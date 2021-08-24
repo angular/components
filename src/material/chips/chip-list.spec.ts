@@ -1380,7 +1380,7 @@ describe('MatChipList', () => {
     });
   });
 
-  it('should preselected chip as selected inside an OnPush component', fakeAsync(() => {
+  it('should preselect chip as selected inside an OnPush component', fakeAsync(() => {
     fixture = createComponent(PreselectedChipInsideOnPush);
     fixture.detectChanges();
     tick();
@@ -1389,6 +1389,21 @@ describe('MatChipList', () => {
     expect(fixture.nativeElement.querySelector('.mat-chip').classList)
       .withContext('Expected first chip to be selected.').toContain('mat-chip-selected');
   }));
+
+  it('should not throw when accessing the selected value too early in single selection mode',
+    fakeAsync(() => {
+      fixture = createComponent(StandardChipList);
+      const chipList = fixture.debugElement.query(By.directive(MatChipList)).componentInstance;
+      expect(() => chipList.selected).not.toThrow();
+    }));
+
+  it('should not throw when accessing the selected value too early in multi selection mode',
+    fakeAsync(() => {
+      fixture = createComponent(StandardChipList);
+      const chipList = fixture.debugElement.query(By.directive(MatChipList)).componentInstance;
+      chipList.multiple = true;
+      expect(() => chipList.selected).not.toThrow();
+    }));
 
   function createComponent<T>(component: Type<T>, providers: Provider[] = [], animationsModule:
       Type<NoopAnimationsModule> | Type<BrowserAnimationsModule> = NoopAnimationsModule):
