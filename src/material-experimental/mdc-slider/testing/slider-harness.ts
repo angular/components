@@ -30,6 +30,12 @@ export class MatSliderHarness extends ComponentHarness {
 
   /** Gets the start thumb of the slider (only applicable for range sliders). */
   async getStartThumb(): Promise<MatSliderThumbHarness> {
+    if (!await this.isRange()) {
+      throw Error(
+        '`getStartThumb` is only applicable for range sliders. '
+        + 'Did you mean to use `getEndThumb`?'
+      );
+    }
     return this.locatorFor(MatSliderThumbHarness.with({position: ThumbPosition.START}))();
   }
 
