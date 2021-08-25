@@ -183,6 +183,8 @@ export class _MatTableDataSource<T,
       if (valueAType !== valueBType) {
         if (valueAType === 'number') { valueA += ''; }
         if (valueBType === 'number') { valueB += ''; }
+        if ( (valueAType === 'string') && (_isNumberValue(valueA) === true) ) { valueA += ''; }
+        if ( (valueBType === 'string') && (_isNumberValue(valueB) === true) ) { valueB += ''; }
       }
 
       // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
