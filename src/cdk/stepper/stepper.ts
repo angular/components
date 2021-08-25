@@ -485,6 +485,14 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
 
   private _updateSelectedItemIndex(newIndex: number): void {
     const stepsArray = this.steps.toArray();
+    
+    
+    if(newIndex === this.selectedIndex){
+      newIndex=0;
+      this.steps.forEach(step => step.reset());
+      this._stateChanged();
+    }
+    
     this.selectionChange.emit({
       selectedIndex: newIndex,
       previouslySelectedIndex: this._selectedIndex,
