@@ -26,12 +26,12 @@ export class MatChipHarness extends ContentContainerComponentHarness {
    * @param options Options for filtering which chip instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: ChipHarnessFilters = {}): HarnessPredicate<MatChipHarness> {
+  static with<T extends typeof MatChipHarness>(options: ChipHarnessFilters = {}):
+    HarnessPredicate<InstanceType<T>> {
     return new HarnessPredicate(MatChipHarness, options)
-        .addOption('text', options.text,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
-        .addOption('selected', options.selected,
-            async (harness, selected) => (await harness.isSelected()) === selected);
+      .addOption('text', options.text, (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getText(), label);
+      }) as unknown as HarnessPredicate<InstanceType<T>>;
   }
 
   /** Gets the text of the chip. */
@@ -41,49 +41,9 @@ export class MatChipHarness extends ContentContainerComponentHarness {
     });
   }
 
-  /**
-   * Whether the chip is selected.
-   * @deprecated Use `MatChipOptionHarness.isSelected` instead.
-   * @breaking-change 12.0.0
-   */
-  async isSelected(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-chip-selected');
-  }
-
   /** Whether the chip is disabled. */
   async isDisabled(): Promise<boolean> {
     return (await this.host()).hasClass('mat-chip-disabled');
-  }
-
-  /**
-   * Selects the given chip. Only applies if it's selectable.
-   * @deprecated Use `MatChipOptionHarness.select` instead.
-   * @breaking-change 12.0.0
-   */
-  async select(): Promise<void> {
-    if (!(await this.isSelected())) {
-      await this.toggle();
-    }
-  }
-
-  /**
-   * Deselects the given chip. Only applies if it's selectable.
-   * @deprecated Use `MatChipOptionHarness.deselect` instead.
-   * @breaking-change 12.0.0
-   */
-  async deselect(): Promise<void> {
-    if (await this.isSelected()) {
-      await this.toggle();
-    }
-  }
-
-  /**
-   * Toggles the selected state of the given chip. Only applies if it's selectable.
-   * @deprecated Use `MatChipOptionHarness.toggle` instead.
-   * @breaking-change 12.0.0
-   */
-  async toggle(): Promise<void> {
-    return (await this.host()).sendKeys(' ');
   }
 
   /** Removes the given chip. Only applies if it's removable. */

@@ -11,12 +11,6 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 export interface ChipHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
   text?: string | RegExp;
-  /**
-   * Only find chip instances whose selected state matches the given value.
-   * @deprecated Use `MatChipOptionHarness` together with `ChipOptionHarnessFilters`.
-   * @breaking-change 12.0.0
-   */
-  selected?: boolean;
 }
 
 /** A set of criteria that can be used to filter a list of selectable chip instances. */

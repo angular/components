@@ -16,8 +16,6 @@ export interface ChipAvatarHarnessFilters extends BaseHarnessFilters {
 
 // @public
 export interface ChipHarnessFilters extends BaseHarnessFilters {
-    // @deprecated
-    selected?: boolean;
     text?: string | RegExp;
 }
 
@@ -46,21 +44,13 @@ export interface ChipRemoveHarnessFilters extends BaseHarnessFilters {
 
 // @public
 export class MatChipHarness extends ContentContainerComponentHarness {
-    // @deprecated
-    deselect(): Promise<void>;
     getAvatar(filter?: ChipAvatarHarnessFilters): Promise<MatChipAvatarHarness | null>;
     getRemoveButton(filter?: ChipRemoveHarnessFilters): Promise<MatChipRemoveHarness>;
     getText(): Promise<string>;
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
-    // @deprecated
-    isSelected(): Promise<boolean>;
     remove(): Promise<void>;
-    // @deprecated
-    select(): Promise<void>;
-    // @deprecated
-    toggle(): Promise<void>;
-    static with(options?: ChipHarnessFilters): HarnessPredicate<MatChipHarness>;
+    static with<T extends typeof MatChipHarness>(options?: ChipHarnessFilters): HarnessPredicate<InstanceType<T>>;
 }
 
 // @public
@@ -92,8 +82,6 @@ export class MatChipListHarness extends _MatChipListHarnessBase {
     getChips(filter?: ChipHarnessFilters): Promise<MatChipHarness[]>;
     getInput(filter?: ChipInputHarnessFilters): Promise<MatChipInputHarness>;
     static hostSelector: string;
-    // @deprecated
-    selectChips(filter?: ChipHarnessFilters): Promise<void>;
     static with(options?: ChipListHarnessFilters): HarnessPredicate<MatChipListHarness>;
 }
 
@@ -104,7 +92,7 @@ export class MatChipOptionHarness extends MatChipHarness {
     isSelected(): Promise<boolean>;
     select(): Promise<void>;
     toggle(): Promise<void>;
-    static with(options?: ChipOptionHarnessFilters): HarnessPredicate<MatChipOptionHarness>;
+    static with<T extends typeof MatChipHarness>(this: T, options?: ChipOptionHarnessFilters): HarnessPredicate<InstanceType<T>>;
 }
 
 // @public

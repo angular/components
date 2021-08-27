@@ -19,11 +19,11 @@ import {MatChipRemoveHarness} from './chip-remove-harness';
 export class MatChipHarness extends ContentContainerComponentHarness {
   static hostSelector = '.mat-mdc-basic-chip, .mat-mdc-chip';
 
+  // Note(mmalerba): generics are used as a workaround for lack of polymorphic `this` in static
+  // methods. See https://github.com/microsoft/TypeScript/issues/5863
   /**
    * Gets a `HarnessPredicate` that can be used to search for a chip with specific attributes.
    */
-  // Note(mmalerba): generics are used as a workaround for lack of polymorphic `this` in static
-  // methods. See https://github.com/microsoft/TypeScript/issues/5863
   static with<T extends typeof MatChipHarness>(this: T, options: ChipHarnessFilters = {}):
       HarnessPredicate<InstanceType<T>> {
     return new HarnessPredicate(MatChipHarness, options)

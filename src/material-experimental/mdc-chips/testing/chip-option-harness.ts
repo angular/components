@@ -14,12 +14,12 @@ import {ChipOptionHarnessFilters} from './chip-harness-filters';
 export class MatChipOptionHarness extends MatChipHarness {
   static override hostSelector = '.mat-mdc-chip-option';
 
+  // Note(mmalerba): generics are used as a workaround for lack of polymorphic `this` in static
+  // methods. See https://github.com/microsoft/TypeScript/issues/5863
   /**
    * Gets a `HarnessPredicate` that can be used to search for a chip option with specific
    * attributes.
    */
-  // Note(mmalerba): generics are used as a workaround for lack of polymorphic `this` in static
-  // methods. See https://github.com/microsoft/TypeScript/issues/5863
   static override with<T extends typeof MatChipHarness>(
       this: T, options: ChipOptionHarnessFilters = {}): HarnessPredicate<InstanceType<T>> {
     return new HarnessPredicate(MatChipOptionHarness, options)

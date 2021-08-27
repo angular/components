@@ -188,9 +188,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
 
 // @public
 export interface MatChipInputEvent {
-    chipInput?: MatChipInput;
-    // @deprecated
-    input: HTMLInputElement;
+    chipInput: MatChipInput;
     value: string;
 }
 

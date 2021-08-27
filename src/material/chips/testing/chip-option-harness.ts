@@ -14,42 +14,46 @@ export class MatChipOptionHarness extends MatChipHarness {
   /** The selector for the host element of a selectable chip instance. */
   static override hostSelector = '.mat-chip';
 
+  // Note(mmalerba): generics are used as a workaround for lack of polymorphic `this` in static
+  // methods. See https://github.com/microsoft/TypeScript/issues/5863
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatChipOptionHarness`
    * that meets certain criteria.
    * @param options Options for filtering which chip instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static override with(options: ChipOptionHarnessFilters = {}):
-    HarnessPredicate<MatChipOptionHarness> {
+  static override with<T extends typeof MatChipHarness>(
+    this: T, options: ChipOptionHarnessFilters = {}):
+    HarnessPredicate<InstanceType<T>> {
     return new HarnessPredicate(MatChipOptionHarness, options)
         .addOption('text', options.text,
             (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
         .addOption('selected', options.selected,
-            async (harness, selected) => (await harness.isSelected()) === selected);
+            async (harness, selected) => (await harness.isSelected()) === selected) as
+            unknown as HarnessPredicate<InstanceType<T>>;
   }
 
   /** Whether the chip is selected. */
-  override async isSelected(): Promise<boolean> {
+  async isSelected(): Promise<boolean> {
     return (await this.host()).hasClass('mat-chip-selected');
   }
 
   /** Selects the given chip. Only applies if it's selectable. */
-  override async select(): Promise<void> {
+  async select(): Promise<void> {
     if (!(await this.isSelected())) {
       await this.toggle();
     }
   }
 
   /** Deselects the given chip. Only applies if it's selectable. */
-  override async deselect(): Promise<void> {
+  async deselect(): Promise<void> {
     if (await this.isSelected()) {
       await this.toggle();
     }
   }
 
   /** Toggles the selected state of the given chip. */
-  override async toggle(): Promise<void> {
+  async toggle(): Promise<void> {
     return (await this.host()).sendKeys(' ');
   }
 }

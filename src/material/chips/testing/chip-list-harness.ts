@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {MatChipHarness} from './chip-harness';
 import {MatChipInputHarness} from './chip-input-harness';
 import {
@@ -65,21 +65,6 @@ export class MatChipListHarness extends _MatChipListHarnessBase {
    */
   async getChips(filter: ChipHarnessFilters = {}): Promise<MatChipHarness[]> {
     return this.locatorForAll(MatChipHarness.with(filter))();
-  }
-
-  /**
-   * Selects a chip inside the chip list.
-   * @param filter An optional filter to apply to the child chips.
-   *    All the chips matching the filter will be selected.
-   * @deprecated Use `MatChipListboxHarness.selectChips` instead.
-   * @breaking-change 12.0.0
-   */
-  async selectChips(filter: ChipHarnessFilters = {}): Promise<void> {
-    const chips = await this.getChips(filter);
-    if (!chips.length) {
-      throw Error(`Cannot find chip matching filter ${JSON.stringify(filter)}`);
-    }
-    await parallel(() => chips.map(chip => chip.select()));
   }
 
   /**
