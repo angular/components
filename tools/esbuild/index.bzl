@@ -1,4 +1,4 @@
-load("@npm//@bazel/esbuild:index.bzl", _esbuild = "esbuild", "esbuild_config")
+load("@npm//@bazel/esbuild:index.bzl", "esbuild_config", _esbuild = "esbuild")
 load("@npm//@angular/dev-infra-private/bazel:expand_template.bzl", "expand_template")
 
 def esbuild(**kwargs):
