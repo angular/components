@@ -31,13 +31,13 @@ describe('DocViewer', () => {
   });
 
   it('should be sorted alphabetically (components)', () => {
-    const components = docsItems.getItems(COMPONENTS).map(c => c.id);
+    const components = docsItems.getItems(COMPONENTS).map(c => c.name);
     const sortedComponents = components.concat().sort();
     expect(components).toEqual(sortedComponents);
   });
 
   it('should be sorted alphabetically (cdk)', () => {
-    const cdk = docsItems.getItems(CDK).map(c => c.id);
+    const cdk = docsItems.getItems(CDK).map(c => c.name);
     const sortedCdk = cdk.concat().sort();
     expect(cdk).toEqual(sortedCdk);
   });
