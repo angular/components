@@ -1,28 +1,30 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, ViewChildren, QueryList} from '@angular/core';
+import {Component, QueryList, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
+  MAT_OPTION_PARENT_COMPONENT,
   MatOption,
   MatOptionModule,
-  MAT_OPTION_PARENT_COMPONENT,
   MatOptionParentComponent,
 } from '@angular/material/core';
+
 import {MatOptionHarness} from './option-harness';
 
 /** Shared tests to run on both the original and MDC-based options. */
 export function runHarnessTests(
-    optionModule: typeof MatOptionModule,
-    optionHarness: typeof MatOptionHarness,
+    optionModule: typeof MatOptionModule, optionHarness: typeof MatOptionHarness,
     optionComponent: typeof MatOption) {
   let fixture: ComponentFixture<OptionHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [optionModule],
-      declarations: [OptionHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [optionModule],
+          declarations: [OptionHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(OptionHarnessTest);
     fixture.detectChanges();
@@ -106,10 +108,7 @@ export function runHarnessTests(
   });
 
   @Component({
-    providers: [{
-      provide: MAT_OPTION_PARENT_COMPONENT,
-      useExisting: OptionHarnessTest
-    }],
+    providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: OptionHarnessTest}],
     template: `
       <mat-option>Plain option</mat-option>
       <mat-option disabled>Disabled option</mat-option>

@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable, OnDestroy} from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
 
 // Avoid using `declare const` because it caused conflicts inside Google
 // with the real typings for these symbols. We use `declare interface` instead
@@ -74,9 +74,9 @@ export class OverlayContainer implements OnDestroy {
     const containerClass = 'cdk-overlay-container';
 
     if (this._platform.isBrowser || isTestEnvironment) {
-      const oppositePlatformContainers =
-          this._document.querySelectorAll(`.${containerClass}[platform="server"], ` +
-                                          `.${containerClass}[platform="test"]`);
+      const oppositePlatformContainers = this._document.querySelectorAll(
+          `.${containerClass}[platform="server"], ` +
+          `.${containerClass}[platform="test"]`);
 
       // Remove any old containers from the opposite platform.
       // This can happen when transitioning from the server to the client.

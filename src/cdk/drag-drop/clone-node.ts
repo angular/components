@@ -31,8 +31,9 @@ export function deepCloneNode(node: HTMLElement): HTMLElement {
 }
 
 /** Matches elements between an element and its clone and allows for their data to be cloned. */
-function transferData<T extends Element>(selector: string, node: HTMLElement, clone: HTMLElement,
-                                         callback: (source: T, clone: T) => void) {
+function transferData<T extends Element>(
+    selector: string, node: HTMLElement, clone: HTMLElement,
+    callback: (source: T, clone: T) => void) {
   const descendantElements = node.querySelectorAll<T>(selector);
 
   if (descendantElements.length) {
@@ -48,8 +49,11 @@ function transferData<T extends Element>(selector: string, node: HTMLElement, cl
 let cloneUniqueId = 0;
 
 /** Transfers the data of one input element to another. */
-function transferInputData(source: Element & {value: string},
-                           clone: Element & {value: string; name: string; type: string}) {
+function transferInputData(source: Element&{value: string}, clone: Element&{
+  value: string;
+  name: string;
+  type: string
+}) {
   // Browsers throw an error when assigning the value of a file input programmatically.
   if (clone.type !== 'file') {
     clone.value = source.value;
@@ -72,6 +76,7 @@ function transferCanvasData(source: HTMLCanvasElement, clone: HTMLCanvasElement)
     // We can't do much about it so just ignore the error.
     try {
       context.drawImage(source, 0, 0);
-    } catch {}
+    } catch {
+    }
   }
 }

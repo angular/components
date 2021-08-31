@@ -1,8 +1,10 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {dispatchMouseEvent, dispatchFakeEvent} from '../../cdk/testing/private';
+
+import {dispatchFakeEvent, dispatchMouseEvent} from '../../cdk/testing/private';
+
+import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 
 
 describe('MatCalendarBody', () => {
@@ -66,10 +68,11 @@ describe('MatCalendarBody', () => {
       const deselectedCells = cellEls.filter(c => c.getAttribute('aria-selected') === 'false');
 
       expect(selectedCells.length)
-        .withContext('Expected one cell to be marked as selected.').toBe(1);
+          .withContext('Expected one cell to be marked as selected.')
+          .toBe(1);
       expect(deselectedCells.length)
-        .withContext('Expected remaining cells to be marked as deselected.')
-        .toBe(cellEls.length - 1);
+          .withContext('Expected remaining cells to be marked as deselected.')
+          .toBe(cellEls.length - 1);
     });
 
     it('places label in first row if space is available', () => {
@@ -82,7 +85,8 @@ describe('MatCalendarBody', () => {
       expect(labelEls.length).toBe(1);
       expect(cellEls.length).toBe(11);
       expect(rowEls[0].firstElementChild!.classList)
-        .withContext('first cell should be the label').toContain('mat-calendar-body-label');
+          .withContext('first cell should be the label')
+          .toContain('mat-calendar-body-label');
       expect(labelEls[0].getAttribute('colspan')).toBe('3');
     });
 
@@ -93,7 +97,8 @@ describe('MatCalendarBody', () => {
       fixture.detectChanges();
 
       expect(todayElement.classList)
-        .withContext('today should be selected').toContain('mat-calendar-body-selected');
+          .withContext('today should be selected')
+          .toContain('mat-calendar-body-selected');
     });
 
     it('should mark active date', () => {
@@ -109,10 +114,8 @@ describe('MatCalendarBody', () => {
     });
 
     it('should have a focus indicator', () => {
-      expect(cellEls.every(element => !!element.querySelector('.mat-focus-indicator')))
-          .toBe(true);
+      expect(cellEls.every(element => !!element.querySelector('.mat-focus-indicator'))).toBe(true);
     });
-
   });
 
   describe('range calendar body', () => {
@@ -184,15 +187,16 @@ describe('MatCalendarBody', () => {
     });
 
     it('should mark a cell as a start bridge if it is the end of the main range ' +
-      'and the start of the comparison', () => {
-      testComponent.startValue = 1;
-      testComponent.endValue = 5;
-      testComponent.comparisonStart = 5;
-      testComponent.comparisonEnd = 10;
-      fixture.detectChanges();
+           'and the start of the comparison',
+       () => {
+         testComponent.startValue = 1;
+         testComponent.endValue = 5;
+         testComponent.comparisonStart = 5;
+         testComponent.comparisonEnd = 10;
+         fixture.detectChanges();
 
-      expect(cells[4].classList).toContain(bridgeStart);
-    });
+         expect(cells[4].classList).toContain(bridgeStart);
+       });
 
     it('should not mark a cell as a start bridge if there is no end range value', () => {
       testComponent.startValue = 1;
@@ -205,15 +209,16 @@ describe('MatCalendarBody', () => {
     });
 
     it('should mark a cell as an end bridge if it is the start of the main range ' +
-      'and the end of the comparison', () => {
-      testComponent.comparisonStart = 1;
-      testComponent.comparisonEnd = 5;
-      testComponent.startValue = 5;
-      testComponent.endValue = 10;
-      fixture.detectChanges();
+           'and the end of the comparison',
+       () => {
+         testComponent.comparisonStart = 1;
+         testComponent.comparisonEnd = 5;
+         testComponent.startValue = 5;
+         testComponent.endValue = 10;
+         fixture.detectChanges();
 
-      expect(cells[4].classList).toContain(bridgeEnd);
-    });
+         expect(cells[4].classList).toContain(bridgeEnd);
+       });
 
     it('should not mark a cell as an end bridge if there is no end range value', () => {
       testComponent.comparisonStart = 1;
@@ -298,15 +303,15 @@ describe('MatCalendarBody', () => {
     });
 
     it('should be able to show a comparison range that starts before the beginning of the calendar',
-      () => {
-        testComponent.comparisonStart = -10;
-        testComponent.comparisonEnd = 2;
-        fixture.detectChanges();
+       () => {
+         testComponent.comparisonStart = -10;
+         testComponent.comparisonEnd = 2;
+         fixture.detectChanges();
 
-        expect(cells.some(cell => cell.classList.contains(comparisonStartClass))).toBe(false);
-        expect(cells[0].classList).toContain(inComparisonClass);
-        expect(cells[1].classList).toContain(comparisonEndClass);
-      });
+         expect(cells.some(cell => cell.classList.contains(comparisonStartClass))).toBe(false);
+         expect(cells[0].classList).toContain(inComparisonClass);
+         expect(cells[1].classList).toContain(comparisonEndClass);
+       });
 
     it('should be able to show a range that ends after the end of the calendar', () => {
       testComponent.startValue = 27;
@@ -438,37 +443,37 @@ describe('MatCalendarBody', () => {
     });
 
     it('should preview the selected range after the user selects a start and moves focus away',
-      () => {
-        cells[2].click();
-        fixture.detectChanges();
+       () => {
+         cells[2].click();
+         fixture.detectChanges();
 
-        dispatchFakeEvent(cells[5], 'focus');
-        fixture.detectChanges();
+         dispatchFakeEvent(cells[5], 'focus');
+         fixture.detectChanges();
 
-        expect(cells[2].classList).toContain(previewStartClass);
-        expect(cells[3].classList).toContain(inPreviewClass);
-        expect(cells[4].classList).toContain(inPreviewClass);
-        expect(cells[5].classList).toContain(previewEndClass);
+         expect(cells[2].classList).toContain(previewStartClass);
+         expect(cells[3].classList).toContain(inPreviewClass);
+         expect(cells[4].classList).toContain(inPreviewClass);
+         expect(cells[5].classList).toContain(previewEndClass);
 
-        // Go a few cells ahead.
-        dispatchFakeEvent(cells[7], 'focus');
-        fixture.detectChanges();
+         // Go a few cells ahead.
+         dispatchFakeEvent(cells[7], 'focus');
+         fixture.detectChanges();
 
-        expect(cells[5].classList).not.toContain(previewEndClass);
-        expect(cells[5].classList).toContain(inPreviewClass);
-        expect(cells[6].classList).toContain(inPreviewClass);
-        expect(cells[7].classList).toContain(previewEndClass);
+         expect(cells[5].classList).not.toContain(previewEndClass);
+         expect(cells[5].classList).toContain(inPreviewClass);
+         expect(cells[6].classList).toContain(inPreviewClass);
+         expect(cells[7].classList).toContain(previewEndClass);
 
-        // Go back a few cells.
-        dispatchFakeEvent(cells[4], 'focus');
-        fixture.detectChanges();
+         // Go back a few cells.
+         dispatchFakeEvent(cells[4], 'focus');
+         fixture.detectChanges();
 
-        expect(cells[5].classList).not.toContain(inPreviewClass);
-        expect(cells[6].classList).not.toContain(inPreviewClass);
-        expect(cells[7].classList).not.toContain(previewEndClass);
-        expect(cells[3].classList).toContain(inPreviewClass);
-        expect(cells[4].classList).toContain(previewEndClass);
-      });
+         expect(cells[5].classList).not.toContain(inPreviewClass);
+         expect(cells[6].classList).not.toContain(inPreviewClass);
+         expect(cells[7].classList).not.toContain(previewEndClass);
+         expect(cells[3].classList).toContain(inPreviewClass);
+         expect(cells[4].classList).toContain(previewEndClass);
+       });
 
     it('should not be able to extend the range before the start', () => {
       cells[5].click();
@@ -483,32 +488,34 @@ describe('MatCalendarBody', () => {
     });
 
     it('should be able to show a range, starting before the beginning of the calendar, ' +
-      'while hovering', () => {
-        fixture.componentInstance.startValue = -1;
-        fixture.detectChanges();
+           'while hovering',
+       () => {
+         fixture.componentInstance.startValue = -1;
+         fixture.detectChanges();
 
-        dispatchMouseEvent(cells[2], 'mouseenter');
-        fixture.detectChanges();
+         dispatchMouseEvent(cells[2], 'mouseenter');
+         fixture.detectChanges();
 
-        expect(cells.some(cell => cell.classList.contains(previewStartClass))).toBe(false);
-        expect(cells[0].classList).toContain(inPreviewClass);
-        expect(cells[1].classList).toContain(inPreviewClass);
-        expect(cells[2].classList).toContain(previewEndClass);
-      });
+         expect(cells.some(cell => cell.classList.contains(previewStartClass))).toBe(false);
+         expect(cells[0].classList).toContain(inPreviewClass);
+         expect(cells[1].classList).toContain(inPreviewClass);
+         expect(cells[2].classList).toContain(previewEndClass);
+       });
 
     it('should be able to show a range, starting before the beginning of the calendar, ' +
-      'while moving focus', () => {
-        fixture.componentInstance.startValue = -1;
-        fixture.detectChanges();
+           'while moving focus',
+       () => {
+         fixture.componentInstance.startValue = -1;
+         fixture.detectChanges();
 
-        dispatchMouseEvent(cells[2], 'focus');
-        fixture.detectChanges();
+         dispatchMouseEvent(cells[2], 'focus');
+         fixture.detectChanges();
 
-        expect(cells.some(cell => cell.classList.contains(previewStartClass))).toBe(false);
-        expect(cells[0].classList).toContain(inPreviewClass);
-        expect(cells[1].classList).toContain(inPreviewClass);
-        expect(cells[2].classList).toContain(previewEndClass);
-      });
+         expect(cells.some(cell => cell.classList.contains(previewStartClass))).toBe(false);
+         expect(cells[0].classList).toContain(inPreviewClass);
+         expect(cells[1].classList).toContain(inPreviewClass);
+         expect(cells[2].classList).toContain(previewEndClass);
+       });
 
     it('should remove the preview if the user moves their pointer away', () => {
       cells[2].click();
@@ -580,13 +587,11 @@ describe('MatCalendarBody', () => {
       expect(cells.some(cell => {
         const classList = cell.classList;
         return classList.contains(startClass) || classList.contains(inRangeClass) ||
-               classList.contains(endClass) || classList.contains(comparisonStartClass) ||
-               classList.contains(inComparisonClass) || classList.contains(comparisonEndClass);
+            classList.contains(endClass) || classList.contains(comparisonStartClass) ||
+            classList.contains(inComparisonClass) || classList.contains(comparisonEndClass);
       })).toBe(false);
     });
-
   });
-
 });
 
 
@@ -634,12 +639,12 @@ class StandardCalendarBody {
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);
-  startValue: number | null;
-  endValue: number | null;
-  comparisonStart: number | null;
-  comparisonEnd: number | null;
-  previewStart: number | null;
-  previewEnd: number | null;
+  startValue: number|null;
+  endValue: number|null;
+  comparisonStart: number|null;
+  comparisonEnd: number|null;
+  previewStart: number|null;
+  previewEnd: number|null;
 
   onSelect(event: MatCalendarUserEvent<number>) {
     const value = event.value;
@@ -653,7 +658,7 @@ class RangeCalendarBody {
     }
   }
 
-  previewChanged(event: MatCalendarUserEvent<MatCalendarCell<Date> | null>) {
+  previewChanged(event: MatCalendarUserEvent<MatCalendarCell<Date>|null>) {
     this.previewStart = this.startValue;
     this.previewEnd = event.value?.compareValue || null;
   }
@@ -678,7 +683,7 @@ function createCalendarCells(weeks: number): MatCalendarCell[][] {
   }
 
   return rows.map(row => row.map(cell => {
-    return new MatCalendarCell(cell, `${cell}`, `${cell}-label`, true,
-        cell % 2 === 0 ? 'even' : undefined);
+    return new MatCalendarCell(
+        cell, `${cell}`, `${cell}-label`, true, cell % 2 === 0 ? 'even' : undefined);
   }));
 }

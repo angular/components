@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, OnDestroy, Provider} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
-import {CdkTable, _CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from '@angular/cdk/table';
+import {_COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, CdkTable} from '@angular/cdk/table';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, OnDestroy, Provider} from '@angular/core';
 
 import {ColumnResize} from './column-resize';
 
@@ -27,22 +27,16 @@ export abstract class ResizeStrategy {
 
   /** Updates the width of the specified column. */
   abstract applyColumnSize(
-      cssFriendlyColumnName: string,
-      columnHeader: HTMLElement,
-      sizeInPx: number,
+      cssFriendlyColumnName: string, columnHeader: HTMLElement, sizeInPx: number,
       previousSizeInPx?: number): void;
 
   /** Applies a minimum width to the specified column, updating its current width as needed. */
   abstract applyMinColumnSize(
-      cssFriendlyColumnName: string,
-      columnHeader: HTMLElement,
-      minSizeInPx: number): void;
+      cssFriendlyColumnName: string, columnHeader: HTMLElement, minSizeInPx: number): void;
 
   /** Applies a maximum width to the specified column, updating its current width as needed. */
   abstract applyMaxColumnSize(
-      cssFriendlyColumnName: string,
-      columnHeader: HTMLElement,
-      minSizeInPx: number): void;
+      cssFriendlyColumnName: string, columnHeader: HTMLElement, minSizeInPx: number): void;
 
   /** Adjusts the width of the table element by the specified delta. */
   protected updateTableWidthAndStickyColumns(delta: number): void {
@@ -76,14 +70,13 @@ export abstract class ResizeStrategy {
 export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
   constructor(
       protected readonly columnResize: ColumnResize,
-      @Inject(_COALESCED_STYLE_SCHEDULER)
-          protected readonly styleScheduler: _CoalescedStyleScheduler,
-      protected readonly table: CdkTable<unknown>) {
+      @Inject(_COALESCED_STYLE_SCHEDULER) protected readonly styleScheduler:
+          _CoalescedStyleScheduler, protected readonly table: CdkTable<unknown>) {
     super();
   }
 
-  applyColumnSize(_: string, columnHeader: HTMLElement, sizeInPx: number,
-      previousSizeInPx?: number): void {
+  applyColumnSize(
+      _: string, columnHeader: HTMLElement, sizeInPx: number, previousSizeInPx?: number): void {
     const delta = sizeInPx - (previousSizeInPx ?? getElementWidth(columnHeader));
 
     if (delta === 0) {
@@ -132,20 +125,21 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
 
   constructor(
       protected readonly columnResize: ColumnResize,
-      @Inject(_COALESCED_STYLE_SCHEDULER)
-          protected readonly styleScheduler: _CoalescedStyleScheduler,
-      protected readonly table: CdkTable<unknown>,
+      @Inject(_COALESCED_STYLE_SCHEDULER) protected readonly styleScheduler:
+          _CoalescedStyleScheduler, protected readonly table: CdkTable<unknown>,
       @Inject(DOCUMENT) document: any) {
     super();
     this._document = document;
   }
 
-  applyColumnSize(cssFriendlyColumnName: string, columnHeader: HTMLElement,
-      sizeInPx: number, previousSizeInPx?: number): void {
+  applyColumnSize(
+      cssFriendlyColumnName: string, columnHeader: HTMLElement, sizeInPx: number,
+      previousSizeInPx?: number): void {
     // Optimization: Check applied width first as we probably set it already before reading
     // offsetWidth which triggers layout.
-    const delta = sizeInPx - (previousSizeInPx ??
-        (this._getAppliedWidth(cssFriendlyColumnName) || columnHeader.offsetWidth));
+    const delta = sizeInPx -
+        (previousSizeInPx ??
+         (this._getAppliedWidth(cssFriendlyColumnName) || columnHeader.offsetWidth));
 
     if (delta === 0) {
       return;
@@ -160,16 +154,16 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
   applyMinColumnSize(cssFriendlyColumnName: string, _: HTMLElement, sizeInPx: number): void {
     const cssSize = coerceCssPixelValue(sizeInPx);
 
-    this._applyProperty(cssFriendlyColumnName, 'min-width', cssSize,
-        sizeInPx !== this.defaultMinSize);
+    this._applyProperty(
+        cssFriendlyColumnName, 'min-width', cssSize, sizeInPx !== this.defaultMinSize);
     this.updateTableWidthAndStickyColumns(0);
   }
 
   applyMaxColumnSize(cssFriendlyColumnName: string, _: HTMLElement, sizeInPx: number): void {
     const cssSize = coerceCssPixelValue(sizeInPx);
 
-    this._applyProperty(cssFriendlyColumnName, 'max-width', cssSize,
-        sizeInPx !== this.defaultMaxSize);
+    this._applyProperty(
+        cssFriendlyColumnName, 'max-width', cssSize, sizeInPx !== this.defaultMaxSize);
     this.updateTableWidthAndStickyColumns(0);
   }
 
@@ -194,11 +188,8 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
     return coercePixelsFromFlexValue(this._getPropertyValue(cssFriendslyColumnName, 'flex'));
   }
 
-  private _applyProperty(
-      cssFriendlyColumnName: string,
-      key: string,
-      value: string,
-      enable = true): void {
+  private _applyProperty(cssFriendlyColumnName: string, key: string, value: string, enable = true):
+      void {
     const properties = this._getColumnPropertiesMap(cssFriendlyColumnName);
 
     this.styleScheduler.schedule(() => {

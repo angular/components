@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ListKeyManager, ListKeyManagerOption} from './list-key-manager';
 import {FocusOrigin} from '../focus-monitor/focus-monitor';
+
+import {ListKeyManager, ListKeyManagerOption} from './list-key-manager';
 
 /**
  * This is the interface for focusable items (used by the FocusKeyManager).
@@ -19,7 +20,7 @@ export interface FocusableOption extends ListKeyManagerOption {
   focus(origin?: FocusOrigin): void;
 }
 
-export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
+export class FocusKeyManager<T> extends ListKeyManager<FocusableOption&T> {
   private _origin: FocusOrigin = 'program';
 
   /**

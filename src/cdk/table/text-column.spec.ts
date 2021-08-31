@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {
-  getTableTextColumnMissingParentTableError,
   getTableTextColumnMissingNameError,
+  getTableTextColumnMissingParentTableError,
 } from './table-errors';
 import {CdkTableModule} from './table-module';
 import {expectTableToMatchContent} from './table.spec';
@@ -205,4 +205,3 @@ class MissingTableApp {
 })
 class TextColumnWithoutNameApp extends BasicTextColumnApp {
 }
-

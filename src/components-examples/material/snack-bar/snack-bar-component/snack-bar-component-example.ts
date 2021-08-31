@@ -31,4 +31,5 @@ export class SnackBarComponentExample {
     }
   `],
 })
-export class PizzaPartyComponent {}
+export class PizzaPartyComponent {
+}

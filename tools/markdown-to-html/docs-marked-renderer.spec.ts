@@ -74,8 +74,7 @@ describe('DocsMarkdownRenderer', () => {
           "example": "exampleName",
          }
         ) -->`);
-    expectEqualIgnoreLeadingWhitespace(result,
-      `<div material-docs-example="exampleName"></div>`);
+    expectEqualIgnoreLeadingWhitespace(result, `<div material-docs-example="exampleName"></div>`);
   });
 
   it('generates html using old API', () => {

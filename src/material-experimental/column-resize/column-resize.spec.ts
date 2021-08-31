@@ -1,19 +1,21 @@
+import {ColumnSize} from '@angular/cdk-experimental/column-resize';
+import {BidiModule} from '@angular/cdk/bidi';
+import {DataSource} from '@angular/cdk/collections';
+import {ESCAPE} from '@angular/cdk/keycodes';
 import {
+  ChangeDetectionStrategy,
   Component,
   Directive,
   ElementRef,
   ViewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flushMicrotasks} from '@angular/core/testing';
-import {BidiModule} from '@angular/cdk/bidi';
-import {DataSource} from '@angular/cdk/collections';
-import {dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
 
-import {ColumnSize} from '@angular/cdk-experimental/column-resize';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
+
+import {AbstractMatColumnResize} from './column-resize-directives/common';
 import {
   MatColumnResize,
   MatColumnResizeFlex,
@@ -22,7 +24,6 @@ import {
   MatDefaultEnabledColumnResizeFlex,
   MatDefaultEnabledColumnResizeModule,
 } from './index';
-import {AbstractMatColumnResize} from './column-resize-directives/common';
 
 function getDefaultEnabledDirectiveStrings() {
   return {
@@ -41,8 +42,8 @@ function getOptInDirectiveStrings() {
 }
 
 function getTableTemplate(defaultEnabled: boolean) {
-  const directives = defaultEnabled ?
-      getDefaultEnabledDirectiveStrings() : getOptInDirectiveStrings();
+  const directives =
+      defaultEnabled ? getDefaultEnabledDirectiveStrings() : getOptInDirectiveStrings();
 
   return `
       <style>
@@ -95,8 +96,8 @@ function getTableTemplate(defaultEnabled: boolean) {
 }
 
 function getFlexTemplate(defaultEnabled: boolean) {
-  const directives = defaultEnabled ?
-      getDefaultEnabledDirectiveStrings() : getOptInDirectiveStrings();
+  const directives =
+      defaultEnabled ? getDefaultEnabledDirectiveStrings() : getOptInDirectiveStrings();
 
   return `
       <style>
@@ -196,20 +197,17 @@ abstract class BaseTestComponent {
   getOverlayThumbPosition(index: number): number {
     const thumbPositionElement = this.getOverlayThumbElement(index)!.parentNode as HTMLElement;
     const left = parseInt(thumbPositionElement.style.left!, 10);
-    const translateX = Number(/translateX\((-?\d+)px\)/.exec(
-        thumbPositionElement.style.transform)?.[1] ?? 0);
+    const translateX =
+        Number(/translateX\((-?\d+)px\)/.exec(thumbPositionElement.style.transform)?.[1] ?? 0);
     return left + translateX;
   }
 
   beginColumnResizeWithMouse(index: number, button = 0): void {
     const thumbElement = this.getOverlayThumbElement(index);
-    this.table.nativeElement!.dispatchEvent(new MouseEvent('mouseleave',
-        {bubbles: true, relatedTarget: thumbElement, button}));
-    thumbElement.dispatchEvent(new MouseEvent('mousedown', {
-      bubbles: true,
-      screenX: MOUSE_START_OFFSET,
-      button
-    } as MouseEventInit));
+    this.table.nativeElement!.dispatchEvent(
+        new MouseEvent('mouseleave', {bubbles: true, relatedTarget: thumbElement, button}));
+    thumbElement.dispatchEvent(new MouseEvent(
+        'mousedown', {bubbles: true, screenX: MOUSE_START_OFFSET, button} as MouseEventInit));
   }
 
   updateResizeWithMouseInProgress(totalDelta: number): void {
@@ -256,7 +254,8 @@ class MatResizeTest extends BaseTestComponent {
 }
 
 @Component({template: getTableTemplate(false), changeDetection: ChangeDetectionStrategy.OnPush})
-class MatResizeOnPushTest extends MatResizeTest {}
+class MatResizeOnPushTest extends MatResizeTest {
+}
 
 @Component({template: getTableTemplate(true)})
 class MatResizeDefaultTest extends BaseTestComponent {
@@ -275,14 +274,12 @@ class MatResizeFlexTest extends BaseTestComponent {
 
 @Component({template: getFlexTemplate(true)})
 class MatResizeDefaultFlexTest extends BaseTestComponent {
-  @ViewChild(MatDefaultEnabledColumnResizeFlex)
-  columnResize: AbstractMatColumnResize;
+  @ViewChild(MatDefaultEnabledColumnResizeFlex) columnResize: AbstractMatColumnResize;
 }
 
 @Component({template: getFlexTemplate(true)})
 class MatResizeDefaultFlexRtlTest extends BaseTestComponentRtl {
-  @ViewChild(MatDefaultEnabledColumnResizeFlex)
-  columnResize: AbstractMatColumnResize;
+  @ViewChild(MatDefaultEnabledColumnResizeFlex) columnResize: AbstractMatColumnResize;
 }
 
 interface PeriodicElement {
@@ -351,10 +348,12 @@ describe('Material Popover Edit', () => {
       beforeEach(fakeAsync(() => {
         jasmine.addMatchers(approximateMatcher);
 
-        TestBed.configureTestingModule({
-          imports: [BidiModule, MatTableModule, resizeModule],
-          declarations: [componentClass],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [BidiModule, MatTableModule, resizeModule],
+              declarations: [componentClass],
+            })
+            .compileComponents();
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -362,174 +361,178 @@ describe('Material Popover Edit', () => {
       }));
 
       it('shows resize handle overlays on header row hover and while a resize handle is in use',
-          fakeAsync(() => {
-        expect(component.getOverlayThumbElement(0)).toBeUndefined();
+         fakeAsync(() => {
+           expect(component.getOverlayThumbElement(0)).toBeUndefined();
 
-        component.triggerHoverState();
-        fixture.detectChanges();
+           component.triggerHoverState();
+           fixture.detectChanges();
 
-        expect(component.getOverlayThumbElement(0).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
-        expect(component.getOverlayThumbElement(2).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
+           expect(component.getOverlayThumbElement(0).classList.contains(
+                      'mat-column-resize-overlay-thumb'))
+               .toBe(true);
+           expect(component.getOverlayThumbElement(2).classList.contains(
+                      'mat-column-resize-overlay-thumb'))
+               .toBe(true);
 
-        component.beginColumnResizeWithMouse(0);
+           component.beginColumnResizeWithMouse(0);
 
-        expect(component.getOverlayThumbElement(0).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
-        expect(component.getOverlayThumbElement(2).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
+           expect(component.getOverlayThumbElement(0).classList.contains(
+                      'mat-column-resize-overlay-thumb'))
+               .toBe(true);
+           expect(component.getOverlayThumbElement(2).classList.contains(
+                      'mat-column-resize-overlay-thumb'))
+               .toBe(true);
 
-        component.completeResizeWithMouseInProgress(0);
-        component.endHoverState();
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.completeResizeWithMouseInProgress(0);
+           component.endHoverState();
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        expect(component.getOverlayThumbElement(0)).toBeUndefined();
-      }));
+           expect(component.getOverlayThumbElement(0)).toBeUndefined();
+         }));
 
       it('resizes the target column via mouse input', fakeAsync(() => {
-        const initialTableWidth = component.getTableWidth();
-        const initialColumnWidth = component.getColumnWidth(1);
-        const initialColumnPosition = component.getColumnOriginPosition(1);
-        const initialNextColumnPosition = component.getColumnOriginPosition(2);
+           const initialTableWidth = component.getTableWidth();
+           const initialColumnWidth = component.getColumnWidth(1);
+           const initialColumnPosition = component.getColumnOriginPosition(1);
+           const initialNextColumnPosition = component.getColumnOriginPosition(2);
 
-        component.triggerHoverState();
-        fixture.detectChanges();
-        component.beginColumnResizeWithMouse(1);
+           component.triggerHoverState();
+           fixture.detectChanges();
+           component.beginColumnResizeWithMouse(1);
 
-        const initialThumbPosition = component.getOverlayThumbPosition(1);
-        component.updateResizeWithMouseInProgress(5);
-        flushMicrotasks();
+           const initialThumbPosition = component.getOverlayThumbPosition(1);
+           component.updateResizeWithMouseInProgress(5);
+           flushMicrotasks();
 
-        let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
-        let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
-        let nextColumnPositionDelta =
-            component.getColumnOriginPosition(2) - initialNextColumnPosition;
-        (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
-        (expect(nextColumnPositionDelta) as any).isApproximately(columnPositionDelta);
+           let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
+           let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
+           let nextColumnPositionDelta =
+               component.getColumnOriginPosition(2) - initialNextColumnPosition;
+           (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
+           (expect(nextColumnPositionDelta) as any).isApproximately(columnPositionDelta);
 
-        (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 5);
-        (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 5);
+           (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 5);
+           (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 5);
 
-        component.updateResizeWithMouseInProgress(1);
-        flushMicrotasks();
+           component.updateResizeWithMouseInProgress(1);
+           flushMicrotasks();
 
-        thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
-        columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
-        (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
+           thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
+           columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
+           (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
 
-        (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 1);
-        (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
+           (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 1);
+           (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
 
-        component.completeResizeWithMouseInProgress(1);
-        flushMicrotasks();
+           component.completeResizeWithMouseInProgress(1);
+           flushMicrotasks();
 
-        (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
+           (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
 
-        component.endHoverState();
-        fixture.detectChanges();
-      }));
+           component.endHoverState();
+           fixture.detectChanges();
+         }));
 
       it('should not start dragging using the right mouse button', fakeAsync(() => {
-        const initialColumnWidth = component.getColumnWidth(1);
+           const initialColumnWidth = component.getColumnWidth(1);
 
-        component.triggerHoverState();
-        fixture.detectChanges();
-        component.beginColumnResizeWithMouse(1, 2);
+           component.triggerHoverState();
+           fixture.detectChanges();
+           component.beginColumnResizeWithMouse(1, 2);
 
-        const initialPosition = component.getOverlayThumbPosition(1);
+           const initialPosition = component.getOverlayThumbPosition(1);
 
-        component.updateResizeWithMouseInProgress(5);
+           component.updateResizeWithMouseInProgress(5);
 
-        expect(component.getOverlayThumbPosition(1)).toBe(initialPosition);
-        expect(component.getColumnWidth(1)).toBe(initialColumnWidth);
-      }));
+           expect(component.getOverlayThumbPosition(1)).toBe(initialPosition);
+           expect(component.getColumnWidth(1)).toBe(initialColumnWidth);
+         }));
 
       it('cancels an active mouse resize with the escape key', fakeAsync(() => {
-        const initialTableWidth = component.getTableWidth();
-        const initialColumnWidth = component.getColumnWidth(1);
-        const initialColumnPosition = component.getColumnOriginPosition(1);
+           const initialTableWidth = component.getTableWidth();
+           const initialColumnWidth = component.getColumnWidth(1);
+           const initialColumnPosition = component.getColumnOriginPosition(1);
 
-        component.triggerHoverState();
-        fixture.detectChanges();
-        component.beginColumnResizeWithMouse(1);
+           component.triggerHoverState();
+           fixture.detectChanges();
+           component.beginColumnResizeWithMouse(1);
 
-        const initialThumbPosition = component.getOverlayThumbPosition(1);
+           const initialThumbPosition = component.getOverlayThumbPosition(1);
 
-        component.updateResizeWithMouseInProgress(5);
-        flushMicrotasks();
+           component.updateResizeWithMouseInProgress(5);
+           flushMicrotasks();
 
-        let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
-        let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
-        (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
+           let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
+           let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
+           (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
 
-        (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 5);
-        (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 5);
+           (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 5);
+           (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 5);
 
-        dispatchKeyboardEvent(document, 'keyup', ESCAPE);
-        flushMicrotasks();
+           dispatchKeyboardEvent(document, 'keyup', ESCAPE);
+           flushMicrotasks();
 
-        (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth);
-        (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth);
+           (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth);
+           (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth);
 
-        component.endHoverState();
-        fixture.detectChanges();
-      }));
+           component.endHoverState();
+           fixture.detectChanges();
+         }));
 
       it('notifies subscribers of a completed resize via ColumnResizeNotifier', fakeAsync(() => {
-        const initialColumnWidth = component.getColumnWidth(1);
+           const initialColumnWidth = component.getColumnWidth(1);
 
-        let resize: ColumnSize|null = null;
-        component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
-          resize = size;
-        });
+           let resize: ColumnSize|null = null;
+           component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
+             resize = size;
+           });
 
-        component.triggerHoverState();
-        fixture.detectChanges();
+           component.triggerHoverState();
+           fixture.detectChanges();
 
-        expect(resize).toBe(null);
+           expect(resize).toBe(null);
 
-        component.resizeColumnWithMouse(1, 5);
-        flushMicrotasks();
+           component.resizeColumnWithMouse(1, 5);
+           flushMicrotasks();
 
-        expect(resize).toEqual({columnId: 'name', size: initialColumnWidth + 5} as any);
+           expect(resize).toEqual({columnId: 'name', size: initialColumnWidth + 5} as any);
 
-        component.endHoverState();
-        fixture.detectChanges();
-      }));
+           component.endHoverState();
+           fixture.detectChanges();
+         }));
 
       it('does not notify subscribers of a canceled resize', fakeAsync(() => {
-        let resize: ColumnSize|null = null;
-        component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
-          resize = size;
-        });
+           let resize: ColumnSize|null = null;
+           component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
+             resize = size;
+           });
 
-        component.triggerHoverState();
-        fixture.detectChanges();
-        component.beginColumnResizeWithMouse(0);
+           component.triggerHoverState();
+           fixture.detectChanges();
+           component.beginColumnResizeWithMouse(0);
 
-        component.updateResizeWithMouseInProgress(5);
-        flushMicrotasks();
+           component.updateResizeWithMouseInProgress(5);
+           flushMicrotasks();
 
-        dispatchKeyboardEvent(document, 'keyup', ESCAPE);
-        flushMicrotasks();
+           dispatchKeyboardEvent(document, 'keyup', ESCAPE);
+           flushMicrotasks();
 
-        component.endHoverState();
-        fixture.detectChanges();
+           component.endHoverState();
+           fixture.detectChanges();
 
-        expect(resize).toBe(null);
-      }));
+           expect(resize).toBe(null);
+         }));
 
       it('performs a column resize triggered via ColumnResizeNotifier', fakeAsync(() => {
-        // Pre-verify that we are not updating the size to the initial size.
-        (expect(component.getColumnWidth(1)) as any).not.isApproximately(173);
+           // Pre-verify that we are not updating the size to the initial size.
+           (expect(component.getColumnWidth(1)) as any).not.isApproximately(173);
 
-        component.columnResize.columnResizeNotifier.resize('name', 173);
-        flushMicrotasks();
+           component.columnResize.columnResizeNotifier.resize('name', 173);
+           flushMicrotasks();
 
-        (expect(component.getColumnWidth(1)) as any).isApproximately(173);
-      }));
+           (expect(component.getColumnWidth(1)) as any).isApproximately(173);
+         }));
     });
   }
 });

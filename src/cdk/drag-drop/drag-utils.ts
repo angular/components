@@ -38,10 +38,8 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
  * @param currentIndex Index of the item in its current array.
  * @param targetIndex Index at which to insert the item.
  */
-export function transferArrayItem<T = any>(currentArray: T[],
-                                           targetArray: T[],
-                                           currentIndex: number,
-                                           targetIndex: number): void {
+export function transferArrayItem<T = any>(
+    currentArray: T[], targetArray: T[], currentIndex: number, targetIndex: number): void {
   const from = clamp(currentIndex, currentArray.length - 1);
   const to = clamp(targetIndex, targetArray.length);
 
@@ -59,10 +57,8 @@ export function transferArrayItem<T = any>(currentArray: T[],
  * @param targetIndex Index at which to insert the item.
  *
  */
-export function copyArrayItem<T = any>(currentArray: T[],
-                                       targetArray: T[],
-                                       currentIndex: number,
-                                       targetIndex: number): void {
+export function copyArrayItem<T = any>(
+    currentArray: T[], targetArray: T[], currentIndex: number, targetIndex: number): void {
   const to = clamp(targetIndex, targetArray.length);
 
   if (currentArray.length) {

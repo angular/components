@@ -17,10 +17,10 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
+  _MatMenuBase,
   MAT_MENU_DEFAULT_OPTIONS,
   MAT_MENU_PANEL,
   MAT_MENU_SCROLL_STRATEGY,
-  _MatMenuBase,
   matMenuAnimations,
   MatMenuDefaultOptions,
 } from '@angular/material/menu';
@@ -49,10 +49,7 @@ export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: Provider = {
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
   },
-  animations: [
-    matMenuAnimations.transformMenu,
-    matMenuAnimations.fadeInItems
-  ],
+  animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
   providers: [
     {provide: MAT_MENU_PANEL, useExisting: MatMenu},
   ]
@@ -61,9 +58,9 @@ export class MatMenu extends _MatMenuBase {
   protected override _elevationPrefix = 'mat-mdc-elevation-z';
   protected override _baseElevation = 8;
 
-  constructor(_elementRef: ElementRef<HTMLElement>,
-              _ngZone: NgZone,
-              @Inject(MAT_MENU_DEFAULT_OPTIONS) _defaultOptions: MatMenuDefaultOptions) {
+  constructor(
+      _elementRef: ElementRef<HTMLElement>, _ngZone: NgZone,
+      @Inject(MAT_MENU_DEFAULT_OPTIONS) _defaultOptions: MatMenuDefaultOptions) {
     super(_elementRef, _ngZone, _defaultOptions);
   }
 }

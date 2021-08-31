@@ -2,6 +2,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+
 import {
   CdkDragDropAxisLockExample
 } from './cdk-drag-drop-axis-lock/cdk-drag-drop-axis-lock-example';
@@ -37,10 +38,10 @@ import {CdkDragDropOverviewExample} from './cdk-drag-drop-overview/cdk-drag-drop
 import {
   CdkDragDropRootElementExample
 } from './cdk-drag-drop-root-element/cdk-drag-drop-root-element-example';
-import {CdkDragDropSortingExample} from './cdk-drag-drop-sorting/cdk-drag-drop-sorting-example';
 import {
   CdkDragDropSortPredicateExample
 } from './cdk-drag-drop-sort-predicate/cdk-drag-drop-sort-predicate-example';
+import {CdkDragDropSortingExample} from './cdk-drag-drop-sorting/cdk-drag-drop-sorting-example';
 
 export {
   CdkDragDropAxisLockExample,

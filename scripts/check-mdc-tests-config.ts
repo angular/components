@@ -31,8 +31,7 @@ export const config = {
     'mdc-chips': [
       // The chain of events for dispatching the remove event in the MDC
       // chips is different so we have a different set of tests.
-      'should emit (removed) on click',
-      'should not remove if parent chip is disabled',
+      'should emit (removed) on click', 'should not remove if parent chip is disabled',
 
       // This test checks something that isn't supported in the MDC form field.
       'should propagate the dynamic `placeholder` value to the form field'
@@ -188,5 +187,7 @@ export const config = {
       'should set the old snack bar animation state to complete and the new snack bar ' +
           'animation state to visible on entry of new snack bar'
     ],
-  } as {[key: string]: string[]}
+  } as {
+    [key: string]: string[]
+  }
 };

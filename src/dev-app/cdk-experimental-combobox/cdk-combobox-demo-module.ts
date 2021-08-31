@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
 import {CdkComboboxModule} from '@angular/cdk-experimental/combobox';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
+
 import {CdkComboboxDemo} from './cdk-combobox-demo';
 import {PanelContent} from './panel-content';
 
@@ -21,4 +22,5 @@ import {PanelContent} from './panel-content';
   ],
   declarations: [CdkComboboxDemo, PanelContent],
 })
-export class CdkComboboxDemoModule {}
+export class CdkComboboxDemoModule {
+}

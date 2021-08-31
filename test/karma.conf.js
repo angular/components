@@ -7,10 +7,8 @@ module.exports = config => {
     frameworks: ['jasmine'],
     middleware: ['fake-url'],
     plugins: [
-      require('karma-jasmine'),
-      require('karma-browserstack-launcher'),
-      require('karma-sauce-launcher'),
-      require('karma-sourcemap-loader'), {
+      require('karma-jasmine'), require('karma-browserstack-launcher'),
+      require('karma-sauce-launcher'), require('karma-sourcemap-loader'), {
         'middleware:fake-url': [
           'factory',
           function() {
@@ -172,8 +170,8 @@ module.exports = config => {
     }
 
     const platformBrowsers = platformMap[testPlatform];
-    const browserInstanceChunks = splitBrowsersIntoInstances(
-        platformBrowsers, maxParallelContainerInstances);
+    const browserInstanceChunks =
+        splitBrowsersIntoInstances(platformBrowsers, maxParallelContainerInstances);
 
     // Configure Karma to launch the browsers that belong to the given test platform and
     // container instance.

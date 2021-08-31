@@ -6,9 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {PlatformModule} from '@angular/cdk/platform';
+import {NgModule} from '@angular/core';
+
 import {MatCommonModule} from '../common-behaviors/common-module';
+
 import {MatRipple} from './ripple';
 
 export * from './ripple';
@@ -20,4 +22,5 @@ export * from './ripple-renderer';
   exports: [MatRipple, MatCommonModule],
   declarations: [MatRipple],
 })
-export class MatRippleModule {}
+export class MatRippleModule {
+}

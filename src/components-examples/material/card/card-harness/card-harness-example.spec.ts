@@ -1,28 +1,28 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatButtonHarness} from '@angular/material/button/testing';
-import {MatCardHarness} from '@angular/material/card/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatButtonHarness} from '@angular/material/button/testing';
+import {MatCardModule} from '@angular/material/card';
+import {MatCardHarness} from '@angular/material/card/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
-import {MatCardModule} from '@angular/material/card';
+
 import {CardHarnessExample} from './card-harness-example';
 
 describe('CardHarnessExample', () => {
   let fixture: ComponentFixture<CardHarnessExample>;
   let loader: HarnessLoader;
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatCardModule],
-      declarations: [CardHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({imports: [MatCardModule], declarations: [CardHarnessExample]})
+        .compileComponents();
     fixture = TestBed.createComponent(CardHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -37,8 +37,7 @@ describe('CardHarnessExample', () => {
   it('should get subtitle text', async () => {
     const cards = await loader.getAllHarnesses(MatCardHarness);
     expect(await parallel(() => cards.map(card => card.getSubtitleText()))).toEqual([
-      '',
-      'Dog Breed'
+      '', 'Dog Breed'
     ]);
   });
 

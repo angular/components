@@ -9,5 +9,5 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 export interface OptgroupHarnessFilters extends BaseHarnessFilters {
-  labelText?: string | RegExp;
+  labelText?: string|RegExp;
 }

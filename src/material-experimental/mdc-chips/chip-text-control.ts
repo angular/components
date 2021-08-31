@@ -24,4 +24,3 @@ export interface MatChipTextControl {
   /** Focuses the text control. */
   focus(): void;
 }
-

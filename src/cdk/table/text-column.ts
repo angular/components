@@ -17,11 +17,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {CdkTable} from './table';
 import {
-  getTableTextColumnMissingParentTableError,
   getTableTextColumnMissingNameError,
+  getTableTextColumnMissingParentTableError,
 } from './table-errors';
 import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
 

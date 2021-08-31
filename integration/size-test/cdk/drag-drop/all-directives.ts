@@ -15,11 +15,13 @@ import {Component, NgModule} from '@angular/core';
     </div>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [DragDropModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

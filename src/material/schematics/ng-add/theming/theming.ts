@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {normalize, logging} from '@angular-devkit/core';
+import {logging, normalize} from '@angular-devkit/core';
 import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 import {
   chain,
@@ -20,14 +20,16 @@ import {
   addBodyClass,
   defaultTargetBuilders,
   getProjectFromWorkspace,
+  getProjectIndexFiles,
   getProjectStyleFile,
   getProjectTargetOptions,
-  getProjectIndexFiles,
 } from '@angular/cdk/schematics';
 import {InsertChange} from '@schematics/angular/utility/change';
 import {getWorkspace, updateWorkspace} from '@schematics/angular/utility/workspace';
 import {join} from 'path';
+
 import {Schema} from '../schema';
+
 import {createCustomTheme} from './create-custom-theme';
 
 /** Path segment that can be found in paths that refer to a prebuilt theme. */
@@ -40,9 +42,8 @@ const defaultCustomThemeFilename = 'custom-theme.scss';
 export function addThemeToAppStyles(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
     const themeName = options.theme || 'indigo-pink';
-    return themeName === 'custom' ?
-      insertCustomTheme(options.project, host, context.logger) :
-      insertPrebuiltTheme(options.project, themeName, context.logger);
+    return themeName === 'custom' ? insertCustomTheme(options.project, host, context.logger) :
+                                    insertPrebuiltTheme(options.project, themeName, context.logger);
   };
 }
 
@@ -67,8 +68,8 @@ export function addTypographyClass(options: Schema): Rule {
  * Insert a custom theme to project style file. If no valid style file could be found, a new
  * Scss file for the custom theme will be created.
  */
-async function insertCustomTheme(projectName: string, host: Tree,
-                                 logger: logging.LoggerApi): Promise<Rule> {
+async function insertCustomTheme(
+    projectName: string, host: Tree, logger: logging.LoggerApi): Promise<Rule> {
   const workspace = await getWorkspace(host);
   const project = getProjectFromWorkspace(workspace, projectName);
   const stylesPath = getProjectStyleFile(project, 'scss');
@@ -76,8 +77,9 @@ async function insertCustomTheme(projectName: string, host: Tree,
 
   if (!stylesPath) {
     if (!project.sourceRoot) {
-      throw new SchematicsException(`Could not find source root for project: "${projectName}". ` +
-        `Please make sure that the "sourceRoot" property is set in the workspace config.`);
+      throw new SchematicsException(
+          `Could not find source root for project: "${projectName}". ` +
+          `Please make sure that the "sourceRoot" property is set in the workspace config.`);
     }
 
     // Normalize the path through the devkit utilities because we want to avoid having
@@ -114,8 +116,9 @@ function insertPrebuiltTheme(project: string, theme: string, logger: logging.Log
 }
 
 /** Adds a theming style entry to the given project target options. */
-function addThemeStyleToTarget(projectName: string, targetName: 'test' | 'build',
-                               assetPath: string, logger: logging.LoggerApi): Rule {
+function addThemeStyleToTarget(
+    projectName: string, targetName: 'test'|'build', assetPath: string,
+    logger: logging.LoggerApi): Rule {
   return updateWorkspace(workspace => {
     const project = getProjectFromWorkspace(workspace, projectName);
 
@@ -143,7 +146,8 @@ function addThemeStyleToTarget(projectName: string, targetName: 'test' | 'build'
         // theme because these files can contain custom styles, while prebuilt themes are
         // always packaged and considered replaceable.
         if (stylePath.includes(defaultCustomThemeFilename)) {
-          logger.error(`Could not add the selected theme to the CLI project ` +
+          logger.error(
+              `Could not add the selected theme to the CLI project ` +
               `configuration because there is already a custom theme file referenced.`);
           logger.info(`Please manually add the following style file to your configuration:`);
           logger.info(`    ${assetPath}`);
@@ -163,8 +167,8 @@ function addThemeStyleToTarget(projectName: string, targetName: 'test' | 'build'
  * provided by the Angular CLI. If the configured builder does not match the default builder,
  * this function can either throw or just show a warning.
  */
-function validateDefaultTargetBuilder(project: ProjectDefinition, targetName: 'build' | 'test',
-                                      logger: logging.LoggerApi) {
+function validateDefaultTargetBuilder(
+    project: ProjectDefinition, targetName: 'build'|'test', logger: logging.LoggerApi) {
   const defaultBuilder = defaultTargetBuilders[targetName];
   const targetConfig = project.targets && project.targets.get(targetName);
   const isDefaultBuilder = targetConfig && targetConfig['builder'] === defaultBuilder;
@@ -176,14 +180,16 @@ function validateDefaultTargetBuilder(project: ProjectDefinition, targetName: 'b
   // builder has been changed, we warn because a theme is not mandatory for running tests
   // with Material. See: https://github.com/angular/components/issues/14176
   if (!isDefaultBuilder && targetName === 'build') {
-    throw new SchematicsException(`Your project is not using the default builders for ` +
-      `"${targetName}". The Angular Material schematics cannot add a theme to the workspace ` +
-      `configuration if the builder has been changed.`);
+    throw new SchematicsException(
+        `Your project is not using the default builders for ` +
+        `"${targetName}". The Angular Material schematics cannot add a theme to the workspace ` +
+        `configuration if the builder has been changed.`);
   } else if (!isDefaultBuilder) {
     // for non-build targets we gracefully report the error without actually aborting the
     // setup schematic. This is because a theme is not mandatory for running tests.
-    logger.warn(`Your project is not using the default builders for "${targetName}". This ` +
-      `means that we cannot add the configured theme to the "${targetName}" target.`);
+    logger.warn(
+        `Your project is not using the default builders for "${targetName}". This ` +
+        `means that we cannot add the configured theme to the "${targetName}" target.`);
   }
 
   return isDefaultBuilder;

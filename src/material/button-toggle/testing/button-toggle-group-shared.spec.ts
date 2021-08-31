@@ -2,7 +2,8 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatButtonToggleModule, MatButtonToggleAppearance} from '@angular/material/button-toggle';
+import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/material/button-toggle';
+
 import {MatButtonToggleGroupHarness} from './button-toggle-group-harness';
 
 /** Shared tests to run on both the original and MDC-based button toggle group. */
@@ -13,10 +14,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [buttonToggleModule],
-      declarations: [ButtonToggleGroupHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [buttonToggleModule],
+          declarations: [ButtonToggleGroupHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ButtonToggleGroupHarnessTest);
     fixture.detectChanges();
@@ -69,4 +72,3 @@ class ButtonToggleGroupHarnessTest {
   vertical = false;
   appearance: MatButtonToggleAppearance = 'standard';
 }
-

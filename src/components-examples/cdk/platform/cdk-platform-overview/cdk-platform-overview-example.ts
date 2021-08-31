@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
 import {
   getSupportedInputTypes,
   Platform,
   supportsPassiveEventListeners,
   supportsScrollBehavior,
 } from '@angular/cdk/platform';
+import {Component} from '@angular/core';
 
 /**
  * @title Platform overview

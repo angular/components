@@ -14,7 +14,6 @@ import * as ts from 'typescript';
  * have changed their API.
  */
 export class MiscClassInheritanceMigration extends Migration<null> {
-
   // Only enable this rule if the migration targets version 6. The rule
   // currently only includes migrations for V6 deprecations.
   enabled = this.targetVersion === TargetVersion.V6;

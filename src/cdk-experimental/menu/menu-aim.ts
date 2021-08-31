@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, InjectionToken, Directive} from '@angular/core';
+import {Directive, Injectable, InjectionToken, NgZone, OnDestroy} from '@angular/core';
 import {fromEvent, Subject} from 'rxjs';
-import {takeUntil, filter} from 'rxjs/operators';
-import {PointerFocusTracker, FocusableElement} from './pointer-focus-tracker';
+import {filter, takeUntil} from 'rxjs/operators';
+
+import {throwMissingMenuReference, throwMissingPointerFocusTracker} from './menu-errors';
 import {Menu} from './menu-interface';
-import {throwMissingPointerFocusTracker, throwMissingMenuReference} from './menu-errors';
+import {FocusableElement, PointerFocusTracker} from './pointer-focus-tracker';
 
 /**
  * MenuAim is responsible for determining if a sibling menuitem's menu should be closed when a
@@ -20,7 +21,7 @@ import {throwMissingPointerFocusTracker, throwMissingMenuReference} from './menu
  */
 export interface MenuAim {
   /** Set the Menu and its PointerFocusTracker. */
-  initialize(menu: Menu, pointerTracker: PointerFocusTracker<FocusableElement & Toggler>): void;
+  initialize(menu: Menu, pointerTracker: PointerFocusTracker<FocusableElement&Toggler>): void;
 
   /**
    * Calls the `doToggle` callback when it is deemed that the user is not moving towards
@@ -50,7 +51,7 @@ const CLOSE_DELAY = 300;
  * potentially open its own menu.
  */
 export interface Toggler {
-  getMenu(): Menu | undefined;
+  getMenu(): Menu|undefined;
 }
 
 /** Calculate the slope between point a and b. */
@@ -64,7 +65,9 @@ function getYIntercept(point: Point, slope: number) {
 }
 
 /** Represents a coordinate of mouse travel. */
-type Point = {x: number; y: number};
+type Point = {
+  x: number; y: number
+};
 
 /**
  * Whether the given mouse trajectory line defined by the slope and y intercept falls within the
@@ -82,11 +85,10 @@ function isWithinSubmenu(submenuPoints: DOMRect, m: number, b: number) {
   // by fixing one coordinate to that edge's coordinate (either x or y) and checking if the
   // other coordinate is within bounds.
   return (
-    (m * left + b >= top && m * left + b <= bottom) ||
-    (m * right + b >= top && m * right + b <= bottom) ||
-    ((top - b) / m >= left && (top - b) / m <= right) ||
-    ((bottom - b) / m >= left && (bottom - b) / m <= right)
-  );
+      (m * left + b >= top && m * left + b <= bottom) ||
+      (m * right + b >= top && m * right + b <= bottom) ||
+      ((top - b) / m >= left && (top - b) / m <= right) ||
+      ((bottom - b) / m >= left && (bottom - b) / m <= right));
 }
 /**
  * TargetMenuAim predicts if a user is moving into a submenu. It calculates the
@@ -107,10 +109,10 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   private _menu: Menu;
 
   /** Reference to the root menu's mouse manager. */
-  private _pointerTracker: PointerFocusTracker<Toggler & FocusableElement>;
+  private _pointerTracker: PointerFocusTracker<Toggler&FocusableElement>;
 
   /** The id associated with the current timeout call waiting to resolve. */
-  private _timeoutId: number | null;
+  private _timeoutId: number|null;
 
   /** Emits when this service is destroyed. */
   private readonly _destroyed: Subject<void> = new Subject();
@@ -118,7 +120,7 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   constructor(private readonly _ngZone: NgZone) {}
 
   /** Set the Menu and its PointerFocusTracker. */
-  initialize(menu: Menu, pointerTracker: PointerFocusTracker<FocusableElement & Toggler>) {
+  initialize(menu: Menu, pointerTracker: PointerFocusTracker<FocusableElement&Toggler>) {
     this._menu = menu;
     this._pointerTracker = pointerTracker;
     this._subscribeToMouseMoves();
@@ -164,12 +166,13 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
     // cases where the user may have moved towards the submenu but stopped on a sibling menu
     // item intentionally.
     const timeoutId = (setTimeout(() => {
-      // Resolve if the user is currently moused over some element in the root menu
-      if (this._pointerTracker!.activeElement && timeoutId === this._timeoutId) {
-        doToggle();
-      }
-      this._timeoutId = null;
-    }, CLOSE_DELAY) as any) as number;
+                         // Resolve if the user is currently moused over some element in the root
+                         // menu
+                         if (this._pointerTracker!.activeElement && timeoutId === this._timeoutId) {
+                           doToggle();
+                         }
+                         this._timeoutId = null;
+                       }, CLOSE_DELAY) as any) as number;
 
     this._timeoutId = timeoutId;
   }
@@ -196,10 +199,9 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   }
 
   /** Get the bounding DOMRect for the open submenu. */
-  private _getSubmenuBounds(): DOMRect | undefined {
-    return this._pointerTracker?.previousElement
-      ?.getMenu()
-      ?._elementRef.nativeElement.getBoundingClientRect();
+  private _getSubmenuBounds(): DOMRect|undefined {
+    return this._pointerTracker?.previousElement?.getMenu()
+        ?._elementRef.nativeElement.getBoundingClientRect();
   }
 
   /**
@@ -221,16 +223,15 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   private _subscribeToMouseMoves() {
     this._ngZone.runOutsideAngular(() => {
       fromEvent<MouseEvent>(this._menu._elementRef.nativeElement, 'mousemove')
-        .pipe(
-          filter((_: MouseEvent, index: number) => index % MOUSE_MOVE_SAMPLE_FREQUENCY === 0),
-          takeUntil(this._destroyed)
-        )
-        .subscribe((event: MouseEvent) => {
-          this._points.push({x: event.clientX, y: event.clientY});
-          if (this._points.length > NUM_POINTS) {
-            this._points.shift();
-          }
-        });
+          .pipe(
+              filter((_: MouseEvent, index: number) => index % MOUSE_MOVE_SAMPLE_FREQUENCY === 0),
+              takeUntil(this._destroyed))
+          .subscribe((event: MouseEvent) => {
+            this._points.push({x: event.clientX, y: event.clientY});
+            if (this._points.length > NUM_POINTS) {
+              this._points.shift();
+            }
+          });
     });
   }
 
@@ -249,4 +250,5 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   exportAs: 'cdkTargetMenuAim',
   providers: [{provide: MENU_AIM, useClass: TargetMenuAim}],
 })
-export class CdkTargetMenuAim {}
+export class CdkTargetMenuAim {
+}

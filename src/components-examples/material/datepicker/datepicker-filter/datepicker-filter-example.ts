@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
   templateUrl: 'datepicker-filter-example.html',
 })
 export class DatepickerFilterExample {
-  myFilter = (d: Date | null): boolean => {
+  myFilter = (d: Date|null): boolean => {
     const day = (d || new Date()).getDay();
     // Prevent Saturday and Sunday from being selected.
     return day !== 0 && day !== 6;

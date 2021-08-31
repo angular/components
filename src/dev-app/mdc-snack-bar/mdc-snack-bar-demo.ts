@@ -22,7 +22,6 @@ import {
   encapsulation: ViewEncapsulation.None,
 })
 export class MdcSnackBarDemo {
-
   @ViewChild('template') template: TemplateRef<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';

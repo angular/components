@@ -9,40 +9,22 @@
 import {PropertyNameUpgradeData, TargetVersion, VersionChanges} from '@angular/cdk/schematics';
 
 export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
-  [TargetVersion.V11]: [
-    {
-      pr: 'https://github.com/angular/components/pull/20449',
-      changes: [
-        {
-          replace: 'getPopupConnectionElementRef',
-          replaceWith: 'getConnectedOverlayOrigin',
-          limitedTo: {classes: ['MatDatepickerInput']}
-        }
-      ]
-    }
-  ],
-  [TargetVersion.V9]: [
-    {
-      pr: 'https://github.com/angular/components/pull/17333',
-      changes: [
-        {
-          replace: 'afterOpen',
-          replaceWith: 'afterOpened',
-          limitedTo: {classes: ['MatDialogRef']}
-        },
-        {
-          replace: 'beforeClose',
-          replaceWith: 'beforeClosed',
-          limitedTo: {classes: ['MatDialogRef']}
-        },
-        {
-          replace: 'afterOpen',
-          replaceWith: 'afterOpened',
-          limitedTo: {classes: ['MatDialog']}
-        }
-      ]
-    }
-  ],
+  [TargetVersion.V11]: [{
+    pr: 'https://github.com/angular/components/pull/20449',
+    changes: [{
+      replace: 'getPopupConnectionElementRef',
+      replaceWith: 'getConnectedOverlayOrigin',
+      limitedTo: {classes: ['MatDatepickerInput']}
+    }]
+  }],
+  [TargetVersion.V9]: [{
+    pr: 'https://github.com/angular/components/pull/17333',
+    changes: [
+      {replace: 'afterOpen', replaceWith: 'afterOpened', limitedTo: {classes: ['MatDialogRef']}},
+      {replace: 'beforeClose', replaceWith: 'beforeClosed', limitedTo: {classes: ['MatDialogRef']}},
+      {replace: 'afterOpen', replaceWith: 'afterOpened', limitedTo: {classes: ['MatDialog']}}
+    ]
+  }],
   [TargetVersion.V6]: [
     {
       pr: 'https://github.com/angular/components/pull/10163',

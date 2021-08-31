@@ -7,26 +7,27 @@
  */
 
 import {
-    TemplateRef,
-    ViewContainerRef,
-    ElementRef,
-    ComponentRef,
-    EmbeddedViewRef,
-    Injector,
-    ComponentFactoryResolver,
+  ComponentFactoryResolver,
+  ComponentRef,
+  ElementRef,
+  EmbeddedViewRef,
+  Injector,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
+
 import {
-    throwNullPortalOutletError,
-    throwPortalAlreadyAttachedError,
-    throwNoPortalAttachedError,
-    throwNullPortalError,
-    throwPortalOutletAlreadyDisposedError,
-    throwUnknownPortalTypeError
+  throwNoPortalAttachedError,
+  throwNullPortalError,
+  throwNullPortalOutletError,
+  throwPortalAlreadyAttachedError,
+  throwPortalOutletAlreadyDisposedError,
+  throwUnknownPortalTypeError
 } from './portal-errors';
 
 /** Interface that can be used to generically type a class. */
 export interface ComponentType<T> {
-  new (...args: any[]): T;
+  new(...args: any[]): T;
 }
 
 /**
@@ -34,7 +35,7 @@ export interface ComponentType<T> {
  * It can be attach to / detached from a `PortalOutlet`.
  */
 export abstract class Portal<T> {
-  private _attachedHost: PortalOutlet | null;
+  private _attachedHost: PortalOutlet|null;
 
   /** Attach this portal to a host. */
   attach(host: PortalOutlet): T {
@@ -49,7 +50,7 @@ export abstract class Portal<T> {
     }
 
     this._attachedHost = host;
-    return <T> host.attach(this);
+    return <T>host.attach(this);
   }
 
   /** Detach this portal from its host */
@@ -73,7 +74,7 @@ export abstract class Portal<T> {
    * Sets the PortalOutlet reference without performing `attach()`. This is used directly by
    * the PortalOutlet when it is performing an `attach()` or `detach()`.
    */
-  setAttachedHost(host: PortalOutlet | null) {
+  setAttachedHost(host: PortalOutlet|null) {
     this._attachedHost = host;
   }
 }
@@ -91,22 +92,20 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
    * This is different from where the component *renders*, which is determined by the PortalOutlet.
    * The origin is necessary when the host is outside of the Angular application context.
    */
-  viewContainerRef?: ViewContainerRef | null;
+  viewContainerRef?: ViewContainerRef|null;
 
   /** [Optional] Injector used for the instantiation of the component. */
-  injector?: Injector | null;
+  injector?: Injector|null;
 
   /**
    * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
    * Defaults to using the resolver from the outlet that the portal is attached to.
    */
-  componentFactoryResolver?: ComponentFactoryResolver | null;
+  componentFactoryResolver?: ComponentFactoryResolver|null;
 
   constructor(
-      component: ComponentType<T>,
-      viewContainerRef?: ViewContainerRef | null,
-      injector?: Injector | null,
-      componentFactoryResolver?: ComponentFactoryResolver | null) {
+      component: ComponentType<T>, viewContainerRef?: ViewContainerRef|null,
+      injector?: Injector|null, componentFactoryResolver?: ComponentFactoryResolver|null) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
@@ -126,7 +125,7 @@ export class TemplatePortal<C = any> extends Portal<EmbeddedViewRef<C>> {
   viewContainerRef: ViewContainerRef;
 
   /** Contextual data to be passed in to the embedded view. */
-  context: C | undefined;
+  context: C|undefined;
 
   constructor(template: TemplateRef<C>, viewContainerRef: ViewContainerRef, context?: C) {
     super();
@@ -144,7 +143,7 @@ export class TemplatePortal<C = any> extends Portal<EmbeddedViewRef<C>> {
    * When a context is provided it will override the `context` property of the `TemplatePortal`
    * instance.
    */
-  override attach(host: PortalOutlet, context: C | undefined = this.context): EmbeddedViewRef<C> {
+  override attach(host: PortalOutlet, context: C|undefined = this.context): EmbeddedViewRef<C> {
     this.context = context;
     return super.attach(host);
   }
@@ -164,7 +163,7 @@ export class DomPortal<T = HTMLElement> extends Portal<T> {
   /** DOM node hosting the portal's content. */
   readonly element: T;
 
-  constructor(element: T | ElementRef<T>) {
+  constructor(element: T|ElementRef<T>) {
     super();
     this.element = element instanceof ElementRef ? element.nativeElement : element;
   }
@@ -198,10 +197,10 @@ export type PortalHost = PortalOutlet;
  */
 export abstract class BasePortalOutlet implements PortalOutlet {
   /** The portal currently attached to the host. */
-  protected _attachedPortal: Portal<any> | null;
+  protected _attachedPortal: Portal<any>|null;
 
   /** A function that will permanently dispose this host. */
-  private _disposeFn: (() => void) | null;
+  private _disposeFn: (() => void)|null;
 
   /** Whether this host has already been permanently disposed. */
   private _isDisposed: boolean = false;
@@ -253,7 +252,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
   abstract attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
 
   // @breaking-change 10.0.0 `attachDomPortal` to become a required abstract method.
-  readonly attachDomPortal: null | ((portal: DomPortal) => any) = null;
+  readonly attachDomPortal: null|((portal: DomPortal) => any) = null;
 
   /** Detaches a previously attached portal. */
   detach(): void {

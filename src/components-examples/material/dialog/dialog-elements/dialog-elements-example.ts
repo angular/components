@@ -21,4 +21,5 @@ export class DialogElementsExample {
   selector: 'dialog-elements-example-dialog',
   templateUrl: 'dialog-elements-example-dialog.html',
 })
-export class DialogElementsExampleDialog {}
+export class DialogElementsExampleDialog {
+}

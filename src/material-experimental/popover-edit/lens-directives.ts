@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive} from '@angular/core';
-
 import {
+  CdkEditClose,
   CdkEditControl,
   CdkEditRevert,
-  CdkEditClose,
   EditRef,
 } from '@angular/cdk-experimental/popover-edit';
+import {Directive} from '@angular/core';
 
 /**
  * A component that attaches to a form within the edit.
@@ -41,7 +40,7 @@ export class MatEditLens<FormValue> extends CdkEditControl<FormValue> {
 @Directive({
   selector: 'button[matEditRevert]',
   host: {
-    'type': 'button', // Prevents accidental form submits.
+    'type': 'button',  // Prevents accidental form submits.
   }
 })
 export class MatEditRevert<FormValue> extends CdkEditRevert<FormValue> {

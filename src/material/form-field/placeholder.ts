@@ -15,7 +15,6 @@ import {Directive} from '@angular/core';
  *     placeholder.
  * @breaking-change 8.0.0
  */
-@Directive({
-  selector: 'mat-placeholder'
-})
-export class MatPlaceholder {}
+@Directive({selector: 'mat-placeholder'})
+export class MatPlaceholder {
+}

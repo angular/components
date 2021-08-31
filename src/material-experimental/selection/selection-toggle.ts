@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CdkSelectionToggle} from '@angular/cdk-experimental/selection';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Directive, Input} from '@angular/core';
 
 /**
@@ -32,7 +32,9 @@ export class MatSelectionToggle<T> extends CdkSelectionToggle<T> {
 
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('matSelectionToggleIndex')
-  override get index(): number|undefined { return this._index; }
+  override get index(): number|undefined {
+    return this._index;
+  }
   override set index(index: number|undefined) {
     // TODO: when we remove support for ViewEngine, change this setter to an input
     // alias in the decorator metadata.

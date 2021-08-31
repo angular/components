@@ -17,10 +17,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [bottomSheetModule, NoopAnimationsModule],
-      declarations: [BottomSheetHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [bottomSheetModule, NoopAnimationsModule],
+          declarations: [BottomSheetHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(BottomSheetHarnessTest);
     fixture.detectChanges();

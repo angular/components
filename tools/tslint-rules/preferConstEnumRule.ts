@@ -1,6 +1,6 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import * as tsutils from 'tsutils';
+import * as ts from 'typescript';
 
 /**
  * Rule that enforces that we use `const enum` rather than a plain `enum`.

@@ -1,30 +1,31 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatRadioButtonHarness, MatRadioGroupHarness} from '@angular/material/radio/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatRadioButtonHarness, MatRadioGroupHarness} from '@angular/material/radio/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatRadioModule} from '@angular/material/radio';
+
 import {RadioHarnessExample} from './radio-harness-example';
-import {ReactiveFormsModule} from '@angular/forms';
 
 describe('RadioHarnessExample', () => {
   let fixture: ComponentFixture<RadioHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatRadioModule, ReactiveFormsModule],
-      declarations: [RadioHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule(
+            {imports: [MatRadioModule, ReactiveFormsModule], declarations: [RadioHarnessExample]})
+        .compileComponents();
     fixture = TestBed.createComponent(RadioHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -52,7 +53,7 @@ describe('RadioHarnessExample', () => {
 
   it('should get label text of buttons', async () => {
     const [firstRadio, secondRadio, thirdRadio] =
-      await loader.getAllHarnesses(MatRadioButtonHarness);
+        await loader.getAllHarnesses(MatRadioButtonHarness);
     expect(await firstRadio.getLabelText()).toBe('Chocolate');
     expect(await secondRadio.getLabelText()).toBe('Vanilla');
     expect(await thirdRadio.getLabelText()).toBe('Strawberry');

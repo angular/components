@@ -5,11 +5,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {NgZone} from '@angular/core';
-import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll-strategy';
-import {OverlayReference} from '../overlay-reference';
-import {Subscription} from 'rxjs';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {NgZone} from '@angular/core';
+import {Subscription} from 'rxjs';
+
+import {OverlayReference} from '../overlay-reference';
+
+import {getMatScrollStrategyAlreadyAttachedError, ScrollStrategy} from './scroll-strategy';
 
 /**
  * Config options for the CloseScrollStrategy.
@@ -28,10 +30,8 @@ export class CloseScrollStrategy implements ScrollStrategy {
   private _initialScrollPosition: number;
 
   constructor(
-    private _scrollDispatcher: ScrollDispatcher,
-    private _ngZone: NgZone,
-    private _viewportRuler: ViewportRuler,
-    private _config?: CloseScrollStrategyConfig) {}
+      private _scrollDispatcher: ScrollDispatcher, private _ngZone: NgZone,
+      private _viewportRuler: ViewportRuler, private _config?: CloseScrollStrategyConfig) {}
 
   /** Attaches this scroll strategy to an overlay. */
   attach(overlayRef: OverlayReference) {

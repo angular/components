@@ -6,4 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'datepicker-actions-example.html',
   styleUrls: ['datepicker-actions-example.css']
 })
-export class DatepickerActionsExample {}
+export class DatepickerActionsExample {
+}

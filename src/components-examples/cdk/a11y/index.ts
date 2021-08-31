@@ -28,4 +28,3 @@ const EXAMPLES = [
 })
 export class CdkA11yExamplesModule {
 }
-

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {_MatOptgroupBase, MAT_OPTGROUP} from '@angular/material/core';
 
 // Notes on the accessibility pattern used for `mat-optgroup`.
@@ -46,8 +46,7 @@ import {_MatOptgroupBase, MAT_OPTGROUP} from '@angular/material/core';
     '[attr.aria-disabled]': '_inert ? null : disabled.toString()',
     '[attr.aria-labelledby]': '_inert ? null : _labelId',
   },
-  providers: [
-    {provide: MAT_OPTGROUP, useExisting: MatOptgroup}
-  ]
+  providers: [{provide: MAT_OPTGROUP, useExisting: MatOptgroup}]
 })
-export class MatOptgroup extends _MatOptgroupBase {}
+export class MatOptgroup extends _MatOptgroupBase {
+}

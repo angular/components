@@ -43,15 +43,13 @@ export class MapDirectionsService {
       }
 
       const callback =
-          (
-            result: google.maps.DirectionsResult|undefined,
-            status: google.maps.DirectionsStatus
-          ) => {
-        this._ngZone.run(() => {
-          observer.next({result, status});
-          observer.complete();
-        });
-      };
+          (result: google.maps.DirectionsResult|undefined,
+           status: google.maps.DirectionsStatus) => {
+            this._ngZone.run(() => {
+              observer.next({result, status});
+              observer.complete();
+            });
+          };
       this._directionsService.route(request, callback);
     });
   }

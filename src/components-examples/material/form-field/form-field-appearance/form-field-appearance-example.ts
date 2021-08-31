@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'form-field-appearance-example',
   templateUrl: 'form-field-appearance-example.html',
 })
-export class FormFieldAppearanceExample {}
+export class FormFieldAppearanceExample {
+}

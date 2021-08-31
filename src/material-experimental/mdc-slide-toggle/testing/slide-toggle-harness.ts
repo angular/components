@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {HarnessPredicate} from '@angular/cdk/testing';
 import {
   _MatSlideToggleHarnessBase,
   SlideToggleHarnessFilters
@@ -28,7 +28,8 @@ export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
    */
   static with(options: SlideToggleHarnessFilters = {}): HarnessPredicate<MatSlideToggleHarness> {
     return new HarnessPredicate(MatSlideToggleHarness, options)
-        .addOption('label', options.label,
+        .addOption(
+            'label', options.label,
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
         // We want to provide a filter option for "name" because the name of the slide-toggle is
         // only set on the underlying input. This means that it's not possible for developers

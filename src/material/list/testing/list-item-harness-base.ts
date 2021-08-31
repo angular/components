@@ -9,11 +9,12 @@
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
+  ContentContainerComponentHarness,
   HarnessLoader,
   HarnessPredicate,
-  ContentContainerComponentHarness,
   parallel,
 } from '@angular/cdk/testing';
+
 import {BaseListItemHarnessFilters, SubheaderHarnessFilters} from './list-harness-filters';
 
 const iconSelector = '.mat-list-icon';
@@ -31,7 +32,8 @@ export function getListItemPredicate<H extends MatListItemHarnessBase>(
     harnessType: ComponentHarnessConstructor<H>,
     options: BaseListItemHarnessFilters): HarnessPredicate<H> {
   return new HarnessPredicate(harnessType, options)
-      .addOption('text', options.text,
+      .addOption(
+          'text', options.text,
           (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
 }
 
@@ -41,7 +43,8 @@ export class MatSubheaderHarness extends ComponentHarness {
 
   static with(options: SubheaderHarnessFilters = {}): HarnessPredicate<MatSubheaderHarness> {
     return new HarnessPredicate(MatSubheaderHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 
@@ -61,9 +64,8 @@ export const enum MatListItemSection {
  * Shared behavior among the harnesses for the various `MatListItem` flavors.
  * @docs-private
  */
-export abstract class MatListItemHarnessBase
-    extends ContentContainerComponentHarness<MatListItemSection> {
-
+export abstract class MatListItemHarnessBase extends
+    ContentContainerComponentHarness<MatListItemSection> {
   private _lines = this.locatorForAll('.mat-line');
   private _avatar = this.locatorForOptional(avatarSelector);
   private _icon = this.locatorForOptional(iconSelector);

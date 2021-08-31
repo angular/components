@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {startWith, map} from 'rxjs/operators';
+import {map, startWith} from 'rxjs/operators';
 
 /**
  * @title Plain input autocomplete
@@ -17,10 +17,8 @@ export class AutocompletePlainInputExample implements OnInit {
   filteredStreets: Observable<string[]>;
 
   ngOnInit() {
-    this.filteredStreets = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    this.filteredStreets =
+        this.control.valueChanges.pipe(startWith(''), map(value => this._filter(value)));
   }
 
   private _filter(value: string): string[] {

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {CdkMenuItem} from '@angular/cdk-experimental/menu';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 /**
  * A material design MenubarItem adhering to the functionality of CdkMenuItem and
@@ -30,4 +30,5 @@ import {CdkMenuItem} from '@angular/cdk-experimental/menu';
   },
   providers: [{provide: CdkMenuItem, useExisting: MatMenuBarItem}],
 })
-export class MatMenuBarItem extends CdkMenuItem {}
+export class MatMenuBarItem extends CdkMenuItem {
+}

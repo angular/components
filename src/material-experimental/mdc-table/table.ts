@@ -7,25 +7,25 @@
  */
 
 import {
+  _DisposeViewRepeaterStrategy,
+  _RecycleViewRepeaterStrategy,
+  _VIEW_REPEATER_STRATEGY
+} from '@angular/cdk/collections';
+import {
+  _COALESCED_STYLE_SCHEDULER,
+  _CoalescedStyleScheduler,
+  CDK_TABLE,
+  CDK_TABLE_TEMPLATE,
+  CdkTable,
+  STICKY_POSITIONING_LISTENER,
+} from '@angular/cdk/table';
+import {
   ChangeDetectionStrategy,
   Component,
   Directive,
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  CDK_TABLE_TEMPLATE,
-  CdkTable,
-  _CoalescedStyleScheduler,
-  _COALESCED_STYLE_SCHEDULER,
-  CDK_TABLE,
-  STICKY_POSITIONING_LISTENER,
-} from '@angular/cdk/table';
-import {
-  _DisposeViewRepeaterStrategy,
-  _RecycleViewRepeaterStrategy,
-  _VIEW_REPEATER_STRATEGY
-} from '@angular/cdk/collections';
 
 /**
  * Enables the recycle view repeater strategy, which reduces rendering latency. Not compatible with
@@ -37,7 +37,8 @@ import {
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy},
   ],
 })
-export class MatRecycleRows {}
+export class MatRecycleRows {
+}
 
 @Component({
   selector: 'mat-table, table[mat-table]',

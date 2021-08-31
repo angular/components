@@ -1,10 +1,11 @@
 import {Component, ElementRef} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItemCheckbox} from './menu-item-checkbox';
-import {CDK_MENU} from './menu-interface';
+
 import {CdkMenu} from './menu';
+import {CDK_MENU} from './menu-interface';
+import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {CdkMenuModule} from './menu-module';
 
 describe('MenuItemCheckbox', () => {
   let fixture: ComponentFixture<SingleCheckboxButton>;
@@ -12,24 +13,25 @@ describe('MenuItemCheckbox', () => {
   let checkboxElement: HTMLButtonElement;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [SingleCheckboxButton],
-      providers: [
-        {provide: CDK_MENU, useClass: CdkMenu},
-        // View engine can't figure out the ElementRef to inject so we need to provide a fake
-        {provide: ElementRef, useValue: new ElementRef<null>(null)},
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [SingleCheckboxButton],
+          providers: [
+            {provide: CDK_MENU, useClass: CdkMenu},
+            // View engine can't figure out the ElementRef to inject so we need to provide a fake
+            {provide: ElementRef, useValue: new ElementRef<null>(null)},
+          ],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SingleCheckboxButton);
     fixture.detectChanges();
 
-    checkbox = fixture.debugElement
-      .query(By.directive(CdkMenuItemCheckbox))
-      .injector.get(CdkMenuItemCheckbox);
+    checkbox = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox))
+                   .injector.get(CdkMenuItemCheckbox);
     checkboxElement = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox)).nativeElement;
   });
 
@@ -103,4 +105,5 @@ describe('MenuItemCheckbox', () => {
 @Component({
   template: `<button cdkMenuItemCheckbox>Click me!</button>`,
 })
-class SingleCheckboxButton {}
+class SingleCheckboxButton {
+}

@@ -1,9 +1,11 @@
-import {TestBed, inject, fakeAsync, tick} from '@angular/core/testing';
+import {NgZone} from '@angular/core';
+import {fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {Subscription} from 'rxjs';
+
+import {dispatchFakeEvent} from '../testing/private';
+
 import {ScrollingModule} from './public-api';
 import {ViewportRuler} from './viewport-ruler';
-import {dispatchFakeEvent} from '../testing/private';
-import {NgZone} from '@angular/core';
-import {Subscription} from 'rxjs';
 
 describe('ViewportRuler', () => {
   let viewportRuler: ViewportRuler;
@@ -17,10 +19,9 @@ describe('ViewportRuler', () => {
   veryLargeElement.style.width = '6000px';
   veryLargeElement.style.height = '6000px';
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [ScrollingModule],
-    providers: [ViewportRuler]
-  }));
+  beforeEach(
+      () =>
+          TestBed.configureTestingModule({imports: [ScrollingModule], providers: [ViewportRuler]}));
 
   beforeEach(inject([ViewportRuler, NgZone], (v: ViewportRuler, n: NgZone) => {
     viewportRuler = v;
@@ -67,10 +68,11 @@ describe('ViewportRuler', () => {
     document.body.removeChild(veryLargeElement);
   });
 
-  it('should get the bounds based on client coordinates when the page is pinch-zoomed', () => {
-    // There is no API to make the browser pinch-zoom, so there's no real way to automate
-    // tests for this behavior. Leaving this test here as documentation for the behavior.
-  });
+  it('should get the bounds based on client coordinates when the page is pinch-zoomed',
+     () => {
+         // There is no API to make the browser pinch-zoom, so there's no real way to automate
+         // tests for this behavior. Leaving this test here as documentation for the behavior.
+     });
 
   it('should get the scroll position when the page is not scrolled', () => {
     let scrollPos = viewportRuler.getViewportScrollPosition();
@@ -120,17 +122,17 @@ describe('ViewportRuler', () => {
     });
 
     it('should be able to throttle the callback', fakeAsync(() => {
-      const spy = jasmine.createSpy('viewport changed spy');
-      const subscription = viewportRuler.change(1337).subscribe(spy);
+         const spy = jasmine.createSpy('viewport changed spy');
+         const subscription = viewportRuler.change(1337).subscribe(spy);
 
-      dispatchFakeEvent(window, 'resize');
-      expect(spy).not.toHaveBeenCalled();
+         dispatchFakeEvent(window, 'resize');
+         expect(spy).not.toHaveBeenCalled();
 
-      tick(1337);
+         tick(1337);
 
-      expect(spy).toHaveBeenCalledTimes(1);
-      subscription.unsubscribe();
-    }));
+         expect(spy).toHaveBeenCalledTimes(1);
+         subscription.unsubscribe();
+       }));
 
     it('should run the resize event outside the NgZone', () => {
       const spy = jasmine.createSpy('viewport changed spy');
@@ -153,6 +155,5 @@ describe('ViewportRuler', () => {
       expect(spy).toHaveBeenCalledWith(false);
       subscription!.unsubscribe();
     });
-
   });
 });

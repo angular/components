@@ -20,16 +20,15 @@ export class FocusMonitorFocusViaExample implements OnDestroy, AfterViewInit {
 
   origin = this.formatOrigin(null);
 
-  constructor(public focusMonitor: FocusMonitor,
-              private _cdr: ChangeDetectorRef,
-              private _ngZone: NgZone) {}
+  constructor(
+      public focusMonitor: FocusMonitor, private _cdr: ChangeDetectorRef, private _ngZone: NgZone) {
+  }
 
   ngAfterViewInit() {
-    this.focusMonitor.monitor(this.monitoredEl)
-        .subscribe(origin => this._ngZone.run(() => {
-          this.origin = this.formatOrigin(origin);
-          this._cdr.markForCheck();
-        }));
+    this.focusMonitor.monitor(this.monitoredEl).subscribe(origin => this._ngZone.run(() => {
+      this.origin = this.formatOrigin(origin);
+      this._cdr.markForCheck();
+    }));
   }
 
   ngOnDestroy() {

@@ -23,11 +23,13 @@ export class MatIconHarness extends ComponentHarness {
    */
   static with(options: IconHarnessFilters = {}): HarnessPredicate<MatIconHarness> {
     return new HarnessPredicate(MatIconHarness, options)
-        .addOption('type', options.type,
-            async (harness, type) => (await harness.getType()) === type)
-        .addOption('name', options.name,
+        .addOption(
+            'type', options.type, async (harness, type) => (await harness.getType()) === type)
+        .addOption(
+            'name', options.name,
             (harness, text) => HarnessPredicate.stringMatches(harness.getName(), text))
-        .addOption('namespace', options.namespace,
+        .addOption(
+            'namespace', options.namespace,
             (harness, text) => HarnessPredicate.stringMatches(harness.getNamespace(), text));
   }
 
@@ -38,7 +40,7 @@ export class MatIconHarness extends ComponentHarness {
   }
 
   /** Gets the name of the icon. */
-  async getName(): Promise<string | null> {
+  async getName(): Promise<string|null> {
     const host = await this.host();
     const nameFromDom = await host.getAttribute('data-mat-icon-name');
 
@@ -57,7 +59,7 @@ export class MatIconHarness extends ComponentHarness {
   }
 
   /** Gets the namespace of the icon. */
-  async getNamespace(): Promise<string | null> {
+  async getNamespace(): Promise<string|null> {
     return (await this.host()).getAttribute('data-mat-icon-namespace');
   }
 

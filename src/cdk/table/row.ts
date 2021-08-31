@@ -11,18 +11,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  Inject,
   IterableChanges,
   IterableDiffer,
   IterableDiffers,
   OnChanges,
   OnDestroy,
+  Optional,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
-  ViewEncapsulation,
-  Inject,
-  Optional
+  ViewEncapsulation
 } from '@angular/core';
+
 import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
 import {CdkCellDef, CdkColumnDef} from './cell';
 import {CDK_TABLE} from './tokens';
@@ -96,9 +97,8 @@ const _CdkHeaderRowDefBase: CanStickCtor&typeof CdkHeaderRowDefBase =
 })
 export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
   constructor(
-    template: TemplateRef<any>,
-    _differs: IterableDiffers,
-    @Inject(CDK_TABLE) @Optional() public _table?: any) {
+      template: TemplateRef<any>, _differs: IterableDiffers,
+      @Inject(CDK_TABLE) @Optional() public _table?: any) {
     super(template, _differs);
   }
 
@@ -127,9 +127,8 @@ const _CdkFooterRowDefBase: CanStickCtor&typeof CdkFooterRowDefBase =
 })
 export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
   constructor(
-    template: TemplateRef<any>,
-    _differs: IterableDiffers,
-    @Inject(CDK_TABLE) @Optional() public _table?: any) {
+      template: TemplateRef<any>, _differs: IterableDiffers,
+      @Inject(CDK_TABLE) @Optional() public _table?: any) {
     super(template, _differs);
   }
 
@@ -163,9 +162,8 @@ export class CdkRowDef<T> extends BaseRowDef {
   // TODO(andrewseguin): Add an input for providing a switch function to determine
   //   if this template should be used.
   constructor(
-    template: TemplateRef<any>,
-    _differs: IterableDiffers,
-    @Inject(CDK_TABLE) @Optional() public _table?: any) {
+      template: TemplateRef<any>, _differs: IterableDiffers,
+      @Inject(CDK_TABLE) @Optional() public _table?: any) {
     super(template, _differs);
   }
 }
@@ -309,9 +307,7 @@ export class CdkRow {
 }
 
 /** Row that can be used to display a message when no data is shown in the table. */
-@Directive({
-  selector: 'ng-template[cdkNoDataRow]'
-})
+@Directive({selector: 'ng-template[cdkNoDataRow]'})
 export class CdkNoDataRow {
   constructor(public templateRef: TemplateRef<any>) {}
 }

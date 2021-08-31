@@ -1,5 +1,5 @@
+import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop enter predicate
@@ -17,10 +17,9 @@ export class CdkDragDropEnterPredicateExample {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+      transferArrayItem(
+          event.previousContainer.data, event.container.data, event.previousIndex,
+          event.currentIndex);
     }
   }
 

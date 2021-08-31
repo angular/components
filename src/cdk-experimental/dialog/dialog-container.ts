@@ -54,14 +54,14 @@ export function throwDialogContentAlreadyAttachedError() {
   // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  animations: [
-    trigger('dialog', [
-      state('enter', style({opacity: 1})),
-      state('exit, void', style({opacity: 0})),
-      transition('* => enter', animate('{{enterAnimationDuration}}')),
-      transition('* => exit, * => void', animate('{{exitAnimationDuration}}')),
-    ])
-  ],
+  animations: [trigger(
+      'dialog',
+      [
+        state('enter', style({opacity: 1})),
+        state('exit, void', style({opacity: 0})),
+        transition('* => enter', animate('{{enterAnimationDuration}}')),
+        transition('* => exit, * => void', animate('{{exitAnimationDuration}}')),
+      ])],
   host: {
     '[@dialog]': `{
       value: _state,
@@ -78,28 +78,39 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
   private readonly _document: Document;
 
   /** State of the dialog animation. */
-  _state: 'void' | 'enter' | 'exit' = 'enter';
+  _state: 'void'|'enter'|'exit' = 'enter';
 
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
-  private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
+  private _elementFocusedBeforeDialogWasOpened: HTMLElement|null = null;
 
-   /** The class that traps and manages focus within the dialog. */
+  /** The class that traps and manages focus within the dialog. */
   private _focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
 
   // @HostBinding is used in the class as it is expected to be extended. Since @Component decorator
   // metadata is not inherited by child classes, instead the host binding data is defined in a way
   // that can be inherited.
   // tslint:disable:no-host-decorator-in-concrete no-private-getters
-  @HostBinding('attr.aria-label') get _ariaLabel() { return this._config.ariaLabel || null; }
+  @HostBinding('attr.aria-label')
+  get _ariaLabel() {
+    return this._config.ariaLabel || null;
+  }
 
   @HostBinding('attr.aria-describedby')
-  get _ariaDescribedBy() { return this._config.ariaDescribedBy; }
+  get _ariaDescribedBy() {
+    return this._config.ariaDescribedBy;
+  }
 
-  @HostBinding('attr.role') get _role() { return this._config.role; }
+  @HostBinding('attr.role')
+  get _role() {
+    return this._config.role;
+  }
 
   @HostBinding('attr.aria-modal') _ariaModal: boolean = true;
 
-  @HostBinding('attr.tabindex') get _tabindex() { return -1; }
+  @HostBinding('attr.tabindex')
+  get _tabindex() {
+    return -1;
+  }
   // tslint:disable:no-host-decorator-in-concrete no-private-getters
 
   /** The portal host inside of this container into which the dialog content will be loaded. */
@@ -121,14 +132,12 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
   readonly _animationDone = new Subject<AnimationEvent>();
 
   constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _focusTrapFactory: FocusTrapFactory,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private readonly _interactivityChecker: InteractivityChecker,
-    private readonly _ngZone: NgZone,
-    @Optional() @Inject(DOCUMENT) _document: any,
-    /** The dialog configuration. */
-    public _config: DialogConfig) {
+      private _elementRef: ElementRef<HTMLElement>, private _focusTrapFactory: FocusTrapFactory,
+      private _changeDetectorRef: ChangeDetectorRef,
+      private readonly _interactivityChecker: InteractivityChecker,
+      private readonly _ngZone: NgZone, @Optional() @Inject(DOCUMENT) _document: any,
+      /** The dialog configuration. */
+      public _config: DialogConfig) {
     super();
 
     this._document = _document;
@@ -136,22 +145,25 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
     // We use a Subject with a distinctUntilChanged, rather than a callback attached to .done,
     // because some browsers fire the done event twice and we don't want to emit duplicate events.
     // See: https://github.com/angular/angular/issues/24084
-    this._animationDone.pipe(distinctUntilChanged((x, y) => {
-      return x.fromState === y.fromState && x.toState === y.toState;
-    })).subscribe(event => {
-      // Emit lifecycle events based on animation `done` callback.
-      if (event.toState === 'enter') {
-        this._autoFocus();
-        this._afterEnter.next();
-        this._afterEnter.complete();
-      }
+    this._animationDone
+        .pipe(distinctUntilChanged((x, y) => {
+          return x.fromState === y.fromState && x.toState === y.toState;
+        }))
+        .subscribe(event => {
+          // Emit lifecycle events based on animation `done` callback.
+          if (event.toState === 'enter') {
+            this._autoFocus();
+            this._afterEnter.next();
+            this._afterEnter.complete();
+          }
 
-      if (event.fromState === 'enter' && (event.toState === 'void' || event.toState === 'exit')) {
-        this._returnFocusAfterDialog();
-        this._afterExit.next();
-        this._afterExit.complete();
-      }
-    });
+          if (event.fromState === 'enter' &&
+              (event.toState === 'void' || event.toState === 'exit')) {
+            this._returnFocusAfterDialog();
+            this._afterExit.next();
+            this._afterExit.complete();
+          }
+        });
   }
 
   /** Initializes the dialog container with the attached content. */
@@ -200,13 +212,14 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  override attachDomPortal = (portal: DomPortal) => {
-    if (this._portalHost.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throwDialogContentAlreadyAttachedError();
-    }
+  override attachDomPortal =
+      (portal: DomPortal) => {
+        if (this._portalHost.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+          throwDialogContentAlreadyAttachedError();
+        }
 
-    return this._portalHost.attachDomPortal(portal);
-  }
+        return this._portalHost.attachDomPortal(portal);
+      }
 
   /** Emit lifecycle events based on animation `start` callback. */
   _onAnimationStart(event: AnimationEvent) {
@@ -267,7 +280,7 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
    */
   private _focusByCssSelector(selector: string, options?: FocusOptions) {
     let elementToFocus =
-      this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
+        this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
     if (elementToFocus) {
       this._forceFocus(elementToFocus, options);
     }
@@ -300,19 +313,18 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
         break;
       case true:
       case 'first-tabbable':
-        this._focusTrap.focusInitialElementWhenReady()
-          .then(hasMovedFocus => {
-            if (!hasMovedFocus) {
-              element.focus();
-            }
-          });
+        this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
+          if (!hasMovedFocus) {
+            element.focus();
+          }
+        });
         break;
-        case 'first-heading':
-          this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
-          break;
-        default:
-          this._focusByCssSelector(this._config.autoFocus!);
-          break;
+      case 'first-heading':
+        this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
+        break;
+      default:
+        this._focusByCssSelector(this._config.autoFocus!);
+        break;
     }
   }
 
@@ -329,7 +341,7 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
       // the consumer moved it themselves before the animation was done, in which case we shouldn't
       // do anything.
       if (!activeElement || activeElement === this._document.body || activeElement === element ||
-        element.contains(activeElement)) {
+          element.contains(activeElement)) {
         toFocus.focus();
       }
     }

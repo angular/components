@@ -8,12 +8,15 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 /** Possible orientations for a stepper. */
-export const enum StepperOrientation {HORIZONTAL, VERTICAL}
+export const enum StepperOrientation {
+  HORIZONTAL,
+  VERTICAL
+}
 
 /** A set of criteria that can be used to filter a list of `MatStepHarness` instances. */
 export interface StepHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose label matches the given value. */
-  label?: string | RegExp;
+  label?: string|RegExp;
   /** Only find steps with the given selected state. */
   selected?: boolean;
   /** Only find completed steps. */
@@ -34,6 +37,5 @@ export interface StepperHarnessFilters extends BaseHarnessFilters {
  */
 export interface StepperButtonHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
+  text?: string|RegExp;
 }
-

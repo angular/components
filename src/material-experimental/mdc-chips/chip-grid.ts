@@ -35,21 +35,22 @@ import {
   mixinErrorState,
 } from '@angular/material-experimental/mdc-core';
 import {MatFormFieldControl} from '@angular/material-experimental/mdc-form-field';
-import {MatChipTextControl} from './chip-text-control';
 import {merge, Observable, Subscription} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
+
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
 import {MatChipSet} from './chip-set';
+import {MatChipTextControl} from './chip-text-control';
 import {GridFocusKeyManager} from './grid-focus-key-manager';
 
 /** Change event object that is emitted when the chip grid value has changed. */
 export class MatChipGridChange {
   constructor(
-    /** Chip grid that emitted the event. */
-    public source: MatChipGrid,
-    /** Value of the chip grid when the event was emitted. */
-    public value: any) { }
+      /** Chip grid that emitted the event. */
+      public source: MatChipGrid,
+      /** Value of the chip grid when the event was emitted. */
+      public value: any) {}
 }
 
 /**
@@ -57,18 +58,16 @@ export class MatChipGridChange {
  * @docs-private
  */
 class MatChipGridBase extends MatChipSet {
-  constructor(_elementRef: ElementRef,
-              _changeDetectorRef: ChangeDetectorRef,
-              _dir: Directionality,
-              public _defaultErrorStateMatcher: ErrorStateMatcher,
-              public _parentForm: NgForm,
-              public _parentFormGroup: FormGroupDirective,
-              /** @docs-private */
-              public ngControl: NgControl) {
+  constructor(
+      _elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality,
+      public _defaultErrorStateMatcher: ErrorStateMatcher, public _parentForm: NgForm,
+      public _parentFormGroup: FormGroupDirective,
+      /** @docs-private */
+      public ngControl: NgControl) {
     super(_elementRef, _changeDetectorRef, _dir);
   }
 }
-const _MatChipGridMixinBase: CanUpdateErrorStateCtor & typeof MatChipGridBase =
+const _MatChipGridMixinBase: CanUpdateErrorStateCtor&typeof MatChipGridBase =
     mixinErrorState(MatChipGridBase);
 
 /**
@@ -101,7 +100,10 @@ const _MatChipGridMixinBase: CanUpdateErrorStateCtor & typeof MatChipGridBase =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentInit, AfterViewInit,
-  CanUpdateErrorState, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
+                                                                  CanUpdateErrorState,
+                                                                  ControlValueAccessor, DoCheck,
+                                                                  MatFormFieldControl<any>,
+                                                                  OnDestroy {
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
@@ -109,10 +111,10 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   readonly controlType: string = 'mat-chip-grid';
 
   /** Subscription to focus changes in the chips. */
-  private _chipFocusSubscription: Subscription | null;
+  private _chipFocusSubscription: Subscription|null;
 
   /** Subscription to blur changes in the chips. */
-  private _chipBlurSubscription: Subscription | null;
+  private _chipBlurSubscription: Subscription|null;
 
   /** The chip input to add more chips */
   protected _chipInput: MatChipTextControl;
@@ -149,7 +151,9 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  get id(): string { return this._chipInput.id; }
+  get id(): string {
+    return this._chipInput.id;
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -161,7 +165,9 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   }
 
   /** The ARIA role applied to the chip grid. */
-  override get role(): string | null { return this.empty ? null : 'grid'; }
+  override get role(): string|null {
+    return this.empty ? null : 'grid';
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -179,14 +185,18 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   protected _placeholder: string;
 
   /** Whether any chips or the matChipInput inside of this chip-grid has focus. */
-  override get focused(): boolean { return this._chipInput.focused || this._hasFocusedChip(); }
+  override get focused(): boolean {
+    return this._chipInput.focused || this._hasFocusedChip();
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
   @Input()
-  get required(): boolean { return this._required; }
+  get required(): boolean {
+    return this._required;
+  }
   set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
@@ -197,14 +207,18 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  get shouldLabelFloat(): boolean { return !this.empty || this.focused; }
+  get shouldLabelFloat(): boolean {
+    return !this.empty || this.focused;
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
   @Input()
-  get value(): any { return this._value; }
+  get value(): any {
+    return this._value;
+  }
   set value(value: any) {
     this._value = value;
   }
@@ -224,8 +238,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   }
 
   /** Emits when the chip grid value has been changed by the user. */
-  @Output() readonly change: EventEmitter<MatChipGridChange> =
-      new EventEmitter<MatChipGridChange>();
+  @Output()
+  readonly change: EventEmitter<MatChipGridChange> = new EventEmitter<MatChipGridChange>();
 
   /**
    * Emits whenever the raw value of the chip-grid changes. This is here primarily
@@ -241,14 +255,13 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   })
   override _chips: QueryList<MatChipRow>;
 
-  constructor(_elementRef: ElementRef,
-              _changeDetectorRef: ChangeDetectorRef,
-              @Optional() _dir: Directionality,
-              @Optional() _parentForm: NgForm,
-              @Optional() _parentFormGroup: FormGroupDirective,
-              _defaultErrorStateMatcher: ErrorStateMatcher,
-              @Optional() @Self() ngControl: NgControl) {
-    super(_elementRef, _changeDetectorRef, _dir, _defaultErrorStateMatcher, _parentForm,
+  constructor(
+      _elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef,
+      @Optional() _dir: Directionality, @Optional() _parentForm: NgForm,
+      @Optional() _parentFormGroup: FormGroupDirective,
+      _defaultErrorStateMatcher: ErrorStateMatcher, @Optional() @Self() ngControl: NgControl) {
+    super(
+        _elementRef, _changeDetectorRef, _dir, _defaultErrorStateMatcher, _parentForm,
         _parentFormGroup, ngControl);
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
@@ -326,7 +339,9 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
+  setDescribedByIds(ids: string[]) {
+    this._ariaDescribedby = ids.join(' ');
+  }
 
   /**
    * Implemented as part of ControlValueAccessor.
@@ -444,13 +459,12 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   /** Initializes the key manager to manage focus. */
   private _initKeyManager() {
     this._keyManager = new GridFocusKeyManager(this._chips)
-      .withHomeAndEnd()
-      .withDirectionality(this._dir ? this._dir.value : 'ltr');
+                           .withHomeAndEnd()
+                           .withDirectionality(this._dir ? this._dir.value : 'ltr');
 
     if (this._dir) {
-      this._dir.change
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(dir => this._keyManager.withDirectionality(dir));
+      this._dir.change.pipe(takeUntil(this._destroyed))
+          .subscribe(dir => this._keyManager.withDirectionality(dir));
     }
   }
 
@@ -475,8 +489,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
 
   /** Emits change event to set the model value. */
   private _propagateChanges(): void {
-    const valueToEmit = this._chips.length ? this._chips.toArray().map(
-      chip => chip.value) : [];
+    const valueToEmit = this._chips.length ? this._chips.toArray().map(chip => chip.value) : [];
     this._value = valueToEmit;
     this.change.emit(new MatChipGridChange(this, valueToEmit));
     this.valueChange.emit(valueToEmit);
@@ -499,10 +512,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     if (this._lastDestroyedChipIndex != null) {
       if (this._chips.length) {
         const newChipIndex = Math.min(this._lastDestroyedChipIndex, this._chips.length - 1);
-        this._keyManager.setActiveCell({
-          row: newChipIndex,
-          column: Math.max(this._keyManager.activeColumnIndex, 0)
-        });
+        this._keyManager.setActiveCell(
+            {row: newChipIndex, column: Math.max(this._keyManager.activeColumnIndex, 0)});
       } else {
         this.focus();
       }

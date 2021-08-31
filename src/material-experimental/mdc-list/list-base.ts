@@ -63,17 +63,23 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   @Input()
   get disableRipple(): boolean {
     return this.disabled || this._disableRipple || this._listBase.disableRipple ||
-           this._noopAnimations;
+        this._noopAnimations;
   }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  set disableRipple(value: boolean) {
+    this._disableRipple = coerceBooleanProperty(value);
+  }
   private _disableRipple: boolean = false;
 
   /** Whether the list-item is disabled. */
   @HostBinding('class.mdc-list-item--disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
-  get disabled(): boolean { return this._disabled || (this._listBase && this._listBase.disabled); }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return this._disabled || (this._listBase && this._listBase.disabled);
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled = false;
 
   private _subscriptions = new Subscription();
@@ -83,19 +89,21 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
    * Implemented as part of `RippleTarget`.
    * @docs-private
    */
-  rippleConfig: RippleConfig & RippleGlobalOptions;
+  rippleConfig: RippleConfig&RippleGlobalOptions;
 
   /**
    * Implemented as part of `RippleTarget`.
    * @docs-private
    */
-  get rippleDisabled(): boolean { return this.disableRipple || !!this.rippleConfig.disabled; }
+  get rippleDisabled(): boolean {
+    return this.disableRipple || !!this.rippleConfig.disabled;
+  }
 
-  constructor(public _elementRef: ElementRef<HTMLElement>, protected _ngZone: NgZone,
-              private _listBase: MatListBase, private _platform: Platform,
-              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-                  globalRippleOptions?: RippleGlobalOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      public _elementRef: ElementRef<HTMLElement>, protected _ngZone: NgZone,
+      private _listBase: MatListBase, private _platform: Platform,
+      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     this.rippleConfig = globalRippleOptions || {};
     this._hostElement = this._elementRef.nativeElement;
     this._noopAnimations = animationMode === 'NoopAnimations';
@@ -147,23 +155,24 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
    */
   private _monitorLines() {
     this._ngZone.runOutsideAngular(() => {
-      this._subscriptions.add(this.lines.changes.pipe(startWith(this.lines))
-          .subscribe((lines: QueryList<ElementRef<Element>>) => {
-            toggleClass(this._hostElement, 'mat-mdc-list-item-single-line', lines.length <= 1);
-            toggleClass(this._hostElement, 'mdc-list-item--with-one-line', lines.length <= 1);
+      this._subscriptions.add(
+          this.lines.changes.pipe(startWith(this.lines))
+              .subscribe((lines: QueryList<ElementRef<Element>>) => {
+                toggleClass(this._hostElement, 'mat-mdc-list-item-single-line', lines.length <= 1);
+                toggleClass(this._hostElement, 'mdc-list-item--with-one-line', lines.length <= 1);
 
-            lines.forEach((line: ElementRef<Element>, index: number) => {
-              toggleClass(
-                this._hostElement, 'mdc-list-item--with-two-lines', lines.length === 2);
-              toggleClass(
-                this._hostElement, 'mdc-list-item--with-three-lines', lines.length === 3);
-              toggleClass(line.nativeElement,
-                  'mdc-list-item__primary-text', index === 0 && lines.length > 1);
-              toggleClass(
-                  line.nativeElement, 'mdc-list-item__secondary-text', index !== 0);
-            });
-            setLines(lines, this._elementRef, 'mat-mdc');
-          }));
+                lines.forEach((line: ElementRef<Element>, index: number) => {
+                  toggleClass(
+                      this._hostElement, 'mdc-list-item--with-two-lines', lines.length === 2);
+                  toggleClass(
+                      this._hostElement, 'mdc-list-item--with-three-lines', lines.length === 3);
+                  toggleClass(
+                      line.nativeElement, 'mdc-list-item__primary-text',
+                      index === 0 && lines.length > 1);
+                  toggleClass(line.nativeElement, 'mdc-list-item__secondary-text', index !== 0);
+                });
+                setLines(lines, this._elementRef, 'mat-mdc');
+              }));
     });
   }
 
@@ -174,20 +183,27 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
 @Directive()
 /** @docs-private */
 export abstract class MatListBase {
-  @HostBinding('class.mat-mdc-list-non-interactive')
-  _isNonInteractive: boolean = true;
+  @HostBinding('class.mat-mdc-list-non-interactive') _isNonInteractive: boolean = true;
 
   /** Whether ripples for all list items is disabled. */
   @Input()
-  get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  get disableRipple(): boolean {
+    return this._disableRipple;
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple = coerceBooleanProperty(value);
+  }
   private _disableRipple: boolean = false;
 
   /** Whether all list items are disabled. */
   @HostBinding('attr.aria-disabled')
   @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled = false;
 
   static ngAcceptInputType_disabled: BooleanInput;

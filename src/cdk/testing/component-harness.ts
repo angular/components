@@ -23,7 +23,7 @@ export type AsyncOptionPredicate<T, O> = (item: T, option: O) => Promise<boolean
  * a `HarnessPredicate`.
  */
 export type HarnessQuery<T extends ComponentHarness> =
-    ComponentHarnessConstructor<T> | HarnessPredicate<T>;
+    ComponentHarnessConstructor<T>|HarnessPredicate<T>;
 
 /**
  * The result type obtained when searching using a particular list of queries. This type depends on
@@ -47,14 +47,16 @@ export type HarnessQuery<T extends ComponentHarness> =
  * is equivalent to:
  * `MyHarness | MyOtherHarness | TestElement`.
  */
-export type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = {
+export type LocatorFnResult<T extends(HarnessQuery<any>|string)[]> = {
   [I in keyof T]:
       // Map `ComponentHarnessConstructor<C>` to `C`.
-      T[I] extends new (...args: any[]) => infer C ? C :
-      // Map `HarnessPredicate<C>` to `C`.
-      T[I] extends { harnessType: new (...args: any[]) => infer C } ? C :
+  T[I] extends new (...args: any[]) => infer C ? C :
+                                                 // Map `HarnessPredicate<C>` to `C`.
+      T[I] extends {harnessType: new (...args: any[]) => infer C} ?
+      C :
       // Map `string` to `TestElement`.
-      T[I] extends string ? TestElement :
+      T[I] extends string ?
+      TestElement :
       // Map everything else to `never` (should not happen due to the type constraint on `T`).
       never;
 }[number];
@@ -137,7 +139,7 @@ export interface LocatorFactory {
    * - `await lf.locatorFor('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await lf.locatorFor('span')()` throws because the `Promise` rejects.
    */
-  locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+  locatorFor<T extends(HarnessQuery<any>|string)[]>(...queries: T):
       AsyncFactoryFn<LocatorFnResult<T>>;
 
   /**
@@ -161,8 +163,8 @@ export interface LocatorFactory {
    * - `await lf.locatorForOptional('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await lf.locatorForOptional('span')()` gets `null`.
    */
-  locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null>;
+  locatorForOptional<T extends(HarnessQuery<any>|string)[]>(...queries: T):
+      AsyncFactoryFn<LocatorFnResult<T>|null>;
 
   /**
    * Creates an asynchronous locator function that can be used to find `ComponentHarness` instances
@@ -200,7 +202,7 @@ export interface LocatorFactory {
    *   ]`
    * - `await lf.locatorForAll('span')()` gets `[]`.
    */
-  locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+  locatorForAll<T extends(HarnessQuery<any>|string)[]>(...queries: T):
       AsyncFactoryFn<LocatorFnResult<T>[]>;
 
   /** @return A `HarnessLoader` rooted at the root element of this `LocatorFactory`. */
@@ -220,7 +222,7 @@ export interface LocatorFactory {
    * @return A `HarnessLoader` rooted at the first element matching the given selector, or null if
    *     no matching element is found.
    */
-  harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null>;
+  harnessLoaderForOptional(selector: string): Promise<HarnessLoader|null>;
 
   /**
    * Gets a list of `HarnessLoader` instances, one for each matching element.
@@ -286,7 +288,7 @@ export abstract class ComponentHarness {
    * - `await ch.locatorFor('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await ch.locatorFor('span')()` throws because the `Promise` rejects.
    */
-  protected locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+  protected locatorFor<T extends(HarnessQuery<any>|string)[]>(...queries: T):
       AsyncFactoryFn<LocatorFnResult<T>> {
     return this.locatorFactory.locatorFor(...queries);
   }
@@ -312,8 +314,8 @@ export abstract class ComponentHarness {
    * - `await ch.locatorForOptional('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await ch.locatorForOptional('span')()` gets `null`.
    */
-  protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null> {
+  protected locatorForOptional<T extends(HarnessQuery<any>|string)[]>(...queries: T):
+      AsyncFactoryFn<LocatorFnResult<T>|null> {
     return this.locatorFactory.locatorForOptional(...queries);
   }
 
@@ -353,7 +355,7 @@ export abstract class ComponentHarness {
    *   ]`
    * - `await ch.locatorForAll('span')()` gets `[]`.
    */
-  protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+  protected locatorForAll<T extends(HarnessQuery<any>|string)[]>(...queries: T):
       AsyncFactoryFn<LocatorFnResult<T>[]> {
     return this.locatorFactory.locatorForAll(...queries);
   }
@@ -381,9 +383,8 @@ export abstract class ComponentHarness {
  * Base class for component harnesses that authors should extend if they anticipate that consumers
  * of the harness may want to access other harnesses within the `<ng-content>` of the component.
  */
-export abstract class ContentContainerComponentHarness<S extends string = string>
-  extends ComponentHarness implements HarnessLoader {
-
+export abstract class ContentContainerComponentHarness<S extends string = string> extends
+    ComponentHarness implements HarnessLoader {
   async getChildLoader(selector: S): Promise<HarnessLoader> {
     return (await this.getRootHarnessLoader()).getChildLoader(selector);
   }
@@ -451,8 +452,8 @@ export class HarnessPredicate<T extends ComponentHarness> {
    *   allowed. If `pattern` is `null`, the value is expected to be `null`.
    * @return Whether the value matches the pattern.
    */
-  static async stringMatches(value: string | null | Promise<string | null>,
-                             pattern: string | RegExp | null): Promise<boolean> {
+  static async stringMatches(value: string|null|Promise<string|null>, pattern: string|RegExp|null):
+      Promise<boolean> {
     value = await value;
     if (pattern === null) {
       return value === null;
@@ -482,7 +483,7 @@ export class HarnessPredicate<T extends ComponentHarness> {
    * @param predicate The predicate function to run if the option value is not undefined.
    * @return this (for method chaining).
    */
-  addOption<O>(name: string, option: O | undefined, predicate: AsyncOptionPredicate<T, O>) {
+  addOption<O>(name: string, option: O|undefined, predicate: AsyncOptionPredicate<T, O>) {
     if (option !== undefined) {
       this.add(`${name} = ${_valueAsString(option)}`, item => predicate(item, option));
     }
@@ -527,15 +528,16 @@ export class HarnessPredicate<T extends ComponentHarness> {
 
     const [ancestors, ancestorPlaceholders] = _splitAndEscapeSelector(this._ancestor);
     const [selectors, selectorPlaceholders] =
-      _splitAndEscapeSelector(this.harnessType.hostSelector || '');
+        _splitAndEscapeSelector(this.harnessType.hostSelector || '');
     const result: string[] = [];
 
     // We have to add the ancestor to each part of the host compound selector, otherwise we can get
     // incorrect results. E.g. `.ancestor .a, .ancestor .b` vs `.ancestor .a, .b`.
     ancestors.forEach(escapedAncestor => {
       const ancestor = _restoreSelector(escapedAncestor, ancestorPlaceholders);
-      return selectors.forEach(escapedSelector =>
-        result.push(`${ancestor} ${_restoreSelector(escapedSelector, selectorPlaceholders)}`));
+      return selectors.forEach(
+          escapedSelector => result.push(
+              `${ancestor} ${_restoreSelector(escapedSelector, selectorPlaceholders)}`));
     });
 
     return result.join(', ');
@@ -563,13 +565,19 @@ function _valueAsString(value: unknown) {
   }
   // `JSON.stringify` doesn't handle RegExp properly, so we need a custom replacer.
   try {
-    return JSON.stringify(value, (_, v) => {
-      if (v instanceof RegExp) {
-        return `/${v.toString()}/`;
-      }
+    return JSON
+        .stringify(
+            value,
+            (_, v) => {
+              if (v instanceof RegExp) {
+                return `/${v.toString()}/`;
+              }
 
-      return typeof v === 'string' ? v.replace('/\//g', '\\/') : v;
-    }).replace(/"\/\//g, '\\/').replace(/\/\/"/g, '\\/').replace(/\\\//g, '/');
+              return typeof v === 'string' ? v.replace('/\//g', '\\/') : v;
+            })
+        .replace(/"\/\//g, '\\/')
+        .replace(/\/\/"/g, '\\/')
+        .replace(/\\\//g, '/');
   } catch {
     // `JSON.stringify` will throw if the object is cyclical,
     // in this case the best we can do is report the value as `{...}`.

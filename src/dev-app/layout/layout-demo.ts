@@ -14,4 +14,5 @@ import {Component} from '@angular/core';
   templateUrl: 'layout-demo.html',
   styleUrls: ['layout-demo.css'],
 })
-export class LayoutDemo { }
+export class LayoutDemo {
+}

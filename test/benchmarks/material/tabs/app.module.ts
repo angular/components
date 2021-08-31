@@ -7,10 +7,11 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {MatTabsModule} from '@angular/material/tabs';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatTabsModule} from '@angular/material/tabs';
-import {threeTabs, tenTabs, twentyTabs} from './fake-tab-data';
+
+import {tenTabs, threeTabs, twentyTabs} from './fake-tab-data';
 
 /** component: mat-tab */
 
@@ -34,9 +35,15 @@ export class TabsBenchmarkApp {
   areTenTabsVisible = false;
   areTwentyTabsVisible = false;
 
-  showThreeTabs() { this.areThreeTabsVisible = true; }
-  showTenTabs() { this.areTenTabsVisible = true; }
-  showTwentyTabs() { this.areTwentyTabsVisible = true; }
+  showThreeTabs() {
+    this.areThreeTabsVisible = true;
+  }
+  showTenTabs() {
+    this.areTenTabsVisible = true;
+  }
+  showTwentyTabs() {
+    this.areTwentyTabsVisible = true;
+  }
 
   hide() {
     this.areThreeTabsVisible = false;
@@ -54,4 +61,5 @@ export class TabsBenchmarkApp {
   ],
   bootstrap: [TabsBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'icon-e2e',
   templateUrl: 'icon-e2e.html',
 })
-export class IconE2E {}
+export class IconE2E {
+}

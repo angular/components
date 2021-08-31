@@ -21,9 +21,9 @@ exports.platformMap = {
 /** Build a list of configuration (custom launcher names). */
 function buildConfiguration(type, target) {
   const targetBrowsers = Object.keys(browserConfig)
-    .map(browserName => [browserName, browserConfig[browserName][type]])
-    .filter(([, config]) => config.target === target)
-    .map(([browserName]) => browserName);
+                             .map(browserName => [browserName, browserConfig[browserName][type]])
+                             .filter(([, config]) => config.target === target)
+                             .map(([browserName]) => browserName);
 
   return targetBrowsers.map(browserName => `${target.toUpperCase()}_${browserName.toUpperCase()}`);
 }

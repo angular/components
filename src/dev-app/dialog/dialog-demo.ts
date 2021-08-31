@@ -19,7 +19,7 @@ const defaultDialogConfig = new MatDialogConfig();
   styleUrls: ['dialog-demo.css'],
 })
 export class DialogDemo {
-  dialogRef: MatDialogRef<JazzDialog> | null;
+  dialogRef: MatDialogRef<JazzDialog>|null;
   lastAfterClosedResult: string;
   lastBeforeCloseResult: string;
   actionsAlignment: string;
@@ -34,15 +34,8 @@ export class DialogDemo {
     minHeight: '',
     maxWidth: defaultDialogConfig.maxWidth,
     maxHeight: '',
-    position: {
-      top: '',
-      bottom: '',
-      left: '',
-      right: ''
-    },
-    data: {
-      message: 'Jazzy jazz jazz'
-    }
+    position: {top: '', bottom: '', left: '', right: ''},
+    data: {message: 'Jazzy jazz jazz'}
   };
   numTemplateOpens = 0;
 
@@ -110,20 +103,15 @@ export class JazzDialog {
   private _dimesionToggle = false;
 
   constructor(
-    public dialogRef: MatDialogRef<JazzDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+      public dialogRef: MatDialogRef<JazzDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   togglePosition(): void {
     this._dimesionToggle = !this._dimesionToggle;
 
     if (this._dimesionToggle) {
-      this.dialogRef
-        .updateSize('500px', '500px')
-        .updatePosition({ top: '25px', left: '25px' });
+      this.dialogRef.updateSize('500px', '500px').updatePosition({top: '25px', left: '25px'});
     } else {
-      this.dialogRef
-        .updateSize()
-        .updatePosition();
+      this.dialogRef.updateSize().updatePosition();
     }
   }
 
@@ -183,7 +171,7 @@ export class JazzDialog {
 export class ContentElementDialog {
   actionsAlignment: string;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
   showInStackedDialog() {
     this.dialog.open(IFrameDialog);
@@ -212,4 +200,5 @@ export class ContentElementDialog {
     </mat-dialog-actions>
   `
 })
-export class IFrameDialog {}
+export class IFrameDialog {
+}

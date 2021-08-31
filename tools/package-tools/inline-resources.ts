@@ -1,6 +1,6 @@
-import {dirname, join} from 'path';
 import {readFileSync, writeFileSync} from 'fs';
 import {sync as glob} from 'glob';
+import {dirname, join} from 'path';
 
 /** Finds all JavaScript files in a directory and inlines all resources of Angular components. */
 export function inlineResourcesForDirectory(folderPath: string) {
@@ -35,9 +35,8 @@ function inlineStyles(fileContent: string, filePath: string) {
     // tslint:disable-next-line:no-eval
     const styleUrls = eval(styleUrlsValue) as string[];
 
-    const styleContents = styleUrls
-      .map(url => join(dirname(filePath), url))
-      .map(path => loadResourceFile(path));
+    const styleContents =
+        styleUrls.map(url => join(dirname(filePath), url)).map(path => loadResourceFile(path));
 
     return `styles: ["${styleContents.join(' ')}"]`;
   });
@@ -50,7 +49,5 @@ function removeModuleId(fileContent: string) {
 
 /** Loads the specified resource file and drops line-breaks of the content. */
 function loadResourceFile(filePath: string): string {
-  return readFileSync(filePath, 'utf-8')
-    .replace(/([\n\r]\s*)+/gm, ' ')
-    .replace(/"/g, '\\"');
+  return readFileSync(filePath, 'utf-8').replace(/([\n\r]\s*)+/gm, ' ').replace(/"/g, '\\"');
 }

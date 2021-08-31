@@ -7,16 +7,17 @@ import {MatTableHarness} from './table-harness';
 
 /** Shared tests to run on both the original and MDC-based table. */
 export function runHarnessTests(
-    tableModule: typeof MatTableModule,
-    tableHarness: typeof MatTableHarness) {
+    tableModule: typeof MatTableModule, tableHarness: typeof MatTableHarness) {
   let fixture: ComponentFixture<TableHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [tableModule],
-      declarations: [TableHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [tableModule],
+          declarations: [TableHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(TableHarnessTest);
     fixture.detectChanges();
@@ -43,12 +44,11 @@ export function runHarnessTests(
     const headerRows = await table.getHeaderRows();
     const footerRows = await table.getFooterRows();
     const rows = await table.getRows();
-    const headerCells = (await parallel(() => headerRows.map(row => row.getCells())))
-      .map(row => row.length);
-    const footerCells = (await parallel(() => footerRows.map(row => row.getCells())))
-      .map(row => row.length);
-    const cells = (await parallel(() => rows.map(row => row.getCells())))
-      .map(row => row.length);
+    const headerCells =
+        (await parallel(() => headerRows.map(row => row.getCells()))).map(row => row.length);
+    const footerCells =
+        (await parallel(() => footerRows.map(row => row.getCells()))).map(row => row.length);
+    const cells = (await parallel(() => rows.map(row => row.getCells()))).map(row => row.length);
 
     expect(headerCells).toEqual([4]);
     expect(cells).toEqual([4, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
@@ -109,16 +109,16 @@ export function runHarnessTests(
         headerText: ['Name'],
         footerText: ['Name of the element'],
         text: [
-          'Hydrogen', 'Helium', 'Lithium', 'Beryllium', 'Boron',
-          'Carbon', 'Nitrogen', 'Oxygen', 'Fluorine', 'Neon'
+          'Hydrogen', 'Helium', 'Lithium', 'Beryllium', 'Boron', 'Carbon', 'Nitrogen', 'Oxygen',
+          'Fluorine', 'Neon'
         ]
       },
       weight: {
         headerText: ['Weight'],
         footerText: ['Weight of the element'],
         text: [
-          '1.0079', '4.0026', '6.941', '9.0122', '10.811',
-          '12.0107', '14.0067', '15.9994', '18.9984', '20.1797'
+          '1.0079', '4.0026', '6.941', '9.0122', '10.811', '12.0107', '14.0067', '15.9994',
+          '18.9984', '20.1797'
         ]
       },
       symbol: {
@@ -134,16 +134,11 @@ export function runHarnessTests(
     const text = await table.getCellTextByIndex();
 
     expect(text).toEqual([
-      ['1', 'Hydrogen', '1.0079', 'H'],
-      ['2', 'Helium', '4.0026', 'He'],
-      ['3', 'Lithium', '6.941', 'Li'],
-      ['4', 'Beryllium', '9.0122', 'Be'],
-      ['5', 'Boron', '10.811', 'B'],
-      ['6', 'Carbon', '12.0107', 'C'],
-      ['7', 'Nitrogen', '14.0067', 'N'],
-      ['8', 'Oxygen', '15.9994', 'O'],
-      ['9', 'Fluorine', '18.9984', 'F'],
-      ['10', 'Neon', '20.1797', 'Ne']
+      ['1', 'Hydrogen', '1.0079', 'H'], ['2', 'Helium', '4.0026', 'He'],
+      ['3', 'Lithium', '6.941', 'Li'], ['4', 'Beryllium', '9.0122', 'Be'],
+      ['5', 'Boron', '10.811', 'B'], ['6', 'Carbon', '12.0107', 'C'],
+      ['7', 'Nitrogen', '14.0067', 'N'], ['8', 'Oxygen', '15.9994', 'O'],
+      ['9', 'Fluorine', '18.9984', 'F'], ['10', 'Neon', '20.1797', 'Ne']
     ]);
   });
 
@@ -160,12 +155,8 @@ export function runHarnessTests(
     const rows = await table.getRows();
 
     expect(rows.length).toBeGreaterThan(0);
-    expect(await rows[0].getCellTextByColumnName()).toEqual({
-      position: '1',
-      name: 'Hydrogen',
-      weight: '1.0079',
-      symbol: 'H'
-    });
+    expect(await rows[0].getCellTextByColumnName())
+        .toEqual({position: '1', name: 'Hydrogen', weight: '1.0079', symbol: 'H'});
   });
 }
 

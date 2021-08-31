@@ -1,31 +1,33 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {MutationObserverFactory, ObserversModule} from '@angular/cdk/observers';
 import {PortalModule} from '@angular/cdk/portal';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
-import {
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
-  createKeyboardEvent,
-  dispatchEvent,
-  createMouseEvent,
-} from '../../cdk/testing/private';
 import {CommonModule} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
   discardPeriodicTasks,
   fakeAsync,
   TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
+import {Subject} from 'rxjs';
+
+import {
+  createKeyboardEvent,
+  createMouseEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+} from '../../cdk/testing/private';
+
 import {MatInkBar} from './ink-bar';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {Subject} from 'rxjs';
-import {ObserversModule, MutationObserverFactory} from '@angular/cdk/observers';
 
 
 describe('MatTabHeader', () => {
@@ -220,8 +222,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should not do anything if a modifier key is pressed', () => {
-      const rightArrowEvent = createKeyboardEvent(
-          'keydown', RIGHT_ARROW, undefined, {shift: true});
+      const rightArrowEvent = createKeyboardEvent('keydown', RIGHT_ARROW, undefined, {shift: true});
       const enterEvent = createKeyboardEvent('keydown', ENTER, undefined, {shift: true});
 
       appComponent.tabHeader.focusIndex = 0;
@@ -239,7 +240,6 @@ describe('MatTabHeader', () => {
       expect(appComponent.selectedIndex).toBe(0);
       expect(enterEvent.defaultPrevented).toBe(false);
     });
-
   });
 
   describe('pagination', () => {
@@ -289,13 +289,15 @@ describe('MatTabHeader', () => {
         const buttonAfter = fixture.debugElement.query(By.css('.mat-tab-header-pagination-after'))!;
 
         expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .withContext('Expected no ripple to show up initially.').toBe(0);
+            .withContext('Expected no ripple to show up initially.')
+            .toBe(0);
 
         dispatchFakeEvent(buttonAfter.nativeElement, 'mousedown');
         dispatchFakeEvent(buttonAfter.nativeElement, 'mouseup');
 
         expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .withContext('Expected one ripple to show up after mousedown').toBe(1);
+            .withContext('Expected one ripple to show up after mousedown')
+            .toBe(1);
       });
 
       it('should allow disabling ripples for pagination buttons', () => {
@@ -308,15 +310,16 @@ describe('MatTabHeader', () => {
         const buttonAfter = fixture.debugElement.query(By.css('.mat-tab-header-pagination-after'))!;
 
         expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .withContext('Expected no ripple to show up initially.').toBe(0);
+            .withContext('Expected no ripple to show up initially.')
+            .toBe(0);
 
         dispatchFakeEvent(buttonAfter.nativeElement, 'mousedown');
         dispatchFakeEvent(buttonAfter.nativeElement, 'mouseup');
 
         expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .withContext('Expected no ripple to show up after mousedown').toBe(0);
+            .withContext('Expected no ripple to show up after mousedown')
+            .toBe(0);
       });
-
     });
 
     describe('rtl', () => {
@@ -368,130 +371,131 @@ describe('MatTabHeader', () => {
       });
 
       it('should scroll towards the end while holding down the next button using a mouse',
-        fakeAsync(() => {
-          assertNextButtonScrolling('mousedown', 'click');
-        }));
+         fakeAsync(() => {
+           assertNextButtonScrolling('mousedown', 'click');
+         }));
 
       it('should scroll towards the start while holding down the prev button using a mouse',
-        fakeAsync(() => {
-          assertPrevButtonScrolling('mousedown', 'click');
-        }));
+         fakeAsync(() => {
+           assertPrevButtonScrolling('mousedown', 'click');
+         }));
 
       it('should scroll towards the end while holding down the next button using touch',
-        fakeAsync(() => {
-          assertNextButtonScrolling('touchstart', 'touchend');
-        }));
+         fakeAsync(() => {
+           assertNextButtonScrolling('touchstart', 'touchend');
+         }));
 
       it('should scroll towards the start while holding down the prev button using touch',
-        fakeAsync(() => {
-          assertPrevButtonScrolling('touchstart', 'touchend');
-        }));
+         fakeAsync(() => {
+           assertPrevButtonScrolling('touchstart', 'touchend');
+         }));
 
       it('should not scroll if the sequence is interrupted quickly', fakeAsync(() => {
-        expect(header.scrollDistance)
-          .withContext('Expected to start off not scrolled.').toBe(0);
+           expect(header.scrollDistance).withContext('Expected to start off not scrolled.').toBe(0);
 
-        dispatchFakeEvent(nextButton, 'mousedown');
-        fixture.detectChanges();
+           dispatchFakeEvent(nextButton, 'mousedown');
+           fixture.detectChanges();
 
-        tick(100);
+           tick(100);
 
-        dispatchFakeEvent(headerElement, 'mouseleave');
-        fixture.detectChanges();
+           dispatchFakeEvent(headerElement, 'mouseleave');
+           fixture.detectChanges();
 
-        tick(3000);
+           tick(3000);
 
-        expect(header.scrollDistance)
-          .withContext('Expected not to have scrolled after a while.').toBe(0);
-      }));
+           expect(header.scrollDistance)
+               .withContext('Expected not to have scrolled after a while.')
+               .toBe(0);
+         }));
 
       it('should clear the timeouts on destroy', fakeAsync(() => {
-        dispatchFakeEvent(nextButton, 'mousedown');
-        fixture.detectChanges();
-        fixture.destroy();
+           dispatchFakeEvent(nextButton, 'mousedown');
+           fixture.detectChanges();
+           fixture.destroy();
 
-        // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
-      }));
+           // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
+         }));
 
       it('should clear the timeouts on click', fakeAsync(() => {
-        dispatchFakeEvent(nextButton, 'mousedown');
-        fixture.detectChanges();
+           dispatchFakeEvent(nextButton, 'mousedown');
+           fixture.detectChanges();
 
-        dispatchFakeEvent(nextButton, 'click');
-        fixture.detectChanges();
+           dispatchFakeEvent(nextButton, 'click');
+           fixture.detectChanges();
 
-        // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
-      }));
+           // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
+         }));
 
       it('should clear the timeouts on touchend', fakeAsync(() => {
-        dispatchFakeEvent(nextButton, 'touchstart');
-        fixture.detectChanges();
+           dispatchFakeEvent(nextButton, 'touchstart');
+           fixture.detectChanges();
 
-        dispatchFakeEvent(nextButton, 'touchend');
-        fixture.detectChanges();
+           dispatchFakeEvent(nextButton, 'touchend');
+           fixture.detectChanges();
 
-        // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
-      }));
+           // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
+         }));
 
       it('should clear the timeouts when reaching the end', fakeAsync(() => {
-        dispatchFakeEvent(nextButton, 'mousedown');
-        fixture.detectChanges();
+           dispatchFakeEvent(nextButton, 'mousedown');
+           fixture.detectChanges();
 
-        // Simulate a very long timeout.
-        tick(60000);
+           // Simulate a very long timeout.
+           tick(60000);
 
-        // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
-      }));
+           // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
+         }));
 
       it('should clear the timeouts when reaching the start', fakeAsync(() => {
-        header.scrollDistance = Infinity;
-        fixture.detectChanges();
+           header.scrollDistance = Infinity;
+           fixture.detectChanges();
 
-        dispatchFakeEvent(prevButton, 'mousedown');
-        fixture.detectChanges();
+           dispatchFakeEvent(prevButton, 'mousedown');
+           fixture.detectChanges();
 
-        // Simulate a very long timeout.
-        tick(60000);
+           // Simulate a very long timeout.
+           tick(60000);
 
-        // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
-      }));
+           // No need to assert. If fakeAsync doesn't throw, it means that the timers were cleared.
+         }));
 
       it('should stop scrolling if the pointer leaves the header', fakeAsync(() => {
-        expect(header.scrollDistance)
-          .withContext('Expected to start off not scrolled.').toBe(0);
+           expect(header.scrollDistance).withContext('Expected to start off not scrolled.').toBe(0);
 
-        dispatchFakeEvent(nextButton, 'mousedown');
-        fixture.detectChanges();
-        tick(300);
+           dispatchFakeEvent(nextButton, 'mousedown');
+           fixture.detectChanges();
+           tick(300);
 
-        expect(header.scrollDistance)
-          .withContext('Expected not to scroll after short amount of time.').toBe(0);
+           expect(header.scrollDistance)
+               .withContext('Expected not to scroll after short amount of time.')
+               .toBe(0);
 
-        tick(1000);
+           tick(1000);
 
-        expect(header.scrollDistance)
-          .withContext('Expected to scroll after some time.').toBeGreaterThan(0);
+           expect(header.scrollDistance)
+               .withContext('Expected to scroll after some time.')
+               .toBeGreaterThan(0);
 
-        const previousDistance = header.scrollDistance;
+           const previousDistance = header.scrollDistance;
 
-        dispatchFakeEvent(headerElement, 'mouseleave');
-        fixture.detectChanges();
-        tick(100);
+           dispatchFakeEvent(headerElement, 'mouseleave');
+           fixture.detectChanges();
+           tick(100);
 
-        expect(header.scrollDistance).toBe(previousDistance);
-      }));
+           expect(header.scrollDistance).toBe(previousDistance);
+         }));
 
       it('should not scroll when pressing the right mouse button', fakeAsync(() => {
-        expect(header.scrollDistance)
-          .withContext('Expected to start off not scrolled.').toBe(0);
+           expect(header.scrollDistance).withContext('Expected to start off not scrolled.').toBe(0);
 
-        dispatchEvent(nextButton, createMouseEvent('mousedown', undefined, undefined, 2));
-        fixture.detectChanges();
-        tick(3000);
+           dispatchEvent(nextButton, createMouseEvent('mousedown', undefined, undefined, 2));
+           fixture.detectChanges();
+           tick(3000);
 
-        expect(header.scrollDistance)
-          .withContext('Expected not to have scrolled after a while.').toBe(0);
-      }));
+           expect(header.scrollDistance)
+               .withContext('Expected not to have scrolled after a while.')
+               .toBe(0);
+         }));
 
       /**
        * Asserts that auto scrolling using the next button works.
@@ -499,28 +503,29 @@ describe('MatTabHeader', () => {
        * @param endEventName Name of the event that is supposed to end the scrolling.
        */
       function assertNextButtonScrolling(startEventName: string, endEventName: string) {
-        expect(header.scrollDistance)
-          .withContext('Expected to start off not scrolled.').toBe(0);
+        expect(header.scrollDistance).withContext('Expected to start off not scrolled.').toBe(0);
 
         dispatchFakeEvent(nextButton, startEventName);
         fixture.detectChanges();
         tick(300);
 
         expect(header.scrollDistance)
-          .withContext('Expected not to scroll after short amount of time.').toBe(0);
+            .withContext('Expected not to scroll after short amount of time.')
+            .toBe(0);
 
         tick(1000);
 
         expect(header.scrollDistance)
-          .withContext('Expected to scroll after some time.').toBeGreaterThan(0);
+            .withContext('Expected to scroll after some time.')
+            .toBeGreaterThan(0);
 
         const previousDistance = header.scrollDistance;
 
         tick(100);
 
         expect(header.scrollDistance)
-          .withContext('Expected to scroll again after some more time.')
-          .toBeGreaterThan(previousDistance);
+            .withContext('Expected to scroll again after some more time.')
+            .toBeGreaterThan(previousDistance);
 
         dispatchFakeEvent(nextButton, endEventName);
       }
@@ -536,32 +541,32 @@ describe('MatTabHeader', () => {
 
         let currentScroll = header.scrollDistance;
 
-        expect(currentScroll)
-          .withContext('Expected to start off scrolled.').toBeGreaterThan(0);
+        expect(currentScroll).withContext('Expected to start off scrolled.').toBeGreaterThan(0);
 
         dispatchFakeEvent(prevButton, startEventName);
         fixture.detectChanges();
         tick(300);
 
         expect(header.scrollDistance)
-          .withContext('Expected not to scroll after short amount of time.').toBe(currentScroll);
+            .withContext('Expected not to scroll after short amount of time.')
+            .toBe(currentScroll);
 
         tick(1000);
 
         expect(header.scrollDistance)
-          .withContext('Expected to scroll after some time.').toBeLessThan(currentScroll);
+            .withContext('Expected to scroll after some time.')
+            .toBeLessThan(currentScroll);
 
         currentScroll = header.scrollDistance;
 
         tick(100);
 
         expect(header.scrollDistance)
-          .withContext('Expected to scroll again after some more time.')
-          .toBeLessThan(currentScroll);
+            .withContext('Expected to scroll again after some more time.')
+            .toBeLessThan(currentScroll);
 
         dispatchFakeEvent(nextButton, endEventName);
       }
-
     });
 
     describe('disabling pagination', () => {
@@ -599,50 +604,50 @@ describe('MatTabHeader', () => {
     });
 
     it('should re-align the ink bar when the direction changes', fakeAsync(() => {
-      fixture = TestBed.createComponent(SimpleTabHeaderApp);
+         fixture = TestBed.createComponent(SimpleTabHeaderApp);
 
-      const inkBar = fixture.componentInstance.tabHeader._inkBar;
-      spyOn(inkBar, 'alignToElement');
+         const inkBar = fixture.componentInstance.tabHeader._inkBar;
+         spyOn(inkBar, 'alignToElement');
 
-      fixture.detectChanges();
+         fixture.detectChanges();
 
-      change.next();
-      fixture.detectChanges();
-      tick(20); // Angular turns rAF calls into 16.6ms timeouts in tests.
+         change.next();
+         fixture.detectChanges();
+         tick(20);  // Angular turns rAF calls into 16.6ms timeouts in tests.
 
-      expect(inkBar.alignToElement).toHaveBeenCalled();
-    }));
+         expect(inkBar.alignToElement).toHaveBeenCalled();
+       }));
 
     it('should re-align the ink bar when the window is resized', fakeAsync(() => {
-      fixture = TestBed.createComponent(SimpleTabHeaderApp);
-      fixture.detectChanges();
+         fixture = TestBed.createComponent(SimpleTabHeaderApp);
+         fixture.detectChanges();
 
-      const inkBar = fixture.componentInstance.tabHeader._inkBar;
+         const inkBar = fixture.componentInstance.tabHeader._inkBar;
 
-      spyOn(inkBar, 'alignToElement');
+         spyOn(inkBar, 'alignToElement');
 
-      dispatchFakeEvent(window, 'resize');
-      tick(150);
-      fixture.detectChanges();
+         dispatchFakeEvent(window, 'resize');
+         tick(150);
+         fixture.detectChanges();
 
-      expect(inkBar.alignToElement).toHaveBeenCalled();
-      discardPeriodicTasks();
-    }));
+         expect(inkBar.alignToElement).toHaveBeenCalled();
+         discardPeriodicTasks();
+       }));
 
     it('should update arrows when the window is resized', fakeAsync(() => {
-      fixture = TestBed.createComponent(SimpleTabHeaderApp);
+         fixture = TestBed.createComponent(SimpleTabHeaderApp);
 
-      const header = fixture.componentInstance.tabHeader;
+         const header = fixture.componentInstance.tabHeader;
 
-      spyOn(header, '_checkPaginationEnabled');
+         spyOn(header, '_checkPaginationEnabled');
 
-      dispatchFakeEvent(window, 'resize');
-      tick(10);
-      fixture.detectChanges();
+         dispatchFakeEvent(window, 'resize');
+         tick(10);
+         fixture.detectChanges();
 
-      expect(header._checkPaginationEnabled).toHaveBeenCalled();
-      discardPeriodicTasks();
-    }));
+         expect(header._checkPaginationEnabled).toHaveBeenCalled();
+         discardPeriodicTasks();
+       }));
 
     it('should update the pagination state if the content of the labels changes', () => {
       const mutationCallbacks: Function[] = [];
@@ -659,8 +664,7 @@ describe('MatTabHeader', () => {
       fixture = TestBed.createComponent(SimpleTabHeaderApp);
       fixture.detectChanges();
 
-      const tabHeaderElement: HTMLElement =
-          fixture.nativeElement.querySelector('.mat-tab-header');
+      const tabHeaderElement: HTMLElement = fixture.nativeElement.querySelector('.mat-tab-header');
       const labels =
           Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.label-content'));
       const extraText = new Array(100).fill('w').join();
@@ -678,7 +682,6 @@ describe('MatTabHeader', () => {
 
       expect(tabHeaderElement.classList).toContain(enabledClass);
     });
-
   });
 });
 

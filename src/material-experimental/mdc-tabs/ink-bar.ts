@@ -47,8 +47,8 @@ export class MatInkBar {
     }
 
     if (correspondingItem) {
-      const clientRect = currentItem ?
-          currentItem._foundation.computeContentClientRect() : undefined;
+      const clientRect =
+          currentItem ? currentItem._foundation.computeContentClientRect() : undefined;
 
       // The ink bar won't animate unless we give it the `ClientRect` of the previous item.
       correspondingItem._foundation.activate(clientRect);
@@ -73,20 +73,23 @@ export class MatInkBarFoundation {
         this._hostElement.classList.add(className);
       }
     },
-    removeClass: className => {
-      if (!this._destroyed) {
-        this._hostElement.classList.remove(className);
-      }
-    },
-    setContentStyleProperty: (propName, value) => {
-      this._inkBarContentElement.style.setProperty(propName, value);
-    },
-    computeContentClientRect: () => {
-      // `getBoundingClientRect` isn't available on the server.
-      return this._destroyed || !this._inkBarContentElement.getBoundingClientRect ? {
-        width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0
-      } : this._inkBarContentElement.getBoundingClientRect();
-    }
+    removeClass:
+        className => {
+          if (!this._destroyed) {
+            this._hostElement.classList.remove(className);
+          }
+        },
+    setContentStyleProperty:
+        (propName, value) => {
+          this._inkBarContentElement.style.setProperty(propName, value);
+        },
+    computeContentClientRect:
+        () => {
+          // `getBoundingClientRect` isn't available on the server.
+          return this._destroyed || !this._inkBarContentElement.getBoundingClientRect ?
+              {width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0} :
+              this._inkBarContentElement.getBoundingClientRect();
+        }
   };
 
   constructor(private _hostElement: HTMLElement, private _document: Document) {
@@ -143,7 +146,9 @@ export class MatInkBarFoundation {
    * Gets whether the ink bar should be appended to the content, which will cause the ink bar
    * to match the width of the content rather than the tab host element.
    */
-  getFitToContent(): boolean { return this._fitToContent; }
+  getFitToContent(): boolean {
+    return this._fitToContent;
+  }
 
   /** Creates and appends the ink bar element. */
   private _createInkBarElement() {

@@ -6,42 +6,38 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
+import {DOCUMENT} from '@angular/common';
 import {
-  Component,
-  Directive,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
-  ViewChild,
-  ComponentFactoryResolver,
-  ViewContainerRef,
-  Inject,
-  forwardRef,
   ChangeDetectorRef,
-  Optional,
+  Component,
+  ComponentFactoryResolver,
+  Directive,
   ElementRef,
+  forwardRef,
+  Inject,
+  Optional,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
+  _MatTabBodyBase,
   MatTabBodyPortal as BaseMatTabBodyPortal,
   matTabsAnimations,
-  _MatTabBodyBase,
 } from '@angular/material/tabs';
-import {CdkPortalOutlet} from '@angular/cdk/portal';
-import {Directionality} from '@angular/cdk/bidi';
-import {DOCUMENT} from '@angular/common';
 
 /**
  * The portal host directive for the contents of the tab.
  * @docs-private
  */
-@Directive({
-  selector: '[matTabBodyHost]'
-})
+@Directive({selector: '[matTabBodyHost]'})
 export class MatTabBodyPortal extends BaseMatTabBodyPortal {
   constructor(
-    componentFactoryResolver: ComponentFactoryResolver,
-    viewContainerRef: ViewContainerRef,
-    @Inject(forwardRef(() => MatTabBody)) host: MatTabBody,
-    @Inject(DOCUMENT) _document: any) {
+      componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef,
+      @Inject(forwardRef(() => MatTabBody)) host: MatTabBody, @Inject(DOCUMENT) _document: any) {
     super(componentFactoryResolver, viewContainerRef, host, _document);
   }
 }
@@ -64,9 +60,9 @@ export class MatTabBodyPortal extends BaseMatTabBodyPortal {
 export class MatTabBody extends _MatTabBodyBase {
   @ViewChild(CdkPortalOutlet) _portalHost: CdkPortalOutlet;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-    @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+      elementRef: ElementRef<HTMLElement>, @Optional() dir: Directionality,
+      changeDetectorRef: ChangeDetectorRef) {
     super(elementRef, dir, changeDetectorRef);
   }
 }

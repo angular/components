@@ -7,9 +7,10 @@
  */
 
 import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {DrawerContainerHarnessFilters, DrawerHarnessFilters} from './drawer-harness-filters';
+
 import {MatDrawerContentHarness} from './drawer-content-harness';
 import {MatDrawerHarness} from './drawer-harness';
+import {DrawerContainerHarnessFilters, DrawerHarnessFilters} from './drawer-harness-filters';
 
 /** Harness for interacting with a standard mat-drawer-container in tests. */
 export class MatDrawerContainerHarness extends ContentContainerComponentHarness<string> {
@@ -23,7 +24,7 @@ export class MatDrawerContainerHarness extends ContentContainerComponentHarness<
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DrawerContainerHarnessFilters = {}):
-    HarnessPredicate<MatDrawerContainerHarness> {
+      HarnessPredicate<MatDrawerContainerHarness> {
     return new HarnessPredicate(MatDrawerContainerHarness, options);
   }
 

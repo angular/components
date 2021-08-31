@@ -41,10 +41,8 @@ const _MatIconBase = mixinColor(class {
  * Used to handle server-side rendering and to stub out during unit tests.
  * @docs-private
  */
-export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-location', {
-  providedIn: 'root',
-  factory: MAT_ICON_LOCATION_FACTORY
-});
+export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>(
+    'mat-icon-location', {providedIn: 'root', factory: MAT_ICON_LOCATION_FACTORY});
 
 /**
  * Stubbed out location for `MatIcon`.
@@ -69,18 +67,8 @@ export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
 
 /** SVG attributes that accept a FuncIRI (e.g. `url(<something>)`). */
 const funcIriAttributes = [
-  'clip-path',
-  'color-profile',
-  'src',
-  'cursor',
-  'fill',
-  'filter',
-  'marker',
-  'marker-start',
-  'marker-mid',
-  'marker-end',
-  'mask',
-  'stroke'
+  'clip-path', 'color-profile', 'src', 'cursor', 'fill', 'filter', 'marker', 'marker-start',
+  'marker-mid', 'marker-end', 'mask', 'stroke'
 ];
 
 /** Selector that can be used to find all elements that are using a `FuncIRI`. */
@@ -150,7 +138,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Name of the icon in the SVG icon set. */
   @Input()
-  get svgIcon(): string { return this._svgIcon; }
+  get svgIcon(): string {
+    return this._svgIcon;
+  }
   set svgIcon(value: string) {
     if (value !== this._svgIcon) {
       if (value) {
@@ -165,7 +155,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Font set that the icon is a part of. */
   @Input()
-  get fontSet(): string { return this._fontSet; }
+  get fontSet(): string {
+    return this._fontSet;
+  }
   set fontSet(value: string) {
     const newValue = this._cleanupFontValue(value);
 
@@ -178,7 +170,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Name of an icon within a font set. */
   @Input()
-  get fontIcon(): string { return this._fontIcon; }
+  get fontIcon(): string {
+    return this._fontIcon;
+  }
   set fontIcon(value: string) {
     const newValue = this._cleanupFontValue(value);
 
@@ -192,8 +186,8 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
 
-  _svgName: string | null;
-  _svgNamespace: string | null;
+  _svgName: string|null;
+  _svgNamespace: string|null;
 
   /** Keeps track of the current page path. */
   private _previousPath?: string;
@@ -237,9 +231,12 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
     const parts = iconName.split(':');
     switch (parts.length) {
-      case 1: return ['', parts[0]]; // Use default namespace.
-      case 2: return <[string, string]>parts;
-      default: throw Error(`Invalid icon name: "${iconName}"`); // TODO: add an ngDevMode check
+      case 1:
+        return ['', parts[0]];  // Use default namespace.
+      case 2:
+        return <[string, string]>parts;
+      default:
+        throw Error(`Invalid icon name: "${iconName}"`);  // TODO: add an ngDevMode check
     }
   }
 
@@ -328,9 +325,8 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
 
     const elem: HTMLElement = this._elementRef.nativeElement;
-    const fontSetClass = this.fontSet ?
-        this._iconRegistry.classNameForFontAlias(this.fontSet) :
-        this._iconRegistry.getDefaultFontSetClass();
+    const fontSetClass = this.fontSet ? this._iconRegistry.classNameForFontAlias(this.fontSet) :
+                                        this._iconRegistry.getDefaultFontSetClass();
 
     if (fontSetClass != this._previousFontSetClass) {
       if (this._previousFontSetClass) {
@@ -425,12 +421,14 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
         this._svgName = iconName;
       }
 
-      this._currentIconFetch = this._iconRegistry.getNamedSvgIcon(iconName, namespace)
-          .pipe(take(1))
-          .subscribe(svg => this._setSvgElement(svg), (err: Error) => {
-            const errorMessage = `Error retrieving icon ${namespace}:${iconName}! ${err.message}`;
-            this._errorHandler.handleError(new Error(errorMessage));
-          });
+      this._currentIconFetch =
+          this._iconRegistry.getNamedSvgIcon(iconName, namespace)
+              .pipe(take(1))
+              .subscribe(svg => this._setSvgElement(svg), (err: Error) => {
+                const errorMessage =
+                    `Error retrieving icon ${namespace}:${iconName}! ${err.message}`;
+                this._errorHandler.handleError(new Error(errorMessage));
+              });
     }
   }
 

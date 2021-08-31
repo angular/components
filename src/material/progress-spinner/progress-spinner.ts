@@ -7,7 +7,7 @@
  */
 
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {Platform, _getShadowRoot} from '@angular/cdk/platform';
+import {_getShadowRoot, Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -16,16 +16,16 @@ import {
   Inject,
   InjectionToken,
   Input,
+  OnInit,
   Optional,
   ViewEncapsulation,
-  OnInit,
 } from '@angular/core';
 import {CanColor, mixinColor} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 /** Possible mode for a progress spinner. */
-export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
+export type ProgressSpinnerMode = 'determinate'|'indeterminate';
 
 /**
  * Base reference size of the spinner.
@@ -152,7 +152,9 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
 
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
-  get diameter(): number { return this._diameter; }
+  get diameter(): number {
+    return this._diameter;
+  }
   set diameter(size: number) {
     this._diameter = coerceNumberProperty(size);
     this._spinnerAnimationLabel = this._getSpinnerAnimationLabel();
@@ -184,17 +186,15 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
     this._value = Math.max(0, Math.min(100, coerceNumberProperty(newValue)));
   }
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              /**
-               * @deprecated `_platform` parameter no longer being used.
-               * @breaking-change 14.0.0
-               */
-              _platform: Platform,
-              @Optional() @Inject(DOCUMENT) private _document: any,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-              @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-                  defaults?: MatProgressSpinnerDefaultOptions) {
-
+  constructor(
+      elementRef: ElementRef<HTMLElement>,
+      /**
+       * @deprecated `_platform` parameter no longer being used.
+       * @breaking-change 14.0.0
+       */
+      _platform: Platform, @Optional() @Inject(DOCUMENT) private _document: any,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+      @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS) defaults?: MatProgressSpinnerDefaultOptions) {
     super(elementRef);
 
     const trackedDiameters = MatProgressSpinner._diameters;
@@ -206,8 +206,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
       trackedDiameters.set(_document.head, new Set<number>([BASE_SIZE]));
     }
 
-    this._noopAnimations = animationMode === 'NoopAnimations' &&
-        (!!defaults && !defaults._forceAnimations);
+    this._noopAnimations =
+        animationMode === 'NoopAnimations' && (!!defaults && !defaults._forceAnimations);
 
     if (defaults) {
       if (defaults.diameter) {
@@ -329,11 +329,11 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
   encapsulation: ViewEncapsulation.None,
 })
 export class MatSpinner extends MatProgressSpinner {
-  constructor(elementRef: ElementRef<HTMLElement>, platform: Platform,
-              @Optional() @Inject(DOCUMENT) document: any,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-              @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-                  defaults?: MatProgressSpinnerDefaultOptions) {
+  constructor(
+      elementRef: ElementRef<HTMLElement>, platform: Platform,
+      @Optional() @Inject(DOCUMENT) document: any,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+      @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS) defaults?: MatProgressSpinnerDefaultOptions) {
     super(elementRef, platform, document, animationMode, defaults);
     this.mode = 'indeterminate';
   }

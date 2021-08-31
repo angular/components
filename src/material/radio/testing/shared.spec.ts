@@ -8,9 +8,9 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatRadioButtonHarness, MatRadioGroupHarness} from './radio-harness';
 
 /** Shared tests to run on both the original and MDC-based radio components. */
-export function runHarnessTests(radioModule: typeof MatRadioModule,
-                                radioGroupHarness: typeof MatRadioGroupHarness,
-                                radioButtonHarness: typeof MatRadioButtonHarness) {
+export function runHarnessTests(
+    radioModule: typeof MatRadioModule, radioGroupHarness: typeof MatRadioGroupHarness,
+    radioButtonHarness: typeof MatRadioButtonHarness) {
   let platform: Platform;
   let fixture: ComponentFixture<MultipleRadioButtonsHarnessTest>;
   let loader: HarnessLoader;
@@ -36,8 +36,8 @@ export function runHarnessTests(radioModule: typeof MatRadioModule,
     });
 
     it('should load radio-group with exact id', async () => {
-      const groups = await loader.getAllHarnesses(
-          radioGroupHarness.with({selector: '#my-group-2'}));
+      const groups =
+          await loader.getAllHarnesses(radioGroupHarness.with({selector: '#my-group-2'}));
       expect(groups.length).toBe(1);
     });
 
@@ -52,16 +52,16 @@ export function runHarnessTests(radioModule: typeof MatRadioModule,
     });
 
     it('should throw when finding radio-group with specific name that has mismatched ' +
-        'radio-button names',
-        async () => {
-          fixture.componentInstance.thirdGroupButtonName = 'other-name';
-          fixture.detectChanges();
+           'radio-button names',
+       async () => {
+         fixture.componentInstance.thirdGroupButtonName = 'other-name';
+         fixture.detectChanges();
 
-          await expectAsync(
-            loader.getAllHarnesses(radioGroupHarness.with({name: 'third-group-name'})))
-          .toBeRejectedWithError(
-            /locator found a radio-group with name "third-group-name".*have mismatching names/);
-        });
+         await expectAsync(
+             loader.getAllHarnesses(radioGroupHarness.with({name: 'third-group-name'})))
+             .toBeRejectedWithError(
+                 /locator found a radio-group with name "third-group-name".*have mismatching names/);
+       });
 
     it('should get name of radio-group', async () => {
       const groups = await loader.getAllHarnesses(radioGroupHarness);
@@ -79,7 +79,7 @@ export function runHarnessTests(radioModule: typeof MatRadioModule,
       fixture.detectChanges();
 
       await expectAsync(groups[2].getName())
-        .toBeRejectedWithError(/Radio buttons in radio-group have mismatching names./);
+          .toBeRejectedWithError(/Radio buttons in radio-group have mismatching names./);
     });
 
     it('should get id of radio-group', async () => {
@@ -138,8 +138,9 @@ export function runHarnessTests(radioModule: typeof MatRadioModule,
 
     it('should throw error when checking invalid radio button', async () => {
       const group = await loader.getHarness(radioGroupHarness.with({name: 'my-group-1-name'}));
-      await expectAsync(group.checkRadioButton({label: 'opt4'})).toBeRejectedWithError(
-          /Could not find radio button matching {"label":"opt4"}/);
+      await expectAsync(group.checkRadioButton({
+        label: 'opt4'
+      })).toBeRejectedWithError(/Could not find radio button matching {"label":"opt4"}/);
     });
   });
 

@@ -1,5 +1,5 @@
-import {createPlugin, utils} from 'stylelint';
 import {basename} from 'path';
+import {createPlugin, utils} from 'stylelint';
 
 const ruleName = 'material/no-import';
 const messages = utils.ruleMessages(ruleName, {
@@ -21,13 +21,8 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {exclude?: 
 
     root.walkAtRules(rule => {
       if (rule.name === 'import') {
-        utils.report({
-          result,
-          ruleName,
-          message: messages.expected(),
-          node: rule
-        });
-       }
+        utils.report({result, ruleName, message: messages.expected(), node: rule});
+      }
     });
   };
 });

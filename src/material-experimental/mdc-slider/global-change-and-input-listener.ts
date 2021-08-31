@@ -22,7 +22,6 @@ import {finalize, share, takeUntil} from 'rxjs/operators';
  */
 @Injectable({providedIn: 'root'})
 export class GlobalChangeAndInputListener<K extends 'change'|'input'> implements OnDestroy {
-
   /** The injected document if available or fallback to the global document reference. */
   private _document: Document;
 
@@ -49,19 +48,18 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> implements
       this._observables.set(type, this._createGlobalEventObservable(type));
     }
 
-    return this._ngZone.runOutsideAngular(() =>
-      this._observables.get(type)!.subscribe((event: Event) =>
-        this._ngZone.run(() => callback(event))
-      )
-    );
+    return this._ngZone.runOutsideAngular(
+        () => this._observables.get(type)!.subscribe(
+            (event: Event) => this._ngZone.run(() => callback(event))));
   }
 
   /** Creates an observable that emits all events of the given type. */
   private _createGlobalEventObservable(type: K) {
-    return fromEvent(this._document, type, {capture: true, passive: true}).pipe(
-      takeUntil(this._destroyed),
-      finalize(() => this._observables.delete(type)),
-      share(),
-    );
+    return fromEvent(this._document, type, {capture: true, passive: true})
+        .pipe(
+            takeUntil(this._destroyed),
+            finalize(() => this._observables.delete(type)),
+            share(),
+        );
   }
 }

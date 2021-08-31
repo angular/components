@@ -16,10 +16,12 @@ export function runHarnessTests(
   let platform: Platform;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [buttonModule, MatIconModule, PlatformModule],
-      declarations: [ButtonHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [buttonModule, MatIconModule, PlatformModule],
+          declarations: [ButtonHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ButtonHarnessTest);
     fixture.detectChanges();
@@ -145,4 +147,3 @@ class ButtonHarnessTest {
   disabled = true;
   clicked = false;
 }
-

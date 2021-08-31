@@ -19,7 +19,7 @@ export interface TaskState {
 const stateObservableSymbol = Symbol('ProxyZone_PATCHED#stateObservable');
 
 /** Type that describes a potentially patched proxy zone instance. */
-type PatchedProxyZone = ProxyZone & {
+type PatchedProxyZone = ProxyZone&{
   [stateObservableSymbol]: undefined|Observable<TaskState>;
 };
 
@@ -58,19 +58,20 @@ export class TaskStateZoneInterceptor {
    */
   static setup(): Observable<TaskState> {
     if (Zone === undefined) {
-      throw Error('Could not find ZoneJS. For test harnesses running in TestBed, ' +
-        'ZoneJS needs to be installed.');
+      throw Error(
+          'Could not find ZoneJS. For test harnesses running in TestBed, ' +
+          'ZoneJS needs to be installed.');
     }
 
     // tslint:disable-next-line:variable-name
-    const ProxyZoneSpec = (Zone as any)['ProxyZoneSpec'] as ProxyZoneStatic|undefined;
+    const ProxyZoneSpec = (Zone as any)['ProxyZoneSpec'] as ProxyZoneStatic | undefined;
 
     // If there is no "ProxyZoneSpec" installed, we throw an error and recommend
     // setting up the proxy zone by pulling in the testing bundle.
     if (!ProxyZoneSpec) {
       throw Error(
-        'ProxyZoneSpec is needed for the test harnesses but could not be found. ' +
-        'Please make sure that your environment includes zone.js/dist/zone-testing.js');
+          'ProxyZoneSpec is needed for the test harnesses but could not be found. ' +
+          'Please make sure that your environment includes zone.js/dist/zone-testing.js');
     }
 
     // Ensure that there is a proxy zone instance set up, and get

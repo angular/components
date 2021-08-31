@@ -24,10 +24,12 @@ describe('performance for the testbed harness environment', () => {
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatButtonModule],
-      declarations: [ButtonHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatButtonModule],
+          declarations: [ButtonHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ButtonHarnessTest);
     fixture.detectChanges();
@@ -114,5 +116,5 @@ describe('performance for the testbed harness environment', () => {
   `,
 })
 export class ButtonHarnessTest {
-  vals = Array.from({ length: NUM_BUTTONS }, (_, i) => i);
+  vals = Array.from({length: NUM_BUTTONS}, (_, i) => i);
 }

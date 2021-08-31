@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export {MatInput} from './input';
-export {MatInputModule} from './module';
-export {MatTextareaAutosize} from './autosize';
 export {
   getMatInputUnsupportedTypeError,
   MAT_INPUT_VALUE_ACCESSOR,
 } from '@angular/material/input';
+export {MatTextareaAutosize} from './autosize';
+export {MatInput} from './input';
+export {MatInputModule} from './module';

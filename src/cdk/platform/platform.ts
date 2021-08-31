@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 
 // Whether the current platform supports the V8 Break Iterator. The V8 check
 // is necessary to detect all Blink based browsers.
@@ -28,14 +28,15 @@ try {
  * Service to detect the current platform by comparing the userAgent strings and
  * checking browser-specific global properties.
  */
-@Injectable({providedIn: 'root'})
+@
+Injectable({providedIn: 'root'})
 export class Platform {
   // We want to use the Angular platform check because if the Document is shimmed
   // without the navigator, the following checks will fail. This is preferred because
   // sometimes the Document may be shimmed without the user's knowledge or intention
   /** Whether the Angular application is being rendered in the browser. */
-  isBrowser: boolean = this._platformId ?
-      isPlatformBrowser(this._platformId) : typeof document === 'object' && !!document;
+  isBrowser: boolean = this._platformId ? isPlatformBrowser(this._platformId) :
+                                          typeof document === 'object' && !!document;
 
   /** Whether the current browser is Microsoft Edge. */
   EDGE: boolean = this.isBrowser && /(edge)/i.test(navigator.userAgent);
@@ -45,18 +46,19 @@ export class Platform {
 
   // EdgeHTML and Trident mock Blink specific things and need to be excluded from this check.
   /** Whether the current rendering engine is Blink. */
-  BLINK: boolean = this.isBrowser && (!!((window as any).chrome || hasV8BreakIterator) &&
-      typeof CSS !== 'undefined' && !this.EDGE && !this.TRIDENT);
+  BLINK: boolean = this.isBrowser &&
+      (!!((window as any).chrome || hasV8BreakIterator) && typeof CSS !== 'undefined' &&
+       !this.EDGE && !this.TRIDENT);
 
   // Webkit is part of the userAgent in EdgeHTML, Blink and Trident. Therefore we need to
   // ensure that Webkit runs standalone and is not used as another engine's base.
   /** Whether the current rendering engine is WebKit. */
-  WEBKIT: boolean = this.isBrowser &&
-      /AppleWebKit/i.test(navigator.userAgent) && !this.BLINK && !this.EDGE && !this.TRIDENT;
+  WEBKIT: boolean = this.isBrowser && /AppleWebKit/i.test(navigator.userAgent) && !this.BLINK &&
+      !this.EDGE && !this.TRIDENT;
 
   /** Whether the current platform is Apple iOS. */
-  IOS: boolean = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-      !('MSStream' in window);
+  IOS: boolean =
+      this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
 
   // It's difficult to detect the plain Gecko engine, because most of the browsers identify
   // them self as Gecko-like browsers and modify the userAgent's according to that.
@@ -77,4 +79,3 @@ export class Platform {
 
   constructor(@Inject(PLATFORM_ID) private _platformId: Object) {}
 }
-

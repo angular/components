@@ -43,26 +43,24 @@ if (explicitPullRequests.length) {
 } else {
   // Fetch PRs that are merge-ready but not merge-safe
   github.search.issues(githubSearchOptions)
-    .then(response => writeScheduleScript(response.data.items))
-    .catch(error => console.error('Fetching merge-ready PRs failed.', error));
+      .then(response => writeScheduleScript(response.data.items))
+      .catch(error => console.error('Fetching merge-ready PRs failed.', error));
 }
 
 
 function writeScheduleScript(prs) {
-  let script =
-    `#!/bin/bash \n\n` +
-    `mkdir -p ${logDir} \n\n` +
-    `# Be sure you have no locally modified files in your git client before running this. \n\n`;
+  let script = `#!/bin/bash \n\n` +
+      `mkdir -p ${logDir} \n\n` +
+      `# Be sure you have no locally modified files in your git client before running this. \n\n`;
 
   // Generate a command for each file to be piped into the `at` command, scheduling it to run at
   // a later time.
   for (const pr of prs) {
-    script +=
-      `echo '(` +
+    script += `echo '(` +
         `cd ${localRepo} ; ` +
         `${presubmitScript} ${pr.number} --global 2>&1 > ${logDir}/pr-${pr.number}.txt ` +
-      `)' | ` +
-      `at ${startTime} today \n`;
+        `)' | ` +
+        `at ${startTime} today \n`;
   }
 
   fs.writeFileSync(path.join(localRepo, 'dist', 'schedule-presubmit.sh'), script, 'utf-8');

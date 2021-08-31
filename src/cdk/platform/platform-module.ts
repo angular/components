@@ -10,4 +10,5 @@ import {NgModule} from '@angular/core';
 
 
 @NgModule({})
-export class PlatformModule {}
+export class PlatformModule {
+}

@@ -15,7 +15,8 @@ import {Directive} from '@angular/core';
     'class': 'mat-mdc-snack-bar-label mdc-snackbar__label',
   }
 })
-export class MatSnackBarLabel {}
+export class MatSnackBarLabel {
+}
 
 /** Directive that should be applied to the element containing the snack bar's action buttons. */
 @Directive({
@@ -24,7 +25,8 @@ export class MatSnackBarLabel {}
     'class': 'mat-mdc-snack-bar-actions mdc-snackbar__actions',
   }
 })
-export class MatSnackBarActions {}
+export class MatSnackBarActions {
+}
 
 /** Directive that should be applied to each of the snack bar's action buttons. */
 @Directive({
@@ -33,4 +35,5 @@ export class MatSnackBarActions {}
     'class': 'mat-mdc-snack-bar-action mdc-snackbar__action',
   }
 })
-export class MatSnackBarAction {}
+export class MatSnackBarAction {
+}

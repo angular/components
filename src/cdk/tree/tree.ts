@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FocusableOption} from '@angular/cdk/a11y';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CollectionViewer, DataSource, isDataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
@@ -37,6 +38,7 @@ import {
   Subscription,
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -47,7 +49,6 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError
 } from './tree-errors';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -77,10 +78,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   private _dataDiffer: IterableDiffer<T>;
 
   /** Stores the node definition that does not have a when predicate. */
-  private _defaultNodeDef: CdkTreeNodeDef<T> | null;
+  private _defaultNodeDef: CdkTreeNodeDef<T>|null;
 
   /** Data subscription */
-  private _dataSubscription: Subscription | null;
+  private _dataSubscription: Subscription|null;
 
   /** Level of nodes */
   private _levels: Map<T, number> = new Map<T, number>();
@@ -91,13 +92,15 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * Data source can be an observable of data array, or a data array to render.
    */
   @Input()
-  get dataSource(): DataSource<T> | Observable<T[]> | T[] { return this._dataSource; }
-  set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
+  get dataSource(): DataSource<T>|Observable<T[]>|T[] {
+    return this._dataSource;
+  }
+  set dataSource(dataSource: DataSource<T>|Observable<T[]>|T[]) {
     if (this._dataSource !== dataSource) {
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: DataSource<T> | Observable<T[]> | T[];
+  private _dataSource: DataSource<T>|Observable<T[]>|T[];
 
   /** The tree controller */
   @Input() treeControl: TreeControl<T, K>;
@@ -118,7 +121,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
     descendants: true
-  }) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
+  })
+  _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange
@@ -127,10 +131,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * Can be used by the data source to as a heuristic of what data should be provided.
    */
   readonly viewChange =
-    new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
+      new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
-  constructor(private _differs: IterableDiffers,
-              private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
@@ -177,7 +180,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * render change subscription if one exists. If the data source is null, interpret this by
    * clearing the node outlet. Otherwise start listening for new data.
    */
-  private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
+  private _switchDataSource(dataSource: DataSource<T>|Observable<T[]>|T[]) {
     if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
       (this.dataSource as DataSource<T>).disconnect(this);
     }
@@ -200,7 +203,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    let dataStream: Observable<readonly T[]> | undefined;
+    let dataStream: Observable<readonly T[]>|undefined;
 
     if (isDataSource(this._dataSource)) {
       dataStream = this._dataSource.connect(this);
@@ -212,32 +215,34 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
     if (dataStream) {
       this._dataSubscription = dataStream.pipe(takeUntil(this._onDestroy))
-        .subscribe(data => this.renderNodeChanges(data));
+                                   .subscribe(data => this.renderNodeChanges(data));
     } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getTreeNoValidDataSourceError();
     }
   }
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */
-  renderNodeChanges(data: readonly T[], dataDiffer: IterableDiffer<T> = this._dataDiffer,
-                    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
-                    parentData?: T) {
+  renderNodeChanges(
+      data: readonly T[], dataDiffer: IterableDiffer<T> = this._dataDiffer,
+      viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer, parentData?: T) {
     const changes = dataDiffer.diff(data);
-    if (!changes) { return; }
+    if (!changes) {
+      return;
+    }
 
-    changes.forEachOperation((item: IterableChangeRecord<T>,
-                              adjustedPreviousIndex: number | null,
-                              currentIndex: number | null) => {
-        if (item.previousIndex == null) {
-          this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
-        } else if (currentIndex == null) {
-          viewContainer.remove(adjustedPreviousIndex!);
-          this._levels.delete(item.item);
-        } else {
-          const view = viewContainer.get(adjustedPreviousIndex!);
-          viewContainer.move(view!, currentIndex);
-        }
-      });
+    changes.forEachOperation(
+        (item: IterableChangeRecord<T>, adjustedPreviousIndex: number|null,
+         currentIndex: number|null) => {
+          if (item.previousIndex == null) {
+            this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
+          } else if (currentIndex == null) {
+            viewContainer.remove(adjustedPreviousIndex!);
+            this._levels.delete(item.item);
+          } else {
+            const view = viewContainer.get(adjustedPreviousIndex!);
+            viewContainer.move(view!, currentIndex);
+          }
+        });
 
     this._changeDetectorRef.detectChanges();
   }
@@ -249,10 +254,12 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * definition.
    */
   _getNodeDef(data: T, i: number): CdkTreeNodeDef<T> {
-    if (this._nodeDefs.length === 1) { return this._nodeDefs.first; }
+    if (this._nodeDefs.length === 1) {
+      return this._nodeDefs.first;
+    }
 
     const nodeDef =
-      this._nodeDefs.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
+        this._nodeDefs.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
 
     if (!nodeDef && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getTreeMissingMatchingNodeDefError();
@@ -310,7 +317,10 @@ export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestro
    *   removed in a future version.
    * @breaking-change 12.0.0 Remove this input
    */
-  @Input() get role(): 'treeitem'|'group' { return 'treeitem'; }
+  @Input()
+  get role(): 'treeitem'|'group' {
+    return 'treeitem';
+  }
 
   set role(_role: 'treeitem'|'group') {
     // TODO: move to host after View Engine deprecation
@@ -321,7 +331,7 @@ export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestro
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
    * in `CdkTree` and set the data to it.
    */
-  static mostRecentTreeNode: CdkTreeNode<any> | null = null;
+  static mostRecentTreeNode: CdkTreeNode<any>|null = null;
 
   /** Subject that emits when the component has been destroyed. */
   protected readonly _destroyed = new Subject<void>();
@@ -332,7 +342,9 @@ export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestro
   private _parentNodeAriaLevel: number;
 
   /** The tree node's data. */
-  get data(): T { return this._data; }
+  get data(): T {
+    return this._data;
+  }
   set data(value: T) {
     if (value !== this._data) {
       this._data = value;
@@ -354,15 +366,14 @@ export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestro
   protected _isAriaExpanded: boolean;
 
   get level(): number {
-   // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
-   // aria-level off the parent node and use it as the level for this node (note aria-level is
-   // 1-indexed, while this property is 0-indexed, so we don't need to increment).
-   return this._tree.treeControl.getLevel ?
-     this._tree.treeControl.getLevel(this._data) : this._parentNodeAriaLevel;
-   }
+    // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
+    // aria-level off the parent node and use it as the level for this node (note aria-level is
+    // 1-indexed, while this property is 0-indexed, so we don't need to increment).
+    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) :
+                                             this._parentNodeAriaLevel;
+  }
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>,
-              protected _tree: CdkTree<T, K>) {
+  constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine. It is not set as a @HostBinding because
@@ -407,7 +418,7 @@ export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestro
   // TODO: role should eventually just be set in the component host
   protected _setRoleFromData(): void {
     if (!this._tree.treeControl.isExpandable && !this._tree.treeControl.getChildren &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getTreeControlFunctionsMissingError();
     }
     this.role = 'treeitem';

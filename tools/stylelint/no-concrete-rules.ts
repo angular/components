@@ -1,5 +1,5 @@
-import {createPlugin, utils} from 'stylelint';
 import {basename} from 'path';
+import {createPlugin, utils} from 'stylelint';
 
 const ruleName = 'material/no-concrete-rules';
 const messages = utils.ruleMessages(ruleName, {
@@ -34,12 +34,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options) => {
     // about the top-level nodes.
     root.nodes.forEach(node => {
       if (node.type === 'rule' || (node.type === 'atrule' && node.name === 'include')) {
-        utils.report({
-          result,
-          ruleName,
-          node,
-          message: messages.expected(filePattern)
-        });
+        utils.report({result, ruleName, node, message: messages.expected(filePattern)});
       }
     });
   };

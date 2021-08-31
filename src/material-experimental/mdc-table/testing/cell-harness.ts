@@ -8,10 +8,10 @@
 
 import {HarnessPredicate} from '@angular/cdk/testing';
 import {
+  CellHarnessFilters,
   MatCellHarness as BaseMatCellHarness,
-  MatHeaderCellHarness as BaseMatHeaderCellHarness,
   MatFooterCellHarness as BaseMatFooterCellHarness,
-  CellHarnessFilters
+  MatHeaderCellHarness as BaseMatHeaderCellHarness
 } from '@angular/material/table/testing';
 
 /** Harness for interacting with an MDC-based Angular Material table cell. */

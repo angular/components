@@ -13,11 +13,13 @@ import {MatSelectModule} from '@angular/material/select';
     </mat-select>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatSelectModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

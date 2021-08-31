@@ -11,7 +11,6 @@ import {TreeControl} from './tree-control';
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
-
   /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
   abstract getDescendants(dataNode: T): T[];
 
@@ -42,7 +41,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
   isExpandable: (dataNode: T) => boolean;
 
   /** Gets a stream that emits whenever the given data node's children change. */
-  getChildren: (dataNode: T) => (Observable<T[]> | T[] | undefined | null);
+  getChildren: (dataNode: T) => (Observable<T[]>| T[] | undefined | null);
 
   /** Toggles one single data node's expanded/collapsed state. */
   toggle(dataNode: T): void {

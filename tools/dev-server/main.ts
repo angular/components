@@ -24,4 +24,3 @@ setupBazelWatcherSupport(server);
 // Start the devserver. The server will always bind to the loopback and
 // the public interface of the current host.
 server.start();
-

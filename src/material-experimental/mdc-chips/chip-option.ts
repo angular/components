@@ -9,28 +9,29 @@
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SPACE} from '@angular/cdk/keycodes';
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   Output,
-  ViewEncapsulation,
-  AfterContentInit
+  ViewEncapsulation
 } from '@angular/core';
 import {deprecated} from '@material/chips';
 import {take} from 'rxjs/operators';
+
 import {MatChip} from './chip';
 
 
 /** Event object emitted by MatChipOption when selected or deselected. */
 export class MatChipSelectionChange {
   constructor(
-    /** Reference to the chip that emitted the event. */
-    public source: MatChipOption,
-    /** Whether the chip that emitted the event is selected. */
-    public selected: boolean,
-    /** Whether the selection change was a result of a user interaction. */
-    public isUserInput = false) { }
+      /** Reference to the chip that emitted the event. */
+      public source: MatChipOption,
+      /** Whether the chip that emitted the event is selected. */
+      public selected: boolean,
+      /** Whether the selection change was a result of a user interaction. */
+      public isUserInput = false) {}
 }
 
 /**
@@ -65,7 +66,6 @@ export class MatChipSelectionChange {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipOption extends MatChip implements AfterContentInit {
-
   /** Whether the chip list is selectable. */
   chipListSelectable: boolean = true;
 
@@ -105,18 +105,19 @@ export class MatChipOption extends MatChip implements AfterContentInit {
   }
 
   /** The ARIA selected applied to the chip. */
-  get ariaSelected(): string | null {
+  get ariaSelected(): string|null {
     // Remove the `aria-selected` when the chip is deselected in single-selection mode, because
     // it adds noise to NVDA users where "not selected" will be read out for each chip.
-    return this.selectable && (this._chipListMultiple || this.selected) ?
-        this.selected.toString() : null;
+    return this.selectable && (this._chipListMultiple || this.selected) ? this.selected.toString() :
+                                                                          null;
   }
 
   /** The unstyled chip selector for this component. */
   protected override basicChipAttrName = 'mat-basic-chip-option';
 
   /** Emitted when the chip is selected or deselected. */
-  @Output() readonly selectionChange: EventEmitter<MatChipSelectionChange> =
+  @Output()
+  readonly selectionChange: EventEmitter<MatChipSelectionChange> =
       new EventEmitter<MatChipSelectionChange>();
 
   override ngAfterContentInit() {
@@ -170,11 +171,7 @@ export class MatChipOption extends MatChip implements AfterContentInit {
 
   /** Emits a selection change event. */
   private _dispatchSelectionChange(isUserInput = false) {
-    this.selectionChange.emit({
-      source: this,
-      isUserInput,
-      selected: this.selected
-    });
+    this.selectionChange.emit({source: this, isUserInput, selected: this.selected});
   }
 
   /** Allows for programmatic focusing of the chip. */
@@ -196,14 +193,12 @@ export class MatChipOption extends MatChip implements AfterContentInit {
     // earlier than usual, causing it to be blurred and throwing off the logic in the chip list
     // that moves focus not the next item. To work around the issue, we defer marking the chip
     // as not focused until the next time the zone stabilizes.
-    this._ngZone.onStable
-      .pipe(take(1))
-      .subscribe(() => {
-        this._ngZone.run(() => {
-          this._hasFocusInternal = false;
-          this._onBlur.next({chip: this});
-        });
+    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+      this._ngZone.run(() => {
+        this._hasFocusInternal = false;
+        this._onBlur.next({chip: this});
       });
+    });
   }
 
 

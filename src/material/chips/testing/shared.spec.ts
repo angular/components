@@ -1,38 +1,37 @@
-import {Component} from '@angular/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {HarnessLoader, parallel, TestKey} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatIconHarness} from '@angular/material/icon/testing';
-import {MatChipListHarness} from './chip-list-harness';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {MatChipHarness} from './chip-harness';
 import {MatChipInputHarness} from './chip-input-harness';
-import {MatChipRemoveHarness} from './chip-remove-harness';
-import {MatChipOptionHarness} from './chip-option-harness';
+import {MatChipListHarness} from './chip-list-harness';
 import {MatChipListboxHarness} from './chip-listbox-harness';
+import {MatChipOptionHarness} from './chip-option-harness';
+import {MatChipRemoveHarness} from './chip-remove-harness';
 
 /** Shared tests to run on both the original and MDC-based chips. */
 export function runHarnessTests(
-    chipsModule: typeof MatChipsModule,
-    chipListHarness: typeof MatChipListHarness,
-    listboxHarness: typeof MatChipListboxHarness,
-    chipHarness: typeof MatChipHarness,
-    chipOptionHarness: typeof MatChipOptionHarness,
-    chipInputHarness: typeof MatChipInputHarness,
-    chipRemoveHarness: typeof MatChipRemoveHarness,
-    iconModule: typeof MatIconModule,
+    chipsModule: typeof MatChipsModule, chipListHarness: typeof MatChipListHarness,
+    listboxHarness: typeof MatChipListboxHarness, chipHarness: typeof MatChipHarness,
+    chipOptionHarness: typeof MatChipOptionHarness, chipInputHarness: typeof MatChipInputHarness,
+    chipRemoveHarness: typeof MatChipRemoveHarness, iconModule: typeof MatIconModule,
     iconHarness: typeof MatIconHarness) {
   let fixture: ComponentFixture<ChipsHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [chipsModule, MatFormFieldModule, NoopAnimationsModule, iconModule],
-      declarations: [ChipsHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [chipsModule, MatFormFieldModule, NoopAnimationsModule, iconModule],
+          declarations: [ChipsHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ChipsHarnessTest);
     fixture.detectChanges();
@@ -48,18 +47,14 @@ export function runHarnessTests(
     const chipLists = await loader.getAllHarnesses(chipListHarness);
 
     expect(await parallel(() => chipLists.map(list => list.isDisabled()))).toEqual([
-      false,
-      false,
-      false
+      false, false, false
     ]);
 
     fixture.componentInstance.isDisabled = true;
     fixture.detectChanges();
 
     expect(await parallel(() => chipLists.map(list => list.isDisabled()))).toEqual([
-      true,
-      false,
-      false
+      true, false, false
     ]);
   });
 
@@ -67,18 +62,14 @@ export function runHarnessTests(
     const chipLists = await loader.getAllHarnesses(chipListHarness);
 
     expect(await parallel(() => chipLists.map(list => list.isRequired()))).toEqual([
-      false,
-      false,
-      true
+      false, false, true
     ]);
 
     fixture.componentInstance.isRequired = true;
     fixture.detectChanges();
 
     expect(await parallel(() => chipLists.map(list => list.isRequired()))).toEqual([
-      true,
-      false,
-      true
+      true, false, true
     ]);
   });
 
@@ -86,18 +77,14 @@ export function runHarnessTests(
     const chipLists = await loader.getAllHarnesses(chipListHarness);
 
     expect(await parallel(() => chipLists.map(list => list.isMultiple()))).toEqual([
-      false,
-      false,
-      false
+      false, false, false
     ]);
 
     fixture.componentInstance.isMultiple = true;
     fixture.detectChanges();
 
     expect(await parallel(() => chipLists.map(list => list.isMultiple()))).toEqual([
-      true,
-      false,
-      false
+      true, false, false
     ]);
   });
 
@@ -105,18 +92,14 @@ export function runHarnessTests(
     const chipLists = await loader.getAllHarnesses(chipListHarness);
 
     expect(await parallel(() => chipLists.map(list => list.getOrientation()))).toEqual([
-      'horizontal',
-      'horizontal',
-      'horizontal'
+      'horizontal', 'horizontal', 'horizontal'
     ]);
 
     fixture.componentInstance.orientation = 'vertical';
     fixture.detectChanges();
 
     expect(await parallel(() => chipLists.map(list => list.getOrientation()))).toEqual([
-      'vertical',
-      'horizontal',
-      'horizontal'
+      'vertical', 'horizontal', 'horizontal'
     ]);
   });
 
@@ -151,8 +134,7 @@ export function runHarnessTests(
 
     const selectedChips = await chipList.getChips({selected: true});
     expect(await parallel(() => selectedChips.map(chip => chip.getText()))).toEqual([
-      'Chip 2',
-      'Chip 4'
+      'Chip 2', 'Chip 4'
     ]);
   });
 
@@ -164,12 +146,7 @@ export function runHarnessTests(
   it('should get the text of a chip', async () => {
     const chips = await loader.getAllHarnesses(chipHarness);
     expect(await parallel(() => chips.map(chip => chip.getText()))).toEqual([
-      'Chip 1',
-      'Chip 2',
-      'Chip 3',
-      'Chip 4',
-      'Frodo',
-      'Bilbo'
+      'Chip 1', 'Chip 2', 'Chip 3', 'Chip 4', 'Frodo', 'Bilbo'
     ]);
   });
 
@@ -200,35 +177,20 @@ export function runHarnessTests(
   it('should get the disabled state of a chip', async () => {
     const chips = await loader.getAllHarnesses(chipHarness);
     expect(await parallel(() => chips.map(chip => chip.isDisabled()))).toEqual([
-      false,
-      false,
-      true,
-      false,
-      false,
-      false
+      false, false, true, false, false, false
     ]);
   });
 
   it('should get the selected state of a chip', async () => {
     const chips = await loader.getAllHarnesses(chipOptionHarness);
     expect(await parallel(() => chips.map(chip => chip.isSelected()))).toEqual([
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
+      false, false, false, false, false, false
     ]);
 
     await chips[1].select();
 
     expect(await parallel(() => chips.map(chip => chip.isSelected()))).toEqual([
-      false,
-      true,
-      false,
-      false,
-      false,
-      false
+      false, true, false, false, false, false
     ]);
   });
 
@@ -305,9 +267,7 @@ export function runHarnessTests(
   });
 
   it('should find avatar in chip', async () => {
-    const chip = await loader.getHarness(chipHarness.with({
-      selector: '.mat-chip-with-avatar'
-    }));
+    const chip = await loader.getHarness(chipHarness.with({selector: '.mat-chip-with-avatar'}));
     const avatar = await chip.getAvatar();
     expect(avatar).toBeTruthy();
     const avatarHost = await avatar?.host();
@@ -315,9 +275,8 @@ export function runHarnessTests(
   });
 
   it('should find icon in chip', async () => {
-    const chip = await loader.getHarness(chipHarness.with({
-      selector: '.mat-chip-with-icon-avatar'
-    }));
+    const chip =
+        await loader.getHarness(chipHarness.with({selector: '.mat-chip-with-icon-avatar'}));
     expect(chip).toBeTruthy();
     const icon = await chip.getHarness(iconHarness);
     expect(icon).toBeTruthy();

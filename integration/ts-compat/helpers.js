@@ -13,8 +13,8 @@ const npmPackages = getNpmPackagesFromRunfiles();
 // Path to the node modules of the workspace.
 const nodeModulesDir = runfiles.resolve('npm/node_modules');
 // Path to the generated file that imports all entry-points.
-const testFilePath = runfiles.resolveWorkspaceRelative(
-  'integration/ts-compat/import-all-entry-points.ts');
+const testFilePath =
+    runfiles.resolveWorkspaceRelative('integration/ts-compat/import-all-entry-points.ts');
 
 /**
  * Runs the TypeScript compatibility test with the specified tsc binary. The
@@ -39,12 +39,10 @@ exports.runTypeScriptCompatibilityTest = async (tscBinPath) => {
       '--strict',
       // Disables automatic type resolution. In non-sandbox environments, the node modules
       // are accessible and types could end up as part of the program.
-      '--types',
-      '--lib', 'es2015,dom',
+      '--types', '--lib', 'es2015,dom',
       // Ensures that `node_modules` can be resolved. By default, in sandbox environments the
       // node modules cannot be resolved because they are wrapped in the `npm/node_modules` folder
-      '--baseUrl', nodeModulesDir,
-      testFilePath
+      '--baseUrl', nodeModulesDir, testFilePath
     ];
     // Run `tsc` to compile the project. The stdout/stderr output is inherited, so that
     // warnings and errors are printed to the console.
@@ -61,4 +59,3 @@ exports.runTypeScriptCompatibilityTest = async (tscBinPath) => {
     });
   });
 };
-

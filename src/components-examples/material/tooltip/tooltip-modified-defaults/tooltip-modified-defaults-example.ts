@@ -14,8 +14,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 @Component({
   selector: 'tooltip-modified-defaults-example',
   templateUrl: 'tooltip-modified-defaults-example.html',
-  providers: [
-    {provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}
-  ],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}],
 })
-export class TooltipModifiedDefaultsExample {}
+export class TooltipModifiedDefaultsExample {
+}

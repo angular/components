@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, NgZone} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {FocusTrap, InteractivityChecker} from '@angular/cdk/a11y';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
 /** Value indicating whether focus left the target area before or after the enclosed elements. */
@@ -25,10 +25,7 @@ export class FocusEscapeNotifier extends FocusTrap {
   private readonly _escapeSubject = new Subject<FocusEscapeNotifierDirection>();
 
   constructor(
-      element: HTMLElement,
-      checker: InteractivityChecker,
-      ngZone: NgZone,
-      document: Document) {
+      element: HTMLElement, checker: InteractivityChecker, ngZone: NgZone, document: Document) {
     super(element, checker, ngZone, document, true /* deferAnchors */);
 
     // The focus trap adds "anchors" at the beginning and end of a trapped region that redirect
@@ -56,10 +53,8 @@ export class FocusEscapeNotifierFactory {
   private _document: Document;
 
   constructor(
-      private _checker: InteractivityChecker,
-      private _ngZone: NgZone,
+      private _checker: InteractivityChecker, private _ngZone: NgZone,
       @Inject(DOCUMENT) _document: any) {
-
     this._document = _document;
   }
 

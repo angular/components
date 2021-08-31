@@ -13,11 +13,13 @@ import {MatTabsModule} from '@angular/material/tabs';
     </mat-tab-group>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatTabsModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

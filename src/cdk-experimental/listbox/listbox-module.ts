@@ -14,4 +14,5 @@ const EXPORTED_DECLARATIONS = [CdkListbox, CdkOption];
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
 })
-export class CdkListboxModule {}
+export class CdkListboxModule {
+}

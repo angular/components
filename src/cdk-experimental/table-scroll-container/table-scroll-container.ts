@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, OnDestroy, OnInit, Optional} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {Directionality} from '@angular/cdk/bidi';
 import {_getShadowRoot} from '@angular/cdk/platform';
 import {
@@ -16,6 +14,8 @@ import {
   StickySize,
   StickyUpdate,
 } from '@angular/cdk/table';
+import {DOCUMENT} from '@angular/common';
+import {Directive, ElementRef, Inject, OnDestroy, OnInit, Optional} from '@angular/core';
 
 let nextId = 0;
 
@@ -39,8 +39,7 @@ let nextId = 0;
     {provide: STICKY_POSITIONING_LISTENER, useExisting: CdkTableScrollContainer},
   ],
 })
-export class CdkTableScrollContainer implements StickyPositioningListener,
-    OnDestroy, OnInit {
+export class CdkTableScrollContainer implements StickyPositioningListener, OnDestroy, OnInit {
   private readonly _uniqueClassName: string;
   private _styleRoot!: Node;
   private _styleElement?: HTMLStyleElement;

@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Observable} from 'rxjs';
 import {ListRange} from '@angular/cdk/collections';
+import {Observable} from 'rxjs';
 
 /**
  * An item to be repeated by the VirtualScrollViewport
  */
 export interface CdkVirtualScrollRepeater<T> {
   readonly dataStream: Observable<readonly T[]>;
-  measureRangeSize(range: ListRange, orientation: 'horizontal' | 'vertical'): number;
+  measureRangeSize(range: ListRange, orientation: 'horizontal'|'vertical'): number;
 }

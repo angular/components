@@ -7,7 +7,7 @@
  */
 
 import {HarnessPredicate} from '@angular/cdk/testing';
-import {CheckboxHarnessFilters, _MatCheckboxHarnessBase} from '@angular/material/checkbox/testing';
+import {_MatCheckboxHarnessBase, CheckboxHarnessFilters} from '@angular/material/checkbox/testing';
 
 /** Harness for interacting with a MDC-based mat-checkbox in tests. */
 export class MatCheckboxHarness extends _MatCheckboxHarnessBase {

@@ -14,7 +14,7 @@ import {SliderThumbHarnessFilters, ThumbPosition} from './slider-harness-filters
 /** Harness for interacting with a thumb inside of a Material slider in tests. */
 export class MatSliderThumbHarness extends ComponentHarness {
   static hostSelector =
-    'input[matSliderThumb], input[matSliderStartThumb], input[matSliderEndThumb]';
+      'input[matSliderThumb], input[matSliderStartThumb], input[matSliderEndThumb]';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatSliderThumbHarness` that meets
@@ -54,11 +54,8 @@ export class MatSliderThumbHarness extends ComponentHarness {
 
   /** Gets the current percentage value of the slider. */
   async getPercentage(): Promise<number> {
-    const [value, min, max] = await parallel(() => [
-      this.getValue(),
-      this.getMinValue(),
-      this.getMaxValue()
-    ]);
+    const [value, min, max] =
+        await parallel(() => [this.getValue(), this.getMinValue(), this.getMaxValue()]);
 
     return (value - min) / (max - min);
   }

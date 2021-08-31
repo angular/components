@@ -33,11 +33,8 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
     },
     {
       pr: 'https://github.com/angular/components/pull/17302',
-      changes: [{
-        replace: 'onChange',
-        replaceWith: 'changed',
-        limitedTo: {classes: ['SelectionModel']}
-      }]
+      changes:
+          [{replace: 'onChange', replaceWith: 'changed', limitedTo: {classes: ['SelectionModel']}}]
     }
   ],
   [TargetVersion.V8]: [],

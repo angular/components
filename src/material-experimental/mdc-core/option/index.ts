@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatRippleModule, MatPseudoCheckboxModule} from '@angular/material/core';
-import {MatOption} from './option';
+import {NgModule} from '@angular/core';
+import {MatPseudoCheckboxModule, MatRippleModule} from '@angular/material/core';
+
 import {MatOptgroup} from './optgroup';
+import {MatOption} from './option';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {MatOptgroup} from './optgroup';
   exports: [MatOption, MatOptgroup],
   declarations: [MatOption, MatOptgroup]
 })
-export class MatOptionModule {}
+export class MatOptionModule {
+}
 
 
 export * from './option';

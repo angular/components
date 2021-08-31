@@ -1,13 +1,15 @@
-import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@angular/core';
+import {SPACE, TAB} from '@angular/cdk/keycodes';
+import {Component, ElementRef, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {TAB, SPACE} from '@angular/cdk/keycodes';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItem} from './menu-item';
+
 import {CdkMenu} from './menu';
-import {CdkMenuItemTrigger} from './menu-item-trigger';
 import {Menu} from './menu-interface';
+import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemTrigger} from './menu-item-trigger';
+import {CdkMenuModule} from './menu-module';
 
 describe('MenuItemTrigger', () => {
   describe('on CdkMenuItem', () => {
@@ -16,10 +18,12 @@ describe('MenuItemTrigger', () => {
     let menuItemElement: HTMLButtonElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [TriggerForEmptyMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [TriggerForEmptyMenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -80,13 +84,15 @@ describe('MenuItemTrigger', () => {
       grabElementsForTesting();
     };
 
-    const setDocumentDirection = (dir: 'ltr' | 'rtl') => (document.dir = dir);
+    const setDocumentDirection = (dir: 'ltr'|'rtl') => (document.dir = dir);
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarWithNestedSubMenus],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuBarWithNestedSubMenus],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -210,25 +216,23 @@ describe('MenuItemTrigger', () => {
       detectChanges();
 
       expect(Math.floor(nativeTriggers[0].getBoundingClientRect().bottom))
-        .withContext('MenuBar is horizontal by default')
-        .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().top));
+          .withContext('MenuBar is horizontal by default')
+          .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().top));
     });
 
-    it(
-      'should fallback to positioning the overlay above the trigger for horizontal Menu ' +
-        'styled to bottom of viewport',
-      () => {
-        nativeTriggers[0].style.position = 'fixed';
-        nativeTriggers[0].style.bottom = '0';
+    it('should fallback to positioning the overlay above the trigger for horizontal Menu ' +
+           'styled to bottom of viewport',
+       () => {
+         nativeTriggers[0].style.position = 'fixed';
+         nativeTriggers[0].style.bottom = '0';
 
-        triggers[0].toggle();
-        detectChanges();
+         triggers[0].toggle();
+         detectChanges();
 
-        expect(Math.floor(nativeTriggers[0].getBoundingClientRect().top))
-          .withContext('trigger button position set to the bottom of the viewport')
-          .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().bottom));
-      }
-    );
+         expect(Math.floor(nativeTriggers[0].getBoundingClientRect().top))
+             .withContext('trigger button position set to the bottom of the viewport')
+             .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().bottom));
+       });
 
     it('should position nested submenu overlay to right by default in ltr layout', () => {
       triggers[0].toggle();
@@ -236,9 +240,8 @@ describe('MenuItemTrigger', () => {
       triggers[1].toggle();
       detectChanges();
 
-      expect(Math.floor(nativeTriggers[1].getBoundingClientRect().right)).toEqual(
-        Math.floor(nativeMenus[1].getBoundingClientRect().left)
-      );
+      expect(Math.floor(nativeTriggers[1].getBoundingClientRect().right))
+          .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().left));
     });
 
     it('should fallback to positioning nested submenu overlay to the left in ltr layout', () => {
@@ -250,8 +253,8 @@ describe('MenuItemTrigger', () => {
       detectChanges();
 
       expect(Math.floor(nativeTriggers[1].getBoundingClientRect().left))
-        .withContext('trigger positioned on the right')
-        .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().right));
+          .withContext('trigger positioned on the right')
+          .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().right));
     });
 
     it('should position nested submenu overlay to the left by default in rtl layout', () => {
@@ -262,9 +265,8 @@ describe('MenuItemTrigger', () => {
       triggers[1].toggle();
       detectChanges();
 
-      expect(Math.floor(nativeTriggers[1].getBoundingClientRect().left)).toEqual(
-        Math.floor(nativeMenus[1].getBoundingClientRect().right)
-      );
+      expect(Math.floor(nativeTriggers[1].getBoundingClientRect().left))
+          .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().right));
     });
 
     it('should fallback to positioning nested submenu overlay to the right in rtl layout', () => {
@@ -279,8 +281,8 @@ describe('MenuItemTrigger', () => {
       detectChanges();
 
       expect(Math.floor(nativeTriggers[1].getBoundingClientRect().right))
-        .withContext('trigger positioned on the left')
-        .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().left));
+          .withContext('trigger positioned on the left')
+          .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().left));
     });
 
     it('should position nested submenu at trigger level by default', () => {
@@ -291,8 +293,8 @@ describe('MenuItemTrigger', () => {
       detectChanges();
 
       expect(Math.floor(nativeTriggers[1].getBoundingClientRect().top))
-        .withContext('submenu should be at height of its trigger by default')
-        .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().top));
+          .withContext('submenu should be at height of its trigger by default')
+          .toEqual(Math.floor(nativeMenus[1].getBoundingClientRect().top));
     });
   });
 
@@ -302,26 +304,26 @@ describe('MenuItemTrigger', () => {
      * @param componentClass the component to create
      */
     function createComponent<T>(componentClass: Type<T>) {
-      return function () {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [componentClass],
-        }).compileComponents();
+      return function() {
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [componentClass],
+            })
+            .compileComponents();
 
         TestBed.createComponent(componentClass).detectChanges();
       };
     }
 
     it('should throw an error if two triggers in different menubars open the same menu', () => {
-      expect(createComponent(TriggersWithSameMenuDifferentMenuBars)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/
-      );
+      expect(createComponent(TriggersWithSameMenuDifferentMenuBars))
+          .toThrowError(/CdkMenuPanel is already referenced by different CdkMenuTrigger/);
     });
 
     it('should throw an error if two triggers in the same menubar open the same menu', () => {
-      expect(createComponent(TriggersWithSameMenuSameMenuBar)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/
-      );
+      expect(createComponent(TriggersWithSameMenuSameMenuBar))
+          .toThrowError(/CdkMenuPanel is already referenced by different CdkMenuTrigger/);
     });
 
     // TODO uncomment once we figure out why this is failing in Ivy
@@ -337,7 +339,7 @@ describe('MenuItemTrigger', () => {
 
     let nativeMenus: HTMLElement[];
     let nativeTrigger: HTMLElement;
-    let submenuNativeItem: HTMLElement | undefined;
+    let submenuNativeItem: HTMLElement|undefined;
 
     const grabElementsForTesting = () => {
       nativeTrigger = fixture.componentInstance.nativeTrigger.nativeElement;
@@ -352,10 +354,12 @@ describe('MenuItemTrigger', () => {
     };
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [StandaloneTriggerWithInlineMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [StandaloneTriggerWithInlineMenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -439,7 +443,8 @@ describe('MenuItemTrigger', () => {
     <ng-template cdkMenuPanel #noop="cdkMenuPanel"><div cdkMenu></div></ng-template>
   `,
 })
-class TriggerForEmptyMenu {}
+class TriggerForEmptyMenu {
+}
 
 @Component({
   template: `
@@ -486,7 +491,8 @@ class MenuBarWithNestedSubMenus {
     </ng-template>
   `,
 })
-class TriggersWithSameMenuDifferentMenuBars {}
+class TriggersWithSameMenuDifferentMenuBars {
+}
 
 @Component({
   template: `
@@ -502,7 +508,8 @@ class TriggersWithSameMenuDifferentMenuBars {}
     </ng-template>
   `,
 })
-class TriggersWithSameMenuSameMenuBar {}
+class TriggersWithSameMenuSameMenuBar {
+}
 
 // TODO uncomment once we figure out why this is failing in Ivy
 // @Component({

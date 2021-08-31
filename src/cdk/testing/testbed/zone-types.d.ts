@@ -17,6 +17,9 @@
 declare interface Zone {
   current: any;
 }
-declare const Zone: Zone | undefined;
+declare const Zone: Zone|undefined;
 declare type ZoneDelegate = Object;
-declare type HasTaskState = {microTask: boolean, macroTask: boolean};
+declare type HasTaskState = {
+  microTask: boolean,
+  macroTask: boolean
+};

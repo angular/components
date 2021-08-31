@@ -18,7 +18,7 @@ const cssCalcAllowedValue = /^-?\d+((\.\d+)?[A-Za-z%$]?)+$/;
 
 /** Object that can be styled by the `TileStyler`. */
 export interface TileStyleTarget {
-  _setListStyle(style: [string, string | null] | null): void;
+  _setListStyle(style: [string, string|null]|null): void;
   _tiles: QueryList<MatGridTile>;
 }
 
@@ -111,8 +111,7 @@ export abstract class TileStyler {
   }
 
   /** Sets the horizontal placement of the tile in the list. */
-  setColStyles(tile: MatGridTile, colIndex: number, percentWidth: number,
-               gutterWidth: number) {
+  setColStyles(tile: MatGridTile, colIndex: number, percentWidth: number, gutterWidth: number) {
     // Base horizontal size of a column.
     let baseTileWidth = this.getBaseTileSize(percentWidth, gutterWidth);
 
@@ -143,15 +142,17 @@ export abstract class TileStyler {
    * This method will be implemented by each type of TileStyler.
    * @docs-private
    */
-  abstract setRowStyles(tile: MatGridTile, rowIndex: number, percentWidth: number,
-                        gutterWidth: number): void;
+  abstract setRowStyles(
+      tile: MatGridTile, rowIndex: number, percentWidth: number, gutterWidth: number): void;
 
   /**
    * Calculates the computed height and returns the correct style property to set.
    * This method can be implemented by each type of TileStyler.
    * @docs-private
    */
-  getComputedHeight(): [string, string] | null { return null; }
+  getComputedHeight(): [string, string]|null {
+    return null;
+  }
 
   /**
    * Called when the tile styler is swapped out with a different one. To be used for cleanup.
@@ -168,15 +169,16 @@ export abstract class TileStyler {
  * @docs-private
  */
 export class FixedTileStyler extends TileStyler {
-
-  constructor(public fixedRowHeight: string) { super(); }
+  constructor(public fixedRowHeight: string) {
+    super();
+  }
 
   override init(gutterSize: string, tracker: TileCoordinator, cols: number, direction: string) {
     super.init(gutterSize, tracker, cols, direction);
     this.fixedRowHeight = normalizeUnits(this.fixedRowHeight);
 
     if (!cssCalcAllowedValue.test(this.fixedRowHeight) &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Invalid value "${this.fixedRowHeight}" set as rowHeight.`);
     }
   }
@@ -187,9 +189,7 @@ export class FixedTileStyler extends TileStyler {
   }
 
   override getComputedHeight(): [string, string] {
-    return [
-      'height', calc(`${this.getTileSpan(this.fixedRowHeight)} + ${this.getGutterSpan()}`)
-    ];
+    return ['height', calc(`${this.getTileSpan(this.fixedRowHeight)} + ${this.getGutterSpan()}`)];
   }
 
   override reset(list: TileStyleTarget) {
@@ -211,7 +211,6 @@ export class FixedTileStyler extends TileStyler {
  * @docs-private
  */
 export class RatioTileStyler extends TileStyler {
-
   /** Ratio width:height given by user to determine row height. */
   rowHeightRatio: number;
   baseTileHeight: string;
@@ -221,8 +220,8 @@ export class RatioTileStyler extends TileStyler {
     this._parseRatio(value);
   }
 
-  setRowStyles(tile: MatGridTile, rowIndex: number, percentWidth: number,
-               gutterWidth: number): void {
+  setRowStyles(tile: MatGridTile, rowIndex: number, percentWidth: number, gutterWidth: number):
+      void {
     let percentHeightPerTile = percentWidth / this.rowHeightRatio;
     this.baseTileHeight = this.getBaseTileSize(percentHeightPerTile, gutterWidth);
 
@@ -302,4 +301,3 @@ function calc(exp: string): string {
 function normalizeUnits(value: string): string {
   return value.match(/([A-Za-z%]+)$/) ? value : `${value}px`;
 }
-

@@ -15,7 +15,7 @@ import {
 import {TooltipHarnessFilters} from './tooltip-harness-filters';
 
 export abstract class _MatTooltipHarnessBase extends ComponentHarness {
-  protected abstract _optionalPanel: AsyncFactoryFn<TestElement | null>;
+  protected abstract _optionalPanel: AsyncFactoryFn<TestElement|null>;
 
   /** Shows the tooltip. */
   async show(): Promise<void> {
@@ -38,7 +38,7 @@ export abstract class _MatTooltipHarnessBase extends ComponentHarness {
     // @breaking-change 12.0.0 Remove null assertion from `dispatchEvent`.
     await host.dispatchEvent?.('touchend');
     await host.mouseAway();
-    await this.forceStabilize(); // Needed in order to flush the `hide` animation.
+    await this.forceStabilize();  // Needed in order to flush the `hide` animation.
   }
 
   /** Gets whether the tooltip is open. */

@@ -6,12 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {NgZone} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll-strategy';
+
 import {OverlayReference} from '../overlay-reference';
-import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {isElementScrolledOutsideView} from '../position/scroll-clip';
+
+import {getMatScrollStrategyAlreadyAttachedError, ScrollStrategy} from './scroll-strategy';
 
 /**
  * Config options for the RepositionScrollStrategy.
@@ -32,10 +34,8 @@ export class RepositionScrollStrategy implements ScrollStrategy {
   private _overlayRef: OverlayReference;
 
   constructor(
-    private _scrollDispatcher: ScrollDispatcher,
-    private _viewportRuler: ViewportRuler,
-    private _ngZone: NgZone,
-    private _config?: RepositionScrollStrategyConfig) { }
+      private _scrollDispatcher: ScrollDispatcher, private _viewportRuler: ViewportRuler,
+      private _ngZone: NgZone, private _config?: RepositionScrollStrategyConfig) {}
 
   /** Attaches this scroll strategy to an overlay. */
   attach(overlayRef: OverlayReference) {

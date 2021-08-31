@@ -44,9 +44,8 @@ export interface _ViewRepeaterItemInsertArgs<C> {
  * @template C The type for the context passed to each embedded view.
  */
 export type _ViewRepeaterItemContextFactory<T, R, C extends _ViewRepeaterItemContext<T>> =
-    (record: IterableChangeRecord<R>,
-     adjustedPreviousIndex: number | null,
-     currentIndex: number | null) => _ViewRepeaterItemInsertArgs<C>;
+    (record: IterableChangeRecord<R>, adjustedPreviousIndex: number|null,
+     currentIndex: number|null) => _ViewRepeaterItemInsertArgs<C>;
 
 /**
  * Extracts the value of an item from an {@link IterableChangeRecord}.
@@ -54,8 +53,7 @@ export type _ViewRepeaterItemContextFactory<T, R, C extends _ViewRepeaterItemCon
  * @template T The type for the embedded view's $implicit property.
  * @template R The type for the item in each IterableDiffer change record.
  */
-export type _ViewRepeaterItemValueResolver<T, R> =
-    (record: IterableChangeRecord<R>) => T;
+export type _ViewRepeaterItemValueResolver<T, R> = (record: IterableChangeRecord<R>) => T;
 
 /** Indicates how a view was changed by a {@link _ViewRepeater}. */
 export const enum _ViewRepeaterOperation {
@@ -91,8 +89,7 @@ export interface _ViewRepeaterItemChange<R, C> {
  * @template R The type for the item in each IterableDiffer change record.
  * @template C The type for the context passed to each embedded view.
  */
-export type _ViewRepeaterItemChanged<R, C> =
-    (change: _ViewRepeaterItemChange<R, C>) => void;
+export type _ViewRepeaterItemChanged<R, C> = (change: _ViewRepeaterItemChange<R, C>) => void;
 
 /**
  * Describes a strategy for rendering items in a {@link ViewContainerRef}.
@@ -103,8 +100,7 @@ export type _ViewRepeaterItemChanged<R, C> =
  */
 export interface _ViewRepeater<T, R, C extends _ViewRepeaterItemContext<T>> {
   applyChanges(
-      changes: IterableChanges<R>,
-      viewContainerRef: ViewContainerRef,
+      changes: IterableChanges<R>, viewContainerRef: ViewContainerRef,
       itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,
       itemValueResolver: _ViewRepeaterItemValueResolver<T, R>,
       itemViewChanged?: _ViewRepeaterItemChanged<R, C>): void;
@@ -116,5 +112,6 @@ export interface _ViewRepeater<T, R, C extends _ViewRepeaterItemContext<T>> {
  * Injection token for {@link _ViewRepeater}. This token is for use by Angular Material only.
  * @docs-private
  */
-export const _VIEW_REPEATER_STRATEGY = new InjectionToken<
-        _ViewRepeater<unknown, unknown, _ViewRepeaterItemContext<unknown>>>('_ViewRepeater');
+export const _VIEW_REPEATER_STRATEGY =
+    new InjectionToken<_ViewRepeater<unknown, unknown, _ViewRepeaterItemContext<unknown>>>(
+        '_ViewRepeater');

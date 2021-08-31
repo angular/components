@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Type} from '@angular/core';
 import {Resizable} from '@angular/cdk-experimental/column-resize';
+import {Type} from '@angular/core';
+
 import {MatColumnResizeOverlayHandle} from '../overlay-handle';
 
 export abstract class AbstractMatResizable extends Resizable<MatColumnResizeOverlayHandle> {

@@ -1,7 +1,9 @@
-import {Component, QueryList, ElementRef, ViewChildren, AfterViewInit} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
+import {AfterViewInit, Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {Observable} from 'rxjs';
+
+import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
+
 import {FocusableElement, PointerFocusTracker} from './pointer-focus-tracker';
 
 describe('FocusMouseManger', () => {
@@ -18,9 +20,11 @@ describe('FocusMouseManger', () => {
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [MultiElementWithConditionalComponent, MockWrapper],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          declarations: [MultiElementWithConditionalComponent, MockWrapper],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

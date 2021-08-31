@@ -1,24 +1,26 @@
+import {TAB} from '@angular/cdk/keycodes';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
-  tick,
   flush,
+  TestBed,
+  tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {Component, ViewChild, ViewChildren, QueryList, ElementRef} from '@angular/core';
-import {TAB} from '@angular/cdk/keycodes';
+import {By} from '@angular/platform-browser';
+
 import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
   createMouseEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
 } from '../../cdk/testing/private';
-import {By} from '@angular/platform-browser';
+
 import {CdkMenu} from './menu';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {CdkMenuModule} from './menu-module';
 import {CdkMenuPanel} from './menu-panel';
 import {MenuStack} from './menu-stack';
 
@@ -28,30 +30,30 @@ describe('Menu', () => {
     let menuItems: CdkMenuItemCheckbox[];
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuCheckboxGroup],
-        }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuCheckboxGroup],
+          })
+          .compileComponents();
 
-        fixture = TestBed.createComponent(MenuCheckboxGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuCheckboxGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(element => element.injector.get(CdkMenuItemCheckbox));
-      })
-    );
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemCheckbox))
+                      .map(element => element.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should toggle menuitemcheckbox', () => {
       expect(menuItems[0].checked).toBeTrue();
       expect(menuItems[1].checked).toBeFalse();
 
       menuItems[1].trigger();
-      expect(menuItems[0].checked).toBeTrue(); // checkbox should not change
+      expect(menuItems[0].checked).toBeTrue();  // checkbox should not change
 
       menuItems[0].trigger();
 
@@ -65,23 +67,23 @@ describe('Menu', () => {
     let menuItems: CdkMenuItemCheckbox[];
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuCheckboxGroup],
-        }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuCheckboxGroup],
+          })
+          .compileComponents();
 
-        fixture = TestBed.createComponent(MenuCheckboxGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuCheckboxGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(element => element.injector.get(CdkMenuItemCheckbox));
-      })
-    );
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemCheckbox))
+                      .map(element => element.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should emit on click', () => {
       const spy = jasmine.createSpy('cdkMenu change spy');
@@ -100,25 +102,25 @@ describe('Menu', () => {
     let menu: CdkMenu;
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithNestedGroup],
-        }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuWithNestedGroup],
+          })
+          .compileComponents();
 
-        fixture = TestBed.createComponent(MenuWithNestedGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuWithNestedGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
+      menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(element => element.injector.get(CdkMenuItemCheckbox));
-      })
-    );
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemCheckbox))
+                      .map(element => element.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should not emit change from root menu ', () => {
       const spy = jasmine.createSpy('changeSpy for root menu');
@@ -138,28 +140,28 @@ describe('Menu', () => {
     let menu: CdkMenu;
 
     const getMenuItems = () => {
-      return fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemCheckbox))
-        .map(element => element.injector.get(CdkMenuItemCheckbox));
+      return fixture.debugElement.queryAll(By.directive(CdkMenuItemCheckbox))
+          .map(element => element.injector.get(CdkMenuItemCheckbox));
     };
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithConditionalGroup],
-        }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuWithConditionalGroup],
+          })
+          .compileComponents();
 
-        fixture = TestBed.createComponent(MenuWithConditionalGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuWithConditionalGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
-        menuItems = getMenuItems();
-      })
-    );
+      menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
+      menuItems = getMenuItems();
+    }));
 
     it('should not emit after the menu group element renders', () => {
       const spy = jasmine.createSpy('cdkMenu change');
@@ -183,21 +185,21 @@ describe('Menu', () => {
     let nativeMenuItems: HTMLElement[];
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [InlineMenu],
-        }).compileComponents();
-      })
-    );
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [InlineMenu],
+          })
+          .compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(InlineMenu);
       fixture.detectChanges();
 
       nativeMenu = fixture.debugElement.query(By.directive(CdkMenu)).nativeElement;
-      nativeMenuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItem))
-        .map(e => e.nativeElement);
+      nativeMenuItems =
+          fixture.debugElement.queryAll(By.directive(CdkMenuItem)).map(e => e.nativeElement);
     });
 
     it('should have its tabindex set to 0', () => {
@@ -215,7 +217,7 @@ describe('Menu', () => {
 
   describe('menu aim', () => {
     /** A coordinate in the browser window */
-    type Point = {x: number; y: number};
+    type Point = { x: number; y: number };
 
     /** Calculate the slope between two points. */
     function getSlope(from: Point, to: Point) {
@@ -250,20 +252,22 @@ describe('Menu', () => {
     describe('with ltr layout and menu at top of page moving down and right', () => {
       let fixture: ComponentFixture<WithComplexNestedMenus>;
       let nativeFileTrigger: HTMLElement;
-      let nativeFileButtons: HTMLElement[] | undefined;
+      let nativeFileButtons: HTMLElement[]|undefined;
 
-      let nativeEditTrigger: HTMLElement | undefined;
-      let nativeEditButtons: HTMLElement[] | undefined;
+      let nativeEditTrigger: HTMLElement|undefined;
+      let nativeEditButtons: HTMLElement[]|undefined;
 
-      let nativeShareTrigger: HTMLElement | undefined;
+      let nativeShareTrigger: HTMLElement|undefined;
 
       let nativeMenus: HTMLElement[];
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [WithComplexNestedMenus],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [WithComplexNestedMenus],
+            })
+            .compileComponents();
       }));
 
       beforeEach(() => {
@@ -274,14 +278,12 @@ describe('Menu', () => {
       /** Get the test elements from the component. */
       function grabElementsForTesting() {
         nativeFileTrigger = fixture.componentInstance.nativeFileTrigger?.nativeElement;
-        nativeFileButtons = fixture.debugElement
-          .query(By.css('#file_menu'))
-          ?.nativeElement.querySelectorAll('button');
+        nativeFileButtons = fixture.debugElement.query(By.css('#file_menu'))
+                                ?.nativeElement.querySelectorAll('button');
 
         nativeEditTrigger = fixture.componentInstance.nativeEditTrigger?.nativeElement;
-        nativeEditButtons = fixture.debugElement
-          .query(By.css('#edit_menu'))
-          ?.nativeElement.querySelectorAll('button');
+        nativeEditButtons = fixture.debugElement.query(By.css('#edit_menu'))
+                                ?.nativeElement.querySelectorAll('button');
 
         nativeShareTrigger = fixture.componentInstance.nativeShareTrigger?.nativeElement;
 
@@ -326,7 +328,7 @@ describe('Menu', () => {
       function hover(from: Point, to: Point, inMenu: HTMLElement, duration: number) {
         const getNextPoint = getNextPointIterator(from, to);
 
-        let currPoint: Point | null = from;
+        let currPoint: Point|null = from;
         let currElement = getElementAt(currPoint);
 
         const timeout = duration / (to.x - from.x);
@@ -365,101 +367,95 @@ describe('Menu', () => {
         };
       }
 
-      it(
-        'should close the edit menu when hovering directly down from the edit menu trigger to' +
-          ' the print item without waiting',
-        fakeAsync(() => {
-          openFileMenu();
-          openMenuOnHover(nativeEditTrigger!);
-          const editPosition = nativeEditTrigger!.getBoundingClientRect();
-          const printPosition = nativeFileButtons![4].getBoundingClientRect();
+      it('should close the edit menu when hovering directly down from the edit menu trigger to' +
+             ' the print item without waiting',
+         fakeAsync(() => {
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const printPosition = nativeFileButtons![4].getBoundingClientRect();
 
-          const numEnterEvents = hover(
-            editPosition,
-            {x: printPosition.x + 5, y: printPosition.y + 1},
-            nativeMenus[0],
-            100
-          );
-          detectChanges();
+           const numEnterEvents = hover(
+               editPosition, {x: printPosition.x + 5, y: printPosition.y + 1}, nativeMenus[0], 100);
+           detectChanges();
 
-          expect(numEnterEvents).toBe(4);
-          expect(nativeMenus.length).toBe(1);
-        })
-      );
+           expect(numEnterEvents).toBe(4);
+           expect(nativeMenus.length).toBe(1);
+         }));
 
       it('should close the edit menu after moving towards submenu and stopping', fakeAsync(() => {
-        openFileMenu();
-        openMenuOnHover(nativeEditTrigger!);
-        const editPosition = nativeEditTrigger!.getBoundingClientRect();
-        const sharePosition = nativeShareTrigger!.getBoundingClientRect();
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const sharePosition = nativeShareTrigger!.getBoundingClientRect();
 
-        const numEnters = hover(
-          {
-            x: editPosition.x + editPosition.width / 2,
-            y: editPosition.y + editPosition.height - 10,
-          },
-          {
-            x: sharePosition.x + sharePosition.width - 10,
-            y: sharePosition.y + sharePosition.height - 10,
-          },
-          nativeMenus[0],
-          100
-        );
-        tick(2000);
-        detectChanges();
+           const numEnters = hover(
+               {
+                 x: editPosition.x + editPosition.width / 2,
+                 y: editPosition.y + editPosition.height - 10,
+               },
+               {
+                 x: sharePosition.x + sharePosition.width - 10,
+                 y: sharePosition.y + sharePosition.height - 10,
+               },
+               nativeMenus[0], 100);
+           tick(2000);
+           detectChanges();
 
-        expect(numEnters).toBe(1);
-        expect(nativeMenus.length).toBe(2);
-        expect(nativeMenus[1].id).toBe('share_menu');
-      }));
+           expect(numEnters).toBe(1);
+           expect(nativeMenus.length).toBe(2);
+           expect(nativeMenus[1].id).toBe('share_menu');
+         }));
 
       it('should not close the edit submenu when hovering into its items in time', fakeAsync(() => {
-        openFileMenu();
-        openMenuOnHover(nativeEditTrigger!);
-        const editPosition = nativeEditTrigger!.getBoundingClientRect();
-        const pastePosition = nativeEditButtons![4].getBoundingClientRect();
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const pastePosition = nativeEditButtons![4].getBoundingClientRect();
 
-        const numEnters = hover(editPosition, pastePosition, nativeMenus[0], 100);
-        detectChanges();
-        flush();
+           const numEnters = hover(editPosition, pastePosition, nativeMenus[0], 100);
+           detectChanges();
+           flush();
 
-        expect(numEnters).toBeGreaterThan(2);
-        expect(nativeMenus.length).toBe(2);
-        expect(nativeMenus[1].id).toBe('edit_menu');
-      }));
+           expect(numEnters).toBeGreaterThan(2);
+           expect(nativeMenus.length).toBe(2);
+           expect(nativeMenus[1].id).toBe('edit_menu');
+         }));
 
       it('should close the edit menu when hovering into its items slowly', fakeAsync(() => {
-        openFileMenu();
-        openMenuOnHover(nativeEditTrigger!);
-        const editPosition = nativeEditTrigger!.getBoundingClientRect();
-        const pastePosition = nativeEditButtons![4].getBoundingClientRect();
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const pastePosition = nativeEditButtons![4].getBoundingClientRect();
 
-        const numEnters = hover(editPosition, pastePosition, nativeMenus[0], 4000);
-        detectChanges();
-        flush();
+           const numEnters = hover(editPosition, pastePosition, nativeMenus[0], 4000);
+           detectChanges();
+           flush();
 
-        expect(numEnters).toBeGreaterThan(2);
-        expect(nativeMenus.length).toBe(1);
-      }));
+           expect(numEnters).toBeGreaterThan(2);
+           expect(nativeMenus.length).toBe(1);
+         }));
     });
 
     describe('with rtl layout and menu at bottom of page moving up and left', () => {
       let fixture: ComponentFixture<WithComplexNestedMenusOnBottom>;
       let nativeFileTrigger: HTMLElement;
-      let nativeFileButtons: HTMLElement[] | undefined;
+      let nativeFileButtons: HTMLElement[]|undefined;
 
-      let nativeEditTrigger: HTMLElement | undefined;
-      let nativeEditButtons: HTMLElement[] | undefined;
+      let nativeEditTrigger: HTMLElement|undefined;
+      let nativeEditButtons: HTMLElement[]|undefined;
 
-      let nativeShareTrigger: HTMLElement | undefined;
+      let nativeShareTrigger: HTMLElement|undefined;
 
       let nativeMenus: HTMLElement[];
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [WithComplexNestedMenusOnBottom],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [WithComplexNestedMenusOnBottom],
+            })
+            .compileComponents();
       }));
 
       beforeEach(() => {
@@ -478,14 +474,12 @@ describe('Menu', () => {
       /** Get the test elements from the component. */
       function grabElementsForTesting() {
         nativeFileTrigger = fixture.componentInstance.nativeFileTrigger?.nativeElement;
-        nativeFileButtons = fixture.debugElement
-          .query(By.css('#file_menu'))
-          ?.nativeElement.querySelectorAll('button');
+        nativeFileButtons = fixture.debugElement.query(By.css('#file_menu'))
+                                ?.nativeElement.querySelectorAll('button');
 
         nativeEditTrigger = fixture.componentInstance.nativeEditTrigger?.nativeElement;
-        nativeEditButtons = fixture.debugElement
-          .query(By.css('#edit_menu'))
-          ?.nativeElement.querySelectorAll('button');
+        nativeEditButtons = fixture.debugElement.query(By.css('#edit_menu'))
+                                ?.nativeElement.querySelectorAll('button');
 
         nativeShareTrigger = fixture.componentInstance.nativeShareTrigger?.nativeElement;
 
@@ -531,7 +525,7 @@ describe('Menu', () => {
       function hover(from: Point, to: Point, inMenu: HTMLElement, duration: number) {
         const getNextPoint = getNextPointIterator(from, to);
 
-        let currPoint: Point | null = from;
+        let currPoint: Point|null = from;
         let currElement = getElementAt(currPoint);
 
         const timeout = duration / (to.x - from.x);
@@ -570,67 +564,59 @@ describe('Menu', () => {
         };
       }
 
-      it(
-        'should close the edit menu when hovering directly up from the edit menu trigger to' +
-          ' the print item without waiting',
-        fakeAsync(() => {
-          openFileMenu();
-          openMenuOnHover(nativeEditTrigger!);
+      it('should close the edit menu when hovering directly up from the edit menu trigger to' +
+             ' the print item without waiting',
+         fakeAsync(() => {
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
 
-          const editPosition = nativeEditTrigger!.getBoundingClientRect();
-          const printPosition = nativeFileButtons![0].getBoundingClientRect();
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const printPosition = nativeFileButtons![0].getBoundingClientRect();
 
-          const numEnterEvents = hover(
-            {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
-            {x: printPosition.x + 10, y: printPosition.y - 10},
-            nativeMenus[0],
-            100
-          );
-          detectChanges();
-          flush();
+           const numEnterEvents = hover(
+               {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
+               {x: printPosition.x + 10, y: printPosition.y - 10}, nativeMenus[0], 100);
+           detectChanges();
+           flush();
 
-          expect(numEnterEvents).toBe(4);
-          expect(nativeMenus.length).toBe(1);
-        })
-      );
+           expect(numEnterEvents).toBe(4);
+           expect(nativeMenus.length).toBe(1);
+         }));
 
       it('should close the edit menu after moving towards submenu and stopping', fakeAsync(() => {
-        openFileMenu();
-        openMenuOnHover(nativeEditTrigger!);
-        const editPosition = nativeEditTrigger!.getBoundingClientRect();
-        const sharePosition = nativeShareTrigger!.getBoundingClientRect();
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const sharePosition = nativeShareTrigger!.getBoundingClientRect();
 
-        const numEnters = hover(
-          {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
-          {
-            x: sharePosition.x + 10,
-            y: sharePosition.y + 10,
-          },
-          nativeMenus[0],
-          100
-        );
-        tick(2000);
-        detectChanges();
+           const numEnters = hover(
+               {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5}, {
+                 x: sharePosition.x + 10,
+                 y: sharePosition.y + 10,
+               },
+               nativeMenus[0], 100);
+           tick(2000);
+           detectChanges();
 
-        expect(numEnters).toBe(1);
-        expect(nativeMenus.length).toBe(2);
-        expect(nativeMenus[1].id).toBe('share_menu');
-      }));
+           expect(numEnters).toBe(1);
+           expect(nativeMenus.length).toBe(2);
+           expect(nativeMenus[1].id).toBe('share_menu');
+         }));
 
       it('should not close the edit submenu when hovering into its items in time', fakeAsync(() => {
-        openFileMenu();
-        openMenuOnHover(nativeEditTrigger!);
-        const editPosition = nativeEditTrigger!.getBoundingClientRect();
-        const undoPosition = nativeEditButtons![0].getBoundingClientRect();
+           openFileMenu();
+           openMenuOnHover(nativeEditTrigger!);
+           const editPosition = nativeEditTrigger!.getBoundingClientRect();
+           const undoPosition = nativeEditButtons![0].getBoundingClientRect();
 
-        const numEnters = hover(editPosition, undoPosition, nativeMenus[0], 100);
-        detectChanges();
-        flush();
+           const numEnters = hover(editPosition, undoPosition, nativeMenus[0], 100);
+           detectChanges();
+           flush();
 
-        expect(numEnters).toBeGreaterThan(2);
-        expect(nativeMenus.length).toBe(2);
-        expect(nativeMenus[1].id).toBe('edit_menu');
-      }));
+           expect(numEnters).toBeGreaterThan(2);
+           expect(nativeMenus.length).toBe(2);
+           expect(nativeMenus[1].id).toBe('edit_menu');
+         }));
     });
   });
 });
@@ -709,7 +695,8 @@ class MenuWithConditionalGroup {
     </div>
   `,
 })
-class InlineMenu {}
+class InlineMenu {
+}
 
 @Component({
   template: `

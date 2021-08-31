@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'mdc-card-fancy-example.html',
   styleUrls: ['mdc-card-fancy-example.css'],
 })
-export class MdcCardFancyExample {}
+export class MdcCardFancyExample {
+}

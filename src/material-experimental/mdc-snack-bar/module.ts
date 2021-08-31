@@ -15,11 +15,7 @@ import {MatCommonModule} from '@angular/material-experimental/mdc-core';
 
 import {MatSimpleSnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
-import {
-  MatSnackBarAction,
-  MatSnackBarActions,
-  MatSnackBarLabel
-} from './snack-bar-content';
+import {MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel} from './snack-bar-content';
 
 @NgModule({
   imports: [

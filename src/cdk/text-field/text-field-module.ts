@@ -17,4 +17,5 @@ import {CdkTextareaAutosize} from './autosize';
   imports: [PlatformModule],
   exports: [CdkAutofill, CdkTextareaAutosize],
 })
-export class TextFieldModule {}
+export class TextFieldModule {
+}

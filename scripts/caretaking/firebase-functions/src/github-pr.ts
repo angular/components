@@ -1,5 +1,5 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 
 export const githubPR = functions.https.onRequest(async (req, resp) => {
   const github = req.body;
@@ -24,19 +24,15 @@ export const githubPR = functions.https.onRequest(async (req, resp) => {
     prEffected = pull_request.number;
     actionTaken = 'Updated PR';
   } else if (action === 'status') {
-    const ref = admin
-        .database()
-        .ref(`/pulls/${fullRepoName}`)
-        .orderByChild('github/commit_sha')
-        .equalTo(github.sha);
+    const ref = admin.database()
+                    .ref(`/pulls/${fullRepoName}`)
+                    .orderByChild('github/commit_sha')
+                    .equalTo(github.sha);
     await ref.once('value', snapshot => {
       snapshot.forEach(d => {
         d.child(`statuses`).ref.update({
-          [github.context.replace(/\W/g, '')]: {
-            context: github.context,
-            build_url: github.target_url,
-            status: github.state
-          }
+          [github.context.replace(/\W/g, '')]:
+              {context: github.context, build_url: github.target_url, status: github.state}
         });
         prEffected = d.val().github.pull_number;
         actionTaken = 'Updated Status';

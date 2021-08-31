@@ -6,4 +6,5 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComponentHarnessE2e {}
+export class ComponentHarnessE2e {
+}

@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'datepicker-custom-icon-example',
   templateUrl: 'datepicker-custom-icon-example.html',
 })
-export class DatepickerCustomIconExample {}
+export class DatepickerCustomIconExample {
+}

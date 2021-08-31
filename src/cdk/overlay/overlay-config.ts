@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PositionStrategy} from './position/position-strategy';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {ScrollStrategy, NoopScrollStrategy} from './scroll/index';
+
+import {PositionStrategy} from './position/position-strategy';
+import {NoopScrollStrategy, ScrollStrategy} from './scroll/index';
 
 
 /** Initial configuration used when creating an overlay. */
@@ -20,37 +21,37 @@ export class OverlayConfig {
   scrollStrategy?: ScrollStrategy = new NoopScrollStrategy();
 
   /** Custom class to add to the overlay pane. */
-  panelClass?: string | string[] = '';
+  panelClass?: string|string[] = '';
 
   /** Whether the overlay has a backdrop. */
   hasBackdrop?: boolean = false;
 
   /** Custom class to add to the backdrop */
-  backdropClass?: string | string[] = 'cdk-overlay-dark-backdrop';
+  backdropClass?: string|string[] = 'cdk-overlay-dark-backdrop';
 
   /** The width of the overlay panel. If a number is provided, pixel units are assumed. */
-  width?: number | string;
+  width?: number|string;
 
   /** The height of the overlay panel. If a number is provided, pixel units are assumed. */
-  height?: number | string;
+  height?: number|string;
 
   /** The min-width of the overlay panel. If a number is provided, pixel units are assumed. */
-  minWidth?: number | string;
+  minWidth?: number|string;
 
   /** The min-height of the overlay panel. If a number is provided, pixel units are assumed. */
-  minHeight?: number | string;
+  minHeight?: number|string;
 
   /** The max-width of the overlay panel. If a number is provided, pixel units are assumed. */
-  maxWidth?: number | string;
+  maxWidth?: number|string;
 
   /** The max-height of the overlay panel. If a number is provided, pixel units are assumed. */
-  maxHeight?: number | string;
+  maxHeight?: number|string;
 
   /**
    * Direction of the text in the overlay panel. If a `Directionality` instance
    * is passed in, the overlay will handle changes to its value automatically.
    */
-  direction?: Direction | Directionality;
+  direction?: Direction|Directionality;
 
   /**
    * Whether the overlay should be disposed of when the user goes backwards/forwards in history.
@@ -65,7 +66,7 @@ export class OverlayConfig {
       // loses the array generic type in the `for of`. But we *also* have to use `Array` because
       // typescript won't iterate over an `Iterable` unless you compile with `--downlevelIteration`
       const configKeys =
-          Object.keys(config) as Iterable<keyof OverlayConfig> & (keyof OverlayConfig)[];
+          Object.keys(config) as Iterable<keyof OverlayConfig>& (keyof OverlayConfig)[];
       for (const key of configKeys) {
         if (config[key] !== undefined) {
           // TypeScript, as of version 3.5, sees the left-hand-side of this expression

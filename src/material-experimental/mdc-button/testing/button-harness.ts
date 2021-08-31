@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {ButtonHarnessFilters} from '@angular/material/button/testing';
 
 
@@ -33,7 +33,8 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
    */
   static with(options: ButtonHarnessFilters = {}): HarnessPredicate<MatButtonHarness> {
     return new HarnessPredicate(MatButtonHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 
@@ -47,7 +48,7 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
   click(location: 'center'): Promise<void>;
   /** Clicks the button. */
   click(): Promise<void>;
-  async click(...args: [] | ['center'] | [number, number]): Promise<void> {
+  async click(...args: []|['center']|[number, number]): Promise<void> {
     return (await this.host()).click(...(args as []));
   }
 

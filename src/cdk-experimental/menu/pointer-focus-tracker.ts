@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {QueryList, ElementRef} from '@angular/core';
-import {fromEvent, Observable, defer, Subject} from 'rxjs';
-import {mapTo, mergeAll, takeUntil, startWith, mergeMap} from 'rxjs/operators';
+import {ElementRef, QueryList} from '@angular/core';
+import {defer, fromEvent, Observable, Subject} from 'rxjs';
+import {mapTo, mergeAll, mergeMap, startWith, takeUntil} from 'rxjs/operators';
 
 /** Item to track for mouse focus events. */
 export interface FocusableElement {
@@ -49,20 +49,14 @@ export class PointerFocusTracker<T extends FocusableElement> {
    * This should typically run outside the Angular zone.
    */
   private _getItemPointerEntries(): Observable<T> {
-    return defer(() =>
-      this._items.changes.pipe(
-        startWith(this._items),
-        mergeMap((list: QueryList<T>) =>
-          list.map(element =>
-            fromEvent(element._elementRef.nativeElement, 'mouseenter').pipe(
-              mapTo(element),
-              takeUntil(this._items.changes)
-            )
-          )
-        ),
-        mergeAll()
-      )
-    );
+    return defer(
+        () => this._items.changes.pipe(
+            startWith(this._items),
+            mergeMap(
+                (list: QueryList<T>) => list.map(
+                    element => fromEvent(element._elementRef.nativeElement, 'mouseenter')
+                                   .pipe(mapTo(element), takeUntil(this._items.changes)))),
+            mergeAll()));
   }
 
   /**
@@ -70,20 +64,14 @@ export class PointerFocusTracker<T extends FocusableElement> {
    * This should typically run outside the Angular zone.
    */
   private _getItemPointerExits() {
-    return defer(() =>
-      this._items.changes.pipe(
-        startWith(this._items),
-        mergeMap((list: QueryList<T>) =>
-          list.map(element =>
-            fromEvent(element._elementRef.nativeElement, 'mouseout').pipe(
-              mapTo(element),
-              takeUntil(this._items.changes)
-            )
-          )
-        ),
-        mergeAll()
-      )
-    );
+    return defer(
+        () => this._items.changes.pipe(
+            startWith(this._items),
+            mergeMap(
+                (list: QueryList<T>) => list.map(
+                    element => fromEvent(element._elementRef.nativeElement, 'mouseout')
+                                   .pipe(mapTo(element), takeUntil(this._items.changes)))),
+            mergeAll()));
   }
 
   /** Stop the managers listeners. */

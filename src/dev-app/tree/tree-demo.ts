@@ -12,4 +12,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tree-demo.html',
   styleUrls: ['tree-demo.css'],
 })
-export class TreeDemo {}
+export class TreeDemo {
+}

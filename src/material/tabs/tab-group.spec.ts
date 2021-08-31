@@ -1,25 +1,27 @@
 import {LEFT_ARROW} from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {CommonModule} from '@angular/common';
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
   fakeAsync,
+  flush,
   TestBed,
   tick,
-  flush,
+  waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
+
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+
 import {
+  MAT_TABS_CONFIG,
   MatTab,
   MatTabGroup,
   MatTabHeader,
   MatTabHeaderPosition,
-  MatTabsModule,
-  MAT_TABS_CONFIG
+  MatTabsModule
 } from './index';
 
 
@@ -81,55 +83,56 @@ describe('MatTabGroup', () => {
     });
 
     it('should support two-way binding for selectedIndex', fakeAsync(() => {
-      const component = fixture.componentInstance;
-      component.selectedIndex = 0;
+         const component = fixture.componentInstance;
+         component.selectedIndex = 0;
 
-      fixture.detectChanges();
+         fixture.detectChanges();
 
-      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
-      tabLabel.nativeElement.click();
-      fixture.detectChanges();
-      tick();
+         const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+         tabLabel.nativeElement.click();
+         fixture.detectChanges();
+         tick();
 
-      expect(component.selectedIndex).toBe(1);
-    }));
+         expect(component.selectedIndex).toBe(1);
+       }));
 
     // Note: needs to be `async` in order to fail when we expect it to.
     it('should set to correct tab on fast change', waitForAsync(() => {
-      const component = fixture.componentInstance;
-      component.selectedIndex = 0;
-      fixture.detectChanges();
+         const component = fixture.componentInstance;
+         component.selectedIndex = 0;
+         fixture.detectChanges();
 
-      setTimeout(() => {
-        component.selectedIndex = 1;
-        fixture.detectChanges();
+         setTimeout(() => {
+           component.selectedIndex = 1;
+           fixture.detectChanges();
 
-        setTimeout(() => {
-          component.selectedIndex = 0;
-          fixture.detectChanges();
-          fixture.whenStable().then(() => {
-            expect(component.selectedIndex).toBe(0);
-          });
-        }, 1);
-      }, 1);
-    }));
+           setTimeout(() => {
+             component.selectedIndex = 0;
+             fixture.detectChanges();
+             fixture.whenStable().then(() => {
+               expect(component.selectedIndex).toBe(0);
+             });
+           }, 1);
+         }, 1);
+       }));
 
     it('should change tabs based on selectedIndex', fakeAsync(() => {
-      const component = fixture.componentInstance;
-      const tabComponent = fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
+         const component = fixture.componentInstance;
+         const tabComponent =
+             fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
 
-      spyOn(component, 'handleSelection').and.callThrough();
+         spyOn(component, 'handleSelection').and.callThrough();
 
-      checkSelectedIndex(1, fixture);
+         checkSelectedIndex(1, fixture);
 
-      tabComponent.selectedIndex = 2;
+         tabComponent.selectedIndex = 2;
 
-      checkSelectedIndex(2, fixture);
-      tick();
+         checkSelectedIndex(2, fixture);
+         tick();
 
-      expect(component.handleSelection).toHaveBeenCalledTimes(1);
-      expect(component.selectEvent.index).toBe(2);
-    }));
+         expect(component.handleSelection).toHaveBeenCalledTimes(1);
+         expect(component.selectEvent.index).toBe(2);
+       }));
 
     it('should update tab positions when selected index is changed', () => {
       fixture.detectChanges();
@@ -188,13 +191,15 @@ describe('MatTabGroup', () => {
       const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
 
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples to show up initially.').toBe(0);
+          .withContext('Expected no ripples to show up initially.')
+          .toBe(0);
 
       dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
       dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
 
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected one ripple to show up on label mousedown.').toBe(1);
+          .withContext('Expected one ripple to show up on label mousedown.')
+          .toBe(1);
     });
 
     it('should allow disabling ripples for tab-group labels', () => {
@@ -205,45 +210,47 @@ describe('MatTabGroup', () => {
       const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
 
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples to show up initially.').toBe(0);
+          .withContext('Expected no ripples to show up initially.')
+          .toBe(0);
 
       dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
       dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
 
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripple to show up on label mousedown.').toBe(0);
+          .withContext('Expected no ripple to show up on label mousedown.')
+          .toBe(0);
     });
 
     it('should set the isActive flag on each of the tabs', fakeAsync(() => {
-      fixture.detectChanges();
-      tick();
+         fixture.detectChanges();
+         tick();
 
-      const tabs = fixture.componentInstance.tabs.toArray();
+         const tabs = fixture.componentInstance.tabs.toArray();
 
-      expect(tabs[0].isActive).toBe(false);
-      expect(tabs[1].isActive).toBe(true);
-      expect(tabs[2].isActive).toBe(false);
+         expect(tabs[0].isActive).toBe(false);
+         expect(tabs[1].isActive).toBe(true);
+         expect(tabs[2].isActive).toBe(false);
 
-      fixture.componentInstance.selectedIndex = 2;
-      fixture.detectChanges();
-      tick();
+         fixture.componentInstance.selectedIndex = 2;
+         fixture.detectChanges();
+         tick();
 
-      expect(tabs[0].isActive).toBe(false);
-      expect(tabs[1].isActive).toBe(false);
-      expect(tabs[2].isActive).toBe(true);
-    }));
+         expect(tabs[0].isActive).toBe(false);
+         expect(tabs[1].isActive).toBe(false);
+         expect(tabs[2].isActive).toBe(true);
+       }));
 
     it('should fire animation done event', fakeAsync(() => {
-      fixture.detectChanges();
+         fixture.detectChanges();
 
-      spyOn(fixture.componentInstance, 'animationDone');
-      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
-      tabLabel.nativeElement.click();
-      fixture.detectChanges();
-      tick();
+         spyOn(fixture.componentInstance, 'animationDone');
+         const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+         tabLabel.nativeElement.click();
+         fixture.detectChanges();
+         tick();
 
-      expect(fixture.componentInstance.animationDone).toHaveBeenCalledTimes(1);
-    }));
+         expect(fixture.componentInstance.animationDone).toHaveBeenCalledTimes(1);
+       }));
 
     it('should add the proper `aria-setsize` and `aria-posinset`', () => {
       fixture.detectChanges();
@@ -266,8 +273,9 @@ describe('MatTabGroup', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
-      expect(fixture.componentInstance.handleFocus)
-        .toHaveBeenCalledWith(jasmine.objectContaining({index: 2}));
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledWith(jasmine.objectContaining({
+        index: 2
+      }));
     });
 
     it('should emit focusChange on arrow key navigation', () => {
@@ -275,8 +283,9 @@ describe('MatTabGroup', () => {
       fixture.detectChanges();
 
       const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
-      const tabLabelContainer = fixture.debugElement
-        .query(By.css('.mat-tab-label-container'))!.nativeElement as HTMLElement;
+      const tabLabelContainer =
+          fixture.debugElement.query(By.css('.mat-tab-label-container'))!.nativeElement as
+          HTMLElement;
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
 
@@ -290,13 +299,14 @@ describe('MatTabGroup', () => {
       dispatchKeyboardEvent(tabLabelContainer, 'keydown', LEFT_ARROW);
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(2);
-      expect(fixture.componentInstance.handleFocus)
-        .toHaveBeenCalledWith(jasmine.objectContaining({index: 1}));
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledWith(jasmine.objectContaining({
+        index: 1
+      }));
     });
 
     it('should clean up the tabs QueryList on destroy', () => {
       const component: MatTabGroup =
-        fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
+          fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
       const spy = jasmine.createSpy('complete spy');
       const subscription = component._tabs.changes.subscribe({complete: spy});
 
@@ -311,28 +321,28 @@ describe('MatTabGroup', () => {
           [...fixture.debugElement.nativeElement.querySelectorAll('.mat-tab-label')];
 
       expect(tabLabelNativeElements.every(el => el.classList.contains('mat-focus-indicator')))
-        .toBe(true);
+          .toBe(true);
     });
 
     it('should emit focusChange when a tab receives focus', fakeAsync(() => {
-      spyOn(fixture.componentInstance, 'handleFocus');
-      fixture.detectChanges();
+         spyOn(fixture.componentInstance, 'handleFocus');
+         fixture.detectChanges();
 
-      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+         const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
 
-      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
+         expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
 
-      // In order to verify that the `focusChange` event also fires with the correct
-      // index, we focus the second tab before testing the keyboard navigation.
-      dispatchFakeEvent(tabLabels[2].nativeElement, 'focus');
-      fixture.detectChanges();
-      flush();
-      fixture.detectChanges();
+         // In order to verify that the `focusChange` event also fires with the correct
+         // index, we focus the second tab before testing the keyboard navigation.
+         dispatchFakeEvent(tabLabels[2].nativeElement, 'focus');
+         fixture.detectChanges();
+         flush();
+         fixture.detectChanges();
 
-      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
-      expect(fixture.componentInstance.handleFocus)
-        .toHaveBeenCalledWith(jasmine.objectContaining({index: 2}));
-    }));
+         expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
+         expect(fixture.componentInstance.handleFocus)
+             .toHaveBeenCalledWith(jasmine.objectContaining({index: 2}));
+       }));
 
     it('should be able to programmatically focus a particular tab', () => {
       fixture.detectChanges();
@@ -352,8 +362,8 @@ describe('MatTabGroup', () => {
     it('should be able to set a tabindex on the inner content element', () => {
       fixture.componentInstance.contentTabIndex = 1;
       fixture.detectChanges();
-      const contentElements = Array.from<HTMLElement>(fixture.nativeElement
-          .querySelectorAll('mat-tab-body'));
+      const contentElements =
+          Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('mat-tab-body'));
 
       expect(contentElements.map(e => e.getAttribute('tabindex'))).toEqual([null, '1', null]);
 
@@ -362,7 +372,6 @@ describe('MatTabGroup', () => {
 
       expect(contentElements.map(e => e.getAttribute('tabindex'))).toEqual(['1', null, null]);
     });
-
   });
 
   describe('aria labelling', () => {
@@ -449,54 +458,54 @@ describe('MatTabGroup', () => {
     }));
 
     it('should be able to add a new tab, select it, and have correct origin position',
-      fakeAsync(() => {
-        const component: MatTabGroup =
-            fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
+       fakeAsync(() => {
+         const component: MatTabGroup =
+             fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
 
-        let tabs: MatTab[] = component._tabs.toArray();
-        expect(tabs[0].origin).toBe(null);
-        expect(tabs[1].origin).toBe(0);
-        expect(tabs[2].origin).toBe(null);
+         let tabs: MatTab[] = component._tabs.toArray();
+         expect(tabs[0].origin).toBe(null);
+         expect(tabs[1].origin).toBe(0);
+         expect(tabs[2].origin).toBe(null);
 
-        // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
-        fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
-        fixture.componentInstance.selectedIndex = 4;
-        fixture.detectChanges();
-        tick();
+         // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
+         fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
+         fixture.componentInstance.selectedIndex = 4;
+         fixture.detectChanges();
+         tick();
 
-        tabs = component._tabs.toArray();
-        expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
+         tabs = component._tabs.toArray();
+         expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
 
-        // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
-        fixture.componentInstance.selectedIndex = 0;
-        fixture.detectChanges();
-        tick();
+         // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
+         fixture.componentInstance.selectedIndex = 0;
+         fixture.detectChanges();
+         tick();
 
-        fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
-        fixture.detectChanges();
-        tick();
+         fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
+         fixture.detectChanges();
+         tick();
 
-        tabs = component._tabs.toArray();
-        expect(tabs[0].origin).toBeLessThan(0);
-    }));
+         tabs = component._tabs.toArray();
+         expect(tabs[0].origin).toBeLessThan(0);
+       }));
 
 
     it('should update selected index if the last tab removed while selected', fakeAsync(() => {
-      const component: MatTabGroup =
-          fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
+         const component: MatTabGroup =
+             fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
 
-      const numberOfTabs = component._tabs.length;
-      fixture.componentInstance.selectedIndex = numberOfTabs - 1;
-      fixture.detectChanges();
-      tick();
+         const numberOfTabs = component._tabs.length;
+         fixture.componentInstance.selectedIndex = numberOfTabs - 1;
+         fixture.detectChanges();
+         tick();
 
-      // Remove last tab while last tab is selected, expect next tab over to be selected
-      fixture.componentInstance.tabs.pop();
-      fixture.detectChanges();
-      tick();
+         // Remove last tab while last tab is selected, expect next tab over to be selected
+         fixture.componentInstance.tabs.pop();
+         fixture.detectChanges();
+         tick();
 
-      expect(component.selectedIndex).toBe(numberOfTabs - 2);
-    }));
+         expect(component.selectedIndex).toBe(numberOfTabs - 2);
+       }));
 
 
     it('should maintain the selected tab if a new tab is added', () => {
@@ -535,52 +544,51 @@ describe('MatTabGroup', () => {
     });
 
     it('should be able to select a new tab after creation', fakeAsync(() => {
-      fixture.detectChanges();
-      const component: MatTabGroup =
-        fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
+         fixture.detectChanges();
+         const component: MatTabGroup =
+             fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
 
-      fixture.componentInstance.tabs.push({label: 'Last tab', content: 'at the end'});
-      fixture.componentInstance.selectedIndex = 3;
+         fixture.componentInstance.tabs.push({label: 'Last tab', content: 'at the end'});
+         fixture.componentInstance.selectedIndex = 3;
 
-      fixture.detectChanges();
-      tick();
+         fixture.detectChanges();
+         tick();
 
-      expect(component.selectedIndex).toBe(3);
-      expect(component._tabs.toArray()[3].isActive).toBe(true);
-    }));
+         expect(component.selectedIndex).toBe(3);
+         expect(component._tabs.toArray()[3].isActive).toBe(true);
+       }));
 
     it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
-      fixture.detectChanges();
-      fixture.componentInstance.selectedIndex = 1;
-      fixture.detectChanges();
+         fixture.detectChanges();
+         fixture.componentInstance.selectedIndex = 1;
+         fixture.detectChanges();
 
-      // Add a new tab at the beginning.
-      spyOn(fixture.componentInstance, 'handleSelection');
-      fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         // Add a new tab at the beginning.
+         spyOn(fixture.componentInstance, 'handleSelection');
+         fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
-    }));
-
+         expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
+       }));
   });
 
   describe('async tabs', () => {
     let fixture: ComponentFixture<AsyncTabsTestApp>;
 
     it('should show tabs when they are available', fakeAsync(() => {
-      fixture = TestBed.createComponent(AsyncTabsTestApp);
+         fixture = TestBed.createComponent(AsyncTabsTestApp);
 
-      expect(fixture.debugElement.queryAll(By.css('.mat-tab-label')).length).toBe(0);
+         expect(fixture.debugElement.queryAll(By.css('.mat-tab-label')).length).toBe(0);
 
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-      tick();
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
+         tick();
 
-      expect(fixture.debugElement.queryAll(By.css('.mat-tab-label')).length).toBe(2);
-    }));
+         expect(fixture.debugElement.queryAll(By.css('.mat-tab-label')).length).toBe(2);
+       }));
   });
 
   describe('with simple api', () => {
@@ -597,43 +605,42 @@ describe('MatTabGroup', () => {
     }));
 
     it('should support a tab-group with the simple api', fakeAsync(() => {
-      expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
-      expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
+         expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
+         expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
 
-      tabGroup.selectedIndex = 2;
-      fixture.detectChanges();
-      tick();
+         tabGroup.selectedIndex = 2;
+         fixture.detectChanges();
+         tick();
 
-      expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
-      expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
+         expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
+         expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
 
-      fixture.componentInstance.otherLabel = 'Chips';
-      fixture.componentInstance.otherContent = 'Salt, vinegar';
-      fixture.detectChanges();
+         fixture.componentInstance.otherLabel = 'Chips';
+         fixture.componentInstance.otherContent = 'Salt, vinegar';
+         fixture.detectChanges();
 
-      expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
-      expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
-    }));
+         expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
+         expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
+       }));
 
     it('should support @ViewChild in the tab content', () => {
       expect(fixture.componentInstance.legumes).toBeTruthy();
     });
 
     it('should only have the active tab in the DOM', fakeAsync(() => {
-      expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
-      expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
+         expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
+         expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
 
-      tabGroup.selectedIndex = 3;
-      fixture.detectChanges();
-      tick();
+         tabGroup.selectedIndex = 3;
+         fixture.detectChanges();
+         tick();
 
-      expect(fixture.nativeElement.textContent).not.toContain('Pizza, fries');
-      expect(fixture.nativeElement.textContent).toContain('Peanuts');
-    }));
+         expect(fixture.nativeElement.textContent).not.toContain('Pizza, fries');
+         expect(fixture.nativeElement.textContent).toContain('Peanuts');
+       }));
 
     it('should support setting the header position', () => {
-      const tabGroupNode =
-          fixture.debugElement.query(By.css('mat-tab-group'))!.nativeElement;
+      const tabGroupNode = fixture.debugElement.query(By.css('mat-tab-group'))!.nativeElement;
 
       expect(tabGroupNode.classList).not.toContain('mat-tab-group-inverted-header');
 
@@ -646,60 +653,60 @@ describe('MatTabGroup', () => {
 
   describe('lazy loaded tabs', () => {
     it('should lazy load the second tab', fakeAsync(() => {
-      const fixture = TestBed.createComponent(TemplateTabs);
-      fixture.detectChanges();
-      tick();
+         const fixture = TestBed.createComponent(TemplateTabs);
+         fixture.detectChanges();
+         tick();
 
-      const secondLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
-      secondLabel.nativeElement.click();
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         const secondLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+         secondLabel.nativeElement.click();
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      const child = fixture.debugElement.query(By.css('.child'))!;
-      expect(child.nativeElement).toBeDefined();
-    }));
+         const child = fixture.debugElement.query(By.css('.child'))!;
+         expect(child.nativeElement).toBeDefined();
+       }));
   });
 
   describe('special cases', () => {
     it('should not throw an error when binding isActive to the view', fakeAsync(() => {
-      const fixture = TestBed.createComponent(TabGroupWithIsActiveBinding);
+         const fixture = TestBed.createComponent(TabGroupWithIsActiveBinding);
 
-      expect(() => {
-        fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
-      }).not.toThrow();
+         expect(() => {
+           fixture.detectChanges();
+           tick();
+           fixture.detectChanges();
+         }).not.toThrow();
 
-      expect(fixture.nativeElement.textContent).toContain('pizza is active');
-    }));
+         expect(fixture.nativeElement.textContent).toContain('pizza is active');
+       }));
   });
 
   describe('nested tabs', () => {
     it('should not pick up the tabs from descendant tab groups', fakeAsync(() => {
-      const fixture = TestBed.createComponent(NestedTabs);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         const fixture = TestBed.createComponent(NestedTabs);
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      const groups = fixture.componentInstance.groups.toArray();
+         const groups = fixture.componentInstance.groups.toArray();
 
-      expect(groups.length).toBe(2);
-      expect(groups[0]._tabs.map((tab: MatTab) => tab.textLabel))
-          .toEqual(['One', 'Two']);
-      expect(groups[1]._tabs.map((tab: MatTab) => tab.textLabel))
-        .toEqual(['Inner tab one', 'Inner tab two']);
-    }));
+         expect(groups.length).toBe(2);
+         expect(groups[0]._tabs.map((tab: MatTab) => tab.textLabel)).toEqual(['One', 'Two']);
+         expect(groups[1]._tabs.map((tab: MatTab) => tab.textLabel)).toEqual([
+           'Inner tab one', 'Inner tab two'
+         ]);
+       }));
 
     it('should pick up indirect descendant tabs', fakeAsync(() => {
-      const fixture = TestBed.createComponent(TabGroupWithIndirectDescendantTabs);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         const fixture = TestBed.createComponent(TabGroupWithIndirectDescendantTabs);
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      const tabs = fixture.componentInstance.tabGroup._tabs;
-      expect(tabs.map((tab: MatTab) => tab.textLabel)).toEqual(['One', 'Two']);
-    }));
+         const tabs = fixture.componentInstance.tabGroup._tabs;
+         expect(tabs.map((tab: MatTab) => tab.textLabel)).toEqual(['One', 'Two']);
+       }));
   });
 
   describe('tall tabs', () => {
@@ -708,38 +715,38 @@ describe('MatTabGroup', () => {
     });
 
     it('should not scroll when changing tabs by clicking', fakeAsync(() => {
-      const fixture = TestBed.createComponent(TabGroupWithSpaceAbove);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         const fixture = TestBed.createComponent(TabGroupWithSpaceAbove);
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      window.scrollBy(0, 250);
-      expect(window.scrollY).toBe(250);
+         window.scrollBy(0, 250);
+         expect(window.scrollY).toBe(250);
 
-      // select the second tab
-      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
-      tabLabel.nativeElement.click();
-      checkSelectedIndex(1, fixture);
+         // select the second tab
+         const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+         tabLabel.nativeElement.click();
+         checkSelectedIndex(1, fixture);
 
-      expect(window.scrollY).toBe(250);
-      tick();
-    }));
+         expect(window.scrollY).toBe(250);
+         tick();
+       }));
 
     it('should not scroll when changing tabs programatically', fakeAsync(() => {
-      const fixture = TestBed.createComponent(TabGroupWithSpaceAbove);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         const fixture = TestBed.createComponent(TabGroupWithSpaceAbove);
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      window.scrollBy(0, 250);
-      expect(window.scrollY).toBe(250);
+         window.scrollBy(0, 250);
+         expect(window.scrollY).toBe(250);
 
-      fixture.componentInstance.tabGroup.selectedIndex = 1;
-      fixture.detectChanges();
+         fixture.componentInstance.tabGroup.selectedIndex = 1;
+         fixture.detectChanges();
 
-      expect(window.scrollY).toBe(250);
-      tick();
-    }));
+         expect(window.scrollY).toBe(250);
+         tick();
+       }));
   });
 
   /**
@@ -749,16 +756,18 @@ describe('MatTabGroup', () => {
   function checkSelectedIndex(expectedIndex: number, fixture: ComponentFixture<any>) {
     fixture.detectChanges();
 
-    const tabComponent: MatTabGroup = fixture.debugElement
-        .query(By.css('mat-tab-group'))!.componentInstance;
+    const tabComponent: MatTabGroup =
+        fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
     expect(tabComponent.selectedIndex).toBe(expectedIndex);
 
-    const tabLabelElement = fixture.debugElement
-        .query(By.css(`.mat-tab-label:nth-of-type(${expectedIndex + 1})`))!.nativeElement;
+    const tabLabelElement =
+        fixture.debugElement.query(By.css(
+            `.mat-tab-label:nth-of-type(${expectedIndex + 1})`))!.nativeElement;
     expect(tabLabelElement.classList.contains('mat-tab-label-active')).toBe(true);
 
-    const tabContentElement = fixture.debugElement
-        .query(By.css(`mat-tab-body:nth-of-type(${expectedIndex + 1})`))!.nativeElement;
+    const tabContentElement =
+        fixture.debugElement.query(By.css(
+            `mat-tab-body:nth-of-type(${expectedIndex + 1})`))!.nativeElement;
     expect(tabContentElement.classList.contains('mat-tab-body-active')).toBe(true);
   }
 
@@ -778,9 +787,7 @@ describe('MatTabNavBar with a default config', () => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, BrowserAnimationsModule],
       declarations: [SimpleTabsTestApp],
-      providers: [
-        {provide: MAT_TABS_CONFIG, useValue: {dynamicHeight: true}}
-      ]
+      providers: [{provide: MAT_TABS_CONFIG, useValue: {dynamicHeight: true}}]
     });
 
     TestBed.compileComponents();
@@ -807,20 +814,20 @@ describe('nested MatTabGroup with enabled animations', () => {
   }));
 
   it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
-    expect(() => {
-      const fixture = TestBed.createComponent(NestedTabs);
-      fixture.detectChanges();
-      tick();
-    }).not.toThrow();
-  }));
+       expect(() => {
+         const fixture = TestBed.createComponent(NestedTabs);
+         fixture.detectChanges();
+         tick();
+       }).not.toThrow();
+     }));
 
   it('should not throw when setting an animationDuration without units', fakeAsync(() => {
-    expect(() => {
-      const fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
-      fixture.detectChanges();
-      tick();
-    }).not.toThrow();
-  }));
+       expect(() => {
+         const fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+         fixture.detectChanges();
+         tick();
+       }).not.toThrow();
+     }));
 });
 
 
@@ -856,7 +863,7 @@ class SimpleTabsTestApp {
   focusEvent: any;
   selectEvent: any;
   disableRipple: boolean = false;
-  contentTabIndex: number | null = null;
+  contentTabIndex: number|null = null;
   headerPosition: MatTabHeaderPosition = 'above';
   handleFocus(event: any) {
     this.focusEvent = event;
@@ -864,7 +871,7 @@ class SimpleTabsTestApp {
   handleSelection(event: any) {
     this.selectEvent = event;
   }
-  animationDone() { }
+  animationDone() {}
 }
 
 @Component({
@@ -907,17 +914,11 @@ class SimpleDynamicTabsTestApp {
   `
 })
 class BindedTabsTestApp {
-  tabs = [
-    { label: 'one', content: 'one' },
-    { label: 'two', content: 'two' }
-  ];
+  tabs = [{label: 'one', content: 'one'}, {label: 'two', content: 'two'}];
   selectedIndex = 0;
 
   addNewActiveTab(): void {
-    this.tabs.push({
-      label: 'new tab',
-      content: 'new content'
-    });
+    this.tabs.push({label: 'new tab', content: 'new content'});
     this.selectedIndex = this.tabs.length - 1;
   }
 }
@@ -957,10 +958,7 @@ class DisabledTabsTestApp {
   `
 })
 class AsyncTabsTestApp implements OnInit {
-  private _tabs = [
-    { label: 'one', content: 'one' },
-    { label: 'two', content: 'two' }
-  ];
+  private _tabs = [{label: 'one', content: 'one'}, {label: 'two', content: 'two'}];
 
   tabs: Observable<any>;
 
@@ -1023,11 +1021,12 @@ class NestedTabs {
       </mat-tab>
     </mat-tab-group>
   `,
- })
- class TemplateTabs {}
+})
+class TemplateTabs {
+}
 
 
- @Component({
+@Component({
   template: `
   <mat-tab-group>
     <mat-tab [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"></mat-tab>
@@ -1062,7 +1061,8 @@ class TabGroupWithIsActiveBinding {
     </mat-tab-group>
   `,
 })
-class TabsWithCustomAnimationDuration {}
+class TabsWithCustomAnimationDuration {
+}
 
 
 @Component({

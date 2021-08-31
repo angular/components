@@ -14,43 +14,30 @@ import {
   MatPseudoCheckboxModule,
   MatRippleModule,
 } from '@angular/material/core';
+import {MatDividerModule} from '@angular/material/divider';
+
 import {
   MatList,
-  MatNavList,
   MatListAvatarCssMatStyler,
   MatListIconCssMatStyler,
   MatListItem,
   MatListSubheaderCssMatStyler,
+  MatNavList,
 } from './list';
 import {MatListOption, MatSelectionList} from './selection-list';
-import {MatDividerModule} from '@angular/material/divider';
 
 
 @NgModule({
   imports: [MatLineModule, MatRippleModule, MatCommonModule, MatPseudoCheckboxModule, CommonModule],
   exports: [
-    MatList,
-    MatNavList,
-    MatListItem,
-    MatListAvatarCssMatStyler,
-    MatLineModule,
-    MatCommonModule,
-    MatListIconCssMatStyler,
-    MatListSubheaderCssMatStyler,
-    MatPseudoCheckboxModule,
-    MatSelectionList,
-    MatListOption,
-    MatDividerModule
+    MatList, MatNavList, MatListItem, MatListAvatarCssMatStyler, MatLineModule, MatCommonModule,
+    MatListIconCssMatStyler, MatListSubheaderCssMatStyler, MatPseudoCheckboxModule,
+    MatSelectionList, MatListOption, MatDividerModule
   ],
   declarations: [
-    MatList,
-    MatNavList,
-    MatListItem,
-    MatListAvatarCssMatStyler,
-    MatListIconCssMatStyler,
-    MatListSubheaderCssMatStyler,
-    MatSelectionList,
-    MatListOption
+    MatList, MatNavList, MatListItem, MatListAvatarCssMatStyler, MatListIconCssMatStyler,
+    MatListSubheaderCssMatStyler, MatSelectionList, MatListOption
   ],
 })
-export class MatListModule {}
+export class MatListModule {
+}

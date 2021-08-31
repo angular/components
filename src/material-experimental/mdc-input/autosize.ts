@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MatTextareaAutosize as BaseTextareaAutosize} from '@angular/material/input';
 import {Directive} from '@angular/core';
+import {MatTextareaAutosize as BaseTextareaAutosize} from '@angular/material/input';
 
 /**
  * Directive to automatically resize a textarea to fit its content.

@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tab-group-align-example.html',
   styleUrls: ['tab-group-align-example.css'],
 })
-export class TabGroupAlignExample {}
+export class TabGroupAlignExample {
+}

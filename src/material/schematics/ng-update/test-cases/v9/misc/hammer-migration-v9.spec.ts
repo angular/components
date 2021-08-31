@@ -1,18 +1,19 @@
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {dedent} from '../../../../../../cdk/testing/private';
 import {addPackageToPackageJson} from '@angular/cdk/schematics/ng-add/package-config';
 import {createTestCaseSetup, resolveBazelPath} from '@angular/cdk/schematics/testing';
 import {readFileSync} from 'fs';
+
+import {dedent} from '../../../../../../cdk/testing/private';
 import {MIGRATION_PATH} from '../../../../paths';
 
 
 interface PackageJson {
-  dependencies: Record<string, string | undefined>;
+  dependencies: Record<string, string|undefined>;
 }
 
 describe('v9 HammerJS removal', () => {
-  const GESTURE_CONFIG_TEMPLATE_PATH = resolveBazelPath(__dirname,
-      '../../../migrations/hammer-gestures-v9/gesture-config.template');
+  const GESTURE_CONFIG_TEMPLATE_PATH =
+      resolveBazelPath(__dirname, '../../../migrations/hammer-gestures-v9/gesture-config.template');
 
   let runner: SchematicTestRunner;
   let tree: UnitTestTree;
@@ -38,15 +39,17 @@ describe('v9 HammerJS removal', () => {
     `);
   }
 
-  function getDependencyVersion(name: string): string | undefined {
+  function getDependencyVersion(name: string): string|undefined {
     return (JSON.parse(tree.readContent('/package.json')) as PackageJson).dependencies[name];
   }
 
   it('should not throw if project tsconfig does not have explicit root file names', async () => {
     // Generates a second project in the workspace. This is necessary to ensure that the
     // migration runs logic to determine the correct workspace project.
-    await runner.runExternalSchematicAsync(
-        '@schematics/angular', 'application', {name: 'second-project'}, tree).toPromise();
+    await runner
+        .runExternalSchematicAsync(
+            '@schematics/angular', 'application', {name: 'second-project'}, tree)
+        .toPromise();
     // Overwrite the default tsconfig to not specify any explicit source files. This replicates
     // the scenario observed in: https://github.com/angular/components/issues/18504.
     writeFile('/projects/cdk-testing/tsconfig.app.json', JSON.stringify({
@@ -84,8 +87,8 @@ describe('v9 HammerJS removal', () => {
 
       expect(tree.readContent('/projects/cdk-testing/src/main.ts')).not.toContain('hammerjs');
       expect(logOutput).toContain(
-        'General notice: The HammerJS v9 migration for Angular Components is not able to ' +
-        'migrate tests. Please manually clean up tests in your project if they rely on HammerJS.');
+          'General notice: The HammerJS v9 migration for Angular Components is not able to ' +
+          'migrate tests. Please manually clean up tests in your project if they rely on HammerJS.');
     });
 
     it('should remove empty named import to load hammerjs', async () => {
@@ -345,9 +348,9 @@ describe('v9 HammerJS removal', () => {
 
       expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain(`import 'hammerjs';`);
       expect(logOutput).toContain(
-        'General notice: The HammerJS v9 migration for Angular Components is not able to ' +
-        'migrate tests. Please manually clean up tests in your project if they rely on the ' +
-        'deprecated Angular Material gesture config.');
+          'General notice: The HammerJS v9 migration for Angular Components is not able to ' +
+          'migrate tests. Please manually clean up tests in your project if they rely on the ' +
+          'deprecated Angular Material gesture config.');
     });
 
     it('should ignore global reference to Hammer if not resolved to known types', async () => {
@@ -363,7 +366,7 @@ describe('v9 HammerJS removal', () => {
       await runMigration();
 
       expect(tree.readContent('/projects/cdk-testing/src/main.ts'))
-        .not.toContain(`import 'hammerjs';`);
+          .not.toContain(`import 'hammerjs';`);
     });
 
     it('should not create gesture config if hammer is only used programmatically', async () => {
@@ -696,12 +699,13 @@ describe('v9 HammerJS removal', () => {
     });
 
     it('should add gesture config provider to app module if module is referenced through ' +
-        're-exports in bootstrap', async () => {
-      writeFile('/projects/cdk-testing/src/app/app.component.html', `
+           're-exports in bootstrap',
+       async () => {
+         writeFile('/projects/cdk-testing/src/app/app.component.html', `
         <span (slide)="onSlide($event)"></span>
       `);
 
-      writeFile('/projects/cdk-testing/src/main.ts', `
+         writeFile('/projects/cdk-testing/src/main.ts', `
         import 'hammerjs';
         import { enableProdMode } from '@angular/core';
         import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -717,15 +721,16 @@ describe('v9 HammerJS removal', () => {
           .catch(err => console.error(err));
       `);
 
-      writeFile('/projects/cdk-testing/src/app/index.ts', `export * from './app.module';`);
+         writeFile('/projects/cdk-testing/src/app/index.ts', `export * from './app.module';`);
 
-      await runMigration();
+         await runMigration();
 
-      expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain(`import 'hammerjs';`);
-      expect(tree.exists('/projects/cdk-testing/src/gesture-config.ts')).toBe(true);
+         expect(tree.readContent('/projects/cdk-testing/src/main.ts'))
+             .toContain(`import 'hammerjs';`);
+         expect(tree.exists('/projects/cdk-testing/src/gesture-config.ts')).toBe(true);
 
-      // tslint:disable:max-line-length
-      expect(tree.readContent('/projects/cdk-testing/src/app/app.module.ts')).toContain(dedent`\
+         // tslint:disable:max-line-length
+         expect(tree.readContent('/projects/cdk-testing/src/app/app.module.ts')).toContain(dedent`\
         import { NgModule } from '@angular/core';
         import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
 
@@ -744,8 +749,8 @@ describe('v9 HammerJS removal', () => {
           bootstrap: [AppComponent]
         })
         export class AppModule { }`);
-      // tslint:enable:max-line-length
-    });
+         // tslint:enable:max-line-length
+       });
 
     it('should not add gesture config provider multiple times if already provided', async () => {
       writeFile('/projects/cdk-testing/src/app/app.component.html', `
@@ -847,24 +852,27 @@ describe('v9 HammerJS removal', () => {
      });
 
   it('should not remove hammerjs from "package.json" file if used in one project while ' +
-      'unused in other project', async () => {
-    addPackageToPackageJson(tree, 'hammerjs', '0.0.0');
+         'unused in other project',
+     async () => {
+       addPackageToPackageJson(tree, 'hammerjs', '0.0.0');
 
-    expect(getDependencyVersion('hammerjs')).toBe('0.0.0');
+       expect(getDependencyVersion('hammerjs')).toBe('0.0.0');
 
-    await runner.runExternalSchematicAsync('@schematics/angular', 'application',
-      {name: 'second-project'}, tree).toPromise();
+       await runner
+           .runExternalSchematicAsync(
+               '@schematics/angular', 'application', {name: 'second-project'}, tree)
+           .toPromise();
 
-    // Ensure the "second-project" will be detected with using HammerJS.
-    writeFile('/projects/second-project/src/main.ts', `
+       // Ensure the "second-project" will be detected with using HammerJS.
+       writeFile('/projects/second-project/src/main.ts', `
       new (window as any).Hammer(document.body);
     `);
 
-    await runMigration();
+       await runMigration();
 
-    expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
-    expect(getDependencyVersion('hammerjs')).toBe('0.0.0');
-  });
+       expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
+       expect(getDependencyVersion('hammerjs')).toBe('0.0.0');
+     });
 
   describe('with custom gesture config', () => {
     beforeEach(() => {
@@ -915,8 +923,9 @@ describe('v9 HammerJS removal', () => {
     });
 
     it('should warn if hammer is used in template and references to Material gesture config ' +
-      'were detected', async () => {
-        writeFile('/projects/cdk-testing/src/test.component.ts', dedent`
+           'were detected',
+       async () => {
+         writeFile('/projects/cdk-testing/src/test.component.ts', dedent`
           import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
           import {NgModule} from '@angular/core';
           import {CustomGestureConfig} from "../gesture-config";
@@ -932,7 +941,7 @@ describe('v9 HammerJS removal', () => {
           export class TestModule {}
         `);
 
-        const subModuleFileContent = dedent`
+         const subModuleFileContent = dedent`
           import {NgModule} from '@angular/core';
           import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
           import {GestureConfig} from '@angular/material/core';
@@ -948,19 +957,19 @@ describe('v9 HammerJS removal', () => {
           export class SubModule {}
         `;
 
-        writeFile('/projects/cdk-testing/src/sub.module.ts', subModuleFileContent);
-        writeFile('/projects/cdk-testing/src/app/app.component.html', `
+         writeFile('/projects/cdk-testing/src/sub.module.ts', subModuleFileContent);
+         writeFile('/projects/cdk-testing/src/app/app.component.html', `
           <span (longpress)="onPress()"></span>
         `);
 
-        const {logOutput} = await runMigration();
+         const {logOutput} = await runMigration();
 
-      expect(logOutput).toContain(
-        'This target cannot be migrated completely. Please manually remove references ' +
-        'to the deprecated Angular Material gesture config.');
-      expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
-      expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain('hammerjs');
-        expect(tree.readContent('/projects/cdk-testing/src/test.component.ts')).toContain(dedent`
+         expect(logOutput).toContain(
+             'This target cannot be migrated completely. Please manually remove references ' +
+             'to the deprecated Angular Material gesture config.');
+         expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
+         expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain('hammerjs');
+         expect(tree.readContent('/projects/cdk-testing/src/test.component.ts')).toContain(dedent`
           import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
           import {NgModule} from '@angular/core';
           import {CustomGestureConfig} from "../gesture-config";
@@ -974,9 +983,9 @@ describe('v9 HammerJS removal', () => {
             ],
           })
           export class TestModule {}`);
-        expect(tree.readContent('/projects/cdk-testing/src/sub.module.ts'))
-            .toBe(subModuleFileContent);
-      });
+         expect(tree.readContent('/projects/cdk-testing/src/sub.module.ts'))
+             .toBe(subModuleFileContent);
+       });
 
     it('should not remove hammerjs if no usage could be detected', async () => {
       writeFile('/projects/cdk-testing/src/test.component.ts', dedent`
@@ -1014,8 +1023,8 @@ describe('v9 HammerJS removal', () => {
       const {logOutput} = await runMigration();
 
       expect(logOutput).toContain(
-        'This target cannot be migrated completely, but all references to the ' +
-        'deprecated Angular Material gesture have been removed.');
+          'This target cannot be migrated completely, but all references to the ' +
+          'deprecated Angular Material gesture have been removed.');
       expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
       expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain('hammerjs');
       expect(tree.readContent('/projects/cdk-testing/src/test.component.ts')).toContain(dedent`

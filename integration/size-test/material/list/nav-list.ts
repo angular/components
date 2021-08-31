@@ -15,11 +15,13 @@ import {MatListModule} from '@angular/material/list';
     </mat-nav-list>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatListModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

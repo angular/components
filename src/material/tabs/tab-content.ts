@@ -22,5 +22,5 @@ export const MAT_TAB_CONTENT = new InjectionToken<MatTabContent>('MatTabContent'
 })
 export class MatTabContent {
   constructor(
-    /** Content for the tab. */ public template: TemplateRef<any>) {}
+      /** Content for the tab. */ public template: TemplateRef<any>) {}
 }

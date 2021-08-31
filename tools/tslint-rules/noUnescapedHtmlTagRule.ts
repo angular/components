@@ -1,28 +1,26 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import * as utils from 'tsutils';
+import * as ts from 'typescript';
 
 const ERROR_MESSAGE =
-  'An HTML tag delimiter (< or >) may only appear in a JSDoc comment if it is escaped.' +
-  ' This prevents failures in document generation caused by a misinterpreted tag.';
+    'An HTML tag delimiter (< or >) may only appear in a JSDoc comment if it is escaped.' +
+    ' This prevents failures in document generation caused by a misinterpreted tag.';
 
 /**
  * Rule that walks through all comments inside of the library and adds failures when it
  * detects unescaped HTML tags inside of multi-line comments.
  */
 export class Rule extends Lint.Rules.AbstractRule {
-
   apply(sourceFile: ts.SourceFile) {
     return this.applyWithWalker(new NoUnescapedHtmlTagWalker(sourceFile, this.getOptions()));
   }
 }
 
 class NoUnescapedHtmlTagWalker extends Lint.RuleWalker {
-
   override visitSourceFile(sourceFile: ts.SourceFile) {
     utils.forEachComment(sourceFile, (fullText, commentRange) => {
       const htmlIsEscaped =
-        this._parseForHtml(fullText.substring(commentRange.pos, commentRange.end));
+          this._parseForHtml(fullText.substring(commentRange.pos, commentRange.end));
       if (commentRange.kind === ts.SyntaxKind.MultiLineCommentTrivia && !htmlIsEscaped) {
         this.addFailureAt(commentRange.pos, commentRange.end - commentRange.pos, ERROR_MESSAGE);
       }

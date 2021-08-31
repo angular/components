@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'slider-overview-example.html',
   styleUrls: ['slider-overview-example.css'],
 })
-export class SliderOverviewExample {}
+export class SliderOverviewExample {
+}

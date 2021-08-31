@@ -21,9 +21,7 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
 
   const visitNode = (node: any): void => {
     if (node.kind === ts.SyntaxKind.ClassDeclaration) {
-      const meta: any = {
-        componentName: node.name.text
-      };
+      const meta: any = {componentName: node.name.text};
 
       if (node.jsDoc && node.jsDoc.length) {
         for (const doc of node.jsDoc) {
@@ -50,8 +48,8 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
                 // Since additional files can be also stylesheets, we need to properly parse
                 // the styleUrls metadata property.
                 if (propName === 'styleUrls' && ts.isArrayLiteralExpression(prop.initializer)) {
-                  meta[propName] = prop.initializer.elements
-                    .map((literal: ts.StringLiteral) => literal.text);
+                  meta[propName] =
+                      prop.initializer.elements.map((literal: ts.StringLiteral) => literal.text);
                 } else {
                   meta[propName] = prop.initializer.text;
                 }

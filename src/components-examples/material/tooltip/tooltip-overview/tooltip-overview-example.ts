@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'tooltip-overview-example',
   templateUrl: 'tooltip-overview-example.html',
 })
-export class TooltipOverviewExample {}
+export class TooltipOverviewExample {
+}

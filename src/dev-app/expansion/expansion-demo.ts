@@ -8,7 +8,9 @@
 
 import {Component, ViewChild} from '@angular/core';
 import {
-  MatAccordion, MatAccordionDisplayMode, MatAccordionTogglePosition
+  MatAccordion,
+  MatAccordionDisplayMode,
+  MatAccordionTogglePosition
 } from '@angular/material/expansion';
 
 

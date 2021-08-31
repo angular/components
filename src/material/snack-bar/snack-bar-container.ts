@@ -13,8 +13,8 @@ import {
   BasePortalOutlet,
   CdkPortalOutlet,
   ComponentPortal,
-  TemplatePortal,
   DomPortal,
+  TemplatePortal,
 } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {take} from 'rxjs/operators';
+
 import {matSnackBarAnimations} from './snack-bar-animations';
 import {MatSnackBarConfig} from './snack-bar-config';
 
@@ -69,8 +70,8 @@ export interface _SnackBarContainer {
     '(@state.done)': 'onAnimationEnd($event)'
   },
 })
-export class MatSnackBarContainer extends BasePortalOutlet
-    implements OnDestroy, _SnackBarContainer {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy,
+                                                                      _SnackBarContainer {
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
 
@@ -102,16 +103,13 @@ export class MatSnackBarContainer extends BasePortalOutlet
    * Role of the live region. This is only for Firefox as there is a known issue where Firefox +
    * JAWS does not read out aria-live message.
    */
-  _role?: 'status' | 'alert';
+  _role?: 'status'|'alert';
 
   constructor(
-    private _ngZone: NgZone,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _platform: Platform,
-    /** The snack bar configuration. */
-    public snackBarConfig: MatSnackBarConfig) {
-
+      private _ngZone: NgZone, private _elementRef: ElementRef<HTMLElement>,
+      private _changeDetectorRef: ChangeDetectorRef, private _platform: Platform,
+      /** The snack bar configuration. */
+      public snackBarConfig: MatSnackBarConfig) {
     super();
 
     // Use aria-live rather than a live role like 'alert' or 'status'
@@ -155,11 +153,12 @@ export class MatSnackBarContainer extends BasePortalOutlet
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  override attachDomPortal = (portal: DomPortal) => {
-    this._assertNotAttached();
-    this._applySnackBarClasses();
-    return this._portalOutlet.attachDomPortal(portal);
-  }
+  override attachDomPortal =
+      (portal: DomPortal) => {
+        this._assertNotAttached();
+        this._applySnackBarClasses();
+        return this._portalOutlet.attachDomPortal(portal);
+      }
 
   /** Handle end of animations, updating the state of the snackbar. */
   onAnimationEnd(event: AnimationEvent) {
@@ -270,9 +269,8 @@ export class MatSnackBarContainer extends BasePortalOutlet
           if (inertElement && liveElement) {
             // If an element in the snack bar content is focused before being moved
             // track it and restore focus after moving to the live region.
-            let focusedElement: HTMLElement | null = null;
-            if (this._platform.isBrowser &&
-                document.activeElement instanceof HTMLElement &&
+            let focusedElement: HTMLElement|null = null;
+            if (this._platform.isBrowser && document.activeElement instanceof HTMLElement &&
                 inertElement.contains(document.activeElement)) {
               focusedElement = document.activeElement;
             }

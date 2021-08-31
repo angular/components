@@ -5,10 +5,11 @@ import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {MatSliderModule} from '@angular/material/slider';
+
 import {SliderConfigurableExample} from './slider-configurable/slider-configurable-example';
 import {SliderFormattingExample} from './slider-formatting/slider-formatting-example';
-import {SliderOverviewExample} from './slider-overview/slider-overview-example';
 import {SliderHarnessExample} from './slider-harness/slider-harness-example';
+import {SliderOverviewExample} from './slider-overview/slider-overview-example';
 
 export {
   SliderConfigurableExample,

@@ -10,20 +10,20 @@
 /// <reference types="googlemaps" />
 
 import {
+  Directive,
   Input,
+  NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  NgZone,
-  Directive,
-  OnChanges,
   SimpleChanges,
 } from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {GoogleMap} from '../google-map/google-map';
-import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {MapEventManager} from '../map-event-manager';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -100,10 +100,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    * See: https://developers.google.com/maps/documentation/javascript/reference/marker#Icon
    */
   @Input()
-  set icon(icon: string | google.maps.Icon | google.maps.Symbol) {
+  set icon(icon: string|google.maps.Icon|google.maps.Symbol) {
     this._icon = icon;
   }
-  private _icon: string | google.maps.Icon | google.maps.Symbol;
+  private _icon: string|google.maps.Icon|google.maps.Symbol;
 
   /**
    * Whether the marker is visible.
@@ -119,147 +119,166 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.animation_changed
    */
-  @Output() readonly animationChanged: Observable<void> =
+  @Output()
+  readonly animationChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('animation_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.click
    */
-  @Output() readonly mapClick: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapClick: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('click');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.clickable_changed
    */
-  @Output() readonly clickableChanged: Observable<void> =
+  @Output()
+  readonly clickableChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('clickable_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.cursor_changed
    */
-  @Output() readonly cursorChanged: Observable<void> =
+  @Output()
+  readonly cursorChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('cursor_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.dblclick
    */
-  @Output() readonly mapDblclick: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapDblclick: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dblclick');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.drag
    */
-  @Output() readonly mapDrag: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapDrag: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('drag');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.dragend
    */
-  @Output() readonly mapDragend: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapDragend: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dragend');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.draggable_changed
    */
-  @Output() readonly draggableChanged: Observable<void> =
+  @Output()
+  readonly draggableChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('draggable_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.dragstart
    */
-  @Output() readonly mapDragstart: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapDragstart: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dragstart');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.flat_changed
    */
-  @Output() readonly flatChanged: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('flat_changed');
+  @Output()
+  readonly flatChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('flat_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.icon_changed
    */
-  @Output() readonly iconChanged: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('icon_changed');
+  @Output()
+  readonly iconChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('icon_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mousedown
    */
-  @Output() readonly mapMousedown: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapMousedown: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mousedown');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseout
    */
-  @Output() readonly mapMouseout: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapMouseout: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseout');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseover
    */
-  @Output() readonly mapMouseover: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapMouseover: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseover');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseup
    */
-  @Output() readonly mapMouseup: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapMouseup: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseup');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.position_changed
    */
-  @Output() readonly positionChanged: Observable<void> =
+  @Output()
+  readonly positionChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('position_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.rightclick
    */
-  @Output() readonly mapRightclick: Observable<google.maps.MapMouseEvent> =
+  @Output()
+  readonly mapRightclick: Observable<google.maps.MapMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.shape_changed
    */
-  @Output() readonly shapeChanged: Observable<void> =
+  @Output()
+  readonly shapeChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('shape_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.title_changed
    */
-  @Output() readonly titleChanged: Observable<void> =
+  @Output()
+  readonly titleChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('title_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.visible_changed
    */
-  @Output() readonly visibleChanged: Observable<void> =
+  @Output()
+  readonly visibleChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('visible_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.zindex_changed
    */
-  @Output() readonly zindexChanged: Observable<void> =
+  @Output()
+  readonly zindexChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('zindex_changed');
 
   /**
@@ -269,9 +288,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    */
   marker?: google.maps.Marker;
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _ngZone: NgZone) {}
+  constructor(private readonly _googleMap: GoogleMap, private _ngZone: NgZone) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

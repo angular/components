@@ -13,17 +13,8 @@ import {_MatSlideToggleRequiredValidatorModule} from '@angular/material/slide-to
 import {MatSlideToggle} from './slide-toggle';
 
 @NgModule({
-  imports: [
-    _MatSlideToggleRequiredValidatorModule,
-    MatCommonModule,
-    MatRippleModule,
-    CommonModule
-  ],
-  exports: [
-    _MatSlideToggleRequiredValidatorModule,
-    MatSlideToggle,
-    MatCommonModule
-  ],
+  imports: [_MatSlideToggleRequiredValidatorModule, MatCommonModule, MatRippleModule, CommonModule],
+  exports: [_MatSlideToggleRequiredValidatorModule, MatSlideToggle, MatCommonModule],
   declarations: [MatSlideToggle],
 })
 export class MatSlideToggleModule {

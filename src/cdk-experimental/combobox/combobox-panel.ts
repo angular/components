@@ -6,33 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+export type AriaHasPopupValue = 'false'|'true'|'menu'|'listbox'|'tree'|'grid'|'dialog';
 
 import {Directive, TemplateRef} from '@angular/core';
 import {Subject} from 'rxjs';
 
 @Directive({
-  host: {
-    'class': 'cdk-combobox-panel'
-  },
+  host: {'class': 'cdk-combobox-panel'},
   selector: 'ng-template[cdkComboboxPanel]',
   exportAs: 'cdkComboboxPanel',
 })
 export class CdkComboboxPanel<T = unknown> {
-
-  valueUpdated: Subject<T | T[]> = new Subject<T | T[]>();
+  valueUpdated: Subject<T|T[]> = new Subject<T|T[]>();
   contentIdUpdated: Subject<string> = new Subject<string>();
   contentTypeUpdated: Subject<AriaHasPopupValue> = new Subject<AriaHasPopupValue>();
 
   contentId: string = '';
   contentType: AriaHasPopupValue;
 
-  constructor(
-    readonly _templateRef: TemplateRef<unknown>
-  ) {}
+  constructor(readonly _templateRef: TemplateRef<unknown>) {}
 
   /** Tells the parent combobox to close the panel and sends back the content value. */
-  closePanel(data?: T | T[]) {
+  closePanel(data?: T|T[]) {
     this.valueUpdated.next(data || []);
   }
 

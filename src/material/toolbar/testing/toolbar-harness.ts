@@ -29,8 +29,9 @@ export class MatToolbarHarness extends ContentContainerComponentHarness<MatToolb
    */
   static with(options: ToolbarHarnessFilters = {}): HarnessPredicate<MatToolbarHarness> {
     return new HarnessPredicate(MatToolbarHarness, options)
-      .addOption('text', options.text,
-        (harness, text) => HarnessPredicate.stringMatches(harness._getText(), text));
+        .addOption(
+            'text', options.text,
+            (harness, text) => HarnessPredicate.stringMatches(harness._getText(), text));
   }
 
   /** Whether the toolbar has multiple rows. */

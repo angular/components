@@ -20,7 +20,6 @@ export interface ModuleInfo {
 
 /** Document type for an entry-point. */
 export class EntryPointDoc {
-
   /** Unique document type for Dgeni. */
   docType = 'entry-point';
 
@@ -242,5 +241,4 @@ export class EntryPointGrouper implements Processor {
     }
     return foundEntryPoint;
   }
-
 }

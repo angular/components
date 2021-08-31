@@ -1,11 +1,11 @@
-import {Component} from '@angular/core';
-import {TestBed, waitForAsync, ComponentFixture, fakeAsync, flush} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
+import {Component} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+
 import {MatToolbarModule} from './index';
 
 describe('MatToolbar', () => {
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatToolbarModule, CommonModule],
@@ -52,20 +52,21 @@ describe('MatToolbar', () => {
 
     it('should not wrap the first row contents inside of a generated element', () => {
       expect(toolbarElement.firstElementChild!.tagName)
-        .withContext('Expected the <span> element of the first row to be a direct child ' +
-                     'of the toolbar').toBe('SPAN');
+          .withContext(
+              'Expected the <span> element of the first row to be a direct child ' +
+              'of the toolbar')
+          .toBe('SPAN');
     });
   });
 
   describe('with multiple rows', () => {
-
     it('should project each toolbar-row element inside of the toolbar', () => {
       const fixture = TestBed.createComponent(ToolbarMultipleRows);
       fixture.detectChanges();
 
       expect(fixture.debugElement.queryAll(By.css('.mat-toolbar > .mat-toolbar-row')).length)
-        .withContext('Expected one toolbar row to be present while no content is projected.')
-        .toBe(2);
+          .withContext('Expected one toolbar row to be present while no content is projected.')
+          .toBe(2);
     });
 
     it('should throw an error if different toolbar modes are mixed', () => {
@@ -76,22 +77,22 @@ describe('MatToolbar', () => {
     });
 
     it('should throw an error if a toolbar-row is added later', fakeAsync(() => {
-      const fixture = TestBed.createComponent(ToolbarMixedRowModes);
+         const fixture = TestBed.createComponent(ToolbarMixedRowModes);
 
-      fixture.componentInstance.showToolbarRow = false;
-      fixture.detectChanges();
-      flush();
+         fixture.componentInstance.showToolbarRow = false;
+         fixture.detectChanges();
+         flush();
 
-      expect(() => {
-        try {
-          fixture.componentInstance.showToolbarRow = true;
-          fixture.detectChanges();
-          flush();
-        } catch {
-          flush();
-        }
-      }).toThrowError(/attempting to combine different/i);
-    }));
+         expect(() => {
+           try {
+             fixture.componentInstance.showToolbarRow = true;
+             fixture.detectChanges();
+             flush();
+           } catch {
+             flush();
+           }
+         }).toThrowError(/attempting to combine different/i);
+       }));
 
     it('should pick up indirect descendant rows', () => {
       const fixture = TestBed.createComponent(ToolbarMultipleIndirectRows);
@@ -100,9 +101,7 @@ describe('MatToolbar', () => {
 
       expect(toolbar.classList).toContain('mat-toolbar-multiple-rows');
     });
-
   });
-
 });
 
 
@@ -125,7 +124,8 @@ class ToolbarSingleRow {
     </mat-toolbar>
   `
 })
-class ToolbarMultipleRows {}
+class ToolbarMultipleRows {
+}
 
 @Component({
   template: `
@@ -151,4 +151,5 @@ class ToolbarMixedRowModes {
     </mat-toolbar>
   `
 })
-class ToolbarMultipleIndirectRows {}
+class ToolbarMultipleIndirectRows {
+}

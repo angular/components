@@ -6,18 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Provider} from '@angular/core';
-
 import {
   ColumnResize,
   ColumnResizeNotifier,
   ColumnResizeNotifierSource,
   HeaderRowEventDispatcher,
 } from '@angular/cdk-experimental/column-resize';
+import {Provider} from '@angular/core';
 
 import {
-  TABLE_LAYOUT_FIXED_RESIZE_STRATEGY_PROVIDER,
   FLEX_RESIZE_STRATEGY_PROVIDER,
+  TABLE_LAYOUT_FIXED_RESIZE_STRATEGY_PROVIDER,
 } from '../resize-strategy';
 
 const PROVIDERS: Provider[] = [

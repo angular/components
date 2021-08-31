@@ -1,30 +1,33 @@
-import {TestBed, ComponentFixture, waitForAsync} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatDialogHarness} from '@angular/material/dialog/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialogHarness} from '@angular/material/dialog/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatDialogModule} from '@angular/material/dialog';
-import {DialogHarnessExample} from './dialog-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {DialogHarnessExample} from './dialog-harness-example';
 
 describe('DialogHarnessExample', () => {
   let fixture: ComponentFixture<DialogHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(waitForAsync(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatDialogModule, NoopAnimationsModule],
-      declarations: [DialogHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatDialogModule, NoopAnimationsModule],
+          declarations: [DialogHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(DialogHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);

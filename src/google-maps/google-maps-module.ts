@@ -14,16 +14,16 @@ import {MapBicyclingLayer} from './map-bicycling-layer/map-bicycling-layer';
 import {MapCircle} from './map-circle/map-circle';
 import {MapDirectionsRenderer} from './map-directions-renderer/map-directions-renderer';
 import {MapGroundOverlay} from './map-ground-overlay/map-ground-overlay';
+import {MapHeatmapLayer} from './map-heatmap-layer/map-heatmap-layer';
 import {MapInfoWindow} from './map-info-window/map-info-window';
 import {MapKmlLayer} from './map-kml-layer/map-kml-layer';
-import {MapMarker} from './map-marker/map-marker';
 import {MapMarkerClusterer} from './map-marker-clusterer/map-marker-clusterer';
+import {MapMarker} from './map-marker/map-marker';
 import {MapPolygon} from './map-polygon/map-polygon';
 import {MapPolyline} from './map-polyline/map-polyline';
 import {MapRectangle} from './map-rectangle/map-rectangle';
 import {MapTrafficLayer} from './map-traffic-layer/map-traffic-layer';
 import {MapTransitLayer} from './map-transit-layer/map-transit-layer';
-import {MapHeatmapLayer} from './map-heatmap-layer/map-heatmap-layer';
 
 const COMPONENTS = [
   GoogleMap,

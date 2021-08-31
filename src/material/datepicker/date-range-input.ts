@@ -6,39 +6,40 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusOrigin} from '@angular/cdk/a11y';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input,
-  Optional,
-  OnDestroy,
-  ContentChild,
   AfterContentInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Self,
+  Component,
+  ContentChild,
   ElementRef,
   Inject,
+  Input,
   OnChanges,
+  OnDestroy,
+  Optional,
+  Self,
   SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
-import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
-import {ThemePalette, DateAdapter} from '@angular/material/core';
-import {NgControl, ControlContainer} from '@angular/forms';
-import {Subject, merge, Subscription} from 'rxjs';
-import {FocusOrigin} from '@angular/cdk/a11y';
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
+import {ControlContainer, NgControl} from '@angular/forms';
+import {DateAdapter, ThemePalette} from '@angular/material/core';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
+import {merge, Subject, Subscription} from 'rxjs';
+
 import {
-  MatStartDate,
-  MatEndDate,
-  MatDateRangeInputParent,
   MAT_DATE_RANGE_INPUT_PARENT,
+  MatDateRangeInputParent,
+  MatEndDate,
+  MatStartDate,
 } from './date-range-input-parts';
+import {MatDateRangePickerInput} from './date-range-picker';
+import {DateRange, MatDateSelectionModel} from './date-selection-model';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn, dateInputsHaveChanged} from './datepicker-input-base';
-import {MatDateRangePickerInput} from './date-range-picker';
-import {DateRange, MatDateSelectionModel} from './date-selection-model';
 
 let nextUniqueId = 0;
 
@@ -67,8 +68,9 @@ let nextUniqueId = 0;
   ]
 })
 export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
-  MatDatepickerControl<D>, MatDateRangeInputParent<D>, MatDateRangePickerInput<D>,
-  AfterContentInit, OnChanges, OnDestroy {
+                                             MatDatepickerControl<D>, MatDateRangeInputParent<D>,
+                                             MatDateRangePickerInput<D>, AfterContentInit,
+                                             OnChanges, OnDestroy {
   private _closedSubscription = Subscription.EMPTY;
 
   /** Current value of the range input. */
@@ -103,7 +105,9 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
   /** The range picker that this input is associated with. */
   @Input()
-  get rangePicker() { return this._rangePicker; }
+  get rangePicker() {
+    return this._rangePicker;
+  }
   set rangePicker(rangePicker: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>) {
     if (rangePicker) {
       this._model = rangePicker.registerInput(this);
@@ -120,7 +124,9 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
   /** Whether the input is required. */
   @Input()
-  get required(): boolean { return !!this._required; }
+  get required(): boolean {
+    return !!this._required;
+  }
   set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
   }
@@ -128,7 +134,9 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
   /** Function that can be used to filter out dates within the date range picker. */
   @Input()
-  get dateFilter() { return this._dateFilter; }
+  get dateFilter() {
+    return this._dateFilter;
+  }
   set dateFilter(value: DateFilterFn<D>) {
     const start = this._startInput;
     const end = this._endInput;
@@ -148,8 +156,10 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
   /** The minimum valid date. */
   @Input()
-  get min(): D | null { return this._min; }
-  set min(value: D | null) {
+  get min(): D|null {
+    return this._min;
+  }
+  set min(value: D|null) {
     const validValue = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
 
     if (!this._dateAdapter.sameDate(validValue, this._min)) {
@@ -157,12 +167,14 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
       this._revalidate();
     }
   }
-  private _min: D | null;
+  private _min: D|null;
 
   /** The maximum valid date. */
   @Input()
-  get max(): D | null { return this._max; }
-  set max(value: D | null) {
+  get max(): D|null {
+    return this._max;
+  }
+  set max(value: D|null) {
     const validValue = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
 
     if (!this._dateAdapter.sameDate(validValue, this._max)) {
@@ -170,14 +182,14 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
       this._revalidate();
     }
   }
-  private _max: D | null;
+  private _max: D|null;
 
   /** Whether the input is disabled. */
   @Input()
   get disabled(): boolean {
     return (this._startInput && this._endInput) ?
-      (this._startInput.disabled && this._endInput.disabled) :
-      this._groupDisabled;
+        (this._startInput.disabled && this._endInput.disabled) :
+        this._groupDisabled;
   }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
@@ -206,19 +218,19 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   }
 
   /** Value for the `aria-describedby` attribute of the inputs. */
-  _ariaDescribedBy: string | null = null;
+  _ariaDescribedBy: string|null = null;
 
   /** Date selection model currently registered with the input. */
-  private _model: MatDateSelectionModel<DateRange<D>> | undefined;
+  private _model: MatDateSelectionModel<DateRange<D>>|undefined;
 
   /** Separator text to be shown between the inputs. */
   @Input() separator = '–';
 
   /** Start of the comparison range that should be shown in the calendar. */
-  @Input() comparisonStart: D | null = null;
+  @Input() comparisonStart: D|null = null;
 
   /** End of the comparison range that should be shown in the calendar. */
-  @Input() comparisonEnd: D | null = null;
+  @Input() comparisonEnd: D|null = null;
 
   @ContentChild(MatStartDate) _startInput: MatStartDate<D>;
   @ContentChild(MatEndDate) _endInput: MatEndDate<D>;
@@ -228,18 +240,16 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
    * TODO(crisbeto): change type to `AbstractControlDirective` after #18206 lands.
    * @docs-private
    */
-  ngControl: NgControl | null;
+  ngControl: NgControl|null;
 
   /** Emits when the input's state has changed. */
   readonly stateChanges = new Subject<void>();
 
   constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Self() control: ControlContainer,
-    @Optional() private _dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
-
+      private _changeDetectorRef: ChangeDetectorRef, private _elementRef: ElementRef<HTMLElement>,
+      @Optional() @Self() control: ControlContainer,
+      @Optional() private _dateAdapter: DateAdapter<D>,
+      @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
     if (!_dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -312,7 +322,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   }
 
   /** Gets the date at which the calendar should start. */
-  getStartValue(): D | null {
+  getStartValue(): D|null {
     return this.value ? this.value.start : null;
   }
 
@@ -327,7 +337,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   }
 
   /** Gets the ID of an element that should be used a description for the calendar overlay. */
-  getOverlayLabelId(): string | null {
+  getOverlayLabelId(): string|null {
     return this._formField ? this._formField.getLabelId() : null;
   }
 
@@ -356,8 +366,9 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
   /** Whether the separate text should be hidden. */
   _shouldHideSeparator() {
-    return (!this._formField || (this._formField.getLabelId() &&
-      !this._formField._shouldLabelFloat())) && this.empty;
+    return (!this._formField ||
+            (this._formField.getLabelId() && !this._formField._shouldLabelFloat())) &&
+        this.empty;
   }
 
   /** Gets the value for the `aria-labelledby` attribute of the inputs. */

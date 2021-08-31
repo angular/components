@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, InjectionToken} from '@angular/core';
+import {Injectable, InjectionToken, NgZone, OnDestroy} from '@angular/core';
 import {from, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 
@@ -62,37 +62,40 @@ export class _CoalescedStyleScheduler implements OnDestroy {
   }
 
   private _createScheduleIfNeeded() {
-    if (this._currentSchedule) { return; }
+    if (this._currentSchedule) {
+      return;
+    }
 
     this._currentSchedule = new _Schedule();
 
-    this._getScheduleObservable().pipe(
-        takeUntil(this._destroyed),
-    ).subscribe(() => {
-      while (this._currentSchedule!.tasks.length || this._currentSchedule!.endTasks.length) {
-        const schedule = this._currentSchedule!;
+    this._getScheduleObservable()
+        .pipe(
+            takeUntil(this._destroyed),
+            )
+        .subscribe(() => {
+          while (this._currentSchedule!.tasks.length || this._currentSchedule!.endTasks.length) {
+            const schedule = this._currentSchedule!;
 
-        // Capture new tasks scheduled by the current set of tasks.
-        this._currentSchedule = new _Schedule();
+            // Capture new tasks scheduled by the current set of tasks.
+            this._currentSchedule = new _Schedule();
 
-        for (const task of schedule.tasks) {
-          task();
-        }
+            for (const task of schedule.tasks) {
+              task();
+            }
 
-        for (const task of schedule.endTasks) {
-          task();
-        }
-      }
+            for (const task of schedule.endTasks) {
+              task();
+            }
+          }
 
-      this._currentSchedule = null;
-    });
+          this._currentSchedule = null;
+        });
   }
 
   private _getScheduleObservable() {
     // Use onStable when in the context of an ongoing change detection cycle so that we
     // do not accidentally trigger additional cycles.
-    return this._ngZone.isStable ?
-        from(Promise.resolve(undefined)) :
-        this._ngZone.onStable.pipe(take(1));
+    return this._ngZone.isStable ? from(Promise.resolve(undefined)) :
+                                   this._ngZone.onStable.pipe(take(1));
   }
 }

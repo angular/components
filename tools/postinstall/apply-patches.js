@@ -250,11 +250,11 @@ async function readAndValidatePatchMarker() {
   // TODO: Remove once inquirer has been updated to v8.x where TTY is respected.
   if (process.stdin.isTTY) {
     cleanupModules = (await inquirer.prompt({
-      name: 'result',
-      type: 'confirm',
-      message: 'Clean up node modules automatically?',
-      default: false
-    })).result;
+                       name: 'result',
+                       type: 'confirm',
+                       message: 'Clean up node modules automatically?',
+                       default: false
+                     })).result;
   }
 
   if (cleanupModules) {

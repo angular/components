@@ -1,30 +1,31 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatMenuHarness} from '@angular/material/menu/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatMenuHarness} from '@angular/material/menu/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatMenuModule} from '@angular/material/menu';
-import {MenuHarnessExample} from './menu-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MenuHarnessExample} from './menu-harness-example';
 
 describe('MenuHarnessExample', () => {
   let fixture: ComponentFixture<MenuHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatMenuModule, NoopAnimationsModule],
-      declarations: [MenuHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule(
+            {imports: [MatMenuModule, NoopAnimationsModule], declarations: [MenuHarnessExample]})
+        .compileComponents();
     fixture = TestBed.createComponent(MenuHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

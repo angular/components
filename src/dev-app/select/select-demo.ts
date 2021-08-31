@@ -15,7 +15,7 @@ import {MatSelectChange} from '@angular/material/select';
 
 /** Error any time control is invalid */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
+  isErrorState(control: FormControl|null): boolean {
     if (control) {
       return control.invalid;
     }
@@ -40,7 +40,7 @@ export class SelectDemo {
   currentPokemon: string[];
   currentPokemonFromGroup: string;
   currentDigimon: string;
-  currentAppearanceValue: string | null;
+  currentAppearanceValue: string|null;
   latestChangeEvent: MatSelectChange;
   floatLabel: FloatLabelType = 'auto';
   drinksWidth = 'default';
@@ -52,10 +52,8 @@ export class SelectDemo {
   selectFormControl = new FormControl('', Validators.required);
 
   foods = [
-    {value: null, viewValue: 'None'},
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
+    {value: null, viewValue: 'None'}, {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'}, {value: 'tacos-2', viewValue: 'Tacos'}
   ];
 
   drinks = [
@@ -85,43 +83,44 @@ export class SelectDemo {
   ];
 
   availableThemes = [
-    {value: 'primary', name: 'Primary' },
-    {value: 'accent', name: 'Accent' },
-    {value: 'warn', name: 'Warn' }
+    {value: 'primary', name: 'Primary'}, {value: 'accent', name: 'Accent'},
+    {value: 'warn', name: 'Warn'}
   ];
 
   pokemonGroups = [
     {
       name: 'Grass',
-      pokemon: [
-        {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
-        {value: 'oddish-1', viewValue: 'Oddish'},
-        {value: 'bellsprout-2', viewValue: 'Bellsprout'}
-      ]
+      pokemon:
+          [
+            {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
+            {value: 'oddish-1', viewValue: 'Oddish'},
+            {value: 'bellsprout-2', viewValue: 'Bellsprout'}
+          ]
     },
     {
       name: 'Water',
-      pokemon: [
-        {value: 'squirtle-3', viewValue: 'Squirtle'},
-        {value: 'psyduck-4', viewValue: 'Psyduck'},
-        {value: 'horsea-5', viewValue: 'Horsea'}
-      ]
+      pokemon:
+          [
+            {value: 'squirtle-3', viewValue: 'Squirtle'},
+            {value: 'psyduck-4', viewValue: 'Psyduck'}, {value: 'horsea-5', viewValue: 'Horsea'}
+          ]
     },
     {
       name: 'Fire',
       disabled: true,
-      pokemon: [
-        {value: 'charmander-6', viewValue: 'Charmander'},
-        {value: 'vulpix-7', viewValue: 'Vulpix'},
-        {value: 'flareon-8', viewValue: 'Flareon'}
-      ]
+      pokemon:
+          [
+            {value: 'charmander-6', viewValue: 'Charmander'},
+            {value: 'vulpix-7', viewValue: 'Vulpix'}, {value: 'flareon-8', viewValue: 'Flareon'}
+          ]
     },
     {
       name: 'Psychic',
-      pokemon: [
-        {value: 'mew-9', viewValue: 'Mew'},
-        {value: 'mewtwo-10', viewValue: 'Mewtwo'},
-      ]
+      pokemon:
+          [
+            {value: 'mew-9', viewValue: 'Mew'},
+            {value: 'mewtwo-10', viewValue: 'Mewtwo'},
+          ]
     }
   ];
 
@@ -129,8 +128,7 @@ export class SelectDemo {
     {value: 'mihiramon-0', viewValue: 'Mihiramon'},
     {value: 'sandiramon-1', viewValue: 'Sandiramon'},
     {value: 'sinduramon-2', viewValue: 'Sinduramon'},
-    {value: 'pajiramon-3', viewValue: 'Pajiramon'},
-    {value: 'vajiramon-4', viewValue: 'Vajiramon'},
+    {value: 'pajiramon-3', viewValue: 'Pajiramon'}, {value: 'vajiramon-4', viewValue: 'Vajiramon'},
     {value: 'indramon-5', viewValue: 'Indramon'}
   ];
 

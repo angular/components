@@ -30,18 +30,17 @@ import {
  * @template R The type for the item in each IterableDiffer change record.
  * @template C The type for the context passed to each embedded view.
  */
-export class _DisposeViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemContext<T>>
-    implements _ViewRepeater<T, R, C> {
-  applyChanges(changes: IterableChanges<R>,
-               viewContainerRef: ViewContainerRef,
-               itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,
-               itemValueResolver: _ViewRepeaterItemValueResolver<T, R>,
-               itemViewChanged?: _ViewRepeaterItemChanged<R, C>) {
+export class _DisposeViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemContext<T>> implements
+    _ViewRepeater<T, R, C> {
+  applyChanges(
+      changes: IterableChanges<R>, viewContainerRef: ViewContainerRef,
+      itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,
+      itemValueResolver: _ViewRepeaterItemValueResolver<T, R>,
+      itemViewChanged?: _ViewRepeaterItemChanged<R, C>) {
     changes.forEachOperation(
-        (record: IterableChangeRecord<R>,
-         adjustedPreviousIndex: number | null,
-         currentIndex: number | null) => {
-          let view: EmbeddedViewRef<C> | undefined;
+        (record: IterableChangeRecord<R>, adjustedPreviousIndex: number|null,
+         currentIndex: number|null) => {
+          let view: EmbeddedViewRef<C>|undefined;
           let operation: _ViewRepeaterOperation;
           if (record.previousIndex == null) {
             const insertContext = itemContextFactory(record, adjustedPreviousIndex, currentIndex);
@@ -67,6 +66,5 @@ export class _DisposeViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
         });
   }
 
-  detach() {
-  }
+  detach() {}
 }

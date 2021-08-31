@@ -1,32 +1,35 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatDatepickerInputHarness} from '@angular/material/datepicker/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormsModule} from '@angular/forms';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDatepickerInputHarness} from '@angular/material/datepicker/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {DatepickerHarnessExample} from './datepicker-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatNativeDateModule} from '@angular/material/core';
-import {FormsModule} from '@angular/forms';
+
+import {DatepickerHarnessExample} from './datepicker-harness-example';
 
 describe('DatepickerHarnessExample', () => {
   let fixture: ComponentFixture<DatepickerHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatDatepickerModule, NoopAnimationsModule, MatNativeDateModule, FormsModule],
-      declarations: [DatepickerHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatDatepickerModule, NoopAnimationsModule, MatNativeDateModule, FormsModule],
+          declarations: [DatepickerHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(DatepickerHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

@@ -25,7 +25,8 @@ import {
   declarations: [CdkDefaultEnabledColumnResize, CdkDefaultEnabledColumnResizeFlex],
   exports: [CdkDefaultEnabledColumnResize, CdkDefaultEnabledColumnResizeFlex],
 })
-export class CdkColumnResizeDefaultEnabledModule {}
+export class CdkColumnResizeDefaultEnabledModule {
+}
 
 /**
  * One of two NgModules for use with CdkColumnResize.
@@ -35,4 +36,5 @@ export class CdkColumnResizeDefaultEnabledModule {}
   declarations: [CdkColumnResize, CdkColumnResizeFlex],
   exports: [CdkColumnResize, CdkColumnResizeFlex],
 })
-export class CdkColumnResizeModule {}
+export class CdkColumnResizeModule {
+}

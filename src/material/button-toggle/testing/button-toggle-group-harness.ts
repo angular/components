@@ -8,9 +8,10 @@
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
+
 import {ButtonToggleGroupHarnessFilters} from './button-toggle-group-harness-filters';
-import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 import {MatButtonToggleHarness} from './button-toggle-harness';
+import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 
 
 /** Harness for interacting with a standard mat-button-toggle in tests. */
@@ -25,7 +26,7 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: ButtonToggleGroupHarnessFilters = {}):
-    HarnessPredicate<MatButtonToggleGroupHarness> {
+      HarnessPredicate<MatButtonToggleGroupHarness> {
     return new HarnessPredicate(MatButtonToggleGroupHarness, options);
   }
 

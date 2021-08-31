@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, InjectionToken} from '@angular/core';
 import {CdkPortal} from '@angular/cdk/portal';
+import {Directive, InjectionToken} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `MatTabLabel`. It serves as
@@ -21,4 +21,5 @@ export const MAT_TAB_LABEL = new InjectionToken<MatTabLabel>('MatTabLabel');
   selector: '[mat-tab-label], [matTabLabel]',
   providers: [{provide: MAT_TAB_LABEL, useExisting: MatTabLabel}],
 })
-export class MatTabLabel extends CdkPortal {}
+export class MatTabLabel extends CdkPortal {
+}

@@ -1,13 +1,15 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
-import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {MatFormFieldModule} from '@angular/material-experimental/mdc-form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
+
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
+
 import {
   MAT_CHIPS_DEFAULT_OPTIONS,
   MatChipGrid,
@@ -31,11 +33,9 @@ describe('MDC-based MatChipInput', () => {
       imports: [PlatformModule, MatChipsModule, MatFormFieldModule, NoopAnimationsModule],
       declarations: [TestChipInput],
       providers: [{
-        provide: Directionality, useFactory: () => {
-          return {
-            value: dir.toLowerCase(),
-            change: new Subject()
-          };
+        provide: Directionality,
+        useFactory: () => {
+          return {value: dir.toLowerCase(), change: new Subject()};
         }
       }]
     });
@@ -104,40 +104,44 @@ describe('MDC-based MatChipInput', () => {
     });
 
     it('should allow focus to escape when tabbing forwards', fakeAsync(() => {
-      const gridElement: HTMLElement = fixture.nativeElement.querySelector('mat-chip-grid');
+         const gridElement: HTMLElement = fixture.nativeElement.querySelector('mat-chip-grid');
 
-      expect(gridElement.getAttribute('tabindex')).toBe('0');
+         expect(gridElement.getAttribute('tabindex')).toBe('0');
 
-      dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB);
-      fixture.detectChanges();
+         dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB);
+         fixture.detectChanges();
 
-      expect(gridElement.getAttribute('tabindex'))
-        .withContext('Expected tabIndex to be set to -1 temporarily.').toBe('-1');
+         expect(gridElement.getAttribute('tabindex'))
+             .withContext('Expected tabIndex to be set to -1 temporarily.')
+             .toBe('-1');
 
-      tick();
-      fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      expect(gridElement.getAttribute('tabindex'))
-        .withContext('Expected tabIndex to be reset back to 0').toBe('0');
-    }));
+         expect(gridElement.getAttribute('tabindex'))
+             .withContext('Expected tabIndex to be reset back to 0')
+             .toBe('0');
+       }));
 
     it('should not allow focus to escape when tabbing backwards', fakeAsync(() => {
-      const gridElement: HTMLElement = fixture.nativeElement.querySelector('mat-chip-grid');
+         const gridElement: HTMLElement = fixture.nativeElement.querySelector('mat-chip-grid');
 
-      expect(gridElement.getAttribute('tabindex')).toBe('0');
+         expect(gridElement.getAttribute('tabindex')).toBe('0');
 
-      dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB, undefined, {shift: true});
-      fixture.detectChanges();
+         dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB, undefined, {shift: true});
+         fixture.detectChanges();
 
-      expect(gridElement.getAttribute('tabindex'))
-        .withContext('Expected tabindex to remain 0').toBe('0');
+         expect(gridElement.getAttribute('tabindex'))
+             .withContext('Expected tabindex to remain 0')
+             .toBe('0');
 
-      tick();
-      fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      expect(gridElement.getAttribute('tabindex'))
-        .withContext('Expected tabindex to remain 0').toBe('0');
-    }));
+         expect(gridElement.getAttribute('tabindex'))
+             .withContext('Expected tabindex to remain 0')
+             .toBe('0');
+       }));
 
     it('should set input styling classes', () => {
       expect(inputNativeElement.classList).toContain('mat-mdc-input-element');
@@ -145,7 +149,6 @@ describe('MDC-based MatChipInput', () => {
       expect(inputNativeElement.classList).toContain('mat-mdc-chip-input');
       expect(inputNativeElement.classList).toContain('mdc-text-field__input');
     });
-
   });
 
   describe('[addOnBlur]', () => {
@@ -204,17 +207,16 @@ describe('MDC-based MatChipInput', () => {
     it('emits (chipEnd) when the separator keys are configured globally', () => {
       fixture.destroy();
 
-      TestBed
-        .resetTestingModule()
-        .configureTestingModule({
-          imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
-          declarations: [TestChipInput],
-          providers: [{
-            provide: MAT_CHIPS_DEFAULT_OPTIONS,
-            useValue: ({separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions)
-          }]
-        })
-        .compileComponents();
+      TestBed.resetTestingModule()
+          .configureTestingModule({
+            imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
+            declarations: [TestChipInput],
+            providers: [{
+              provide: MAT_CHIPS_DEFAULT_OPTIONS,
+              useValue: ({separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions)
+            }]
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(TestChipInput);
       testChipInput = fixture.debugElement.componentInstance;
@@ -240,7 +242,6 @@ describe('MDC-based MatChipInput', () => {
       dispatchKeyboardEvent(inputNativeElement, 'keydown', ENTER, undefined, {shift: true});
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
-
   });
 });
 
@@ -263,6 +264,5 @@ class TestChipInput {
   placeholder = '';
   required = false;
 
-  add(_: MatChipInputEvent) {
-  }
+  add(_: MatChipInputEvent) {}
 }

@@ -7,8 +7,9 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatButtonModule} from '@angular/material/button';
+import {BrowserModule} from '@angular/platform-browser';
+
 import {NUM_BUTTONS} from './constants';
 
 /** component: component-harness-test */
@@ -22,7 +23,7 @@ import {NUM_BUTTONS} from './constants';
   styleUrls: ['../../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class ButtonHarnessTest {
-  vals = Array.from({ length: NUM_BUTTONS }, (_, i) => i);
+  vals = Array.from({length: NUM_BUTTONS}, (_, i) => i);
 }
 
 @NgModule({
@@ -33,4 +34,5 @@ export class ButtonHarnessTest {
   ],
   bootstrap: [ButtonHarnessTest],
 })
-export class AppModule {}
+export class AppModule {
+}

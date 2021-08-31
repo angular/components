@@ -7,10 +7,10 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, NgZone, OnDestroy, Optional} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
-import {DOCUMENT} from '@angular/common';
 
 /** Time in ms to throttle the resize events by default. */
 export const DEFAULT_RESIZE_TIME = 20;
@@ -28,22 +28,22 @@ export interface ViewportScrollPosition {
 @Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
   /** Cached viewport dimensions. */
-  private _viewportSize: {width: number; height: number} | null;
+  private _viewportSize: {width: number; height: number}|null;
 
   /** Stream of viewport change events. */
   private readonly _change = new Subject<Event>();
 
   /** Event listener that will be used to handle the viewport change events. */
-  private _changeListener = (event: Event) => {
-    this._change.next(event);
-  }
+  private _changeListener =
+      (event: Event) => {
+        this._change.next(event);
+      }
 
   /** Used to reference correct document/window */
   protected _document: Document;
 
-  constructor(private _platform: Platform,
-              ngZone: NgZone,
-              @Optional() @Inject(DOCUMENT) document: any) {
+  constructor(
+      private _platform: Platform, ngZone: NgZone, @Optional() @Inject(DOCUMENT) document: any) {
     this._document = document;
 
     ngZone.runOutsideAngular(() => {
@@ -132,10 +132,10 @@ export class ViewportRuler implements OnDestroy {
     const documentRect = documentElement.getBoundingClientRect();
 
     const top = -documentRect.top || document.body.scrollTop || window.scrollY ||
-                 documentElement.scrollTop || 0;
+        documentElement.scrollTop || 0;
 
     const left = -documentRect.left || document.body.scrollLeft || window.scrollX ||
-                  documentElement.scrollLeft || 0;
+        documentElement.scrollLeft || 0;
 
     return {top, left};
   }

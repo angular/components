@@ -1,7 +1,8 @@
 import {Component, ElementRef} from '@angular/core';
-import {fakeAsync, TestBed, inject} from '@angular/core/testing';
-import {DragDropModule} from './drag-drop-module';
+import {fakeAsync, inject, TestBed} from '@angular/core/testing';
+
 import {DragDrop} from './drag-drop';
+import {DragDropModule} from './drag-drop-module';
 import {DragRef} from './drag-ref';
 import {DropListRef} from './drop-list-ref';
 
@@ -39,9 +40,7 @@ describe('DragDrop', () => {
 });
 
 
-@Component({
-  template: '<div></div>'
-})
+@Component({template: '<div></div>'})
 class TestComponent {
   constructor(public elementRef: ElementRef<HTMLElement>) {}
 }

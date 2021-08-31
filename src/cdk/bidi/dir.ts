@@ -7,12 +7,12 @@
  */
 
 import {
-  Directive,
-  Output,
-  Input,
-  EventEmitter,
   AfterContentInit,
+  Directive,
+  EventEmitter,
+  Input,
   OnDestroy,
+  Output,
 } from '@angular/core';
 
 import {Direction, Directionality} from './directionality';
@@ -44,7 +44,9 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
 
   /** @docs-private */
   @Input()
-  get dir(): Direction { return this._dir; }
+  get dir(): Direction {
+    return this._dir;
+  }
   set dir(value: Direction) {
     const old = this._dir;
     const normalizedValue = value ? value.toLowerCase() : value;
@@ -58,7 +60,9 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
   }
 
   /** Current layout direction of the element. */
-  get value(): Direction { return this.dir; }
+  get value(): Direction {
+    return this.dir;
+  }
 
   /** Initialize once default value has been set. */
   ngAfterContentInit() {
@@ -69,4 +73,3 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
     this.change.complete();
   }
 }
-

@@ -12,10 +12,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [optionModule],
-      declarations: [OptgroupHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [optionModule],
+          declarations: [OptgroupHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(OptgroupHarnessTest);
     fixture.detectChanges();
@@ -28,9 +30,8 @@ export function runHarnessTests(
   });
 
   it('should filter groups based on their text', async () => {
-    const groups = await loader.getAllHarnesses(optionGroupHarness.with({
-      labelText: 'Disabled group'
-    }));
+    const groups =
+        await loader.getAllHarnesses(optionGroupHarness.with({labelText: 'Disabled group'}));
 
     expect(groups.length).toBe(1);
   });
@@ -77,4 +78,3 @@ export function runHarnessTests(
 })
 class OptgroupHarnessTest {
 }
-

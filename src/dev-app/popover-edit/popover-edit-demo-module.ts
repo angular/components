@@ -6,15 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {
   CdkPopoverEditExamplesModule
 } from '@angular/components-examples/cdk-experimental/popover-edit';
 import {
   PopoverEditExamplesModule
 } from '@angular/components-examples/material-experimental/popover-edit';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+
 import {PopoverEditDemo} from './popover-edit-demo';
 
 @NgModule({

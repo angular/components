@@ -23,10 +23,12 @@ describe('AutofillMonitor', () => {
   let testComponent: Inputs;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [TextFieldModule],
-      declarations: [Inputs],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [TextFieldModule],
+          declarations: [Inputs],
+        })
+        .compileComponents();
   });
 
   beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {
@@ -92,7 +94,7 @@ describe('AutofillMonitor', () => {
   it('should emit and add filled class upon start animation', () => {
     const inputEl = testComponent.input1.nativeElement;
     let animationStartCallback: Function = () => {};
-    let autofillStreamEvent: AutofillEvent | null = null;
+    let autofillStreamEvent: AutofillEvent|null = null;
     inputEl.addEventListener.and.callFake((_: string, cb: Function) => animationStartCallback = cb);
     const autofillStream = autofillMonitor.monitor(inputEl);
     autofillStream.subscribe(event => autofillStreamEvent = event);
@@ -107,7 +109,7 @@ describe('AutofillMonitor', () => {
   it('should emit and remove filled class upon end animation', () => {
     const inputEl = testComponent.input1.nativeElement;
     let animationStartCallback: Function = () => {};
-    let autofillStreamEvent: AutofillEvent | null = null;
+    let autofillStreamEvent: AutofillEvent|null = null;
     inputEl.addEventListener.and.callFake((_: string, cb: Function) => animationStartCallback = cb);
     const autofillStream = autofillMonitor.monitor(inputEl);
     autofillStream.subscribe(event => autofillStreamEvent = event);
@@ -176,10 +178,12 @@ describe('cdkAutofill', () => {
   let testComponent: InputWithCdkAutofilled;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [TextFieldModule],
-      declarations: [InputWithCdkAutofilled],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [TextFieldModule],
+          declarations: [InputWithCdkAutofilled],
+        })
+        .compileComponents();
   });
 
   beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {
@@ -216,9 +220,7 @@ class Inputs {
   @ViewChild('input3') input3: ElementRef<any>;
 }
 
-@Component({
-  template: `<input #input cdkAutofill>`
-})
+@Component({template: `<input #input cdkAutofill>`})
 class InputWithCdkAutofilled {
   // Cast to `any` so we can stub out some methods in the tests.
   @ViewChild('input') input: ElementRef<any>;

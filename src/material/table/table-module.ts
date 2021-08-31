@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {MatRecycleRows, MatTable} from './table';
 import {CdkTableModule} from '@angular/cdk/table';
+import {NgModule} from '@angular/core';
+import {MatCommonModule} from '@angular/material/core';
+
 import {
   MatCell,
   MatCellDef,
@@ -23,12 +24,12 @@ import {
   MatFooterRowDef,
   MatHeaderRow,
   MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatRowDef,
-  MatNoDataRow
+  MatRowDef
 } from './row';
+import {MatRecycleRows, MatTable} from './table';
 import {MatTextColumn} from './text-column';
-import {MatCommonModule} from '@angular/material/core';
 
 const EXPORTED_DECLARATIONS = [
   // Table
@@ -66,4 +67,5 @@ const EXPORTED_DECLARATIONS = [
   exports: [MatCommonModule, EXPORTED_DECLARATIONS],
   declarations: EXPORTED_DECLARATIONS,
 })
-export class MatTableModule {}
+export class MatTableModule {
+}

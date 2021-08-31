@@ -1,33 +1,36 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatFormFieldHarness} from '@angular/material/form-field/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatInputModule} from '@angular/material/input';
+import {MatInputHarness} from '@angular/material/input/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormFieldHarnessExample} from './form-field-harness-example';
-import {MatInputModule} from '@angular/material/input';
-import {ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatInputHarness} from '@angular/material/input/testing';
+
+import {FormFieldHarnessExample} from './form-field-harness-example';
 
 describe('FormFieldHarnessExample', () => {
   let fixture: ComponentFixture<FormFieldHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, NoopAnimationsModule],
-      declarations: [FormFieldHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, NoopAnimationsModule],
+          declarations: [FormFieldHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(FormFieldHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

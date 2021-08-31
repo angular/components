@@ -10,12 +10,12 @@
 /// <reference types="googlemaps" />
 
 import {
+  Directive,
   Input,
+  NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
-  NgZone,
-  Directive,
-  OnChanges,
   SimpleChanges,
 } from '@angular/core';
 
@@ -23,9 +23,9 @@ import {GoogleMap} from '../google-map/google-map';
 
 /** Possible data that can be shown on a heatmap layer. */
 export type HeatmapData =
-  google.maps.MVCArray<
-    google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> |
-  (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
+    google.maps.MVCArray<google.maps.LatLng|google.maps.visualization.WeightedLocation|
+                         google.maps.LatLngLiteral>|
+    (google.maps.LatLng|google.maps.visualization.WeightedLocation|google.maps.LatLngLiteral)[];
 
 
 /**
@@ -65,9 +65,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
    */
   heatmap?: google.maps.visualization.HeatmapLayer;
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _ngZone: NgZone) {}
+  constructor(private readonly _googleMap: GoogleMap, private _ngZone: NgZone) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

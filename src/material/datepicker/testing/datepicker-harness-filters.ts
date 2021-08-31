@@ -11,9 +11,9 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 /** A set of criteria that can be used to filter a list of datepicker input instances. */
 export interface DatepickerInputHarnessFilters extends BaseHarnessFilters {
   /** Filters based on the value of the input. */
-  value?: string | RegExp;
+  value?: string|RegExp;
   /** Filters based on the placeholder text of the input. */
-  placeholder?: string | RegExp;
+  placeholder?: string|RegExp;
 }
 
 /** A set of criteria that can be used to filter a list of datepicker toggle instances. */
@@ -25,7 +25,7 @@ export interface CalendarHarnessFilters extends BaseHarnessFilters {}
 /** A set of criteria that can be used to filter a list of calendar cell instances. */
 export interface CalendarCellHarnessFilters extends BaseHarnessFilters {
   /** Filters based on the text of the cell. */
-  text?: string | RegExp;
+  text?: string|RegExp;
   /** Filters based on whether the cell is selected. */
   selected?: boolean;
   /** Filters based on whether the cell is activated using keyboard navigation */
@@ -45,5 +45,5 @@ export interface CalendarCellHarnessFilters extends BaseHarnessFilters {
 /** A set of criteria that can be used to filter a list of date range input instances. */
 export interface DateRangeInputHarnessFilters extends BaseHarnessFilters {
   /** Filters based on the value of the input. */
-  value?: string | RegExp;
+  value?: string|RegExp;
 }

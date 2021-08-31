@@ -6,5 +6,5 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export {OverlayOutsideClickDispatcher} from './overlay-outside-click-dispatcher';
 export {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
+export {OverlayOutsideClickDispatcher} from './overlay-outside-click-dispatcher';

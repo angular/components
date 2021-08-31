@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'datepicker-disabled-example',
   templateUrl: 'datepicker-disabled-example.html',
 })
-export class DatepickerDisabledExample {}
+export class DatepickerDisabledExample {
+}

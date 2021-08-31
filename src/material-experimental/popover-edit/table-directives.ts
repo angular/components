@@ -5,15 +5,15 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Directive} from '@angular/core';
 import {
   _CELL_SELECTOR,
   _closest,
+  CdkEditOpen,
   CdkPopoverEdit,
   CdkPopoverEditTabOut,
-  CdkRowHoverContent,
-  CdkEditOpen
+  CdkRowHoverContent
 } from '@angular/cdk-experimental/popover-edit';
+import {Directive} from '@angular/core';
 
 const POPOVER_EDIT_HOST_BINDINGS = {
   '[attr.tabindex]': 'disabled ? null : 0',
@@ -85,8 +85,8 @@ export class MatRowHoverContent extends CdkRowHoverContent {
   }
 
   protected override makeElementVisible(element: HTMLElement): void {
-    _closest(this.elementRef.nativeElement!, _CELL_SELECTOR)!
-        .classList.add(MAT_ROW_HOVER_CELL_CLASS);
+    _closest(
+        this.elementRef.nativeElement!, _CELL_SELECTOR)!.classList.add(MAT_ROW_HOVER_CELL_CLASS);
 
     if (this.services.directionality.value === 'rtl') {
       element.classList.add(MAT_ROW_HOVER_RTL_CLASS);

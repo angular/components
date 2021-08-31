@@ -6,4 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'sidenav-drawer-overview-example.html',
   styleUrls: ['sidenav-drawer-overview-example.css'],
 })
-export class SidenavDrawerOverviewExample {}
+export class SidenavDrawerOverviewExample {
+}

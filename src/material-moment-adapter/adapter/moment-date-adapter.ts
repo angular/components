@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, Optional, InjectionToken} from '@angular/core';
+import {Inject, Injectable, InjectionToken, Optional} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -21,7 +21,6 @@ const moment = _rollupMoment || _moment;
 
 /** Configurable options for {@see MomentDateAdapter}. */
 export interface MatMomentDateAdapterOptions {
-
   /**
    * When enabled, the dates have to match the format exactly.
    * See https://momentjs.com/guides/#/parsing/strict-mode/.
@@ -38,17 +37,13 @@ export interface MatMomentDateAdapterOptions {
 
 /** InjectionToken for moment date adapter to configure options. */
 export const MAT_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<MatMomentDateAdapterOptions>(
-  'MAT_MOMENT_DATE_ADAPTER_OPTIONS', {
-    providedIn: 'root',
-    factory: MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY
-});
+    'MAT_MOMENT_DATE_ADAPTER_OPTIONS',
+    {providedIn: 'root', factory: MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY});
 
 
 /** @docs-private */
 export function MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): MatMomentDateAdapterOptions {
-  return {
-    useUtc: false
-  };
+  return {useUtc: false};
 }
 
 
@@ -80,10 +75,10 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     narrowDaysOfWeek: string[]
   };
 
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
-    @Optional() @Inject(MAT_MOMENT_DATE_ADAPTER_OPTIONS)
-    private _options?: MatMomentDateAdapterOptions) {
-
+  constructor(
+      @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
+      @Optional() @Inject(MAT_MOMENT_DATE_ADAPTER_OPTIONS) private _options?:
+          MatMomentDateAdapterOptions) {
     super();
     this.setLocale(dateLocale || moment.locale());
   }
@@ -119,7 +114,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return this.clone(date).day();
   }
 
-  getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+  getMonthNames(style: 'long'|'short'|'narrow'): string[] {
     // Moment.js doesn't support narrow month names, so we just use short if narrow is requested.
     return style == 'long' ? this._localeData.longMonths : this._localeData.shortMonths;
   }
@@ -128,7 +123,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return this._localeData.dates;
   }
 
-  getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+  getDayOfWeekNames(style: 'long'|'short'|'narrow'): string[] {
     if (style == 'long') {
       return this._localeData.longDaysOfWeek;
     }
@@ -181,7 +176,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return this._createMoment().locale(this.locale);
   }
 
-  parse(value: any, parseFormat: string | string[]): Moment | null {
+  parse(value: any, parseFormat: string|string[]): Moment|null {
     if (value && typeof value == 'string') {
       return this._createMoment(value, parseFormat, this.locale);
     }
@@ -217,7 +212,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
    * (https://www.ietf.org/rfc/rfc3339.txt) and valid Date objects into valid Moments and empty
    * string into null. Returns an invalid date for all other values.
    */
-  override deserialize(value: any): Moment | null {
+  override deserialize(value: any): Moment|null {
     let date;
     if (value instanceof Date) {
       date = this._createMoment(value).locale(this.locale);
@@ -251,14 +246,12 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
 
   /** Creates a Moment instance while respecting the current UTC settings. */
   private _createMoment(
-    date?: MomentInput,
-    format?: MomentFormatSpecification,
-    locale?: string,
-  ): Moment {
+      date?: MomentInput,
+      format?: MomentFormatSpecification,
+      locale?: string,
+      ): Moment {
     const {strict, useUtc}: MatMomentDateAdapterOptions = this._options || {};
 
-    return useUtc
-      ? moment.utc(date, format, locale, strict)
-      : moment(date, format, locale, strict);
+    return useUtc ? moment.utc(date, format, locale, strict) : moment(date, format, locale, strict);
   }
 }

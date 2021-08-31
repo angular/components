@@ -11,10 +11,12 @@ describe('MatChipInputHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipInputHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatChipsModule],
+          declarations: [ChipInputHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ChipInputHarnessTest);
     fixture.detectChanges();
@@ -63,7 +65,6 @@ describe('MatChipInputHarness', () => {
     await harness.blur();
     expect(await harness.isFocused()).toBe(false);
   });
-
 });
 
 @Component({
@@ -80,4 +81,3 @@ describe('MatChipInputHarness', () => {
 class ChipInputHarnessTest {
   required = false;
 }
-

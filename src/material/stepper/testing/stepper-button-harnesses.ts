@@ -35,7 +35,8 @@ export class MatStepperNextHarness extends StepperButtonHarness {
    */
   static with(options: StepperButtonHarnessFilters = {}): HarnessPredicate<MatStepperNextHarness> {
     return new HarnessPredicate(MatStepperNextHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 }
@@ -53,9 +54,10 @@ export class MatStepperPreviousHarness extends StepperButtonHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: StepperButtonHarnessFilters = {}):
-    HarnessPredicate<MatStepperPreviousHarness> {
+      HarnessPredicate<MatStepperPreviousHarness> {
     return new HarnessPredicate(MatStepperPreviousHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 }

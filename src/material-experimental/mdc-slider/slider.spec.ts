@@ -8,11 +8,6 @@
 
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {
-  dispatchMouseEvent,
-  dispatchPointerEvent,
-  dispatchTouchEvent,
-} from '../../cdk/testing/private';
 import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
@@ -26,6 +21,13 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {of} from 'rxjs';
+
+import {
+  dispatchMouseEvent,
+  dispatchPointerEvent,
+  dispatchTouchEvent,
+} from '../../cdk/testing/private';
+
 import {MatSliderModule} from './module';
 import {MatSlider, MatSliderThumb, MatSliderVisualThumb} from './slider';
 
@@ -34,18 +36,20 @@ interface Point {
   y: number;
 }
 
-describe('MDC-based MatSlider' , () => {
+describe('MDC-based MatSlider', () => {
   let platform: Platform;
 
   function createComponent<T>(
-    component: Type<T>,
-    providers: Provider[] = [],
-  ): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
-      declarations: [component],
-      providers: [...providers],
-    }).compileComponents();
+      component: Type<T>,
+      providers: Provider[] = [],
+      ): ComponentFixture<T> {
+    TestBed
+        .configureTestingModule({
+          imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
+          declarations: [component],
+          providers: [...providers],
+        })
+        .compileComponents();
 
     platform = TestBed.inject(Platform);
     // Mock #setPointerCapture as it throws errors on pointerdown without a real pointerId.
@@ -178,7 +182,7 @@ describe('MDC-based MatSlider' , () => {
 
     it('should have a strong focus indicator in each of the thumbs', () => {
       const indicators =
-        sliderElement.querySelectorAll('.mat-mdc-slider-visual-thumb .mat-mdc-focus-indicator');
+          sliderElement.querySelectorAll('.mat-mdc-slider-visual-thumb .mat-mdc-focus-indicator');
       expect(indicators.length).toBe(2);
     });
   });
@@ -307,93 +311,91 @@ describe('MDC-based MatSlider' , () => {
 
     function pointerdown() {
       dispatchPointerOrTouchEvent(
-        thumbElement, PointerEventType.POINTER_DOWN, thumbX, thumbY, platform.IOS
-      );
+          thumbElement, PointerEventType.POINTER_DOWN, thumbX, thumbY, platform.IOS);
     }
 
     function pointerup() {
       dispatchPointerOrTouchEvent(
-        thumbElement, PointerEventType.POINTER_UP, thumbX, thumbY, platform.IOS
-      );
+          thumbElement, PointerEventType.POINTER_UP, thumbX, thumbY, platform.IOS);
     }
 
     it('should show the hover ripple on mouseenter', fakeAsync(() => {
-      expect(isRippleVisible('hover')).toBeFalse();
-      mouseenter();
-      expect(isRippleVisible('hover')).toBeTrue();
-    }));
+         expect(isRippleVisible('hover')).toBeFalse();
+         mouseenter();
+         expect(isRippleVisible('hover')).toBeTrue();
+       }));
 
     it('should hide the hover ripple on mouseleave', fakeAsync(() => {
-      mouseenter();
-      mouseleave();
-      expect(isRippleVisible('hover')).toBeFalse();
-    }));
+         mouseenter();
+         mouseleave();
+         expect(isRippleVisible('hover')).toBeFalse();
+       }));
 
     it('should show the focus ripple on pointerdown', fakeAsync(() => {
-      expect(isRippleVisible('focus')).toBeFalse();
-      pointerdown();
-      expect(isRippleVisible('focus')).toBeTrue();
-    }));
+         expect(isRippleVisible('focus')).toBeFalse();
+         pointerdown();
+         expect(isRippleVisible('focus')).toBeTrue();
+       }));
 
     it('should continue to show the focus ripple on pointerup', fakeAsync(() => {
-      pointerdown();
-      pointerup();
-      expect(isRippleVisible('focus')).toBeTrue();
-    }));
+         pointerdown();
+         pointerup();
+         expect(isRippleVisible('focus')).toBeTrue();
+       }));
 
     it('should hide the focus ripple on blur', fakeAsync(() => {
-      pointerdown();
-      pointerup();
-      blur();
-      expect(isRippleVisible('focus')).toBeFalse();
-    }));
+         pointerdown();
+         pointerup();
+         blur();
+         expect(isRippleVisible('focus')).toBeFalse();
+       }));
 
     it('should show the active ripple on pointerdown', fakeAsync(() => {
-      expect(isRippleVisible('active')).toBeFalse();
-      pointerdown();
-      expect(isRippleVisible('active')).toBeTrue();
-    }));
+         expect(isRippleVisible('active')).toBeFalse();
+         pointerdown();
+         expect(isRippleVisible('active')).toBeTrue();
+       }));
 
     it('should hide the active ripple on pointerup', fakeAsync(() => {
-      pointerdown();
-      pointerup();
-      expect(isRippleVisible('active')).toBeFalse();
-    }));
+         pointerdown();
+         pointerup();
+         expect(isRippleVisible('active')).toBeFalse();
+       }));
 
     // Edge cases.
 
     it('should not show the hover ripple if the thumb is already focused', fakeAsync(() => {
-      pointerdown();
-      mouseenter();
-      expect(isRippleVisible('hover')).toBeFalse();
-    }));
+         pointerdown();
+         mouseenter();
+         expect(isRippleVisible('hover')).toBeFalse();
+       }));
 
     it('should hide the hover ripple if the thumb is focused', fakeAsync(() => {
-      mouseenter();
-      pointerdown();
-      expect(isRippleVisible('hover')).toBeFalse();
-    }));
+         mouseenter();
+         pointerdown();
+         expect(isRippleVisible('hover')).toBeFalse();
+       }));
 
     it('should not hide the focus ripple if the thumb is pressed', fakeAsync(() => {
-      pointerdown();
-      blur();
-      expect(isRippleVisible('focus')).toBeTrue();
-    }));
+         pointerdown();
+         blur();
+         expect(isRippleVisible('focus')).toBeTrue();
+       }));
 
     it('should not hide the hover ripple on blur if the thumb is hovered', fakeAsync(() => {
-      mouseenter();
-      pointerdown();
-      pointerup();
-      blur();
-      expect(isRippleVisible('hover')).toBeTrue();
-    }));
+         mouseenter();
+         pointerdown();
+         pointerup();
+         blur();
+         expect(isRippleVisible('hover')).toBeTrue();
+       }));
 
     it('should hide the focus ripple on drag end if the thumb already lost focus', fakeAsync(() => {
-      pointerdown();
-      blur();
-      pointerup();
-      expect(isRippleVisible('focus')).toBeFalse();
-    }));
+         pointerdown();
+         blur();
+         pointerup();
+         expect(isRippleVisible('focus')).toBeFalse();
+       }));
   });
 
   describe('slider with set min and max', () => {
@@ -426,13 +428,14 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should be able to set the min and max values when they are more precise ' +
-      'than the step', () => {
-        sliderInstance.step = 10;
-        slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
-        expect(inputInstance.value).toBe(25);
-        slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
-        expect(inputInstance.value).toBe(75);
-    });
+           'than the step',
+       () => {
+         sliderInstance.step = 10;
+         slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
+         expect(inputInstance.value).toBe(25);
+         slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
+         expect(inputInstance.value).toBe(75);
+       });
   });
 
   describe('range slider with set min and max', () => {
@@ -480,14 +483,15 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should be able to set the min and max values when they are more precise ' +
-      'than the step', () => {
-        sliderInstance.step = 10;
-        fixture.detectChanges();
-        slideToValue(sliderInstance, 25, Thumb.START, platform.IOS);
-        expect(startInputInstance.value).toBe(25);
-        slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
-        expect(endInputInstance.value).toBe(75);
-    });
+           'than the step',
+       () => {
+         sliderInstance.step = 10;
+         fixture.detectChanges();
+         slideToValue(sliderInstance, 25, Thumb.START, platform.IOS);
+         expect(startInputInstance.value).toBe(25);
+         slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
+         expect(endInputInstance.value).toBe(75);
+       });
   });
 
   describe('slider with set value', () => {
@@ -677,7 +681,7 @@ describe('MDC-based MatSlider' , () => {
       const sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       valueIndicatorTextElement =
-        sliderNativeElement.querySelector('.mdc-slider__value-indicator-text')!;
+          sliderNativeElement.querySelector('.mdc-slider__value-indicator-text')!;
       inputInstance = sliderInstance._getInput(Thumb.END);
     });
 
@@ -719,9 +723,9 @@ describe('MDC-based MatSlider' , () => {
       const startThumbElement = sliderInstance._getThumbElement(Thumb.START);
       const endThumbElement = sliderInstance._getThumbElement(Thumb.END);
       startValueIndicatorTextElement =
-        startThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
+          startThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
       endValueIndicatorTextElement =
-        endThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
+          endThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
     });
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
@@ -849,40 +853,41 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should dispatch events when changing back to previously emitted value after ' +
-      'programmatically setting value', () => {
-        const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-          const {x, y} = getCoordsForValue(sliderInstance, value);
-          dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-        };
+           'programmatically setting value',
+       () => {
+         const dispatchSliderEvent = (type: PointerEventType, value: number) => {
+           const {x, y} = getCoordsForValue(sliderInstance, value);
+           dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
+         };
 
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
+         expect(testComponent.onChange).not.toHaveBeenCalled();
+         expect(testComponent.onInput).not.toHaveBeenCalled();
 
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
+         fixture.detectChanges();
 
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onChange).not.toHaveBeenCalled();
+         expect(testComponent.onInput).toHaveBeenCalledTimes(1);
 
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
-        fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
+         fixture.detectChanges();
 
-        expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+         expect(testComponent.onInput).toHaveBeenCalledTimes(1);
 
-        inputInstance.value = 0;
-        fixture.detectChanges();
+         inputInstance.value = 0;
+         fixture.detectChanges();
 
-        expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+         expect(testComponent.onInput).toHaveBeenCalledTimes(1);
 
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
+         dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
+         fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
 
-        expect(testComponent.onChange).toHaveBeenCalledTimes(2);
-        expect(testComponent.onInput).toHaveBeenCalledTimes(2);
-    });
+         expect(testComponent.onChange).toHaveBeenCalledTimes(2);
+         expect(testComponent.onInput).toHaveBeenCalledTimes(2);
+       });
   });
 
   describe('range slider with change handlers', () => {
@@ -963,96 +968,98 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should dispatch events when changing back to previously emitted value after ' +
-      'programmatically setting the start value', () => {
-        const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-          const {x, y} = getCoordsForValue(sliderInstance, value);
-          dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-        };
+           'programmatically setting the start value',
+       () => {
+         const dispatchSliderEvent = (type: PointerEventType, value: number) => {
+           const {x, y} = getCoordsForValue(sliderInstance, value);
+           dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
+         };
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
 
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
+         fixture.detectChanges();
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
 
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
-        fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
+         fixture.detectChanges();
 
-        expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
+         expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
 
-        startInputInstance.value = 0;
-        fixture.detectChanges();
+         startInputInstance.value = 0;
+         fixture.detectChanges();
 
-        expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
+         expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
 
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
+         dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
+         fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
 
-        expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(2);
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(2);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-    });
+         expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(2);
+         expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(2);
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+       });
 
     it('should dispatch events when changing back to previously emitted value after ' +
-      'programmatically setting the end value', () => {
-        const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-          const {x, y} = getCoordsForValue(sliderInstance, value);
-          dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-        };
+           'programmatically setting the end value',
+       () => {
+         const dispatchSliderEvent = (type: PointerEventType, value: number) => {
+           const {x, y} = getCoordsForValue(sliderInstance, value);
+           dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
+         };
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
 
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 80);
-        fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_DOWN, 80);
+         fixture.detectChanges();
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
 
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 80);
-        fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_UP, 80);
+         fixture.detectChanges();
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
+         expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
 
-        endInputInstance.value = 100;
-        fixture.detectChanges();
+         endInputInstance.value = 100;
+         fixture.detectChanges();
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
+         expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
 
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 80);
-        fixture.detectChanges();
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 80);
+         dispatchSliderEvent(PointerEventType.POINTER_DOWN, 80);
+         fixture.detectChanges();
+         dispatchSliderEvent(PointerEventType.POINTER_UP, 80);
 
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(2);
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(2);
-    });
+         expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+         expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(2);
+         expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(2);
+       });
   });
 
   describe('slider with input event', () => {
@@ -1207,10 +1214,8 @@ describe('MDC-based MatSlider' , () => {
     let inputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardSlider, [{
-        provide: Directionality,
-        useValue: ({value: 'rtl', change: of()})
-      }]);
+      const fixture = createComponent(
+          StandardSlider, [{provide: Directionality, useValue: ({value: 'rtl', change: of()})}]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
@@ -1229,10 +1234,9 @@ describe('MDC-based MatSlider' , () => {
     let endInputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardRangeSlider, [{
-        provide: Directionality,
-        useValue: ({value: 'rtl', change: of()})
-      }]);
+      const fixture = createComponent(
+          StandardRangeSlider,
+          [{provide: Directionality, useValue: ({value: 'rtl', change: of()})}]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
@@ -1278,17 +1282,17 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
-      expect(inputInstance.value).toBe(0);
-      testComponent.val = 5;
-      fixture.detectChanges();
-      flush();
-      expect(inputInstance.value).toBe(5);
+         expect(inputInstance.value).toBe(0);
+         testComponent.val = 5;
+         fixture.detectChanges();
+         flush();
+         expect(inputInstance.value).toBe(5);
 
-      testComponent.val = undefined;
-      fixture.detectChanges();
-      flush();
-      expect(inputInstance.value).toBe(0);
-    }));
+         testComponent.val = undefined;
+         fixture.detectChanges();
+         flush();
+         expect(inputInstance.value).toBe(0);
+       }));
   });
 
   describe('slider with ngModel', () => {
@@ -1337,32 +1341,32 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should be able to reset a slider by setting the start thumb model back to undefined',
-      fakeAsync(() => {
-        expect(startInputInstance.value).toBe(0);
-        testComponent.startVal = 5;
-        fixture.detectChanges();
-        flush();
-        expect(startInputInstance.value).toBe(5);
+       fakeAsync(() => {
+         expect(startInputInstance.value).toBe(0);
+         testComponent.startVal = 5;
+         fixture.detectChanges();
+         flush();
+         expect(startInputInstance.value).toBe(5);
 
-        testComponent.startVal = undefined;
-        fixture.detectChanges();
-        flush();
-        expect(startInputInstance.value).toBe(0);
-    }));
+         testComponent.startVal = undefined;
+         fixture.detectChanges();
+         flush();
+         expect(startInputInstance.value).toBe(0);
+       }));
 
     it('should be able to reset a slider by setting the end thumb model back to undefined',
-      fakeAsync(() => {
-        expect(endInputInstance.value).toBe(100);
-        testComponent.endVal = 5;
-        fixture.detectChanges();
-        flush();
-        expect(endInputInstance.value).toBe(5);
+       fakeAsync(() => {
+         expect(endInputInstance.value).toBe(100);
+         testComponent.endVal = 5;
+         fixture.detectChanges();
+         flush();
+         expect(endInputInstance.value).toBe(5);
 
-        testComponent.endVal = undefined;
-        fixture.detectChanges();
-        flush();
-        expect(endInputInstance.value).toBe(0);
-    }));
+         testComponent.endVal = undefined;
+         fixture.detectChanges();
+         flush();
+         expect(endInputInstance.value).toBe(0);
+       }));
   });
 
   describe('slider as a custom form control', () => {
@@ -1660,7 +1664,8 @@ const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
   `,
   styles: SLIDER_STYLES,
 })
-class StandardSlider {}
+class StandardSlider {
+}
 
 @Component({
   template: `
@@ -1671,7 +1676,8 @@ class StandardSlider {}
   `,
   styles: SLIDER_STYLES,
 })
-class StandardRangeSlider {}
+class StandardRangeSlider {
+}
 
 @Component({
   template: `
@@ -1681,7 +1687,8 @@ class StandardRangeSlider {}
   `,
   styles: SLIDER_STYLES,
 })
-class DisabledSlider {}
+class DisabledSlider {
+}
 
 @Component({
   template: `
@@ -1692,7 +1699,8 @@ class DisabledSlider {}
   `,
   styles: SLIDER_STYLES,
 })
-class DisabledRangeSlider {}
+class DisabledRangeSlider {
+}
 
 @Component({
   template: `
@@ -1702,7 +1710,8 @@ class DisabledRangeSlider {}
   `,
   styles: SLIDER_STYLES,
 })
-class SliderWithMinAndMax {}
+class SliderWithMinAndMax {
+}
 
 @Component({
   template: `
@@ -1713,7 +1722,8 @@ class SliderWithMinAndMax {}
   `,
   styles: SLIDER_STYLES,
 })
-class RangeSliderWithMinAndMax {}
+class RangeSliderWithMinAndMax {
+}
 
 @Component({
   template: `
@@ -1723,7 +1733,8 @@ class RangeSliderWithMinAndMax {}
   `,
   styles: SLIDER_STYLES,
 })
-class SliderWithValue {}
+class SliderWithValue {
+}
 
 @Component({
   template: `
@@ -1734,7 +1745,8 @@ class SliderWithValue {}
   `,
   styles: SLIDER_STYLES,
 })
-class RangeSliderWithValue {}
+class RangeSliderWithValue {
+}
 
 @Component({
   template: `
@@ -1744,7 +1756,8 @@ class RangeSliderWithValue {}
   `,
   styles: SLIDER_STYLES,
 })
-class SliderWithStep {}
+class SliderWithStep {
+}
 
 @Component({
   template: `
@@ -1755,7 +1768,8 @@ class SliderWithStep {}
   `,
   styles: SLIDER_STYLES,
 })
-class RangeSliderWithStep {}
+class RangeSliderWithStep {
+}
 
 @Component({
   template: `
@@ -1767,7 +1781,9 @@ class RangeSliderWithStep {}
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) { return `$${v / 1000}k`; }
+    if (v >= 1000) {
+      return `$${v / 1000}k`;
+    }
     return `$${v}`;
   }
 }
@@ -1783,7 +1799,9 @@ class DiscreteSliderWithDisplayWith {
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) { return `$${v / 1000}k`; }
+    if (v >= 1000) {
+      return `$${v / 1000}k`;
+    }
     return `$${v}`;
   }
 }
@@ -1861,7 +1879,7 @@ class RangeSliderWithChangeHandler {
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
-  val: number | undefined = 0;
+  val: number|undefined = 0;
 }
 
 @Component({
@@ -1875,8 +1893,8 @@ class SliderWithNgModel {
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
-  startVal: number | undefined = 0;
-  endVal: number | undefined = 100;
+  startVal: number|undefined = 0;
+  endVal: number|undefined = 100;
 }
 
 @Component({
@@ -1983,12 +2001,12 @@ function getCoordsForValue(slider: MatSlider, value: number): Point {
 
 /** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
 function dispatchPointerOrTouchEvent(
-  node: Node, type: PointerEventType, x: number, y: number, isIOS: boolean) {
-    if (isIOS) {
-      dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
-    } else {
-      dispatchPointerEvent(node, type, x, y);
-    }
+    node: Node, type: PointerEventType, x: number, y: number, isIOS: boolean) {
+  if (isIOS) {
+    dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
+  } else {
+    dispatchPointerEvent(node, type, x, y);
+  }
 }
 
 /** Returns the touch event equivalent of the given pointer event. */

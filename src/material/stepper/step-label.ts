@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive} from '@angular/core';
 import {CdkStepLabel} from '@angular/cdk/stepper';
+import {Directive} from '@angular/core';
 
 @Directive({
   selector: '[matStepLabel]',
 })
-export class MatStepLabel extends CdkStepLabel {}
+export class MatStepLabel extends CdkStepLabel {
+}

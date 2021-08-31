@@ -21,7 +21,11 @@ import {_MatDialogContainerBase} from './dialog-container';
 let uniqueId = 0;
 
 /** Possible states of the lifecycle of a dialog. */
-export const enum MatDialogState {OPEN, CLOSING, CLOSED}
+export const enum MatDialogState {
+  OPEN,
+  CLOSING,
+  CLOSED
+}
 
 /**
  * Reference to a dialog opened via the MatDialog service.
@@ -31,19 +35,19 @@ export class MatDialogRef<T, R = any> {
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
-  disableClose: boolean | undefined = this._containerInstance._config.disableClose;
+  disableClose: boolean|undefined = this._containerInstance._config.disableClose;
 
   /** Subject for notifying the user that the dialog has finished opening. */
   private readonly _afterOpened = new Subject<void>();
 
   /** Subject for notifying the user that the dialog has finished closing. */
-  private readonly _afterClosed = new Subject<R | undefined>();
+  private readonly _afterClosed = new Subject<R|undefined>();
 
   /** Subject for notifying the user that the dialog has started closing. */
-  private readonly _beforeClosed = new Subject<R | undefined>();
+  private readonly _beforeClosed = new Subject<R|undefined>();
 
   /** Result to be passed to afterClosed. */
-  private _result: R | undefined;
+  private _result: R|undefined;
 
   /** Handle to the timeout that's running as a fallback in case the exit animation doesn't fire. */
   private _closeFallbackTimeout: number;
@@ -52,32 +56,27 @@ export class MatDialogRef<T, R = any> {
   private _state = MatDialogState.OPEN;
 
   constructor(
-    private _overlayRef: OverlayRef,
-    public _containerInstance: _MatDialogContainerBase,
-    /** Id of the dialog. */
-    readonly id: string = `mat-dialog-${uniqueId++}`) {
-
+      private _overlayRef: OverlayRef, public _containerInstance: _MatDialogContainerBase,
+      /** Id of the dialog. */
+      readonly id: string = `mat-dialog-${uniqueId++}`) {
     // Pass the id along to the container.
     _containerInstance._id = id;
 
     // Emit when opening animation completes
-    _containerInstance._animationStateChanged.pipe(
-      filter(event => event.state === 'opened'),
-      take(1)
-    )
-    .subscribe(() => {
-      this._afterOpened.next();
-      this._afterOpened.complete();
-    });
+    _containerInstance._animationStateChanged
+        .pipe(filter(event => event.state === 'opened'), take(1))
+        .subscribe(() => {
+          this._afterOpened.next();
+          this._afterOpened.complete();
+        });
 
     // Dispose overlay when closing animation is complete
-    _containerInstance._animationStateChanged.pipe(
-      filter(event => event.state === 'closed'),
-      take(1)
-    ).subscribe(() => {
-      clearTimeout(this._closeFallbackTimeout);
-      this._finishDialogClose();
-    });
+    _containerInstance._animationStateChanged
+        .pipe(filter(event => event.state === 'closed'), take(1))
+        .subscribe(() => {
+          clearTimeout(this._closeFallbackTimeout);
+          this._finishDialogClose();
+        });
 
     _overlayRef.detachments().subscribe(() => {
       this._beforeClosed.next(this._result);
@@ -89,13 +88,13 @@ export class MatDialogRef<T, R = any> {
     });
 
     _overlayRef.keydownEvents()
-      .pipe(filter(event => {
-        return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
-      }))
-      .subscribe(event => {
-        event.preventDefault();
-        _closeDialogVia(this, 'keyboard');
-      });
+        .pipe(filter(event => {
+          return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
+        }))
+        .subscribe(event => {
+          event.preventDefault();
+          _closeDialogVia(this, 'keyboard');
+        });
 
     _overlayRef.backdropClick().subscribe(() => {
       if (this.disableClose) {
@@ -114,23 +113,22 @@ export class MatDialogRef<T, R = any> {
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.
-    this._containerInstance._animationStateChanged.pipe(
-      filter(event => event.state === 'closing'),
-      take(1)
-    )
-    .subscribe(event => {
-      this._beforeClosed.next(dialogResult);
-      this._beforeClosed.complete();
-      this._overlayRef.detachBackdrop();
+    this._containerInstance._animationStateChanged
+        .pipe(filter(event => event.state === 'closing'), take(1))
+        .subscribe(event => {
+          this._beforeClosed.next(dialogResult);
+          this._beforeClosed.complete();
+          this._overlayRef.detachBackdrop();
 
-      // The logic that disposes of the overlay depends on the exit animation completing, however
-      // it isn't guaranteed if the parent view is destroyed while it's running. Add a fallback
-      // timeout which will clean everything up if the animation hasn't fired within the specified
-      // amount of time plus 100ms. We don't need to run this outside the NgZone, because for the
-      // vast majority of cases the timeout will have been cleared before it has the chance to fire.
-      this._closeFallbackTimeout = setTimeout(() => this._finishDialogClose(),
-          event.totalTime + 100);
-    });
+          // The logic that disposes of the overlay depends on the exit animation completing,
+          // however it isn't guaranteed if the parent view is destroyed while it's running. Add a
+          // fallback timeout which will clean everything up if the animation hasn't fired within
+          // the specified amount of time plus 100ms. We don't need to run this outside the NgZone,
+          // because for the vast majority of cases the timeout will have been cleared before it has
+          // the chance to fire.
+          this._closeFallbackTimeout =
+              setTimeout(() => this._finishDialogClose(), event.totalTime + 100);
+        });
 
     this._state = MatDialogState.CLOSING;
     this._containerInstance._startExitAnimation();
@@ -146,14 +144,14 @@ export class MatDialogRef<T, R = any> {
   /**
    * Gets an observable that is notified when the dialog is finished closing.
    */
-  afterClosed(): Observable<R | undefined> {
+  afterClosed(): Observable<R|undefined> {
     return this._afterClosed;
   }
 
   /**
    * Gets an observable that is notified when the dialog has started closing.
    */
-  beforeClosed(): Observable<R | undefined> {
+  beforeClosed(): Observable<R|undefined> {
     return this._beforeClosed;
   }
 
@@ -207,13 +205,13 @@ export class MatDialogRef<T, R = any> {
   }
 
   /** Add a CSS class or an array of classes to the overlay pane. */
-  addPanelClass(classes: string | string[]): this {
+  addPanelClass(classes: string|string[]): this {
     this._overlayRef.addPanelClass(classes);
     return this;
   }
 
   /** Remove a CSS class or an array of classes from the overlay pane. */
-  removePanelClass(classes: string | string[]): this {
+  removePanelClass(classes: string|string[]): this {
     this._overlayRef.removePanelClass(classes);
     return this;
   }

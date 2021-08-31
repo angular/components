@@ -40,8 +40,7 @@ abstract class MatChipSetBase {
   abstract disabled: boolean;
   constructor(_elementRef: ElementRef) {}
 }
-const _MatChipSetMixinBase: HasTabIndexCtor & typeof MatChipSetBase =
-    mixinTabIndex(MatChipSetBase);
+const _MatChipSetMixinBase: HasTabIndexCtor&typeof MatChipSetBase = mixinTabIndex(MatChipSetBase);
 
 /**
  * Basic container component for the MatChip component.
@@ -63,22 +62,22 @@ const _MatChipSetMixinBase: HasTabIndexCtor & typeof MatChipSetBase =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit, AfterViewInit,
-  HasTabIndex, OnDestroy {
+                                                                HasTabIndex, OnDestroy {
   /** Subscription to remove changes in chips. */
-  private _chipRemoveSubscription: Subscription | null;
+  private _chipRemoveSubscription: Subscription|null;
 
   /** Subscription to destroyed events in chips. */
-  private _chipDestroyedSubscription: Subscription | null;
+  private _chipDestroyedSubscription: Subscription|null;
 
   /** Subscription to chip interactions. */
-  private _chipInteractionSubscription: Subscription | null;
+  private _chipInteractionSubscription: Subscription|null;
 
   /**
    * When a chip is destroyed, we store the index of the destroyed chip until the chips
    * query list notifies about the update. This is necessary because we cannot determine an
    * appropriate chip that should receive focus until the array of chips updated completely.
    */
-  protected _lastDestroyedChipIndex: number | null = null;
+  protected _lastDestroyedChipIndex: number|null = null;
 
   /** The MDC foundation containing business logic for MDC chip-set. */
   protected _chipSetFoundation: deprecated.MDCChipSetFoundation;
@@ -121,7 +120,9 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   /** Whether the chip set is disabled. */
   @Input()
-  get disabled(): boolean { return this._disabled; }
+  get disabled(): boolean {
+    return this._disabled;
+  }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
     this._syncChipsState();
@@ -129,11 +130,13 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   protected _disabled: boolean = false;
 
   /** Whether the chip list contains chips or not. */
-  get empty(): boolean { return this._chips.length === 0; }
+  get empty(): boolean {
+    return this._chips.length === 0;
+  }
 
   /** The ARIA role applied to the chip set. */
   @Input()
-  get role(): string | null {
+  get role(): string|null {
     if (this._role) {
       return this._role;
     } else {
@@ -141,13 +144,15 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
     }
   }
 
-  set role(value: string | null) {
+  set role(value: string|null) {
     this._role = value;
   }
   private _role: string|null = null;
 
   /** Whether any of the chips inside of this chip-set has focus. */
-  get focused(): boolean { return this._hasFocusedChip(); }
+  get focused(): boolean {
+    return this._hasFocusedChip();
+  }
 
   /** Combined stream of all of the child chips' remove events. */
   get chipRemoveChanges(): Observable<MatChipEvent> {
@@ -169,11 +174,12 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
     descendants: true
-  }) _chips: QueryList<MatChip>;
+  })
+  _chips: QueryList<MatChip>;
 
-  constructor(protected _elementRef: ElementRef,
-              protected _changeDetectorRef: ChangeDetectorRef,
-              @Optional() protected _dir: Directionality) {
+  constructor(
+      protected _elementRef: ElementRef, protected _changeDetectorRef: ChangeDetectorRef,
+      @Optional() protected _dir: Directionality) {
     super(_elementRef);
     this._chipSetFoundation = new deprecated.MDCChipSetFoundation(this._chipSetAdapter);
   }
@@ -220,9 +226,9 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   /** Sets whether the given CSS class should be applied to the MDC chip. */
   protected _setMdcClass(cssClass: string, active: boolean) {
-      const classes = this._elementRef.nativeElement.classList;
-      active ? classes.add(cssClass) : classes.remove(cssClass);
-      this._changeDetectorRef.markForCheck();
+    const classes = this._elementRef.nativeElement.classList;
+    active ? classes.add(cssClass) : classes.remove(cssClass);
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Adapter method that returns true if the chip set has the given MDC class. */
@@ -246,11 +252,11 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   /** Subscribes to chip removal events. */
   private _listenToChipsRemove() {
     this._chipRemoveSubscription = this.chipRemoveChanges.subscribe((event: MatChipEvent) => {
-       this._chipSetFoundation.handleChipRemoval({
-         chipId: event.chip.id,
-         // TODO(mmalerba): Add removal message.
-         removedAnnouncement: null,
-       });
+      this._chipSetFoundation.handleChipRemoval({
+        chipId: event.chip.id,
+        // TODO(mmalerba): Add removal message.
+        removedAnnouncement: null,
+      });
     });
   }
 

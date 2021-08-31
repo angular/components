@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'cdk-drag-drop-axis-lock-example.html',
   styleUrls: ['cdk-drag-drop-axis-lock-example.css'],
 })
-export class CdkDragDropAxisLockExample {}
+export class CdkDragDropAxisLockExample {
+}

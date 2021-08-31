@@ -16,17 +16,12 @@ import {MatListOptionCheckboxPosition} from '@angular/material-experimental/mdc-
   styleUrls: ['mdc-list-demo.css'],
 })
 export class MdcListDemo {
-  items: string[] = [
-    'Pepper',
-    'Salt',
-    'Paprika'
-  ];
+  items: string[] = ['Pepper', 'Salt', 'Paprika'];
 
   checkboxPosition: MatListOptionCheckboxPosition = 'before';
 
   contacts: {name: string, headline: string}[] = [
-    {name: 'Nancy', headline: 'Software engineer'},
-    {name: 'Mary', headline: 'TPM'},
+    {name: 'Nancy', headline: 'Software engineer'}, {name: 'Mary', headline: 'TPM'},
     {name: 'Bobby', headline: 'UX designer'}
   ];
 
@@ -52,10 +47,7 @@ export class MdcListDemo {
   ];
 
   links: {name: string}[] = [
-    {name: 'Inbox'},
-    {name: 'Outbox'},
-    {name: 'Spam'},
-    {name: 'Trash'}
+    {name: 'Inbox'}, {name: 'Outbox'}, {name: 'Spam'}, {name: 'Trash'}
 
   ];
 

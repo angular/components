@@ -15,9 +15,9 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  shareReplay,
   skip,
   startWith,
-  shareReplay,
 } from 'rxjs/operators';
 
 import {CELL_SELECTOR, ROW_SELECTOR} from './constants';
@@ -83,12 +83,12 @@ export class EditEventDispatcher<R> {
       distinctUntilChanged<Element|HoverContentState|boolean|null>();
   private readonly _startWithNull = startWith<Element|null>(null);
   private readonly _distinctShare = pipe(
-    this._distinctUntilChanged as MonoTypeOperatorFunction<HoverContentState>,
-    shareReplay(1),
+      this._distinctUntilChanged as MonoTypeOperatorFunction<HoverContentState>,
+      shareReplay(1),
   );
   private readonly _startWithNullDistinct = pipe(
-    this._startWithNull,
-    this._distinctUntilChanged as MonoTypeOperatorFunction<Element|null>,
+      this._startWithNull,
+      this._distinctUntilChanged as MonoTypeOperatorFunction<Element|null>,
   );
 
   readonly editingAndEnabled = this.editing.pipe(
@@ -97,19 +97,22 @@ export class EditEventDispatcher<R> {
   );
 
   /** An observable that emits the row containing focus or an active edit. */
-  readonly editingOrFocused = combineLatest([
-      this.editingAndEnabled.pipe(
-          map(cell => closest(cell, ROW_SELECTOR)),
-          this._startWithNull,
-      ),
-      this.focused.pipe(this._startWithNull),
-  ]).pipe(
-      map(([editingRow, focusedRow]) => focusedRow || editingRow),
-      this._distinctUntilChanged as MonoTypeOperatorFunction<Element|null>,
-      auditTime(FOCUS_DELAY), // Use audit to skip over blur events to the next focused element.
-      this._distinctUntilChanged as MonoTypeOperatorFunction<Element|null>,
-      shareReplay(1),
-  );
+  readonly editingOrFocused =
+      combineLatest([
+        this.editingAndEnabled.pipe(
+            map(cell => closest(cell, ROW_SELECTOR)),
+            this._startWithNull,
+            ),
+        this.focused.pipe(this._startWithNull),
+      ])
+          .pipe(
+              map(([editingRow, focusedRow]) => focusedRow || editingRow),
+              this._distinctUntilChanged as MonoTypeOperatorFunction<Element|null>,
+              auditTime(
+                  FOCUS_DELAY),  // Use audit to skip over blur events to the next focused element.
+              this._distinctUntilChanged as MonoTypeOperatorFunction<Element|null>,
+              shareReplay(1),
+          );
 
   /** Tracks rows that contain hover content with a reference count. */
   private _rowsWithHoverContent = new WeakMap<Element, number>();
@@ -118,28 +121,30 @@ export class EditEventDispatcher<R> {
   private _currentlyEditing: Element|null = null;
 
   /** The combined set of row hover content states organized by row. */
-  private readonly _hoveredContentStateDistinct = combineLatest([
-      this._getFirstRowWithHoverContent(),
-      this._getLastRowWithHoverContent(),
-      this.editingOrFocused,
-      this.hovering.pipe(
-          distinctUntilChanged(),
-          audit(row => this.mouseMove.pipe(
-              filter(mouseMoveRow => row === mouseMoveRow),
-              this._startWithNull,
-              debounceTime(MOUSE_EVENT_DELAY_MS)),
-          ),
-          this._startWithNullDistinct,
-      ),
-  ]).pipe(
-      skip(1), // Skip the initial emission of [null, null, null, null].
-      map(computeHoverContentState),
-      distinctUntilChanged(areMapEntriesEqual),
-      // Optimization: Enter the zone before shareReplay so that we trigger a single
-      // ApplicationRef.tick for all row updates.
-      this._enterZone(),
-      shareReplay(1),
-  );
+  private readonly _hoveredContentStateDistinct =
+      combineLatest([
+        this._getFirstRowWithHoverContent(),
+        this._getLastRowWithHoverContent(),
+        this.editingOrFocused,
+        this.hovering.pipe(
+            distinctUntilChanged(),
+            audit(
+                row => this.mouseMove.pipe(
+                    filter(mouseMoveRow => row === mouseMoveRow), this._startWithNull,
+                    debounceTime(MOUSE_EVENT_DELAY_MS)),
+                ),
+            this._startWithNullDistinct,
+            ),
+      ])
+          .pipe(
+              skip(1),  // Skip the initial emission of [null, null, null, null].
+              map(computeHoverContentState),
+              distinctUntilChanged(areMapEntriesEqual),
+              // Optimization: Enter the zone before shareReplay so that we trigger a single
+              // ApplicationRef.tick for all row updates.
+              this._enterZone(),
+              shareReplay(1),
+          );
 
   private readonly _editingAndEnabledDistinct = this.editingAndEnabled.pipe(
       distinctUntilChanged(),
@@ -225,8 +230,8 @@ export class EditEventDispatcher<R> {
     if (row !== this._lastSeenRow) {
       this._lastSeenRow = row;
       this._lastSeenRowHoverOrFocus = this._hoveredContentStateDistinct.pipe(
-        map(state => state.get(row) || HoverContentState.OFF),
-        this._distinctShare,
+          map(state => state.get(row) || HoverContentState.OFF),
+          this._distinctShare,
       );
     }
 
@@ -238,8 +243,7 @@ export class EditEventDispatcher<R> {
    * re-entering the zone for stream pipelines.
    */
   private _enterZone<T>(): MonoTypeOperatorFunction<T> {
-    return (source: Observable<T>) =>
-        new Observable<T>((observer) => source.subscribe({
+    return (source: Observable<T>) => new Observable<T>((observer) => source.subscribe({
              next: (value) => this._ngZone.run(() => observer.next(value)),
              error: (err) => observer.error(err),
              complete: () => observer.complete()
@@ -268,7 +272,7 @@ export class EditEventDispatcher<R> {
     });
   }
 
-  private _mapAllRowsToSingleRow(mapper: (rows: NodeList) => Element|null):
+  private _mapAllRowsToSingleRow(mapper: (rows: NodeList) => Element | null):
       Observable<Element|null> {
     return this.allRows.pipe(
         map(mapper),
@@ -278,15 +282,15 @@ export class EditEventDispatcher<R> {
 }
 
 function computeHoverContentState([firstRow, lastRow, activeRow, hoverRow]: (Element|null)[]):
-     Map<Element, HoverContentState> {
+    Map<Element, HoverContentState> {
   const hoverContentState = new Map<Element, HoverContentState>();
 
   // Add focusable rows.
-  for (const focussableRow of [
-    firstRow,
-    lastRow,
-    activeRow && activeRow.previousElementSibling,
-    activeRow && activeRow.nextElementSibling,
+  for (const focussableRow
+           of [firstRow,
+               lastRow,
+               activeRow && activeRow.previousElementSibling,
+               activeRow && activeRow.nextElementSibling,
   ]) {
     if (focussableRow) {
       hoverContentState.set(focussableRow as Element, HoverContentState.FOCUSABLE);

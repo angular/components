@@ -6,20 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {A11yModule} from '@angular/cdk/a11y';
+import {ObserversModule} from '@angular/cdk/observers';
+import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule, MatRippleModule} from '@angular/material-experimental/mdc-core';
-import {PortalModule} from '@angular/cdk/portal';
-import {ObserversModule} from '@angular/cdk/observers';
-import {A11yModule} from '@angular/cdk/a11y';
+
+import {MatTab} from './tab';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 import {MatTabContent} from './tab-content';
+import {MatTabGroup} from './tab-group';
+import {MatTabHeader} from './tab-header';
 import {MatTabLabel} from './tab-label';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {MatTab} from './tab';
-import {MatTabHeader} from './tab-header';
-import {MatTabGroup} from './tab-group';
-import {MatTabNav, MatTabLink} from './tab-nav-bar/tab-nav-bar';
+import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
 
 @NgModule({
   imports: [
@@ -40,18 +41,10 @@ import {MatTabNav, MatTabLink} from './tab-nav-bar/tab-nav-bar';
     MatTabLink,
   ],
   declarations: [
-    MatTabContent,
-    MatTabLabel,
-    MatTab,
-    MatTabGroup,
-    MatTabNav,
-    MatTabLink,
+    MatTabContent, MatTabLabel, MatTab, MatTabGroup, MatTabNav, MatTabLink,
 
     // Private directives, should not be exported.
-    MatTabBody,
-    MatTabBodyPortal,
-    MatTabLabelWrapper,
-    MatTabHeader
+    MatTabBody, MatTabBodyPortal, MatTabLabelWrapper, MatTabHeader
   ]
 })
 export class MatTabsModule {

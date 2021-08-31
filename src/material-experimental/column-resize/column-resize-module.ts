@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {OverlayModule} from '@angular/cdk/overlay';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {OverlayModule} from '@angular/cdk/overlay';
 
 import {MatColumnResize} from './column-resize-directives/column-resize';
 import {MatColumnResizeFlex} from './column-resize-directives/column-resize-flex';
@@ -18,9 +18,9 @@ import {
 import {
   MatDefaultEnabledColumnResizeFlex
 } from './column-resize-directives/default-enabled-column-resize-flex';
+import {MatColumnResizeOverlayHandle} from './overlay-handle';
 import {MatDefaultResizable} from './resizable-directives/default-enabled-resizable';
 import {MatResizable} from './resizable-directives/resizable';
-import {MatColumnResizeOverlayHandle} from './overlay-handle';
 
 const ENTRY_COMMON_COMPONENTS = [
   MatColumnResizeOverlayHandle,
@@ -31,7 +31,8 @@ const ENTRY_COMMON_COMPONENTS = [
   exports: ENTRY_COMMON_COMPONENTS,
   entryComponents: ENTRY_COMMON_COMPONENTS,
 })
-export class MatColumnResizeCommonModule {}
+export class MatColumnResizeCommonModule {
+}
 
 const IMPORTS = [
   MatCommonModule,
@@ -52,7 +53,8 @@ const IMPORTS = [
     MatDefaultResizable,
   ],
 })
-export class MatDefaultEnabledColumnResizeModule {}
+export class MatDefaultEnabledColumnResizeModule {
+}
 
 @NgModule({
   imports: IMPORTS,
@@ -67,4 +69,5 @@ export class MatDefaultEnabledColumnResizeModule {}
     MatResizable,
   ],
 })
-export class MatColumnResizeModule {}
+export class MatColumnResizeModule {
+}

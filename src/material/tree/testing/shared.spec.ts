@@ -1,5 +1,8 @@
-import {Component} from '@angular/core';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
@@ -7,22 +10,20 @@ import {
   MatTreeNestedDataSource
 } from '@angular/material/tree';
 import {MatTreeHarness} from '@angular/material/tree/testing';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {HarnessLoader} from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
 /** Shared tests to run on both the original and MDC-based trees. */
 export function runHarnessTests(
-  treeModule: typeof MatTreeModule,
-  treeHarness: typeof MatTreeHarness) {
+    treeModule: typeof MatTreeModule, treeHarness: typeof MatTreeHarness) {
   let fixture: ComponentFixture<TreeHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [treeModule],
-      declarations: [TreeHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [treeModule],
+          declarations: [TreeHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(TreeHarnessTest);
     fixture.detectChanges();
@@ -97,15 +98,12 @@ export function runHarnessTests(
     expect(await firstGroup.isExpanded()).toBe(false);
   });
 
-  it ('should correctly get tree structure', async () => {
+  it('should correctly get tree structure', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const flatTree = trees[0];
 
     expect(await flatTree.getTreeStructure()).toEqual({
-      children: [
-        {text: 'Flat Group 1'},
-        {text: 'Flat Group 2'}
-      ]
+      children: [{text: 'Flat Group 1'}, {text: 'Flat Group 2'}]
     });
 
     const firstGroup = (await flatTree.getNodes({text: /Flat Group 1/}))[0];
@@ -115,11 +113,7 @@ export function runHarnessTests(
       children: [
         {
           text: 'Flat Group 1',
-          children: [
-            {text: 'Flat Leaf 1.1'},
-            {text: 'Flat Leaf 1.2'},
-            {text: 'Flat Leaf 1.3'}
-          ]
+          children: [{text: 'Flat Leaf 1.1'}, {text: 'Flat Leaf 1.2'}, {text: 'Flat Leaf 1.3'}]
         },
         {text: 'Flat Group 2'}
       ]
@@ -132,11 +126,7 @@ export function runHarnessTests(
       children: [
         {
           text: 'Flat Group 1',
-          children: [
-            {text: 'Flat Leaf 1.1'},
-            {text: 'Flat Leaf 1.2'},
-            {text: 'Flat Leaf 1.3'}
-          ]
+          children: [{text: 'Flat Leaf 1.1'}, {text: 'Flat Leaf 1.2'}, {text: 'Flat Leaf 1.3'}]
         },
         {
           text: 'Flat Group 2',
@@ -152,50 +142,39 @@ export function runHarnessTests(
     const trees = await loader.getAllHarnesses(treeHarness);
     const nestedTree = trees[1];
     expect(await nestedTree.getTreeStructure()).toEqual({
-      children: [
-        {text: 'Nested Group 1'},
-        {text: 'Nested Group 2'}
-      ]
+      children: [{text: 'Nested Group 1'}, {text: 'Nested Group 2'}]
     });
 
     const firstGroup = (await nestedTree.getNodes({text: /Nested Group 1/}))[0];
     await firstGroup.expand();
-    expect(await nestedTree.getTreeStructure()).toEqual(
-      {
-        children: [
-          {
-            text: 'Nested Group 1',
-            children: [
-              {text: 'Nested Leaf 1.1'},
-              {text: 'Nested Leaf 1.2'},
-              {text: 'Nested Leaf 1.3'}
-            ]
-          },
-          {text: 'Nested Group 2'}
-        ]
-      });
+    expect(await nestedTree.getTreeStructure()).toEqual({
+      children: [
+        {
+          text: 'Nested Group 1',
+          children:
+              [{text: 'Nested Leaf 1.1'}, {text: 'Nested Leaf 1.2'}, {text: 'Nested Leaf 1.3'}]
+        },
+        {text: 'Nested Group 2'}
+      ]
+    });
 
     const secondGroup = (await nestedTree.getNodes({text: /Nested Group 2/}))[0];
     await secondGroup.expand();
-    expect(await nestedTree.getTreeStructure()).toEqual(
-      {
-        children: [
-          {
-            text: 'Nested Group 1',
-            children: [
-              {text: 'Nested Leaf 1.1'},
-              {text: 'Nested Leaf 1.2'},
-              {text: 'Nested Leaf 1.3'}
-            ]
-          },
-          {
-            text: 'Nested Group 2',
-            children: [
-              {text: 'Nested Group 2.1'},
-            ]
-          }
-        ]
-      });
+    expect(await nestedTree.getTreeStructure()).toEqual({
+      children: [
+        {
+          text: 'Nested Group 1',
+          children:
+              [{text: 'Nested Leaf 1.1'}, {text: 'Nested Leaf 1.2'}, {text: 'Nested Leaf 1.3'}]
+        },
+        {
+          text: 'Nested Group 2',
+          children: [
+            {text: 'Nested Group 2.1'},
+          ]
+        }
+      ]
+    });
   });
 }
 
@@ -212,18 +191,17 @@ const FLAT_TREE_DATA: Node[] = [
       {name: 'Flat Leaf 1.2'},
       {name: 'Flat Leaf 1.3'},
     ]
-  }, {
+  },
+  {
     name: 'Flat Group 2',
-    children: [
-      {
-        name: 'Flat Group 2.1',
-        children: [
-          {name: 'Flat Leaf 2.1.1'},
-          {name: 'Flat Leaf 2.1.2'},
-          {name: 'Flat Leaf 2.1.3'},
-        ]
-      }
-    ]
+    children: [{
+      name: 'Flat Group 2.1',
+      children: [
+        {name: 'Flat Leaf 2.1.1'},
+        {name: 'Flat Leaf 2.1.2'},
+        {name: 'Flat Leaf 2.1.3'},
+      ]
+    }]
   },
 ];
 
@@ -235,7 +213,8 @@ const NESTED_TREE_DATA: Node[] = [
       {name: 'Nested Leaf 1.2'},
       {name: 'Nested Leaf 1.3'},
     ]
-  }, {
+  },
+  {
     name: 'Nested Group 2',
     children: [
       {
@@ -289,18 +268,19 @@ interface ExampleFlatNode {
   `
 })
 class TreeHarnessTest {
-  private _transformer = (node: Node, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  }
+  private _transformer =
+      (node: Node, level: number) => {
+        return {
+          expandable: !!node.children && node.children.length > 0,
+          name: node.name,
+          level: level,
+        };
+      }
 
   treeFlattener = new MatTreeFlattener(
-    this._transformer, node => node.level, node => node.expandable, node => node.children);
-  flatTreeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level, node => node.expandable);
+      this._transformer, node => node.level, node => node.expandable, node => node.children);
+  flatTreeControl =
+      new FlatTreeControl<ExampleFlatNode>(node => node.level, node => node.expandable);
   flatTreeDataSource = new MatTreeFlatDataSource(this.flatTreeControl, this.treeFlattener);
   nestedTreeControl = new NestedTreeControl<Node>(node => node.children);
   nestedTreeDataSource = new MatTreeNestedDataSource<Node>();

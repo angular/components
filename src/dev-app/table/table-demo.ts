@@ -11,4 +11,5 @@ import {Component} from '@angular/core';
 @Component({
   templateUrl: './table-demo.html',
 })
-export class TableDemo {}
+export class TableDemo {
+}

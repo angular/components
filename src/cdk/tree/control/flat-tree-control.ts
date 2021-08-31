@@ -15,7 +15,6 @@ export interface FlatTreeControlOptions<T, K> {
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
-
   /** Construct with flat tree data node functions getLevel and isExpandable. */
   constructor(
       public override getLevel: (dataNode: T) => number,
@@ -45,8 +44,8 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     // If we reach a node whose level is greater than the level of the tree node, we hit a
     // sibling of an ancestor.
     for (let i = startIndex + 1;
-        i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
-        i++) {
+         i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
+         i++) {
       results.push(this.dataNodes[i]);
     }
     return results;

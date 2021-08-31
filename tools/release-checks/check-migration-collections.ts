@@ -1,9 +1,10 @@
 import {error} from '@angular/dev-infra-private/ng-dev/utils/console';
-import {dirname, join} from 'path';
 import * as chalk from 'chalk';
-import {releasePackages} from '../../.ng-dev/release';
 import {readFileSync} from 'fs';
+import {dirname, join} from 'path';
 import * as semver from 'semver';
+
+import {releasePackages} from '../../.ng-dev/release';
 
 /** Path to the directory containing all package sources. */
 const packagesDir = join(__dirname, '../../src');
@@ -12,9 +13,9 @@ const packagesDir = join(__dirname, '../../src');
 export async function assertValidUpdateMigrationCollections(newVersion: semver.SemVer) {
   const failures: string[] = [];
   releasePackages.forEach(packageName => {
-    failures.push(...checkPackageJsonMigrations(
-      join(packagesDir, packageName, 'package.json'), newVersion)
-      .map(f => chalk.yellow(`       ⮑  ${chalk.bold(packageName)}: ${f}`)));
+    failures.push(
+        ...checkPackageJsonMigrations(join(packagesDir, packageName, 'package.json'), newVersion)
+            .map(f => chalk.yellow(`       ⮑  ${chalk.bold(packageName)}: ${f}`)));
   });
   if (failures.length) {
     error(chalk.red(`  ✘   Failures in ng-update migration collection detected:`));
@@ -33,8 +34,7 @@ export function checkPackageJsonMigrations(
 
   if (packageJson['ng-update'] && packageJson['ng-update'].migrations) {
     return checkMigrationCollection(
-      packageJson['ng-update'].migrations, dirname(packageJsonPath),
-      currentVersion);
+        packageJson['ng-update'].migrations, dirname(packageJsonPath), currentVersion);
   }
   return [];
 }
@@ -44,7 +44,7 @@ export function checkPackageJsonMigrations(
  * has a migration set up for the given target version.
  */
 function checkMigrationCollection(
-  collectionPath: string, packagePath: string, targetVersion: semver.SemVer): string[] {
+    collectionPath: string, packagePath: string, targetVersion: semver.SemVer): string[] {
   const collection = JSON.parse(readFileSync(join(packagePath, collectionPath), 'utf8'));
   if (!collection.schematics) {
     return ['No schematics found in migration collection.'];
@@ -57,7 +57,7 @@ function checkMigrationCollection(
     const schematicVersion = schematics[name].version;
     try {
       return schematicVersion && semver.gte(schematicVersion, lowerBoundaryVersion) &&
-        semver.lte(schematicVersion, targetVersion);
+          semver.lte(schematicVersion, targetVersion);
     } catch {
       failures.push(`Could not parse version for migration: ${name}`);
     }

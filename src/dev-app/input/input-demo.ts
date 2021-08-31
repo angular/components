@@ -66,12 +66,12 @@ export class InputDemo {
 
   addABunch(n: number) {
     for (let x = 0; x < n; x++) {
-      this.items.push({ value: ++max });
+      this.items.push({value: ++max});
     }
   }
 
   customErrorStateMatcher: ErrorStateMatcher = {
-    isErrorState: (control: FormControl | null) => {
+    isErrorState: (control: FormControl|null) => {
       if (control) {
         const hasInteraction = control.dirty || control.touched;
         const isInvalid = control.invalid;
@@ -88,9 +88,8 @@ export class InputDemo {
   }
 
   togglePlaceholderTestTouched() {
-    this.placeholderTestControl.touched ?
-      this.placeholderTestControl.markAsUntouched() :
-      this.placeholderTestControl.markAsTouched();
+    this.placeholderTestControl.touched ? this.placeholderTestControl.markAsUntouched() :
+                                          this.placeholderTestControl.markAsTouched();
   }
 
   parseNumber(value: string): number {

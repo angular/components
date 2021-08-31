@@ -1,29 +1,30 @@
 import {ComponentHarness, HarnessLoader, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {createFakeEvent, dispatchFakeEvent} from '../../../cdk/testing/private';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {createFakeEvent, dispatchFakeEvent} from '../../../cdk/testing/private';
+
 import {MatFormFieldHarness} from './form-field-harness';
 
 /** Shared tests to run on both the original and MDC-based form-field's. */
-export function runHarnessTests(
-    modules: Type<any>[], {
-      formFieldHarness,
-      inputHarness,
-      selectHarness,
-      datepickerInputHarness,
-      dateRangeInputHarness,
-      isMdcImplementation,
-    }: {
-      formFieldHarness: typeof MatFormFieldHarness,
-      inputHarness: Type<any>,
-      selectHarness: Type<any>,
-      datepickerInputHarness: Type<any>,
-      dateRangeInputHarness: Type<any>
-      isMdcImplementation: boolean
-    }) {
+export function runHarnessTests(modules: Type<any>[], {
+  formFieldHarness,
+  inputHarness,
+  selectHarness,
+  datepickerInputHarness,
+  dateRangeInputHarness,
+  isMdcImplementation,
+}: {
+  formFieldHarness: typeof MatFormFieldHarness,
+  inputHarness: Type<any>,
+  selectHarness: Type<any>,
+  datepickerInputHarness: Type<any>,
+  dateRangeInputHarness: Type<any>
+  isMdcImplementation: boolean
+}) {
   let fixture: ComponentFixture<FormFieldHarnessTest>;
   let loader: HarnessLoader;
 

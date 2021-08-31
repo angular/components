@@ -9,11 +9,11 @@
 import {
   _getTextWithExcludedElements,
   ElementDimensions,
+  EventData,
   ModifierKeys,
   TestElement,
   TestKey,
   TextOptions,
-  EventData,
 } from '@angular/cdk/testing';
 import {browser, Button, by, ElementFinder, Key} from 'protractor';
 
@@ -102,8 +102,8 @@ export class ProtractorElement implements TestElement {
    * @param modifiers Modifier keys held while clicking
    */
   click(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
-  async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+  async click(...args: [ModifierKeys?]|['center', ModifierKeys?]|[number, number, ModifierKeys?]):
+      Promise<void> {
     await this._dispatchClickEventSequence(args, Button.LEFT);
   }
 
@@ -114,8 +114,8 @@ export class ProtractorElement implements TestElement {
    * @param modifiers Modifier keys held while clicking
    */
   rightClick(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
-  async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+  async rightClick(...args: [ModifierKeys?
+  ]|['center', ModifierKeys?]|[number, number, ModifierKeys?]): Promise<void> {
     await this._dispatchClickEventSequence(args, Button.RIGHT);
   }
 
@@ -131,9 +131,7 @@ export class ProtractorElement implements TestElement {
 
   /** Hovers the mouse over the element. */
   async hover(): Promise<void> {
-    return browser.actions()
-        .mouseMove(await this.element.getWebElement())
-        .perform();
+    return browser.actions().mouseMove(await this.element.getWebElement()).perform();
   }
 
   /** Moves the mouse away from the element. */
@@ -147,16 +145,16 @@ export class ProtractorElement implements TestElement {
    * Sends the given string to the input as a series of key presses. Also fires input events
    * and attempts to add the string to the Element's value.
    */
-  async sendKeys(...keys: (string | TestKey)[]): Promise<void>;
+  async sendKeys(...keys: (string|TestKey)[]): Promise<void>;
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
    * and attempts to add the string to the Element's value.
    */
-  async sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
+  async sendKeys(modifiers: ModifierKeys, ...keys: (string|TestKey)[]): Promise<void>;
   async sendKeys(...modifiersAndKeys: any[]): Promise<void> {
     const first = modifiersAndKeys[0];
     let modifiers: ModifierKeys;
-    let rest: (string | TestKey)[];
+    let rest: (string|TestKey)[];
     if (typeof first !== 'string' && typeof first !== 'number') {
       modifiers = first;
       rest = modifiersAndKeys.slice(1);
@@ -167,10 +165,10 @@ export class ProtractorElement implements TestElement {
 
     const modifierKeys = toProtractorModifierKeys(modifiers);
     const keys = rest.map(k => typeof k === 'string' ? k.split('') : [keyMap[k]])
-        .reduce((arr, k) => arr.concat(k), [])
-        // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
-        // so avoid it if no modifier keys are required.
-        .map(k => modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k);
+                     .reduce((arr, k) => arr.concat(k), [])
+                     // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
+                     // so avoid it if no modifier keys are required.
+                     .map(k => modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k);
 
     return this.element.sendKeys(...keys);
   }
@@ -219,7 +217,7 @@ export class ProtractorElement implements TestElement {
   /** Selects the options at the specified indexes inside of a native `select` element. */
   async selectOptions(...optionIndexes: number[]): Promise<void> {
     const options = await this.element.all(by.css('option'));
-    const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
+    const indexes = new Set(optionIndexes);  // Convert to a set to remove duplicates.
 
     if (options.length && indexes.size) {
       // Reset the value so all the selected states are cleared. We can
@@ -240,10 +238,12 @@ export class ProtractorElement implements TestElement {
 
   /** Checks whether this element matches the given selector. */
   async matchesSelector(selector: string): Promise<boolean> {
-      return browser.executeScript(`
+    return browser.executeScript(
+        `
           return (Element.prototype.matches ||
                   Element.prototype.msMatchesSelector).call(arguments[0], arguments[1])
-          `, this.element, selector);
+          `,
+        this.element, selector);
   }
 
   /** Checks whether the element is focused. */
@@ -261,9 +261,8 @@ export class ProtractorElement implements TestElement {
 
   /** Dispatches all the events that are part of a click event sequence. */
   private async _dispatchClickEventSequence(
-    args: [ModifierKeys?] | ['center', ModifierKeys?] |
-      [number, number, ModifierKeys?],
-    button: string) {
+      args: [ModifierKeys?]|['center', ModifierKeys?]|[number, number, ModifierKeys?],
+      button: string) {
     let modifiers: ModifierKeys = {};
     if (args.length && typeof args[args.length - 1] === 'object') {
       modifiers = args.pop() as ModifierKeys;
@@ -273,11 +272,10 @@ export class ProtractorElement implements TestElement {
     // Omitting the offset argument to mouseMove results in clicking the center.
     // This is the default behavior we want, so we use an empty array of offsetArgs if
     // no args remain after popping the modifiers from the args passed to this function.
-    const offsetArgs = (args.length === 2 ?
-      [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
+    const offsetArgs =
+        (args.length === 2 ? [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
 
-    let actions = browser.actions()
-      .mouseMove(await this.element.getWebElement(), ...offsetArgs);
+    let actions = browser.actions().mouseMove(await this.element.getWebElement(), ...offsetArgs);
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);

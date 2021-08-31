@@ -12,7 +12,7 @@ import {switchMap} from 'rxjs/operators';
 
 type MapEventManagerTarget = {
   addListener: (name: string, callback: (...args: any[]) => void) => google.maps.MapsEventListener;
-} | undefined;
+}|undefined;
 
 /** Manages event on a Google Maps object, ensuring that events are added only when necessary. */
 export class MapEventManager {

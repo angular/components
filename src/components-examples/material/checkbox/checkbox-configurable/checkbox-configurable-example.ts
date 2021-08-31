@@ -11,6 +11,6 @@ import {Component} from '@angular/core';
 export class CheckboxConfigurableExample {
   checked = false;
   indeterminate = false;
-  labelPosition: 'before' | 'after' = 'after';
+  labelPosition: 'before'|'after' = 'after';
   disabled = false;
 }

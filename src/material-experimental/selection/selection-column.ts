@@ -6,18 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MatCellDef, MatColumnDef, MatHeaderCellDef, MatTable} from '@angular/material/table';
 import {
+  ChangeDetectionStrategy,
   Component,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
   ViewChild,
-  ChangeDetectionStrategy,
   ViewEncapsulation,
-  Inject,
 } from '@angular/core';
+import {MatCellDef, MatColumnDef, MatHeaderCellDef, MatTable} from '@angular/material/table';
 
 import {MatSelection} from './selection';
 

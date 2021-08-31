@@ -22,7 +22,7 @@ export class SelectionModel<T> {
   private _selectedToEmit: T[] = [];
 
   /** Cache for the array value of the selected items. */
-  private _selected: T[] | null;
+  private _selected: T[]|null;
 
   /** Selected values. */
   get selected(): T[] {
@@ -37,10 +37,7 @@ export class SelectionModel<T> {
   readonly changed = new Subject<SelectionChange<T>>();
 
   constructor(
-    private _multiple = false,
-    initiallySelectedValues?: T[],
-    private _emitChanges = true) {
-
+      private _multiple = false, initiallySelectedValues?: T[], private _emitChanges = true) {
     if (initiallySelectedValues && initiallySelectedValues.length) {
       if (_multiple) {
         initiallySelectedValues.forEach(value => this._markSelected(value));
@@ -129,11 +126,8 @@ export class SelectionModel<T> {
     this._selected = null;
 
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
-      this.changed.next({
-        source: this,
-        added: this._selectedToEmit,
-        removed: this._deselectedToEmit
-      });
+      this.changed.next(
+          {source: this, added: this._selectedToEmit, removed: this._deselectedToEmit});
 
       this._deselectedToEmit = [];
       this._selectedToEmit = [];

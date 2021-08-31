@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, TemplateRef} from '@angular/core';
 import {StepState} from '@angular/cdk/stepper';
+import {Directive, Input, TemplateRef} from '@angular/core';
 
 /** Template context available to an attached `matStepperIcon`. */
 export interface MatStepperIconContext {

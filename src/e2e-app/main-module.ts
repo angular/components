@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
+
 import {
   BlockScrollStrategyE2eModule
 } from './block-scroll-strategy/block-scroll-strategy-e2e-module';
@@ -25,6 +26,8 @@ import {MdcCheckboxE2eModule} from './mdc-checkbox/mdc-checkbox-e2e-module';
 import {MdcChipsE2eModule} from './mdc-chips/mdc-chips-e2e-module';
 import {MdcDialogE2eModule} from './mdc-dialog/mdc-dialog-e2e-module';
 import {MdcMenuE2eModule} from './mdc-menu/mdc-menu-e2e-module';
+import {MdcProgressBarE2eModule} from './mdc-progress-bar/mdc-progress-bar-e2e-module';
+import {MdcProgressSpinnerE2eModule} from './mdc-progress-spinner/mdc-progress-spinner-module';
 import {MdcRadioE2eModule} from './mdc-radio/mdc-radio-e2e-module';
 import {MdcSlideToggleE2eModule} from './mdc-slide-toggle/mdc-slide-toggle-e2e-module';
 import {MdcSliderE2eModule} from './mdc-slider/mdc-slider-e2e-module';
@@ -40,8 +43,6 @@ import {StepperE2eModule} from './stepper/stepper-e2e-module';
 import {TabsE2eModule} from './tabs/tabs-e2e-module';
 import {ToolbarE2eModule} from './toolbar/toolbar-e2e-module';
 import {VirtualScrollE2eModule} from './virtual-scroll/virtual-scroll-e2e-module';
-import {MdcProgressBarE2eModule} from './mdc-progress-bar/mdc-progress-bar-e2e-module';
-import {MdcProgressSpinnerE2eModule} from './mdc-progress-spinner/mdc-progress-spinner-module';
 
 @NgModule({
   imports: [

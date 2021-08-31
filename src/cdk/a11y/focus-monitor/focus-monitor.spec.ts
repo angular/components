@@ -1,23 +1,25 @@
 import {TAB} from '@angular/cdk/keycodes';
-import {
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
-  patchElementFocus,
-  createMouseEvent,
-  dispatchEvent,
-} from '../../testing/private';
 import {DOCUMENT} from '@angular/common';
 import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
+import {
+  createMouseEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  patchElementFocus,
+} from '../../testing/private';
 import {A11yModule} from '../index';
 import {TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
+
 import {
+  FOCUS_MONITOR_DEFAULT_OPTIONS,
   FocusMonitor,
   FocusMonitorDetectionMode,
   FocusOrigin,
-  FOCUS_MONITOR_DEFAULT_OPTIONS,
 } from './focus-monitor';
 
 
@@ -26,40 +28,38 @@ describe('FocusMonitor', () => {
   let buttonElement: HTMLElement;
   let focusMonitor: FocusMonitor;
   let changeHandler: (origin: FocusOrigin) => void;
-  let fakeActiveElement: HTMLElement | null;
+  let fakeActiveElement: HTMLElement|null;
 
   beforeEach(() => {
     fakeActiveElement = null;
 
-    TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [PlainButton],
-      providers: [{
-        provide: DOCUMENT,
-        useFactory: () => {
-          // We have to stub out the `document` in order to be able to fake `activeElement`.
-          const fakeDocument = {body: document.body};
+    TestBed
+        .configureTestingModule({
+          imports: [A11yModule],
+          declarations: [PlainButton],
+          providers: [{
+            provide: DOCUMENT,
+            useFactory: () => {
+              // We have to stub out the `document` in order to be able to fake `activeElement`.
+              const fakeDocument = {body: document.body};
 
-          [
-            'createElement',
-            'dispatchEvent',
-            'querySelectorAll',
-            'addEventListener',
-            'removeEventListener'
-          ].forEach(method => {
-            (fakeDocument as any)[method] = function() {
-              return (document as any)[method].apply(document, arguments);
-            };
-          });
+              ['createElement', 'dispatchEvent', 'querySelectorAll', 'addEventListener',
+               'removeEventListener']
+                  .forEach(method => {
+                    (fakeDocument as any)[method] = function() {
+                      return (document as any)[method].apply(document, arguments);
+                    };
+                  });
 
-          Object.defineProperty(fakeDocument, 'activeElement', {
-            get: () => fakeActiveElement || document.activeElement
-          });
+              Object.defineProperty(
+                  fakeDocument, 'activeElement',
+                  {get: () => fakeActiveElement || document.activeElement});
 
-          return fakeDocument;
-        }
-      }]
-    }).compileComponents();
+              return fakeDocument;
+            }
+          }]
+        })
+        .compileComponents();
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
@@ -75,236 +75,266 @@ describe('FocusMonitor', () => {
   }));
 
   it('manually registered element should receive focus classes', fakeAsync(() => {
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick();
 
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledTimes(1);
-  }));
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledTimes(1);
+     }));
 
   it('should detect focus via keyboard', fakeAsync(() => {
-    // Simulate focus via keyboard.
-    dispatchKeyboardEvent(document, 'keydown', TAB);
-    buttonElement.focus();
-    fixture.detectChanges();
-    flush();
+       // Simulate focus via keyboard.
+       dispatchKeyboardEvent(document, 'keydown', TAB);
+       buttonElement.focus();
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-keyboard-focused'))
-      .withContext('button should have cdk-keyboard-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
+           .withContext('button should have cdk-keyboard-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+     }));
 
   it('should detect focus via mouse', fakeAsync(() => {
-    // Simulate focus via mouse.
-    dispatchMouseEvent(buttonElement, 'mousedown');
-    buttonElement.focus();
-    fixture.detectChanges();
-    flush();
+       // Simulate focus via mouse.
+       dispatchMouseEvent(buttonElement, 'mousedown');
+       buttonElement.focus();
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-mouse-focused'))
-      .withContext('button should have cdk-mouse-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('mouse');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-mouse-focused'))
+           .withContext('button should have cdk-mouse-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+     }));
 
   it('should detect focus via touch', fakeAsync(() => {
-    // Simulate focus via touch.
-    dispatchFakeEvent(buttonElement, 'touchstart');
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick(TOUCH_BUFFER_MS);
+       // Simulate focus via touch.
+       dispatchFakeEvent(buttonElement, 'touchstart');
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick(TOUCH_BUFFER_MS);
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-touch-focused'))
-      .withContext('button should have cdk-touch-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('touch');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-touch-focused'))
+           .withContext('button should have cdk-touch-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('touch');
+     }));
 
   it('should detect programmatic focus', fakeAsync(() => {
-    // Programmatically focus.
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
+       // Programmatically focus.
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-program-focused'))
-      .withContext('button should have cdk-program-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('program');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-program-focused'))
+           .withContext('button should have cdk-program-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('program');
+     }));
 
   it('should detect fake mousedown from a screen reader', fakeAsync(() => {
-    // Simulate focus via a fake mousedown from a screen reader.
-    dispatchMouseEvent(buttonElement, 'mousedown');
-    const event = createMouseEvent('mousedown');
-    Object.defineProperties(event, {offsetX: {get: () => 0}, offsetY: {get: () => 0}});
-    dispatchEvent(buttonElement, event);
+       // Simulate focus via a fake mousedown from a screen reader.
+       dispatchMouseEvent(buttonElement, 'mousedown');
+       const event = createMouseEvent('mousedown');
+       Object.defineProperties(event, {offsetX: {get: () => 0}, offsetY: {get: () => 0}});
+       dispatchEvent(buttonElement, event);
 
-    buttonElement.focus();
-    fixture.detectChanges();
-    flush();
+       buttonElement.focus();
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-keyboard-focused'))
-      .withContext('button should have cdk-keyboard-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
+           .withContext('button should have cdk-keyboard-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+     }));
 
   it('focusVia keyboard should simulate keyboard focus', fakeAsync(() => {
-    focusMonitor.focusVia(buttonElement, 'keyboard');
-    flush();
+       focusMonitor.focusVia(buttonElement, 'keyboard');
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-keyboard-focused'))
-      .withContext('button should have cdk-keyboard-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
+           .withContext('button should have cdk-keyboard-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+     }));
 
   it('focusVia mouse should simulate mouse focus', fakeAsync(() => {
-    focusMonitor.focusVia(buttonElement, 'mouse');
-    fixture.detectChanges();
-    flush();
+       focusMonitor.focusVia(buttonElement, 'mouse');
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-mouse-focused'))
-      .withContext('button should have cdk-mouse-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('mouse');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-mouse-focused'))
+           .withContext('button should have cdk-mouse-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+     }));
 
   it('focusVia touch should simulate touch focus', fakeAsync(() => {
-    focusMonitor.focusVia(buttonElement, 'touch');
-    fixture.detectChanges();
-    flush();
+       focusMonitor.focusVia(buttonElement, 'touch');
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-touch-focused'))
-      .withContext('button should have cdk-touch-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('touch');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-touch-focused'))
+           .withContext('button should have cdk-touch-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('touch');
+     }));
 
   it('focusVia program should simulate programmatic focus', fakeAsync(() => {
-    focusMonitor.focusVia(buttonElement, 'program');
-    fixture.detectChanges();
-    flush();
+       focusMonitor.focusVia(buttonElement, 'program');
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-program-focused'))
-      .withContext('button should have cdk-program-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledWith('program');
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-program-focused'))
+           .withContext('button should have cdk-program-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledWith('program');
+     }));
 
   it('should remove focus classes on blur', fakeAsync(() => {
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(changeHandler).toHaveBeenCalledWith('program');
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(changeHandler).toHaveBeenCalledWith('program');
 
-    // Call `blur` directly because invoking `buttonElement.blur()` does not always trigger the
-    // handler on IE11 on SauceLabs.
-    focusMonitor._onBlur({} as any, buttonElement);
-    fixture.detectChanges();
+       // Call `blur` directly because invoking `buttonElement.blur()` does not always trigger the
+       // handler on IE11 on SauceLabs.
+       focusMonitor._onBlur({} as any, buttonElement);
+       fixture.detectChanges();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should not have any focus classes').toBe(0);
-    expect(changeHandler).toHaveBeenCalledWith(null);
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should not have any focus classes')
+           .toBe(0);
+       expect(changeHandler).toHaveBeenCalledWith(null);
+     }));
 
   it('should remove classes on stopMonitoring', fakeAsync(() => {
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes')
-      .toBe(2);
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
 
-    focusMonitor.stopMonitoring(buttonElement);
-    fixture.detectChanges();
+       focusMonitor.stopMonitoring(buttonElement);
+       fixture.detectChanges();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should not have any focus classes')
-      .toBe(0);
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should not have any focus classes')
+           .toBe(0);
+     }));
 
   it('should remove classes when destroyed', fakeAsync(() => {
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes')
-      .toBe(2);
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
 
-    // Destroy manually since destroying the fixture won't do it.
-    focusMonitor.ngOnDestroy();
-    fixture.detectChanges();
+       // Destroy manually since destroying the fixture won't do it.
+       focusMonitor.ngOnDestroy();
+       fixture.detectChanges();
 
-    expect(buttonElement.classList.length)
-      .withContext('button should not have any focus classes')
-      .toBe(0);
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should not have any focus classes')
+           .toBe(0);
+     }));
 
   it('should pass focus options to the native focus method', fakeAsync(() => {
-    spyOn(buttonElement, 'focus');
+       spyOn(buttonElement, 'focus');
 
-    focusMonitor.focusVia(buttonElement, 'program', {preventScroll: true});
-    fixture.detectChanges();
-    flush();
+       focusMonitor.focusVia(buttonElement, 'program', {preventScroll: true});
+       fixture.detectChanges();
+       flush();
 
-    expect(buttonElement.focus).toHaveBeenCalledWith(jasmine.objectContaining({
-      preventScroll: true
-    }));
-  }));
+       expect(buttonElement.focus).toHaveBeenCalledWith(jasmine.objectContaining({
+         preventScroll: true
+       }));
+     }));
 
   it('should not clear the focus origin too early in the current event loop', fakeAsync(() => {
-    dispatchKeyboardEvent(document, 'keydown', TAB);
+       dispatchKeyboardEvent(document, 'keydown', TAB);
 
-    // Simulate the behavior of Firefox 57 where the focus event sometimes happens *one* tick later.
-    tick();
+       // Simulate the behavior of Firefox 57 where the focus event sometimes happens *one* tick
+       // later.
+       tick();
 
-    buttonElement.focus();
+       buttonElement.focus();
 
-    // Since the timeout doesn't clear the focus origin too early as with the `0ms` timeout, the
-    // focus origin should be reported properly.
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
+       // Since the timeout doesn't clear the focus origin too early as with the `0ms` timeout, the
+       // focus origin should be reported properly.
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
 
-    flush();
-  }));
+       flush();
+     }));
 
-  it('should clear the focus origin after one tick with "immediate" detection',
-     fakeAsync(() => {
+  it('should clear the focus origin after one tick with "immediate" detection', fakeAsync(() => {
        dispatchKeyboardEvent(document, 'keydown', TAB);
        tick(2);
        buttonElement.focus();
@@ -314,86 +344,97 @@ describe('FocusMonitor', () => {
      }));
 
   it('should check children if monitor was called with different checkChildren', fakeAsync(() => {
-    const parent = fixture.nativeElement.querySelector('.parent');
+       const parent = fixture.nativeElement.querySelector('.parent');
 
-    focusMonitor.monitor(parent, true);
-    focusMonitor.monitor(parent, false);
+       focusMonitor.monitor(parent, true);
+       focusMonitor.monitor(parent, false);
 
-    // Simulate focus via mouse.
-    dispatchMouseEvent(buttonElement, 'mousedown');
-    buttonElement.focus();
-    fixture.detectChanges();
-    flush();
+       // Simulate focus via mouse.
+       dispatchMouseEvent(buttonElement, 'mousedown');
+       buttonElement.focus();
+       fixture.detectChanges();
+       flush();
 
-    expect(parent.classList).toContain('cdk-focused');
-    expect(parent.classList).toContain('cdk-mouse-focused');
-  }));
+       expect(parent.classList).toContain('cdk-focused');
+       expect(parent.classList).toContain('cdk-mouse-focused');
+     }));
 
   it('focusVia should change the focus origin when called on the focused node', fakeAsync(() => {
-    spyOn(buttonElement, 'focus').and.callThrough();
-    focusMonitor.focusVia(buttonElement, 'keyboard');
-    flush();
-    fakeActiveElement = buttonElement;
+       spyOn(buttonElement, 'focus').and.callThrough();
+       focusMonitor.focusVia(buttonElement, 'keyboard');
+       flush();
+       fakeActiveElement = buttonElement;
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-keyboard-focused'))
-      .withContext('button should have cdk-keyboard-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledTimes(1);
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-    expect(buttonElement.focus).toHaveBeenCalledTimes(1);
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
+           .withContext('button should have cdk-keyboard-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledTimes(1);
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+       expect(buttonElement.focus).toHaveBeenCalledTimes(1);
 
-    focusMonitor.focusVia(buttonElement, 'mouse');
-    flush();
-    fakeActiveElement = buttonElement;
+       focusMonitor.focusVia(buttonElement, 'mouse');
+       flush();
+       fakeActiveElement = buttonElement;
 
-    expect(buttonElement.classList.length)
-      .withContext('button should have exactly 2 focus classes').toBe(2);
-    expect(buttonElement.classList.contains('cdk-focused'))
-      .withContext('button should have cdk-focused class').toBe(true);
-    expect(buttonElement.classList.contains('cdk-mouse-focused'))
-      .withContext('button should have cdk-mouse-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledTimes(2);
-    expect(changeHandler).toHaveBeenCalledWith('mouse');
-    expect(buttonElement.focus).toHaveBeenCalledTimes(1);
-  }));
+       expect(buttonElement.classList.length)
+           .withContext('button should have exactly 2 focus classes')
+           .toBe(2);
+       expect(buttonElement.classList.contains('cdk-focused'))
+           .withContext('button should have cdk-focused class')
+           .toBe(true);
+       expect(buttonElement.classList.contains('cdk-mouse-focused'))
+           .withContext('button should have cdk-mouse-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledTimes(2);
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+       expect(buttonElement.focus).toHaveBeenCalledTimes(1);
+     }));
 
   it('focusVia should change the focus origin when called a focused child node', fakeAsync(() => {
-    const parent = fixture.nativeElement.querySelector('.parent');
-    focusMonitor.stopMonitoring(buttonElement); // The button gets monitored by default.
-    focusMonitor.monitor(parent, true).subscribe(changeHandler);
-    spyOn(buttonElement, 'focus').and.callThrough();
-    focusMonitor.focusVia(buttonElement, 'keyboard');
-    flush();
-    fakeActiveElement = buttonElement;
+       const parent = fixture.nativeElement.querySelector('.parent');
+       focusMonitor.stopMonitoring(buttonElement);  // The button gets monitored by default.
+       focusMonitor.monitor(parent, true).subscribe(changeHandler);
+       spyOn(buttonElement, 'focus').and.callThrough();
+       focusMonitor.focusVia(buttonElement, 'keyboard');
+       flush();
+       fakeActiveElement = buttonElement;
 
-    expect(parent.classList.length)
-      .withContext('Parent should have exactly 2 focus classes and the `parent` class').toBe(3);
-    expect(parent.classList.contains('cdk-focused'))
-      .withContext('Parent should have cdk-focused class').toBe(true);
-    expect(parent.classList.contains('cdk-keyboard-focused'))
-      .withContext('Parent should have cdk-keyboard-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledTimes(1);
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-    expect(buttonElement.focus).toHaveBeenCalledTimes(1);
+       expect(parent.classList.length)
+           .withContext('Parent should have exactly 2 focus classes and the `parent` class')
+           .toBe(3);
+       expect(parent.classList.contains('cdk-focused'))
+           .withContext('Parent should have cdk-focused class')
+           .toBe(true);
+       expect(parent.classList.contains('cdk-keyboard-focused'))
+           .withContext('Parent should have cdk-keyboard-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledTimes(1);
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+       expect(buttonElement.focus).toHaveBeenCalledTimes(1);
 
-    focusMonitor.focusVia(buttonElement, 'mouse');
-    flush();
-    fakeActiveElement = buttonElement;
+       focusMonitor.focusVia(buttonElement, 'mouse');
+       flush();
+       fakeActiveElement = buttonElement;
 
-    expect(parent.classList.length)
-      .withContext('Parent should have exactly 2 focus classes and the `parent` class').toBe(3);
-    expect(parent.classList.contains('cdk-focused'))
-      .withContext('Parent should have cdk-focused class').toBe(true);
-    expect(parent.classList.contains('cdk-mouse-focused'))
-      .withContext('Parent should have cdk-mouse-focused class').toBe(true);
-    expect(changeHandler).toHaveBeenCalledTimes(2);
-    expect(changeHandler).toHaveBeenCalledWith('mouse');
-    expect(buttonElement.focus).toHaveBeenCalledTimes(1);
-  }));
-
+       expect(parent.classList.length)
+           .withContext('Parent should have exactly 2 focus classes and the `parent` class')
+           .toBe(3);
+       expect(parent.classList.contains('cdk-focused'))
+           .withContext('Parent should have cdk-focused class')
+           .toBe(true);
+       expect(parent.classList.contains('cdk-mouse-focused'))
+           .withContext('Parent should have cdk-mouse-focused class')
+           .toBe(true);
+       expect(changeHandler).toHaveBeenCalledTimes(2);
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+       expect(buttonElement.focus).toHaveBeenCalledTimes(1);
+     }));
 });
 
 describe('FocusMonitor with "eventual" detection', () => {
@@ -403,20 +444,22 @@ describe('FocusMonitor with "eventual" detection', () => {
   let changeHandler: (origin: FocusOrigin) => void;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [
-        PlainButton,
-      ],
-      providers: [
-        {
-          provide: FOCUS_MONITOR_DEFAULT_OPTIONS,
-          useValue: {
-            detectionMode: FocusMonitorDetectionMode.EVENTUAL,
-          },
-        },
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [A11yModule],
+          declarations: [
+            PlainButton,
+          ],
+          providers: [
+            {
+              provide: FOCUS_MONITOR_DEFAULT_OPTIONS,
+              useValue: {
+                detectionMode: FocusMonitorDetectionMode.EVENTUAL,
+              },
+            },
+          ],
+        })
+        .compileComponents();
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
@@ -433,27 +476,29 @@ describe('FocusMonitor with "eventual" detection', () => {
 
 
   it('should not clear the focus origin, even after a few seconds', fakeAsync(() => {
-    dispatchKeyboardEvent(document, 'keydown', TAB);
-    tick(2000);
+       dispatchKeyboardEvent(document, 'keydown', TAB);
+       tick(2000);
 
-    buttonElement.focus();
+       buttonElement.focus();
 
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-  }));
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+     }));
 });
 
 describe('cdkMonitorFocus', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [
-        ButtonWithFocusClasses,
-        ComplexComponentWithMonitorElementFocus,
-        ComplexComponentWithMonitorSubtreeFocus,
-        ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus,
-        FocusMonitorOnCommentNode,
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [A11yModule],
+          declarations: [
+            ButtonWithFocusClasses,
+            ComplexComponentWithMonitorElementFocus,
+            ComplexComponentWithMonitorSubtreeFocus,
+            ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus,
+            FocusMonitorOnCommentNode,
+          ],
+        })
+        .compileComponents();
   });
 
   describe('button with cdkMonitorElementFocus', () => {
@@ -471,88 +516,103 @@ describe('cdkMonitorFocus', () => {
 
     it('should initially not be focused', () => {
       expect(buttonElement.classList.length)
-        .withContext('button should not have focus classes').toBe(0);
+          .withContext('button should not have focus classes')
+          .toBe(0);
     });
 
     it('should detect focus via keyboard', fakeAsync(() => {
-      // Simulate focus via keyboard.
-      dispatchKeyboardEvent(document, 'keydown', TAB);
-      buttonElement.focus();
-      fixture.detectChanges();
-      flush();
+         // Simulate focus via keyboard.
+         dispatchKeyboardEvent(document, 'keydown', TAB);
+         buttonElement.focus();
+         fixture.detectChanges();
+         flush();
 
-      expect(buttonElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-      expect(buttonElement.classList.contains('cdk-focused'))
-        .withContext('button should have cdk-focused class').toBe(true);
-      expect(buttonElement.classList.contains('cdk-keyboard-focused'))
-        .withContext('button should have cdk-keyboard-focused class').toBe(true);
-      expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('keyboard');
-    }));
+         expect(buttonElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+         expect(buttonElement.classList.contains('cdk-focused'))
+             .withContext('button should have cdk-focused class')
+             .toBe(true);
+         expect(buttonElement.classList.contains('cdk-keyboard-focused'))
+             .withContext('button should have cdk-keyboard-focused class')
+             .toBe(true);
+         expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('keyboard');
+       }));
 
     it('should detect focus via mouse', fakeAsync(() => {
-      // Simulate focus via mouse.
-      dispatchMouseEvent(buttonElement, 'mousedown');
-      buttonElement.focus();
-      fixture.detectChanges();
-      flush();
+         // Simulate focus via mouse.
+         dispatchMouseEvent(buttonElement, 'mousedown');
+         buttonElement.focus();
+         fixture.detectChanges();
+         flush();
 
-      expect(buttonElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-      expect(buttonElement.classList.contains('cdk-focused'))
-        .withContext('button should have cdk-focused class').toBe(true);
-      expect(buttonElement.classList.contains('cdk-mouse-focused'))
-        .withContext('button should have cdk-mouse-focused class').toBe(true);
-      expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('mouse');
-    }));
+         expect(buttonElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+         expect(buttonElement.classList.contains('cdk-focused'))
+             .withContext('button should have cdk-focused class')
+             .toBe(true);
+         expect(buttonElement.classList.contains('cdk-mouse-focused'))
+             .withContext('button should have cdk-mouse-focused class')
+             .toBe(true);
+         expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('mouse');
+       }));
 
     it('should detect focus via touch', fakeAsync(() => {
-      // Simulate focus via touch.
-      dispatchFakeEvent(buttonElement, 'touchstart');
-      buttonElement.focus();
-      fixture.detectChanges();
-      tick(TOUCH_BUFFER_MS);
+         // Simulate focus via touch.
+         dispatchFakeEvent(buttonElement, 'touchstart');
+         buttonElement.focus();
+         fixture.detectChanges();
+         tick(TOUCH_BUFFER_MS);
 
-      expect(buttonElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-      expect(buttonElement.classList.contains('cdk-focused'))
-        .withContext('button should have cdk-focused class').toBe(true);
-      expect(buttonElement.classList.contains('cdk-touch-focused'))
-        .withContext('button should have cdk-touch-focused class').toBe(true);
-      expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('touch');
-    }));
+         expect(buttonElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+         expect(buttonElement.classList.contains('cdk-focused'))
+             .withContext('button should have cdk-focused class')
+             .toBe(true);
+         expect(buttonElement.classList.contains('cdk-touch-focused'))
+             .withContext('button should have cdk-touch-focused class')
+             .toBe(true);
+         expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('touch');
+       }));
 
     it('should detect programmatic focus', fakeAsync(() => {
-      // Programmatically focus.
-      buttonElement.focus();
-      fixture.detectChanges();
-      tick();
+         // Programmatically focus.
+         buttonElement.focus();
+         fixture.detectChanges();
+         tick();
 
-      expect(buttonElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-      expect(buttonElement.classList.contains('cdk-focused'))
-        .withContext('button should have cdk-focused class').toBe(true);
-      expect(buttonElement.classList.contains('cdk-program-focused'))
-        .withContext('button should have cdk-program-focused class').toBe(true);
-      expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
-    }));
+         expect(buttonElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+         expect(buttonElement.classList.contains('cdk-focused'))
+             .withContext('button should have cdk-focused class')
+             .toBe(true);
+         expect(buttonElement.classList.contains('cdk-program-focused'))
+             .withContext('button should have cdk-program-focused class')
+             .toBe(true);
+         expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
+       }));
 
     it('should remove focus classes on blur', fakeAsync(() => {
-      buttonElement.focus();
-      fixture.detectChanges();
-      tick();
+         buttonElement.focus();
+         fixture.detectChanges();
+         tick();
 
-      expect(buttonElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-      expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
+         expect(buttonElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+         expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
 
-      buttonElement.blur();
-      fixture.detectChanges();
+         buttonElement.blur();
+         fixture.detectChanges();
 
-      expect(buttonElement.classList.length)
-        .withContext('button should not have any focus classes').toBe(0);
-      expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith(null);
-    }));
+         expect(buttonElement.classList.length)
+             .withContext('button should not have any focus classes')
+             .toBe(0);
+         expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith(null);
+       }));
   });
 
   describe('complex component with cdkMonitorElementFocus', () => {
@@ -572,22 +632,24 @@ describe('cdkMonitorFocus', () => {
     });
 
     it('should add focus classes on parent focus', fakeAsync(() => {
-      parentElement.focus();
-      fixture.detectChanges();
-      tick();
+         parentElement.focus();
+         fixture.detectChanges();
+         tick();
 
-      expect(parentElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-    }));
+         expect(parentElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+       }));
 
     it('should not add focus classes on child focus', fakeAsync(() => {
-      childElement.focus();
-      fixture.detectChanges();
-      tick();
+         childElement.focus();
+         fixture.detectChanges();
+         tick();
 
-      expect(parentElement.classList.length)
-        .withContext('button should not have any focus classes').toBe(0);
-    }));
+         expect(parentElement.classList.length)
+             .withContext('button should not have any focus classes')
+             .toBe(0);
+       }));
   });
 
   describe('complex component with cdkMonitorSubtreeFocus', () => {
@@ -607,22 +669,24 @@ describe('cdkMonitorFocus', () => {
     });
 
     it('should add focus classes on parent focus', fakeAsync(() => {
-      parentElement.focus();
-      fixture.detectChanges();
-      tick();
+         parentElement.focus();
+         fixture.detectChanges();
+         tick();
 
-      expect(parentElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-    }));
+         expect(parentElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+       }));
 
     it('should add focus classes on child focus', fakeAsync(() => {
-      childElement.focus();
-      fixture.detectChanges();
-      tick();
+         childElement.focus();
+         fixture.detectChanges();
+         tick();
 
-      expect(parentElement.classList.length)
-        .withContext('button should have exactly 2 focus classes').toBe(2);
-    }));
+         expect(parentElement.classList.length)
+             .withContext('button should have exactly 2 focus classes')
+             .toBe(2);
+       }));
   });
 
   describe('complex component with cdkMonitorSubtreeFocus and cdkMonitorElementFocus', () => {
@@ -645,14 +709,14 @@ describe('cdkMonitorFocus', () => {
     }));
 
     it('should add keyboard focus classes on both elements when child is focused via keyboard',
-        fakeAsync(() => {
-          focusMonitor.focusVia(childElement, 'keyboard');
-          fixture.detectChanges();
-          flush();
+       fakeAsync(() => {
+         focusMonitor.focusVia(childElement, 'keyboard');
+         fixture.detectChanges();
+         flush();
 
-          expect(parentElement.classList).toContain('cdk-keyboard-focused');
-          expect(childElement.classList).toContain('cdk-keyboard-focused');
-        }));
+         expect(parentElement.classList).toContain('cdk-keyboard-focused');
+         expect(childElement.classList).toContain('cdk-keyboard-focused');
+       }));
   });
 
   it('should not throw when trying to monitor focus on a non-element node', () => {
@@ -670,12 +734,14 @@ describe('FocusMonitor observable stream', () => {
   let focusMonitor: FocusMonitor;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [
-        PlainButton,
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [A11yModule],
+          declarations: [
+            PlainButton,
+          ],
+        })
+        .compileComponents();
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
@@ -687,51 +753,45 @@ describe('FocusMonitor observable stream', () => {
   }));
 
   it('should emit inside the NgZone', fakeAsync(() => {
-    const spy = jasmine.createSpy('zone spy');
-    focusMonitor.monitor(buttonElement).subscribe(() => spy(NgZone.isInAngularZone()));
-    expect(spy).not.toHaveBeenCalled();
+       const spy = jasmine.createSpy('zone spy');
+       focusMonitor.monitor(buttonElement).subscribe(() => spy(NgZone.isInAngularZone()));
+       expect(spy).not.toHaveBeenCalled();
 
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
-    expect(spy).toHaveBeenCalledWith(true);
-  }));
+       buttonElement.focus();
+       fixture.detectChanges();
+       tick();
+       expect(spy).toHaveBeenCalledWith(true);
+     }));
 });
 
 
-@Component({
-  template: `<div class="parent"><button>focus me!</button></div>`
-})
-class PlainButton {}
+@Component({template: `<div class="parent"><button>focus me!</button></div>`})
+class PlainButton {
+}
 
 
-@Component({
-  template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`
-})
+@Component(
+    {template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`})
 class ButtonWithFocusClasses {
   focusChanged(_origin: FocusOrigin) {}
 }
 
 
-@Component({
-  template: `<div tabindex="0" cdkMonitorElementFocus><button></button></div>`
-})
-class ComplexComponentWithMonitorElementFocus {}
+@Component({template: `<div tabindex="0" cdkMonitorElementFocus><button></button></div>`})
+class ComplexComponentWithMonitorElementFocus {
+}
 
 
-@Component({
-  template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`
-})
-class ComplexComponentWithMonitorSubtreeFocus {}
+@Component({template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`})
+class ComplexComponentWithMonitorSubtreeFocus {
+}
 
 
-@Component({
-  template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`
-})
-class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {}
+@Component({template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`})
+class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {
+}
 
 
-@Component({
-  template: `<ng-container cdkMonitorElementFocus></ng-container>`
-})
-class FocusMonitorOnCommentNode {}
+@Component({template: `<ng-container cdkMonitorElementFocus></ng-container>`})
+class FocusMonitorOnCommentNode {
+}

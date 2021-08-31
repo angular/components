@@ -19,7 +19,8 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './chip-default-options';
+
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 import {MatChipList} from './chip-list';
 import {MatChipTextControl} from './chip-text-control';
 
@@ -87,8 +88,12 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
   @Input('matChipInputAddOnBlur')
-  get addOnBlur(): boolean { return this._addOnBlur; }
-  set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
+  get addOnBlur(): boolean {
+    return this._addOnBlur;
+  }
+  set addOnBlur(value: boolean) {
+    this._addOnBlur = coerceBooleanProperty(value);
+  }
   _addOnBlur: boolean = false;
 
   /**
@@ -97,8 +102,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
    * Defaults to `[ENTER]`.
    */
   @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: readonly number[] | ReadonlySet<number> =
-      this._defaultOptions.separatorKeyCodes;
+  separatorKeyCodes: readonly number[]|ReadonlySet<number> = this._defaultOptions.separatorKeyCodes;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd') readonly chipEnd = new EventEmitter<MatChipInputEvent>();
@@ -111,19 +115,25 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
 
   /** Whether the input is disabled. */
   @Input()
-  get disabled(): boolean { return this._disabled || (this._chipList && this._chipList.disabled); }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return this._disabled || (this._chipList && this._chipList.disabled);
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled: boolean = false;
 
   /** Whether the input is empty. */
-  get empty(): boolean { return !this.inputElement.value; }
+  get empty(): boolean {
+    return !this.inputElement.value;
+  }
 
   /** The native input element to which this directive is attached. */
   readonly inputElement: HTMLInputElement;
 
   constructor(
-    protected _elementRef: ElementRef<HTMLInputElement>,
-    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
+      protected _elementRef: ElementRef<HTMLInputElement>,
+      @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
   }
 

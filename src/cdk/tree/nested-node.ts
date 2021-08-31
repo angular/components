@@ -39,8 +39,9 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode}
   ]
 })
-export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K>
-    implements AfterContentInit, DoCheck, OnDestroy, OnInit {
+export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit,
+                                                                              DoCheck, OnDestroy,
+                                                                              OnInit {
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
@@ -55,9 +56,9 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K>
   })
   nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              tree: CdkTree<T, K>,
-              protected _differs: IterableDiffers) {
+  constructor(
+      elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>,
+      protected _differs: IterableDiffers) {
     super(elementRef, tree);
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine. It is not set as a @HostBinding because
@@ -76,7 +77,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K>
       this.updateChildrenNodes(childrenNodes as T[]);
     } else if (isObservable(childrenNodes)) {
       childrenNodes.pipe(takeUntil(this._destroyed))
-        .subscribe(result => this.updateChildrenNodes(result));
+          .subscribe(result => this.updateChildrenNodes(result));
     }
     this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
         .subscribe(() => this.updateChildrenNodes());

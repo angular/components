@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'input-prefix-suffix-example.html',
   styleUrls: ['input-prefix-suffix-example.css'],
 })
-export class InputPrefixSuffixExample {}
+export class InputPrefixSuffixExample {
+}

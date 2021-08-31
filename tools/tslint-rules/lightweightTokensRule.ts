@@ -16,8 +16,8 @@ type Context = Lint.WalkContext<RuleArguments>;
 
 /** Failure message that is used when a heavy token is optionally used. */
 const failureMessage = `Use a lightweight token for optionally injecting. This is necessary as ` +
-  `otherwise the injected symbol is always retained even though it might not be used. ` +
-  `Read more about it: https://next.angular.io/guide/lightweight-injection-tokens`;
+    `otherwise the injected symbol is always retained even though it might not be used. ` +
+    `Read more about it: https://next.angular.io/guide/lightweight-injection-tokens`;
 
 /**
  * Rule that warns if a DI constructor is discovered for which parameters optionally
@@ -27,7 +27,8 @@ const failureMessage = `Use a lightweight token for optionally injecting. This i
  */
 export class Rule extends Lint.Rules.TypedRule {
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-    return this.applyWithFunction(sourceFile, checkSourceFileForLightweightTokens,
+    return this.applyWithFunction(
+        sourceFile, checkSourceFileForLightweightTokens,
         this.getOptions().ruleArguments as RuleArguments, program.getTypeChecker());
   }
 }

@@ -1,10 +1,10 @@
-import {createPlugin, utils} from 'stylelint';
 import {basename} from 'path';
+import {createPlugin, utils} from 'stylelint';
 
 const ruleName = 'material/no-top-level-ampersand-in-mixin';
 const messages = utils.ruleMessages(ruleName, {
   expected: () => `Selectors starting with an ampersand ` +
-                  `are not allowed inside top-level mixin rules`
+      `are not allowed inside top-level mixin rules`
 });
 
 /** Config options for the rule. */
@@ -33,18 +33,13 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
     root.walkAtRules(node => {
       // Skip non-mixin atrules and internal mixins.
       if (!node.nodes || node.name !== 'mixin' || node.params.startsWith('_') ||
-        node.params.startsWith('private-')) {
+          node.params.startsWith('private-')) {
         return;
       }
 
       node.nodes.forEach(childNode => {
         if (childNode.type === 'rule' && childNode.selector.startsWith('&')) {
-          utils.report({
-            result,
-            ruleName,
-            message: messages.expected(),
-            node: childNode
-          });
+          utils.report({result, ruleName, message: messages.expected(), node: childNode});
         }
       });
     });

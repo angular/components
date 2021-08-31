@@ -21,5 +21,5 @@ export const MAT_GRID_LIST = new InjectionToken<MatGridListBase>('MAT_GRID_LIST'
 export interface MatGridListBase {
   cols: number;
   gutterSize: string;
-  rowHeight: number | string;
+  rowHeight: number|string;
 }

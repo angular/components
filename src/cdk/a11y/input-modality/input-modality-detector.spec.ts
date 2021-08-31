@@ -1,20 +1,21 @@
 import {A, ALT, B, C, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
+import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {
   createMouseEvent,
+  createTouchEvent,
+  dispatchEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   dispatchTouchEvent,
-  dispatchEvent,
-  createTouchEvent,
 } from '../../testing/private';
-import {fakeAsync, TestBed, tick} from '@angular/core/testing';
+
 import {
+  INPUT_MODALITY_DETECTOR_OPTIONS,
   InputModality,
   InputModalityDetector,
   InputModalityDetectorOptions,
-  INPUT_MODALITY_DETECTOR_OPTIONS,
   TOUCH_BUFFER_MS,
 } from './input-modality-detector';
 
@@ -184,14 +185,14 @@ describe('InputModalityDetector', () => {
   });
 
   it('should ignore mouse events that occur too closely after a touch event', fakeAsync(() => {
-    setupTest();
+       setupTest();
 
-    dispatchTouchEvent(document, 'touchstart');
-    dispatchMouseEvent(document, 'mousedown');
-    expect(detector.mostRecentModality).toBe('touch');
+       dispatchTouchEvent(document, 'touchstart');
+       dispatchMouseEvent(document, 'mousedown');
+       expect(detector.mostRecentModality).toBe('touch');
 
-    tick(TOUCH_BUFFER_MS);
-    dispatchMouseEvent(document, 'mousedown');
-    expect(detector.mostRecentModality).toBe('mouse');
-  }));
+       tick(TOUCH_BUFFER_MS);
+       dispatchMouseEvent(document, 'mousedown');
+       expect(detector.mostRecentModality).toBe('mouse');
+     }));
 });

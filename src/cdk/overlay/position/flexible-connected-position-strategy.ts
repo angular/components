@@ -6,9 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PositionStrategy} from './position-strategy';
+import {coerceArray, coerceCssPixelValue} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
+import {CdkScrollable, ViewportRuler, ViewportScrollPosition} from '@angular/cdk/scrolling';
 import {ElementRef} from '@angular/core';
-import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '@angular/cdk/scrolling';
+import {Observable, Subject, Subscription} from 'rxjs';
+
+import {OverlayContainer} from '../overlay-container';
+import {OverlayReference} from '../overlay-reference';
+
 import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
@@ -16,12 +22,8 @@ import {
   validateHorizontalPosition,
   validateVerticalPosition,
 } from './connected-position';
-import {Observable, Subscription, Subject} from 'rxjs';
-import {OverlayReference} from '../overlay-reference';
-import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
-import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
-import {OverlayContainer} from '../overlay-container';
+import {PositionStrategy} from './position-strategy';
+import {isElementClippedByScrolling, isElementScrolledOutsideView} from './scroll-clip';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -33,7 +35,7 @@ const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 const cssUnitPattern = /([A-Za-z%]+)$/;
 
 /** Possible values that can be set as the origin of a FlexibleConnectedPositionStrategy. */
-export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Point & {
+export type FlexibleConnectedPositionStrategyOrigin = ElementRef|Element|Point&{
   width?: number;
   height?: number;
 };
@@ -101,10 +103,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * Parent element for the overlay panel used to constrain the overlay panel's size to fit
    * within the viewport.
    */
-  private _boundingBox: HTMLElement | null;
+  private _boundingBox: HTMLElement|null;
 
   /** The last position to have been calculated as the best fit position. */
-  private _lastPosition: ConnectedPosition | null;
+  private _lastPosition: ConnectedPosition|null;
 
   /** Subject that emits whenever the position changes. */
   private readonly _positionChanges = new Subject<ConnectedOverlayPositionChange>();
@@ -125,7 +127,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _appliedPanelClasses: string[] = [];
 
   /** Amount by which the overlay was pushed in each axis during the last time it was positioned. */
-  private _previousPushAmount: {x: number, y: number} | null;
+  private _previousPushAmount: {x: number, y: number}|null;
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> = this._positionChanges;
@@ -145,7 +147,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Attaches this position strategy to an overlay. */
   attach(overlayRef: OverlayReference): void {
     if (this._overlayRef && overlayRef !== this._overlayRef &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('This position strategy is already attached to an overlay');
     }
 
@@ -216,7 +218,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const flexibleFits: FlexibleFit[] = [];
 
     // Fallback if none of the preferred positions fit within the viewport.
-    let fallback: FallbackPosition | undefined;
+    let fallback: FallbackPosition|undefined;
 
     // Go through each of the preferred positions looking for a good fit.
     // If a good fit is found, it will be applied immediately.
@@ -265,7 +267,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // If there are any positions where the overlay would fit with flexible dimensions, choose the
     // one that has the greatest area available modified by the position's weight
     if (flexibleFits.length) {
-      let bestFit: FlexibleFit | null = null;
+      let bestFit: FlexibleFit|null = null;
       let bestScore = -1;
       for (const fit of flexibleFits) {
         const score =
@@ -494,11 +496,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * Gets the (x, y) coordinate of the top-left corner of the overlay given a given position and
    * origin point to which the overlay should be connected.
    */
-  private _getOverlayPoint(
-      originPoint: Point,
-      overlayRect: ClientRect,
-      pos: ConnectedPosition): Point {
-
+  private _getOverlayPoint(originPoint: Point, overlayRect: ClientRect, pos: ConnectedPosition):
+      Point {
     // Calculate the (overlayStartX, overlayStartY), the start of the
     // potential overlay position relative to the origin point.
     let overlayStartX: number;
@@ -525,9 +524,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Gets how well an overlay at the given point will fit within the viewport. */
-  private _getOverlayFit(point: Point, rawOverlayRect: ClientRect, viewport: ClientRect,
-    position: ConnectedPosition): OverlayFit {
-
+  private _getOverlayFit(
+      point: Point, rawOverlayRect: ClientRect, viewport: ClientRect,
+      position: ConnectedPosition): OverlayFit {
     // Round the overlay rect when comparing against the
     // viewport, because the viewport is always rounded.
     const overlay = getRoundedBoundingClientRect(rawOverlayRect);
@@ -576,10 +575,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       const minHeight = getPixelValue(this._overlayRef.getConfig().minHeight);
       const minWidth = getPixelValue(this._overlayRef.getConfig().minWidth);
 
-      const verticalFit = fit.fitsInViewportVertically ||
-          (minHeight != null && minHeight <= availableHeight);
-      const horizontalFit = fit.fitsInViewportHorizontally ||
-          (minWidth != null && minWidth <= availableWidth);
+      const verticalFit =
+          fit.fitsInViewportVertically || (minHeight != null && minHeight <= availableHeight);
+      const horizontalFit =
+          fit.fitsInViewportHorizontally || (minWidth != null && minWidth <= availableWidth);
 
       return verticalFit && horizontalFit;
     }
@@ -597,17 +596,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * @returns The point at which to position the overlay after pushing. This is effectively a new
    *     originPoint.
    */
-  private _pushOverlayOnScreen(start: Point,
-                               rawOverlayRect: ClientRect,
-                               scrollPosition: ViewportScrollPosition): Point {
+  private _pushOverlayOnScreen(
+      start: Point, rawOverlayRect: ClientRect, scrollPosition: ViewportScrollPosition): Point {
     // If the position is locked and we've pushed the overlay already, reuse the previous push
     // amount, rather than pushing it again. If we were to continue pushing, the element would
     // remain in the viewport, which goes against the expectations when position locking is enabled.
     if (this._previousPushAmount && this._positionLocked) {
-      return {
-        x: start.x + this._previousPushAmount.x,
-        y: start.y + this._previousPushAmount.y
-      };
+      return {x: start.x + this._previousPushAmount.x, y: start.y + this._previousPushAmount.y};
     }
 
     // Round the overlay rect when comparing against the
@@ -686,8 +681,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     const elements: NodeListOf<HTMLElement> =
         this._boundingBox!.querySelectorAll(this._transformOriginSelector);
-    let xOrigin: 'left' | 'right' | 'center';
-    let yOrigin: 'top' | 'bottom' | 'center' = position.overlayY;
+    let xOrigin: 'left'|'right'|'center';
+    let yOrigin: 'top'|'bottom'|'center' = position.overlayY;
 
     if (position.overlayX === 'center') {
       xOrigin = 'center';
@@ -743,13 +738,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     // The overlay is opening 'right-ward' (the content flows to the right).
     const isBoundedByRightViewportEdge =
-        (position.overlayX === 'start' && !isRtl) ||
-        (position.overlayX === 'end' && isRtl);
+        (position.overlayX === 'start' && !isRtl) || (position.overlayX === 'end' && isRtl);
 
     // The overlay is opening 'left-ward' (the content flows to the left).
     const isBoundedByLeftViewportEdge =
-        (position.overlayX === 'end' && !isRtl) ||
-        (position.overlayX === 'start' && isRtl);
+        (position.overlayX === 'end' && !isRtl) || (position.overlayX === 'start' && isRtl);
 
     let width: number, left: number, right: number;
 
@@ -925,9 +918,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Gets the exact top/bottom for the overlay when not using flexible sizing or when pushing. */
-  private _getExactOverlayY(position: ConnectedPosition,
-                            originPoint: Point,
-                            scrollPosition: ViewportScrollPosition) {
+  private _getExactOverlayY(
+      position: ConnectedPosition, originPoint: Point, scrollPosition: ViewportScrollPosition) {
     // Reset any existing styles. This is necessary in case the
     // preferred position has changed since the last `apply`.
     let styles = {top: '', bottom: ''} as CSSStyleDeclaration;
@@ -961,9 +953,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Gets the exact left/right for the overlay when not using flexible sizing or when pushing. */
-  private _getExactOverlayX(position: ConnectedPosition,
-                            originPoint: Point,
-                            scrollPosition: ViewportScrollPosition) {
+  private _getExactOverlayX(
+      position: ConnectedPosition, originPoint: Point, scrollPosition: ViewportScrollPosition) {
     // Reset any existing styles. This is necessary in case the preferred position has
     // changed since the last `apply`.
     let styles = {left: '', right: ''} as CSSStyleDeclaration;
@@ -977,7 +968,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // or "after" the origin, which determines the direction in which the element will expand.
     // For the horizontal axis, the meaning of "before" and "after" change based on whether the
     // page is in RTL or LTR.
-    let horizontalStyleProperty: 'left' | 'right';
+    let horizontalStyleProperty: 'left'|'right';
 
     if (this._isRtl()) {
       horizontalStyleProperty = position.overlayX === 'end' ? 'left' : 'right';
@@ -1004,7 +995,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _getScrollVisibility(): ScrollingVisibility {
     // Note: needs fresh rects since the position could've changed.
     const originBounds = this._getOriginRect();
-    const overlayBounds =  this._pane.getBoundingClientRect();
+    const overlayBounds = this._pane.getBoundingClientRect();
 
     // TODO(jelbourn): instead of needing all of the client rects for these scrolling containers
     // every time, we should be able to use the scrollTop of the containers if the size of those
@@ -1040,11 +1031,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const scrollPosition = this._viewportRuler.getViewportScrollPosition();
 
     return {
-      top:    scrollPosition.top + this._viewportMargin,
-      left:   scrollPosition.left + this._viewportMargin,
-      right:  scrollPosition.left + width - this._viewportMargin,
+      top: scrollPosition.top + this._viewportMargin,
+      left: scrollPosition.left + this._viewportMargin,
+      right: scrollPosition.left + width - this._viewportMargin,
       bottom: scrollPosition.top + height - this._viewportMargin,
-      width:  width  - (2 * this._viewportMargin),
+      width: width - (2 * this._viewportMargin),
       height: height - (2 * this._viewportMargin),
     };
   }
@@ -1060,7 +1051,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Retrieves the offset of a position along the x or y axis. */
-  private _getOffset(position: ConnectedPosition, axis: 'x' | 'y') {
+  private _getOffset(position: ConnectedPosition, axis: 'x'|'y') {
     if (axis === 'x') {
       // We don't do something like `position['offset' + axis]` in
       // order to avoid breking minifiers that rename properties.
@@ -1089,7 +1080,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Adds a single CSS class or an array of classes on the overlay panel. */
-  private _addPanelClasses(cssClasses: string | string[]) {
+  private _addPanelClasses(cssClasses: string|string[]) {
     if (this._pane) {
       coerceArray(cssClasses).forEach(cssClass => {
         if (cssClass !== '' && this._appliedPanelClasses.indexOf(cssClass) === -1) {
@@ -1188,21 +1179,21 @@ interface FlexibleFit {
 
 /** A connected position as specified by the user. */
 export interface ConnectedPosition {
-  originX: 'start' | 'center' | 'end';
-  originY: 'top' | 'center' | 'bottom';
+  originX: 'start'|'center'|'end';
+  originY: 'top'|'center'|'bottom';
 
-  overlayX: 'start' | 'center' | 'end';
-  overlayY: 'top' | 'center' | 'bottom';
+  overlayX: 'start'|'center'|'end';
+  overlayY: 'top'|'center'|'bottom';
 
   weight?: number;
   offsetX?: number;
   offsetY?: number;
-  panelClass?: string | string[];
+  panelClass?: string|string[];
 }
 
 /** Shallow-extends a stylesheet object with another stylesheet object. */
-function extendStyles(destination: CSSStyleDeclaration,
-                      source: CSSStyleDeclaration): CSSStyleDeclaration {
+function extendStyles(
+    destination: CSSStyleDeclaration, source: CSSStyleDeclaration): CSSStyleDeclaration {
   for (let key in source) {
     if (source.hasOwnProperty(key)) {
       destination[key] = source[key];

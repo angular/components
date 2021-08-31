@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'progress-bar-indeterminate-example',
   templateUrl: 'progress-bar-indeterminate-example.html',
 })
-export class ProgressBarIndeterminateExample {}
+export class ProgressBarIndeterminateExample {
+}

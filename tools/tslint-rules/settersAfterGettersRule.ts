@@ -1,6 +1,6 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import * as tsutils from 'tsutils';
+import * as ts from 'typescript';
 
 /**
  * Rule that enforces that property setters are declared after getters.
@@ -17,7 +17,8 @@ class Walker extends Lint.RuleWalker {
       const getterName = getter.name.getText();
       const setter = getter.parent.members.find(member => {
         return tsutils.isSetAccessorDeclaration(member) && member.name.getText() === getterName;
-      }) as ts.SetAccessorDeclaration | undefined;
+      }) as ts.SetAccessorDeclaration |
+          undefined;
 
       if (setter && setter.pos < getter.pos) {
         this.addFailureAtNode(setter, 'Setters must be declared after getters.');

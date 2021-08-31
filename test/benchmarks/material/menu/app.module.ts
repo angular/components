@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatMenuModule} from '@angular/material/menu';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mat-menu */
 
@@ -30,4 +30,5 @@ export class MenuBenchmarkApp {
   ],
   bootstrap: [MenuBenchmarkApp]
 })
-export class AppModule {}
+export class AppModule {
+}

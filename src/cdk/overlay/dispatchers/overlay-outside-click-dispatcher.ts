@@ -6,10 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {_getEventTarget, Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable} from '@angular/core';
+
 import {OverlayReference} from '../overlay-reference';
-import {Platform, _getEventTarget} from '@angular/cdk/platform';
+
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 
 /**

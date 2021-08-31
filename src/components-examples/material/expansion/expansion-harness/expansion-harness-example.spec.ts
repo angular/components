@@ -1,13 +1,14 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatExpansionPanelHarness, MatAccordionHarness} from '@angular/material/expansion/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatAccordionHarness, MatExpansionPanelHarness} from '@angular/material/expansion/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatExpansionModule} from '@angular/material/expansion';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {ExpansionHarnessExample} from './expansion-harness-example';
 
 describe('ExpansionHarnessExample', () => {
@@ -15,16 +16,18 @@ describe('ExpansionHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatExpansionModule, NoopAnimationsModule],
-      declarations: [ExpansionHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatExpansionModule, NoopAnimationsModule],
+          declarations: [ExpansionHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(ExpansionHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

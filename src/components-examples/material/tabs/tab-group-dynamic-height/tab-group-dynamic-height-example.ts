@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tab-group-dynamic-height-example.html',
   styleUrls: ['tab-group-dynamic-height-example.css'],
 })
-export class TabGroupDynamicHeightExample {}
+export class TabGroupDynamicHeightExample {
+}

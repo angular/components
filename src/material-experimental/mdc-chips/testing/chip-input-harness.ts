@@ -21,9 +21,11 @@ export class MatChipInputHarness extends ComponentHarness {
    */
   static with(options: ChipInputHarnessFilters = {}): HarnessPredicate<MatChipInputHarness> {
     return new HarnessPredicate(MatChipInputHarness, options)
-        .addOption('value', options.value, async (harness, value) => {
-          return (await harness.getValue()) === value;
-        })
+        .addOption(
+            'value', options.value,
+            async (harness, value) => {
+              return (await harness.getValue()) === value;
+            })
         .addOption('placeholder', options.placeholder, async (harness, placeholder) => {
           return (await harness.getPlaceholder()) === placeholder;
         });
@@ -88,7 +90,7 @@ export class MatChipInputHarness extends ComponentHarness {
   }
 
   /** Sends a chip separator key to the input element. */
-  async sendSeparatorKey(key: TestKey | string): Promise<void> {
+  async sendSeparatorKey(key: TestKey|string): Promise<void> {
     const inputEl = await this.host();
     return inputEl.sendKeys(key);
   }

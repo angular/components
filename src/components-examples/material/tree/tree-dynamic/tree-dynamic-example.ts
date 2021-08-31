@@ -1,4 +1,4 @@
-import {CollectionViewer, SelectionChange, DataSource} from '@angular/cdk/collections';
+import {CollectionViewer, DataSource, SelectionChange} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable} from '@angular/core';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
@@ -6,8 +6,8 @@ import {map} from 'rxjs/operators';
 
 /** Flat node with expandable and level information */
 export class DynamicFlatNode {
-  constructor(public item: string, public level = 1, public expandable = false,
-              public isLoading = false) {}
+  constructor(
+      public item: string, public level = 1, public expandable = false, public isLoading = false) {}
 }
 
 /**
@@ -17,10 +17,8 @@ export class DynamicFlatNode {
 @Injectable({providedIn: 'root'})
 export class DynamicDatabase {
   dataMap = new Map<string, string[]>([
-    ['Fruits', ['Apple', 'Orange', 'Banana']],
-    ['Vegetables', ['Tomato', 'Potato', 'Onion']],
-    ['Apple', ['Fuji', 'Macintosh']],
-    ['Onion', ['Yellow', 'White', 'Purple']]
+    ['Fruits', ['Apple', 'Orange', 'Banana']], ['Vegetables', ['Tomato', 'Potato', 'Onion']],
+    ['Apple', ['Fuji', 'Macintosh']], ['Onion', ['Yellow', 'White', 'Purple']]
   ]);
 
   rootLevelNodes: string[] = ['Fruits', 'Vegetables'];
@@ -30,7 +28,7 @@ export class DynamicDatabase {
     return this.rootLevelNodes.map(name => new DynamicFlatNode(name, 0, true));
   }
 
-  getChildren(node: string): string[] | undefined {
+  getChildren(node: string): string[]|undefined {
     return this.dataMap.get(node);
   }
 
@@ -46,22 +44,23 @@ export class DynamicDatabase {
  * structure.
  */
 export class DynamicDataSource implements DataSource<DynamicFlatNode> {
-
   dataChange = new BehaviorSubject<DynamicFlatNode[]>([]);
 
-  get data(): DynamicFlatNode[] { return this.dataChange.value; }
+  get data(): DynamicFlatNode[] {
+    return this.dataChange.value;
+  }
   set data(value: DynamicFlatNode[]) {
     this._treeControl.dataNodes = value;
     this.dataChange.next(value);
   }
 
-  constructor(private _treeControl: FlatTreeControl<DynamicFlatNode>,
-              private _database: DynamicDatabase) {}
+  constructor(
+      private _treeControl: FlatTreeControl<DynamicFlatNode>, private _database: DynamicDatabase) {}
 
   connect(collectionViewer: CollectionViewer): Observable<DynamicFlatNode[]> {
     this._treeControl.expansionModel.changed.subscribe(change => {
       if ((change as SelectionChange<DynamicFlatNode>).added ||
-        (change as SelectionChange<DynamicFlatNode>).removed) {
+          (change as SelectionChange<DynamicFlatNode>).removed) {
         this.handleTreeControl(change as SelectionChange<DynamicFlatNode>);
       }
     });
@@ -87,7 +86,7 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
   toggleNode(node: DynamicFlatNode, expand: boolean) {
     const children = this._database.getChildren(node.item);
     const index = this.data.indexOf(node);
-    if (!children || index < 0) { // If no children, or cannot find the node, no op
+    if (!children || index < 0) {  // If no children, or cannot find the node, no op
       return;
     }
 
@@ -95,13 +94,14 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
 
     setTimeout(() => {
       if (expand) {
-        const nodes = children.map(name =>
-          new DynamicFlatNode(name, node.level + 1, this._database.isExpandable(name)));
+        const nodes = children.map(
+            name => new DynamicFlatNode(name, node.level + 1, this._database.isExpandable(name)));
         this.data.splice(index + 1, 0, ...nodes);
       } else {
         let count = 0;
-        for (let i = index + 1; i < this.data.length
-          && this.data[i].level > node.level; i++, count++) {}
+        for (let i = index + 1; i < this.data.length && this.data[i].level > node.level;
+             i++, count++) {
+        }
         this.data.splice(index + 1, count);
       }
 

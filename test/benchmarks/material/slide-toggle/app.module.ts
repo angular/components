@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mat-slide-toggle */
 
@@ -27,8 +27,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 })
 export class SlideToggleBenchmarkApp {
   isVisible = false;
-  show() { this.isVisible = true; }
-  hide() { this.isVisible = false; }
+  show() {
+    this.isVisible = true;
+  }
+  hide() {
+    this.isVisible = false;
+  }
 }
 
 @NgModule({
@@ -39,4 +43,5 @@ export class SlideToggleBenchmarkApp {
   ],
   bootstrap: [SlideToggleBenchmarkApp]
 })
-export class AppModule {}
+export class AppModule {
+}

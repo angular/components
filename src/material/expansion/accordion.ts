@@ -6,18 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusKeyManager} from '@angular/cdk/a11y';
+import {CdkAccordion} from '@angular/cdk/accordion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
+  AfterContentInit,
+  ContentChildren,
   Directive,
   Input,
-  ContentChildren,
-  QueryList,
-  AfterContentInit,
   OnDestroy,
+  QueryList,
 } from '@angular/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CdkAccordion} from '@angular/cdk/accordion';
-import {FocusKeyManager} from '@angular/cdk/a11y';
 import {startWith} from 'rxjs/operators';
+
 import {
   MAT_ACCORDION,
   MatAccordionBase,
@@ -33,10 +34,7 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
   selector: 'mat-accordion',
   exportAs: 'matAccordion',
   inputs: ['multi'],
-  providers: [{
-    provide: MAT_ACCORDION,
-    useExisting: MatAccordion
-  }],
+  providers: [{provide: MAT_ACCORDION, useExisting: MatAccordion}],
   host: {
     class: 'mat-accordion',
     // Class binding which is only used by the test harness as there is no other
@@ -44,8 +42,8 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
     '[class.mat-accordion-multi]': 'this.multi',
   }
 })
-export class MatAccordion extends CdkAccordion implements MatAccordionBase,
-  AfterContentInit, OnDestroy {
+export class MatAccordion extends CdkAccordion implements MatAccordionBase, AfterContentInit,
+                                                          OnDestroy {
   private _keyManager: FocusKeyManager<MatExpansionPanelHeader>;
 
   /** Headers belonging to this accordion. */
@@ -57,8 +55,12 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase,
 
   /** Whether the expansion indicator should be hidden. */
   @Input()
-  get hideToggle(): boolean { return this._hideToggle; }
-  set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
+  get hideToggle(): boolean {
+    return this._hideToggle;
+  }
+  set hideToggle(show: boolean) {
+    this._hideToggle = coerceBooleanProperty(show);
+  }
   private _hideToggle: boolean = false;
 
   /**
@@ -75,12 +77,11 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase,
   @Input() togglePosition: MatAccordionTogglePosition = 'after';
 
   ngAfterContentInit() {
-    this._headers.changes
-      .pipe(startWith(this._headers))
-      .subscribe((headers: QueryList<MatExpansionPanelHeader>) => {
-        this._ownHeaders.reset(headers.filter(header => header.panel.accordion === this));
-        this._ownHeaders.notifyOnChanges();
-      });
+    this._headers.changes.pipe(startWith(this._headers))
+        .subscribe((headers: QueryList<MatExpansionPanelHeader>) => {
+          this._ownHeaders.reset(headers.filter(header => header.panel.accordion === this));
+          this._ownHeaders.notifyOnChanges();
+        });
 
     this._keyManager = new FocusKeyManager(this._ownHeaders).withWrap().withHomeAndEnd();
   }

@@ -9,12 +9,13 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {
+  MatCommonModule,
   MatLineModule,
   MatPseudoCheckboxModule,
   MatRippleModule,
-  MatCommonModule,
 } from '@angular/material-experimental/mdc-core';
 import {MatDividerModule} from '@angular/material/divider';
+
 import {MatActionList} from './action-list';
 import {MatList, MatListItem} from './list';
 import {MatListOption} from './list-option';
@@ -62,4 +63,5 @@ import {MatSelectionList} from './selection-list';
     MatListGraphicAlignmentStyler,
   ]
 })
-export class MatListModule {}
+export class MatListModule {
+}

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -17,7 +18,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import {TemplatePortal} from '@angular/cdk/portal';
+
 import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
 
 
@@ -68,8 +69,8 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
   private _portal: TemplatePortal;
 
   constructor(
-    private _datepicker: MatDatepickerBase<MatDatepickerControl<unknown>, unknown>,
-    private _viewContainerRef: ViewContainerRef) {}
+      private _datepicker: MatDatepickerBase<MatDatepickerControl<unknown>, unknown>,
+      private _viewContainerRef: ViewContainerRef) {}
 
   ngAfterViewInit() {
     this._portal = new TemplatePortal(this._template, this._viewContainerRef);

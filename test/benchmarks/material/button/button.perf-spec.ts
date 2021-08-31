@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {$, browser} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/bazel/benchmark/driver-utilities';
+import {$, browser} from 'protractor';
 
 describe('button performance benchmarks', () => {
   beforeAll(() => {
     browser.angularAppRoot('#root');
   });
 
-  it('renders a basic raised button', async() => {
+  it('renders a basic raised button', async () => {
     await runBenchmark({
       id: 'button-render',
       url: '',
@@ -24,7 +24,7 @@ describe('button performance benchmarks', () => {
     });
   });
 
-  it('clicks a basic raised button', async() => {
+  it('clicks a basic raised button', async () => {
     await runBenchmark({
       id: 'button-click',
       url: '',

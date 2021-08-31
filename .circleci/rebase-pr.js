@@ -59,12 +59,14 @@ async function _main() {
   console.log();
 
   // Get the count of commits between the latest commit from origin and the common ancestor SHA.
-  const commitCount = exec(`git rev-list --count origin/${refs.base.ref}...${refs.commonAncestorSha}`);
+  const commitCount =
+      exec(`git rev-list --count origin/${refs.base.ref}...${refs.commonAncestorSha}`);
   console.log(`Checking ${commitCount} commits for changes in the CircleCI config file.`);
 
   // Check if the files changed between the latest commit from origin and the common ancestor SHA
   // includes the CircleCI config.
-  const circleCIConfigChanged = exec(`git diff --name-only origin/${refs.base.ref} ${refs.commonAncestorSha} -- .circleci/config.yml`);
+  const circleCIConfigChanged = exec(`git diff --name-only origin/${refs.base.ref} ${
+      refs.commonAncestorSha} -- .circleci/config.yml`);
 
   if (!!circleCIConfigChanged) {
     throw Error(`
@@ -89,7 +91,6 @@ async function _main() {
   exec(`git rebase origin/${refs.base.ref}`);
   console.log(`Rebased current branch onto ${refs.base.ref}.`);
 }
-
 
 
 /**
@@ -185,16 +186,12 @@ function getRefAndShas(sha, owner, name) {
 /** Gets the refs and shas for the base and target of the current environment. */
 function getRefsAndShasForChange() {
   const base = getRefAndShas(
-    process.env['CIRCLE_GIT_BASE_REVISION'],
-    process.env['CIRCLE_PROJECT_USERNAME'],
-    process.env['CIRCLE_PROJECT_REPONAME']
-  );
+      process.env['CIRCLE_GIT_BASE_REVISION'], process.env['CIRCLE_PROJECT_USERNAME'],
+      process.env['CIRCLE_PROJECT_REPONAME']);
 
   const target = getRefAndShas(
-    process.env['CIRCLE_GIT_REVISION'],
-    process.env['CIRCLE_PR_USERNAME'],
-    process.env['CIRCLE_PR_REPONAME']
-  );
+      process.env['CIRCLE_GIT_REVISION'], process.env['CIRCLE_PR_USERNAME'],
+      process.env['CIRCLE_PR_REPONAME']);
 
   const commonAncestorSha = getCommonAncestorSha(base.sha, target.sha);
   return {

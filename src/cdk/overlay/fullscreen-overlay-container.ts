@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Inject, OnDestroy} from '@angular/core';
-import {OverlayContainer} from './overlay-container';
-import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, OnDestroy} from '@angular/core';
+
+import {OverlayContainer} from './overlay-container';
 
 
 /**
@@ -21,7 +22,7 @@ import {Platform} from '@angular/cdk/platform';
  */
 @Injectable({providedIn: 'root'})
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
-  private _fullScreenEventName: string | undefined;
+  private _fullScreenEventName: string|undefined;
   private _fullScreenListener: () => void;
 
   constructor(@Inject(DOCUMENT) _document: any, platform: Platform) {
@@ -65,7 +66,7 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
     }
   }
 
-  private _getEventName(): string | undefined {
+  private _getEventName(): string|undefined {
     if (!this._fullScreenEventName) {
       const _document = this._document as any;
 
@@ -90,10 +91,7 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
   getFullscreenElement(): Element {
     const _document = this._document as any;
 
-    return _document.fullscreenElement ||
-           _document.webkitFullscreenElement ||
-           _document.mozFullScreenElement ||
-           _document.msFullscreenElement ||
-           null;
+    return _document.fullscreenElement || _document.webkitFullscreenElement ||
+        _document.mozFullScreenElement || _document.msFullscreenElement || null;
   }
 }

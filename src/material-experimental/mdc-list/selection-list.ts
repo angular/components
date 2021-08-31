@@ -44,16 +44,16 @@ const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
 /** Change event that is being fired whenever the selected state of an option changes. */
 export class MatSelectionListChange {
   constructor(
-    /** Reference to the selection list that emitted the event. */
-    public source: MatSelectionList,
-    /**
-     * Reference to the option that has been changed.
-     * @deprecated Use `options` instead, because some events may change more than one option.
-     * @breaking-change 12.0.0
-     */
-    public option: MatListOption,
-    /** Reference to the options that have been changed. */
-    public options: MatListOption[]) {}
+      /** Reference to the selection list that emitted the event. */
+      public source: MatSelectionList,
+      /**
+       * Reference to the option that has been changed.
+       * @deprecated Use `options` instead, because some events may change more than one option.
+       * @breaking-change 12.0.0
+       */
+      public option: MatListOption,
+      /** Reference to the options that have been changed. */
+      public options: MatListOption[]) {}
 }
 
 @Component({
@@ -74,17 +74,17 @@ export class MatSelectionListChange {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatSelectionList extends MatInteractiveListBase<MatListOption>
-    implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-
+export class MatSelectionList extends MatInteractiveListBase<MatListOption> implements
+    SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
   private _multiple = true;
   private _initialized = false;
 
   @ContentChildren(MatListOption, {descendants: true}) _items: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
-  @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
-    new EventEmitter<MatSelectionListChange>();
+  @Output()
+  readonly selectionChange: EventEmitter<MatSelectionListChange> =
+      new EventEmitter<MatSelectionListChange>();
 
   /** Theme color of the selection list. This sets the checkbox color for all list options. */
   @Input() color: ThemePalette = 'accent';
@@ -98,14 +98,16 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
 
   /** Whether selection is limited to one or multiple items (default multiple). */
   @Input()
-  get multiple(): boolean { return this._multiple; }
+  get multiple(): boolean {
+    return this._multiple;
+  }
   set multiple(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
       if ((typeof ngDevMode === 'undefined' || ngDevMode) && this._initialized) {
         throw new Error(
-          'Cannot change `multiple` mode of mat-selection-list after initialization.');
+            'Cannot change `multiple` mode of mat-selection-list after initialization.');
       }
 
       this._multiple = newValue;
@@ -170,7 +172,7 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
     const disableRippleChanges = changes['disableRipple'];
 
     if ((disableRippleChanges && !disableRippleChanges.firstChange) ||
-      (disabledChanges && !disabledChanges.firstChange)) {
+        (disabledChanges && !disabledChanges.firstChange)) {
       this._markOptionsForCheck();
     }
   }
@@ -281,12 +283,12 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
 
   private _syncSelectedOptionsWithFoundation() {
     if (this._multiple) {
-      this._foundation.setSelectedIndex(this.selectedOptions.selected
-          .map(o => this._itemsArr.indexOf(o)));
+      this._foundation.setSelectedIndex(
+          this.selectedOptions.selected.map(o => this._itemsArr.indexOf(o)));
     } else {
       const selected = this.selectedOptions.selected[0];
-      const index = selected === undefined ?
-          mdcListNumbers.UNSET_INDEX : this._itemsArr.indexOf(selected);
+      const index =
+          selected === undefined ? mdcListNumbers.UNSET_INDEX : this._itemsArr.indexOf(selected);
       this._foundation.setSelectedIndex(index);
     }
   }

@@ -11,7 +11,7 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 /** A set of criteria that can be used to filter a list of `MatDrawerHarness` instances. */
 export interface DrawerHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose side is the given value. */
-  position?: 'start' | 'end';
+  position?: 'start'|'end';
 }
 
 /** A set of criteria that can be used to filter a list of `MatDrawerContainerHarness` instances. */

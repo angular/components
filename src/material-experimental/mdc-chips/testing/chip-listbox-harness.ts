@@ -38,7 +38,7 @@ export class MatChipListboxHarness extends ComponentHarness {
   }
 
   /** Gets whether the orientation of the chip list. */
-  async getOrientation(): Promise<'horizontal' | 'vertical'> {
+  async getOrientation(): Promise<'horizontal'|'vertical'> {
     const orientation = await (await this.host()).getAttribute('aria-orientation');
     return orientation === 'vertical' ? 'vertical' : 'horizontal';
   }

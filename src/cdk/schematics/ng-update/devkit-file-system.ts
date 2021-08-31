@@ -8,8 +8,9 @@
 
 import {normalize, Path} from '@angular-devkit/core';
 import {Tree, UpdateRecorder} from '@angular-devkit/schematics';
-import {DirectoryEntry, FileSystem} from '../update-tool/file-system';
 import * as path from 'path';
+
+import {DirectoryEntry, FileSystem} from '../update-tool/file-system';
 
 /**
  * File system that leverages the virtual tree from the CLI devkit. This file

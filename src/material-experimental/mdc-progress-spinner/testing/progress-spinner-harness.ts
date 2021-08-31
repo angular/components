@@ -23,7 +23,7 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: ProgressSpinnerHarnessFilters = {}):
-    HarnessPredicate<MatProgressSpinnerHarness> {
+      HarnessPredicate<MatProgressSpinnerHarness> {
     return new HarnessPredicate(MatProgressSpinnerHarness, options);
   }
 

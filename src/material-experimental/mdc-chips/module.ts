@@ -14,6 +14,7 @@ import {
   MatCommonModule,
   MatRippleModule,
 } from '@angular/material-experimental/mdc-core';
+
 import {MatChip, MatChipCssInternalOnly} from './chip';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 import {MatChipEditInput} from './chip-edit-input';
@@ -21,8 +22,8 @@ import {MatChipGrid} from './chip-grid';
 import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MatChipInput} from './chip-input';
 import {MatChipListbox} from './chip-listbox';
-import {MatChipRow} from './chip-row';
 import {MatChipOption} from './chip-option';
+import {MatChipRow} from './chip-row';
 import {MatChipSet} from './chip-set';
 
 
@@ -46,12 +47,9 @@ const CHIP_DECLARATIONS = [
   exports: [MatCommonModule, CHIP_DECLARATIONS],
   declarations: CHIP_DECLARATIONS,
   providers: [
-    ErrorStateMatcher,
-    {
+    ErrorStateMatcher, {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
-      useValue: {
-        separatorKeyCodes: [ENTER]
-      } as MatChipsDefaultOptions
+      useValue: {separatorKeyCodes: [ENTER]} as MatChipsDefaultOptions
     }
   ]
 })

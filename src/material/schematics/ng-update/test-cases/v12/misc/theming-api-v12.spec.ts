@@ -39,10 +39,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat-palette($mat-indigo);`,
       `$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);`,
       `$candy-app-theme: mat-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include angular-material-theme($candy-app-theme);`,
@@ -51,15 +51,15 @@ describe('v12 theming API migration', () => {
       `$dark-accent: mat-palette($mat-amber, A200, A100, A400);`,
       `$dark-warn: mat-palette($mat-deep-orange);`,
       `$dark-theme: mat-dark-theme((`,
-        `color: (`,
-          `primary: $dark-primary,`,
-          `accent: $dark-accent,`,
-          `warn: $dark-warn,`,
-        `)`,
+      `color: (`,
+      `primary: $dark-primary,`,
+      `accent: $dark-accent,`,
+      `warn: $dark-warn,`,
+      `)`,
       `));`,
 
       `.unicorn-dark-theme {`,
-        `@include angular-material-color($dark-theme);`,
+      `@include angular-material-color($dark-theme);`,
       `}`
     ]);
 
@@ -73,10 +73,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat.define-palette(mat.$indigo-palette);`,
       `$candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);`,
       `$candy-app-theme: mat.define-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include mat.all-component-themes($candy-app-theme);`,
@@ -85,53 +85,33 @@ describe('v12 theming API migration', () => {
       `$dark-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);`,
       `$dark-warn: mat.define-palette(mat.$deep-orange-palette);`,
       `$dark-theme: mat.define-dark-theme((`,
-        `color: (`,
-          `primary: $dark-primary,`,
-          `accent: $dark-accent,`,
-          `warn: $dark-warn,`,
-        `)`,
+      `color: (`,
+      `primary: $dark-primary,`,
+      `accent: $dark-accent,`,
+      `warn: $dark-warn,`,
+      `)`,
       `));`,
 
       `.unicorn-dark-theme {`,
-        `@include mat.all-component-colors($dark-theme);`,
+      `@include mat.all-component-colors($dark-theme);`,
       `}`
     ]);
   });
 
   it('should migrate files using CDK APIs through the theming import', async () => {
     writeLines(THEME_PATH, [
-      `@import '~@angular/material/theming';`,
-      ``,
-      `@include cdk-overlay();`,
-      ``,
+      `@import '~@angular/material/theming';`, ``, `@include cdk-overlay();`, ``,
 
-      `.my-dialog {`,
-        `z-index: $cdk-z-index-overlay-container + 1;`,
-      `}`,
-      ``,
-      `@include cdk-high-contrast(active, off) {`,
-        `button {`,
-          `outline: solid 1px;`,
-        `}`,
-      `}`
+      `.my-dialog {`, `z-index: $cdk-z-index-overlay-container + 1;`, `}`, ``,
+      `@include cdk-high-contrast(active, off) {`, `button {`, `outline: solid 1px;`, `}`, `}`
     ]);
 
     await runMigration();
 
     expect(splitFile(THEME_PATH)).toEqual([
-      `@use '~@angular/cdk' as cdk;`,
-      ``,
-      `@include cdk.overlay();`,
-      ``,
-      `.my-dialog {`,
-        `z-index: cdk.$overlay-container-z-index + 1;`,
-      `}`,
-      ``,
-      `@include cdk.high-contrast(active, off) {`,
-        `button {`,
-          `outline: solid 1px;`,
-        `}`,
-      `}`
+      `@use '~@angular/cdk' as cdk;`, ``, `@include cdk.overlay();`, ``, `.my-dialog {`,
+      `z-index: cdk.$overlay-container-z-index + 1;`, `}`, ``,
+      `@include cdk.high-contrast(active, off) {`, `button {`, `outline: solid 1px;`, `}`, `}`
     ]);
   });
 
@@ -146,43 +126,33 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat-palette($mat-indigo);`,
       `$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);`,
       `$candy-app-theme: mat-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include angular-material-theme($candy-app-theme);`,
 
       `.my-dialog {`,
-        `z-index: $cdk-z-index-overlay-container + 1;`,
+      `z-index: $cdk-z-index-overlay-container + 1;`,
       `}`,
     ]);
 
     await runMigration();
 
     expect(splitFile(THEME_PATH)).toEqual([
-      `@use '~@angular/material' as mat;`,
-      `@use '~@angular/cdk' as cdk;`,
-      `@import './foo'`,
-      ``,
-      `@include cdk.overlay();`,
-      `@include mat.core();`,
+      `@use '~@angular/material' as mat;`, `@use '~@angular/cdk' as cdk;`, `@import './foo'`, ``,
+      `@include cdk.overlay();`, `@include mat.core();`,
 
       `$candy-app-primary: mat.define-palette(mat.$indigo-palette);`,
       `$candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);`,
-      `$candy-app-theme: mat.define-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
-      `));`,
+      `$candy-app-theme: mat.define-light-theme((`, `color: (`, `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`, `)`, `));`,
 
       `@include mat.all-component-themes($candy-app-theme);`,
 
-      `.my-dialog {`,
-        `z-index: cdk.$overlay-container-z-index + 1;`,
-      `}`
+      `.my-dialog {`, `z-index: cdk.$overlay-container-z-index + 1;`, `}`
     ]);
   });
 
@@ -282,42 +252,42 @@ describe('v12 theming API migration', () => {
   });
 
   it('should account for multi-line comment file headers placed aboved the @import statements',
-    async () => {
-      writeLines(THEME_PATH, [
-        `/** This is a license. */`,
-        `@import './foo'`,
-        `@import '~@angular/material/theming';`,
-        `@include mat-core();`,
-      ]);
+     async () => {
+       writeLines(THEME_PATH, [
+         `/** This is a license. */`,
+         `@import './foo'`,
+         `@import '~@angular/material/theming';`,
+         `@include mat-core();`,
+       ]);
 
-      await runMigration();
+       await runMigration();
 
-      expect(splitFile(THEME_PATH)).toEqual([
-        `/** This is a license. */`,
-        `@use '~@angular/material' as mat;`,
-        `@import './foo'`,
-        `@include mat.core();`,
-      ]);
-    });
+       expect(splitFile(THEME_PATH)).toEqual([
+         `/** This is a license. */`,
+         `@use '~@angular/material' as mat;`,
+         `@import './foo'`,
+         `@include mat.core();`,
+       ]);
+     });
 
   it('should account for single-line comment file headers placed aboved the @import statements',
-    async () => {
-      writeLines(THEME_PATH, [
-        `// This is a license.`,
-        `@import './foo'`,
-        `@import '~@angular/material/theming';`,
-        `@include mat-core();`,
-      ]);
+     async () => {
+       writeLines(THEME_PATH, [
+         `// This is a license.`,
+         `@import './foo'`,
+         `@import '~@angular/material/theming';`,
+         `@include mat-core();`,
+       ]);
 
-      await runMigration();
+       await runMigration();
 
-      expect(splitFile(THEME_PATH)).toEqual([
-        `// This is a license.`,
-        `@use '~@angular/material' as mat;`,
-        `@import './foo'`,
-        `@include mat.core();`,
-      ]);
-    });
+       expect(splitFile(THEME_PATH)).toEqual([
+         `// This is a license.`,
+         `@use '~@angular/material' as mat;`,
+         `@import './foo'`,
+         `@include mat.core();`,
+       ]);
+     });
 
   it('should migrate multiple files within the same project', async () => {
     const componentPath = join(PROJECT_PATH, 'components/dialog.scss');
@@ -330,7 +300,7 @@ describe('v12 theming API migration', () => {
     writeLines(componentPath, [
       `@import '~@angular/material/theming';`,
       `.my-dialog {`,
-        `z-index: $cdk-z-index-overlay-container + 1;`,
+      `z-index: $cdk-z-index-overlay-container + 1;`,
       `}`,
     ]);
 
@@ -344,7 +314,7 @@ describe('v12 theming API migration', () => {
     expect(splitFile(componentPath)).toEqual([
       `@use '~@angular/cdk' as cdk;`,
       `.my-dialog {`,
-        `z-index: cdk.$overlay-container-z-index + 1;`,
+      `z-index: cdk.$overlay-container-z-index + 1;`,
       `}`,
     ]);
   });
@@ -378,10 +348,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat-palette($mat-indigo);`,
       `$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);`,
       `$candy-app-theme: mat-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include mat-button-theme($candy-app-theme);`,
@@ -401,10 +371,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat.define-palette(mat.$indigo-palette);`,
       `$candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);`,
       `$candy-app-theme: mat.define-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include mat.button-theme($candy-app-theme);`,
@@ -431,10 +401,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat-palette($mat-indigo);`,
       `$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);`,
       `$candy-app-theme: mat-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include mat-button-theme($candy-app-theme);`,
@@ -454,10 +424,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat.define-palette(mat.$indigo-palette);`,
       `$candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);`,
       `$candy-app-theme: mat.define-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include mat.button-theme($candy-app-theme);`,
@@ -483,10 +453,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: theming.mat-palette(palette.$mat-indigo);`,
       `$candy-app-accent: theming.mat-palette(palette.$mat-pink, A200, A100, A400);`,
       `$candy-app-theme: theming.mat-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include button.mat-button-theme($candy-app-theme);`,
@@ -506,10 +476,10 @@ describe('v12 theming API migration', () => {
       `$candy-app-primary: mat.define-palette(mat.$indigo-palette);`,
       `$candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);`,
       `$candy-app-theme: mat.define-light-theme((`,
-        `color: (`,
-          `primary: $candy-app-primary,`,
-          `accent: $candy-app-accent,`,
-        `)`,
+      `color: (`,
+      `primary: $candy-app-primary,`,
+      `accent: $candy-app-accent,`,
+      `)`,
       `));`,
 
       `@include mat.button-theme($candy-app-theme);`,
@@ -549,7 +519,7 @@ describe('v12 theming API migration', () => {
       `@import '~@angular/material/theming';`,
       ``,
       `.my-dialog {`,
-        `color: red;`,
+      `color: red;`,
       `}`,
     ]);
 
@@ -557,48 +527,28 @@ describe('v12 theming API migration', () => {
 
     expect(splitFile(THEME_PATH)).toEqual([
       `.my-dialog {`,
-        `color: red;`,
+      `color: red;`,
       `}`,
     ]);
   });
 
   it('should replace removed variables with their values', async () => {
     writeLines(THEME_PATH, [
-      `@import '~@angular/material/theming';`,
-      ``,
-      `@include mat-button-toggle-theme();`,
-      ``,
+      `@import '~@angular/material/theming';`, ``, `@include mat-button-toggle-theme();`, ``,
 
-      `.my-button-toggle {`,
-        `height: $mat-button-toggle-standard-height + 10px;`,
-        `transition: $swift-ease-out;`,
-      `}`,
-      ``,
-      `@media ($mat-small) {`,
-        `.my-button-toggle {`,
-          `height: $mat-button-toggle-standard-minimum-height;`,
-        `}`,
-      `}`
+      `.my-button-toggle {`, `height: $mat-button-toggle-standard-height + 10px;`,
+      `transition: $swift-ease-out;`, `}`, ``, `@media ($mat-small) {`, `.my-button-toggle {`,
+      `height: $mat-button-toggle-standard-minimum-height;`, `}`, `}`
     ]);
 
     await runMigration();
 
     expect(splitFile(THEME_PATH)).toEqual([
-      `@use '~@angular/material' as mat;`,
-      ``,
-      `@include mat.button-toggle-theme();`,
-      ``,
+      `@use '~@angular/material' as mat;`, ``, `@include mat.button-toggle-theme();`, ``,
 
-      `.my-button-toggle {`,
-        `height: 48px + 10px;`,
-        `transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);`,
-      `}`,
-      ``,
-      `@media (max-width: 959px) {`,
-        `.my-button-toggle {`,
-          `height: 24px;`,
-        `}`,
-      `}`
+      `.my-button-toggle {`, `height: 48px + 10px;`,
+      `transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);`, `}`, ``,
+      `@media (max-width: 959px) {`, `.my-button-toggle {`, `height: 24px;`, `}`, `}`
     ]);
   });
 
@@ -650,84 +600,64 @@ describe('v12 theming API migration', () => {
     const otherTheme = join(PROJECT_PATH, 'other-theme.scss');
 
     writeLines(THEME_PATH, [
-      `@import '~@angular/material/theming';`,
-      ``,
-      `.my-button {`,
-        `z-index: $z-index-fab;`,
-      `}`
+      `@import '~@angular/material/theming';`, ``, `.my-button {`, `z-index: $z-index-fab;`, `}`
     ]);
 
     writeLines(otherTheme, [
-      `@import 're-exports-material-symbols';`,
-      ``,
-      `.my-drawer {`,
-        `z-index: $z-index-drawer;`,
-      `}`
+      `@import 're-exports-material-symbols';`, ``, `.my-drawer {`, `z-index: $z-index-drawer;`, `}`
     ]);
 
     await runMigration();
 
-    expect(splitFile(THEME_PATH)).toEqual([
-      `.my-button {`,
-        `z-index: 20;`,
-      `}`
-    ]);
+    expect(splitFile(THEME_PATH)).toEqual([`.my-button {`, `z-index: 20;`, `}`]);
 
     expect(splitFile(otherTheme)).toEqual([
-      `@import 're-exports-material-symbols';`,
-      ``,
-      `.my-drawer {`,
-        `z-index: $z-index-drawer;`,
-      `}`
+      `@import 're-exports-material-symbols';`, ``, `.my-drawer {`, `z-index: $z-index-drawer;`, `}`
     ]);
   });
 
   it('should insert the @use statement at the top of the file, if the theming import is ' +
-     'the only import in the file and there is other content before it', async () => {
-    writeLines(THEME_PATH, [
-      `:host {`,
-        `display: block;`,
-        `width: 100%;`,
-      `}`,
-      ``,
-      `@import '~@angular/material/theming';`,
-      ``,
-      `.button {`,
-        `@include mat-elevation(4);`,
-        `padding: 8px;`,
-      `}`,
-    ]);
+         'the only import in the file and there is other content before it',
+     async () => {
+       writeLines(THEME_PATH, [
+         `:host {`,
+         `display: block;`,
+         `width: 100%;`,
+         `}`,
+         ``,
+         `@import '~@angular/material/theming';`,
+         ``,
+         `.button {`,
+         `@include mat-elevation(4);`,
+         `padding: 8px;`,
+         `}`,
+       ]);
 
-    await runMigration();
+       await runMigration();
 
-    expect(splitFile(THEME_PATH)).toEqual([
-      `@use '~@angular/material' as mat;`,
-      `:host {`,
-        `display: block;`,
-        `width: 100%;`,
-      `}`,
-      ``,
-      ``,
-      `.button {`,
-        `@include mat.elevation(4);`,
-        `padding: 8px;`,
-      `}`,
-    ]);
-  });
+       expect(splitFile(THEME_PATH)).toEqual([
+         `@use '~@angular/material' as mat;`,
+         `:host {`,
+         `display: block;`,
+         `width: 100%;`,
+         `}`,
+         ``,
+         ``,
+         `.button {`,
+         `@include mat.elevation(4);`,
+         `padding: 8px;`,
+         `}`,
+       ]);
+     });
 
   it('should migrate extra given mixins and functions', () => {
     const originalContent = [
-      `@import '~@angular/material/theming';`,
-      `$something: mat-mdc-typography-config();`,
-      `@include mat-mdc-button-theme();`,
-      `$another: $mat-vermillion`
+      `@import '~@angular/material/theming';`, `$something: mat-mdc-typography-config();`,
+      `@include mat-mdc-button-theme();`, `$another: $mat-vermillion`
     ].join('\n');
 
     const migratedContent = migrateFileContent(
-        originalContent,
-        '~@angular/material/',
-        '~@angular/cdk/',
-        '~@angular/material',
+        originalContent, '~@angular/material/', '~@angular/cdk/', '~@angular/material',
         '~@angular/cdk', {
           mixins: {'mat-mdc-button-theme': 'mdc-button-theme'},
           functions: {'mat-mdc-typography-config': 'mdc-typography-config'},
@@ -873,5 +803,4 @@ describe('v12 theming API migration', () => {
       '@include mat.button-theme();',
     ]);
   });
-
 });

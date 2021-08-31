@@ -10,8 +10,6 @@ import {NgModule} from '@angular/core';
 import {MatProgressSpinnerModule} from '@angular/material-experimental/mdc-progress-spinner';
 import {MdcProgressSpinnerE2e} from './mdc-progress-spinner-e2e';
 
-@NgModule({
-  imports: [MatProgressSpinnerModule],
-  declarations: [MdcProgressSpinnerE2e]
-})
-export class MdcProgressSpinnerE2eModule {}
+@NgModule({imports: [MatProgressSpinnerModule], declarations: [MdcProgressSpinnerE2e]})
+export class MdcProgressSpinnerE2eModule {
+}

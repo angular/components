@@ -25,7 +25,6 @@ function sortObjectByKeys(obj: Record<string, string>) {
 
 /** Adds a package to the package.json in the given host tree. */
 export function addPackageToPackageJson(host: Tree, pkg: string, version: string): Tree {
-
   if (host.exists('package.json')) {
     const sourceText = host.read('package.json')!.toString('utf-8');
     const json = JSON.parse(sourceText) as PackageJson;
@@ -46,7 +45,7 @@ export function addPackageToPackageJson(host: Tree, pkg: string, version: string
 }
 
 /** Gets the version of the specified package by looking at the package.json in the given tree. */
-export function getPackageVersionFromPackageJson(tree: Tree, name: string): string | null {
+export function getPackageVersionFromPackageJson(tree: Tree, name: string): string|null {
   if (!tree.exists('package.json')) {
     return null;
   }

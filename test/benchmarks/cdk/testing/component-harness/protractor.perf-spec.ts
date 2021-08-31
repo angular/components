@@ -7,11 +7,12 @@
  */
 
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatButtonHarness} from '@angular/material/button/testing/button-harness';
 import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
-import {$$, element, by, browser} from 'protractor';
-import {benchmark} from './protractor-benchmark-utilities';
+import {MatButtonHarness} from '@angular/material/button/testing/button-harness';
+import {$$, browser, by, element} from 'protractor';
+
 import {NUM_BUTTONS} from './constants';
+import {benchmark} from './protractor-benchmark-utilities';
 
 const FIRST_BUTTON = '0';
 const MIDDLE_BUTTON = `${Math.floor(NUM_BUTTONS / 2)}`;

@@ -1,8 +1,9 @@
+import {CdkPortal, PortalModule} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
-import {PortalModule, CdkPortal} from '@angular/cdk/portal';
-import {Overlay, OverlayContainer, OverlayModule, FullscreenOverlayContainer} from './index';
+import {inject, TestBed, waitForAsync} from '@angular/core/testing';
+
+import {FullscreenOverlayContainer, Overlay, OverlayContainer, OverlayModule} from './index';
 
 describe('FullscreenOverlayContainer', () => {
   let overlay: Overlay;
@@ -12,49 +13,51 @@ describe('FullscreenOverlayContainer', () => {
   beforeEach(waitForAsync(() => {
     fullscreenListeners = new Set();
 
-    TestBed.configureTestingModule({
-      imports: [OverlayTestModule],
-      providers: [{
-        provide: DOCUMENT,
-        useFactory: () => {
-          // Provide a (very limited) stub for the document. This is the most practical solution for
-          // now since we only hit a handful of Document APIs. If we end up having to add more
-          // stubs here, we should reconsider whether to use a Proxy instead. Avoiding a proxy for
-          // now since it isn't supported on IE. See:
-          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+    TestBed
+        .configureTestingModule({
+          imports: [OverlayTestModule],
+          providers: [{
+            provide: DOCUMENT,
+            useFactory: () => {
+              // Provide a (very limited) stub for the document. This is the most practical solution
+              // for now since we only hit a handful of Document APIs. If we end up having to add
+              // more stubs here, we should reconsider whether to use a Proxy instead. Avoiding a
+              // proxy for now since it isn't supported on IE. See:
+              // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
           fakeDocument = {
             body: document.body,
             fullscreenElement: document.createElement('div'),
             fullscreenEnabled: true,
             addEventListener: function(eventName: string, listener: EventListener) {
-              if (eventName === 'fullscreenchange') {
-                fullscreenListeners.add(listener);
-              } else {
-                document.addEventListener(eventName, listener);
-              }
+        if (eventName === 'fullscreenchange') {
+          fullscreenListeners.add(listener);
+        } else {
+          document.addEventListener(eventName, listener);
+        }
             },
             removeEventListener: function(eventName: string, listener: EventListener) {
-              if (eventName === 'fullscreenchange') {
-                fullscreenListeners.delete(listener);
-              } else {
-                document.addEventListener(eventName, listener);
-              }
+        if (eventName === 'fullscreenchange') {
+          fullscreenListeners.delete(listener);
+        } else {
+          document.addEventListener(eventName, listener);
+        }
             },
             querySelectorAll: function(...args: [string]) {
-              return document.querySelectorAll(...args);
+        return document.querySelectorAll(...args);
             },
             createElement: function(...args: [string, (ElementCreationOptions | undefined)?]) {
-              return document.createElement(...args);
+        return document.createElement(...args);
             },
             getElementsByClassName: function(...args: [string]) {
-              return document.getElementsByClassName(...args);
+        return document.getElementsByClassName(...args);
             }
           };
 
           return fakeDocument;
-        }
-      }]
-    }).compileComponents();
+            }
+          }]
+        })
+        .compileComponents();
   }));
 
   beforeEach(inject([Overlay], (o: Overlay) => {
@@ -104,7 +107,6 @@ describe('FullscreenOverlayContainer', () => {
 
     expect(fullscreenElement.contains(overlayRef.overlayElement)).toBe(true);
   });
-
 });
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
@@ -115,15 +117,13 @@ describe('FullscreenOverlayContainer', () => {
 class TestComponentWithTemplatePortals {
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 
-  constructor(public viewContainerRef: ViewContainerRef) { }
+  constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @NgModule({
   imports: [OverlayModule, PortalModule],
   declarations: [TestComponentWithTemplatePortals],
-  providers: [{
-    provide: OverlayContainer,
-    useClass: FullscreenOverlayContainer
-  }]
+  providers: [{provide: OverlayContainer, useClass: FullscreenOverlayContainer}]
 })
-class OverlayTestModule { }
+class OverlayTestModule {
+}

@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'menu-position-example',
   templateUrl: 'menu-position-example.html',
 })
-export class MenuPositionExample {}
+export class MenuPositionExample {
+}

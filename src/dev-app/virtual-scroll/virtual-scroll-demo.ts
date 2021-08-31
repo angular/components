@@ -31,8 +31,8 @@ export class VirtualScrollDemo implements OnDestroy {
   scrolledIndex = new Map<CdkVirtualScrollViewport, number>();
   fixedSizeData = Array(10000).fill(50);
   increasingSizeData = Array(10000).fill(0).map((_, i) => (1 + Math.floor(i / 1000)) * 20);
-  decreasingSizeData = Array(10000).fill(0)
-      .map((_, i) => (1 + Math.floor((10000 - i) / 1000)) * 20);
+  decreasingSizeData =
+      Array(10000).fill(0).map((_, i) => (1 + Math.floor((10000 - i) / 1000)) * 20);
   randomData = Array(10000).fill(0).map(() => Math.round(Math.random() * 100));
   readonly observableData = new BehaviorSubject<number[]>([]);
   states = [
@@ -104,7 +104,7 @@ export class VirtualScrollDemo implements OnDestroy {
     this.observableData.next(data);
   }
 
-  sortBy(prop: 'name' | 'capital') {
+  sortBy(prop: 'name'|'capital') {
     this.statesObservable.next(this.states.map(s => ({...s})).sort((a, b) => {
       const aProp = a[prop], bProp = b[prop];
       if (aProp < bProp) {

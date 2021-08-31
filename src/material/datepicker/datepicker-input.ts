@@ -27,12 +27,13 @@ import {
   MatDateFormats,
   ThemePalette,
 } from '@angular/material/core';
-import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
-import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
-import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
+
 import {DateSelectionModelChange} from './date-selection-model';
+import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
+import {DateFilterFn, MatDatepickerInputBase} from './datepicker-input-base';
 
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -73,25 +74,27 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
-  implements MatDatepickerControl<D | null>, OnDestroy {
+export class MatDatepickerInput<D> extends MatDatepickerInputBase<D|null, D> implements
+    MatDatepickerControl<D|null>, OnDestroy {
   private _closedSubscription = Subscription.EMPTY;
 
   /** The datepicker that this input is associated with. */
   @Input()
-  set matDatepicker(datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D | null, D>) {
+  set matDatepicker(datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D|null, D>) {
     if (datepicker) {
       this._datepicker = datepicker;
       this._closedSubscription = datepicker.closedStream.subscribe(() => this._onTouched());
       this._registerModel(datepicker.registerInput(this));
     }
   }
-  _datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D | null, D>;
+  _datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D|null, D>;
 
   /** The minimum valid date. */
   @Input()
-  get min(): D | null { return this._min; }
-  set min(value: D | null) {
+  get min(): D|null {
+    return this._min;
+  }
+  set min(value: D|null) {
     const validValue = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
 
     if (!this._dateAdapter.sameDate(validValue, this._min)) {
@@ -99,12 +102,14 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
       this._validatorOnChange();
     }
   }
-  private _min: D | null;
+  private _min: D|null;
 
   /** The maximum valid date. */
   @Input()
-  get max(): D | null { return this._max; }
-  set max(value: D | null) {
+  get max(): D|null {
+    return this._max;
+  }
+  set max(value: D|null) {
     const validValue = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
 
     if (!this._dateAdapter.sameDate(validValue, this._max)) {
@@ -112,12 +117,14 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
       this._validatorOnChange();
     }
   }
-  private _max: D | null;
+  private _max: D|null;
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input('matDatepickerFilter')
-  get dateFilter() { return this._dateFilter; }
-  set dateFilter(value: DateFilterFn<D | null>) {
+  get dateFilter() {
+    return this._dateFilter;
+  }
+  set dateFilter(value: DateFilterFn<D|null>) {
     const wasMatchingValue = this._matchesFilter(this.value);
     this._dateFilter = value;
 
@@ -125,14 +132,13 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
       this._validatorOnChange();
     }
   }
-  private _dateFilter: DateFilterFn<D | null>;
+  private _dateFilter: DateFilterFn<D|null>;
 
   /** The combined form control validator for this input. */
-  protected _validator: ValidatorFn | null;
+  protected _validator: ValidatorFn|null;
 
   constructor(
-      elementRef: ElementRef<HTMLInputElement>,
-      @Optional() dateAdapter: DateAdapter<D>,
+      elementRef: ElementRef<HTMLInputElement>, @Optional() dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
       @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
     super(elementRef, dateAdapter, dateFormats);
@@ -148,7 +154,7 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
   }
 
   /** Gets the ID of an element that should be used a description for the calendar overlay. */
-  getOverlayLabelId(): string | null {
+  getOverlayLabelId(): string|null {
     if (this._formField) {
       return this._formField.getLabelId();
     }
@@ -162,7 +168,7 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
   }
 
   /** Gets the value at which the calendar should start. */
-  getStartValue(): D | null {
+  getStartValue(): D|null {
     return this.value;
   }
 
@@ -178,11 +184,11 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
     }
   }
 
-  protected _getValueFromModel(modelValue: D | null): D | null {
+  protected _getValueFromModel(modelValue: D|null): D|null {
     return modelValue;
   }
 
-  protected _assignValueToModel(value: D | null): void {
+  protected _assignValueToModel(value: D|null): void {
     if (this._model) {
       this._model.updateSelection(value, this);
     }

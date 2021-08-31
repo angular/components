@@ -13,13 +13,14 @@ import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
+
+import {MatStepContent} from './step-content';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {MatHorizontalStepper, MatStep, MatStepper, MatVerticalStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
 import {MatStepperIcon} from './stepper-icon';
 import {MAT_STEPPER_INTL_PROVIDER} from './stepper-intl';
-import {MatStepContent} from './step-content';
 
 
 @NgModule({
@@ -57,4 +58,5 @@ import {MatStepContent} from './step-content';
   ],
   providers: [MAT_STEPPER_INTL_PROVIDER, ErrorStateMatcher],
 })
-export class MatStepperModule {}
+export class MatStepperModule {
+}

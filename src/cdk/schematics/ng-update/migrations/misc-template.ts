@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
 import {Migration} from '../../update-tool/migration';
+import {TargetVersion} from '../../update-tool/target-version';
 import {findAllSubstringIndices} from '../typescript/literal';
 import {UpgradeData} from '../upgrade-data';
 
@@ -17,7 +17,6 @@ import {UpgradeData} from '../upgrade-data';
  * instances of outdated Angular CDK API that can't be migrated automatically.
  */
 export class MiscTemplateMigration extends Migration<UpgradeData> {
-
   // Only enable this rule if the migration targets version 6. The rule
   // currently only includes migrations for V6 deprecations.
   enabled = this.targetVersion === TargetVersion.V6;

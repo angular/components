@@ -8,18 +8,15 @@
 
 import {HarnessPredicate} from '@angular/cdk/testing';
 import {
+  _MatRadioButtonHarnessBase,
+  _MatRadioGroupHarnessBase,
   RadioButtonHarnessFilters,
   RadioGroupHarnessFilters,
-  _MatRadioGroupHarnessBase,
-  _MatRadioButtonHarnessBase,
 } from '@angular/material/radio/testing';
 
 /** Harness for interacting with an MDC-based mat-radio-group in tests. */
 export class MatRadioGroupHarness extends _MatRadioGroupHarnessBase<
-  typeof MatRadioButtonHarness,
-  MatRadioButtonHarness,
-  RadioButtonHarnessFilters
-> {
+    typeof MatRadioButtonHarness, MatRadioButtonHarness, RadioButtonHarnessFilters> {
   /** The selector for the host element of a `MatRadioGroup` instance. */
   static hostSelector = '.mat-mdc-radio-group';
   protected _buttonClass = MatRadioButtonHarness;
@@ -30,8 +27,7 @@ export class MatRadioGroupHarness extends _MatRadioGroupHarnessBase<
    * @param options Options for filtering which radio group instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: RadioGroupHarnessFilters = {}):
-    HarnessPredicate<MatRadioGroupHarness> {
+  static with(options: RadioGroupHarnessFilters = {}): HarnessPredicate<MatRadioGroupHarness> {
     return new HarnessPredicate<MatRadioGroupHarness>(MatRadioGroupHarness, options)
         .addOption('name', options.name, this._checkRadioGroupName);
   }
@@ -48,13 +44,13 @@ export class MatRadioButtonHarness extends _MatRadioButtonHarnessBase {
    * @param options Options for filtering which radio button instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: RadioButtonHarnessFilters = {}):
-    HarnessPredicate<MatRadioButtonHarness> {
+  static with(options: RadioButtonHarnessFilters = {}): HarnessPredicate<MatRadioButtonHarness> {
     return new HarnessPredicate<MatRadioButtonHarness>(MatRadioButtonHarness, options)
-        .addOption('label', options.label,
-          (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
-        .addOption('name', options.name,
-           async (harness, name) => (await harness.getName()) === name);
+        .addOption(
+            'label', options.label,
+            (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
+        .addOption(
+            'name', options.name, async (harness, name) => (await harness.getName()) === name);
   }
 
   protected _textLabel = this.locatorFor('label');

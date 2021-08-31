@@ -1,30 +1,31 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatTreeHarness} from '@angular/material/tree/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTreeModule} from '@angular/material/tree';
+import {MatTreeHarness} from '@angular/material/tree/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatTreeModule} from '@angular/material/tree';
+
 import {TreeHarnessExample} from './tree-harness-example';
-import {MatIconModule} from '@angular/material/icon';
 
 describe('TreeHarnessExample', () => {
   let fixture: ComponentFixture<TreeHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatTreeModule, MatIconModule],
-      declarations: [TreeHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule(
+            {imports: [MatTreeModule, MatIconModule], declarations: [TreeHarnessExample]})
+        .compileComponents();
     fixture = TestBed.createComponent(TreeHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -54,14 +55,11 @@ describe('TreeHarnessExample', () => {
     expect(await secondGroup.isExpanded()).toBe(false);
   });
 
-  it ('should correctly get tree structure', async () => {
+  it('should correctly get tree structure', async () => {
     const tree = await loader.getHarness(MatTreeHarness);
 
     expect(await tree.getTreeStructure()).toEqual({
-      children: [
-        {text: 'Flat Group 1'},
-        {text: 'Flat Group 2'}
-      ]
+      children: [{text: 'Flat Group 1'}, {text: 'Flat Group 2'}]
     });
 
     const firstGroup = (await tree.getNodes({text: /Flat Group 1/}))[0];
@@ -71,11 +69,7 @@ describe('TreeHarnessExample', () => {
       children: [
         {
           text: 'Flat Group 1',
-          children: [
-            {text: 'Flat Leaf 1.1'},
-            {text: 'Flat Leaf 1.2'},
-            {text: 'Flat Leaf 1.3'}
-          ]
+          children: [{text: 'Flat Leaf 1.1'}, {text: 'Flat Leaf 1.2'}, {text: 'Flat Leaf 1.3'}]
         },
         {text: 'Flat Group 2'}
       ]

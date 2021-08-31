@@ -40,8 +40,7 @@ export class SimpleSnackBar implements TextOnlySnackBar {
   data: {message: string, action: string};
 
   constructor(
-    public snackBarRef: MatSnackBarRef<SimpleSnackBar>,
-    @Inject(MAT_SNACK_BAR_DATA) data: any) {
+      public snackBarRef: MatSnackBarRef<SimpleSnackBar>, @Inject(MAT_SNACK_BAR_DATA) data: any) {
     this.data = data;
   }
 

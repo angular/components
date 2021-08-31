@@ -1,5 +1,5 @@
+import {CdkDrag, CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, CdkDrag} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop sort predicate

@@ -47,5 +47,4 @@ export class RippleDemo {
       this.ripple.fadeOutAll();
     }
   }
-
 }

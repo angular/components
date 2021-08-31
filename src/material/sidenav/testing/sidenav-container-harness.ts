@@ -23,7 +23,7 @@ export class MatSidenavContainerHarness extends ContentContainerComponentHarness
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DrawerContainerHarnessFilters = {}):
-    HarnessPredicate<MatSidenavContainerHarness> {
+      HarnessPredicate<MatSidenavContainerHarness> {
     return new HarnessPredicate(MatSidenavContainerHarness, options);
   }
 

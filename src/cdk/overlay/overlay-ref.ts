@@ -7,15 +7,16 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {coerceArray, coerceCssPixelValue} from '@angular/cdk/coercion';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
 import {Location} from '@angular/common';
-import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
+import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
+import {merge, Observable, Subject, Subscription, SubscriptionLike} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
+
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {OverlayReference} from './overlay-reference';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
@@ -23,7 +24,7 @@ import {ScrollStrategy} from './scroll';
 
 /** An object where all of its properties cannot be written. */
 export type ImmutableObject<T> = {
-  readonly [P in keyof T]: T[P];
+  readonly[P in keyof T]: T[P];
 };
 
 /**
@@ -31,12 +32,12 @@ export type ImmutableObject<T> = {
  * Used to manipulate or dispose of said overlay.
  */
 export class OverlayRef implements PortalOutlet, OverlayReference {
-  private _backdropElement: HTMLElement | null = null;
+  private _backdropElement: HTMLElement|null = null;
   private readonly _backdropClick = new Subject<MouseEvent>();
   private readonly _attachments = new Subject<void>();
   private readonly _detachments = new Subject<void>();
-  private _positionStrategy: PositionStrategy | undefined;
-  private _scrollStrategy: ScrollStrategy | undefined;
+  private _positionStrategy: PositionStrategy|undefined;
+  private _scrollStrategy: ScrollStrategy|undefined;
   private _locationChanges: SubscriptionLike = Subscription.EMPTY;
   private _backdropClickHandler = (event: MouseEvent) => this._backdropClick.next(event);
 
@@ -53,16 +54,10 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   readonly _outsidePointerEvents = new Subject<MouseEvent>();
 
   constructor(
-      private _portalOutlet: PortalOutlet,
-      private _host: HTMLElement,
-      private _pane: HTMLElement,
-      private _config: ImmutableObject<OverlayConfig>,
-      private _ngZone: NgZone,
-      private _keyboardDispatcher: OverlayKeyboardDispatcher,
-      private _document: Document,
-      private _location: Location,
-      private _outsideClickDispatcher: OverlayOutsideClickDispatcher) {
-
+      private _portalOutlet: PortalOutlet, private _host: HTMLElement, private _pane: HTMLElement,
+      private _config: ImmutableObject<OverlayConfig>, private _ngZone: NgZone,
+      private _keyboardDispatcher: OverlayKeyboardDispatcher, private _document: Document,
+      private _location: Location, private _outsideClickDispatcher: OverlayOutsideClickDispatcher) {
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
       this._scrollStrategy.attach(this);
@@ -77,7 +72,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   }
 
   /** The overlay's backdrop HTML element. */
-  get backdropElement(): HTMLElement | null {
+  get backdropElement(): HTMLElement|null {
     return this._backdropElement;
   }
 
@@ -124,14 +119,12 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // Update the position once the zone is stable so that the overlay will be fully rendered
     // before attempting to position it, as the position may depend on the size of the rendered
     // content.
-    this._ngZone.onStable
-      .pipe(take(1))
-      .subscribe(() => {
-        // The overlay could've been detached before the zone has stabilized.
-        if (this.hasAttached()) {
-          this.updatePosition();
-        }
-      });
+    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+      // The overlay could've been detached before the zone has stabilized.
+      if (this.hasAttached()) {
+        this.updatePosition();
+      }
+    });
 
     // Enable pointer events for the overlay pane element.
     this._togglePointerEvents(true);
@@ -298,20 +291,20 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   }
 
   /** Sets the LTR/RTL direction for the overlay. */
-  setDirection(dir: Direction | Directionality): void {
+  setDirection(dir: Direction|Directionality): void {
     this._config = {...this._config, direction: dir};
     this._updateElementDirection();
   }
 
   /** Add a CSS class or an array of classes to the overlay pane. */
-  addPanelClass(classes: string | string[]): void {
+  addPanelClass(classes: string|string[]): void {
     if (this._pane) {
       this._toggleClasses(this._pane, classes, true);
     }
   }
 
   /** Remove a CSS class or an array of classes from the overlay pane. */
-  removePanelClass(classes: string | string[]): void {
+  removePanelClass(classes: string|string[]): void {
     if (this._pane) {
       this._toggleClasses(this._pane, classes, false);
     }
@@ -468,7 +461,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   }
 
   /** Toggles a single CSS class or an array of classes on an element. */
-  private _toggleClasses(element: HTMLElement, cssClasses: string | string[], isAdd: boolean) {
+  private _toggleClasses(element: HTMLElement, cssClasses: string|string[], isAdd: boolean) {
     const classList = element.classList;
 
     coerceArray(cssClasses).forEach(cssClass => {
@@ -489,24 +482,24 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       // We can't remove the host here immediately, because the overlay pane's content
       // might still be animating. This stream helps us avoid interrupting the animation
       // by waiting for the pane to become empty.
-      const subscription = this._ngZone.onStable
-        .pipe(takeUntil(merge(this._attachments, this._detachments)))
-        .subscribe(() => {
-          // Needs a couple of checks for the pane and host, because
-          // they may have been removed by the time the zone stabilizes.
-          if (!this._pane || !this._host || this._pane.children.length === 0) {
-            if (this._pane && this._config.panelClass) {
-              this._toggleClasses(this._pane, this._config.panelClass, false);
-            }
+      const subscription =
+          this._ngZone.onStable.pipe(takeUntil(merge(this._attachments, this._detachments)))
+              .subscribe(() => {
+                // Needs a couple of checks for the pane and host, because
+                // they may have been removed by the time the zone stabilizes.
+                if (!this._pane || !this._host || this._pane.children.length === 0) {
+                  if (this._pane && this._config.panelClass) {
+                    this._toggleClasses(this._pane, this._config.panelClass, false);
+                  }
 
-            if (this._host && this._host.parentElement) {
-              this._previousHostParent = this._host.parentElement;
-              this._previousHostParent.removeChild(this._host);
-            }
+                  if (this._host && this._host.parentElement) {
+                    this._previousHostParent = this._host.parentElement;
+                    this._previousHostParent.removeChild(this._host);
+                  }
 
-            subscription.unsubscribe();
-          }
-        });
+                  subscription.unsubscribe();
+                }
+              });
     });
   }
 
@@ -527,10 +520,10 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
 /** Size properties for an overlay. */
 export interface OverlaySizeConfig {
-  width?: number | string;
-  height?: number | string;
-  minWidth?: number | string;
-  minHeight?: number | string;
-  maxWidth?: number | string;
-  maxHeight?: number | string;
+  width?: number|string;
+  height?: number|string;
+  minWidth?: number|string;
+  minHeight?: number|string;
+  maxWidth?: number|string;
+  maxHeight?: number|string;
 }

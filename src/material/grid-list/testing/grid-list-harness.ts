@@ -52,8 +52,8 @@ export class MatGridListHarness extends ComponentHarness {
       Promise<MatGridTileHarness> {
     const [tileHarnesses, columns] = await parallel(() => [this.getTiles(), this.getColumns()]);
     const tileSpans = tileHarnesses.map(t => parallel(() => [t.getColspan(), t.getRowspan()]));
-    const tiles = (await parallel(() => tileSpans))
-        .map(([colspan, rowspan]) => ({colspan, rowspan}));
+    const tiles =
+        (await parallel(() => tileSpans)).map(([colspan, rowspan]) => ({colspan, rowspan}));
     // Update the tile coordinator to reflect the current column amount and
     // rendered tiles. We update upon every call of this method since we do not
     // know if tiles have been added, removed or updated (in terms of rowspan/colspan).

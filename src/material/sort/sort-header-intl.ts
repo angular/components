@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, SkipSelf, Optional} from '@angular/core';
+import {Injectable, Optional, SkipSelf} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
@@ -36,4 +36,3 @@ export const MAT_SORT_HEADER_INTL_PROVIDER = {
   deps: [[new Optional(), new SkipSelf(), MatSortHeaderIntl]],
   useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY
 };
-

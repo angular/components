@@ -1,7 +1,9 @@
 import {TestBed} from '@angular/core/testing';
-import {MapGeocoderResponse, MapGeocoder} from './map-geocoder';
+
 import {GoogleMapsModule} from '../google-maps-module';
 import {createGeocoderConstructorSpy, createGeocoderSpy} from '../testing/fake-google-map-utils';
+
+import {MapGeocoder, MapGeocoderResponse} from './map-geocoder';
 
 describe('MapGeocoder', () => {
   let geocoder: MapGeocoder;

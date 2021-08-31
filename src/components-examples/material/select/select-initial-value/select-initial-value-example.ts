@@ -19,13 +19,11 @@ interface Car {
 })
 export class SelectInitialValueExample {
   foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'steak-0', viewValue: 'Steak'}, {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
   cars: Car[] = [
-    {value: 'ford', viewValue: 'Ford'},
-    {value: 'chevrolet', viewValue: 'Chevrolet'},
+    {value: 'ford', viewValue: 'Ford'}, {value: 'chevrolet', viewValue: 'Chevrolet'},
     {value: 'dodge', viewValue: 'Dodge'}
   ];
   selectedFood = this.foods[2].value;

@@ -7,10 +7,11 @@
  */
 
 
-import {OverlayRef, GlobalPositionStrategy, OverlaySizeConfig} from '@angular/cdk/overlay';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
+import {GlobalPositionStrategy, OverlayRef, OverlaySizeConfig} from '@angular/cdk/overlay';
 import {Observable} from 'rxjs';
-import {map, filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
+
 import {DialogPosition} from './dialog-config';
 import {CdkDialogContainer} from './dialog-container';
 
@@ -25,16 +26,14 @@ export class DialogRef<T, R = any> {
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
-  disableClose: boolean | undefined;
+  disableClose: boolean|undefined;
 
   /** Result to be passed to afterClosed. */
-  private _result: R | undefined;
+  private _result: R|undefined;
 
   constructor(
-    public _overlayRef: OverlayRef,
-    protected _containerInstance: CdkDialogContainer,
-    readonly id: string = `dialog-${uniqueId++}`) {
-
+      public _overlayRef: OverlayRef, protected _containerInstance: CdkDialogContainer,
+      readonly id: string = `dialog-${uniqueId++}`) {
     // If the dialog has a backdrop, handle clicks from the backdrop.
     if (_containerInstance._config.hasBackdrop) {
       _overlayRef.backdropClick().subscribe(() => {
@@ -56,13 +55,13 @@ export class DialogRef<T, R = any> {
 
     // Close when escape keydown event occurs
     _overlayRef.keydownEvents()
-      .pipe(filter(event => {
-        return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
-      }))
-      .subscribe(event => {
-        event.preventDefault();
-        this.close();
-      });
+        .pipe(filter(event => {
+          return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
+        }))
+        .subscribe(event => {
+          event.preventDefault();
+          this.close();
+        });
   }
 
   /** Gets an observable that emits when the overlay's backdrop has been clicked. */
@@ -136,12 +135,12 @@ export class DialogRef<T, R = any> {
   }
 
   /** Gets an observable that emits when dialog begins closing. */
-  beforeClosed(): Observable<R | undefined> {
+  beforeClosed(): Observable<R|undefined> {
     return this._containerInstance._beforeExit.pipe(map(() => this._result));
   }
 
   /** Gets an observable that emits when dialog is finished closing. */
-  afterClosed(): Observable<R | undefined> {
+  afterClosed(): Observable<R|undefined> {
     return this._containerInstance._afterExit.pipe(map(() => this._result));
   }
 }

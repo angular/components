@@ -20,11 +20,12 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
-  MatLine,
   MAT_RIPPLE_GLOBAL_OPTIONS,
+  MatLine,
   RippleGlobalOptions,
 } from '@angular/material-experimental/mdc-core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 import {MatListBase, MatListItemBase} from './list-base';
 
 @Component({
@@ -41,7 +42,8 @@ import {MatListBase, MatListItemBase} from './list-base';
     {provide: MatListBase, useExisting: MatList},
   ]
 })
-export class MatList extends MatListBase {}
+export class MatList extends MatListBase {
+}
 
 @Component({
   selector: 'mat-list-item, a[mat-list-item], button[mat-list-item]',
@@ -62,17 +64,14 @@ export class MatList extends MatListBase {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatListItem extends MatListItemBase {
-  @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
-      QueryList<ElementRef<Element>>;
+  @ContentChildren(MatLine, {read: ElementRef, descendants: true})
+  lines: QueryList<ElementRef<Element>>;
   @ViewChild('text') _itemText: ElementRef<HTMLElement>;
 
   constructor(
-    element: ElementRef,
-    ngZone: NgZone,
-    listBase: MatListBase,
-    platform: Platform,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+      element: ElementRef, ngZone: NgZone, listBase: MatListBase, platform: Platform,
+      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(element, ngZone, listBase, platform, globalRippleOptions, animationMode);
   }
 }

@@ -7,8 +7,9 @@
  */
 
 import * as ts from 'typescript';
-import {WorkspacePath} from '../../update-tool/file-system';
+
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
+import {WorkspacePath} from '../../update-tool/file-system';
 import {Migration} from '../../update-tool/migration';
 import {AttributeSelectorUpgradeData} from '../data/attribute-selectors';
 import {findAllSubstringIndices} from '../typescript/literal';
@@ -68,10 +69,10 @@ export class AttributeSelectorsMigration extends Migration<UpgradeData> {
     });
   }
 
-  private _replaceSelector(filePath: WorkspacePath, start: number,
-                           data: AttributeSelectorUpgradeData) {
+  private _replaceSelector(
+      filePath: WorkspacePath, start: number, data: AttributeSelectorUpgradeData) {
     this.fileSystem.edit(filePath)
-      .remove(start, data.replace.length)
-      .insertRight(start, data.replaceWith);
+        .remove(start, data.replace.length)
+        .insertRight(start, data.replaceWith);
   }
 }

@@ -19,8 +19,8 @@ export function hasNgModuleImport(tree: Tree, modulePath: string, className: str
     throw new SchematicsException(`Could not read Angular module file: ${modulePath}`);
   }
 
-  const parsedFile = ts.createSourceFile(modulePath, moduleFileContent.toString(),
-      ts.ScriptTarget.Latest, true);
+  const parsedFile =
+      ts.createSourceFile(modulePath, moduleFileContent.toString(), ts.ScriptTarget.Latest, true);
   const ngModuleMetadata = findNgModuleMetadata(parsedFile);
 
   if (!ngModuleMetadata) {
@@ -45,7 +45,7 @@ export function hasNgModuleImport(tree: Tree, modulePath: string, className: str
  * Resolves the last identifier that is part of the given expression. This helps resolving
  * identifiers of nested property access expressions (e.g. myNamespace.core.NgModule).
  */
-function resolveIdentifierOfExpression(expression: ts.Expression): ts.Identifier | null {
+function resolveIdentifierOfExpression(expression: ts.Expression): ts.Identifier|null {
   if (ts.isIdentifier(expression)) {
     return expression;
   } else if (ts.isPropertyAccessExpression(expression) && ts.isIdentifier(expression.name)) {
@@ -59,7 +59,7 @@ function resolveIdentifierOfExpression(expression: ts.Expression): ts.Identifier
  * corresponding metadata for it. This function searches breadth first because
  * NgModule's are usually not nested within other expressions or declarations.
  */
-function findNgModuleMetadata(rootNode: ts.Node): ts.ObjectLiteralExpression | null {
+function findNgModuleMetadata(rootNode: ts.Node): ts.ObjectLiteralExpression|null {
   // Add immediate child nodes of the root node to the queue.
   const nodeQueue: ts.Node[] = [...rootNode.getChildren()];
 

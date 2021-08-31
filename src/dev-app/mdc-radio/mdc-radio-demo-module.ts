@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatRadioModule} from '@angular/material-experimental/mdc-radio';
-import {RouterModule} from '@angular/router';
-import {MdcRadioDemo} from './mdc-radio-demo';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material-experimental/mdc-button';
 import {MatCheckboxModule} from '@angular/material-experimental/mdc-checkbox';
-import {CommonModule} from '@angular/common';
+import {MatRadioModule} from '@angular/material-experimental/mdc-radio';
+import {RouterModule} from '@angular/router';
+
+import {MdcRadioDemo} from './mdc-radio-demo';
 
 @NgModule({
   imports: [

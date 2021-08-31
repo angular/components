@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {Component} from '@angular/core';
 
 /**
  * @title Drag&Drop disabled sorting
@@ -10,28 +10,17 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   styleUrls: ['cdk-drag-drop-disabled-sorting-example.css'],
 })
 export class CdkDragDropDisabledSortingExample {
-  items = [
-    'Carrots',
-    'Tomatoes',
-    'Onions',
-    'Apples',
-    'Avocados'
-  ];
+  items = ['Carrots', 'Tomatoes', 'Onions', 'Apples', 'Avocados'];
 
-  basket = [
-    'Oranges',
-    'Bananas',
-    'Cucumbers'
-  ];
+  basket = ['Oranges', 'Bananas', 'Cucumbers'];
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+      transferArrayItem(
+          event.previousContainer.data, event.container.data, event.previousIndex,
+          event.currentIndex);
     }
   }
 }

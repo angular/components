@@ -27,4 +27,5 @@ import {
     CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
   ],
 })
-export class OverlayModule {}
+export class OverlayModule {
+}

@@ -1,21 +1,15 @@
-import {waitForAsync, TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CdkAccordionModule, CdkAccordionItem} from './public-api';
+
+import {CdkAccordionItem, CdkAccordionModule} from './public-api';
 
 describe('CdkAccordionItem', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        CdkAccordionModule
-      ],
-      declarations: [
-        SingleItem,
-        ItemGroupWithoutAccordion,
-        ItemGroupWithAccordion
-      ],
+      imports: [BrowserAnimationsModule, CdkAccordionModule],
+      declarations: [SingleItem, ItemGroupWithoutAccordion, ItemGroupWithAccordion],
     });
     TestBed.compileComponents();
   }));
@@ -26,9 +20,8 @@ describe('CdkAccordionItem', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SingleItem);
-      item = fixture.debugElement
-        .query(By.directive(CdkAccordionItem))!
-        .injector.get<CdkAccordionItem>(CdkAccordionItem);
+      item = fixture.debugElement.query(By.directive(
+          CdkAccordionItem))!.injector.get<CdkAccordionItem>(CdkAccordionItem);
     });
 
     describe('that is not disabled', () => {
@@ -170,7 +163,6 @@ describe('CdkAccordionItem', () => {
 
       subscription.unsubscribe();
     });
-
   });
 
   describe('items without accordion', () => {
@@ -180,9 +172,8 @@ describe('CdkAccordionItem', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ItemGroupWithoutAccordion);
-      [firstItem, secondItem] = fixture.debugElement
-        .queryAll(By.directive(CdkAccordionItem))
-        .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
+      [firstItem, secondItem] = fixture.debugElement.queryAll(By.directive(CdkAccordionItem))
+                                    .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
     });
 
     it('should not change expanded state based on unrelated items', () => {
@@ -221,9 +212,8 @@ describe('CdkAccordionItem', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ItemGroupWithAccordion);
-      [firstItem, secondItem] = fixture.debugElement
-        .queryAll(By.directive(CdkAccordionItem))
-        .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
+      [firstItem, secondItem] = fixture.debugElement.queryAll(By.directive(CdkAccordionItem))
+                                    .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
     });
 
     it('should change expanded state based on related items', () => {
@@ -241,10 +231,9 @@ describe('CdkAccordionItem', () => {
   });
 });
 
-@Component({
-  template: `<cdk-accordion-item #item1></cdk-accordion-item>`
-})
-class SingleItem {}
+@Component({template: `<cdk-accordion-item #item1></cdk-accordion-item>`})
+class SingleItem {
+}
 
 @Component({
   template: `
@@ -252,7 +241,8 @@ class SingleItem {}
     <cdk-accordion-item #item2></cdk-accordion-item>
   `
 })
-class ItemGroupWithoutAccordion {}
+class ItemGroupWithoutAccordion {
+}
 
 @Component({
   template: `
@@ -262,4 +252,5 @@ class ItemGroupWithoutAccordion {}
     </cdk-accordion>
   `
 })
-class ItemGroupWithAccordion {}
+class ItemGroupWithAccordion {
+}

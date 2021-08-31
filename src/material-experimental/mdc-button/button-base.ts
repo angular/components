@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {Directive, ElementRef, HostListener, NgZone, ViewChild} from '@angular/core';
@@ -18,7 +19,6 @@ import {
   mixinDisabled,
   mixinDisableRipple,
 } from '@angular/material-experimental/mdc-core';
-import {FocusOrigin} from '@angular/cdk/a11y';
 
 /** Inputs common to all buttons. */
 export const MAT_BUTTON_INPUTS = ['disabled', 'disableRipple', 'color'];
@@ -152,8 +152,7 @@ export const MAT_ANCHOR_HOST = {
 export class MatAnchorBase extends MatButtonBase {
   tabIndex: number;
 
-  constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone,
-              animationMode?: string) {
+  constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
 

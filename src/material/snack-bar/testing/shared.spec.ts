@@ -1,9 +1,10 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, TemplateRef, ViewChild, Injector} from '@angular/core';
+import {Component, Injector, TemplateRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatSnackBar, MatSnackBarConfig, MatSnackBarModule} from '@angular/material/snack-bar';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {MatSnackBarHarness} from './snack-bar-harness';
 
 /**
@@ -11,17 +12,18 @@ import {MatSnackBarHarness} from './snack-bar-harness';
  * the non-MDC or MDC based snack-bar harness.
  */
 export function runHarnessTests(
-    snackBarModule: typeof MatSnackBarModule,
-    snackBarToken: typeof MatSnackBar,
+    snackBarModule: typeof MatSnackBarModule, snackBarToken: typeof MatSnackBar,
     snackBarHarness: typeof MatSnackBarHarness) {
   let fixture: ComponentFixture<SnackbarHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [snackBarModule, NoopAnimationsModule],
-      declarations: [SnackbarHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [snackBarModule, NoopAnimationsModule],
+          declarations: [SnackbarHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(SnackbarHarnessTest);
     fixture.detectChanges();
@@ -52,9 +54,8 @@ export function runHarnessTests(
 
   it('should load snack-bar harness by selector', async () => {
     fixture.componentInstance.openSimple('Hello!', '', {panelClass: 'my-snack-bar'});
-    const snackBars = await loader.getAllHarnesses(snackBarHarness.with({
-      selector: '.my-snack-bar'
-    }));
+    const snackBars =
+        await loader.getAllHarnesses(snackBarHarness.with({selector: '.my-snack-bar'}));
     expect(snackBars.length).toBe(1);
   });
 
@@ -134,21 +135,21 @@ export function runHarnessTests(
     snackBarRef.onAction().subscribe(() => actionCount++);
 
     expect(await snackBar.isDismissed())
-      .withContext('The snackbar should be present in the DOM before dismiss').toBe(false);
+        .withContext('The snackbar should be present in the DOM before dismiss')
+        .toBe(false);
 
     await snackBar.dismissWithAction();
     expect(actionCount).toBe(1);
     expect(await snackBar.isDismissed())
-      .withContext('The snackbar should be absent from the DOM after dismiss').toBe(true);
+        .withContext('The snackbar should be absent from the DOM after dismiss')
+        .toBe(true);
 
     fixture.componentInstance.openSimple('No action');
     snackBar = await loader.getHarness(snackBarHarness);
     await expectAsync(snackBar.dismissWithAction()).toBeRejectedWithError(/without action/);
   });
 
-  @Component({
-    template: `<ng-template>My custom snack-bar.</ng-template>`
-  })
+  @Component({template: `<ng-template>My custom snack-bar.</ng-template>`})
   class SnackbarHarnessTest {
     @ViewChild(TemplateRef) customTmpl: TemplateRef<any>;
     snackBar: MatSnackBar;

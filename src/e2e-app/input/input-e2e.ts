@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'input-e2e',
   templateUrl: 'input-e2e.html',
 })
-export class InputE2E {}
+export class InputE2E {
+}

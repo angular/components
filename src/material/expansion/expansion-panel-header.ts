@@ -7,6 +7,7 @@
  */
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {NumberInput} from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -23,17 +24,17 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
-import {NumberInput} from '@angular/cdk/coercion';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
+
 import {MatAccordionTogglePosition} from './accordion-base';
 import {matExpansionAnimations} from './expansion-animations';
 import {
+  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
   MatExpansionPanel,
   MatExpansionPanelDefaultOptions,
-  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
 
 
@@ -75,16 +76,14 @@ const _MatExpansionPanelHeaderMixinBase = mixinTabIndex(MatExpansionPanelHeaderB
   },
 })
 export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase implements
-  AfterViewInit, OnDestroy, FocusableOption, HasTabIndex {
+    AfterViewInit, OnDestroy, FocusableOption, HasTabIndex {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
-      @Host() public panel: MatExpansionPanel,
-      private _element: ElementRef,
-      private _focusMonitor: FocusMonitor,
-      private _changeDetectorRef: ChangeDetectorRef,
-      @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS) @Optional()
-          defaultOptions?: MatExpansionPanelDefaultOptions,
+      @Host() public panel: MatExpansionPanel, private _element: ElementRef,
+      private _focusMonitor: FocusMonitor, private _changeDetectorRef: ChangeDetectorRef,
+      @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS) @Optional() defaultOptions?:
+          MatExpansionPanelDefaultOptions,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
       @Attribute('tabindex') tabIndex?: string) {
     super();
@@ -99,19 +98,14 @@ export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase i
     this._parentChangeSubscription =
         merge(
             panel.opened, panel.closed, accordionHideToggleChange,
-            panel._inputChanges.pipe(filter(
-                changes => {
-                  return !!(
-                    changes['hideToggle'] ||
-                    changes['disabled'] ||
-                    changes['togglePosition']);
-                  })))
-    .subscribe(() => this._changeDetectorRef.markForCheck());
+            panel._inputChanges.pipe(filter(changes => {
+              return !!(changes['hideToggle'] || changes['disabled'] || changes['togglePosition']);
+            })))
+            .subscribe(() => this._changeDetectorRef.markForCheck());
 
     // Avoids focus being lost if the panel contained the focused element and was closed.
-    panel.closed
-      .pipe(filter(() => panel._containsFocus()))
-      .subscribe(() => _focusMonitor.focusVia(_element, 'program'));
+    panel.closed.pipe(filter(() => panel._containsFocus()))
+        .subscribe(() => _focusMonitor.focusVia(_element, 'program'));
 
     if (defaultOptions) {
       this.expandedHeight = defaultOptions.expandedHeight;
@@ -232,21 +226,14 @@ export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase i
 /**
  * Description element of a `<mat-expansion-panel-header>`.
  */
-@Directive({
-  selector: 'mat-panel-description',
-  host: {
-    class: 'mat-expansion-panel-header-description'
-  }
-})
-export class MatExpansionPanelDescription {}
+@Directive(
+    {selector: 'mat-panel-description', host: {class: 'mat-expansion-panel-header-description'}})
+export class MatExpansionPanelDescription {
+}
 
 /**
  * Title element of a `<mat-expansion-panel-header>`.
  */
-@Directive({
-  selector: 'mat-panel-title',
-  host: {
-    class: 'mat-expansion-panel-header-title'
-  }
-})
-export class MatExpansionPanelTitle {}
+@Directive({selector: 'mat-panel-title', host: {class: 'mat-expansion-panel-header-title'}})
+export class MatExpansionPanelTitle {
+}

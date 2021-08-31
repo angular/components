@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, NgZone} from '@angular/core';
 import {
   ColumnResize,
   ColumnResizeNotifier,
   ColumnResizeNotifierSource,
   HeaderRowEventDispatcher,
 } from '@angular/cdk-experimental/column-resize';
+import {Directive, ElementRef, NgZone} from '@angular/core';
 
 import {AbstractMatColumnResize, TABLE_HOST_BINDINGS, TABLE_PROVIDERS} from './common';
 
@@ -33,8 +33,7 @@ export class MatDefaultEnabledColumnResize extends AbstractMatColumnResize {
       readonly columnResizeNotifier: ColumnResizeNotifier,
       readonly elementRef: ElementRef<HTMLElement>,
       protected readonly eventDispatcher: HeaderRowEventDispatcher,
-      protected readonly ngZone: NgZone,
-      protected readonly notifier: ColumnResizeNotifierSource) {
+      protected readonly ngZone: NgZone, protected readonly notifier: ColumnResizeNotifierSource) {
     super();
   }
 }

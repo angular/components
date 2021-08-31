@@ -6,30 +6,32 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusableOption} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {
   Directive,
-  Input,
-  Optional,
-  Self,
   ElementRef,
-  Output,
   EventEmitter,
-  Inject,
   HostListener,
+  Inject,
+  Input,
   NgZone,
   OnDestroy,
+  Optional,
+  Output,
+  Self,
 } from '@angular/core';
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
-import {FocusableOption} from '@angular/cdk/a11y';
-import {SPACE, ENTER, RIGHT_ARROW, LEFT_ARROW} from '@angular/cdk/keycodes';
-import {Directionality} from '@angular/cdk/bidi';
-import {Subject, fromEvent} from 'rxjs';
-import {takeUntil, filter} from 'rxjs/operators';
+import {fromEvent, Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
+
+import {MENU_AIM, MenuAim, Toggler} from './menu-aim';
+import {CDK_MENU, Menu} from './menu-interface';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
-import {Menu, CDK_MENU} from './menu-interface';
 import {FocusNext} from './menu-stack';
 import {FocusableElement} from './pointer-focus-tracker';
-import {Toggler, MENU_AIM, MenuAim} from './menu-aim';
+
 
 // TODO refactor this to be configurable allowing for custom elements to be removed
 /** Removes all icons from within the given element. */
@@ -76,22 +78,20 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
    * The tabindex for this menu item managed internally and used for implementing roving a
    * tab index.
    */
-  _tabindex: 0 | -1 = -1;
+  _tabindex: 0|- 1 = -1;
 
   /** Emits when the menu item is destroyed. */
   private readonly _destroyed = new Subject<void>();
 
   constructor(
-    readonly _elementRef: ElementRef<HTMLElement>,
-    private readonly _ngZone: NgZone,
-    @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
-    @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
-    @Optional() private readonly _dir?: Directionality,
-    /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
-    // `CdkMenuItem` is commonly used in combination with a `CdkMenuItemTrigger`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger
-  ) {
+      readonly _elementRef: ElementRef<HTMLElement>, private readonly _ngZone: NgZone,
+      @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
+      @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
+      @Optional() private readonly _dir?: Directionality,
+      /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
+      // `CdkMenuItem` is commonly used in combination with a `CdkMenuItemTrigger`.
+      // tslint:disable-next-line: lightweight-tokens
+      @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger) {
     this._setupMouseEnter();
 
     if (this._isStandaloneItem()) {
@@ -173,12 +173,12 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
    * Get a reference to the rendered Menu if the Menu is open and it is visible in the DOM.
    * @return the menu if it is open, otherwise undefined.
    */
-  getMenu(): Menu | undefined {
+  getMenu(): Menu|undefined {
     return this._menuTrigger?.getMenu();
   }
 
   /** Get the MenuItemTrigger associated with this element. */
-  getMenuTrigger(): CdkMenuItemTrigger | undefined {
+  getMenuTrigger(): CdkMenuItemTrigger|undefined {
     return this._menuTrigger;
   }
 
@@ -214,18 +214,18 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       case RIGHT_ARROW:
         if (this._parentMenu && this._isParentVertical() && !this.hasMenu()) {
           event.preventDefault();
-          this._dir?.value === 'rtl'
-            ? this._getMenuStack()?.close(this._parentMenu, FocusNext.previousItem)
-            : this._getMenuStack()?.closeAll(FocusNext.nextItem);
+          this._dir?.value === 'rtl' ?
+              this._getMenuStack()?.close(this._parentMenu, FocusNext.previousItem) :
+              this._getMenuStack()?.closeAll(FocusNext.nextItem);
         }
         break;
 
       case LEFT_ARROW:
         if (this._parentMenu && this._isParentVertical() && !this.hasMenu()) {
           event.preventDefault();
-          this._dir?.value === 'rtl'
-            ? this._getMenuStack()?.closeAll(FocusNext.nextItem)
-            : this._getMenuStack()?.close(this._parentMenu, FocusNext.previousItem);
+          this._dir?.value === 'rtl' ?
+              this._getMenuStack()?.closeAll(FocusNext.nextItem) :
+              this._getMenuStack()?.close(this._parentMenu, FocusNext.previousItem);
         }
         break;
     }
@@ -238,22 +238,20 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   private _setupMouseEnter() {
     if (!this._isStandaloneItem()) {
       const closeOpenSiblings = () =>
-        this._ngZone.run(() => this._getMenuStack()?.closeSubMenuOf(this._parentMenu!));
+          this._ngZone.run(() => this._getMenuStack()?.closeSubMenuOf(this._parentMenu!));
 
-      this._ngZone.runOutsideAngular(() =>
-        fromEvent(this._elementRef.nativeElement, 'mouseenter')
-          .pipe(
-            filter(() => !this._getMenuStack()?.isEmpty() && !this.hasMenu()),
-            takeUntil(this._destroyed)
-          )
-          .subscribe(() => {
-            if (this._menuAim) {
-              this._menuAim.toggle(closeOpenSiblings);
-            } else {
-              closeOpenSiblings();
-            }
-          })
-      );
+      this._ngZone.runOutsideAngular(
+          () => fromEvent(this._elementRef.nativeElement, 'mouseenter')
+                    .pipe(
+                        filter(() => !this._getMenuStack()?.isEmpty() && !this.hasMenu()),
+                        takeUntil(this._destroyed))
+                    .subscribe(() => {
+                      if (this._menuAim) {
+                        this._menuAim.toggle(closeOpenSiblings);
+                      } else {
+                        closeOpenSiblings();
+                      }
+                    }));
     }
   }
 

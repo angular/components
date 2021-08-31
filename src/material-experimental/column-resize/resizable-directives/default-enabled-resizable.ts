@@ -7,28 +7,28 @@
  */
 
 import {
+  ColumnResize,
+  ColumnResizeNotifierSource,
+  HeaderRowEventDispatcher,
+  ResizeStrategy,
+} from '@angular/cdk-experimental/column-resize';
+import {Directionality} from '@angular/cdk/bidi';
+import {Overlay} from '@angular/cdk/overlay';
+import {
+  _COALESCED_STYLE_SCHEDULER,
+  _CoalescedStyleScheduler,
+  CdkColumnDef,
+} from '@angular/cdk/table';
+import {DOCUMENT} from '@angular/common';
+import {
+  ChangeDetectorRef,
   Directive,
   ElementRef,
   Inject,
   Injector,
   NgZone,
   ViewContainerRef,
-  ChangeDetectorRef,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {Directionality} from '@angular/cdk/bidi';
-import {Overlay} from '@angular/cdk/overlay';
-import {
-  CdkColumnDef,
-  _CoalescedStyleScheduler,
-  _COALESCED_STYLE_SCHEDULER,
-} from '@angular/cdk/table';
-import {
-  ColumnResize,
-  ColumnResizeNotifierSource,
-  HeaderRowEventDispatcher,
-  ResizeStrategy,
-} from '@angular/cdk-experimental/column-resize';
 
 import {AbstractMatResizable, RESIZABLE_HOST_BINDINGS, RESIZABLE_INPUTS} from './common';
 
@@ -45,20 +45,16 @@ export class MatDefaultResizable extends AbstractMatResizable {
   protected readonly document: Document;
 
   constructor(
-      protected readonly columnDef: CdkColumnDef,
-      protected readonly columnResize: ColumnResize,
-      protected readonly directionality: Directionality,
-      @Inject(DOCUMENT) document: any,
+      protected readonly columnDef: CdkColumnDef, protected readonly columnResize: ColumnResize,
+      protected readonly directionality: Directionality, @Inject(DOCUMENT) document: any,
       protected readonly elementRef: ElementRef,
       protected readonly eventDispatcher: HeaderRowEventDispatcher,
-      protected readonly injector: Injector,
-      protected readonly ngZone: NgZone,
+      protected readonly injector: Injector, protected readonly ngZone: NgZone,
       protected readonly overlay: Overlay,
       protected readonly resizeNotifier: ColumnResizeNotifierSource,
       protected readonly resizeStrategy: ResizeStrategy,
-      @Inject(_COALESCED_STYLE_SCHEDULER)
-          protected readonly styleScheduler: _CoalescedStyleScheduler,
-      protected readonly viewContainerRef: ViewContainerRef,
+      @Inject(_COALESCED_STYLE_SCHEDULER) protected readonly styleScheduler:
+          _CoalescedStyleScheduler, protected readonly viewContainerRef: ViewContainerRef,
       protected readonly changeDetectorRef: ChangeDetectorRef) {
     super();
     this.document = document;

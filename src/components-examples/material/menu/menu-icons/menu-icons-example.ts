@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'menu-icons-example',
   templateUrl: 'menu-icons-example.html',
 })
-export class MenuIconsExample {}
+export class MenuIconsExample {
+}

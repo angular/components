@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'divider-harness-example',
   templateUrl: 'divider-harness-example.html',
 })
-export class DividerHarnessExample {}
+export class DividerHarnessExample {
+}

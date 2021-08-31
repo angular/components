@@ -47,7 +47,7 @@ describe('Material address-form schematic', () => {
 
     await expectAsync(
         runner.runSchematicAsync('address-form', {project: 'material'}, appTree).toPromise())
-      .toBeRejectedWithError(/required property 'name'/);
+        .toBeRejectedWithError(/required property 'name'/);
   });
 
   describe('style option', () => {

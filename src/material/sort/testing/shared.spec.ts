@@ -8,16 +8,17 @@ import {MatSortHarness} from './sort-harness';
 
 /** Shared tests to run on both the original and MDC-based sort. */
 export function runHarnessTests(
-    sortModule: typeof MatSortModule,
-    sortHarness: typeof MatSortHarness) {
+    sortModule: typeof MatSortModule, sortHarness: typeof MatSortHarness) {
   let fixture: ComponentFixture<SortHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [sortModule, NoopAnimationsModule],
-      declarations: [SortHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [sortModule, NoopAnimationsModule],
+          declarations: [SortHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(SortHarnessTest);
     fixture.detectChanges();
@@ -166,4 +167,3 @@ class SortHarnessTest {
     }
   }
 }
-

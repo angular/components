@@ -18,7 +18,8 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class TestShadowBoundary {}
+export class TestShadowBoundary {
+}
 
 @Component({
   selector: 'test-sub-shadow-boundary',
@@ -27,4 +28,5 @@ export class TestShadowBoundary {}
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class TestSubShadowBoundary {}
+export class TestSubShadowBoundary {
+}

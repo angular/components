@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EventEmitter, Inject, Injectable, Optional, OnDestroy} from '@angular/core';
+import {EventEmitter, Inject, Injectable, OnDestroy, Optional} from '@angular/core';
+
 import {DIR_DOCUMENT} from './dir-document-token';
 
 
-export type Direction = 'ltr' | 'rtl';
+export type Direction = 'ltr'|'rtl';
 
 
 /**

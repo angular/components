@@ -1,7 +1,7 @@
 import {Direction} from '@angular/cdk/bidi';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
   const r1 = el1.nativeElement.getBoundingClientRect();
@@ -10,12 +10,12 @@ function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, e
       r1.left < r2.right && r1.right > r2.left && r1.top < r2.bottom && r1.bottom > r2.top;
   if (expected) {
     expect(actual)
-      .withContext(`${JSON.stringify(r1)} should overlap with ${JSON.stringify(r2)}`)
-      .toBe(expected);
+        .withContext(`${JSON.stringify(r1)} should overlap with ${JSON.stringify(r2)}`)
+        .toBe(expected);
   } else {
     expect(actual)
-      .withContext(`${JSON.stringify(r1)} should not overlap with ${JSON.stringify(r2)}`)
-      .toBe(expected);
+        .withContext(`${JSON.stringify(r1)} should not overlap with ${JSON.stringify(r2)}`)
+        .toBe(expected);
   }
 }
 
@@ -25,10 +25,12 @@ describe('CdkScrollable', () => {
   let maxOffset = 0;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [ScrollingModule],
-      declarations: [ScrollableViewport],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [ScrollingModule],
+          declarations: [ScrollableViewport],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

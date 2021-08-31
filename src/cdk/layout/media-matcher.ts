@@ -5,14 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Injectable} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
+import {Injectable} from '@angular/core';
 
 /** Global registry for all dynamically-created, injected media queries. */
 const mediaQueriesForWebkitCompatibility: Set<string> = new Set<string>();
 
 /** Style tag that holds all of the dynamically-created media queries. */
-let mediaQueryStyleNode: HTMLStyleElement | undefined;
+let mediaQueryStyleNode: HTMLStyleElement|undefined;
 
 /** A utility for calling matchMedia queries. */
 @Injectable({providedIn: 'root'})
@@ -22,10 +22,10 @@ export class MediaMatcher {
 
   constructor(private _platform: Platform) {
     this._matchMedia = this._platform.isBrowser && window.matchMedia ?
-      // matchMedia is bound to the window scope intentionally as it is an illegal invocation to
-      // call it from a different scope.
-      window.matchMedia.bind(window) :
-      noopMatchMedia;
+        // matchMedia is bound to the window scope intentionally as it is an illegal invocation to
+        // call it from a different scope.
+        window.matchMedia.bind(window) :
+        noopMatchMedia;
   }
 
   /**

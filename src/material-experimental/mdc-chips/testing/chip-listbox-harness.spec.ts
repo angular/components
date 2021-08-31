@@ -11,10 +11,12 @@ describe('MatChipListboxHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipListboxHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatChipsModule],
+          declarations: [ChipListboxHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ChipListboxHarnessTest);
     fixture.detectChanges();
@@ -28,7 +30,7 @@ describe('MatChipListboxHarness', () => {
 
   it('should get the number of options', async () => {
     const harness = await loader.getHarness(MatChipListboxHarness);
-    expect ((await harness.getChips()).length).toBe(4);
+    expect((await harness.getChips()).length).toBe(4);
   });
 
   it('should get whether the listbox is in multi-selection mode', async () => {
@@ -97,7 +99,6 @@ describe('MatChipListboxHarness', () => {
 
     expect(selectedText).toEqual(['Blue', 'Yellow']);
   });
-
 });
 
 @Component({
@@ -120,4 +121,3 @@ class ChipListboxHarnessTest {
     {text: 'Yellow', selected: false},
   ];
 }
-

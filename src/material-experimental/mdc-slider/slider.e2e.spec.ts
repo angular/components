@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {clickElementAtPoint, getElement, Point} from '../../cdk/testing/private/e2e';
 import {Thumb} from '@material/slider';
 import {browser, by, element, ElementFinder} from 'protractor';
 
-describe('MDC-based MatSlider' , () => {
+import {clickElementAtPoint, getElement, Point} from '../../cdk/testing/private/e2e';
+
+describe('MDC-based MatSlider', () => {
   const getStandardSlider = () => element(by.id('standard-slider'));
   const getDisabledSlider = () => element(by.id('disabled-slider'));
   const getRangeSlider = () => element(by.id('range-slider'));
@@ -19,7 +20,9 @@ describe('MDC-based MatSlider' , () => {
 
   describe('standard slider', async () => {
     let slider: ElementFinder;
-    beforeEach(() => { slider = getStandardSlider(); });
+    beforeEach(() => {
+      slider = getStandardSlider();
+    });
 
     it('should update the value on click', async () => {
       await setValueByClick(slider, 15);
@@ -34,7 +37,9 @@ describe('MDC-based MatSlider' , () => {
 
   describe('disabled slider', async () => {
     let slider: ElementFinder;
-    beforeEach(() => { slider = getDisabledSlider(); });
+    beforeEach(() => {
+      slider = getDisabledSlider();
+    });
 
     it('should not update the value on click', async () => {
       await setValueByClick(slider, 15);
@@ -49,7 +54,9 @@ describe('MDC-based MatSlider' , () => {
 
   describe('range slider', async () => {
     let slider: ElementFinder;
-    beforeEach(() => { slider = getRangeSlider(); });
+    beforeEach(() => {
+      slider = getRangeSlider();
+    });
 
     it('should update the start thumb value on slide', async () => {
       await slideToValue(slider, 35, Thumb.START);
@@ -61,28 +68,30 @@ describe('MDC-based MatSlider' , () => {
       expect(await getSliderValue(slider, Thumb.END)).toBe(55);
     });
 
-    it('should update the start thumb value on click between thumbs '
-      + 'but closer to the start thumb', async () => {
-        await setValueByClick(slider, 49);
-        expect(await getSliderValue(slider, Thumb.START)).toBe(49);
-        expect(await getSliderValue(slider, Thumb.END)).toBe(100);
-    });
+    it('should update the start thumb value on click between thumbs ' +
+           'but closer to the start thumb',
+       async () => {
+         await setValueByClick(slider, 49);
+         expect(await getSliderValue(slider, Thumb.START)).toBe(49);
+         expect(await getSliderValue(slider, Thumb.END)).toBe(100);
+       });
 
-    it('should update the end thumb value on click between thumbs '
-      + 'but closer to the end thumb', async () => {
-        await setValueByClick(slider, 51);
-        expect(await getSliderValue(slider, Thumb.START)).toBe(0);
-        expect(await getSliderValue(slider, Thumb.END)).toBe(51);
-    });
+    it('should update the end thumb value on click between thumbs ' +
+           'but closer to the end thumb',
+       async () => {
+         await setValueByClick(slider, 51);
+         expect(await getSliderValue(slider, Thumb.START)).toBe(0);
+         expect(await getSliderValue(slider, Thumb.END)).toBe(51);
+       });
   });
 });
 
 /** Returns the current value of the slider. */
 async function getSliderValue(slider: ElementFinder, thumbPosition: Thumb): Promise<number> {
   const inputs = await slider.all(by.css('.mdc-slider__input'));
-  return thumbPosition === Thumb.END
-    ? Number(await inputs[inputs.length - 1].getAttribute('value'))
-    : Number(await inputs[0].getAttribute('value'));
+  return thumbPosition === Thumb.END ?
+      Number(await inputs[inputs.length - 1].getAttribute('value')) :
+      Number(await inputs[0].getAttribute('value'));
 }
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
@@ -91,15 +100,15 @@ async function setValueByClick(slider: ElementFinder, value: number): Promise<vo
 }
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
-async function slideToValue
-  (slider: ElementFinder, value: number, thumbPosition: Thumb): Promise<void> {
-    const webElement = await getElement(slider).getWebElement();
-    const startCoords = await getCoordsForValue(
+async function slideToValue(
+    slider: ElementFinder, value: number, thumbPosition: Thumb): Promise<void> {
+  const webElement = await getElement(slider).getWebElement();
+  const startCoords = await getCoordsForValue(
       slider,
       await getSliderValue(slider, thumbPosition),
-    );
-    const endCoords = await getCoordsForValue(slider, value);
-    return await browser.actions()
+  );
+  const endCoords = await getCoordsForValue(slider, value);
+  return await browser.actions()
       .mouseMove(webElement, startCoords)
       .mouseDown()
       .mouseMove(webElement, endCoords)

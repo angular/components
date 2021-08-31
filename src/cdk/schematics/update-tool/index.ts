@@ -48,7 +48,8 @@ export class UpdateProject<Context> {
    * @param additionalStylesheetPaths Additional stylesheets that should be migrated, if not
    *   referenced in an Angular component. This is helpful for global stylesheets in a project.
    */
-  migrate<Data>(migrationTypes: MigrationCtor<Data, Context>[], target: TargetVersion, data: Data,
+  migrate<Data>(
+      migrationTypes: MigrationCtor<Data, Context>[], target: TargetVersion, data: Data,
       additionalStylesheetPaths?: string[]): {hasFailures: boolean} {
     // Create instances of the specified migrations.
     const migrations = this._createMigrations(migrationTypes, target, data);
@@ -59,7 +60,7 @@ export class UpdateProject<Context> {
     // Collect all of the TypeScript source files we want to migrate. We don't
     // migrate type definition files, or source files from external libraries.
     const sourceFiles = this._program.getSourceFiles().filter(
-      f => !f.isDeclarationFile && !this._program.isSourceFileFromExternalLibrary(f));
+        f => !f.isDeclarationFile && !this._program.isSourceFileFromExternalLibrary(f));
 
     // Helper function that visits a given TypeScript node and collects all referenced
     // component resources (i.e. stylesheets or templates). Additionally, the helper
@@ -126,8 +127,8 @@ export class UpdateProject<Context> {
     migrations.forEach(r => r.postAnalysis());
 
     // Collect all failures reported by individual migrations.
-    const failures = migrations.reduce((res, m) =>
-        res.concat(m.failures), [] as MigrationFailure[]);
+    const failures =
+        migrations.reduce((res, m) => res.concat(m.failures), [] as MigrationFailure[]);
 
     // In case there are failures, print these to the CLI logger as warnings.
     if (failures.length) {
@@ -146,12 +147,14 @@ export class UpdateProject<Context> {
    * Creates instances of the given migrations with the specified target
    * version and data.
    */
-  private _createMigrations<Data>(types: MigrationCtor<Data, Context>[], target: TargetVersion,
-                                  data: Data): Migration<Data, Context>[] {
+  private _createMigrations<Data>(
+      types: MigrationCtor<Data, Context>[], target: TargetVersion,
+      data: Data): Migration<Data, Context>[] {
     const result: Migration<Data, Context>[] = [];
     for (const ctor of types) {
-      const instance = new ctor(this._program, this._typeChecker, target, this._context,
-        data, this._fileSystem, this._logger);
+      const instance = new ctor(
+          this._program, this._typeChecker, target, this._context, data, this._fileSystem,
+          this._logger);
       instance.init();
       if (instance.enabled) {
         result.push(instance);

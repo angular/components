@@ -1,6 +1,7 @@
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
+import {CdkPortal, PortalModule} from '@angular/cdk/portal';
 import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
-import {PortalModule, CdkPortal} from '@angular/cdk/portal';
+import {inject, TestBed, waitForAsync} from '@angular/core/testing';
+
 import {Overlay, OverlayContainer, OverlayModule} from './index';
 
 describe('OverlayContainer', () => {
@@ -8,9 +9,7 @@ describe('OverlayContainer', () => {
   let overlayContainer: OverlayContainer;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [OverlayTestModule]
-    }).compileComponents();
+    TestBed.configureTestingModule({imports: [OverlayTestModule]}).compileComponents();
   }));
 
   beforeEach(inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {
@@ -25,17 +24,17 @@ describe('OverlayContainer', () => {
     overlayRef.attach(fixture.componentInstance.templatePortal);
     fixture.detectChanges();
 
-    expect(document.querySelector('.cdk-overlay-container')).not
-      .withContext('Expected the overlay container to be in the DOM after opening an overlay')
-      .toBeNull();
+    expect(document.querySelector('.cdk-overlay-container'))
+        .not.withContext('Expected the overlay container to be in the DOM after opening an overlay')
+        .toBeNull();
 
     // Manually call `ngOnDestroy` because there is no way to force Angular to destroy an
     // injectable in a unit test.
     overlayContainer.ngOnDestroy();
 
     expect(document.querySelector('.cdk-overlay-container'))
-      .withContext('Expected the overlay container *not* to be in the DOM after destruction')
-      .toBeNull();
+        .withContext('Expected the overlay container *not* to be in the DOM after destruction')
+        .toBeNull();
   });
 
   it('should add and remove css classes from the container element', () => {
@@ -43,13 +42,14 @@ describe('OverlayContainer', () => {
 
     const containerElement = document.querySelector('.cdk-overlay-container')!;
     expect(containerElement.classList.contains('commander-shepard'))
-      .withContext('Expected the overlay container to have class "commander-shepard"').toBe(true);
+        .withContext('Expected the overlay container to have class "commander-shepard"')
+        .toBe(true);
 
     overlayContainer.getContainerElement().classList.remove('commander-shepard');
 
     expect(containerElement.classList.contains('commander-shepard'))
-      .withContext('Expected the overlay container not to have class "commander-shepard"')
-      .toBe(false);
+        .withContext('Expected the overlay container not to have class "commander-shepard"')
+        .toBe(false);
   });
 
   it('should remove overlay containers from the server when on the browser', () => {
@@ -91,7 +91,6 @@ describe('OverlayContainer', () => {
 
     extraContainer.parentNode!.removeChild(extraContainer);
   });
-
 });
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
@@ -102,11 +101,10 @@ describe('OverlayContainer', () => {
 class TestComponentWithTemplatePortals {
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 
-  constructor(public viewContainerRef: ViewContainerRef) { }
+  constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
-@NgModule({
-  imports: [OverlayModule, PortalModule],
-  declarations: [TestComponentWithTemplatePortals]
-})
-class OverlayTestModule { }
+@NgModule(
+    {imports: [OverlayModule, PortalModule], declarations: [TestComponentWithTemplatePortals]})
+class OverlayTestModule {
+}

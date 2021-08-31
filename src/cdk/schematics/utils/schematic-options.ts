@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 import {isJsonObject, JsonObject} from '@angular-devkit/core';
+import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 import {Schema, Style} from '@schematics/angular/component/schema';
 
 /**
@@ -43,12 +43,14 @@ export function getDefaultComponentOptions(project: ProjectDefinition): Partial<
  * by looking at the stored schematic options for `@schematics/angular:component` in the
  * CLI workspace configuration.
  */
-function getDefaultComponentOption<T>(project: ProjectDefinition, optionNames: string[],
-                                      fallbackValue: T): T {
+function getDefaultComponentOption<T>(
+    project: ProjectDefinition, optionNames: string[], fallbackValue: T): T {
   const schematicOptions = isJsonObject(project.extensions.schematics || null) ?
-      project.extensions.schematics as JsonObject : null;
+      project.extensions.schematics as JsonObject :
+      null;
   const defaultSchematic = schematicOptions ?
-      schematicOptions['@schematics/angular:component'] as JsonObject | null : null;
+      schematicOptions['@schematics/angular:component'] as JsonObject | null :
+      null;
 
   for (const optionName of optionNames) {
     if (defaultSchematic && defaultSchematic[optionName] != null) {

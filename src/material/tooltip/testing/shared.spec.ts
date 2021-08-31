@@ -13,10 +13,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [tooltipModule, NoopAnimationsModule],
-      declarations: [TooltipHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [tooltipModule, NoopAnimationsModule],
+          declarations: [TooltipHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(TooltipHarnessTest);
     fixture.detectChanges();

@@ -7,8 +7,9 @@
  */
 
 import {CdkSelectionExamplesModule} from '@angular/components-examples/cdk-experimental/selection';
-import {MatSelectionExamplesModule} from
-'@angular/components-examples/material-experimental/selection';
+import {
+  MatSelectionExamplesModule
+} from '@angular/components-examples/material-experimental/selection';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';

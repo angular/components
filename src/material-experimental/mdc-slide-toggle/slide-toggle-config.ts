@@ -19,8 +19,6 @@ export interface MatSlideToggleDefaultOptions {
 }
 
 /** Injection token to be used to override the default options for `mat-slide-toggle`. */
-export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS =
-  new InjectionToken<MatSlideToggleDefaultOptions>('mat-slide-toggle-default-options', {
-    providedIn: 'root',
-    factory: () => ({disableToggleValue: false})
-  });
+export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatSlideToggleDefaultOptions>(
+    'mat-slide-toggle-default-options',
+    {providedIn: 'root', factory: () => ({disableToggleValue: false})});

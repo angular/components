@@ -6,21 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
-  Output,
+  ChangeDetectorRef,
   Directive,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   Optional,
-  ChangeDetectorRef,
+  Output,
   SkipSelf,
-  Inject,
 } from '@angular/core';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {CDK_ACCORDION, CdkAccordion} from './accordion';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs';
+
+import {CDK_ACCORDION, CdkAccordion} from './accordion';
 
 /** Used to generate unique ID for each accordion item. */
 let nextId = 0;
@@ -60,7 +61,9 @@ export class CdkAccordionItem implements OnDestroy {
 
   /** Whether the AccordionItem is expanded. */
   @Input()
-  get expanded(): boolean { return this._expanded; }
+  get expanded(): boolean {
+    return this._expanded;
+  }
   set expanded(expanded: boolean) {
     expanded = coerceBooleanProperty(expanded);
 
@@ -90,23 +93,28 @@ export class CdkAccordionItem implements OnDestroy {
 
   /** Whether the AccordionItem is disabled. */
   @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(disabled: boolean) { this._disabled = coerceBooleanProperty(disabled); }
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(disabled: boolean) {
+    this._disabled = coerceBooleanProperty(disabled);
+  }
   private _disabled = false;
 
   /** Unregister function for _expansionDispatcher. */
   private _removeUniqueSelectionListener: () => void = () => {};
 
-  constructor(@Optional() @Inject(CDK_ACCORDION) @SkipSelf() public accordion: CdkAccordion,
-              private _changeDetectorRef: ChangeDetectorRef,
-              protected _expansionDispatcher: UniqueSelectionDispatcher) {
+  constructor(
+      @Optional() @Inject(CDK_ACCORDION) @SkipSelf() public accordion: CdkAccordion,
+      private _changeDetectorRef: ChangeDetectorRef,
+      protected _expansionDispatcher: UniqueSelectionDispatcher) {
     this._removeUniqueSelectionListener =
-      _expansionDispatcher.listen((id: string, accordionId: string) => {
-        if (this.accordion && !this.accordion.multi &&
-            this.accordion.id === accordionId && this.id !== id) {
-          this.expanded = false;
-        }
-      });
+        _expansionDispatcher.listen((id: string, accordionId: string) => {
+          if (this.accordion && !this.accordion.multi && this.accordion.id === accordionId &&
+              this.id !== id) {
+            this.expanded = false;
+          }
+        });
 
     // When an accordion item is hosted in an accordion, subscribe to open/close events.
     if (this.accordion) {

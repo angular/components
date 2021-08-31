@@ -23,7 +23,7 @@ let nextUniqueId = 0;
 })
 export class MatHint {
   /** Whether to align the hint label at the start or end of the line. */
-  @Input() align: 'start' | 'end' = 'start';
+  @Input() align: 'start'|'end' = 'start';
 
   /** Unique ID for the hint. Used for the aria-describedby on the form field control. */
   @Input() id: string = `mat-mdc-hint-${nextUniqueId++}`;

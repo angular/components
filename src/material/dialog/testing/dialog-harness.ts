@@ -19,7 +19,7 @@ export const enum MatDialogSection {
 
 // @breaking-change 14.0.0 change generic type to MatDialogSection.
 /** Harness for interacting with a standard `MatDialog` in tests. */
-export class MatDialogHarness extends ContentContainerComponentHarness<MatDialogSection | string> {
+export class MatDialogHarness extends ContentContainerComponentHarness<MatDialogSection|string> {
   // Developers can provide a custom component or template for the
   // dialog. The canonical dialog parent is the "MatDialogContainer".
   /** The selector for the host element of a `MatDialog` instance. */

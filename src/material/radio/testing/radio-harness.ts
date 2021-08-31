@@ -18,14 +18,16 @@ import {
 import {RadioButtonHarnessFilters, RadioGroupHarnessFilters} from './radio-harness-filters';
 
 export abstract class _MatRadioGroupHarnessBase<
-  ButtonType extends (ComponentHarnessConstructor<Button> & {
-    with: (options?: ButtonFilters) => HarnessPredicate<Button>}),
-  Button extends ComponentHarness & {
-    isChecked(): Promise<boolean>, getValue(): Promise<string|null>,
-    getName(): Promise<string|null>, check(): Promise<void>
-  },
-  ButtonFilters extends BaseHarnessFilters
-> extends ComponentHarness {
+    ButtonType extends(ComponentHarnessConstructor<Button>&
+                       {with: (options?: ButtonFilters) => HarnessPredicate<Button>}),
+                      Button extends ComponentHarness&{
+      isChecked(): Promise<boolean>,
+      getValue(): Promise<string|null>,
+      getName(): Promise<string|null>,
+      check(): Promise<void>
+    },
+                                     ButtonFilters extends BaseHarnessFilters> extends
+    ComponentHarness {
   protected abstract _buttonClass: ButtonType;
 
   /** Gets the name of the radio-group. */
@@ -130,7 +132,7 @@ export abstract class _MatRadioGroupHarnessBase<
    * matching name could be found but has mismatching radio-button names.
    */
   protected static async _checkRadioGroupName(
-    harness: _MatRadioGroupHarnessBase<any, any, any>, name: string) {
+      harness: _MatRadioGroupHarnessBase<any, any, any>, name: string) {
     // Check if there is a radio-group which has the "name" attribute set
     // to the expected group name. It's not possible to always determine
     // the "name" of a radio-group by reading the attribute. This is because
@@ -158,10 +160,7 @@ export abstract class _MatRadioGroupHarnessBase<
 
 /** Harness for interacting with a standard mat-radio-group in tests. */
 export class MatRadioGroupHarness extends _MatRadioGroupHarnessBase<
-  typeof MatRadioButtonHarness,
-  MatRadioButtonHarness,
-  RadioButtonHarnessFilters
-> {
+    typeof MatRadioButtonHarness, MatRadioButtonHarness, RadioButtonHarnessFilters> {
   /** The selector for the host element of a `MatRadioGroup` instance. */
   static hostSelector = '.mat-radio-group';
   protected _buttonClass = MatRadioButtonHarness;
@@ -265,10 +264,11 @@ export class MatRadioButtonHarness extends _MatRadioButtonHarnessBase {
    */
   static with(options: RadioButtonHarnessFilters = {}): HarnessPredicate<MatRadioButtonHarness> {
     return new HarnessPredicate(MatRadioButtonHarness, options)
-        .addOption('label', options.label,
-          (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
-        .addOption('name', options.name,
-          async (harness, name) => (await harness.getName()) === name);
+        .addOption(
+            'label', options.label,
+            (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
+        .addOption(
+            'name', options.name, async (harness, name) => (await harness.getName()) === name);
   }
 
   protected _textLabel = this.locatorFor('.mat-radio-label-content');

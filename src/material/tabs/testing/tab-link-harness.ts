@@ -22,7 +22,8 @@ export class MatTabLinkHarness extends ComponentHarness {
    */
   static with(options: TabLinkHarnessFilters = {}): HarnessPredicate<MatTabLinkHarness> {
     return new HarnessPredicate(MatTabLinkHarness, options)
-        .addOption('label', options.label,
+        .addOption(
+            'label', options.label,
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label));
   }
 

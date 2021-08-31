@@ -54,15 +54,14 @@ describe('material-table-schematic', () => {
     expect(moduleContent).toContain(`import { MatTableModule } from '@angular/material/table';`);
     expect(moduleContent).toContain(`import { MatSortModule } from '@angular/material/sort';`);
     expect(moduleContent)
-      .toContain(`import { MatPaginatorModule } from '@angular/material/paginator';`);
+        .toContain(`import { MatPaginatorModule } from '@angular/material/paginator';`);
   });
 
   it('should throw if no name has been specified', async () => {
     const appTree = await createTestApp(runner);
 
-    await expectAsync(
-        runner.runSchematicAsync('table', {project: 'material'}, appTree).toPromise())
-      .toBeRejectedWithError(/required property 'name'/);
+    await expectAsync(runner.runSchematicAsync('table', {project: 'material'}, appTree).toPromise())
+        .toBeRejectedWithError(/required property 'name'/);
   });
 
   describe('style option', () => {

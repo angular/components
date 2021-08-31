@@ -60,9 +60,8 @@ export function performDefaultSnapshotBuild(): BuiltPackage[] {
  * Builds the release packages with the given compile mode and copies
  * the package output into the given directory.
  */
-function buildReleasePackages(useIvy: boolean, distPath: string,
-                              isSnapshotBuild: boolean): BuiltPackage[] {
-
+function buildReleasePackages(
+    useIvy: boolean, distPath: string, isSnapshotBuild: boolean): BuiltPackage[] {
   console.log('######################################');
   console.log('  Building release packages...');
   console.log(`  Compiling with Ivy: ${useIvy}`);
@@ -109,10 +108,7 @@ function buildReleasePackages(useIvy: boolean, distPath: string,
 
   return packageNames.map(pkg => {
     const outputPath = getOutputPath(pkg);
-    return {
-      name: `@angular/${pkg}`,
-      outputPath
-    };
+    return {name: `@angular/${pkg}`, outputPath};
   });
 }
 
@@ -124,8 +120,9 @@ function getPackageNamesOfTargets(targets: string[]): string[] {
   return targets.map(targetName => {
     const matches = targetName.match(/\/\/src\/(.*):npm_package/);
     if (matches === null) {
-      throw Error(`Found Bazel target with "${releaseTargetTag}" tag, but could not ` +
-        `determine release output name: ${targetName}`);
+      throw Error(
+          `Found Bazel target with "${releaseTargetTag}" tag, but could not ` +
+          `determine release output name: ${targetName}`);
     }
     return matches[1];
   });

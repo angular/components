@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'input-form-example.html',
   styleUrls: ['input-form-example.css'],
 })
-export class InputFormExample {}
+export class InputFormExample {
+}

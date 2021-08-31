@@ -1,5 +1,6 @@
-import {createPlugin, utils} from 'stylelint';
 import * as minimatch from 'minimatch';
+import {createPlugin, utils} from 'stylelint';
+
 import {NeedsPrefix} from './needs-prefix';
 
 const parseSelector = require('stylelint/lib/utils/parseSelector');
@@ -64,19 +65,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
     // Check all of the @-rules and their values.
     root.walkAtRules(rule => {
       if (needsPrefix.atRule(rule.name)) {
-        utils.report({
-          result,
-          ruleName,
-          message: messages.atRule(rule.name),
-          node: rule
-        });
+        utils.report({result, ruleName, message: messages.atRule(rule.name), node: rule});
       } else if (needsPrefix.mediaFeature(rule.params)) {
-        utils.report({
-          result,
-          ruleName,
-          message: messages.mediaFeature(rule.name),
-          node: rule
-        });
+        utils.report({result, ruleName, message: messages.mediaFeature(rule.name), node: rule});
       }
     });
 
@@ -84,7 +75,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
     root.walkRules(rule => {
       // Silence warnings for Sass selectors. Stylelint does this in their own rules as well:
       // https://github.com/stylelint/stylelint/blob/master/lib/utils/isStandardSyntaxSelector.js
-      parseSelector(rule.selector, { warn: () => {} }, rule, (selectorTree: any) => {
+      parseSelector(rule.selector, {warn: () => {}}, rule, (selectorTree: any) => {
         selectorTree.walkPseudos((pseudoNode: any) => {
           if (needsPrefix.selector(pseudoNode.value)) {
             utils.report({
@@ -98,7 +89,6 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
         });
       });
     });
-
   };
 });
 

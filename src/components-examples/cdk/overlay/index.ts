@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {NgModule} from '@angular/core';
 
 import {CdkOverlayBasicExample} from './cdk-overlay-basic/cdk-overlay-basic-example';
 
@@ -13,4 +13,5 @@ const EXAMPLES = [CdkOverlayBasicExample];
   exports: EXAMPLES,
   entryComponents: EXAMPLES,
 })
-export class CdkOverlayExamplesModule {}
+export class CdkOverlayExamplesModule {
+}

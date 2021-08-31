@@ -8,11 +8,12 @@
 
 export {
   CellHarnessFilters,
-  RowHarnessFilters,
-  TableHarnessFilters,
   MatRowHarnessColumnsText,
   MatTableHarnessColumnsText,
+  RowHarnessFilters,
+  TableHarnessFilters,
 } from '@angular/material/table/testing';
+
 export * from './table-harness';
 export * from './row-harness';
 export * from './cell-harness';

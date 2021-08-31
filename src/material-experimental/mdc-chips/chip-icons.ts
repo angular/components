@@ -32,15 +32,13 @@ export const MAT_CHIP_AVATAR = new InjectionToken<MatChipAvatar>('MatChipAvatar'
  */
 @Directive({
   selector: 'mat-chip-avatar, [matChipAvatar]',
-  host: {
-    'class': 'mat-mdc-chip-avatar mdc-chip__icon mdc-chip__icon--leading',
-    'role': 'img'
-  },
+  host: {'class': 'mat-mdc-chip-avatar mdc-chip__icon mdc-chip__icon--leading', 'role': 'img'},
   providers: [{provide: MAT_CHIP_AVATAR, useExisting: MatChipAvatar}],
 })
 export class MatChipAvatar {
-  constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _elementRef: ElementRef<HTMLElement>) {}
+  constructor(
+      private _changeDetectorRef: ChangeDetectorRef, private _elementRef: ElementRef<HTMLElement>) {
+  }
 
   /** Sets whether the given CSS class should be applied to the leading icon. */
   setClass(cssClass: string, active: boolean) {
@@ -55,7 +53,7 @@ export class MatChipAvatar {
  * retention of the class and its directive metadata.
  */
 export const MAT_CHIP_TRAILING_ICON =
-  new InjectionToken<MatChipTrailingIcon>('MatChipTrailingIcon');
+    new InjectionToken<MatChipTrailingIcon>('MatChipTrailingIcon');
 
 /**
  * Directive to add CSS classes to and configure attributes for chip trailing icon.
@@ -64,8 +62,7 @@ export const MAT_CHIP_TRAILING_ICON =
 @Directive({
   selector: 'mat-chip-trailing-icon, [matChipTrailingIcon]',
   host: {
-    'class':
-        'mat-mdc-chip-trailing-icon mdc-chip__icon mdc-chip__icon--trailing',
+    'class': 'mat-mdc-chip-trailing-icon mdc-chip__icon mdc-chip__icon--trailing',
     'tabindex': '-1',
     'aria-hidden': 'true',
   },
@@ -75,8 +72,7 @@ export class MatChipTrailingIcon implements OnDestroy {
   private _foundation: deprecated.MDCChipTrailingActionFoundation;
   private _adapter: deprecated.MDCChipTrailingActionAdapter = {
     focus: () => this._elementRef.nativeElement.focus(),
-    getAttribute: (name: string) =>
-        this._elementRef.nativeElement.getAttribute(name),
+    getAttribute: (name: string) => this._elementRef.nativeElement.getAttribute(name),
     setAttribute:
         (name: string, value: string) => {
           this._elementRef.nativeElement.setAttribute(name, value);
@@ -143,10 +139,7 @@ class MatChipRemoveBase extends MatChipTrailingIcon {
   }
 }
 
-const _MatChipRemoveMixinBase:
-  CanDisableCtor &
-  HasTabIndexCtor &
-  typeof MatChipRemoveBase =
+const _MatChipRemoveMixinBase: CanDisableCtor&HasTabIndexCtor&typeof MatChipRemoveBase =
     mixinTabIndex(mixinDisabled(MatChipRemoveBase), 0);
 
 /**
@@ -185,7 +178,7 @@ export class MatChipRemove extends _MatChipRemoveMixinBase implements CanDisable
    * Emits when the user interacts with the icon.
    * @docs-private
    */
-  readonly interaction = new Subject<MouseEvent | KeyboardEvent>();
+  readonly interaction = new Subject<MouseEvent|KeyboardEvent>();
 
   constructor(elementRef: ElementRef) {
     super(elementRef);

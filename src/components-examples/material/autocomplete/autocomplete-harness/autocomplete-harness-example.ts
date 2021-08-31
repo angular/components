@@ -3,10 +3,8 @@ import {Component} from '@angular/core';
 /**
  * @title Testing with MatAutocompleteHarness
  */
-@Component({
-  selector: 'autocomplete-harness-example',
-  templateUrl: 'autocomplete-harness-example.html'
-})
+@Component(
+    {selector: 'autocomplete-harness-example', templateUrl: 'autocomplete-harness-example.html'})
 export class AutocompleteHarnessExample {
   states = [
     {code: 'AL', name: 'Alabama'},

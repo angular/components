@@ -13,11 +13,13 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     </mat-autocomplete>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatAutocompleteModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

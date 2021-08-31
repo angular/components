@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {TabGroupExamplesModule} from '@angular/components-examples/material/tabs';
+import {NgModule} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import {RouterModule} from '@angular/router';
+
 import {TabsDemo} from './tabs-demo';
 
 @NgModule({

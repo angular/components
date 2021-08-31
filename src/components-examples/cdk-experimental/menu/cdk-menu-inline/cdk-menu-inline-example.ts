@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   styleUrls: ['cdk-menu-inline-example.css'],
   templateUrl: 'cdk-menu-inline-example.html',
 })
-export class CdkMenuInlineExample {}
+export class CdkMenuInlineExample {
+}

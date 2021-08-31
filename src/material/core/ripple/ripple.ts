@@ -18,9 +18,10 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
 import {RippleRenderer, RippleTarget} from './ripple-renderer';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
@@ -51,13 +52,9 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS =
 @Directive({
   selector: '[mat-ripple], [matRipple]',
   exportAs: 'matRipple',
-  host: {
-    'class': 'mat-ripple',
-    '[class.mat-ripple-unbounded]': 'unbounded'
-  }
+  host: {'class': 'mat-ripple', '[class.mat-ripple-unbounded]': 'unbounded'}
 })
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
-
   /** Custom color for all ripples. */
   @Input('matRippleColor') color: string;
 
@@ -89,7 +86,9 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * by using the `launch()` method.
    */
   @Input('matRippleDisabled')
-  get disabled() { return this._disabled; }
+  get disabled() {
+    return this._disabled;
+  }
   set disabled(value: boolean) {
     if (value) {
       this.fadeOutAllNonPersistent();
@@ -104,7 +103,9 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * Defaults to the directive's host element.
    */
   @Input('matRippleTrigger')
-  get trigger() { return this._trigger || this._elementRef.nativeElement; }
+  get trigger() {
+    return this._trigger || this._elementRef.nativeElement;
+  }
   set trigger(trigger: HTMLElement) {
     this._trigger = trigger;
     this._setupTriggerEventsIfEnabled();
@@ -120,12 +121,10 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   /** Whether ripple directive is initialized and the input bindings are set. */
   private _isInitialized: boolean = false;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>,
-              ngZone: NgZone,
-              platform: Platform,
-              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
-
+  constructor(
+      private _elementRef: ElementRef<HTMLElement>, ngZone: NgZone, platform: Platform,
+      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
     this._globalOptions = globalOptions || {};
     this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform);
   }
@@ -199,7 +198,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   launch(x: number, y: number, config?: RippleConfig): RippleRef;
 
   /** Launches a manual ripple at the specified coordinated or just by the ripple config. */
-  launch(configOrX: number | RippleConfig, y: number = 0, config?: RippleConfig): RippleRef {
+  launch(configOrX: number|RippleConfig, y: number = 0, config?: RippleConfig): RippleRef {
     if (typeof configOrX === 'number') {
       return this._rippleRenderer.fadeInRipple(configOrX, y, {...this.rippleConfig, ...config});
     } else {
@@ -207,4 +206,3 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     }
   }
 }
-

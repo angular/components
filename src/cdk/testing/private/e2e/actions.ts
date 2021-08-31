@@ -7,7 +7,8 @@
  */
 
 import {browser} from 'protractor';
-import {getElement, FinderResult, Point} from './query';
+
+import {FinderResult, getElement, Point} from './query';
 
 /**
  * Presses a single key or a sequence of keys.

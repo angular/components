@@ -5,11 +5,12 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ElementRef, NgZone} from '@angular/core';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {coerceElement} from '@angular/cdk/coercion';
-import {RippleRef, RippleState, RippleConfig} from './ripple-ref';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
+import {ElementRef, NgZone} from '@angular/core';
+
+import {RippleConfig, RippleRef, RippleState} from './ripple-ref';
 
 /**
  * Interface that describes the target for launching ripples.
@@ -61,7 +62,7 @@ export class RippleRenderer implements EventListenerObject {
   private _containerElement: HTMLElement;
 
   /** Element which triggers the ripple elements on mouse events. */
-  private _triggerElement: HTMLElement | null;
+  private _triggerElement: HTMLElement|null;
 
   /** Whether the pointer is currently down or not. */
   private _isPointerDown = false;
@@ -70,7 +71,7 @@ export class RippleRenderer implements EventListenerObject {
   private _activeRipples = new Set<RippleRef>();
 
   /** Latest non-persistent ripple that was triggered. */
-  private _mostRecentTransientRipple: RippleRef | null;
+  private _mostRecentTransientRipple: RippleRef|null;
 
   /** Time in milliseconds when the last touchstart event happened. */
   private _lastTouchStartEvent: number;
@@ -82,13 +83,11 @@ export class RippleRenderer implements EventListenerObject {
    * Cached dimensions of the ripple container. Set when the first
    * ripple is shown and cleared once no more ripples are visible.
    */
-  private _containerRect: ClientRect | null;
+  private _containerRect: ClientRect|null;
 
-  constructor(private _target: RippleTarget,
-              private _ngZone: NgZone,
-              elementOrElementRef: HTMLElement | ElementRef<HTMLElement>,
-              platform: Platform) {
-
+  constructor(
+      private _target: RippleTarget, private _ngZone: NgZone,
+      elementOrElementRef: HTMLElement|ElementRef<HTMLElement>, platform: Platform) {
     // Only do anything if we're on the browser.
     if (platform.isBrowser) {
       this._containerElement = coerceElement(elementOrElementRef);
@@ -103,7 +102,7 @@ export class RippleRenderer implements EventListenerObject {
    */
   fadeInRipple(x: number, y: number, config: RippleConfig = {}): RippleRef {
     const containerRect = this._containerRect =
-                          this._containerRect || this._containerElement.getBoundingClientRect();
+        this._containerRect || this._containerElement.getBoundingClientRect();
     const animationConfig = {...defaultRippleAnimationConfig, ...config.animation};
 
     if (config.centered) {
@@ -218,7 +217,7 @@ export class RippleRenderer implements EventListenerObject {
   }
 
   /** Sets up the trigger event listeners */
-  setupTriggerEvents(elementOrElementRef: HTMLElement | ElementRef<HTMLElement>) {
+  setupTriggerEvents(elementOrElementRef: HTMLElement|ElementRef<HTMLElement>) {
     const element = coerceElement(elementOrElementRef);
 
     if (!element || element === this._triggerElement) {
@@ -300,7 +299,7 @@ export class RippleRenderer implements EventListenerObject {
       // By default, only ripples that are completely visible will fade out on pointer release.
       // If the `terminateOnPointerUp` option is set, ripples that still fade in will also fade out.
       const isVisible = ripple.state === RippleState.VISIBLE ||
-        ripple.config.terminateOnPointerUp && ripple.state === RippleState.FADING_IN;
+          ripple.config.terminateOnPointerUp && ripple.state === RippleState.FADING_IN;
 
       if (!ripple.config.persistent && isVisible) {
         ripple.fadeOut();

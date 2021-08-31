@@ -22,10 +22,7 @@ function guessPackageName(name, packagesDir) {
   const attempts = [name, ...orderedGuessPackages.map(package => path.join(package, name))];
   const result = attempts.find(guessName => shelljs.test('-d', path.join(packagesDir, guessName)));
 
-  return {
-    result: result ? convertPathToPosix(result) : null,
-    attempts
-  };
+  return {result: result ? convertPathToPosix(result) : null, attempts};
 }
 
 /** Converts an arbitrary path to a Posix path. */

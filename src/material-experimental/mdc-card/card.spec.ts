@@ -1,16 +1,14 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, Provider, Type, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+
+import {MAT_CARD_CONFIG, MatCard} from './card';
 import {MatCardModule} from './module';
-import {MatCard, MAT_CARD_CONFIG} from './card';
 
 
 describe('MDC-based MatCard', () => {
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [MatCardModule],
-      declarations: [component],
-      providers
-    }).compileComponents();
+    TestBed.configureTestingModule({imports: [MatCardModule], declarations: [component], providers})
+        .compileComponents();
 
     return TestBed.createComponent<T>(component);
   }
@@ -36,20 +34,15 @@ describe('MDC-based MatCard', () => {
   });
 
   it('should be able to change the default card appearance using DI', () => {
-    const fixture = createComponent(BasicCard, [{
-      provide: MAT_CARD_CONFIG,
-      useValue: {appearance: 'outlined'}
-    }]);
+    const fixture = createComponent(
+        BasicCard, [{provide: MAT_CARD_CONFIG, useValue: {appearance: 'outlined'}}]);
     fixture.detectChanges();
     const card = fixture.nativeElement.querySelector('.mat-mdc-card');
     expect(card.classList).toContain('mdc-card--outlined');
   });
-
 });
 
-@Component({
-  template: '<mat-card></mat-card>'
-})
+@Component({template: '<mat-card></mat-card>'})
 class BasicCard {
   @ViewChild(MatCard) card: MatCard;
 }

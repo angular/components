@@ -6,11 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {_closest} from '@angular/cdk-experimental/popover-edit';
 import {Injectable, NgZone} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, map, share, skip, startWith} from 'rxjs/operators';
-
-import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {HEADER_ROW_SELECTOR} from './selectors';
 
@@ -42,23 +41,25 @@ export class HeaderRowEventDispatcher {
    * Emits the header that is currently hovered or hosting an active resize event (with active
    * taking precedence).
    */
-  readonly headerRowHoveredOrActiveDistinct = combineLatest([
-      this.headerCellHoveredDistinct.pipe(
-          map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
-          startWith(null),
-          distinctUntilChanged(),
-       ),
-      this.overlayHandleActiveForCell.pipe(
-          map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
-          startWith(null),
-          distinctUntilChanged(),
-      ),
-  ]).pipe(
-      skip(1), // Ignore initial [null, null] emission.
-      map(([hovered, active]) => active || hovered),
-      distinctUntilChanged(),
-      share(),
-  );
+  readonly headerRowHoveredOrActiveDistinct =
+      combineLatest([
+        this.headerCellHoveredDistinct.pipe(
+            map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
+            startWith(null),
+            distinctUntilChanged(),
+            ),
+        this.overlayHandleActiveForCell.pipe(
+            map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
+            startWith(null),
+            distinctUntilChanged(),
+            ),
+      ])
+          .pipe(
+              skip(1),  // Ignore initial [null, null] emission.
+              map(([hovered, active]) => active || hovered),
+              distinctUntilChanged(),
+              share(),
+          );
 
   private readonly _headerRowHoveredOrActiveDistinctReenterZone =
       this.headerRowHoveredOrActiveDistinct.pipe(
@@ -79,9 +80,9 @@ export class HeaderRowEventDispatcher {
     if (row !== this._lastSeenRow) {
       this._lastSeenRow = row;
       this._lastSeenRowHover = this._headerRowHoveredOrActiveDistinctReenterZone.pipe(
-        map(hoveredRow => hoveredRow === row),
-        distinctUntilChanged(),
-        share(),
+          map(hoveredRow => hoveredRow === row),
+          distinctUntilChanged(),
+          share(),
       );
     }
 
@@ -89,11 +90,10 @@ export class HeaderRowEventDispatcher {
   }
 
   private _enterZone<T>(): MonoTypeOperatorFunction<T> {
-    return (source: Observable<T>) =>
-        new Observable<T>((observer) => source.subscribe({
-          next: (value) => this._ngZone.run(() => observer.next(value)),
-          error: (err) => observer.error(err),
-          complete: () => observer.complete()
-        }));
+    return (source: Observable<T>) => new Observable<T>((observer) => source.subscribe({
+             next: (value) => this._ngZone.run(() => observer.next(value)),
+             error: (err) => observer.error(err),
+             complete: () => observer.complete()
+           }));
   }
 }

@@ -8,8 +8,7 @@ import {MatTabGroupHarness} from './tab-group-harness';
 
 /** Shared tests to run on both the original and MDC-based tab-group's. */
 export function runTabGroupHarnessTests(
-    tabsModule: typeof MatTabsModule,
-    tabGroupHarness: typeof MatTabGroupHarness) {
+    tabsModule: typeof MatTabsModule, tabGroupHarness: typeof MatTabGroupHarness) {
   let fixture: ComponentFixture<TabGroupHarnessTest>;
   let loader: HarnessLoader;
 
@@ -67,8 +66,9 @@ export function runTabGroupHarnessTests(
 
   it('should throw error when attempting to select invalid tab', async () => {
     const tabGroup = await loader.getHarness(tabGroupHarness);
-    await expectAsync(tabGroup.selectTab({label: 'Fake'})).toBeRejectedWithError(
-        /Cannot find mat-tab matching filter {"label":"Fake"}/);
+    await expectAsync(tabGroup.selectTab({
+      label: 'Fake'
+    })).toBeRejectedWithError(/Cannot find mat-tab matching filter {"label":"Fake"}/);
   });
 
   it('should be able to get label of tabs', async () => {

@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   styleUrls: ['input-overview-example.css'],
   templateUrl: 'input-overview-example.html',
 })
-export class InputOverviewExample {}
+export class InputOverviewExample {
+}

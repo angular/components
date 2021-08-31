@@ -12,4 +12,5 @@ import {Component} from '@angular/core';
   selector: 'tabs-demo',
   templateUrl: 'tabs-demo.html',
 })
-export class TabsDemo {}
+export class TabsDemo {
+}

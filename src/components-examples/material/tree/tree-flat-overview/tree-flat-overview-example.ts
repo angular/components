@@ -19,7 +19,8 @@ const TREE_DATA: FoodNode[] = [
       {name: 'Banana'},
       {name: 'Fruit loops'},
     ]
-  }, {
+  },
+  {
     name: 'Vegetables',
     children: [
       {
@@ -28,7 +29,8 @@ const TREE_DATA: FoodNode[] = [
           {name: 'Broccoli'},
           {name: 'Brussels sprouts'},
         ]
-      }, {
+      },
+      {
         name: 'Orange',
         children: [
           {name: 'Pumpkins'},
@@ -55,16 +57,16 @@ interface ExampleFlatNode {
   styleUrls: ['tree-flat-overview-example.css'],
 })
 export class TreeFlatOverviewExample {
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  }
+  private _transformer =
+      (node: FoodNode, level: number) => {
+        return {
+          expandable: !!node.children && node.children.length > 0,
+          name: node.name,
+          level: level,
+        };
+      }
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-      node => node.level, node => node.expandable);
+  treeControl = new FlatTreeControl<ExampleFlatNode>(node => node.level, node => node.expandable);
 
   treeFlattener = new MatTreeFlattener(
       this._transformer, node => node.level, node => node.expandable, node => node.children);

@@ -19,7 +19,8 @@ export function runHarnessTests(
     // the existing instance of the specified dialog service. This allows us to run these
     // tests for the MDC-based version of the dialog too.
     const providers = dialogService !== MatDialog ?
-        [{provide: MatDialog, useExisting: dialogService}] : undefined;
+        [{provide: MatDialog, useExisting: dialogService}] :
+        undefined;
     await TestBed
         .configureTestingModule({
           imports: [dialogModule, NoopAnimationsModule],

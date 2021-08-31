@@ -13,8 +13,8 @@ import {defaultTargetBuilders, getTargetsByBuilderName} from './project-targets'
 /** Gets the path of the index file in the given project. */
 export function getProjectIndexFiles(project: ProjectDefinition): Path[] {
   const paths = getTargetsByBuilderName(project, defaultTargetBuilders.build)
-    .filter(t => t.options?.index)
-    .map(t => t.options!.index as Path);
+                    .filter(t => t.options?.index)
+                    .map(t => t.options!.index as Path);
 
   // Use a set to remove duplicate index files referenced in multiple build targets of a project.
   return Array.from(new Set(paths));

@@ -6,21 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
   Component,
-  ViewEncapsulation,
+  ContentChildren,
+  Directive,
   ElementRef,
+  Inject,
   Input,
   Optional,
-  ContentChildren,
   QueryList,
-  AfterContentInit,
-  Directive,
-  ChangeDetectionStrategy,
-  Inject,
+  ViewEncapsulation,
 } from '@angular/core';
 import {MatLine, setLines} from '@angular/material/core';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
 @Component({
@@ -43,18 +44,26 @@ export class MatGridTile {
   _colspan: number = 1;
 
   constructor(
-    private _element: ElementRef<HTMLElement>,
-    @Optional() @Inject(MAT_GRID_LIST) public _gridList?: MatGridListBase) {}
+      private _element: ElementRef<HTMLElement>,
+      @Optional() @Inject(MAT_GRID_LIST) public _gridList?: MatGridListBase) {}
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
-  get rowspan(): number { return this._rowspan; }
-  set rowspan(value: number) { this._rowspan = Math.round(coerceNumberProperty(value)); }
+  get rowspan(): number {
+    return this._rowspan;
+  }
+  set rowspan(value: number) {
+    this._rowspan = Math.round(coerceNumberProperty(value));
+  }
 
   /** Amount of columns that the grid tile takes up. */
   @Input()
-  get colspan(): number { return this._colspan; }
-  set colspan(value: number) { this._colspan = Math.round(coerceNumberProperty(value)); }
+  get colspan(): number {
+    return this._colspan;
+  }
+  set colspan(value: number) {
+    this._colspan = Math.round(coerceNumberProperty(value));
+  }
 
   /**
    * Sets the style of the grid-tile element.  Needs to be set manually to avoid
@@ -88,28 +97,22 @@ export class MatGridTileText implements AfterContentInit {
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-grid-avatar], [matGridAvatar]',
-  host: {'class': 'mat-grid-avatar'}
-})
-export class MatGridAvatarCssMatStyler {}
+@Directive({selector: '[mat-grid-avatar], [matGridAvatar]', host: {'class': 'mat-grid-avatar'}})
+export class MatGridAvatarCssMatStyler {
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
-@Directive({
-  selector: 'mat-grid-tile-header',
-  host: {'class': 'mat-grid-tile-header'}
-})
-export class MatGridTileHeaderCssMatStyler {}
+@Directive({selector: 'mat-grid-tile-header', host: {'class': 'mat-grid-tile-header'}})
+export class MatGridTileHeaderCssMatStyler {
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
-@Directive({
-  selector: 'mat-grid-tile-footer',
-  host: {'class': 'mat-grid-tile-footer'}
-})
-export class MatGridTileFooterCssMatStyler {}
+@Directive({selector: 'mat-grid-tile-footer', host: {'class': 'mat-grid-tile-footer'}})
+export class MatGridTileFooterCssMatStyler {
+}

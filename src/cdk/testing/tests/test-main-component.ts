@@ -8,7 +8,6 @@
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {FormControl} from '@angular/forms';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,6 +18,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'test-main',
@@ -42,7 +42,7 @@ export class TestMainComponent implements OnDestroy {
   multiSelect: string[] = [];
   multiSelectChangeEventCount = 0;
   basicEvent = 0;
-  customEventData: string | null = null;
+  customEventData: string|null = null;
   _shadowDomSupported = _supportsShadowDom();
   clickResult = {x: -1, y: -1};
   rightClickResult = {x: -1, y: -1, button: -1};
@@ -96,7 +96,8 @@ export class TestMainComponent implements OnDestroy {
     this._assignRelativeCoordinates(event, this.clickResult);
 
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
-      .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
+                         .map(key => event.getModifierState(key) ? key.toLowerCase() : '')
+                         .join('-');
   }
 
   onRightClick(event: MouseEvent) {
@@ -104,7 +105,8 @@ export class TestMainComponent implements OnDestroy {
     this._assignRelativeCoordinates(event, this.rightClickResult);
 
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
-    .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
+                         .map(key => event.getModifierState(key) ? key.toLowerCase() : '')
+                         .join('-');
   }
 
   onCustomEvent(event: any) {
@@ -113,8 +115,8 @@ export class TestMainComponent implements OnDestroy {
 
   runTaskOutsideZone() {
     this._zone.runOutsideAngular(() => setTimeout(() => {
-      this.taskStateResultElement.nativeElement.textContent = 'result';
-    }, 100));
+                                   this.taskStateResultElement.nativeElement.textContent = 'result';
+                                 }, 100));
   }
 
   private _assignRelativeCoordinates(event: MouseEvent, obj: {x: number, y: number}) {

@@ -1,8 +1,9 @@
-import {ComponentFixture, TestBed, fakeAsync} from '@angular/core/testing';
-import {Component, DebugElement, ViewEncapsulation, ViewChild} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {MatBadge, MatBadgeModule} from './index';
+import {Component, DebugElement, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+
+import {MatBadge, MatBadgeModule} from './index';
 
 describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
@@ -163,7 +164,7 @@ describe('MatBadge', () => {
 
   it('should apply view encapsulation on create badge content', () => {
     const badge = badgeNativeElement.querySelector('.mat-badge-content')!;
-    let encapsulationAttr: Attr | undefined;
+    let encapsulationAttr: Attr|undefined;
 
     for (let i = 0; i < badge.attributes.length; i++) {
       if (badge.attributes[i].name.startsWith('_ngcontent-')) {
@@ -229,7 +230,6 @@ describe('MatBadge', () => {
       TestBed.createComponent(BadgeOnTemplate);
     }).toThrowError(/matBadge must be attached to an element node/);
   });
-
 });
 
 /** Test component that contains a MatBadge. */
@@ -253,7 +253,7 @@ describe('MatBadge', () => {
 class BadgeTestApp {
   @ViewChild(MatBadge) badgeInstance: MatBadge;
   badgeColor: ThemePalette;
-  badgeContent: string | number | undefined | null = '1';
+  badgeContent: string|number|undefined|null = '1';
   badgeDirection = 'above after';
   badgeHidden = false;
   badgeSize = 'medium';

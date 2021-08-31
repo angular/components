@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'radio-overview-example.html',
   styleUrls: ['radio-overview-example.css'],
 })
-export class RadioOverviewExample {}
+export class RadioOverviewExample {
+}

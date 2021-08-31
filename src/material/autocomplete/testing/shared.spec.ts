@@ -17,13 +17,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-          NoopAnimationsModule,
-          autocompleteModule
-      ],
-      declarations: [AutocompleteHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [NoopAnimationsModule, autocompleteModule],
+          declarations: [AutocompleteHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(AutocompleteHarnessTest);
     fixture.detectChanges();
@@ -137,8 +136,9 @@ export function runHarnessTests(
   it('should throw when selecting an option that is not available', async () => {
     const input = await loader.getHarness(autocompleteHarness.with({selector: '#plain'}));
     await input.enterText('New');
-    await expectAsync(input.selectOption({text: 'Texas'})).toBeRejectedWithError(
-        /Could not find a mat-option matching {"text":"Texas"}/);
+    await expectAsync(input.selectOption({
+      text: 'Texas'
+    })).toBeRejectedWithError(/Could not find a mat-option matching {"text":"Texas"}/);
   });
 }
 
@@ -181,32 +181,31 @@ class AutocompleteHarnessTest {
   stateGroups = [
     {
       name: 'One',
-      states: [
-        {code: 'IA', name: 'Iowa'},
-        {code: 'KS', name: 'Kansas'},
-        {code: 'KY', name: 'Kentucky'},
-        {code: 'LA', name: 'Louisiana'},
-        {code: 'ME', name: 'Maine'}
-      ]
+      states:
+          [
+            {code: 'IA', name: 'Iowa'}, {code: 'KS', name: 'Kansas'},
+            {code: 'KY', name: 'Kentucky'}, {code: 'LA', name: 'Louisiana'},
+            {code: 'ME', name: 'Maine'}
+          ]
     },
     {
       name: 'Two',
-      states: [
-        {code: 'RI', name: 'Rhode Island'},
-        {code: 'SC', name: 'South Carolina'},
-        {code: 'SD', name: 'South Dakota'},
-        {code: 'TN', name: 'Tennessee'},
-        {code: 'TX', name: 'Texas'},
-      ]
+      states:
+          [
+            {code: 'RI', name: 'Rhode Island'},
+            {code: 'SC', name: 'South Carolina'},
+            {code: 'SD', name: 'South Dakota'},
+            {code: 'TN', name: 'Tennessee'},
+            {code: 'TX', name: 'Texas'},
+          ]
     },
     {
       name: 'Three',
-      states: [
-        {code: 'UT', name: 'Utah'},
-        {code: 'WA', name: 'Washington'},
-        {code: 'WV', name: 'West Virginia'},
-        {code: 'WI', name: 'Wisconsin'}
-      ]
+      states:
+          [
+            {code: 'UT', name: 'Utah'}, {code: 'WA', name: 'Washington'},
+            {code: 'WV', name: 'West Virginia'}, {code: 'WI', name: 'Wisconsin'}
+          ]
     }
   ];
 }

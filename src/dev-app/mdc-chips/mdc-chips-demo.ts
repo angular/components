@@ -8,8 +8,8 @@
 
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component} from '@angular/core';
+import {MatChipEditedEvent, MatChipInputEvent} from '@angular/material-experimental/mdc-chips';
 import {ThemePalette} from '@angular/material-experimental/mdc-core';
-import {MatChipInputEvent, MatChipEditedEvent} from '@angular/material-experimental/mdc-chips';
 
 export interface Person {
   name: string;
@@ -41,19 +41,13 @@ export class MdcChipsDemo {
   selectedPeople = null;
 
   people: Person[] = [
-    {name: 'Kara'},
-    {name: 'Jeremy'},
-    {name: 'Topher'},
-    {name: 'Elad'},
-    {name: 'Kristiyan'},
+    {name: 'Kara'}, {name: 'Jeremy'}, {name: 'Topher'}, {name: 'Elad'}, {name: 'Kristiyan'},
     {name: 'Paul'}
   ];
 
   availableColors: DemoColor[] = [
-    {name: 'none', color: undefined},
-    {name: 'Primary', color: 'primary'},
-    {name: 'Accent', color: 'accent'},
-    {name: 'Warn', color: 'warn'}
+    {name: 'none', color: undefined}, {name: 'Primary', color: 'primary'},
+    {name: 'Accent', color: 'accent'}, {name: 'Warn', color: 'warn'}
   ];
 
   displayMessage(message: string): void {
@@ -65,7 +59,7 @@ export class MdcChipsDemo {
 
     // Add our person
     if (value) {
-      this.people.push({ name: value });
+      this.people.push({name: value});
     }
 
     // Clear the input value

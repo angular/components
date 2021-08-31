@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tab-group-custom-label-example.html',
   styleUrls: ['tab-group-custom-label-example.css'],
 })
-export class TabGroupCustomLabelExample {}
+export class TabGroupCustomLabelExample {
+}

@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ScrollStrategy} from './scroll-strategy';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {supportsScrollBehavior} from '@angular/cdk/platform';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+
+import {ScrollStrategy} from './scroll-strategy';
 
 const scrollBehaviorSupported = supportsScrollBehavior();
 

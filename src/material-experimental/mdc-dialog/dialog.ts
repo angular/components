@@ -10,9 +10,10 @@ import {Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {Location} from '@angular/common';
 import {Inject, Injectable, InjectionToken, Injector, Optional, SkipSelf} from '@angular/core';
 import {_MatDialogBase, MatDialogConfig} from '@angular/material/dialog';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatMdcDialogData');
@@ -44,8 +45,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
 @Injectable()
 export class MatDialog extends _MatDialogBase<MatDialogContainer> {
   constructor(
-      overlay: Overlay,
-      injector: Injector,
+      overlay: Overlay, injector: Injector,
       /**
        * @deprecated `_location` parameter to be removed.
        * @breaking-change 10.0.0

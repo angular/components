@@ -7,9 +7,10 @@
  */
 
 import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {MatSlideToggleModule} from '@angular/material-experimental/mdc-slide-toggle';
 import {RouterModule} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+
 import {MdcSlideToggleDemo} from './mdc-slide-toggle-demo';
 
 @NgModule({

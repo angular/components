@@ -7,9 +7,9 @@ const highlightJs = require('highlight.js');
  */
 export function highlightCodeBlock(code: string, language: string) {
   if (language) {
-    return highlightJs.highlight(code, {
-      language: language.toLowerCase() === 'ts' ? 'typescript' : language
-    }).value;
+    return highlightJs
+        .highlight(code, {language: language.toLowerCase() === 'ts' ? 'typescript' : language})
+        .value;
   }
 
   return code;

@@ -1,30 +1,33 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatSelectHarness} from '@angular/material/select/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSelectHarness} from '@angular/material/select/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatSelectModule} from '@angular/material/select';
-import {SelectHarnessExample} from './select-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {SelectHarnessExample} from './select-harness-example';
 
 describe('SelectHarnessExample', () => {
   let fixture: ComponentFixture<SelectHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatSelectModule, NoopAnimationsModule],
-      declarations: [SelectHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatSelectModule, NoopAnimationsModule],
+          declarations: [SelectHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(SelectHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

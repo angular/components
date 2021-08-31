@@ -6,6 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export type MenuPositionX = 'before' | 'after';
+export type MenuPositionX = 'before'|'after';
 
-export type MenuPositionY = 'above' | 'below';
+export type MenuPositionY = 'above'|'below';

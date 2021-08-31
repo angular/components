@@ -19,13 +19,11 @@ import {
  * are outdated usages of the Angular Material API that needs to be updated manually.
  */
 export class MiscTemplateMigration extends Migration<null> {
-
   // Only enable this rule if the migration targets version 6. The rule
   // currently only includes migrations for V6 deprecations.
   enabled = this.targetVersion === TargetVersion.V6;
 
   override visitTemplate(template: ResolvedResource): void {
-
     // Migration for: https://github.com/angular/components/pull/10398 (v6)
     findOutputsOnElementWithTag(template.content, 'selectionChange', [
       'mat-list-option'

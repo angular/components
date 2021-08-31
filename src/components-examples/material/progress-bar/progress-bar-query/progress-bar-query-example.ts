@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'progress-bar-query-example',
   templateUrl: 'progress-bar-query-example.html',
 })
-export class ProgressBarQueryExample {}
+export class ProgressBarQueryExample {
+}

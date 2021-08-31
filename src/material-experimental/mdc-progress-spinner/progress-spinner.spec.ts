@@ -1,30 +1,32 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {CommonModule} from '@angular/common';
+import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {
   MatProgressSpinner,
   MatProgressSpinnerModule
 } from '@angular/material-experimental/mdc-progress-spinner';
-import {CommonModule} from '@angular/common';
-import {By} from '@angular/platform-browser';
 import {MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/progress-spinner';
-import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {By} from '@angular/platform-browser';
 
 describe('MDC-based MatProgressSpinner', () => {
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatProgressSpinnerModule, CommonModule],
-      declarations: [
-        BasicProgressSpinner,
-        IndeterminateProgressSpinner,
-        ProgressSpinnerWithValueAndBoundMode,
-        ProgressSpinnerWithColor,
-        ProgressSpinnerCustomStrokeWidth,
-        ProgressSpinnerCustomDiameter,
-        SpinnerWithColor,
-        ProgressSpinnerWithStringValues,
-        IndeterminateSpinnerInShadowDom,
-        IndeterminateSpinnerInShadowDomWithNgIf,
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [MatProgressSpinnerModule, CommonModule],
+          declarations: [
+            BasicProgressSpinner,
+            IndeterminateProgressSpinner,
+            ProgressSpinnerWithValueAndBoundMode,
+            ProgressSpinnerWithColor,
+            ProgressSpinnerCustomStrokeWidth,
+            ProgressSpinnerCustomDiameter,
+            SpinnerWithColor,
+            ProgressSpinnerWithStringValues,
+            IndeterminateSpinnerInShadowDom,
+            IndeterminateSpinnerInShadowDomWithNgIf,
+          ],
+        })
+        .compileComponents();
   }));
 
   it('should apply a mode of "determinate" if no mode is provided.', () => {
@@ -126,20 +128,20 @@ describe('MDC-based MatProgressSpinner', () => {
     fixture.detectChanges();
 
     expect(parseInt(spinner.style.width))
-      .withContext('Expected the custom diameter to be applied to the host element width.')
-      .toBe(32);
+        .withContext('Expected the custom diameter to be applied to the host element width.')
+        .toBe(32);
     expect(parseInt(spinner.style.height))
-      .withContext('Expected the custom diameter to be applied to the host element height.')
-      .toBe(32);
+        .withContext('Expected the custom diameter to be applied to the host element height.')
+        .toBe(32);
     expect(parseInt(svgElement.clientWidth))
-      .withContext('Expected the custom diameter to be applied to the svg element width.')
-      .toBe(32);
+        .withContext('Expected the custom diameter to be applied to the svg element width.')
+        .toBe(32);
     expect(parseInt(svgElement.clientHeight))
-      .withContext('Expected the custom diameter to be applied to the svg element height.')
-      .toBe(32);
+        .withContext('Expected the custom diameter to be applied to the svg element height.')
+        .toBe(32);
     expect(svgElement.getAttribute('viewBox'))
-      .withContext('Expected the custom diameter to be applied to the svg viewBox.')
-      .toBe('0 0 25.2 25.2');
+        .withContext('Expected the custom diameter to be applied to the svg viewBox.')
+        .toBe('0 0 25.2 25.2');
   });
 
   it('should allow a custom stroke width', () => {
@@ -152,11 +154,13 @@ describe('MDC-based MatProgressSpinner', () => {
     const svgElement = fixture.nativeElement.querySelector('svg');
 
     expect(parseInt(circleElement.style.strokeWidth))
-      .withContext('Expected the custom stroke ' +
-    'width to be applied to the circle element as a percentage of the element size.').toBe(40);
+        .withContext(
+            'Expected the custom stroke ' +
+            'width to be applied to the circle element as a percentage of the element size.')
+        .toBe(40);
     expect(svgElement.getAttribute('viewBox'))
-      .withContext('Expected the viewBox to be adjusted based on the stroke width.')
-      .toBe('0 0 130 130');
+        .withContext('Expected the viewBox to be adjusted based on the stroke width.')
+        .toBe('0 0 130 130');
   });
 
   it('should allow floating point values for custom diameter', () => {
@@ -169,20 +173,20 @@ describe('MDC-based MatProgressSpinner', () => {
     const svgElement: HTMLElement = fixture.nativeElement.querySelector('svg');
 
     expect(parseFloat(spinner.style.width))
-      .withContext('Expected the custom diameter to be applied to the host element width.')
-      .toBe(32.5);
+        .withContext('Expected the custom diameter to be applied to the host element width.')
+        .toBe(32.5);
     expect(parseFloat(spinner.style.height))
-      .withContext('Expected the custom diameter to be applied to the host element height.')
-      .toBe(32.5);
+        .withContext('Expected the custom diameter to be applied to the host element height.')
+        .toBe(32.5);
     expect(Math.ceil(svgElement.clientWidth))
-      .withContext('Expected the custom diameter to be applied to the svg element width.')
-      .toBe(33);
+        .withContext('Expected the custom diameter to be applied to the svg element width.')
+        .toBe(33);
     expect(Math.ceil(svgElement.clientHeight))
-      .withContext('Expected the custom diameter to be applied to the svg element height.')
-      .toBe(33);
+        .withContext('Expected the custom diameter to be applied to the svg element height.')
+        .toBe(33);
     expect(svgElement.getAttribute('viewBox'))
-      .withContext('Expected the custom diameter to be applied to the svg viewBox.')
-      .toBe('0 0 25.75 25.75');
+        .withContext('Expected the custom diameter to be applied to the svg viewBox.')
+        .toBe('0 0 25.75 25.75');
   });
 
   it('should allow floating point values for custom stroke width', () => {
@@ -195,11 +199,13 @@ describe('MDC-based MatProgressSpinner', () => {
     const svgElement = fixture.nativeElement.querySelector('svg');
 
     expect(parseFloat(circleElement.style.strokeWidth))
-      .withContext('Expected the custom stroke ' +
-    'width to be applied to the circle element as a percentage of the element size.').toBe(40.5);
+        .withContext(
+            'Expected the custom stroke ' +
+            'width to be applied to the circle element as a percentage of the element size.')
+        .toBe(40.5);
     expect(svgElement.getAttribute('viewBox'))
-      .withContext('Expected the viewBox to be adjusted based on the stroke width.')
-      .toBe('0 0 130.5 130.5');
+        .withContext('Expected the viewBox to be adjusted based on the stroke width.')
+        .toBe('0 0 130.5 130.5');
   });
 
   it('should expand the host element if the stroke width is greater than the default', () => {
@@ -291,17 +297,13 @@ describe('MDC-based MatProgressSpinner', () => {
   });
 
   it('should be able to set a default diameter', () => {
-    TestBed
-      .resetTestingModule()
-      .configureTestingModule({
-        imports: [MatProgressSpinnerModule],
-        declarations: [BasicProgressSpinner],
-        providers: [{
-          provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
-          useValue: {diameter: 23}
-        }]
-      })
-      .compileComponents();
+    TestBed.resetTestingModule()
+        .configureTestingModule({
+          imports: [MatProgressSpinnerModule],
+          declarations: [BasicProgressSpinner],
+          providers: [{provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS, useValue: {diameter: 23}}]
+        })
+        .compileComponents();
 
     const fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
@@ -311,17 +313,13 @@ describe('MDC-based MatProgressSpinner', () => {
   });
 
   it('should be able to set a default stroke width', () => {
-    TestBed
-      .resetTestingModule()
-      .configureTestingModule({
-        imports: [MatProgressSpinnerModule],
-        declarations: [BasicProgressSpinner],
-        providers: [{
-          provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
-          useValue: {strokeWidth: 7}
-        }]
-      })
-      .compileComponents();
+    TestBed.resetTestingModule()
+        .configureTestingModule({
+          imports: [MatProgressSpinnerModule],
+          declarations: [BasicProgressSpinner],
+          providers: [{provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS, useValue: {strokeWidth: 7}}]
+        })
+        .compileComponents();
 
     const fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
@@ -365,7 +363,6 @@ describe('MDC-based MatProgressSpinner', () => {
     expect(children.length).toBeGreaterThan(0);
     expect(children.every(child => child.getAttribute('aria-hidden') === 'true')).toBe(true);
   });
-
 });
 
 
@@ -387,9 +384,8 @@ class ProgressSpinnerCustomDiameter {
 class IndeterminateProgressSpinner {
 }
 
-@Component({
-  template: '<mat-progress-spinner [value]="value" [mode]="mode"></mat-progress-spinner>'
-})
+@Component(
+    {template: '<mat-progress-spinner [value]="value" [mode]="mode"></mat-progress-spinner>'})
 class ProgressSpinnerWithValueAndBoundMode {
   mode = 'indeterminate';
   value = 50;
@@ -439,9 +435,7 @@ class IndeterminateSpinnerInShadowDom {
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class IndeterminateSpinnerInShadowDomWithNgIf {
-  @ViewChild(MatProgressSpinner, {read: ElementRef})
-  spinner: ElementRef<HTMLElement>;
+  @ViewChild(MatProgressSpinner, {read: ElementRef}) spinner: ElementRef<HTMLElement>;
 
   diameter: number;
 }
-

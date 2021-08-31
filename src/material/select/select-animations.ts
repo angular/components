@@ -25,18 +25,17 @@ import {
  * @docs-private
  */
 export const matSelectAnimations: {
-  readonly transformPanelWrap: AnimationTriggerMetadata;
-  readonly transformPanel: AnimationTriggerMetadata;
+  readonly transformPanelWrap: AnimationTriggerMetadata; readonly transformPanel:
+                                                                      AnimationTriggerMetadata;
 } = {
   /**
    * This animation ensures the select's overlay panel animation (transformPanel) is called when
    * closing the select.
    * This is needed due to https://github.com/angular/angular/issues/23302
    */
-  transformPanelWrap: trigger('transformPanelWrap', [
-      transition('* => void', query('@transformPanel', [animateChild()],
-          {optional: true}))
-  ]),
+  transformPanelWrap: trigger(
+      'transformPanelWrap',
+      [transition('* => void', query('@transformPanel', [animateChild()], {optional: true}))]),
 
   /**
    * This animation transforms the select's overlay panel on and off the page.
@@ -47,23 +46,22 @@ export const matSelectAnimations: {
    *
    * When the panel is removed from the DOM, it simply fades out linearly.
    */
-  transformPanel: trigger('transformPanel', [
-    state('void', style({
-      transform: 'scaleY(0.8)',
-      minWidth: '100%',
-      opacity: 0
-    })),
-    state('showing', style({
-      opacity: 1,
-      minWidth: 'calc(100% + 32px)', // 32px = 2 * 16px padding
-      transform: 'scaleY(1)'
-    })),
-    state('showing-multiple', style({
-      opacity: 1,
-      minWidth: 'calc(100% + 64px)', // 64px = 48px padding on the left + 16px padding on the right
-      transform: 'scaleY(1)'
-    })),
-    transition('void => *', animate('120ms cubic-bezier(0, 0, 0.2, 1)')),
-    transition('* => void', animate('100ms 25ms linear', style({opacity: 0})))
-  ])
+  transformPanel: trigger(
+      'transformPanel',
+      [
+        state('void', style({transform: 'scaleY(0.8)', minWidth: '100%', opacity: 0})),
+        state('showing', style({
+                opacity: 1,
+                minWidth: 'calc(100% + 32px)',  // 32px = 2 * 16px padding
+                transform: 'scaleY(1)'
+              })),
+        state('showing-multiple', style({
+                opacity: 1,
+                minWidth: 'calc(100% + 64px)',  // 64px = 48px padding on the left + 16px padding on
+                                                // the right
+                transform: 'scaleY(1)'
+              })),
+        transition('void => *', animate('120ms cubic-bezier(0, 0, 0.2, 1)')),
+        transition('* => void', animate('100ms 25ms linear', style({opacity: 0})))
+      ])
 };

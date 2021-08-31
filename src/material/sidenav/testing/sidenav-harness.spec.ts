@@ -9,12 +9,6 @@ import {MatSidenavHarness} from './sidenav-harness';
 
 describe('Non-MDC-based', () => {
   runHarnessTests(
-    MatSidenavModule,
-    MatDrawerHarness,
-    MatDrawerContainerHarness,
-    MatDrawerContentHarness,
-    MatSidenavHarness,
-    MatSidenavContainerHarness,
-    MatSidenavContentHarness
-  );
+      MatSidenavModule, MatDrawerHarness, MatDrawerContainerHarness, MatDrawerContentHarness,
+      MatSidenavHarness, MatSidenavContainerHarness, MatSidenavContentHarness);
 });

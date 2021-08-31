@@ -49,11 +49,8 @@ export class AutocompleteOverviewExample {
   ];
 
   constructor() {
-    this.filteredStates = this.stateCtrl.valueChanges
-      .pipe(
-        startWith(''),
-        map(state => state ? this._filterStates(state) : this.states.slice())
-      );
+    this.filteredStates = this.stateCtrl.valueChanges.pipe(
+        startWith(''), map(state => state ? this._filterStates(state) : this.states.slice()));
   }
 
   private _filterStates(value: string): State[] {

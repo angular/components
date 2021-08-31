@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Inject, InjectionToken, Input, OnInit, Optional} from '@angular/core';
 import {AriaHasPopupValue, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+import {Directive, Inject, InjectionToken, Input, OnInit, Optional} from '@angular/core';
 
 export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
 
@@ -16,21 +16,17 @@ let id = 0;
 @Directive({
   selector: '[panelContent]',
   exportAs: 'panelContent',
-  host: {
-    'role': 'role',
-    '[id]': 'dialogId'
-  }
+  host: {'role': 'role', '[id]': 'dialogId'}
 })
 export class PanelContent<V> implements OnInit {
-
   dialogId = `dialog-${id++}`;
   role = 'dialog';
 
   @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
 
   constructor(
-    @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<V>,
-  ) { }
+      @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<V>,
+  ) {}
 
   ngOnInit() {
     this.registerWithPanel();

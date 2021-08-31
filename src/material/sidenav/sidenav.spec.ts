@@ -1,9 +1,10 @@
-import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {MatSidenav, MatSidenavModule, MatSidenavContainer} from './index';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
+import {Component, ViewChild} from '@angular/core';
+import {fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 
 
 describe('MatSidenav', () => {
@@ -45,44 +46,43 @@ describe('MatSidenav', () => {
   });
 
   it('should pick up sidenavs that are not direct descendants', fakeAsync(() => {
-    const fixture = TestBed.createComponent(IndirectDescendantSidenav);
-    fixture.detectChanges();
+       const fixture = TestBed.createComponent(IndirectDescendantSidenav);
+       fixture.detectChanges();
 
-    expect(fixture.componentInstance.sidenav.opened).toBe(false);
+       expect(fixture.componentInstance.sidenav.opened).toBe(false);
 
-    fixture.componentInstance.container.open();
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+       fixture.componentInstance.container.open();
+       fixture.detectChanges();
+       tick();
+       fixture.detectChanges();
 
-    expect(fixture.componentInstance.sidenav.opened).toBe(true);
-  }));
+       expect(fixture.componentInstance.sidenav.opened).toBe(true);
+     }));
 
   it('should not pick up sidenavs from nested containers', fakeAsync(() => {
-    const fixture = TestBed.createComponent(NestedSidenavContainers);
-    const instance = fixture.componentInstance;
-    fixture.detectChanges();
+       const fixture = TestBed.createComponent(NestedSidenavContainers);
+       const instance = fixture.componentInstance;
+       fixture.detectChanges();
 
-    expect(instance.outerSidenav.opened).toBe(false);
-    expect(instance.innerSidenav.opened).toBe(false);
+       expect(instance.outerSidenav.opened).toBe(false);
+       expect(instance.innerSidenav.opened).toBe(false);
 
-    instance.outerContainer.open();
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+       instance.outerContainer.open();
+       fixture.detectChanges();
+       tick();
+       fixture.detectChanges();
 
-    expect(instance.outerSidenav.opened).toBe(true);
-    expect(instance.innerSidenav.opened).toBe(false);
+       expect(instance.outerSidenav.opened).toBe(true);
+       expect(instance.innerSidenav.opened).toBe(false);
 
-    instance.innerContainer.open();
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+       instance.innerContainer.open();
+       fixture.detectChanges();
+       tick();
+       fixture.detectChanges();
 
-    expect(instance.outerSidenav.opened).toBe(true);
-    expect(instance.innerSidenav.opened).toBe(true);
-  }));
-
+       expect(instance.outerSidenav.opened).toBe(true);
+       expect(instance.innerSidenav.opened).toBe(true);
+     }));
 });
 
 

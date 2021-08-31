@@ -24,9 +24,7 @@ describe('LuxonDateAdapter', () => {
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [LuxonDateModule]
-    }).compileComponents();
+    TestBed.configureTestingModule({imports: [LuxonDateModule]}).compileComponents();
 
     adapter = TestBed.inject(DateAdapter);
     adapter.setLocale('en-US');
@@ -71,15 +69,16 @@ describe('LuxonDateAdapter', () => {
     adapter.setLocale('da-DK');
 
     expect(adapter.getMonthNames('long')).toEqual([
-      'januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli',
-      'august', 'september', 'oktober', 'november', 'december'
+      'januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september',
+      'oktober', 'november', 'december'
     ]);
   });
 
   it('should get date names', () => {
     expect(adapter.getDateNames()).toEqual([
-      '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17',
-      '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'
+      '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '10', '11',
+      '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
+      '23', '24', '25', '26', '27', '28', '29', '30', '31'
     ]);
   });
 
@@ -87,9 +86,9 @@ describe('LuxonDateAdapter', () => {
     adapter.setLocale('ja-JP');
 
     expect(adapter.getDateNames()).toEqual([
-      '1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日', '11日', '12日',
-      '13日', '14日', '15日', '16日', '17日', '18日', '19日', '20日', '21日', '22日', '23日', '24日',
-      '25日', '26日', '27日', '28日', '29日', '30日', '31日'
+      '1日',  '2日',  '3日',  '4日',  '5日',  '6日',  '7日',  '8日',  '9日',  '10日', '11日',
+      '12日', '13日', '14日', '15日', '16日', '17日', '18日', '19日', '20日', '21日', '22日',
+      '23日', '24日', '25日', '26日', '27日', '28日', '29日', '30日', '31日'
     ]);
   });
 
@@ -106,9 +105,7 @@ describe('LuxonDateAdapter', () => {
   });
 
   it('should get narrow day of week names', () => {
-    expect(adapter.getDayOfWeekNames('narrow')).toEqual([
-      'S', 'M', 'T', 'W', 'T', 'F', 'S'
-    ]);
+    expect(adapter.getDayOfWeekNames('narrow')).toEqual(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
   });
 
   it('should get day of week names in a different locale', () => {
@@ -146,9 +143,10 @@ describe('LuxonDateAdapter', () => {
     expect(() => adapter.createDate(2017, JAN, 0)).toThrow();
   });
 
-  it("should get today's date", () => {
+  it('should get today\'s date', () => {
     expect(adapter.sameDate(adapter.today(), DateTime.local()))
-      .withContext("should be equal to today's date").toBe(true);
+        .withContext('should be equal to today\'s date')
+        .toBe(true);
   });
 
   it('should parse string according to given format', () => {
@@ -160,10 +158,10 @@ describe('LuxonDateAdapter', () => {
 
   it('should parse string according to first matching format', () => {
     expect(adapter.parse('1/2/2017', ['L/d/yyyy', 'yyyy/d/L'])!.toISO())
-      .toEqual(DateTime.local(2017, JAN, 2).toISO());
+        .toEqual(DateTime.local(2017, JAN, 2).toISO());
 
     expect(adapter.parse('1/2/2017', ['yyyy/d/L', 'L/d/yyyy'])!.toISO())
-      .toEqual(DateTime.local(2017, JAN, 2).toISO());
+        .toEqual(DateTime.local(2017, JAN, 2).toISO());
   });
 
   it('should throw if parse formats are an empty array', () => {
@@ -195,7 +193,8 @@ describe('LuxonDateAdapter', () => {
     expect(d).not.toBeNull();
     expect(adapter.isDateInstance(d)).toBe(true);
     expect(adapter.isValid(d as DateTime))
-      .withContext('Expected to parse as "invalid date" object').toBe(false);
+        .withContext('Expected to parse as "invalid date" object')
+        .toBe(false);
   });
 
   it('should format date according to given format', () => {
@@ -284,19 +283,22 @@ describe('LuxonDateAdapter', () => {
 
   it('should clamp date at lower bound', () => {
     expect(adapter.clampDate(
-        DateTime.local(2017, JAN, 1), DateTime.local(2018, JAN, 1), DateTime.local(2019, JAN, 1)))
+               DateTime.local(2017, JAN, 1), DateTime.local(2018, JAN, 1),
+               DateTime.local(2019, JAN, 1)))
         .toEqual(DateTime.local(2018, JAN, 1));
   });
 
   it('should clamp date at upper bound', () => {
     expect(adapter.clampDate(
-        DateTime.local(2020, JAN, 1), DateTime.local(2018, JAN, 1), DateTime.local(2019, JAN, 1)))
+               DateTime.local(2020, JAN, 1), DateTime.local(2018, JAN, 1),
+               DateTime.local(2019, JAN, 1)))
         .toEqual(DateTime.local(2019, JAN, 1));
   });
 
   it('should clamp date already within bounds', () => {
     expect(adapter.clampDate(
-        DateTime.local(2018, FEB, 1), DateTime.local(2018, JAN, 1), DateTime.local(2019, JAN, 1)))
+               DateTime.local(2018, FEB, 1), DateTime.local(2018, JAN, 1),
+               DateTime.local(2019, JAN, 1)))
         .toEqual(DateTime.local(2018, FEB, 1));
   });
 
@@ -383,10 +385,12 @@ describe('LuxonDateAdapter with MAT_DATE_LOCALE override', () => {
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [LuxonDateModule],
-      providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [LuxonDateModule],
+          providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
+        })
+        .compileComponents();
 
     adapter = TestBed.inject(DateAdapter);
   }));
@@ -406,10 +410,10 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [LuxonDateModule],
-      providers: [{provide: LOCALE_ID, useValue: 'fr-FR'}]
-    }).compileComponents();
+    TestBed
+        .configureTestingModule(
+            {imports: [LuxonDateModule], providers: [{provide: LOCALE_ID, useValue: 'fr-FR'}]})
+        .compileComponents();
 
     adapter = TestBed.inject(DateAdapter);
   }));
@@ -431,13 +435,12 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [LuxonDateModule],
-      providers: [{
-        provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
-        useValue: {useUtc: true}
-      }]
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [LuxonDateModule],
+          providers: [{provide: MAT_LUXON_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}]
+        })
+        .compileComponents();
 
     adapter = TestBed.inject(DateAdapter);
   }));
@@ -445,8 +448,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
   describe('use UTC', () => {
     it('should create Luxon date in UTC', () => {
       // Use 0 since createDate takes 0-indexed months.
-      expect(adapter.createDate(2017, 0, 5).toISO())
-          .toBe(DateTime.utc(2017, JAN, 5).toISO());
+      expect(adapter.createDate(2017, 0, 5).toISO()).toBe(DateTime.utc(2017, JAN, 5).toISO());
     });
 
     it('should create today in UTC', () => {
@@ -464,7 +466,6 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
       expect(date.toISO()).toBe(date.toUTC().toISO());
     });
   });
-
 });
 
 
@@ -477,9 +478,13 @@ function stripDirectionalityCharacters(str: string) {
   return str.replace(/[\u200e\u200f]/g, '');
 }
 
-function assertValidDate(adapter: DateAdapter<DateTime>, d: DateTime | null, valid: boolean) {
-  expect(adapter.isDateInstance(d)).not
-    .withContext(`Expected ${d} to be a date instance`).toBeNull();
-  expect(adapter.isValid(d!)).withContext(`Expected ${d} to be ${valid ? 'valid' : 'invalid'},` +
-    ` but was ${valid ? 'invalid' : 'valid'}`).toBe(valid);
+function assertValidDate(adapter: DateAdapter<DateTime>, d: DateTime|null, valid: boolean) {
+  expect(adapter.isDateInstance(d))
+      .not.withContext(`Expected ${d} to be a date instance`)
+      .toBeNull();
+  expect(adapter.isValid(d!))
+      .withContext(
+          `Expected ${d} to be ${valid ? 'valid' : 'invalid'},` +
+          ` but was ${valid ? 'invalid' : 'valid'}`)
+      .toBe(valid);
 }

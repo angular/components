@@ -1,12 +1,13 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatDividerHarness} from '@angular/material/divider/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatDividerHarness} from '@angular/material/divider/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatDividerModule} from '@angular/material/divider';
+
 import {DividerHarnessExample} from './divider-harness-example';
 
 describe('DividerHarnessExample', () => {
@@ -14,16 +15,16 @@ describe('DividerHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatDividerModule],
-      declarations: [DividerHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule(
+            {imports: [MatDividerModule], declarations: [DividerHarnessExample]})
+        .compileComponents();
     fixture = TestBed.createComponent(DividerHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

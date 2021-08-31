@@ -8,10 +8,9 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 import {SortDirection} from '@angular/material/sort';
 
-export interface SortHarnessFilters extends BaseHarnessFilters {
-}
+export interface SortHarnessFilters extends BaseHarnessFilters {}
 
 export interface SortHeaderHarnessFilters extends BaseHarnessFilters {
-  label?: string | RegExp;
+  label?: string|RegExp;
   sortDirection?: SortDirection;
 }

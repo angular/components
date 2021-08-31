@@ -17,7 +17,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-export type MatCardAppearance = 'outlined' | 'raised';
+export type MatCardAppearance = 'outlined'|'raised';
 
 /** Object that can be used to configure the default options for the card module. */
 export interface MatCardConfig {
@@ -38,10 +38,8 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
   selector: 'mat-card',
   templateUrl: 'card.html',
   styleUrls: ['card.css'],
-  host: {
-    'class': 'mat-mdc-card mdc-card',
-    '[class.mdc-card--outlined]': 'appearance == "outlined"'
-  },
+  host:
+      {'class': 'mat-mdc-card mdc-card', '[class.mdc-card--outlined]': 'appearance == "outlined"'},
   exportAs: 'matCard',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,7 +66,8 @@ export class MatCard {
   selector: `mat-card-title, [mat-card-title], [matCardTitle]`,
   host: {'class': 'mat-mdc-card-title'}
 })
-export class MatCardTitle {}
+export class MatCardTitle {
+}
 
 
 /**
@@ -83,7 +82,8 @@ export class MatCardTitle {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-mdc-card-title-group'}
 })
-export class MatCardTitleGroup {}
+export class MatCardTitleGroup {
+}
 
 
 /**
@@ -93,11 +93,9 @@ export class MatCardTitleGroup {}
  *
  * MatCardContent provides no behaviors, instead serving as a purely visual treatment.
  */
-@Directive({
-  selector: 'mat-card-content',
-  host: {'class': 'mat-mdc-card-content'}
-})
-export class MatCardContent {}
+@Directive({selector: 'mat-card-content', host: {'class': 'mat-mdc-card-content'}})
+export class MatCardContent {
+}
 
 
 /**
@@ -111,7 +109,8 @@ export class MatCardContent {}
   selector: `mat-card-subtitle, [mat-card-subtitle], [matCardSubtitle]`,
   host: {'class': 'mat-mdc-card-subtitle'}
 })
-export class MatCardSubtitle {}
+export class MatCardSubtitle {
+}
 
 
 /**
@@ -134,7 +133,7 @@ export class MatCardActions {
   // as to not conflict with the native `align` attribute.
 
   /** Position of the actions inside the card. */
-  @Input() align: 'start' | 'end' = 'start';
+  @Input() align: 'start'|'end' = 'start';
 
   // TODO(jelbourn): support `.mdc-card__actions--full-bleed`.
 
@@ -161,7 +160,8 @@ export class MatCardActions {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-mdc-card-header'}
 })
-export class MatCardHeader {}
+export class MatCardHeader {
+}
 
 
 /**
@@ -171,11 +171,9 @@ export class MatCardHeader {}
  *
  * MatCardFooter provides no behaviors, instead serving as a purely visual treatment.
  */
-@Directive({
-  selector: 'mat-card-footer',
-  host: {'class': 'mat-mdc-card-footer'}
-})
-export class MatCardFooter {}
+@Directive({selector: 'mat-card-footer', host: {'class': 'mat-mdc-card-footer'}})
+export class MatCardFooter {
+}
 
 // TODO(jelbourn): deprecate the "image" selectors to replace with "media".
 
@@ -204,7 +202,8 @@ export class MatCardImage {
   selector: '[mat-card-sm-image], [matCardImageSmall]',
   host: {'class': 'mat-mdc-card-sm-image mdc-card__media'}
 })
-export class MatCardSmImage {}
+export class MatCardSmImage {
+}
 
 
 /** Same as `MatCardImage`, but medium. */
@@ -212,7 +211,8 @@ export class MatCardSmImage {}
   selector: '[mat-card-md-image], [matCardImageMedium]',
   host: {'class': 'mat-mdc-card-md-image mdc-card__media'}
 })
-export class MatCardMdImage {}
+export class MatCardMdImage {
+}
 
 
 /** Same as `MatCardImage`, but large. */
@@ -220,7 +220,8 @@ export class MatCardMdImage {}
   selector: '[mat-card-lg-image], [matCardImageLarge]',
   host: {'class': 'mat-mdc-card-lg-image mdc-card__media'}
 })
-export class MatCardLgImage {}
+export class MatCardLgImage {
+}
 
 
 /** Same as `MatCardImage`, but extra-large. */
@@ -228,7 +229,8 @@ export class MatCardLgImage {}
   selector: '[mat-card-xl-image], [matCardImageXLarge]',
   host: {'class': 'mat-mdc-card-xl-image mdc-card__media'}
 })
-export class MatCardXlImage {}
+export class MatCardXlImage {
+}
 
 
 /**
@@ -240,9 +242,6 @@ export class MatCardXlImage {}
  *
  * MatCardAvatar provides no behaviors, instead serving as a purely visual treatment.
  */
-@Directive({
-  selector: '[mat-card-avatar], [matCardAvatar]',
-  host: {'class': 'mat-mdc-card-avatar'}
-})
-export class MatCardAvatar {}
-
+@Directive({selector: '[mat-card-avatar], [matCardAvatar]', host: {'class': 'mat-mdc-card-avatar'}})
+export class MatCardAvatar {
+}

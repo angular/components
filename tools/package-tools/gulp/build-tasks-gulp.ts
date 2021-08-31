@@ -1,7 +1,9 @@
-import {dest, src, task, series} from 'gulp';
+import {dest, series, src, task} from 'gulp';
 import {join} from 'path';
+
 import {BuildPackage} from '../build-package';
 import {inlineResourcesForDirectory} from '../inline-resources';
+
 import {buildScssPipeline} from './build-scss-pipeline';
 
 /**
@@ -25,8 +27,9 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
   // Glob that matches every HTML file in the current package.
   const htmlGlob = join(buildPackage.sourceDir, '**/*.html');
 
-  task(`${taskName}:assets:scss`, () =>
-    buildScssPipeline(buildPackage.sourceDir).pipe(dest(buildPackage.outputDir)));
+  task(
+      `${taskName}:assets:scss`,
+      () => buildScssPipeline(buildPackage.sourceDir).pipe(dest(buildPackage.outputDir)));
   task(`${taskName}:assets:copy-styles`, () => src(styleGlobs).pipe(dest(buildPackage.outputDir)));
   task(`${taskName}:assets:html`, () => src(htmlGlob).pipe(dest(buildPackage.outputDir)));
   task(`${taskName}:assets:inline`, done => {
@@ -37,24 +40,24 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
   /**
    * Asset tasks. Building Sass files and inlining CSS, HTML files into the ESM output.
    */
-  task(`${taskName}:assets`, series(
-    `${taskName}:assets:scss`,
-    `${taskName}:assets:copy-styles`,
-    `${taskName}:assets:html`
-  ));
+  task(
+      `${taskName}:assets`,
+      series(
+          `${taskName}:assets:scss`, `${taskName}:assets:copy-styles`, `${taskName}:assets:html`));
 
   /**
    * TypeScript compilation tasks. Tasks are creating ESM, FESM, UMD bundles for releases.
    */
   task(`${taskName}:build:esm:tests`, () => buildPackage.compileTests());
 
-  task(`${taskName}:build-no-bundles`, series(
-    // Build assets before building the ESM output. Since we compile with NGC, the compiler
-    // tries to resolve all required assets.
-    `${taskName}:assets`,
-    // Build the ESM output that includes all test files. Also build assets for the package.
-    `${taskName}:build:esm:tests`,
-    // Inline assets into ESM output.
-    `${taskName}:assets:inline`
-  ));
+  task(
+      `${taskName}:build-no-bundles`,
+      series(
+          // Build assets before building the ESM output. Since we compile with NGC, the compiler
+          // tries to resolve all required assets.
+          `${taskName}:assets`,
+          // Build the ESM output that includes all test files. Also build assets for the package.
+          `${taskName}:build:esm:tests`,
+          // Inline assets into ESM output.
+          `${taskName}:assets:inline`));
 }

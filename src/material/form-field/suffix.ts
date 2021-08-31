@@ -20,4 +20,5 @@ export const MAT_SUFFIX = new InjectionToken<MatSuffix>('MatSuffix');
   selector: '[matSuffix]',
   providers: [{provide: MAT_SUFFIX, useExisting: MatSuffix}],
 })
-export class MatSuffix {}
+export class MatSuffix {
+}

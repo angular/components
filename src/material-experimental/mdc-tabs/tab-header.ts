@@ -6,28 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ViewEncapsulation,
-  ContentChildren,
-  ViewChild,
-  ElementRef,
-  QueryList,
   AfterContentInit,
-  Optional,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  NgZone,
+  Component,
+  ContentChildren,
+  ElementRef,
   Inject,
+  NgZone,
+  Optional,
+  QueryList,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {_MatTabHeaderBase} from '@angular/material/tabs';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {Platform} from '@angular/cdk/platform';
-import {Directionality} from '@angular/cdk/bidi';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {MatTabLabelWrapper} from './tab-label-wrapper';
+
 import {MatInkBar} from './ink-bar';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
@@ -47,7 +48,7 @@ import {MatInkBar} from './ink-bar';
   host: {
     'class': 'mat-mdc-tab-header',
     '[class.mat-mdc-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.mat-mdc-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
+    '[class.mat-mdc-tab-header-rtl]': '_getLayoutDirection() == \'rtl\'',
   },
 })
 export class MatTabHeader extends _MatTabHeaderBase implements AfterContentInit {
@@ -58,13 +59,10 @@ export class MatTabHeader extends _MatTabHeaderBase implements AfterContentInit 
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
   _inkBar: MatInkBar;
 
-  constructor(elementRef: ElementRef,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler,
+      @Optional() dir: Directionality, ngZone: NgZone, platform: Platform,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
 

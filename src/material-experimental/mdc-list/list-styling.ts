@@ -24,8 +24,7 @@ import {LIST_OPTION, ListOption} from './list-option-types';
   }
 })
 export class MatListGraphicAlignmentStyler {
-  constructor(
-      @Optional() @Inject(LIST_OPTION) public _listOption: ListOption) {}
+  constructor(@Optional() @Inject(LIST_OPTION) public _listOption: ListOption) {}
 
   _isAlignedAtStart() {
     // By default, in all list items the graphic is aligned at start. In list options,
@@ -38,21 +37,17 @@ export class MatListGraphicAlignmentStyler {
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-list-avatar], [matListAvatar]',
-  host: {'class': 'mat-mdc-list-avatar'}
-})
-export class MatListAvatarCssMatStyler {}
+@Directive({selector: '[mat-list-avatar], [matListAvatar]', host: {'class': 'mat-mdc-list-avatar'}})
+export class MatListAvatarCssMatStyler {
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-list-icon], [matListIcon]',
-  host: {'class': 'mat-mdc-list-icon'}
-})
-export class MatListIconCssMatStyler {}
+@Directive({selector: '[mat-list-icon], [matListIcon]', host: {'class': 'mat-mdc-list-icon'}})
+export class MatListIconCssMatStyler {
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -64,4 +59,5 @@ export class MatListIconCssMatStyler {}
   //  make a change in one of the repos to visually distinguish.
   host: {'class': 'mat-mdc-subheader mdc-list-group__subheader'}
 })
-export class MatListSubheaderCssMatStyler {}
+export class MatListSubheaderCssMatStyler {
+}

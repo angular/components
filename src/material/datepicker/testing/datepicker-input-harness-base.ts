@@ -15,16 +15,17 @@ import {DatepickerInputHarnessFilters} from './datepicker-harness-filters';
 
 /** Sets up the filter predicates for a datepicker input harness. */
 export function getInputPredicate<T extends MatDatepickerInputHarnessBase>(
-  type: ComponentHarnessConstructor<T>,
-  options: DatepickerInputHarnessFilters): HarnessPredicate<T> {
-
+    type: ComponentHarnessConstructor<T>,
+    options: DatepickerInputHarnessFilters): HarnessPredicate<T> {
   return new HarnessPredicate(type, options)
-    .addOption('value', options.value, (harness, value) => {
-      return HarnessPredicate.stringMatches(harness.getValue(), value);
-    })
-    .addOption('placeholder', options.placeholder, (harness, placeholder) => {
-      return HarnessPredicate.stringMatches(harness.getPlaceholder(), placeholder);
-    });
+      .addOption(
+          'value', options.value,
+          (harness, value) => {
+            return HarnessPredicate.stringMatches(harness.getValue(), value);
+          })
+      .addOption('placeholder', options.placeholder, (harness, placeholder) => {
+        return HarnessPredicate.stringMatches(harness.getPlaceholder(), placeholder);
+      });
 }
 
 /** Base class for datepicker input harnesses. */
@@ -90,12 +91,12 @@ export abstract class MatDatepickerInputHarnessBase extends MatFormFieldControlH
   }
 
   /** Gets the formatted minimum date for the input's value. */
-  async getMin(): Promise<string | null> {
+  async getMin(): Promise<string|null> {
     return (await this.host()).getAttribute('min');
   }
 
   /** Gets the formatted maximum date for the input's value. */
-  async getMax(): Promise<string | null> {
+  async getMax(): Promise<string|null> {
     return (await this.host()).getAttribute('max');
   }
 }

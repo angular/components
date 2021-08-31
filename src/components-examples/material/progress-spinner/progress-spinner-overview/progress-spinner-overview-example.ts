@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'progress-spinner-overview-example',
   templateUrl: 'progress-spinner-overview-example.html',
 })
-export class ProgressSpinnerOverviewExample {}
+export class ProgressSpinnerOverviewExample {
+}

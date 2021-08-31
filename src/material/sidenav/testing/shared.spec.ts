@@ -12,22 +12,23 @@ import {MatSidenavContentHarness} from './sidenav-content-harness';
 import {MatSidenavHarness} from './sidenav-harness';
 
 /** Shared tests to run on both the original and MDC-based drawer & sidenav. */
-export function runHarnessTests(sidenavModule: typeof MatSidenavModule,
-                                drawerHarness: typeof MatDrawerHarness,
-                                drawerContainerHarness: typeof MatDrawerContainerHarness,
-                                drawerContentHarness: typeof MatDrawerContentHarness,
-                                sidenavHarness: typeof MatSidenavHarness,
-                                sidenavContainerHarness: typeof MatSidenavContainerHarness,
-                                sidenavContentHarness: typeof MatSidenavContentHarness) {
+export function runHarnessTests(
+    sidenavModule: typeof MatSidenavModule, drawerHarness: typeof MatDrawerHarness,
+    drawerContainerHarness: typeof MatDrawerContainerHarness,
+    drawerContentHarness: typeof MatDrawerContentHarness, sidenavHarness: typeof MatSidenavHarness,
+    sidenavContainerHarness: typeof MatSidenavContainerHarness,
+    sidenavContentHarness: typeof MatSidenavContentHarness) {
   describe('drawer', () => {
     let fixture: ComponentFixture<DrawerHarnessTest>;
     let loader: HarnessLoader;
 
     beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [sidenavModule, NoopAnimationsModule],
-        declarations: [DrawerHarnessTest],
-      }).compileComponents();
+      await TestBed
+          .configureTestingModule({
+            imports: [sidenavModule, NoopAnimationsModule],
+            declarations: [DrawerHarnessTest],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(DrawerHarnessTest);
       fixture.detectChanges();
@@ -106,7 +107,6 @@ export function runHarnessTests(sidenavModule: typeof MatSidenavModule,
       const contentElements = await loader.getAllHarnesses(drawerContentHarness);
       expect(contentElements.length).toBe(2);
     });
-
   });
 
   describe('sidenav', () => {
@@ -114,10 +114,12 @@ export function runHarnessTests(sidenavModule: typeof MatSidenavModule,
     let loader: HarnessLoader;
 
     beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [sidenavModule, NoopAnimationsModule],
-        declarations: [SidenavHarnessTest],
-      }).compileComponents();
+      await TestBed
+          .configureTestingModule({
+            imports: [sidenavModule, NoopAnimationsModule],
+            declarations: [SidenavHarnessTest],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(SidenavHarnessTest);
       fixture.detectChanges();
@@ -162,7 +164,6 @@ export function runHarnessTests(sidenavModule: typeof MatSidenavModule,
       const contentElements = await loader.getAllHarnesses(sidenavContentHarness);
       expect(contentElements.length).toBe(2);
     });
-
   });
 }
 
@@ -198,4 +199,5 @@ class DrawerHarnessTest {
     </mat-sidenav-container>
   `
 })
-class SidenavHarnessTest {}
+class SidenavHarnessTest {
+}

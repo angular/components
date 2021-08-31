@@ -18,4 +18,5 @@ import {MatInput} from './input';
   exports: [MatInput, MatTextareaAutosize, MatFormFieldModule, TextFieldModule, MatCommonModule],
   declarations: [MatInput, MatTextareaAutosize],
 })
-export class MatInputModule {}
+export class MatInputModule {
+}

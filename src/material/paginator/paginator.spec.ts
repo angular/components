@@ -1,21 +1,25 @@
-import {ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
-import {Component, ViewChild, Type, Provider} from '@angular/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {dispatchMouseEvent} from '../../cdk/testing/private';
+import {Component, Provider, Type, ViewChild} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
 import {By} from '@angular/platform-browser';
-import {MatPaginatorModule, MatPaginator, MatPaginatorIntl} from './index';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {dispatchMouseEvent} from '../../cdk/testing/private';
+
+import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from './index';
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
 
 
 describe('MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [MatPaginatorModule, NoopAnimationsModule],
-      declarations: [type],
-      providers: [MatPaginatorIntl, ...providers]
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [MatPaginatorModule, NoopAnimationsModule],
+          declarations: [type],
+          providers: [MatPaginatorIntl, ...providers]
+        })
+        .compileComponents();
 
     const fixture = TestBed.createComponent(type);
     fixture.detectChanges();
@@ -103,10 +107,8 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getNextButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(1);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 0,
-        pageIndex: 1
-      }));
+      expect(component.pageEvent)
+          .toHaveBeenCalledWith(jasmine.objectContaining({previousPageIndex: 0, pageIndex: 1}));
     });
 
     it('should be able to go to the previous page', () => {
@@ -120,45 +122,37 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getPreviousButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 1,
-        pageIndex: 0
-      }));
+      expect(component.pageEvent)
+          .toHaveBeenCalledWith(jasmine.objectContaining({previousPageIndex: 1, pageIndex: 0}));
     });
   });
 
   it('should be able to show the first/last buttons', () => {
     const fixture = createComponent(MatPaginatorApp);
-    expect(getFirstButton(fixture))
-      .withContext('Expected first button to not exist.')
-      .toBeNull();
+    expect(getFirstButton(fixture)).withContext('Expected first button to not exist.').toBeNull();
 
-    expect(getLastButton(fixture))
-      .withContext('Expected last button to not exist.')
-      .toBeNull();
+    expect(getLastButton(fixture)).withContext('Expected last button to not exist.').toBeNull();
 
     fixture.componentInstance.showFirstLastButtons = true;
     fixture.detectChanges();
 
     expect(getFirstButton(fixture))
-      .withContext('Expected first button to be rendered.')
-      .toBeTruthy();
+        .withContext('Expected first button to be rendered.')
+        .toBeTruthy();
 
-    expect(getLastButton(fixture))
-      .withContext('Expected last button to be rendered.')
-      .toBeTruthy();
+    expect(getLastButton(fixture)).withContext('Expected last button to be rendered.').toBeTruthy();
   });
 
   it('should mark itself as initialized', fakeAsync(() => {
-    const fixture = createComponent(MatPaginatorApp);
-    const component = fixture.componentInstance;
-    const paginator = component.paginator;
-    let isMarkedInitialized = false;
-    paginator.initialized.subscribe(() => isMarkedInitialized = true);
+       const fixture = createComponent(MatPaginatorApp);
+       const component = fixture.componentInstance;
+       const paginator = component.paginator;
+       let isMarkedInitialized = false;
+       paginator.initialized.subscribe(() => isMarkedInitialized = true);
 
-    tick();
-    expect(isMarkedInitialized).toBeTruthy();
-  }));
+       tick();
+       expect(isMarkedInitialized).toBeTruthy();
+     }));
 
   it('should not allow a negative pageSize', () => {
     const fixture = createComponent(MatPaginatorApp);
@@ -217,10 +211,8 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getLastButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(9);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 0,
-        pageIndex: 9
-      }));
+      expect(component.pageEvent)
+          .toHaveBeenCalledWith(jasmine.objectContaining({previousPageIndex: 0, pageIndex: 9}));
     });
 
     it('should be able to go to the first page via the first page button', () => {
@@ -231,10 +223,8 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getFirstButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 3,
-        pageIndex: 0
-      }));
+      expect(component.pageEvent)
+          .toHaveBeenCalledWith(jasmine.objectContaining({previousPageIndex: 3, pageIndex: 0}));
     });
 
     it('should disable navigating to the next page if at last page', () => {
@@ -260,7 +250,6 @@ describe('MatPaginator', () => {
       expect(component.pageEvent).not.toHaveBeenCalled();
       expect(paginator.pageIndex).toBe(0);
     });
-
   });
 
   it('should mark for check when inputs are changed directly', () => {
@@ -340,30 +329,24 @@ describe('MatPaginator', () => {
     component.pageEvent.calls.reset();
     paginator._changePageSize(25);
 
-    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-      pageIndex: 1,
-      pageSize: 25
-    }));
+    expect(component.pageEvent)
+        .toHaveBeenCalledWith(jasmine.objectContaining({pageIndex: 1, pageSize: 25}));
 
     // The first item on the page is still 25. Change the page size to 8 so that we should now be
     // on the fourth page where the top item is index 24.
     component.pageEvent.calls.reset();
     paginator._changePageSize(8);
 
-    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-      pageIndex: 3,
-      pageSize: 8
-    }));
+    expect(component.pageEvent)
+        .toHaveBeenCalledWith(jasmine.objectContaining({pageIndex: 3, pageSize: 8}));
 
     // The first item on the page is 24. Change the page size to 16 so that we should now be
     // on the first page where the top item is index 0.
     component.pageEvent.calls.reset();
     paginator._changePageSize(25);
 
-    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-      pageIndex: 0,
-      pageSize: 25
-    }));
+    expect(component.pageEvent)
+        .toHaveBeenCalledWith(jasmine.objectContaining({pageIndex: 0, pageSize: 25}));
   });
 
   it('should keep track of the right number of pages', () => {
@@ -418,15 +401,15 @@ describe('MatPaginator', () => {
     const element = fixture.nativeElement;
 
     expect(element.querySelector('.mat-paginator-page-size'))
-      .withContext('Expected select to be rendered.')
-      .toBeTruthy();
+        .withContext('Expected select to be rendered.')
+        .toBeTruthy();
 
     fixture.componentInstance.hidePageSize = true;
     fixture.detectChanges();
 
     expect(element.querySelector('.mat-paginator-page-size'))
-      .withContext('Expected select to be removed.')
-      .toBeNull();
+        .withContext('Expected select to be removed.')
+        .toBeNull();
   });
 
   it('should be able to disable all the controls in the paginator via the binding', () => {
@@ -457,14 +440,14 @@ describe('MatPaginator', () => {
 
   it('should be able to configure the default options via a provider', () => {
     const fixture = createComponent(MatPaginatorWithoutInputsApp, [{
-      provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
-      useValue: {
-        pageSize: 7,
-        pageSizeOptions: [7, 14, 21],
-        hidePageSize: true,
-        showFirstLastButtons: true
-      } as MatPaginatorDefaultOptions
-    }]);
+                                      provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
+                                      useValue: {
+                                        pageSize: 7,
+                                        pageSizeOptions: [7, 14, 21],
+                                        hidePageSize: true,
+                                        showFirstLastButtons: true
+                                      } as MatPaginatorDefaultOptions
+                                    }]);
     const paginator = fixture.componentInstance.paginator;
 
     expect(paginator.pageSize).toBe(7);
@@ -478,7 +461,6 @@ describe('MatPaginator', () => {
     const hostElement = fixture.nativeElement.querySelector('mat-paginator');
     expect(hostElement.getAttribute('role')).toBe('group');
   });
-
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
@@ -564,7 +546,7 @@ class MatPaginatorWithoutOptionsApp {
                    length="100">
     </mat-paginator>
   `
-  })
+})
 class MatPaginatorWithStringValues {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }

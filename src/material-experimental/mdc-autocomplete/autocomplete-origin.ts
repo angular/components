@@ -17,4 +17,5 @@ import {_MatAutocompleteOriginBase} from '@angular/material/autocomplete';
   selector: '[matAutocompleteOrigin]',
   exportAs: 'matAutocompleteOrigin',
 })
-export class MatAutocompleteOrigin extends _MatAutocompleteOriginBase {}
+export class MatAutocompleteOrigin extends _MatAutocompleteOriginBase {
+}

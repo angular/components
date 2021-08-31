@@ -6,46 +6,46 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  Input,
-  Output,
-  EventEmitter,
-  ElementRef,
-  ViewContainerRef,
-  Inject,
-  OnDestroy,
-  Optional,
-  NgZone,
-} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
-  OverlayRef,
-  Overlay,
-  OverlayConfig,
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
 } from '@angular/cdk/overlay';
-import {SPACE, ENTER, RIGHT_ARROW, LEFT_ARROW, DOWN_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
-import {fromEvent, Subject, merge} from 'rxjs';
-import {takeUntil, filter} from 'rxjs/operators';
-import {CdkMenuPanel} from './menu-panel';
-import {Menu, CDK_MENU} from './menu-interface';
-import {FocusNext, MenuStack} from './menu-stack';
-import {throwExistingMenuStackError} from './menu-errors';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  Optional,
+  Output,
+  ViewContainerRef,
+} from '@angular/core';
+import {fromEvent, merge, Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
+
 import {MENU_AIM, MenuAim} from './menu-aim';
+import {throwExistingMenuStackError} from './menu-errors';
+import {CDK_MENU, Menu} from './menu-interface';
+import {CdkMenuPanel} from './menu-panel';
+import {FocusNext, MenuStack} from './menu-stack';
 
 /**
  * Whether the target element is a menu item to be ignored by the overlay background click handler.
  */
 export function isClickInsideMenuOverlay(target: Element): boolean {
   while (target?.parentElement) {
-    const isOpenTrigger =
-      target.getAttribute('aria-expanded') === 'true' &&
-      target.classList.contains('cdk-menu-trigger');
+    const isOpenTrigger = target.getAttribute('aria-expanded') === 'true' &&
+        target.classList.contains('cdk-menu-trigger');
     const isOverlayMenu =
-      target.classList.contains('cdk-menu') && !target.classList.contains('cdk-menu-inline');
+        target.classList.contains('cdk-menu') && !target.classList.contains('cdk-menu-inline');
 
     if (isOpenTrigger || isOverlayMenu) {
       return true;
@@ -78,10 +78,10 @@ export function isClickInsideMenuOverlay(target: Element): boolean {
 export class CdkMenuItemTrigger implements OnDestroy {
   /** Template reference variable to the menu this trigger opens */
   @Input('cdkMenuTriggerFor')
-  get menuPanel(): CdkMenuPanel | undefined {
+  get menuPanel(): CdkMenuPanel|undefined {
     return this._menuPanel;
   }
-  set menuPanel(panel: CdkMenuPanel | undefined) {
+  set menuPanel(panel: CdkMenuPanel|undefined) {
     // If the provided panel already has a stack, that means it already has a trigger configured.
     // Note however that there are some edge cases where two triggers **may** share the same menu,
     // e.g. two triggers in two separate menus.
@@ -108,7 +108,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
   _menuStack: MenuStack = new MenuStack();
 
   /** A reference to the overlay which manages the triggered menu */
-  private _overlayRef: OverlayRef | null = null;
+  private _overlayRef: OverlayRef|null = null;
 
   /** The content of the menu panel opened by this trigger. */
   private _panelContent: TemplatePortal;
@@ -120,14 +120,12 @@ export class CdkMenuItemTrigger implements OnDestroy {
   private readonly _stopOutsideClicksListener = merge(this.closed, this._destroyed);
 
   constructor(
-    private readonly _elementRef: ElementRef<HTMLElement>,
-    protected readonly _viewContainerRef: ViewContainerRef,
-    private readonly _overlay: Overlay,
-    private readonly _ngZone: NgZone,
-    @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
-    @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
-    @Optional() private readonly _directionality?: Directionality
-  ) {
+      private readonly _elementRef: ElementRef<HTMLElement>,
+      protected readonly _viewContainerRef: ViewContainerRef, private readonly _overlay: Overlay,
+      private readonly _ngZone: NgZone,
+      @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
+      @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
+      @Optional() private readonly _directionality?: Directionality) {
     this._registerCloseHandler();
     this._subscribeToMouseEnter();
   }
@@ -174,7 +172,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
    * Get a reference to the rendered Menu if the Menu is open and it is visible in the DOM.
    * @return the menu if it is open, otherwise undefined.
    */
-  getMenu(): Menu | undefined {
+  getMenu(): Menu|undefined {
     return this.menuPanel?._menu;
   }
 
@@ -184,25 +182,23 @@ export class CdkMenuItemTrigger implements OnDestroy {
    */
   private _subscribeToMouseEnter() {
     // Closes any sibling menu items and opens the menu associated with this trigger.
-    const toggleMenus = () =>
-      this._ngZone.run(() => {
-        this._closeSiblingTriggers();
-        this.openMenu();
-      });
+    const toggleMenus = () => this._ngZone.run(() => {
+      this._closeSiblingTriggers();
+      this.openMenu();
+    });
 
     this._ngZone.runOutsideAngular(() => {
       fromEvent(this._elementRef.nativeElement, 'mouseenter')
-        .pipe(
-          filter(() => !this._getMenuStack()?.isEmpty() && !this.isMenuOpen()),
-          takeUntil(this._destroyed)
-        )
-        .subscribe(() => {
-          if (this._menuAim) {
-            this._menuAim.toggle(toggleMenus);
-          } else {
-            toggleMenus();
-          }
-        });
+          .pipe(
+              filter(() => !this._getMenuStack()?.isEmpty() && !this.isMenuOpen()),
+              takeUntil(this._destroyed))
+          .subscribe(() => {
+            if (this._menuAim) {
+              this._menuAim.toggle(toggleMenus);
+            } else {
+              toggleMenus();
+            }
+          });
     });
   }
 
@@ -250,9 +246,8 @@ export class CdkMenuItemTrigger implements OnDestroy {
         if (!this._isParentVertical()) {
           event.preventDefault();
           this.openMenu();
-          keyCode === DOWN_ARROW
-            ? this.menuPanel?._menu?.focusFirstItem('keyboard')
-            : this.menuPanel?._menu?.focusLastItem('keyboard');
+          keyCode === DOWN_ARROW ? this.menuPanel?._menu?.focusFirstItem('keyboard') :
+                                   this.menuPanel?._menu?.focusLastItem('keyboard');
         }
         break;
     }
@@ -267,7 +262,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
       // that means that the parent menu is a menu bar since we don't put the menu bar on the
       // stack
       const isParentMenuBar =
-        !menuStack.closeSubMenuOf(this._parentMenu) && menuStack.peek() !== this._parentMenu;
+          !menuStack.closeSubMenuOf(this._parentMenu) && menuStack.peek() !== this._parentMenu;
 
       if (isParentMenuBar) {
         menuStack.closeAll();
@@ -288,23 +283,22 @@ export class CdkMenuItemTrigger implements OnDestroy {
 
   /** Build the position strategy for the overlay which specifies where to place the menu */
   private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
-    return this._overlay
-      .position()
-      .flexibleConnectedTo(this._elementRef)
-      .withPositions(this._getOverlayPositions());
+    return this._overlay.position()
+        .flexibleConnectedTo(this._elementRef)
+        .withPositions(this._getOverlayPositions());
   }
 
   /** Determine and return where to position the opened menu relative to the menu item */
   private _getOverlayPositions(): ConnectedPosition[] {
     // TODO: use a common positioning config from (possibly) cdk/overlay
-    return !this._parentMenu || this._parentMenu.orientation === 'horizontal'
-      ? [
+    return !this._parentMenu || this._parentMenu.orientation === 'horizontal' ?
+        [
           {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
           {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom'},
           {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top'},
           {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom'},
-        ]
-      : [
+        ] :
+        [
           {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top'},
           {originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom'},
           {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top'},
@@ -381,14 +375,13 @@ export class CdkMenuItemTrigger implements OnDestroy {
    */
   private _subscribeToOutsideClicks() {
     if (this._overlayRef) {
-      this._overlayRef
-        .outsidePointerEvents()
-        .pipe(takeUntil(this._stopOutsideClicksListener))
-        .subscribe(event => {
-          if (!isClickInsideMenuOverlay(event.target as Element)) {
-            this._getMenuStack().closeAll();
-          }
-        });
+      this._overlayRef.outsidePointerEvents()
+          .pipe(takeUntil(this._stopOutsideClicksListener))
+          .subscribe(event => {
+            if (!isClickInsideMenuOverlay(event.target as Element)) {
+              this._getMenuStack().closeAll();
+            }
+          });
     }
   }
 

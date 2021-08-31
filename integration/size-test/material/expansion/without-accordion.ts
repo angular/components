@@ -13,11 +13,13 @@ import {MatExpansionModule} from '@angular/material/expansion';
     </mat-expansion-panel>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatExpansionModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

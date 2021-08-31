@@ -47,4 +47,5 @@ import {
   ],
   entryComponents: [MatDialogContainer],
 })
-export class MatDialogModule {}
+export class MatDialogModule {
+}

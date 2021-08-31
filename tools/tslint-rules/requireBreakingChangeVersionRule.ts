@@ -1,6 +1,6 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import * as utils from 'tsutils';
+import * as ts from 'typescript';
 
 /** Doc tag that can be used to indicate a breaking change. */
 const BREAKING_CHANGE = '@breaking-change';

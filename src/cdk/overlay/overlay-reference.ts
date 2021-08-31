@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Portal} from '@angular/cdk/portal';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Portal} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
 
 /**
@@ -21,20 +21,20 @@ export interface OverlayReference {
   dispose: () => void;
   overlayElement: HTMLElement;
   hostElement: HTMLElement;
-  backdropElement: HTMLElement | null;
+  backdropElement: HTMLElement|null;
   getConfig: () => any;
   hasAttached: () => boolean;
   updateSize: (config: any) => void;
   updatePosition: () => void;
   getDirection: () => Direction;
-  setDirection: (dir: Direction | Directionality) => void;
+  setDirection: (dir: Direction|Directionality) => void;
   backdropClick: () => Observable<MouseEvent>;
   attachments: () => Observable<void>;
   detachments: () => Observable<void>;
   keydownEvents: () => Observable<KeyboardEvent>;
   outsidePointerEvents: () => Observable<MouseEvent>;
-  addPanelClass: (classes: string | string[]) => void;
-  removePanelClass: (classes: string | string[]) => void;
+  addPanelClass: (classes: string|string[]) => void;
+  removePanelClass: (classes: string|string[]) => void;
   readonly _outsidePointerEvents: Subject<MouseEvent>;
   readonly _keydownEvents: Subject<KeyboardEvent>;
 }

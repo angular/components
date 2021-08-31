@@ -45,9 +45,7 @@ import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
  * @param project The project to build the path for.
  */
 function buildDefaultPath(project: ProjectDefinition): string {
-  const root = project.sourceRoot
-    ? `/${project.sourceRoot}/`
-    : `/${project.root}/src/`;
+  const root = project.sourceRoot ? `/${project.sourceRoot}/` : `/${project.root}/src/`;
 
   const projectDirName = project.extensions.projectType === ProjectType.Application ? 'app' : 'lib';
 
@@ -78,18 +76,14 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
     const modulePath = options.module;
     let source = readIntoSourceFile(host, modulePath);
 
-    const componentPath = `/${options.path}/`
-      + (options.flat ? '' : strings.dasherize(options.name) + '/')
-      + strings.dasherize(options.name)
-      + '.component';
+    const componentPath = `/${options.path}/` +
+        (options.flat ? '' : strings.dasherize(options.name) + '/') +
+        strings.dasherize(options.name) + '.component';
     const relativePath = buildRelativePath(modulePath, componentPath);
     const classifiedName = strings.classify(`${options.name}Component`);
 
-    const declarationChanges = addDeclarationToModule(
-      source,
-      modulePath,
-      classifiedName,
-      relativePath);
+    const declarationChanges =
+        addDeclarationToModule(source, modulePath, classifiedName, relativePath);
 
     const declarationRecorder = host.beginUpdate(modulePath);
     for (const change of declarationChanges) {
@@ -105,10 +99,7 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
 
       const exportRecorder = host.beginUpdate(modulePath);
       const exportChanges = addExportToModule(
-        source,
-        modulePath,
-        strings.classify(`${options.name}Component`),
-        relativePath);
+          source, modulePath, strings.classify(`${options.name}Component`), relativePath);
 
       for (const change of exportChanges) {
         if (change instanceof InsertChange) {
@@ -153,9 +144,8 @@ function indentTextContent(text: string, numSpaces: number): string {
  * This allows inlining the external template or stylesheet files in EJS without having
  * to manually duplicate the file content.
  */
-export function buildComponent(options: ComponentOptions,
-                               additionalFiles: {[key: string]: string} = {}): Rule {
-
+export function buildComponent(
+    options: ComponentOptions, additionalFiles: {[key: string]: string} = {}): Rule {
   return async (host, ctx) => {
     const context = ctx as FileSystemSchematicContext;
     const workspace = await getWorkspace(host);
@@ -176,10 +166,12 @@ export function buildComponent(options: ComponentOptions,
     // Add the default component option values to the options if an option is not explicitly
     // specified but a default component option is available.
     Object.keys(options)
-      .filter(key => options[key as keyof ComponentOptions] == null &&
-                     defaultComponentOptions[key as keyof ComponentOptions])
-      .forEach(key => (options as any)[key] =
-          (defaultComponentOptions as ComponentOptions)[key as keyof ComponentOptions]);
+        .filter(
+            key => options[key as keyof ComponentOptions] == null &&
+                defaultComponentOptions[key as keyof ComponentOptions])
+        .forEach(
+            key => (options as any)[key] =
+                (defaultComponentOptions as ComponentOptions)[key as keyof ComponentOptions]);
 
     if (options.path === undefined) {
       // TODO(jelbourn): figure out if the need for this `as any` is a bug due to two different
@@ -241,10 +233,10 @@ export function buildComponent(options: ComponentOptions,
     ]);
 
     return () => chain([
-      branchAndMerge(chain([
-        addDeclarationToNgModule(options),
-        mergeWith(templateSource),
-      ])),
-    ])(host, context);
+             branchAndMerge(chain([
+               addDeclarationToNgModule(options),
+               mergeWith(templateSource),
+             ])),
+           ])(host, context);
   };
 }

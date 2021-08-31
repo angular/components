@@ -14,4 +14,5 @@ import {CdkAutoSizeVirtualScroll} from './auto-size-virtual-scroll';
   exports: [CdkAutoSizeVirtualScroll],
   declarations: [CdkAutoSizeVirtualScroll],
 })
-export class ScrollingModule {}
+export class ScrollingModule {
+}

@@ -10,11 +10,13 @@ import {MatRadioModule} from '@angular/material/radio';
     <mat-radio-button value="hello"></mat-radio-button>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatRadioModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -6,29 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CdkEditable, CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {CdkEditable, CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
+
+import {MatEditClose, MatEditLens, MatEditRevert} from './lens-directives';
 import {
+  MatEditOpen,
   MatPopoverEdit,
   MatPopoverEditTabOut,
-  MatRowHoverContent,
-  MatEditOpen
+  MatRowHoverContent
 } from './table-directives';
-import {
-  MatEditLens,
-  MatEditRevert,
-  MatEditClose
-} from './lens-directives';
 
 const EXPORTED_DECLARATIONS = [
-  MatPopoverEdit,
-  MatPopoverEditTabOut,
-  MatRowHoverContent,
-  MatEditLens,
-  MatEditRevert,
-  MatEditClose,
-  MatEditOpen
+  MatPopoverEdit, MatPopoverEditTabOut, MatRowHoverContent, MatEditLens, MatEditRevert,
+  MatEditClose, MatEditOpen
 ];
 
 @NgModule({
@@ -42,4 +34,5 @@ const EXPORTED_DECLARATIONS = [
   ],
   declarations: EXPORTED_DECLARATIONS,
 })
-export class MatPopoverEditModule { }
+export class MatPopoverEditModule {
+}

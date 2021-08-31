@@ -14,12 +14,12 @@ import {
   Component,
   ElementRef,
   Inject,
+  NgZone,
   OnDestroy,
   Optional,
-  ViewEncapsulation,
-  NgZone
+  ViewEncapsulation
 } from '@angular/core';
-import {MatDialogConfig, _MatDialogContainerBase} from '@angular/material/dialog';
+import {_MatDialogContainerBase, MatDialogConfig} from '@angular/material/dialog';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {cssClasses, numbers} from '@material/dialog';
 
@@ -61,26 +61,14 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
   private _animationTimer: number|null = null;
 
   constructor(
-      elementRef: ElementRef,
-      focusTrapFactory: FocusTrapFactory,
-      changeDetectorRef: ChangeDetectorRef,
-      @Optional() @Inject(DOCUMENT) document: any,
-      config: MatDialogConfig,
-      checker: InteractivityChecker,
-      ngZone: NgZone,
+      elementRef: ElementRef, focusTrapFactory: FocusTrapFactory,
+      changeDetectorRef: ChangeDetectorRef, @Optional() @Inject(DOCUMENT) document: any,
+      config: MatDialogConfig, checker: InteractivityChecker, ngZone: NgZone,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
-      focusMonitor?: FocusMonitor
-      ) {
+      focusMonitor?: FocusMonitor) {
     super(
-      elementRef,
-      focusTrapFactory,
-      changeDetectorRef,
-      document,
-      config,
-      checker,
-      ngZone,
-      focusMonitor
-    );
+        elementRef, focusTrapFactory, changeDetectorRef, document, config, checker, ngZone,
+        focusMonitor);
   }
 
   override _initializeWithAttachedContent() {

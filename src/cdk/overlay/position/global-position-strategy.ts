@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PositionStrategy} from './position-strategy';
 import {OverlayReference} from '../overlay-reference';
+
+import {PositionStrategy} from './position-strategy';
 
 /** Class to be added to the overlay pane wrapper. */
 const wrapperClass = 'cdk-global-overlay-wrapper';
@@ -166,9 +167,9 @@ export class GlobalPositionStrategy implements PositionStrategy {
     const config = this._overlayRef.getConfig();
     const {width, height, maxWidth, maxHeight} = config;
     const shouldBeFlushHorizontally = (width === '100%' || width === '100vw') &&
-                                      (!maxWidth || maxWidth === '100%' || maxWidth === '100vw');
+        (!maxWidth || maxWidth === '100%' || maxWidth === '100vw');
     const shouldBeFlushVertically = (height === '100%' || height === '100vh') &&
-                                    (!maxHeight || maxHeight === '100%' || maxHeight === '100vh');
+        (!maxHeight || maxHeight === '100%' || maxHeight === '100vh');
 
     styles.position = this._cssPosition;
     styles.marginLeft = shouldBeFlushHorizontally ? '0' : this._leftOffset;
@@ -211,8 +212,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
     const parentStyles = parent.style;
 
     parent.classList.remove(wrapperClass);
-    parentStyles.justifyContent = parentStyles.alignItems = styles.marginTop =
-      styles.marginBottom = styles.marginLeft = styles.marginRight = styles.position = '';
+    parentStyles.justifyContent = parentStyles.alignItems = styles.marginTop = styles.marginBottom =
+        styles.marginLeft = styles.marginRight = styles.position = '';
 
     this._overlayRef = null!;
     this._isDisposed = true;

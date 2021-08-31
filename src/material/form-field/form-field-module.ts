@@ -44,4 +44,5 @@ import {MatSuffix} from './suffix';
     MatSuffix,
   ],
 })
-export class MatFormFieldModule {}
+export class MatFormFieldModule {
+}

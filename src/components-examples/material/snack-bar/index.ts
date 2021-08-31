@@ -4,20 +4,21 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+
 import {
   PizzaPartyComponent,
   SnackBarComponentExample
 } from './snack-bar-component/snack-bar-component-example';
+import {SnackBarHarnessExample} from './snack-bar-harness/snack-bar-harness-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {SnackBarPositionExample} from './snack-bar-position/snack-bar-position-example';
-import {SnackBarHarnessExample} from './snack-bar-harness/snack-bar-harness-example';
 
 export {
+  PizzaPartyComponent,
   SnackBarComponentExample,
   SnackBarHarnessExample,
   SnackBarOverviewExample,
   SnackBarPositionExample,
-  PizzaPartyComponent,
 };
 
 const EXAMPLES = [

@@ -18,4 +18,5 @@ import {TestSubComponent} from './test-sub-component';
   declarations: [TestMainComponent, TestSubComponent, TestShadowBoundary, TestSubShadowBoundary],
   exports: [TestMainComponent, TestSubComponent, TestShadowBoundary, TestSubShadowBoundary]
 })
-export class TestComponentsModule {}
+export class TestComponentsModule {
+}

@@ -10,10 +10,12 @@ describe('Non-MDC-based MatSliderHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatSliderModule],
-      declarations: [SliderHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatSliderModule],
+          declarations: [SliderHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(SliderHarnessTest);
     fixture.detectChanges();

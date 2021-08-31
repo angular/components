@@ -6,24 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ElementRef, NgZone} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {coerceElement} from '@angular/cdk/coercion';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {_getShadowRoot} from '@angular/cdk/platform';
-import {Subject, Subscription, interval, animationFrameScheduler} from 'rxjs';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ElementRef, NgZone} from '@angular/core';
+import {animationFrameScheduler, interval, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {moveItemInArray} from './drag-utils';
-import {DragDropRegistry} from './drag-drop-registry';
-import {DragRefInternal as DragRef, Point} from './drag-ref';
+
 import {
-  isPointerNearClientRect,
   adjustClientRect,
   getMutableClientRect,
   isInsideClientRect,
+  isPointerNearClientRect,
 } from './client-rect';
-import {ParentPositionTracker} from './parent-position-tracker';
+import {DragDropRegistry} from './drag-drop-registry';
+import {DragRefInternal as DragRef, Point} from './drag-ref';
 import {combineTransforms, DragCSSStyleDeclaration} from './drag-styling';
+import {moveItemInArray} from './drag-utils';
+import {ParentPositionTracker} from './parent-position-tracker';
 
 /**
  * Proximity, as a ratio to width/height, at which a
@@ -53,10 +54,18 @@ interface CachedItemPosition {
 }
 
 /** Vertical direction in which we can auto-scroll. */
-const enum AutoScrollVerticalDirection {NONE, UP, DOWN}
+const enum AutoScrollVerticalDirection {
+  NONE,
+  UP,
+  DOWN
+}
 
 /** Horizontal direction in which we can auto-scroll. */
-const enum AutoScrollHorizontalDirection {NONE, LEFT, RIGHT}
+const enum AutoScrollHorizontalDirection {
+  NONE,
+  LEFT,
+  RIGHT
+}
 
 /**
  * Internal compile-time-only representation of a `DropListRef`.
@@ -70,7 +79,7 @@ export interface DropListRefInternal extends DropListRef {}
  */
 export class DropListRef<T = any> {
   /** Element that the drop list is attached to. */
-  element: HTMLElement | ElementRef<HTMLElement>;
+  element: HTMLElement|ElementRef<HTMLElement>;
 
   /** Whether starting a dragging sequence from this container is disabled. */
   disabled: boolean = false;
@@ -79,7 +88,7 @@ export class DropListRef<T = any> {
   sortingDisabled: boolean = false;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  lockAxis: 'x' | 'y';
+  lockAxis: 'x'|'y';
 
   /**
    * Whether auto-scrolling the view when the user
@@ -126,12 +135,8 @@ export class DropListRef<T = any> {
   }>();
 
   /** Emits as the user is swapping items while actively dragging. */
-  readonly sorted = new Subject<{
-    previousIndex: number,
-    currentIndex: number,
-    container: DropListRef,
-    item: DragRef
-  }>();
+  readonly sorted = new Subject<
+      {previousIndex: number, currentIndex: number, container: DropListRef, item: DragRef}>();
 
   /** Arbitrary data that can be attached to the drop list. */
   data: T;
@@ -146,7 +151,7 @@ export class DropListRef<T = any> {
   private _parentPositions: ParentPositionTracker;
 
   /** Cached `ClientRect` of the drop list. */
-  private _clientRect: ClientRect | undefined;
+  private _clientRect: ClientRect|undefined;
 
   /**
    * Draggable items that are currently active inside the container. Includes the items
@@ -169,7 +174,7 @@ export class DropListRef<T = any> {
   private _siblings: readonly DropListRef[] = [];
 
   /** Direction in which the list is oriented. */
-  private _orientation: 'horizontal' | 'vertical' = 'vertical';
+  private _orientation: 'horizontal'|'vertical' = 'vertical';
 
   /** Connected siblings that currently have a dragged item. */
   private _activeSiblings = new Set<DropListRef>();
@@ -187,13 +192,13 @@ export class DropListRef<T = any> {
   private _horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
 
   /** Node that is being auto-scrolled. */
-  private _scrollNode: HTMLElement | Window;
+  private _scrollNode: HTMLElement|Window;
 
   /** Used to signal to the current auto-scroll sequence when to stop. */
   private readonly _stopScrollTimers = new Subject<void>();
 
   /** Shadow root of the current element. Necessary for `elementFromPoint` to resolve correctly. */
-  private _cachedShadowRoot: DocumentOrShadowRoot | null = null;
+  private _cachedShadowRoot: DocumentOrShadowRoot|null = null;
 
   /** Reference to the document. */
   private _document: Document;
@@ -205,11 +210,9 @@ export class DropListRef<T = any> {
   private _initialScrollSnap: string;
 
   constructor(
-    element: ElementRef<HTMLElement> | HTMLElement,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
-    _document: any,
-    private _ngZone: NgZone,
-    private _viewportRuler: ViewportRuler) {
+      element: ElementRef<HTMLElement>|HTMLElement,
+      private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, _document: any,
+      private _ngZone: NgZone, private _viewportRuler: ViewportRuler) {
     this.element = coerceElement(element);
     this._document = _document;
     this.withScrollableParents([this.element]);
@@ -274,7 +277,7 @@ export class DropListRef<T = any> {
     const activeDraggables = this._activeDraggables;
     const currentIndex = activeDraggables.indexOf(item);
     const placeholder = item.getPlaceholderElement();
-    let newPositionReference: DragRef | undefined = activeDraggables[newIndex];
+    let newPositionReference: DragRef|undefined = activeDraggables[newIndex];
 
     // If the item at the new position is the same as the item that is being dragged,
     // it means that we're trying to restore the item to its initial position. In this
@@ -336,8 +339,9 @@ export class DropListRef<T = any> {
    *    container when the item was dropped.
    * @param distance Distance the user has dragged since the start of the dragging sequence.
    */
-  drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef,
-    isPointerOverContainer: boolean, distance: Point, dropPoint: Point): void {
+  drop(
+      item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef,
+      isPointerOverContainer: boolean, distance: Point, dropPoint: Point): void {
     this._reset();
     this.dropped.next({
       item,
@@ -395,7 +399,7 @@ export class DropListRef<T = any> {
    * Sets the orientation of the container.
    * @param orientation New orientation for the container.
    */
-  withOrientation(orientation: 'vertical' | 'horizontal'): this {
+  withOrientation(orientation: 'vertical'|'horizontal'): this {
     this._orientation = orientation;
     return this;
   }
@@ -432,7 +436,8 @@ export class DropListRef<T = any> {
     // The rest of the logic still stands no matter what orientation we're in, however
     // we need to invert the array when determining the index.
     const items = this._orientation === 'horizontal' && this._direction === 'rtl' ?
-        this._itemPositions.slice().reverse() : this._itemPositions;
+        this._itemPositions.slice().reverse() :
+        this._itemPositions;
 
     return items.findIndex(currentItem => currentItem.drag === item);
   }
@@ -452,8 +457,10 @@ export class DropListRef<T = any> {
    * @param pointerY Position of the item along the Y axis.
    * @param pointerDelta Direction in which the pointer is moving along each axis.
    */
-  _sortItem(item: DragRef, pointerX: number, pointerY: number,
-            pointerDelta: {x: number, y: number}): void {
+  _sortItem(item: DragRef, pointerX: number, pointerY: number, pointerDelta: {
+    x: number,
+    y: number
+  }): void {
     // Don't sort the item if sorting is disabled or it's out of range.
     if (this.sortingDisabled || !this._clientRect ||
         !isPointerNearClientRect(this._clientRect, DROP_PROXIMITY_THRESHOLD, pointerX, pointerY)) {
@@ -487,12 +494,7 @@ export class DropListRef<T = any> {
     // Shuffle the array in place.
     moveItemInArray(siblings, currentIndex, newIndex);
 
-    this.sorted.next({
-      previousIndex: currentIndex,
-      currentIndex: newIndex,
-      container: this,
-      item
-    });
+    this.sorted.next({previousIndex: currentIndex, currentIndex: newIndex, container: this, item});
 
     siblings.forEach((sibling, index) => {
       // Don't do anything if the position hasn't changed.
@@ -502,8 +504,8 @@ export class DropListRef<T = any> {
 
       const isDraggedItem = sibling.drag === item;
       const offset = isDraggedItem ? itemOffset : siblingOffset;
-      const elementToOffset = isDraggedItem ? item.getPlaceholderElement() :
-                                              sibling.drag.getRootElement();
+      const elementToOffset =
+          isDraggedItem ? item.getPlaceholderElement() : sibling.drag.getRootElement();
 
       // Update the offset to reflect the new position.
       sibling.offset += offset;
@@ -516,11 +518,11 @@ export class DropListRef<T = any> {
         // Round the transforms since some browsers will
         // blur the elements, for sub-pixel transforms.
         elementToOffset.style.transform = combineTransforms(
-          `translate3d(${Math.round(sibling.offset)}px, 0, 0)`, sibling.initialTransform);
+            `translate3d(${Math.round(sibling.offset)}px, 0, 0)`, sibling.initialTransform);
         adjustClientRect(sibling.clientRect, 0, offset);
       } else {
         elementToOffset.style.transform = combineTransforms(
-          `translate3d(0, ${Math.round(sibling.offset)}px, 0)`, sibling.initialTransform);
+            `translate3d(0, ${Math.round(sibling.offset)}px, 0)`, sibling.initialTransform);
         adjustClientRect(sibling.clientRect, offset, 0);
       }
     });
@@ -542,7 +544,7 @@ export class DropListRef<T = any> {
       return;
     }
 
-    let scrollNode: HTMLElement | Window | undefined;
+    let scrollNode: HTMLElement|Window|undefined;
     let verticalScrollDirection = AutoScrollVerticalDirection.NONE;
     let horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
 
@@ -554,8 +556,8 @@ export class DropListRef<T = any> {
         return;
       }
 
-      if (isPointerNearClientRect(position.clientRect, DROP_PROXIMITY_THRESHOLD,
-          pointerX, pointerY)) {
+      if (isPointerNearClientRect(
+              position.clientRect, DROP_PROXIMITY_THRESHOLD, pointerX, pointerY)) {
         [verticalScrollDirection, horizontalScrollDirection] = getElementScrollDirections(
             element as HTMLElement, position.clientRect, pointerX, pointerY);
 
@@ -574,9 +576,10 @@ export class DropListRef<T = any> {
       scrollNode = window;
     }
 
-    if (scrollNode && (verticalScrollDirection !== this._verticalScrollDirection ||
-        horizontalScrollDirection !== this._horizontalScrollDirection ||
-        scrollNode !== this._scrollNode)) {
+    if (scrollNode &&
+        (verticalScrollDirection !== this._verticalScrollDirection ||
+         horizontalScrollDirection !== this._horizontalScrollDirection ||
+         scrollNode !== this._scrollNode)) {
       this._verticalScrollDirection = verticalScrollDirection;
       this._horizontalScrollDirection = horizontalScrollDirection;
       this._scrollNode = scrollNode;
@@ -624,18 +627,20 @@ export class DropListRef<T = any> {
   private _cacheItemPositions() {
     const isHorizontal = this._orientation === 'horizontal';
 
-    this._itemPositions = this._activeDraggables.map(drag => {
-      const elementToMeasure = drag.getVisibleElement();
-      return {
-        drag,
-        offset: 0,
-        initialTransform: elementToMeasure.style.transform || '',
-        clientRect: getMutableClientRect(elementToMeasure),
-      };
-    }).sort((a, b) => {
-      return isHorizontal ? a.clientRect.left - b.clientRect.left :
-                            a.clientRect.top - b.clientRect.top;
-    });
+    this._itemPositions = this._activeDraggables
+                              .map(drag => {
+                                const elementToMeasure = drag.getVisibleElement();
+                                return {
+                                  drag,
+                                  offset: 0,
+                                  initialTransform: elementToMeasure.style.transform || '',
+                                  clientRect: getMutableClientRect(elementToMeasure),
+                                };
+                              })
+                              .sort((a, b) => {
+                                return isHorizontal ? a.clientRect.left - b.clientRect.left :
+                                                      a.clientRect.top - b.clientRect.top;
+                              });
   }
 
   /** Resets the container to its initial state. */
@@ -650,8 +655,8 @@ export class DropListRef<T = any> {
       const rootElement = item.getRootElement();
 
       if (rootElement) {
-        const initialTransform = this._itemPositions
-          .find(current => current.drag === item)?.initialTransform;
+        const initialTransform =
+            this._itemPositions.find(current => current.drag === item)?.initialTransform;
         rootElement.style.transform = initialTransform || '';
       }
     });
@@ -672,10 +677,7 @@ export class DropListRef<T = any> {
    * @param siblings All of the items in the list.
    * @param delta Direction in which the user is moving.
    */
-  private _getSiblingOffsetPx(currentIndex: number,
-                              siblings: CachedItemPosition[],
-                              delta: 1 | -1) {
-
+  private _getSiblingOffsetPx(currentIndex: number, siblings: CachedItemPosition[], delta: 1|- 1) {
     const isHorizontal = this._orientation === 'horizontal';
     const currentPosition = siblings[currentIndex].clientRect;
     const immediateSibling = siblings[currentIndex + delta * -1];
@@ -705,7 +707,7 @@ export class DropListRef<T = any> {
    * @param newPosition Position of the item where the current item should be moved.
    * @param delta Direction in which the user is moving.
    */
-  private _getItemOffsetPx(currentPosition: ClientRect, newPosition: ClientRect, delta: 1 | -1) {
+  private _getItemOffsetPx(currentPosition: ClientRect, newPosition: ClientRect, delta: 1|- 1) {
     const isHorizontal = this._orientation === 'horizontal';
     let itemOffset = isHorizontal ? newPosition.left - currentPosition.left :
                                     newPosition.top - currentPosition.top;
@@ -751,8 +753,8 @@ export class DropListRef<T = any> {
    * @param pointerY Position of the user's pointer along the Y axis.
    * @param delta Direction in which the user is moving their pointer.
    */
-  private _getItemIndexFromPointerPosition(item: DragRef, pointerX: number, pointerY: number,
-                                           delta?: {x: number, y: number}): number {
+  private _getItemIndexFromPointerPosition(
+      item: DragRef, pointerX: number, pointerY: number, delta?: {x: number, y: number}): number {
     const isHorizontal = this._orientation === 'horizontal';
     const index = this._itemPositions.findIndex(({drag, clientRect}, _, array) => {
       if (drag === item) {
@@ -791,28 +793,29 @@ export class DropListRef<T = any> {
   }
 
   /** Starts the interval that'll auto-scroll the element. */
-  private _startScrollInterval = () => {
-    this._stopScrolling();
+  private _startScrollInterval =
+      () => {
+        this._stopScrolling();
 
-    interval(0, animationFrameScheduler)
-      .pipe(takeUntil(this._stopScrollTimers))
-      .subscribe(() => {
-        const node = this._scrollNode;
-        const scrollStep = this.autoScrollStep;
+        interval(0, animationFrameScheduler)
+            .pipe(takeUntil(this._stopScrollTimers))
+            .subscribe(() => {
+              const node = this._scrollNode;
+              const scrollStep = this.autoScrollStep;
 
-        if (this._verticalScrollDirection === AutoScrollVerticalDirection.UP) {
-          node.scrollBy(0, -scrollStep);
-        } else if (this._verticalScrollDirection === AutoScrollVerticalDirection.DOWN) {
-          node.scrollBy(0, scrollStep);
-        }
+              if (this._verticalScrollDirection === AutoScrollVerticalDirection.UP) {
+                node.scrollBy(0, -scrollStep);
+              } else if (this._verticalScrollDirection === AutoScrollVerticalDirection.DOWN) {
+                node.scrollBy(0, scrollStep);
+              }
 
-        if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.LEFT) {
-          node.scrollBy(-scrollStep, 0);
-        } else if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.RIGHT) {
-          node.scrollBy(scrollStep, 0);
-        }
-      });
-  }
+              if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.LEFT) {
+                node.scrollBy(-scrollStep, 0);
+              } else if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.RIGHT) {
+                node.scrollBy(scrollStep, 0);
+              }
+            });
+      }
 
   /**
    * Checks whether the user's pointer is positioned over the container.
@@ -830,7 +833,7 @@ export class DropListRef<T = any> {
    * @param x Position of the item along the X axis.
    * @param y Position of the item along the Y axis.
    */
-  _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef | undefined {
+  _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef|undefined {
     return this._siblings.find(sibling => sibling._canReceive(item, x, y));
   }
 
@@ -873,12 +876,13 @@ export class DropListRef<T = any> {
     const activeSiblings = this._activeSiblings;
 
     if (!activeSiblings.has(sibling) && items.every(item => {
-      // Note that we have to add an exception to the `enterPredicate` for items that started off
-      // in this drop list. The drag ref has logic that allows an item to return to its initial
-      // container, if it has left the initial container and none of the connected containers
-      // allow it to enter. See `DragRef._updateActiveDropContainer` for more context.
-      return this.enterPredicate(item, this) || this._draggables.indexOf(item) > -1;
-    })) {
+          // Note that we have to add an exception to the `enterPredicate` for items that started
+          // off in this drop list. The drag ref has logic that allows an item to return to its
+          // initial container, if it has left the initial container and none of the connected
+          // containers allow it to enter. See `DragRef._updateActiveDropContainer` for more
+          // context.
+          return this.enterPredicate(item, this) || this._draggables.indexOf(item) > -1;
+        })) {
       activeSiblings.add(sibling);
       this._cacheParentPositions();
       this._listenToScrollEvents();
@@ -899,35 +903,34 @@ export class DropListRef<T = any> {
    * Used for updating the internal state of the list.
    */
   private _listenToScrollEvents() {
-    this._viewportScrollSubscription = this._dragDropRegistry
-      .scrolled(this._getShadowRoot())
-      .subscribe(event => {
-        if (this.isDragging()) {
-          const scrollDifference = this._parentPositions.handleScroll(event);
+    this._viewportScrollSubscription =
+        this._dragDropRegistry.scrolled(this._getShadowRoot()).subscribe(event => {
+          if (this.isDragging()) {
+            const scrollDifference = this._parentPositions.handleScroll(event);
 
-          if (scrollDifference) {
-            // Since we know the amount that the user has scrolled we can shift all of the
-            // client rectangles ourselves. This is cheaper than re-measuring everything and
-            // we can avoid inconsistent behavior where we might be measuring the element before
-            // its position has changed.
-            this._itemPositions.forEach(({clientRect}) => {
-              adjustClientRect(clientRect, scrollDifference.top, scrollDifference.left);
-            });
+            if (scrollDifference) {
+              // Since we know the amount that the user has scrolled we can shift all of the
+              // client rectangles ourselves. This is cheaper than re-measuring everything and
+              // we can avoid inconsistent behavior where we might be measuring the element before
+              // its position has changed.
+              this._itemPositions.forEach(({clientRect}) => {
+                adjustClientRect(clientRect, scrollDifference.top, scrollDifference.left);
+              });
 
-            // We need two loops for this, because we want all of the cached
-            // positions to be up-to-date before we re-sort the item.
-            this._itemPositions.forEach(({drag}) => {
-              if (this._dragDropRegistry.isDragging(drag)) {
-                // We need to re-sort the item manually, because the pointer move
-                // events won't be dispatched while the user is scrolling.
-                drag._sortFromLastPointerPosition();
-              }
-            });
+              // We need two loops for this, because we want all of the cached
+              // positions to be up-to-date before we re-sort the item.
+              this._itemPositions.forEach(({drag}) => {
+                if (this._dragDropRegistry.isDragging(drag)) {
+                  // We need to re-sort the item manually, because the pointer move
+                  // events won't be dispatched while the user is scrolling.
+                  drag._sortFromLastPointerPosition();
+                }
+              });
+            }
+          } else if (this.isReceiving()) {
+            this._cacheParentPositions();
           }
-        } else if (this.isReceiving()) {
-          this._cacheParentPositions();
-        }
-      });
+        });
   }
 
   /**
@@ -997,8 +1000,9 @@ function getHorizontalScrollDirection(clientRect: ClientRect, pointerX: number) 
  * @param pointerX Position of the user's pointer along the x axis.
  * @param pointerY Position of the user's pointer along the y axis.
  */
-function getElementScrollDirections(element: HTMLElement, clientRect: ClientRect, pointerX: number,
-  pointerY: number): [AutoScrollVerticalDirection, AutoScrollHorizontalDirection] {
+function getElementScrollDirections(
+    element: HTMLElement, clientRect: ClientRect, pointerX: number,
+    pointerY: number): [AutoScrollVerticalDirection, AutoScrollHorizontalDirection] {
   const computedVertical = getVerticalScrollDirection(clientRect, pointerY);
   const computedHorizontal = getHorizontalScrollDirection(clientRect, pointerX);
   let verticalScrollDirection = AutoScrollVerticalDirection.NONE;

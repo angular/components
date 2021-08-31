@@ -16,9 +16,7 @@ export interface ChipColor {
 })
 export class ChipsStackedExample {
   availableColors: ChipColor[] = [
-    {name: 'none', color: undefined},
-    {name: 'Primary', color: 'primary'},
-    {name: 'Accent', color: 'accent'},
-    {name: 'Warn', color: 'warn'}
+    {name: 'none', color: undefined}, {name: 'Primary', color: 'primary'},
+    {name: 'Accent', color: 'accent'}, {name: 'Warn', color: 'warn'}
   ];
 }

@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 
@@ -50,13 +50,17 @@ export class PopoverEditTabOutMatTableExample {
   readonly preservedWeightValues = new WeakMap<PeriodicElement, any>();
 
   onSubmitName(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.name = f.value.name;
   }
 
   onSubmitWeight(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.weight = f.value.weight;
   }

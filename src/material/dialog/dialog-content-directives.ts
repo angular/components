@@ -8,13 +8,14 @@
 
 import {
   Directive,
+  ElementRef,
   Input,
   OnChanges,
   OnInit,
   Optional,
   SimpleChanges,
-  ElementRef,
 } from '@angular/core';
+
 import {MatDialog} from './dialog';
 import {_closeDialogVia, MatDialogRef} from './dialog-ref';
 
@@ -38,7 +39,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   @Input('aria-label') ariaLabel: string;
 
   /** Default to "button" to prevents accidental form submits. */
-  @Input() type: 'submit' | 'button' | 'reset' = 'button';
+  @Input() type: 'submit'|'button'|'reset' = 'button';
 
   /** Dialog close input. */
   @Input('mat-dialog-close') dialogResult: any;
@@ -47,16 +48,15 @@ export class MatDialogClose implements OnInit, OnChanges {
 
   constructor(
 
-    /**
-     * Reference to the containing dialog.
-     * @deprecated `dialogRef` property to become private.
-     * @breaking-change 13.0.0
-     */
-    // The dialog title directive is always used in combination with a `MatDialogRef`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() public dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog) {}
+      /**
+       * Reference to the containing dialog.
+       * @deprecated `dialogRef` property to become private.
+       * @breaking-change 13.0.0
+       */
+      // The dialog title directive is always used in combination with a `MatDialogRef`.
+      // tslint:disable-next-line: lightweight-tokens
+      @Optional() public dialogRef: MatDialogRef<any>, private _elementRef: ElementRef<HTMLElement>,
+      private _dialog: MatDialog) {}
 
   ngOnInit() {
     if (!this.dialogRef) {
@@ -82,8 +82,9 @@ export class MatDialogClose implements OnInit, OnChanges {
     // result in incorrect origins. Most of the time, close buttons will be auto focused in the
     // dialog, and therefore clicking the button won't result in a focus change. This means that
     // the FocusMonitor won't detect any origin change, and will always output `program`.
-    _closeDialogVia(this.dialogRef,
-        event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse', this.dialogResult);
+    _closeDialogVia(
+        this.dialogRef, event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse',
+        this.dialogResult);
   }
 }
 
@@ -106,8 +107,7 @@ export class MatDialogTitle implements OnInit {
       // The dialog title directive is always used in combination with a `MatDialogRef`.
       // tslint:disable-next-line: lightweight-tokens
       @Optional() private _dialogRef: MatDialogRef<any>,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _dialog: MatDialog) {}
+      private _elementRef: ElementRef<HTMLElement>, private _dialog: MatDialog) {}
 
   ngOnInit() {
     if (!this._dialogRef) {
@@ -134,7 +134,8 @@ export class MatDialogTitle implements OnInit {
   selector: `[mat-dialog-content], mat-dialog-content, [matDialogContent]`,
   host: {'class': 'mat-dialog-content'}
 })
-export class MatDialogContent {}
+export class MatDialogContent {
+}
 
 
 /**
@@ -145,7 +146,8 @@ export class MatDialogContent {}
   selector: `[mat-dialog-actions], mat-dialog-actions, [matDialogActions]`,
   host: {'class': 'mat-dialog-actions'}
 })
-export class MatDialogActions {}
+export class MatDialogActions {
+}
 
 
 /**
@@ -154,7 +156,7 @@ export class MatDialogActions {}
  * @param openDialogs References to the currently-open dialogs.
  */
 function getClosestDialog(element: ElementRef<HTMLElement>, openDialogs: MatDialogRef<any>[]) {
-  let parent: HTMLElement | null = element.nativeElement.parentElement;
+  let parent: HTMLElement|null = element.nativeElement.parentElement;
 
   while (parent && !parent.classList.contains('mat-dialog-container')) {
     parent = parent.parentElement;

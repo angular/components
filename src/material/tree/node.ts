@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {
   CDK_TREE_NODE_OUTLET_NODE,
   CdkNestedTreeNode,
@@ -21,7 +22,8 @@ import {
   ElementRef,
   Input,
   IterableDiffers,
-  OnDestroy, OnInit,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {
   CanDisable,
@@ -29,7 +31,6 @@ import {
   mixinDisabled,
   mixinTabIndex,
 } from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 
 const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
 
@@ -42,13 +43,12 @@ const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
   inputs: ['role', 'disabled', 'tabIndex'],
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
-export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K>
-    implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
-
-
-  constructor(elementRef: ElementRef<HTMLElement>,
-              tree: CdkTree<T, K>,
-              @Attribute('tabindex') tabIndex: string) {
+export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K> implements CanDisable, DoCheck,
+                                                                             HasTabIndex, OnInit,
+                                                                             OnDestroy {
+  constructor(
+      elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>,
+      @Attribute('tabindex') tabIndex: string) {
     super(elementRef, tree);
 
     this.tabIndex = Number(tabIndex) || 0;
@@ -83,9 +83,7 @@ export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K>
  */
 @Directive({
   selector: '[matTreeNodeDef]',
-  inputs: [
-    'when: matTreeNodeDefWhen'
-  ],
+  inputs: ['when: matTreeNodeDefWhen'],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
@@ -105,29 +103,34 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: MatNestedTreeNode}
   ]
 })
-export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K>
-    implements AfterContentInit, DoCheck, OnDestroy, OnInit {
+export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements
+    AfterContentInit, DoCheck, OnDestroy, OnInit {
   @Input('matNestedTreeNode') node: T;
 
   /** Whether the node is disabled. */
   @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled() {
+    return this._disabled;
+  }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled = false;
 
   /** Tabindex for the node. */
   @Input()
-  get tabIndex(): number { return this.disabled ? -1 : this._tabIndex; }
+  get tabIndex(): number {
+    return this.disabled ? -1 : this._tabIndex;
+  }
   set tabIndex(value: number) {
     // If the specified tabIndex value is null or undefined, fall back to the default value.
     this._tabIndex = value != null ? value : 0;
   }
   private _tabIndex: number;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              tree: CdkTree<T, K>,
-              differs: IterableDiffers,
-              @Attribute('tabindex') tabIndex: string) {
+  constructor(
+      elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, differs: IterableDiffers,
+      @Attribute('tabindex') tabIndex: string) {
     super(elementRef, tree, differs);
     this.tabIndex = Number(tabIndex) || 0;
     // The classes are directly added here instead of in the host property because classes on

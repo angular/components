@@ -16,4 +16,5 @@ import {MatIcon} from './icon';
   exports: [MatIcon, MatCommonModule],
   declarations: [MatIcon],
 })
-export class MatIconModule {}
+export class MatIconModule {
+}

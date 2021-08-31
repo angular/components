@@ -162,8 +162,8 @@ export function checkCdkPackage(packagePath: string): string[] {
   const prebuiltFiles = glob('*-prebuilt.css', {cwd: packagePath}).map(path => basename(path));
   const newApiFilePath = join(packagePath, '_index.scss');
   const failures = ['overlay', 'a11y', 'text-field']
-      .filter(name => !prebuiltFiles.includes(`${name}-prebuilt.css`))
-      .map(name => `Could not find the prebuilt ${name} styles.`);
+                       .filter(name => !prebuiltFiles.includes(`${name}-prebuilt.css`))
+                       .map(name => `Could not find the prebuilt ${name} styles.`);
 
   if (!existsSync(newApiFilePath)) {
     failures.push('New Sass API bundle could not be found.');

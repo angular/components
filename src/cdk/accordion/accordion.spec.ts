@@ -1,7 +1,8 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 import {CdkAccordion} from './accordion';
 import {CdkAccordionItem} from './accordion-item';
 import {CdkAccordionModule} from './accordion-module';
@@ -9,10 +10,7 @@ import {CdkAccordionModule} from './accordion-module';
 describe('CdkAccordion', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        CdkAccordionModule
-      ],
+      imports: [BrowserAnimationsModule, CdkAccordionModule],
       declarations: [
         SetOfItems,
         NestedItems,
@@ -23,9 +21,9 @@ describe('CdkAccordion', () => {
 
   it('should ensure only one item is expanded at a time', () => {
     const fixture = TestBed.createComponent(SetOfItems);
-    const [firstPanel, secondPanel] = fixture.debugElement
-      .queryAll(By.directive(CdkAccordionItem))
-      .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
+    const [firstPanel, secondPanel] =
+        fixture.debugElement.queryAll(By.directive(CdkAccordionItem))
+            .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
 
     firstPanel.open();
     fixture.detectChanges();
@@ -40,9 +38,9 @@ describe('CdkAccordion', () => {
 
   it('should allow multiple items to be expanded simultaneously', () => {
     const fixture = TestBed.createComponent(SetOfItems);
-    const [firstPanel, secondPanel] = fixture.debugElement
-      .queryAll(By.directive(CdkAccordionItem))
-      .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
+    const [firstPanel, secondPanel] =
+        fixture.debugElement.queryAll(By.directive(CdkAccordionItem))
+            .map(el => el.injector.get<CdkAccordionItem>(CdkAccordionItem));
 
     fixture.componentInstance.multi = true;
     fixture.detectChanges();
@@ -115,14 +113,15 @@ describe('CdkAccordion', () => {
     expect(stateSpy).toHaveBeenCalled();
     expect(openCloseSpy).toHaveBeenCalled();
   });
-
 });
 
-@Component({template: `
+@Component({
+  template: `
   <cdk-accordion [multi]="multi">
     <cdk-accordion-item></cdk-accordion-item>
     <cdk-accordion-item></cdk-accordion-item>
-  </cdk-accordion>`})
+  </cdk-accordion>`
+})
 class SetOfItems {
   @ViewChild(CdkAccordion) accordion: CdkAccordion;
   @ViewChildren(CdkAccordionItem) items: QueryList<CdkAccordionItem>;
@@ -130,12 +129,14 @@ class SetOfItems {
 }
 
 
-@Component({template: `
+@Component({
+  template: `
   <cdk-accordion>
     <cdk-accordion-item #outerItem="cdkAccordionItem">
       <cdk-accordion-item #innerItem="cdkAccordionItem"></cdk-accordion-item>
     </cdk-accordion-item>
-  </cdk-accordion>`})
+  </cdk-accordion>`
+})
 class NestedItems {
   @ViewChild('outerItem') outerItem: CdkAccordionItem;
   @ViewChild('innerItem') innerItem: CdkAccordionItem;

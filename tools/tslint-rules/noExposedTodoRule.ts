@@ -1,9 +1,8 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import * as utils from 'tsutils';
+import * as ts from 'typescript';
 
-const ERROR_MESSAGE =
-    'A TODO may only appear in inline (//) style comments. ' +
+const ERROR_MESSAGE = 'A TODO may only appear in inline (//) style comments. ' +
     'This is meant to prevent a TODO from being accidentally included in any public API docs.';
 
 /**
@@ -12,14 +11,12 @@ const ERROR_MESSAGE =
  * comments.
  */
 export class Rule extends Lint.Rules.AbstractRule {
-
   apply(sourceFile: ts.SourceFile) {
     return this.applyWithWalker(new NoExposedTodoWalker(sourceFile, this.getOptions()));
   }
 }
 
 class NoExposedTodoWalker extends Lint.RuleWalker {
-
   override visitSourceFile(sourceFile: ts.SourceFile) {
     utils.forEachComment(sourceFile, (text, commentRange) => {
       const isTodoComment = text.substring(commentRange.pos, commentRange.end).includes('TODO:');

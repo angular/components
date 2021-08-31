@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {readFileSync, existsSync} from 'fs';
 import * as browserSync from 'browser-sync';
+import {existsSync, readFileSync} from 'fs';
 import * as http from 'http';
 import * as path from 'path';
 import * as send from 'send';
@@ -105,7 +105,8 @@ export class DevServer {
     for (let rootPath of this._rootPaths) {
       try {
         return require.resolve(path.posix.join(rootPath, getManifestPath(url)));
-      } catch {}
+      } catch {
+      }
     }
     return null;
   }
@@ -123,7 +124,7 @@ export class DevServer {
       // into the dev app as a `script` tag. It is used to pass in environment-specific variables.
       const varsPath = path.join(path.dirname(indexPath), 'variables.json');
       const scriptTag = '<script>window.DEV_APP_VARIABLES = ' +
-        (existsSync(varsPath) ? readFileSync(varsPath, 'utf8') : '{}') + ';</script>';
+          (existsSync(varsPath) ? readFileSync(varsPath, 'utf8') : '{}') + ';</script>';
       const content = readFileSync(indexPath, 'utf8');
       const headIndex = content.indexOf('</head>');
       this._index = content.slice(0, headIndex) + scriptTag + content.slice(headIndex);

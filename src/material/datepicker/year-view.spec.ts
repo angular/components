@@ -9,12 +9,14 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
-import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
 import {By} from '@angular/platform-browser';
+
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
+
 import {MatCalendarBody} from './calendar-body';
 import {MatYearView} from './year-view';
 
@@ -35,9 +37,13 @@ describe('MatYearView', () => {
         YearViewWithDateFilter,
         YearViewWithDateClass,
       ],
-      providers: [
-        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
-      ]
+      providers: [{
+        provide: Directionality,
+        useFactory: () => dir =
+        {
+          value: 'ltr'
+        }
+      }]
     });
 
     TestBed.compileComponents();
@@ -128,7 +134,7 @@ describe('MatYearView', () => {
         beforeEach(() => {
           calendarInstance = fixture.componentInstance;
           calendarBodyEl =
-            fixture.debugElement.nativeElement.querySelector('.mat-calendar-body') as HTMLElement;
+              fixture.debugElement.nativeElement.querySelector('.mat-calendar-body') as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
           dir.value = 'ltr';
           fixture.componentInstance.date = new Date(2017, JAN, 5);
@@ -328,7 +334,6 @@ describe('MatYearView', () => {
 
       expect(spy).not.toHaveBeenCalled();
     });
-
   });
 
   describe('year view with custom date classes', () => {
@@ -355,7 +360,6 @@ describe('MatYearView', () => {
       expect(dateClassSpy).toHaveBeenCalledWith(jasmine.any(Date), 'year');
     });
   });
-
 });
 
 
@@ -383,8 +387,8 @@ class StandardYearView {
 })
 class YearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
-  minDate: Date | null = null;
-  maxDate: Date | null = null;
+  minDate: Date|null = null;
+  maxDate: Date|null = null;
   dateFilter(date: Date) {
     if (date.getMonth() == JAN) {
       return date.getDate() == 10;
@@ -397,9 +401,8 @@ class YearViewWithDateFilter {
 }
 
 
-@Component({
-  template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`
-})
+@Component(
+    {template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`})
 class YearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);
   dateClass(date: Date) {

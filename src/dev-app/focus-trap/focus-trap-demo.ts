@@ -7,25 +7,26 @@
  */
 
 import {CdkTrapFocus} from '@angular/cdk/a11y';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
   Component,
   ElementRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewChildren,
   QueryList,
+  ViewChild,
+  ViewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {_supportsShadowDom} from '@angular/cdk/platform';
 
 @Component({
   selector: 'shadow-dom-demo',
   template: '<ng-content></ng-content>',
-  host:     {'class': 'demo-focus-trap-shadow-root'},
+  host: {'class': 'demo-focus-trap-shadow-root'},
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class FocusTrapShadowDomDemo {}
+export class FocusTrapShadowDomDemo {
+}
 
 @Component({
   selector: 'focus-trap-demo',
@@ -33,11 +34,9 @@ export class FocusTrapShadowDomDemo {}
   styleUrls: ['focus-trap-demo.css'],
 })
 export class FocusTrapDemo implements AfterViewInit {
-  @ViewChild('newElements')
-  private _newElements: ElementRef<HTMLElement>;
+  @ViewChild('newElements') private _newElements: ElementRef<HTMLElement>;
 
-  @ViewChildren(CdkTrapFocus)
-  private _focusTraps: QueryList<CdkTrapFocus>;
+  @ViewChildren(CdkTrapFocus) private _focusTraps: QueryList<CdkTrapFocus>;
 
   _supportsShadowDom = _supportsShadowDom();
 

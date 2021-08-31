@@ -18,11 +18,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {RouterModule} from '@angular/router';
+
 import {
   CustomHeader,
   CustomHeaderNgContent,
-  DatepickerDemo,
   CustomRangeStrategy,
+  DatepickerDemo,
 } from './datepicker-demo';
 
 @NgModule({

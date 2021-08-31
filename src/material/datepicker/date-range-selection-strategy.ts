@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, InjectionToken, Optional, SkipSelf, FactoryProvider} from '@angular/core';
+import {FactoryProvider, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
+
 import {DateRange} from './date-selection-model';
 
 /** Injection token used to customize the date range selection behavior. */
@@ -23,7 +24,7 @@ export interface MatDateRangeSelectionStrategy<D> {
    * @param event DOM event that triggered the selection. Currently only corresponds to a `click`
    *    event, but it may get expanded in the future.
    */
-  selectionFinished(date: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
+  selectionFinished(date: D|null, currentRange: DateRange<D>, event: Event): DateRange<D>;
 
   /**
    * Called when the user has activated a new date (e.g. by hovering over
@@ -35,7 +36,7 @@ export interface MatDateRangeSelectionStrategy<D> {
    * @param event DOM event that caused the preview to be changed. Will be either a
    *    `mouseenter`/`mouseleave` or `focus`/`blur` depending on how the user is navigating.
    */
-  createPreview(activeDate: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
+  createPreview(activeDate: D|null, currentRange: DateRange<D>, event: Event): DateRange<D>;
 }
 
 /** Provides the default date range selection behavior. */
@@ -58,9 +59,9 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
     return new DateRange<D>(start, end);
   }
 
-  createPreview(activeDate: D | null, currentRange: DateRange<D>) {
-    let start: D | null = null;
-    let end: D | null = null;
+  createPreview(activeDate: D|null, currentRange: DateRange<D>) {
+    let start: D|null = null;
+    let end: D|null = null;
 
     if (currentRange.start && !currentRange.end && activeDate) {
       start = currentRange.start;
@@ -74,7 +75,7 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
 
 /** @docs-private */
 export function MAT_CALENDAR_RANGE_STRATEGY_PROVIDER_FACTORY(
-  parent: MatDateRangeSelectionStrategy<unknown>, adapter: DateAdapter<unknown>) {
+    parent: MatDateRangeSelectionStrategy<unknown>, adapter: DateAdapter<unknown>) {
   return parent || new DefaultMatCalendarRangeStrategy(adapter);
 }
 

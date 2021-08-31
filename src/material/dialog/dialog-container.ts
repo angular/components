@@ -43,7 +43,7 @@ import {MatDialogConfig} from './dialog-config';
 
 /** Event that captures the state of dialog container animations. */
 interface DialogAnimationEvent {
-  state: 'opened' | 'opening' | 'closing' | 'closed';
+  state: 'opened'|'opening'|'closing'|'closed';
   totalTime: number;
 }
 
@@ -74,7 +74,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
   _animationStateChanged = new EventEmitter<DialogAnimationEvent>();
 
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
-  private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
+  private _elementFocusedBeforeDialogWasOpened: HTMLElement|null = null;
 
   /**
    * Type of interaction that led to the dialog being closed. This is used to determine
@@ -84,22 +84,17 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
   _closeInteractionType: FocusOrigin|null = null;
 
   /** ID of the element that should be considered as the dialog's label. */
-  _ariaLabelledBy: string | null;
+  _ariaLabelledBy: string|null;
 
   /** ID for the container DOM element. */
   _id: string;
 
   constructor(
-    protected _elementRef: ElementRef,
-    protected _focusTrapFactory: FocusTrapFactory,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(DOCUMENT) _document: any,
-    /** The dialog configuration. */
-    public _config: MatDialogConfig,
-    private readonly _interactivityChecker: InteractivityChecker,
-    private readonly _ngZone: NgZone,
-    private _focusMonitor?: FocusMonitor) {
-
+      protected _elementRef: ElementRef, protected _focusTrapFactory: FocusTrapFactory,
+      protected _changeDetectorRef: ChangeDetectorRef, @Optional() @Inject(DOCUMENT) _document: any,
+      /** The dialog configuration. */
+      public _config: MatDialogConfig, private readonly _interactivityChecker: InteractivityChecker,
+      private readonly _ngZone: NgZone, private _focusMonitor?: FocusMonitor) {
     super();
     this._ariaLabelledBy = _config.ariaLabelledBy || null;
     this._document = _document;
@@ -146,13 +141,14 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  override attachDomPortal = (portal: DomPortal) => {
-    if (this._portalOutlet.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throwMatDialogContentAlreadyAttachedError();
-    }
+  override attachDomPortal =
+      (portal: DomPortal) => {
+        if (this._portalOutlet.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+          throwMatDialogContentAlreadyAttachedError();
+        }
 
-    return this._portalOutlet.attachDomPortal(portal);
-  }
+        return this._portalOutlet.attachDomPortal(portal);
+      }
 
   /** Moves focus back into the dialog if it was moved out. */
   _recaptureFocus() {
@@ -184,7 +180,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
    */
   private _focusByCssSelector(selector: string, options?: FocusOptions) {
     let elementToFocus =
-      this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
+        this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
     if (elementToFocus) {
       this._forceFocus(elementToFocus, options);
     }
@@ -320,7 +316,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
 })
 export class MatDialogContainer extends _MatDialogContainerBase {
   /** State of the dialog animation. */
-  _state: 'void' | 'enter' | 'exit' = 'enter';
+  _state: 'void'|'enter'|'exit' = 'enter';
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone({toState, totalTime}: AnimationEvent) {

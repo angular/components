@@ -24,11 +24,11 @@ describe('CDK ng-add', () => {
 
     expect(dependencies['@angular/cdk']).toBe('~0.0.0-PLACEHOLDER');
     expect(Object.keys(dependencies))
-      .withContext('Expected the modified "dependencies" to be sorted alphabetically.')
-      .toEqual(Object.keys(dependencies).sort());
+        .withContext('Expected the modified "dependencies" to be sorted alphabetically.')
+        .toEqual(Object.keys(dependencies).sort());
     expect(runner.tasks.some(task => task.name === 'node-package'))
-      .withContext('Expected the package manager to be scheduled in order to update lock files.')
-      .toBe(true);
+        .withContext('Expected the package manager to be scheduled in order to update lock files.')
+        .toBe(true);
   });
 
   it('should respect version range from CLI ng-add command', async () => {
@@ -42,7 +42,9 @@ describe('CDK ng-add', () => {
 
     expect(dependencies['@angular/cdk']).toBe('^9.0.0');
     expect(runner.tasks.some(task => task.name === 'node-package'))
-      .withContext('Expected the package manager to not run since the CDK version ' +
-                   'was already inserted.').toBe(false);
+        .withContext(
+            'Expected the package manager to not run since the CDK version ' +
+            'was already inserted.')
+        .toBe(false);
   });
 });

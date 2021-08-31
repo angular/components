@@ -6,13 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusableOption, FocusOptions, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Directive,
   ElementRef,
   EventEmitter,
   Inject,
@@ -22,12 +24,11 @@ import {
   Output,
   QueryList,
   ViewEncapsulation,
-  Directive,
 } from '@angular/core';
-import {FocusOptions, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
-import {MatOptgroup, _MatOptgroupBase, MAT_OPTGROUP} from './optgroup';
-import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
+
+import {_MatOptgroupBase, MAT_OPTGROUP, MatOptgroup} from './optgroup';
+import {MAT_OPTION_PARENT_COMPONENT, MatOptionParentComponent} from './option-parent';
 
 /**
  * Option IDs need to be unique across components, so this counter exists outside of
@@ -38,10 +39,10 @@ let _uniqueIdCounter = 0;
 /** Event object emitted by MatOption when selected or deselected. */
 export class MatOptionSelectionChange {
   constructor(
-    /** Reference to the option that emitted the event. */
-    public source: _MatOptionBase,
-    /** Whether the change in the option's value was a result of a user action. */
-    public isUserInput = false) { }
+      /** Reference to the option that emitted the event. */
+      public source: _MatOptionBase,
+      /** Whether the change in the option's value was a result of a user action. */
+      public isUserInput = false) {}
 }
 
 @Directive()
@@ -52,10 +53,14 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
-  get multiple() { return this._parent && this._parent.multiple; }
+  get multiple() {
+    return this._parent && this._parent.multiple;
+  }
 
   /** Whether or not the option is currently selected. */
-  get selected(): boolean { return this._selected; }
+  get selected(): boolean {
+    return this._selected;
+  }
 
   /** The form value of the option. */
   @Input() value: any;
@@ -65,11 +70,17 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.group && this.group.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled() {
+    return (this.group && this.group.disabled) || this._disabled;
+  }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
 
   /** Whether ripples for the option are disabled. */
-  get disableRipple() { return this._parent && this._parent.disableRipple; }
+  get disableRipple() {
+    return this._parent && this._parent.disableRipple;
+  }
 
   /** Event emitted when the option is selected or deselected. */
   // tslint:disable-next-line:no-output-on-prefix
@@ -79,10 +90,8 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   readonly _stateChanges = new Subject<void>();
 
   constructor(
-    private _element: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _parent: MatOptionParentComponent,
-    readonly group: _MatOptgroupBase) {}
+      private _element: ElementRef<HTMLElement>, private _changeDetectorRef: ChangeDetectorRef,
+      private _parent: MatOptionParentComponent, readonly group: _MatOptgroupBase) {}
 
   /**
    * Whether or not the option is currently active and ready to be selected.
@@ -258,10 +267,9 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
 })
 export class MatOption extends _MatOptionBase {
   constructor(
-    element: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
-    @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup) {
+      element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef,
+      @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
+      @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup) {
     super(element, changeDetectorRef, parent, group);
   }
 }
@@ -273,9 +281,9 @@ export class MatOption extends _MatOptionBase {
  * @param optionGroups Flat list of all of the option groups.
  * @docs-private
  */
-export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>,
-  optionGroups: QueryList<MatOptgroup>): number {
-
+export function _countGroupLabelsBeforeOption(
+    optionIndex: number, options: QueryList<MatOption>,
+    optionGroups: QueryList<MatOptgroup>): number {
   if (optionGroups.length) {
     let optionsArray = options.toArray();
     let groups = optionGroups.toArray();
@@ -301,8 +309,9 @@ export function _countGroupLabelsBeforeOption(optionIndex: number, options: Quer
  * @param panelHeight Height of the panel.
  * @docs-private
  */
-export function _getOptionScrollPosition(optionOffset: number, optionHeight: number,
-    currentScrollPosition: number, panelHeight: number): number {
+export function _getOptionScrollPosition(
+    optionOffset: number, optionHeight: number, currentScrollPosition: number,
+    panelHeight: number): number {
   if (optionOffset < currentScrollPosition) {
     return optionOffset;
   }
@@ -313,4 +322,3 @@ export function _getOptionScrollPosition(optionOffset: number, optionHeight: num
 
   return currentScrollPosition;
 }
-

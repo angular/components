@@ -38,7 +38,8 @@ import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   mixinDisabled,
   mixinDisableRipple,
-  mixinTabIndex, RippleConfig,
+  mixinTabIndex,
+  RippleConfig,
   RippleGlobalOptions,
   RippleRenderer,
   RippleTarget,
@@ -55,14 +56,16 @@ import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab
  */
 @Directive()
 export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements AfterContentChecked,
-  AfterContentInit, OnDestroy {
-
+                                                                              AfterContentInit,
+                                                                              OnDestroy {
   /** Query list of all tab links of the tab navigation. */
-  abstract override _items: QueryList<MatPaginatedTabHeaderItem & {active: boolean}>;
+  abstract override _items: QueryList<MatPaginatedTabHeaderItem&{active: boolean}>;
 
   /** Background color of the tab nav. */
   @Input()
-  get backgroundColor(): ThemePalette { return this._backgroundColor; }
+  get backgroundColor(): ThemePalette {
+    return this._backgroundColor;
+  }
   set backgroundColor(value: ThemePalette) {
     const classList = this._elementRef.nativeElement.classList;
     classList.remove(`mat-background-${this.backgroundColor}`);
@@ -77,20 +80,21 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
 
   /** Whether the ripple effect is disabled or not. */
   @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: any) { this._disableRipple = coerceBooleanProperty(value); }
+  get disableRipple() {
+    return this._disableRipple;
+  }
+  set disableRipple(value: any) {
+    this._disableRipple = coerceBooleanProperty(value);
+  }
   private _disableRipple: boolean = false;
 
   /** Theme color of the nav bar. */
   @Input() color: ThemePalette = 'primary';
 
-  constructor(elementRef: ElementRef,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      elementRef: ElementRef, @Optional() dir: Directionality, ngZone: NgZone,
+      changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, platform: Platform,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
 
@@ -144,7 +148,7 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
   host: {
     'class': 'mat-tab-nav-bar mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
+    '[class.mat-tab-header-rtl]': '_getLayoutDirection() == \'rtl\'',
     '[class.mat-primary]': 'color !== "warn" && color !== "accent"',
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
@@ -161,13 +165,10 @@ export class MatTabNav extends _MatTabNavBase {
   @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
 
-  constructor(elementRef: ElementRef,
-    @Optional() dir: Directionality,
-    ngZone: NgZone,
-    changeDetectorRef: ChangeDetectorRef,
-    viewportRuler: ViewportRuler,
-    platform: Platform,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      elementRef: ElementRef, @Optional() dir: Directionality, ngZone: NgZone,
+      changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, platform: Platform,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
   }
 
@@ -180,14 +181,17 @@ const _MatTabLinkMixinBase = mixinTabIndex(mixinDisableRipple(mixinDisabled(clas
 /** Base class with all of the `MatTabLink` functionality. */
 @Directive()
 export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewInit, OnDestroy,
-  CanDisable, CanDisableRipple, HasTabIndex, RippleTarget, FocusableOption {
-
+                                                                     CanDisable, CanDisableRipple,
+                                                                     HasTabIndex, RippleTarget,
+                                                                     FocusableOption {
   /** Whether the tab link is active or not. */
   protected _isActive: boolean = false;
 
   /** Whether the link is active. */
   @Input()
-  get active(): boolean { return this._isActive; }
+  get active(): boolean {
+    return this._isActive;
+  }
   set active(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
@@ -203,7 +207,7 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
    * the tab link ripples.
    * @docs-private
    */
-  rippleConfig: RippleConfig & RippleGlobalOptions;
+  rippleConfig: RippleConfig&RippleGlobalOptions;
 
   /**
    * Whether ripples are disabled on interaction.
@@ -211,7 +215,7 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
    */
   get rippleDisabled(): boolean {
     return this.disabled || this.disableRipple || this._tabNavBar.disableRipple ||
-      !!this.rippleConfig.disabled;
+        !!this.rippleConfig.disabled;
   }
 
   constructor(
@@ -278,11 +282,10 @@ export class MatTabLink extends _MatTabLinkBase implements OnDestroy {
   private _tabLinkRipple: RippleRenderer;
 
   constructor(
-    tabNavBar: MatTabNav, elementRef: ElementRef, ngZone: NgZone,
-    platform: Platform,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions|null,
-    @Attribute('tabindex') tabIndex: string, focusMonitor: FocusMonitor,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+      tabNavBar: MatTabNav, elementRef: ElementRef, ngZone: NgZone, platform: Platform,
+      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions|null,
+      @Attribute('tabindex') tabIndex: string, focusMonitor: FocusMonitor,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(tabNavBar, elementRef, globalRippleOptions, tabIndex, focusMonitor, animationMode);
     this._tabLinkRipple = new RippleRenderer(this, ngZone, elementRef, platform);
     this._tabLinkRipple.setupTriggerEvents(elementRef.nativeElement);

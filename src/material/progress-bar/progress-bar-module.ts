@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
+
 import {MatProgressBar} from './progress-bar';
 
 
@@ -17,4 +18,5 @@ import {MatProgressBar} from './progress-bar';
   exports: [MatProgressBar, MatCommonModule],
   declarations: [MatProgressBar],
 })
-export class MatProgressBarModule {}
+export class MatProgressBarModule {
+}

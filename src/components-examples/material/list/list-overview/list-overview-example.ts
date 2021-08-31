@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'list-overview-example',
   templateUrl: 'list-overview-example.html',
 })
-export class ListOverviewExample {}
+export class ListOverviewExample {
+}

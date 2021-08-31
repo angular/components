@@ -20,7 +20,7 @@ export class CdkMenuPanel {
   _menu?: Menu;
 
   /** Keep track of open Menus. */
-  _menuStack: MenuStack | null;
+  _menuStack: MenuStack|null;
 
   constructor(readonly _templateRef: TemplateRef<unknown>) {}
 

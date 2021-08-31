@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'sidenav-harness-example',
   templateUrl: 'sidenav-harness-example.html',
 })
-export class SidenavHarnessExample {}
+export class SidenavHarnessExample {
+}

@@ -40,4 +40,5 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
     MatSidenavContent,
   ],
 })
-export class MatSidenavModule {}
+export class MatSidenavModule {
+}

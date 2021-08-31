@@ -28,20 +28,9 @@ import {
 
 
 const CARD_DIRECTIVES = [
-  MatCard,
-  MatCardActions,
-  MatCardAvatar,
-  MatCardContent,
-  MatCardFooter,
-  MatCardHeader,
-  MatCardImage,
-  MatCardLgImage,
-  MatCardMdImage,
-  MatCardSmImage,
-  MatCardSubtitle,
-  MatCardTitle,
-  MatCardTitleGroup,
-  MatCardXlImage
+  MatCard, MatCardActions, MatCardAvatar, MatCardContent, MatCardFooter, MatCardHeader,
+  MatCardImage, MatCardLgImage, MatCardMdImage, MatCardSmImage, MatCardSubtitle, MatCardTitle,
+  MatCardTitleGroup, MatCardXlImage
 ];
 
 @NgModule({

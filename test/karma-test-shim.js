@@ -6,20 +6,18 @@ Error.stackTraceLimit = Infinity;
 // take longer in some situations (e.g Saucelabs and Browserstack tunnels)
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-__karma__.loaded = function () {};
+__karma__.loaded = function() {};
 
 var specFiles = Object.keys(window.__karma__.files).filter(isMaterialSpecFile);
 
 // Configure the Angular test bed and run all specs once configured.
-configureTestBed()
-  .then(runMaterialSpecs)
-  .then(__karma__.start, function(error) {
-    // Passing in the error object directly to Karma won't log out the stack trace and
-    // passing the `originalErr` doesn't work correctly either. We have to log out the
-    // stack trace so we can actually debug errors before the tests have started.
-    console.error(error.originalErr.stack);
-    __karma__.error(error);
-  });
+configureTestBed().then(runMaterialSpecs).then(__karma__.start, function(error) {
+  // Passing in the error object directly to Karma won't log out the stack trace and
+  // passing the `originalErr` doesn't work correctly either. We have to log out the
+  // stack trace so we can actually debug errors before the tests have started.
+  console.error(error.originalErr.stack);
+  __karma__.error(error);
+});
 
 
 /** Runs the Angular Material specs in Karma. */
@@ -37,21 +35,20 @@ function isMaterialSpecFile(path) {
 
 /** Configures Angular's TestBed. */
 function configureTestBed() {
-  return Promise.all([
-    System.import('@angular/core'),
-    System.import('@angular/core/testing'),
-    System.import('@angular/platform-browser-dynamic/testing')
-  ]).then(function (providers) {
-    var core = providers[0];
-    var testing = providers[1];
-    var testingBrowser = providers[2];
+  return Promise
+      .all([
+        System.import('@angular/core'), System.import('@angular/core/testing'),
+        System.import('@angular/platform-browser-dynamic/testing')
+      ])
+      .then(function(providers) {
+        var core = providers[0];
+        var testing = providers[1];
+        var testingBrowser = providers[2];
 
-    console.log('Running tests using Angular version: ' + core.VERSION.full);
+        console.log('Running tests using Angular version: ' + core.VERSION.full);
 
-    testing.TestBed.initTestEnvironment(
-      testingBrowser.BrowserDynamicTestingModule,
-      testingBrowser.platformBrowserDynamicTesting(),
-      {teardown: {destroyAfterEach: true}}
-    );
-  });
+        testing.TestBed.initTestEnvironment(
+            testingBrowser.BrowserDynamicTestingModule,
+            testingBrowser.platformBrowserDynamicTesting(), {teardown: {destroyAfterEach: true}});
+      });
 }

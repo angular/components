@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentPortal, Portal, CdkPortal, DomPortal} from '@angular/cdk/portal';
-import {Component, QueryList, ViewChildren, ElementRef, ViewChild} from '@angular/core';
+import {CdkPortal, ComponentPortal, DomPortal, Portal} from '@angular/cdk/portal';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 
 @Component({
@@ -39,8 +39,6 @@ export class PortalDemo {
 }
 
 
-@Component({
-  selector: 'science-joke',
-  template: `<p> 100 kilopascals go into a bar. </p>`
-})
-export class ScienceJoke { }
+@Component({selector: 'science-joke', template: `<p> 100 kilopascals go into a bar. </p>`})
+export class ScienceJoke {
+}

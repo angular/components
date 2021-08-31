@@ -14,7 +14,8 @@ import {MatCardModule} from '@angular/material/card';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {RouterModule} from '@angular/router';
-import {FocusTrapDemo, FocusTrapShadowDomDemo, FocusTrapDialogDemo} from './focus-trap-demo';
+
+import {FocusTrapDemo, FocusTrapDialogDemo, FocusTrapShadowDomDemo} from './focus-trap-demo';
 
 @NgModule({
   imports: [

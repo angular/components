@@ -1,18 +1,11 @@
+import * as minimatch from 'minimatch';
 import * as path from 'path';
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
-import * as minimatch from 'minimatch';
 
 const hooks = new Set([
-  'ngOnChanges',
-  'ngOnInit',
-  'ngDoCheck',
-  'ngAfterContentInit',
-  'ngAfterContentChecked',
-  'ngAfterViewInit',
-  'ngAfterViewChecked',
-  'ngOnDestroy',
-  'ngDoBootstrap'
+  'ngOnChanges', 'ngOnInit', 'ngDoCheck', 'ngAfterContentInit', 'ngAfterContentChecked',
+  'ngAfterViewInit', 'ngAfterViewChecked', 'ngOnDestroy', 'ngDoBootstrap'
 ]);
 
 /** Rule that prevents direct calls of the Angular lifecycle hooks */

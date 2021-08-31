@@ -76,8 +76,8 @@ export abstract class MatListHarnessBase<
     }
 
     // Concurrently wait for all sections to resolve their heading if present.
-    return parallel(() => listSections.map(async (s) =>
-        ({items: s.items, heading: await s.heading})));
+    return parallel(
+        () => listSections.map(async (s) => ({items: s.items, heading: await s.heading})));
   }
 
   /**

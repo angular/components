@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken} from '@angular/core';
 import {CdkAccordion} from '@angular/cdk/accordion';
+import {InjectionToken} from '@angular/core';
 
 /** MatAccordion's display modes. */
-export type MatAccordionDisplayMode = 'default' | 'flat';
+export type MatAccordionDisplayMode = 'default'|'flat';
 
 /** MatAccordion's toggle positions. */
-export type MatAccordionTogglePosition = 'before' | 'after';
+export type MatAccordionTogglePosition = 'before'|'after';
 
 /**
  * Base interface for a `MatAccordion`.

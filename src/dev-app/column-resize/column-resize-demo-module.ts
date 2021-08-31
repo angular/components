@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {MatExpansionModule} from '@angular/material/expansion';
-
-import {ColumnResizeHome} from './column-resize-home';
 import {
   DefaultEnabledColumnResizeExampleModule,
   DefaultEnabledColumnResizeFlexExampleModule,
   OptInColumnResizeExampleModule,
 } from '@angular/components-examples/material-experimental/column-resize';
+import {NgModule} from '@angular/core';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {RouterModule} from '@angular/router';
+
+import {ColumnResizeHome} from './column-resize-home';
 
 @NgModule({
   imports: [

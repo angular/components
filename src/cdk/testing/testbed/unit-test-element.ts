@@ -10,15 +10,17 @@ import * as keyCodes from '@angular/cdk/keycodes';
 import {
   _getTextWithExcludedElements,
   ElementDimensions,
+  EventData,
   ModifierKeys,
   TestElement,
   TestKey,
   TextOptions,
-  EventData,
 } from '@angular/cdk/testing';
+
 import {
   clearElement,
   createFakeEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchPointerEvent,
@@ -26,7 +28,6 @@ import {
   triggerBlur,
   triggerFocus,
   typeInElement,
-  dispatchEvent,
 } from './fake-events';
 
 /** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
@@ -97,8 +98,8 @@ export class UnitTestElement implements TestElement {
    * @param modifiers Modifier keys held while clicking
    */
   click(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
-  async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+  async click(...args: [ModifierKeys?]|['center', ModifierKeys?]|[number, number, ModifierKeys?]):
+      Promise<void> {
     await this._dispatchMouseEventSequence('click', args, 0);
     await this._stabilize();
   }
@@ -110,8 +111,8 @@ export class UnitTestElement implements TestElement {
    * @param modifiers Modifier keys held while clicking
    */
   rightClick(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
-  async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+  async rightClick(...args: [ModifierKeys?
+  ]|['center', ModifierKeys?]|[number, number, ModifierKeys?]): Promise<void> {
     await this._dispatchMouseEventSequence('contextmenu', args, 2);
     await this._stabilize();
   }
@@ -148,12 +149,12 @@ export class UnitTestElement implements TestElement {
    * Sends the given string to the input as a series of key presses. Also fires input events
    * and attempts to add the string to the Element's value.
    */
-  async sendKeys(...keys: (string | TestKey)[]): Promise<void>;
+  async sendKeys(...keys: (string|TestKey)[]): Promise<void>;
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
    * and attempts to add the string to the Element's value.
    */
-  async sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
+  async sendKeys(modifiers: ModifierKeys, ...keys: (string|TestKey)[]): Promise<void>;
   async sendKeys(...modifiersAndKeys: any[]): Promise<void> {
     const args = modifiersAndKeys.map(k => typeof k === 'number' ? keyMap[k as TestKey] : k);
     typeInElement(this.element as HTMLElement, ...args);
@@ -206,7 +207,7 @@ export class UnitTestElement implements TestElement {
   async selectOptions(...optionIndexes: number[]): Promise<void> {
     let hasChanged = false;
     const options = this.element.querySelectorAll('option');
-    const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
+    const indexes = new Set(optionIndexes);  // Convert to a set to remove duplicates.
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
@@ -265,7 +266,7 @@ export class UnitTestElement implements TestElement {
    * @param button Mouse button that should be pressed when dispatching the event.
    */
   private _dispatchPointerEventIfSupported(
-    name: string, clientX?: number, clientY?: number, button?: number) {
+      name: string, clientX?: number, clientY?: number, button?: number) {
     // The latest versions of all browsers we support have the new `PointerEvent` API.
     // Though since we capture the two most recent versions of these browsers, we also
     // need to support Safari 12 at time of writing. Safari 12 does not have support for this,
@@ -277,11 +278,10 @@ export class UnitTestElement implements TestElement {
 
   /** Dispatches all the events that are part of a mouse event sequence. */
   private async _dispatchMouseEventSequence(
-    name: string,
-    args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
-    button?: number) {
-    let clientX: number | undefined = undefined;
-    let clientY: number | undefined = undefined;
+      name: string, args: [ModifierKeys?]|['center', ModifierKeys?]|[number, number, ModifierKeys?],
+      button?: number) {
+    let clientX: number|undefined = undefined;
+    let clientY: number|undefined = undefined;
     let modifiers: ModifierKeys = {};
 
     if (args.length && typeof args[args.length - 1] === 'object') {

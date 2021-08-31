@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Observable} from 'rxjs';
-import {NgControl} from '@angular/forms';
 import {Directive} from '@angular/core';
+import {NgControl} from '@angular/forms';
+import {Observable} from 'rxjs';
 
 
 /** An interface which allows a control to work inside of a `MatFormField`. */
 @Directive()
 export abstract class MatFormFieldControl<T> {
   /** The value of the control. */
-  value: T | null;
+  value: T|null;
 
   /**
    * Stream that emits whenever the state of the control changes such that the parent `MatFormField`
@@ -30,7 +30,7 @@ export abstract class MatFormFieldControl<T> {
   readonly placeholder: string;
 
   /** Gets the NgControl for this control. */
-  readonly ngControl: NgControl | null;
+  readonly ngControl: NgControl|null;
 
   /** Whether the control is focused. */
   readonly focused: boolean;

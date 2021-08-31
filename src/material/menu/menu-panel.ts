@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EventEmitter, TemplateRef, InjectionToken} from '@angular/core';
-import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {Direction} from '@angular/cdk/bidi';
 import {FocusOrigin} from '@angular/cdk/a11y';
+import {Direction} from '@angular/cdk/bidi';
+import {EventEmitter, InjectionToken, TemplateRef} from '@angular/core';
+
 import {MatMenuContent} from './menu-content';
+import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /**
  * Injection token used to provide the parent menu to menu-specific components.
@@ -28,7 +29,7 @@ export interface MatMenuPanel<T = any> {
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
   readonly close: EventEmitter<void|'click'|'keydown'|'tab'>;
-  parentMenu?: MatMenuPanel | undefined;
+  parentMenu?: MatMenuPanel|undefined;
   direction?: Direction;
   focusFirstItem: (origin?: FocusOrigin) => void;
   resetActiveItem: () => void;

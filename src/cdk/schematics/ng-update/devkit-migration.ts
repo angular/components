@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {SchematicContext, Tree} from '@angular-devkit/schematics';
 import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {SchematicContext, Tree} from '@angular-devkit/schematics';
+
 import {Constructor, Migration, PostMigrationAction} from '../update-tool/migration';
 
 export type DevkitContext = {
@@ -22,7 +23,6 @@ export type DevkitContext = {
 };
 
 export abstract class DevkitMigration<Data> extends Migration<Data, DevkitContext> {
-
   /** Prints an informative message with context on the current target. */
   protected printInfo(text: string) {
     const targetName = this.context.isTestTarget ? 'test' : 'build';
@@ -38,5 +38,5 @@ export abstract class DevkitMigration<Data> extends Migration<Data, DevkitContex
   static globalPostMigration?(tree: Tree, context: SchematicContext): PostMigrationAction;
 }
 
-export type DevkitMigrationCtor<Data> = Constructor<DevkitMigration<Data>> &
+export type DevkitMigrationCtor<Data> = Constructor<DevkitMigration<Data>>&
     {[m in keyof typeof DevkitMigration]: (typeof DevkitMigration)[m]};

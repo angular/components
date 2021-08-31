@@ -14,4 +14,5 @@ import {Component} from '@angular/core';
   templateUrl: 'typography-demo.html',
   styleUrls: ['typography-demo.css'],
 })
-export class TypographyDemo { }
+export class TypographyDemo {
+}

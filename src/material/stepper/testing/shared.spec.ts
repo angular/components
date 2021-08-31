@@ -1,33 +1,35 @@
-import {Component} from '@angular/core';
-import {ReactiveFormsModule, FormGroup, FormControl, Validators} from '@angular/forms';
+import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatStepperModule} from '@angular/material/stepper';
-import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatStepperHarness} from './stepper-harness';
-import {MatStepperNextHarness, MatStepperPreviousHarness} from './stepper-button-harnesses';
+
 import {StepperOrientation} from './step-harness-filters';
+import {MatStepperNextHarness, MatStepperPreviousHarness} from './stepper-button-harnesses';
+import {MatStepperHarness} from './stepper-harness';
 
 /** Shared tests to run on both the original and MDC-based steppers. */
 export function runHarnessTests(
-    stepperModule: typeof MatStepperModule,
-    stepperHarness: typeof MatStepperHarness,
+    stepperModule: typeof MatStepperModule, stepperHarness: typeof MatStepperHarness,
     stepperNextHarness: typeof MatStepperNextHarness,
     stepperPreviousHarness: typeof MatStepperPreviousHarness) {
   let fixture: ComponentFixture<StepperHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [stepperModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [StepperHarnessTest],
-      providers: [{
-        provide: STEPPER_GLOBAL_OPTIONS,
-        useValue: {showError: true} // Required so the error state shows up in tests.
-      }]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [stepperModule, NoopAnimationsModule, ReactiveFormsModule],
+          declarations: [StepperHarnessTest],
+          providers: [{
+            provide: STEPPER_GLOBAL_OPTIONS,
+            useValue: {showError: true}  // Required so the error state shows up in tests.
+          }]
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(StepperHarnessTest);
     fixture.detectChanges();
@@ -40,10 +42,12 @@ export function runHarnessTests(
   });
 
   it('should filter steppers by their orientation', async () => {
-    const [verticalSteppers, horizontalSteppers] = await parallel(() => [
-      loader.getAllHarnesses(stepperHarness.with({orientation: StepperOrientation.VERTICAL})),
-      loader.getAllHarnesses(stepperHarness.with({orientation: StepperOrientation.HORIZONTAL}))
-    ]);
+    const [verticalSteppers, horizontalSteppers] = await parallel(
+        () =>
+            [loader.getAllHarnesses(
+                 stepperHarness.with({orientation: StepperOrientation.VERTICAL})),
+             loader.getAllHarnesses(
+                 stepperHarness.with({orientation: StepperOrientation.HORIZONTAL}))]);
 
     expect(verticalSteppers.length).toBe(2);
     expect(horizontalSteppers.length).toBe(1);
@@ -53,9 +57,7 @@ export function runHarnessTests(
     const steppers = await loader.getAllHarnesses(stepperHarness);
 
     expect(await parallel(() => steppers.map(stepper => stepper.getOrientation()))).toEqual([
-      StepperOrientation.VERTICAL,
-      StepperOrientation.HORIZONTAL,
-      StepperOrientation.VERTICAL
+      StepperOrientation.VERTICAL, StepperOrientation.HORIZONTAL, StepperOrientation.VERTICAL
     ]);
   });
 
@@ -76,19 +78,13 @@ export function runHarnessTests(
     const steps = await stepper.getSteps();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      true,
-      false,
-      false,
-      false
+      true, false, false, false
     ]);
 
     await stepper.selectStep({label: 'Three'});
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      false,
-      true,
-      false
+      false, false, true, false
     ]);
   });
 
@@ -97,10 +93,7 @@ export function runHarnessTests(
     const steps = await stepper.getSteps();
 
     expect(await parallel(() => steps.map(step => step.getLabel()))).toEqual([
-      'One',
-      'Two',
-      'Three',
-      'Four'
+      'One', 'Two', 'Three', 'Four'
     ]);
   });
 
@@ -116,10 +109,7 @@ export function runHarnessTests(
     const stepper = await loader.getHarness(stepperHarness.with({selector: '#one-stepper'}));
     const steps = await stepper.getSteps();
     expect(await parallel(() => steps.map(step => step.getAriaLabel()))).toEqual([
-      null,
-      null,
-      null,
-      'Fourth step'
+      null, null, null, 'Fourth step'
     ]);
   });
 
@@ -127,10 +117,7 @@ export function runHarnessTests(
     const stepper = await loader.getHarness(stepperHarness.with({selector: '#one-stepper'}));
     const steps = await stepper.getSteps();
     expect(await parallel(() => steps.map(step => step.getAriaLabelledby()))).toEqual([
-      null,
-      null,
-      'some-label',
-      null
+      null, null, 'some-label', null
     ]);
   });
 
@@ -139,10 +126,7 @@ export function runHarnessTests(
     const steps = await stepper.getSteps();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      true,
-      false,
-      false,
-      false
+      true, false, false, false
     ]);
   });
 
@@ -151,19 +135,13 @@ export function runHarnessTests(
     const steps = await stepper.getSteps();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      true,
-      false,
-      false,
-      false
+      true, false, false, false
     ]);
 
     await steps[2].select();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      false,
-      true,
-      false
+      false, false, true, false
     ]);
   });
 
@@ -176,10 +154,8 @@ export function runHarnessTests(
   it('should be able to get harness loader for an element inside a tab', async () => {
     const stepper = await loader.getHarness(stepperHarness.with({selector: '#one-stepper'}));
     const [step] = await stepper.getSteps({label: 'Two'});
-    const [nextButton, previousButton] = await parallel(() => [
-      step.getHarness(stepperNextHarness),
-      step.getHarness(stepperPreviousHarness)
-    ]);
+    const [nextButton, previousButton] = await parallel(
+        () => [step.getHarness(stepperNextHarness), step.getHarness(stepperPreviousHarness)]);
 
     expect(await nextButton.getText()).toBe('Next');
     expect(await previousButton.getText()).toBe('Previous');
@@ -194,19 +170,13 @@ export function runHarnessTests(
     await secondStep.select();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      true,
-      false,
-      false
+      false, true, false, false
     ]);
 
     await nextButton.click();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      false,
-      true,
-      false
+      false, false, true, false
     ]);
   });
 
@@ -219,19 +189,13 @@ export function runHarnessTests(
     await secondStep.select();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      true,
-      false,
-      false
+      false, true, false, false
     ]);
 
     await previousButton.click();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      true,
-      false,
-      false,
-      false
+      true, false, false, false
     ]);
   });
 
@@ -257,7 +221,6 @@ export function runHarnessTests(
 
     expect(await parallel(() => steps.map(step => step.isCompleted()))).toEqual([true, false]);
   });
-
 }
 
 @Component({
@@ -306,11 +269,7 @@ export function runHarnessTests(
   `
 })
 class StepperHarnessTest {
-  oneGroup = new FormGroup({
-    oneCtrl: new FormControl('', Validators.required)
-  });
+  oneGroup = new FormGroup({oneCtrl: new FormControl('', Validators.required)});
 
-  twoGroup = new FormGroup({
-    twoCtrl: new FormControl('', Validators.required)
-  });
+  twoGroup = new FormGroup({twoCtrl: new FormControl('', Validators.required)});
 }

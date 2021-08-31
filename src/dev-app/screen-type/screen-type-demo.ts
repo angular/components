@@ -24,11 +24,10 @@ export class ScreenTypeDemo {
   isLandscape: Observable<BreakpointState>;
 
   constructor(breakpointObserver: BreakpointObserver) {
-    this.isHandset = breakpointObserver.observe([Breakpoints.HandsetLandscape,
-                                       Breakpoints.HandsetPortrait]);
+    this.isHandset =
+        breakpointObserver.observe([Breakpoints.HandsetLandscape, Breakpoints.HandsetPortrait]);
     this.isTablet = breakpointObserver.observe(Breakpoints.Tablet);
-    this.isWeb = breakpointObserver.observe([Breakpoints.WebLandscape,
-                                  Breakpoints.WebPortrait]);
+    this.isWeb = breakpointObserver.observe([Breakpoints.WebLandscape, Breakpoints.WebPortrait]);
     this.isPortrait = breakpointObserver.observe('(orientation: portrait)');
     this.isLandscape = breakpointObserver.observe('(orientation: landscape)');
   }

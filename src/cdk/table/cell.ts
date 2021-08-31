@@ -70,8 +70,12 @@ const _CdkColumnDefBase: CanStickCtor&typeof CdkColumnDefBase =
 export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   /** Unique name for this column. */
   @Input('cdkColumnDef')
-  get name(): string { return this._name; }
-  set name(name: string) { this._setNameInput(name); }
+  get name(): string {
+    return this._name;
+  }
+  set name(name: string) {
+    this._setNameInput(name);
+  }
   protected _name: string;
 
   /**
@@ -184,8 +188,7 @@ export class CdkFooterCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     if (columnDef._table?._elementRef.nativeElement.nodeType === 1) {
-      const tableRole = columnDef._table._elementRef.nativeElement
-        .getAttribute('role');
+      const tableRole = columnDef._table._elementRef.nativeElement.getAttribute('role');
       const role = (tableRole === 'grid' || tableRole === 'treegrid') ? 'gridcell' : 'cell';
       elementRef.nativeElement.setAttribute('role', role);
     }
@@ -203,8 +206,7 @@ export class CdkCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     if (columnDef._table?._elementRef.nativeElement.nodeType === 1) {
-      const tableRole = columnDef._table._elementRef.nativeElement
-        .getAttribute('role');
+      const tableRole = columnDef._table._elementRef.nativeElement.getAttribute('role');
       const role = (tableRole === 'grid' || tableRole === 'treegrid') ? 'gridcell' : 'cell';
       elementRef.nativeElement.setAttribute('role', role);
     }

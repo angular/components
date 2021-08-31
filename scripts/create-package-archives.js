@@ -38,8 +38,8 @@ rm('-Rf', archivesDir);
 mkdir('-p', archivesDir);
 
 const builtPackages = ls(releasesDir)
-  .map(name => ({name, path: join(releasesDir, name)}))
-  .filter(pkg => test('-d', pkg.path));
+                          .map(name => ({name, path: join(releasesDir, name)}))
+                          .filter(pkg => test('-d', pkg.path));
 
 // If multiple packages should be archived, we also generate a single archive that
 // contains all packages. This makes it easier to transfer the release packages.
@@ -50,7 +50,8 @@ if (builtPackages.length > 1) {
 
 for (const pkg of builtPackages) {
   console.info(`Creating archive for package: ${pkg.name}`);
-  exec(`tar --create --gzip --directory ${pkg.path} --file ${archivesDir}/${pkg.name}-${suffix}.tgz .`);
+  exec(`tar --create --gzip --directory ${pkg.path} --file ${archivesDir}/${pkg.name}-${
+      suffix}.tgz .`);
 }
 
 console.info(green(`Created package archives in: ${archivesDir}`));

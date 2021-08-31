@@ -8,12 +8,14 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
+
 import {FormFieldAppearanceExample} from './form-field-appearance/form-field-appearance-example';
 import {
   FormFieldCustomControlExample,
   MyTelInput
 } from './form-field-custom-control/form-field-custom-control-example';
 import {FormFieldErrorExample} from './form-field-error/form-field-error-example';
+import {FormFieldHarnessExample} from './form-field-harness/form-field-harness-example';
 import {FormFieldHintExample} from './form-field-hint/form-field-hint-example';
 import {FormFieldLabelExample} from './form-field-label/form-field-label-example';
 import {FormFieldOverviewExample} from './form-field-overview/form-field-overview-example';
@@ -21,7 +23,6 @@ import {
   FormFieldPrefixSuffixExample
 } from './form-field-prefix-suffix/form-field-prefix-suffix-example';
 import {FormFieldThemingExample} from './form-field-theming/form-field-theming-example';
-import {FormFieldHarnessExample} from './form-field-harness/form-field-harness-example';
 
 export {
   FormFieldAppearanceExample,

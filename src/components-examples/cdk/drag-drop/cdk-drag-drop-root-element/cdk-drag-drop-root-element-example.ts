@@ -1,13 +1,13 @@
-import {
-  Component,
-  ViewChild,
-  TemplateRef,
-  AfterViewInit,
-  ViewContainerRef,
-  OnDestroy,
-} from '@angular/core';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 
 /**
  * @title Drag&Drop with alternate root element

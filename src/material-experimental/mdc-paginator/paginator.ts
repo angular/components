@@ -15,8 +15,8 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatPaginatorIntl, _MatPaginatorBase} from '@angular/material/paginator';
 import {MatFormFieldAppearance} from '@angular/material-experimental/mdc-form-field';
+import {_MatPaginatorBase, MatPaginatorIntl} from '@angular/material/paginator';
 
 // Note that while `MatPaginatorDefaultOptions` and `MAT_PAGINATOR_DEFAULT_OPTIONS` are identical
 // between the MDC and non-MDC versions, we have to duplicate them, because the type of
@@ -72,9 +72,9 @@ export class MatPaginator extends _MatPaginatorBase<MatPaginatorDefaultOptions> 
   readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
 
 
-  constructor(intl: MatPaginatorIntl,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS) defaults?: MatPaginatorDefaultOptions) {
+  constructor(
+      intl: MatPaginatorIntl, changeDetectorRef: ChangeDetectorRef,
+      @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS) defaults?: MatPaginatorDefaultOptions) {
     super(intl, changeDetectorRef, defaults);
     this._formFieldAppearance = defaults?.formFieldAppearance || 'outline';
   }

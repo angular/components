@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone} from '@angular/core';
 import {FocusTrapFactory} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay} from '@angular/cdk/overlay';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {Injectable, NgZone} from '@angular/core';
 
 import {EditEventDispatcher} from './edit-event-dispatcher';
+import {EditRef} from './edit-ref';
 import {FocusDispatcher} from './focus-dispatcher';
 import {PopoverEditPositionStrategyFactory} from './popover-edit-position-strategy-factory';
-import {EditRef} from './edit-ref';
 
 /**
  * Optimization
@@ -28,8 +28,8 @@ export class EditServices {
   constructor(
       readonly directionality: Directionality,
       readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
-      readonly focusDispatcher: FocusDispatcher,
-      readonly focusTrapFactory: FocusTrapFactory, readonly ngZone: NgZone,
-      readonly overlay: Overlay, readonly positionFactory: PopoverEditPositionStrategyFactory,
+      readonly focusDispatcher: FocusDispatcher, readonly focusTrapFactory: FocusTrapFactory,
+      readonly ngZone: NgZone, readonly overlay: Overlay,
+      readonly positionFactory: PopoverEditPositionStrategyFactory,
       readonly scrollDispatcher: ScrollDispatcher, readonly viewportRuler: ViewportRuler) {}
 }

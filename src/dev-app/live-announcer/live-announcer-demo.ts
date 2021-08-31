@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {Component} from '@angular/core';
 
 
 @Component({

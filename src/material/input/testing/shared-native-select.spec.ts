@@ -9,16 +9,17 @@ import {MatNativeSelectHarness} from './native-select-harness';
 
 /** Shared tests to run on both the original and MDC-based native selects. */
 export function runNativeSelectHarnessTests(
-    inputModule: typeof MatInputModule,
-    selectHarness: typeof MatNativeSelectHarness) {
+    inputModule: typeof MatInputModule, selectHarness: typeof MatNativeSelectHarness) {
   let fixture: ComponentFixture<SelectHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, inputModule, FormsModule],
-      declarations: [SelectHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [NoopAnimationsModule, inputModule, FormsModule],
+          declarations: [SelectHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();
@@ -39,8 +40,7 @@ export function runNativeSelectHarnessTests(
     const selects = await loader.getAllHarnesses(selectHarness);
 
     expect(await parallel(() => selects.map(select => select.getName()))).toEqual([
-      'favorite-food',
-      'favorite-drink'
+      'favorite-food', 'favorite-drink'
     ]);
   });
 
@@ -115,10 +115,7 @@ export function runNativeSelectHarnessTests(
     const options = await select.getOptions();
 
     expect(await parallel(() => options.map(option => option.getText()))).toEqual([
-      'Water',
-      'Soda',
-      'Coffee',
-      'Juice'
+      'Water', 'Soda', 'Coffee', 'Juice'
     ]);
   });
 
@@ -134,17 +131,13 @@ export function runNativeSelectHarnessTests(
     const options = await select.getOptions();
 
     expect(await parallel(() => options.map(option => option.isDisabled()))).toEqual([
-      false,
-      false,
-      false
+      false, false, false
     ]);
 
     fixture.componentInstance.pastaDisabled = true;
 
     expect(await parallel(() => options.map(option => option.isDisabled()))).toEqual([
-      false,
-      true,
-      false
+      false, true, false
     ]);
   });
 
@@ -153,17 +146,13 @@ export function runNativeSelectHarnessTests(
     const options = await select.getOptions();
 
     expect(await parallel(() => options.map(option => option.isSelected()))).toEqual([
-      false,
-      false,
-      false
+      false, false, false
     ]);
 
     await select.selectOptions({index: 2});
 
     expect(await parallel(() => options.map(option => option.isSelected()))).toEqual([
-      false,
-      false,
-      true
+      false, false, true
     ]);
   });
 
@@ -172,22 +161,15 @@ export function runNativeSelectHarnessTests(
     const options = await select.getOptions();
 
     expect(await parallel(() => options.map(option => option.isSelected()))).toEqual([
-      false,
-      false,
-      false,
-      false
+      false, false, false, false
     ]);
 
     await select.selectOptions({text: /Water|Coffee/});
 
     expect(await parallel(() => options.map(option => option.isSelected()))).toEqual([
-      true,
-      false,
-      true,
-      false
+      true, false, true, false
     ]);
   });
-
 }
 
 @Component({

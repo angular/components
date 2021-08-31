@@ -7,21 +7,22 @@
  */
 
 import {HarnessPredicate} from '@angular/cdk/testing';
-import {
-  FormFieldHarnessFilters,
-  _MatFormFieldHarnessBase,
-} from '@angular/material/form-field/testing';
 import {MatInputHarness} from '@angular/material-experimental/mdc-input/testing';
 import {MatSelectHarness} from '@angular/material-experimental/mdc-select/testing';
 import {
   MatDatepickerInputHarness,
   MatDateRangeInputHarness,
 } from '@angular/material/datepicker/testing';
+import {
+  _MatFormFieldHarnessBase,
+  FormFieldHarnessFilters,
+} from '@angular/material/form-field/testing';
+
 
 // TODO(devversion): support support chip list harness
 /** Possible harnesses of controls which can be bound to a form-field. */
 export type FormFieldControlHarness =
-  MatInputHarness|MatSelectHarness|MatDatepickerInputHarness|MatDateRangeInputHarness;
+    MatInputHarness|MatSelectHarness|MatDatepickerInputHarness|MatDateRangeInputHarness;
 
 /** Harness for interacting with a MDC-based form-field's in tests. */
 export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldControlHarness> {
@@ -35,9 +36,11 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
    */
   static with(options: FormFieldHarnessFilters = {}): HarnessPredicate<MatFormFieldHarness> {
     return new HarnessPredicate(MatFormFieldHarness, options)
-        .addOption('floatingLabelText', options.floatingLabelText,
+        .addOption(
+            'floatingLabelText', options.floatingLabelText,
             async (harness, text) => HarnessPredicate.stringMatches(await harness.getLabel(), text))
-        .addOption('hasErrors', options.hasErrors,
+        .addOption(
+            'hasErrors', options.hasErrors,
             async (harness, hasErrors) => await harness.hasErrors() === hasErrors);
   }
 

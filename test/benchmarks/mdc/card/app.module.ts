@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatCardModule} from '@angular/material-experimental/mdc-card';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mdc-card */
 
@@ -26,8 +26,12 @@ import {MatCardModule} from '@angular/material-experimental/mdc-card';
 export class CardBenchmarkApp {
   isVisible = false;
 
-  show() { this.isVisible = true; }
-  hide() { this.isVisible = false; }
+  show() {
+    this.isVisible = true;
+  }
+  hide() {
+    this.isVisible = false;
+  }
 }
 
 @NgModule({
@@ -38,4 +42,5 @@ export class CardBenchmarkApp {
   ],
   bootstrap: [CardBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

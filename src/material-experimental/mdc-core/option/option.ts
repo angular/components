@@ -7,20 +7,21 @@
  */
 
 import {
-  Component,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
-  ElementRef,
   ChangeDetectorRef,
-  Optional,
+  Component,
+  ElementRef,
   Inject,
+  Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   _MatOptionBase,
+  MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
   MatOptionParentComponent,
-  MAT_OPTGROUP,
 } from '@angular/material/core';
+
 import {MatOptgroup} from './optgroup';
 
 /**
@@ -50,10 +51,9 @@ import {MatOptgroup} from './optgroup';
 })
 export class MatOption extends _MatOptionBase {
   constructor(
-    element: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
-    @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup) {
+      element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef,
+      @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
+      @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup) {
     super(element, changeDetectorRef, parent, group);
   }
 }

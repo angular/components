@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessPredicate, ContentContainerComponentHarness} from '@angular/cdk/testing';
+import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+
 import {CardHarnessFilters} from './card-harness-filters';
 
 /** Selectors for different sections of the mat-card that can container user content. */
@@ -30,11 +31,14 @@ export class MatCardHarness extends ContentContainerComponentHarness<MatCardSect
    */
   static with(options: CardHarnessFilters = {}): HarnessPredicate<MatCardHarness> {
     return new HarnessPredicate(MatCardHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
-        .addOption('title', options.title,
+        .addOption(
+            'title', options.title,
             (harness, title) => HarnessPredicate.stringMatches(harness.getTitleText(), title))
-        .addOption('subtitle', options.subtitle,
+        .addOption(
+            'subtitle', options.subtitle,
             (harness, subtitle) =>
                 HarnessPredicate.stringMatches(harness.getSubtitleText(), subtitle));
   }

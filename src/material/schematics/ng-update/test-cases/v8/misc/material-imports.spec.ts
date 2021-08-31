@@ -33,7 +33,7 @@ describe('v8 material imports', () => {
     await runFixers();
 
     expect(appTree.readContent('/projects/cdk-testing/src/test-cases/material-imports_input.ts'))
-        .toBe(readFileContent(
-            resolveBazelPath(__dirname, './material-imports_expected_output.ts')));
+        .toBe(
+            readFileContent(resolveBazelPath(__dirname, './material-imports_expected_output.ts')));
   });
 });

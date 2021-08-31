@@ -6,4 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'sidenav-backdrop-example.html',
   styleUrls: ['sidenav-backdrop-example.css'],
 })
-export class SidenavBackdropExample {}
+export class SidenavBackdropExample {
+}

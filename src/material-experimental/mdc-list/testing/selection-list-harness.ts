@@ -63,8 +63,8 @@ export class MatSelectionListHarness extends MatListHarnessBase<
     if (!filters.length) {
       return this.getItems();
     }
-    const matches = await parallel(() =>
-      filters.map(filter => this.locatorForAll(MatListOptionHarness.with(filter))()));
+    const matches = await parallel(
+        () => filters.map(filter => this.locatorForAll(MatListOptionHarness.with(filter))()));
     return matches.reduce((result, current) => [...result, ...current], []);
   }
 }
@@ -87,8 +87,7 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
             async (harness, selected) => await harness.isSelected() === selected);
   }
 
-  private _beforeCheckbox =
-      this.locatorForOptional('.mdc-list-item__start .mdc-checkbox');
+  private _beforeCheckbox = this.locatorForOptional('.mdc-list-item__start .mdc-checkbox');
 
   /** Gets the position of the checkbox relative to the list option content. */
   async getCheckboxPosition(): Promise<MatListOptionCheckboxPosition> {

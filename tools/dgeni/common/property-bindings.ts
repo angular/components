@@ -11,8 +11,8 @@ export interface PropertyBinding {
  * Detects whether the specified property member is an input. If the property is an input, the
  * alias and input name will be returned.
  */
-export function getInputBindingData(doc: PropertyMemberDoc, metadata: Map<string, any>)
-    : PropertyBinding | undefined {
+export function getInputBindingData(
+    doc: PropertyMemberDoc, metadata: Map<string, any>): PropertyBinding|undefined {
   return getBindingPropertyData(doc, metadata, 'inputs', 'Input');
 }
 
@@ -20,8 +20,8 @@ export function getInputBindingData(doc: PropertyMemberDoc, metadata: Map<string
  * Detects whether the specified property member is an output. If the property is an output, the
  * alias and output name will be returned.
  */
-export function getOutputBindingData(doc: PropertyMemberDoc, metadata: Map<string, any>)
-    : PropertyBinding | undefined {
+export function getOutputBindingData(
+    doc: PropertyMemberDoc, metadata: Map<string, any>): PropertyBinding|undefined {
   return getBindingPropertyData(doc, metadata, 'outputs', 'Output');
 }
 
@@ -29,18 +29,15 @@ export function getOutputBindingData(doc: PropertyMemberDoc, metadata: Map<strin
  * Method that detects the specified type of property binding (either "output" or "input") from
  * the directive metadata or from the associated decorator on the property.
  */
-function getBindingPropertyData(doc: PropertyMemberDoc, metadata: Map<string, any>,
-                                propertyName: string, decoratorName: string) {
-
+function getBindingPropertyData(
+    doc: PropertyMemberDoc, metadata: Map<string, any>, propertyName: string,
+    decoratorName: string) {
   if (metadata) {
     const metadataValues: string[] = metadata.get(propertyName) || [];
     const foundValue = metadataValues.find(value => value.split(':')[0] === doc.name);
 
     if (foundValue) {
-      return {
-        name: doc.name,
-        alias: foundValue.split(':')[1]
-      };
+      return {name: doc.name, alias: foundValue.split(':')[1]};
     }
   }
 

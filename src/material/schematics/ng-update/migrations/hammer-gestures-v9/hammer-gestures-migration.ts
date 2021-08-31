@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  join,
-  Path,
-  relative,
-  dirname
-} from '@angular-devkit/core';
+import {dirname, join, Path, relative} from '@angular-devkit/core';
 import {SchematicContext, Tree} from '@angular-devkit/schematics';
 import {
   addSymbolToNgModuleMetadata,
@@ -67,8 +62,7 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
   // Only enable this rule if the migration targets v9 or v10 and is running for a non-test
   // target. We cannot migrate test targets since they have a limited scope
   // (in regards to source files) and therefore the HammerJS usage detection can be incorrect.
-  enabled =
-      (this.targetVersion === TargetVersion.V9 || this.targetVersion === TargetVersion.V10) &&
+  enabled = (this.targetVersion === TargetVersion.V9 || this.targetVersion === TargetVersion.V10) &&
       !this.context.isTestTarget;
 
   private _printer = ts.createPrinter();
@@ -245,8 +239,7 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
   private _setupHammerWithCustomEvents() {
     const project = this.context.project;
     const sourceRoot = this.fileSystem.resolve(project.sourceRoot || project.root);
-    const newConfigPath =
-        join(sourceRoot, this._getAvailableGestureConfigFileName(sourceRoot));
+    const newConfigPath = join(sourceRoot, this._getAvailableGestureConfigFileName(sourceRoot));
 
     // Copy gesture config template into the CLI project.
     this.fileSystem.create(
@@ -256,8 +249,8 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
     // newly copied gesture config.
     this._gestureConfigReferences.forEach(i => {
       const filePath = this.fileSystem.resolve(i.node.getSourceFile().fileName);
-      return this._replaceGestureConfigReference(i, GESTURE_CONFIG_CLASS_NAME,
-        getModuleSpecifier(newConfigPath, filePath));
+      return this._replaceGestureConfigReference(
+          i, GESTURE_CONFIG_CLASS_NAME, getModuleSpecifier(newConfigPath, filePath));
     });
 
     // Setup the gesture config provider and the "HammerModule" in the root module
@@ -672,9 +665,8 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
     const providerIdentifiers =
         providersField ? findMatchingChildNodes(providersField, ts.isIdentifier) : null;
     const gestureConfigExpr = this._importManager.addImportToSourceFile(
-        sourceFile, GESTURE_CONFIG_CLASS_NAME,
-        getModuleSpecifier(gestureConfigPath, filePath), false,
-        this._getGestureConfigIdentifiersOfFile(sourceFile));
+        sourceFile, GESTURE_CONFIG_CLASS_NAME, getModuleSpecifier(gestureConfigPath, filePath),
+        false, this._getGestureConfigIdentifiersOfFile(sourceFile));
     const hammerConfigTokenExpr = this._importManager.addImportToSourceFile(
         sourceFile, HAMMER_CONFIG_TOKEN_NAME, HAMMER_CONFIG_TOKEN_MODULE);
     const newProviderNode = ts.createObjectLiteral([
@@ -690,11 +682,11 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
           this._gestureConfigReferences.some(r => providerIdentifiers.includes(r.node)))) {
       const symbolName = this._printNode(newProviderNode, sourceFile);
       addSymbolToNgModuleMetadata(sourceFile, sourceFile.fileName, 'providers', symbolName, null)
-        .forEach(change => {
-          if (change instanceof InsertChange) {
-            recorder.insertRight(change.pos, change.toAdd);
-          }
-        });
+          .forEach(change => {
+            if (change instanceof InsertChange) {
+              recorder.insertRight(change.pos, change.toAdd);
+            }
+          });
     }
   }
 
@@ -755,11 +747,11 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
         !this._hammerModuleReferences.some(r => importIdentifiers.includes(r.node))) {
       const symbolName = this._printNode(hammerModuleExpr, sourceFile);
       addSymbolToNgModuleMetadata(sourceFile, sourceFile.fileName, 'imports', symbolName, null)
-        .forEach(change => {
-          if (change instanceof InsertChange) {
-            recorder.insertRight(change.pos, change.toAdd);
-          }
-        });
+          .forEach(change => {
+            if (change instanceof InsertChange) {
+              recorder.insertRight(change.pos, change.toAdd);
+            }
+          });
     }
   }
 

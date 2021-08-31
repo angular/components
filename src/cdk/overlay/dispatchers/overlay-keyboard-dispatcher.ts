@@ -19,7 +19,6 @@ import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
  */
 @Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-
   constructor(@Inject(DOCUMENT) document: any) {
     super(document);
   }

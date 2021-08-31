@@ -1,8 +1,9 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatSortModule} from '@angular/material/sort';
-import {SortOverviewExample} from './sort-overview/sort-overview-example';
+
 import {SortHarnessExample} from './sort-harness/sort-harness-example';
+import {SortOverviewExample} from './sort-overview/sort-overview-example';
 
 export {SortHarnessExample, SortOverviewExample};
 

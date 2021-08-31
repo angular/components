@@ -96,5 +96,7 @@ function testPackage(pkg) {
     }
   }
 
-  return {passedFiles, failures}
+  return {
+    passedFiles, failures
+  }
 }

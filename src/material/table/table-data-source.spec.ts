@@ -1,15 +1,18 @@
-import {MatTableDataSource} from './table-data-source';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Component, ViewChild} from '@angular/core';
+
+import {MatTableDataSource} from './table-data-source';
 
 describe('MatTableDataSource', () => {
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule],
-      declarations: [MatSortApp],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [MatSortModule, NoopAnimationsModule],
+          declarations: [MatSortApp],
+        })
+        .compileComponents();
   }));
 
   describe('sort', () => {
@@ -74,13 +77,10 @@ describe('MatTableDataSource', () => {
       dataSource.data = [5, 4, 3, 2, 1];
       expect(dataSource.filteredData).toEqual([5, 4, 3, 2, 1]);
     });
-
   });
 });
 
-@Component({
-  template: `<div matSort matSortDirection="asc"></div>`
-})
+@Component({template: `<div matSort matSortDirection="asc"></div>`})
 class MatSortApp {
   @ViewChild(MatSort) sort: MatSort;
 }

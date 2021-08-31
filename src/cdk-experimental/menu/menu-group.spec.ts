@@ -1,13 +1,14 @@
 import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {CdkMenuModule} from './menu-module';
+
 import {CdkMenuGroup} from './menu-group';
+import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItemRadio} from './menu-item-radio';
+import {CdkMenuModule} from './menu-module';
 import {CdkMenuPanel} from './menu-panel';
 import {MenuStack} from './menu-stack';
-import {CdkMenuItem} from './menu-item';
 
 describe('MenuGroup', () => {
   describe('with MenuItems as checkbox', () => {
@@ -15,10 +16,12 @@ describe('MenuGroup', () => {
     let menuItems: CdkMenuItemCheckbox[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [CheckboxMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [CheckboxMenu],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(CheckboxMenu);
       fixture.detectChanges();
@@ -27,9 +30,8 @@ describe('MenuGroup', () => {
       fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
       fixture.detectChanges();
 
-      menuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemCheckbox))
-        .map(e => e.injector.get(CdkMenuItemCheckbox));
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemCheckbox))
+                      .map(e => e.injector.get(CdkMenuItemCheckbox));
     }));
 
     it('should not change state of sibling checked menuitemcheckbox', () => {
@@ -44,10 +46,12 @@ describe('MenuGroup', () => {
     let menuItems: CdkMenuItemRadio[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuWithMultipleRadioGroups],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuWithMultipleRadioGroups],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
       fixture.detectChanges();
@@ -56,9 +60,8 @@ describe('MenuGroup', () => {
       fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
       fixture.detectChanges();
 
-      menuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemRadio))
-        .map(e => e.injector.get(CdkMenuItemRadio));
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemRadio))
+                      .map(e => e.injector.get(CdkMenuItemRadio));
     }));
 
     it('should change state of sibling menuitemradio in same group', () => {
@@ -90,10 +93,12 @@ describe('MenuGroup', () => {
     let menuItems: CdkMenuItemRadio[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuWithMenuItemsAndRadioGroups],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuWithMenuItemsAndRadioGroups],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(MenuWithMenuItemsAndRadioGroups);
       fixture.detectChanges();
@@ -102,9 +107,8 @@ describe('MenuGroup', () => {
       fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
       fixture.detectChanges();
 
-      menuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemRadio))
-        .map(element => element.injector.get(CdkMenuItemRadio));
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemRadio))
+                      .map(element => element.injector.get(CdkMenuItemRadio));
     }));
 
     it('should emit from enclosing radio group only', () => {
@@ -127,10 +131,9 @@ describe('MenuGroup', () => {
     it('should not emit with click on disabled button', () => {
       const spy = jasmine.createSpy('cdkMenuGroup change spy');
 
-      fixture.debugElement
-        .queryAll(By.directive(CdkMenuGroup))[1]
-        .injector.get(CdkMenuGroup)
-        .change.subscribe(spy);
+      fixture.debugElement.queryAll(By.directive(CdkMenuGroup))[1]
+          .injector.get(CdkMenuGroup)
+          .change.subscribe(spy);
       menuItems[0].disabled = true;
 
       menuItems[0].trigger();

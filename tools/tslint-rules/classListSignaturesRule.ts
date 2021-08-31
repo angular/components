@@ -1,5 +1,5 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
+import * as ts from 'typescript';
 
 /**
  * Rule that catches cases where `classList` is used in a way
@@ -32,12 +32,14 @@ class Walker extends Lint.ProgramAwareRuleWalker {
       const args = parent.arguments;
 
       if (name === 'replace') {
-        this.addFailureAtNode(propertyAccess,
+        this.addFailureAtNode(
+            propertyAccess,
             'This method is not supported in iOS Safari. Use `add` and `remove` instead.');
       } else if (args.length > 1 || (args.length === 1 && ts.isSpreadElement(args[0]))) {
-        this.addFailureAtNode(propertyAccess,
+        this.addFailureAtNode(
+            propertyAccess,
             'Passing in multiple arguments into this method is not supported in some browsers. ' +
-            'Use the single argument signature instead.');
+                'Use the single argument signature instead.');
       }
     }
 

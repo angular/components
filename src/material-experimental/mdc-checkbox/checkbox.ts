@@ -26,16 +26,17 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  MAT_CHECKBOX_DEFAULT_OPTIONS,
-  MatCheckboxDefaultOptions, MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY
-} from '@angular/material/checkbox';
-import {
-  mixinColor,
-  mixinDisabled,
   CanColor,
   CanDisable,
   MatRipple,
+  mixinColor,
+  mixinDisabled,
 } from '@angular/material-experimental/mdc-core';
+import {
+  MAT_CHECKBOX_DEFAULT_OPTIONS,
+  MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
+  MatCheckboxDefaultOptions
+} from '@angular/material/checkbox';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
 
@@ -82,7 +83,8 @@ const _MatCheckboxBase = mixinColor(mixinDisabled(class {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDestroy,
-  ControlValueAccessor, CanColor, CanDisable {
+                                                             ControlValueAccessor, CanColor,
+                                                             CanDisable {
   /**
    * The `aria-label` attribute to use for the input element. In most cases, `aria-labelledby` will
    * take precedence so this may be omitted.
@@ -227,12 +229,11 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   };
 
   constructor(
-      private _changeDetectorRef: ChangeDetectorRef,
-      elementRef: ElementRef<HTMLElement>,
+      private _changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>,
       @Attribute('tabindex') tabIndex: string,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-      @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
-          private _options?: MatCheckboxDefaultOptions) {
+      @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?:
+          MatCheckboxDefaultOptions) {
     super(elementRef);
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
     // ripple, which we do ourselves instead.

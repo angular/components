@@ -6,18 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {A11yModule} from '@angular/cdk/a11y';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {A11yModule} from '@angular/cdk/a11y';
+
 import {MatBadge} from './badge';
 
 
 @NgModule({
-  imports: [
-    A11yModule,
-    MatCommonModule
-  ],
+  imports: [A11yModule, MatCommonModule],
   exports: [MatBadge, MatCommonModule],
   declarations: [MatBadge],
 })
-export class MatBadgeModule {}
+export class MatBadgeModule {
+}

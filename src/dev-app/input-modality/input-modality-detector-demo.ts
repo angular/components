@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, OnDestroy, NgZone} from '@angular/core';
 import {InputModality, InputModalityDetector} from '@angular/cdk/a11y';
-
+import {Component, NgZone, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -24,9 +23,10 @@ export class InputModalityDetectorDemo implements OnDestroy {
       inputModalityDetector: InputModalityDetector,
       ngZone: NgZone,
   ) {
-    inputModalityDetector.modalityChanged
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(modality => ngZone.run(() => { this._modality = modality; }));
+    inputModalityDetector.modalityChanged.pipe(takeUntil(this._destroyed))
+        .subscribe(modality => ngZone.run(() => {
+          this._modality = modality;
+        }));
   }
 
   ngOnDestroy() {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-type ModifierKey = 'altKey' | 'shiftKey' | 'ctrlKey' | 'metaKey';
+type ModifierKey = 'altKey'|'shiftKey'|'ctrlKey'|'metaKey';
 
 /**
  * Checks whether a modifier key is pressed.

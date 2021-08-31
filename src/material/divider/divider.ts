@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'mat-divider',
@@ -27,14 +27,22 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 export class MatDivider {
   /** Whether the divider is vertically aligned. */
   @Input()
-  get vertical(): boolean { return this._vertical; }
-  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }
+  get vertical(): boolean {
+    return this._vertical;
+  }
+  set vertical(value: boolean) {
+    this._vertical = coerceBooleanProperty(value);
+  }
   private _vertical: boolean = false;
 
   /** Whether the divider is an inset divider. */
   @Input()
-  get inset(): boolean { return this._inset; }
-  set inset(value: boolean) { this._inset = coerceBooleanProperty(value); }
+  get inset(): boolean {
+    return this._inset;
+  }
+  set inset(value: boolean) {
+    this._inset = coerceBooleanProperty(value);
+  }
   private _inset: boolean = false;
 
   static ngAcceptInputType_vertical: BooleanInput;

@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'chips-overview-example',
   templateUrl: 'chips-overview-example.html',
 })
-export class ChipsOverviewExample {}
+export class ChipsOverviewExample {
+}

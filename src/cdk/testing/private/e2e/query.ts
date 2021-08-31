@@ -40,6 +40,9 @@ export async function getScrollPosition(): Promise<Point> {
   return await browser.executeScript<Point>(snippet);
 }
 
-export type FinderResult = ElementFinder | string;
+export type FinderResult = ElementFinder|string;
 
-export interface Point { x: number; y: number; }
+export interface Point {
+  x: number;
+  y: number;
+}

@@ -23,11 +23,13 @@ export class MatChipOptionHarness extends MatChipHarness {
   static override with<T extends typeof MatChipHarness>(
       this: T, options: ChipOptionHarnessFilters = {}): HarnessPredicate<InstanceType<T>> {
     return new HarnessPredicate(MatChipOptionHarness, options)
-      .addOption('text', options.text,
-          (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
-      .addOption('selected', options.selected,
-          async (harness, selected) => (await harness.isSelected()) === selected) as
-          unknown as HarnessPredicate<InstanceType<T>>;
+               .addOption(
+                   'text', options.text,
+                   (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
+               .addOption(
+                   'selected', options.selected,
+                   async (harness, selected) => (await harness.isSelected()) === selected) as
+        unknown as HarnessPredicate<InstanceType<T>>;
   }
 
   /** Whether the chip is selected. */

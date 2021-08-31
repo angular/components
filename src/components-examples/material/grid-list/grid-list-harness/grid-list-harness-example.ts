@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'grid-list-harness-example',
   templateUrl: 'grid-list-harness-example.html',
 })
-export class GridListHarnessExample {}
+export class GridListHarnessExample {
+}

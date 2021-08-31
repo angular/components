@@ -37,9 +37,8 @@ export class OverlayPositionBuilder {
    * @param origin Origin relative to which to position the overlay.
    */
   flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin):
-    FlexibleConnectedPositionStrategy {
-    return new FlexibleConnectedPositionStrategy(origin, this._viewportRuler, this._document,
-        this._platform, this._overlayContainer);
+      FlexibleConnectedPositionStrategy {
+    return new FlexibleConnectedPositionStrategy(
+        origin, this._viewportRuler, this._document, this._platform, this._overlayContainer);
   }
-
 }

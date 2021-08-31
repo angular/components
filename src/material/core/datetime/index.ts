@@ -25,11 +25,13 @@ export * from './native-date-formats';
     {provide: DateAdapter, useClass: NativeDateAdapter},
   ],
 })
-export class NativeDateModule {}
+export class NativeDateModule {
+}
 
 
 @NgModule({
   imports: [NativeDateModule],
   providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS}],
 })
-export class MatNativeDateModule {}
+export class MatNativeDateModule {
+}

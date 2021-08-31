@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AnimationEvent} from '@angular/animations';
 import {Directionality} from '@angular/cdk/bidi';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {
   CdkStep,
   CdkStepper,
@@ -14,7 +16,7 @@ import {
   STEPPER_GLOBAL_OPTIONS,
   StepperOptions,
 } from '@angular/cdk/stepper';
-import {AnimationEvent} from '@angular/animations';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -39,17 +41,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
-import {DOCUMENT} from '@angular/common';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
-import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject, Subscription} from 'rxjs';
-import {takeUntil, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
+import {distinctUntilChanged, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
 
+import {MatStepContent} from './step-content';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
-import {MatStepContent} from './step-content';
 
 @Component({
   selector: 'mat-step',
@@ -77,24 +77,27 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   /** Currently-attached portal containing the lazy content. */
   _portal: TemplatePortal;
 
-  constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
-              @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
-              private _viewContainerRef: ViewContainerRef,
-              @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+  constructor(
+      @Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
+      @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
+      private _viewContainerRef: ViewContainerRef,
+      @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
     super(stepper, stepperOptions);
   }
 
   ngAfterContentInit() {
-    this._isSelected = this._stepper.steps.changes.pipe(switchMap(() => {
-      return this._stepper.selectionChange.pipe(
-        map(event => event.selectedStep === this),
-        startWith(this._stepper.selected === this)
-      );
-    })).subscribe(isSelected => {
-      if (isSelected && this._lazyContent && !this._portal) {
-        this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef!);
-      }
-    });
+    this._isSelected = this._stepper.steps.changes
+                           .pipe(switchMap(() => {
+                             return this._stepper.selectionChange.pipe(
+                                 map(event => event.selectedStep === this),
+                                 startWith(this._stepper.selected === this));
+                           }))
+                           .subscribe(isSelected => {
+                             if (isSelected && this._lazyContent && !this._portal) {
+                               this._portal = new TemplatePortal(
+                                   this._lazyContent._template, this._viewContainerRef!);
+                             }
+                           });
   }
 
   ngOnDestroy() {
@@ -102,7 +105,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: FormControl|null, form: FormGroupDirective|NgForm|null): boolean {
     const originalErrorState = this._errorStateMatcher.isErrorState(control, form);
 
     // Custom error state checks for the validity of form that is not submitted or touched
@@ -127,7 +130,7 @@ abstract class _MatProxyStepperBase extends CdkStepper {
   readonly animationDone: EventEmitter<void>;
   disableRipple: boolean;
   color: ThemePalette;
-  labelPosition: 'bottom' | 'end';
+  labelPosition: 'bottom'|'end';
 }
 
 /**
@@ -135,14 +138,16 @@ abstract class _MatProxyStepperBase extends CdkStepper {
  * @breaking-change 13.0.0
  */
 @Directive({selector: 'mat-horizontal-stepper'})
-export class MatHorizontalStepper extends _MatProxyStepperBase {}
+export class MatHorizontalStepper extends _MatProxyStepperBase {
+}
 
 /**
  * @deprecated Use `MatStepper` instead.
  * @breaking-change 13.0.0
  */
 @Directive({selector: 'mat-vertical-stepper'})
-export class MatVerticalStepper extends _MatProxyStepperBase {}
+export class MatVerticalStepper extends _MatProxyStepperBase {
+}
 
 
 @Component({
@@ -199,8 +204,7 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
    * Whether the label should display in bottom or end position.
    * Only applies in the `horizontal` orientation.
    */
-  @Input()
-  labelPosition: 'bottom' | 'end' = 'end';
+  @Input() labelPosition: 'bottom'|'end' = 'end';
 
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>> = {};
@@ -209,10 +213,8 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   readonly _animationDone = new Subject<AnimationEvent>();
 
   constructor(
-    @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef,
-    elementRef: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) _document: any) {
+      @Optional() dir: Directionality, changeDetectorRef: ChangeDetectorRef,
+      elementRef: ElementRef<HTMLElement>, @Inject(DOCUMENT) _document: any) {
     super(dir, changeDetectorRef, elementRef, _document);
     const nodeName = elementRef.nativeElement.nodeName.toLowerCase();
     this.orientation = nodeName === 'mat-vertical-stepper' ? 'vertical' : 'horizontal';
@@ -227,17 +229,18 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
       this._stateChanged();
     });
 
-    this._animationDone.pipe(
-      // This needs a `distinctUntilChanged` in order to avoid emitting the same event twice due
-      // to a bug in animations where the `.done` callback gets invoked twice on some browsers.
-      // See https://github.com/angular/angular/issues/24084
-      distinctUntilChanged((x, y) => x.fromState === y.fromState && x.toState === y.toState),
-      takeUntil(this._destroyed)
-    ).subscribe(event => {
-      if ((event.toState as StepContentPositionState) === 'current') {
-        this.animationDone.emit();
-      }
-    });
+    this._animationDone
+        .pipe(
+            // This needs a `distinctUntilChanged` in order to avoid emitting the same event twice
+            // due to a bug in animations where the `.done` callback gets invoked twice on some
+            // browsers. See https://github.com/angular/angular/issues/24084
+            distinctUntilChanged((x, y) => x.fromState === y.fromState && x.toState === y.toState),
+            takeUntil(this._destroyed))
+        .subscribe(event => {
+          if ((event.toState as StepContentPositionState) === 'current') {
+            this.animationDone.emit();
+          }
+        });
   }
 
   _stepIsNavigable(index: number, step: MatStep): boolean {

@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MapDirectionsRenderer} from './map-directions-renderer';
+
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
 import {GoogleMapsModule} from '../google-maps-module';
 import {
@@ -10,6 +10,8 @@ import {
   createMapConstructorSpy,
   createMapSpy
 } from '../testing/fake-google-map-utils';
+
+import {MapDirectionsRenderer} from './map-directions-renderer';
 
 const DEFAULT_DIRECTIONS: google.maps.DirectionsResult = {
   geocoded_waypoints: [],
@@ -91,8 +93,8 @@ describe('MapDirectionsRenderer', () => {
     const fixture = TestBed.createComponent(TestApp);
 
     const directionsRendererComponent =
-        fixture.debugElement.query(By.directive(MapDirectionsRenderer))!
-        .injector.get<MapDirectionsRenderer>(MapDirectionsRenderer);
+        fixture.debugElement.query(By.directive(
+            MapDirectionsRenderer))!.injector.get<MapDirectionsRenderer>(MapDirectionsRenderer);
     fixture.detectChanges();
 
     directionsRendererSpy.getDirections.and.returnValue(DEFAULT_DIRECTIONS);

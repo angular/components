@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -18,27 +19,27 @@ import {
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
-import {MAT_SELECT_TRIGGER, _MatSelectBase} from '@angular/material/select';
 import {
-  MatOptgroup,
-  MatOption,
-  MAT_OPTGROUP,
-  MAT_OPTION_PARENT_COMPONENT,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
+  MAT_OPTGROUP,
+  MAT_OPTION_PARENT_COMPONENT,
+  MatOptgroup,
+  MatOption,
 } from '@angular/material-experimental/mdc-core';
-import {CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {MatFormFieldControl} from '@angular/material/form-field';
+import {_MatSelectBase, MAT_SELECT_TRIGGER} from '@angular/material/select';
 import {takeUntil} from 'rxjs/operators';
+
 import {matSelectAnimations} from './select-animations';
 
 /** Change event object that is emitted when the select value has changed. */
 export class MatSelectChange {
   constructor(
-    /** Reference to the select that emitted the change event. */
-    public source: MatSelect,
-    /** Current value of the select that emitted the event. */
-    public value: any) { }
+      /** Reference to the select that emitted the change event. */
+      public source: MatSelect,
+      /** Current value of the select that emitted the event. */
+      public value: any) {}
 }
 
 /**
@@ -48,7 +49,8 @@ export class MatSelectChange {
   selector: 'mat-select-trigger',
   providers: [{provide: MAT_SELECT_TRIGGER, useExisting: MatSelectTrigger}],
 })
-export class MatSelectTrigger {}
+export class MatSelectTrigger {
+}
 
 @Component({
   selector: 'mat-select',
@@ -110,7 +112,7 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   ];
 
   /** Ideal origin for the overlay panel. */
-  _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
+  _preferredOverlayOrigin: CdkOverlayOrigin|ElementRef|undefined;
 
   /** Width of the overlay panel. */
   _overlayWidth: number;
@@ -168,11 +170,7 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
         panel.scrollTop = 0;
       } else {
         panel.scrollTop = _getOptionScrollPosition(
-          element.offsetTop,
-          element.offsetHeight,
-          panel.scrollTop,
-          panel.offsetHeight
-        );
+            element.offsetTop, element.offsetHeight, panel.scrollTop, panel.offsetHeight);
       }
     }
   }

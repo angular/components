@@ -1,22 +1,21 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {Component, DebugElement} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
 import {
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
 } from '../../../cdk/testing/private';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
-import {MatOption, MatOptionModule, MAT_OPTION_PARENT_COMPONENT} from './index';
+
+import {MAT_OPTION_PARENT_COMPONENT, MatOption, MatOptionModule} from './index';
 
 describe('MatOption component', () => {
-
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatOptionModule],
-      declarations: [BasicOption]
-    }).compileComponents();
+    TestBed.configureTestingModule({imports: [MatOptionModule], declarations: [BasicOption]})
+        .compileComponents();
   }));
 
   it('should complete the `stateChanges` stream on destroy', () => {
@@ -163,21 +162,24 @@ describe('MatOption component', () => {
 
     it('should show ripples by default', () => {
       expect(optionInstance.disableRipple)
-        .withContext('Expected ripples to be enabled by default')
-        .toBeFalsy();
+          .withContext('Expected ripples to be enabled by default')
+          .toBeFalsy();
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples to show up initially').toBe(0);
+          .withContext('Expected no ripples to show up initially')
+          .toBe(0);
 
       dispatchFakeEvent(optionNativeElement, 'mousedown');
       dispatchFakeEvent(optionNativeElement, 'mouseup');
 
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected one ripple to show up after a fake click.').toBe(1);
+          .withContext('Expected one ripple to show up after a fake click.')
+          .toBe(1);
     });
 
     it('should not show ripples if the option is disabled', () => {
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples to show up initially').toBe(0);
+          .withContext('Expected no ripples to show up initially')
+          .toBe(0);
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
@@ -186,9 +188,9 @@ describe('MatOption component', () => {
       dispatchFakeEvent(optionNativeElement, 'mouseup');
 
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples to show up after click on a disabled option.').toBe(0);
+          .withContext('Expected no ripples to show up after click on a disabled option.')
+          .toBe(0);
     });
-
   });
 
   it('should have a focus indicator', () => {
@@ -203,14 +205,13 @@ describe('MatOption component', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [MatOptionModule],
-        declarations: [InsideGroup],
-        providers: [{
-          provide: MAT_OPTION_PARENT_COMPONENT,
-          useValue: {inertGroups: true}
-        }]
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [MatOptionModule],
+            declarations: [InsideGroup],
+            providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useValue: {inertGroups: true}}]
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(InsideGroup);
       fixture.detectChanges();
@@ -228,12 +229,9 @@ describe('MatOption component', () => {
       expect(option.textContent?.trim()).toBe('Option(Group)');
     });
   });
-
 });
 
-@Component({
-  template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`
-})
+@Component({template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`})
 class BasicOption {
   disabled: boolean;
   id: string;

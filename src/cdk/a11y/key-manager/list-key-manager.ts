@@ -6,22 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {QueryList} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
 import {
-  UP_ARROW,
-  DOWN_ARROW,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  TAB,
   A,
-  Z,
-  ZERO,
-  NINE,
+  DOWN_ARROW,
+  END,
   hasModifierKey,
   HOME,
-  END,
+  LEFT_ARROW,
+  NINE,
+  RIGHT_ARROW,
+  TAB,
+  UP_ARROW,
+  Z,
+  ZERO,
 } from '@angular/cdk/keycodes';
+import {QueryList} from '@angular/core';
+import {Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
 /** This interface is for items that can be passed to a ListKeyManager. */
@@ -34,7 +34,7 @@ export interface ListKeyManagerOption {
 }
 
 /** Modifier keys handled by the ListKeyManager. */
-export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey';
+export type ListKeyManagerModifierKey = 'altKey'|'ctrlKey'|'metaKey'|'shiftKey';
 
 /**
  * This class manages keyboard events for selectable lists. If you pass it a query list
@@ -42,12 +42,12 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
-  private _activeItem: T | null = null;
+  private _activeItem: T|null = null;
   private _wrap = false;
   private readonly _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
   private _vertical = true;
-  private _horizontal: 'ltr' | 'rtl' | null;
+  private _horizontal: 'ltr'|'rtl'|null;
   private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
   private _homeAndEnd = false;
 
@@ -60,7 +60,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   // Buffer for the letters that the user has pressed when the typeahead option is turned on.
   private _pressedLetters: string[] = [];
 
-  constructor(private _items: QueryList<T> | T[]) {
+  constructor(private _items: QueryList<T>|T[]) {
     // We allow for the items to be an array because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
@@ -121,7 +121,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * Passing in `null` will disable horizontal movement.
    * @param direction Direction in which the selection can be moved.
    */
-  withHorizontalOrientation(direction: 'ltr' | 'rtl' | null): this {
+  withHorizontalOrientation(direction: 'ltr'|'rtl'|null): this {
     this._horizontal = direction;
     return this;
   }
@@ -140,8 +140,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
   withTypeAhead(debounceInterval: number = 200): this {
-    if ((typeof ngDevMode === 'undefined' || ngDevMode) && (this._items.length &&
-        this._items.some(item => typeof item.getLabel !== 'function'))) {
+    if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
+        (this._items.length && this._items.some(item => typeof item.getLabel !== 'function'))) {
       throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
     }
 
@@ -150,30 +150,30 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
     // and convert those letters back into a string. Afterwards find the first item that starts
     // with that string and select it.
-    this._typeaheadSubscription = this._letterKeyStream.pipe(
-      tap(letter => this._pressedLetters.push(letter)),
-      debounceTime(debounceInterval),
-      filter(() => this._pressedLetters.length > 0),
-      map(() => this._pressedLetters.join(''))
-    ).subscribe(inputString => {
-      const items = this._getItemsArray();
+    this._typeaheadSubscription =
+        this._letterKeyStream
+            .pipe(
+                tap(letter => this._pressedLetters.push(letter)), debounceTime(debounceInterval),
+                filter(() => this._pressedLetters.length > 0),
+                map(() => this._pressedLetters.join('')))
+            .subscribe(inputString => {
+              const items = this._getItemsArray();
 
-      // Start at 1 because we want to start searching at the item immediately
-      // following the current active item.
-      for (let i = 1; i < items.length + 1; i++) {
-        const index = (this._activeItemIndex + i) % items.length;
-        const item = items[index];
+              // Start at 1 because we want to start searching at the item immediately
+              // following the current active item.
+              for (let i = 1; i < items.length + 1; i++) {
+                const index = (this._activeItemIndex + i) % items.length;
+                const item = items[index];
 
-        if (!this._skipPredicateFn(item) &&
-            item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+                if (!this._skipPredicateFn(item) &&
+                    item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+                  this.setActiveItem(index);
+                  break;
+                }
+              }
 
-          this.setActiveItem(index);
-          break;
-        }
-      }
-
-      this._pressedLetters = [];
-    });
+              this._pressedLetters = [];
+            });
 
     return this;
   }
@@ -275,7 +275,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         }
 
       default:
-      if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
+        if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
           // Attempt to use the `event.key` which also maps it to the user's keyboard language,
           // otherwise fall back to resolving alphanumeric characters via the keyCode.
           if (event.key && event.key.length === 1) {
@@ -295,12 +295,12 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /** Index of the currently active item. */
-  get activeItemIndex(): number | null {
+  get activeItemIndex(): number|null {
     return this._activeItemIndex;
   }
 
   /** The active item. */
-  get activeItem(): T | null {
+  get activeItem(): T|null {
     return this._activeItem;
   }
 
@@ -326,8 +326,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Sets the active item to a previous enabled item in the list. */
   setPreviousItemActive(): void {
-    this._activeItemIndex < 0 && this._wrap ? this.setLastItemActive()
-                                            : this._setActiveItemByDelta(-1);
+    this._activeItemIndex < 0 && this._wrap ? this.setLastItemActive() :
+                                              this._setActiveItemByDelta(-1);
   }
 
   /**
@@ -357,7 +357,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * currently active item and the new active item. It will calculate differently
    * depending on whether wrap mode is turned on.
    */
-  private _setActiveItemByDelta(delta: -1 | 1): void {
+  private _setActiveItemByDelta(delta: -1|1): void {
     this._wrap ? this._setActiveInWrapMode(delta) : this._setActiveInDefaultMode(delta);
   }
 
@@ -366,7 +366,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * down the list until it finds an item that is not disabled, and it will wrap if it
    * encounters either end of the list.
    */
-  private _setActiveInWrapMode(delta: -1 | 1): void {
+  private _setActiveInWrapMode(delta: -1|1): void {
     const items = this._getItemsArray();
 
     for (let i = 1; i <= items.length; i++) {
@@ -385,7 +385,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * continue to move down the list until it finds an item that is not disabled. If
    * it encounters either end of the list, it will stop and not wrap.
    */
-  private _setActiveInDefaultMode(delta: -1 | 1): void {
+  private _setActiveInDefaultMode(delta: -1|1): void {
     this._setActiveItemByIndex(this._activeItemIndex + delta, delta);
   }
 
@@ -394,7 +394,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * item is disabled, it will move in the fallbackDelta direction until it either
    * finds an enabled item or encounters the end of the list.
    */
-  private _setActiveItemByIndex(index: number, fallbackDelta: -1 | 1): void {
+  private _setActiveItemByIndex(index: number, fallbackDelta: -1|1): void {
     const items = this._getItemsArray();
 
     if (!items[index]) {

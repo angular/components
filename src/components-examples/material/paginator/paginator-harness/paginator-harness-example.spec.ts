@@ -1,14 +1,15 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatPaginatorHarness} from '@angular/material/paginator/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginatorHarness} from '@angular/material/paginator/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {PaginatorHarnessExample} from './paginator-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {PaginatorHarnessExample} from './paginator-harness-example';
 
 describe('PaginatorHarnessExample', () => {
   let fixture: ComponentFixture<PaginatorHarnessExample>;
@@ -16,16 +17,18 @@ describe('PaginatorHarnessExample', () => {
   let instance: PaginatorHarnessExample;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatPaginatorModule, NoopAnimationsModule],
-      declarations: [PaginatorHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatPaginatorModule, NoopAnimationsModule],
+          declarations: [PaginatorHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(PaginatorHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

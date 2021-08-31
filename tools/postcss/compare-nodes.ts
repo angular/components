@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Node, Declaration, Rule} from 'postcss';
+import {Declaration, Node, Rule} from 'postcss';
 
 /**
  * Compares two Postcss AST nodes and returns whether a boolean indicating

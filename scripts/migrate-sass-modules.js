@@ -15,19 +15,12 @@ const {sync: glob} = require('glob');
 
 const directory = path.join(__dirname, '../src');
 const migratedFiles = new Set();
-const ignorePatterns = [
-  '**/*.import.scss',
-  '**/test-theming-bundle.scss',
-  'material/_theming.scss'
-];
+const ignorePatterns =
+    ['**/*.import.scss', '**/test-theming-bundle.scss', 'material/_theming.scss'];
 const materialPrefixes = [
-  ...getPrefixes('material', 'mat'),
-  ...getPrefixes('material/core', 'mat'),
+  ...getPrefixes('material', 'mat'), ...getPrefixes('material/core', 'mat'),
   // Outliers that don't have a directory of their own.
-  'mat-pseudo-checkbox-',
-  'mat-elevation-',
-  'mat-optgroup-',
-  'mat-expansion-panel-'
+  'mat-pseudo-checkbox-', 'mat-elevation-', 'mat-optgroup-', 'mat-expansion-panel-'
 ];
 const mdcPrefixes = [
   ...getPrefixes('material-experimental', 'mat'),
@@ -105,7 +98,7 @@ function migrate(pattern, prefixes = [], forward = false, ignore = []) {
   // Note that while the migrator allows for multiple files to be passed in, we start getting
   // some assertion errors along the way. Running it on a file-by-file basis works fine.
   const files = glob(pattern, {cwd: directory, ignore: [...ignore, ...ignorePatterns]})
-    .filter(file => !migratedFiles.has(file));
+                    .filter(file => !migratedFiles.has(file));
   const message = `Migrating ${files.length} unmigrated files matching ${pattern}.`;
   console.log(ignore.length ? message + ` Ignoring ${ignore.join(', ')}.` : message);
   run('sass-migrator', [...args, ...files]);
@@ -142,8 +135,9 @@ function commentOutMdc(pattern) {
 
 function restoreAndSortMdc(pattern) {
   const files = glob(pattern, {cwd: directory, absolute: true});
-  console.log(`Re-adding and sorting @material imports from ${files.length} ` +
-              `files matching ${pattern}.`);
+  console.log(
+      `Re-adding and sorting @material imports from ${files.length} ` +
+      `files matching ${pattern}.`);
 
   files.forEach(file => {
     // Remove the commented out lines with the marker from `commentOutMdc`.
@@ -165,9 +159,8 @@ function restoreAndSortMdc(pattern) {
 
     // Sort the imports so that `@use` comes before `@import`. Otherwise Sass will throw an error.
     if (headerStartIndex > -1 && headerEndIndex > -1) {
-      const headers = lines
-        .splice(headerStartIndex, headerEndIndex - headerStartIndex)
-        .sort((a, b) => a.startsWith('@use') && !b.startsWith('@use') ? -1 : 0);
+      const headers = lines.splice(headerStartIndex, headerEndIndex - headerStartIndex)
+                          .sort((a, b) => a.startsWith('@use') && !b.startsWith('@use') ? -1 : 0);
       lines.splice(headerStartIndex, 0, ...headers);
     }
 

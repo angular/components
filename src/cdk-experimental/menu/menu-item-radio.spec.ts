@@ -1,11 +1,12 @@
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {Component, ElementRef} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItemRadio} from './menu-item-radio';
-import {CDK_MENU} from './menu-interface';
+
 import {CdkMenu} from './menu';
+import {CDK_MENU} from './menu-interface';
+import {CdkMenuItemRadio} from './menu-item-radio';
+import {CdkMenuModule} from './menu-module';
 
 describe('MenuItemRadio', () => {
   let fixture: ComponentFixture<SimpleRadioButton>;
@@ -15,25 +16,26 @@ describe('MenuItemRadio', () => {
 
   beforeEach(waitForAsync(() => {
     selectionDispatcher = new UniqueSelectionDispatcher();
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [SimpleRadioButton],
-      providers: [
-        {provide: UniqueSelectionDispatcher, useValue: selectionDispatcher},
-        {provide: CDK_MENU, useClass: CdkMenu},
-        // View engine can't figure out the ElementRef to inject so we need to provide a fake
-        {provide: ElementRef, useValue: new ElementRef<null>(null)},
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [SimpleRadioButton],
+          providers: [
+            {provide: UniqueSelectionDispatcher, useValue: selectionDispatcher},
+            {provide: CDK_MENU, useClass: CdkMenu},
+            // View engine can't figure out the ElementRef to inject so we need to provide a fake
+            {provide: ElementRef, useValue: new ElementRef<null>(null)},
+          ],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleRadioButton);
     fixture.detectChanges();
 
-    radioButton = fixture.debugElement
-      .query(By.directive(CdkMenuItemRadio))
-      .injector.get(CdkMenuItemRadio);
+    radioButton =
+        fixture.debugElement.query(By.directive(CdkMenuItemRadio)).injector.get(CdkMenuItemRadio);
     radioElement = fixture.debugElement.query(By.directive(CdkMenuItemRadio)).nativeElement;
   });
 
@@ -112,4 +114,5 @@ describe('MenuItemRadio', () => {
 @Component({
   template: `<button cdkMenuItemRadio>Click me!</button>`,
 })
-class SimpleRadioButton {}
+class SimpleRadioButton {
+}

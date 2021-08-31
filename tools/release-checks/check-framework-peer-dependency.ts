@@ -2,10 +2,10 @@ import {
   FatalReleaseActionError
 } from '@angular/dev-infra-private/ng-dev/release/publish/actions-error';
 import {error} from '@angular/dev-infra-private/ng-dev/utils/console';
-import {SemVer} from 'semver';
-import {join} from 'path';
-import {existsSync, readFileSync} from 'fs';
 import * as chalk from 'chalk';
+import {existsSync, readFileSync} from 'fs';
+import {join} from 'path';
+import {SemVer} from 'semver';
 
 /** Path to the Bazel file that configures the release output. */
 const bzlConfigPath = join(__dirname, '../../packages.bzl');
@@ -19,18 +19,18 @@ const bzlConfigPath = join(__dirname, '../../packages.bzl');
 export async function assertValidFrameworkPeerDependency(newVersion: SemVer) {
   const currentVersionRange = _extractAngularVersionPlaceholderOrThrow();
   const isMajorWithPrerelease =
-    newVersion.minor === 0 && newVersion.patch === 0 && !!newVersion.prerelease[0];
+      newVersion.minor === 0 && newVersion.patch === 0 && !!newVersion.prerelease[0];
   const requiredRange = isMajorWithPrerelease ?
-    `^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0-0` :
-    `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0-0`;
+      `^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0-0` :
+      `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0-0`;
 
   if (requiredRange !== currentVersionRange) {
     error(chalk.red(
-      `  ✘   Cannot stage release. The required Angular version range ` +
-      `is invalid. The version range should be: ${requiredRange}`));
+        `  ✘   Cannot stage release. The required Angular version range ` +
+        `is invalid. The version range should be: ${requiredRange}`));
     error(chalk.red(
-      `      Please manually update the version range ` +
-      `in: ${bzlConfigPath}`));
+        `      Please manually update the version range ` +
+        `in: ${bzlConfigPath}`));
     throw new FatalReleaseActionError();
   }
 }
@@ -42,8 +42,8 @@ export async function assertValidFrameworkPeerDependency(newVersion: SemVer) {
 function _extractAngularVersionPlaceholderOrThrow(): string {
   if (!existsSync(bzlConfigPath)) {
     error(chalk.red(
-      `  ✘   Cannot stage release. Could not find the file which sets ` +
-      `the Angular peerDependency placeholder value. Looked for: ${bzlConfigPath}`));
+        `  ✘   Cannot stage release. Could not find the file which sets ` +
+        `the Angular peerDependency placeholder value. Looked for: ${bzlConfigPath}`));
     throw new FatalReleaseActionError();
   }
 
@@ -51,9 +51,9 @@ function _extractAngularVersionPlaceholderOrThrow(): string {
   const matches = configFileContent.match(/ANGULAR_PACKAGE_VERSION = ["']([^"']+)/);
   if (!matches || !matches[1]) {
     error(chalk.red(
-      `  ✘   Cannot stage release. Could not find the ` +
-      `"ANGULAR_PACKAGE_VERSION" variable. Please ensure this variable exists. ` +
-      `Looked in: ${bzlConfigPath}`));
+        `  ✘   Cannot stage release. Could not find the ` +
+        `"ANGULAR_PACKAGE_VERSION" variable. Please ensure this variable exists. ` +
+        `Looked in: ${bzlConfigPath}`));
     throw new FatalReleaseActionError();
   }
   return matches[1];

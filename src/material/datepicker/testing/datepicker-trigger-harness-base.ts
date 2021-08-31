@@ -7,8 +7,9 @@
  */
 
 import {ComponentHarness, LocatorFactory, parallel, TestElement} from '@angular/cdk/testing';
-import {CalendarHarnessFilters} from './datepicker-harness-filters';
+
 import {MatCalendarHarness} from './calendar-harness';
+import {CalendarHarnessFilters} from './datepicker-harness-filters';
 
 /** Interface for a test harness that can open and close a calendar. */
 export interface DatepickerTrigger {
@@ -21,7 +22,7 @@ export interface DatepickerTrigger {
 
 /** Base class for harnesses that can trigger a calendar. */
 export abstract class DatepickerTriggerHarnessBase extends ComponentHarness implements
-  DatepickerTrigger {
+    DatepickerTrigger {
   /** Whether the trigger is disabled. */
   abstract isDisabled(): Promise<boolean>;
 
@@ -64,14 +65,13 @@ export abstract class DatepickerTriggerHarnessBase extends ComponentHarness impl
 }
 
 /** Gets the ID of the calendar that a particular test element can trigger. */
-export async function getCalendarId(host: Promise<TestElement>): Promise<string | null> {
+export async function getCalendarId(host: Promise<TestElement>): Promise<string|null> {
   return (await host).getAttribute('data-mat-calendar');
 }
 
 /** Closes the calendar with a specific ID. */
 export async function closeCalendar(
-  calendarId: Promise<string | null>,
-  documentLocator: LocatorFactory) {
+    calendarId: Promise<string|null>, documentLocator: LocatorFactory) {
   // We close the calendar by clicking on the backdrop, even though all datepicker variants
   // have the ability to close by pressing escape. The backdrop is preferrable, because the
   // escape key has multiple functions inside a range picker (either cancel the current range
@@ -84,17 +84,14 @@ export async function closeCalendar(
 
 /** Gets the test harness for a calendar associated with a particular host. */
 export async function getCalendar(
-  filter: CalendarHarnessFilters,
-  host: Promise<TestElement>,
-  documentLocator: LocatorFactory): Promise<MatCalendarHarness> {
+    filter: CalendarHarnessFilters, host: Promise<TestElement>,
+    documentLocator: LocatorFactory): Promise<MatCalendarHarness> {
   const calendarId = await getCalendarId(host);
 
   if (!calendarId) {
     throw Error(`Element is not associated with a calendar`);
   }
 
-  return documentLocator.locatorFor(MatCalendarHarness.with({
-    ...filter,
-    selector: `#${calendarId}`
-  }))();
+  return documentLocator.locatorFor(
+      MatCalendarHarness.with({...filter, selector: `#${calendarId}`}))();
 }

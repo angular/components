@@ -1,12 +1,13 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
-import {MatNativeDateModule} from '@angular/material/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
+
 import {MatCalendarHarness} from './calendar-harness';
+import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
 
 /** Shared tests to run on both the original and MDC-based datepicker toggles. */
 export function runDatepickerToggleHarnessTests(
@@ -17,10 +18,12 @@ export function runDatepickerToggleHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatNativeDateModule, datepickerModule],
-      declarations: [DatepickerToggleHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [NoopAnimationsModule, MatNativeDateModule, datepickerModule],
+          declarations: [DatepickerToggleHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(DatepickerToggleHarnessTest);
     fixture.detectChanges();
@@ -75,7 +78,6 @@ export function runDatepickerToggleHarnessTests(
     await toggle.openCalendar();
     expect(await toggle.getCalendar()).toBeInstanceOf(calendarHarness);
   });
-
 }
 
 @Component({

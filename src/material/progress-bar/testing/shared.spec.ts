@@ -5,8 +5,9 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressBarHarness} from './progress-bar-harness';
 
-export function runHarnessTests(progressBarModule: typeof MatProgressBarModule,
-                                progressBarHarness: typeof MatProgressBarHarness) {
+export function runHarnessTests(
+    progressBarModule: typeof MatProgressBarModule,
+    progressBarHarness: typeof MatProgressBarHarness) {
   let fixture: ComponentFixture<ProgressBarHarnessTest>;
   let loader: HarnessLoader;
 

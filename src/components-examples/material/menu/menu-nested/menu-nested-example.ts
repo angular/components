@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'menu-nested-example',
   templateUrl: 'menu-nested-example.html',
 })
-export class MenuNestedExample {}
+export class MenuNestedExample {
+}

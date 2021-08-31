@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessPredicate, ComponentHarness, TestKey} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessPredicate, TestKey} from '@angular/cdk/testing';
+
 import {ChipInputHarnessFilters} from './chip-harness-filters';
 
 /** Harness for interacting with a standard Material chip inputs in tests. */
@@ -21,9 +22,11 @@ export class MatChipInputHarness extends ComponentHarness {
    */
   static with(options: ChipInputHarnessFilters = {}): HarnessPredicate<MatChipInputHarness> {
     return new HarnessPredicate(MatChipInputHarness, options)
-        .addOption('value', options.value, async (harness, value) => {
-          return (await harness.getValue()) === value;
-        })
+        .addOption(
+            'value', options.value,
+            async (harness, value) => {
+              return (await harness.getValue()) === value;
+            })
         .addOption('placeholder', options.placeholder, async (harness, placeholder) => {
           return (await harness.getPlaceholder()) === placeholder;
         });
@@ -88,7 +91,7 @@ export class MatChipInputHarness extends ComponentHarness {
   }
 
   /** Sends a chip separator key to the input element. */
-  async sendSeparatorKey(key: TestKey | string): Promise<void> {
+  async sendSeparatorKey(key: TestKey|string): Promise<void> {
     const inputEl = await this.host();
     return inputEl.sendKeys(key);
   }

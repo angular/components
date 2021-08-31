@@ -10,13 +10,18 @@ import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
+  Directive,
+  Inject,
   InjectionToken,
   Input,
-  ViewEncapsulation,
-  Directive, Inject, Optional
+  Optional,
+  ViewEncapsulation
 } from '@angular/core';
+
 import {CanDisable, mixinDisabled} from '../common-behaviors/disabled';
-import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
+
+import {MAT_OPTION_PARENT_COMPONENT, MatOptionParentComponent} from './option-parent';
+
 
 // Notes on the accessibility pattern used for `mat-optgroup`.
 // The option group has two different "modes": regular and inert. The regular mode uses the

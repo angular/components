@@ -33,8 +33,8 @@ class Walker extends Lint.RuleWalker {
     }
 
     for (let member of node.members) {
-      const hasLifecycleHook = member.name !== undefined &&
-          ts.isIdentifier(member.name) && LIFECYCLE_HOOKS.has(member.name.text);
+      const hasLifecycleHook = member.name !== undefined && ts.isIdentifier(member.name) &&
+          LIFECYCLE_HOOKS.has(member.name.text);
       // A class is considering using Angular features if it declares any of
       // the known Angular lifecycle hooks, or if it has class members that are
       // decorated with Angular decorators (e.g. `@Input`).

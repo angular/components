@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'date-range-picker-overview-example',
   templateUrl: 'date-range-picker-overview-example.html',
 })
-export class DateRangePickerOverviewExample {}
+export class DateRangePickerOverviewExample {
+}

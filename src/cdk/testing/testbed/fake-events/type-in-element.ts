@@ -6,20 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ModifierKeys} from '@angular/cdk/testing';
 import {PERIOD} from '@angular/cdk/keycodes';
+import {ModifierKeys} from '@angular/cdk/testing';
+
 import {dispatchFakeEvent, dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
 
 /** Input types for which the value can be entered incrementally. */
 const incrementalInputTypes =
-  new Set(['text', 'email', 'hidden', 'password', 'search', 'tel', 'url']);
+    new Set(['text', 'email', 'hidden', 'password', 'search', 'tel', 'url']);
 
 /**
  * Checks whether the given Element is a text input element.
  * @docs-private
  */
-export function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
+export function isTextInput(element: Element): element is HTMLInputElement|HTMLTextAreaElement {
   const nodeName = element.nodeName.toLowerCase();
   return nodeName === 'input' || nodeName === 'textarea';
 }
@@ -32,7 +33,7 @@ export function isTextInput(element: Element): element is HTMLInputElement | HTM
  * @docs-private
  */
 export function typeInElement(
-    element: HTMLElement, ...keys: (string | {keyCode?: number, key?: string})[]): void;
+    element: HTMLElement, ...keys: (string|{keyCode?: number, key?: string})[]): void;
 
 /**
  * Focuses an input, sets its value and dispatches
@@ -42,13 +43,14 @@ export function typeInElement(
  * @param keys The keys to send to the element.
  * @docs-private
  */
-export function typeInElement(element: HTMLElement, modifiers: ModifierKeys,
-                              ...keys: (string | {keyCode?: number, key?: string})[]): void;
+export function typeInElement(
+    element: HTMLElement, modifiers: ModifierKeys,
+    ...keys: (string|{keyCode?: number, key?: string})[]): void;
 
 export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
   const first = modifiersAndKeys[0];
   let modifiers: ModifierKeys;
-  let rest: (string | {keyCode?: number, key?: string})[];
+  let rest: (string|{keyCode?: number, key?: string})[];
   if (typeof first !== 'string' && first.keyCode === undefined && first.key === undefined) {
     modifiers = first;
     rest = modifiersAndKeys.slice(1);
@@ -58,10 +60,12 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
   }
   const isInput = isTextInput(element);
   const inputType = element.getAttribute('type') || 'text';
-  const keys: {keyCode?: number, key?: string}[] = rest
-      .map(k => typeof k === 'string' ?
-          k.split('').map(c => ({keyCode: c.toUpperCase().charCodeAt(0), key: c})) : [k])
-      .reduce((arr, k) => arr.concat(k), []);
+  const keys: {keyCode?: number, key?: string}[] =
+      rest.map(
+              k => typeof k === 'string' ?
+                  k.split('').map(c => ({keyCode: c.toUpperCase().charCodeAt(0), key: c})) :
+                  [k])
+          .reduce((arr, k) => arr.concat(k), []);
 
   // We simulate the user typing in a value by incrementally assigning the value below. The problem
   // is that for some input types, the browser won't allow for an invalid value to be set via the
@@ -69,9 +73,10 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
   // such an input, we have to set the value all at once or listeners to the `input` event (e.g.
   // the `ReactiveFormsModule` uses such an approach) won't receive the correct value.
   const enterValueIncrementally = inputType === 'number' && keys.length > 0 ?
-    // The value can be set character by character in number inputs if it doesn't have any decimals.
-    keys.every(key => key.key !== '.' && key.keyCode !== PERIOD) :
-    incrementalInputTypes.has(inputType);
+      // The value can be set character by character in number inputs if it doesn't have any
+      // decimals.
+      keys.every(key => key.key !== '.' && key.keyCode !== PERIOD) :
+      incrementalInputTypes.has(inputType);
 
   triggerFocus(element);
 
@@ -103,7 +108,7 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
  * Clears the text in an input or textarea element.
  * @docs-private
  */
-export function clearElement(element: HTMLInputElement | HTMLTextAreaElement) {
+export function clearElement(element: HTMLInputElement|HTMLTextAreaElement) {
   triggerFocus(element as HTMLElement);
   element.value = '';
   dispatchFakeEvent(element, 'input');

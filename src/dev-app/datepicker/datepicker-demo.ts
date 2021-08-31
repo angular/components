@@ -10,23 +10,23 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Directive,
   Inject,
+  Injectable,
   OnDestroy,
   Optional,
   ViewChild,
-  ViewEncapsulation,
-  Directive,
-  Injectable
+  ViewEncapsulation
 } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {
+  DateRange,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatCalendar,
   MatCalendarHeader,
   MatDatepickerInputEvent,
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
-  MatDateRangeSelectionStrategy,
-  DateRange
+  MatDateRangeSelectionStrategy
 } from '@angular/material/datepicker';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -49,8 +49,8 @@ export class DatepickerDemo {
   maxDate: Date;
   startAt: Date;
   date: any;
-  lastDateInput: Date | null;
-  lastDateChange: Date | null;
+  lastDateInput: Date|null;
+  lastDateChange: Date|null;
   color: ThemePalette;
   showActions = false;
 
@@ -69,13 +69,13 @@ export class DatepickerDemo {
     this.comparisonEnd = new Date(year, month, 13);
   }
 
-  dateFilter: (date: Date | null) => boolean =
-    (date: Date | null) => {
-      if (date === null) {
-        return true;
+  dateFilter: (date: Date|null) => boolean =
+      (date: Date|null) => {
+        if (date === null) {
+          return true;
+        }
+        return !(date.getFullYear() % 2) && Boolean(date.getMonth() % 2) && !(date.getDate() % 2);
       }
-      return !(date.getFullYear() % 2) && Boolean(date.getMonth() % 2) && !(date.getDate() % 2);
-    }
 
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
@@ -106,7 +106,7 @@ export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D
     return new DateRange<D>(start, end);
   }
 
-  createPreview(activeDate: D | null, currentRange: DateRange<D>): DateRange<D> {
+  createPreview(activeDate: D|null, currentRange: DateRange<D>): DateRange<D> {
     if (activeDate) {
       if (currentRange.start && currentRange.end) {
         return this._getRangeRelativeToDate(activeDate, currentRange.start, currentRange.end);
@@ -118,9 +118,9 @@ export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D
     return new DateRange<D>(null, null);
   }
 
-  private _getRangeRelativeToDate(date: D | null, start: D, end: D): DateRange<D> {
-    let rangeStart: D | null = null;
-    let rangeEnd: D | null = null;
+  private _getRangeRelativeToDate(date: D|null, start: D, end: D): DateRange<D> {
+    let rangeStart: D|null = null;
+    let rangeEnd: D|null = null;
 
     if (date) {
       const delta = Math.round(Math.abs(this._dateAdapter.compareDate(start, end)) / 2);
@@ -134,12 +134,10 @@ export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D
 
 @Directive({
   selector: '[customRangeStrategy]',
-  providers: [{
-    provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-    useClass: PreserveRangeStrategy
-  }]
+  providers: [{provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: PreserveRangeStrategy}]
 })
-export class CustomRangeStrategy {}
+export class CustomRangeStrategy {
+}
 
 // Custom header component for datepicker
 @Component({
@@ -154,9 +152,7 @@ export class CustomHeader<D> implements OnDestroy {
   constructor(
       private _calendar: MatCalendar<D>, private _dateAdapter: DateAdapter<D>,
       @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats, cdr: ChangeDetectorRef) {
-    _calendar.stateChanges
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(() => cdr.markForCheck());
+    _calendar.stateChanges.pipe(takeUntil(this._destroyed)).subscribe(() => cdr.markForCheck());
   }
 
   ngOnDestroy() {
@@ -170,13 +166,13 @@ export class CustomHeader<D> implements OnDestroy {
         .toLocaleUpperCase();
   }
 
-  previousClicked(mode: 'month' | 'year') {
+  previousClicked(mode: 'month'|'year') {
     this._calendar.activeDate = mode === 'month' ?
         this._dateAdapter.addCalendarMonths(this._calendar.activeDate, -1) :
         this._dateAdapter.addCalendarYears(this._calendar.activeDate, -1);
   }
 
-  nextClicked(mode: 'month' | 'year') {
+  nextClicked(mode: 'month'|'year') {
     this._calendar.activeDate = mode === 'month' ?
         this._dateAdapter.addCalendarMonths(this._calendar.activeDate, 1) :
         this._dateAdapter.addCalendarYears(this._calendar.activeDate, 1);
@@ -184,17 +180,15 @@ export class CustomHeader<D> implements OnDestroy {
 }
 
 @Component({
-    selector: 'customer-header-ng-content',
-    template: `
+  selector: 'customer-header-ng-content',
+  template: `
       <mat-calendar-header #header>
         <button mat-button type="button" (click)="todayClicked()">TODAY</button>
       </mat-calendar-header>
     `
 })
 export class CustomHeaderNgContent<D> {
-
-  @ViewChild(MatCalendarHeader)
-  header: MatCalendarHeader<D>;
+  @ViewChild(MatCalendarHeader) header: MatCalendarHeader<D>;
 
   constructor(@Optional() private _dateAdapter: DateAdapter<D>) {}
 

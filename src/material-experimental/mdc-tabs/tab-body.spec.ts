@@ -1,14 +1,15 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
+import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 import {AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material-experimental/mdc-core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
-import {MatTabBody, MatTabBodyPortal} from './tab-body';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
+
+import {MatTabBody, MatTabBodyPortal} from './tab-body';
 
 
 describe('MDC-based MatTabBody', () => {
@@ -24,9 +25,7 @@ describe('MDC-based MatTabBody', () => {
         MatTabBodyPortal,
         SimpleTabBodyApp,
       ],
-      providers: [
-        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}
-      ]
+      providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}]
     });
 
     TestBed.compileComponents();
@@ -57,7 +56,6 @@ describe('MDC-based MatTabBody', () => {
     });
 
     describe('in LTR direction', () => {
-
       beforeEach(() => {
         dir = 'ltr';
         fixture = TestBed.createComponent(SimpleTabBodyApp);
@@ -182,23 +180,17 @@ describe('MDC-based MatTabBody', () => {
   });
 
   it('should mark the tab body content as a scrollable container', () => {
-    TestBed
-      .resetTestingModule()
-      .configureTestingModule({
-        imports: [
-          CommonModule,
-          PortalModule,
-          MatRippleModule,
-          NoopAnimationsModule,
-          ScrollingModule
-        ],
-        declarations: [
-          MatTabBody,
-          MatTabBodyPortal,
-          SimpleTabBodyApp,
-        ]
-      })
-      .compileComponents();
+    TestBed.resetTestingModule()
+        .configureTestingModule({
+          imports:
+              [CommonModule, PortalModule, MatRippleModule, NoopAnimationsModule, ScrollingModule],
+          declarations: [
+            MatTabBody,
+            MatTabBodyPortal,
+            SimpleTabBodyApp,
+          ]
+        })
+        .compileComponents();
 
     const fixture = TestBed.createComponent(SimpleTabBodyApp);
     const tabBodyContent = fixture.nativeElement.querySelector('.mat-mdc-tab-body-content');
@@ -219,12 +211,12 @@ describe('MDC-based MatTabBody', () => {
 class SimpleTabBodyApp implements AfterContentInit {
   content: TemplatePortal;
   position: number;
-  origin: number | null;
+  origin: number|null;
 
   @ViewChild(MatTabBody) tabBody: MatTabBody;
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(private _viewContainerRef: ViewContainerRef) { }
+  constructor(private _viewContainerRef: ViewContainerRef) {}
 
   ngAfterContentInit() {
     this.content = new TemplatePortal(this.template, this._viewContainerRef);

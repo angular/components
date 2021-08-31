@@ -6,16 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, Inject} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, NgZone, OnDestroy} from '@angular/core';
 import {merge, Observable, Observer, Subject} from 'rxjs';
 
 /** Event options that can be used to bind an active, capturing event. */
-const activeCapturingEventOptions = normalizePassiveListenerOptions({
-  passive: false,
-  capture: true
-});
+const activeCapturingEventOptions =
+    normalizePassiveListenerOptions({passive: false, capture: true});
 
 /**
  * Service that keeps track of all the drag item and drop container
@@ -39,10 +37,8 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   private _activeDragInstances: I[] = [];
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
-  private _globalListeners = new Map<string, {
-    handler: (event: Event) => void,
-    options?: AddEventListenerOptions | boolean
-  }>();
+  private _globalListeners = new Map<
+      string, {handler: (event: Event) => void, options?: AddEventListenerOptions|boolean}>();
 
   /**
    * Predicate function to check if an item is being dragged.  Moved out into a property,
@@ -54,13 +50,13 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * Emits the `touchmove` or `mousemove` events that are dispatched
    * while the user is dragging a drag item instance.
    */
-  readonly pointerMove: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
+  readonly pointerMove: Subject<TouchEvent|MouseEvent> = new Subject<TouchEvent|MouseEvent>();
 
   /**
    * Emits the `touchend` or `mouseup` events that are dispatched
    * while the user is dragging a drag item instance.
    */
-  readonly pointerUp: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
+  readonly pointerUp: Subject<TouchEvent|MouseEvent> = new Subject<TouchEvent|MouseEvent>();
 
   /**
    * Emits when the viewport has been scrolled while the user is dragging an item.
@@ -69,9 +65,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    */
   readonly scroll: Subject<Event> = new Subject<Event>();
 
-  constructor(
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) _document: any) {
+  constructor(private _ngZone: NgZone, @Inject(DOCUMENT) _document: any) {
     this._document = _document;
   }
 
@@ -93,8 +87,8 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
       this._ngZone.runOutsideAngular(() => {
         // The event handler has to be explicitly active,
         // because newer browsers make it passive by default.
-        this._document.addEventListener('touchmove', this._persistentTouchmoveListener,
-            activeCapturingEventOptions);
+        this._document.addEventListener(
+            'touchmove', this._persistentTouchmoveListener, activeCapturingEventOptions);
       });
     }
   }
@@ -110,8 +104,8 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
     this.stopDragging(drag);
 
     if (this._dragInstances.size === 0) {
-      this._document.removeEventListener('touchmove', this._persistentTouchmoveListener,
-          activeCapturingEventOptions);
+      this._document.removeEventListener(
+          'touchmove', this._persistentTouchmoveListener, activeCapturingEventOptions);
     }
   }
 
@@ -120,7 +114,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * @param drag Drag instance which is being dragged.
    * @param event Event that initiated the dragging.
    */
-  startDragging(drag: I, event: TouchEvent | MouseEvent) {
+  startDragging(drag: I, event: TouchEvent|MouseEvent) {
     // Do not process the same drag twice to avoid memory leaks and redundant listeners
     if (this._activeDragInstances.indexOf(drag) > -1) {
       return;
@@ -135,24 +129,23 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
       // use `preventDefault` to prevent the page from scrolling while the user is dragging.
       this._globalListeners
-        .set(isTouchEvent ? 'touchend' : 'mouseup', {
-          handler: (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent),
-          options: true
-        })
-        .set('scroll', {
-          handler: (e: Event) => this.scroll.next(e),
-          // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
-          // the document. See https://github.com/angular/components/issues/17144.
-          options: true
-        })
-        // Preventing the default action on `mousemove` isn't enough to disable text selection
-        // on Safari so we need to prevent the selection event as well. Alternatively this can
-        // be done by setting `user-select: none` on the `body`, however it has causes a style
-        // recalculation which can be expensive on pages with a lot of elements.
-        .set('selectstart', {
-          handler: this._preventDefaultWhileDragging,
-          options: activeCapturingEventOptions
-        });
+          .set(isTouchEvent ? 'touchend' : 'mouseup', {
+            handler: (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent),
+            options: true
+          })
+          .set('scroll', {
+            handler: (e: Event) => this.scroll.next(e),
+            // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
+            // the document. See https://github.com/angular/components/issues/17144.
+            options: true
+          })
+          // Preventing the default action on `mousemove` isn't enough to disable text selection
+          // on Safari so we need to prevent the selection event as well. Alternatively this can
+          // be done by setting `user-select: none` on the `body`, however it has causes a style
+          // recalculation which can be expensive on pages with a lot of elements.
+          .set(
+              'selectstart',
+              {handler: this._preventDefaultWhileDragging, options: activeCapturingEventOptions});
 
       // We don't have to bind a move event for touch drag sequences, because
       // we already have a persistent global one bound from `registerDragItem`.
@@ -196,7 +189,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    *   Top-level listeners won't pick up events coming from the shadow DOM so this parameter can
    *   be used to include an additional top-level listener at the shadow root level.
    */
-  scrolled(shadowRoot?: DocumentOrShadowRoot | null): Observable<Event> {
+  scrolled(shadowRoot?: DocumentOrShadowRoot|null): Observable<Event> {
     const streams: Observable<Event>[] = [this.scroll];
 
     if (shadowRoot && shadowRoot !== this._document) {
@@ -236,25 +229,28 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * Event listener that will prevent the default browser action while the user is dragging.
    * @param event Event whose default action should be prevented.
    */
-  private _preventDefaultWhileDragging = (event: Event) => {
-    if (this._activeDragInstances.length > 0) {
-      event.preventDefault();
-    }
-  }
-
-  /** Event listener for `touchmove` that is bound even if no dragging is happening. */
-  private _persistentTouchmoveListener = (event: TouchEvent) => {
-    if (this._activeDragInstances.length > 0) {
-      // Note that we only want to prevent the default action after dragging has actually started.
-      // Usually this is the same time at which the item is added to the `_activeDragInstances`,
-      // but it could be pushed back if the user has set up a drag delay or threshold.
-      if (this._activeDragInstances.some(this._draggingPredicate)) {
-        event.preventDefault();
+  private _preventDefaultWhileDragging =
+      (event: Event) => {
+        if (this._activeDragInstances.length > 0) {
+          event.preventDefault();
+        }
       }
 
-      this.pointerMove.next(event);
-    }
-  }
+  /** Event listener for `touchmove` that is bound even if no dragging is happening. */
+  private _persistentTouchmoveListener =
+      (event: TouchEvent) => {
+        if (this._activeDragInstances.length > 0) {
+          // Note that we only want to prevent the default action after dragging has actually
+          // started. Usually this is the same time at which the item is added to the
+          // `_activeDragInstances`, but it could be pushed back if the user has set up a drag delay
+          // or threshold.
+          if (this._activeDragInstances.some(this._draggingPredicate)) {
+            event.preventDefault();
+          }
+
+          this.pointerMove.next(event);
+        }
+      }
 
   /** Clears out the global event listeners from the `document`. */
   private _clearGlobalListeners() {

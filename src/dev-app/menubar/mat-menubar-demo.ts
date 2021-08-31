@@ -6,13 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CDK_MENU, CdkMenu, CdkMenuGroup, CdkMenuItem} from '@angular/cdk-experimental/menu';
 import {Component, ViewEncapsulation} from '@angular/core';
-import {CdkMenu, CdkMenuItem, CdkMenuGroup, CDK_MENU} from '@angular/cdk-experimental/menu';
 
 @Component({
   templateUrl: 'mat-menubar-demo.html',
 })
-export class MatMenuBarDemo {}
+export class MatMenuBarDemo {
+}
 
 // TODO: Remove the fake when mat-menu is re-built with CdkMenu directives
 @Component({
@@ -33,7 +34,8 @@ export class MatMenuBarDemo {}
   styleUrls: ['mat-menubar-demo.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class DemoMenu extends CdkMenu {}
+export class DemoMenu extends CdkMenu {
+}
 
 // TODO: Remove the fake when mat-menu-item is re-built with CdkMenu directives
 @Component({
@@ -50,4 +52,5 @@ export class DemoMenu extends CdkMenu {}
   styleUrls: ['mat-menubar-demo.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class DemoMenuItem extends CdkMenuItem {}
+export class DemoMenuItem extends CdkMenuItem {
+}

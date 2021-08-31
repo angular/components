@@ -7,9 +7,9 @@
  */
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
 import {CdkTreeExamplesModule} from '@angular/components-examples/cdk/tree';
 import {TreeExamplesModule} from '@angular/components-examples/material/tree';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';

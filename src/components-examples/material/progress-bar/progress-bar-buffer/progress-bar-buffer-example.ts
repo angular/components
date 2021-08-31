@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'progress-bar-buffer-example',
   templateUrl: 'progress-bar-buffer-example.html',
 })
-export class ProgressBarBufferExample {}
+export class ProgressBarBufferExample {
+}

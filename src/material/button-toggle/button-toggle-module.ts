@@ -16,4 +16,5 @@ import {MatButtonToggle, MatButtonToggleGroup} from './button-toggle';
   exports: [MatCommonModule, MatButtonToggleGroup, MatButtonToggle],
   declarations: [MatButtonToggleGroup, MatButtonToggle],
 })
-export class MatButtonToggleModule {}
+export class MatButtonToggleModule {
+}

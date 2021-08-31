@@ -2,9 +2,10 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
+
+import {RadioHarnessExample} from './radio-harness/radio-harness-example';
 import {RadioNgModelExample} from './radio-ng-model/radio-ng-model-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
-import {RadioHarnessExample} from './radio-harness/radio-harness-example';
 
 export {
   RadioHarnessExample,

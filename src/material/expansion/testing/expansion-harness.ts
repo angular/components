@@ -23,7 +23,7 @@ export const enum MatExpansionPanelSection {
 
 /** Harness for interacting with a standard mat-expansion-panel in tests. */
 export class MatExpansionPanelHarness extends
-  ContentContainerComponentHarness<MatExpansionPanelSection> {
+    ContentContainerComponentHarness<MatExpansionPanelSection> {
   static hostSelector = '.mat-expansion-panel';
 
   private _header = this.locatorFor(MatExpansionPanelSection.HEADER);

@@ -14,4 +14,5 @@ import {CdkTableScrollContainer} from './table-scroll-container';
   declarations: [CdkTableScrollContainer],
   exports: [CdkTableScrollContainer],
 })
-export class CdkTableScrollContainerModule {}
+export class CdkTableScrollContainerModule {
+}

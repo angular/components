@@ -9,23 +9,24 @@ import {IconType} from './icon-harness-filters';
 
 /** Shared tests to run on both the original and MDC-based icons. */
 export function runHarnessTests(
-    iconModule: typeof MatIconModule,
-    iconRegistry: typeof MatIconRegistry,
+    iconModule: typeof MatIconModule, iconRegistry: typeof MatIconRegistry,
     iconHarness: typeof MatIconHarness) {
   let fixture: ComponentFixture<IconHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [iconModule],
-      declarations: [IconHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [iconModule],
+          declarations: [IconHarnessTest],
+        })
+        .compileComponents();
 
     const registry = TestBed.inject(iconRegistry);
     const sanitizer = TestBed.inject(DomSanitizer);
 
-    registry.addSvgIconLiteralInNamespace('svgIcons', 'svgIcon',
-        sanitizer.bypassSecurityTrustHtml('<svg></svg>'));
+    registry.addSvgIconLiteralInNamespace(
+        'svgIcons', 'svgIcon', sanitizer.bypassSecurityTrustHtml('<svg></svg>'));
     fixture = TestBed.createComponent(IconHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -37,31 +38,31 @@ export function runHarnessTests(
   });
 
   it('should filter icon harnesses based on their type', async () => {
-    const [svgIcons, fontIcons] = await parallel(() => [
-      loader.getAllHarnesses(iconHarness.with({type: IconType.SVG})),
-      loader.getAllHarnesses(iconHarness.with({type: IconType.FONT}))
-    ]);
+    const [svgIcons, fontIcons] = await parallel(
+        () =>
+            [loader.getAllHarnesses(iconHarness.with({type: IconType.SVG})),
+             loader.getAllHarnesses(iconHarness.with({type: IconType.FONT}))]);
 
     expect(svgIcons.length).toBe(1);
     expect(fontIcons.length).toBe(2);
   });
 
   it('should filter icon harnesses based on their name', async () => {
-    const [regexFilterResults, stringFilterResults] = await parallel(() => [
-      loader.getAllHarnesses(iconHarness.with({name: /^font/})),
-      loader.getAllHarnesses(iconHarness.with({name: 'fontIcon'}))
-    ]);
+    const [regexFilterResults, stringFilterResults] = await parallel(
+        () =>
+            [loader.getAllHarnesses(iconHarness.with({name: /^font/})),
+             loader.getAllHarnesses(iconHarness.with({name: 'fontIcon'}))]);
 
     expect(regexFilterResults.length).toBe(1);
     expect(stringFilterResults.length).toBe(1);
   });
 
   it('should filter icon harnesses based on their namespace', async () => {
-    const [regexFilterResults, stringFilterResults, nullFilterResults] = await parallel(() => [
-      loader.getAllHarnesses(iconHarness.with({namespace: /^font/})),
-      loader.getAllHarnesses(iconHarness.with({namespace: 'svgIcons'})),
-      loader.getAllHarnesses(iconHarness.with({namespace: null}))
-    ]);
+    const [regexFilterResults, stringFilterResults, nullFilterResults] = await parallel(
+        () =>
+            [loader.getAllHarnesses(iconHarness.with({namespace: /^font/})),
+             loader.getAllHarnesses(iconHarness.with({namespace: 'svgIcons'})),
+             loader.getAllHarnesses(iconHarness.with({namespace: null}))]);
 
     expect(regexFilterResults.length).toBe(1);
     expect(stringFilterResults.length).toBe(1);
@@ -91,7 +92,6 @@ export function runHarnessTests(
     const inlineStates = await parallel(() => icons.map(icon => icon.isInline()));
     expect(inlineStates).toEqual([false, false, true]);
   });
-
 }
 
 @Component({
@@ -103,4 +103,3 @@ export function runHarnessTests(
 })
 class IconHarnessTest {
 }
-

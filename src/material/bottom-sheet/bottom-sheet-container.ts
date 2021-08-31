@@ -6,36 +6,37 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Component,
-  ComponentRef,
-  EmbeddedViewRef,
-  ViewChild,
-  OnDestroy,
-  ElementRef,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ChangeDetectorRef,
-  EventEmitter,
-  Inject,
-  Optional,
-  NgZone,
-} from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
+import {FocusTrap, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   BasePortalOutlet,
-  ComponentPortal,
-  TemplatePortal,
   CdkPortalOutlet,
+  ComponentPortal,
   DomPortal,
+  TemplatePortal,
 } from '@angular/cdk/portal';
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {MatBottomSheetConfig} from './bottom-sheet-config';
-import {matBottomSheetAnimations} from './bottom-sheet-animations';
-import {Subscription} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
-import {FocusTrap, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentRef,
+  ElementRef,
+  EmbeddedViewRef,
+  EventEmitter,
+  Inject,
+  NgZone,
+  OnDestroy,
+  Optional,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {Subscription} from 'rxjs';
+
+import {matBottomSheetAnimations} from './bottom-sheet-animations';
+import {MatBottomSheetConfig} from './bottom-sheet-config';
 
 // TODO(crisbeto): consolidate some logic between this, MatDialog and MatSnackBar
 
@@ -72,7 +73,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
 
   /** The state of the bottom sheet animations. */
-  _animationState: 'void' | 'visible' | 'hidden' = 'void';
+  _animationState: 'void'|'visible'|'hidden' = 'void';
 
   /** Emits whenever the state of the animation changes. */
   _animationStateChanged = new EventEmitter<AnimationEvent>();
@@ -81,7 +82,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   private _focusTrap: FocusTrap;
 
   /** Element that was focused before the bottom sheet was opened. */
-  private _elementFocusedBeforeOpened: HTMLElement | null = null;
+  private _elementFocusedBeforeOpened: HTMLElement|null = null;
 
   /** Server-side rendering-compatible reference to the global document object. */
   private _document: Document;
@@ -90,28 +91,29 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   private _destroyed: boolean;
 
   constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _focusTrapFactory: FocusTrapFactory,
-    private readonly _interactivityChecker: InteractivityChecker,
-    private readonly _ngZone: NgZone,
-    breakpointObserver: BreakpointObserver,
-    @Optional() @Inject(DOCUMENT) document: any,
-    /** The bottom sheet configuration. */
-    public bottomSheetConfig: MatBottomSheetConfig) {
+      private _elementRef: ElementRef<HTMLElement>, private _changeDetectorRef: ChangeDetectorRef,
+      private _focusTrapFactory: FocusTrapFactory,
+      private readonly _interactivityChecker: InteractivityChecker,
+      private readonly _ngZone: NgZone, breakpointObserver: BreakpointObserver,
+      @Optional() @Inject(DOCUMENT) document: any,
+      /** The bottom sheet configuration. */
+      public bottomSheetConfig: MatBottomSheetConfig) {
     super();
 
     this._document = document;
-    this._breakpointSubscription = breakpointObserver
-      .observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])
-      .subscribe(() => {
-        this._toggleClass('mat-bottom-sheet-container-medium',
-            breakpointObserver.isMatched(Breakpoints.Medium));
-        this._toggleClass('mat-bottom-sheet-container-large',
-            breakpointObserver.isMatched(Breakpoints.Large));
-        this._toggleClass('mat-bottom-sheet-container-xlarge',
-            breakpointObserver.isMatched(Breakpoints.XLarge));
-      });
+    this._breakpointSubscription =
+        breakpointObserver.observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])
+            .subscribe(() => {
+              this._toggleClass(
+                  'mat-bottom-sheet-container-medium',
+                  breakpointObserver.isMatched(Breakpoints.Medium));
+              this._toggleClass(
+                  'mat-bottom-sheet-container-large',
+                  breakpointObserver.isMatched(Breakpoints.Large));
+              this._toggleClass(
+                  'mat-bottom-sheet-container-xlarge',
+                  breakpointObserver.isMatched(Breakpoints.XLarge));
+            });
   }
 
   /** Attach a component portal as content to this bottom sheet container. */
@@ -135,12 +137,13 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  override attachDomPortal = (portal: DomPortal) => {
-    this._validatePortalAttached();
-    this._setPanelClass();
-    this._savePreviouslyFocusedElement();
-    return this._portalOutlet.attachDomPortal(portal);
-  }
+  override attachDomPortal =
+      (portal: DomPortal) => {
+        this._validatePortalAttached();
+        this._setPanelClass();
+        this._savePreviouslyFocusedElement();
+        return this._portalOutlet.attachDomPortal(portal);
+      }
 
   /** Begin animation of bottom sheet entrance into view. */
   enter(): void {
@@ -223,7 +226,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
    */
   private _focusByCssSelector(selector: string, options?: FocusOptions) {
     let elementToFocus =
-      this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
+        this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
     if (elementToFocus) {
       this._forceFocus(elementToFocus, options);
     }
@@ -285,7 +288,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
       // the consumer moved it themselves before the animation was done, in which case we shouldn't
       // do anything.
       if (!activeElement || activeElement === this._document.body || activeElement === element ||
-        element.contains(activeElement)) {
+          element.contains(activeElement)) {
         toFocus.focus();
       }
     }

@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTableModule} from '@angular/material-experimental/mdc-table';
-import {RouterModule} from '@angular/router';
-import {MdcTableDemo} from './mdc-table-demo';
 import {MdcTableExamplesModule} from '@angular/components-examples/material-experimental/mdc-table';
+import {NgModule} from '@angular/core';
+import {MatTableModule} from '@angular/material-experimental/mdc-table';
+import {MatIconModule} from '@angular/material/icon';
+import {RouterModule} from '@angular/router';
+
+import {MdcTableDemo} from './mdc-table-demo';
 
 @NgModule({
   imports: [

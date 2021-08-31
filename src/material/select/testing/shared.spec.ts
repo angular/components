@@ -11,23 +11,24 @@ import {MatSelectHarness} from './select-harness';
 
 /** Shared tests to run on both the original and MDC-based select. */
 export function runHarnessTests(
-    formFieldModule: typeof MatFormFieldModule,
-    selectModule: typeof MatSelectModule,
+    formFieldModule: typeof MatFormFieldModule, selectModule: typeof MatSelectModule,
     selectHarness: typeof MatSelectHarness) {
   let fixture: ComponentFixture<SelectHarnessTest>;
   let loader: HarnessLoader;
   let overlayContainer: OverlayContainer;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        selectModule,
-        formFieldModule,
-        NoopAnimationsModule,
-        ReactiveFormsModule,
-      ],
-      declarations: [SelectHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [
+            selectModule,
+            formFieldModule,
+            NoopAnimationsModule,
+            ReactiveFormsModule,
+          ],
+          declarations: [SelectHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();
@@ -49,9 +50,8 @@ export function runHarnessTests(
   });
 
   it('should be able to check whether a select is in multi-selection mode', async () => {
-    const singleSelection = await loader.getHarness(selectHarness.with({
-      selector: '#single-selection'
-    }));
+    const singleSelection =
+        await loader.getHarness(selectHarness.with({selector: '#single-selection'}));
     const multipleSelection =
         await loader.getHarness(selectHarness.with({selector: '#multiple-selection'}));
 
@@ -60,9 +60,8 @@ export function runHarnessTests(
   });
 
   it('should get disabled state', async () => {
-    const singleSelection = await loader.getHarness(selectHarness.with({
-      selector: '#single-selection'
-    }));
+    const singleSelection =
+        await loader.getHarness(selectHarness.with({selector: '#single-selection'}));
     const multipleSelection =
         await loader.getHarness(selectHarness.with({selector: '#multiple-selection'}));
 
@@ -77,9 +76,8 @@ export function runHarnessTests(
   });
 
   it('should get required state', async () => {
-    const singleSelection = await loader.getHarness(selectHarness.with({
-      selector: '#single-selection'
-    }));
+    const singleSelection =
+        await loader.getHarness(selectHarness.with({selector: '#single-selection'}));
     const multipleSelection =
         await loader.getHarness(selectHarness.with({selector: '#multiple-selection'}));
 
@@ -94,12 +92,10 @@ export function runHarnessTests(
   });
 
   it('should get valid state', async () => {
-    const singleSelection = await loader.getHarness(selectHarness.with({
-      selector: '#single-selection'
-    }));
-    const withFormControl = await loader.getHarness(selectHarness.with({
-      selector: '#with-form-control'
-    }));
+    const singleSelection =
+        await loader.getHarness(selectHarness.with({selector: '#single-selection'}));
+    const withFormControl =
+        await loader.getHarness(selectHarness.with({selector: '#with-form-control'}));
 
     expect(await singleSelection.isValid()).toBe(true);
     expect(await withFormControl.isValid()).toBe(false);
@@ -158,18 +154,15 @@ export function runHarnessTests(
   });
 
   it('should be able to get the select options when there are multiple open selects', async () => {
-    const singleSelect = await loader.getHarness(selectHarness.with({
-      selector: '#single-selection'
-    }));
+    const singleSelect =
+        await loader.getHarness(selectHarness.with({selector: '#single-selection'}));
     await singleSelect.open();
 
     const groupedSelect = await loader.getHarness(selectHarness.with({selector: '#grouped'}));
     await groupedSelect.open();
 
-    const [singleOptions, groupedOptions] = await parallel(() => [
-      singleSelect.getOptions(),
-      groupedSelect.getOptions()
-    ]);
+    const [singleOptions, groupedOptions] =
+        await parallel(() => [singleSelect.getOptions(), groupedSelect.getOptions()]);
 
     expect(await singleOptions[0].getText()).toBe('Alabama');
     expect(singleOptions.length).toBe(11);
@@ -235,7 +228,6 @@ export function runHarnessTests(
 
     expect(control.value).toBe('CA');
   });
-
 }
 
 @Component({
@@ -287,32 +279,31 @@ class SelectHarnessTest {
   stateGroups = [
     {
       name: 'One',
-      states: [
-        {code: 'IA', name: 'Iowa'},
-        {code: 'KS', name: 'Kansas'},
-        {code: 'KY', name: 'Kentucky'},
-        {code: 'LA', name: 'Louisiana'},
-        {code: 'ME', name: 'Maine'}
-      ]
+      states:
+          [
+            {code: 'IA', name: 'Iowa'}, {code: 'KS', name: 'Kansas'},
+            {code: 'KY', name: 'Kentucky'}, {code: 'LA', name: 'Louisiana'},
+            {code: 'ME', name: 'Maine'}
+          ]
     },
     {
       name: 'Two',
-      states: [
-        {code: 'RI', name: 'Rhode Island'},
-        {code: 'SC', name: 'South Carolina'},
-        {code: 'SD', name: 'South Dakota'},
-        {code: 'TN', name: 'Tennessee'},
-        {code: 'TX', name: 'Texas'},
-      ]
+      states:
+          [
+            {code: 'RI', name: 'Rhode Island'},
+            {code: 'SC', name: 'South Carolina'},
+            {code: 'SD', name: 'South Dakota'},
+            {code: 'TN', name: 'Tennessee'},
+            {code: 'TX', name: 'Texas'},
+          ]
     },
     {
       name: 'Three',
-      states: [
-        {code: 'UT', name: 'Utah'},
-        {code: 'WA', name: 'Washington'},
-        {code: 'WV', name: 'West Virginia'},
-        {code: 'WI', name: 'Wisconsin'}
-      ]
+      states:
+          [
+            {code: 'UT', name: 'Utah'}, {code: 'WA', name: 'Washington'},
+            {code: 'WV', name: 'West Virginia'}, {code: 'WI', name: 'Wisconsin'}
+          ]
     }
   ];
 }

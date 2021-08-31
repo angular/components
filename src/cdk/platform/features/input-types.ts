@@ -15,28 +15,9 @@ const candidateInputTypes = [
   // first changing it to something else:
   // The specified value "" does not conform to the required format.
   // The format is "#rrggbb" where rr, gg, bb are two-digit hexadecimal numbers.
-  'color',
-  'button',
-  'checkbox',
-  'date',
-  'datetime-local',
-  'email',
-  'file',
-  'hidden',
-  'image',
-  'month',
-  'number',
-  'password',
-  'radio',
-  'range',
-  'reset',
-  'search',
-  'submit',
-  'tel',
-  'text',
-  'time',
-  'url',
-  'week',
+  'color', 'button', 'checkbox', 'date',  'datetime-local', 'email', 'file',   'hidden', 'image',
+  'month', 'number', 'password', 'radio', 'range',          'reset', 'search', 'submit', 'tel',
+  'text',  'time',   'url',      'week',
 ];
 
 /** @returns The input types supported by this browser. */

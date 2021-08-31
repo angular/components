@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ViewContainerRef, ComponentFactoryResolver} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
+import {ComponentFactoryResolver, ViewContainerRef} from '@angular/core';
 
 /** Options for where to set focus to automatically on dialog open */
-export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
+export type AutoFocusTarget = 'dialog'|'first-tabbable'|'first-heading';
 
 /** Valid ARIA roles for a dialog element. */
-export type DialogRole = 'dialog' | 'alertdialog';
+export type DialogRole = 'dialog'|'alertdialog';
 
 /** Possible overrides for a dialog's position. */
 export interface DialogPosition {
@@ -35,7 +35,6 @@ export interface DialogPosition {
  * Configuration for opening a modal dialog with the MatDialog service.
  */
 export class MatDialogConfig<D = any> {
-
   /**
    * Where the attached component should live in Angular's *logical* component tree.
    * This affects what is available for injection and the change detection order for the
@@ -51,13 +50,13 @@ export class MatDialogConfig<D = any> {
   role?: DialogRole = 'dialog';
 
   /** Custom class for the overlay pane. */
-  panelClass?: string | string[] = '';
+  panelClass?: string|string[] = '';
 
   /** Whether the dialog has a backdrop. */
   hasBackdrop?: boolean = true;
 
   /** Custom class for the backdrop. */
-  backdropClass?: string | string[] = '';
+  backdropClass?: string|string[] = '';
 
   /** Whether the user can use escape or clicking on the backdrop to close the modal. */
   disableClose?: boolean = false;
@@ -69,41 +68,41 @@ export class MatDialogConfig<D = any> {
   height?: string = '';
 
   /** Min-width of the dialog. If a number is provided, assumes pixel units. */
-  minWidth?: number | string;
+  minWidth?: number|string;
 
   /** Min-height of the dialog. If a number is provided, assumes pixel units. */
-  minHeight?: number | string;
+  minHeight?: number|string;
 
   /** Max-width of the dialog. If a number is provided, assumes pixel units. Defaults to 80vw. */
-  maxWidth?: number | string = '80vw';
+  maxWidth?: number|string = '80vw';
 
   /** Max-height of the dialog. If a number is provided, assumes pixel units. */
-  maxHeight?: number | string;
+  maxHeight?: number|string;
 
   /** Position overrides. */
   position?: DialogPosition;
 
   /** Data being injected into the child component. */
-  data?: D | null = null;
+  data?: D|null = null;
 
   /** Layout direction for the dialog's content. */
   direction?: Direction;
 
   /** ID of the element that describes the dialog. */
-  ariaDescribedBy?: string | null = null;
+  ariaDescribedBy?: string|null = null;
 
   /** ID of the element that labels the dialog. */
-  ariaLabelledBy?: string | null = null;
+  ariaLabelledBy?: string|null = null;
 
   /** Aria label to assign to the dialog element. */
-  ariaLabel?: string | null = null;
+  ariaLabel?: string|null = null;
 
   /**
    * Where the dialog should focus on open.
    * @breaking-change 14.0.0 Remove boolean option from autoFocus. Use string or
    * AutoFocusTarget instead.
    */
-  autoFocus?: AutoFocusTarget | string | boolean = 'first-tabbable';
+  autoFocus?: AutoFocusTarget|string|boolean = 'first-tabbable';
 
   /**
    * Whether the dialog should restore focus to the

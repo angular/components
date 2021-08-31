@@ -1,6 +1,6 @@
-import {resolve as resolvePath} from 'path';
-import {spawn} from 'child_process';
 import * as chalk from 'chalk';
+import {spawn} from 'child_process';
+import {resolve as resolvePath} from 'path';
 
 /**
  * Spawns a child process that compiles TypeScript using the specified compiler binary.
@@ -8,7 +8,7 @@ import * as chalk from 'chalk';
  * @param flags Command-line flags to be passed to binary.
  * @returns Promise that resolves/rejects when the child process exits.
  */
-export function tsCompile(binary: 'tsc' | 'ngc', flags: string[]) {
+export function tsCompile(binary: 'tsc'|'ngc', flags: string[]) {
   return new Promise<void>((resolve, reject) => {
     const binaryPath = resolvePath(`./node_modules/typescript/bin/${binary}`);
     // Use `node` for spawning the TypeScript compiler. On Windows, the shell is

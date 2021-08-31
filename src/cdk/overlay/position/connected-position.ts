@@ -8,10 +8,10 @@
 
 /** Horizontal dimension of a connection point on the perimeter of the origin or overlay element. */
 import {Optional} from '@angular/core';
-export type HorizontalConnectionPos = 'start' | 'center' | 'end';
+export type HorizontalConnectionPos = 'start'|'center'|'end';
 
 /** Vertical dimension of a connection point on the perimeter of the origin or overlay element. */
-export type VerticalConnectionPos = 'top' | 'center' | 'bottom';
+export type VerticalConnectionPos = 'top'|'center'|'bottom';
 
 
 /** A connection point on the origin element. */
@@ -38,15 +38,13 @@ export class ConnectionPositionPair {
   overlayY: VerticalConnectionPos;
 
   constructor(
-    origin: OriginConnectionPosition,
-    overlay: OverlayConnectionPosition,
-    /** Offset along the X axis. */
-    public offsetX?: number,
-    /** Offset along the Y axis. */
-    public offsetY?: number,
-    /** Class(es) to be applied to the panel while this position is active. */
-    public panelClass?: string | string[]) {
-
+      origin: OriginConnectionPosition, overlay: OverlayConnectionPosition,
+      /** Offset along the X axis. */
+      public offsetX?: number,
+      /** Offset along the Y axis. */
+      public offsetY?: number,
+      /** Class(es) to be applied to the panel while this position is active. */
+      public panelClass?: string|string[]) {
     this.originX = origin.originX;
     this.originY = origin.originY;
     this.overlayX = overlay.overlayX;
@@ -103,8 +101,9 @@ export class ConnectedOverlayPositionChange {
  */
 export function validateVerticalPosition(property: string, value: VerticalConnectionPos) {
   if (value !== 'top' && value !== 'bottom' && value !== 'center') {
-    throw Error(`ConnectedPosition: Invalid ${property} "${value}". ` +
-                `Expected "top", "bottom" or "center".`);
+    throw Error(
+        `ConnectedPosition: Invalid ${property} "${value}". ` +
+        `Expected "top", "bottom" or "center".`);
   }
 }
 
@@ -116,7 +115,8 @@ export function validateVerticalPosition(property: string, value: VerticalConnec
  */
 export function validateHorizontalPosition(property: string, value: HorizontalConnectionPos) {
   if (value !== 'start' && value !== 'end' && value !== 'center') {
-    throw Error(`ConnectedPosition: Invalid ${property} "${value}". ` +
-                `Expected "start", "end" or "center".`);
+    throw Error(
+        `ConnectedPosition: Invalid ${property} "${value}". ` +
+        `Expected "start", "end" or "center".`);
   }
 }

@@ -20,5 +20,4 @@ export class SlideToggleDemo {
   onFormSubmit() {
     alert(`You submitted the form.`);
   }
-
 }

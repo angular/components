@@ -62,10 +62,10 @@ export class ElementSelectorsMigration extends Migration<UpgradeData> {
     });
   }
 
-  private _replaceSelector(filePath: WorkspacePath, start: number,
-                           data: ElementSelectorUpgradeData) {
+  private _replaceSelector(
+      filePath: WorkspacePath, start: number, data: ElementSelectorUpgradeData) {
     this.fileSystem.edit(filePath)
-      .remove(start, data.replace.length)
-      .insertRight(start, data.replaceWith);
+        .remove(start, data.replace.length)
+        .insertRight(start, data.replaceWith);
   }
 }

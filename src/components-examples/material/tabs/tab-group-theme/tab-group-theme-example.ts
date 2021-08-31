@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tab-group-theme-example.html',
   styleUrls: ['tab-group-theme-example.css'],
 })
-export class TabGroupThemeExample {}
+export class TabGroupThemeExample {
+}

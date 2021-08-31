@@ -7,11 +7,11 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {DOCUMENT} from '@angular/common';
 import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
 
 import {DevAppDirectionality} from './dev-app-directionality';
 import {DevAppRippleOptions} from './ripple-options';
-import {DOCUMENT} from '@angular/common';
 
 const isDarkThemeKey = 'ANGULAR_COMPONENTS_DEV_APP_DARK_THEME';
 

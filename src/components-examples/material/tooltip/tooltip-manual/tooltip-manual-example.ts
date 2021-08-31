@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tooltip-manual-example.html',
   styleUrls: ['tooltip-manual-example.css'],
 })
-export class TooltipManualExample {}
+export class TooltipManualExample {
+}

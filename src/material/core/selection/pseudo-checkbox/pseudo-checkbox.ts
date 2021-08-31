@@ -7,12 +7,12 @@
  */
 
 import {
-  Component,
-  ViewEncapsulation,
-  Input,
   ChangeDetectionStrategy,
+  Component,
   Inject,
+  Input,
   Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -20,7 +20,7 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
  * Possible states for a pseudo checkbox.
  * @docs-private
  */
-export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
+export type MatPseudoCheckboxState = 'unchecked'|'checked'|'indeterminate';
 
 /**
  * Component that shows a simplified checkbox without including any kind of "real" checkbox.
@@ -56,5 +56,5 @@ export class MatPseudoCheckbox {
   /** Whether the checkbox is disabled. */
   @Input() disabled: boolean = false;
 
-  constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) { }
+  constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {}
 }

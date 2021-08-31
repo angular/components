@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CdkRowSelection} from '@angular/cdk-experimental/selection';
-import {Input, Directive} from '@angular/core';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {Directive, Input} from '@angular/core';
 
 
 /**
@@ -33,7 +33,9 @@ export class MatRowSelection<T> extends CdkRowSelection<T> {
 
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('matRowSelectionIndex')
-  override get index(): number|undefined { return this._index; }
+  override get index(): number|undefined {
+    return this._index;
+  }
   override set index(index: number|undefined) {
     // TODO: when we remove support for ViewEngine, change this setter to an input
     // alias in the decorator metadata.

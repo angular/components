@@ -1,7 +1,7 @@
-import * as path from 'path';
-import * as ts from 'typescript';
-import * as Lint from 'tslint';
 import * as minimatch from 'minimatch';
+import * as path from 'path';
+import * as Lint from 'tslint';
+import * as ts from 'typescript';
 
 const buildConfig = require('../../build-config');
 
@@ -10,7 +10,7 @@ const licenseBanner = buildConfig.licenseBanner;
 
 /** Failure message that will be shown if a license banner is missing. */
 const ERROR_MESSAGE = 'Missing license header in this TypeScript file. ' +
-  'Every TypeScript file of the library needs to have the Google license banner at the top.';
+    'Every TypeScript file of the library needs to have the Google license banner at the top.';
 
 /** TSLint fix that can be used to add the license banner easily. */
 const tslintFix = Lint.Replacement.appendText(0, licenseBanner + '\n\n');
@@ -20,14 +20,12 @@ const tslintFix = Lint.Replacement.appendText(0, licenseBanner + '\n\n');
  * file does not have the license banner at the top of the file.
  */
 export class Rule extends Lint.Rules.AbstractRule {
-
   apply(sourceFile: ts.SourceFile) {
     return this.applyWithWalker(new RequireLicenseBannerWalker(sourceFile, this.getOptions()));
   }
 }
 
 class RequireLicenseBannerWalker extends Lint.RuleWalker {
-
   /** Whether the walker should check the current source file. */
   private _enabled: boolean;
 

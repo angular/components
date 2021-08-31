@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
 import {GoogleMapsModule} from '../google-maps-module';

@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export type SortDirection = 'asc' | 'desc' | '';
+export type SortDirection = 'asc'|'desc'|'';

@@ -6,16 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, Provider} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {CdkTable, _CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from '@angular/cdk/table';
-
 import {
+  CdkFlexTableResizeStrategy,
   ColumnResize,
   ResizeStrategy,
-  CdkFlexTableResizeStrategy,
   TABLE_LAYOUT_FIXED_RESIZE_STRATEGY_PROVIDER,
 } from '@angular/cdk-experimental/column-resize';
+import {_COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, CdkTable} from '@angular/cdk/table';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, Provider} from '@angular/core';
 
 export {TABLE_LAYOUT_FIXED_RESIZE_STRATEGY_PROVIDER};
 
@@ -27,8 +26,7 @@ export class MatFlexTableResizeStrategy extends CdkFlexTableResizeStrategy {
   constructor(
       columnResize: ColumnResize,
       @Inject(_COALESCED_STYLE_SCHEDULER) styleScheduler: _CoalescedStyleScheduler,
-      table: CdkTable<unknown>,
-      @Inject(DOCUMENT) document: any) {
+      table: CdkTable<unknown>, @Inject(DOCUMENT) document: any) {
     super(columnResize, styleScheduler, table, document);
   }
 

@@ -1,10 +1,12 @@
 import {TestBed} from '@angular/core/testing';
-import {MapDirectionsResponse, MapDirectionsService} from './map-directions-service';
+
 import {GoogleMapsModule} from '../google-maps-module';
 import {
   createDirectionsServiceConstructorSpy,
   createDirectionsServiceSpy
 } from '../testing/fake-google-map-utils';
+
+import {MapDirectionsResponse, MapDirectionsService} from './map-directions-service';
 
 describe('MapDirectionsService', () => {
   let mapDirectionsService: MapDirectionsService;
@@ -38,10 +40,10 @@ describe('MapDirectionsService', () => {
   it('calls route on inputs', () => {
     const result = {};
     const status = 'OK';
-    directionsServiceSpy.route.and.callFake((_request: google.maps.DirectionsRequest,
-        callback: Function) => {
-      callback(result, status);
-    });
+    directionsServiceSpy.route.and.callFake(
+        (_request: google.maps.DirectionsRequest, callback: Function) => {
+          callback(result, status);
+        });
     const request: google.maps.DirectionsRequest = {};
     mapDirectionsService.route(request).subscribe(response => {
       expect(response).toEqual({result, status} as MapDirectionsResponse);

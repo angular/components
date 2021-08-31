@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'toolbar-harness-example',
   templateUrl: 'toolbar-harness-example.html',
 })
-export class ToolbarHarnessExample {}
+export class ToolbarHarnessExample {
+}

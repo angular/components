@@ -9,8 +9,8 @@
 import {HarnessPredicate} from '@angular/cdk/testing';
 import {MatSelectHarness} from '@angular/material-experimental/mdc-select/testing';
 import {
-  PaginatorHarnessFilters,
   _MatPaginatorHarnessBase,
+  PaginatorHarnessFilters,
 } from '@angular/material/paginator/testing';
 
 
@@ -22,9 +22,8 @@ export class MatPaginatorHarness extends _MatPaginatorHarnessBase {
   protected _previousButton = this.locatorFor('.mat-mdc-paginator-navigation-previous');
   protected _firstPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-first');
   protected _lastPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-last');
-  protected _select = this.locatorForOptional(MatSelectHarness.with({
-    ancestor: '.mat-mdc-paginator-page-size'
-  }));
+  protected _select =
+      this.locatorForOptional(MatSelectHarness.with({ancestor: '.mat-mdc-paginator-page-size'}));
   protected _pageSizeFallback = this.locatorFor('.mat-mdc-paginator-page-size-value');
   protected _rangeLabel = this.locatorFor('.mat-mdc-paginator-range-label');
 

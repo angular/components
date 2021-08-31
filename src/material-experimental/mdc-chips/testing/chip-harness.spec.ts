@@ -13,10 +13,12 @@ describe('MatChipHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatChipsModule, MatIconModule],
-      declarations: [ChipHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatChipsModule, MatIconModule],
+          declarations: [ChipHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ChipHarnessTest);
     fixture.detectChanges();
@@ -58,9 +60,8 @@ describe('MatChipHarness', () => {
   });
 
   it('should find avatar in chip', async () => {
-    const chip = await loader.getHarness(MatChipHarness.with({
-      selector: '.mat-mdc-chip-with-avatar'
-    }));
+    const chip =
+        await loader.getHarness(MatChipHarness.with({selector: '.mat-mdc-chip-with-avatar'}));
     const avatar = await chip.getAvatar();
     expect(avatar).toBeTruthy();
     const avatarHost = await avatar?.host();
@@ -68,9 +69,8 @@ describe('MatChipHarness', () => {
   });
 
   it('should find icon in chip', async () => {
-    const chip = await loader.getHarness(MatChipHarness.with({
-      selector: '.mat-mdc-chip-with-icon-avatar'
-    }));
+    const chip =
+        await loader.getHarness(MatChipHarness.with({selector: '.mat-mdc-chip-with-icon-avatar'}));
     expect(chip).toBeTruthy();
     const icon = await chip.getHarness(MatIconHarness);
     expect(icon).toBeTruthy();

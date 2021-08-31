@@ -6,24 +6,27 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatSliderModule} from '@angular/material-experimental/mdc-slider';
+
 import {MatSliderHarness} from './slider-harness';
-import {MatSliderThumbHarness} from './slider-thumb-harness';
 import {ThumbPosition} from './slider-harness-filters';
+import {MatSliderThumbHarness} from './slider-thumb-harness';
 
 describe('MDC-based MatSliderHarness', () => {
   let fixture: ComponentFixture<SliderHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatSliderModule],
-      declarations: [SliderHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatSliderModule],
+          declarations: [SliderHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(SliderHarnessTest);
     fixture.detectChanges();
@@ -70,10 +73,11 @@ describe('MDC-based MatSliderHarness', () => {
 
   it('should throw when trying to get the start thumb from a single point slider', async () => {
     const slider = await loader.getHarness(MatSliderHarness.with({isRange: false}));
-    await expectAsync(slider.getStartThumb()).toBeRejectedWithError(
-        '`getStartThumb` is only applicable for range sliders. '
-        + 'Did you mean to use `getEndThumb`?',
-      );
+    await expectAsync(slider.getStartThumb())
+        .toBeRejectedWithError(
+            '`getStartThumb` is only applicable for range sliders. ' +
+                'Did you mean to use `getEndThumb`?',
+        );
   });
 
   it('should get the step of a slider', async () => {
@@ -169,7 +173,6 @@ describe('MDC-based MatSliderHarness', () => {
     await thumb.blur();
     expect(await thumb.isFocused()).toBe(false);
   });
-
 });
 
 @Component({

@@ -10,14 +10,14 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 export interface ChipHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
+  text?: string|RegExp;
 }
 
 export interface ChipInputHarnessFilters extends BaseHarnessFilters {
   /** Filters based on the value of the input. */
-  value?: string | RegExp;
+  value?: string|RegExp;
   /** Filters based on the placeholder text of the input. */
-  placeholder?: string | RegExp;
+  placeholder?: string|RegExp;
 }
 
 export interface ChipListboxHarnessFilters extends BaseHarnessFilters {}

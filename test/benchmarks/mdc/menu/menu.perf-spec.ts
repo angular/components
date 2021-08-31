@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {$, by, element, ElementFinder, Key} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/bazel/benchmark/driver-utilities';
+import {$, by, element, ElementFinder, Key} from 'protractor';
 
 // Clicking to close a menu is problematic. This is a solution that uses `.sendKeys()` avoids
 // issues with `.click()`.

@@ -1,20 +1,23 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
+
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
 
 describe('CdkVirtualScrollViewport', () => {
-  describe ('with AutoSizeVirtualScrollStrategy', () => {
+  describe('with AutoSizeVirtualScrollStrategy', () => {
     let fixture: ComponentFixture<AutoSizeVirtualScroll>;
     let testComponent: AutoSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, ExperimentalScrollingModule],
-        declarations: [AutoSizeVirtualScroll],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [ScrollingModule, ExperimentalScrollingModule],
+            declarations: [AutoSizeVirtualScroll],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -24,30 +27,33 @@ describe('CdkVirtualScrollViewport', () => {
     });
 
     it('should render initial state for uniform items', fakeAsync(() => {
-      finishInit(fixture);
+         finishInit(fixture);
 
-      const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
-      expect(contentWrapper.children.length)
-        .withContext('should render 4 50px items to fill 200px space').toBe(4);
-    }));
+         const contentWrapper = viewport.elementRef.nativeElement.querySelector(
+             '.cdk-virtual-scroll-content-wrapper')!;
+         expect(contentWrapper.children.length)
+             .withContext('should render 4 50px items to fill 200px space')
+             .toBe(4);
+       }));
 
     it('should render extra content if first item is smaller than average', fakeAsync(() => {
-      testComponent.items = [50, 200, 200, 200, 200, 200];
-      finishInit(fixture);
+         testComponent.items = [50, 200, 200, 200, 200, 200];
+         finishInit(fixture);
 
-      const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
-      expect(contentWrapper.children.length)
-        .withContext('should render 4 items to fill 200px space based on 50px ' +
-                     'estimate from first item').toBe(4);
-    }));
+         const contentWrapper = viewport.elementRef.nativeElement.querySelector(
+             '.cdk-virtual-scroll-content-wrapper')!;
+         expect(contentWrapper.children.length)
+             .withContext(
+                 'should render 4 items to fill 200px space based on 50px ' +
+                 'estimate from first item')
+             .toBe(4);
+       }));
 
     it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
-      testComponent.minBufferPx = 100;
-      testComponent.maxBufferPx = 99;
-      expect(() => finishInit(fixture)).toThrow();
-    }));
+         testComponent.minBufferPx = 100;
+         testComponent.maxBufferPx = 99;
+         expect(() => finishInit(fixture)).toThrow();
+       }));
 
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,
     // once it actually does that.

@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   styleUrls: ['cdk-menu-menubar-example.css'],
   templateUrl: 'cdk-menu-menubar-example.html',
 })
-export class CdkMenuMenubarExample {}
+export class CdkMenuMenubarExample {
+}

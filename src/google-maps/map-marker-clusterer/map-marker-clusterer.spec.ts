@@ -1,16 +1,17 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
 import {GoogleMapsModule} from '../google-maps-module';
 import {
   createMapConstructorSpy,
   createMapSpy,
-  createMarkerConstructorSpy,
   createMarkerClustererConstructorSpy,
   createMarkerClustererSpy,
+  createMarkerConstructorSpy,
   createMarkerSpy,
 } from '../testing/fake-google-map-utils';
+
 import {MapMarkerClusterer} from './map-marker-clusterer';
 
 describe('MapMarkerClusterer', () => {
@@ -40,8 +41,8 @@ describe('MapMarkerClusterer', () => {
     });
 
     markerClustererSpy = createMarkerClustererSpy();
-    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy)
-        .and.callThrough();
+    markerClustererConstructorSpy =
+        createMarkerClustererConstructorSpy(markerClustererSpy).and.callThrough();
 
     fixture = TestBed.createComponent(TestApp);
   });
@@ -53,14 +54,14 @@ describe('MapMarkerClusterer', () => {
 
   it('throws an error if the clustering library has not been loaded', () => {
     (window as any).MarkerClusterer = undefined;
-    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy, false)
-        .and.callThrough();
+    markerClustererConstructorSpy =
+        createMarkerClustererConstructorSpy(markerClustererSpy, false).and.callThrough();
 
     expect(() => fixture.detectChanges())
         .toThrow(new Error(
-          'MarkerClusterer class not found, cannot construct a marker cluster. ' +
-          'Please install the MarkerClustererPlus library: ' +
-          'https://github.com/googlemaps/js-markerclustererplus'));
+            'MarkerClusterer class not found, cannot construct a marker cluster. ' +
+            'Please install the MarkerClustererPlus library: ' +
+            'https://github.com/googlemaps/js-markerclustererplus'));
   });
 
   it('initializes a Google Map Marker Clusterer', () => {
@@ -131,12 +132,8 @@ describe('MapMarkerClusterer', () => {
 
   it('sets marker clusterer options', () => {
     fixture.detectChanges();
-    const options: MarkerClustererOptions = {
-      enableRetinaIcons: true,
-      gridSize: 1337,
-      ignoreHidden: true,
-      imageExtension: 'png'
-    };
+    const options: MarkerClustererOptions =
+        {enableRetinaIcons: true, gridSize: 1337, ignoreHidden: true, imageExtension: 'png'};
     fixture.componentInstance.options = options;
     fixture.detectChanges();
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(jasmine.objectContaining(options));
@@ -144,18 +141,10 @@ describe('MapMarkerClusterer', () => {
 
   it('gives precedence to specific inputs over options', () => {
     fixture.detectChanges();
-    const options: MarkerClustererOptions = {
-      enableRetinaIcons: true,
-      gridSize: 1337,
-      ignoreHidden: true,
-      imageExtension: 'png'
-    };
-    const expectedOptions: MarkerClustererOptions = {
-      enableRetinaIcons: false,
-      gridSize: 42,
-      ignoreHidden: false,
-      imageExtension: 'jpeg'
-    };
+    const options: MarkerClustererOptions =
+        {enableRetinaIcons: true, gridSize: 1337, ignoreHidden: true, imageExtension: 'png'};
+    const expectedOptions: MarkerClustererOptions =
+        {enableRetinaIcons: false, gridSize: 42, ignoreHidden: false, imageExtension: 'jpeg'};
     fixture.componentInstance.enableRetinaIcons = expectedOptions.enableRetinaIcons;
     fixture.componentInstance.gridSize = expectedOptions.gridSize;
     fixture.componentInstance.ignoreHidden = expectedOptions.ignoreHidden;
@@ -170,15 +159,17 @@ describe('MapMarkerClusterer', () => {
   it('sets Google Maps Markers in the MarkerClusterer', () => {
     fixture.detectChanges();
 
-    expect(markerClustererSpy.addMarkers)
-        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher]);
+    expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
+      anyMarkerMatcher, anyMarkerMatcher
+    ]);
   });
 
   it('updates Google Maps Markers in the Marker Clusterer', () => {
     fixture.detectChanges();
 
-    expect(markerClustererSpy.addMarkers)
-        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher]);
+    expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
+      anyMarkerMatcher, anyMarkerMatcher
+    ]);
 
     fixture.componentInstance.state = 'state2';
     fixture.detectChanges();
@@ -273,8 +264,7 @@ describe('MapMarkerClusterer', () => {
         .toHaveBeenCalledWith('clusteringbegin', jasmine.any(Function));
     expect(markerClustererSpy.addListener)
         .not.toHaveBeenCalledWith('clusteringend', jasmine.any(Function));
-    expect(markerClustererSpy.addListener)
-        .toHaveBeenCalledWith('click', jasmine.any(Function));
+    expect(markerClustererSpy.addListener).toHaveBeenCalledWith('click', jasmine.any(Function));
   });
 });
 

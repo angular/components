@@ -9,9 +9,9 @@
 import {ChangeDetectionStrategy, Component, Inject, ViewEncapsulation} from '@angular/core';
 import {
   MAT_SNACK_BAR_DATA,
-  TextOnlySnackBar,
   MatSnackBarRef,
-  SimpleSnackBar
+  SimpleSnackBar,
+  TextOnlySnackBar
 } from '@angular/material/snack-bar';
 
 @Component({
@@ -28,8 +28,7 @@ import {
 export class MatSimpleSnackBar implements TextOnlySnackBar {
   constructor(
       public snackBarRef: MatSnackBarRef<SimpleSnackBar>,
-      @Inject(MAT_SNACK_BAR_DATA) public data: {message: string, action: string}) {
-  }
+      @Inject(MAT_SNACK_BAR_DATA) public data: {message: string, action: string}) {}
 
   /** Performs the action on the snack bar. */
   action(): void {
@@ -41,4 +40,3 @@ export class MatSimpleSnackBar implements TextOnlySnackBar {
     return !!this.data.action;
   }
 }
-

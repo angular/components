@@ -51,9 +51,7 @@ export class ImportManager {
   /** Map of source files and their analyzed imports. */
   private _importCache = new Map<ts.SourceFile, AnalyzedImport[]>();
 
-  constructor(
-      private _fileSystem: FileSystem,
-      private _printer: ts.Printer) {}
+  constructor(private _fileSystem: FileSystem, private _printer: ts.Printer) {}
 
   /**
    * Analyzes the import of the specified source file if needed. In order to perform

@@ -39,7 +39,8 @@ export function resolveBazelPath(parent: string, relativePath: string) {
       if (result) {
         return result;
       }
-    } catch {}
+    } catch {
+    }
   }
 
   throw Error(`Could not resolve path. Looked in: ${projectDirs.join(', ')}`);

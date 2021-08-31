@@ -6,30 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  ChangeDetectorRef,
-  ElementRef,
-  NgZone,
-  Optional,
-  QueryList,
-  EventEmitter,
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
-  OnDestroy,
+  ChangeDetectorRef,
   Directive,
+  ElementRef,
+  EventEmitter,
   Inject,
   Input,
+  NgZone,
+  OnDestroy,
+  Optional,
+  QueryList,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
-import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
-import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {fromEvent, merge, of as observableOf, Subject, timer} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 /** Config used to bind passive event listeners */
@@ -41,7 +41,7 @@ const passiveEventListenerOptions =
  * will scroll the header towards the end of the tabs list and 'before' will scroll towards the
  * beginning of the list.
  */
-export type ScrollDirection = 'after' | 'before';
+export type ScrollDirection = 'after'|'before';
 
 /**
  * The distance in pixels that will be overshot when scrolling a tab label into view. This helps
@@ -62,7 +62,7 @@ const HEADER_SCROLL_DELAY = 650;
 const HEADER_SCROLL_INTERVAL = 100;
 
 /** Item inside a paginated tab header. */
-export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRef};
+export type MatPaginatedTabHeaderItem = FocusableOption&{elementRef: ElementRef};
 
 /**
  * Base class for a tab header that supported pagination.
@@ -70,7 +70,7 @@ export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRe
  */
 @Directive()
 export abstract class MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit,
-  AfterViewInit, OnDestroy {
+                                                       AfterViewInit, OnDestroy {
   abstract _items: QueryList<MatPaginatedTabHeaderItem>;
   abstract _inkBar: {hide: () => void, alignToElement: (element: HTMLElement) => void};
   abstract _tabListContainer: ElementRef<HTMLElement>;
@@ -118,11 +118,12 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * Whether pagination should be disabled. This can be used to avoid unnecessary
    * layout recalculations if it's known that pagination won't be required.
    */
-  @Input()
-  disablePagination: boolean = false;
+  @Input() disablePagination: boolean = false;
 
   /** The index of the active tab. */
-  get selectedIndex(): number { return this._selectedIndex; }
+  get selectedIndex(): number {
+    return this._selectedIndex;
+  }
   set selectedIndex(value: number) {
     value = coerceNumberProperty(value);
 
@@ -143,21 +144,19 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   /** Event emitted when a label is focused. */
   readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>,
-              protected _changeDetectorRef: ChangeDetectorRef,
-              private _viewportRuler: ViewportRuler,
-              @Optional() private _dir: Directionality,
-              private _ngZone: NgZone,
-              private _platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
-
+  constructor(
+      protected _elementRef: ElementRef<HTMLElement>,
+      protected _changeDetectorRef: ChangeDetectorRef, private _viewportRuler: ViewportRuler,
+      @Optional() private _dir: Directionality, private _ngZone: NgZone,
+      private _platform: Platform,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
     _ngZone.runOutsideAngular(() => {
       fromEvent(_elementRef.nativeElement, 'mouseleave')
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(() => {
-          this._stopInterval();
-        });
+          .pipe(takeUntil(this._destroyed))
+          .subscribe(() => {
+            this._stopInterval();
+          });
     });
   }
 
@@ -167,16 +166,16 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   ngAfterViewInit() {
     // We need to handle these events manually, because we want to bind passive event listeners.
     fromEvent(this._previousPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
-        this._handlePaginatorPress('before');
-      });
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => {
+          this._handlePaginatorPress('before');
+        });
 
     fromEvent(this._nextPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
-        this._handlePaginatorPress('after');
-      });
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => {
+          this._handlePaginatorPress('after');
+        });
   }
 
   ngAfterContentInit() {
@@ -188,9 +187,9 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     };
 
     this._keyManager = new FocusKeyManager<MatPaginatedTabHeaderItem>(this._items)
-      .withHorizontalOrientation(this._getLayoutDirection())
-      .withHomeAndEnd()
-      .withWrap();
+                           .withHorizontalOrientation(this._getLayoutDirection())
+                           .withHomeAndEnd()
+                           .withWrap();
 
     this._keyManager.updateActiveItem(this._selectedIndex);
 
@@ -324,7 +323,9 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * providing a valid index and return true.
    */
   _isValidIndex(index: number): boolean {
-    if (!this._items) { return true; }
+    if (!this._items) {
+      return true;
+    }
 
     const tab = this._items ? this._items.toArray()[index] : null;
     return !!tab && !tab.disabled;
@@ -388,7 +389,9 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
-  get scrollDistance(): number { return this._scrollDistance; }
+  get scrollDistance(): number {
+    return this._scrollDistance;
+  }
   set scrollDistance(value: number) {
     this._scrollTo(value);
   }
@@ -520,8 +523,8 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
   /** Tells the ink-bar to align itself to the current label wrapper */
   _alignInkBarToSelectedTab(): void {
-    const selectedItem = this._items && this._items.length ?
-        this._items.toArray()[this.selectedIndex] : null;
+    const selectedItem =
+        this._items && this._items.length ? this._items.toArray()[this.selectedIndex] : null;
     const selectedLabelWrapper = selectedItem ? selectedItem.elementRef.nativeElement : null;
 
     if (selectedLabelWrapper) {
@@ -553,16 +556,16 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     // Start a timer after the delay and keep firing based on the interval.
     timer(HEADER_SCROLL_DELAY, HEADER_SCROLL_INTERVAL)
-      // Keep the timer going until something tells it to stop or the component is destroyed.
-      .pipe(takeUntil(merge(this._stopScrolling, this._destroyed)))
-      .subscribe(() => {
-        const {maxScrollDistance, distance} = this._scrollHeader(direction);
+        // Keep the timer going until something tells it to stop or the component is destroyed.
+        .pipe(takeUntil(merge(this._stopScrolling, this._destroyed)))
+        .subscribe(() => {
+          const {maxScrollDistance, distance} = this._scrollHeader(direction);
 
-        // Stop the timer if we've reached the start or the end.
-        if (distance === 0 || distance >= maxScrollDistance) {
-          this._stopInterval();
-        }
-      });
+          // Stop the timer if we've reached the start or the end.
+          if (distance === 0 || distance >= maxScrollDistance) {
+            this._stopInterval();
+          }
+        });
   }
 
   /**

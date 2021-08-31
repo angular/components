@@ -84,8 +84,8 @@ async function isVisibleInViewport(el: ElementFinder, viewport: ElementFinder): 
 
 
 /** Gets the rect for an element given its location ans size. */
-function getRect(location: ILocation, size: ISize):
-    {top: number, left: number, bottom: number, right: number} {
+function getRect(
+    location: ILocation, size: ISize): {top: number, left: number, bottom: number, right: number} {
   return {
     top: location.y,
     left: location.x,
@@ -109,9 +109,9 @@ function smoothScrollViewportTo(viewportEl: any, offset: number, done: () => voi
   do {
     const co = curOffset += Math.min(25, Math.max(-25, offset - curOffset));
     promise = promise.then(() => new Promise<void>(resolve => {
-      viewportEl.scrollTop = co;
-      window.requestAnimationFrame(() => resolve());
-    }));
+                             viewportEl.scrollTop = co;
+                             window.requestAnimationFrame(() => resolve());
+                           }));
   } while (curOffset != offset);
   promise.then(() => done());
 }

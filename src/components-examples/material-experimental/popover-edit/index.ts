@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatPopoverEditModule} from '@angular/material-experimental/popover-edit';
 import {MatButtonModule} from '@angular/material/button';
@@ -9,6 +9,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatListModule} from '@angular/material/list';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
+
 import {
   PopoverEditCellSpanMatTableExample
 } from './popover-edit-cell-span-mat-table/popover-edit-cell-span-mat-table-example';

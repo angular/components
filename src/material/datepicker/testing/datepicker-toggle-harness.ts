@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {HarnessPredicate} from '@angular/cdk/testing';
+
 import {DatepickerToggleHarnessFilters} from './datepicker-harness-filters';
 import {DatepickerTriggerHarnessBase} from './datepicker-trigger-harness-base';
 
@@ -26,7 +27,7 @@ export class MatDatepickerToggleHarness extends DatepickerTriggerHarnessBase {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DatepickerToggleHarnessFilters = {}):
-    HarnessPredicate<MatDatepickerToggleHarness> {
+      HarnessPredicate<MatDatepickerToggleHarness> {
     return new HarnessPredicate(MatDatepickerToggleHarness, options);
   }
 

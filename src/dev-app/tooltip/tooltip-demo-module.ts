@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {TooltipExamplesModule} from '@angular/components-examples/material/tooltip';
+import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
+
 import {TooltipDemo} from './tooltip-demo';
 
 @NgModule({

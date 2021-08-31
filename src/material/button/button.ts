@@ -6,19 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnDestroy,
-  ViewChild,
-  ViewEncapsulation,
-  Optional,
   Inject,
   Input,
-  AfterViewInit,
+  OnDestroy,
+  Optional,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CanColor,
@@ -76,9 +76,9 @@ const _MatButtonBase = mixinColor(mixinDisabled(mixinDisableRipple(class {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatButton extends _MatButtonBase
-    implements AfterViewInit, OnDestroy, CanDisable, CanColor, CanDisableRipple, FocusableOption {
-
+export class MatButton extends _MatButtonBase implements AfterViewInit, OnDestroy, CanDisable,
+                                                         CanColor, CanDisableRipple,
+                                                         FocusableOption {
   /** Whether the button is round. */
   readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
@@ -88,9 +88,9 @@ export class MatButton extends _MatButtonBase
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
-  constructor(elementRef: ElementRef,
-              private _focusMonitor: FocusMonitor,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
+  constructor(
+      elementRef: ElementRef, private _focusMonitor: FocusMonitor,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
     super(elementRef);
 
     // For each of the variant selectors that is present in the button's host
@@ -175,9 +175,8 @@ export class MatAnchor extends MatButton {
   @Input() tabIndex: number;
 
   constructor(
-    focusMonitor: FocusMonitor,
-    elementRef: ElementRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
+      focusMonitor: FocusMonitor, elementRef: ElementRef,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
     super(elementRef, focusMonitor, animationMode);
   }
 

@@ -1,23 +1,27 @@
-import {Component, ViewChild, ElementRef, Type, ViewChildren, QueryList} from '@angular/core';
-import {CdkMenuModule} from './menu-module';
-import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
-import {CdkMenu} from './menu';
-import {CdkContextMenuTrigger} from './context-menu';
-import {dispatchMouseEvent} from '../../cdk/testing/private';
+import {Component, ElementRef, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
+import {dispatchMouseEvent} from '../../cdk/testing/private';
+
+import {CdkContextMenuTrigger} from './context-menu';
+import {CdkMenu} from './menu';
+import {CdkMenuBar} from './menu-bar';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
-import {CdkMenuBar} from './menu-bar';
+import {CdkMenuModule} from './menu-module';
 
 describe('CdkContextMenuTrigger', () => {
   describe('with simple context menu trigger', () => {
     let fixture: ComponentFixture<SimpleContextMenu>;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [SimpleContextMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [SimpleContextMenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -86,8 +90,8 @@ describe('CdkContextMenuTrigger', () => {
 
       const menus = fixture.componentInstance.menus;
       expect(menus.length)
-        .withContext('two context menu triggers should result in a single context menu')
-        .toBe(1);
+          .withContext('two context menu triggers should result in a single context menu')
+          .toBe(1);
     });
 
     it('should retain the context menu on right click inside the open menu', () => {
@@ -109,10 +113,12 @@ describe('CdkContextMenuTrigger', () => {
     let fixture: ComponentFixture<NestedContextMenu>;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [NestedContextMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [NestedContextMenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -168,18 +174,16 @@ describe('CdkContextMenuTrigger', () => {
       expect(getCutMenu()).not.toBeDefined();
     });
 
-    it(
-      'should open the parent context menu only when right clicked in nested context and nested' +
-        ' is disabled',
-      () => {
-        fixture.componentInstance.copyMenuDisabled = true;
-        fixture.detectChanges();
-        openCopyContextMenu();
+    it('should open the parent context menu only when right clicked in nested context and nested' +
+           ' is disabled',
+       () => {
+         fixture.componentInstance.copyMenuDisabled = true;
+         fixture.detectChanges();
+         openCopyContextMenu();
 
-        expect(getCopyMenu()).not.toBeDefined();
-        expect(getCutMenu()).toBeDefined();
-      }
-    );
+         expect(getCopyMenu()).not.toBeDefined();
+         expect(getCutMenu()).toBeDefined();
+       });
 
     it('should close nested context menu when parent is opened', () => {
       openCopyContextMenu();
@@ -223,10 +227,12 @@ describe('CdkContextMenuTrigger', () => {
     let instance: ContextMenuWithSubmenu;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [ContextMenuWithSubmenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [ContextMenuWithSubmenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -254,10 +260,12 @@ describe('CdkContextMenuTrigger', () => {
     let nativeMenuBarTrigger: HTMLElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [ContextMenuWithMenuBarAndInlineMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [ContextMenuWithMenuBarAndInlineMenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -358,20 +366,21 @@ describe('CdkContextMenuTrigger', () => {
      * @param componentClass the component to create
      */
     function createComponent<T>(componentClass: Type<T>) {
-      return function () {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [componentClass],
-        }).compileComponents();
+      return function() {
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [componentClass],
+            })
+            .compileComponents();
 
         TestBed.createComponent(componentClass).detectChanges();
       };
     }
 
     it('should throw an error if context and menubar trigger share a menu', () => {
-      expect(createComponent(MenuBarAndContextTriggerShareMenu)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/
-      );
+      expect(createComponent(MenuBarAndContextTriggerShareMenu))
+          .toThrowError(/CdkMenuPanel is already referenced by different CdkMenuTrigger/);
     });
   });
 });
@@ -498,4 +507,5 @@ class ContextMenuWithMenuBarAndInlineMenu {
     </ng-template>
   `,
 })
-class MenuBarAndContextTriggerShareMenu {}
+class MenuBarAndContextTriggerShareMenu {
+}

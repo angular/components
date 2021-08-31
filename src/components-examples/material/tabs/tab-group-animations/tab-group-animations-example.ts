@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tab-group-animations-example.html',
   styleUrls: ['tab-group-animations-example.css'],
 })
-export class TabGroupAnimationsExample {}
+export class TabGroupAnimationsExample {
+}

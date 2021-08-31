@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatMenuModule} from '@angular/material-experimental/mdc-menu';
-import {RouterModule} from '@angular/router';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
+import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material-experimental/mdc-button';
+import {MatMenuModule} from '@angular/material-experimental/mdc-menu';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {RouterModule} from '@angular/router';
+
 import {MdcMenuDemo} from './mdc-menu-demo';
 
 @NgModule({

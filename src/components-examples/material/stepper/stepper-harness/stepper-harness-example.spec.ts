@@ -1,31 +1,34 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatStepperHarness, MatStepperNextHarness} from '@angular/material/stepper/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatStepperHarness, MatStepperNextHarness} from '@angular/material/stepper/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatStepperModule} from '@angular/material/stepper';
-import {StepperHarnessExample} from './stepper-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms';
+
+import {StepperHarnessExample} from './stepper-harness-example';
 
 describe('StepperHarnessExample', () => {
   let fixture: ComponentFixture<StepperHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [StepperHarnessExample],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
+          declarations: [StepperHarnessExample],
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(StepperHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -59,17 +62,13 @@ describe('StepperHarnessExample', () => {
     await secondStep.select();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      true,
-      false
+      false, true, false
     ]);
 
     await nextButton.click();
 
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
-      false,
-      false,
-      true
+      false, false, true
     ]);
   });
 });

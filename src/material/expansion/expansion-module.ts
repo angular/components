@@ -42,4 +42,5 @@ import {
     MatExpansionPanelContent,
   ],
 })
-export class MatExpansionModule {}
+export class MatExpansionModule {
+}

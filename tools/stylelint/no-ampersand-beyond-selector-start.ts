@@ -1,5 +1,5 @@
-import {createPlugin, utils} from 'stylelint';
 import {basename} from 'path';
+import {createPlugin, utils} from 'stylelint';
 
 const isStandardSyntaxRule = require('stylelint/lib/utils/isStandardSyntaxRule');
 const isStandardSyntaxSelector = require('stylelint/lib/utils/isStandardSyntaxSelector');
@@ -36,16 +36,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
     }
 
     root.walkRules(rule => {
-      if (rule.parent.type === 'rule' &&
-          isStandardSyntaxRule(rule) &&
-          isStandardSyntaxSelector(rule.selector) &&
-          hasInvalidAmpersandUsage(rule.selector)) {
-        utils.report({
-          result,
-          ruleName,
-          message: messages.expected(),
-          node: rule
-        });
+      if (rule.parent.type === 'rule' && isStandardSyntaxRule(rule) &&
+          isStandardSyntaxSelector(rule.selector) && hasInvalidAmpersandUsage(rule.selector)) {
+        utils.report({result, ruleName, message: messages.expected(), node: rule});
       }
     });
   };

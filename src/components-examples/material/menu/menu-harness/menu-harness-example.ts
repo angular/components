@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'menu-harness-example',
   templateUrl: 'menu-harness-example.html',
 })
-export class MenuHarnessExample {}
+export class MenuHarnessExample {
+}

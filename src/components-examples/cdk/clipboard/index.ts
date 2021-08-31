@@ -1,6 +1,7 @@
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {ClipboardModule} from '@angular/cdk/clipboard';
+
 import {CdkClipboardOverviewExample} from './cdk-clipboard-overview/cdk-clipboard-overview-example';
 
 export {CdkClipboardOverviewExample};

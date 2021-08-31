@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -18,26 +19,24 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  MDCCircularProgressAdapter,
-  MDCCircularProgressFoundation
-} from '@material/circular-progress';
 import {CanColor, mixinColor} from '@angular/material-experimental/mdc-core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
   MatProgressSpinnerDefaultOptions
 } from '@angular/material/progress-spinner';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {
+  MDCCircularProgressAdapter,
+  MDCCircularProgressFoundation
+} from '@material/circular-progress';
 
 // Boilerplate for applying mixins to MatProgressBar.
 const _MatProgressSpinnerBase = mixinColor(class {
-  constructor(public _elementRef: ElementRef) {
-  }
+  constructor(public _elementRef: ElementRef) {}
 }, 'primary');
 
 /** Possible mode for a progress spinner. */
-export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
+export type ProgressSpinnerMode = 'determinate'|'indeterminate';
 
 /**
  * Base reference size of the spinner.
@@ -72,9 +71,8 @@ const BASE_STROKE_WIDTH = 10;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressSpinner extends _MatProgressSpinnerBase implements AfterViewInit,
-  OnDestroy, CanColor {
-
+export class MatProgressSpinner extends _MatProgressSpinnerBase implements AfterViewInit, OnDestroy,
+                                                                           CanColor {
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
   _noopAnimations: boolean;
 
@@ -92,27 +90,28 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
     hasClass: (className: string) => this._elementRef.nativeElement.classList.contains(className),
     removeClass: (className: string) => this._elementRef.nativeElement.classList.remove(className),
     removeAttribute: (name: string) => this._elementRef.nativeElement.removeAttribute(name),
-    setAttribute: (name, value) => {
-      if (name !== 'aria-valuenow') {
-        // MDC deals with values between 0 and 1 but Angular Material deals with values between
-        // 0 and 100 so the aria-valuenow should be set through the attr binding in the host
-        // instead of by the MDC adapter
-        this._elementRef.nativeElement.setAttribute(name, value);
-      }
-    },
+    setAttribute:
+        (name, value) => {
+          if (name !== 'aria-valuenow') {
+            // MDC deals with values between 0 and 1 but Angular Material deals with values between
+            // 0 and 100 so the aria-valuenow should be set through the attr binding in the host
+            // instead of by the MDC adapter
+            this._elementRef.nativeElement.setAttribute(name, value);
+          }
+        },
     getDeterminateCircleAttribute: (attributeName: string) =>
-      this._determinateCircle.nativeElement.getAttribute(attributeName),
+        this._determinateCircle.nativeElement.getAttribute(attributeName),
     setDeterminateCircleAttribute: (attributeName: string, value: string) =>
-      this._determinateCircle.nativeElement.setAttribute(attributeName, value),
+        this._determinateCircle.nativeElement.setAttribute(attributeName, value),
   };
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-              @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-                defaults?: MatProgressSpinnerDefaultOptions) {
+  constructor(
+      elementRef: ElementRef<HTMLElement>,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+      @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS) defaults?: MatProgressSpinnerDefaultOptions) {
     super(elementRef);
-    this._noopAnimations = animationMode === 'NoopAnimations' &&
-      (!!defaults && !defaults._forceAnimations);
+    this._noopAnimations =
+        animationMode === 'NoopAnimations' && (!!defaults && !defaults._forceAnimations);
 
     if (defaults) {
       if (defaults.diameter) {
@@ -125,8 +124,9 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
     }
   }
 
-  private _mode: ProgressSpinnerMode = this._elementRef.nativeElement.nodeName.toLowerCase() ===
-  'mat-spinner' ? 'indeterminate' : 'determinate';
+  private _mode: ProgressSpinnerMode =
+      this._elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner' ? 'indeterminate' :
+                                                                                'determinate';
 
   /**
    * Mode of the progress bar.
@@ -136,7 +136,9 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
    * Mirrored to mode attribute.
    */
   @Input()
-  get mode(): ProgressSpinnerMode { return this._mode; }
+  get mode(): ProgressSpinnerMode {
+    return this._mode;
+  }
 
   set mode(value: ProgressSpinnerMode) {
     this._mode = value;

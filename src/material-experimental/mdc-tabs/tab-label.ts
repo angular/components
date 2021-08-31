@@ -13,4 +13,5 @@ import {MatTabLabel as BaseMatTabLabel} from '@angular/material/tabs';
 @Directive({
   selector: '[mat-tab-label], [matTabLabel]',
 })
-export class MatTabLabel extends BaseMatTabLabel {}
+export class MatTabLabel extends BaseMatTabLabel {
+}

@@ -8,18 +8,19 @@
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput} from '@angular/cdk/coercion';
+import {DOCUMENT} from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  OnDestroy,
-  ViewEncapsulation,
-  Inject,
-  Optional,
-  Input,
   HostListener,
-  AfterViewInit,
-  ChangeDetectorRef,
+  Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CanDisable,
@@ -28,8 +29,9 @@ import {
   mixinDisableRipple,
 } from '@angular/material/core';
 import {Subject} from 'rxjs';
-import {DOCUMENT} from '@angular/common';
+
 import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
+
 
 // Boilerplate for applying mixins to MatMenuItem.
 /** @docs-private */
@@ -56,11 +58,11 @@ const _MatMenuItemBase = mixinDisableRipple(mixinDisabled(class {}));
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
 })
-export class MatMenuItem extends _MatMenuItemBase
-    implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy {
-
+export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, CanDisable,
+                                                             CanDisableRipple, AfterViewInit,
+                                                             OnDestroy {
   /** ARIA role for the menu item. */
-  @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
+  @Input() role: 'menuitem'|'menuitemradio'|'menuitemcheckbox' = 'menuitem';
 
   /** Stream that emits when the menu item is hovered. */
   readonly _hovered: Subject<MatMenuItem> = new Subject<MatMenuItem>();
@@ -75,20 +77,18 @@ export class MatMenuItem extends _MatMenuItemBase
   _triggersSubmenu: boolean = false;
 
   constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    /**
-     * @deprecated `_document` parameter is no longer being used and will be removed.
-     * @breaking-change 12.0.0
-     */
-    @Inject(DOCUMENT) _document?: any,
-    private _focusMonitor?: FocusMonitor,
-    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>,
-    /**
-     * @deprecated `_changeDetectorRef` to become a required parameter.
-     * @breaking-change 14.0.0
-     */
-    private _changeDetectorRef?: ChangeDetectorRef) {
-
+      private _elementRef: ElementRef<HTMLElement>,
+      /**
+       * @deprecated `_document` parameter is no longer being used and will be removed.
+       * @breaking-change 12.0.0
+       */
+      @Inject(DOCUMENT) _document?: any, private _focusMonitor?: FocusMonitor,
+      @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>,
+      /**
+       * @deprecated `_changeDetectorRef` to become a required parameter.
+       * @breaking-change 14.0.0
+       */
+      private _changeDetectorRef?: ChangeDetectorRef) {
     // @breaking-change 8.0.0 make `_focusMonitor` and `document` required params.
     super();
 

@@ -30,4 +30,5 @@ import {InputModalityDetectorDemo} from './input-modality-detector-demo';
   ],
   declarations: [InputModalityDetectorDemo],
 })
-export class InputModalityDetectorDemoModule {}
+export class InputModalityDetectorDemoModule {
+}

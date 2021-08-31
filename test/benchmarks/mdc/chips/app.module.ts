@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatChipsModule} from '@angular/material-experimental/mdc-chips';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mdc-chip */
 
@@ -24,10 +24,18 @@ export class ChipsBenchmarkApp {
   isGridVisible = false;
   isListboxVisible = false;
 
-  showSingleChip() { this.isSingleChipVisible = true; }
-  showSet() { this.isSetVisible = true; }
-  showGrid() { this.isGridVisible = true; }
-  showListbox() { this.isListboxVisible = true; }
+  showSingleChip() {
+    this.isSingleChipVisible = true;
+  }
+  showSet() {
+    this.isSetVisible = true;
+  }
+  showGrid() {
+    this.isGridVisible = true;
+  }
+  showListbox() {
+    this.isListboxVisible = true;
+  }
 
   hide() {
     this.isSingleChipVisible = false;
@@ -45,4 +53,5 @@ export class ChipsBenchmarkApp {
   ],
   bootstrap: [ChipsBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

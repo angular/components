@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+
 import {SliderHarnessFilters, ThumbPosition} from './slider-harness-filters';
 import {MatSliderThumbHarness} from './slider-thumb-harness';
 
@@ -23,18 +24,17 @@ export class MatSliderHarness extends ComponentHarness {
    */
   static with(options: SliderHarnessFilters = {}): HarnessPredicate<MatSliderHarness> {
     return new HarnessPredicate(MatSliderHarness, options)
-      .addOption('isRange', options.isRange, async (harness, value) => {
-        return (await harness.isRange()) === value;
-      });
+        .addOption('isRange', options.isRange, async (harness, value) => {
+          return (await harness.isRange()) === value;
+        });
   }
 
   /** Gets the start thumb of the slider (only applicable for range sliders). */
   async getStartThumb(): Promise<MatSliderThumbHarness> {
     if (!await this.isRange()) {
       throw Error(
-        '`getStartThumb` is only applicable for range sliders. '
-        + 'Did you mean to use `getEndThumb`?'
-      );
+          '`getStartThumb` is only applicable for range sliders. ' +
+          'Did you mean to use `getEndThumb`?');
     }
     return this.locatorFor(MatSliderThumbHarness.with({position: ThumbPosition.START}))();
   }

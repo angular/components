@@ -1,15 +1,14 @@
 import {DataSource} from '@angular/cdk/collections';
 import {
   AfterContentInit,
+  AfterViewInit,
   Component,
+  ContentChild,
   ContentChildren,
   Input,
-  AfterViewInit,
   QueryList,
   ViewChild,
-  ContentChild,
 } from '@angular/core';
-import {MatSort} from '@angular/material/sort';
 import {
   MatColumnDef,
   MatHeaderRowDef,
@@ -18,6 +17,7 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material-experimental/mdc-table';
+import {MatSort} from '@angular/material/sort';
 
 export interface PeriodicElement {
   name: string;

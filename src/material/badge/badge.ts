@@ -32,11 +32,10 @@ const _MatBadgeBase = mixinDisabled(class {});
 
 /** Allowed position options for matBadgePosition */
 export type MatBadgePosition =
-    'above after' | 'above before' | 'below before' | 'below after' |
-    'before' | 'after' | 'above' | 'below';
+    'above after'|'above before'|'below before'|'below after'|'before'|'after'|'above'|'below';
 
 /** Allowed size options for matBadgeSize */
-export type MatBadgeSize = 'small' | 'medium' | 'large';
+export type MatBadgeSize = 'small'|'medium'|'large';
 
 /** Directive to display a text badge. */
 @Directive({
@@ -62,7 +61,9 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
 
   /** The color of the badge. Can be `primary`, `accent`, or `warn`. */
   @Input('matBadgeColor')
-  get color(): ThemePalette { return this._color; }
+  get color(): ThemePalette {
+    return this._color;
+  }
   set color(value: ThemePalette) {
     this._setColor(value);
     this._color = value;
@@ -71,7 +72,9 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
 
   /** Whether the badge should overlap its contents or not */
   @Input('matBadgeOverlap')
-  get overlap(): boolean { return this._overlap; }
+  get overlap(): boolean {
+    return this._overlap;
+  }
   set overlap(val: boolean) {
     this._overlap = coerceBooleanProperty(val);
   }
@@ -84,11 +87,13 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
   @Input('matBadgePosition') position: MatBadgePosition = 'above after';
 
   /** The content for the badge */
-  @Input('matBadge') content: string | number | undefined | null;
+  @Input('matBadge') content: string|number|undefined|null;
 
   /** Message used to describe the decorated element via aria-describedby */
   @Input('matBadgeDescription')
-  get description(): string { return this._description; }
+  get description(): string {
+    return this._description;
+  }
   set description(newDescription: string) {
     if (newDescription !== this._description) {
       const badgeElement = this._badgeElement;
@@ -97,7 +102,7 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
 
       if (badgeElement) {
         newDescription ? badgeElement.setAttribute('aria-label', newDescription) :
-            badgeElement.removeAttribute('aria-label');
+                         badgeElement.removeAttribute('aria-label');
       }
     }
   }
@@ -108,7 +113,9 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
 
   /** Whether the badge is hidden. */
   @Input('matBadgeHidden')
-  get hidden(): boolean { return this._hidden; }
+  get hidden(): boolean {
+    return this._hidden;
+  }
   set hidden(val: boolean) {
     this._hidden = coerceBooleanProperty(val);
   }
@@ -117,23 +124,21 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
   /** Unique id for the badge */
   _id: number = nextId++;
 
-  private _badgeElement: HTMLElement | undefined;
+  private _badgeElement: HTMLElement|undefined;
 
   constructor(
-      private _ngZone: NgZone,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _ariaDescriber: AriaDescriber,
-      private _renderer: Renderer2,
+      private _ngZone: NgZone, private _elementRef: ElementRef<HTMLElement>,
+      private _ariaDescriber: AriaDescriber, private _renderer: Renderer2,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
-      super();
+    super();
 
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const nativeElement = _elementRef.nativeElement;
-        if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
-          throw Error('matBadge must be attached to an element node.');
-        }
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      const nativeElement = _elementRef.nativeElement;
+      if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
+        throw Error('matBadge must be attached to an element node.');
       }
     }
+  }
 
   /** Whether the badge is above the host or not */
   isAbove(): boolean {
@@ -175,7 +180,7 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
    * Gets the element into which the badge's content is being rendered.
    * Undefined if the element hasn't been created (e.g. if the badge doesn't have content).
    */
-  getBadgeElement(): HTMLElement | undefined {
+  getBadgeElement(): HTMLElement|undefined {
     return this._badgeElement;
   }
 

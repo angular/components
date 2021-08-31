@@ -10,13 +10,14 @@
 // behaviors once we move it out of experiemental.
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTableModule} from '@angular/material/table';
+
+import {MatRowSelection} from './row-selection';
 import {MatSelectAll} from './select-all';
 import {MatSelection} from './selection';
-import {MatSelectionToggle} from './selection-toggle';
 import {MatSelectionColumn} from './selection-column';
-import {MatRowSelection} from './row-selection';
+import {MatSelectionToggle} from './selection-toggle';
 
 @NgModule({
   imports: [

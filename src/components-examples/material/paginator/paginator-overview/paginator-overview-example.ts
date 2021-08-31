@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'paginator-overview-example',
   templateUrl: 'paginator-overview-example.html',
 })
-export class PaginatorOverviewExample {}
+export class PaginatorOverviewExample {
+}

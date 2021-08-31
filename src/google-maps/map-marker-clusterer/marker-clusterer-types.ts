@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
- /// <reference types="googlemaps" />
+/// <reference types="googlemaps" />
 
 /**
  * Class for clustering markers on a Google Map.
@@ -29,7 +29,7 @@ declare class MarkerClusterer {
   bindTo(key: string, target: google.maps.MVCObject, targetKey: string, noNotify: boolean): void;
   changed(key: string): void;
   clearMarkers(): void;
-  fitMapToMarkers(padding: number | google.maps.Padding): void;
+  fitMapToMarkers(padding: number|google.maps.Padding): void;
   get(key: string): any;
   getAverageCenter(): boolean;
   getBatchSizeIE(): number;
@@ -42,7 +42,7 @@ declare class MarkerClusterer {
   getImageExtension(): string;
   getImagePath(): string;
   getImageSizes(): number[];
-  getMap(): google.maps.Map | google.maps.StreetViewPanorama;
+  getMap(): google.maps.Map|google.maps.StreetViewPanorama;
   getMarkers(): google.maps.Marker[];
   getMaxZoom(): number;
   getMinimumClusterSize(): number;
@@ -69,7 +69,7 @@ declare class MarkerClusterer {
   setImageExtension(imageExtension: string): void;
   setImagePath(imagePath: string): void;
   setImageSizes(imageSizes: number[]): void;
-  setMap(map: google.maps.Map | null): void;
+  setMap(map: google.maps.Map|null): void;
   setMaxZoom(maxZoom: number): void;
   setMinimumClusterSize(minimumClusterSize: number): void;
   setStyles(styles: ClusterIconStyle[]): void;
@@ -175,5 +175,5 @@ declare type AriaLabelFn = (text: string) => string;
  *
  * See googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#calculator
  */
-declare type Calculator =
-    (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;
+declare type Calculator = (markers: google.maps.Marker[], clusterIconStylesCount: number) =>
+    ClusterIconInfo;

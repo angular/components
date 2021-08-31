@@ -20,17 +20,16 @@ export class LoadmoreNode {
     return this.childrenChange.value;
   }
 
-  constructor(public item: string,
-              public hasChildren = false,
-              public loadMoreParentItem: string | null = null) {}
+  constructor(
+      public item: string, public hasChildren = false,
+      public loadMoreParentItem: string|null = null) {}
 }
 
 /** Flat node with expandable and level information */
 export class LoadmoreFlatNode {
-  constructor(public item: string,
-              public level = 1,
-              public expandable = false,
-              public loadMoreParentItem: string | null = null) {}
+  constructor(
+      public item: string, public level = 1, public expandable = false,
+      public loadMoreParentItem: string|null = null) {}
 }
 
 /**
@@ -68,8 +67,7 @@ export class LoadmoreDatabase {
       return;
     }
     const newChildrenNumber = parent.children!.length + this.batchNumber;
-    const nodes = children.slice(0, newChildrenNumber)
-      .map(name => this._generateNode(name));
+    const nodes = children.slice(0, newChildrenNumber).map(name => this._generateNode(name));
     if (newChildrenNumber < children.length) {
       // Need a new load more node
       nodes.push(new LoadmoreNode(LOAD_MORE, false, item));
@@ -106,8 +104,8 @@ export class TreeLoadmoreExample {
   dataSource: MatTreeFlatDataSource<LoadmoreNode, LoadmoreFlatNode>;
 
   constructor(private _database: LoadmoreDatabase) {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-      this.isExpandable, this.getChildren);
+    this.treeFlattener =
+        new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
     this.treeControl = new FlatTreeControl<LoadmoreFlatNode>(this.getLevel, this.isExpandable);
 
@@ -122,18 +120,19 @@ export class TreeLoadmoreExample {
 
   getChildren = (node: LoadmoreNode): Observable<LoadmoreNode[]> => node.childrenChange;
 
-  transformer = (node: LoadmoreNode, level: number) => {
-    const existingNode = this.nodeMap.get(node.item);
+  transformer =
+      (node: LoadmoreNode, level: number) => {
+        const existingNode = this.nodeMap.get(node.item);
 
-    if (existingNode) {
-      return existingNode;
-    }
+        if (existingNode) {
+          return existingNode;
+        }
 
-    const newNode =
-        new LoadmoreFlatNode(node.item, level, node.hasChildren, node.loadMoreParentItem);
-    this.nodeMap.set(node.item, newNode);
-    return newNode;
-  }
+        const newNode =
+            new LoadmoreFlatNode(node.item, level, node.hasChildren, node.loadMoreParentItem);
+        this.nodeMap.set(node.item, newNode);
+        return newNode;
+      }
 
   getLevel = (node: LoadmoreFlatNode) => node.level;
 

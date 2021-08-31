@@ -30,12 +30,13 @@ import {
   TemplateRef,
   Type,
 } from '@angular/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {defer, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+
 import {MatDialogConfig} from './dialog-config';
-import {MatDialogContainer, _MatDialogContainerBase} from './dialog-container';
+import {_MatDialogContainerBase, MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
@@ -55,8 +56,8 @@ export function MAT_DIALOG_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => Scro
 }
 
 /** @docs-private */
-export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-  () => ScrollStrategy {
+export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () =>
+    ScrollStrategy {
   return () => overlay.scrollStrategies.block();
 }
 
@@ -102,21 +103,20 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
    * Stream that emits when all open dialog have finished closing.
    * Will emit on subscribe if there are no open dialogs to begin with.
    */
-  readonly afterAllClosed: Observable<void> = defer(() => this.openDialogs.length ?
-      this._getAfterAllClosed() :
-      this._getAfterAllClosed().pipe(startWith(undefined))) as Observable<any>;
+  readonly afterAllClosed: Observable<void> =
+      defer(
+          () => this.openDialogs.length ? this._getAfterAllClosed() :
+                                          this._getAfterAllClosed().pipe(startWith(undefined))) as
+      Observable<any>;
 
   constructor(
-      private _overlay: Overlay,
-      private _injector: Injector,
+      private _overlay: Overlay, private _injector: Injector,
       private _defaultOptions: MatDialogConfig|undefined,
       private _parentDialog: _MatDialogBase<C>|undefined,
-      private _overlayContainer: OverlayContainer,
-      scrollStrategy: any,
-      private _dialogRefConstructor: Type<MatDialogRef<any>>,
-      private _dialogContainerType: Type<C>,
+      private _overlayContainer: OverlayContainer, scrollStrategy: any,
+      private _dialogRefConstructor: Type<MatDialogRef<any>>, private _dialogContainerType: Type<C>,
       private _dialogDataToken: InjectionToken<any>,
-      private _animationMode?: 'NoopAnimations' | 'BrowserAnimations') {
+      private _animationMode?: 'NoopAnimations'|'BrowserAnimations') {
     this._scrollStrategy = scrollStrategy;
   }
 
@@ -126,8 +126,8 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
    * @param config Extra configuration options.
    * @returns Reference to the newly-opened dialog.
    */
-  open<T, D = any, R = any>(component: ComponentType<T>,
-                            config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+  open<T, D = any, R = any>(component: ComponentType<T>, config?: MatDialogConfig<D>):
+      MatDialogRef<T, R>;
 
   /**
    * Opens a modal dialog containing the given template.
@@ -135,18 +135,19 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
    * @param config Extra configuration options.
    * @returns Reference to the newly-opened dialog.
    */
-  open<T, D = any, R = any>(template: TemplateRef<T>,
-                            config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+  open<T, D = any, R = any>(template: TemplateRef<T>, config?: MatDialogConfig<D>):
+      MatDialogRef<T, R>;
 
-  open<T, D = any, R = any>(template: ComponentType<T> | TemplateRef<T>,
-                            config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+  open<T, D = any, R = any>(template: ComponentType<T>|TemplateRef<T>, config?: MatDialogConfig<D>):
+      MatDialogRef<T, R>;
 
-  open<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-                            config?: MatDialogConfig<D>): MatDialogRef<T, R> {
+  open<T, D = any, R = any>(
+      componentOrTemplateRef: ComponentType<T>|TemplateRef<T>,
+      config?: MatDialogConfig<D>): MatDialogRef<T, R> {
     config = _applyConfigDefaults(config, this._defaultOptions || new MatDialogConfig());
 
     if (config.id && this.getDialogById(config.id) &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
     }
 
@@ -159,25 +160,23 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     if (this._animationMode !== 'NoopAnimations') {
       const animationStateSubscription =
-        dialogContainer._animationStateChanged.subscribe((dialogAnimationEvent) => {
-          if (dialogAnimationEvent.state === 'opening') {
-            this._dialogAnimatingOpen = true;
-          }
-          if (dialogAnimationEvent.state === 'opened') {
-            this._dialogAnimatingOpen = false;
-            animationStateSubscription.unsubscribe();
-          }
-        });
+          dialogContainer._animationStateChanged.subscribe((dialogAnimationEvent) => {
+            if (dialogAnimationEvent.state === 'opening') {
+              this._dialogAnimatingOpen = true;
+            }
+            if (dialogAnimationEvent.state === 'opened') {
+              this._dialogAnimatingOpen = false;
+              animationStateSubscription.unsubscribe();
+            }
+          });
       if (!this._animationStateSubscriptions) {
         this._animationStateSubscriptions = new Subscription();
       }
       this._animationStateSubscriptions.add(animationStateSubscription);
     }
 
-    const dialogRef = this._attachDialogContent<T, R>(componentOrTemplateRef,
-                                                      dialogContainer,
-                                                      overlayRef,
-                                                      config);
+    const dialogRef = this._attachDialogContent<T, R>(
+        componentOrTemplateRef, dialogContainer, overlayRef, config);
     this._lastDialogRef = dialogRef;
 
     // If this is the first dialog that we're opening, hide all the non-overlay content.
@@ -206,7 +205,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
    * Finds an open dialog by its id.
    * @param id ID to use when looking up the dialog.
    */
-  getDialogById(id: string): MatDialogRef<any> | undefined {
+  getDialogById(id: string): MatDialogRef<any>|undefined {
     return this.openDialogs.find(dialog => dialog.id === id);
   }
 
@@ -271,8 +270,9 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       providers: [{provide: MatDialogConfig, useValue: config}]
     });
 
-    const containerPortal = new ComponentPortal(this._dialogContainerType,
-        config.viewContainerRef, injector, config.componentFactoryResolver);
+    const containerPortal = new ComponentPortal(
+        this._dialogContainerType, config.viewContainerRef, injector,
+        config.componentFactoryResolver);
     const containerRef = overlay.attach<C>(containerPortal);
 
     return containerRef.instance;
@@ -288,19 +288,15 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
    * @returns A promise resolving to the MatDialogRef that should be returned to the user.
    */
   private _attachDialogContent<T, R>(
-      componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-      dialogContainer: C,
-      overlayRef: OverlayRef,
-      config: MatDialogConfig): MatDialogRef<T, R> {
-
+      componentOrTemplateRef: ComponentType<T>|TemplateRef<T>, dialogContainer: C,
+      overlayRef: OverlayRef, config: MatDialogConfig): MatDialogRef<T, R> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
     const dialogRef = new this._dialogRefConstructor(overlayRef, dialogContainer, config.id);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
-      dialogContainer.attachTemplatePortal(
-        new TemplatePortal<T>(componentOrTemplateRef, null!,
-          <any>{$implicit: config.data, dialogRef}));
+      dialogContainer.attachTemplatePortal(new TemplatePortal<T>(
+          componentOrTemplateRef, null!, <any>{$implicit: config.data, dialogRef}));
     } else {
       const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
       const contentRef = dialogContainer.attachComponentPortal<T>(
@@ -308,9 +304,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       dialogRef.componentInstance = contentRef.instance;
     }
 
-    dialogRef
-      .updateSize(config.width, config.height)
-      .updatePosition(config.position);
+    dialogRef.updateSize(config.width, config.height).updatePosition(config.position);
 
     return dialogRef;
   }
@@ -324,10 +318,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
    * @returns The custom injector that can be used inside the dialog.
    */
   private _createInjector<T>(
-      config: MatDialogConfig,
-      dialogRef: MatDialogRef<T>,
-      dialogContainer: C): Injector {
-
+      config: MatDialogConfig, dialogRef: MatDialogRef<T>, dialogContainer: C): Injector {
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
 
     // The dialog container should be provided as the dialog container and the dialog's
@@ -340,12 +331,11 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       {provide: this._dialogRefConstructor, useValue: dialogRef}
     ];
 
-    if (config.direction && (!userInjector ||
-        !userInjector.get<Directionality | null>(Directionality, null, InjectFlags.Optional))) {
-      providers.push({
-        provide: Directionality,
-        useValue: {value: config.direction, change: observableOf()}
-      });
+    if (config.direction &&
+        (!userInjector ||
+         !userInjector.get<Directionality|null>(Directionality, null, InjectFlags.Optional))) {
+      providers.push(
+          {provide: Directionality, useValue: {value: config.direction, change: observableOf()}});
     }
 
     return Injector.create({parent: userInjector || this._injector, providers});
@@ -391,11 +381,8 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       for (let i = siblings.length - 1; i > -1; i--) {
         let sibling = siblings[i];
 
-        if (sibling !== overlayContainer &&
-          sibling.nodeName !== 'SCRIPT' &&
-          sibling.nodeName !== 'STYLE' &&
-          !sibling.hasAttribute('aria-live')) {
-
+        if (sibling !== overlayContainer && sibling.nodeName !== 'SCRIPT' &&
+            sibling.nodeName !== 'STYLE' && !sibling.hasAttribute('aria-live')) {
           this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
           sibling.setAttribute('aria-hidden', 'true');
         }
@@ -415,7 +402,6 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       dialogs[i].close();
     }
   }
-
 }
 
 /**
@@ -435,7 +421,8 @@ export class MatDialog extends _MatDialogBase<MatDialogContainer> {
       @Optional() @SkipSelf() parentDialog: MatDialog, overlayContainer: OverlayContainer,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: 'NoopAnimations'|
       'BrowserAnimations') {
-    super(overlay, injector, defaultOptions, parentDialog, overlayContainer, scrollStrategy,
+    super(
+        overlay, injector, defaultOptions, parentDialog, overlayContainer, scrollStrategy,
         MatDialogRef, MatDialogContainer, MAT_DIALOG_DATA, animationMode);
   }
 }

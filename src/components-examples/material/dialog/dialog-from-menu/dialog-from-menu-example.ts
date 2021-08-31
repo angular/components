@@ -28,4 +28,5 @@ export class DialogFromMenuExample {
   selector: 'dialog-from-menu-dialog',
   templateUrl: 'dialog-from-menu-example-dialog.html',
 })
-export class DialogFromMenuExampleDialog {}
+export class DialogFromMenuExampleDialog {
+}

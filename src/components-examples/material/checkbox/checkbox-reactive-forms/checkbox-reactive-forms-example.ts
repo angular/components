@@ -11,10 +11,6 @@ export class CheckboxReactiveFormsExample {
   toppings: FormGroup;
 
   constructor(fb: FormBuilder) {
-    this.toppings = fb.group({
-      pepperoni: false,
-      extracheese: false,
-      mushroom: false
-    });
+    this.toppings = fb.group({pepperoni: false, extracheese: false, mushroom: false});
   }
 }

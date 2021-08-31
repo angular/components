@@ -17,7 +17,8 @@ import {MatSlideToggleRequiredValidator} from './slide-toggle-required-validator
   exports: [MatSlideToggleRequiredValidator],
   declarations: [MatSlideToggleRequiredValidator],
 })
-export class _MatSlideToggleRequiredValidatorModule {}
+export class _MatSlideToggleRequiredValidatorModule {
+}
 
 @NgModule({
   imports: [
@@ -26,11 +27,8 @@ export class _MatSlideToggleRequiredValidatorModule {}
     MatCommonModule,
     ObserversModule,
   ],
-  exports: [
-    _MatSlideToggleRequiredValidatorModule,
-    MatSlideToggle,
-    MatCommonModule
-  ],
+  exports: [_MatSlideToggleRequiredValidatorModule, MatSlideToggle, MatCommonModule],
   declarations: [MatSlideToggle],
 })
-export class MatSlideToggleModule {}
+export class MatSlideToggleModule {
+}

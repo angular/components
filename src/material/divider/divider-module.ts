@@ -16,4 +16,5 @@ import {MatDivider} from './divider';
   exports: [MatDivider, MatCommonModule],
   declarations: [MatDivider],
 })
-export class MatDividerModule {}
+export class MatDividerModule {
+}

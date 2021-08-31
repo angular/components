@@ -10,7 +10,7 @@
  * Extended CSSStyleDeclaration that includes a couple of drag-related
  * properties that aren't in the built-in TS typings.
  */
- export interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
+export interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
   msScrollSnapType: string;
   scrollSnapType: string;
 }
@@ -20,9 +20,8 @@
  * Note that the keys in `source` have to be dash-cased.
  * @docs-private
  */
-export function extendStyles(dest: CSSStyleDeclaration,
-                             source: Record<string, string>,
-                             importantProperties?: Set<string>) {
+export function extendStyles(
+    dest: CSSStyleDeclaration, source: Record<string, string>, importantProperties?: Set<string>) {
   for (let key in source) {
     if (source.hasOwnProperty(key)) {
       const value = source[key];
@@ -66,15 +65,16 @@ export function toggleNativeDragInteractions(element: HTMLElement, enable: boole
  * @param importantProperties Properties to be set as `!important`.
  * @docs-private
  */
-export function toggleVisibility(element: HTMLElement,
-                                 enable: boolean,
-                                 importantProperties?: Set<string>) {
-  extendStyles(element.style, {
-    position: enable ? '' : 'fixed',
-    top: enable ? '' : '0',
-    opacity: enable ? '' : '0',
-    left: enable ? '' : '-999em'
-  }, importantProperties);
+export function toggleVisibility(
+    element: HTMLElement, enable: boolean, importantProperties?: Set<string>) {
+  extendStyles(
+      element.style, {
+        position: enable ? '' : 'fixed',
+        top: enable ? '' : '0',
+        opacity: enable ? '' : '0',
+        left: enable ? '' : '-999em'
+      },
+      importantProperties);
 }
 
 /**
@@ -82,7 +82,6 @@ export function toggleVisibility(element: HTMLElement,
  * that exited before the base transform was applied.
  */
 export function combineTransforms(transform: string, initialTransform?: string): string {
-  return initialTransform && initialTransform != 'none' ?
-      (transform + ' ' + initialTransform) :
-      transform;
+  return initialTransform && initialTransform != 'none' ? (transform + ' ' + initialTransform) :
+                                                          transform;
 }

@@ -62,7 +62,7 @@ export abstract class DateAdapter<D, L = any> {
    * @param style The naming style (e.g. long = 'January', short = 'Jan', narrow = 'J').
    * @returns An ordered list of all month names, starting with January.
    */
-  abstract getMonthNames(style: 'long' | 'short' | 'narrow'): string[];
+  abstract getMonthNames(style: 'long'|'short'|'narrow'): string[];
 
   /**
    * Gets a list of names for the dates of the month.
@@ -75,7 +75,7 @@ export abstract class DateAdapter<D, L = any> {
    * @param style The naming style (e.g. long = 'Sunday', short = 'Sun', narrow = 'S').
    * @returns An ordered list of all weekday names, starting with Sunday.
    */
-  abstract getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[];
+  abstract getDayOfWeekNames(style: 'long'|'short'|'narrow'): string[];
 
   /**
    * Gets the name for the year of the given date.
@@ -127,7 +127,7 @@ export abstract class DateAdapter<D, L = any> {
    *     (type is implementation-dependent).
    * @returns The parsed date.
    */
-  abstract parse(value: any, parseFormat: any): D | null;
+  abstract parse(value: any, parseFormat: any): D|null;
 
   /**
    * Formats a date as a string according to the given format.
@@ -195,13 +195,13 @@ export abstract class DateAdapter<D, L = any> {
    */
   abstract invalid(): D;
 
- /**
-  * Given a potential date object, returns that same date object if it is
-  * a valid date, or `null` if it's not a valid date.
-  * @param obj The object to check.
-  * @returns A date or `null`.
-  */
-  getValidDateOrNull(obj: unknown): D | null {
+  /**
+   * Given a potential date object, returns that same date object if it is
+   * a valid date, or `null` if it's not a valid date.
+   * @param obj The object to check.
+   * @returns A date or `null`.
+   */
+  getValidDateOrNull(obj: unknown): D|null {
     return this.isDateInstance(obj) && this.isValid(obj as D) ? obj as D : null;
   }
 
@@ -217,7 +217,7 @@ export abstract class DateAdapter<D, L = any> {
    * @returns The deserialized date object, either a valid date, null if the value can be
    *     deserialized into a null date (e.g. the empty string), or an invalid date.
    */
-  deserialize(value: any): D | null {
+  deserialize(value: any): D|null {
     if (value == null || this.isDateInstance(value) && this.isValid(value)) {
       return value;
     }
@@ -242,8 +242,7 @@ export abstract class DateAdapter<D, L = any> {
    */
   compareDate(first: D, second: D): number {
     return this.getYear(first) - this.getYear(second) ||
-        this.getMonth(first) - this.getMonth(second) ||
-        this.getDate(first) - this.getDate(second);
+        this.getMonth(first) - this.getMonth(second) || this.getDate(first) - this.getDate(second);
   }
 
   /**
@@ -253,7 +252,7 @@ export abstract class DateAdapter<D, L = any> {
    * @returns Whether the two dates are equal.
    *     Null dates are considered equal to other null dates.
    */
-  sameDate(first: D | null, second: D | null): boolean {
+  sameDate(first: D|null, second: D|null): boolean {
     if (first && second) {
       let firstValid = this.isValid(first);
       let secondValid = this.isValid(second);
@@ -273,7 +272,7 @@ export abstract class DateAdapter<D, L = any> {
    * @returns `min` if `date` is less than `min`, `max` if date is greater than `max`,
    *     otherwise `date`.
    */
-  clampDate(date: D, min?: D | null, max?: D | null): D {
+  clampDate(date: D, min?: D|null, max?: D|null): D {
     if (min && this.compareDate(date, min) < 0) {
       return min;
     }

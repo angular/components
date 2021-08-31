@@ -10,7 +10,7 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 /** A set of criteria that can be used to filter a list of chip instances. */
 export interface ChipHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
+  text?: string|RegExp;
   /**
    * Only find chip instances whose selected state matches the given value.
    * @deprecated Use `MatChipOptionHarness` together with `ChipOptionHarnessFilters`.
@@ -34,9 +34,9 @@ export interface ChipListboxHarnessFilters extends BaseHarnessFilters {}
 /** A set of criteria that can be used to filter a list of `MatChipListInputHarness` instances. */
 export interface ChipInputHarnessFilters extends BaseHarnessFilters {
   /** Filters based on the value of the input. */
-  value?: string | RegExp;
+  value?: string|RegExp;
   /** Filters based on the placeholder text of the input. */
-  placeholder?: string | RegExp;
+  placeholder?: string|RegExp;
 }
 
 /** A set of criteria that can be used to filter a list of `MatChipRemoveHarness` instances. */

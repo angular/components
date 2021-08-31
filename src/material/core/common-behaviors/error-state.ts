@@ -29,8 +29,8 @@ export interface CanUpdateErrorState {
  * @deprecated No longer necessary to apply to mixin classes. To be made private.
  * @breaking-change 13.0.0
  */
-export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState> &
-                                      AbstractConstructor<CanUpdateErrorState>;
+export type CanUpdateErrorStateCtor =
+    Constructor<CanUpdateErrorState>&AbstractConstructor<CanUpdateErrorState>;
 
 /** @docs-private */
 export interface HasErrorState {
@@ -45,9 +45,9 @@ export interface HasErrorState {
  * For component with `errorState` and need to update `errorState`.
  */
 export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T):
-  CanUpdateErrorStateCtor & T;
+    CanUpdateErrorStateCtor&T;
 export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T):
-  CanUpdateErrorStateCtor & T {
+    CanUpdateErrorStateCtor&T {
   return class extends base {
     // This class member exists as an interop with `MatFormFieldControl` which expects
     // a public `stateChanges` observable to emit whenever the form field should be updated.

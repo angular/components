@@ -25,9 +25,11 @@ export class MatInputHarness extends MatFormFieldControlHarness {
    */
   static with(options: InputHarnessFilters = {}): HarnessPredicate<MatInputHarness> {
     return new HarnessPredicate(MatInputHarness, options)
-        .addOption('value', options.value, (harness, value) => {
-          return HarnessPredicate.stringMatches(harness.getValue(), value);
-        })
+        .addOption(
+            'value', options.value,
+            (harness, value) => {
+              return HarnessPredicate.stringMatches(harness.getValue(), value);
+            })
         .addOption('placeholder', options.placeholder, (harness, placeholder) => {
           return HarnessPredicate.stringMatches(harness.getPlaceholder(), placeholder);
         });
@@ -72,10 +74,8 @@ export class MatInputHarness extends MatFormFieldControlHarness {
   /** Gets the placeholder of the input. */
   async getPlaceholder(): Promise<string> {
     const host = await this.host();
-    const [nativePlaceholder, fallback] = await parallel(() => [
-      host.getProperty('placeholder'),
-      host.getAttribute('data-placeholder')
-    ]);
+    const [nativePlaceholder, fallback] = await parallel(
+        () => [host.getProperty('placeholder'), host.getAttribute('data-placeholder')]);
     return nativePlaceholder || fallback || '';
   }
 

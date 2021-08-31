@@ -9,14 +9,15 @@
 import {
   Directive,
   EventEmitter,
-  Input,
-  Output,
-  NgZone,
-  InjectionToken,
   Inject,
-  Optional,
+  InjectionToken,
+  Input,
+  NgZone,
   OnDestroy,
+  Optional,
+  Output,
 } from '@angular/core';
+
 import {Clipboard} from './clipboard';
 import {PendingCopy} from './pending-copy';
 
@@ -66,10 +67,8 @@ export class CdkCopyToClipboard implements OnDestroy {
   private _currentTimeout: any;
 
   constructor(
-    private _clipboard: Clipboard,
-    private _ngZone: NgZone,
-    @Optional() @Inject(CDK_COPY_TO_CLIPBOARD_CONFIG) config?: CdkCopyToClipboardConfig) {
-
+      private _clipboard: Clipboard, private _ngZone: NgZone,
+      @Optional() @Inject(CDK_COPY_TO_CLIPBOARD_CONFIG) config?: CdkCopyToClipboardConfig) {
     if (config && config.attempts != null) {
       this.attempts = config.attempts;
     }

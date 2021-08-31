@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
 import {CdkStepper} from '@angular/cdk/stepper';
+import {Component} from '@angular/core';
 
 /** @title A custom CDK stepper without a form */
 @Component({
@@ -7,7 +7,8 @@ import {CdkStepper} from '@angular/cdk/stepper';
   templateUrl: './cdk-custom-stepper-without-form-example.html',
   styleUrls: ['./cdk-custom-stepper-without-form-example.css']
 })
-export class CdkCustomStepperWithoutFormExample {}
+export class CdkCustomStepperWithoutFormExample {
+}
 
 /** Custom CDK stepper component */
 @Component({

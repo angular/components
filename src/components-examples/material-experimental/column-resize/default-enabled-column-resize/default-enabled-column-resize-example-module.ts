@@ -7,8 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
 import {MatDefaultEnabledColumnResizeModule} from '@angular/material-experimental/column-resize';
+import {MatTableModule} from '@angular/material/table';
 
 import {DefaultEnabledColumnResizeExample} from './default-enabled-column-resize-example';
 

@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'tab-group-basic-example',
   templateUrl: 'tab-group-basic-example.html',
 })
-export class TabGroupBasicExample {}
+export class TabGroupBasicExample {
+}

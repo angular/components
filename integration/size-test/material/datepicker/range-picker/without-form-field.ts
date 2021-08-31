@@ -17,11 +17,13 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     <mat-date-range-picker #picker></mat-date-range-picker>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatDatepickerModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

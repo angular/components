@@ -6,4 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'datepicker-color-example.html',
   styleUrls: ['datepicker-color-example.css'],
 })
-export class DatepickerColorExample {}
+export class DatepickerColorExample {
+}

@@ -7,10 +7,11 @@
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+
 import {MatStepHarness} from './step-harness';
 import {
-  StepperHarnessFilters,
   StepHarnessFilters,
+  StepperHarnessFilters,
   StepperOrientation,
 } from './step-harness-filters';
 
@@ -27,7 +28,8 @@ export class MatStepperHarness extends ComponentHarness {
    */
   static with(options: StepperHarnessFilters = {}): HarnessPredicate<MatStepperHarness> {
     return new HarnessPredicate(MatStepperHarness, options)
-        .addOption('orientation', options.orientation,
+        .addOption(
+            'orientation', options.orientation,
             async (harness, orientation) => (await harness.getOrientation()) === orientation);
   }
 
@@ -42,8 +44,8 @@ export class MatStepperHarness extends ComponentHarness {
   /** Gets the orientation of the stepper. */
   async getOrientation(): Promise<StepperOrientation> {
     const host = await this.host();
-    return (await host.hasClass('mat-stepper-horizontal')) ?
-        StepperOrientation.HORIZONTAL : StepperOrientation.VERTICAL;
+    return (await host.hasClass('mat-stepper-horizontal')) ? StepperOrientation.HORIZONTAL :
+                                                             StepperOrientation.VERTICAL;
   }
 
   /**

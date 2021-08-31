@@ -85,8 +85,7 @@ if (!components.length) {
 }
 
 const bazelAction = local ? 'run' : 'test';
-const testLabels = components
-    .map(t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`);
+const testLabels = components.map(t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`);
 
 // Runs Bazel for the determined test labels.
 shelljs.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')} ${configFlag}`);
@@ -98,8 +97,8 @@ shelljs.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')} ${configFlag
 function getBazelPackageOfComponentName(name) {
   // Before guessing any Bazel package, we test if the name contains the
   // package name already. If so, we just use that for Bazel package.
-  const targetName = convertPathToBazelLabel(name) ||
-                     convertPathToBazelLabel(path.join(packagesDir, name));
+  const targetName =
+      convertPathToBazelLabel(name) || convertPathToBazelLabel(path.join(packagesDir, name));
   if (targetName !== null) {
     return targetName;
   }
@@ -112,8 +111,9 @@ function getBazelPackageOfComponentName(name) {
     return guessLabel;
   }
 
-  console.error(chalk.red(`Could not find test target for specified component: ` +
-    `${chalk.yellow(name)}. Looked in packages: \n${guess.attempts.join('\n')}`));
+  console.error(chalk.red(
+      `Could not find test target for specified component: ` +
+      `${chalk.yellow(name)}. Looked in packages: \n${guess.attempts.join('\n')}`));
   process.exit(1);
 }
 

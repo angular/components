@@ -7,9 +7,11 @@
  */
 
 import {Rule, SchematicContext} from '@angular-devkit/schematics';
+
 import {TargetVersion} from '../update-tool/target-version';
-import {cdkUpgradeData} from './upgrade-data';
+
 import {createMigrationSchematicRule} from './devkit-migration-rule';
+import {cdkUpgradeData} from './upgrade-data';
 
 /** Entry point for the migration schematics with target of Angular CDK 6.0.0 */
 export function updateToV6(): Rule {
@@ -52,8 +54,8 @@ export function updateToV13(): Rule {
 }
 
 /** Function that will be called when the migration completed. */
-function onMigrationComplete(context: SchematicContext, targetVersion: TargetVersion,
-                             hasFailures: boolean) {
+function onMigrationComplete(
+    context: SchematicContext, targetVersion: TargetVersion, hasFailures: boolean) {
   context.logger.info('');
   context.logger.info(`  ✓  Updated Angular CDK to ${targetVersion}`);
   context.logger.info('');

@@ -6,13 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   ComponentHarnessConstructor,
   ContentContainerComponentHarness,
   HarnessPredicate,
 } from '@angular/cdk/testing';
+
 import {TreeNodeHarnessFilters} from './tree-harness-filters';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 
 /** Harness for interacting with a standard Angular Material tree node. */
 export class MatTreeNodeHarness extends ContentContainerComponentHarness<string> {
@@ -74,18 +75,17 @@ export class MatTreeNodeHarness extends ContentContainerComponentHarness<string>
 }
 
 function getNodePredicate<T extends MatTreeNodeHarness>(
-  type: ComponentHarnessConstructor<T>,
-  options: TreeNodeHarnessFilters): HarnessPredicate<T> {
+    type: ComponentHarnessConstructor<T>, options: TreeNodeHarnessFilters): HarnessPredicate<T> {
   return new HarnessPredicate(type, options)
-    .addOption('text', options.text,
-      (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
-    .addOption(
-      'disabled', options.disabled,
-      async (harness, disabled) => (await harness.isDisabled()) === disabled)
-    .addOption(
-      'expanded', options.expanded,
-      async (harness, expanded) => (await harness.isExpanded()) === expanded)
-    .addOption(
-      'level', options.level,
-      async (harness, level) => (await harness.getLevel()) === level);
+      .addOption(
+          'text', options.text,
+          (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
+      .addOption(
+          'disabled', options.disabled,
+          async (harness, disabled) => (await harness.isDisabled()) === disabled)
+      .addOption(
+          'expanded', options.expanded,
+          async (harness, expanded) => (await harness.isExpanded()) === expanded)
+      .addOption(
+          'level', options.level, async (harness, level) => (await harness.getLevel()) === level);
 }

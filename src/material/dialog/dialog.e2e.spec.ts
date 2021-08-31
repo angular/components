@@ -1,9 +1,10 @@
 import {browser, by, element, Key} from 'protractor';
+
 import {
-  expectToExist,
-  expectFocusOn,
-  pressKeys,
   clickElementAtPoint,
+  expectFocusOn,
+  expectToExist,
+  pressKeys,
   waitForElement,
 } from '../../cdk/testing/private/e2e';
 
@@ -21,7 +22,7 @@ describe('dialog', () => {
     await expectToExist('.my-template-dialog');
   });
 
-  it('should close by clicking on the backdrop', async() => {
+  it('should close by clicking on the backdrop', async () => {
     await element(by.id('default')).click();
 
     await waitForDialog();
@@ -37,15 +38,14 @@ describe('dialog', () => {
     await expectToExist('mat-dialog-container', false);
   });
 
-  it('should close by pressing escape when the first tabbable element has lost focus',
-    async () => {
-      await element(by.id('default')).click();
+  it('should close by pressing escape when the first tabbable element has lost focus', async () => {
+    await element(by.id('default')).click();
 
-      await waitForDialog();
-      await clickElementAtPoint('mat-dialog-container', { x: 0, y: 0 });
-      await pressKeys(Key.ESCAPE);
-      await expectToExist('mat-dialog-container', false);
-    });
+    await waitForDialog();
+    await clickElementAtPoint('mat-dialog-container', {x: 0, y: 0});
+    await pressKeys(Key.ESCAPE);
+    await expectToExist('mat-dialog-container', false);
+  });
 
   it('should close by clicking on the "close" button', async () => {
     await element(by.id('default')).click();
@@ -101,6 +101,6 @@ describe('dialog', () => {
   }
 
   async function clickOnBackdrop() {
-    await clickElementAtPoint('.cdk-overlay-backdrop', { x: 0, y: 0 });
+    await clickElementAtPoint('.cdk-overlay-backdrop', {x: 0, y: 0});
   }
 });

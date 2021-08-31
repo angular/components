@@ -7,8 +7,9 @@
  */
 
 import {Directive} from '@angular/core';
-import {CdkMenuItemSelectable} from './menu-item-selectable';
+
 import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemSelectable} from './menu-item-selectable';
 
 /**
  * A directive providing behavior for the "menuitemcheckbox" ARIA role, which behaves similarly to a

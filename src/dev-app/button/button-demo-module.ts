@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ButtonExamplesModule} from '@angular/components-examples/material/button';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {RouterModule} from '@angular/router';
+
 import {ButtonDemo} from './button-demo';
-import {ButtonExamplesModule} from '@angular/components-examples/material/button';
 
 @NgModule({
   imports: [

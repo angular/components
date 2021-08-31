@@ -3,7 +3,6 @@ import {UnitTestTree} from '@angular-devkit/schematics/testing';
 import {hasNgModuleImport} from './ng-module-imports';
 
 describe('NgModule import utils', () => {
-
   let host: UnitTestTree;
 
   beforeEach(() => {

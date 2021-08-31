@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'button-toggle-mode-example',
   templateUrl: 'button-toggle-mode-example.html',
 })
-export class ButtonToggleModeExample {}
+export class ButtonToggleModeExample {
+}

@@ -1,9 +1,11 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+
 import {MatChipsModule} from '../index';
+
 import {MatChipGridHarness} from './chip-grid-harness';
 
 
@@ -12,10 +14,12 @@ describe('MatChipGridHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatChipsModule, ReactiveFormsModule],
-      declarations: [ChipGridHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatChipsModule, ReactiveFormsModule],
+          declarations: [ChipGridHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ChipGridHarnessTest);
     fixture.detectChanges();
@@ -66,7 +70,6 @@ describe('MatChipGridHarness', () => {
 
     expect(await harness.isInvalid()).toBe(true);
   });
-
 });
 
 @Component({
@@ -83,4 +86,3 @@ class ChipGridHarnessTest {
   control = new FormControl('value', [Validators.required]);
   required = false;
 }
-

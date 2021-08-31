@@ -10,11 +10,13 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     <mat-button-toggle>Center text</mat-button-toggle>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatButtonToggleModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

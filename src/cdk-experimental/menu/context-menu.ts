@@ -6,34 +6,35 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  ConnectedPosition,
+  FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+} from '@angular/cdk/overlay';
+import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   Directive,
-  Input,
-  ViewContainerRef,
-  Output,
   EventEmitter,
-  Optional,
-  OnDestroy,
   Inject,
   Injectable,
   InjectionToken,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  ViewContainerRef,
 } from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
-import {
-  OverlayRef,
-  Overlay,
-  OverlayConfig,
-  FlexibleConnectedPositionStrategy,
-  ConnectedPosition,
-} from '@angular/cdk/overlay';
-import {TemplatePortal, Portal} from '@angular/cdk/portal';
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
-import {Subject, merge} from 'rxjs';
+import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {CdkMenuPanel} from './menu-panel';
-import {MenuStack} from './menu-stack';
+
 import {throwExistingMenuStackError} from './menu-errors';
 import {isClickInsideMenuOverlay} from './menu-item-trigger';
+import {CdkMenuPanel} from './menu-panel';
+import {MenuStack} from './menu-stack';
 
 /** Tracks the last open context menu trigger across the entire application. */
 @Injectable({providedIn: 'root'})
@@ -63,12 +64,13 @@ export type ContextMenuOptions = {
 };
 
 /** Injection token for the ContextMenu options object. */
-export const CDK_CONTEXT_MENU_DEFAULT_OPTIONS = new InjectionToken<ContextMenuOptions>(
-  'cdk-context-menu-default-options'
-);
+export const CDK_CONTEXT_MENU_DEFAULT_OPTIONS =
+    new InjectionToken<ContextMenuOptions>('cdk-context-menu-default-options');
 
 /** The coordinates of where the context menu should open. */
-export type ContextMenuCoordinates = {x: number; y: number};
+export type ContextMenuCoordinates = {
+  x: number; y: number
+};
 
 /**
  * A directive which when placed on some element opens a the Menu it is bound to when a user
@@ -123,7 +125,7 @@ export class CdkContextMenuTrigger implements OnDestroy {
   private _disabled = false;
 
   /** A reference to the overlay which manages the triggered menu. */
-  private _overlayRef: OverlayRef | null = null;
+  private _overlayRef: OverlayRef|null = null;
 
   /** The content of the menu panel opened by this trigger. */
   private _panelContent: TemplatePortal;
@@ -138,12 +140,10 @@ export class CdkContextMenuTrigger implements OnDestroy {
   private readonly _stopOutsideClicksListener = merge(this.closed, this._destroyed);
 
   constructor(
-    protected readonly _viewContainerRef: ViewContainerRef,
-    private readonly _overlay: Overlay,
-    private readonly _contextMenuTracker: ContextMenuTracker,
-    @Inject(CDK_CONTEXT_MENU_DEFAULT_OPTIONS) private readonly _options: ContextMenuOptions,
-    @Optional() private readonly _directionality?: Directionality
-  ) {
+      protected readonly _viewContainerRef: ViewContainerRef, private readonly _overlay: Overlay,
+      private readonly _contextMenuTracker: ContextMenuTracker,
+      @Inject(CDK_CONTEXT_MENU_DEFAULT_OPTIONS) private readonly _options: ContextMenuOptions,
+      @Optional() private readonly _directionality?: Directionality) {
     this._setMenuStackListener();
   }
 
@@ -159,15 +159,15 @@ export class CdkContextMenuTrigger implements OnDestroy {
       // disconnected from this one.
       this._menuStack.closeSubMenuOf(this._menuPanel._menu!);
 
-      (this._overlayRef!.getConfig()
-        .positionStrategy as FlexibleConnectedPositionStrategy).setOrigin(coordinates);
+      (this._overlayRef!.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
+          .setOrigin(coordinates);
       this._overlayRef!.updatePosition();
     } else {
       this.opened.next();
 
       if (this._overlayRef) {
-        (this._overlayRef.getConfig()
-          .positionStrategy as FlexibleConnectedPositionStrategy).setOrigin(coordinates);
+        (this._overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
+            .setOrigin(coordinates);
         this._overlayRef.updatePosition();
       } else {
         this._overlayRef = this._overlay.create(this._getOverlayConfig(coordinates));
@@ -232,15 +232,13 @@ export class CdkContextMenuTrigger implements OnDestroy {
    * Build the position strategy for the overlay which specifies where to place the menu.
    * @param coordinates the location to place the opened menu
    */
-  private _getOverlayPositionStrategy(
-    coordinates: ContextMenuCoordinates
-  ): FlexibleConnectedPositionStrategy {
-    return this._overlay
-      .position()
-      .flexibleConnectedTo(coordinates)
-      .withDefaultOffsetX(this._options.offsetX)
-      .withDefaultOffsetY(this._options.offsetY)
-      .withPositions(this._getOverlayPositions());
+  private _getOverlayPositionStrategy(coordinates: ContextMenuCoordinates):
+      FlexibleConnectedPositionStrategy {
+    return this._overlay.position()
+        .flexibleConnectedTo(coordinates)
+        .withDefaultOffsetX(this._options.offsetX)
+        .withDefaultOffsetY(this._options.offsetY)
+        .withPositions(this._getOverlayPositions());
   }
 
   /**
@@ -285,14 +283,13 @@ export class CdkContextMenuTrigger implements OnDestroy {
    */
   private _subscribeToOutsideClicks() {
     if (this._overlayRef) {
-      this._overlayRef
-        .outsidePointerEvents()
-        .pipe(takeUntil(this._stopOutsideClicksListener))
-        .subscribe(event => {
-          if (!isClickInsideMenuOverlay(event.target as Element)) {
-            this._menuStack.closeAll();
-          }
-        });
+      this._overlayRef.outsidePointerEvents()
+          .pipe(takeUntil(this._stopOutsideClicksListener))
+          .subscribe(event => {
+            if (!isClickInsideMenuOverlay(event.target as Element)) {
+              this._menuStack.closeAll();
+            }
+          });
     }
   }
 

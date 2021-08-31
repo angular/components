@@ -37,12 +37,13 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    */
   useUtcForDisplay: boolean = false;
 
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string,
-    /**
-     * @deprecated No longer being used. To be removed.
-     * @breaking-change 14.0.0
-     */
-    _platform?: Platform) {
+  constructor(
+      @Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string,
+      /**
+       * @deprecated No longer being used. To be removed.
+       * @breaking-change 14.0.0
+       */
+      _platform?: Platform) {
     super();
     super.setLocale(matDateLocale);
   }
@@ -63,7 +64,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return date.getDay();
   }
 
-  getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+  getMonthNames(style: 'long'|'short'|'narrow'): string[] {
     const dtf = new Intl.DateTimeFormat(this.locale, {month: style, timeZone: 'utc'});
     return range(12, i => this._format(dtf, new Date(2017, i, 1)));
   }
@@ -73,7 +74,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return range(31, i => this._format(dtf, new Date(2017, 0, i + 1)));
   }
 
-  getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+  getDayOfWeekNames(style: 'long'|'short'|'narrow'): string[] {
     const dtf = new Intl.DateTimeFormat(this.locale, {weekday: style, timeZone: 'utc'});
     return range(7, i => this._format(dtf, new Date(2017, 0, i + 1)));
   }
@@ -89,8 +90,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   getNumDaysInMonth(date: Date): number {
-    return this.getDate(this._createDateWithOverflow(
-        this.getYear(date), this.getMonth(date) + 1, 0));
+    return this.getDate(
+        this._createDateWithOverflow(this.getYear(date), this.getMonth(date) + 1, 0));
   }
 
   clone(date: Date): Date {
@@ -123,7 +124,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return new Date();
   }
 
-  parse(value: any): Date | null {
+  parse(value: any): Date|null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
     if (typeof value == 'number') {
@@ -167,9 +168,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   toIso8601(date: Date): string {
     return [
-      date.getUTCFullYear(),
-      this._2digit(date.getUTCMonth() + 1),
-      this._2digit(date.getUTCDate())
+      date.getUTCFullYear(), this._2digit(date.getUTCMonth() + 1), this._2digit(date.getUTCDate())
     ].join('-');
   }
 
@@ -178,7 +177,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
    * invalid date for all other values.
    */
-  override deserialize(value: any): Date | null {
+  override deserialize(value: any): Date|null {
     if (typeof value === 'string') {
       if (!value) {
         return null;

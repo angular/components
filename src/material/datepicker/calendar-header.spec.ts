@@ -1,13 +1,11 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Component} from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  waitForAsync
-} from '@angular/core/testing';
-import {MatNativeDateModule, DateAdapter} from '@angular/material/core';
-import {DEC, FEB, JAN} from '../testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
+
+import {DEC, FEB, JAN} from '../testing';
+
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
@@ -76,8 +74,7 @@ describe('MatCalendarHeader', () => {
       expect(calendarInstance.currentView).toBe('month');
     });
 
-    it('should emit viewChanged when view changed from \'month\' to \'multi-year\'',
-     () => {
+    it('should emit viewChanged when view changed from \'month\' to \'multi-year\'', () => {
       expect(calendarInstance.currentView).toBe('month');
       spyOn(calendarInstance.viewChanged, 'emit');
 
@@ -87,8 +84,7 @@ describe('MatCalendarHeader', () => {
       expect(calendarInstance.viewChanged.emit).toHaveBeenCalledWith('multi-year');
     });
 
-    it('should emit viewChanged when view changed from \'multi-year\' to \'month\'',
-      () => {
+    it('should emit viewChanged when view changed from \'multi-year\' to \'month\'', () => {
       periodButton.click();
       fixture.detectChanges();
       expect(calendarInstance.currentView).toBe('multi-year');
@@ -100,8 +96,7 @@ describe('MatCalendarHeader', () => {
       expect(calendarInstance.viewChanged.emit).toHaveBeenCalledWith('month');
     });
 
-    it('should emit viewChanged when view changed from \'multi-year\' to \'year\'',
-    () => {
+    it('should emit viewChanged when view changed from \'multi-year\' to \'year\'', () => {
       periodButton.click();
       fixture.detectChanges();
       expect(calendarInstance.currentView).toBe('multi-year');
@@ -210,7 +205,6 @@ describe('MatCalendarHeader', () => {
       expect(periodButton.hasAttribute('aria-describedby')).toBe(true);
       expect(periodButton.getAttribute('aria-describedby')).toBe(description?.getAttribute('id')!);
     });
-
   });
 
   describe('calendar with minDate only', () => {
@@ -229,11 +223,10 @@ describe('MatCalendarHeader', () => {
       let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton =
-        calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
+          calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
       prevButton =
-        calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
-      nextButton =
-        calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
+          calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
+      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
     });
@@ -283,11 +276,10 @@ describe('MatCalendarHeader', () => {
       let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton =
-        calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
+          calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
       prevButton =
-        calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
-      nextButton =
-        calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
+          calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
+      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
     });
@@ -336,11 +328,10 @@ describe('MatCalendarHeader', () => {
       let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton =
-        calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
+          calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
       prevButton =
-        calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
-      nextButton =
-        calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
+          calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
+      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
     });
@@ -409,6 +400,6 @@ class StandardCalendar {
 })
 class CalendarWithMinMaxDate {
   startAt = new Date(2018, JAN, 1);
-  minDate: Date | null;
-  maxDate: Date | null;
+  minDate: Date|null;
+  maxDate: Date|null;
 }

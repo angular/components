@@ -9,7 +9,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -27,11 +27,12 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleGlobalOptions,
 } from '@angular/material-experimental/mdc-core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
 import {GridKeyManagerRow} from './grid-key-manager';
@@ -75,14 +76,14 @@ export interface MatChipEditedEvent extends MatChipEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipRow extends MatChip implements AfterContentInit, AfterViewInit,
-  GridKeyManagerRow<HTMLElement> {
+                                                   GridKeyManagerRow<HTMLElement> {
   protected override basicChipAttrName = 'mat-basic-chip-row';
 
   @Input() editable: boolean = false;
 
   /** Emitted when the chip is edited. */
-  @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
-      new EventEmitter<MatChipEditedEvent>();
+  @Output()
+  readonly edited: EventEmitter<MatChipEditedEvent> = new EventEmitter<MatChipEditedEvent>();
 
   /**
    * The focusable wrapper element in the first gridcell, which contains all
@@ -103,16 +104,13 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
    * Timeout used to give some time between `focusin` and `focusout`
    * in order to determine whether focus has left the chip.
    */
-  private _focusoutTimeout: number | null;
+  private _focusoutTimeout: number|null;
 
   constructor(
-    @Inject(DOCUMENT) private readonly _document: any,
-    changeDetectorRef: ChangeDetectorRef,
-    elementRef: ElementRef, ngZone: NgZone,
-    @Optional() dir: Directionality,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-        globalRippleOptions?: RippleGlobalOptions) {
+      @Inject(DOCUMENT) private readonly _document: any, changeDetectorRef: ChangeDetectorRef,
+      elementRef: ElementRef, ngZone: NgZone, @Optional() dir: Directionality,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions) {
     super(changeDetectorRef, elementRef, ngZone, dir, animationMode, globalRippleOptions);
   }
 
@@ -133,8 +131,8 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   override ngAfterViewInit() {
     super.ngAfterViewInit();
     this.cells = this.removeIcon ?
-      [this.chipContent.nativeElement, this.removeIcon._elementRef.nativeElement] :
-      [this.chipContent.nativeElement];
+        [this.chipContent.nativeElement, this.removeIcon._elementRef.nativeElement] :
+        [this.chipContent.nativeElement];
   }
 
   /**

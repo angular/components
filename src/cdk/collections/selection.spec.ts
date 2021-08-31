@@ -206,7 +206,6 @@ describe('SelectionModel', () => {
         expect(spy).toHaveBeenCalledTimes(1);
         expect(event.removed).toEqual([1, 2, 3]);
       });
-
     });
   });
 

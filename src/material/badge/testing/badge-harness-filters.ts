@@ -9,5 +9,5 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 export interface BadgeHarnessFilters extends BaseHarnessFilters {
-  text?: string | RegExp;
+  text?: string|RegExp;
 }

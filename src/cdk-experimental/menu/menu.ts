@@ -6,43 +6,44 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  Input,
-  Output,
-  EventEmitter,
-  QueryList,
-  ContentChildren,
-  AfterContentInit,
-  OnDestroy,
-  Optional,
-  OnInit,
-  NgZone,
-  HostListener,
-  ElementRef,
-  Inject,
-  Self,
-} from '@angular/core';
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  UP_ARROW,
   DOWN_ARROW,
   ESCAPE,
-  TAB,
   hasModifierKey,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  TAB,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {Directionality} from '@angular/cdk/bidi';
+import {
+  AfterContentInit,
+  ContentChildren,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  QueryList,
+  Self,
+} from '@angular/core';
 import {merge} from 'rxjs';
-import {take, takeUntil, startWith, mergeMap, mapTo, mergeAll, switchMap} from 'rxjs/operators';
-import {CdkMenuGroup} from './menu-group';
-import {CdkMenuPanel} from './menu-panel';
-import {Menu, CDK_MENU} from './menu-interface';
-import {CdkMenuItem} from './menu-item';
-import {MenuStack, MenuStackItem, FocusNext, NoopMenuStack} from './menu-stack';
-import {PointerFocusTracker} from './pointer-focus-tracker';
+import {mapTo, mergeAll, mergeMap, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+
 import {MENU_AIM, MenuAim} from './menu-aim';
+import {CdkMenuGroup} from './menu-group';
+import {CDK_MENU, Menu} from './menu-interface';
+import {CdkMenuItem} from './menu-item';
+import {CdkMenuPanel} from './menu-panel';
+import {FocusNext, MenuStack, MenuStackItem, NoopMenuStack} from './menu-stack';
+import {PointerFocusTracker} from './pointer-focus-tracker';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -71,10 +72,10 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
    * Sets the aria-orientation attribute and determines where menus will be opened.
    * Does not affect styling/layout.
    */
-  @Input('cdkMenuOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
+  @Input('cdkMenuOrientation') orientation: 'horizontal'|'vertical' = 'vertical';
 
   /** Event emitted when the menu is closed. */
-  @Output() readonly closed: EventEmitter<void | 'click' | 'tab' | 'escape'> = new EventEmitter();
+  @Output() readonly closed: EventEmitter<void|'click'|'tab'|'escape'> = new EventEmitter();
 
   // We provide a default MenuStack implementation in case the menu is an inline menu.
   // For Menus part of a MenuBar nested within a MenuPanel this will be overwritten
@@ -109,14 +110,12 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   @Input('cdkMenuPanel') private readonly _explicitPanel?: CdkMenuPanel;
 
   constructor(
-    private readonly _ngZone: NgZone,
-    readonly _elementRef: ElementRef<HTMLElement>,
-    @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
-    @Optional() private readonly _dir?: Directionality,
-    // `CdkMenuPanel` is always used in combination with a `CdkMenu`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() private readonly _menuPanel?: CdkMenuPanel
-  ) {
+      private readonly _ngZone: NgZone, readonly _elementRef: ElementRef<HTMLElement>,
+      @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
+      @Optional() private readonly _dir?: Directionality,
+      // `CdkMenuPanel` is always used in combination with a `CdkMenu`.
+      // tslint:disable-next-line: lightweight-tokens
+      @Optional() private readonly _menuPanel?: CdkMenuPanel) {
     super();
   }
 
@@ -232,10 +231,8 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
 
   /** Setup the FocusKeyManager with the correct orientation for the menu. */
   private _setKeyManager() {
-    this._keyManager = new FocusKeyManager(this._allItems)
-      .withWrap()
-      .withTypeAhead()
-      .withHomeAndEnd();
+    this._keyManager =
+        new FocusKeyManager(this._allItems).withWrap().withTypeAhead().withHomeAndEnd();
 
     if (this._isHorizontal()) {
       this._keyManager.withHorizontalOrientation(this._dir?.value || 'ltr');
@@ -251,28 +248,25 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   private _subscribeToMouseManager() {
     this._ngZone.runOutsideAngular(() => {
       this._pointerTracker = new PointerFocusTracker(this._allItems);
-      this._pointerTracker.entered
-        .pipe(takeUntil(this.closed))
-        .subscribe(item => this._keyManager.setActiveItem(item));
+      this._pointerTracker.entered.pipe(takeUntil(this.closed))
+          .subscribe(item => this._keyManager.setActiveItem(item));
     });
   }
 
   /** Subscribe to the MenuStack close and empty observables. */
   private _subscribeToMenuStack() {
-    this._menuStack.closed
-      .pipe(takeUntil(this.closed))
-      .subscribe(item => this._closeOpenMenu(item));
+    this._menuStack.closed.pipe(takeUntil(this.closed))
+        .subscribe(item => this._closeOpenMenu(item));
 
-    this._menuStack.emptied
-      .pipe(takeUntil(this.closed))
-      .subscribe(event => this._toggleMenuFocus(event));
+    this._menuStack.emptied.pipe(takeUntil(this.closed))
+        .subscribe(event => this._toggleMenuFocus(event));
   }
 
   /**
    * Close the open menu if the current active item opened the requested MenuStackItem.
    * @param item the MenuStackItem requested to be closed.
    */
-  private _closeOpenMenu(menu: MenuStackItem | undefined) {
+  private _closeOpenMenu(menu: MenuStackItem|undefined) {
     const keyManager = this._keyManager;
     const trigger = this._openItem;
     if (menu === trigger?.getMenuTrigger()?.getMenu()) {
@@ -286,7 +280,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   }
 
   /** Set focus the either the current, previous or next item based on the FocusNext event. */
-  private _toggleMenuFocus(event: FocusNext | undefined) {
+  private _toggleMenuFocus(event: FocusNext|undefined) {
     const keyManager = this._keyManager;
     switch (event) {
       case FocusNext.nextItem:
@@ -316,21 +310,20 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   private _subscribeToMenuOpen() {
     const exitCondition = merge(this._allItems.changes, this.closed);
     this._allItems.changes
-      .pipe(
-        startWith(this._allItems),
-        mergeMap((list: QueryList<CdkMenuItem>) =>
-          list
-            .filter(item => item.hasMenu())
-            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition)))
-        ),
-        mergeAll(),
-        switchMap((item: CdkMenuItem) => {
-          this._openItem = item;
-          return item.getMenuTrigger()!.closed;
-        }),
-        takeUntil(this.closed)
-      )
-      .subscribe(() => (this._openItem = undefined));
+        .pipe(
+            startWith(this._allItems),
+            mergeMap(
+                (list: QueryList<CdkMenuItem>) =>
+                    list.filter(item => item.hasMenu())
+                        .map(
+                            item => item.getMenuTrigger()!.opened.pipe(
+                                mapTo(item), takeUntil(exitCondition)))),
+            mergeAll(), switchMap((item: CdkMenuItem) => {
+              this._openItem = item;
+              return item.getMenuTrigger()!.closed;
+            }),
+            takeUntil(this.closed))
+        .subscribe(() => (this._openItem = undefined));
   }
 
   /** Return true if this menu has been configured in a horizontal orientation. */

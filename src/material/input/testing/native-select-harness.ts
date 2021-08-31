@@ -72,8 +72,7 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
   }
 
   /** Gets the options inside the select panel. */
-  async getOptions(filter: NativeOptionHarnessFilters = {}):
-    Promise<MatNativeOptionHarness[]> {
+  async getOptions(filter: NativeOptionHarnessFilters = {}): Promise<MatNativeOptionHarness[]> {
     return this.locatorForAll(MatNativeOptionHarness.with(filter))();
   }
 
@@ -90,10 +89,12 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
       throw Error('Select does not have options matching the specified filter');
     }
 
-    const [host, optionIndexes] = await parallel(() => [
-      this.host(),
-      parallel(() => options.slice(0, isMultiple ? undefined : 1).map(option => option.getIndex()))
-    ]);
+    const [host, optionIndexes] = await parallel(
+        () =>
+            [this.host(),
+             parallel(
+                 () => options.slice(0, isMultiple ? undefined : 1)
+                           .map(option => option.getIndex()))]);
 
     await host.selectOptions(...optionIndexes);
   }

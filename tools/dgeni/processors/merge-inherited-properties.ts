@@ -23,8 +23,8 @@ export class MergeInheritedProperties implements Processor {
   $runBefore = ['categorizer'];
 
   constructor(
-    /** Shared map that can be used to resolve docs through symbols. */
-    private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {}
+      /** Shared map that can be used to resolve docs through symbols. */
+      private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {}
 
   $process(docs: DocCollection) {
     return docs.filter(doc => doc.docType === 'class')

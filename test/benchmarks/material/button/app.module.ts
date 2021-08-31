@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatButtonModule} from '@angular/material/button';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mat-raised-button */
 
@@ -27,8 +27,12 @@ export class ButtonBenchmarkApp {
   isChecked = false;
   isVisible = false;
 
-  show() { this.isVisible = true; }
-  hide() { this.isVisible = false; }
+  show() {
+    this.isVisible = true;
+  }
+  hide() {
+    this.isVisible = false;
+  }
 }
 
 
@@ -40,4 +44,5 @@ export class ButtonBenchmarkApp {
   ],
   bootstrap: [ButtonBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

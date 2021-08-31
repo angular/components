@@ -3,9 +3,11 @@
  * and runs sanity checks against the NPM package output.
  */
 
-import {performNpmReleaseBuild} from './build-packages-dist';
-import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output';
 import * as semver from 'semver';
+
+import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output';
+
+import {performNpmReleaseBuild} from './build-packages-dist';
 
 const {version} = require('../package.json');
 
@@ -21,5 +23,3 @@ main().catch(e => {
   console.error(e);
   process.exit(1);
 });
-
-

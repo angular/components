@@ -12,10 +12,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [dividerModule],
-      declarations: [DividerHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [dividerModule],
+          declarations: [DividerHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(DividerHarnessTest);
     fixture.detectChanges();
@@ -46,4 +48,5 @@ export function runHarnessTests(
     <mat-divider inset vertical></mat-divider>
   `
 })
-class DividerHarnessTest {}
+class DividerHarnessTest {
+}

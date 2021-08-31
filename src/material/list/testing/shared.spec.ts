@@ -46,10 +46,12 @@ function runBaseListFunctionalityTests<
     let fixture: ComponentFixture<{}>;
 
     beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [listModule],
-        declarations: [testComponent],
-      }).compileComponents();
+      await TestBed
+          .configureTestingModule({
+            imports: [listModule],
+            declarations: [testComponent],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(testComponent);
       fixture.detectChanges();
@@ -61,8 +63,9 @@ function runBaseListFunctionalityTests<
 
     it('should get all items', async () => {
       const items = await simpleListHarness.getItems();
-      expect(await parallel(() => items.map(i => i.getText())))
-          .toEqual(['Item 1', 'Item 2', 'Item 3']);
+      expect(await parallel(() => items.map(i => i.getText()))).toEqual([
+        'Item 1', 'Item 2', 'Item 3'
+      ]);
     });
 
     it('should get all items matching text', async () => {
@@ -80,8 +83,9 @@ function runBaseListFunctionalityTests<
       expect(sections[0].heading).toBeUndefined();
       expect(await parallel(() => sections[0].items.map(i => i.getText()))).toEqual(['Item 1']);
       expect(sections[1].heading).toBe('Section 1');
-      expect(await parallel(() => sections[1].items.map(i => i.getText())))
-          .toEqual(['Item 2', 'Item 3']);
+      expect(await parallel(() => sections[1].items.map(i => i.getText()))).toEqual([
+        'Item 2', 'Item 3'
+      ]);
       expect(sections[2].heading).toBe('Section 2');
       expect(sections[2].items.length).toEqual(0);
     });
@@ -133,23 +137,24 @@ function runBaseListFunctionalityTests<
     it('should get all items, subheaders, and dividers excluding some harness types', async () => {
       const items = await simpleListHarness.getItemsWithSubheadersAndDividers(
           {subheader: false, divider: false});
-      const subheaders = await simpleListHarness.getItemsWithSubheadersAndDividers(
-          {item: false, divider: false});
+      const subheaders =
+          await simpleListHarness.getItemsWithSubheadersAndDividers({item: false, divider: false});
       const dividers = await simpleListHarness.getItemsWithSubheadersAndDividers(
           {item: false, subheader: false});
-      expect(await parallel(() => items.map(i => i.getText())))
-          .toEqual(['Item 1', 'Item 2', 'Item 3']);
-      expect(await parallel(() => subheaders.map(s => s.getText())))
-          .toEqual(['Section 1', 'Section 2']);
-      expect(await parallel(() => dividers.map(d => d.getOrientation())))
-          .toEqual(['horizontal', 'horizontal']);
+      expect(await parallel(() => items.map(i => i.getText()))).toEqual([
+        'Item 1', 'Item 2', 'Item 3'
+      ]);
+      expect(await parallel(() => subheaders.map(s => s.getText()))).toEqual([
+        'Section 1', 'Section 2'
+      ]);
+      expect(await parallel(() => dividers.map(d => d.getOrientation()))).toEqual([
+        'horizontal', 'horizontal'
+      ]);
     });
 
     it('should get all items, subheaders, and dividers with filters', async () => {
-      const itemsSubheadersAndDividers = await simpleListHarness.getItemsWithSubheadersAndDividers({
-        item: {text: /1/},
-        subheader: {text: /2/}
-      });
+      const itemsSubheadersAndDividers = await simpleListHarness.getItemsWithSubheadersAndDividers(
+          {item: {text: /1/}, subheader: {text: /2/}});
       expect(itemsSubheadersAndDividers.length).toBe(4);
       expect(itemsSubheadersAndDividers[0] instanceof listItemHarnessBase).toBe(true);
       expect(await (itemsSubheadersAndDividers[0] as MatListItemHarnessBase).getText())
@@ -205,14 +210,11 @@ function runBaseListFunctionalityTests<
  * harness.
  */
 export function runHarnessTests(
-    listModule: typeof MatListModule,
-    listHarness: typeof MatListHarness,
-    actionListHarness: typeof MatActionListHarness,
-    navListHarness: typeof MatNavListHarness,
+    listModule: typeof MatListModule, listHarness: typeof MatListHarness,
+    actionListHarness: typeof MatActionListHarness, navListHarness: typeof MatNavListHarness,
     selectionListHarness: typeof MatSelectionListHarness,
     listItemHarnessBase: typeof MatListItemHarnessBase,
-    subheaderHarness: typeof MatSubheaderHarness,
-    dividerHarness: typeof MatDividerHarness,
+    subheaderHarness: typeof MatSubheaderHarness, dividerHarness: typeof MatDividerHarness,
     selectors: {content: string}) {
   describe('MatListHarness', () => {
     runBaseListFunctionalityTests<MatListHarness, MatListItemHarness>(
@@ -230,10 +232,12 @@ export function runHarnessTests(
       let fixture: ComponentFixture<ActionListHarnessTest>;
 
       beforeEach(async () => {
-        await TestBed.configureTestingModule({
-          imports: [listModule],
-          declarations: [ActionListHarnessTest],
-        }).compileComponents();
+        await TestBed
+            .configureTestingModule({
+              imports: [listModule],
+              declarations: [ActionListHarnessTest],
+            })
+            .compileComponents();
 
         fixture = TestBed.createComponent(ActionListHarnessTest);
         fixture.detectChanges();
@@ -265,10 +269,12 @@ export function runHarnessTests(
       let fixture: ComponentFixture<NavListHarnessTest>;
 
       beforeEach(async () => {
-        await TestBed.configureTestingModule({
-          imports: [listModule],
-          declarations: [NavListHarnessTest],
-        }).compileComponents();
+        await TestBed
+            .configureTestingModule({
+              imports: [listModule],
+              declarations: [NavListHarnessTest],
+            })
+            .compileComponents();
 
         fixture = TestBed.createComponent(NavListHarnessTest);
         fixture.detectChanges();
@@ -312,10 +318,12 @@ export function runHarnessTests(
       let fixture: ComponentFixture<SelectionListHarnessTest>;
 
       beforeEach(async () => {
-        await TestBed.configureTestingModule({
-          imports: [listModule],
-          declarations: [SelectionListHarnessTest],
-        }).compileComponents();
+        await TestBed
+            .configureTestingModule({
+              imports: [listModule],
+              declarations: [SelectionListHarnessTest],
+            })
+            .compileComponents();
 
         fixture = TestBed.createComponent(SelectionListHarnessTest);
         fixture.detectChanges();
@@ -342,8 +350,9 @@ export function runHarnessTests(
         expect((await harness.getItems({selected: true})).length).toBe(0);
         await harness.selectItems({text: /1/}, {text: /3/});
         const selected = await harness.getItems({selected: true});
-        expect(await parallel(() => selected.map(item => item.getText())))
-            .toEqual(['Item 1', 'Item 3']);
+        expect(await parallel(() => selected.map(item => item.getText()))).toEqual([
+          'Item 1', 'Item 3'
+        ]);
       });
 
       it('should uncheck multiple options', async () => {
@@ -425,7 +434,8 @@ export function runHarnessTests(
       <mat-list class="test-empty"></mat-list>
   `
 })
-class ListHarnessTest {}
+class ListHarnessTest {
+}
 
 @Component({
   template: `

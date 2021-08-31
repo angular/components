@@ -28,9 +28,11 @@ export class MatChipHarness extends ContentContainerComponentHarness {
    */
   static with(options: ChipHarnessFilters = {}): HarnessPredicate<MatChipHarness> {
     return new HarnessPredicate(MatChipHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
-        .addOption('selected', options.selected,
+        .addOption(
+            'selected', options.selected,
             async (harness, selected) => (await harness.isSelected()) === selected);
   }
 
@@ -103,7 +105,7 @@ export class MatChipHarness extends ContentContainerComponentHarness {
    * Gets the avatar inside a chip.
    * @param filter Optionally filters which avatars are included.
    */
-  async getAvatar(filter: ChipAvatarHarnessFilters = {}): Promise<MatChipAvatarHarness | null> {
+  async getAvatar(filter: ChipAvatarHarnessFilters = {}): Promise<MatChipAvatarHarness|null> {
     return this.locatorForOptional(MatChipAvatarHarness.with(filter))();
   }
 }

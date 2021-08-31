@@ -46,8 +46,8 @@ export class MatSnackBarHarness extends ContentContainerComponentHarness<string>
    * determined based on the ARIA politeness specified in the snack-bar config.
    */
   async getAriaLive(): Promise<AriaLivePoliteness> {
-    return (await this._simpleSnackBarLiveRegion())
-        .getAttribute('aria-live') as Promise<AriaLivePoliteness>;
+    return (await this._simpleSnackBarLiveRegion()).getAttribute('aria-live') as
+        Promise<AriaLivePoliteness>;
   }
 
   /**
@@ -91,11 +91,13 @@ export class MatSnackBarHarness extends ContentContainerComponentHarness<string>
     // element isn't in the DOM by seeing that its width and height are zero.
 
     const host = await this.host();
-    const [exit, dimensions] = await parallel(() => [
-      // The snackbar container is marked with the "exit" attribute after it has been dismissed
-      // but before the animation has finished (after which it's removed from the DOM).
-      host.getAttribute('mat-exit'),
-      host.getDimensions(),
+    const [exit, dimensions] = await parallel(
+        () => [
+            // The snackbar container is marked with the "exit" attribute after it has been
+            // dismissed but before the animation has finished (after which it's removed from the
+            // DOM).
+            host.getAttribute('mat-exit'),
+            host.getDimensions(),
     ]);
 
     return exit != null || (!!dimensions && dimensions.height === 0 && dimensions.width === 0);

@@ -1,9 +1,10 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {MatPaginatorHarness} from './paginator-harness';
 
 /** Shared tests to run on both the original and MDC-based paginator. */
@@ -14,10 +15,12 @@ export function runHarnessTests(
   let instance: PaginatorHarnessTest;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [paginatorModule, NoopAnimationsModule],
-      declarations: [PaginatorHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [paginatorModule, NoopAnimationsModule],
+          declarations: [PaginatorHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(PaginatorHarnessTest);
     fixture.detectChanges();
@@ -90,8 +93,8 @@ export function runHarnessTests(
     instance.showFirstLastButtons = false;
     fixture.detectChanges();
 
-    await expectAsync(paginator.goToFirstPage()).toBeRejectedWithError(
-        /Could not find first page button inside paginator/);
+    await expectAsync(paginator.goToFirstPage())
+        .toBeRejectedWithError(/Could not find first page button inside paginator/);
   });
 
   it('should throw an error if the last page button is not available', async () => {
@@ -100,8 +103,8 @@ export function runHarnessTests(
     instance.showFirstLastButtons = false;
     fixture.detectChanges();
 
-    await expectAsync(paginator.goToLastPage()).toBeRejectedWithError(
-        /Could not find last page button inside paginator/);
+    await expectAsync(paginator.goToLastPage())
+        .toBeRejectedWithError(/Could not find last page button inside paginator/);
   });
 
   it('should throw an error if the page size selector is not available', async () => {
@@ -110,8 +113,8 @@ export function runHarnessTests(
     instance.pageSizeOptions = [];
     fixture.detectChanges();
 
-    await expectAsync(paginator.setPageSize(10)).toBeRejectedWithError(
-        /Cannot find page size selector in paginator/);
+    await expectAsync(paginator.setPageSize(10))
+        .toBeRejectedWithError(/Cannot find page size selector in paginator/);
   });
 }
 
@@ -140,4 +143,3 @@ class PaginatorHarnessTest {
     this.pageIndex = event.pageIndex;
   }
 }
-

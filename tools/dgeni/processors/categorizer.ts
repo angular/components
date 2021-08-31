@@ -48,8 +48,8 @@ export class Categorizer implements Processor {
   $runBefore = ['docs-processed', 'entryPointGrouper'];
 
   constructor(
-    /** Shared map that can be used to resolve docs through symbols. */
-    private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {}
+      /** Shared map that can be used to resolve docs through symbols. */
+      private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {}
 
   $process(docs: DocCollection) {
     docs.filter(doc => doc.docType === 'class' || doc.docType === 'interface')
@@ -108,13 +108,13 @@ export class Categorizer implements Processor {
     classDoc.directiveMetadata = getDirectiveMetadata(classDoc);
     classDoc.inheritedDocs = getInheritedDocsOfClass(classDoc, this._exportSymbolsToDocsMap);
 
-    classDoc.methods.push(...classDoc.statics
-      .filter(isMethod)
-      .filter(filterDuplicateMembers) as CategorizedMethodMemberDoc[]);
+    classDoc.methods.push(
+        ...classDoc.statics.filter(isMethod).filter(filterDuplicateMembers) as
+        CategorizedMethodMemberDoc[]);
 
-    classDoc.properties.push(...classDoc.statics
-      .filter(isProperty)
-      .filter(filterDuplicateMembers) as CategorizedPropertyMemberDoc[]);
+    classDoc.properties.push(
+        ...classDoc.statics.filter(isProperty).filter(filterDuplicateMembers) as
+        CategorizedPropertyMemberDoc[]);
 
     // In case the extended document is not public, we don't want to print it in the
     // rendered class API doc. This causes confusion and also is not helpful as the

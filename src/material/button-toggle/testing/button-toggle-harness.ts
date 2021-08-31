@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
+
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 
 
@@ -28,11 +29,14 @@ export class MatButtonToggleHarness extends ComponentHarness {
    */
   static with(options: ButtonToggleHarnessFilters = {}): HarnessPredicate<MatButtonToggleHarness> {
     return new HarnessPredicate(MatButtonToggleHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
-        .addOption('name', options.name,
+        .addOption(
+            'name', options.name,
             (harness, name) => HarnessPredicate.stringMatches(harness.getName(), name))
-        .addOption('checked', options.checked,
+        .addOption(
+            'checked', options.checked,
             async (harness, checked) => (await harness.isChecked()) === checked);
   }
 
@@ -49,17 +53,17 @@ export class MatButtonToggleHarness extends ComponentHarness {
   }
 
   /** Gets a promise for the button toggle's name. */
-  async getName(): Promise<string | null> {
+  async getName(): Promise<string|null> {
     return (await this._button()).getAttribute('name');
   }
 
   /** Gets a promise for the button toggle's aria-label. */
-  async getAriaLabel(): Promise<string | null> {
+  async getAriaLabel(): Promise<string|null> {
     return (await this._button()).getAttribute('aria-label');
   }
 
   /** Gets a promise for the button toggles's aria-labelledby. */
-  async getAriaLabelledby(): Promise<string | null> {
+  async getAriaLabelledby(): Promise<string|null> {
     return (await this._button()).getAttribute('aria-labelledby');
   }
 

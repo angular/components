@@ -1,6 +1,6 @@
+import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 
 /**
  * @title Stepper with customized states
@@ -9,9 +9,7 @@ import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
   selector: 'stepper-states-example',
   templateUrl: 'stepper-states-example.html',
   styleUrls: ['stepper-states-example.css'],
-  providers: [{
-    provide: STEPPER_GLOBAL_OPTIONS, useValue: {displayDefaultIndicatorType: false}
-  }]
+  providers: [{provide: STEPPER_GLOBAL_OPTIONS, useValue: {displayDefaultIndicatorType: false}}]
 })
 export class StepperStatesExample implements OnInit {
   firstFormGroup: FormGroup;
@@ -20,11 +18,7 @@ export class StepperStatesExample implements OnInit {
   constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
+    this.firstFormGroup = this._formBuilder.group({firstCtrl: ['', Validators.required]});
+    this.secondFormGroup = this._formBuilder.group({secondCtrl: ['', Validators.required]});
   }
 }

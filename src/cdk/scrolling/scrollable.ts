@@ -13,18 +13,33 @@ import {
   supportsScrollBehavior
 } from '@angular/cdk/platform';
 import {Directive, ElementRef, NgZone, OnDestroy, OnInit, Optional} from '@angular/core';
-import {fromEvent, Observable, Subject, Observer} from 'rxjs';
+import {fromEvent, Observable, Observer, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+
 import {ScrollDispatcher} from './scroll-dispatcher';
 
-export type _Without<T> = {[P in keyof T]?: never};
-export type _XOR<T, U> = (_Without<T> & U) | (_Without<U> & T);
-export type _Top = {top?: number};
-export type _Bottom = {bottom?: number};
-export type _Left = {left?: number};
-export type _Right = {right?: number};
-export type _Start = {start?: number};
-export type _End = {end?: number};
+export type _Without<T> = {
+  [P in keyof T]?: never
+};
+export type _XOR<T, U> = (_Without<T>&U)|(_Without<U>&T);
+export type _Top = {
+  top?: number
+};
+export type _Bottom = {
+  bottom?: number
+};
+export type _Left = {
+  left?: number
+};
+export type _Right = {
+  right?: number
+};
+export type _Start = {
+  start?: number
+};
+export type _End = {
+  end?: number
+};
 export type _XAxis = _XOR<_XOR<_Left, _Right>, _XOR<_Start, _End>>;
 export type _YAxis = _XOR<_Top, _Bottom>;
 
@@ -34,28 +49,26 @@ export type _YAxis = _XOR<_Top, _Bottom>;
  * Please note: the top and bottom properties are mutually exclusive, as are the left, right,
  * start, and end properties.
  */
-export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
+export type ExtendedScrollToOptions = _XAxis&_YAxis&ScrollOptions;
 
 /**
  * Sends an event when the directive's element is scrolled. Registers itself with the
  * ScrollDispatcher service to include itself as part of its collection of scrolling events that it
  * can be listened to through the service.
  */
-@Directive({
-  selector: '[cdk-scrollable], [cdkScrollable]'
-})
+@Directive({selector: '[cdk-scrollable], [cdkScrollable]'})
 export class CdkScrollable implements OnInit, OnDestroy {
   private readonly _destroyed = new Subject<void>();
 
-  private _elementScrolled: Observable<Event> = new Observable((observer: Observer<Event>) =>
-      this.ngZone.runOutsideAngular(() =>
-          fromEvent(this.elementRef.nativeElement, 'scroll').pipe(takeUntil(this._destroyed))
-              .subscribe(observer)));
+  private _elementScrolled: Observable<Event> = new Observable(
+      (observer: Observer<Event>) => this.ngZone.runOutsideAngular(
+          () => fromEvent(this.elementRef.nativeElement, 'scroll')
+                    .pipe(takeUntil(this._destroyed))
+                    .subscribe(observer)));
 
-  constructor(protected elementRef: ElementRef<HTMLElement>,
-              protected scrollDispatcher: ScrollDispatcher,
-              protected ngZone: NgZone,
-              @Optional() protected dir?: Directionality) {}
+  constructor(
+      protected elementRef: ElementRef<HTMLElement>, protected scrollDispatcher: ScrollDispatcher,
+      protected ngZone: NgZone, @Optional() protected dir?: Directionality) {}
 
   ngOnInit() {
     this.scrollDispatcher.register(this);
@@ -100,15 +113,13 @@ export class CdkScrollable implements OnInit, OnDestroy {
 
     // Rewrite the bottom offset as a top offset.
     if (options.bottom != null) {
-      (options as _Without<_Bottom> & _Top).top =
-          el.scrollHeight - el.clientHeight - options.bottom;
+      (options as _Without<_Bottom>& _Top).top = el.scrollHeight - el.clientHeight - options.bottom;
     }
 
     // Rewrite the right offset as a left offset.
     if (isRtl && getRtlScrollAxisType() != RtlScrollAxisType.NORMAL) {
       if (options.left != null) {
-        (options as _Without<_Left> & _Right).right =
-            el.scrollWidth - el.clientWidth - options.left;
+        (options as _Without<_Left>& _Right).right = el.scrollWidth - el.clientWidth - options.left;
       }
 
       if (getRtlScrollAxisType() == RtlScrollAxisType.INVERTED) {
@@ -118,8 +129,7 @@ export class CdkScrollable implements OnInit, OnDestroy {
       }
     } else {
       if (options.right != null) {
-        (options as _Without<_Right> & _Left).left =
-            el.scrollWidth - el.clientWidth - options.right;
+        (options as _Without<_Right>& _Left).left = el.scrollWidth - el.clientWidth - options.right;
       }
     }
 
@@ -150,7 +160,7 @@ export class CdkScrollable implements OnInit, OnDestroy {
    * in an RTL context.
    * @param from The edge to measure from.
    */
-  measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {
+  measureScrollOffset(from: 'top'|'left'|'right'|'bottom'|'start'|'end'): number {
     const LEFT = 'left';
     const RIGHT = 'right';
     const el = this.elementRef.nativeElement;

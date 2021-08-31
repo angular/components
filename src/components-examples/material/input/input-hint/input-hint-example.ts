@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'input-hint-example.html',
   styleUrls: ['input-hint-example.css'],
 })
-export class InputHintExample {}
+export class InputHintExample {
+}

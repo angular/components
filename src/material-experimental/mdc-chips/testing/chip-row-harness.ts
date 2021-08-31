@@ -7,8 +7,9 @@
  */
 
 import {HarnessPredicate} from '@angular/cdk/testing';
-import {ChipRowHarnessFilters} from './chip-harness-filters';
+
 import {MatChipHarness} from './chip-harness';
+import {ChipRowHarnessFilters} from './chip-harness-filters';
 
 /** Harness for interacting with a mat-chip-row in tests. */
 export class MatChipRowHarness extends MatChipHarness {
@@ -21,7 +22,7 @@ export class MatChipRowHarness extends MatChipHarness {
   // methods. See https://github.com/microsoft/TypeScript/issues/5863
   static override with<T extends typeof MatChipHarness>(
       this: T, options: ChipRowHarnessFilters = {}): HarnessPredicate<InstanceType<T>> {
-    return new HarnessPredicate(MatChipRowHarness, options) as
-        unknown as HarnessPredicate<InstanceType<T>>;
+    return new HarnessPredicate(MatChipRowHarness, options) as unknown as
+        HarnessPredicate<InstanceType<T>>;
   }
 }

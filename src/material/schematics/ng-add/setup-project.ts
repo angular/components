@@ -80,13 +80,13 @@ function addAnimationsModule(options: Schema) {
         return;
       }
 
-      addModuleImportToRootModule(host, browserAnimationsModuleName,
-          '@angular/platform-browser/animations', project);
+      addModuleImportToRootModule(
+          host, browserAnimationsModuleName, '@angular/platform-browser/animations', project);
     } else if (!hasNgModuleImport(host, appModulePath, browserAnimationsModuleName)) {
       // Do not add the NoopAnimationsModule module if the project already explicitly uses
       // the BrowserAnimationsModule.
-      addModuleImportToRootModule(host, noopAnimationsModuleName,
-        '@angular/platform-browser/animations', project);
+      addModuleImportToRootModule(
+          host, noopAnimationsModuleName, '@angular/platform-browser/animations', project);
     }
   };
 }
@@ -112,16 +112,17 @@ function addMaterialAppStyles(options: Schema) {
     const buffer = host.read(styleFilePath);
 
     if (!buffer) {
-      logger.error(`Could not read the default style file within the project ` +
-        `(${styleFilePath})`);
+      logger.error(
+          `Could not read the default style file within the project ` +
+          `(${styleFilePath})`);
       logger.info(`Please consider manually setting up the Roboto font.`);
       return;
     }
 
     const htmlContent = buffer.toString();
     const insertion = '\n' +
-      `html, body { height: 100%; }\n` +
-      `body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }\n`;
+        `html, body { height: 100%; }\n` +
+        `body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }\n`;
 
     if (htmlContent.includes(insertion)) {
       return;

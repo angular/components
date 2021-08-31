@@ -19,10 +19,7 @@ import {
  */
 @Directive({
   selector: '[matTreeNodeOutlet]',
-  providers: [{
-    provide: CdkTreeNodeOutlet,
-    useExisting: MatTreeNodeOutlet
-  }]
+  providers: [{provide: CdkTreeNodeOutlet, useExisting: MatTreeNodeOutlet}]
 })
 export class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
   constructor(

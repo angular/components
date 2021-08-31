@@ -1,4 +1,3 @@
-import {dispatchFakeEvent} from '../../cdk/testing/private';
 import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
 import {
   ComponentFixture,
@@ -7,15 +6,14 @@ import {
   flushMicrotasks,
   TestBed,
 } from '@angular/core/testing';
-import {ThemePalette} from '@angular/material-experimental/mdc-core';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {ThemePalette} from '@angular/material-experimental/mdc-core';
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from '@angular/material/checkbox';
 import {By} from '@angular/platform-browser';
-import {
-  MatCheckbox,
-  MatCheckboxChange,
-  MatCheckboxModule
-} from './index';
-import {MatCheckboxDefaultOptions, MAT_CHECKBOX_DEFAULT_OPTIONS} from '@angular/material/checkbox';
+
+import {dispatchFakeEvent} from '../../cdk/testing/private';
+
+import {MatCheckbox, MatCheckboxChange, MatCheckboxModule} from './index';
 
 
 describe('MDC-based MatCheckbox', () => {
@@ -81,31 +79,32 @@ describe('MDC-based MatCheckbox', () => {
     });
 
     it('should toggle checkbox ripple disabledness correctly', fakeAsync(() => {
-      const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
+         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
 
-      testComponent.isDisabled = true;
-      fixture.detectChanges();
-      dispatchFakeEvent(checkboxElement, 'mousedown');
-      dispatchFakeEvent(checkboxElement, 'mouseup');
-      checkboxElement.click();
-      expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
+         testComponent.isDisabled = true;
+         fixture.detectChanges();
+         dispatchFakeEvent(checkboxElement, 'mousedown');
+         dispatchFakeEvent(checkboxElement, 'mouseup');
+         checkboxElement.click();
+         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
-      flush();
-      testComponent.isDisabled = false;
-      fixture.detectChanges();
-      dispatchFakeEvent(checkboxElement, 'mousedown');
-      dispatchFakeEvent(checkboxElement, 'mouseup');
-      checkboxElement.click();
-      expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
+         flush();
+         testComponent.isDisabled = false;
+         fixture.detectChanges();
+         dispatchFakeEvent(checkboxElement, 'mousedown');
+         dispatchFakeEvent(checkboxElement, 'mouseup');
+         checkboxElement.click();
+         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
 
-      flush();
-    }));
+         flush();
+       }));
 
     it('should add and remove indeterminate state', fakeAsync(() => {
          expect(inputElement.checked).toBe(false);
          expect(inputElement.indeterminate).toBe(false);
          expect(inputElement.getAttribute('aria-checked'))
-          .withContext('Expect aria-checked to be false').toBe('false');
+             .withContext('Expect aria-checked to be false')
+             .toBe('false');
 
          testComponent.isIndeterminate = true;
          fixture.detectChanges();
@@ -113,7 +112,8 @@ describe('MDC-based MatCheckbox', () => {
          expect(inputElement.checked).toBe(false);
          expect(inputElement.indeterminate).toBe(true);
          expect(inputElement.getAttribute('aria-checked'))
-          .withContext('Expect aria checked to be mixed for indeterminate checkbox').toBe('mixed');
+             .withContext('Expect aria checked to be mixed for indeterminate checkbox')
+             .toBe('mixed');
 
          testComponent.isIndeterminate = false;
          fixture.detectChanges();
@@ -153,7 +153,8 @@ describe('MDC-based MatCheckbox', () => {
          expect(inputElement.checked).toBe(true);
          expect(testComponent.isIndeterminate).toBe(true);
          expect(inputElement.getAttribute('aria-checked'))
-          .withContext('Expect aria checked to be true').toBe('true');
+             .withContext('Expect aria checked to be true')
+             .toBe('true');
 
          inputElement.click();
          fixture.detectChanges();
@@ -361,17 +362,17 @@ describe('MDC-based MatCheckbox', () => {
        }));
 
     it('should keep the view in sync if the `checked` value changes inside the `change` listener',
-      fakeAsync(() => {
-        spyOn(testComponent, 'onCheckboxChange').and.callFake(() => {
-          checkboxInstance.checked = false;
-        });
+       fakeAsync(() => {
+         spyOn(testComponent, 'onCheckboxChange').and.callFake(() => {
+           checkboxInstance.checked = false;
+         });
 
-        labelElement.click();
-        fixture.detectChanges();
-        flush();
+         labelElement.click();
+         fixture.detectChanges();
+         flush();
 
-        expect(inputElement.checked).toBe(false);
-      }));
+         expect(inputElement.checked).toBe(false);
+       }));
 
     it('should forward the required attribute', fakeAsync(() => {
          testComponent.isRequired = true;
@@ -499,11 +500,10 @@ describe('MDC-based MatCheckbox', () => {
          }));
 
       it('should default to accent if no color is passed in', fakeAsync(() => {
-        testComponent.checkboxColor = undefined;
-        fixture.detectChanges();
-        expect(checkboxNativeElement.classList).toContain('mat-accent');
-      }));
-
+           testComponent.checkboxColor = undefined;
+           fixture.detectChanges();
+           expect(checkboxNativeElement.classList).toContain('mat-accent');
+         }));
     });
 
     describe(`when MAT_CHECKBOX_CLICK_ACTION is 'check'`, () => {
@@ -512,9 +512,7 @@ describe('MDC-based MatCheckbox', () => {
         TestBed.configureTestingModule({
           imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
           declarations: [SingleCheckbox],
-          providers: [
-            {provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}
-          ]
+          providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}]
         });
 
         fixture = createComponent(SingleCheckbox);
@@ -546,9 +544,7 @@ describe('MDC-based MatCheckbox', () => {
         TestBed.configureTestingModule({
           imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
           declarations: [SingleCheckbox],
-          providers: [
-            {provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}
-          ]
+          providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}]
         });
 
         fixture = createComponent(SingleCheckbox);
@@ -590,7 +586,8 @@ describe('MDC-based MatCheckbox', () => {
 
            expect(inputElement.checked).toBe(false);
            expect(inputElement.indeterminate)
-            .withContext('indeterminate should not change').toBe(true);
+               .withContext('indeterminate should not change')
+               .toBe(true);
          }));
     });
 
@@ -774,12 +771,13 @@ describe('MDC-based MatCheckbox', () => {
          fixture.detectChanges();
 
          const checkbox =
-             fixture.debugElement.query(By.directive(MatCheckbox))!
-             .componentInstance as MatCheckbox;
+             fixture.debugElement.query(By.directive(MatCheckbox))!.componentInstance as
+             MatCheckbox;
 
          expect(checkbox.tabIndex)
-          .withContext('Expected tabIndex property to have been set based on the native attribute')
-          .toBe(5);
+             .withContext(
+                 'Expected tabIndex property to have been set based on the native attribute')
+             .toBe(5);
        }));
 
     it('should clear the tabindex attribute from the host element', fakeAsync(() => {
@@ -931,15 +929,15 @@ describe('MDC-based MatCheckbox', () => {
        }));
 
     it('should update the ngModel value when using the `toggle` method', fakeAsync(() => {
-      const checkbox = fixture.debugElement.query(By.directive(MatCheckbox)).componentInstance;
+         const checkbox = fixture.debugElement.query(By.directive(MatCheckbox)).componentInstance;
 
-      expect(fixture.componentInstance.isGood).toBe(false);
+         expect(fixture.componentInstance.isGood).toBe(false);
 
-      checkbox.toggle();
-      fixture.detectChanges();
+         checkbox.toggle();
+         fixture.detectChanges();
 
-      expect(fixture.componentInstance.isGood).toBe(true);
-    }));
+         expect(fixture.componentInstance.isGood).toBe(true);
+       }));
   });
 
   describe('with name attribute', () => {
@@ -1142,10 +1140,9 @@ class CheckboxWithAriaLabelledby {
 }
 
 /** Simple test component with an aria-describedby set. */
-@Component({
-  template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`
-})
-class CheckboxWithAriaDescribedby {}
+@Component({template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`})
+class CheckboxWithAriaDescribedby {
+}
 
 /** Simple test component with name attribute */
 @Component({template: `<mat-checkbox name="test-name"></mat-checkbox>`})

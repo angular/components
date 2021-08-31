@@ -21,16 +21,16 @@ exports.getNpmPackagesFromRunfiles = function() {
   if (!runfilesManifestPath) {
     const packageRunfilesDir = join(process.env.RUNFILES, workspacePath);
     return readdirSync(packageRunfilesDir)
-      .map(name => ({name, pkgPath: join(packageRunfilesDir, name, 'npm_package/')}))
-      .filter(({pkgPath}) => existsSync(pkgPath));
+        .map(name => ({name, pkgPath: join(packageRunfilesDir, name, 'npm_package/')}))
+        .filter(({pkgPath}) => existsSync(pkgPath));
   }
   const workspaceManifestPathRegex = new RegExp(`^${workspacePath}/[\\w-]+/npm_package$`);
   return readFileSync(runfilesManifestPath, 'utf8')
-    .split('\n')
-    .map(mapping => mapping.split(' '))
-    .filter(([runfilePath]) => runfilePath.match(workspaceManifestPathRegex))
-    .map(([runfilePath, realPath]) => ({
-      name: relative(workspacePath, runfilePath).split(sep)[0],
-      pkgPath: realPath,
-    }));
+      .split('\n')
+      .map(mapping => mapping.split(' '))
+      .filter(([runfilePath]) => runfilePath.match(workspaceManifestPathRegex))
+      .map(([runfilePath, realPath]) => ({
+             name: relative(workspacePath, runfilePath).split(sep)[0],
+             pkgPath: realPath,
+           }));
 }

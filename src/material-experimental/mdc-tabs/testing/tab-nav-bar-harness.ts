@@ -7,7 +7,8 @@
  */
 
 import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {TabNavBarHarnessFilters, TabLinkHarnessFilters} from './tab-harness-filters';
+
+import {TabLinkHarnessFilters, TabNavBarHarnessFilters} from './tab-harness-filters';
 import {MatTabLinkHarness} from './tab-link-harness';
 
 /** Harness for interacting with an MDC-based mat-tab-nav-bar in tests. */

@@ -6,10 +6,9 @@ describe('event objects', () => {
   beforeEach(() => testElement = document.createElement('div'));
 
   describe('synthetic mouse event', () => {
-
     it('should be possible to call `preventDefault` multiple times', () => {
-      const preventDefaultSpy = jasmine.createSpy('preventDefault').and
-        .callFake((event: Event) => event.preventDefault());
+      const preventDefaultSpy = jasmine.createSpy('preventDefault')
+                                    .and.callFake((event: Event) => event.preventDefault());
 
       // Register event listeners twice, where both prevent prevent the default behavior.
       testElement.addEventListener('click', (event: Event) => preventDefaultSpy(event));
@@ -24,10 +23,9 @@ describe('event objects', () => {
   });
 
   describe('synthetic keyboard event', () => {
-
     it('should be possible to call `preventDefault` multiple times', () => {
-      const preventDefaultSpy = jasmine.createSpy('preventDefault').and
-        .callFake((event: Event) => event.preventDefault());
+      const preventDefaultSpy = jasmine.createSpy('preventDefault')
+                                    .and.callFake((event: Event) => event.preventDefault());
 
       // Register event listeners twice, where both prevent prevent the default behavior.
       testElement.addEventListener('keydown', (event: Event) => preventDefaultSpy(event));

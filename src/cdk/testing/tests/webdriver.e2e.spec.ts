@@ -32,9 +32,8 @@ const port = process.env['TEST_SERVER_PORT'];
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
 // browser-side script passed to `By.js`.
-declare const kagekiri: {
-  querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>
-};
+declare const kagekiri:
+    {querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>};
 
 describe('WebDriverHarnessEnvironment', () => {
   let wd: webdriver.WebDriver;
@@ -55,9 +54,9 @@ describe('WebDriverHarnessEnvironment', () => {
 
   beforeAll(async () => {
     wd = await new webdriver.Builder()
-      .usingServer(process.env.WEB_TEST_WEBDRIVER_SERVER!)
-      .withCapabilities(webTestMetadata.capabilities)
-      .build();
+             .usingServer(process.env.WEB_TEST_WEBDRIVER_SERVER!)
+             .withCapabilities(webTestMetadata.capabilities)
+             .build();
   });
 
   afterAll(async () => {
@@ -85,8 +84,8 @@ describe('WebDriverHarnessEnvironment', () => {
       let harness: MainComponentHarness;
 
       beforeEach(async () => {
-        harness = await SeleniumWebDriverHarnessEnvironment.loader(wd)
-            .getHarness(MainComponentHarness);
+        harness =
+            await SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness);
       });
 
       it('can get elements outside of host', async () => {
@@ -110,8 +109,8 @@ describe('WebDriverHarnessEnvironment', () => {
 
     describe('shadow DOM interaction', () => {
       it('should not pierce shadow boundary by default', async () => {
-        const harness = await SeleniumWebDriverHarnessEnvironment.loader(wd)
-            .getHarness(MainComponentHarness);
+        const harness =
+            await SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness);
         expect(await harness.shadows()).toEqual([]);
       });
 
@@ -134,9 +133,11 @@ describe('WebDriverHarnessEnvironment', () => {
     });
   });
 
-  describe('environment independent', () => crossEnvironmentSpecs(
-      () => SeleniumWebDriverHarnessEnvironment.loader(wd),
-      () => SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness),
-      async () => (await activeElement()).getAttribute('id'),
-  ));
+  describe(
+      'environment independent',
+      () => crossEnvironmentSpecs(
+          () => SeleniumWebDriverHarnessEnvironment.loader(wd),
+          () => SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness),
+          async () => (await activeElement()).getAttribute('id'),
+          ));
 });

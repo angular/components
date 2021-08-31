@@ -7,10 +7,10 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mat-form-field */
 
@@ -48,9 +48,15 @@ export class FormFieldBenchmarkApp {
   isSelectVisible = false;
   isTextareaVisible = false;
 
-  showInput() { this.isInputVisible = true; }
-  showSelect() { this.isSelectVisible = true; }
-  showTextarea() { this.isTextareaVisible = true; }
+  showInput() {
+    this.isInputVisible = true;
+  }
+  showSelect() {
+    this.isSelectVisible = true;
+  }
+  showTextarea() {
+    this.isTextareaVisible = true;
+  }
 
   hide() {
     this.isInputVisible = false;
@@ -69,4 +75,5 @@ export class FormFieldBenchmarkApp {
   ],
   bootstrap: [FormFieldBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

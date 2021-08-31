@@ -35,21 +35,12 @@ export class TableGeneratedColumnsExample {
       header: 'No.',
       cell: (element: PeriodicElement) => `${element.position}`
     },
-    {
-      columnDef: 'name',
-      header: 'Name',
-      cell: (element: PeriodicElement) => `${element.name}`
-    },
-    {
+    {columnDef: 'name', header: 'Name', cell: (element: PeriodicElement) => `${element.name}`}, {
       columnDef: 'weight',
       header: 'Weight',
       cell: (element: PeriodicElement) => `${element.weight}`
     },
-    {
-      columnDef: 'symbol',
-      header: 'Symbol',
-      cell: (element: PeriodicElement) => `${element.symbol}`
-    }
+    {columnDef: 'symbol', header: 'Symbol', cell: (element: PeriodicElement) => `${element.symbol}`}
   ];
   dataSource = ELEMENT_DATA;
   displayedColumns = this.columns.map(c => c.columnDef);

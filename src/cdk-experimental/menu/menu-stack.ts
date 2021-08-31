@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Subject, Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 /** Events to emit as specified by the caller once the MenuStack is empty. */
 export const enum FocusNext {
@@ -20,7 +20,7 @@ export const enum FocusNext {
  */
 export interface MenuStackItem {
   /** A reference to the previous Menus MenuStack instance. */
-  _menuStack: MenuStack | null;
+  _menuStack: MenuStack|null;
 }
 
 /**
@@ -34,20 +34,20 @@ export class MenuStack {
   private readonly _elements: MenuStackItem[] = [];
 
   /** Emits the element which was popped off of the stack when requested by a closer. */
-  private readonly _close: Subject<MenuStackItem | undefined> = new Subject();
+  private readonly _close: Subject<MenuStackItem|undefined> = new Subject();
 
   /** Emits once the MenuStack has become empty after popping off elements. */
-  private readonly _empty: Subject<FocusNext | undefined> = new Subject();
+  private readonly _empty: Subject<FocusNext|undefined> = new Subject();
 
   /** Observable which emits the MenuStackItem which has been requested to close. */
-  readonly closed: Observable<MenuStackItem | undefined> = this._close;
+  readonly closed: Observable<MenuStackItem|undefined> = this._close;
 
   /**
    * Observable which emits when the MenuStack is empty after popping off the last element. It
    * emits a FocusNext event which specifies the action the closer has requested the listener
    * perform.
    */
-  readonly emptied: Observable<FocusNext | undefined> = this._empty;
+  readonly emptied: Observable<FocusNext|undefined> = this._empty;
 
   /** @param menu the MenuStackItem to put on the stack. */
   push(menu: MenuStackItem) {
@@ -64,7 +64,7 @@ export class MenuStack {
    */
   close(lastItem: MenuStackItem, focusNext?: FocusNext) {
     if (this._elements.indexOf(lastItem) >= 0) {
-      let poppedElement: MenuStackItem | undefined;
+      let poppedElement: MenuStackItem|undefined;
       do {
         poppedElement = this._elements.pop();
         this._close.next(poppedElement);
@@ -122,7 +122,7 @@ export class MenuStack {
   }
 
   /** Get the top most element on the stack. */
-  peek(): MenuStackItem | undefined {
+  peek(): MenuStackItem|undefined {
     return this._elements[this._elements.length - 1];
   }
 }

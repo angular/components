@@ -1,7 +1,8 @@
-import {Component, DebugElement, QueryList} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
+import {Component, DebugElement, QueryList} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
 import {MatChip, MatChipSet, MatChipsModule} from './index';
 
 
@@ -52,20 +53,20 @@ describe('MDC-based MatChipSet', () => {
       });
 
       it('should disable a chip that is added after the set became disabled', fakeAsync(() => {
-        expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
+           expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
-        chipSetInstance.disabled = true;
-        fixture.detectChanges();
+           chipSetInstance.disabled = true;
+           fixture.detectChanges();
 
-        expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
+           expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
-        fixture.componentInstance.chips.push(5, 6);
-        fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+           fixture.componentInstance.chips.push(5, 6);
+           fixture.detectChanges();
+           tick();
+           fixture.detectChanges();
 
-        expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
-      }));
+           expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
+         }));
 
       it('should have role presentation by default', () => {
         expect(chipSetNativeElement.getAttribute('role')).toBe('presentation');
@@ -99,7 +100,6 @@ describe('MDC-based MatChipSet', () => {
 
     expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
   });
-
 });
 
 @Component({

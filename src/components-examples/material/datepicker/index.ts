@@ -7,6 +7,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+
 import {
   DateRangePickerComparisonExample
 } from './date-range-picker-comparison/date-range-picker-comparison-example';
@@ -20,7 +21,6 @@ import {
   DateRangePickerSelectionStrategyExample
 } from './date-range-picker-selection-strategy/date-range-picker-selection-strategy-example';
 import {DatepickerActionsExample} from './datepicker-actions/datepicker-actions-example';
-
 import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
 import {DatepickerColorExample} from './datepicker-color/datepicker-color-example';
 import {
@@ -49,6 +49,7 @@ import {
 } from './datepicker-views-selection/datepicker-views-selection-example';
 
 export {
+  DatepickerActionsExample,
   DatepickerApiExample,
   DatepickerColorExample,
   DatepickerCustomHeaderExample,
@@ -68,11 +69,10 @@ export {
   DatepickerTouchExample,
   DatepickerValueExample,
   DatepickerViewsSelectionExample,
-  DateRangePickerOverviewExample,
-  DateRangePickerFormsExample,
   DateRangePickerComparisonExample,
+  DateRangePickerFormsExample,
+  DateRangePickerOverviewExample,
   DateRangePickerSelectionStrategyExample,
-  DatepickerActionsExample,
   ExampleHeader,
 };
 

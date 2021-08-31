@@ -41,7 +41,8 @@ globSync('*/*/**/public-api.ts', {cwd: packagesDir}).forEach(filePath => {
 });
 
 if (nonConfigured.length) {
-  console.error(chalk.red('Found entry-points which are not configured. Add the following ' +
+  console.error(chalk.red(
+      'Found entry-points which are not configured. Add the following ' +
       'entry-points to the package-specific "config.bzl" file:\n'));
   nonConfigured.forEach(e => console.warn(chalk.yellow(`  - ${e}`)));
   process.exit(1);

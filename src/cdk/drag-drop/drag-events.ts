@@ -80,7 +80,7 @@ export interface CdkDragMove<T = any> {
   /** Position of the user's pointer on the page. */
   pointerPosition: {x: number, y: number};
   /** Native event that is causing the dragging. */
-  event: MouseEvent | TouchEvent;
+  event: MouseEvent|TouchEvent;
   /** Distance in pixels that the user has dragged since the drag sequence started. */
   distance: {x: number, y: number};
   /**
@@ -89,7 +89,7 @@ export interface CdkDragMove<T = any> {
    * whereas `-1` means that it's decreasing (they're moving to the left or upwards). `0` means
    * that the position hasn't changed.
    */
-  delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+  delta: {x: -1|0|1, y: -1|0|1};
 }
 
 /** Event emitted when the user swaps the position of two drag items. */

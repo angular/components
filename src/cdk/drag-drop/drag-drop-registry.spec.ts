@@ -1,24 +1,28 @@
 import {Component} from '@angular/core';
-import {fakeAsync, TestBed, ComponentFixture, inject} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, inject, TestBed} from '@angular/core/testing';
+
 import {
   createMouseEvent,
-  dispatchMouseEvent,
   createTouchEvent,
-  dispatchTouchEvent,
   dispatchFakeEvent,
+  dispatchMouseEvent,
+  dispatchTouchEvent,
 } from '../testing/private';
-import {DragDropRegistry} from './drag-drop-registry';
+
 import {DragDropModule} from './drag-drop-module';
+import {DragDropRegistry} from './drag-drop-registry';
 
 describe('DragDropRegistry', () => {
   let fixture: ComponentFixture<BlankComponent>;
   let registry: DragDropRegistry<DragItem, DragList>;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [DragDropModule],
-      declarations: [BlankComponent],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [DragDropModule],
+          declarations: [BlankComponent],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(BlankComponent);
     fixture.detectChanges();
@@ -190,14 +194,15 @@ describe('DragDropRegistry', () => {
   });
 
   it('should prevent the default `touchmove` if the item does not consider itself as being ' +
-    'dragged yet', () => {
-      const item = new DragItem(false);
-      registry.startDragging(item, createTouchEvent('touchstart') as TouchEvent);
-      expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented).toBe(false);
+         'dragged yet',
+     () => {
+       const item = new DragItem(false);
+       registry.startDragging(item, createTouchEvent('touchstart') as TouchEvent);
+       expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented).toBe(false);
 
-      item.shouldBeDragging = true;
-      expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented).toBe(true);
-    });
+       item.shouldBeDragging = true;
+       expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented).toBe(true);
+     });
 
   it('should prevent the default `touchmove` if event propagation is stopped', () => {
     const item = new DragItem(true);
@@ -241,7 +246,9 @@ describe('DragDropRegistry', () => {
   });
 
   class DragItem {
-    isDragging() { return this.shouldBeDragging; }
+    isDragging() {
+      return this.shouldBeDragging;
+    }
     constructor(public shouldBeDragging = false) {
       registry.registerDragItem(this);
     }
@@ -254,5 +261,6 @@ describe('DragDropRegistry', () => {
   }
 
   @Component({template: ``})
-  class BlankComponent {}
+  class BlankComponent {
+  }
 });

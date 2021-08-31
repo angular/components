@@ -16,10 +16,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [slideToggleModule, ReactiveFormsModule],
-      declarations: [SlideToggleHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [slideToggleModule, ReactiveFormsModule],
+          declarations: [SlideToggleHarnessTest],
+        })
+        .compileComponents();
 
     platform = TestBed.inject(Platform);
     fixture = TestBed.createComponent(SlideToggleHarnessTest);
@@ -45,8 +47,8 @@ export function runHarnessTests(
   });
 
   it('should load slide-toggle with name', async () => {
-    const slideToggles = await loader.getAllHarnesses(
-        slideToggleHarness.with({name: 'first-name'}));
+    const slideToggles =
+        await loader.getAllHarnesses(slideToggleHarness.with({name: 'first-name'}));
     expect(slideToggles.length).toBe(1);
     expect(await slideToggles[0].getLabelText()).toBe('First');
   });
@@ -72,12 +74,15 @@ export function runHarnessTests(
   it('should get valid state', async () => {
     const [requiredToggle, optionalToggle] = await loader.getAllHarnesses(slideToggleHarness);
     expect(await optionalToggle.isValid())
-      .withContext('Expected optional toggle to be valid').toBe(true);
+        .withContext('Expected optional toggle to be valid')
+        .toBe(true);
     expect(await requiredToggle.isValid())
-      .withContext('Expected required checked toggle to be valid').toBe(true);
+        .withContext('Expected required checked toggle to be valid')
+        .toBe(true);
     await requiredToggle.uncheck();
     expect(await requiredToggle.isValid())
-      .withContext('Expected required unchecked toggle to be invalid').toBe(false);
+        .withContext('Expected required unchecked toggle to be invalid')
+        .toBe(false);
   });
 
   it('should get name', async () => {
@@ -177,4 +182,3 @@ class SlideToggleHarnessTest {
   ctrl = new FormControl(true);
   disabled = true;
 }
-

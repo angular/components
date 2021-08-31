@@ -1,8 +1,10 @@
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
+
 import {dispatchFakeEvent} from '../../cdk/testing/private';
+
 import {
   MAT_RADIO_DEFAULT_OPTIONS,
   MatRadioButton,
@@ -57,12 +59,12 @@ describe('MDC-based MatRadio', () => {
       radioNativeElements = radioDebugElements.map(debugEl => debugEl.nativeElement);
       radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
 
-      radioLabelElements = radioDebugElements
-          .map(debugEl => debugEl.query(By.css('label'))!.nativeElement);
-      radioInputElements = radioDebugElements
-          .map(debugEl => debugEl.query(By.css('input'))!.nativeElement);
-      radioFormFieldElements = radioDebugElements
-          .map(debugEl => debugEl.query(By.css('.mdc-form-field'))!.nativeElement);
+      radioLabelElements =
+          radioDebugElements.map(debugEl => debugEl.query(By.css('label'))!.nativeElement);
+      radioInputElements =
+          radioDebugElements.map(debugEl => debugEl.query(By.css('input'))!.nativeElement);
+      radioFormFieldElements = radioDebugElements.map(
+          debugEl => debugEl.query(By.css('.mdc-form-field'))!.nativeElement);
     }));
 
     it('should set individual radio names based on the group name', () => {
@@ -169,8 +171,8 @@ describe('MDC-based MatRadio', () => {
     it('should emit a change event from radio buttons', () => {
       expect(radioInstances[0].checked).toBe(false);
 
-      const spies = radioInstances
-          .map((radio, index) => jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`));
+      const spies = radioInstances.map(
+          (radio, index) => jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`));
 
       spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
 
@@ -189,22 +191,23 @@ describe('MDC-based MatRadio', () => {
     });
 
     it(`should not emit a change event from the radio group when change group value
-        programmatically`, () => {
-      expect(groupInstance.value).toBeFalsy();
+        programmatically`,
+       () => {
+         expect(groupInstance.value).toBeFalsy();
 
-      const changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
+         const changeSpy = jasmine.createSpy('radio-group change listener');
+         groupInstance.change.subscribe(changeSpy);
 
-      radioLabelElements[0].click();
-      fixture.detectChanges();
+         radioLabelElements[0].click();
+         fixture.detectChanges();
 
-      expect(changeSpy).toHaveBeenCalledTimes(1);
+         expect(changeSpy).toHaveBeenCalledTimes(1);
 
-      groupInstance.value = 'water';
-      fixture.detectChanges();
+         groupInstance.value = 'water';
+         fixture.detectChanges();
 
-      expect(changeSpy).toHaveBeenCalledTimes(1);
-    });
+         expect(changeSpy).toHaveBeenCalledTimes(1);
+       });
 
     it('should update the group and radios when updating the group value', () => {
       expect(groupInstance.value).toBeFalsy();
@@ -243,11 +246,14 @@ describe('MDC-based MatRadio', () => {
       dispatchFakeEvent(radioFormFieldElements[0], 'mousedown');
       dispatchFakeEvent(radioFormFieldElements[0], 'mouseup');
 
-      let rippleAmount = radioNativeElements[0]
-          .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)').length;
+      let rippleAmount =
+          radioNativeElements[0]
+              .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)')
+              .length;
 
       expect(rippleAmount)
-        .withContext('Expected a disabled radio button to not show ripples').toBe(0);
+          .withContext('Expected a disabled radio button to not show ripples')
+          .toBe(0);
 
       testComponent.isFirstDisabled = false;
       fixture.detectChanges();
@@ -256,10 +262,10 @@ describe('MDC-based MatRadio', () => {
       dispatchFakeEvent(radioFormFieldElements[0], 'mouseup');
 
       rippleAmount = radioNativeElements[0]
-          .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)').length;
+                         .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)')
+                         .length;
 
-      expect(rippleAmount)
-        .withContext('Expected an enabled radio button to show ripples').toBe(1);
+      expect(rippleAmount).withContext('Expected an enabled radio button to show ripples').toBe(1);
     });
 
     it('should not show ripples if matRippleDisabled input is set', () => {
@@ -270,8 +276,10 @@ describe('MDC-based MatRadio', () => {
         dispatchFakeEvent(radioFormField, 'mousedown');
         dispatchFakeEvent(radioFormField, 'mouseup');
 
-        const rippleAmount = radioNativeElements[0]
-            .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)').length;
+        const rippleAmount =
+            radioNativeElements[0]
+                .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)')
+                .length;
 
         expect(rippleAmount).toBe(0);
       }
@@ -283,33 +291,36 @@ describe('MDC-based MatRadio', () => {
         dispatchFakeEvent(radioFormField, 'mousedown');
         dispatchFakeEvent(radioFormField, 'mouseup');
 
-        const rippleAmount = radioNativeElements[0]
-            .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)').length;
+        const rippleAmount =
+            radioNativeElements[0]
+                .querySelectorAll('.mat-ripple-element:not(.mat-radio-persistent-ripple)')
+                .length;
 
         expect(rippleAmount).toBe(1);
       }
     });
 
     it(`should update the group's selected radio to null when unchecking that radio
-        programmatically`, () => {
-      const changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
-      radioInstances[0].checked = true;
+        programmatically`,
+       () => {
+         const changeSpy = jasmine.createSpy('radio-group change listener');
+         groupInstance.change.subscribe(changeSpy);
+         radioInstances[0].checked = true;
 
-      fixture.detectChanges();
+         fixture.detectChanges();
 
-      expect(changeSpy).not.toHaveBeenCalled();
-      expect(groupInstance.value).toBeTruthy();
+         expect(changeSpy).not.toHaveBeenCalled();
+         expect(groupInstance.value).toBeTruthy();
 
-      radioInstances[0].checked = false;
+         radioInstances[0].checked = false;
 
-      fixture.detectChanges();
+         fixture.detectChanges();
 
-      expect(changeSpy).not.toHaveBeenCalled();
-      expect(groupInstance.value).toBeFalsy();
-      expect(radioInstances.every(radio => !radio.checked)).toBe(true);
-      expect(groupInstance.selected).toBeNull();
-    });
+         expect(changeSpy).not.toHaveBeenCalled();
+         expect(groupInstance.value).toBeFalsy();
+         expect(radioInstances.every(radio => !radio.checked)).toBe(true);
+         expect(groupInstance.selected).toBeNull();
+       });
 
     it('should not fire a change event from the group when a radio checked state changes', () => {
       const changeSpy = jasmine.createSpy('radio-group change listener');
@@ -337,53 +348,61 @@ describe('MDC-based MatRadio', () => {
 
       expect(changeSpy).not.toHaveBeenCalled();
       expect(groupInstance.value).toBe('apple');
-      expect(groupInstance.selected)
-        .withContext('expect group selected to be null').toBeFalsy();
+      expect(groupInstance.selected).withContext('expect group selected to be null').toBeFalsy();
       expect(radioInstances[0].checked)
-        .withContext('should not select the first button').toBeFalsy();
+          .withContext('should not select the first button')
+          .toBeFalsy();
       expect(radioInstances[1].checked)
-        .withContext('should not select the second button').toBeFalsy();
+          .withContext('should not select the second button')
+          .toBeFalsy();
       expect(radioInstances[2].checked)
-        .withContext('should not select the third button').toBeFalsy();
+          .withContext('should not select the third button')
+          .toBeFalsy();
 
       radioInstances[0].value = 'apple';
 
       fixture.detectChanges();
 
       expect(groupInstance.selected)
-        .withContext('expect group selected to be first button').toBe(radioInstances[0]);
+          .withContext('expect group selected to be first button')
+          .toBe(radioInstances[0]);
       expect(radioInstances[0].checked)
-        .withContext('expect group select the first button').toBeTruthy();
+          .withContext('expect group select the first button')
+          .toBeTruthy();
       expect(radioInstances[1].checked)
-        .withContext('should not select the second button').toBeFalsy();
+          .withContext('should not select the second button')
+          .toBeFalsy();
       expect(radioInstances[2].checked)
-        .withContext('should not select the third button').toBeFalsy();
+          .withContext('should not select the third button')
+          .toBeFalsy();
     });
 
     it('should apply class based on color attribute', () => {
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-accent')))
-        .withContext('Expected every radio element to use the accent color by default.').toBe(true);
+          .withContext('Expected every radio element to use the accent color by default.')
+          .toBe(true);
 
       testComponent.color = 'primary';
       fixture.detectChanges();
 
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-primary')))
-        .withContext('Expected every radio element to use the primary color from the binding.')
-        .toBe(true);
+          .withContext('Expected every radio element to use the primary color from the binding.')
+          .toBe(true);
 
       testComponent.color = 'warn';
       fixture.detectChanges();
 
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-warn')))
-        .withContext('Expected every radio element to use the primary color from the binding.')
-        .toBe(true);
+          .withContext('Expected every radio element to use the primary color from the binding.')
+          .toBe(true);
 
       testComponent.color = null;
       fixture.detectChanges();
 
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-accent')))
-        .withContext('Expected every radio element to fallback to accent color if value is falsy.')
-        .toBe(true);
+          .withContext(
+              'Expected every radio element to fallback to accent color if value is falsy.')
+          .toBe(true);
     });
 
     it('should be able to inherit the color from the radio group', () => {
@@ -391,7 +410,8 @@ describe('MDC-based MatRadio', () => {
       fixture.detectChanges();
 
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-warn')))
-        .withContext('Expected every radio element to have the warn color.').toBe(true);
+          .withContext('Expected every radio element to have the warn color.')
+          .toBe(true);
     });
 
     it('should have the individual button color take precedence over the group color', () => {
@@ -408,10 +428,10 @@ describe('MDC-based MatRadio', () => {
       const radioRippleNativeElements =
           radioNativeElements.map(element => element.querySelector('.mat-radio-ripple')!);
 
-      expect(radioRippleNativeElements
-          .every(element => element.classList.contains('mat-mdc-focus-indicator'))).toBe(true);
+      expect(radioRippleNativeElements.every(
+                 element => element.classList.contains('mat-mdc-focus-indicator')))
+          .toBe(true);
     });
-
   });
 
   describe('group with ngModel', () => {
@@ -439,8 +459,8 @@ describe('MDC-based MatRadio', () => {
       radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
       innerRadios = fixture.debugElement.queryAll(By.css('input[type="radio"]'));
 
-      radioLabelElements = radioDebugElements
-          .map(debugEl => debugEl.query(By.css('label'))!.nativeElement);
+      radioLabelElements =
+          radioDebugElements.map(debugEl => debugEl.query(By.css('label'))!.nativeElement);
     });
 
     it('should set individual radio names based on the group name', () => {
@@ -460,14 +480,16 @@ describe('MDC-based MatRadio', () => {
       const nodes: HTMLInputElement[] = innerRadios.map(radio => radio.nativeElement);
 
       expect(nodes.every(radio => radio.getAttribute('name') === groupInstance.name))
-        .withContext('Expected all radios to have the initial name.').toBe(true);
+          .withContext('Expected all radios to have the initial name.')
+          .toBe(true);
 
       fixture.componentInstance.groupName = 'changed-name';
       fixture.detectChanges();
 
       expect(groupInstance.name).toBe('changed-name');
       expect(nodes.every(radio => radio.getAttribute('name') === groupInstance.name))
-        .withContext('Expected all radios to have the new name.').toBe(true);
+          .withContext('Expected all radios to have the new name.')
+          .toBe(true);
     });
 
     it('should check the corresponding radio button on group value change', () => {
@@ -516,15 +538,15 @@ describe('MDC-based MatRadio', () => {
     });
 
     it('should write to the radio button based on ngModel', fakeAsync(() => {
-      testComponent.modelValue = 'chocolate';
+         testComponent.modelValue = 'chocolate';
 
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-      expect(innerRadios[1].nativeElement.checked).toBe(true);
-      expect(radioInstances[1].checked).toBe(true);
-    }));
+         expect(innerRadios[1].nativeElement.checked).toBe(true);
+         expect(radioInstances[1].checked).toBe(true);
+       }));
 
     it('should update the ngModel value when selecting a radio button', () => {
       dispatchFakeEvent(innerRadios[1].nativeElement, 'change');
@@ -622,22 +644,22 @@ describe('MDC-based MatRadio', () => {
       testComponent = fixture.debugElement.componentInstance;
 
       radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
-      seasonRadioInstances = radioDebugElements
-          .filter(debugEl => debugEl.componentInstance.name == 'season')
-          .map(debugEl => debugEl.componentInstance);
-      weatherRadioInstances = radioDebugElements
-          .filter(debugEl => debugEl.componentInstance.name == 'weather')
-          .map(debugEl => debugEl.componentInstance);
-      fruitRadioInstances = radioDebugElements
-          .filter(debugEl => debugEl.componentInstance.name == 'fruit')
-          .map(debugEl => debugEl.componentInstance);
-      fruitRadioNativeElements = radioDebugElements
-          .filter(debugEl => debugEl.componentInstance.name == 'fruit')
-          .map(debugEl => debugEl.nativeElement);
+      seasonRadioInstances =
+          radioDebugElements.filter(debugEl => debugEl.componentInstance.name == 'season')
+              .map(debugEl => debugEl.componentInstance);
+      weatherRadioInstances =
+          radioDebugElements.filter(debugEl => debugEl.componentInstance.name == 'weather')
+              .map(debugEl => debugEl.componentInstance);
+      fruitRadioInstances =
+          radioDebugElements.filter(debugEl => debugEl.componentInstance.name == 'fruit')
+              .map(debugEl => debugEl.componentInstance);
+      fruitRadioNativeElements =
+          radioDebugElements.filter(debugEl => debugEl.componentInstance.name == 'fruit')
+              .map(debugEl => debugEl.nativeElement);
 
       fruitRadioNativeInputs = [];
       for (const element of fruitRadioNativeElements) {
-        fruitRadioNativeInputs.push(<HTMLElement> element.querySelector('input'));
+        fruitRadioNativeInputs.push(<HTMLElement>element.querySelector('input'));
       }
     });
 
@@ -761,7 +783,6 @@ describe('MDC-based MatRadio', () => {
     it('should default the radio color to `accent`', () => {
       expect(seasonRadioInstances.every(radio => radio.color === 'accent')).toBe(true);
     });
-
   });
 
   describe('with tabindex', () => {
@@ -786,17 +807,20 @@ describe('MDC-based MatRadio', () => {
     });
 
     it('should allow specifying an explicit tabindex for a single radio-button', () => {
-      const radioButtonInput = fixture.debugElement
-          .query(By.css('.mat-mdc-radio-button input'))!.nativeElement as HTMLInputElement;
+      const radioButtonInput =
+          fixture.debugElement.query(By.css('.mat-mdc-radio-button input'))!.nativeElement as
+          HTMLInputElement;
 
       expect(radioButtonInput.tabIndex)
-        .withContext('Expected the tabindex to be set to "0" by default.').toBe(0);
+          .withContext('Expected the tabindex to be set to "0" by default.')
+          .toBe(0);
 
       fixture.componentInstance.tabIndex = 4;
       fixture.detectChanges();
 
       expect(radioButtonInput.tabIndex)
-        .withContext('Expected the tabindex to be set to "4".').toBe(4);
+          .withContext('Expected the tabindex to be set to "4".')
+          .toBe(4);
     });
 
     it('should remove the tabindex from the host element', () => {
@@ -813,8 +837,9 @@ describe('MDC-based MatRadio', () => {
       const predefinedFixture = TestBed.createComponent(RadioButtonWithPredefinedTabindex);
       predefinedFixture.detectChanges();
 
-      const radioButtonInput = predefinedFixture.debugElement
-        .query(By.css('.mat-mdc-radio-button input'))!.nativeElement as HTMLInputElement;
+      const radioButtonInput =
+          predefinedFixture.debugElement.query(By.css(
+              '.mat-mdc-radio-button input'))!.nativeElement as HTMLInputElement;
 
       expect(radioButtonInput.getAttribute('tabindex')).toBe('5');
     });
@@ -839,7 +864,6 @@ describe('MDC-based MatRadio', () => {
 
       expect(radioButton.hasAttribute('tabindex')).toBe(false);
     });
-
   });
 
   describe('group interspersed with other tags', () => {
@@ -885,9 +909,7 @@ describe('MatRadioDefaultOverrides', () => {
       fixture.detectChanges();
       const radioDebugElement: DebugElement =
           fixture.debugElement.query(By.directive(MatRadioButton))!;
-      expect(
-          radioDebugElement.nativeElement.classList
-      ).toContain('mat-primary');
+      expect(radioDebugElement.nativeElement.classList).toContain('mat-primary');
     });
     it('should not override explicit input bindings', () => {
       const fixture: ComponentFixture<RadioButtonWithColorBinding> =
@@ -895,9 +917,7 @@ describe('MatRadioDefaultOverrides', () => {
       fixture.detectChanges();
       const radioDebugElement: DebugElement =
           fixture.debugElement.query(By.directive(MatRadioButton))!;
-      expect(
-          radioDebugElement.nativeElement.classList
-      ).not.toContain('mat-primary');
+      expect(radioDebugElement.nativeElement.classList).not.toContain('mat-primary');
       expect(radioDebugElement.nativeElement.classList).toContain('mat-warn');
     });
   });
@@ -924,13 +944,13 @@ describe('MatRadioDefaultOverrides', () => {
   `
 })
 class RadiosInsideRadioGroup {
-  labelPos: 'before' | 'after';
+  labelPos: 'before'|'after';
   isFirstDisabled: boolean = false;
   isGroupDisabled: boolean = false;
   isGroupRequired: boolean = false;
-  groupValue: string | null = null;
+  groupValue: string|null = null;
   disableRipple: boolean = false;
-  color: string | null;
+  color: string|null;
 }
 
 
@@ -983,9 +1003,7 @@ class RadioGroupWithNgModel {
   lastEvent: MatRadioChange;
 }
 
-@Component({
-  template: `<mat-radio-button>One</mat-radio-button>`
-})
+@Component({template: `<mat-radio-button>One</mat-radio-button>`})
 class DisableableRadioButton {
   @ViewChild(MatRadioButton) matRadioButton: MatRadioButton;
 
@@ -1007,9 +1025,8 @@ class RadioGroupWithFormControl {
   formControl = new FormControl();
 }
 
-@Component({
-  template: `<mat-radio-button [disabled]="disabled" [tabIndex]="tabIndex"></mat-radio-button>`
-})
+@Component(
+    {template: `<mat-radio-button [disabled]="disabled" [tabIndex]="tabIndex"></mat-radio-button>`})
 class FocusableRadioButton {
   tabIndex: number;
   disabled = false;
@@ -1039,23 +1056,21 @@ class InterleavedRadioGroup {
     <div><ng-content></ng-content></div>
   `
 })
-class TranscludingWrapper {}
+class TranscludingWrapper {
+}
 
 
-@Component({
-  template: `<mat-radio-button tabindex="5"></mat-radio-button>`
-})
-class RadioButtonWithPredefinedTabindex {}
+@Component({template: `<mat-radio-button tabindex="5"></mat-radio-button>`})
+class RadioButtonWithPredefinedTabindex {
+}
 
-@Component({
-  template: `<mat-radio-button></mat-radio-button>`
-})
-class DefaultRadioButton {}
+@Component({template: `<mat-radio-button></mat-radio-button>`})
+class DefaultRadioButton {
+}
 
-@Component({
-  template: `<mat-radio-button color="warn"></mat-radio-button>`
-})
-class RadioButtonWithColorBinding {}
+@Component({template: `<mat-radio-button color="warn"></mat-radio-button>`})
+class RadioButtonWithColorBinding {
+}
 
 
 @Component({
@@ -1065,4 +1080,5 @@ class RadioButtonWithColorBinding {}
       aria-describedby="something"
       aria-labelledby="something-else"></mat-radio-button>`
 })
-class RadioButtonWithPredefinedAriaAttributes {}
+class RadioButtonWithPredefinedAriaAttributes {
+}

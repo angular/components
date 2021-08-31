@@ -19,20 +19,20 @@ import {
   OnChanges,
   OnDestroy,
   SimpleChanges,
-  ViewEncapsulation,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
-import {MatDatepickerIntl} from './datepicker-intl';
+
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 
 /** Can be used to override the icon of a `matDatepickerToggle`. */
-@Directive({
-  selector: '[matDatepickerToggleIcon]'
-})
-export class MatDatepickerToggleIcon {}
+@Directive({selector: '[matDatepickerToggleIcon]'})
+export class MatDatepickerToggleIcon {
+}
 
 
 @Component({
@@ -63,7 +63,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   @Input('for') datepicker: MatDatepickerPanel<MatDatepickerControl<any>, D>;
 
   /** Tabindex for the toggle. */
-  @Input() tabIndex: number | null;
+  @Input() tabIndex: number|null;
 
   /** Screenreader label for the button. */
   @Input('aria-label') ariaLabel: string;
@@ -92,10 +92,8 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   @ViewChild('button') _button: MatButton;
 
   constructor(
-    public _intl: MatDatepickerIntl,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Attribute('tabindex') defaultTabIndex: string) {
-
+      public _intl: MatDatepickerIntl, private _changeDetectorRef: ChangeDetectorRef,
+      @Attribute('tabindex') defaultTabIndex: string) {
     const parsedTabIndex = Number(defaultTabIndex);
     this.tabIndex = (parsedTabIndex || parsedTabIndex === 0) ? parsedTabIndex : null;
   }
@@ -124,18 +122,17 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   private _watchStateChanges() {
     const datepickerStateChanged = this.datepicker ? this.datepicker.stateChanges : observableOf();
     const inputStateChanged = this.datepicker && this.datepicker.datepickerInput ?
-        this.datepicker.datepickerInput.stateChanges : observableOf();
+        this.datepicker.datepickerInput.stateChanges :
+        observableOf();
     const datepickerToggled = this.datepicker ?
         merge(this.datepicker.openedStream, this.datepicker.closedStream) :
         observableOf();
 
     this._stateChanges.unsubscribe();
     this._stateChanges = merge(
-      this._intl.changes,
-      datepickerStateChanged as Observable<void>,
-      inputStateChanged,
-      datepickerToggled
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
+                             this._intl.changes, datepickerStateChanged as Observable<void>,
+                             inputStateChanged, datepickerToggled)
+                             .subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

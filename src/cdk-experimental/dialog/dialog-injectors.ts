@@ -6,15 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken} from '@angular/core';
 import {
   ComponentType,
   Overlay,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {DialogRef} from './dialog-ref';
-import {CdkDialogContainer} from './dialog-container';
+import {InjectionToken} from '@angular/core';
+
 import {DialogConfig} from './dialog-config';
+import {CdkDialogContainer} from './dialog-container';
+import {DialogRef} from './dialog-ref';
 
 /** Injection token for the Dialog's ScrollStrategy. */
 export const DIALOG_SCROLL_STRATEGY =
@@ -34,8 +35,8 @@ export const DIALOG_CONTAINER =
     new InjectionToken<ComponentType<CdkDialogContainer>>('DialogContainer');
 
 /** @docs-private */
-export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => ScrollStrategy {
+export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () =>
+    ScrollStrategy {
   return () => overlay.scrollStrategies.block();
 }
 

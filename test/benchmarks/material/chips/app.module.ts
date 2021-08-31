@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatChipsModule} from '@angular/material/chips';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mat-chip */
 
@@ -39,11 +39,19 @@ export class ChipsBenchmarkApp {
   isSingleVisible = false;
   isMultipleVisible = false;
 
-  showSingle() { this.isSingleVisible = true; }
-  hideSingle() { this.isSingleVisible = false; }
+  showSingle() {
+    this.isSingleVisible = true;
+  }
+  hideSingle() {
+    this.isSingleVisible = false;
+  }
 
-  showMultiple() { this.isMultipleVisible = true; }
-  hideMultiple() { this.isMultipleVisible = false; }
+  showMultiple() {
+    this.isMultipleVisible = true;
+  }
+  hideMultiple() {
+    this.isMultipleVisible = false;
+  }
 }
 
 @NgModule({
@@ -54,4 +62,5 @@ export class ChipsBenchmarkApp {
   ],
   bootstrap: [ChipsBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

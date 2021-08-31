@@ -1,30 +1,29 @@
-import {Component, NgModule, ErrorHandler} from '@angular/core';
+import {Component, ErrorHandler, NgModule} from '@angular/core';
 import {MatAutocompleteModule} from '@angular/material-experimental/mdc-autocomplete';
 import {MatButtonModule} from '@angular/material-experimental/mdc-button';
 import {MatCardModule} from '@angular/material-experimental/mdc-card';
 import {MatCheckboxModule} from '@angular/material-experimental/mdc-checkbox';
+import {MatChipsModule} from '@angular/material-experimental/mdc-chips';
+import {MatDialog, MatDialogModule} from '@angular/material-experimental/mdc-dialog';
 import {MatFormFieldModule} from '@angular/material-experimental/mdc-form-field';
 import {MatInputModule} from '@angular/material-experimental/mdc-input';
 import {MatListModule} from '@angular/material-experimental/mdc-list';
-import {MatProgressBarModule} from '@angular/material-experimental/mdc-progress-bar';
-import {MatChipsModule} from '@angular/material-experimental/mdc-chips';
 import {MatMenuModule} from '@angular/material-experimental/mdc-menu';
+import {MatPaginatorModule} from '@angular/material-experimental/mdc-paginator';
+import {MatProgressBarModule} from '@angular/material-experimental/mdc-progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material-experimental/mdc-progress-spinner';
 import {MatRadioModule} from '@angular/material-experimental/mdc-radio';
+import {MatSelectModule} from '@angular/material-experimental/mdc-select';
 import {MatSlideToggleModule} from '@angular/material-experimental/mdc-slide-toggle';
 import {MatSliderModule} from '@angular/material-experimental/mdc-slider';
-import {MatTabsModule} from '@angular/material-experimental/mdc-tabs';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material-experimental/mdc-snack-bar';
 import {MatTableModule} from '@angular/material-experimental/mdc-table';
-import {MatDialog, MatDialogModule} from '@angular/material-experimental/mdc-dialog';
+import {MatTabsModule} from '@angular/material-experimental/mdc-tabs';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSnackBarModule, MatSnackBar} from '@angular/material-experimental/mdc-snack-bar';
-import {MatProgressSpinnerModule} from '@angular/material-experimental/mdc-progress-spinner';
-import {MatSelectModule} from '@angular/material-experimental/mdc-select';
-import {MatPaginatorModule} from '@angular/material-experimental/mdc-paginator';
 
-@Component({
-  template: `<button>Do the thing</button>`
-})
-export class TestEntryComponent {}
+@Component({template: `<button>Do the thing</button>`})
+export class TestEntryComponent {
+}
 
 @Component({
   selector: 'kitchen-sink-mdc',

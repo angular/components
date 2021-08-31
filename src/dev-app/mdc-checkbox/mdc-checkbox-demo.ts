@@ -7,9 +7,9 @@
  */
 
 import {Component, Directive} from '@angular/core';
+import {ThemePalette} from '@angular/material-experimental/mdc-core';
 import {MAT_CHECKBOX_DEFAULT_OPTIONS} from '@angular/material/checkbox';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {ThemePalette} from '@angular/material-experimental/mdc-core';
 
 
 export interface Task {
@@ -77,7 +77,7 @@ export class MatCheckboxDemoNestedChecklist {
     return task.completed || (subtasks != null && subtasks.every(t => t.completed));
   }
 
-  someComplete(tasks: Task[] | undefined | null): boolean {
+  someComplete(tasks: Task[]|undefined|null): boolean {
     if (tasks == null) {
       return false;
     }
@@ -85,7 +85,7 @@ export class MatCheckboxDemoNestedChecklist {
     return numComplete > 0 && numComplete < tasks.length;
   }
 
-  setAllCompleted(tasks: Task[] | undefined | null, completed: boolean): void {
+  setAllCompleted(tasks: Task[]|undefined|null, completed: boolean): void {
     if (tasks == null) {
       return;
     }
@@ -102,7 +102,7 @@ export class MdcCheckboxDemo {
   isIndeterminate: boolean = false;
   isChecked: boolean = false;
   isDisabled: boolean = false;
-  labelPosition: 'before' | 'after' = 'after';
+  labelPosition: 'before'|'after' = 'after';
   useAlternativeColor: boolean = false;
 
   demoRequired = false;

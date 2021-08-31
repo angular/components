@@ -8,15 +8,15 @@
 
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef, CdkTable} from '@angular/cdk/table';
 import {
+  ChangeDetectionStrategy,
   Component,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
   ViewChild,
-  ChangeDetectionStrategy,
   ViewEncapsulation,
-  Inject,
 } from '@angular/core';
 
 import {CdkSelection} from './selection';

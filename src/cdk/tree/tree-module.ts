@@ -7,12 +7,13 @@
  */
 
 import {NgModule} from '@angular/core';
+
+import {CdkNestedTreeNode} from './nested-node';
+import {CdkTreeNodeDef} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNodePadding} from './padding';
 import {CdkTreeNodeToggle} from './toggle';
 import {CdkTree, CdkTreeNode} from './tree';
-import {CdkTreeNodeDef} from './node';
-import {CdkNestedTreeNode} from './nested-node';
 
 const EXPORTED_DECLARATIONS = [
   CdkNestedTreeNode,
@@ -28,4 +29,5 @@ const EXPORTED_DECLARATIONS = [
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
 })
-export class CdkTreeModule {}
+export class CdkTreeModule {
+}

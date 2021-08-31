@@ -6,15 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {
-  ArrayDataSource,
-  CollectionViewer,
-  DataSource,
-  ListRange,
-  isDataSource,
   _RecycleViewRepeaterStrategy,
   _VIEW_REPEATER_STRATEGY,
   _ViewRepeaterItemInsertArgs,
+  ArrayDataSource,
+  CollectionViewer,
+  DataSource,
+  isDataSource,
+  ListRange,
 } from '@angular/cdk/collections';
 import {
   Directive,
@@ -34,9 +35,9 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {Observable, Subject, of as observableOf, isObservable} from 'rxjs';
+import {isObservable, Observable, of as observableOf, Subject} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
+
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
@@ -46,7 +47,7 @@ export type CdkVirtualForOfContext<T> = {
   /** The item value. */
   $implicit: T;
   /** The DataSource, Observable, or NgIterable that was passed to *cdkVirtualFor. */
-  cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;
+  cdkVirtualForOf: DataSource<T>| Observable<T[]>| NgIterable<T>;
   /** The index of the item in the DataSource. */
   index: number;
   /** The number of items in the DataSource. */
@@ -63,7 +64,7 @@ export type CdkVirtualForOfContext<T> = {
 
 
 /** Helper to extract the offset of a DOM Node in a certain direction. */
-function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 'end', node: Node) {
+function getOffset(orientation: 'horizontal'|'vertical', direction: 'start'|'end', node: Node) {
   const el = node as Element;
   if (!el.getBoundingClientRect) {
     return 0;
@@ -87,8 +88,8 @@ function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy},
   ]
 })
-export class CdkVirtualForOf<T> implements
-    CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy {
+export class CdkVirtualForOf<T> implements CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck,
+                                           OnDestroy {
   /** Emits when the rendered view of the data changes. */
   readonly viewChange = new Subject<ListRange>();
 
@@ -97,37 +98,37 @@ export class CdkVirtualForOf<T> implements
 
   /** The DataSource to display. */
   @Input()
-  get cdkVirtualForOf(): DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined {
+  get cdkVirtualForOf(): DataSource<T>|Observable<T[]>|NgIterable<T>|null|undefined {
     return this._cdkVirtualForOf;
   }
-  set cdkVirtualForOf(value: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined) {
+  set cdkVirtualForOf(value: DataSource<T>|Observable<T[]>|NgIterable<T>|null|undefined) {
     this._cdkVirtualForOf = value;
     if (isDataSource(value)) {
       this._dataSourceChanges.next(value);
     } else {
       // If value is an an NgIterable, convert it to an array.
-      this._dataSourceChanges.next(new ArrayDataSource<T>(
-          isObservable(value) ? value : Array.from(value || [])));
+      this._dataSourceChanges.next(
+          new ArrayDataSource<T>(isObservable(value) ? value : Array.from(value || [])));
     }
   }
 
-  _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined;
+  _cdkVirtualForOf: DataSource<T>|Observable<T[]>|NgIterable<T>|null|undefined;
 
   /**
    * The `TrackByFunction` to use for tracking changes. The `TrackByFunction` takes the index and
    * the item and produces a value to be used as the item's identity when tracking changes.
    */
   @Input()
-  get cdkVirtualForTrackBy(): TrackByFunction<T> | undefined {
+  get cdkVirtualForTrackBy(): TrackByFunction<T>|undefined {
     return this._cdkVirtualForTrackBy;
   }
-  set cdkVirtualForTrackBy(fn: TrackByFunction<T> | undefined) {
+  set cdkVirtualForTrackBy(fn: TrackByFunction<T>|undefined) {
     this._needsUpdate = true;
     this._cdkVirtualForTrackBy = fn ?
         (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item) :
         undefined;
   }
-  private _cdkVirtualForTrackBy: TrackByFunction<T> | undefined;
+  private _cdkVirtualForTrackBy: TrackByFunction<T>|undefined;
 
   /** The template used to stamp out new elements. */
   @Input()
@@ -151,8 +152,7 @@ export class CdkVirtualForOf<T> implements
   }
 
   /** Emits whenever the data in the current DataSource changes. */
-  readonly dataStream: Observable<readonly T[]> = this._dataSourceChanges
-  .pipe(
+  readonly dataStream: Observable<readonly T[]> = this._dataSourceChanges.pipe(
       // Start off with null `DataSource`.
       startWith(null),
       // Bundle up the previous and current data sources so we can work with both.
@@ -165,7 +165,7 @@ export class CdkVirtualForOf<T> implements
       shareReplay(1));
 
   /** The differ used to calculate changes to the data. */
-  private _differ: IterableDiffer<T> | null = null;
+  private _differ: IterableDiffer<T>|null = null;
 
   /** The most recent data emitted from the DataSource. */
   private _data: readonly T[];
@@ -189,11 +189,10 @@ export class CdkVirtualForOf<T> implements
       /** The set of available differs. */
       private _differs: IterableDiffers,
       /** The strategy used to render items in the virtual scroll viewport. */
-      @Inject(_VIEW_REPEATER_STRATEGY)
-      private _viewRepeater: _RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>,
+      @Inject(_VIEW_REPEATER_STRATEGY) private _viewRepeater:
+          _RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>,
       /** The virtual scrolling viewport that these items are being rendered in. */
-      @SkipSelf() private _viewport: CdkVirtualScrollViewport,
-      ngZone: NgZone) {
+      @SkipSelf() private _viewport: CdkVirtualScrollViewport, ngZone: NgZone) {
     this.dataStream.subscribe(data => {
       this._data = data;
       this._onRenderedDataChange();
@@ -211,12 +210,12 @@ export class CdkVirtualForOf<T> implements
    * in the specified range. Throws an error if the range includes items that are not currently
    * rendered.
    */
-  measureRangeSize(range: ListRange, orientation: 'horizontal' | 'vertical'): number {
+  measureRangeSize(range: ListRange, orientation: 'horizontal'|'vertical'): number {
     if (range.start >= range.end) {
       return 0;
     }
     if ((range.start < this._renderedRange.start || range.end > this._renderedRange.end) &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Error: attempted to measure an item that isn't rendered.`);
     }
 
@@ -227,13 +226,14 @@ export class CdkVirtualForOf<T> implements
 
     // Loop over all the views, find the first and land node and compute the size by subtracting
     // the top of the first node from the bottom of the last one.
-    let firstNode: HTMLElement | undefined;
-    let lastNode: HTMLElement | undefined;
+    let firstNode: HTMLElement|undefined;
+    let lastNode: HTMLElement|undefined;
 
     // Find the first node by starting from the beginning and going forwards.
     for (let i = 0; i < rangeLen; i++) {
       const view = this._viewContainerRef.get(i + renderedStartIndex) as
-          EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
+              EmbeddedViewRef<CdkVirtualForOfContext<T>>|
+          null;
       if (view && view.rootNodes.length) {
         firstNode = lastNode = view.rootNodes[0];
         break;
@@ -243,7 +243,8 @@ export class CdkVirtualForOf<T> implements
     // Find the last node by starting from the end and going backwards.
     for (let i = rangeLen - 1; i > -1; i--) {
       const view = this._viewContainerRef.get(i + renderedStartIndex) as
-          EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
+              EmbeddedViewRef<CdkVirtualForOfContext<T>>|
+          null;
       if (view && view.rootNodes.length) {
         lastNode = view.rootNodes[view.rootNodes.length - 1];
         break;
@@ -251,7 +252,8 @@ export class CdkVirtualForOf<T> implements
     }
 
     return firstNode && lastNode ?
-        getOffset(orientation, 'end', lastNode) - getOffset(orientation, 'start', firstNode) : 0;
+        getOffset(orientation, 'end', lastNode) - getOffset(orientation, 'start', firstNode) :
+        0;
   }
 
   ngDoCheck() {
@@ -298,9 +300,8 @@ export class CdkVirtualForOf<T> implements
   }
 
   /** Swap out one `DataSource` for another. */
-  private _changeDataSource(oldDs: DataSource<T> | null, newDs: DataSource<T> | null):
+  private _changeDataSource(oldDs: DataSource<T>|null, newDs: DataSource<T>|null):
       Observable<readonly T[]> {
-
     if (oldDs) {
       oldDs.disconnect(this);
     }
@@ -325,11 +326,9 @@ export class CdkVirtualForOf<T> implements
   /** Apply changes to the DOM. */
   private _applyChanges(changes: IterableChanges<T>) {
     this._viewRepeater.applyChanges(
-        changes,
-        this._viewContainerRef,
-        (record: IterableChangeRecord<T>,
-         _adjustedPreviousIndex: number | null,
-         currentIndex: number | null) => this._getEmbeddedViewArgs(record, currentIndex!),
+        changes, this._viewContainerRef,
+        (record: IterableChangeRecord<T>, _adjustedPreviousIndex: number|null,
+         currentIndex: number|null) => this._getEmbeddedViewArgs(record, currentIndex!),
         (record) => record.item);
 
     // Update $implicit for any items that had an identity change.

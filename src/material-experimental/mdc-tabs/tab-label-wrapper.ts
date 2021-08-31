@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {MatTabLabelWrapper as BaseMatTabLabelWrapper} from '@angular/material/tabs';
-import {MatInkBarFoundation, MatInkBarItem} from './ink-bar';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {DOCUMENT} from '@angular/common';
+import {Directive, ElementRef, Inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {MatTabLabelWrapper as BaseMatTabLabelWrapper} from '@angular/material/tabs';
+
+import {MatInkBarFoundation, MatInkBarItem} from './ink-bar';
 
 /**
  * Used in the `mat-tab-group` view to display tab labels.
@@ -24,16 +25,20 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
     '[attr.aria-disabled]': '!!disabled',
   }
 })
-export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
-    implements MatInkBarItem, OnInit, OnDestroy {
+export class MatTabLabelWrapper extends BaseMatTabLabelWrapper implements MatInkBarItem, OnInit,
+                                                                          OnDestroy {
   private _document: Document;
 
   _foundation: MatInkBarFoundation;
 
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
-  get fitInkBarToContent(): boolean { return this._foundation.getFitToContent(); }
-  set fitInkBarToContent(v: boolean) { this._foundation.setFitToContent(coerceBooleanProperty(v)); }
+  get fitInkBarToContent(): boolean {
+    return this._foundation.getFitToContent();
+  }
+  set fitInkBarToContent(v: boolean) {
+    this._foundation.setFitToContent(coerceBooleanProperty(v));
+  }
 
   constructor(elementRef: ElementRef, @Inject(DOCUMENT) _document: any) {
     super(elementRef);

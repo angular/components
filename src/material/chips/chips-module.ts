@@ -28,13 +28,11 @@ const CHIP_DECLARATIONS = [
   exports: CHIP_DECLARATIONS,
   declarations: CHIP_DECLARATIONS,
   providers: [
-    ErrorStateMatcher,
-    {
+    ErrorStateMatcher, {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
-      useValue: {
-        separatorKeyCodes: [ENTER]
-      } as MatChipsDefaultOptions
+      useValue: {separatorKeyCodes: [ENTER]} as MatChipsDefaultOptions
     }
   ]
 })
-export class MatChipsModule {}
+export class MatChipsModule {
+}

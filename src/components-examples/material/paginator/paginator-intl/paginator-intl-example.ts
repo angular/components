@@ -33,13 +33,13 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
   selector: 'paginator-intl-example',
   templateUrl: 'paginator-intl-example.html',
 })
-export class PaginatorIntlExample {}
+export class PaginatorIntlExample {
+}
 
 @NgModule({
   imports: [MatPaginatorModule],
   declarations: [PaginatorIntlExample],
-  providers: [
-    {provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl}
-  ]
+  providers: [{provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl}]
 })
-export class PaginatorIntlExampleModule {}
+export class PaginatorIntlExampleModule {
+}

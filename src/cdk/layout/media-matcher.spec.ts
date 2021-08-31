@@ -5,9 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {MediaMatcher} from './media-matcher';
-import {inject} from '@angular/core/testing';
 import {Platform} from '@angular/cdk/platform';
+import {inject} from '@angular/core/testing';
+
+import {MediaMatcher} from './media-matcher';
 
 describe('MediaMatcher', () => {
   let mediaMatcher: MediaMatcher;
@@ -22,23 +23,23 @@ describe('MediaMatcher', () => {
   });
 
   it('should add CSS rules for provided queries when the platform is webkit',
-    inject([Platform], (platform: Platform) => {
-      const randomWidth = `${Math.random()}px`;
+     inject([Platform], (platform: Platform) => {
+       const randomWidth = `${Math.random()}px`;
 
-      expect(getStyleTagByString(randomWidth)).toBeFalsy();
-      mediaMatcher.matchMedia(`(width: ${randomWidth})`);
+       expect(getStyleTagByString(randomWidth)).toBeFalsy();
+       mediaMatcher.matchMedia(`(width: ${randomWidth})`);
 
-      if (platform.WEBKIT) {
-        expect(getStyleTagByString(randomWidth)).toBeTruthy();
-      } else {
-        expect(getStyleTagByString(randomWidth)).toBeFalsy();
-      }
+       if (platform.WEBKIT) {
+         expect(getStyleTagByString(randomWidth)).toBeTruthy();
+       } else {
+         expect(getStyleTagByString(randomWidth)).toBeFalsy();
+       }
 
-      function getStyleTagByString(str: string): HTMLStyleElement | undefined {
-        return Array.from(document.head!.querySelectorAll('style')).find(tag => {
-          const rules = tag.sheet ? Array.from((tag.sheet as CSSStyleSheet).cssRules) : [];
-          return !!rules.find(rule => rule.cssText.includes(str));
-        });
-      }
-  }));
+       function getStyleTagByString(str: string): HTMLStyleElement|undefined {
+         return Array.from(document.head!.querySelectorAll('style')).find(tag => {
+           const rules = tag.sheet ? Array.from((tag.sheet as CSSStyleSheet).cssRules) : [];
+           return !!rules.find(rule => rule.cssText.includes(str));
+         });
+       }
+     }));
 });

@@ -33,7 +33,8 @@ const _MatToolbarBase = mixinColor(class {
   exportAs: 'matToolbarRow',
   host: {'class': 'mat-toolbar-row'},
 })
-export class MatToolbarRow {}
+export class MatToolbarRow {
+}
 
 @Component({
   selector: 'mat-toolbar',
@@ -56,9 +57,7 @@ export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewIn
   @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows: QueryList<MatToolbarRow>;
 
   constructor(
-    elementRef: ElementRef,
-    private _platform: Platform,
-    @Inject(DOCUMENT) document?: any) {
+      elementRef: ElementRef, private _platform: Platform, @Inject(DOCUMENT) document?: any) {
     super(elementRef);
 
     // TODO: make the document a required param when doing breaking changes.
@@ -79,10 +78,11 @@ export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewIn
     if (this._toolbarRows.length && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       // Check if there are any other DOM nodes that can display content but aren't inside of
       // a <mat-toolbar-row> element.
-      const isCombinedUsage = Array.from<HTMLElement>(this._elementRef.nativeElement.childNodes)
-        .filter(node => !(node.classList && node.classList.contains('mat-toolbar-row')))
-        .filter(node => node.nodeType !== (this._document ? this._document.COMMENT_NODE : 8))
-        .some(node => !!(node.textContent && node.textContent.trim()));
+      const isCombinedUsage =
+          Array.from<HTMLElement>(this._elementRef.nativeElement.childNodes)
+              .filter(node => !(node.classList && node.classList.contains('mat-toolbar-row')))
+              .filter(node => node.nodeType !== (this._document ? this._document.COMMENT_NODE : 8))
+              .some(node => !!(node.textContent && node.textContent.trim()));
 
       if (isCombinedUsage) {
         throwToolbarMixedModesError();
@@ -96,7 +96,8 @@ export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewIn
  * @docs-private
  */
 export function throwToolbarMixedModesError() {
-  throw Error('MatToolbar: Attempting to combine different toolbar modes. ' +
-    'Either specify multiple `<mat-toolbar-row>` elements explicitly or just place content ' +
-    'inside of a `<mat-toolbar>` for a single row.');
+  throw Error(
+      'MatToolbar: Attempting to combine different toolbar modes. ' +
+      'Either specify multiple `<mat-toolbar-row>` elements explicitly or just place content ' +
+      'inside of a `<mat-toolbar>` for a single row.');
 }

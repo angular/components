@@ -1,11 +1,5 @@
-import {
-  browser,
-  by,
-  element,
-  ElementArrayFinder,
-  Key,
-  ExpectedConditions
-} from 'protractor';
+import {browser, by, element, ElementArrayFinder, ExpectedConditions, Key} from 'protractor';
+
 import {pressKeys} from '../../cdk/testing/private/e2e';
 
 describe('MDC-based tabs', () => {
@@ -25,14 +19,14 @@ describe('MDC-based tabs', () => {
       expect(await getBodyActiveStates(tabBodies)).toEqual([false, true, false]);
 
       await browser.wait(ExpectedConditions.not(
-        ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
+          ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
 
       await tabLabels.get(0).click();
       expect(await getLabelActiveStates(tabLabels)).toEqual([true, false, false]);
       expect(await getBodyActiveStates(tabBodies)).toEqual([true, false, false]);
 
       await browser.wait(ExpectedConditions.not(
-        ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
+          ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
     });
 
     it('should change focus with keyboard interaction', async () => {

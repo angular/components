@@ -1,4 +1,5 @@
 import {Routes} from '@angular/router';
+
 import {BlockScrollStrategyE2E} from '../block-scroll-strategy/block-scroll-strategy-e2e';
 import {ButtonToggleE2e} from '../button-toggle/button-toggle-e2e';
 import {ButtonE2E} from '../button/button-e2e';
@@ -18,13 +19,13 @@ import {MdcChipsE2e} from '../mdc-chips/mdc-chips-e2e';
 import {MdcDialogE2E} from '../mdc-dialog/mdc-dialog-e2e';
 import {MdcInputE2E} from '../mdc-input/mdc-input-e2e';
 import {MdcMenuE2e} from '../mdc-menu/mdc-menu-e2e';
+import {MdcProgressBarE2E} from '../mdc-progress-bar/mdc-progress-bar-e2e';
+import {MdcProgressSpinnerE2e} from '../mdc-progress-spinner/mdc-progress-spinner-e2e';
 import {MdcRadioE2e} from '../mdc-radio/mdc-radio-e2e';
 import {MdcSlideToggleE2e} from '../mdc-slide-toggle/mdc-slide-toggle-e2e';
 import {MdcSliderE2e} from '../mdc-slider/mdc-slider-e2e';
 import {MdcTableE2e} from '../mdc-table/mdc-table-e2e';
 import {MdcTabsE2e} from '../mdc-tabs/mdc-tabs-e2e';
-import {MdcProgressBarE2E} from '../mdc-progress-bar/mdc-progress-bar-e2e';
-import {MdcProgressSpinnerE2e} from '../mdc-progress-spinner/mdc-progress-spinner-e2e';
 import {MenuE2E} from '../menu/menu-e2e';
 import {ProgressBarE2E} from '../progress-bar/progress-bar-e2e';
 import {ProgressSpinnerE2E} from '../progress-spinner/progress-spinner-e2e';
@@ -35,6 +36,7 @@ import {StepperE2e} from '../stepper/stepper-e2e';
 import {BasicTabs} from '../tabs/tabs-e2e';
 import {ToolbarE2e} from '../toolbar/toolbar-e2e';
 import {VirtualScrollE2E} from '../virtual-scroll/virtual-scroll-e2e';
+
 import {Home} from './e2e-app-layout';
 
 export const E2E_APP_ROUTES: Routes = [

@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
-
 import {GoogleMapsModule} from '../google-maps-module';
 import {MapMarker} from '../map-marker/map-marker';
 import {
@@ -12,6 +11,7 @@ import {
   createMapConstructorSpy,
   createMapSpy
 } from '../testing/fake-google-map-utils';
+
 import {MapInfoWindow} from './map-info-window';
 
 describe('MapInfoWindow', () => {
@@ -110,10 +110,8 @@ describe('MapInfoWindow', () => {
 
   it('exposes methods that change the configuration of the info window', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
-    const fakeMarkerComponent = {
-      marker: fakeMarker,
-      getAnchor: () => fakeMarker
-    } as unknown as MapMarker;
+    const fakeMarkerComponent = {marker: fakeMarker, getAnchor: () => fakeMarker} as unknown as
+        MapMarker;
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
@@ -131,10 +129,8 @@ describe('MapInfoWindow', () => {
 
   it('should not try to reopen info window multiple times for the same marker', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
-    const fakeMarkerComponent = {
-      marker: fakeMarker,
-      getAnchor: () => fakeMarker
-    } as unknown as MapMarker;
+    const fakeMarkerComponent = {marker: fakeMarker, getAnchor: () => fakeMarker} as unknown as
+        MapMarker;
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
@@ -218,7 +214,6 @@ describe('MapInfoWindow', () => {
     infoWindowComponent.open();
     expect(infoWindowSpy.open).toHaveBeenCalledTimes(1);
   });
-
 });
 
 @Component({

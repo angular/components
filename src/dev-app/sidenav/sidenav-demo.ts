@@ -28,6 +28,10 @@ export class SidenavDemo {
   get mode(): MatDrawerMode {
     return (['side', 'over', 'push'] as MatDrawerMode[])[this.modeIndex];
   }
-  get fixedTop() { return this.fixed && this.showHeader && !this.coverHeader ? 64 : 0; }
-  get fixedBottom() { return this.fixed && this.showFooter && !this.coverHeader ? 64 : 0; }
+  get fixedTop() {
+    return this.fixed && this.showHeader && !this.coverHeader ? 64 : 0;
+  }
+  get fixedBottom() {
+    return this.fixed && this.showFooter && !this.coverHeader ? 64 : 0;
+  }
 }

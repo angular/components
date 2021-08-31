@@ -13,6 +13,7 @@ import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {
   ConnectedPosition,
+  ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
   OriginConnectionPosition,
@@ -21,12 +22,13 @@ import {
   OverlayRef,
   ScrollStrategy,
   VerticalConnectionPos,
-  ConnectionPositionPair,
 } from '@angular/cdk/overlay';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {DOCUMENT} from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -40,9 +42,7 @@ import {
   Optional,
   ViewContainerRef,
   ViewEncapsulation,
-  AfterViewInit,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {Observable, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 
@@ -50,16 +50,16 @@ import {matTooltipAnimations} from './tooltip-animations';
 
 
 /** Possible positions for a tooltip. */
-export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
+export type TooltipPosition = 'left'|'right'|'above'|'below'|'before'|'after';
 
 /**
  * Options for how the tooltip trigger should handle touch gestures.
  * See `MatTooltip.touchGestures` for more information.
  */
-export type TooltipTouchGestures = 'auto' | 'on' | 'off';
+export type TooltipTouchGestures = 'auto'|'on'|'off';
 
 /** Possible visibility states of a tooltip. */
-export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
+export type TooltipVisibility = 'initial'|'visible'|'hidden';
 
 /** Time in ms to throttle repositioning after scroll events. */
 export const SCROLL_THROTTLE_MS = 20;
@@ -116,11 +116,9 @@ export interface MatTooltipDefaultOptions {
 }
 
 /** Injection token to be used to override the default options for `matTooltip`. */
-export const MAT_TOOLTIP_DEFAULT_OPTIONS =
-    new InjectionToken<MatTooltipDefaultOptions>('mat-tooltip-default-options', {
-      providedIn: 'root',
-      factory: MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY
-    });
+export const MAT_TOOLTIP_DEFAULT_OPTIONS = new InjectionToken<MatTooltipDefaultOptions>(
+    'mat-tooltip-default-options',
+    {providedIn: 'root', factory: MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY});
 
 /** @docs-private */
 export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
@@ -134,9 +132,9 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions 
 
 @Directive()
 export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implements OnDestroy,
-  AfterViewInit {
-  _overlayRef: OverlayRef | null;
-  _tooltipInstance: T | null;
+                                                                                  AfterViewInit {
+  _overlayRef: OverlayRef|null;
+  _tooltipInstance: T|null;
 
   private _portal: ComponentPortal<T>;
   private _position: TooltipPosition = 'below';
@@ -152,7 +150,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
-  get position(): TooltipPosition { return this._position; }
+  get position(): TooltipPosition {
+    return this._position;
+  }
   set position(value: TooltipPosition) {
     if (value !== this._position) {
       this._position = value;
@@ -167,7 +167,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
   /** Disables the display of the tooltip. */
   @Input('matTooltipDisabled')
-  get disabled(): boolean { return this._disabled; }
+  get disabled(): boolean {
+    return this._disabled;
+  }
   set disabled(value) {
     this._disabled = coerceBooleanProperty(value);
 
@@ -203,7 +205,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
   /** The message to be displayed in the tooltip */
   @Input('matTooltip')
-  get message() { return this._message; }
+  get message() {
+    return this._message;
+  }
   set message(value: string) {
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message, 'tooltip');
 
@@ -232,7 +236,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
   @Input('matTooltipClass')
-  get tooltipClass() { return this._tooltipClass; }
+  get tooltipClass() {
+    return this._tooltipClass;
+  }
   set tooltipClass(value: string|string[]|Set<string>|{[key: string]: any}) {
     this._tooltipClass = value;
     if (this._tooltipInstance) {
@@ -241,8 +247,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   }
 
   /** Manually-bound passive event listeners. */
-  private readonly _passiveListeners:
-      (readonly [string, EventListenerOrEventListenerObject])[] = [];
+  private readonly _passiveListeners: (readonly[string, EventListenerOrEventListenerObject])[] = [];
 
   /** Reference to the current document. */
   private _document: Document;
@@ -254,19 +259,11 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   private readonly _destroyed = new Subject<void>();
 
   constructor(
-    private _overlay: Overlay,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _scrollDispatcher: ScrollDispatcher,
-    private _viewContainerRef: ViewContainerRef,
-    private _ngZone: NgZone,
-    private _platform: Platform,
-    private _ariaDescriber: AriaDescriber,
-    private _focusMonitor: FocusMonitor,
-    scrollStrategy: any,
-    protected _dir: Directionality,
-    private _defaultOptions: MatTooltipDefaultOptions,
-    @Inject(DOCUMENT) _document: any) {
-
+      private _overlay: Overlay, private _elementRef: ElementRef<HTMLElement>,
+      private _scrollDispatcher: ScrollDispatcher, private _viewContainerRef: ViewContainerRef,
+      private _ngZone: NgZone, private _platform: Platform, private _ariaDescriber: AriaDescriber,
+      private _focusMonitor: FocusMonitor, scrollStrategy: any, protected _dir: Directionality,
+      private _defaultOptions: MatTooltipDefaultOptions, @Inject(DOCUMENT) _document: any) {
     this._scrollStrategy = scrollStrategy;
     this._document = _document;
 
@@ -297,15 +294,15 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._setupPointerEnterEventsIfNeeded();
 
     this._focusMonitor.monitor(this._elementRef)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(origin => {
-        // Note that the focus monitor runs outside the Angular zone.
-        if (!origin) {
-          this._ngZone.run(() => this.hide(0));
-        } else if (origin === 'keyboard') {
-          this._ngZone.run(() => this.show());
-        }
-    });
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(origin => {
+          // Note that the focus monitor runs outside the Angular zone.
+          if (!origin) {
+            this._ngZone.run(() => this.hide(0));
+          } else if (origin === 'keyboard') {
+            this._ngZone.run(() => this.show());
+          }
+        });
   }
 
   /**
@@ -337,19 +334,20 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
   show(delay: number = this.showDelay): void {
-    if (this.disabled || !this.message || (this._isTooltipVisible() &&
-      !this._tooltipInstance!._showTimeoutId && !this._tooltipInstance!._hideTimeoutId)) {
-        return;
+    if (this.disabled || !this.message ||
+        (this._isTooltipVisible() && !this._tooltipInstance!._showTimeoutId &&
+         !this._tooltipInstance!._hideTimeoutId)) {
+      return;
     }
 
     const overlayRef = this._createOverlay();
     this._detach();
-    this._portal = this._portal ||
-       new ComponentPortal(this._tooltipComponent, this._viewContainerRef);
+    this._portal =
+        this._portal || new ComponentPortal(this._tooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
     this._tooltipInstance.afterHidden()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this._detach());
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
     this._tooltipInstance!.show(delay);
@@ -376,13 +374,14 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
    * Handles the keydown events on the host element.
    * Needs to be an arrow function so that we can use it in addEventListener.
    */
-  private _handleKeydown = (event: KeyboardEvent) => {
-    if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this._ngZone.run(() => this.hide(0));
-    }
-  }
+  private _handleKeydown =
+      (event: KeyboardEvent) => {
+        if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
+          event.preventDefault();
+          event.stopPropagation();
+          this._ngZone.run(() => this.hide(0));
+        }
+      }
 
   /** Create the overlay config and position strategy */
   private _createOverlay(): OverlayRef {
@@ -422,13 +421,11 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
     this._updatePosition(this._overlayRef);
 
-    this._overlayRef.detachments()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this._detach());
+    this._overlayRef.detachments().pipe(takeUntil(this._destroyed)).subscribe(() => this._detach());
 
     this._overlayRef.outsidePointerEvents()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this._tooltipInstance?._handleBodyInteraction());
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => this._tooltipInstance?._handleBodyInteraction());
 
     return this._overlayRef;
   }
@@ -471,14 +468,10 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     if (position == 'above' || position == 'below') {
       originPosition = {originX: 'center', originY: position == 'above' ? 'top' : 'bottom'};
     } else if (
-      position == 'before' ||
-      (position == 'left' && isLtr) ||
-      (position == 'right' && !isLtr)) {
+        position == 'before' || (position == 'left' && isLtr) || (position == 'right' && !isLtr)) {
       originPosition = {originX: 'start', originY: 'center'};
     } else if (
-      position == 'after' ||
-      (position == 'right' && isLtr) ||
-      (position == 'left' && !isLtr)) {
+        position == 'after' || (position == 'right' && isLtr) || (position == 'left' && !isLtr)) {
       originPosition = {originX: 'end', originY: 'center'};
     } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getMatTooltipInvalidPositionError(position);
@@ -486,10 +479,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
     const {x, y} = this._invertPosition(originPosition!.originX, originPosition!.originY);
 
-    return {
-      main: originPosition!,
-      fallback: {originX: x, originY: y}
-    };
+    return {main: originPosition!, fallback: {originX: x, originY: y}};
   }
 
   /** Returns the overlay position and a fallback position based on the user's preference */
@@ -503,14 +493,10 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     } else if (position == 'below') {
       overlayPosition = {overlayX: 'center', overlayY: 'top'};
     } else if (
-      position == 'before' ||
-      (position == 'left' && isLtr) ||
-      (position == 'right' && !isLtr)) {
+        position == 'before' || (position == 'left' && isLtr) || (position == 'right' && !isLtr)) {
       overlayPosition = {overlayX: 'end', overlayY: 'center'};
     } else if (
-      position == 'after' ||
-      (position == 'right' && isLtr) ||
-      (position == 'left' && !isLtr)) {
+        position == 'after' || (position == 'right' && isLtr) || (position == 'left' && !isLtr)) {
       overlayPosition = {overlayX: 'start', overlayY: 'center'};
     } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getMatTooltipInvalidPositionError(position);
@@ -518,10 +504,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
     const {x, y} = this._invertPosition(overlayPosition!.overlayX, overlayPosition!.overlayY);
 
-    return {
-      main: overlayPosition!,
-      fallback: {overlayX: x, overlayY: y}
-    };
+    return {main: overlayPosition!, fallback: {overlayX: x, overlayY: y}};
   }
 
   /** Updates the tooltip message and repositions the overlay according to the new message length */
@@ -532,10 +515,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.pipe(
-        take(1),
-        takeUntil(this._destroyed)
-      ).subscribe(() => {
+      this._ngZone.onMicrotaskEmpty.pipe(take(1), takeUntil(this._destroyed)).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }
@@ -614,22 +594,26 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     // The mouse events shouldn't be bound on mobile devices, because they can prevent the
     // first tap from firing its click event or can cause the tooltip to open for clicks.
     if (this._platformSupportsMouseEvents()) {
-      this._passiveListeners
-          .push(['mouseenter', () => {
-            this._setupPointerExitEventsIfNeeded();
-            this.show();
-          }]);
+      this._passiveListeners.push([
+        'mouseenter',
+        () => {
+          this._setupPointerExitEventsIfNeeded();
+          this.show();
+        }
+      ]);
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
 
-      this._passiveListeners
-          .push(['touchstart', () => {
-            // Note that it's important that we don't `preventDefault` here,
-            // because it can prevent click events from firing on the element.
-            this._setupPointerExitEventsIfNeeded();
-            clearTimeout(this._touchstartTimeout);
-            this._touchstartTimeout = setTimeout(() => this.show(), LONGPRESS_DELAY);
-          }]);
+      this._passiveListeners.push([
+        'touchstart',
+        () => {
+          // Note that it's important that we don't `preventDefault` here,
+          // because it can prevent click events from firing on the element.
+          this._setupPointerExitEventsIfNeeded();
+          clearTimeout(this._touchstartTimeout);
+          this._touchstartTimeout = setTimeout(() => this.show(), LONGPRESS_DELAY);
+        }
+      ]);
     }
 
     this._addListeners(this._passiveListeners);
@@ -641,12 +625,11 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     }
     this._pointerExitEventsInitialized = true;
 
-    const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
+    const exitListeners: (readonly[string, EventListenerOrEventListenerObject])[] = [];
     if (this._platformSupportsMouseEvents()) {
       exitListeners.push(
-        ['mouseleave', () => this.hide()],
-        ['wheel', event => this._wheelListener(event as WheelEvent)]
-      );
+          ['mouseleave', () => this.hide()],
+          ['wheel', event => this._wheelListener(event as WheelEvent)]);
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
       const touchendListener = () => {
@@ -655,8 +638,8 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       };
 
       exitListeners.push(
-        ['touchend', touchendListener],
-        ['touchcancel', touchendListener],
+          ['touchend', touchendListener],
+          ['touchcancel', touchendListener],
       );
     }
 
@@ -664,8 +647,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._passiveListeners.push(...exitListeners);
   }
 
-  private _addListeners(
-      listeners: (readonly [string, EventListenerOrEventListenerObject])[]) {
+  private _addListeners(listeners: (readonly[string, EventListenerOrEventListenerObject])[]) {
     listeners.forEach(([event, listener]) => {
       this._elementRef.nativeElement.addEventListener(event, listener, passiveListenerOptions);
     });
@@ -728,32 +710,21 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
  *
  * https://material.io/design/components/tooltips.html
  */
-@Directive({
-  selector: '[matTooltip]',
-  exportAs: 'matTooltip',
-  host: {
-    'class': 'mat-tooltip-trigger'
-  }
-})
+@Directive(
+    {selector: '[matTooltip]', exportAs: 'matTooltip', host: {'class': 'mat-tooltip-trigger'}})
 export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
   protected readonly _tooltipComponent = TooltipComponent;
 
   constructor(
-    overlay: Overlay,
-    elementRef: ElementRef<HTMLElement>,
-    scrollDispatcher: ScrollDispatcher,
-    viewContainerRef: ViewContainerRef,
-    ngZone: NgZone,
-    platform: Platform,
-    ariaDescriber: AriaDescriber,
-    focusMonitor: FocusMonitor,
-    @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
-    @Optional() dir: Directionality,
-    @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS) defaultOptions: MatTooltipDefaultOptions,
-    @Inject(DOCUMENT) _document: any) {
-
-    super(overlay, elementRef, scrollDispatcher, viewContainerRef, ngZone, platform, ariaDescriber,
-      focusMonitor, scrollStrategy, dir, defaultOptions, _document);
+      overlay: Overlay, elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher,
+      viewContainerRef: ViewContainerRef, ngZone: NgZone, platform: Platform,
+      ariaDescriber: AriaDescriber, focusMonitor: FocusMonitor,
+      @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any, @Optional() dir: Directionality,
+      @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS) defaultOptions: MatTooltipDefaultOptions,
+      @Inject(DOCUMENT) _document: any) {
+    super(
+        overlay, elementRef, scrollDispatcher, viewContainerRef, ngZone, platform, ariaDescriber,
+        focusMonitor, scrollStrategy, dir, defaultOptions, _document);
   }
 }
 
@@ -766,10 +737,10 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   tooltipClass: string|string[]|Set<string>|{[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
-  _showTimeoutId: number | undefined;
+  _showTimeoutId: number|undefined;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  _hideTimeoutId: number | undefined;
+  _hideTimeoutId: number|undefined;
 
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility = 'initial';
@@ -904,8 +875,7 @@ export class TooltipComponent extends _TooltipComponentBase {
   _isHandset: Observable<BreakpointState> = this._breakpointObserver.observe(Breakpoints.Handset);
 
   constructor(
-    changeDetectorRef: ChangeDetectorRef,
-    private _breakpointObserver: BreakpointObserver) {
+      changeDetectorRef: ChangeDetectorRef, private _breakpointObserver: BreakpointObserver) {
     super(changeDetectorRef);
   }
 }

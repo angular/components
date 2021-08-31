@@ -9,6 +9,6 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 export interface OptionHarnessFilters extends BaseHarnessFilters {
-  text?: string | RegExp;
+  text?: string|RegExp;
   isSelected?: boolean;
 }

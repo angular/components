@@ -27,10 +27,10 @@ import {FormFieldHarnessFilters} from './form-field-harness-filters';
 // TODO(devversion): support support chip list harness
 /** Possible harnesses of controls which can be bound to a form-field. */
 export type FormFieldControlHarness =
-  MatInputHarness|MatSelectHarness|MatDatepickerInputHarness|MatDateRangeInputHarness;
+    MatInputHarness|MatSelectHarness|MatDatepickerInputHarness|MatDateRangeInputHarness;
 
-export abstract class _MatFormFieldHarnessBase<ControlHarness extends MatFormFieldControlHarness>
-  extends ComponentHarness {
+export abstract class _MatFormFieldHarnessBase<
+    ControlHarness extends MatFormFieldControlHarness> extends ComponentHarness {
   protected abstract _prefixContainer: AsyncFactoryFn<TestElement|null>;
   protected abstract _suffixContainer: AsyncFactoryFn<TestElement|null>;
   protected abstract _label: AsyncFactoryFn<TestElement|null>;
@@ -97,12 +97,10 @@ export abstract class _MatFormFieldHarnessBase<ControlHarness extends MatFormFie
     if (type) {
       return this.locatorForOptional(type)();
     }
-    const [select, input, datepickerInput, dateRangeInput] = await parallel(() => [
-      this._selectControl(),
-      this._inputControl(),
-      this._datepickerInputControl(),
-      this._dateRangeInputControl()
-    ]);
+    const [select, input, datepickerInput, dateRangeInput] = await parallel(
+        () =>
+            [this._selectControl(), this._inputControl(), this._datepickerInputControl(),
+             this._dateRangeInputControl()]);
 
     // Match the datepicker inputs first since they can also have a `MatInput`.
     return datepickerInput || dateRangeInput || select || input;
@@ -214,10 +212,12 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
    */
   static with(options: FormFieldHarnessFilters = {}): HarnessPredicate<MatFormFieldHarness> {
     return new HarnessPredicate(MatFormFieldHarness, options)
-      .addOption('floatingLabelText', options.floatingLabelText, async (harness, text) =>
-          HarnessPredicate.stringMatches(await harness.getLabel(), text))
-      .addOption('hasErrors', options.hasErrors, async (harness, hasErrors) =>
-          await harness.hasErrors() === hasErrors);
+        .addOption(
+            'floatingLabelText', options.floatingLabelText,
+            async (harness, text) => HarnessPredicate.stringMatches(await harness.getLabel(), text))
+        .addOption(
+            'hasErrors', options.hasErrors,
+            async (harness, hasErrors) => await harness.hasErrors() === hasErrors);
   }
 
   protected _prefixContainer = this.locatorForOptional('.mat-form-field-prefix');
@@ -251,9 +251,10 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
   /** Whether the label is currently floating. */
   async isLabelFloating(): Promise<boolean> {
     const host = await this.host();
-    const [hasLabel, shouldFloat] = await parallel(() => [
-      this.hasLabel(),
-      host.hasClass('mat-form-field-should-float'),
+    const [hasLabel, shouldFloat] = await parallel(
+        () =>
+            [this.hasLabel(),
+             host.hasClass('mat-form-field-should-float'),
     ]);
     // If there is no label, the label conceptually can never float. The `should-float` class
     // is just always set regardless of whether the label is displayed or not.

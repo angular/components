@@ -21,9 +21,7 @@ export interface BreakpointState {
    * A key boolean pair for each query provided to the observe method,
    * with its current matched state.
    */
-  breakpoints: {
-    [key: string]: boolean;
-  };
+  breakpoints: {[key: string]: boolean;};
 }
 
 /** The current state of a layout breakpoint. */
@@ -60,7 +58,7 @@ export class BreakpointObserver implements OnDestroy {
    * @param value One or more media queries to check.
    * @returns Whether any of the media queries match.
    */
-  isMatched(value: string | readonly string[]): boolean {
+  isMatched(value: string|readonly string[]): boolean {
     const queries = splitQueries(coerceArray(value));
     return queries.some(mediaQuery => this._registerQuery(mediaQuery).mql.matches);
   }
@@ -71,15 +69,14 @@ export class BreakpointObserver implements OnDestroy {
    * @param value One or more media queries to check.
    * @returns A stream of matches for the given queries.
    */
-  observe(value: string | readonly string[]): Observable<BreakpointState> {
+  observe(value: string|readonly string[]): Observable<BreakpointState> {
     const queries = splitQueries(coerceArray(value));
     const observables = queries.map(query => this._registerQuery(query).observable);
 
     let stateObservable = combineLatest(observables);
     // Emit the first state immediately, and then debounce the subsequent emissions.
-    stateObservable = concat(
-      stateObservable.pipe(take(1)),
-      stateObservable.pipe(skip(1), debounceTime(0)));
+    stateObservable =
+        concat(stateObservable.pipe(take(1)), stateObservable.pipe(skip(1), debounceTime(0)));
     return stateObservable.pipe(map(breakpointStates => {
       const response: BreakpointState = {
         matches: false,
@@ -104,22 +101,22 @@ export class BreakpointObserver implements OnDestroy {
 
     // Create callback for match changes and add it is as a listener.
     const queryObservable = new Observable((observer: Observer<MediaQueryList>) => {
-      // Listener callback methods are wrapped to be placed back in ngZone. Callbacks must be placed
-      // back into the zone because matchMedia is only included in Zone.js by loading the
-      // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
-      // have MediaQueryList inherit from EventTarget, which causes inconsistencies in how Zone.js
-      // patches it.
-      const handler = (e: any) => this._zone.run(() => observer.next(e));
-      mql.addListener(handler);
+                              // Listener callback methods are wrapped to be placed back in ngZone.
+                              // Callbacks must be placed back into the zone because matchMedia is
+                              // only included in Zone.js by loading the webapis-media-query.js file
+                              // alongside the zone.js file.  Additionally, some browsers do not
+                              // have MediaQueryList inherit from EventTarget, which causes
+                              // inconsistencies in how Zone.js patches it.
+                              const handler = (e: any) => this._zone.run(() => observer.next(e));
+                              mql.addListener(handler);
 
-      return () => {
-        mql.removeListener(handler);
-      };
-    }).pipe(
-      startWith(mql),
-      map(({matches}) => ({query, matches})),
-      takeUntil(this._destroySubject)
-    );
+                              return () => {
+                                mql.removeListener(handler);
+                              };
+                            })
+                                .pipe(
+                                    startWith(mql), map(({matches}) => ({query, matches})),
+                                    takeUntil(this._destroySubject));
 
     // Add the MediaQueryList to the set of queries.
     const output = {observable: queryObservable, mql};
@@ -134,6 +131,6 @@ export class BreakpointObserver implements OnDestroy {
  */
 function splitQueries(queries: readonly string[]): readonly string[] {
   return queries.map(query => query.split(','))
-                .reduce((a1, a2) => a1.concat(a2))
-                .map(query => query.trim());
+      .reduce((a1, a2) => a1.concat(a2))
+      .map(query => query.trim());
 }

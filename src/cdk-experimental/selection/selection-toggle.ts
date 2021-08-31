@@ -7,15 +7,7 @@
  */
 
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {
-  Directive,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Self
-} from '@angular/core';
+import {Directive, Inject, Input, OnDestroy, OnInit, Optional, Self} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {distinctUntilChanged, switchMap, takeUntil} from 'rxjs/operators';
@@ -42,8 +34,12 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
 
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('cdkSelectionToggleIndex')
-  get index(): number|undefined { return this._index; }
-  set index(index: number|undefined) { this._index = coerceNumberProperty(index); }
+  get index(): number|undefined {
+    return this._index;
+  }
+  set index(index: number|undefined) {
+    this._index = coerceNumberProperty(index);
+  }
   protected _index?: number;
 
   /** The checked state of the selection toggle */

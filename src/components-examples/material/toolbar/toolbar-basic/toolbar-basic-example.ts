@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'toolbar-basic-example.html',
   styleUrls: ['toolbar-basic-example.css'],
 })
-export class ToolbarBasicExample {}
+export class ToolbarBasicExample {
+}

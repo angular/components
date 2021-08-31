@@ -7,6 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ListRange} from '@angular/cdk/collections';
 import {
   ChangeDetectionStrategy,
@@ -27,17 +28,17 @@ import {
   animationFrameScheduler,
   asapScheduler,
   Observable,
-  Subject,
   Observer,
+  Subject,
   Subscription,
 } from 'rxjs';
 import {auditTime, startWith, takeUntil} from 'rxjs/operators';
+
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
-import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
 /** Checks if the given ranges are equal. */
 function rangesEqual(r1: ListRange, r2: ListRange): boolean {
@@ -82,13 +83,13 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   get orientation() {
     return this._orientation;
   }
-  set orientation(orientation: 'horizontal' | 'vertical') {
+  set orientation(orientation: 'horizontal'|'vertical') {
     if (this._orientation !== orientation) {
       this._orientation = orientation;
       this._calculateSpacerSize();
     }
   }
-  private _orientation: 'horizontal' | 'vertical' = 'vertical';
+  private _orientation: 'horizontal'|'vertical' = 'vertical';
 
   /**
    * Whether rendered items should persist in the DOM after scrolling out of view. By default, items
@@ -146,7 +147,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   private _viewportSize = 0;
 
   /** the currently attached CdkVirtualScrollRepeater. */
-  private _forOf: CdkVirtualScrollRepeater<any> | null;
+  private _forOf: CdkVirtualScrollRepeater<any>|null;
 
   /** The last rendered content offset that was set. */
   private _renderedContentOffset = 0;
@@ -166,14 +167,12 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /** Subscription to changes in the viewport size. */
   private _viewportChanges = Subscription.EMPTY;
 
-  constructor(public override elementRef: ElementRef<HTMLElement>,
-              private _changeDetectorRef: ChangeDetectorRef,
-              ngZone: NgZone,
-              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY)
-                  private _scrollStrategy: VirtualScrollStrategy,
-              @Optional() dir: Directionality,
-              scrollDispatcher: ScrollDispatcher,
-              viewportRuler: ViewportRuler) {
+  constructor(
+      public override elementRef: ElementRef<HTMLElement>,
+      private _changeDetectorRef: ChangeDetectorRef, ngZone: NgZone,
+      @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy,
+      @Optional() dir: Directionality, scrollDispatcher: ScrollDispatcher,
+      viewportRuler: ViewportRuler) {
     super(elementRef, scrollDispatcher, ngZone, dir);
 
     if (!_scrollStrategy && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -296,7 +295,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /**
    * Gets the offset from the start of the viewport to the start of the rendered data (in pixels).
    */
-  getOffsetToRenderedContentStart(): number | null {
+  getOffsetToRenderedContentStart(): number|null {
     return this._renderedContentOffsetNeedsRewrite ? null : this._renderedContentOffset;
   }
 
@@ -304,7 +303,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * Sets the offset from the start of the viewport to either the start or end of the rendered data
    * (in pixels).
    */
-  setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
+  setRenderedContentOffset(offset: number, to: 'to-start'|'to-end' = 'to-start') {
     // For a horizontal viewport in a right-to-left language we need to translate along the x-axis
     // in the negative direction.
     const isRtl = this.dir && this.dir.value == 'rtl';
@@ -358,7 +357,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * @param index The index of the element to scroll to.
    * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
    */
-  scrollToIndex(index: number,  behavior: ScrollBehavior = 'auto') {
+  scrollToIndex(index: number, behavior: ScrollBehavior = 'auto') {
     this._scrollStrategy.scrollToIndex(index, behavior);
   }
 
@@ -367,11 +366,9 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * @param from The edge to measure the offset from. Defaults to 'top' in vertical mode and 'start'
    *     in horizontal mode.
    */
-  override measureScrollOffset(
-      from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {
-    return from ?
-      super.measureScrollOffset(from) :
-      super.measureScrollOffset(this.orientation === 'horizontal' ? 'start' : 'top');
+  override measureScrollOffset(from?: 'top'|'left'|'right'|'bottom'|'start'|'end'): number {
+    return from ? super.measureScrollOffset(from) :
+                  super.measureScrollOffset(this.orientation === 'horizontal' ? 'start' : 'top');
   }
 
   /** Measure the combined size of all of the rendered items. */
@@ -401,8 +398,8 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /** Measure the viewport size. */
   private _measureViewportSize() {
     const viewportEl = this.elementRef.nativeElement;
-    this._viewportSize = this.orientation === 'horizontal' ?
-        viewportEl.clientWidth : viewportEl.clientHeight;
+    this._viewportSize =
+        this.orientation === 'horizontal' ? viewportEl.clientWidth : viewportEl.clientHeight;
   }
 
   /** Queue up change detection to run. */

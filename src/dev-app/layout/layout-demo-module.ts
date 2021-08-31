@@ -7,10 +7,11 @@
  */
 
 import {CommonModule} from '@angular/common';
+import {CdkLayoutExamplesModule} from '@angular/components-examples/cdk/layout';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
+
 import {LayoutDemo} from './layout-demo';
-import {CdkLayoutExamplesModule} from '@angular/components-examples/cdk/layout';
 
 @NgModule({
   imports: [
@@ -20,4 +21,5 @@ import {CdkLayoutExamplesModule} from '@angular/components-examples/cdk/layout';
   ],
   declarations: [LayoutDemo],
 })
-export class LayoutDemoModule { }
+export class LayoutDemoModule {
+}

@@ -4,6 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
 import {CheckboxHarnessExample} from './checkbox-harness/checkbox-harness-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
@@ -13,8 +14,8 @@ import {
 
 export {
   CheckboxConfigurableExample,
-  CheckboxOverviewExample,
   CheckboxHarnessExample,
+  CheckboxOverviewExample,
   CheckboxReactiveFormsExample,
 };
 

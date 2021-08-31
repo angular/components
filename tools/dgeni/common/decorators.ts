@@ -68,12 +68,11 @@ export function hasClassDecorator(doc: ClassExportDoc, decoratorName: string) {
 }
 
 export function hasDecorator(doc: HasDecoratorsDoc, decoratorName: string) {
-  return !!doc.decorators &&
-    doc.decorators.length > 0 &&
-    doc.decorators.some(d => d.name == decoratorName);
+  return !!doc.decorators && doc.decorators.length > 0 &&
+      doc.decorators.some(d => d.name == decoratorName);
 }
 
-export function getBreakingChange(doc: any): string | null {
+export function getBreakingChange(doc: any): string|null {
   if (!doc.tags) {
     return null;
   }
@@ -86,7 +85,7 @@ export function getBreakingChange(doc: any): string | null {
  * Decorates public exposed docs. Creates a property on the doc that indicates whether
  * the item is deprecated or not.
  */
-export function decorateDeprecatedDoc(doc: ApiDoc & DeprecationInfo) {
+export function decorateDeprecatedDoc(doc: ApiDoc&DeprecationInfo) {
   doc.isDeprecated = isDeprecatedDoc(doc);
   doc.breakingChange = getBreakingChange(doc);
 

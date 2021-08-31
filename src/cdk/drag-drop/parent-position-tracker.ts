@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {_getEventTarget} from '@angular/cdk/platform';
-import {getMutableClientRect, adjustClientRect} from './client-rect';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+
+import {adjustClientRect, getMutableClientRect} from './client-rect';
 
 /** Object holding the scroll position of something. */
 interface ScrollPosition {
@@ -19,10 +20,8 @@ interface ScrollPosition {
 /** Keeps track of the scroll position and dimensions of the parents of an element. */
 export class ParentPositionTracker {
   /** Cached positions of the scrollable parent elements. */
-  readonly positions = new Map<Document|HTMLElement, {
-    scrollPosition: ScrollPosition,
-    clientRect?: ClientRect
-  }>();
+  readonly positions =
+      new Map<Document|HTMLElement, {scrollPosition: ScrollPosition, clientRect?: ClientRect}>();
 
   constructor(private _document: Document, private _viewportRuler: ViewportRuler) {}
 
@@ -47,7 +46,7 @@ export class ParentPositionTracker {
   }
 
   /** Handles scrolling while a drag is taking place. */
-  handleScroll(event: Event): ScrollPosition | null {
+  handleScroll(event: Event): ScrollPosition|null {
     const target = _getEventTarget<HTMLElement|Document>(event)!;
     const cachedPosition = this.positions.get(target);
 

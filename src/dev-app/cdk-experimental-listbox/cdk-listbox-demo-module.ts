@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
 import {CdkListboxModule} from '@angular/cdk-experimental/listbox';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
 import {CdkListboxDemo} from './cdk-listbox-demo';
 
@@ -24,4 +24,5 @@ import {CdkListboxDemo} from './cdk-listbox-demo';
   ],
   declarations: [CdkListboxDemo],
 })
-export class CdkListboxDemoModule {}
+export class CdkListboxDemoModule {
+}

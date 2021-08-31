@@ -7,10 +7,11 @@
  */
 
 import {
-  HarnessPredicate,
   ComponentHarnessConstructor,
-  ContentContainerComponentHarness
+  ContentContainerComponentHarness,
+  HarnessPredicate
 } from '@angular/cdk/testing';
+
 import {CellHarnessFilters} from './table-harness-filters';
 
 /** Harness for interacting with a standard Angular Material table cell. */
@@ -50,13 +51,14 @@ export class MatCellHarness extends ContentContainerComponentHarness {
   }
 
   protected static _getCellPredicate<T extends MatCellHarness>(
-    type: ComponentHarnessConstructor<T>,
-    options: CellHarnessFilters): HarnessPredicate<T> {
+      type: ComponentHarnessConstructor<T>, options: CellHarnessFilters): HarnessPredicate<T> {
     return new HarnessPredicate(type, options)
-      .addOption('text', options.text,
-          (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
-      .addOption('columnName', options.columnName,
-          (harness, name) => HarnessPredicate.stringMatches(harness.getColumnName(), name));
+        .addOption(
+            'text', options.text,
+            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
+        .addOption(
+            'columnName', options.columnName,
+            (harness, name) => HarnessPredicate.stringMatches(harness.getColumnName(), name));
   }
 }
 

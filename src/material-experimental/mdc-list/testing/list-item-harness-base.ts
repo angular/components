@@ -61,9 +61,8 @@ export const enum MatListItemSection {
  * Shared behavior among the harnesses for the various `MatListItem` flavors.
  * @docs-private
  */
-export abstract class MatListItemHarnessBase
-    extends ContentContainerComponentHarness<MatListItemSection> {
-
+export abstract class MatListItemHarnessBase extends
+    ContentContainerComponentHarness<MatListItemSection> {
   private _lines = this.locatorForAll('.mat-line');
   private _avatar = this.locatorForOptional('.mat-mdc-list-avatar');
   private _icon = this.locatorForOptional('.mat-mdc-list-icon');

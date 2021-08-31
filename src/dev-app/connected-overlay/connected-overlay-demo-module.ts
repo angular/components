@@ -8,13 +8,13 @@
 
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
+import {CdkOverlayExamplesModule} from '@angular/components-examples/cdk/overlay';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {RouterModule} from '@angular/router';
-import {CdkOverlayExamplesModule} from '@angular/components-examples/cdk/overlay';
 
 import {ConnectedOverlayDemo} from './connected-overlay-demo';
 
@@ -31,4 +31,5 @@ import {ConnectedOverlayDemo} from './connected-overlay-demo';
   ],
   declarations: [ConnectedOverlayDemo],
 })
-export class ConnectedOverlayDemoModule {}
+export class ConnectedOverlayDemoModule {
+}

@@ -43,12 +43,13 @@ export class MatNavListItemHarness extends MatListItemHarnessBase {
    */
   static with(options: NavListItemHarnessFilters = {}): HarnessPredicate<MatNavListItemHarness> {
     return getListItemPredicate(MatNavListItemHarness, options)
-        .addOption('href', options.href,
+        .addOption(
+            'href', options.href,
             async (harness, href) => HarnessPredicate.stringMatches(harness.getHref(), href));
   }
 
   /** Gets the href for this nav list item. */
-  async getHref(): Promise<string | null> {
+  async getHref(): Promise<string|null> {
     return (await this.host()).getAttribute('href');
   }
 

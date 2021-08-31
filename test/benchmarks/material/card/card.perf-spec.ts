@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {$, browser} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/bazel/benchmark/driver-utilities';
+import {$, browser} from 'protractor';
 
 describe('card performance benchmarks', () => {
   beforeAll(() => {
     browser.angularAppRoot('#root');
   });
 
-  it('renders a simple card', async() => {
+  it('renders a simple card', async () => {
     await runBenchmark({
       id: 'card-render',
       url: '',

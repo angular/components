@@ -1,8 +1,8 @@
 import {Component, Inject} from '@angular/core';
-import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 
 export interface DialogData {
-  animal: 'panda' | 'unicorn' | 'lion';
+  animal: 'panda'|'unicorn'|'lion';
 }
 
 /**
@@ -16,11 +16,7 @@ export class DialogDataExample {
   constructor(public dialog: MatDialog) {}
 
   openDialog() {
-    this.dialog.open(DialogDataExampleDialog, {
-      data: {
-        animal: 'panda'
-      }
-    });
+    this.dialog.open(DialogDataExampleDialog, {data: {animal: 'panda'}});
   }
 }
 

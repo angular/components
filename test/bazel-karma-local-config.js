@@ -10,11 +10,7 @@ module.exports = config => {
   // to launch any browser at all, we overwrite the "browsers" option. Since the
   // default config tries to extend the browsers array with "Chrome", we need to
   // always return a new empty array.
-  Object.defineProperty(overwrites, 'browsers', {
-    get: () => [],
-    set: () => {},
-    enumerable: true
-  });
+  Object.defineProperty(overwrites, 'browsers', {get: () => [], set: () => {}, enumerable: true});
 
   // Ensures that tests start executing once browsers have been manually connected. We need
   // to use "defineProperty" because the default "@bazel/concatjs" config overwrites the option.
@@ -39,9 +35,7 @@ module.exports = config => {
 class KarmaPluginArrayWithoutWatchers extends Array {
   // The Bazel Karma rules only register new plugins using `.push`.
   push(...plugins) {
-    plugins
-      .filter(p => typeof p === 'object')
-      .forEach(p => delete p.watcher);
+    plugins.filter(p => typeof p === 'object').forEach(p => delete p.watcher);
 
     super.push(...plugins);
   }

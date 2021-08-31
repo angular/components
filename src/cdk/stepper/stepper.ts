@@ -15,8 +15,10 @@ import {
   NumberInput
 } from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {
+  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -38,9 +40,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  AfterContentInit,
 } from '@angular/core';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 
@@ -310,10 +310,10 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
 
   /** The step that is selected. */
   @Input()
-  get selected(): CdkStep | undefined {
+  get selected(): CdkStep|undefined {
     return this.steps ? this.steps.toArray()[this.selectedIndex] : undefined;
   }
-  set selected(step: CdkStep | undefined) {
+  set selected(step: CdkStep|undefined) {
     this.selectedIndex = (step && this.steps) ? this.steps.toArray().indexOf(step) : -1;
   }
 
@@ -325,7 +325,9 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
 
   /** Orientation of the stepper. */
   @Input()
-  get orientation(): StepperOrientation { return this._orientation; }
+  get orientation(): StepperOrientation {
+    return this._orientation;
+  }
   set orientation(value: StepperOrientation) {
     // This is a protected method so that `MatSteppter` can hook into it.
     this._orientation = value;
@@ -353,12 +355,11 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterContentInit() {
-    this._steps.changes
-      .pipe(startWith(this._steps), takeUntil(this._destroyed))
-      .subscribe((steps: QueryList<CdkStep>) => {
-        this.steps.reset(steps.filter(step => step._stepper === this));
-        this.steps.notifyOnChanges();
-      });
+    this._steps.changes.pipe(startWith(this._steps), takeUntil(this._destroyed))
+        .subscribe((steps: QueryList<CdkStep>) => {
+          this.steps.reset(steps.filter(step => step._stepper === this));
+          this.steps.notifyOnChanges();
+        });
   }
 
   ngAfterViewInit() {
@@ -561,11 +562,11 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
  * @docs-private
  */
 interface AbstractControlLike {
-  asyncValidator: ((control: any) => any) | null;
+  asyncValidator: ((control: any) => any)|null;
   dirty: boolean;
   disabled: boolean;
   enabled: boolean;
-  errors: {[key: string]: any} | null;
+  errors: {[key: string]: any}|null;
   invalid: boolean;
   parent: any;
   pending: boolean;
@@ -577,16 +578,16 @@ interface AbstractControlLike {
   untouched: boolean;
   updateOn: any;
   valid: boolean;
-  validator: ((control: any) => any) | null;
+  validator: ((control: any) => any)|null;
   value: any;
   readonly valueChanges: Observable<any>;
   clearAsyncValidators(): void;
   clearValidators(): void;
   disable(opts?: any): void;
   enable(opts?: any): void;
-  get(path: (string | number)[] | string): AbstractControlLike | null;
-  getError(errorCode: string, path?: (string | number)[] | string): any;
-  hasError(errorCode: string, path?: (string | number)[] | string): boolean;
+  get(path: (string|number)[]|string): AbstractControlLike|null;
+  getError(errorCode: string, path?: (string|number)[]|string): any;
+  hasError(errorCode: string, path?: (string|number)[]|string): boolean;
   markAllAsTouched(): void;
   markAsDirty(opts?: any): void;
   markAsPending(opts?: any): void;
@@ -595,12 +596,10 @@ interface AbstractControlLike {
   markAsUntouched(opts?: any): void;
   patchValue(value: any, options?: Object): void;
   reset(value?: any, options?: Object): void;
-  setAsyncValidators(newValidator: (control: any) => any |
-    ((control: any) => any)[] | null): void;
-  setErrors(errors: {[key: string]: any} | null, opts?: any): void;
+  setAsyncValidators(newValidator: (control: any) => any | ((control: any) => any)[] | null): void;
+  setErrors(errors: {[key: string]: any}|null, opts?: any): void;
   setParent(parent: any): void;
-  setValidators(newValidator: (control: any) => any |
-    ((control: any) => any)[] | null): void;
+  setValidators(newValidator: (control: any) => any | ((control: any) => any)[] | null): void;
   setValue(value: any, options?: Object): void;
   updateValueAndValidity(opts?: any): void;
   patchValue(value: any, options?: any): void;

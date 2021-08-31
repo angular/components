@@ -7,28 +7,29 @@
  */
 
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  ContentChildren,
-  forwardRef,
-  Inject,
-  Input,
-  ViewEncapsulation,
-  QueryList,
-  ElementRef,
-  NgZone,
-} from '@angular/core';
-import {MatDrawer, MatDrawerContainer, MatDrawerContent, MAT_DRAWER_CONTAINER} from './drawer';
-import {matDrawerAnimations} from './drawer-animations';
-import {
   BooleanInput,
   coerceBooleanProperty,
   coerceNumberProperty,
   NumberInput
 } from '@angular/cdk/coercion';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
+  forwardRef,
+  Inject,
+  Input,
+  NgZone,
+  QueryList,
+  ViewEncapsulation,
+} from '@angular/core';
+
+import {MAT_DRAWER_CONTAINER, MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
+import {matDrawerAnimations} from './drawer-animations';
 
 
 @Component({
@@ -46,9 +47,7 @@ export class MatSidenavContent extends MatDrawerContent {
   constructor(
       changeDetectorRef: ChangeDetectorRef,
       @Inject(forwardRef(() => MatSidenavContainer)) container: MatSidenavContainer,
-      elementRef: ElementRef<HTMLElement>,
-      scrollDispatcher: ScrollDispatcher,
-      ngZone: NgZone) {
+      elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone) {
     super(changeDetectorRef, container, elementRef, scrollDispatcher, ngZone);
   }
 }
@@ -79,8 +78,12 @@ export class MatSidenavContent extends MatDrawerContent {
 export class MatSidenav extends MatDrawer {
   /** Whether the sidenav is fixed in the viewport. */
   @Input()
-  get fixedInViewport(): boolean { return this._fixedInViewport; }
-  set fixedInViewport(value) { this._fixedInViewport = coerceBooleanProperty(value); }
+  get fixedInViewport(): boolean {
+    return this._fixedInViewport;
+  }
+  set fixedInViewport(value) {
+    this._fixedInViewport = coerceBooleanProperty(value);
+  }
   private _fixedInViewport = false;
 
   /**
@@ -88,8 +91,12 @@ export class MatSidenav extends MatDrawer {
    * mode.
    */
   @Input()
-  get fixedTopGap(): number { return this._fixedTopGap; }
-  set fixedTopGap(value) { this._fixedTopGap = coerceNumberProperty(value); }
+  get fixedTopGap(): number {
+    return this._fixedTopGap;
+  }
+  set fixedTopGap(value) {
+    this._fixedTopGap = coerceNumberProperty(value);
+  }
   private _fixedTopGap = 0;
 
   /**
@@ -97,8 +104,12 @@ export class MatSidenav extends MatDrawer {
    * fixed mode.
    */
   @Input()
-  get fixedBottomGap(): number { return this._fixedBottomGap; }
-  set fixedBottomGap(value) { this._fixedBottomGap = coerceNumberProperty(value); }
+  get fixedBottomGap(): number {
+    return this._fixedBottomGap;
+  }
+  set fixedBottomGap(value) {
+    this._fixedBottomGap = coerceNumberProperty(value);
+  }
   private _fixedBottomGap = 0;
 
   static ngAcceptInputType_fixedInViewport: BooleanInput;
@@ -118,10 +129,7 @@ export class MatSidenav extends MatDrawer {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  providers: [{
-    provide: MAT_DRAWER_CONTAINER,
-    useExisting: MatSidenavContainer
-  }]
+  providers: [{provide: MAT_DRAWER_CONTAINER, useExisting: MatSidenavContainer}]
 
 })
 export class MatSidenavContainer extends MatDrawerContainer {

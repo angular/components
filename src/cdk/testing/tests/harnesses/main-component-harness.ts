@@ -88,18 +88,16 @@ export class MainComponentHarness extends ComponentHarness {
   readonly quotedContentSelectorWithAncestor =
       this.locatorFor(QuotedCommaSelectorHarness.with({ancestor: '.quoted-comma-parent'}));
 
-  readonly subcomponentHarnessesAndElements =
-      this.locatorForAll('#counter', SubComponentHarness);
-  readonly subcomponentHarnessAndElementsRedundant =
-      this.locatorForAll(
-          SubComponentHarness.with({title: /test/}), 'test-sub', SubComponentHarness, 'test-sub');
+  readonly subcomponentHarnessesAndElements = this.locatorForAll('#counter', SubComponentHarness);
+  readonly subcomponentHarnessAndElementsRedundant = this.locatorForAll(
+      SubComponentHarness.with({title: /test/}), 'test-sub', SubComponentHarness, 'test-sub');
   readonly subcomponentAndSpecialHarnesses =
       this.locatorForAll(SubComponentHarness, SubComponentSpecialHarness);
   readonly missingElementsAndHarnesses =
       this.locatorFor('.not-found', SubComponentHarness.with({title: /not found/}));
   readonly shadows = this.locatorForAll('.in-the-shadows');
-  readonly deepShadow = this.locatorFor(
-      'test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows');
+  readonly deepShadow =
+      this.locatorFor('test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows');
   readonly hoverTest = this.locatorFor('#hover-box');
   readonly customEventBasic = this.locatorFor('#custom-event-basic');
   readonly customEventObject = this.locatorFor('#custom-event-object');

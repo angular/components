@@ -1,12 +1,10 @@
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {runDatepickerToggleHarnessTests} from './datepicker-toggle-harness-shared.spec';
-import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
+
 import {MatCalendarHarness} from './calendar-harness';
+import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
+import {runDatepickerToggleHarnessTests} from './datepicker-toggle-harness-shared.spec';
 
 describe('Non-MDC-based datepicker toggle harness', () => {
   runDatepickerToggleHarnessTests(
-    MatDatepickerModule,
-    MatDatepickerToggleHarness,
-    MatCalendarHarness
-  );
+      MatDatepickerModule, MatDatepickerToggleHarness, MatCalendarHarness);
 });

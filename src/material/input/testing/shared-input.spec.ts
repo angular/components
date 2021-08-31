@@ -1,11 +1,12 @@
+import {getSupportedInputTypes} from '@angular/cdk/platform';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
-import {getSupportedInputTypes} from '@angular/cdk/platform';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {MatInputHarness} from './input-harness';
 
 /** Shared tests to run on both the original and MDC-based input's. */
@@ -38,8 +39,8 @@ export function runInputHarnessTests(
   });
 
   it('should load input with specific name', async () => {
-    const inputs = await loader.getAllHarnesses(
-        inputHarness.with({selector: '[name="favorite-food"]'}));
+    const inputs =
+        await loader.getAllHarnesses(inputHarness.with({selector: '[name="favorite-food"]'}));
     expect(inputs.length).toBe(1);
   });
 
@@ -206,7 +207,7 @@ export function runInputHarnessTests(
     }
 
     const input = await loader.getHarness(inputHarness.with({selector: '#colorControl'}));
-    expect(await input.getValue()).toBe('#000000'); // Color inputs default to black.
+    expect(await input.getValue()).toBe('#000000');  // Color inputs default to black.
     await input.setValue('#00ff00');
     expect((await input.getValue()).toLowerCase()).toBe('#00ff00');
   });

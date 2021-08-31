@@ -91,8 +91,8 @@ export class MatTreeHarness extends ComponentHarness {
    * @param level The level of nodes that are being accounted for during this iteration
    * @param parentExpanded Whether the parent of the first node in param nodes is expanded
    */
-  private _getTreeStructure(nodes: [number, string, boolean][], level: number,
-                                     parentExpanded: boolean): TextTree {
+  private _getTreeStructure(
+      nodes: [number, string, boolean][], level: number, parentExpanded: boolean): TextTree {
     const result: TextTree = {};
     for (let i = 0; i < nodes.length; i++) {
       const [nodeLevel, text, expanded] = nodes[i];
@@ -117,9 +117,8 @@ export class MatTreeHarness extends ComponentHarness {
         if (nextNodeLevel === level) {
           this._addChildToNode(result, {text});
         } else if (nextNodeLevel > level) {
-          let children = this._getTreeStructure(nodes.slice(i + 1),
-            nextNodeLevel,
-            expanded)?.children;
+          let children =
+              this._getTreeStructure(nodes.slice(i + 1), nextNodeLevel, expanded)?.children;
           let child = children ? {text, children} : {text};
           this._addChildToNode(result, child);
         } else {

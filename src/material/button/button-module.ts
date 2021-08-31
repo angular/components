@@ -26,4 +26,5 @@ import {MatAnchor, MatButton} from './button';
     MatAnchor,
   ],
 })
-export class MatButtonModule {}
+export class MatButtonModule {
+}

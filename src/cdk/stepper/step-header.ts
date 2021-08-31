@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef} from '@angular/core';
 import {FocusableOption} from '@angular/cdk/a11y';
+import {Directive, ElementRef} from '@angular/core';
 
 
 @Directive({

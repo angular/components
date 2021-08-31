@@ -1,42 +1,44 @@
-import {ComponentFixture, TestBed, waitForAsync, fakeAsync, tick} from '@angular/core/testing';
 import {
-  Component,
-  ViewChild,
-  ElementRef,
-  ViewChildren,
-  QueryList,
-  EventEmitter,
-} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {
-  TAB,
-  RIGHT_ARROW,
-  LEFT_ARROW,
-  DOWN_ARROW,
-  UP_ARROW,
-  SPACE,
-  HOME,
-  END,
-  E,
   D,
+  DOWN_ARROW,
+  E,
+  END,
   ESCAPE,
-  S,
   H,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  S,
+  SPACE,
+  TAB,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-  dispatchKeyboardEvent,
+  Component,
+  ElementRef,
+  EventEmitter,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+
+import {
   createKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../cdk/testing/private';
-import {CdkMenuBar} from './menu-bar';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItemRadio} from './menu-item-radio';
+
 import {CdkMenu} from './menu';
+import {CdkMenuBar} from './menu-bar';
+import {CdkMenuGroup} from './menu-group';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {CdkMenuItemRadio} from './menu-item-radio';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
-import {CdkMenuGroup} from './menu-group';
+import {CdkMenuModule} from './menu-module';
 
 describe('MenuBar', () => {
   describe('as radio group', () => {
@@ -44,17 +46,18 @@ describe('MenuBar', () => {
     let menuItems: CdkMenuItemRadio[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarRadioGroup],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuBarRadioGroup],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(MenuBarRadioGroup);
       fixture.detectChanges();
 
-      menuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemRadio))
-        .map(element => element.injector.get(CdkMenuItemRadio));
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemRadio))
+                      .map(element => element.injector.get(CdkMenuItemRadio));
     }));
 
     it('should toggle menuitemradio items', () => {
@@ -73,26 +76,26 @@ describe('MenuBar', () => {
     let menuItems: CdkMenuItemRadio[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarRadioGroup],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuBarRadioGroup],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(MenuBarRadioGroup);
 
       fixture.detectChanges();
 
-      menuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemRadio))
-        .map(element => element.injector.get(CdkMenuItemRadio));
+      menuItems = fixture.debugElement.queryAll(By.directive(CdkMenuItemRadio))
+                      .map(element => element.injector.get(CdkMenuItemRadio));
     }));
 
     it('should emit on click', () => {
       const spy = jasmine.createSpy('cdkMenu change spy');
-      fixture.debugElement
-        .query(By.directive(CdkMenuBar))
-        .injector.get(CdkMenuBar)
-        .change.subscribe(spy);
+      fixture.debugElement.query(By.directive(CdkMenuBar))
+          .injector.get(CdkMenuBar)
+          .change.subscribe(spy);
 
       menuItems[0].trigger();
 
@@ -114,13 +117,11 @@ describe('MenuBar', () => {
 
         nativeMenus = fixture.componentInstance.nativeMenus.map(e => e.nativeElement);
 
-        menuBarNativeItems = fixture.componentInstance.nativeItems
-          .map(e => e.nativeElement)
-          .slice(0, 2); // menu bar has the first 2 menu items
+        menuBarNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                 .slice(0, 2);  // menu bar has the first 2 menu items
 
-        fileMenuNativeItems = fixture.componentInstance.nativeItems
-          .map(e => e.nativeElement)
-          .slice(2, 5); // file menu has the next 3 menu items
+        fileMenuNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                  .slice(2, 5);  // file menu has the next 3 menu items
       }
 
       /** Run change detection and extract then set the rendered elements. */
@@ -138,10 +139,12 @@ describe('MenuBar', () => {
       }
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MultiMenuWithSubmenu],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [MultiMenuWithSubmenu],
+            })
+            .compileComponents();
       }));
 
       beforeEach(() => {
@@ -193,40 +196,38 @@ describe('MenuBar', () => {
         });
 
         it('should focus the edit MenuItem on E, D character keys', fakeAsync(() => {
-          focusMenuBar();
-          dispatchKeyboardEvent(nativeMenuBar, 'keydown', E);
-          dispatchKeyboardEvent(nativeMenuBar, 'keydown', D);
-          tick(500);
-          detectChanges();
+             focusMenuBar();
+             dispatchKeyboardEvent(nativeMenuBar, 'keydown', E);
+             dispatchKeyboardEvent(nativeMenuBar, 'keydown', D);
+             tick(500);
+             detectChanges();
 
-          expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-        }));
+             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
+           }));
 
-        it(
-          'should toggle and wrap when cycling the right/left arrow keys on menu bar ' +
-            'without toggling menus',
-          () => {
-            focusMenuBar();
+        it('should toggle and wrap when cycling the right/left arrow keys on menu bar ' +
+               'without toggling menus',
+           () => {
+             focusMenuBar();
 
-            dispatchKeyboardEvent(nativeMenuBar, 'keydown', RIGHT_ARROW);
-            detectChanges();
-            expect(document.activeElement).toEqual(menuBarNativeItems[1]);
+             dispatchKeyboardEvent(nativeMenuBar, 'keydown', RIGHT_ARROW);
+             detectChanges();
+             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
 
-            dispatchKeyboardEvent(nativeMenuBar, 'keydown', RIGHT_ARROW);
-            detectChanges();
-            expect(document.activeElement).toEqual(menuBarNativeItems[0]);
+             dispatchKeyboardEvent(nativeMenuBar, 'keydown', RIGHT_ARROW);
+             detectChanges();
+             expect(document.activeElement).toEqual(menuBarNativeItems[0]);
 
-            dispatchKeyboardEvent(nativeMenuBar, 'keydown', LEFT_ARROW);
-            detectChanges();
-            expect(document.activeElement).toEqual(menuBarNativeItems[1]);
+             dispatchKeyboardEvent(nativeMenuBar, 'keydown', LEFT_ARROW);
+             detectChanges();
+             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
 
-            dispatchKeyboardEvent(nativeMenuBar, 'keydown', LEFT_ARROW);
-            detectChanges();
-            expect(document.activeElement).toEqual(menuBarNativeItems[0]);
+             dispatchKeyboardEvent(nativeMenuBar, 'keydown', LEFT_ARROW);
+             detectChanges();
+             expect(document.activeElement).toEqual(menuBarNativeItems[0]);
 
-            expect(nativeMenus.length).toBe(0);
-          }
-        );
+             expect(nativeMenus.length).toBe(0);
+           });
 
         it('should toggle tabindex of menu bar items with left/right arrow keys', () => {
           focusMenuBar();
@@ -254,33 +255,28 @@ describe('MenuBar', () => {
           expect(nativeMenus.length).toBe(0);
         });
 
-        it(
-          "should open the focused menu item's menu and focus the first submenu" +
-            ' item on the down key',
-          () => {
-            focusMenuBar();
+        it('should open the focused menu item\'s menu and focus the first submenu' +
+               ' item on the down key',
+           () => {
+             focusMenuBar();
 
-            dispatchKeyboardEvent(menuBarNativeItems[0], 'keydown', DOWN_ARROW);
-            detectChanges();
+             dispatchKeyboardEvent(menuBarNativeItems[0], 'keydown', DOWN_ARROW);
+             detectChanges();
 
-            expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
-          }
-        );
+             expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
+           });
 
-        it(
-          "should open the focused menu item's menu and focus the last submenu" +
-            ' item on the up key',
-          () => {
-            focusMenuBar();
+        it('should open the focused menu item\'s menu and focus the last submenu' +
+               ' item on the up key',
+           () => {
+             focusMenuBar();
 
-            dispatchKeyboardEvent(menuBarNativeItems[0], 'keydown', UP_ARROW);
-            detectChanges();
+             dispatchKeyboardEvent(menuBarNativeItems[0], 'keydown', UP_ARROW);
+             detectChanges();
 
-            expect(document.activeElement).toEqual(
-              fileMenuNativeItems[fileMenuNativeItems.length - 1]
-            );
-          }
-        );
+             expect(document.activeElement)
+                 .toEqual(fileMenuNativeItems[fileMenuNativeItems.length - 1]);
+           });
 
         it('should open the focused menu items menu and focus first submenu item on space', () => {
           focusMenuBar();
@@ -291,27 +287,25 @@ describe('MenuBar', () => {
           expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
         });
 
-        it(
-          'should set the tabindex to 0 on the active item and reset the previous active items ' +
-            'to -1 when navigating down to a submenu and within it using the arrow keys',
-          () => {
-            focusMenuBar();
+        it('should set the tabindex to 0 on the active item and reset the previous active items ' +
+               'to -1 when navigating down to a submenu and within it using the arrow keys',
+           () => {
+             focusMenuBar();
 
-            expect(menuBarNativeItems[0].tabIndex).toEqual(0);
+             expect(menuBarNativeItems[0].tabIndex).toEqual(0);
 
-            dispatchKeyboardEvent(menuBarNativeItems[0], 'keydown', SPACE);
-            detectChanges();
+             dispatchKeyboardEvent(menuBarNativeItems[0], 'keydown', SPACE);
+             detectChanges();
 
-            expect(menuBarNativeItems[0].tabIndex).toEqual(-1);
-            expect(fileMenuNativeItems[0].tabIndex).toEqual(0);
+             expect(menuBarNativeItems[0].tabIndex).toEqual(-1);
+             expect(fileMenuNativeItems[0].tabIndex).toEqual(0);
 
-            dispatchKeyboardEvent(fileMenuNativeItems[0], 'keydown', DOWN_ARROW);
-            detectChanges();
+             dispatchKeyboardEvent(fileMenuNativeItems[0], 'keydown', DOWN_ARROW);
+             detectChanges();
 
-            expect(fileMenuNativeItems[0].tabIndex).toEqual(-1);
-            expect(fileMenuNativeItems[1].tabIndex).toEqual(0);
-          }
-        );
+             expect(fileMenuNativeItems[0].tabIndex).toEqual(-1);
+             expect(fileMenuNativeItems[1].tabIndex).toEqual(0);
+           });
       });
 
       describe('for Menu', () => {
@@ -368,9 +362,8 @@ describe('MenuBar', () => {
           expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
 
           dispatchKeyboardEvent(nativeMenus[0], 'keydown', END);
-          expect(document.activeElement).toEqual(
-            fileMenuNativeItems[fileMenuNativeItems.length - 1]
-          );
+          expect(document.activeElement)
+              .toEqual(fileMenuNativeItems[fileMenuNativeItems.length - 1]);
 
           dispatchKeyboardEvent(nativeMenus[0], 'keydown', HOME);
           expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
@@ -395,27 +388,24 @@ describe('MenuBar', () => {
           dispatchEvent(nativeMenus[0], event);
           detectChanges();
 
-          expect(document.activeElement).toEqual(
-            fileMenuNativeItems[fileMenuNativeItems.length - 1]
-          );
+          expect(document.activeElement)
+              .toEqual(fileMenuNativeItems[fileMenuNativeItems.length - 1]);
         });
 
-        it(
-          'should call user defined function and close out menus on space key on a non-trigger ' +
-            'menu item',
-          () => {
-            openFileMenu();
-            openShareMenu();
-            const spy = jasmine.createSpy('user defined callback spy');
-            fixture.componentInstance.clickEmitter.subscribe(spy);
+        it('should call user defined function and close out menus on space key on a non-trigger ' +
+               'menu item',
+           () => {
+             openFileMenu();
+             openShareMenu();
+             const spy = jasmine.createSpy('user defined callback spy');
+             fixture.componentInstance.clickEmitter.subscribe(spy);
 
-            dispatchKeyboardEvent(document.activeElement!, 'keydown', SPACE);
-            detectChanges();
+             dispatchKeyboardEvent(document.activeElement!, 'keydown', SPACE);
+             detectChanges();
 
-            expect(nativeMenus.length).toBe(0);
-            expect(spy).toHaveBeenCalledTimes(1);
-          }
-        );
+             expect(nativeMenus.length).toBe(0);
+             expect(spy).toHaveBeenCalledTimes(1);
+           });
 
         it('should close the submenu on left arrow and place focus back on its trigger', () => {
           openFileMenu();
@@ -429,21 +419,19 @@ describe('MenuBar', () => {
           expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
         });
 
-        it(
-          'should close menu tree, focus next menu bar item and open its menu on right arrow ' +
-            "when currently focused item doesn't trigger a menu",
-          () => {
-            openFileMenu();
-            openShareMenu();
+        it('should close menu tree, focus next menu bar item and open its menu on right arrow ' +
+               'when currently focused item doesn\'t trigger a menu',
+           () => {
+             openFileMenu();
+             openShareMenu();
 
-            dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW);
-            detectChanges();
+             dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW);
+             detectChanges();
 
-            expect(nativeMenus.length).toBe(1);
-            expect(nativeMenus[0].id).toBe('edit_menu');
-            expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-          }
-        );
+             expect(nativeMenus.length).toBe(1);
+             expect(nativeMenus[0].id).toBe('edit_menu');
+             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
+           });
 
         it('should close first level menu and focus previous menubar item on left arrow', () => {
           openFileMenu();
@@ -466,8 +454,8 @@ describe('MenuBar', () => {
           expect(nativeMenus.length).toBe(1);
           expect(nativeMenus[0].id).toBe('file_menu');
           expect(document.activeElement)
-            .withContext('re-focus trigger')
-            .toEqual(fileMenuNativeItems[1]);
+              .withContext('re-focus trigger')
+              .toEqual(fileMenuNativeItems[1]);
         });
 
         it('should not close submenu and focus parent on escape with modifier', () => {
@@ -494,28 +482,24 @@ describe('MenuBar', () => {
         });
 
         it('should focus share MenuItem on S, H character key press', fakeAsync(() => {
-          openFileMenu();
+             openFileMenu();
 
-          dispatchKeyboardEvent(nativeMenus[0], 'keydown', S);
-          dispatchKeyboardEvent(nativeMenus[0], 'keydown', H);
-          tick(500);
-          detectChanges();
+             dispatchKeyboardEvent(nativeMenus[0], 'keydown', S);
+             dispatchKeyboardEvent(nativeMenus[0], 'keydown', H);
+             tick(500);
+             detectChanges();
 
-          expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
-        }));
+             expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
+           }));
 
         it('should handle keyboard actions if initial menu is opened programmatically', () => {
-          fixture.debugElement
-              .queryAll(By.directive(CdkMenuItem))[0]
+          fixture.debugElement.queryAll(By.directive(CdkMenuItem))[0]
               .injector.get(CdkMenuItem)
-              .getMenuTrigger()!
-              .openMenu();
+              .getMenuTrigger()!.openMenu();
           detectChanges();
-          fixture.debugElement
-              .queryAll(By.directive(CdkMenuItem))[2]
+          fixture.debugElement.queryAll(By.directive(CdkMenuItem))[2]
               .injector.get(CdkMenuItem)
-              .getMenuTrigger()!
-              .openMenu();
+              .getMenuTrigger()!.openMenu();
           detectChanges();
 
           fileMenuNativeItems[0].focus();
@@ -539,13 +523,11 @@ describe('MenuBar', () => {
 
         nativeMenus = fixture.componentInstance.nativeMenus.map(e => e.nativeElement);
 
-        menuBarNativeItems = fixture.componentInstance.nativeItems
-          .map(e => e.nativeElement)
-          .slice(0, 2); // menu bar has the first 2 menu items
+        menuBarNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                 .slice(0, 2);  // menu bar has the first 2 menu items
 
-        fileMenuNativeItems = fixture.componentInstance.nativeItems
-          .map(e => e.nativeElement)
-          .slice(2, 5); // file menu has the next 3 menu items
+        fileMenuNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                  .slice(2, 5);  // file menu has the next 3 menu items
       }
 
       /** Run change detection and extract then set the rendered elements. */
@@ -563,10 +545,12 @@ describe('MenuBar', () => {
       }
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MultiMenuWithSubmenu],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [MultiMenuWithSubmenu],
+            })
+            .compileComponents();
       }));
 
       beforeEach(() => {
@@ -618,36 +602,32 @@ describe('MenuBar', () => {
           expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
         });
 
-        it(
-          'should close menu tree, focus next menu bar item and open its menu on left arrow when ' +
-            "focused item doesn't have a menu",
-          () => {
-            openFileMenu();
-            openShareMenu();
+        it('should close menu tree, focus next menu bar item and open its menu on left arrow when ' +
+               'focused item doesn\'t have a menu',
+           () => {
+             openFileMenu();
+             openShareMenu();
 
-            dispatchKeyboardEvent(document.activeElement!, 'keydown', LEFT_ARROW);
-            detectChanges();
+             dispatchKeyboardEvent(document.activeElement!, 'keydown', LEFT_ARROW);
+             detectChanges();
 
-            expect(nativeMenus.length).toBe(1);
-            expect(nativeMenus[0].id).toBe('edit_menu');
-            expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-          }
-        );
+             expect(nativeMenus.length).toBe(1);
+             expect(nativeMenus[0].id).toBe('edit_menu');
+             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
+           });
 
-        it(
-          'should close first level menu and focus the previous menubar item on right' +
-            ' arrow press',
-          () => {
-            openFileMenu();
+        it('should close first level menu and focus the previous menubar item on right' +
+               ' arrow press',
+           () => {
+             openFileMenu();
 
-            dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW);
-            detectChanges();
+             dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW);
+             detectChanges();
 
-            expect(nativeMenus.length).toBe(1);
-            expect(nativeMenus[0].id).toBe('edit_menu');
-            expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-          }
-        );
+             expect(nativeMenus.length).toBe(1);
+             expect(nativeMenus[0].id).toBe('edit_menu');
+             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
+           });
       });
     });
 
@@ -663,9 +643,8 @@ describe('MenuBar', () => {
 
         nativeMenus = fixture.componentInstance.nativeMenus.map(e => e.nativeElement);
 
-        menuBarNativeItems = fixture.componentInstance.nativeItems
-          .map(e => e.nativeElement)
-          .slice(0, 2); // menu bar has the first 2 menu items
+        menuBarNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                 .slice(0, 2);  // menu bar has the first 2 menu items
 
         fontMenuItems = fixture.componentInstance.checkboxItems.toArray();
       }
@@ -691,10 +670,12 @@ describe('MenuBar', () => {
       }
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithCheckboxes],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [MenuWithCheckboxes],
+            })
+            .compileComponents();
       }));
 
       beforeEach(() => {
@@ -702,20 +683,18 @@ describe('MenuBar', () => {
         detectChanges();
       });
 
-      it(
-        'should set the checked state on the focused checkbox on space key and keep the' +
-          ' menu open',
-        () => {
-          openFontMenu();
+      it('should set the checked state on the focused checkbox on space key and keep the' +
+             ' menu open',
+         () => {
+           openFontMenu();
 
-          dispatchKeyboardEvent(document.activeElement!, 'keydown', SPACE);
-          detectChanges();
+           dispatchKeyboardEvent(document.activeElement!, 'keydown', SPACE);
+           detectChanges();
 
-          expect(fontMenuItems[0].checked).toBeTrue();
-          expect(nativeMenus.length).toBe(1);
-          expect(nativeMenus[0].id).toBe('font_menu');
-        }
-      );
+           expect(fontMenuItems[0].checked).toBeTrue();
+           expect(nativeMenus.length).toBe(1);
+           expect(nativeMenus[0].id).toBe('font_menu');
+         });
     });
 
     describe('with menuitemradio components', () => {
@@ -730,9 +709,8 @@ describe('MenuBar', () => {
 
         nativeMenus = fixture.componentInstance.nativeMenus.map(e => e.nativeElement);
 
-        menuBarNativeItems = fixture.componentInstance.nativeItems
-          .map(e => e.nativeElement)
-          .slice(0, 1); // menu bar only has a single item
+        menuBarNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                 .slice(0, 1);  // menu bar only has a single item
 
         fontMenuItems = fixture.componentInstance.radioItems.toArray();
       }
@@ -758,10 +736,12 @@ describe('MenuBar', () => {
       }
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithRadioButtons],
-        }).compileComponents();
+        TestBed
+            .configureTestingModule({
+              imports: [CdkMenuModule],
+              declarations: [MenuWithRadioButtons],
+            })
+            .compileComponents();
       }));
 
       beforeEach(() => {
@@ -769,21 +749,19 @@ describe('MenuBar', () => {
         detectChanges();
       });
 
-      it(
-        'should set the checked state on the active radio button on space key and keep the' +
-          ' menu open',
-        () => {
-          openFontMenu();
+      it('should set the checked state on the active radio button on space key and keep the' +
+             ' menu open',
+         () => {
+           openFontMenu();
 
-          dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
-          dispatchKeyboardEvent(document.activeElement!, 'keydown', SPACE);
-          detectChanges();
+           dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
+           dispatchKeyboardEvent(document.activeElement!, 'keydown', SPACE);
+           detectChanges();
 
-          expect(fontMenuItems[1].checked).toBeTrue();
-          expect(nativeMenus.length).toBe(1);
-          expect(nativeMenus[0].id).toBe('text_menu');
-        }
-      );
+           expect(fontMenuItems[1].checked).toBeTrue();
+           expect(nativeMenus.length).toBe(1);
+           expect(nativeMenus[0].id).toBe('text_menu');
+         });
     });
   });
 
@@ -814,10 +792,12 @@ describe('MenuBar', () => {
     }
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarWithMenusAndInlineMenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MenuBarWithMenusAndInlineMenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -875,8 +855,8 @@ describe('MenuBar', () => {
       detectChanges();
 
       expect(popoutMenus.length)
-        .withContext('menu should stay open if clicking on an inner span element')
-        .toBe(1);
+          .withContext('menu should stay open if clicking on an inner span element')
+          .toBe(1);
     });
 
     it('should close the open menu when clicking on an inline menu item', () => {
@@ -900,17 +880,14 @@ describe('MenuBar', () => {
     function grabElementsForTesting() {
       nativeMenus = fixture.componentInstance.nativeMenus.map(e => e.nativeElement);
 
-      menuBarNativeItems = fixture.componentInstance.nativeItems
-        .map(e => e.nativeElement)
-        .slice(0, 2); // menu bar has the first 2 menu items
+      menuBarNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                               .slice(0, 2);  // menu bar has the first 2 menu items
 
-      fileMenuNativeItems = fixture.componentInstance.nativeItems
-        .map(e => e.nativeElement)
-        .slice(2, 5); // file menu has the next 3 menu items
+      fileMenuNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                .slice(2, 5);  // file menu has the next 3 menu items
 
-      shareMenuNativeItems = fixture.componentInstance.nativeItems
-        .map(e => e.nativeElement)
-        .slice(5, 7); // share menu has the next 2 menu items
+      shareMenuNativeItems = fixture.componentInstance.nativeItems.map(e => e.nativeElement)
+                                 .slice(5, 7);  // share menu has the next 2 menu items
     }
 
     /** Run change detection and extract then set the rendered elements. */
@@ -934,10 +911,12 @@ describe('MenuBar', () => {
     }
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MultiMenuWithSubmenu],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [MultiMenuWithSubmenu],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -964,43 +943,39 @@ describe('MenuBar', () => {
       expect(nativeMenus.length).toBe(0);
     });
 
-    it(
-      'should not change focused items when hovering over trigger in menu bar with no open ' +
-        'siblings',
-      () => {
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
-        detectChanges();
+    it('should not change focused items when hovering over trigger in menu bar with no open ' +
+           'siblings',
+       () => {
+         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+         detectChanges();
 
-        expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[0]);
-        expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[1]);
-      }
-    );
+         expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[0]);
+         expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[1]);
+       });
 
-    it(
-      'should toggle open menus in menu bar if sibling is open when mouse moves from one item ' +
-        'to the other',
-      () => {
-        openFileMenu();
+    it('should toggle open menus in menu bar if sibling is open when mouse moves from one item ' +
+           'to the other',
+       () => {
+         openFileMenu();
 
-        dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
+         detectChanges();
 
-        expect(nativeMenus.length).toBe(1);
-        expect(nativeMenus[0].id).toBe('edit_menu');
+         expect(nativeMenus.length).toBe(1);
+         expect(nativeMenus[0].id).toBe('edit_menu');
 
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+         detectChanges();
 
-        expect(nativeMenus.length).toBe(1);
-        expect(nativeMenus[0].id).toBe('file_menu');
+         expect(nativeMenus.length).toBe(1);
+         expect(nativeMenus[0].id).toBe('file_menu');
 
-        dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
+         detectChanges();
 
-        expect(nativeMenus.length).toBe(1);
-        expect(nativeMenus[0].id).toBe('edit_menu');
-      }
-    );
+         expect(nativeMenus.length).toBe(1);
+         expect(nativeMenus[0].id).toBe('edit_menu');
+       });
 
     it('should not close the menu when re-hovering the trigger', () => {
       openFileMenu();
@@ -1064,89 +1039,79 @@ describe('MenuBar', () => {
       expect(nativeMenus.length).toBe(0);
     });
 
-    it(
-      'should allow keyboard down arrow to focus next item after mouse sets focus to' +
-        ' initial item',
-      () => {
-        openFileMenu();
-        dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
-        detectChanges();
+    it('should allow keyboard down arrow to focus next item after mouse sets focus to' +
+           ' initial item',
+       () => {
+         openFileMenu();
+         dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
+         detectChanges();
 
-        dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
+         dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
 
-        expect(document.querySelector(':focus')).toEqual(fileMenuNativeItems[1]);
-      }
-    );
+         expect(document.querySelector(':focus')).toEqual(fileMenuNativeItems[1]);
+       });
 
-    it(
-      'should not re-open a menu when hovering over the trigger in the menubar after clicking to ' +
-        'open and then close it',
-      () => {
-        openFileMenu();
-        dispatchMouseEvent(menuBarNativeItems[0], 'click');
-        detectChanges();
+    it('should not re-open a menu when hovering over the trigger in the menubar after clicking to ' +
+           'open and then close it',
+       () => {
+         openFileMenu();
+         dispatchMouseEvent(menuBarNativeItems[0], 'click');
+         detectChanges();
 
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+         detectChanges();
 
-        expect(nativeMenus.length).toBe(0);
-      }
-    );
+         expect(nativeMenus.length).toBe(0);
+       });
 
-    it(
-      'should not set the tabindex when hovering over menubar item and there is no open' +
-        ' sibling menu',
-      () => {
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
-        detectChanges();
+    it('should not set the tabindex when hovering over menubar item and there is no open' +
+           ' sibling menu',
+       () => {
+         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+         detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(-1);
-      }
-    );
+         expect(menuBarNativeItems[0].tabIndex).toBe(-1);
+       });
 
-    it(
-      'should set the tabindex of the opened trigger to 0 and toggle tabindex' +
-        ' when hovering between items',
-      () => {
-        openFileMenu();
+    it('should set the tabindex of the opened trigger to 0 and toggle tabindex' +
+           ' when hovering between items',
+       () => {
+         openFileMenu();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(0);
+         expect(menuBarNativeItems[0].tabIndex).toBe(0);
 
-        dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
+         detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(-1);
-        expect(menuBarNativeItems[1].tabIndex).toBe(0);
+         expect(menuBarNativeItems[0].tabIndex).toBe(-1);
+         expect(menuBarNativeItems[1].tabIndex).toBe(0);
 
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+         detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(0);
-        expect(menuBarNativeItems[1].tabIndex).toBe(-1);
-      }
-    );
+         expect(menuBarNativeItems[0].tabIndex).toBe(0);
+         expect(menuBarNativeItems[1].tabIndex).toBe(-1);
+       });
 
-    it(
-      'should set the tabindex to 0 on the active item and reset the previous active items ' +
-        'to -1 when navigating down to a submenu and within it using a mouse',
-      () => {
-        openFileMenu();
-        expect(menuBarNativeItems[0].tabIndex).toBe(0);
+    it('should set the tabindex to 0 on the active item and reset the previous active items ' +
+           'to -1 when navigating down to a submenu and within it using a mouse',
+       () => {
+         openFileMenu();
+         expect(menuBarNativeItems[0].tabIndex).toBe(0);
 
-        dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseout');
-        detectChanges();
+         dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
+         dispatchMouseEvent(menuBarNativeItems[0], 'mouseout');
+         detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(-1);
-        expect(fileMenuNativeItems[0].tabIndex).toBe(0);
+         expect(menuBarNativeItems[0].tabIndex).toBe(-1);
+         expect(fileMenuNativeItems[0].tabIndex).toBe(0);
 
-        dispatchMouseEvent(fileMenuNativeItems[1], 'mouseenter');
-        detectChanges();
+         dispatchMouseEvent(fileMenuNativeItems[1], 'mouseenter');
+         detectChanges();
 
-        expect(fileMenuNativeItems[0].tabIndex).toBe(-1);
-        expect(fileMenuNativeItems[1].tabIndex).toBe(0);
-      }
-    );
+         expect(fileMenuNativeItems[0].tabIndex).toBe(-1);
+         expect(fileMenuNativeItems[1].tabIndex).toBe(0);
+       });
   });
 });
 
@@ -1166,7 +1131,8 @@ describe('MenuBar', () => {
     </ul>
   `,
 })
-class MenuBarRadioGroup {}
+class MenuBarRadioGroup {
+}
 
 @Component({
   template: `

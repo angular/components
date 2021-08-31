@@ -1,12 +1,13 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatProgressBarHarness} from '@angular/material/progress-bar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarHarness} from '@angular/material/progress-bar/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 import {ProgressBarHarnessExample} from './progress-bar-harness-example';
 
 describe('ProgressBarHarnessExample', () => {
@@ -14,16 +15,16 @@ describe('ProgressBarHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatProgressBarModule],
-      declarations: [ProgressBarHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule(
+            {imports: [MatProgressBarModule], declarations: [ProgressBarHarnessExample]})
+        .compileComponents();
     fixture = TestBed.createComponent(ProgressBarHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

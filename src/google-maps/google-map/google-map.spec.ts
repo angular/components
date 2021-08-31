@@ -1,9 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {GoogleMapsModule} from '../google-maps-module';
 import {createMapConstructorSpy, createMapSpy} from '../testing/fake-google-map-utils';
+
 import {DEFAULT_HEIGHT, DEFAULT_OPTIONS, DEFAULT_WIDTH, GoogleMap} from './google-map';
 
 /** Represents boundaries of a map to be used in tests. */
@@ -147,12 +148,8 @@ describe('GoogleMap', () => {
   });
 
   it('sets map options', () => {
-    const options = {
-      center: {lat: 3, lng: 5},
-      zoom: 7,
-      draggable: false,
-      mapTypeId: DEFAULT_OPTIONS.mapTypeId
-    };
+    const options =
+        {center: {lat: 3, lng: 5}, zoom: 7, draggable: false, mapTypeId: DEFAULT_OPTIONS.mapTypeId};
     mapSpy = createMapSpy(options);
     mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
 
@@ -207,12 +204,8 @@ describe('GoogleMap', () => {
 
   it('gives precedence to center and zoom over options', () => {
     const inputOptions = {center: {lat: 3, lng: 5}, zoom: 7, heading: 170};
-    const correctedOptions = {
-      center: {lat: 12, lng: 15},
-      zoom: 5,
-      heading: 170,
-      mapTypeId: DEFAULT_OPTIONS.mapTypeId
-    };
+    const correctedOptions =
+        {center: {lat: 12, lng: 15}, zoom: 5, heading: 170, mapTypeId: DEFAULT_OPTIONS.mapTypeId};
     mapSpy = createMapSpy(correctedOptions);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
@@ -339,8 +332,9 @@ describe('GoogleMap', () => {
     fixture.componentInstance.mapTypeId = 'terrain' as unknown as google.maps.MapTypeId;
     fixture.detectChanges();
 
-    expect(mapConstructorSpy).toHaveBeenCalledWith(jasmine.any(HTMLElement),
-      jasmine.objectContaining({mapTypeId: 'terrain'}));
+    expect(mapConstructorSpy)
+        .toHaveBeenCalledWith(
+            jasmine.any(HTMLElement), jasmine.objectContaining({mapTypeId: 'terrain'}));
 
     fixture.componentInstance.mapTypeId = 'roadmap' as unknown as google.maps.MapTypeId;
     fixture.detectChanges();
@@ -398,8 +392,8 @@ describe('GoogleMap', () => {
 })
 class TestApp {
   @ViewChild(GoogleMap) map: GoogleMap;
-  height?: string | number | null;
-  width?: string | number | null;
+  height?: string|number|null;
+  width?: string|number|null;
   center?: google.maps.LatLngLiteral;
   zoom?: number;
   options?: google.maps.MapOptions;

@@ -7,19 +7,20 @@
  */
 
 import {HarnessPredicate, parallel, TestKey} from '@angular/cdk/testing';
-import {DatepickerInputHarnessFilters, CalendarHarnessFilters} from './datepicker-harness-filters';
-import {MatDatepickerInputHarnessBase, getInputPredicate} from './datepicker-input-harness-base';
+
 import {MatCalendarHarness} from './calendar-harness';
+import {CalendarHarnessFilters, DatepickerInputHarnessFilters} from './datepicker-harness-filters';
+import {getInputPredicate, MatDatepickerInputHarnessBase} from './datepicker-input-harness-base';
 import {
-  DatepickerTrigger,
   closeCalendar,
-  getCalendarId,
+  DatepickerTrigger,
   getCalendar,
+  getCalendarId,
 } from './datepicker-trigger-harness-base';
 
 /** Harness for interacting with a standard Material datepicker inputs in tests. */
 export class MatDatepickerInputHarness extends MatDatepickerInputHarnessBase implements
-  DatepickerTrigger {
+    DatepickerTrigger {
   static hostSelector = '.mat-datepicker-input';
 
   /**
@@ -29,7 +30,7 @@ export class MatDatepickerInputHarness extends MatDatepickerInputHarnessBase imp
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DatepickerInputHarnessFilters = {}):
-    HarnessPredicate<MatDatepickerInputHarness> {
+      HarnessPredicate<MatDatepickerInputHarness> {
     return getInputPredicate(MatDatepickerInputHarness, options);
   }
 

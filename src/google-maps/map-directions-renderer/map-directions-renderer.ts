@@ -138,8 +138,12 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  private _assertInitialized():
-      asserts this is {directionsRenderer: google.maps.DirectionsRenderer} {
+  // clang-format does not properly format the `asserts` and breaks the syntax.
+  // TODO: remove when a new version of clang-format is available containing:
+  // https://github.com/llvm/llvm-project/commit/70ae843d99808b19247e968507c0019225597066.
+  // clang-format off
+  private _assertInitialized(): asserts this is {directionsRenderer: google.maps.DirectionsRenderer} {
+    // clang-format on
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._googleMap.googleMap) {
         throw Error(

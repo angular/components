@@ -1,26 +1,26 @@
+import {CdkCombobox, CdkComboboxModule, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {
   ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
   waitForAsync,
-  TestBed, tick, fakeAsync,
 } from '@angular/core/testing';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {
-  CdkOption,
-  CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox
-} from './index';
+
 import {
   createKeyboardEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent
 } from '../../cdk/testing/private';
-import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkCombobox, CdkComboboxModule, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+
+import {CdkListbox, CdkListboxModule, CdkOption, ListboxSelectionChangeEvent} from './index';
 
 
 describe('CdkOption and CdkListbox', () => {
-
   describe('selection state change', () => {
     let fixture: ComponentFixture<ListboxWithOptions>;
 
@@ -35,10 +35,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionElements: HTMLElement[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkListboxModule],
-        declarations: [ListboxWithOptions],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkListboxModule],
+            declarations: [ListboxWithOptions],
+          })
+          .compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -219,16 +221,16 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should change active item using type ahead', fakeAsync(() => {
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+         expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+         expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
 
-      dispatchKeyboardEvent(listboxElement, 'keydown', A);
-      fixture.detectChanges();
-      tick(200);
+         dispatchKeyboardEvent(listboxElement, 'keydown', A);
+         fixture.detectChanges();
+         tick(200);
 
-      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[2]);
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
-    }));
+         expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[2]);
+         expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
+       }));
 
     it('should not handle space or enter on a disabled listbox', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
@@ -249,19 +251,19 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should not handle type ahead on a disabled listbox', fakeAsync(() => {
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+         expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+         expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
 
-      testComponent.isListboxDisabled = true;
-      fixture.detectChanges();
+         testComponent.isListboxDisabled = true;
+         fixture.detectChanges();
 
-      dispatchKeyboardEvent(listboxElement, 'keydown', A);
-      fixture.detectChanges();
-      tick(200);
+         dispatchKeyboardEvent(listboxElement, 'keydown', A);
+         fixture.detectChanges();
+         tick(200);
 
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
-    }));
+         expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+         expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+       }));
 
     it('should not select a disabled option using space or enter', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
@@ -337,8 +339,7 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
-      const downKeyEvent =
-        createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
+      const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
 
       expect(selectedOptions.length).toBe(0);
       expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
@@ -370,10 +371,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionElements: HTMLElement[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkListboxModule],
-        declarations: [ListboxMultiselect],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkListboxModule],
+            declarations: [ListboxMultiselect],
+          })
+          .compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -513,10 +516,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionElements: HTMLElement[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkListboxModule],
-        declarations: [ListboxActiveDescendant],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkListboxModule],
+            declarations: [ListboxActiveDescendant],
+          })
+          .compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -582,7 +587,6 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(listboxElement.hasAttribute('aria-activedescendant')).toBeFalse();
       expect(document.activeElement).toEqual(optionElements[1]);
-
     });
   });
 
@@ -598,10 +602,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionElements: HTMLElement[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkListboxModule, FormsModule, ReactiveFormsModule],
-        declarations: [ListboxControlValueAccessor],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkListboxModule, FormsModule, ReactiveFormsModule],
+            declarations: [ListboxControlValueAccessor],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -620,15 +626,18 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should be able to set the disabled state via setDisabledState', () => {
       expect(listboxInstance.disabled)
-        .withContext('Expected the selection list to be enabled.').toBe(false);
+          .withContext('Expected the selection list to be enabled.')
+          .toBe(false);
       expect(optionInstances.every(option => !option.disabled))
-        .withContext('Expected every list option to be enabled.').toBe(true);
+          .withContext('Expected every list option to be enabled.')
+          .toBe(true);
 
       listboxInstance.setDisabledState(true);
       fixture.detectChanges();
 
       expect(listboxInstance.disabled)
-        .withContext('Expected the selection list to be disabled.').toBe(true);
+          .withContext('Expected the selection list to be disabled.')
+          .toBe(true);
       for (const option of optionElements) {
         expect(option.getAttribute('aria-disabled')).toBe('true');
       }
@@ -636,7 +645,8 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should be able to select options via writeValue', () => {
       expect(optionInstances.every(option => !option.disabled))
-        .withContext('Expected every list option to be enabled.').toBe(true);
+          .withContext('Expected every list option to be enabled.')
+          .toBe(true);
 
       listboxInstance.writeValue('arc');
       fixture.detectChanges();
@@ -651,7 +661,8 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should be select multiple options by their values', () => {
       expect(optionInstances.every(option => !option.disabled))
-        .withContext('Expected every list option to be enabled.').toBe(true);
+          .withContext('Expected every list option to be enabled.')
+          .toBe(true);
 
       testComponent.isMultiselectable = true;
       fixture.detectChanges();
@@ -676,7 +687,8 @@ describe('CdkOption and CdkListbox', () => {
     it('should be able to disable options from the control', () => {
       expect(testComponent.listbox.disabled).toBeFalse();
       expect(optionInstances.every(option => !option.disabled))
-        .withContext('Expected every list option to be enabled.').toBe(true);
+          .withContext('Expected every list option to be enabled.')
+          .toBe(true);
 
       testComponent.form.disable();
       fixture.detectChanges();
@@ -687,10 +699,11 @@ describe('CdkOption and CdkListbox', () => {
       }
     });
 
-    it('should be able to toggle disabled state after form control is disabled',  () => {
+    it('should be able to toggle disabled state after form control is disabled', () => {
       expect(testComponent.listbox.disabled).toBeFalse();
       expect(optionInstances.every(option => !option.disabled))
-        .withContext('Expected every list option to be enabled.').toBe(true);
+          .withContext('Expected every list option to be enabled.')
+          .toBe(true);
 
       testComponent.form.disable();
       fixture.detectChanges();
@@ -705,7 +718,8 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(testComponent.listbox.disabled).toBeFalse();
       expect(optionInstances.every(option => !option.disabled))
-        .withContext('Expected every list option to be enabled.').toBe(true);
+          .withContext('Expected every list option to be enabled.')
+          .toBe(true);
     });
 
     it('should be able to select options via setting the value in form control', () => {
@@ -757,7 +771,7 @@ describe('CdkOption and CdkListbox', () => {
       expect(option.selected).toBeFalse();
     });
 
-    it('should maintain the form control on listbox destruction', function () {
+    it('should maintain the form control on listbox destruction', function() {
       testComponent.form.setValue(['solar']);
       fixture.detectChanges();
 
@@ -787,10 +801,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionElements: HTMLElement[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkListboxModule, CdkComboboxModule],
-        declarations: [ListboxInsideCombobox],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkListboxModule, CdkComboboxModule],
+            declarations: [ListboxInsideCombobox],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -802,7 +818,6 @@ describe('CdkOption and CdkListbox', () => {
       combobox = fixture.debugElement.query(By.directive(CdkCombobox));
       comboboxInstance = combobox.injector.get<CdkCombobox<string>>(CdkCombobox);
       comboboxElement = combobox.nativeElement;
-
     });
 
     it('should update combobox value on selection of an option', () => {

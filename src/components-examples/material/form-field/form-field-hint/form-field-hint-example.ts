@@ -6,4 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'form-field-hint-example.html',
   styleUrls: ['form-field-hint-example.css'],
 })
-export class FormFieldHintExample {}
+export class FormFieldHintExample {
+}

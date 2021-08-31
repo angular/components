@@ -93,17 +93,17 @@ export class SecondaryEntryPointsMigration extends Migration<null> {
 
       if (!moduleName) {
         this.createFailureAtNode(
-          element, `"${element.getText()}" was not found in the Material library.`);
+            element, `"${element.getText()}" was not found in the Material library.`);
         return;
       }
 
-        // The module name where the symbol is defined e.g. card, dialog. The
-        // first capture group is contains the module name.
-        if (importMap.has(moduleName)) {
-          importMap.get(moduleName)!.push(element);
-        } else {
-          importMap.set(moduleName, [element]);
-        }
+      // The module name where the symbol is defined e.g. card, dialog. The
+      // first capture group is contains the module name.
+      if (importMap.has(moduleName)) {
+        importMap.get(moduleName)!.push(element);
+      } else {
+        importMap.set(moduleName, [element]);
+      }
     }
 
     // Transforms the import declaration into multiple import declarations that import
@@ -131,8 +131,7 @@ export class SecondaryEntryPointsMigration extends Migration<null> {
       return;
     }
 
-    const filePath = this.fileSystem.resolve(
-        declaration.moduleSpecifier.getSourceFile().fileName);
+    const filePath = this.fileSystem.resolve(declaration.moduleSpecifier.getSourceFile().fileName);
     const recorder = this.fileSystem.edit(filePath);
 
     // Perform the replacement that switches the primary entry-point import to

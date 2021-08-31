@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'list-harness-example',
   templateUrl: 'list-harness-example.html',
 })
-export class ListHarnessExample {}
+export class ListHarnessExample {
+}

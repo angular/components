@@ -7,5 +7,5 @@ import {Component} from '@angular/core';
   styleUrls: ['datepicker-inline-calendar-example.css'],
 })
 export class DatepickerInlineCalendarExample {
-  selected: Date | null;
+  selected: Date|null;
 }

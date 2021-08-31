@@ -1,8 +1,8 @@
+import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
 import {
   ParameterContainer,
   ParamTag,
 } from 'dgeni-packages/typescript/api-doc-types/ParameterContainer';
-import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
 
 export interface NormalizedFunctionParameters {
   params?: FunctionParameterInfo[];
@@ -17,7 +17,7 @@ export interface FunctionParameterInfo extends ParamTag {
  * Generic type that represents Dgeni method members and standalone functions. Also it the type
  * combines the normalized function document so that we can update the doc with type checking.
  */
-export type DefaultFunctionDoc = NormalizedFunctionParameters & ParameterContainer & ApiDoc;
+export type DefaultFunctionDoc = NormalizedFunctionParameters&ParameterContainer&ApiDoc;
 
 /**
  * The `parameters` property are the parameters extracted from TypeScript and are strings
@@ -45,8 +45,9 @@ export function normalizeFunctionParameters(doc: DefaultFunctionDoc) {
       doc.params = doc.params || [];
 
       if (!parameterType) {
-        console.warn(`Missing parameter type information (${parameterName}) in ` +
-          `${doc.fileInfo.relativePath}:${doc.startingLine}`);
+        console.warn(
+            `Missing parameter type information (${parameterName}) in ` +
+            `${doc.fileInfo.relativePath}:${doc.startingLine}`);
         return;
       }
 

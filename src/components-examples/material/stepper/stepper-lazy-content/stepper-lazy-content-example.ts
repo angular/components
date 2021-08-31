@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'stepper-lazy-content-example.html',
   styleUrls: ['stepper-lazy-content-example.css'],
 })
-export class StepperLazyContentExample {}
+export class StepperLazyContentExample {
+}

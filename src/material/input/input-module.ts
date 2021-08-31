@@ -30,4 +30,5 @@ import {MatInput} from './input';
   ],
   providers: [ErrorStateMatcher],
 })
-export class MatInputModule {}
+export class MatInputModule {
+}

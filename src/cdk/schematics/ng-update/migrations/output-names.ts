@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {WorkspacePath} from '../../update-tool/file-system';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
+import {WorkspacePath} from '../../update-tool/file-system';
 import {Migration} from '../../update-tool/migration';
-
 import {OutputNameUpgradeData} from '../data';
 import {
   findOutputsOnElementWithAttr,
@@ -50,10 +49,8 @@ export class OutputNamesMigration extends Migration<UpgradeData> {
     });
   }
 
-  private _replaceOutputName(filePath: WorkspacePath, start: number, width: number,
-                             newName: string) {
-    this.fileSystem.edit(filePath)
-      .remove(start, width)
-      .insertRight(start, newName);
+  private _replaceOutputName(
+      filePath: WorkspacePath, start: number, width: number, newName: string) {
+    this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newName);
   }
 }

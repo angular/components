@@ -1,9 +1,10 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatRipple} from '@angular/material-experimental/mdc-core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
 
@@ -27,10 +28,7 @@ describe('MDC-based MatChip', () => {
         BasicChipWithBoundTabindex,
       ],
       providers: [
-        {provide: Directionality, useFactory: () => ({
-          value: dir,
-          change: new Subject()
-        })},
+        {provide: Directionality, useFactory: () => ({value: dir, change: new Subject()})},
       ]
     });
 
@@ -82,7 +80,8 @@ describe('MDC-based MatChip', () => {
       chipRippleDebugElement = chipDebugElement.query(By.directive(MatRipple))!;
       chipRippleInstance = chipRippleDebugElement.injector.get<MatRipple>(MatRipple);
       expect(chipRippleInstance.disabled)
-        .withContext('Expected basic chip ripples to be disabled.').toBe(true);
+          .withContext('Expected basic chip ripples to be disabled.')
+          .toBe(true);
     });
   });
 
@@ -140,24 +139,28 @@ describe('MDC-based MatChip', () => {
 
     it('should be able to disable ripples with the `[rippleDisabled]` input', () => {
       expect(chipRippleInstance.disabled)
-        .withContext('Expected chip ripples to be enabled.').toBe(false);
+          .withContext('Expected chip ripples to be enabled.')
+          .toBe(false);
 
       testComponent.rippleDisabled = true;
       fixture.detectChanges();
 
       expect(chipRippleInstance.disabled)
-        .withContext('Expected chip ripples to be disabled.').toBe(true);
+          .withContext('Expected chip ripples to be disabled.')
+          .toBe(true);
     });
 
     it('should disable ripples when the chip is disabled', () => {
       expect(chipRippleInstance.disabled)
-        .withContext('Expected chip ripples to be enabled.').toBe(false);
+          .withContext('Expected chip ripples to be enabled.')
+          .toBe(false);
 
       testComponent.disabled = true;
       fixture.detectChanges();
 
       expect(chipRippleInstance.disabled)
-        .withContext('Expected chip ripples to be disabled.').toBe(true);
+          .withContext('Expected chip ripples to be disabled.')
+          .toBe(true);
     });
 
     it('should update the aria-label for disabled chips', () => {
@@ -221,21 +224,15 @@ class SingleChip {
   chipRemove: (event?: MatChipEvent) => void = () => {};
 }
 
-@Component({
-  template: `<mat-basic-chip>Hello</mat-basic-chip>`
-})
+@Component({template: `<mat-basic-chip>Hello</mat-basic-chip>`})
 class BasicChip {
 }
 
-@Component({
-  template: `<mat-basic-chip tabindex="3">Hello</mat-basic-chip>`
-})
+@Component({template: `<mat-basic-chip tabindex="3">Hello</mat-basic-chip>`})
 class BasicChipWithStaticTabindex {
 }
 
-@Component({
-  template: `<mat-basic-chip [tabIndex]="tabindex">Hello</mat-basic-chip>`
-})
+@Component({template: `<mat-basic-chip [tabIndex]="tabindex">Hello</mat-basic-chip>`})
 class BasicChipWithBoundTabindex {
   tabindex = 12;
 }

@@ -44,7 +44,7 @@ describe('Material tree schematic', () => {
     const appTree = await createTestApp(runner);
 
     await expectAsync(runner.runSchematicAsync('tree', {project: 'material'}, appTree).toPromise())
-      .toBeRejectedWithError(/required property 'name'/);
+        .toBeRejectedWithError(/required property 'name'/);
   });
 
   describe('style option', () => {

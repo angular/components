@@ -22,8 +22,8 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
-import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {MapEventManager} from '../map-event-manager';
 
 /**
  * Angular component that renders a Google Maps info window via the Google Maps JavaScript API.
@@ -63,30 +63,32 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * See
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.closeclick
    */
-  @Output() readonly closeclick: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('closeclick');
+  @Output()
+  readonly closeclick: Observable<void> = this._eventManager.getLazyEmitter<void>('closeclick');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/info-window
    * #InfoWindow.content_changed
    */
-  @Output() readonly contentChanged: Observable<void> =
+  @Output()
+  readonly contentChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('content_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.domready
    */
-  @Output() readonly domready: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('domready');
+  @Output()
+  readonly domready: Observable<void> = this._eventManager.getLazyEmitter<void>('domready');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/info-window
    * #InfoWindow.position_changed
    */
-  @Output() readonly positionChanged: Observable<void> =
+  @Output()
+  readonly positionChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('position_changed');
 
   /**
@@ -94,12 +96,13 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/info-window
    * #InfoWindow.zindex_changed
    */
-  @Output() readonly zindexChanged: Observable<void> =
+  @Output()
+  readonly zindexChanged: Observable<void> =
       this._eventManager.getLazyEmitter<void>('zindex_changed');
 
-  constructor(private readonly _googleMap: GoogleMap,
-              private _elementRef: ElementRef<HTMLElement>,
-              private _ngZone: NgZone) {}
+  constructor(
+      private readonly _googleMap: GoogleMap, private _elementRef: ElementRef<HTMLElement>,
+      private _ngZone: NgZone) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

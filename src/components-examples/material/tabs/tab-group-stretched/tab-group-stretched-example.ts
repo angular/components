@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'tab-group-stretched-example.html',
   styleUrls: ['tab-group-stretched-example.css'],
 })
-export class TabGroupStretchedExample {}
+export class TabGroupStretchedExample {
+}

@@ -24,9 +24,7 @@ export const CDK_TREE_NODE_OUTLET_NODE = new InjectionToken<{}>('CDK_TREE_NODE_O
  * Outlet for nested CdkNode. Put `[cdkTreeNodeOutlet]` on a tag to place children dataNodes
  * inside the outlet.
  */
-@Directive({
-  selector: '[cdkTreeNodeOutlet]'
-})
+@Directive({selector: '[cdkTreeNodeOutlet]'})
 export class CdkTreeNodeOutlet {
   constructor(
       public viewContainer: ViewContainerRef,

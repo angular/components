@@ -28,18 +28,12 @@ import {Subject} from 'rxjs';
   templateUrl: 'form-field-custom-control-example.html',
 })
 export class FormFieldCustomControlExample {
-  form: FormGroup = new FormGroup({
-    tel: new FormControl(new MyTel('', '', ''))
-  });
+  form: FormGroup = new FormGroup({tel: new FormControl(new MyTel('', '', ''))});
 }
 
 /** Data structure for holding telephone number. */
 export class MyTel {
-  constructor(
-    public area: string,
-    public exchange: string,
-    public subscriber: string
-  ) {}
+  constructor(public area: string, public exchange: string, public subscriber: string) {}
 }
 
 /** Custom `MatFormFieldControl` for telephone number input. */
@@ -47,14 +41,13 @@ export class MyTel {
   selector: 'example-tel-input',
   templateUrl: 'example-tel-input-example.html',
   styleUrls: ['example-tel-input-example.css'],
-  providers: [{ provide: MatFormFieldControl, useExisting: MyTelInput }],
+  providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
   host: {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',
   }
 })
-export class MyTelInput
-  implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
+export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
   static nextId = 0;
   @ViewChild('area') areaInput: HTMLInputElement;
   @ViewChild('exchange') exchangeInput: HTMLInputElement;
@@ -70,9 +63,7 @@ export class MyTelInput
   onTouched = () => {};
 
   get empty() {
-    const {
-      value: { area, exchange, subscriber }
-    } = this.parts;
+    const {value: {area, exchange, subscriber}} = this.parts;
 
     return !area && !exchange && !subscriber;
   }
@@ -115,18 +106,16 @@ export class MyTelInput
   private _disabled = false;
 
   @Input()
-  get value(): MyTel | null {
+  get value(): MyTel|null {
     if (this.parts.valid) {
-      const {
-        value: { area, exchange, subscriber }
-      } = this.parts;
+      const {value: {area, exchange, subscriber}} = this.parts;
       return new MyTel(area, exchange, subscriber);
     }
     return null;
   }
-  set value(tel: MyTel | null) {
-    const { area, exchange, subscriber } = tel || new MyTel('', '', '');
-    this.parts.setValue({ area, exchange, subscriber });
+  set value(tel: MyTel|null) {
+    const {area, exchange, subscriber} = tel || new MyTel('', '', '');
+    this.parts.setValue({area, exchange, subscriber});
     this.stateChanges.next();
   }
 
@@ -135,25 +124,14 @@ export class MyTelInput
   }
 
   constructor(
-    formBuilder: FormBuilder,
-    private _focusMonitor: FocusMonitor,
-    private _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
-    @Optional() @Self() public ngControl: NgControl) {
-
+      formBuilder: FormBuilder, private _focusMonitor: FocusMonitor,
+      private _elementRef: ElementRef<HTMLElement>,
+      @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
+      @Optional() @Self() public ngControl: NgControl) {
     this.parts = formBuilder.group({
-      area: [
-        null,
-        [Validators.required, Validators.minLength(3), Validators.maxLength(3)]
-      ],
-      exchange: [
-        null,
-        [Validators.required, Validators.minLength(3), Validators.maxLength(3)]
-      ],
-      subscriber: [
-        null,
-        [Validators.required, Validators.minLength(4), Validators.maxLength(4)]
-      ]
+      area: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      exchange: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      subscriber: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]]
     });
 
     if (this.ngControl != null) {
@@ -195,8 +173,8 @@ export class MyTelInput
   }
 
   setDescribedByIds(ids: string[]) {
-    const controlElement = this._elementRef.nativeElement
-      .querySelector('.example-tel-input-container')!;
+    const controlElement =
+        this._elementRef.nativeElement.querySelector('.example-tel-input-container')!;
     controlElement.setAttribute('aria-describedby', ids.join(' '));
   }
 
@@ -212,7 +190,7 @@ export class MyTelInput
     }
   }
 
-  writeValue(tel: MyTel | null): void {
+  writeValue(tel: MyTel|null): void {
     this.value = tel;
   }
 

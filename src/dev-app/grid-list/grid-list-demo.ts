@@ -38,5 +38,7 @@ export class GridListDemo {
   fitListHeight = '400px';
   ratio = '4:1';
 
-  addTileCols() { this.tiles[2].cols++; }
+  addTileCols() {
+    this.tiles[2].cols++;
+  }
 }

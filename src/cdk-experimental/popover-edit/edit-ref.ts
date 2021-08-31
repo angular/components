@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, OnDestroy, Self, NgZone} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, Self} from '@angular/core';
 import {ControlContainer} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {take} from 'rxjs/operators';

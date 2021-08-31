@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {QueryList} from '@angular/core';
-import {Subject} from 'rxjs';
 import {
-  UP_ARROW,
   DOWN_ARROW,
+  END,
+  HOME,
   LEFT_ARROW,
   RIGHT_ARROW,
-  HOME,
-  END,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
+import {QueryList} from '@angular/core';
+import {Subject} from 'rxjs';
 
 
 /** The keys handled by the GridKeyManager keydown method. */
@@ -36,12 +36,12 @@ export interface GridKeyManagerRow<T> {
 export class GridKeyManager<T> {
   private _activeRowIndex = -1;
   private _activeColumnIndex = -1;
-  private _activeRow: GridKeyManagerRow<T> | null = null;
-  private _activeCell: T | null = null;
-  private _dir: 'ltr' | 'rtl' = 'ltr';
+  private _activeRow: GridKeyManagerRow<T>|null = null;
+  private _activeCell: T|null = null;
+  private _dir: 'ltr'|'rtl' = 'ltr';
   private _homeAndEnd = false;
 
-  constructor(private _rows: QueryList<GridKeyManagerRow<T>> | GridKeyManagerRow<T>[]) {
+  constructor(private _rows: QueryList<GridKeyManagerRow<T>>|GridKeyManagerRow<T>[]) {
     // We allow for the rows to be an array because, in some cases, the consumer may
     // not have access to a QueryList of the rows they want to manage (e.g. when the
     // rows aren't being collected via `ViewChildren` or `ContentChildren`).
@@ -67,7 +67,7 @@ export class GridKeyManager<T> {
    *
    * If withDirectionality is not set, the default is 'ltr'.
    */
-  withDirectionality(direction: 'ltr' | 'rtl'): this {
+  withDirectionality(direction: 'ltr'|'rtl'): this {
     this._dir = direction;
     return this;
   }
@@ -91,7 +91,7 @@ export class GridKeyManager<T> {
     this.updateActiveCell(cell);
 
     if (this._activeRowIndex !== previousRowIndex ||
-      this._activeColumnIndex !== previousColumnIndex) {
+        this._activeColumnIndex !== previousColumnIndex) {
       this.change.next({row: this._activeRowIndex, column: this._activeColumnIndex});
     }
   }
@@ -166,7 +166,7 @@ export class GridKeyManager<T> {
   }
 
   /** The active cell. */
-  get activeCell(): T | null {
+  get activeCell(): T|null {
     return this._activeCell;
   }
 
@@ -224,7 +224,7 @@ export class GridKeyManager<T> {
     const rowArray = this._getRowsArray();
 
     if (typeof cell === 'object' && typeof cell.row === 'number' &&
-      typeof cell.column === 'number') {
+        typeof cell.column === 'number') {
       this._activeRowIndex = cell.row;
       this._activeColumnIndex = cell.column;
       this._activeRow = rowArray[cell.row] || null;
@@ -246,12 +246,13 @@ export class GridKeyManager<T> {
    * This method sets the active cell, given the row and columns deltas
    * between the currently active cell and the new active cell.
    */
-  private _setActiveCellByDelta(rowDelta: -1 | 0 | 1, columnDelta: -1 | 0 | 1): void {
+  private _setActiveCellByDelta(rowDelta: -1|0|1, columnDelta: -1|0|1): void {
     // If delta puts us past the last cell in a row, move to the first cell of the next row.
     if (this._activeRow && this._activeColumnIndex + columnDelta >= this._activeRow.cells.length) {
       this._setActiveCellByIndex(this._activeRowIndex + 1, 0);
 
-    // If delta puts us prior to the first cell in a row, move to the last cell of the previous row.
+      // If delta puts us prior to the first cell in a row, move to the last cell of the previous
+      // row.
     } else if (this._activeColumnIndex + columnDelta < 0) {
       const previousRowIndex = this._activeRowIndex - 1;
       const previousRow = this._getRowsArray()[previousRowIndex];
@@ -259,8 +260,8 @@ export class GridKeyManager<T> {
         this._setActiveCellByIndex(previousRowIndex, previousRow.cells.length - 1);
       }
     } else {
-      this._setActiveCellByIndex(this._activeRowIndex + rowDelta,
-        this._activeColumnIndex + columnDelta);
+      this._setActiveCellByIndex(
+          this._activeRowIndex + rowDelta, this._activeColumnIndex + columnDelta);
     }
   }
 

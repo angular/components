@@ -15,19 +15,19 @@ export * from './moment-date-adapter';
 export * from './moment-date-formats';
 
 @NgModule({
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    }
-  ],
+  providers: [{
+    provide: DateAdapter,
+    useClass: MomentDateAdapter,
+    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+  }],
 })
-export class MomentDateModule {}
+export class MomentDateModule {
+}
 
 
 @NgModule({
   imports: [MomentDateModule],
   providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS}],
 })
-export class MatMomentDateModule {}
+export class MatMomentDateModule {
+}

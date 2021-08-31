@@ -8,9 +8,10 @@
 
 import {
   ContentContainerComponentHarness,
-  HarnessPredicate,
   HarnessLoader,
+  HarnessPredicate,
 } from '@angular/cdk/testing';
+
 import {StepHarnessFilters} from './step-harness-filters';
 
 /** Harness for interacting with a standard Angular Material step in tests. */
@@ -26,13 +27,17 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
    */
   static with(options: StepHarnessFilters = {}): HarnessPredicate<MatStepHarness> {
     return new HarnessPredicate(MatStepHarness, options)
-        .addOption('label', options.label,
+        .addOption(
+            'label', options.label,
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label))
-        .addOption('selected', options.selected,
+        .addOption(
+            'selected', options.selected,
             async (harness, selected) => (await harness.isSelected()) === selected)
-        .addOption('completed', options.completed,
+        .addOption(
+            'completed', options.completed,
             async (harness, completed) => (await harness.isCompleted()) === completed)
-        .addOption('invalid', options.invalid,
+        .addOption(
+            'invalid', options.invalid,
             async (harness, invalid) => (await harness.hasErrors()) === invalid);
   }
 

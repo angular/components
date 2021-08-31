@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'icon-overview-example',
   templateUrl: 'icon-overview-example.html',
 })
-export class IconOverviewExample {}
+export class IconOverviewExample {
+}

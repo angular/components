@@ -156,10 +156,12 @@ function setupLocalReleasePackages() {
 
 /** Sets up the MDC packages by linking to their UMD bundles. */
 function setupMdcPackages() {
-  Object.keys(mdcPackageUmdBundles).forEach(pkgName => {
-    // Replace the `@npm//:node_modules/` Bazel target prefix with the `node:*` SystemJS alias.
-    pathMapping[pkgName] = mdcPackageUmdBundles[pkgName].replace('@npm//:node_modules/', 'node:')
-  });
+  Object.keys(mdcPackageUmdBundles)
+      .forEach(
+          pkgName => {// Replace the `@npm//:node_modules/` Bazel target prefix with the `node:*`
+                      // SystemJS alias.
+                      pathMapping[pkgName] =
+                          mdcPackageUmdBundles[pkgName].replace('@npm//:node_modules/', 'node:')});
 }
 
 /** Configures the specified package, its entry-point and its examples. */

@@ -3,9 +3,9 @@
  * to that port, and then running tests against it.
  */
 
+import {runfiles} from '@bazel/runfiles';
 import * as child_process from 'child_process';
 import * as net from 'net';
-import {runfiles} from '@bazel/runfiles';
 
 /** Checks if the given port is free. */
 function isPortFree(port: number) {
@@ -61,33 +61,34 @@ async function waitForPortBound(port: number, timeout: number): Promise<boolean>
 
 /** Starts a server and runs a test against it. */
 async function runTest(serverPath: string, testPath: string) {
-  let server: child_process.ChildProcess | null = null;
+  let server: child_process.ChildProcess|null = null;
   return new Promise<void>(async (resolve, reject) => {
-    const port = await getRandomFreePort();
+           const port = await getRandomFreePort();
 
-    // Expose the chosen test server port so that the test environment can
-    // connect to the server.
-    process.env['TEST_SERVER_PORT'] = `${port}`;
+           // Expose the chosen test server port so that the test environment can
+           // connect to the server.
+           process.env['TEST_SERVER_PORT'] = `${port}`;
 
-    // Start the server.
-    server = child_process.spawn(serverPath, ['--port', `${port}`], {stdio: 'inherit'});
-    server.on('exit', exitCode => {
-      if (exitCode !== 0) {
-        reject(Error(`Server exited with error code: ${exitCode}`));
-      }
-      server = null;
-    });
+           // Start the server.
+           server = child_process.spawn(serverPath, ['--port', `${port}`], {stdio: 'inherit'});
+           server.on('exit', exitCode => {
+             if (exitCode !== 0) {
+               reject(Error(`Server exited with error code: ${exitCode}`));
+             }
+             server = null;
+           });
 
-    // Wait for the server to bind to the port, then run the tests.
-    await waitForPortBound(port, 10000);
+           // Wait for the server to bind to the port, then run the tests.
+           await waitForPortBound(port, 10000);
 
-    const test = child_process.spawnSync(testPath, {stdio: 'inherit'});
-    if (test.status === 0) {
-      resolve();
-    } else {
-      reject(Error(`Test failed`));
-    }
-  }).finally(() => server?.kill());
+           const test = child_process.spawnSync(testPath, {stdio: 'inherit'});
+           if (test.status === 0) {
+             resolve();
+           } else {
+             reject(Error(`Test failed`));
+           }
+         })
+      .finally(() => server?.kill());
 }
 
 if (require.main === module) {
@@ -95,7 +96,5 @@ if (require.main === module) {
   const serverBinPath = runfiles.resolveWorkspaceRelative(serverRootpath);
   const testBinPath = runfiles.resolveWorkspaceRelative(testRootpath);
 
-  runTest(serverBinPath, testBinPath)
-      .then(() => process.exit())
-      .catch(() => process.exit(1));
+  runTest(serverBinPath, testBinPath).then(() => process.exit()).catch(() => process.exit(1));
 }

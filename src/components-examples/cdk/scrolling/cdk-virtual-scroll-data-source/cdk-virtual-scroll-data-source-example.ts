@@ -13,7 +13,7 @@ export class CdkVirtualScrollDataSourceExample {
   ds = new MyDataSource();
 }
 
-export class MyDataSource extends DataSource<string | undefined> {
+export class MyDataSource extends DataSource<string|undefined> {
   private _length = 100000;
   private _pageSize = 100;
   private _cachedData = Array.from<string>({length: this._length});
@@ -48,7 +48,8 @@ export class MyDataSource extends DataSource<string | undefined> {
 
     // Use `setTimeout` to simulate fetching data from server.
     setTimeout(() => {
-      this._cachedData.splice(page * this._pageSize, this._pageSize,
+      this._cachedData.splice(
+          page * this._pageSize, this._pageSize,
           ...Array.from({length: this._pageSize})
               .map((_, i) => `Item #${page * this._pageSize + i}`));
       this._dataStream.next(this._cachedData);

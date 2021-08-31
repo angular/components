@@ -10,6 +10,7 @@ import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {
   AfterViewChecked,
+  AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,7 +26,6 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
-  AfterViewInit,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -40,10 +40,11 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
-  MatCheckboxDefaultOptions,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
+  MatCheckboxDefaultOptions,
 } from './checkbox-config';
 
 
@@ -122,10 +123,10 @@ const _MatCheckboxBase = mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabl
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccessor,
-    AfterViewInit, AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple,
-    FocusableOption {
-
+export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccessor, AfterViewInit,
+                                                             AfterViewChecked, OnDestroy, CanColor,
+                                                             CanDisable, HasTabIndex,
+                                                             CanDisableRipple, FocusableOption {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, aria-labelledby will
    * take precedence so this may be omitted.
@@ -135,7 +136,7 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
   /**
    * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
    */
-  @Input('aria-labelledby') ariaLabelledby: string | null = null;
+  @Input('aria-labelledby') ariaLabelledby: string|null = null;
 
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
   @Input('aria-describedby') ariaDescribedby: string;
@@ -146,23 +147,29 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
   @Input() id: string = this._uniqueId;
 
   /** Returns the unique id for the visual hidden input. */
-  get inputId(): string { return `${this.id || this._uniqueId}-input`; }
+  get inputId(): string {
+    return `${this.id || this._uniqueId}-input`;
+  }
 
   /** Whether the checkbox is required. */
   @Input()
-  get required(): boolean { return this._required; }
-  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+  get required(): boolean {
+    return this._required;
+  }
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+  }
   private _required: boolean;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
-  @Input() labelPosition: 'before' | 'after' = 'after';
+  @Input() labelPosition: 'before'|'after' = 'after';
 
   /** Name value will be applied to the input element if present */
-  @Input() name: string | null = null;
+  @Input() name: string|null = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() readonly change: EventEmitter<MatCheckboxChange> =
-      new EventEmitter<MatCheckboxChange>();
+  @Output()
+  readonly change: EventEmitter<MatCheckboxChange> = new EventEmitter<MatCheckboxChange>();
 
   /** Event emitted when the checkbox's `indeterminate` value changes. */
   @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -188,14 +195,13 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
 
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _focusMonitor: FocusMonitor,
-              private _ngZone: NgZone,
-              @Attribute('tabindex') tabIndex: string,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-              @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
-                  private _options?: MatCheckboxDefaultOptions) {
+  constructor(
+      elementRef: ElementRef<HTMLElement>, private _changeDetectorRef: ChangeDetectorRef,
+      private _focusMonitor: FocusMonitor, private _ngZone: NgZone,
+      @Attribute('tabindex') tabIndex: string,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+      @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?:
+          MatCheckboxDefaultOptions) {
     super(elementRef);
     this._options = this._options || defaults;
     this.color = this.defaultColor = this._options.color || defaults.color;
@@ -231,7 +237,9 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
    * Whether the checkbox is checked.
    */
   @Input()
-  get checked(): boolean { return this._checked; }
+  get checked(): boolean {
+    return this._checked;
+  }
   set checked(value: boolean) {
     if (value != this.checked) {
       this._checked = value;
@@ -245,7 +253,9 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
    * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
    */
   @Input()
-  override get disabled() { return this._disabled; }
+  override get disabled() {
+    return this._disabled;
+  }
   override set disabled(value: any) {
     const newValue = coerceBooleanProperty(value);
 
@@ -263,7 +273,9 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
    * set to false.
    */
   @Input()
-  get indeterminate(): boolean { return this._indeterminate; }
+  get indeterminate(): boolean {
+    return this._indeterminate;
+  }
   set indeterminate(value: boolean) {
     const changed = value != this._indeterminate;
     this._indeterminate = coerceBooleanProperty(value);
@@ -273,7 +285,7 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
         this._transitionCheckState(TransitionCheckState.Indeterminate);
       } else {
         this._transitionCheckState(
-          this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+            this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
       }
       this.indeterminateChange.emit(this._indeterminate);
     }
@@ -316,7 +328,7 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
     this.disabled = isDisabled;
   }
 
-  _getAriaChecked(): 'true' | 'false' | 'mixed' {
+  _getAriaChecked(): 'true'|'false'|'mixed' {
     if (this.checked) {
       return 'true';
     }
@@ -335,8 +347,8 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
       element.classList.remove(this._currentAnimationClass);
     }
 
-    this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
-        oldState, newState);
+    this._currentAnimationClass =
+        this._getAnimationClassForCheckStateTransition(oldState, newState);
     this._currentCheckState = newState;
 
     if (this._currentAnimationClass.length > 0) {
@@ -396,7 +408,6 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
     if (!this.disabled && clickAction !== 'noop') {
       // When user manually click on the checkbox, `indeterminate` is set to false.
       if (this.indeterminate && clickAction !== 'check') {
-
         Promise.resolve().then(() => {
           this._indeterminate = false;
           this.indeterminateChange.emit(this._indeterminate);
@@ -457,16 +468,16 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
         }
         break;
       case TransitionCheckState.Unchecked:
-        animSuffix = newState === TransitionCheckState.Checked ?
-            'unchecked-checked' : 'unchecked-indeterminate';
+        animSuffix = newState === TransitionCheckState.Checked ? 'unchecked-checked' :
+                                                                 'unchecked-indeterminate';
         break;
       case TransitionCheckState.Checked:
-        animSuffix = newState === TransitionCheckState.Unchecked ?
-            'checked-unchecked' : 'checked-indeterminate';
+        animSuffix = newState === TransitionCheckState.Unchecked ? 'checked-unchecked' :
+                                                                   'checked-indeterminate';
         break;
       case TransitionCheckState.Indeterminate:
-        animSuffix = newState === TransitionCheckState.Checked ?
-            'indeterminate-checked' : 'indeterminate-unchecked';
+        animSuffix = newState === TransitionCheckState.Checked ? 'indeterminate-checked' :
+                                                                 'indeterminate-unchecked';
         break;
     }
 

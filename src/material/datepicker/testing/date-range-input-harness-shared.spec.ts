@@ -1,33 +1,35 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
-import {MatNativeDateModule} from '@angular/material/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
+import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {MatCalendarHarness} from './calendar-harness';
 import {
   MatDateRangeInputHarness,
-  MatStartDateHarness,
   MatEndDateHarness,
+  MatStartDateHarness,
 } from './date-range-input-harness';
 
 /** Shared tests to run on both the original and MDC-based date range inputs. */
 export function runDateRangeInputHarnessTests(
     datepickerModule: typeof MatDatepickerModule,
     dateRangeInputHarness: typeof MatDateRangeInputHarness,
-    startInputHarness: typeof MatStartDateHarness,
-    endInputHarness: typeof MatEndDateHarness,
+    startInputHarness: typeof MatStartDateHarness, endInputHarness: typeof MatEndDateHarness,
     calendarHarness: typeof MatCalendarHarness) {
   let fixture: ComponentFixture<DateRangeInputHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatNativeDateModule, datepickerModule, FormsModule],
-      declarations: [DateRangeInputHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [NoopAnimationsModule, MatNativeDateModule, datepickerModule, FormsModule],
+          declarations: [DateRangeInputHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(DateRangeInputHarnessTest);
     fixture.detectChanges();
@@ -155,8 +157,7 @@ export function runDateRangeInputHarnessTests(
     const [start, end] = await parallel(() => [input.getStartInput(), input.getEndInput()]);
 
     expect(await parallel(() => [start.getPlaceholder(), end.getPlaceholder()])).toEqual([
-      'Start date',
-      'End date'
+      'Start date', 'End date'
     ]);
   });
 

@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   styleUrls: ['grid-list-overview-example.css'],
   templateUrl: 'grid-list-overview-example.html',
 })
-export class GridListOverviewExample {}
+export class GridListOverviewExample {
+}

@@ -6,24 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input} from '@angular/core';
 import {
   CdkCell,
   CdkCellDef,
-  CdkColumnDef, CdkFooterCell, CdkFooterCellDef,
+  CdkColumnDef,
+  CdkFooterCell,
+  CdkFooterCellDef,
   CdkHeaderCell,
   CdkHeaderCellDef,
 } from '@angular/cdk/table';
+import {Directive, Input} from '@angular/core';
 
 /**
  * Cell definition for the mat-table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({
-  selector: '[matCellDef]',
-  providers: [{provide: CdkCellDef, useExisting: MatCellDef}]
-})
-export class MatCellDef extends CdkCellDef {}
+@Directive({selector: '[matCellDef]', providers: [{provide: CdkCellDef, useExisting: MatCellDef}]})
+export class MatCellDef extends CdkCellDef {
+}
 
 /**
  * Header cell definition for the mat-table.
@@ -33,7 +33,8 @@ export class MatCellDef extends CdkCellDef {}
   selector: '[matHeaderCellDef]',
   providers: [{provide: CdkHeaderCellDef, useExisting: MatHeaderCellDef}]
 })
-export class MatHeaderCellDef extends CdkHeaderCellDef {}
+export class MatHeaderCellDef extends CdkHeaderCellDef {
+}
 
 /**
  * Footer cell definition for the mat-table.
@@ -43,7 +44,8 @@ export class MatHeaderCellDef extends CdkHeaderCellDef {}
   selector: '[matFooterCellDef]',
   providers: [{provide: CdkFooterCellDef, useExisting: MatFooterCellDef}]
 })
-export class MatFooterCellDef extends CdkFooterCellDef {}
+export class MatFooterCellDef extends CdkFooterCellDef {
+}
 
 /**
  * Column definition for the mat-table.
@@ -60,8 +62,12 @@ export class MatFooterCellDef extends CdkFooterCellDef {}
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
   @Input('matColumnDef')
-  override get name(): string { return this._name; }
-  override set name(name: string) { this._setNameInput(name); }
+  override get name(): string {
+    return this._name;
+  }
+  override set name(name: string) {
+    this._setNameInput(name);
+  }
 
   /**
    * Add "mat-column-" prefix in addition to "cdk-column-" prefix.
@@ -83,7 +89,8 @@ export class MatColumnDef extends CdkColumnDef {
     'role': 'columnheader',
   },
 })
-export class MatHeaderCell extends CdkHeaderCell {}
+export class MatHeaderCell extends CdkHeaderCell {
+}
 
 /** Footer cell template container that adds the right classes and role. */
 @Directive({
@@ -93,7 +100,8 @@ export class MatHeaderCell extends CdkHeaderCell {}
     'role': 'gridcell',
   },
 })
-export class MatFooterCell extends CdkFooterCell {}
+export class MatFooterCell extends CdkFooterCell {
+}
 
 /** Cell template container that adds the right classes and role. */
 @Directive({
@@ -103,4 +111,5 @@ export class MatFooterCell extends CdkFooterCell {}
     'role': 'gridcell',
   },
 })
-export class MatCell extends CdkCell {}
+export class MatCell extends CdkCell {
+}

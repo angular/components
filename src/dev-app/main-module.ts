@@ -14,12 +14,13 @@ import {MAT_RIPPLE_GLOBAL_OPTIONS} from '@angular/material/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
+
 import {DevAppComponent} from './dev-app';
 import {DevAppDirectionality} from './dev-app/dev-app-directionality';
-import {DevAppModule} from './dev-app/dev-app-module';
-import {DEV_APP_ROUTES} from './dev-app/routes';
-import {DevAppRippleOptions} from './dev-app/ripple-options';
 import {ANIMATIONS_STORAGE_KEY} from './dev-app/dev-app-layout';
+import {DevAppModule} from './dev-app/dev-app-module';
+import {DevAppRippleOptions} from './dev-app/ripple-options';
+import {DEV_APP_ROUTES} from './dev-app/routes';
 
 @NgModule({
   imports: [

@@ -4,10 +4,7 @@ import {PageEvent} from '@angular/material/paginator';
 /**
  * @title Testing with MatPaginatorHarness
  */
-@Component({
-  selector: 'paginator-harness-example',
-  templateUrl: 'paginator-harness-example.html'
-})
+@Component({selector: 'paginator-harness-example', templateUrl: 'paginator-harness-example.html'})
 export class PaginatorHarnessExample {
   length = 500;
   pageSize = 10;

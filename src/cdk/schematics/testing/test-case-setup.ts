@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {parse} from 'jsonc-parser';
-import {getSystemPath,  Path} from '@angular-devkit/core';
+import {getSystemPath, Path} from '@angular-devkit/core';
 import {HostTree, Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
 import {readFileSync} from 'fs-extra';
 import {sync as globSync} from 'glob';
+import {parse} from 'jsonc-parser';
 import {basename, extname, join, relative, sep} from 'path';
 import {EMPTY} from 'rxjs';
+
 import {createTestApp} from './test-app';
 
 /** Suffix that indicates whether a given file is a test case input. */
@@ -62,9 +63,8 @@ export async function createFileSystemTestApp(runner: SchematicTestRunner) {
   }
 }
 
-export async function createTestCaseSetup(migrationName: string, collectionPath: string,
-                                   inputFiles: string[]) {
-
+export async function createTestCaseSetup(
+    migrationName: string, collectionPath: string, inputFiles: string[]) {
   const runner = new SchematicTestRunner('schematics', collectionPath);
 
   let logOutput = '';
@@ -86,8 +86,8 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
   const testAppTsconfigPath = 'projects/cdk-testing/tsconfig.app.json';
   // Parse TypeScript configuration files with JSONC (like the CLI does) as the
   // config files could contain comments or trailing commas
-  const testAppTsconfig = parse(appTree.readContent(testAppTsconfigPath), [],
-      {allowTrailingComma: true});
+  const testAppTsconfig =
+      parse(appTree.readContent(testAppTsconfigPath), [], {allowTrailingComma: true});
 
   // include all TypeScript files in the project. Otherwise all test input
   // files won't be part of the program and cannot be migrated.
@@ -124,8 +124,8 @@ export function findBazelVersionTestCases(basePath: string) {
   // test case files by using "glob" and store them in our result map.
   if (!manifestPath) {
     const runfilesBaseDir = join(runfilesDir!, basePath);
-    const inputFiles = globSync(`**/!(${MISC_FOLDER_NAME})/*${TEST_CASE_INPUT_SUFFIX}`,
-        {cwd: runfilesBaseDir});
+    const inputFiles =
+        globSync(`**/!(${MISC_FOLDER_NAME})/*${TEST_CASE_INPUT_SUFFIX}`, {cwd: runfilesBaseDir});
 
     inputFiles.forEach(inputFile => {
       // The target version of an input file will be determined from the first
@@ -133,8 +133,8 @@ export function findBazelVersionTestCases(basePath: string) {
       const targetVersion = inputFile.split(sep)[0];
       const resolvedInputPath = join(runfilesBaseDir, inputFile);
 
-      testCasesMap.set(targetVersion,
-        (testCasesMap.get(targetVersion) || []).concat(resolvedInputPath));
+      testCasesMap.set(
+          targetVersion, (testCasesMap.get(targetVersion) || []).concat(resolvedInputPath));
     });
 
     return testCasesMap;
@@ -166,8 +166,8 @@ export function findBazelVersionTestCases(basePath: string) {
  * Sets up the specified test cases using Jasmine by creating the appropriate jasmine
  * spec definitions. This should be used within a "describe" jasmine closure.
  */
-export function defineJasmineTestCases(versionName: string, collectionFile: string,
-                                inputFiles: string[] | undefined) {
+export function defineJasmineTestCases(
+    versionName: string, collectionFile: string, inputFiles: string[]|undefined) {
   // No test cases for the given version are available. Skip setting up tests for that
   // version.
   if (!inputFiles) {
@@ -179,7 +179,7 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
 
   beforeAll(async () => {
     const {appTree: _tree, runFixers} =
-      await createTestCaseSetup(`migration-${versionName}`, collectionFile, inputFiles);
+        await createTestCaseSetup(`migration-${versionName}`, collectionFile, inputFiles);
 
     await runFixers();
 
@@ -194,7 +194,8 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
 
     it(`should apply update schematics to test case: ${inputTestName}`, () => {
       expect(appTree.readContent(join(testCasesOutputPath, `${inputTestName}.ts`)))
-        .toBe(readFileContent(inputFile.replace(TEST_CASE_INPUT_SUFFIX, TEST_CASE_OUTPUT_SUFFIX)));
+          .toBe(
+              readFileContent(inputFile.replace(TEST_CASE_INPUT_SUFFIX, TEST_CASE_OUTPUT_SUFFIX)));
     });
   });
 }

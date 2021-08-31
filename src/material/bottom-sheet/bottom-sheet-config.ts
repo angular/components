@@ -11,7 +11,7 @@ import {ScrollStrategy} from '@angular/cdk/overlay';
 import {InjectionToken, ViewContainerRef} from '@angular/core';
 
 /** Options for where to set focus to automatically on dialog open */
-export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
+export type AutoFocusTarget = 'dialog'|'first-tabbable'|'first-heading';
 
 /** Injection token that can be used to access the data that was passed in to a bottom sheet. */
 export const MAT_BOTTOM_SHEET_DATA = new InjectionToken<any>('MatBottomSheetData');
@@ -24,13 +24,13 @@ export class MatBottomSheetConfig<D = any> {
   viewContainerRef?: ViewContainerRef;
 
   /** Extra CSS classes to be added to the bottom sheet container. */
-  panelClass?: string | string[];
+  panelClass?: string|string[];
 
   /** Text layout direction for the bottom sheet. */
   direction?: Direction;
 
   /** Data being injected into the child component. */
-  data?: D | null = null;
+  data?: D|null = null;
 
   /** Whether the bottom sheet has a backdrop. */
   hasBackdrop?: boolean = true;
@@ -42,7 +42,7 @@ export class MatBottomSheetConfig<D = any> {
   disableClose?: boolean = false;
 
   /** Aria label to assign to the bottom sheet element. */
-  ariaLabel?: string | null = null;
+  ariaLabel?: string|null = null;
 
   /**
    * Whether the bottom sheet should close when the user goes backwards/forwards in history.
@@ -59,7 +59,7 @@ export class MatBottomSheetConfig<D = any> {
    * @breaking-change 14.0.0 Remove boolean option from autoFocus. Use string or
    * AutoFocusTarget instead.
    */
-  autoFocus?: AutoFocusTarget | string | boolean = 'dialog';
+  autoFocus?: AutoFocusTarget|string|boolean = 'dialog';
 
   /**
    * Whether the bottom sheet should restore focus to the

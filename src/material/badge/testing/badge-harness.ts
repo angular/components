@@ -23,7 +23,8 @@ export class MatBadgeHarness extends ComponentHarness {
    */
   static with(options: BadgeHarnessFilters = {}): HarnessPredicate<MatBadgeHarness> {
     return new HarnessPredicate(MatBadgeHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 

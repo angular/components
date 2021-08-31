@@ -8,7 +8,7 @@
 
 import {dispatchFakeEvent} from './dispatch-events';
 
-function triggerFocusChange(element: HTMLElement, event: 'focus' | 'blur') {
+function triggerFocusChange(element: HTMLElement, event: 'focus'|'blur') {
   let eventFired = false;
   const handler = () => eventFired = true;
   element.addEventListener(event, handler);

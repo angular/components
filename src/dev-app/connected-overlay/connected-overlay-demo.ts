@@ -46,41 +46,41 @@ export class ConnectedOverlayDemo {
   itemCount = 25;
   itemArray: any[] = [];
   itemText = 'Item with a long name';
-  overlayRef: OverlayRef | null;
+  overlayRef: OverlayRef|null;
 
   constructor(
-      public overlay: Overlay,
-      public viewContainerRef: ViewContainerRef,
-      public dir: Directionality) { }
+      public overlay: Overlay, public viewContainerRef: ViewContainerRef,
+      public dir: Directionality) {}
 
   openWithConfig() {
     const positionStrategy = this.overlay.position()
-        .flexibleConnectedTo(this._overlayOrigin.elementRef)
-        .withFlexibleDimensions(this.isFlexible)
-        .withPush(this.canPush)
-        .withViewportMargin(10)
-        .withGrowAfterOpen(true)
-        .withPositions([{
-          originX: this.originX,
-          originY: this.originY,
-          overlayX: this.overlayX,
-          overlayY: this.overlayY,
-          offsetX: this.offsetX,
-          offsetY: this.offsetY
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-        },
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-        }
-      ]);
+                                 .flexibleConnectedTo(this._overlayOrigin.elementRef)
+                                 .withFlexibleDimensions(this.isFlexible)
+                                 .withPush(this.canPush)
+                                 .withViewportMargin(10)
+                                 .withGrowAfterOpen(true)
+                                 .withPositions([
+                                   {
+                                     originX: this.originX,
+                                     originY: this.originY,
+                                     overlayX: this.overlayX,
+                                     overlayY: this.overlayY,
+                                     offsetX: this.offsetX,
+                                     offsetY: this.offsetY
+                                   },
+                                   {
+                                     originX: 'start',
+                                     originY: 'top',
+                                     overlayX: 'start',
+                                     overlayY: 'bottom',
+                                   },
+                                   {
+                                     originX: 'start',
+                                     originY: 'bottom',
+                                     overlayX: 'start',
+                                     overlayY: 'top',
+                                   }
+                                 ]);
 
     this.overlayRef = this.overlay.create({
       positionStrategy,

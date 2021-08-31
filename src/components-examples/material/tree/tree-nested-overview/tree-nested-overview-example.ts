@@ -19,7 +19,8 @@ const TREE_DATA: FoodNode[] = [
       {name: 'Banana'},
       {name: 'Fruit loops'},
     ]
-  }, {
+  },
+  {
     name: 'Vegetables',
     children: [
       {
@@ -28,7 +29,8 @@ const TREE_DATA: FoodNode[] = [
           {name: 'Broccoli'},
           {name: 'Brussels sprouts'},
         ]
-      }, {
+      },
+      {
         name: 'Orange',
         children: [
           {name: 'Pumpkins'},

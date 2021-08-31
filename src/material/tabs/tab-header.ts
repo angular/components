@@ -7,32 +7,33 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentChecked,
   AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  Directive,
   ElementRef,
+  Inject,
+  Input,
   NgZone,
   OnDestroy,
   Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  AfterViewInit,
-  Input,
-  Inject,
-  Directive,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+
 import {MatInkBar} from './ink-bar';
-import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {Platform} from '@angular/cdk/platform';
 import {MatPaginatedTabHeader} from './paginated-tab-header';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
 
 /**
  * Base class with all of the `MatTabHeader` functionality.
@@ -40,21 +41,21 @@ import {MatPaginatedTabHeader} from './paginated-tab-header';
  */
 @Directive()
 export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
-  AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
-
+    AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
   /** Whether the ripple effect is disabled or not. */
   @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: any) { this._disableRipple = coerceBooleanProperty(value); }
+  get disableRipple() {
+    return this._disableRipple;
+  }
+  set disableRipple(value: any) {
+    this._disableRipple = coerceBooleanProperty(value);
+  }
   private _disableRipple: boolean = false;
 
-  constructor(elementRef: ElementRef,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler,
+      @Optional() dir: Directionality, ngZone: NgZone, platform: Platform,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
 
@@ -82,7 +83,7 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
   host: {
     'class': 'mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
+    '[class.mat-tab-header-rtl]': '_getLayoutDirection() == \'rtl\'',
   },
 })
 export class MatTabHeader extends _MatTabHeaderBase {
@@ -93,13 +94,10 @@ export class MatTabHeader extends _MatTabHeaderBase {
   @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
 
-  constructor(elementRef: ElementRef,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler,
+      @Optional() dir: Directionality, ngZone: NgZone, platform: Platform,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
 

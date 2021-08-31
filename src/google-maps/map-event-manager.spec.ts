@@ -141,22 +141,21 @@ describe('MapEventManager', () => {
     alternateTarget.triggerListeners('click');
     expect(spy).toHaveBeenCalledTimes(2);
   });
-
 });
 
 /** Imitates a Google Maps event target and keeps track of the registered events. */
 class TestEventTarget {
   events = new Map<string, Set<() => void>>();
 
-  addListener = jasmine.createSpy('addListener').and.callFake(
-    (name: string, listener: () => void) => {
-      if (!this.events.has(name)) {
-        this.events.set(name, new Set());
-      }
-      this.events.get(name)!.add(listener);
+  addListener =
+      jasmine.createSpy('addListener').and.callFake((name: string, listener: () => void) => {
+        if (!this.events.has(name)) {
+          this.events.set(name, new Set());
+        }
+        this.events.get(name)!.add(listener);
 
-      return {remove: () => this.events.get(name)!.delete(listener)};
-    });
+        return {remove: () => this.events.get(name)!.delete(listener)};
+      });
 
   triggerListeners(name: string) {
     const listeners = this.events.get(name);

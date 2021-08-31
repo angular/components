@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
+import {Component} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
 
 export interface PeriodicElement {
@@ -38,10 +38,7 @@ export class TableDynamicObservableDataExample {
 
   addData() {
     const randomElementIndex = Math.floor(Math.random() * ELEMENT_DATA.length);
-    this.dataToDisplay = [
-      ...this.dataToDisplay,
-      ELEMENT_DATA[randomElementIndex]
-    ];
+    this.dataToDisplay = [...this.dataToDisplay, ELEMENT_DATA[randomElementIndex]];
     this.dataSource.setData(this.dataToDisplay);
   }
 

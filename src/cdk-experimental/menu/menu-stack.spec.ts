@@ -1,10 +1,11 @@
-import {QueryList, ViewChild, ViewChildren, Component} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+
 import {CdkMenu} from './menu';
 import {CdkMenuBar} from './menu-bar';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
-import {MenuStack} from './menu-stack';
 import {CdkMenuModule} from './menu-module';
+import {MenuStack} from './menu-stack';
 
 describe('MenuStack', () => {
   let fixture: ComponentFixture<MultiMenuWithSubmenu>;
@@ -21,10 +22,12 @@ describe('MenuStack', () => {
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [MultiMenuWithSubmenu],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [MultiMenuWithSubmenu],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -44,23 +47,21 @@ describe('MenuStack', () => {
     getElementsForTesting();
   }
 
-  it(
-    'should fill the menu stack with the latest menu at the end of the stack and oldest at' +
-      ' the start of the stack',
-    () => {
-      openAllMenus();
-      expect(menus.length).toBe(3);
-      const spy = jasmine.createSpy('menu stack closed spy');
+  it('should fill the menu stack with the latest menu at the end of the stack and oldest at' +
+         ' the start of the stack',
+     () => {
+       openAllMenus();
+       expect(menus.length).toBe(3);
+       const spy = jasmine.createSpy('menu stack closed spy');
 
-      menuStack.closed.subscribe(spy);
-      menuStack.closeAll();
+       menuStack.closed.subscribe(spy);
+       menuStack.closeAll();
 
-      expect(spy).toHaveBeenCalledTimes(3);
-      const callArgs = spy.calls.all().map((v: jasmine.CallInfo<jasmine.Func>) => v.args[0]);
-      expect(callArgs).toEqual(menus.reverse());
-      expect(menuStack.isEmpty()).toBeTrue();
-    }
-  );
+       expect(spy).toHaveBeenCalledTimes(3);
+       const callArgs = spy.calls.all().map((v: jasmine.CallInfo<jasmine.Func>) => v.args[0]);
+       expect(callArgs).toEqual(menus.reverse());
+       expect(menuStack.isEmpty()).toBeTrue();
+     });
 
   it('should close triggering menu and all menus below it', () => {
     openAllMenus();

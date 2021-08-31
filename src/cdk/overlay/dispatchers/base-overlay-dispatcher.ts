@@ -18,7 +18,6 @@ import {OverlayReference} from '../overlay-reference';
  */
 @Injectable({providedIn: 'root'})
 export abstract class BaseOverlayDispatcher implements OnDestroy {
-
   /** Currently attached overlays in the order they were attached. */
   _attachedOverlays: OverlayReference[] = [];
 

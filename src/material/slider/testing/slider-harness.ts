@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
+
 import {SliderHarnessFilters} from './slider-harness-filters';
 
 /** Harness for interacting with a standard mat-slider in tests. */

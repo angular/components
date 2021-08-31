@@ -7,7 +7,8 @@
  */
 
 import {browser} from 'protractor';
-import {getElement, FinderResult, waitForElement, Point} from './query';
+
+import {FinderResult, getElement, Point, waitForElement} from './query';
 
 /**
  * Asserts that an element exists.
@@ -22,8 +23,10 @@ export async function expectToExist(selector: string, expected = true) {
  * Asserts that an element is focused.
  */
 export async function expectFocusOn(element: FinderResult, expected = true) {
-  expect(await browser.driver.switchTo().activeElement().getId()).toBe(
-    await getElement(element).getId(), `Expected element${expected ? '' : ' not'} to be focused.`);
+  expect(await browser.driver.switchTo().activeElement().getId())
+      .toBe(
+          await getElement(element).getId(),
+          `Expected element${expected ? '' : ' not'} to be focused.`);
 }
 
 /**

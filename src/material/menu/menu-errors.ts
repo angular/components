@@ -45,6 +45,7 @@ export function throwMatMenuInvalidPositionY() {
  * @docs-private
  */
 export function throwMatMenuRecursiveError() {
-  throw Error(`matMenuTriggerFor: menu cannot contain its own trigger. Assign a menu that is ` +
-              `not a parent of the trigger or move the trigger outside of the menu.`);
+  throw Error(
+      `matMenuTriggerFor: menu cannot contain its own trigger. Assign a menu that is ` +
+      `not a parent of the trigger or move the trigger outside of the menu.`);
 }

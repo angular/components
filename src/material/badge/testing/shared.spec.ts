@@ -12,10 +12,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [badgeModule],
-      declarations: [BadgeHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [badgeModule],
+          declarations: [BadgeHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(BadgeHarnessTest);
     fixture.detectChanges();
@@ -139,4 +141,3 @@ class BadgeHarnessTest {
   hidden = true;
   disabled = true;
 }
-

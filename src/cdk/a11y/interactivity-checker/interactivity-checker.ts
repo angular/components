@@ -29,7 +29,6 @@ export class IsFocusableConfig {
  */
 @Injectable({providedIn: 'root'})
 export class InteractivityChecker {
-
   constructor(private _platform: Platform) {}
 
   /**
@@ -146,9 +145,8 @@ export class InteractivityChecker {
     // Perform checks in order of left to most expensive.
     // Again, naive approach that does not capture many edge cases and browser quirks.
     return isPotentiallyFocusable(element) && !this.isDisabled(element) &&
-      (config?.ignoreVisibility || this.isVisible(element));
+        (config?.ignoreVisibility || this.isVisible(element));
   }
-
 }
 
 /**
@@ -168,16 +166,15 @@ function getFrameElement(window: Window) {
 function hasGeometry(element: HTMLElement): boolean {
   // Use logic from jQuery to check for an invisible element.
   // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-  return !!(element.offsetWidth || element.offsetHeight ||
+  return !!(
+      element.offsetWidth || element.offsetHeight ||
       (typeof element.getClientRects === 'function' && element.getClientRects().length));
 }
 
 /** Gets whether an element's  */
 function isNativeFormElement(element: Node) {
   let nodeName = element.nodeName.toLowerCase();
-  return nodeName === 'input' ||
-      nodeName === 'select' ||
-      nodeName === 'button' ||
+  return nodeName === 'input' || nodeName === 'select' || nodeName === 'button' ||
       nodeName === 'textarea';
 }
 
@@ -215,7 +212,7 @@ function hasValidTabIndex(element: HTMLElement): boolean {
  * Returns the parsed tabindex from the element attributes instead of returning the
  * evaluated tabindex from the browsers defaults.
  */
-function getTabIndexValue(element: HTMLElement): number | null {
+function getTabIndexValue(element: HTMLElement): number|null {
   if (!hasValidTabIndex(element)) {
     return null;
   }
@@ -231,10 +228,8 @@ function isPotentiallyTabbableIOS(element: HTMLElement): boolean {
   let nodeName = element.nodeName.toLowerCase();
   let inputType = nodeName === 'input' && (element as HTMLInputElement).type;
 
-  return inputType === 'text'
-      || inputType === 'password'
-      || nodeName === 'select'
-      || nodeName === 'textarea';
+  return inputType === 'text' || inputType === 'password' || nodeName === 'select' ||
+      nodeName === 'textarea';
 }
 
 /**
@@ -247,10 +242,8 @@ function isPotentiallyFocusable(element: HTMLElement): boolean {
     return false;
   }
 
-  return isNativeFormElement(element) ||
-      isAnchorWithHref(element) ||
-      element.hasAttribute('contenteditable') ||
-      hasValidTabIndex(element);
+  return isNativeFormElement(element) || isAnchorWithHref(element) ||
+      element.hasAttribute('contenteditable') || hasValidTabIndex(element);
 }
 
 /** Gets the parent window of a DOM node with regards of being inside of an iframe. */

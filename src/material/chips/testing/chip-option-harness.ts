@@ -21,11 +21,13 @@ export class MatChipOptionHarness extends MatChipHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static override with(options: ChipOptionHarnessFilters = {}):
-    HarnessPredicate<MatChipOptionHarness> {
+      HarnessPredicate<MatChipOptionHarness> {
     return new HarnessPredicate(MatChipOptionHarness, options)
-        .addOption('text', options.text,
+        .addOption(
+            'text', options.text,
             (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
-        .addOption('selected', options.selected,
+        .addOption(
+            'selected', options.selected,
             async (harness, selected) => (await harness.isSelected()) === selected);
   }
 

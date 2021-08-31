@@ -5,4 +5,5 @@ import {Component} from '@angular/core';
   selector: 'datepicker-overview-example',
   templateUrl: 'datepicker-overview-example.html',
 })
-export class DatepickerOverviewExample {}
+export class DatepickerOverviewExample {
+}

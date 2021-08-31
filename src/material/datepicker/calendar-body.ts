@@ -12,34 +12,31 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  Output,
-  ViewEncapsulation,
   NgZone,
   OnChanges,
-  SimpleChanges,
   OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
-export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
+export type MatCalendarCellCssClasses = string|string[]|Set<string>|{[key: string]: any};
 
 /** Function that can generate the extra classes that should be added to a calendar cell. */
-export type MatCalendarCellClassFunction<D> =
-    (date: D, view: 'month' | 'year' | 'multi-year') => MatCalendarCellCssClasses;
+export type MatCalendarCellClassFunction<D> = (date: D, view: 'month'|'year'|'multi-year') =>
+    MatCalendarCellCssClasses;
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
  */
 export class MatCalendarCell<D = any> {
-  constructor(public value: number,
-              public displayValue: string,
-              public ariaLabel: string,
-              public enabled: boolean,
-              public cssClasses: MatCalendarCellCssClasses = {},
-              public compareValue = value,
-              public rawValue?: D) {}
+  constructor(
+      public value: number, public displayValue: string, public ariaLabel: string,
+      public enabled: boolean, public cssClasses: MatCalendarCellCssClasses = {},
+      public compareValue = value, public rawValue?: D) {}
 }
 
 /** Event emitted when a date inside the calendar is triggered as a result of a user action. */
@@ -104,23 +101,22 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   @Input() cellAspectRatio: number = 1;
 
   /** Start of the comparison range. */
-  @Input() comparisonStart: number | null;
+  @Input() comparisonStart: number|null;
 
   /** End of the comparison range. */
-  @Input() comparisonEnd: number | null;
+  @Input() comparisonEnd: number|null;
 
   /** Start of the preview range. */
-  @Input() previewStart: number | null = null;
+  @Input() previewStart: number|null = null;
 
   /** End of the preview range. */
-  @Input() previewEnd: number | null = null;
+  @Input() previewEnd: number|null = null;
 
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange = new EventEmitter<MatCalendarUserEvent<number>>();
 
   /** Emits when the preview has changed as a result of a user action. */
-  @Output() readonly previewChange =
-    new EventEmitter<MatCalendarUserEvent<MatCalendarCell | null>>();
+  @Output() readonly previewChange = new EventEmitter<MatCalendarUserEvent<MatCalendarCell|null>>();
 
   /** The number of blank cells to put at the beginning for the first row. */
   _firstRowOffset: number;
@@ -194,7 +190,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   _focusActiveCell(movePreview = true) {
     this._ngZone.runOutsideAngular(() => {
       this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-        const activeCell: HTMLElement | null =
+        const activeCell: HTMLElement|null =
             this._elementRef.nativeElement.querySelector('.mat-calendar-body-active');
 
         if (activeCell) {
@@ -234,7 +230,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
       return false;
     }
 
-    let previousCell: MatCalendarCell | undefined = this.rows[rowIndex][colIndex - 1];
+    let previousCell: MatCalendarCell|undefined = this.rows[rowIndex][colIndex - 1];
 
     if (!previousCell) {
       const previousRow = this.rows[rowIndex - 1];
@@ -250,7 +246,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
       return false;
     }
 
-    let nextCell: MatCalendarCell | undefined = this.rows[rowIndex][colIndex + 1];
+    let nextCell: MatCalendarCell|undefined = this.rows[rowIndex][colIndex + 1];
 
     if (!nextCell) {
       const nextRow = this.rows[rowIndex + 1];
@@ -305,41 +301,44 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    * Event handler for when the user enters an element
    * inside the calendar body (e.g. by hovering in or focus).
    */
-  private _enterHandler = (event: Event) => {
-    if (this._skipNextFocus && event.type === 'focus') {
-      this._skipNextFocus = false;
-      return;
-    }
+  private _enterHandler =
+      (event: Event) => {
+        if (this._skipNextFocus && event.type === 'focus') {
+          this._skipNextFocus = false;
+          return;
+        }
 
-    // We only need to hit the zone when we're selecting a range.
-    if (event.target && this.isRange) {
-      const cell = this._getCellFromElement(event.target as HTMLElement);
+        // We only need to hit the zone when we're selecting a range.
+        if (event.target && this.isRange) {
+          const cell = this._getCellFromElement(event.target as HTMLElement);
 
-      if (cell) {
-        this._ngZone.run(() => this.previewChange.emit({value: cell.enabled ? cell : null, event}));
+          if (cell) {
+            this._ngZone.run(
+                () => this.previewChange.emit({value: cell.enabled ? cell : null, event}));
+          }
+        }
       }
-    }
-  }
 
   /**
    * Event handler for when the user's pointer leaves an element
    * inside the calendar body (e.g. by hovering out or blurring).
    */
-  private _leaveHandler = (event: Event) => {
-    // We only need to hit the zone when we're selecting a range.
-    if (this.previewEnd !== null && this.isRange) {
-      // Only reset the preview end value when leaving cells. This looks better, because
-      // we have a gap between the cells and the rows and we don't want to remove the
-      // range just for it to show up again when the user moves a few pixels to the side.
-      if (event.target && isTableCell(event.target as HTMLElement)) {
-        this._ngZone.run(() => this.previewChange.emit({value: null, event}));
+  private _leaveHandler =
+      (event: Event) => {
+        // We only need to hit the zone when we're selecting a range.
+        if (this.previewEnd !== null && this.isRange) {
+          // Only reset the preview end value when leaving cells. This looks better, because
+          // we have a gap between the cells and the rows and we don't want to remove the
+          // range just for it to show up again when the user moves a few pixels to the side.
+          if (event.target && isTableCell(event.target as HTMLElement)) {
+            this._ngZone.run(() => this.previewChange.emit({value: null, event}));
+          }
+        }
       }
-    }
-  }
 
   /** Finds the MatCalendarCell that corresponds to a DOM node. */
-  private _getCellFromElement(element: HTMLElement): MatCalendarCell | null {
-    let cell: HTMLElement | undefined;
+  private _getCellFromElement(element: HTMLElement): MatCalendarCell|null {
+    let cell: HTMLElement|undefined;
 
     if (isTableCell(element)) {
       cell = element;
@@ -358,7 +357,6 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     return null;
   }
-
 }
 
 /** Checks whether a node is a table cell element. */
@@ -367,20 +365,18 @@ function isTableCell(node: Node): node is HTMLTableCellElement {
 }
 
 /** Checks whether a value is the start of a range. */
-function isStart(value: number, start: number | null, end: number | null): boolean {
+function isStart(value: number, start: number|null, end: number|null): boolean {
   return end !== null && start !== end && value < end && value === start;
 }
 
 /** Checks whether a value is the end of a range. */
-function isEnd(value: number, start: number | null, end: number | null): boolean {
+function isEnd(value: number, start: number|null, end: number|null): boolean {
   return start !== null && start !== end && value >= start && value === end;
 }
 
 /** Checks whether a value is inside of a range. */
-function isInRange(value: number,
-                   start: number | null,
-                   end: number | null,
-                   rangeEnabled: boolean): boolean {
-  return rangeEnabled && start !== null && end !== null && start !== end &&
-         value >= start && value <= end;
+function isInRange(
+    value: number, start: number|null, end: number|null, rangeEnabled: boolean): boolean {
+  return rangeEnabled && start !== null && end !== null && start !== end && value >= start &&
+      value <= end;
 }

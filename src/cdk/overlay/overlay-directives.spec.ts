@@ -1,25 +1,28 @@
+import {Directionality} from '@angular/cdk/bidi';
+import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {By} from '@angular/platform-browser';
 import {
   ComponentFixture,
-  TestBed,
-  waitForAsync,
-  inject,
   fakeAsync,
+  inject,
+  TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
-import {Directionality} from '@angular/cdk/bidi';
+import {By} from '@angular/platform-browser';
+import {Subject} from 'rxjs';
+
 import {
-  dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
 } from '../testing/private';
-import {ESCAPE, A} from '@angular/cdk/keycodes';
+
 import {
-  Overlay,
   CdkConnectedOverlay,
-  OverlayModule,
   CdkOverlayOrigin,
+  Overlay,
+  OverlayModule,
   ScrollDispatcher,
   ScrollStrategy,
 } from './index';
@@ -32,7 +35,6 @@ import {
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
 } from './position/flexible-connected-position-strategy';
-import {Subject} from 'rxjs';
 
 
 describe('Overlay directives', () => {
@@ -46,10 +48,15 @@ describe('Overlay directives', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
       declarations: [ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
-      providers: [{provide: Directionality, useFactory: () => dir = {value: 'ltr'}},
-        {provide: ScrollDispatcher, useFactory: () => ({
-          scrolled: () => scrolledSubject
-        })}
+      providers: [
+        {
+          provide: Directionality,
+          useFactory: () => dir =
+          {
+            value: 'ltr'
+          }
+        },
+        {provide: ScrollDispatcher, useFactory: () => ({scrolled: () => scrolledSubject})}
       ],
     });
   });
@@ -109,19 +116,18 @@ describe('Overlay directives', () => {
 
     expect(overlayContainerElement.textContent!.trim()).toBe('');
     expect(getPaneElement())
-      .withContext('Expected the overlay pane element to be removed when disposed.')
-      .toBeFalsy();
+        .withContext('Expected the overlay pane element to be removed when disposed.')
+        .toBeFalsy();
   });
 
   it('should use a connected position strategy with a default set of positions', () => {
     fixture.componentInstance.isOpen = true;
     fixture.detectChanges();
 
-    let testComponent: ConnectedOverlayDirectiveTest =
-        fixture.debugElement.componentInstance;
+    let testComponent: ConnectedOverlayDirectiveTest = fixture.debugElement.componentInstance;
     let overlayDirective = testComponent.connectedOverlayDirective;
-    let strategy =
-      overlayDirective.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
+    let strategy = overlayDirective.overlayRef.getConfig().positionStrategy as
+        FlexibleConnectedPositionStrategy;
 
     expect(strategy instanceof FlexibleConnectedPositionStrategy).toBe(true);
     expect(strategy.positions.length).toBeGreaterThan(0);
@@ -158,7 +164,8 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim())
-      .withContext('Expected overlay to have been detached.').toBe('');
+        .withContext('Expected overlay to have been detached.')
+        .toBe('');
     expect(event.defaultPrevented).toBe(true);
   });
 
@@ -175,16 +182,17 @@ describe('Overlay directives', () => {
   });
 
   it('should prevent closing via clicks on the backdrop by default', fakeAsync(() => {
-    fixture.componentInstance.hasBackdrop = true;
-    fixture.componentInstance.isOpen = true;
-    fixture.detectChanges();
+       fixture.componentInstance.hasBackdrop = true;
+       fixture.componentInstance.isOpen = true;
+       fixture.detectChanges();
 
-    const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-    backdrop.click();
-    fixture.detectChanges();
+       const backdrop =
+           overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+       backdrop.click();
+       fixture.detectChanges();
 
-    expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
-  }));
+       expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
+     }));
 
   it('should prevent closing via the escape key with disableClose option', () => {
     fixture.componentInstance.isOpen = true;
@@ -199,22 +207,21 @@ describe('Overlay directives', () => {
   });
 
   it('should not depend on the order in which the `origin` and `open` are set', waitForAsync(() => {
-    fixture.destroy();
+       fixture.destroy();
 
-    const propOrderFixture = TestBed.createComponent(ConnectedOverlayPropertyInitOrder);
-    propOrderFixture.detectChanges();
+       const propOrderFixture = TestBed.createComponent(ConnectedOverlayPropertyInitOrder);
+       propOrderFixture.detectChanges();
 
-    const overlayDirective = propOrderFixture.componentInstance.connectedOverlayDirective;
+       const overlayDirective = propOrderFixture.componentInstance.connectedOverlayDirective;
 
-    expect(() => {
-      overlayDirective.open = true;
-      overlayDirective.origin = propOrderFixture.componentInstance.trigger;
-      propOrderFixture.detectChanges();
-    }).not.toThrow();
-  }));
+       expect(() => {
+         overlayDirective.open = true;
+         overlayDirective.origin = propOrderFixture.componentInstance.trigger;
+         propOrderFixture.detectChanges();
+       }).not.toThrow();
+     }));
 
   describe('inputs', () => {
-
     it('should set the width', () => {
       fixture.componentInstance.width = 250;
       fixture.componentInstance.isOpen = true;
@@ -303,25 +310,25 @@ describe('Overlay directives', () => {
     });
 
     it('should be able to change hasBackdrop after the overlay has been initialized',
-      fakeAsync(() => {
-        // Open once with a backdrop
-        fixture.componentInstance.hasBackdrop = true;
-        fixture.componentInstance.isOpen = true;
-        fixture.detectChanges();
+       fakeAsync(() => {
+         // Open once with a backdrop
+         fixture.componentInstance.hasBackdrop = true;
+         fixture.componentInstance.isOpen = true;
+         fixture.detectChanges();
 
-        expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
 
-        fixture.componentInstance.isOpen = false;
-        fixture.detectChanges();
-        tick(500);
+         fixture.componentInstance.isOpen = false;
+         fixture.detectChanges();
+         tick(500);
 
-        // Open again without a backdrop.
-        fixture.componentInstance.hasBackdrop = false;
-        fixture.componentInstance.isOpen = true;
-        fixture.detectChanges();
+         // Open again without a backdrop.
+         fixture.componentInstance.hasBackdrop = false;
+         fixture.componentInstance.isOpen = true;
+         fixture.detectChanges();
 
-        expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
-      }));
+         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+       }));
 
     it('should set the custom backdrop class', () => {
       fixture.componentInstance.hasBackdrop = true;
@@ -337,8 +344,7 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      const panel
-        = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const panel = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(panel.classList).toContain('cdk-test-panel-class');
     });
 
@@ -581,7 +587,6 @@ describe('Overlay directives', () => {
 
       expect(target.style.transformOrigin).toContain('left bottom');
     });
-
   });
 
   describe('outputs', () => {
@@ -609,8 +614,8 @@ describe('Overlay directives', () => {
       const latestCall = fixture.componentInstance.positionChangeHandler.calls.mostRecent();
 
       expect(latestCall.args[0] instanceof ConnectedOverlayPositionChange)
-        .withContext(`Expected directive to emit an instance of ConnectedOverlayPositionChange.`)
-        .toBe(true);
+          .withContext(`Expected directive to emit an instance of ConnectedOverlayPositionChange.`)
+          .toBe(true);
     });
 
     it('should emit when attached', () => {
@@ -620,8 +625,8 @@ describe('Overlay directives', () => {
 
       expect(fixture.componentInstance.attachHandler).toHaveBeenCalled();
       expect(fixture.componentInstance.attachResult instanceof HTMLElement)
-        .withContext(`Expected pane to be populated with HTML elements when attach was called.`)
-        .toBe(true);
+          .withContext(`Expected pane to be populated with HTML elements when attach was called.`)
+          .toBe(true);
 
       fixture.componentInstance.isOpen = false;
       fixture.detectChanges();
@@ -680,9 +685,7 @@ describe('Overlay directives', () => {
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
     });
-
   });
-
 });
 
 @Component({
@@ -727,11 +730,11 @@ class ConnectedOverlayDirectiveTest {
   @ViewChild('nonDirectiveTrigger') nonDirectiveTrigger: ElementRef<HTMLElement>;
 
   isOpen = false;
-  width: number | string;
-  height: number | string;
-  minWidth: number | string;
+  width: number|string;
+  height: number|string;
+  minWidth: number|string;
   positionStrategy: FlexibleConnectedPositionStrategy;
-  minHeight: number | string;
+  minHeight: number|string;
   offsetX: number;
   offsetY: number;
   triggerOverride: CdkOverlayOrigin|FlexibleConnectedPositionStrategyOrigin;

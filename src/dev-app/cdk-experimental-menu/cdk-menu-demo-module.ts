@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
 import {CdkMenuModule} from '@angular/cdk-experimental/menu';
+import {CommonModule} from '@angular/common';
 import {CdkMenuExamplesModule} from '@angular/components-examples/cdk-experimental/menu';
+import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 
 import {CdkMenuDemo} from './cdk-menu-demo';
 
@@ -23,4 +23,5 @@ import {CdkMenuDemo} from './cdk-menu-demo';
   ],
   declarations: [CdkMenuDemo],
 })
-export class CdkMenuDemoModule {}
+export class CdkMenuDemoModule {
+}

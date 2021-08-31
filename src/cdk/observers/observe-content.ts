@@ -7,10 +7,10 @@
  */
 
 import {
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  coerceElement,
   BooleanInput,
+  coerceBooleanProperty,
+  coerceElement,
+  coerceNumberProperty,
   NumberInput
 } from '@angular/cdk/coercion';
 import {
@@ -25,7 +25,7 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
-import {Observable, Subject, Subscription, Observer} from 'rxjs';
+import {Observable, Observer, Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
 /**
@@ -34,7 +34,7 @@ import {debounceTime} from 'rxjs/operators';
  */
 @Injectable({providedIn: 'root'})
 export class MutationObserverFactory {
-  create(callback: MutationCallback): MutationObserver | null {
+  create(callback: MutationCallback): MutationObserver|null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
 }
@@ -68,7 +68,7 @@ export class ContentObserver implements OnDestroy {
    */
   observe(element: ElementRef<Element>): Observable<MutationRecord[]>;
 
-  observe(elementOrRef: Element | ElementRef<Element>): Observable<MutationRecord[]> {
+  observe(elementOrRef: Element|ElementRef<Element>): Observable<MutationRecord[]> {
     const element = coerceElement(elementOrRef);
 
     return new Observable((observer: Observer<MutationRecord[]>) => {
@@ -91,11 +91,7 @@ export class ContentObserver implements OnDestroy {
       const stream = new Subject<MutationRecord[]>();
       const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
       if (observer) {
-        observer.observe(element, {
-          characterData: true,
-          childList: true,
-          subtree: true
-        });
+        observer.observe(element, {characterData: true, childList: true, subtree: true});
       }
       this._observedElements.set(element, {observer, stream, count: 1});
     } else {
@@ -148,7 +144,9 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
    * to disconnect the underlying MutationObserver until it is needed.
    */
   @Input('cdkObserveContentDisabled')
-  get disabled() { return this._disabled; }
+  get disabled() {
+    return this._disabled;
+  }
   set disabled(value: any) {
     this._disabled = coerceBooleanProperty(value);
     this._disabled ? this._unsubscribe() : this._subscribe();
@@ -157,18 +155,20 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
   /** Debounce interval for emitting the changes. */
   @Input()
-  get debounce(): number { return this._debounce; }
+  get debounce(): number {
+    return this._debounce;
+  }
   set debounce(value: number) {
     this._debounce = coerceNumberProperty(value);
     this._subscribe();
   }
   private _debounce: number;
 
-  private _currentSubscription: Subscription | null = null;
+  private _currentSubscription: Subscription|null = null;
 
-  constructor(private _contentObserver: ContentObserver,
-              private _elementRef: ElementRef<HTMLElement>,
-              private _ngZone: NgZone) {}
+  constructor(
+      private _contentObserver: ContentObserver, private _elementRef: ElementRef<HTMLElement>,
+      private _ngZone: NgZone) {}
 
   ngAfterContentInit() {
     if (!this._currentSubscription && !this.disabled) {
@@ -208,4 +208,5 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   declarations: [CdkObserveContent],
   providers: [MutationObserverFactory]
 })
-export class ObserversModule {}
+export class ObserversModule {
+}

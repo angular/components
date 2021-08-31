@@ -15,18 +15,17 @@ const FLAT_TREE_DATA: Node[] = [
       {name: 'Flat Leaf 1.2'},
       {name: 'Flat Leaf 1.3'},
     ]
-  }, {
+  },
+  {
     name: 'Flat Group 2',
-    children: [
-      {
-        name: 'Flat Group 2.1',
-        children: [
-          {name: 'Flat Leaf 2.1.1'},
-          {name: 'Flat Leaf 2.1.2'},
-          {name: 'Flat Leaf 2.1.3'},
-        ]
-      }
-    ]
+    children: [{
+      name: 'Flat Group 2.1',
+      children: [
+        {name: 'Flat Leaf 2.1.1'},
+        {name: 'Flat Leaf 2.1.2'},
+        {name: 'Flat Leaf 2.1.3'},
+      ]
+    }]
   },
 ];
 
@@ -44,16 +43,16 @@ interface ExampleFlatNode {
   templateUrl: 'tree-harness-example.html',
 })
 export class TreeHarnessExample {
-  private _transformer = (node: Node, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  }
+  private _transformer =
+      (node: Node, level: number) => {
+        return {
+          expandable: !!node.children && node.children.length > 0,
+          name: node.name,
+          level: level,
+        };
+      }
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-      node => node.level, node => node.expandable);
+  treeControl = new FlatTreeControl<ExampleFlatNode>(node => node.level, node => node.expandable);
 
   treeFlattener = new MatTreeFlattener(
       this._transformer, node => node.level, node => node.expandable, node => node.children);

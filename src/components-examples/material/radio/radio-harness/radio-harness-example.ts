@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'radio-harness-example',
   templateUrl: 'radio-harness-example.html',
 })
-export class RadioHarnessExample {}
+export class RadioHarnessExample {
+}

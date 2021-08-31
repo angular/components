@@ -44,13 +44,10 @@ export class MatMenuContent implements OnDestroy {
   readonly _attached = new Subject<void>();
 
   constructor(
-    private _template: TemplateRef<any>,
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _appRef: ApplicationRef,
-    private _injector: Injector,
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(DOCUMENT) private _document: any,
-    private _changeDetectorRef?: ChangeDetectorRef) {}
+      private _template: TemplateRef<any>,
+      private _componentFactoryResolver: ComponentFactoryResolver, private _appRef: ApplicationRef,
+      private _injector: Injector, private _viewContainerRef: ViewContainerRef,
+      @Inject(DOCUMENT) private _document: any, private _changeDetectorRef?: ChangeDetectorRef) {}
 
   /**
    * Attaches the content with a particular context.
@@ -64,8 +61,9 @@ export class MatMenuContent implements OnDestroy {
     this.detach();
 
     if (!this._outlet) {
-      this._outlet = new DomPortalOutlet(this._document.createElement('div'),
-          this._componentFactoryResolver, this._appRef, this._injector);
+      this._outlet = new DomPortalOutlet(
+          this._document.createElement('div'), this._componentFactoryResolver, this._appRef,
+          this._injector);
     }
 
     const element: HTMLElement = this._template.elementRef.nativeElement;

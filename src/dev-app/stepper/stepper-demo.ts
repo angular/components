@@ -7,8 +7,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ThemePalette} from '@angular/material/core';
 
 
 @Component({
@@ -34,17 +34,18 @@ export class StepperDemo implements OnInit {
   ];
 
   availableThemes: {value: ThemePalette, name: string}[] = [
-    {value: 'primary', name: 'Primary'},
-    {value: 'accent', name: 'Accent'},
+    {value: 'primary', name: 'Primary'}, {value: 'accent', name: 'Accent'},
     {value: 'warn', name: 'Warn'}
   ];
 
   theme = this.availableThemes[0].value;
 
   /** Returns a FormArray with the name 'formArray'. */
-  get formArray(): AbstractControl | null { return this.formGroup.get('formArray'); }
+  get formArray(): AbstractControl|null {
+    return this.formGroup.get('formArray');
+  }
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.formGroup = this._formBuilder.group({
@@ -53,9 +54,7 @@ export class StepperDemo implements OnInit {
           firstNameFormCtrl: ['', Validators.required],
           lastNameFormCtrl: ['', Validators.required],
         }),
-        this._formBuilder.group({
-          emailFormCtrl: ['', Validators.email]
-        }),
+        this._formBuilder.group({emailFormCtrl: ['', Validators.email]}),
       ])
     });
 
@@ -64,8 +63,6 @@ export class StepperDemo implements OnInit {
       lastNameCtrl: ['', Validators.required],
     });
 
-    this.emailFormGroup = this._formBuilder.group({
-      emailCtrl: ['', Validators.email]
-    });
+    this.emailFormGroup = this._formBuilder.group({emailCtrl: ['', Validators.email]});
   }
 }

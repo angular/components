@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'slide-toggle-overview-example',
   templateUrl: 'slide-toggle-overview-example.html',
 })
-export class SlideToggleOverviewExample {}
+export class SlideToggleOverviewExample {
+}

@@ -11,10 +11,12 @@ describe('MatChipOptionHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipOptionHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatChipsModule],
+          declarations: [ChipOptionHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ChipOptionHarnessTest);
     fixture.detectChanges();
@@ -73,7 +75,6 @@ describe('MatChipOptionHarness', () => {
     await harness.toggle();
     expect(await harness.isSelected()).toBe(false);
   });
-
 });
 
 @Component({
@@ -92,5 +93,5 @@ describe('MatChipOptionHarness', () => {
     </mat-chip-listbox>
   `
 })
-class ChipOptionHarnessTest {}
-
+class ChipOptionHarnessTest {
+}

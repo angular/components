@@ -42,15 +42,11 @@ describe('material-dashboard-schematic', () => {
     expect(moduleContent).toContain('MatButtonModule');
 
     expect(moduleContent)
-      .toContain(`import { MatGridListModule } from '@angular/material/grid-list';`);
-    expect(moduleContent)
-      .toContain(`import { MatCardModule } from '@angular/material/card';`);
-    expect(moduleContent)
-      .toContain(`import { MatMenuModule } from '@angular/material/menu';`);
-    expect(moduleContent)
-      .toContain(`import { MatIconModule } from '@angular/material/icon';`);
-    expect(moduleContent)
-      .toContain(`import { MatButtonModule } from '@angular/material/button';`);
+        .toContain(`import { MatGridListModule } from '@angular/material/grid-list';`);
+    expect(moduleContent).toContain(`import { MatCardModule } from '@angular/material/card';`);
+    expect(moduleContent).toContain(`import { MatMenuModule } from '@angular/material/menu';`);
+    expect(moduleContent).toContain(`import { MatIconModule } from '@angular/material/icon';`);
+    expect(moduleContent).toContain(`import { MatButtonModule } from '@angular/material/button';`);
   });
 
   it('should throw if no name has been specified', async () => {
@@ -58,7 +54,7 @@ describe('material-dashboard-schematic', () => {
 
     await expectAsync(
         runner.runSchematicAsync('dashboard', {project: 'material'}, appTree).toPromise())
-      .toBeRejectedWithError(/required property 'name'/);
+        .toBeRejectedWithError(/required property 'name'/);
   });
 
   describe('style option', () => {

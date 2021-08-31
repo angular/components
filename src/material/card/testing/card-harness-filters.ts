@@ -11,9 +11,9 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 /** A set of criteria that can be used to filter a list of `MatCardHarness` instances. */
 export interface CardHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
+  text?: string|RegExp;
   /** Only find instances whose title matches the given value. */
-  title?: string | RegExp;
+  title?: string|RegExp;
   /** Only find instances whose subtitle matches the given value. */
-  subtitle?: string | RegExp;
+  subtitle?: string|RegExp;
 }

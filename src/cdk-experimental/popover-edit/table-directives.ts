@@ -13,11 +13,11 @@ import {
   Directive,
   ElementRef,
   EmbeddedViewRef,
+  HostListener,
   NgZone,
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
-  HostListener,
 } from '@angular/core';
 import {fromEvent, fromEventPattern, merge, Subject} from 'rxjs';
 import {
@@ -33,6 +33,7 @@ import {
 
 import {CELL_SELECTOR, EDIT_PANE_CLASS, EDIT_PANE_SELECTOR, ROW_SELECTOR} from './constants';
 import {EditEventDispatcher, HoverContentState} from './edit-event-dispatcher';
+import {EditRef} from './edit-ref';
 import {EditServices} from './edit-services';
 import {FocusDispatcher} from './focus-dispatcher';
 import {
@@ -41,7 +42,6 @@ import {
   FocusEscapeNotifierFactory
 } from './focus-escape-notifier';
 import {closest} from './polyfill';
-import {EditRef} from './edit-ref';
 
 /**
  * Describes the number of columns before and after the originating cell that the
@@ -89,60 +89,72 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       // Track mouse movement over the table to hide/show hover content.
-      fromEvent<MouseEvent>(element, 'mouseover').pipe(
-          toClosest(ROW_SELECTOR),
-          takeUntil(this.destroyed),
-          ).subscribe(this.editEventDispatcher.hovering);
-      fromEvent<MouseEvent>(element, 'mouseleave').pipe(
-          mapTo(null),
-          takeUntil(this.destroyed),
-          ).subscribe(this.editEventDispatcher.hovering);
-      fromEvent<MouseEvent>(element, 'mousemove').pipe(
-          throttleTime(MOUSE_MOVE_THROTTLE_TIME_MS),
-          toClosest(ROW_SELECTOR),
-          takeUntil(this.destroyed),
-          ).subscribe(this.editEventDispatcher.mouseMove);
+      fromEvent<MouseEvent>(element, 'mouseover')
+          .pipe(
+              toClosest(ROW_SELECTOR),
+              takeUntil(this.destroyed),
+              )
+          .subscribe(this.editEventDispatcher.hovering);
+      fromEvent<MouseEvent>(element, 'mouseleave')
+          .pipe(
+              mapTo(null),
+              takeUntil(this.destroyed),
+              )
+          .subscribe(this.editEventDispatcher.hovering);
+      fromEvent<MouseEvent>(element, 'mousemove')
+          .pipe(
+              throttleTime(MOUSE_MOVE_THROTTLE_TIME_MS),
+              toClosest(ROW_SELECTOR),
+              takeUntil(this.destroyed),
+              )
+          .subscribe(this.editEventDispatcher.mouseMove);
 
       // Track focus within the table to hide/show/make focusable hover content.
       fromEventPattern<FocusEvent>(
           handler => element.addEventListener('focus', handler, true),
-          handler => element.removeEventListener('focus', handler, true)
-          ).pipe(
+          handler => element.removeEventListener('focus', handler, true))
+          .pipe(
               toClosest(ROW_SELECTOR),
               share(),
               takeUntil(this.destroyed),
-              ).subscribe(this.editEventDispatcher.focused);
+              )
+          .subscribe(this.editEventDispatcher.focused);
 
       merge(
-        fromEventPattern<FocusEvent>(
-          handler => element.addEventListener('blur', handler, true),
-          handler => element.removeEventListener('blur', handler, true)
-        ),
-        fromEvent<KeyboardEvent>(element, 'keydown').pipe(filter(event => event.key === 'Escape'))
-      ).pipe(
-        mapTo(null),
-        share(),
-        takeUntil(this.destroyed),
-      ).subscribe(this.editEventDispatcher.focused);
+          fromEventPattern<FocusEvent>(
+              handler => element.addEventListener('blur', handler, true),
+              handler => element.removeEventListener('blur', handler, true)),
+          fromEvent<KeyboardEvent>(element, 'keydown')
+              .pipe(filter(event => event.key === 'Escape')))
+          .pipe(
+              mapTo(null),
+              share(),
+              takeUntil(this.destroyed),
+              )
+          .subscribe(this.editEventDispatcher.focused);
 
       // Keep track of rows within the table. This is used to know which rows with hover content
       // are first or last in the table. They are kept focusable in case focus enters from above
       // or below the table.
-      this.ngZone.onStable.pipe(
-          // Optimization: ignore dom changes while focus is within the table as we already
-          // ensure that rows above and below the focused/active row are tabbable.
-          withLatestFrom(this.editEventDispatcher.editingOrFocused),
-          filter(([_, activeRow]) => activeRow == null),
-          map(() => element.querySelectorAll(ROW_SELECTOR)),
-          share(),
-          takeUntil(this.destroyed),
-          ).subscribe(this.editEventDispatcher.allRows);
+      this.ngZone.onStable
+          .pipe(
+              // Optimization: ignore dom changes while focus is within the table as we already
+              // ensure that rows above and below the focused/active row are tabbable.
+              withLatestFrom(this.editEventDispatcher.editingOrFocused),
+              filter(([_, activeRow]) => activeRow == null),
+              map(() => element.querySelectorAll(ROW_SELECTOR)),
+              share(),
+              takeUntil(this.destroyed),
+              )
+          .subscribe(this.editEventDispatcher.allRows);
 
-      fromEvent<KeyboardEvent>(element, 'keydown').pipe(
-          filter(event => event.key === 'Enter'),
-          toClosest(CELL_SELECTOR),
-          takeUntil(this.destroyed),
-          ).subscribe(this.editEventDispatcher.editing);
+      fromEvent<KeyboardEvent>(element, 'keydown')
+          .pipe(
+              filter(event => event.key === 'Enter'),
+              toClosest(CELL_SELECTOR),
+              takeUntil(this.destroyed),
+              )
+          .subscribe(this.editEventDispatcher.editing);
 
       // Keydown must be used here or else key autorepeat does not work properly on some platforms.
       fromEvent<KeyboardEvent>(element, 'keydown')
@@ -294,10 +306,8 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   }
 
   private _showEditOverlay(): void {
-    this.overlayRef!.attach(new TemplatePortal(
-        this.template!,
-        this.viewContainerRef,
-        {$implicit: this.context}));
+    this.overlayRef!.attach(
+        new TemplatePortal(this.template !, this.viewContainerRef, {$implicit: this.context}));
 
     // We have to defer trapping focus, because doing so too early can cause the form inside
     // the overlay to be submitted immediately if it was opened on an Enter keydown event.
@@ -310,10 +320,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     // Update the size of the popup initially and on subsequent changes to
     // scroll position and viewport size.
     merge(this.services.scrollDispatcher.scrolled(), this.services.viewportRuler.change())
-        .pipe(
-          startWith(null),
-          takeUntil(merge(this.overlayRef!.detachments(), this.destroyed))
-        )
+        .pipe(startWith(null), takeUntil(merge(this.overlayRef!.detachments(), this.destroyed)))
         .subscribe(() => {
           this._updateOverlaySize();
         });
@@ -344,8 +351,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   }
 
   private _maybeReturnFocusToCell(): void {
-    if (closest(document.activeElement, EDIT_PANE_SELECTOR) ===
-        this.overlayRef!.overlayElement) {
+    if (closest(document.activeElement, EDIT_PANE_SELECTOR) === this.overlayRef!.overlayElement) {
       this.elementRef.nativeElement!.focus();
     }
   }
@@ -430,8 +436,7 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
    * In the CDK version, this is a noop but subclasses such as MatRowHoverContent use this
    * to prepare/style the inserted element.
    */
-  protected initElement(_: HTMLElement): void {
-  }
+  protected initElement(_: HTMLElement): void {}
 
   /**
    * Called when the hover content needs to be focusable to preserve a reasonable tab ordering
@@ -489,7 +494,6 @@ export class CdkEditOpen {
   constructor(
       protected readonly elementRef: ElementRef<HTMLElement>,
       protected readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>) {
-
     const nativeElement = elementRef.nativeElement;
 
     // Prevent accidental form submits.

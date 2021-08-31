@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkSelection, SelectionChange} from '@angular/cdk-experimental/selection';
-import {Directive, Input, Output, EventEmitter} from '@angular/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Directive, EventEmitter, Input, Output} from '@angular/core';
 
 
 /**
@@ -26,8 +26,12 @@ import {Directive, Input, Output, EventEmitter} from '@angular/core';
 export class MatSelection<T> extends CdkSelection<T> {
   /** Whether to support multiple selection */
   @Input('matSelectionMultiple')
-  override get multiple(): boolean { return this._multiple; }
-  override set multiple(multiple: boolean) { this._multiple = coerceBooleanProperty(multiple); }
+  override get multiple(): boolean {
+    return this._multiple;
+  }
+  override set multiple(multiple: boolean) {
+    this._multiple = coerceBooleanProperty(multiple);
+  }
 
   /** Emits when selection changes. */
   @Output('matSelectionChange') override readonly change = new EventEmitter<SelectionChange<T>>();

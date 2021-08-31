@@ -32,4 +32,5 @@ import {Component} from '@angular/core';
     <popover-edit-tab-out-mat-table-example></popover-edit-tab-out-mat-table-example>
   `,
 })
-export class PopoverEditDemo {}
+export class PopoverEditDemo {
+}

@@ -6,4 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'form-field-overview-example.html',
   styleUrls: ['form-field-overview-example.css']
 })
-export class FormFieldOverviewExample {}
+export class FormFieldOverviewExample {
+}

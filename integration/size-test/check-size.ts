@@ -4,10 +4,10 @@
  * amount, the script will fail with a non-zero exit code.
  */
 
+import {runfiles} from '@bazel/runfiles';
 import * as chalk from 'chalk';
 import {readFileSync, statSync, writeFileSync} from 'fs';
 import {parse, stringify} from 'yaml';
-import {runfiles} from '@bazel/runfiles';
 
 /**
  * Absolute byte deviation from the expected value that is allowed. If the
@@ -21,7 +21,9 @@ const ABSOLUTE_BYTE_THRESHOLD = 500;
 const PERCENTAGE_DEVIATION_THRESHOLD = 1;
 
 /** Type that represents the parsed size-test golden. */
-type Golden = {[testId: string]: number};
+type Golden = {
+  [testId: string]: number
+};
 
 /**
  * Extracted command line arguments specified by the Bazel NodeJS binaries:

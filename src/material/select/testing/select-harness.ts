@@ -7,31 +7,34 @@
  */
 
 import {
+  BaseHarnessFilters,
+  ComponentHarness,
+  ComponentHarnessConstructor,
   HarnessPredicate,
   parallel,
-  ComponentHarness,
-  BaseHarnessFilters,
-  ComponentHarnessConstructor,
 } from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {
-  MatOptionHarness,
   MatOptgroupHarness,
-  OptionHarnessFilters,
+  MatOptionHarness,
   OptgroupHarnessFilters,
+  OptionHarnessFilters,
 } from '@angular/material/core/testing';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
+
 import {SelectHarnessFilters} from './select-harness-filters';
 
 export abstract class _MatSelectHarnessBase<
-    OptionType extends (ComponentHarnessConstructor<Option> & {
-      with: (options?: OptionFilters) => HarnessPredicate<Option>}),
-    Option extends ComponentHarness & {click(): Promise<void>},
-    OptionFilters extends BaseHarnessFilters,
-    OptionGroupType extends (ComponentHarnessConstructor<OptionGroup> & {
-      with: (options?: OptionGroupFilters) => HarnessPredicate<OptionGroup>}),
-    OptionGroup extends ComponentHarness,
-    OptionGroupFilters extends BaseHarnessFilters
-> extends MatFormFieldControlHarness {
+    OptionType extends(ComponentHarnessConstructor<Option>&
+                       {with: (options?: OptionFilters) => HarnessPredicate<Option>}),
+                      Option extends ComponentHarness&{click(): Promise<void>},
+                                     OptionFilters extends
+        BaseHarnessFilters, OptionGroupType extends(ComponentHarnessConstructor<OptionGroup>& {
+                                                     with: (options?: OptionGroupFilters) =>
+                                                         HarnessPredicate<OptionGroup>
+                                                   }),
+                                                   OptionGroup extends
+            ComponentHarness, OptionGroupFilters extends BaseHarnessFilters> extends
+    MatFormFieldControlHarness {
   protected abstract _prefix: string;
   protected abstract _optionClass: OptionType;
   protected abstract _optionGroupClass: OptionGroupType;
@@ -86,18 +89,15 @@ export abstract class _MatSelectHarnessBase<
 
   /** Gets the options inside the select panel. */
   async getOptions(filter?: Omit<OptionFilters, 'ancestor'>): Promise<Option[]> {
-    return this._documentRootLocator.locatorForAll(this._optionClass.with({
-      ...(filter || {}),
-      ancestor: await this._getPanelSelector()
-    } as OptionFilters))();
+    return this._documentRootLocator.locatorForAll(this._optionClass.with(
+        {...(filter || {}), ancestor: await this._getPanelSelector()} as OptionFilters))();
   }
 
   /** Gets the groups of options inside the panel. */
   async getOptionGroups(filter?: Omit<OptionGroupFilters, 'ancestor'>): Promise<OptionGroup[]> {
-    return this._documentRootLocator.locatorForAll(this._optionGroupClass.with({
-      ...(filter || {}),
-      ancestor: await this._getPanelSelector()
-    } as OptionGroupFilters))() as Promise<OptionGroup[]>;
+    return this._documentRootLocator.locatorForAll(this._optionGroupClass.with(
+               {...(filter || {}), ancestor: await this._getPanelSelector()} as
+               OptionGroupFilters))() as Promise<OptionGroup[]>;
   }
 
   /** Gets whether the select is open. */
@@ -121,7 +121,7 @@ export abstract class _MatSelectHarnessBase<
     await this.open();
 
     const [isMultiple, options] =
-      await parallel(() => [this.isMultiple(), this.getOptions(filter)]);
+        await parallel(() => [this.isMultiple(), this.getOptions(filter)]);
 
     if (options.length === 0) {
       throw Error('Select does not have options matching the specified filter');
@@ -152,10 +152,9 @@ export abstract class _MatSelectHarnessBase<
 }
 
 /** Harness for interacting with a standard mat-select in tests. */
-export class MatSelectHarness extends  _MatSelectHarnessBase<
-  typeof MatOptionHarness, MatOptionHarness, OptionHarnessFilters,
-  typeof MatOptgroupHarness, MatOptgroupHarness, OptgroupHarnessFilters
-> {
+export class MatSelectHarness extends _MatSelectHarnessBase<
+    typeof MatOptionHarness, MatOptionHarness, OptionHarnessFilters, typeof MatOptgroupHarness,
+    MatOptgroupHarness, OptgroupHarnessFilters> {
   static hostSelector = '.mat-select';
   protected _prefix = 'mat';
   protected _optionClass = MatOptionHarness;

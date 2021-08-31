@@ -66,7 +66,7 @@ describe('material-navigation-schematic', () => {
 
     await expectAsync(
         runner.runSchematicAsync('navigation', {project: 'material'}, appTree).toPromise())
-      .toBeRejectedWithError(/required property 'name'/);
+        .toBeRejectedWithError(/required property 'name'/);
   });
 
   describe('style option', () => {
@@ -158,22 +158,20 @@ describe('material-navigation-schematic', () => {
   describe('router option', () => {
     it('should respect the option value if routing true', async () => {
       const tree =
-        await runner
-          .runSchematicAsync(
-            'navigation', { routing: true, ...baseOptions }, await createTestApp(runner))
-          .toPromise();
-      const template = tree
-          .readContent('/projects/material/src/app/foo/foo.component.html');
+          await runner
+              .runSchematicAsync(
+                  'navigation', {routing: true, ...baseOptions}, await createTestApp(runner))
+              .toPromise();
+      const template = tree.readContent('/projects/material/src/app/foo/foo.component.html');
       expect(template).toContain('<a mat-list-item routerLink="/">Link 1</a>');
     });
     it('should respect the option value if routing false', async () => {
       const tree =
-        await runner
-          .runSchematicAsync(
-            'navigation', { routing: false, ...baseOptions }, await createTestApp(runner))
-          .toPromise();
-      const template = tree
-          .readContent('/projects/material/src/app/foo/foo.component.html');
+          await runner
+              .runSchematicAsync(
+                  'navigation', {routing: false, ...baseOptions}, await createTestApp(runner))
+              .toPromise();
+      const template = tree.readContent('/projects/material/src/app/foo/foo.component.html');
       expect(template).toContain('<a mat-list-item href="#">Link 1</a>');
     });
   });

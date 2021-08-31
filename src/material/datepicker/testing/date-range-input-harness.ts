@@ -7,12 +7,13 @@
  */
 
 import {HarnessPredicate, parallel, TestKey} from '@angular/cdk/testing';
-import {MatDatepickerInputHarnessBase, getInputPredicate} from './datepicker-input-harness-base';
-import {DatepickerTriggerHarnessBase} from './datepicker-trigger-harness-base';
+
 import {
   DatepickerInputHarnessFilters,
   DateRangeInputHarnessFilters,
 } from './datepicker-harness-filters';
+import {getInputPredicate, MatDatepickerInputHarnessBase} from './datepicker-input-harness-base';
+import {DatepickerTriggerHarnessBase} from './datepicker-trigger-harness-base';
 
 /** Harness for interacting with a standard Material date range start input in tests. */
 export class MatStartDateHarness extends MatDatepickerInputHarnessBase {
@@ -24,8 +25,7 @@ export class MatStartDateHarness extends MatDatepickerInputHarnessBase {
    * @param options Options for filtering which input instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: DatepickerInputHarnessFilters = {}):
-    HarnessPredicate<MatStartDateHarness> {
+  static with(options: DatepickerInputHarnessFilters = {}): HarnessPredicate<MatStartDateHarness> {
     return getInputPredicate(MatStartDateHarness, options);
   }
 }
@@ -40,8 +40,7 @@ export class MatEndDateHarness extends MatDatepickerInputHarnessBase {
    * @param options Options for filtering which input instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: DatepickerInputHarnessFilters = {}):
-    HarnessPredicate<MatEndDateHarness> {
+  static with(options: DatepickerInputHarnessFilters = {}): HarnessPredicate<MatEndDateHarness> {
     return getInputPredicate(MatEndDateHarness, options);
   }
 }
@@ -58,19 +57,19 @@ export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DateRangeInputHarnessFilters = {}):
-    HarnessPredicate<MatDateRangeInputHarness> {
-      return new HarnessPredicate(MatDateRangeInputHarness, options)
-        .addOption('value', options.value,
+      HarnessPredicate<MatDateRangeInputHarness> {
+    return new HarnessPredicate(MatDateRangeInputHarness, options)
+        .addOption(
+            'value', options.value,
             (harness, value) => HarnessPredicate.stringMatches(harness.getValue(), value));
   }
 
   /** Gets the combined value of the start and end inputs, including the separator. */
   async getValue(): Promise<string> {
-    const [start, end, separator] = await parallel(() => [
-      this.getStartInput().then(input => input.getValue()),
-      this.getEndInput().then(input => input.getValue()),
-      this.getSeparator()
-    ]);
+    const [start, end, separator] = await parallel(
+        () =>
+            [this.getStartInput().then(input => input.getValue()),
+             this.getEndInput().then(input => input.getValue()), this.getSeparator()]);
 
     return start + `${end ? ` ${separator} ${end}` : ''}`;
   }
@@ -95,10 +94,10 @@ export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
   /** Gets whether the range input is disabled. */
   async isDisabled(): Promise<boolean> {
     // We consider the input as disabled if both of the sub-inputs are disabled.
-    const [startDisabled, endDisabled] = await parallel(() => [
-      this.getStartInput().then(input => input.isDisabled()),
-      this.getEndInput().then(input => input.isDisabled())
-    ]);
+    const [startDisabled, endDisabled] = await parallel(
+        () =>
+            [this.getStartInput().then(input => input.isDisabled()),
+             this.getEndInput().then(input => input.isDisabled())]);
 
     return startDisabled && endDisabled;
   }

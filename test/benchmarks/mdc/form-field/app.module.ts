@@ -7,9 +7,9 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatFormFieldModule} from '@angular/material-experimental/mdc-form-field';
 import {MatInputModule} from '@angular/material-experimental/mdc-input';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mdc-form-field */
 
@@ -38,8 +38,12 @@ export class FormFieldBenchmarkApp {
   isInputVisible = false;
   isTextareaVisible = false;
 
-  showInput() { this.isInputVisible = true; }
-  showTextarea() { this.isTextareaVisible = true; }
+  showInput() {
+    this.isInputVisible = true;
+  }
+  showTextarea() {
+    this.isTextareaVisible = true;
+  }
 
   hide() {
     this.isInputVisible = false;
@@ -57,4 +61,5 @@ export class FormFieldBenchmarkApp {
   ],
   bootstrap: [FormFieldBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

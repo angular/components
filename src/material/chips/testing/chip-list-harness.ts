@@ -7,13 +7,14 @@
  */
 
 import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
+
 import {MatChipHarness} from './chip-harness';
-import {MatChipInputHarness} from './chip-input-harness';
 import {
-  ChipListHarnessFilters,
   ChipHarnessFilters,
   ChipInputHarnessFilters,
+  ChipListHarnessFilters,
 } from './chip-harness-filters';
+import {MatChipInputHarness} from './chip-input-harness';
 
 /** Base class for chip list harnesses. */
 export abstract class _MatChipListHarnessBase extends ComponentHarness {
@@ -38,7 +39,7 @@ export abstract class _MatChipListHarnessBase extends ComponentHarness {
   }
 
   /** Gets whether the orientation of the chip list. */
-  async getOrientation(): Promise<'horizontal' | 'vertical'> {
+  async getOrientation(): Promise<'horizontal'|'vertical'> {
     const orientation = await (await this.host()).getAttribute('aria-orientation');
     return orientation === 'vertical' ? 'vertical' : 'horizontal';
   }
@@ -95,6 +96,6 @@ export class MatChipListHarness extends _MatChipListHarnessBase {
     }
 
     return this.documentRootLocatorFactory().locatorFor(
-      MatChipInputHarness.with({...filter, selector: `#${inputId}`}))();
+        MatChipInputHarness.with({...filter, selector: `#${inputId}`}))();
   }
 }

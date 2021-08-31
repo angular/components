@@ -1,8 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
-
 import {GoogleMapsModule} from '../google-maps-module';
 import {
   createMapConstructorSpy,
@@ -10,6 +9,7 @@ import {
   createMarkerConstructorSpy,
   createMarkerSpy
 } from '../testing/fake-google-map-utils';
+
 import {DEFAULT_MARKER_OPTIONS, MapMarker} from './map-marker';
 
 describe('MapMarker', () => {

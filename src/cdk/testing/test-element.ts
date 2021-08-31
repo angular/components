@@ -17,8 +17,7 @@ export interface ModifierKeys {
 }
 
 /** Data that can be attached to a custom event dispatched from a `TestElement`. */
-export type EventData =
-    string | number | boolean | undefined | null | EventData[] | {[key: string]: EventData};
+export type EventData = string|number|boolean|undefined|null|EventData[]|{[key: string]: EventData};
 
 /** An enum of non-text keys that can be used with the `sendKeys` method. */
 // NOTE: This is a separate enum from `@angular/cdk/keycodes` because we don't necessarily want to
@@ -113,13 +112,13 @@ export interface TestElement {
    * Sends the given string to the input as a series of key presses. Also fires input events
    * and attempts to add the string to the Element's value.
    */
-  sendKeys(...keys: (string | TestKey)[]): Promise<void>;
+  sendKeys(...keys: (string|TestKey)[]): Promise<void>;
 
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
    * and attempts to add the string to the Element's value.
    */
-  sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
+  sendKeys(modifiers: ModifierKeys, ...keys: (string|TestKey)[]): Promise<void>;
 
   /**
    * Gets the text from the element.
@@ -128,7 +127,7 @@ export interface TestElement {
   text(options?: TextOptions): Promise<string>;
 
   /** Gets the value for the given attribute from the element. */
-  getAttribute(name: string): Promise<string | null>;
+  getAttribute(name: string): Promise<string|null>;
 
   /** Checks whether the element has the given class. */
   hasClass(name: string): Promise<boolean>;

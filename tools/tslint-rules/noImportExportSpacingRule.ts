@@ -1,5 +1,5 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
+import * as ts from 'typescript';
 
 /**
  * Rule that ensures that there are no spaces before/after the braces in import and export clauses.
@@ -18,16 +18,15 @@ function walkContext(context: Lint.WalkContext<string[]>) {
       if (clause) {
         const clauseText = clause.getText();
 
-        if (clauseText.startsWith('{') && clauseText.endsWith('}') && (
-            clauseText.includes('{ ') || clauseText.includes(' }'))) {
-
-          context.addFailureAtNode(clause,
+        if (clauseText.startsWith('{') && clauseText.endsWith('}') &&
+            (clauseText.includes('{ ') || clauseText.includes(' }'))) {
+          context.addFailureAtNode(
+              clause,
               `${ts.isImportDeclaration(node) ? 'Import' : 'Export'} clauses should not have ` +
-              `spaces after the opening brace or before the closing one.`,
+                  `spaces after the opening brace or before the closing one.`,
               new Lint.Replacement(
-                clause.getStart(), clause.getWidth(),
-                clauseText.replace(/{\s+/, '{').replace(/\s+}/, '}')
-              ));
+                  clause.getStart(), clause.getWidth(),
+                  clauseText.replace(/{\s+/, '{').replace(/\s+}/, '}')));
         }
       }
     }

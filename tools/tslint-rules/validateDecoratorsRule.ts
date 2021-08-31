@@ -1,7 +1,7 @@
-import * as path from 'path';
-import * as ts from 'typescript';
-import * as Lint from 'tslint';
 import * as minimatch from 'minimatch';
+import * as path from 'path';
+import * as Lint from 'tslint';
+import * as ts from 'typescript';
 
 /**
  * Rule that enforces certain decorator properties to be defined and to match a pattern.
@@ -39,11 +39,7 @@ const ALL_PROPS_TOKEN = '*';
 
 /** Object that can be used to configured the rule. */
 interface RuleConfig {
-  [key: string]: {
-    argument: number,
-    required?: boolean,
-    properties: {[key: string]: string}
-  };
+  [key: string]: {argument: number, required?: boolean, properties: {[key: string]: string}};
 }
 
 /** Represents a set of required and forbidden decorator properties. */
@@ -76,8 +72,8 @@ class Walker extends Lint.RuleWalker {
     const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
 
     this._rules = this._generateRules(options.ruleArguments[0]);
-    this._enabled = Object.keys(this._rules).length > 0 &&
-                    fileGlobs.some(p => minimatch(relativeFilePath, p));
+    this._enabled =
+        Object.keys(this._rules).length > 0 && fileGlobs.some(p => minimatch(relativeFilePath, p));
   }
 
   override visitClassDeclaration(node: ts.ClassDeclaration) {
@@ -122,16 +118,18 @@ class Walker extends Lint.RuleWalker {
     if (allPropsRequirement) {
       const argumentText = args[rules.argument] ? args[rules.argument].getText() : '';
       if (!allPropsRequirement.test(argumentText)) {
-        this.addFailureAtNode(expression.parent, `Expected decorator argument ${rules.argument} ` +
-                                                 `to match "${allPropsRequirement}"`);
+        this.addFailureAtNode(
+            expression.parent,
+            `Expected decorator argument ${rules.argument} ` +
+                `to match "${allPropsRequirement}"`);
       }
       return;
     }
 
     if (!args[rules.argument]) {
       if (rules.required) {
-        this.addFailureAtNode(expression.parent,
-                             `Missing required argument at index ${rules.argument}`);
+        this.addFailureAtNode(
+            expression.parent, `Missing required argument at index ${rules.argument}`);
       }
       return;
     }
@@ -145,40 +143,39 @@ class Walker extends Lint.RuleWalker {
 
     (args[rules.argument] as ts.ObjectLiteralExpression).properties.forEach(prop => {
       if (ts.isPropertyAssignment(prop) && prop.name && prop.initializer) {
-        props.push({
-          name: prop.name.getText(),
-          value: prop.initializer.getText(),
-          node: prop
-        });
+        props.push({name: prop.name.getText(), value: prop.initializer.getText(), node: prop});
       }
     });
 
     // Find all of the required rule properties that are missing from the decorator.
-    const missing = Object.keys(rules.requiredProps)
-        .filter(key => !props.find(prop => prop.name === key));
+    const missing =
+        Object.keys(rules.requiredProps).filter(key => !props.find(prop => prop.name === key));
 
     if (missing.length) {
       // Exit early if any of the properties are missing.
-      this.addFailureAtNode(expression.expression,
-          'Missing required properties: ' + missing.join(', '));
+      this.addFailureAtNode(
+          expression.expression, 'Missing required properties: ' + missing.join(', '));
     } else {
       // If all the necessary properties are defined, ensure that
       // they match the pattern and aren't in the forbidden list.
-      props
-        .filter(prop => rules.requiredProps[prop.name] || rules.forbiddenProps[prop.name])
-        .forEach(prop => {
-          const {name, value, node} = prop;
-          const requiredPattern = rules.requiredProps[name];
-          const forbiddenPattern = rules.forbiddenProps[name];
+      props.filter(prop => rules.requiredProps[prop.name] || rules.forbiddenProps[prop.name])
+          .forEach(prop => {
+            const {name, value, node} = prop;
+            const requiredPattern = rules.requiredProps[name];
+            const forbiddenPattern = rules.forbiddenProps[name];
 
-          if (requiredPattern && !requiredPattern.test(value)) {
-            this.addFailureAtNode(node, `Invalid value for property. ` +
-                                        `Expected value to match "${requiredPattern}".`);
-          } else if (forbiddenPattern && forbiddenPattern.test(value)) {
-            this.addFailureAtNode(node, `Property value not allowed. ` +
-                                        `Value should not match "${forbiddenPattern}".`);
-          }
-        });
+            if (requiredPattern && !requiredPattern.test(value)) {
+              this.addFailureAtNode(
+                  node,
+                  `Invalid value for property. ` +
+                      `Expected value to match "${requiredPattern}".`);
+            } else if (forbiddenPattern && forbiddenPattern.test(value)) {
+              this.addFailureAtNode(
+                  node,
+                  `Property value not allowed. ` +
+                      `Value should not match "${forbiddenPattern}".`);
+            }
+          });
     }
   }
 
@@ -223,7 +220,9 @@ class Walker extends Lint.RuleWalker {
             argument,
             required: !!required,
             requiredProps: {} as {[key: string]: RegExp},
-            forbiddenProps: {} as {[key: string]: RegExp}
+            forbiddenProps: {} as {
+              [key: string]: RegExp
+            }
           });
         }
       });

@@ -6,6 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {ConnectedPosition, Overlay, ScrollDispatcher} from '@angular/cdk/overlay';
+import {Platform} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,19 +23,15 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {Platform} from '@angular/cdk/platform';
-import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {ConnectedPosition, Overlay, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
-  MatTooltipDefaultOptions,
-  MAT_TOOLTIP_DEFAULT_OPTIONS,
-  MAT_TOOLTIP_SCROLL_STRATEGY,
   _MatTooltipBase,
   _TooltipComponentBase,
+  MAT_TOOLTIP_DEFAULT_OPTIONS,
+  MAT_TOOLTIP_SCROLL_STRATEGY,
+  MatTooltipDefaultOptions,
 } from '@angular/material/tooltip';
 import {numbers} from '@material/tooltip';
+
 import {matTooltipAnimations} from './tooltip-animations';
 
 /**
@@ -46,33 +47,22 @@ export const TOOLTIP_PANEL_CLASS = 'mat-mdc-tooltip-panel';
  *
  * https://material.io/design/components/tooltips.html
  */
-@Directive({
-  selector: '[matTooltip]',
-  exportAs: 'matTooltip',
-  host: {
-    'class': 'mat-mdc-tooltip-trigger'
-  }
-})
+@Directive(
+    {selector: '[matTooltip]', exportAs: 'matTooltip', host: {'class': 'mat-mdc-tooltip-trigger'}})
 export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
   protected override readonly _tooltipComponent = TooltipComponent;
   protected override readonly _cssClassPrefix = 'mat-mdc';
 
   constructor(
-    overlay: Overlay,
-    elementRef: ElementRef<HTMLElement>,
-    scrollDispatcher: ScrollDispatcher,
-    viewContainerRef: ViewContainerRef,
-    ngZone: NgZone,
-    platform: Platform,
-    ariaDescriber: AriaDescriber,
-    focusMonitor: FocusMonitor,
-    @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
-    @Optional() dir: Directionality,
-    @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS) defaultOptions: MatTooltipDefaultOptions,
-    @Inject(DOCUMENT) _document: any) {
-
-    super(overlay, elementRef, scrollDispatcher, viewContainerRef, ngZone, platform, ariaDescriber,
-      focusMonitor, scrollStrategy, dir, defaultOptions, _document);
+      overlay: Overlay, elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher,
+      viewContainerRef: ViewContainerRef, ngZone: NgZone, platform: Platform,
+      ariaDescriber: AriaDescriber, focusMonitor: FocusMonitor,
+      @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any, @Optional() dir: Directionality,
+      @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS) defaultOptions: MatTooltipDefaultOptions,
+      @Inject(DOCUMENT) _document: any) {
+    super(
+        overlay, elementRef, scrollDispatcher, viewContainerRef, ngZone, platform, ariaDescriber,
+        focusMonitor, scrollStrategy, dir, defaultOptions, _document);
     this._viewportMargin = numbers.MIN_VIEWPORT_TOOLTIP_THRESHOLD;
   }
 

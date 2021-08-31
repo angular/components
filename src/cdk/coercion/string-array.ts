@@ -23,7 +23,7 @@
  * @param value the value to coerce into an array of strings
  * @param separator split-separator if value isn't an array
  */
-export function coerceStringArray(value: any, separator: string | RegExp = /\s+/): string[] {
+export function coerceStringArray(value: any, separator: string|RegExp = /\s+/): string[] {
   const result = [];
 
   if (value != null) {

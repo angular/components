@@ -15,17 +15,15 @@ export * from './date-fns-adapter';
 export * from './date-fns-formats';
 
 @NgModule({
-  providers: [{
-    provide: DateAdapter,
-    useClass: DateFnsAdapter,
-    deps: [MAT_DATE_LOCALE]
-  }],
+  providers: [{provide: DateAdapter, useClass: DateFnsAdapter, deps: [MAT_DATE_LOCALE]}],
 })
-export class DateFnsModule {}
+export class DateFnsModule {
+}
 
 
 @NgModule({
   imports: [DateFnsModule],
   providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_FORMATS}],
 })
-export class MatDateFnsModule {}
+export class MatDateFnsModule {
+}

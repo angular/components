@@ -1,18 +1,20 @@
+import {BidiModule} from '@angular/cdk/bidi';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {
   AfterContentInit,
+  AfterViewInit,
   Component,
   ContentChild,
   ContentChildren,
   Input,
   QueryList,
   Type,
-  ViewChild,
-  AfterViewInit
+  ViewChild
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
+
 import {CdkColumnDef} from './cell';
 import {
   CdkTableModule,
@@ -20,7 +22,7 @@ import {
   StickyPositioningListener,
   StickyUpdate,
 } from './index';
-import {CdkHeaderRowDef, CdkRowDef, CdkCellOutlet, CdkNoDataRow} from './row';
+import {CdkCellOutlet, CdkHeaderRowDef, CdkNoDataRow, CdkRowDef} from './row';
 import {CdkTable} from './table';
 import {
   getTableDuplicateColumnNameError,
@@ -30,7 +32,6 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError
 } from './table-errors';
-import {BidiModule} from '@angular/cdk/bidi';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<any>;
@@ -39,10 +40,12 @@ describe('CdkTable', () => {
 
   function createComponent<T>(
       componentType: Type<T>, declarations: any[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [CdkTableModule, BidiModule],
-      declarations: [componentType, ...declarations],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [CdkTableModule, BidiModule],
+          declarations: [componentType, ...declarations],
+        })
+        .compileComponents();
 
     return TestBed.createComponent<T>(componentType);
   }
@@ -252,7 +255,7 @@ describe('CdkTable', () => {
 
       // Add data to the table and recreate what the rendered output should be.
       dataSource.addData();
-      expect(dataSource.data.length).toBe(initialDataLength + 1); // Make sure data was added
+      expect(dataSource.data.length).toBe(initialDataLength + 1);  // Make sure data was added
       fixture.detectChanges();
 
       data = dataSource.data;
@@ -325,14 +328,14 @@ describe('CdkTable', () => {
   });
 
   it('should render no rows when the data is null', fakeAsync(() => {
-    setupTableTestApp(NullDataCdkTableApp);
-    fixture.detectChanges();
+       setupTableTestApp(NullDataCdkTableApp);
+       fixture.detectChanges();
 
-    expect(getRows(tableElement).length).toBe(0);
+       expect(getRows(tableElement).length).toBe(0);
 
-    // Emits that the data rows are changed even when the result is empty.
-    expect(component.contentChangedCount).toBe(1);
-  }));
+       // Emits that the data rows are changed even when the result is empty.
+       expect(component.contentChangedCount).toBe(1);
+     }));
 
   it('should be able to render multiple header and footer rows', () => {
     setupTableTestApp(MultipleHeaderFooterRowsCdkTableApp);
@@ -347,30 +350,30 @@ describe('CdkTable', () => {
   });
 
   it('should be able to project a caption', fakeAsync(() => {
-    setupTableTestApp(NativeHtmlTableWithCaptionApp);
-    fixture.detectChanges();
+       setupTableTestApp(NativeHtmlTableWithCaptionApp);
+       fixture.detectChanges();
 
-    const caption = tableElement.querySelector('caption');
+       const caption = tableElement.querySelector('caption');
 
-    expect(caption).toBeTruthy();
-    expect(tableElement.firstElementChild).toBe(caption);
-  }));
+       expect(caption).toBeTruthy();
+       expect(tableElement.firstElementChild).toBe(caption);
+     }));
 
   it('should be able to project colgroup and col', fakeAsync(() => {
-    setupTableTestApp(NativeHtmlTableWithColgroupAndCol);
-    fixture.detectChanges();
+       setupTableTestApp(NativeHtmlTableWithColgroupAndCol);
+       fixture.detectChanges();
 
-    const colgroupsAndCols = Array.from(tableElement.querySelectorAll('colgroup, col'));
+       const colgroupsAndCols = Array.from(tableElement.querySelectorAll('colgroup, col'));
 
-    expect(colgroupsAndCols.length).toBe(3);
-    expect(colgroupsAndCols[0].childNodes[0]).toBe(colgroupsAndCols[1]);
-    expect(colgroupsAndCols[2].parentNode!.nodeName.toLowerCase()).toBe('table');
-    expect(colgroupsAndCols.map(e => e.nodeName.toLowerCase())).toEqual([
-      'colgroup',
-      'col',
-      'col',
-    ]);
-  }));
+       expect(colgroupsAndCols.length).toBe(3);
+       expect(colgroupsAndCols[0].childNodes[0]).toBe(colgroupsAndCols[1]);
+       expect(colgroupsAndCols[2].parentNode!.nodeName.toLowerCase()).toBe('table');
+       expect(colgroupsAndCols.map(e => e.nodeName.toLowerCase())).toEqual([
+         'colgroup',
+         'col',
+         'col',
+       ]);
+     }));
 
   describe('with different data inputs other than data source', () => {
     let baseData: TestData[] = [
@@ -489,9 +492,7 @@ describe('CdkTable', () => {
       fixture.detectChanges();
 
       // Expect the table to render just the header, no rows
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C']
-      ]);
+      expectTableToMatchContent(tableElement, [['Column A', 'Column B', 'Column C']]);
     });
   });
 
@@ -500,8 +501,7 @@ describe('CdkTable', () => {
       setupTableTestApp(MissingHeaderRowDefCdkTableApp);
       expectTableToMatchContent(tableElement, [
         ['a_1'],  // Data rows
-        ['a_2'],
-        ['a_3'],
+        ['a_2'], ['a_3'],
         ['Footer A'],  // Footer row
       ]);
     });
@@ -518,7 +518,7 @@ describe('CdkTable', () => {
       setupTableTestApp(MissingFooterRowDefCdkTableApp);
       expectTableToMatchContent(tableElement, [
         ['Column A'],  // Header row
-        ['a_1'],  // Data rows
+        ['a_1'],       // Data rows
         ['a_2'],
         ['a_3'],
       ]);
@@ -582,10 +582,12 @@ describe('CdkTable', () => {
 
     const rowGroups = Array.from(thisTableElement.querySelectorAll('thead, tbody, tfoot'));
     expect(rowGroups.length)
-      .withContext('Expected table to have a thead, tbody, and tfoot').toBe(3);
+        .withContext('Expected table to have a thead, tbody, and tfoot')
+        .toBe(3);
     for (const group of rowGroups) {
       expect(group.getAttribute('role'))
-        .withContext('Expected thead, tbody, and tfoot to have role="rowgroup"').toBe('rowgroup');
+          .withContext('Expected thead, tbody, and tfoot to have role="rowgroup"')
+          .toBe('rowgroup');
     }
   });
 
@@ -595,19 +597,19 @@ describe('CdkTable', () => {
     thisFixture.detectChanges();
 
     const rowGroups: HTMLElement[] = Array.from(thisTableElement.querySelectorAll('thead, tfoot'));
-    expect(rowGroups.length)
-      .withContext('Expected table to have a thead and tfoot').toBe(2);
+    expect(rowGroups.length).withContext('Expected table to have a thead and tfoot').toBe(2);
     for (const group of rowGroups) {
       expect(group.style.display)
-        .withContext('Expected thead and tfoot to be `display: none`').toBe('none');
+          .withContext('Expected thead and tfoot to be `display: none`')
+          .toBe('none');
     }
   });
 
   it('should render cells even if row data is falsy', () => {
     setupTableTestApp(BooleanRowCdkTableApp);
     expectTableToMatchContent(tableElement, [
-      [''], // Header row
-      ['false'], // Data rows
+      [''],       // Header row
+      ['false'],  // Data rows
       ['true'],
       ['false'],
       ['true'],
@@ -692,8 +694,8 @@ describe('CdkTable', () => {
     component.dynamicColumns.push(columnA);
     fixture.detectChanges();
     expectTableToMatchContent(tableElement, [
-      [columnA], // Header row
-      [columnA], // Data rows
+      [columnA],  // Header row
+      [columnA],  // Data rows
       [columnA],
       [columnA],
     ]);
@@ -703,8 +705,8 @@ describe('CdkTable', () => {
     component.dynamicColumns.push(columnB);
     fixture.detectChanges();
     expectTableToMatchContent(tableElement, [
-      [columnA, columnB], // Header row
-      [columnA, columnB], // Data rows
+      [columnA, columnB],  // Header row
+      [columnA, columnB],  // Data rows
       [columnA, columnB],
       [columnA, columnB],
     ]);
@@ -713,8 +715,8 @@ describe('CdkTable', () => {
     component.dynamicColumns.shift();
     fixture.detectChanges();
     expectTableToMatchContent(tableElement, [
-      [columnB], // Header row
-      [columnB], // Data rows
+      [columnB],  // Header row
+      [columnB],  // Data rows
       [columnB],
       [columnB],
     ]);
@@ -729,8 +731,7 @@ describe('CdkTable', () => {
     // The header row was defined by the outer component.
     expectTableToMatchContent(tableElement, [
       ['Content Column A', 'Content Column B', 'Injected Column A', 'Injected Column B'],
-      ['injected row with when predicate'],
-      ['a_2', 'b_2', 'a_2', 'b_2'],
+      ['injected row with when predicate'], ['a_2', 'b_2', 'a_2', 'b_2'],
       ['a_3', 'b_3', 'a_3', 'b_3']
     ]);
   });
@@ -772,12 +773,12 @@ describe('CdkTable', () => {
        }));
 
     it('should fail when multiple rows match data without multiTemplateDataRows', fakeAsync(() => {
-      let whenFixture = createComponent(WhenRowMultipleDefaultsCdkTableApp);
-      expect(() => {
-        whenFixture.detectChanges();
-        flush();
-      }).toThrowError(getTableMultipleDefaultRowDefsError().message);
-    }));
+         let whenFixture = createComponent(WhenRowMultipleDefaultsCdkTableApp);
+         expect(() => {
+           whenFixture.detectChanges();
+           flush();
+         }).toThrowError(getTableMultipleDefaultRowDefsError().message);
+       }));
 
     describe('with multiTemplateDataRows', () => {
       it('should be able to render multiple rows per data object', () => {
@@ -856,13 +857,12 @@ describe('CdkTable', () => {
           fixture.detectChanges();
         }).not.toThrow();
       });
-
     });
   });
 
   describe('with sticky positioning', () => {
     interface PositionDirections {
-      [key: string]: string | undefined;
+      [key: string]: string|undefined;
       top?: string;
       bottom?: string;
       left?: string;
@@ -877,15 +877,15 @@ describe('CdkTable', () => {
         expect(element.style.zIndex || '0').toBe('0');
         ['top', 'bottom', 'left', 'right'].forEach(d => {
           expect(element.style[d] || 'unset')
-            .withContext(`Expected ${d} to be unset`).toBe('unset');
+              .withContext(`Expected ${d} to be unset`)
+              .toBe('unset');
         });
       });
     }
 
     function expectStickyStyles(element: any, zIndex: string, directions: PositionDirections = {}) {
       expect(element.style.position).toContain('sticky');
-      expect(element.style.zIndex)
-        .withContext(`Expected zIndex to be ${zIndex}`).toBe(zIndex);
+      expect(element.style.zIndex).withContext(`Expected zIndex to be ${zIndex}`).toBe(zIndex);
 
       ['top', 'bottom', 'left', 'right'].forEach(d => {
         const directionValue = directions[d];
@@ -894,7 +894,8 @@ describe('CdkTable', () => {
           // If no expected position for this direction, must either be unset or empty string
           // If no expected position for this direction, must either be unset or empty string
           expect(element.style[d] || 'unset')
-            .withContext(`Expected ${d} to be unset`).toBe('unset');
+              .withContext(`Expected ${d} to be unset`)
+              .toBe('unset');
           return;
         }
 
@@ -904,10 +905,10 @@ describe('CdkTable', () => {
         // caused by individual browsers.
         if (directionValue.includes('px')) {
           expect(Math.round(parseInt(element.style[d])))
-            .withContext(expectationMessage).toBe(Math.round(parseInt(directionValue)));
+              .withContext(expectationMessage)
+              .toBe(Math.round(parseInt(directionValue)));
         } else {
-          expect(element.style[d])
-            .withContext(expectationMessage).toBe(directionValue);
+          expect(element.style[d]).withContext(expectationMessage).toBe(directionValue);
         }
       });
     }
@@ -938,322 +939,322 @@ describe('CdkTable', () => {
       });
 
       it('should stick and unstick headers', fakeAsync(() => {
-        component.stickyHeaders = ['header-1', 'header-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyHeaders = ['header-1', 'header-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        expectStickyStyles(headerRows[0], '100', {top: '0px'});
-        expectStickyBorderClass(headerRows[0]);
-        expectNoStickyStyles([headerRows[1]]);
-        expectStickyStyles(
-            headerRows[2], '100', {top: headerRows[0].getBoundingClientRect().height + 'px'});
-        expectStickyBorderClass(headerRows[2], {top: true});
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
-          sizes: [
-            headerRows[0].getBoundingClientRect().height,
-            undefined,
-            headerRows[2].getBoundingClientRect().height,
-          ],
-          offsets: [
-            0,
-            undefined,
-            headerRows[0].getBoundingClientRect().height,
-          ],
-          elements: [[headerRows[0]], undefined, [headerRows[2]]],
-        });
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+           expectStickyStyles(headerRows[0], '100', {top: '0px'});
+           expectStickyBorderClass(headerRows[0]);
+           expectNoStickyStyles([headerRows[1]]);
+           expectStickyStyles(
+               headerRows[2], '100', {top: headerRows[0].getBoundingClientRect().height + 'px'});
+           expectStickyBorderClass(headerRows[2], {top: true});
+           expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
+             sizes: [
+               headerRows[0].getBoundingClientRect().height,
+               undefined,
+               headerRows[2].getBoundingClientRect().height,
+             ],
+             offsets: [
+               0,
+               undefined,
+               headerRows[0].getBoundingClientRect().height,
+             ],
+             elements: [[headerRows[0]], undefined, [headerRows[2]]],
+           });
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
 
-        component.stickyHeaders = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectNoStickyStyles(headerRows);
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyHeaders = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectNoStickyStyles(headerRows);
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick and unstick footers', fakeAsync(() => {
-        component.stickyFooters = ['footer-1', 'footer-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyFooters = ['footer-1', 'footer-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        expectStickyStyles(
-            footerRows[0], '10', {bottom: footerRows[1].getBoundingClientRect().height + 'px'});
-        expectStickyBorderClass(footerRows[0], {bottom: true});
-        expectNoStickyStyles([footerRows[1]]);
-        expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerRows[2]);
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
-          sizes: [
-            footerRows[2].getBoundingClientRect().height,
-            undefined,
-            footerRows[0].getBoundingClientRect().height,
-          ],
-          offsets: [0, undefined, footerRows[0].getBoundingClientRect().height],
-          elements: [[footerRows[2]], undefined, [footerRows[0]]],
-        });
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+           expectStickyStyles(
+               footerRows[0], '10', {bottom: footerRows[1].getBoundingClientRect().height + 'px'});
+           expectStickyBorderClass(footerRows[0], {bottom: true});
+           expectNoStickyStyles([footerRows[1]]);
+           expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerRows[2]);
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
+             sizes: [
+               footerRows[2].getBoundingClientRect().height,
+               undefined,
+               footerRows[0].getBoundingClientRect().height,
+             ],
+             offsets: [0, undefined, footerRows[0].getBoundingClientRect().height],
+             elements: [[footerRows[2]], undefined, [footerRows[0]]],
+           });
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
 
-        component.stickyFooters = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectNoStickyStyles(footerRows);
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyFooters = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectNoStickyStyles(footerRows);
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick the correct footer row', fakeAsync(() => {
-        component.stickyFooters = ['footer-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyFooters = ['footer-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerRows[2], {bottom: true});
-        expectNoStickyStyles([footerRows[0], footerRows[1]]);
-      }));
+           expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerRows[2], {bottom: true});
+           expectNoStickyStyles([footerRows[0], footerRows[1]]);
+         }));
 
       it('should stick and unstick left columns', fakeAsync(() => {
-        component.stickyStartColumns = ['column-1', 'column-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyStartColumns = ['column-1', 'column-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        headerRows.forEach(row => {
-          let cells = getHeaderCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[2], '1', {left: '20px'});
-          expectStickyBorderClass(cells[2], {left: true});
-          expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
-        });
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[2], '1', {left: '20px'});
-          expectStickyBorderClass(cells[2], {left: true});
-          expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
-        });
-        footerRows.forEach(row => {
-          let cells = getFooterCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[2], '1', {left: '20px'});
-          expectStickyBorderClass(cells[2], {left: true});
-          expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
-        });
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({
-          sizes: [
-            getCells(dataRows[0])[0].getBoundingClientRect().width,
-            null,
-            getCells(dataRows[0])[2].getBoundingClientRect().width,
-          ]
-        });
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+           headerRows.forEach(row => {
+             let cells = getHeaderCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[2], '1', {left: '20px'});
+             expectStickyBorderClass(cells[2], {left: true});
+             expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
+           });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[2], '1', {left: '20px'});
+             expectStickyBorderClass(cells[2], {left: true});
+             expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
+           });
+           footerRows.forEach(row => {
+             let cells = getFooterCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[2], '1', {left: '20px'});
+             expectStickyBorderClass(cells[2], {left: true});
+             expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
+           });
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({
+             sizes: [
+               getCells(dataRows[0])[0].getBoundingClientRect().width,
+               null,
+               getCells(dataRows[0])[2].getBoundingClientRect().width,
+             ]
+           });
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
 
 
-        component.stickyStartColumns = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
-        dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
-        footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyStartColumns = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
+           dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
+           footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick and unstick right columns', fakeAsync(() => {
-        component.stickyEndColumns = ['column-4', 'column-6'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyEndColumns = ['column-4', 'column-6'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        headerRows.forEach(row => {
-          let cells = getHeaderCells(row);
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5]);
-          expectStickyStyles(cells[3], '1', {right: '20px'});
-          expectStickyBorderClass(cells[3], {right: true});
-          expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
-        });
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5]);
-          expectStickyStyles(cells[3], '1', {right: '20px'});
-          expectStickyBorderClass(cells[3], {right: true});
-          expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
-        });
-        footerRows.forEach(row => {
-          let cells = getFooterCells(row);
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5]);
-          expectStickyStyles(cells[3], '1', {right: '20px'});
-          expectStickyBorderClass(cells[3], {right: true});
-          expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
-        });
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
-          sizes: [
-            getCells(dataRows[0])[5].getBoundingClientRect().width,
-            null,
-            getCells(dataRows[0])[3].getBoundingClientRect().width,
-          ]
-        });
+           headerRows.forEach(row => {
+             let cells = getHeaderCells(row);
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5]);
+             expectStickyStyles(cells[3], '1', {right: '20px'});
+             expectStickyBorderClass(cells[3], {right: true});
+             expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
+           });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5]);
+             expectStickyStyles(cells[3], '1', {right: '20px'});
+             expectStickyBorderClass(cells[3], {right: true});
+             expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
+           });
+           footerRows.forEach(row => {
+             let cells = getFooterCells(row);
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5]);
+             expectStickyStyles(cells[3], '1', {right: '20px'});
+             expectStickyBorderClass(cells[3], {right: true});
+             expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
+           });
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
+             sizes: [
+               getCells(dataRows[0])[5].getBoundingClientRect().width,
+               null,
+               getCells(dataRows[0])[3].getBoundingClientRect().width,
+             ]
+           });
 
-        component.stickyEndColumns = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
-        dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
-        footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyEndColumns = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
+           dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
+           footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should reverse directions for sticky columns in rtl', fakeAsync(() => {
-        component.dir = 'rtl';
-        component.stickyStartColumns = ['column-1', 'column-2'];
-        component.stickyEndColumns = ['column-5', 'column-6'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.dir = 'rtl';
+           component.stickyStartColumns = ['column-1', 'column-2'];
+           component.stickyEndColumns = ['column-5', 'column-6'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        const firstColumnWidth = getHeaderCells(headerRows[0])[0].getBoundingClientRect().width;
-        const lastColumnWidth = getHeaderCells(headerRows[0])[5].getBoundingClientRect().width;
+           const firstColumnWidth = getHeaderCells(headerRows[0])[0].getBoundingClientRect().width;
+           const lastColumnWidth = getHeaderCells(headerRows[0])[5].getBoundingClientRect().width;
 
-        let headerCells = getHeaderCells(headerRows[0]);
-        expectStickyStyles(headerCells[0], '1', {right: '0px'});
-        expectStickyBorderClass(headerCells[0]);
-        expectStickyStyles(headerCells[1], '1', {right: `${firstColumnWidth}px`});
-        expectStickyBorderClass(headerCells[1], {right: true});
-        expectStickyStyles(headerCells[4], '1', {left: `${lastColumnWidth}px`});
-        expectStickyBorderClass(headerCells[4], {left: true});
-        expectStickyStyles(headerCells[5], '1', {left: '0px'});
-        expectStickyBorderClass(headerCells[5]);
+           let headerCells = getHeaderCells(headerRows[0]);
+           expectStickyStyles(headerCells[0], '1', {right: '0px'});
+           expectStickyBorderClass(headerCells[0]);
+           expectStickyStyles(headerCells[1], '1', {right: `${firstColumnWidth}px`});
+           expectStickyBorderClass(headerCells[1], {right: true});
+           expectStickyStyles(headerCells[4], '1', {left: `${lastColumnWidth}px`});
+           expectStickyBorderClass(headerCells[4], {left: true});
+           expectStickyStyles(headerCells[5], '1', {left: '0px'});
+           expectStickyBorderClass(headerCells[5]);
 
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[0], '1', {right: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[1], '1', {right: `${firstColumnWidth}px`});
-          expectStickyBorderClass(cells[1], {right: true});
-          expectStickyStyles(cells[4], '1', {left: `${lastColumnWidth}px`});
-          expectStickyBorderClass(cells[4], {left: true});
-          expectStickyStyles(cells[5], '1', {left: '0px'});
-          expectStickyBorderClass(cells[5]);
-        });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[0], '1', {right: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[1], '1', {right: `${firstColumnWidth}px`});
+             expectStickyBorderClass(cells[1], {right: true});
+             expectStickyStyles(cells[4], '1', {left: `${lastColumnWidth}px`});
+             expectStickyBorderClass(cells[4], {left: true});
+             expectStickyStyles(cells[5], '1', {left: '0px'});
+             expectStickyBorderClass(cells[5]);
+           });
 
-        let footerCells = getFooterCells(footerRows[0]);
-        expectStickyStyles(footerCells[0], '1', {right: '0px'});
-        expectStickyBorderClass(footerCells[0]);
-        expectStickyStyles(footerCells[1], '1', {right: `${firstColumnWidth}px`});
-        expectStickyBorderClass(footerCells[1], {right: true});
-        expectStickyStyles(footerCells[4], '1', {left: `${lastColumnWidth}px`});
-        expectStickyBorderClass(footerCells[4], {left: true});
-        expectStickyStyles(footerCells[5], '1', {left: '0px'});
-        expectStickyBorderClass(footerCells[5]);
-      }));
+           let footerCells = getFooterCells(footerRows[0]);
+           expectStickyStyles(footerCells[0], '1', {right: '0px'});
+           expectStickyBorderClass(footerCells[0]);
+           expectStickyStyles(footerCells[1], '1', {right: `${firstColumnWidth}px`});
+           expectStickyBorderClass(footerCells[1], {right: true});
+           expectStickyStyles(footerCells[4], '1', {left: `${lastColumnWidth}px`});
+           expectStickyBorderClass(footerCells[4], {left: true});
+           expectStickyStyles(footerCells[5], '1', {left: '0px'});
+           expectStickyBorderClass(footerCells[5]);
+         }));
 
       it('should stick and unstick combination of sticky header, footer, and columns',
-          fakeAsync(() => {
-        component.stickyHeaders = ['header-1'];
-        component.stickyFooters = ['footer-3'];
-        component.stickyStartColumns = ['column-1'];
-        component.stickyEndColumns = ['column-6'];
-        fixture.detectChanges();
-        flushMicrotasks();
+         fakeAsync(() => {
+           component.stickyHeaders = ['header-1'];
+           component.stickyFooters = ['footer-3'];
+           component.stickyStartColumns = ['column-1'];
+           component.stickyEndColumns = ['column-6'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        let headerCells = getHeaderCells(headerRows[0]);
-        expectStickyStyles(headerRows[0], '100', {top: '0px'});
-        expectStickyBorderClass(headerRows[0], {top: true});
-        expectStickyStyles(headerCells[0], '1', {left: '0px'});
-        expectStickyBorderClass(headerCells[0], {left: true});
-        expectStickyStyles(headerCells[5], '1', {right: '0px'});
-        expectStickyBorderClass(headerCells[5], {right: true});
-        expectNoStickyStyles([headerCells[1], headerCells[2], headerCells[3], headerCells[4]]);
-        expectNoStickyStyles([headerRows[1], headerRows[2]]);
+           let headerCells = getHeaderCells(headerRows[0]);
+           expectStickyStyles(headerRows[0], '100', {top: '0px'});
+           expectStickyBorderClass(headerRows[0], {top: true});
+           expectStickyStyles(headerCells[0], '1', {left: '0px'});
+           expectStickyBorderClass(headerCells[0], {left: true});
+           expectStickyStyles(headerCells[5], '1', {right: '0px'});
+           expectStickyBorderClass(headerCells[5], {right: true});
+           expectNoStickyStyles([headerCells[1], headerCells[2], headerCells[3], headerCells[4]]);
+           expectNoStickyStyles([headerRows[1], headerRows[2]]);
 
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0], {left: true});
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5], {right: true});
-          expectNoStickyStyles([cells[1], cells[2], cells[3], cells[4]]);
-        });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0], {left: true});
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5], {right: true});
+             expectNoStickyStyles([cells[1], cells[2], cells[3], cells[4]]);
+           });
 
-        let footerCells = getFooterCells(footerRows[0]);
-        expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerRows[2], {bottom: true});
-        expectStickyStyles(footerCells[0], '1', {left: '0px'});
-        expectStickyBorderClass(footerCells[0], {left: true});
-        expectStickyStyles(footerCells[5], '1', {right: '0px'});
-        expectStickyBorderClass(footerCells[5], {right: true});
-        expectNoStickyStyles([footerCells[1], footerCells[2], footerCells[3], footerCells[4]]);
-        expectNoStickyStyles([footerRows[0], footerRows[1]]);
+           let footerCells = getFooterCells(footerRows[0]);
+           expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerRows[2], {bottom: true});
+           expectStickyStyles(footerCells[0], '1', {left: '0px'});
+           expectStickyBorderClass(footerCells[0], {left: true});
+           expectStickyStyles(footerCells[5], '1', {right: '0px'});
+           expectStickyBorderClass(footerCells[5], {right: true});
+           expectNoStickyStyles([footerCells[1], footerCells[2], footerCells[3], footerCells[4]]);
+           expectNoStickyStyles([footerRows[0], footerRows[1]]);
 
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
-          sizes: [headerRows[0].getBoundingClientRect().height],
-          offsets: [0],
-          elements: [[headerRows[0]]],
-        });
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
-          sizes: [footerRows[2].getBoundingClientRect().height],
-          offsets: [0],
-          elements: [[footerRows[2]]],
-        });
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({
-          sizes: [getCells(dataRows[0])[0].getBoundingClientRect().width]
-        });
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
-          sizes: [getCells(dataRows[0])[5].getBoundingClientRect().width]
-        });
+           expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
+             sizes: [headerRows[0].getBoundingClientRect().height],
+             offsets: [0],
+             elements: [[headerRows[0]]],
+           });
+           expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
+             sizes: [footerRows[2].getBoundingClientRect().height],
+             offsets: [0],
+             elements: [[footerRows[2]]],
+           });
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({
+             sizes: [getCells(dataRows[0])[0].getBoundingClientRect().width]
+           });
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
+             sizes: [getCells(dataRows[0])[5].getBoundingClientRect().width]
+           });
 
-        component.stickyHeaders = [];
-        component.stickyFooters = [];
-        component.stickyStartColumns = [];
-        component.stickyEndColumns = [];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyHeaders = [];
+           component.stickyFooters = [];
+           component.stickyStartColumns = [];
+           component.stickyEndColumns = [];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
-        dataRows.forEach(row => expectNoStickyStyles([row, ...getCells(row)]));
-        footerRows.forEach(row => expectNoStickyStyles([row, ...getFooterCells(row)]));
+           headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
+           dataRows.forEach(row => expectNoStickyStyles([row, ...getCells(row)]));
+           footerRows.forEach(row => expectNoStickyStyles([row, ...getFooterCells(row)]));
 
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
     });
 
     describe('on native table layout', () => {
@@ -1270,313 +1271,313 @@ describe('CdkTable', () => {
       });
 
       it('should stick and unstick headers', fakeAsync(() => {
-        component.stickyHeaders = ['header-1', 'header-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyHeaders = ['header-1', 'header-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        getHeaderCells(headerRows[0]).forEach(cell => {
-          expectStickyStyles(cell, '100', {top: '0px'});
-          expectStickyBorderClass(cell);
-        });
-        const firstHeaderHeight = headerRows[0].getBoundingClientRect().height;
-        getHeaderCells(headerRows[2]).forEach(cell => {
-          expectStickyStyles(cell, '100', {top: firstHeaderHeight + 'px'});
-          expectStickyBorderClass(cell, {top: true});
-        });
-        expectNoStickyStyles(getHeaderCells(headerRows[1]));
-        expectNoStickyStyles(headerRows);  // No sticky styles on rows for native table
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
-          sizes: [
-            headerRows[0].getBoundingClientRect().height,
-            undefined,
-            headerRows[2].getBoundingClientRect().height,
-          ],
-          offsets: [
-            0,
-            undefined,
-            headerRows[0].getBoundingClientRect().height,
-          ],
-          elements: [getHeaderCells(headerRows[0]), undefined, getHeaderCells(headerRows[2])],
-        });
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+           getHeaderCells(headerRows[0]).forEach(cell => {
+             expectStickyStyles(cell, '100', {top: '0px'});
+             expectStickyBorderClass(cell);
+           });
+           const firstHeaderHeight = headerRows[0].getBoundingClientRect().height;
+           getHeaderCells(headerRows[2]).forEach(cell => {
+             expectStickyStyles(cell, '100', {top: firstHeaderHeight + 'px'});
+             expectStickyBorderClass(cell, {top: true});
+           });
+           expectNoStickyStyles(getHeaderCells(headerRows[1]));
+           expectNoStickyStyles(headerRows);  // No sticky styles on rows for native table
+           expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
+             sizes: [
+               headerRows[0].getBoundingClientRect().height,
+               undefined,
+               headerRows[2].getBoundingClientRect().height,
+             ],
+             offsets: [
+               0,
+               undefined,
+               headerRows[0].getBoundingClientRect().height,
+             ],
+             elements: [getHeaderCells(headerRows[0]), undefined, getHeaderCells(headerRows[2])],
+           });
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
 
-        component.stickyHeaders = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectNoStickyStyles(headerRows);  // No sticky styles on rows for native table
-        headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyHeaders = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectNoStickyStyles(headerRows);  // No sticky styles on rows for native table
+           headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick and unstick footers', fakeAsync(() => {
-        component.stickyFooters = ['footer-1', 'footer-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyFooters = ['footer-1', 'footer-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        getFooterCells(footerRows[2]).forEach(cell => {
-          expectStickyStyles(cell, '10', {bottom: '0px'});
-          expectStickyBorderClass(cell);
-        });
-        const thirdFooterHeight = footerRows[2].getBoundingClientRect().height;
-        getFooterCells(footerRows[0]).forEach(cell => {
-          expectStickyStyles(cell, '10', {bottom: thirdFooterHeight + 'px'});
-          expectStickyBorderClass(cell, {bottom: true});
-        });
-        expectNoStickyStyles(getFooterCells(footerRows[1]));
-        expectNoStickyStyles(footerRows);  // No sticky styles on rows for native table
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
-          sizes: [
-            footerRows[2].getBoundingClientRect().height,
-            undefined,
-            footerRows[0].getBoundingClientRect().height,
-          ],
-          offsets: [
-            0,
-            undefined,
-            footerRows[2].getBoundingClientRect().height,
-          ],
-          elements: [getFooterCells(footerRows[2]), undefined, getFooterCells(footerRows[0])],
-        });
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+           getFooterCells(footerRows[2]).forEach(cell => {
+             expectStickyStyles(cell, '10', {bottom: '0px'});
+             expectStickyBorderClass(cell);
+           });
+           const thirdFooterHeight = footerRows[2].getBoundingClientRect().height;
+           getFooterCells(footerRows[0]).forEach(cell => {
+             expectStickyStyles(cell, '10', {bottom: thirdFooterHeight + 'px'});
+             expectStickyBorderClass(cell, {bottom: true});
+           });
+           expectNoStickyStyles(getFooterCells(footerRows[1]));
+           expectNoStickyStyles(footerRows);  // No sticky styles on rows for native table
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
+             sizes: [
+               footerRows[2].getBoundingClientRect().height,
+               undefined,
+               footerRows[0].getBoundingClientRect().height,
+             ],
+             offsets: [
+               0,
+               undefined,
+               footerRows[2].getBoundingClientRect().height,
+             ],
+             elements: [getFooterCells(footerRows[2]), undefined, getFooterCells(footerRows[0])],
+           });
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
 
-        component.stickyFooters = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectNoStickyStyles(footerRows);  // No sticky styles on rows for native table
-        footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyFooters = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectNoStickyStyles(footerRows);  // No sticky styles on rows for native table
+           footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick tfoot when all rows are stuck', fakeAsync(() => {
-        const tfoot = tableElement.querySelector('tfoot');
-        component.stickyFooters = ['footer-1'];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectNoStickyStyles([tfoot]);
+           const tfoot = tableElement.querySelector('tfoot');
+           component.stickyFooters = ['footer-1'];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectNoStickyStyles([tfoot]);
 
-        component.stickyFooters = ['footer-1', 'footer-2', 'footer-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectStickyStyles(tfoot, '10', {bottom: '0px'});
-        expectStickyBorderClass(tfoot);
+           component.stickyFooters = ['footer-1', 'footer-2', 'footer-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectStickyStyles(tfoot, '10', {bottom: '0px'});
+           expectStickyBorderClass(tfoot);
 
-        component.stickyFooters = ['footer-1', 'footer-2'];
-        fixture.detectChanges();
-        flushMicrotasks();
-        expectNoStickyStyles([tfoot]);
-      }));
+           component.stickyFooters = ['footer-1', 'footer-2'];
+           fixture.detectChanges();
+           flushMicrotasks();
+           expectNoStickyStyles([tfoot]);
+         }));
 
       it('should stick and unstick left columns', fakeAsync(() => {
-        component.stickyStartColumns = ['column-1', 'column-3'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyStartColumns = ['column-1', 'column-3'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        headerRows.forEach(row => {
-          let cells = getHeaderCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[2], '1', {left: '20px'});
-          expectStickyBorderClass(cells[2], {left: true});
-          expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
-        });
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[2], '1', {left: '20px'});
-          expectStickyBorderClass(cells[2], {left: true});
-          expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
-        });
-        footerRows.forEach(row => {
-          let cells = getFooterCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0]);
-          expectStickyStyles(cells[2], '1', {left: '20px'});
-          expectStickyBorderClass(cells[2], {left: true});
-          expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
-        });
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({
-          sizes: [
-            getCells(dataRows[0])[0].getBoundingClientRect().width,
-            null,
-            getCells(dataRows[0])[2].getBoundingClientRect().width,
-          ],
-        });
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+           headerRows.forEach(row => {
+             let cells = getHeaderCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[2], '1', {left: '20px'});
+             expectStickyBorderClass(cells[2], {left: true});
+             expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
+           });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[2], '1', {left: '20px'});
+             expectStickyBorderClass(cells[2], {left: true});
+             expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
+           });
+           footerRows.forEach(row => {
+             let cells = getFooterCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0]);
+             expectStickyStyles(cells[2], '1', {left: '20px'});
+             expectStickyBorderClass(cells[2], {left: true});
+             expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
+           });
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({
+             sizes: [
+               getCells(dataRows[0])[0].getBoundingClientRect().width,
+               null,
+               getCells(dataRows[0])[2].getBoundingClientRect().width,
+             ],
+           });
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
 
-        component.stickyStartColumns = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
-        dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
-        footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyStartColumns = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
+           dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
+           footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick and unstick right columns', fakeAsync(() => {
-        component.stickyEndColumns = ['column-4', 'column-6'];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyEndColumns = ['column-4', 'column-6'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        headerRows.forEach(row => {
-          let cells = getHeaderCells(row);
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5]);
-          expectStickyStyles(cells[3], '1', {right: '20px'});
-          expectStickyBorderClass(cells[3], {right: true});
-          expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
-        });
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5]);
-          expectStickyStyles(cells[3], '1', {right: '20px'});
-          expectStickyBorderClass(cells[3], {right: true});
-          expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
-        });
-        footerRows.forEach(row => {
-          let cells = getFooterCells(row);
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5]);
-          expectStickyStyles(cells[3], '1', {right: '20px'});
-          expectStickyBorderClass(cells[3], {right: true});
-          expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
-        });
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
-          sizes: [
-            getCells(dataRows[0])[5].getBoundingClientRect().width,
-            null,
-            getCells(dataRows[0])[3].getBoundingClientRect().width,
-          ]
-        });
+           headerRows.forEach(row => {
+             let cells = getHeaderCells(row);
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5]);
+             expectStickyStyles(cells[3], '1', {right: '20px'});
+             expectStickyBorderClass(cells[3], {right: true});
+             expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
+           });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5]);
+             expectStickyStyles(cells[3], '1', {right: '20px'});
+             expectStickyBorderClass(cells[3], {right: true});
+             expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
+           });
+           footerRows.forEach(row => {
+             let cells = getFooterCells(row);
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5]);
+             expectStickyStyles(cells[3], '1', {right: '20px'});
+             expectStickyBorderClass(cells[3], {right: true});
+             expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
+           });
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
+             sizes: [
+               getCells(dataRows[0])[5].getBoundingClientRect().width,
+               null,
+               getCells(dataRows[0])[3].getBoundingClientRect().width,
+             ]
+           });
 
-        component.stickyEndColumns = [];
-        fixture.detectChanges();
-        flushMicrotasks();
-        headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
-        dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
-        footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           component.stickyEndColumns = [];
+           fixture.detectChanges();
+           flushMicrotasks();
+           headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
+           dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
+           footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
 
       it('should stick and unstick combination of sticky header, footer, and columns',
-          fakeAsync(() => {
-        component.stickyHeaders = ['header-1'];
-        component.stickyFooters = ['footer-3'];
-        component.stickyStartColumns = ['column-1'];
-        component.stickyEndColumns = ['column-6'];
-        fixture.detectChanges();
-        flushMicrotasks();
+         fakeAsync(() => {
+           component.stickyHeaders = ['header-1'];
+           component.stickyFooters = ['footer-3'];
+           component.stickyStartColumns = ['column-1'];
+           component.stickyEndColumns = ['column-6'];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        const headerCells = getHeaderCells(headerRows[0]);
-        expectStickyStyles(headerCells[0], '101', {top: '0px', left: '0px'});
-        expectStickyBorderClass(headerCells[0], {top: true, left: true});
-        expectStickyStyles(headerCells[1], '100', {top: '0px'});
-        expectStickyBorderClass(headerCells[1], {top: true});
-        expectStickyStyles(headerCells[2], '100', {top: '0px'});
-        expectStickyBorderClass(headerCells[2], {top: true});
-        expectStickyStyles(headerCells[3], '100', {top: '0px'});
-        expectStickyBorderClass(headerCells[3], {top: true});
-        expectStickyStyles(headerCells[4], '100', {top: '0px'});
-        expectStickyBorderClass(headerCells[4], {top: true});
-        expectStickyStyles(headerCells[5], '101', {top: '0px', right: '0px'});
-        expectStickyBorderClass(headerCells[5], {top: true, right: true});
-        expectNoStickyStyles(headerRows);
+           const headerCells = getHeaderCells(headerRows[0]);
+           expectStickyStyles(headerCells[0], '101', {top: '0px', left: '0px'});
+           expectStickyBorderClass(headerCells[0], {top: true, left: true});
+           expectStickyStyles(headerCells[1], '100', {top: '0px'});
+           expectStickyBorderClass(headerCells[1], {top: true});
+           expectStickyStyles(headerCells[2], '100', {top: '0px'});
+           expectStickyBorderClass(headerCells[2], {top: true});
+           expectStickyStyles(headerCells[3], '100', {top: '0px'});
+           expectStickyBorderClass(headerCells[3], {top: true});
+           expectStickyStyles(headerCells[4], '100', {top: '0px'});
+           expectStickyBorderClass(headerCells[4], {top: true});
+           expectStickyStyles(headerCells[5], '101', {top: '0px', right: '0px'});
+           expectStickyBorderClass(headerCells[5], {top: true, right: true});
+           expectNoStickyStyles(headerRows);
 
-        dataRows.forEach(row => {
-          let cells = getCells(row);
-          expectStickyStyles(cells[0], '1', {left: '0px'});
-          expectStickyBorderClass(cells[0], {left: true});
-          expectStickyStyles(cells[5], '1', {right: '0px'});
-          expectStickyBorderClass(cells[5], {right: true});
-          expectNoStickyStyles([cells[1], cells[2], cells[3], cells[4]]);
-        });
+           dataRows.forEach(row => {
+             let cells = getCells(row);
+             expectStickyStyles(cells[0], '1', {left: '0px'});
+             expectStickyBorderClass(cells[0], {left: true});
+             expectStickyStyles(cells[5], '1', {right: '0px'});
+             expectStickyBorderClass(cells[5], {right: true});
+             expectNoStickyStyles([cells[1], cells[2], cells[3], cells[4]]);
+           });
 
-        const footerCells = getFooterCells(footerRows[2]);
-        expectStickyStyles(footerCells[0], '11', {bottom: '0px', left: '0px'});
-        expectStickyBorderClass(footerCells[0], {bottom: true, left: true});
-        expectStickyStyles(footerCells[1], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerCells[1], {bottom: true});
-        expectStickyStyles(footerCells[2], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerCells[2], {bottom: true});
-        expectStickyStyles(footerCells[3], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerCells[3], {bottom: true});
-        expectStickyStyles(footerCells[4], '10', {bottom: '0px'});
-        expectStickyBorderClass(footerCells[4], {bottom: true});
-        expectStickyStyles(footerCells[5], '11', {bottom: '0px', right: '0px'});
-        expectStickyBorderClass(footerCells[5], {bottom: true, right: true});
-        expectNoStickyStyles(footerRows);
+           const footerCells = getFooterCells(footerRows[2]);
+           expectStickyStyles(footerCells[0], '11', {bottom: '0px', left: '0px'});
+           expectStickyBorderClass(footerCells[0], {bottom: true, left: true});
+           expectStickyStyles(footerCells[1], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerCells[1], {bottom: true});
+           expectStickyStyles(footerCells[2], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerCells[2], {bottom: true});
+           expectStickyStyles(footerCells[3], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerCells[3], {bottom: true});
+           expectStickyStyles(footerCells[4], '10', {bottom: '0px'});
+           expectStickyBorderClass(footerCells[4], {bottom: true});
+           expectStickyStyles(footerCells[5], '11', {bottom: '0px', right: '0px'});
+           expectStickyBorderClass(footerCells[5], {bottom: true, right: true});
+           expectNoStickyStyles(footerRows);
 
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
-          sizes: [headerRows[0].getBoundingClientRect().height],
-          offsets: [0],
-          elements: [getHeaderCells(headerRows[0])],
-        });
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
-          sizes: [footerRows[2].getBoundingClientRect().height],
-          offsets: [0],
-          elements: [getFooterCells(footerRows[2])],
-        });
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({
-          sizes: [getCells(dataRows[0])[0].getBoundingClientRect().width]
-        });
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
-          sizes: [getCells(dataRows[0])[5].getBoundingClientRect().width]
-        });
+           expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
+             sizes: [headerRows[0].getBoundingClientRect().height],
+             offsets: [0],
+             elements: [getHeaderCells(headerRows[0])],
+           });
+           expect(component.mostRecentStickyFooterRowsUpdate).toEqual({
+             sizes: [footerRows[2].getBoundingClientRect().height],
+             offsets: [0],
+             elements: [getFooterCells(footerRows[2])],
+           });
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({
+             sizes: [getCells(dataRows[0])[0].getBoundingClientRect().width]
+           });
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({
+             sizes: [getCells(dataRows[0])[5].getBoundingClientRect().width]
+           });
 
-        component.stickyHeaders = [];
-        component.stickyFooters = [];
-        component.stickyStartColumns = [];
-        component.stickyEndColumns = [];
-        fixture.detectChanges();
-        flushMicrotasks();
+           component.stickyHeaders = [];
+           component.stickyFooters = [];
+           component.stickyStartColumns = [];
+           component.stickyEndColumns = [];
+           fixture.detectChanges();
+           flushMicrotasks();
 
-        headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
-        dataRows.forEach(row => expectNoStickyStyles([row, ...getCells(row)]));
-        footerRows.forEach(row => expectNoStickyStyles([row, ...getFooterCells(row)]));
+           headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
+           dataRows.forEach(row => expectNoStickyStyles([row, ...getCells(row)]));
+           footerRows.forEach(row => expectNoStickyStyles([row, ...getFooterCells(row)]));
 
-        expect(component.mostRecentStickyHeaderRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyFooterRowsUpdate).toEqual(
-            {sizes: [], offsets: [], elements: []});
-        expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
-        expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+           expect(component.mostRecentStickyHeaderRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyFooterRowsUpdate)
+               .toEqual({sizes: [], offsets: [], elements: []});
+           expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
+           expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
+         }));
     });
   });
 
@@ -1706,9 +1707,7 @@ describe('CdkTable', () => {
 
     // Expect that the component has no data source and the table element reflects empty data.
     expect(component.dataSource).toBeUndefined();
-    expectTableToMatchContent(tableElement, [
-      ['Column A']
-    ]);
+    expectTableToMatchContent(tableElement, [['Column A']]);
 
     // Add a data source that has initialized data. Expect that the table shows this data.
     const dynamicDataSource = new FakeDataSource();
@@ -1730,9 +1729,7 @@ describe('CdkTable', () => {
 
     // Expect that the old data source has been disconnected.
     expect(dynamicDataSource.isConnected).toBe(false);
-    expectTableToMatchContent(tableElement, [
-      ['Column A']
-    ]);
+    expectTableToMatchContent(tableElement, [['Column A']]);
 
     // Reconnect a data source and check that the table is populated
     const newDynamicDataSource = new FakeDataSource();
@@ -1849,7 +1846,7 @@ class FakeDataSource extends DataSource<TestData> {
   connect(collectionViewer: CollectionViewer) {
     this.isConnected = true;
     return combineLatest([this._dataChange, collectionViewer.viewChange])
-      .pipe(map(data => data[0]));
+        .pipe(map(data => data[0]));
   }
 
   disconnect() {
@@ -1860,11 +1857,7 @@ class FakeDataSource extends DataSource<TestData> {
     const nextIndex = this.data.length + 1;
 
     let copiedData = this.data.slice();
-    copiedData.push({
-      a: `a_${nextIndex}`,
-      b: `b_${nextIndex}`,
-      c: `c_${nextIndex}`
-    });
+    copiedData.push({a: `a_${nextIndex}`, b: `b_${nextIndex}`, c: `c_${nextIndex}`});
 
     this.data = copiedData;
   }
@@ -1914,7 +1907,7 @@ class BooleanDataSource extends DataSource<boolean> {
   `
 })
 class SimpleCdkTableApp {
-  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  dataSource: FakeDataSource|undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   contentChangedCount = 0;
 
@@ -1945,7 +1938,7 @@ class SimpleCdkTableApp {
   `
 })
 class CdkTableWithDifferentDataInputsApp {
-  dataSource: DataSource<TestData> | Observable<TestData[]> | TestData[] | any = null;
+  dataSource: DataSource<TestData>|Observable<TestData[]>|TestData[]|any = null;
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
@@ -2244,7 +2237,7 @@ class WhenRowMultipleDefaultsCdkTableApp {
   `
 })
 class DynamicDataSourceCdkTableApp {
-  dataSource: FakeDataSource | undefined;
+  dataSource: FakeDataSource|undefined;
   columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
@@ -2269,7 +2262,7 @@ class DynamicDataSourceCdkTableApp {
   `
 })
 class TrackByCdkTableApp {
-  trackByStrategy: 'reference' | 'propertyA' | 'index' = 'reference';
+  trackByStrategy: 'reference'|'propertyA'|'index' = 'reference';
 
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
@@ -2278,9 +2271,12 @@ class TrackByCdkTableApp {
 
   trackBy = (index: number, item: TestData) => {
     switch (this.trackByStrategy) {
-      case 'reference': return item;
-      case 'propertyA': return item.a;
-      case 'index': return index;
+      case 'reference':
+        return item;
+      case 'propertyA':
+        return item.a;
+      case 'index':
+        return index;
     }
   }
 }
@@ -2759,7 +2755,7 @@ class OuterTableApp {
   `
 })
 class NativeHtmlTableApp {
-  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  dataSource: FakeDataSource|undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
@@ -2810,7 +2806,7 @@ class NativeHtmlTableApp {
   `
 })
 class NestedHtmlTableApp {
-  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  dataSource: FakeDataSource|undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -2837,7 +2833,7 @@ class NestedHtmlTableApp {
   `
 })
 class NativeTableWithNoHeaderOrFooterRows {
-  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  dataSource: FakeDataSource|undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
@@ -2858,7 +2854,7 @@ class NativeTableWithNoHeaderOrFooterRows {
   `
 })
 class NativeHtmlTableWithCaptionApp {
-  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  dataSource: FakeDataSource|undefined = new FakeDataSource();
   columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
@@ -2886,7 +2882,7 @@ class NativeHtmlTableWithCaptionApp {
   `
 })
 class NativeHtmlTableWithColgroupAndCol {
-  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  dataSource: FakeDataSource|undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;

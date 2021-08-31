@@ -21,11 +21,12 @@ export class CheckboxOverviewExample {
     name: 'Indeterminate',
     completed: false,
     color: 'primary',
-    subtasks: [
-      {name: 'Primary', completed: false, color: 'primary'},
-      {name: 'Accent', completed: false, color: 'accent'},
-      {name: 'Warn', completed: false, color: 'warn'}
-    ]
+    subtasks:
+        [
+          {name: 'Primary', completed: false, color: 'primary'},
+          {name: 'Accent', completed: false, color: 'accent'},
+          {name: 'Warn', completed: false, color: 'warn'}
+        ]
   };
 
   allComplete: boolean = false;

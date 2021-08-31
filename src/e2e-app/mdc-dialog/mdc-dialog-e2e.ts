@@ -1,16 +1,13 @@
-import {Component, ViewChild, TemplateRef} from '@angular/core';
-import {MatDialog, MatDialogRef, MatDialogConfig} from '@angular/material-experimental/mdc-dialog';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material-experimental/mdc-dialog';
 
-@Component({
-  selector: 'mdc-dialog-e2e',
-  templateUrl: 'mdc-dialog-e2e.html'
-})
+@Component({selector: 'mdc-dialog-e2e', templateUrl: 'mdc-dialog-e2e.html'})
 export class MdcDialogE2E {
-  dialogRef: MatDialogRef<TestDialog> | null;
+  dialogRef: MatDialogRef<TestDialog>|null;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
-  constructor (private _dialog: MatDialog) { }
+  constructor(private _dialog: MatDialog) {}
 
   private _openDialog(config?: MatDialogConfig) {
     this.dialogRef = this._dialog.open(TestDialog, config);
@@ -22,9 +19,7 @@ export class MdcDialogE2E {
   }
 
   openDisabled() {
-    this._openDialog({
-      disableClose: true
-    });
+    this._openDialog({disableClose: true});
   }
 
   openTemplate() {
@@ -40,5 +35,5 @@ export class MdcDialogE2E {
   <button type="button" (click)="dialogRef.close()" id="close">CLOSE</button>`
 })
 export class TestDialog {
-  constructor(public dialogRef: MatDialogRef<TestDialog>) { }
+  constructor(public dialogRef: MatDialogRef<TestDialog>) {}
 }

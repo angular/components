@@ -74,11 +74,7 @@ export class GoogleMapDemo {
 
   isGroundOverlayDisplayed = false;
   groundOverlayImages = [
-    {
-      title: 'Red logo',
-      url: 'https://angular.io/assets/images/logos/angular/angular.svg'
-    },
-    {
+    {title: 'Red logo', url: 'https://angular.io/assets/images/logos/angular/angular.svg'}, {
       title: 'Black logo',
       url: 'https://angular.io/assets/images/logos/angular/angular_solidBlack.svg'
     }
@@ -94,9 +90,7 @@ export class GoogleMapDemo {
 
   mapTypeId: google.maps.MapTypeId;
   mapTypeIds = [
-    google.maps.MapTypeId.HYBRID,
-    google.maps.MapTypeId.ROADMAP,
-    google.maps.MapTypeId.SATELLITE,
+    google.maps.MapTypeId.HYBRID, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE,
     google.maps.MapTypeId.TERRAIN
   ];
 

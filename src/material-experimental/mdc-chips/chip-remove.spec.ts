@@ -1,12 +1,14 @@
+import {ENTER, SPACE, TAB} from '@angular/cdk/keycodes';
+import {Component, DebugElement} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+
 import {
-  dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
 } from '../../cdk/testing/private';
-import {Component, DebugElement} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {SPACE, ENTER, TAB} from '@angular/cdk/keycodes';
+
 import {MatChip, MatChipsModule} from './index';
 
 describe('MDC-based Chip Remove', () => {
@@ -16,12 +18,7 @@ describe('MDC-based Chip Remove', () => {
   let chipNativeElement: HTMLElement;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [
-        TestChip
-      ]
-    });
+    TestBed.configureTestingModule({imports: [MatChipsModule], declarations: [TestChip]});
 
     TestBed.compileComponents();
   }));
@@ -137,7 +134,7 @@ describe('MDC-based Chip Remove', () => {
       expect(event.defaultPrevented).toBe(false);
     });
 
-    it ('should not remove on any key press', () => {
+    it('should not remove on any key press', () => {
       let buttonElement = chipNativeElement.querySelector('button')!;
 
       testChip.removable = true;
@@ -175,4 +172,3 @@ class TestChip {
 
   didRemove() {}
 }
-

@@ -7,13 +7,13 @@
  */
 
 import {
-  Component,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
+  Component,
   Directive,
+  Inject,
   Input,
   Optional,
-  Inject,
+  ViewEncapsulation,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -26,7 +26,8 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
   selector: 'mat-card-content, [mat-card-content], [matCardContent]',
   host: {'class': 'mat-card-content'}
 })
-export class MatCardContent {}
+export class MatCardContent {
+}
 
 /**
  * Title of a card, needed as it's used as a selector in the API.
@@ -34,11 +35,10 @@ export class MatCardContent {}
  */
 @Directive({
   selector: `mat-card-title, [mat-card-title], [matCardTitle]`,
-  host: {
-    'class': 'mat-card-title'
-  }
+  host: {'class': 'mat-card-title'}
 })
-export class MatCardTitle {}
+export class MatCardTitle {
+}
 
 /**
  * Sub-title of a card, needed as it's used as a selector in the API.
@@ -46,11 +46,10 @@ export class MatCardTitle {}
  */
 @Directive({
   selector: `mat-card-subtitle, [mat-card-subtitle], [matCardSubtitle]`,
-  host: {
-    'class': 'mat-card-subtitle'
-  }
+  host: {'class': 'mat-card-subtitle'}
 })
-export class MatCardSubtitle {}
+export class MatCardSubtitle {
+}
 
 /**
  * Action section of a card, needed as it's used as a selector in the API.
@@ -66,78 +65,68 @@ export class MatCardSubtitle {}
 })
 export class MatCardActions {
   /** Position of the actions inside the card. */
-  @Input() align: 'start' | 'end' = 'start';
+  @Input() align: 'start'|'end' = 'start';
 }
 
 /**
  * Footer of a card, needed as it's used as a selector in the API.
  * @docs-private
  */
-@Directive({
-  selector: 'mat-card-footer',
-  host: {'class': 'mat-card-footer'}
-})
-export class MatCardFooter {}
+@Directive({selector: 'mat-card-footer', host: {'class': 'mat-card-footer'}})
+export class MatCardFooter {
+}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-card-image], [matCardImage]',
-  host: {'class': 'mat-card-image'}
-})
-export class MatCardImage {}
+@Directive({selector: '[mat-card-image], [matCardImage]', host: {'class': 'mat-card-image'}})
+export class MatCardImage {
+}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-card-sm-image], [matCardImageSmall]',
-  host: {'class': 'mat-card-sm-image'}
-})
-export class MatCardSmImage {}
+@Directive(
+    {selector: '[mat-card-sm-image], [matCardImageSmall]', host: {'class': 'mat-card-sm-image'}})
+export class MatCardSmImage {
+}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-card-md-image], [matCardImageMedium]',
-  host: {'class': 'mat-card-md-image'}
-})
-export class MatCardMdImage {}
+@Directive(
+    {selector: '[mat-card-md-image], [matCardImageMedium]', host: {'class': 'mat-card-md-image'}})
+export class MatCardMdImage {
+}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-card-lg-image], [matCardImageLarge]',
-  host: {'class': 'mat-card-lg-image'}
-})
-export class MatCardLgImage {}
+@Directive(
+    {selector: '[mat-card-lg-image], [matCardImageLarge]', host: {'class': 'mat-card-lg-image'}})
+export class MatCardLgImage {
+}
 
 /**
  * Large image used in a card, needed to add the mat- CSS styling.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-card-xl-image], [matCardImageXLarge]',
-  host: {'class': 'mat-card-xl-image'}
-})
-export class MatCardXlImage {}
+@Directive(
+    {selector: '[mat-card-xl-image], [matCardImageXLarge]', host: {'class': 'mat-card-xl-image'}})
+export class MatCardXlImage {
+}
 
 /**
  * Avatar image used in a card, needed to add the mat- CSS styling.
  * @docs-private
  */
-@Directive({
-  selector: '[mat-card-avatar], [matCardAvatar]',
-  host: {'class': 'mat-card-avatar'}
-})
-export class MatCardAvatar {}
+@Directive({selector: '[mat-card-avatar], [matCardAvatar]', host: {'class': 'mat-card-avatar'}})
+export class MatCardAvatar {
+}
 
 
 /**
@@ -181,7 +170,8 @@ export class MatCard {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card-header'}
 })
-export class MatCardHeader {}
+export class MatCardHeader {
+}
 
 
 /**
@@ -196,4 +186,5 @@ export class MatCardHeader {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card-title-group'}
 })
-export class MatCardTitleGroup {}
+export class MatCardTitleGroup {
+}

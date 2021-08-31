@@ -15,4 +15,5 @@ import {CdkAccordionItem} from './accordion-item';
   exports: [CdkAccordion, CdkAccordionItem],
   declarations: [CdkAccordion, CdkAccordionItem],
 })
-export class CdkAccordionModule {}
+export class CdkAccordionModule {
+}

@@ -6,18 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
-import {CdkMenu} from './menu';
-import {CdkMenuBar} from './menu-bar';
-import {CdkMenuPanel} from './menu-panel';
-import {CdkMenuItem} from './menu-item';
-import {CdkMenuGroup} from './menu-group';
-import {CdkMenuItemRadio} from './menu-item-radio';
-import {CdkMenuItemCheckbox} from './menu-item-checkbox';
-import {CdkMenuItemTrigger} from './menu-item-trigger';
+import {NgModule} from '@angular/core';
+
 import {CdkContextMenuTrigger} from './context-menu';
+import {CdkMenu} from './menu';
 import {CdkTargetMenuAim} from './menu-aim';
+import {CdkMenuBar} from './menu-bar';
+import {CdkMenuGroup} from './menu-group';
+import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {CdkMenuItemRadio} from './menu-item-radio';
+import {CdkMenuItemTrigger} from './menu-item-trigger';
+import {CdkMenuPanel} from './menu-panel';
 
 const EXPORTED_DECLARATIONS = [
   CdkMenuBar,
@@ -36,4 +37,5 @@ const EXPORTED_DECLARATIONS = [
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
 })
-export class CdkMenuModule {}
+export class CdkMenuModule {
+}

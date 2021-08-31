@@ -19,17 +19,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
     }
 
     root.walkRules(rule => {
-      if (rule.parent.type === 'rule' &&
-          isStandardSyntaxRule(rule) &&
-          isStandardSyntaxSelector(rule.selector) &&
-          rule.selector.includes('/deep/')) {
-
-        utils.report({
-          result,
-          ruleName,
-          message: messages.expected(rule.selector),
-          node: rule
-        });
+      if (rule.parent.type === 'rule' && isStandardSyntaxRule(rule) &&
+          isStandardSyntaxSelector(rule.selector) && rule.selector.includes('/deep/')) {
+        utils.report({result, ruleName, message: messages.expected(rule.selector), node: rule});
       }
     });
   };

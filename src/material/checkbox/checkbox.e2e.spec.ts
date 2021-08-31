@@ -1,7 +1,6 @@
 import {browser, by, element, Key} from 'protractor';
 
 describe('checkbox', () => {
-
   describe('check behavior', () => {
     beforeEach(async () => await browser.get('/checkbox'));
 

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ElementRef} from '@angular/core';
 import {OverlayRef} from '@angular/cdk/overlay';
+import {ElementRef} from '@angular/core';
 
 /** Tracks state of resize events in progress. */
 export class ResizeRef {
@@ -15,5 +15,6 @@ export class ResizeRef {
       readonly origin: ElementRef,
       readonly overlayRef: OverlayRef,
       readonly minWidthPx: number,
-      readonly maxWidthPx: number, ) {}
+      readonly maxWidthPx: number,
+  ) {}
 }

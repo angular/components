@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Component} from '@angular/core';
 
 /**
  * @title Drag&Drop disabled
@@ -11,8 +11,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class CdkDragDropDisabledExample {
   items = [
-    {value: 'I can be dragged', disabled: false},
-    {value: 'I cannot be dragged', disabled: true},
+    {value: 'I can be dragged', disabled: false}, {value: 'I cannot be dragged', disabled: true},
     {value: 'I can also be dragged', disabled: false}
   ];
 

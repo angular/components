@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {DOCUMENT} from '@angular/common';
 import {
   Directive,
   ElementRef,
   Inject,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 
 /**
  * A directive that makes a span editable and exposes functions to modify and retrieve the
@@ -28,8 +28,8 @@ import {DOCUMENT} from '@angular/common';
 })
 export class MatChipEditInput {
   constructor(
-    private readonly _elementRef: ElementRef,
-    @Inject(DOCUMENT) private readonly _document: any) {}
+      private readonly _elementRef: ElementRef, @Inject(DOCUMENT) private readonly _document: any) {
+  }
 
   initialize(initialValue: string) {
     this.getNativeElement().focus();

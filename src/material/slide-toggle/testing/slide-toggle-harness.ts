@@ -6,13 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AsyncFactoryFn,
   ComponentHarness,
   HarnessPredicate,
   TestElement,
 } from '@angular/cdk/testing';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+
 import {SlideToggleHarnessFilters} from './slide-toggle-harness-filters';
 
 export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
@@ -44,17 +45,17 @@ export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
   }
 
   /** Gets the slide-toggle's name. */
-  async getName(): Promise<string | null> {
+  async getName(): Promise<string|null> {
     return (await this._nativeElement()).getAttribute('name');
   }
 
   /** Gets the slide-toggle's aria-label. */
-  async getAriaLabel(): Promise<string | null> {
+  async getAriaLabel(): Promise<string|null> {
     return (await this._nativeElement()).getAttribute('aria-label');
   }
 
   /** Gets the slide-toggle's aria-labelledby. */
-  async getAriaLabelledby(): Promise<string | null> {
+  async getAriaLabelledby(): Promise<string|null> {
     return (await this._nativeElement()).getAttribute('aria-labelledby');
   }
 
@@ -100,7 +101,6 @@ export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
 }
 
 
-
 /** Harness for interacting with a standard mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
   private _inputContainer = this.locatorFor('.mat-slide-toggle-bar');
@@ -117,7 +117,8 @@ export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
    */
   static with(options: SlideToggleHarnessFilters = {}): HarnessPredicate<MatSlideToggleHarness> {
     return new HarnessPredicate(MatSlideToggleHarness, options)
-        .addOption('label', options.label,
+        .addOption(
+            'label', options.label,
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
         // We want to provide a filter option for "name" because the name of the slide-toggle is
         // only set on the underlying input. This means that it's not possible for developers

@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'divider-overview-example',
   templateUrl: 'divider-overview-example.html',
 })
-export class DividerOverviewExample {}
+export class DividerOverviewExample {
+}

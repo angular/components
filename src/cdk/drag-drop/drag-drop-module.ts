@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {CdkDropList} from './directives/drop-list';
-import {CdkDropListGroup} from './directives/drop-list-group';
+import {NgModule} from '@angular/core';
+
 import {CdkDrag} from './directives/drag';
 import {CdkDragHandle} from './directives/drag-handle';
-import {CdkDragPreview} from './directives/drag-preview';
 import {CdkDragPlaceholder} from './directives/drag-placeholder';
+import {CdkDragPreview} from './directives/drag-preview';
+import {CdkDropList} from './directives/drop-list';
+import {CdkDropListGroup} from './directives/drop-list-group';
 import {DragDrop} from './drag-drop';
 
 @NgModule({
@@ -38,4 +39,5 @@ import {DragDrop} from './drag-drop';
     DragDrop,
   ]
 })
-export class DragDropModule {}
+export class DragDropModule {
+}

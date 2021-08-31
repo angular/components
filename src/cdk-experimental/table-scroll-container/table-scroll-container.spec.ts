@@ -1,4 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {Platform} from '@angular/cdk/platform';
+import {CdkTable, CdkTableModule} from '@angular/cdk/table';
 import {
   Component,
   Type,
@@ -7,8 +9,6 @@ import {
 import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CdkTable, CdkTableModule} from '@angular/cdk/table';
-import {Platform} from '@angular/cdk/platform';
 
 import {CdkTableScrollContainerModule} from './index';
 
@@ -24,10 +24,12 @@ describe('CdkTableScrollContainer', () => {
 
   function createComponent<T>(
       componentType: Type<T>, declarations: any[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [CdkTableModule, CdkTableScrollContainerModule],
-      declarations: [componentType, ...declarations],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [CdkTableModule, CdkTableScrollContainerModule],
+          declarations: [componentType, ...declarations],
+        })
+        .compileComponents();
 
     return TestBed.createComponent<T>(componentType);
   }
@@ -52,153 +54,146 @@ describe('CdkTableScrollContainer', () => {
   });
 
   it('sets scrollbar track margin for sticky headers', fakeAsync(() => {
-    component.stickyHeaders = ['header-1', 'header-3'];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyHeaders = ['header-1', 'header-3'];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    if (platform.FIREFOX) {
-      // ::-webkit-scrollbar-track is not recognized by Firefox.
-      return;
-    }
+       if (platform.FIREFOX) {
+         // ::-webkit-scrollbar-track is not recognized by Firefox.
+         return;
+       }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top'))
-        .toBe(`${headerRows[0].offsetHeight}px`);
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+       const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe(`${headerRows[0].offsetHeight}px`);
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
-    component.stickyHeaders = [];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyHeaders = [];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+     }));
 
   it('sets scrollbar track margin for sticky footers', fakeAsync(() => {
-    component.stickyFooters = ['footer-1', 'footer-3'];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyFooters = ['footer-1', 'footer-3'];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    if (platform.FIREFOX) {
-      // ::-webkit-scrollbar-track is not recognized by Firefox.
-      return;
-    }
+       if (platform.FIREFOX) {
+         // ::-webkit-scrollbar-track is not recognized by Firefox.
+         return;
+       }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom'))
-        .toBe(`${footerRows[2].offsetHeight}px`);
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+       const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom'))
+           .toBe(`${footerRows[2].offsetHeight}px`);
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
-    component.stickyFooters = [];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyFooters = [];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+     }));
 
   it('sets scrollbar track margin for sticky start columns', fakeAsync(() => {
-    component.stickyStartColumns = ['column-1', 'column-3'];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyStartColumns = ['column-1', 'column-3'];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    if (platform.FIREFOX) {
-      // ::-webkit-scrollbar-track is not recognized by Firefox.
-      return;
-    }
+       if (platform.FIREFOX) {
+         // ::-webkit-scrollbar-track is not recognized by Firefox.
+         return;
+       }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left'))
-        .toBe(`${getCells(dataRows[0])[0].offsetWidth}px`);
+       const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left'))
+           .toBe(`${getCells(dataRows[0])[0].offsetWidth}px`);
 
-    component.stickyStartColumns = [];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyStartColumns = [];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+     }));
 
   it('sets scrollbar track margin for sticky end columns', fakeAsync(() => {
-    component.stickyEndColumns = ['column-4', 'column-6'];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyEndColumns = ['column-4', 'column-6'];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    if (platform.FIREFOX) {
-      // ::-webkit-scrollbar-track is not recognized by Firefox.
-      return;
-    }
+       if (platform.FIREFOX) {
+         // ::-webkit-scrollbar-track is not recognized by Firefox.
+         return;
+       }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right'))
-        .toBe(`${getCells(dataRows[0])[5].offsetWidth}px`);
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+       const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right'))
+           .toBe(`${getCells(dataRows[0])[5].offsetWidth}px`);
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
-    component.stickyEndColumns = [];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyEndColumns = [];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+     }));
 
   it('sets scrollbar track margin for a combination of sticky rows and columns', fakeAsync(() => {
-    component.stickyHeaders = ['header-1'];
-    component.stickyFooters = ['footer-3'];
-    component.stickyStartColumns = ['column-1'];
-    component.stickyEndColumns = ['column-6'];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyHeaders = ['header-1'];
+       component.stickyFooters = ['footer-3'];
+       component.stickyStartColumns = ['column-1'];
+       component.stickyEndColumns = ['column-6'];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    if (platform.FIREFOX) {
-      // ::-webkit-scrollbar-track is not recognized by Firefox.
-      return;
-    }
+       if (platform.FIREFOX) {
+         // ::-webkit-scrollbar-track is not recognized by Firefox.
+         return;
+       }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top'))
-        .toBe(`${headerRows[0].offsetHeight}px`);
-    expect(scrollerStyle.getPropertyValue('margin-right'))
-        .toBe(`${getCells(dataRows[0])[5].offsetWidth}px`);
-    expect(scrollerStyle.getPropertyValue('margin-bottom'))
-        .toBe(`${footerRows[2].offsetHeight}px`);
-    expect(scrollerStyle.getPropertyValue('margin-left'))
-        .toBe(`${getCells(dataRows[0])[0].offsetWidth}px`);
+       const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe(`${headerRows[0].offsetHeight}px`);
+       expect(scrollerStyle.getPropertyValue('margin-right'))
+           .toBe(`${getCells(dataRows[0])[5].offsetWidth}px`);
+       expect(scrollerStyle.getPropertyValue('margin-bottom'))
+           .toBe(`${footerRows[2].offsetHeight}px`);
+       expect(scrollerStyle.getPropertyValue('margin-left'))
+           .toBe(`${getCells(dataRows[0])[0].offsetWidth}px`);
 
-    component.stickyHeaders = [];
-    component.stickyFooters = [];
-    component.stickyStartColumns = [];
-    component.stickyEndColumns = [];
-    fixture.detectChanges();
-    flushMicrotasks();
+       component.stickyHeaders = [];
+       component.stickyFooters = [];
+       component.stickyStartColumns = [];
+       component.stickyEndColumns = [];
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+       expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
+       expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
+     }));
 });
 
 interface TestData {
@@ -228,7 +223,7 @@ class FakeDataSource extends DataSource<TestData> {
   connect(collectionViewer: CollectionViewer) {
     this.isConnected = true;
     return combineLatest([this._dataChange, collectionViewer.viewChange])
-      .pipe(map(data => data[0]));
+        .pipe(map(data => data[0]));
   }
 
   disconnect() {
@@ -239,11 +234,7 @@ class FakeDataSource extends DataSource<TestData> {
     const nextIndex = this.data.length + 1;
 
     let copiedData = this.data.slice();
-    copiedData.push({
-      a: `a_${nextIndex}`,
-      b: `b_${nextIndex}`,
-      c: `c_${nextIndex}`
-    });
+    copiedData.push({a: `a_${nextIndex}`, b: `b_${nextIndex}`, c: `c_${nextIndex}`});
 
     this.data = copiedData;
   }

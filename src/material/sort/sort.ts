@@ -39,7 +39,7 @@ export interface MatSortable {
   id: string;
 
   /** Starting sort direction. */
-  start: 'asc' | 'desc';
+  start: 'asc'|'desc';
 
   /** Whether to disable clearing the sorting state. */
   disableClear: boolean;
@@ -76,8 +76,8 @@ const _MatSortBase = mixinInitialized(mixinDisabled(class {}));
   host: {'class': 'mat-sort'},
   inputs: ['disabled: matSortDisabled']
 })
-export class MatSort extends _MatSortBase
-    implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit {
+export class MatSort extends _MatSortBase implements CanDisable, HasInitialized, OnChanges,
+                                                     OnDestroy, OnInit {
   /** Collection of all registered sortables that this directive manages. */
   sortables = new Map<string, MatSortable>();
 
@@ -91,14 +91,16 @@ export class MatSort extends _MatSortBase
    * The direction to set when an MatSortable is initially sorted.
    * May be overriden by the MatSortable's sort start.
    */
-  @Input('matSortStart') start: 'asc' | 'desc' = 'asc';
+  @Input('matSortStart') start: 'asc'|'desc' = 'asc';
 
   /** The sort direction of the currently active MatSortable. */
   @Input('matSortDirection')
-  get direction(): SortDirection { return this._direction; }
+  get direction(): SortDirection {
+    return this._direction;
+  }
   set direction(direction: SortDirection) {
     if (direction && direction !== 'asc' && direction !== 'desc' &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getSortInvalidDirectionError(direction);
     }
     this._direction = direction;
@@ -110,15 +112,19 @@ export class MatSort extends _MatSortBase
    * May be overriden by the MatSortable's disable clear input.
    */
   @Input('matSortDisableClear')
-  get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v: boolean) { this._disableClear = coerceBooleanProperty(v); }
+  get disableClear(): boolean {
+    return this._disableClear;
+  }
+  set disableClear(v: boolean) {
+    this._disableClear = coerceBooleanProperty(v);
+  }
   private _disableClear: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
 
-  constructor(@Optional() @Inject(MAT_SORT_DEFAULT_OPTIONS)
-              private _defaultOptions?: MatSortDefaultOptions) {
+  constructor(@Optional() @Inject(MAT_SORT_DEFAULT_OPTIONS) private _defaultOptions?:
+                  MatSortDefaultOptions) {
     super();
   }
 
@@ -162,16 +168,20 @@ export class MatSort extends _MatSortBase
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
   getNextSortDirection(sortable: MatSortable): SortDirection {
-    if (!sortable) { return ''; }
+    if (!sortable) {
+      return '';
+    }
 
     // Get the sort direction cycle with the potential sortable overrides.
-    const disableClear = sortable?.disableClear ??
-        this.disableClear ?? !!this._defaultOptions?.disableClear;
+    const disableClear =
+        sortable?.disableClear ?? this.disableClear ?? !!this._defaultOptions?.disableClear;
     let sortDirectionCycle = getSortDirectionCycle(sortable.start || this.start, disableClear);
 
     // Get and return the next direction in the cycle
     let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
-    if (nextDirectionIndex >= sortDirectionCycle.length) { nextDirectionIndex = 0; }
+    if (nextDirectionIndex >= sortDirectionCycle.length) {
+      nextDirectionIndex = 0;
+    }
     return sortDirectionCycle[nextDirectionIndex];
   }
 
@@ -192,11 +202,14 @@ export class MatSort extends _MatSortBase
 }
 
 /** Returns the sort direction cycle to use given the provided parameters of order and clear. */
-function getSortDirectionCycle(start: 'asc' | 'desc',
-                               disableClear: boolean): SortDirection[] {
+function getSortDirectionCycle(start: 'asc'|'desc', disableClear: boolean): SortDirection[] {
   let sortOrder: SortDirection[] = ['asc', 'desc'];
-  if (start == 'desc') { sortOrder.reverse(); }
-  if (!disableClear) { sortOrder.push(''); }
+  if (start == 'desc') {
+    sortOrder.reverse();
+  }
+  if (!disableClear) {
+    sortOrder.push('');
+  }
 
   return sortOrder;
 }

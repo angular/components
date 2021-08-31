@@ -10,7 +10,7 @@ import {BaseHarnessFilters, ComponentHarness, HarnessPredicate} from '../../comp
 import {TestElement} from '../../test-element';
 
 export interface SubComponentHarnessFilters extends BaseHarnessFilters {
-  title?: string | RegExp;
+  title?: string|RegExp;
   itemCount?: number;
 }
 
@@ -19,10 +19,12 @@ export class SubComponentHarness extends ComponentHarness {
 
   static with(options: SubComponentHarnessFilters = {}) {
     return new HarnessPredicate(SubComponentHarness, options)
-        .addOption('title', options.title,
+        .addOption(
+            'title', options.title,
             async (harness, title) =>
                 HarnessPredicate.stringMatches((await harness.title()).text(), title))
-        .addOption('item count', options.itemCount,
+        .addOption(
+            'item count', options.itemCount,
             async (harness, count) => (await harness.getItems()).length === count);
   }
 

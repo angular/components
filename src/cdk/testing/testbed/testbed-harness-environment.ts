@@ -24,7 +24,7 @@ import {UnitTestElement} from './unit-test-element';
 /** Options to configure the environment. */
 export interface TestbedHarnessEnvironmentOptions {
   /** The query function used to find DOM elements. */
-  queryFn: (selector: string, root: Element) => Iterable<Element> | ArrayLike<Element>;
+  queryFn: (selector: string, root: Element) => Iterable<Element>| ArrayLike<Element>;
 }
 
 /** The default environment options. */
@@ -96,7 +96,8 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /** The options for this environment. */
   private _options: TestbedHarnessEnvironmentOptions;
 
-  protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>,
+  protected constructor(
+      rawRootElement: Element, private _fixture: ComponentFixture<unknown>,
       options?: TestbedHarnessEnvironmentOptions) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
@@ -118,7 +119,8 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * Creates a `HarnessLoader` at the document root. This can be used if harnesses are
    * located outside of a fixture (e.g. overlays appended to the document body).
    */
-  static documentRootLoader(fixture: ComponentFixture<unknown>,
+  static documentRootLoader(
+      fixture: ComponentFixture<unknown>,
       options?: TestbedHarnessEnvironmentOptions): HarnessLoader {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }

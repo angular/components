@@ -1,4 +1,5 @@
-const {buildOptimizer} = require('@angular-devkit/build-optimizer/src/build-optimizer/build-optimizer');
+const {buildOptimizer} =
+    require('@angular-devkit/build-optimizer/src/build-optimizer/build-optimizer');
 const node = require('rollup-plugin-node-resolve');
 const {ivyEnabled} = require('angular_material/tools/angular_ivy_enabled');
 
@@ -30,9 +31,8 @@ module.exports = {
   plugins: [
     buildOptimizerPlugin,
     node({
-      mainFields: ivyEnabled ?
-          ['es2015_ivy_ngcc', 'module_ivy_ngcc','es2015', 'module'] :
-          ['es2015', 'module'],
+      mainFields: ivyEnabled ? ['es2015_ivy_ngcc', 'module_ivy_ngcc', 'es2015', 'module'] :
+                               ['es2015', 'module'],
     }),
   ],
 };

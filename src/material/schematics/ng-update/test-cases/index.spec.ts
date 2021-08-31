@@ -10,7 +10,6 @@ describe('Material upgrade test cases', () => {
   // Setup the test cases for each target version. The test cases will be automatically
   // detected through Bazel's runfiles manifest.
   versionNames.forEach(version => describe(`${version} update`, () => {
-                         defineJasmineTestCases(
-                             version, MIGRATION_PATH, testCasesMap.get(version));
+                         defineJasmineTestCases(version, MIGRATION_PATH, testCasesMap.get(version));
                        }));
 });

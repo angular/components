@@ -16,4 +16,5 @@ import {MatToolbar, MatToolbarRow} from './toolbar';
   exports: [MatToolbar, MatToolbarRow, MatCommonModule],
   declarations: [MatToolbar, MatToolbarRow],
 })
-export class MatToolbarModule {}
+export class MatToolbarModule {
+}

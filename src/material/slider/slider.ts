@@ -17,15 +17,18 @@ import {
 import {
   DOWN_ARROW,
   END,
+  hasModifierKey,
   HOME,
   LEFT_ARROW,
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
-  hasModifierKey,
 } from '@angular/cdk/keycodes';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
 import {
+  AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -35,13 +38,12 @@ import {
   forwardRef,
   Inject,
   Input,
+  NgZone,
   OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
-  NgZone,
-  AfterViewInit,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -53,8 +55,6 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
 const activeEventOptions = normalizePassiveListenerOptions({passive: false});
@@ -91,14 +91,16 @@ export class MatSliderChange {
   source: MatSlider;
 
   /** The new value of the source slider. */
-  value: number | null;
+  value: number|null;
 }
 
 // Boilerplate for applying mixins to MatSlider.
 /** @docs-private */
-const _MatSliderBase = mixinTabIndex(mixinColor(mixinDisabled(class {
-  constructor(public _elementRef: ElementRef) {}
-}), 'accent'));
+const _MatSliderBase = mixinTabIndex(mixinColor(
+    mixinDisabled(class {
+      constructor(public _elementRef: ElementRef) {}
+    }),
+    'accent'));
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -154,11 +156,14 @@ const _MatSliderBase = mixinTabIndex(mixinColor(mixinDisabled(class {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatSlider extends _MatSliderBase
-    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, AfterViewInit, HasTabIndex {
+export class MatSlider extends _MatSliderBase implements ControlValueAccessor, OnDestroy,
+                                                         CanDisable, CanColor, AfterViewInit,
+                                                         HasTabIndex {
   /** Whether the slider is inverted. */
   @Input()
-  get invert(): boolean { return this._invert; }
+  get invert(): boolean {
+    return this._invert;
+  }
   set invert(value: boolean) {
     this._invert = coerceBooleanProperty(value);
   }
@@ -166,7 +171,9 @@ export class MatSlider extends _MatSliderBase
 
   /** The maximum value that the slider can have. */
   @Input()
-  get max(): number { return this._max; }
+  get max(): number {
+    return this._max;
+  }
   set max(v: number) {
     this._max = coerceNumberProperty(v, this._max);
     this._percent = this._calculatePercentage(this._value);
@@ -178,7 +185,9 @@ export class MatSlider extends _MatSliderBase
 
   /** The minimum value that the slider can have. */
   @Input()
-  get min(): number { return this._min; }
+  get min(): number {
+    return this._min;
+  }
   set min(v: number) {
     this._min = coerceNumberProperty(v, this._min);
     this._percent = this._calculatePercentage(this._value);
@@ -190,7 +199,9 @@ export class MatSlider extends _MatSliderBase
 
   /** The values at which the thumb will snap. */
   @Input()
-  get step(): number { return this._step; }
+  get step(): number {
+    return this._step;
+  }
   set step(v: number) {
     this._step = coerceNumberProperty(v, this._step);
 
@@ -205,8 +216,12 @@ export class MatSlider extends _MatSliderBase
 
   /** Whether or not to show the thumb label. */
   @Input()
-  get thumbLabel(): boolean { return this._thumbLabel; }
-  set thumbLabel(value: boolean) { this._thumbLabel = coerceBooleanProperty(value); }
+  get thumbLabel(): boolean {
+    return this._thumbLabel;
+  }
+  set thumbLabel(value: boolean) {
+    this._thumbLabel = coerceBooleanProperty(value);
+  }
   private _thumbLabel: boolean = false;
 
   /**
@@ -214,8 +229,10 @@ export class MatSlider extends _MatSliderBase
    * Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12 values).
    */
   @Input()
-  get tickInterval() { return this._tickInterval; }
-  set tickInterval(value: 'auto' | number) {
+  get tickInterval() {
+    return this._tickInterval;
+  }
+  set tickInterval(value: 'auto'|number) {
     if (value === 'auto') {
       this._tickInterval = 'auto';
     } else if (typeof value === 'number' || typeof value === 'string') {
@@ -224,7 +241,7 @@ export class MatSlider extends _MatSliderBase
       this._tickInterval = 0;
     }
   }
-  private _tickInterval: 'auto' | number = 0;
+  private _tickInterval: 'auto'|number = 0;
 
   /** Value of the slider. */
   @Input()
@@ -252,7 +269,7 @@ export class MatSlider extends _MatSliderBase
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _value: number | null = null;
+  private _value: number|null = null;
 
   /**
    * Function that will be used to format the value before it is displayed
@@ -266,7 +283,9 @@ export class MatSlider extends _MatSliderBase
 
   /** Whether the slider is vertical. */
   @Input()
-  get vertical(): boolean { return this._vertical; }
+  get vertical(): boolean {
+    return this._vertical;
+  }
   set vertical(value: boolean) {
     this._vertical = coerceBooleanProperty(value);
   }
@@ -283,10 +302,10 @@ export class MatSlider extends _MatSliderBase
    * to facilitate the two-way binding for the `value` input.
    * @docs-private
    */
-  @Output() readonly valueChange: EventEmitter<number | null> = new EventEmitter<number | null>();
+  @Output() readonly valueChange: EventEmitter<number|null> = new EventEmitter<number|null>();
 
   /** The value to be used for display purposes. */
-  get displayValue(): string | number {
+  get displayValue(): string|number {
     if (this.displayWith) {
       // Value is never null but since setters and getters cannot have
       // different types, the value getter is also typed to return null.
@@ -317,14 +336,16 @@ export class MatSlider extends _MatSliderBase
   onTouched: () => any = () => {};
 
   /** The percentage of the slider that coincides with the value. */
-  get percent(): number { return this._clamp(this._percent); }
+  get percent(): number {
+    return this._clamp(this._percent);
+  }
   private _percent: number = 0;
 
   /**
    * Whether or not the thumb is sliding and what the user is using to slide it with.
    * Used to determine if there should be a transition for the thumb and fill track.
    */
-  _isSliding: 'keyboard' | 'pointer' | null = null;
+  _isSliding: 'keyboard'|'pointer'|null = null;
 
   /**
    * Whether or not the slider is active (clicked or sliding).
@@ -363,7 +384,7 @@ export class MatSlider extends _MatSliderBase
   }
 
   /** CSS styles for the track background element. */
-  _getTrackBackgroundStyles(): { [key: string]: string } {
+  _getTrackBackgroundStyles(): {[key: string]: string} {
     const axis = this.vertical ? 'Y' : 'X';
     const scale = this.vertical ? `1, ${1 - this.percent}, 1` : `${1 - this.percent}, 1, 1`;
     const sign = this._shouldInvertMouseCoords() ? '-' : '';
@@ -375,7 +396,7 @@ export class MatSlider extends _MatSliderBase
   }
 
   /** CSS styles for the track fill element. */
-  _getTrackFillStyles(): { [key: string]: string } {
+  _getTrackFillStyles(): {[key: string]: string} {
     const percent = this.percent;
     const axis = this.vertical ? 'Y' : 'X';
     const scale = this.vertical ? `1, ${percent}, 1` : `${percent}, 1, 1`;
@@ -393,19 +414,17 @@ export class MatSlider extends _MatSliderBase
   }
 
   /** CSS styles for the ticks container element. */
-  _getTicksContainerStyles(): { [key: string]: string } {
+  _getTicksContainerStyles(): {[key: string]: string} {
     let axis = this.vertical ? 'Y' : 'X';
     // For a horizontal slider in RTL languages we push the ticks container off the left edge
     // instead of the right edge to avoid causing a horizontal scrollbar to appear.
     let sign = !this.vertical && this._getDirection() == 'rtl' ? '' : '-';
     let offset = this._tickIntervalPercent / 2 * 100;
-    return {
-      'transform': `translate${axis}(${sign}${offset}%)`
-    };
+    return {'transform': `translate${axis}(${sign}${offset}%)`};
   }
 
   /** CSS styles for the ticks element. */
-  _getTicksStyles(): { [key: string]: string } {
+  _getTicksStyles(): {[key: string]: string} {
     let tickSize = this._tickIntervalPercent * 100;
     let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
     let axis = this.vertical ? 'Y' : 'X';
@@ -414,7 +433,7 @@ export class MatSlider extends _MatSliderBase
     // ticks 180 degrees so we're really cutting off the end edge abd not the start.
     let sign = !this.vertical && this._getDirection() == 'rtl' ? '-' : '';
     let rotate = !this.vertical && this._getDirection() == 'rtl' ? ' rotate(180deg)' : '';
-    let styles: { [key: string]: string } = {
+    let styles: {[key: string]: string} = {
       'backgroundSize': backgroundSize,
       // Without translateZ ticks sometimes jitter as the slider moves on Chrome & Firefox.
       'transform': `translateZ(0) translate${axis}(${sign}${tickSize / 2}%)${rotate}`
@@ -436,7 +455,7 @@ export class MatSlider extends _MatSliderBase
     return styles;
   }
 
-  _getThumbContainerStyles(): { [key: string]: string } {
+  _getThumbContainerStyles(): {[key: string]: string} {
     const shouldInvertAxis = this._shouldInvertAxis();
     let axis = this.vertical ? 'Y' : 'X';
     // For a horizontal slider in RTL languages we push the thumb container off the left edge
@@ -444,16 +463,14 @@ export class MatSlider extends _MatSliderBase
     let invertOffset =
         (this._getDirection() == 'rtl' && !this.vertical) ? !shouldInvertAxis : shouldInvertAxis;
     let offset = (invertOffset ? this.percent : 1 - this.percent) * 100;
-    return {
-      'transform': `translate${axis}(-${offset}%)`
-    };
+    return {'transform': `translate${axis}(-${offset}%)`};
   }
 
   /** The size of a tick interval as a percentage of the size of the track. */
   private _tickIntervalPercent: number = 0;
 
   /** The dimensions of the slider. */
-  private _sliderDimensions: ClientRect | null = null;
+  private _sliderDimensions: ClientRect|null = null;
 
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
@@ -464,7 +481,7 @@ export class MatSlider extends _MatSliderBase
   private _dirChangeSubscription = Subscription.EMPTY;
 
   /** The value of the slider when the slide start event fires. */
-  private _valueOnSlideStart: number | null;
+  private _valueOnSlideStart: number|null;
 
   /** Reference to the inner slider wrapper element. */
   @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
@@ -484,7 +501,7 @@ export class MatSlider extends _MatSliderBase
   }
 
   /** Keeps track of the last pointer event that was captured by the slider. */
-  private _lastPointerEvent: MouseEvent | TouchEvent | null;
+  private _lastPointerEvent: MouseEvent|TouchEvent|null;
 
   /** Used to subscribe to global move and end events */
   protected _document: Document;
@@ -496,16 +513,14 @@ export class MatSlider extends _MatSliderBase
    * - The browser doesn't support `Touch.identifier`.
    * - Dragging hasn't started yet.
    */
-  private _touchId: number | undefined;
+  private _touchId: number|undefined;
 
-  constructor(elementRef: ElementRef,
-              private _focusMonitor: FocusMonitor,
-              private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality,
-              @Attribute('tabindex') tabIndex: string,
-              private _ngZone: NgZone,
-              @Inject(DOCUMENT) _document: any,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+  constructor(
+      elementRef: ElementRef, private _focusMonitor: FocusMonitor,
+      private _changeDetectorRef: ChangeDetectorRef, @Optional() private _dir: Directionality,
+      @Attribute('tabindex') tabIndex: string, private _ngZone: NgZone,
+      @Inject(DOCUMENT) _document: any,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
     this._document = _document;
     this.tabIndex = parseInt(tabIndex) || 0;
@@ -518,12 +533,10 @@ export class MatSlider extends _MatSliderBase
   }
 
   ngAfterViewInit() {
-    this._focusMonitor
-        .monitor(this._elementRef, true)
-        .subscribe((origin: FocusOrigin) => {
-          this._isActive = !!origin && origin !== 'keyboard';
-          this._changeDetectorRef.detectChanges();
-        });
+    this._focusMonitor.monitor(this._elementRef, true).subscribe((origin: FocusOrigin) => {
+      this._isActive = !!origin && origin !== 'keyboard';
+      this._changeDetectorRef.detectChanges();
+    });
     if (this._dir) {
       this._dirChangeSubscription = this._dir.change.subscribe(() => {
         this._changeDetectorRef.markForCheck();
@@ -626,90 +639,96 @@ export class MatSlider extends _MatSliderBase
   }
 
   /** Called when the user has put their pointer down on the slider. */
-  private _pointerDown = (event: TouchEvent | MouseEvent) => {
-    // Don't do anything if the slider is disabled or the
-    // user is using anything other than the main mouse button.
-    if (this.disabled || this._isSliding || (!isTouchEvent(event) && event.button !== 0)) {
-      return;
-    }
-
-    this._ngZone.run(() => {
-      this._touchId = isTouchEvent(event) ?
-          getTouchIdForSlider(event, this._elementRef.nativeElement) : undefined;
-      const pointerPosition = getPointerPositionOnPage(event, this._touchId);
-
-      if (pointerPosition) {
-        const oldValue = this.value;
-        this._isSliding = 'pointer';
-        this._lastPointerEvent = event;
-        event.preventDefault();
-        this._focusHostElement();
-        this._onMouseenter(); // Simulate mouseenter in case this is a mobile device.
-        this._bindGlobalEvents(event);
-        this._focusHostElement();
-        this._updateValueFromPosition(pointerPosition);
-        this._valueOnSlideStart = oldValue;
-
-        // Emit a change and input event if the value changed.
-        if (oldValue != this.value) {
-          this._emitInputEvent();
+  private _pointerDown =
+      (event: TouchEvent|MouseEvent) => {
+        // Don't do anything if the slider is disabled or the
+        // user is using anything other than the main mouse button.
+        if (this.disabled || this._isSliding || (!isTouchEvent(event) && event.button !== 0)) {
+          return;
         }
+
+        this._ngZone.run(() => {
+          this._touchId = isTouchEvent(event) ?
+              getTouchIdForSlider(event, this._elementRef.nativeElement) :
+              undefined;
+          const pointerPosition = getPointerPositionOnPage(event, this._touchId);
+
+          if (pointerPosition) {
+            const oldValue = this.value;
+            this._isSliding = 'pointer';
+            this._lastPointerEvent = event;
+            event.preventDefault();
+            this._focusHostElement();
+            this._onMouseenter();  // Simulate mouseenter in case this is a mobile device.
+            this._bindGlobalEvents(event);
+            this._focusHostElement();
+            this._updateValueFromPosition(pointerPosition);
+            this._valueOnSlideStart = oldValue;
+
+            // Emit a change and input event if the value changed.
+            if (oldValue != this.value) {
+              this._emitInputEvent();
+            }
+          }
+        });
       }
-    });
-  }
 
   /**
    * Called when the user has moved their pointer after
    * starting to drag. Bound on the document level.
    */
-  private _pointerMove = (event: TouchEvent | MouseEvent) => {
-    if (this._isSliding === 'pointer') {
-      const pointerPosition = getPointerPositionOnPage(event, this._touchId);
+  private _pointerMove =
+      (event: TouchEvent|MouseEvent) => {
+        if (this._isSliding === 'pointer') {
+          const pointerPosition = getPointerPositionOnPage(event, this._touchId);
 
-      if (pointerPosition) {
-        // Prevent the slide from selecting anything else.
-        event.preventDefault();
-        const oldValue = this.value;
-        this._lastPointerEvent = event;
-        this._updateValueFromPosition(pointerPosition);
+          if (pointerPosition) {
+            // Prevent the slide from selecting anything else.
+            event.preventDefault();
+            const oldValue = this.value;
+            this._lastPointerEvent = event;
+            this._updateValueFromPosition(pointerPosition);
 
-        // Native range elements always emit `input` events when the value changed while sliding.
-        if (oldValue != this.value) {
-          this._emitInputEvent();
+            // Native range elements always emit `input` events when the value changed while
+            // sliding.
+            if (oldValue != this.value) {
+              this._emitInputEvent();
+            }
+          }
         }
       }
-    }
-  }
 
   /** Called when the user has lifted their pointer. Bound on the document level. */
-  private _pointerUp = (event: TouchEvent | MouseEvent) => {
-    if (this._isSliding === 'pointer') {
-      if (!isTouchEvent(event) || typeof this._touchId !== 'number' ||
-          // Note that we use `changedTouches`, rather than `touches` because it
-          // seems like in most cases `touches` is empty for `touchend` events.
-          findMatchingTouch(event.changedTouches, this._touchId)) {
-        event.preventDefault();
-        this._removeGlobalEvents();
-        this._isSliding = null;
-        this._touchId = undefined;
+  private _pointerUp =
+      (event: TouchEvent|MouseEvent) => {
+        if (this._isSliding === 'pointer') {
+          if (!isTouchEvent(event) || typeof this._touchId !== 'number' ||
+              // Note that we use `changedTouches`, rather than `touches` because it
+              // seems like in most cases `touches` is empty for `touchend` events.
+              findMatchingTouch(event.changedTouches, this._touchId)) {
+            event.preventDefault();
+            this._removeGlobalEvents();
+            this._isSliding = null;
+            this._touchId = undefined;
 
-        if (this._valueOnSlideStart != this.value && !this.disabled) {
-          this._emitChangeEvent();
+            if (this._valueOnSlideStart != this.value && !this.disabled) {
+              this._emitChangeEvent();
+            }
+
+            this._valueOnSlideStart = this._lastPointerEvent = null;
+          }
         }
-
-        this._valueOnSlideStart = this._lastPointerEvent = null;
       }
-    }
-  }
 
   /** Called when the window has lost focus. */
-  private _windowBlur = () => {
-    // If the window is blurred while dragging we need to stop dragging because the
-    // browser won't dispatch the `mouseup` and `touchend` events anymore.
-    if (this._lastPointerEvent) {
-      this._pointerUp(this._lastPointerEvent);
-    }
-  }
+  private _windowBlur =
+      () => {
+        // If the window is blurred while dragging we need to stop dragging because the
+        // browser won't dispatch the `mouseup` and `touchend` events anymore.
+        if (this._lastPointerEvent) {
+          this._pointerUp(this._lastPointerEvent);
+        }
+      }
 
   /** Use defaultView of injected document if available or fallback to global window reference */
   private _getWindow(): Window {
@@ -721,7 +740,7 @@ export class MatSlider extends _MatSliderBase
    * dragging so that the user doesn't have to keep their pointer exactly over the slider
    * as they're swiping across the screen.
    */
-  private _bindGlobalEvents(triggerEvent: TouchEvent | MouseEvent) {
+  private _bindGlobalEvents(triggerEvent: TouchEvent|MouseEvent) {
     // Note that we bind the events to the `document`, because it allows us to capture
     // drag cancel events where the user's pointer is outside the browser window.
     const document = this._document;
@@ -840,7 +859,7 @@ export class MatSlider extends _MatSliderBase
   }
 
   /** Calculates the percentage of the slider that a value is. */
-  private _calculatePercentage(value: number | null) {
+  private _calculatePercentage(value: number|null) {
     return ((value || 0) - this.min) / (this.max - this.min);
   }
 
@@ -924,7 +943,7 @@ export class MatSlider extends _MatSliderBase
 }
 
 /** Returns whether an event is a touch event. */
-function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
+function isTouchEvent(event: MouseEvent|TouchEvent): event is TouchEvent {
   // This function is called for every pixel that the user has dragged so we need it to be
   // as fast as possible. Since we only bind mouse events and touch events, we can assume
   // that if the event's name starts with `t`, it's a touch event.
@@ -932,7 +951,7 @@ function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
 }
 
 /** Gets the coordinates of a touch or mouse event relative to the viewport. */
-function getPointerPositionOnPage(event: MouseEvent | TouchEvent, id: number|undefined) {
+function getPointerPositionOnPage(event: MouseEvent|TouchEvent, id: number|undefined) {
   let point: {clientX: number, clientY: number}|undefined;
 
   if (isTouchEvent(event)) {
@@ -953,7 +972,7 @@ function getPointerPositionOnPage(event: MouseEvent | TouchEvent, id: number|und
 }
 
 /** Finds a `Touch` with a specific ID in a `TouchList`. */
-function findMatchingTouch(touches: TouchList, id: number): Touch | undefined {
+function findMatchingTouch(touches: TouchList, id: number): Touch|undefined {
   for (let i = 0; i < touches.length; i++) {
     if (touches[i].identifier === id) {
       return touches[i];
@@ -965,7 +984,7 @@ function findMatchingTouch(touches: TouchList, id: number): Touch | undefined {
 
 
 /** Gets the unique ID of a touch that matches a specific slider. */
-function getTouchIdForSlider(event: TouchEvent, sliderHost: HTMLElement): number | undefined {
+function getTouchIdForSlider(event: TouchEvent, sliderHost: HTMLElement): number|undefined {
   for (let i = 0; i < event.touches.length; i++) {
     const target = event.touches[i].target as HTMLElement;
 

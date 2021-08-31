@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessPredicate, ComponentHarness} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+
 import {CalendarCellHarnessFilters} from './datepicker-harness-filters';
 
 /** Harness for interacting with a standard Material calendar cell in tests. */
@@ -24,31 +25,44 @@ export class MatCalendarCellHarness extends ComponentHarness {
    */
   static with(options: CalendarCellHarnessFilters = {}): HarnessPredicate<MatCalendarCellHarness> {
     return new HarnessPredicate(MatCalendarCellHarness, options)
-      .addOption('text', options.text, (harness, text) => {
-        return HarnessPredicate.stringMatches(harness.getText(), text);
-      })
-      .addOption('selected', options.selected, async (harness, selected) => {
-        return (await harness.isSelected()) === selected;
-      })
-      .addOption('active', options.active, async (harness, active) => {
-        return (await harness.isActive()) === active;
-      })
-      .addOption('disabled', options.disabled, async (harness, disabled) => {
-        return (await harness.isDisabled()) === disabled;
-      })
-      .addOption('today', options.today, async (harness, today) => {
-        return (await harness.isToday()) === today;
-      })
-      .addOption('inRange', options.inRange, async (harness, inRange) => {
-        return (await harness.isInRange()) === inRange;
-      })
-      .addOption('inComparisonRange', options.inComparisonRange,
-          async (harness, inComparisonRange) => {
-            return (await harness.isInComparisonRange()) === inComparisonRange;
-          })
-      .addOption('inPreviewRange', options.inPreviewRange, async (harness, inPreviewRange) => {
-        return (await harness.isInPreviewRange()) === inPreviewRange;
-      });
+        .addOption(
+            'text', options.text,
+            (harness, text) => {
+              return HarnessPredicate.stringMatches(harness.getText(), text);
+            })
+        .addOption(
+            'selected', options.selected,
+            async (harness, selected) => {
+              return (await harness.isSelected()) === selected;
+            })
+        .addOption(
+            'active', options.active,
+            async (harness, active) => {
+              return (await harness.isActive()) === active;
+            })
+        .addOption(
+            'disabled', options.disabled,
+            async (harness, disabled) => {
+              return (await harness.isDisabled()) === disabled;
+            })
+        .addOption(
+            'today', options.today,
+            async (harness, today) => {
+              return (await harness.isToday()) === today;
+            })
+        .addOption(
+            'inRange', options.inRange,
+            async (harness, inRange) => {
+              return (await harness.isInRange()) === inRange;
+            })
+        .addOption(
+            'inComparisonRange', options.inComparisonRange,
+            async (harness, inComparisonRange) => {
+              return (await harness.isInComparisonRange()) === inComparisonRange;
+            })
+        .addOption('inPreviewRange', options.inPreviewRange, async (harness, inPreviewRange) => {
+          return (await harness.isInPreviewRange()) === inPreviewRange;
+        });
   }
 
   /** Gets the text of the calendar cell. */

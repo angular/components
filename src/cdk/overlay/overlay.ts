@@ -45,18 +45,14 @@ export class Overlay {
   private _appRef: ApplicationRef;
 
   constructor(
-              /** Scrolling strategies that can be used when creating an overlay. */
-              public scrollStrategies: ScrollStrategyOptions,
-              private _overlayContainer: OverlayContainer,
-              private _componentFactoryResolver: ComponentFactoryResolver,
-              private _positionBuilder: OverlayPositionBuilder,
-              private _keyboardDispatcher: OverlayKeyboardDispatcher,
-              private _injector: Injector,
-              private _ngZone: NgZone,
-              @Inject(DOCUMENT) private _document: any,
-              private _directionality: Directionality,
-              private _location: Location,
-              private _outsideClickDispatcher: OverlayOutsideClickDispatcher) { }
+      /** Scrolling strategies that can be used when creating an overlay. */
+      public scrollStrategies: ScrollStrategyOptions, private _overlayContainer: OverlayContainer,
+      private _componentFactoryResolver: ComponentFactoryResolver,
+      private _positionBuilder: OverlayPositionBuilder,
+      private _keyboardDispatcher: OverlayKeyboardDispatcher, private _injector: Injector,
+      private _ngZone: NgZone, @Inject(DOCUMENT) private _document: any,
+      private _directionality: Directionality, private _location: Location,
+      private _outsideClickDispatcher: OverlayOutsideClickDispatcher) {}
 
   /**
    * Creates an overlay.
@@ -71,8 +67,9 @@ export class Overlay {
 
     overlayConfig.direction = overlayConfig.direction || this._directionality.value;
 
-    return new OverlayRef(portalOutlet, host, pane, overlayConfig, this._ngZone,
-      this._keyboardDispatcher, this._document, this._location, this._outsideClickDispatcher);
+    return new OverlayRef(
+        portalOutlet, host, pane, overlayConfig, this._ngZone, this._keyboardDispatcher,
+        this._document, this._location, this._outsideClickDispatcher);
   }
 
   /**
@@ -121,7 +118,7 @@ export class Overlay {
       this._appRef = this._injector.get<ApplicationRef>(ApplicationRef);
     }
 
-    return new DomPortalOutlet(pane, this._componentFactoryResolver, this._appRef, this._injector,
-                               this._document);
+    return new DomPortalOutlet(
+        pane, this._componentFactoryResolver, this._appRef, this._injector, this._document);
   }
 }

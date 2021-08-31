@@ -14,21 +14,15 @@ import {CdkScrollable} from './scrollable';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
-@NgModule({
-  exports: [CdkScrollable],
-  declarations: [CdkScrollable]
-})
-export class CdkScrollableModule {}
+@NgModule({exports: [CdkScrollable], declarations: [CdkScrollable]})
+export class CdkScrollableModule {
+}
 
 /**
  * @docs-primary-export
  */
 @NgModule({
-  imports: [
-    BidiModule,
-    PlatformModule,
-    CdkScrollableModule
-  ],
+  imports: [BidiModule, PlatformModule, CdkScrollableModule],
   exports: [
     BidiModule,
     CdkScrollableModule,
@@ -42,4 +36,5 @@ export class CdkScrollableModule {}
     CdkVirtualScrollViewport,
   ],
 })
-export class ScrollingModule {}
+export class ScrollingModule {
+}

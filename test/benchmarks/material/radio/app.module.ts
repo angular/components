@@ -7,8 +7,8 @@
  */
 
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {MatRadioModule} from '@angular/material/radio';
+import {BrowserModule} from '@angular/platform-browser';
 
 /** component: mat-radio-button */
 
@@ -46,11 +46,19 @@ export class RadioBenchmarkApp {
   isTwoVisible = false;
   isTenVisible = false;
 
-  showTwo() { this.isTwoVisible = true; }
-  hideTwo() { this.isTwoVisible = false; }
+  showTwo() {
+    this.isTwoVisible = true;
+  }
+  hideTwo() {
+    this.isTwoVisible = false;
+  }
 
-  showTen() { this.isTenVisible = true; }
-  hideTen() { this.isTenVisible = false; }
+  showTen() {
+    this.isTenVisible = true;
+  }
+  hideTen() {
+    this.isTenVisible = false;
+  }
 }
 
 @NgModule({
@@ -61,4 +69,5 @@ export class RadioBenchmarkApp {
   ],
   bootstrap: [RadioBenchmarkApp],
 })
-export class AppModule {}
+export class AppModule {
+}

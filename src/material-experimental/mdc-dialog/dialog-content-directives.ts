@@ -50,8 +50,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   constructor(
       // The dialog title directive is always used in combination with a `MatDialogRef`.
       // tslint:disable-next-line: lightweight-tokens
-      @Optional() public dialogRef: MatDialogRef<any>,
-      private _elementRef: ElementRef<HTMLElement>,
+      @Optional() public dialogRef: MatDialogRef<any>, private _elementRef: ElementRef<HTMLElement>,
       private _dialog: MatDialog) {}
 
   ngOnInit() {
@@ -78,8 +77,9 @@ export class MatDialogClose implements OnInit, OnChanges {
     // result in incorrect origins. Most of the time, close buttons will be auto focused in the
     // dialog, and therefore clicking the button won't result in a focus change. This means that
     // the FocusMonitor won't detect any origin change, and will always output `program`.
-    _closeDialogVia(this.dialogRef,
-      event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse', this.dialogResult);
+    _closeDialogVia(
+        this.dialogRef, event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse',
+        this.dialogResult);
   }
 }
 
@@ -101,8 +101,7 @@ export class MatDialogTitle implements OnInit {
       // The dialog title directive is always used in combination with a `MatDialogRef`.
       // tslint:disable-next-line: lightweight-tokens
       @Optional() private _dialogRef: MatDialogRef<any>,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _dialog: MatDialog) {}
+      private _elementRef: ElementRef<HTMLElement>, private _dialog: MatDialog) {}
 
   ngOnInit() {
     if (!this._dialogRef) {

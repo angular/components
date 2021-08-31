@@ -7,8 +7,9 @@
  */
 
 import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {TabGroupHarnessFilters, TabHarnessFilters} from './tab-harness-filters';
+
 import {MatTabHarness} from './tab-harness';
+import {TabGroupHarnessFilters, TabHarnessFilters} from './tab-harness-filters';
 
 /** Harness for interacting with a standard mat-tab-group in tests. */
 export class MatTabGroupHarness extends ComponentHarness {

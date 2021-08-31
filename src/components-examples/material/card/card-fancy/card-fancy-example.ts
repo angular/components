@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'card-fancy-example.html',
   styleUrls: ['card-fancy-example.css'],
 })
-export class CardFancyExample {}
+export class CardFancyExample {
+}

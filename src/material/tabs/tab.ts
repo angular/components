@@ -12,21 +12,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
+  Inject,
+  InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Optional,
   SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  InjectionToken,
-  Inject,
-  Optional,
 } from '@angular/core';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs';
+
 import {MAT_TAB_CONTENT} from './tab-content';
 import {MAT_TAB_LABEL, MatTabLabel} from './tab-label';
 
@@ -53,8 +54,12 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MAT_TAB_LABEL)
-  get templateLabel(): MatTabLabel { return this._templateLabel; }
-  set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  get templateLabel(): MatTabLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: MatTabLabel) {
+    this._setTemplateLabelInput(value);
+  }
   protected _templateLabel: MatTabLabel;
 
   /**
@@ -79,10 +84,10 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
   @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal | null = null;
+  private _contentPortal: TemplatePortal|null = null;
 
   /** @docs-private */
-  get content(): TemplatePortal | null {
+  get content(): TemplatePortal|null {
     return this._contentPortal;
   }
 
@@ -93,13 +98,13 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
    * The relatively indexed position where 0 represents the center, negative is left, and positive
    * represents the right.
    */
-  position: number | null = null;
+  position: number|null = null;
 
   /**
    * The initial relatively index origin of the tab if it was created and selected after there
    * was already a selected tab. Provides context of what position the tab should originate from.
    */
-  origin: number | null = null;
+  origin: number|null = null;
 
   /**
    * Whether the tab is currently active.
@@ -107,8 +112,8 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
   isActive = false;
 
   constructor(
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any) {
+      private _viewContainerRef: ViewContainerRef,
+      @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any) {
     super();
   }
 
@@ -123,8 +128,8 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
   }
 
   ngOnInit(): void {
-    this._contentPortal = new TemplatePortal(
-        this._explicitContent || this._implicitContent, this._viewContainerRef);
+    this._contentPortal =
+        new TemplatePortal(this._explicitContent || this._implicitContent, this._viewContainerRef);
   }
 
   /**

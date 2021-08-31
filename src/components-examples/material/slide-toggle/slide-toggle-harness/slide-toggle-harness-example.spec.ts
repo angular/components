@@ -1,30 +1,33 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 import {SlideToggleHarnessExample} from './slide-toggle-harness-example';
-import {ReactiveFormsModule} from '@angular/forms';
 
 describe('SlideToggleHarnessExample', () => {
   let fixture: ComponentFixture<SlideToggleHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, ReactiveFormsModule],
-      declarations: [SlideToggleHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatSlideToggleModule, ReactiveFormsModule],
+          declarations: [SlideToggleHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(SlideToggleHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -36,8 +39,8 @@ describe('SlideToggleHarnessExample', () => {
   });
 
   it('should load slide-toggle with name', async () => {
-    const slideToggles = await loader.getAllHarnesses(
-      MatSlideToggleHarness.with({name: 'first-name'}));
+    const slideToggles =
+        await loader.getAllHarnesses(MatSlideToggleHarness.with({name: 'first-name'}));
     expect(slideToggles.length).toBe(1);
     expect(await slideToggles[0].getLabelText()).toBe('First');
   });

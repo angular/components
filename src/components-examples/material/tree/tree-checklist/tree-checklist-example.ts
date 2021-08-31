@@ -27,17 +27,9 @@ const TREE_DATA = {
     'Almond Meal flour': null,
     'Organic eggs': null,
     'Protein Powder': null,
-    Fruits: {
-      Apple: null,
-      Berries: ['Blueberry', 'Raspberry'],
-      Orange: null
-    }
+    Fruits: {Apple: null, Berries: ['Blueberry', 'Raspberry'], Orange: null}
   },
-  Reminders: [
-    'Cook dinner',
-    'Read the Material Design spec',
-    'Upgrade Application to Angular'
-  ]
+  Reminders: ['Cook dinner', 'Read the Material Design spec', 'Upgrade Application to Angular']
 };
 
 /**
@@ -49,7 +41,9 @@ const TREE_DATA = {
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<TodoItemNode[]>([]);
 
-  get data(): TodoItemNode[] { return this.dataChange.value; }
+  get data(): TodoItemNode[] {
+    return this.dataChange.value;
+  }
 
   constructor() {
     this.initialize();
@@ -117,7 +111,7 @@ export class TreeChecklistExample {
   nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
 
   /** A selected parent node to be inserted */
-  selectedParent: TodoItemFlatNode | null = null;
+  selectedParent: TodoItemFlatNode|null = null;
 
   /** The new item's name */
   newItemName = '';
@@ -132,8 +126,8 @@ export class TreeChecklistExample {
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
   constructor(private _database: ChecklistDatabase) {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-      this.isExpandable, this.getChildren);
+    this.treeFlattener =
+        new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -155,18 +149,18 @@ export class TreeChecklistExample {
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
-  transformer = (node: TodoItemNode, level: number) => {
-    const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.item === node.item
-        ? existingNode
-        : new TodoItemFlatNode();
-    flatNode.item = node.item;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children?.length;
-    this.flatNodeMap.set(flatNode, node);
-    this.nestedNodeMap.set(node, flatNode);
-    return flatNode;
-  }
+  transformer =
+      (node: TodoItemNode, level: number) => {
+        const existingNode = this.nestedNodeMap.get(node);
+        const flatNode =
+            existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
+        flatNode.item = node.item;
+        flatNode.level = level;
+        flatNode.expandable = !!node.children?.length;
+        this.flatNodeMap.set(flatNode, node);
+        this.nestedNodeMap.set(node, flatNode);
+        return flatNode;
+      }
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TodoItemFlatNode): boolean {
@@ -188,9 +182,8 @@ export class TreeChecklistExample {
   todoItemSelectionToggle(node: TodoItemFlatNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
-    this.checklistSelection.isSelected(node)
-      ? this.checklistSelection.select(...descendants)
-      : this.checklistSelection.deselect(...descendants);
+    this.checklistSelection.isSelected(node) ? this.checklistSelection.select(...descendants) :
+                                               this.checklistSelection.deselect(...descendants);
 
     // Force update for the parent
     descendants.forEach(child => this.checklistSelection.isSelected(child));
@@ -205,7 +198,7 @@ export class TreeChecklistExample {
 
   /* Checks all the parents when a leaf node is selected/unselected */
   checkAllParentsSelection(node: TodoItemFlatNode): void {
-    let parent: TodoItemFlatNode | null = this.getParentNode(node);
+    let parent: TodoItemFlatNode|null = this.getParentNode(node);
     while (parent) {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
@@ -227,7 +220,7 @@ export class TreeChecklistExample {
   }
 
   /* Get the parent node of a node */
-  getParentNode(node: TodoItemFlatNode): TodoItemFlatNode | null {
+  getParentNode(node: TodoItemFlatNode): TodoItemFlatNode|null {
     const currentLevel = this.getLevel(node);
 
     if (currentLevel < 1) {

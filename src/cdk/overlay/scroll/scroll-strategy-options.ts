@@ -29,12 +29,10 @@ export class ScrollStrategyOptions {
   private _document: Document;
 
   constructor(
-    private _scrollDispatcher: ScrollDispatcher,
-    private _viewportRuler: ViewportRuler,
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) document: any) {
-      this._document = document;
-    }
+      private _scrollDispatcher: ScrollDispatcher, private _viewportRuler: ViewportRuler,
+      private _ngZone: NgZone, @Inject(DOCUMENT) document: any) {
+    this._document = document;
+  }
 
   /** Do nothing on scroll. */
   noop = () => new NoopScrollStrategy();
@@ -43,8 +41,8 @@ export class ScrollStrategyOptions {
    * Close the overlay as soon as the user scrolls.
    * @param config Configuration to be used inside the scroll strategy.
    */
-  close = (config?: CloseScrollStrategyConfig) => new CloseScrollStrategy(this._scrollDispatcher,
-      this._ngZone, this._viewportRuler, config)
+  close = (config?: CloseScrollStrategyConfig) =>
+      new CloseScrollStrategy(this._scrollDispatcher, this._ngZone, this._viewportRuler, config)
 
   /** Block scrolling. */
   block = () => new BlockScrollStrategy(this._viewportRuler, this._document);

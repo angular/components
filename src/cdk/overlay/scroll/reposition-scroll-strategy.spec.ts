@@ -1,13 +1,14 @@
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {Component, NgModule} from '@angular/core';
-import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
+import {Component, NgModule} from '@angular/core';
+import {inject, TestBed, waitForAsync} from '@angular/core/testing';
+import {Subject} from 'rxjs';
+
 import {
   Overlay,
+  OverlayConfig,
   OverlayContainer,
   OverlayModule,
   OverlayRef,
-  OverlayConfig,
   ScrollDispatcher,
 } from '../index';
 
@@ -21,11 +22,8 @@ describe('RepositionScrollStrategy', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, OverlayTestModule],
-      providers: [
-        {provide: ScrollDispatcher, useFactory: () => ({
-          scrolled: () => scrolledSubject
-        })}
-      ]
+      providers:
+          [{provide: ScrollDispatcher, useFactory: () => ({scrolled: () => scrolledSubject})}]
     });
 
     TestBed.compileComponents();
@@ -42,9 +40,8 @@ describe('RepositionScrollStrategy', () => {
   }));
 
   it('should update the overlay position when the page is scrolled', () => {
-    const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition()
-    });
+    const overlayConfig =
+        new OverlayConfig({scrollStrategy: overlay.scrollStrategies.reposition()});
 
     overlayRef = overlay.create(overlayConfig);
     overlayRef.attach(componentPortal);
@@ -58,9 +55,8 @@ describe('RepositionScrollStrategy', () => {
   });
 
   it('should not be updating the position after the overlay is detached', () => {
-    const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition()
-    });
+    const overlayConfig =
+        new OverlayConfig({scrollStrategy: overlay.scrollStrategies.reposition()});
 
     overlayRef = overlay.create(overlayConfig);
     overlayRef.attach(componentPortal);
@@ -73,9 +69,8 @@ describe('RepositionScrollStrategy', () => {
   });
 
   it('should not be updating the position after the overlay is destroyed', () => {
-    const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition()
-    });
+    const overlayConfig =
+        new OverlayConfig({scrollStrategy: overlay.scrollStrategies.reposition()});
 
     overlayRef = overlay.create(overlayConfig);
     overlayRef.attach(componentPortal);
@@ -88,35 +83,27 @@ describe('RepositionScrollStrategy', () => {
   });
 
   it('should be able to close the overlay once it is out of view', () => {
-    const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition({
-        autoClose: true
-      })
-    });
+    const overlayConfig =
+        new OverlayConfig({scrollStrategy: overlay.scrollStrategies.reposition({autoClose: true})});
 
     overlayRef = overlay.create(overlayConfig);
     overlayRef.attach(componentPortal);
     spyOn(overlayRef, 'updatePosition');
     spyOn(overlayRef, 'detach');
-    spyOn(overlayRef.overlayElement, 'getBoundingClientRect').and.returnValue({
-      top: -1000,
-      bottom: -900,
-      left: 0,
-      right: 100,
-      width: 100,
-      height: 100
-    } as DOMRect);
+    spyOn(overlayRef.overlayElement, 'getBoundingClientRect')
+        .and.returnValue(
+            {top: -1000, bottom: -900, left: 0, right: 100, width: 100, height: 100} as DOMRect);
 
     scrolledSubject.next();
     expect(overlayRef.detach).toHaveBeenCalledTimes(1);
   });
-
 });
 
 
 /** Simple component that we can attach to the overlay. */
 @Component({template: '<p>Pasta</p>'})
-class PastaMsg { }
+class PastaMsg {
+}
 
 
 /** Test module to hold the component. */
@@ -125,4 +112,5 @@ class PastaMsg { }
   declarations: [PastaMsg],
   entryComponents: [PastaMsg],
 })
-class OverlayTestModule { }
+class OverlayTestModule {
+}

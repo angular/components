@@ -1,12 +1,13 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
   fakeAsync,
   inject,
   TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
+
 import {ContentObserver, MutationObserverFactory, ObserversModule} from './observe-content';
 
 describe('Observe content directive', () => {
@@ -61,9 +62,7 @@ describe('Observe content directive', () => {
       // MutationObserver and check that the methods are called at the right time.
       TestBed.overrideProvider(MutationObserverFactory, {
         deps: [],
-        useFactory: () => ({
-          create: () => ({observe: observeSpy, disconnect: disconnectSpy})
-        })
+        useFactory: () => ({create: () => ({observe: observeSpy, disconnect: disconnectSpy})})
       });
 
       const fixture = TestBed.createComponent(ComponentWithTextContent);
@@ -78,7 +77,6 @@ describe('Observe content directive', () => {
       expect(observeSpy).toHaveBeenCalledTimes(1);
       expect(disconnectSpy).toHaveBeenCalledTimes(1);
     });
-
   });
 
   describe('debounced', () => {
@@ -98,10 +96,7 @@ describe('Observe content directive', () => {
             create: function(callback: Function) {
               callbacks.push(callback);
 
-              return {
-                observe: () => {},
-                disconnect: () => {}
-              };
+              return {observe: () => {}, disconnect: () => {}};
             }
           }
         }]
@@ -114,13 +109,13 @@ describe('Observe content directive', () => {
     }));
 
     it('should debounce the content changes', fakeAsync(() => {
-      invokeCallbacks();
-      invokeCallbacks();
-      invokeCallbacks();
+         invokeCallbacks();
+         invokeCallbacks();
+         invokeCallbacks();
 
-      tick(500);
-      expect(fixture.componentInstance.spy).toHaveBeenCalledTimes(1);
-    }));
+         tick(500);
+         expect(fixture.componentInstance.spy).toHaveBeenCalledTimes(1);
+       }));
   });
 });
 
@@ -142,10 +137,7 @@ describe('ContentObserver injectable', () => {
             create: function(callback: Function) {
               callbacks.push(callback);
 
-              return {
-                observe: () => {},
-                disconnect: () => {}
-              };
+              return {observe: () => {}, disconnect: () => {}};
             }
           }
         }]
@@ -159,47 +151,45 @@ describe('ContentObserver injectable', () => {
     }));
 
     it('should trigger the callback when the content of the element changes', fakeAsync(() => {
-      const spy = jasmine.createSpy('content observer');
-      const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
-      fixture.detectChanges();
+         const spy = jasmine.createSpy('content observer');
+         const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+         fixture.detectChanges();
 
-      contentObserver.observe(fixture.componentInstance.contentEl)
-          .subscribe(() => spy());
+         contentObserver.observe(fixture.componentInstance.contentEl).subscribe(() => spy());
 
-      expect(spy).not.toHaveBeenCalled();
+         expect(spy).not.toHaveBeenCalled();
 
-      fixture.componentInstance.text = 'text';
-      invokeCallbacks();
+         fixture.componentInstance.text = 'text';
+         invokeCallbacks();
 
-      expect(spy).toHaveBeenCalled();
-    }));
+         expect(spy).toHaveBeenCalled();
+       }));
 
     it('should only create one MutationObserver when observing the same element twice',
-        fakeAsync(inject([MutationObserverFactory], (mof: MutationObserverFactory) => {
-          const spy = jasmine.createSpy('content observer');
-          spyOn(mof, 'create').and.callThrough();
-          const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
-          fixture.detectChanges();
+       fakeAsync(inject([MutationObserverFactory], (mof: MutationObserverFactory) => {
+         const spy = jasmine.createSpy('content observer');
+         spyOn(mof, 'create').and.callThrough();
+         const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+         fixture.detectChanges();
 
-          const sub1 = contentObserver.observe(fixture.componentInstance.contentEl)
-              .subscribe(() => spy());
-          contentObserver.observe(fixture.componentInstance.contentEl)
-              .subscribe(() => spy());
+         const sub1 =
+             contentObserver.observe(fixture.componentInstance.contentEl).subscribe(() => spy());
+         contentObserver.observe(fixture.componentInstance.contentEl).subscribe(() => spy());
 
-          expect(mof.create).toHaveBeenCalledTimes(1);
+         expect(mof.create).toHaveBeenCalledTimes(1);
 
-          fixture.componentInstance.text = 'text';
-          invokeCallbacks();
+         fixture.componentInstance.text = 'text';
+         invokeCallbacks();
 
-          expect(spy).toHaveBeenCalledTimes(2);
+         expect(spy).toHaveBeenCalledTimes(2);
 
-          spy.calls.reset();
-          sub1.unsubscribe();
-          fixture.componentInstance.text = 'text text';
-          invokeCallbacks();
+         spy.calls.reset();
+         sub1.unsubscribe();
+         fixture.componentInstance.text = 'text text';
+         invokeCallbacks();
 
-          expect(spy).toHaveBeenCalledTimes(1);
-        })));
+         expect(spy).toHaveBeenCalledTimes(1);
+       })));
   });
 });
 
@@ -217,23 +207,20 @@ class ComponentWithTextContent {
   doSomething() {}
 }
 
-@Component({ template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>` })
+@Component({template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>`})
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}
 }
 
-@Component({
-  template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`
-})
+@Component(
+    {template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`})
 class ComponentWithDebouncedListener {
   debounce = 500;
   spy = jasmine.createSpy('MutationObserver callback');
 }
 
-@Component({
-  template: `<div #contentEl>{{text}}</div>`
-})
+@Component({template: `<div #contentEl>{{text}}</div>`})
 class UnobservedComponentWithTextContent {
   @ViewChild('contentEl') contentEl: ElementRef;
   text = '';

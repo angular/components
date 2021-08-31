@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Component} from '@angular/core';
 
 /**
  * @title Drag&Drop custom preview
@@ -18,11 +18,13 @@ export class CdkDragDropCustomPreviewExample {
     },
     {
       title: 'Episode II - Attack of the Clones',
-      poster: 'https://upload.wikimedia.org/wikipedia/en/3/32/Star_Wars_-_Episode_II_Attack_of_the_Clones_%28movie_poster%29.jpg'
+      poster:
+          'https://upload.wikimedia.org/wikipedia/en/3/32/Star_Wars_-_Episode_II_Attack_of_the_Clones_%28movie_poster%29.jpg'
     },
     {
       title: 'Episode III - Revenge of the Sith',
-      poster: 'https://upload.wikimedia.org/wikipedia/en/9/93/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg'
+      poster:
+          'https://upload.wikimedia.org/wikipedia/en/9/93/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg'
     },
     {
       title: 'Episode IV - A New Hope',
@@ -38,7 +40,8 @@ export class CdkDragDropCustomPreviewExample {
     },
     {
       title: 'Episode VII - The Force Awakens',
-      poster: 'https://upload.wikimedia.org/wikipedia/en/a/a2/Star_Wars_The_Force_Awakens_Theatrical_Poster.jpg'
+      poster:
+          'https://upload.wikimedia.org/wikipedia/en/a/a2/Star_Wars_The_Force_Awakens_Theatrical_Poster.jpg'
     },
     {
       title: 'Episode VIII - The Last Jedi',
@@ -46,7 +49,8 @@ export class CdkDragDropCustomPreviewExample {
     },
     {
       title: 'Episode IX – The Rise of Skywalker',
-      poster: 'https://upload.wikimedia.org/wikipedia/en/a/af/Star_Wars_The_Rise_of_Skywalker_poster.jpg'
+      poster:
+          'https://upload.wikimedia.org/wikipedia/en/a/af/Star_Wars_The_Rise_of_Skywalker_poster.jpg'
     }
   ];
   // tslint:enable:max-line-length

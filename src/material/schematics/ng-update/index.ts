@@ -89,15 +89,15 @@ export function updateToV13(): Rule {
 }
 
 /** Function that will be called when the migration completed. */
-function onMigrationComplete(context: SchematicContext, targetVersion: TargetVersion,
-                             hasFailures: boolean) {
+function onMigrationComplete(
+    context: SchematicContext, targetVersion: TargetVersion, hasFailures: boolean) {
   context.logger.info('');
   context.logger.info(`  ✓  Updated Angular Material to ${targetVersion}`);
   context.logger.info('');
 
   if (hasFailures) {
     context.logger.warn(
-      '  ⚠  Some issues were detected but could not be fixed automatically. Please check the ' +
-      'output above and fix these issues manually.');
+        '  ⚠  Some issues were detected but could not be fixed automatically. Please check the ' +
+        'output above and fix these issues manually.');
   }
 }

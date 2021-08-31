@@ -31,5 +31,5 @@ if (channelName !== undefined) {
 }
 
 echo(JSON.stringify(payload, null, 2))
-  .exec(`curl -d@- -H "Content-Type: application/json" ${webhookUrl}`);
+    .exec(`curl -d@- -H "Content-Type: application/json" ${webhookUrl}`);
 console.info('Notified Slack about job failure.');

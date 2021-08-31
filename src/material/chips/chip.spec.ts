@@ -1,12 +1,14 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
-import {createKeyboardEvent, dispatchFakeEvent} from '../../cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
-import {MatChip, MatChipEvent, MatChipSelectionChange, MatChipsModule, MatChipList} from './index';
+
+import {createKeyboardEvent, dispatchFakeEvent} from '../../cdk/testing/private';
+
+import {MatChip, MatChipEvent, MatChipList, MatChipSelectionChange, MatChipsModule} from './index';
 
 
 describe('MatChip', () => {
@@ -29,10 +31,7 @@ describe('MatChip', () => {
       ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-        {provide: Directionality, useFactory: () => ({
-          value: dir,
-          change: new Subject()
-        })},
+        {provide: Directionality, useFactory: () => ({value: dir, change: new Subject()})},
       ]
     });
 
@@ -86,7 +85,6 @@ describe('MatChip', () => {
     });
 
     describe('basic behaviors', () => {
-
       it('adds the `mat-chip` class', () => {
         expect(chipNativeElement.classList).toContain('mat-chip');
       });
@@ -98,7 +96,7 @@ describe('MatChip', () => {
       it('emits focus only once for multiple clicks', () => {
         let counter = 0;
         chipInstance._onFocus.subscribe(() => {
-          counter ++ ;
+          counter++;
         });
 
         chipNativeElement.focus();
@@ -191,17 +189,18 @@ describe('MatChip', () => {
       });
 
       it('should not dispatch `selectionChange` event when selecting a selected chip via ' +
-        'user interaction', () => {
-          chipInstance.select();
+             'user interaction',
+         () => {
+           chipInstance.select();
 
-          const spy = jasmine.createSpy('selectionChange spy');
-          const subscription = chipInstance.selectionChange.subscribe(spy);
+           const spy = jasmine.createSpy('selectionChange spy');
+           const subscription = chipInstance.selectionChange.subscribe(spy);
 
-          chipInstance.selectViaInteraction();
+           chipInstance.selectViaInteraction();
 
-          expect(spy).not.toHaveBeenCalled();
-          subscription.unsubscribe();
-        });
+           expect(spy).not.toHaveBeenCalled();
+           subscription.unsubscribe();
+         });
 
       it('should not dispatch `selectionChange` through setter if the value did not change', () => {
         chipInstance.selected = false;
@@ -217,12 +216,14 @@ describe('MatChip', () => {
 
       it('should be able to disable ripples through ripple global options at runtime', () => {
         expect(chipInstance.rippleDisabled)
-          .withContext('Expected chip ripples to be enabled.').toBe(false);
+            .withContext('Expected chip ripples to be enabled.')
+            .toBe(false);
 
         globalRippleOptions.disabled = true;
 
         expect(chipInstance.rippleDisabled)
-          .withContext('Expected chip ripples to be disabled.').toBe(true);
+            .withContext('Expected chip ripples to be disabled.')
+            .toBe(true);
       });
 
       it('should return the chip text if value is undefined', () => {
@@ -245,7 +246,6 @@ describe('MatChip', () => {
     });
 
     describe('keyboard behavior', () => {
-
       describe('when selectable is true', () => {
         beforeEach(() => {
           testComponent.selectable = true;
@@ -254,17 +254,11 @@ describe('MatChip', () => {
 
         it('should selects/deselects the currently focused chip on SPACE', () => {
           const SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
-          const CHIP_SELECTED_EVENT: MatChipSelectionChange = {
-            source: chipInstance,
-            isUserInput: true,
-            selected: true
-          };
+          const CHIP_SELECTED_EVENT:
+              MatChipSelectionChange = {source: chipInstance, isUserInput: true, selected: true};
 
-          const CHIP_DESELECTED_EVENT: MatChipSelectionChange = {
-            source: chipInstance,
-            isUserInput: true,
-            selected: false
-          };
+          const CHIP_DESELECTED_EVENT:
+              MatChipSelectionChange = {source: chipInstance, isUserInput: true, selected: false};
 
           spyOn(testComponent, 'chipSelectionChange');
 
@@ -305,7 +299,6 @@ describe('MatChip', () => {
 
           expect(chipNativeElement.getAttribute('aria-selected')).toBe('true');
         });
-
       });
 
       describe('when selectable is false', () => {
@@ -411,7 +404,6 @@ describe('MatChip', () => {
 
         expect(chipNativeElement.getAttribute('tabindex')).toBeFalsy();
       });
-
     });
 
     it('should have a focus indicator', () => {
@@ -451,21 +443,15 @@ class SingleChip {
   chipRemove: (event?: MatChipEvent) => void = () => {};
 }
 
-@Component({
-  template: `<mat-basic-chip>Hello</mat-basic-chip>`
-})
+@Component({template: `<mat-basic-chip>Hello</mat-basic-chip>`})
 class BasicChip {
 }
 
-@Component({
-  template: `<mat-basic-chip tabindex="3">Hello</mat-basic-chip>`
-})
+@Component({template: `<mat-basic-chip tabindex="3">Hello</mat-basic-chip>`})
 class BasicChipWithStaticTabindex {
 }
 
-@Component({
-  template: `<mat-basic-chip [tabIndex]="tabindex">Hello</mat-basic-chip>`
-})
+@Component({template: `<mat-basic-chip [tabIndex]="tabindex">Hello</mat-basic-chip>`})
 class BasicChipWithBoundTabindex {
   tabindex = 12;
 }

@@ -6,16 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OverlayModule} from '@angular/cdk/overlay';
 import {A11yModule} from '@angular/cdk/a11y';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {CdkScrollableModule} from '@angular/cdk/scrolling';
+
 import {
+  MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
   MatTooltip,
   TooltipComponent,
-  MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
 } from './tooltip';
 
 @NgModule({
@@ -30,4 +31,5 @@ import {
   entryComponents: [TooltipComponent],
   providers: [MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
-export class MatTooltipModule {}
+export class MatTooltipModule {
+}

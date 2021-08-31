@@ -7,17 +7,18 @@ import {MatCardHarness, MatCardSection} from '@angular/material/card/testing/car
 
 /** Shared tests to run on both the original and MDC-based cards. */
 export function runHarnessTests(
-    cardModule: typeof MatCardModule,
-    cardHarness: typeof MatCardHarness,
+    cardModule: typeof MatCardModule, cardHarness: typeof MatCardHarness,
     contentSelectors: {header: string, content: string, actions: string, footer: string}) {
   let fixture: ComponentFixture<CardHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [cardModule],
-      declarations: [CardHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [cardModule],
+          declarations: [CardHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(CardHarnessTest);
     fixture.detectChanges();
@@ -50,27 +51,21 @@ export function runHarnessTests(
   it('should get card text', async () => {
     const cards = await loader.getAllHarnesses(cardHarness);
     expect(await parallel(() => cards.map(c => c.getText()))).toEqual([
-       '',
-       'Shiba InuDog Breed The Shiba Inu is the smallest of the six original and distinct spitz' +
-       ' breeds of dog from Japan. A small, agile dog that copes very well with mountainous' +
-       ' terrain, the Shiba Inu was originally bred for hunting. LIKESHAREWoof woof!'
+      '',
+      'Shiba InuDog Breed The Shiba Inu is the smallest of the six original and distinct spitz' +
+          ' breeds of dog from Japan. A small, agile dog that copes very well with mountainous' +
+          ' terrain, the Shiba Inu was originally bred for hunting. LIKESHAREWoof woof!'
     ]);
   });
 
   it('should get title text', async () => {
     const cards = await loader.getAllHarnesses(cardHarness);
-    expect(await parallel(() => cards.map(c => c.getTitleText()))).toEqual([
-      '',
-      'Shiba Inu'
-    ]);
+    expect(await parallel(() => cards.map(c => c.getTitleText()))).toEqual(['', 'Shiba Inu']);
   });
 
   it('should get subtitle text', async () => {
     const cards = await loader.getAllHarnesses(cardHarness);
-    expect(await parallel(() => cards.map(c => c.getSubtitleText()))).toEqual([
-      '',
-      'Dog Breed'
-    ]);
+    expect(await parallel(() => cards.map(c => c.getSubtitleText()))).toEqual(['', 'Dog Breed']);
   });
 
   it('should get a harness loader for the card header', async () => {
@@ -135,9 +130,9 @@ export function runHarnessTests(
       </mat-card>
   `
 })
-class CardHarnessTest {}
+class CardHarnessTest {
+}
 
 export class DummyHarness extends ComponentHarness {
   static hostSelector = 'div, p, button';
 }
-

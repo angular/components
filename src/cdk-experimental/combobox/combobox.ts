@@ -7,8 +7,8 @@
  */
 
 
-export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
-export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
+export type OpenAction = 'focus'|'click'|'downKey'|'toggle';
+export type OpenActionInput = OpenAction|OpenAction[]|string|null|undefined;
 
 import {
   AfterContentInit,
@@ -18,7 +18,8 @@ import {
   Input,
   OnDestroy,
   Optional,
-  Output, ViewContainerRef
+  Output,
+  ViewContainerRef
 } from '@angular/core';
 import {CdkComboboxPanel, AriaHasPopupValue} from './combobox-panel';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -55,16 +56,23 @@ const allowedOpenActions = ['focus', 'click', 'downKey', 'toggle'];
 })
 export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   @Input('cdkComboboxTriggerFor')
-  get panel(): CdkComboboxPanel<T> | undefined { return this._panel; }
-  set panel(panel: CdkComboboxPanel<T> | undefined) { this._panel = panel; }
-  private _panel: CdkComboboxPanel<T> | undefined;
+  get panel(): CdkComboboxPanel<T>|undefined {
+    return this._panel;
+  }
+  set panel(panel: CdkComboboxPanel<T>|undefined) {
+    this._panel = panel;
+  }
+  private _panel: CdkComboboxPanel<T>|undefined;
+
+  @Input() value: T|T[];
 
   @Input()
-  value: T | T[];
-
-  @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled: boolean = false;
 
   @Input()
@@ -78,14 +86,18 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   /** Whether the textContent is automatically updated upon change of the combobox value. */
   @Input()
-  get autoSetText(): boolean { return this._autoSetText; }
-  set autoSetText(value: boolean) { this._autoSetText = coerceBooleanProperty(value); }
+  get autoSetText(): boolean {
+    return this._autoSetText;
+  }
+  set autoSetText(value: boolean) {
+    this._autoSetText = coerceBooleanProperty(value);
+  }
   private _autoSetText: boolean = true;
 
   @Output('comboboxPanelOpened') readonly opened: EventEmitter<void> = new EventEmitter<void>();
   @Output('comboboxPanelClosed') readonly closed: EventEmitter<void> = new EventEmitter<void>();
-  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]>
-      = new EventEmitter<T[]>();
+  @Output('panelValueChanged')
+  readonly panelValueChanged: EventEmitter<T[]> = new EventEmitter<T[]>();
 
   private _overlayRef: OverlayRef;
   private _panelContent: TemplatePortal;
@@ -93,11 +105,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   contentType: AriaHasPopupValue;
 
   constructor(
-    private readonly _elementRef: ElementRef<HTMLElement>,
-    private readonly _overlay: Overlay,
-    protected readonly _viewContainerRef: ViewContainerRef,
-    @Optional() private readonly _directionality?: Directionality
-  ) {}
+      private readonly _elementRef: ElementRef<HTMLElement>, private readonly _overlay: Overlay,
+      protected readonly _viewContainerRef: ViewContainerRef,
+      @Optional() private readonly _directionality?: Directionality) {}
 
   ngAfterContentInit() {
     this._panel?.valueUpdated.subscribe(data => {
@@ -215,12 +225,11 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return !!this.panel;
   }
 
-  _getTabIndex(): string | null {
+  _getTabIndex(): string|null {
     return this.disabled ? null : '0';
   }
 
-  private _setComboboxValue(value: T | T[]) {
-
+  private _setComboboxValue(value: T|T[]) {
     const valueChanged = (this.value !== value);
     this.value = value;
 
@@ -232,7 +241,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
-  private _setTextContent(content: T | T[]) {
+  private _setTextContent(content: T|T[]) {
     const contentArray = coerceArray(content);
     this._elementRef.nativeElement.textContent = contentArray.join(' ');
   }
@@ -252,8 +261,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
 
   private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
-    return this._overlay
-        .position()
+    return this._overlay.position()
         .flexibleConnectedTo(this._elementRef)
         .withPositions(this._getOverlayPositions());
   }
@@ -276,10 +284,10 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this._panelContent;
   }
 
-  private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
+  private _coerceOpenActionProperty(input: string|OpenAction[]): OpenAction[] {
     let actions = typeof input === 'string' ? input.trim().split(/[ ,]+/) : input;
     if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
-      actions.some(a => allowedOpenActions.indexOf(a) === -1)) {
+        actions.some(a => allowedOpenActions.indexOf(a) === -1)) {
       throw Error(`${input} is not a support open action for CdkCombobox`);
     }
     return actions as OpenAction[];

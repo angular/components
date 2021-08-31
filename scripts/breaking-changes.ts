@@ -1,8 +1,8 @@
-import {join, relative} from 'path';
-import {readFileSync} from 'fs';
 import * as chalk from 'chalk';
-import * as ts from 'typescript';
+import {readFileSync} from 'fs';
+import {join, relative} from 'path';
 import * as tsutils from 'tsutils';
+import * as ts from 'typescript';
 
 const projectRoot = process.cwd();
 
@@ -20,8 +20,8 @@ const summary: {[version: string]: string[]} = {};
 
 // Go through all the TS files in the project.
 parsedConfig.fileNames.forEach((fileName: string) => {
-  const sourceFile = ts.createSourceFile(fileName, readFileSync(fileName, 'utf8'),
-      configFile.languageVersion);
+  const sourceFile =
+      ts.createSourceFile(fileName, readFileSync(fileName, 'utf8'), configFile.languageVersion);
   const lineRanges = tsutils.getLineRanges(sourceFile);
 
   // Go through each of the comments of the file.
@@ -65,10 +65,7 @@ function formatMessage(comment: string, commentRange: ts.CommentRange, lines: ts
   const lineNumber = lines.findIndex(line => line.pos > commentRange.pos);
   const messageMatch = comment.match(/@deprecated(.*)|@breaking-change(.*)/);
   const message = messageMatch ? messageMatch[0] : '';
-  const cleanMessage = message
-    .replace(/[\*\/\r\n]|@[\w-]+/g, '')
-    .replace(versionRegex, '')
-    .trim();
+  const cleanMessage = message.replace(/[\*\/\r\n]|@[\w-]+/g, '').replace(versionRegex, '').trim();
 
   return `Line ${lineNumber}, ${cleanMessage || 'No message'}`;
 }
@@ -95,10 +92,7 @@ function hasExpired(currentVersion: string, breakingChange: string) {
   const target = parseVersion(breakingChange);
 
   return target.major < current.major ||
-        (target.major === current.major && target.minor < current.minor) ||
-        (
-          target.major === current.major &&
-          target.minor === current.minor &&
-          target.patch < current.patch
-        );
+      (target.major === current.major && target.minor < current.minor) ||
+      (target.major === current.major && target.minor === current.minor &&
+       target.patch < current.patch);
 }

@@ -21,7 +21,7 @@ export class MatDrawerContentHarness extends ContentContainerComponentHarness<st
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DrawerContentHarnessFilters = {}):
-    HarnessPredicate<MatDrawerContentHarness> {
+      HarnessPredicate<MatDrawerContentHarness> {
     return new HarnessPredicate(MatDrawerContentHarness, options);
   }
 }

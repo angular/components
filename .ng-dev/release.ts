@@ -1,12 +1,13 @@
 import {BuiltPackage, ReleaseConfig} from '@angular/dev-infra-private/ng-dev/release/config';
 import {ReleaseAction} from '@angular/dev-infra-private/ng-dev/release/publish/actions';
-import {SemVer} from 'semver';
-import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output';
-import {fork} from 'child_process';
-import {join} from 'path';
 import {
   FatalReleaseActionError
 } from '@angular/dev-infra-private/ng-dev/release/publish/actions-error';
+import {fork} from 'child_process';
+import {join} from 'path';
+import {SemVer} from 'semver';
+
+import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output';
 
 const actionProto = ReleaseAction.prototype as any;
 const _origStageFn = actionProto.stageVersionForBranchAndCreatePullRequest;
@@ -20,8 +21,8 @@ async function runStagingReleaseChecks(newVersion: SemVer) {
     // directly call into the release checks, the `.ng-dev/release` config would be
     // cached by NodeJS and release checks would potentially check for packages which
     // no longer exist in the publish branch (or the other way around).
-    const releaseChecksProcess = fork(
-      join(__dirname, '../tools/release-checks/index.js'), [newVersion.format()]);
+    const releaseChecksProcess =
+        fork(join(__dirname, '../tools/release-checks/index.js'), [newVersion.format()]);
 
     releaseChecksProcess.on('close', code => {
       if (code !== 0) {

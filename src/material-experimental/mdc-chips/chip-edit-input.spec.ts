@@ -1,7 +1,8 @@
 import {Component, DebugElement} from '@angular/core';
-import {waitForAsync, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MatChipEditInput, MatChipsModule} from './index';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
+import {MatChipEditInput, MatChipsModule} from './index';
 
 
 describe('MDC-based MatChipEditInput', () => {
@@ -49,4 +50,5 @@ describe('MDC-based MatChipEditInput', () => {
 @Component({
   template: `<span matChipEditInput></span>`,
 })
-class ChipEditInputContainer {}
+class ChipEditInputContainer {
+}

@@ -6,12 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessPredicate, ComponentHarness} from '@angular/cdk/testing';
-import {CalendarHarnessFilters, CalendarCellHarnessFilters} from './datepicker-harness-filters';
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+
 import {MatCalendarCellHarness} from './calendar-cell-harness';
+import {CalendarCellHarnessFilters, CalendarHarnessFilters} from './datepicker-harness-filters';
 
 /** Possible views of a `MatCalendarHarness`. */
-export const enum CalendarView {MONTH, YEAR, MULTI_YEAR}
+export const enum CalendarView {
+  MONTH,
+  YEAR,
+  MULTI_YEAR
+}
 
 /** Harness for interacting with a standard Material calendar in tests. */
 export class MatCalendarHarness extends ComponentHarness {

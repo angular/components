@@ -16,15 +16,10 @@ import {MatListOptionCheckboxPosition} from '@angular/material/list';
   styleUrls: ['list-demo.css'],
 })
 export class ListDemo {
-  items: string[] = [
-    'Pepper',
-    'Salt',
-    'Paprika'
-  ];
+  items: string[] = ['Pepper', 'Salt', 'Paprika'];
 
   contacts: {name: string, headline: string}[] = [
-    {name: 'Nancy', headline: 'Software engineer'},
-    {name: 'Mary', headline: 'TPM'},
+    {name: 'Nancy', headline: 'Software engineer'}, {name: 'Mary', headline: 'TPM'},
     {name: 'Bobby', headline: 'UX designer'}
   ];
 
@@ -52,10 +47,7 @@ export class ListDemo {
   ];
 
   links: {name: string}[] = [
-    {name: 'Inbox'},
-    {name: 'Outbox'},
-    {name: 'Spam'},
-    {name: 'Trash'}
+    {name: 'Inbox'}, {name: 'Outbox'}, {name: 'Spam'}, {name: 'Trash'}
 
   ];
 

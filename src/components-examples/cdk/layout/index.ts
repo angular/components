@@ -20,4 +20,3 @@ const EXAMPLES = [
 })
 export class CdkLayoutExamplesModule {
 }
-

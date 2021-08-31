@@ -6,19 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  Output,
-  EventEmitter,
-  ContentChildren,
-  AfterContentInit,
-  QueryList,
-  OnDestroy,
-} from '@angular/core';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
+import {
+  AfterContentInit,
+  ContentChildren,
+  Directive,
+  EventEmitter,
+  OnDestroy,
+  Output,
+  QueryList,
+} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
-import {CdkMenuItemSelectable} from './menu-item-selectable';
+
 import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemSelectable} from './menu-item-selectable';
 
 /**
  * Directive which acts as a grouping container for `CdkMenuItem` instances with
@@ -63,9 +64,8 @@ export class CdkMenuGroup implements AfterContentInit, OnDestroy {
 
   /** Register each selectable to emit on the change Emitter when clicked */
   private _registerClickListener(selectable: CdkMenuItemSelectable) {
-    selectable.toggled
-      .pipe(takeUntil(this._selectableChanges))
-      .subscribe(() => this.change.next(selectable));
+    selectable.toggled.pipe(takeUntil(this._selectableChanges))
+        .subscribe(() => this.change.next(selectable));
   }
 
   ngOnDestroy() {

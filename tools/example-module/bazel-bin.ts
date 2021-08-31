@@ -8,9 +8,9 @@ import {generateExampleModule} from './generate-example-module';
 if (require.main === module) {
   const [sourceFileManifest, outputFile, baseDir] = process.argv.slice(2);
   const sourceFiles = readFileSync(sourceFileManifest, 'utf8')
-    .split(' ')
-    .map(filePath => filePath.trim())
-    .filter(s => s.endsWith('.ts'));
+                          .split(' ')
+                          .map(filePath => filePath.trim())
+                          .filter(s => s.endsWith('.ts'));
 
   generateExampleModule(sourceFiles, outputFile, baseDir);
 }

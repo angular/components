@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {NodePackageInstallTask} from '@angular-devkit/schematics/tasks';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 
 import {UpdateProject} from '../update-tool';
 import {WorkspacePath} from '../update-tool/file-system';
@@ -107,7 +107,8 @@ export function createMigrationSchematicRule(
     // registered devkit migrations.
     migrations.forEach(m => {
       const actionResult = isDevkitMigration(m) && m.globalPostMigration !== undefined ?
-          m.globalPostMigration(tree, context) : null;
+          m.globalPostMigration(tree, context) :
+          null;
       if (actionResult) {
         runPackageManager = runPackageManager || actionResult.runPackageManager;
       }
@@ -126,9 +127,9 @@ export function createMigrationSchematicRule(
     }
 
     /** Runs the migrations for the specified workspace project. */
-    function runMigrations(project: ProjectDefinition, projectName: string,
-                           tsconfigPath: WorkspacePath, additionalStylesheetPaths: string[],
-                           isTestTarget: boolean) {
+    function runMigrations(
+        project: ProjectDefinition, projectName: string, tsconfigPath: WorkspacePath,
+        additionalStylesheetPaths: string[], isTestTarget: boolean) {
       const program = UpdateProject.createProgramFromTsconfig(tsconfigPath, fileSystem);
       const updateContext: DevkitContext = {
         isTestTarget,
@@ -138,15 +139,15 @@ export function createMigrationSchematicRule(
       };
 
       const updateProject = new UpdateProject(
-        updateContext,
-        program,
-        fileSystem,
-        analyzedFiles,
-        context.logger,
+          updateContext,
+          program,
+          fileSystem,
+          analyzedFiles,
+          context.logger,
       );
 
       const result =
-        updateProject.migrate(migrations, targetVersion, upgradeData, additionalStylesheetPaths);
+          updateProject.migrate(migrations, targetVersion, upgradeData, additionalStylesheetPaths);
 
       // Commit all recorded edits in the update recorder. We apply the edits after all
       // migrations ran because otherwise offsets in the TypeScript program would be
@@ -159,7 +160,7 @@ export function createMigrationSchematicRule(
 }
 
 /** Whether the given migration type refers to a devkit migration */
-export function isDevkitMigration(value: MigrationCtor<any, any>)
-    : value is DevkitMigrationCtor<any> {
+export function isDevkitMigration(value: MigrationCtor<any, any>):
+    value is DevkitMigrationCtor<any> {
   return DevkitMigration.isPrototypeOf(value);
 }

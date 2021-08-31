@@ -20,4 +20,5 @@ export const MAT_PREFIX = new InjectionToken<MatPrefix>('MatPrefix');
   selector: '[matPrefix]',
   providers: [{provide: MAT_PREFIX, useExisting: MatPrefix}],
 })
-export class MatPrefix {}
+export class MatPrefix {
+}

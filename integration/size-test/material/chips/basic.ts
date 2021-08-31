@@ -1,6 +1,6 @@
 import {Component, NgModule} from '@angular/core';
-import {platformBrowser} from '@angular/platform-browser';
 import {MatChipsModule} from '@angular/material/chips';
+import {platformBrowser} from '@angular/platform-browser';
 
 /**
  * Basic component using `MatChipList` and `MatChip`. Other supported parts of the
@@ -13,13 +13,15 @@ import {MatChipsModule} from '@angular/material/chips';
     </mat-chip-list>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatChipsModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}
 
 platformBrowser().bootstrapModule(AppModule);

@@ -10,14 +10,16 @@ import {DOCUMENT} from '@angular/common';
 import {
   Inject,
   Injectable,
-  Optional,
   NgZone,
+  Optional,
 } from '@angular/core';
+
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
+
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
-import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {EventListenerFocusTrapInertStrategy} from './event-listener-inert-strategy';
+import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {FocusTrapManager} from './focus-trap-manager';
 
 /** Factory that allows easy instantiation of configurable focus traps. */
@@ -27,12 +29,9 @@ export class ConfigurableFocusTrapFactory {
   private _inertStrategy: FocusTrapInertStrategy;
 
   constructor(
-      private _checker: InteractivityChecker,
-      private _ngZone: NgZone,
-      private _focusTrapManager: FocusTrapManager,
-      @Inject(DOCUMENT) _document: any,
+      private _checker: InteractivityChecker, private _ngZone: NgZone,
+      private _focusTrapManager: FocusTrapManager, @Inject(DOCUMENT) _document: any,
       @Optional() @Inject(FOCUS_TRAP_INERT_STRATEGY) _inertStrategy?: FocusTrapInertStrategy) {
-
     this._document = _document;
     // TODO split up the strategies into different modules, similar to DateAdapter.
     this._inertStrategy = _inertStrategy || new EventListenerFocusTrapInertStrategy();

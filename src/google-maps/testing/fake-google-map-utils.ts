@@ -31,9 +31,7 @@ export interface TestingWindow extends Window {
       DirectionsRenderer?: jasmine.Spy;
       DirectionsService?: jasmine.Spy;
       LatLng?: jasmine.Spy;
-      visualization?: {
-        HeatmapLayer?: jasmine.Spy;
-      }
+      visualization?: {HeatmapLayer?: jasmine.Spy;}
       Geocoder?: jasmine.Spy;
     };
   };
@@ -424,17 +422,49 @@ export function createBicyclingLayerConstructorSpy(
 
 /** Creates a jasmine.SpyObj for a MarkerClusterer */
 export function createMarkerClustererSpy(): jasmine.SpyObj<MarkerClusterer> {
-  const markerClustererSpy = jasmine.createSpyObj('MarkerClusterer', ['addListener',
-    'addMarkers', 'fitMapToMarkers', 'getAverageCenter', 'getBatchSizeIE',
-    'getCalculator', 'getClusterClass', 'getClusters', 'getEnableRetinaIcons',
-    'getGridSize', 'getIgnoreHidden', 'getImageExtension', 'getImagePath',
-    'getImageSizes', 'getMaxZoom', 'getMinimumClusterSize', 'getStyles',
-    'getTitle', 'getTotalClusters', 'getTotalMarkers', 'getZIndex', 'getZoomOnClick',
-    'removeMarkers', 'repaint', 'setAverageCenter', 'setBatchSizeIE',
-    'setCalculator', 'setClusterClass', 'setEnableRetinaIcons', 'setGridSize',
-    'setIgnoreHidden', 'setImageExtension', 'setImagePath', 'setImageSizes', 'setMap',
-    'setMaxZoom', 'setMinimumClusterSize', 'setStyles', 'setTitle', 'setZIndex',
-    'setZoomOnClick', 'setOptions',
+  const markerClustererSpy = jasmine.createSpyObj('MarkerClusterer', [
+    'addListener',
+    'addMarkers',
+    'fitMapToMarkers',
+    'getAverageCenter',
+    'getBatchSizeIE',
+    'getCalculator',
+    'getClusterClass',
+    'getClusters',
+    'getEnableRetinaIcons',
+    'getGridSize',
+    'getIgnoreHidden',
+    'getImageExtension',
+    'getImagePath',
+    'getImageSizes',
+    'getMaxZoom',
+    'getMinimumClusterSize',
+    'getStyles',
+    'getTitle',
+    'getTotalClusters',
+    'getTotalMarkers',
+    'getZIndex',
+    'getZoomOnClick',
+    'removeMarkers',
+    'repaint',
+    'setAverageCenter',
+    'setBatchSizeIE',
+    'setCalculator',
+    'setClusterClass',
+    'setEnableRetinaIcons',
+    'setGridSize',
+    'setIgnoreHidden',
+    'setImageExtension',
+    'setImagePath',
+    'setImageSizes',
+    'setMap',
+    'setMaxZoom',
+    'setMinimumClusterSize',
+    'setStyles',
+    'setTitle',
+    'setZIndex',
+    'setZoomOnClick',
+    'setOptions',
   ]);
   markerClustererSpy.addListener.and.returnValue({remove: () => {}});
   return markerClustererSpy;
@@ -442,9 +472,8 @@ export function createMarkerClustererSpy(): jasmine.SpyObj<MarkerClusterer> {
 
 /** Creates a jasmine.Spy to watch for the constructor of a MarkerClusterer */
 export function createMarkerClustererConstructorSpy(
-  markerClustererSpy: jasmine.SpyObj<MarkerClusterer>, apiLoaded = true): jasmine.Spy {
-  const markerClustererConstructorSpy = jasmine.createSpy('MarkerClusterer constructor',
-      () => {
+    markerClustererSpy: jasmine.SpyObj<MarkerClusterer>, apiLoaded = true): jasmine.Spy {
+  const markerClustererConstructorSpy = jasmine.createSpy('MarkerClusterer constructor', () => {
     return markerClustererSpy;
   });
   if (apiLoaded) {
@@ -457,20 +486,21 @@ export function createMarkerClustererConstructorSpy(
 /** Creates a jasmine.SpyObj for DirectionsRenderer */
 export function createDirectionsRendererSpy(options: google.maps.DirectionsRendererOptions):
     jasmine.SpyObj<google.maps.DirectionsRenderer> {
-  const directionsRendererSpy = jasmine.createSpyObj('google.maps.DirectionsRenderer',
-      ['addListener', 'getDirections', 'getPanel', 'getRouteIndex', 'setDirections', 'setMap',
-      'setOptions']);
-  directionsRendererSpy.addListener.and.returnValue({ remove: () => {} });
+  const directionsRendererSpy = jasmine.createSpyObj('google.maps.DirectionsRenderer', [
+    'addListener', 'getDirections', 'getPanel', 'getRouteIndex', 'setDirections', 'setMap',
+    'setOptions'
+  ]);
+  directionsRendererSpy.addListener.and.returnValue({remove: () => {}});
   return directionsRendererSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a DirectionsRenderer */
 export function createDirectionsRendererConstructorSpy(
     directionsRendererSpy: jasmine.SpyObj<google.maps.DirectionsRenderer>): jasmine.Spy {
-  const directionsRendererConstructorSpy = jasmine.createSpy('DirectionsRenderer constructor',
-      (_options: google.maps.DirectionsRendererOptions) => {
-    return directionsRendererSpy;
-  });
+  const directionsRendererConstructorSpy = jasmine.createSpy(
+      'DirectionsRenderer constructor', (_options: google.maps.DirectionsRendererOptions) => {
+        return directionsRendererSpy;
+      });
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['DirectionsRenderer'] = directionsRendererConstructorSpy;
@@ -510,9 +540,8 @@ export function createDirectionsServiceConstructorSpy(
 
 /** Creates a jasmine.SpyObj for a `google.maps.visualization.HeatmapLayer`. */
 export function createHeatmapLayerSpy(): jasmine.SpyObj<google.maps.visualization.HeatmapLayer> {
-  const heatmapLayerSpy = jasmine.createSpyObj('google.maps.visualization.HeatmapLayer', [
-    'setMap', 'setOptions', 'setData', 'getData'
-  ]);
+  const heatmapLayerSpy = jasmine.createSpyObj(
+      'google.maps.visualization.HeatmapLayer', ['setMap', 'setOptions', 'setData', 'getData']);
   return heatmapLayerSpy;
 }
 
@@ -550,8 +579,8 @@ export function createLatLngSpy(): jasmine.SpyObj<google.maps.LatLng> {
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.LatLng */
-export function createLatLngConstructorSpy(
-  latLngSpy: jasmine.SpyObj<google.maps.LatLng>): jasmine.Spy {
+export function createLatLngConstructorSpy(latLngSpy: jasmine.SpyObj<google.maps.LatLng>):
+    jasmine.Spy {
   const latLngConstructorSpy = jasmine.createSpy('LatLng constructor', () => latLngSpy);
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
@@ -572,8 +601,8 @@ export function createGeocoderSpy(): jasmine.SpyObj<google.maps.Geocoder> {
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of the Geocoder. */
-export function createGeocoderConstructorSpy(
-    geocoderSpy: jasmine.SpyObj<google.maps.Geocoder>): jasmine.Spy {
+export function createGeocoderConstructorSpy(geocoderSpy: jasmine.SpyObj<google.maps.Geocoder>):
+    jasmine.Spy {
   const geocoderConstructorSpy = jasmine.createSpy('Geocoder constructor', () => geocoderSpy);
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {

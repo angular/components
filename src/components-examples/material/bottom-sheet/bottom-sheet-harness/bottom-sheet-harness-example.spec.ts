@@ -1,30 +1,33 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatBottomSheetHarness} from '@angular/material/bottom-sheet/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MatBottomSheetHarness} from '@angular/material/bottom-sheet/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
-import {BottomSheetHarnessExample} from './bottom-sheet-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {BottomSheetHarnessExample} from './bottom-sheet-harness-example';
 
 describe('BottomSheetHarnessExample', () => {
   let fixture: ComponentFixture<BottomSheetHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true}
-    });
+    TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule, platformBrowserDynamicTesting(),
+        {teardown: {destroyAfterEach: true}});
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule],
-      declarations: [BottomSheetHarnessExample]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatBottomSheetModule, NoopAnimationsModule],
+          declarations: [BottomSheetHarnessExample]
+        })
+        .compileComponents();
     fixture = TestBed.createComponent(BottomSheetHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);

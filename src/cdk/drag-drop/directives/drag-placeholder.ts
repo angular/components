@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, TemplateRef, Input, InjectionToken} from '@angular/core';
+import {Directive, InjectionToken, Input, TemplateRef} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `CdkDragPlaceholder`. It serves as

@@ -7,13 +7,14 @@
  */
 
 import {
+  ApplicationRef,
   ComponentFactoryResolver,
   ComponentRef,
   EmbeddedViewRef,
-  ApplicationRef,
   Injector,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal, DomPortal} from './portal';
+
+import {BasePortalOutlet, ComponentPortal, DomPortal, TemplatePortal} from './portal';
 
 
 /**
@@ -25,10 +26,8 @@ export class DomPortalOutlet extends BasePortalOutlet {
 
   constructor(
       /** Element into which the content is projected. */
-      public outletElement: Element,
-      private _componentFactoryResolver: ComponentFactoryResolver,
-      private _appRef: ApplicationRef,
-      private _defaultInjector: Injector,
+      public outletElement: Element, private _componentFactoryResolver: ComponentFactoryResolver,
+      private _appRef: ApplicationRef, private _defaultInjector: Injector,
 
       /**
        * @deprecated `_document` Parameter to be made required.
@@ -55,8 +54,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // and then manually attach the view to the application.
     if (portal.viewContainerRef) {
       componentRef = portal.viewContainerRef.createComponent(
-          componentFactory,
-          portal.viewContainerRef.length,
+          componentFactory, portal.viewContainerRef.length,
           portal.injector || portal.viewContainerRef.injector);
 
       this.setDisposeFn(() => componentRef.destroy());
@@ -141,7 +139,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
         anchorNode.parentNode.replaceChild(element, anchorNode);
       }
     });
-  }
+  };
 
   /**
    * Clears out a portal from the DOM.

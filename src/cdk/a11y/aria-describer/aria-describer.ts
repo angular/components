@@ -39,7 +39,7 @@ let nextId = 0;
 const messageRegistry = new Map<string|Element, RegisteredMessage>();
 
 /** Container for all registered messages. */
-let messagesContainer: HTMLElement | null = null;
+let messagesContainer: HTMLElement|null = null;
 
 /**
  * Utility that creates visually hidden elements with a message content. Useful for elements that
@@ -50,8 +50,7 @@ let messagesContainer: HTMLElement | null = null;
 export class AriaDescriber implements OnDestroy {
   private _document: Document;
 
-  constructor(
-    @Inject(DOCUMENT) _document: any) {
+  constructor(@Inject(DOCUMENT) _document: any) {
     this._document = _document;
   }
 
@@ -203,7 +202,7 @@ export class AriaDescriber implements OnDestroy {
   private _removeCdkDescribedByReferenceIds(element: Element) {
     // Remove all aria-describedby reference IDs that are prefixed by CDK_DESCRIBEDBY_ID_PREFIX
     const originalReferenceIds = getAriaReferenceIds(element, 'aria-describedby')
-        .filter(id => id.indexOf(CDK_DESCRIBEDBY_ID_PREFIX) != 0);
+                                     .filter(id => id.indexOf(CDK_DESCRIBEDBY_ID_PREFIX) != 0);
     element.setAttribute('aria-describedby', originalReferenceIds.join(' '));
   }
 

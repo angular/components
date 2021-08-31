@@ -1,10 +1,12 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import {RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {CdkMenuBar} from '@angular/cdk-experimental/menu';
+import {RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {MatMenuBarModule} from './menubar-module';
+
 import {MatMenuBar} from './menubar';
+import {MatMenuBarModule} from './menubar-module';
 
 describe('MatMenuBar', () => {
   let fixture: ComponentFixture<SimpleMatMenuBar>;
@@ -12,10 +14,12 @@ describe('MatMenuBar', () => {
   let nativeMatMenubar: HTMLElement;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatMenuBarModule],
-      declarations: [SimpleMatMenuBar],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [MatMenuBarModule],
+          declarations: [SimpleMatMenuBar],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

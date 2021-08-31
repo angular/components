@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
+import {FactoryProvider, Injectable, OnDestroy, Optional, SkipSelf} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {Observable, Subject} from 'rxjs';
 
@@ -20,17 +20,17 @@ export class DateRange<D> {
   private _disableStructuralEquivalency: never;
 
   constructor(
-    /** The start date of the range. */
-    readonly start: D | null,
-    /** The end date of the range. */
-    readonly end: D | null) {}
+      /** The start date of the range. */
+      readonly start: D|null,
+      /** The end date of the range. */
+      readonly end: D|null) {}
 }
 
 /**
  * Conditionally picks the date type, if a DateRange is passed in.
  * @docs-private
  */
-export type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
+export type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D>? D : NonNullable<T>;
 
 /**
  * Event emitted by the date selection model when its selection changes.
@@ -52,17 +52,16 @@ export interface DateSelectionModelChange<S> {
  * @docs-private
  */
 @Injectable()
-export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
-    implements OnDestroy {
+export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements
+    OnDestroy {
   private readonly _selectionChanged = new Subject<DateSelectionModelChange<S>>();
 
   /** Emits when the selection has changed. */
   selectionChanged: Observable<DateSelectionModelChange<S>> = this._selectionChanged;
 
   protected constructor(
-    /** The current selection. */
-    readonly selection: S,
-    protected _adapter: DateAdapter<D>) {
+      /** The current selection. */
+      readonly selection: S, protected _adapter: DateAdapter<D>) {
     this.selection = selection;
   }
 
@@ -86,7 +85,7 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
   }
 
   /** Adds a date to the current selection. */
-  abstract add(date: D | null): void;
+  abstract add(date: D|null): void;
 
   /** Checks whether the current selection is valid. */
   abstract isValid(): boolean;
@@ -103,7 +102,7 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
  * @docs-private
  */
 @Injectable()
-export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
+export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D|null, D> {
   constructor(adapter: DateAdapter<D>) {
     super(null, adapter);
   }
@@ -112,7 +111,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
    * Adds a date to the current selection. In the case of a single date selection, the added date
    * simply overwrites the previous selection
    */
-  add(date: D | null) {
+  add(date: D|null) {
     super.updateSelection(date, this);
   }
 
@@ -152,7 +151,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
    * fills in the next `null` value in the range. If both the start and the end already have a date,
    * the selection is reset so that the given date is the new `start` and the `end` is null.
    */
-  add(date: D | null): void {
+  add(date: D|null): void {
     let {start, end} = this.selection;
 
     if (start == null) {
@@ -179,12 +178,12 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
     // Complete ranges are only valid if both dates are valid and the start is before the end.
     if (start != null && end != null) {
       return this._isValidDateInstance(start) && this._isValidDateInstance(end) &&
-             this._adapter.compareDate(start, end) <= 0;
+          this._adapter.compareDate(start, end) <= 0;
     }
 
     // Partial ranges are valid if the start/end is valid.
     return (start == null || this._isValidDateInstance(start)) &&
-           (end == null || this._isValidDateInstance(end));
+        (end == null || this._isValidDateInstance(end));
   }
 
   /**

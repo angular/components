@@ -8,8 +8,8 @@
 
 import {Component, Directive} from '@angular/core';
 import {MAT_CHECKBOX_DEFAULT_OPTIONS} from '@angular/material/checkbox';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {ThemePalette} from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 export interface Task {
@@ -53,20 +53,21 @@ export class MatCheckboxDemoNestedChecklist {
     {
       name: 'Reminders',
       completed: false,
-      subtasks: [
-        {name: 'Cook Dinner', completed: false},
-        {name: 'Read the Material Design Spec', completed: false},
-        {name: 'Upgrade Application to Angular', completed: false}
-      ]
+      subtasks:
+          [
+            {name: 'Cook Dinner', completed: false},
+            {name: 'Read the Material Design Spec', completed: false},
+            {name: 'Upgrade Application to Angular', completed: false}
+          ]
     },
     {
       name: 'Groceries',
       completed: false,
-      subtasks: [
-        {name: 'Organic Eggs', completed: false},
-        {name: 'Protein Powder', completed: false},
-        {name: 'Almond Meal Flour', completed: false}
-      ]
+      subtasks:
+          [
+            {name: 'Organic Eggs', completed: false}, {name: 'Protein Powder', completed: false},
+            {name: 'Almond Meal Flour', completed: false}
+          ]
     }
   ];
 
@@ -76,7 +77,7 @@ export class MatCheckboxDemoNestedChecklist {
     return task.completed || (subtasks != null && subtasks.every(t => t.completed));
   }
 
-  someComplete(tasks: Task[] | undefined | null): boolean {
+  someComplete(tasks: Task[]|undefined|null): boolean {
     if (tasks == null) {
       return false;
     }
@@ -84,7 +85,7 @@ export class MatCheckboxDemoNestedChecklist {
     return numComplete > 0 && numComplete < tasks.length;
   }
 
-  setAllCompleted(tasks: Task[] | undefined | null, completed: boolean): void {
+  setAllCompleted(tasks: Task[]|undefined|null, completed: boolean): void {
     if (tasks == null) {
       return;
     }
@@ -101,7 +102,7 @@ export class CheckboxDemo {
   isIndeterminate: boolean = false;
   isChecked: boolean = false;
   isDisabled: boolean = false;
-  labelPosition: 'after' | 'before' = 'after';
+  labelPosition: 'after'|'before' = 'after';
   useAlternativeColor: boolean = false;
 
   demoRequired = false;

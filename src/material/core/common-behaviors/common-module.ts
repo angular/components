@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {VERSION as CDK_VERSION} from '@angular/cdk';
 import {HighContrastModeDetector} from '@angular/cdk/a11y';
 import {BidiModule} from '@angular/cdk/bidi';
-import {Inject, InjectionToken, isDevMode, NgModule, Optional, Version} from '@angular/core';
-import {VERSION as CDK_VERSION} from '@angular/cdk';
 import {DOCUMENT} from '@angular/common';
+import {Inject, InjectionToken, isDevMode, NgModule, Optional, Version} from '@angular/core';
 
 // Private version constant to circumvent test/build issues,
 // i.e. avoid core to depend on the @angular/material primary entry-point
@@ -33,7 +33,7 @@ export const MATERIAL_SANITY_CHECKS = new InjectionToken<SanityChecks>('mat-sani
  * Possible sanity checks that can be enabled. If set to
  * true/false, all checks will be enabled/disabled.
  */
-export type SanityChecks = boolean | GranularSanityChecks;
+export type SanityChecks = boolean|GranularSanityChecks;
 
 /** Object that can be used to configure the sanity checks granularly. */
 export interface GranularSanityChecks {
@@ -85,7 +85,7 @@ export class MatCommonModule {
   }
 
   /** Use defaultView of injected document if available or fallback to global window reference */
-  private _getWindow(): Window | null {
+  private _getWindow(): Window|null {
     const win = this._document.defaultView || window;
     return typeof win === 'object' && win ? win : null;
   }
@@ -116,9 +116,8 @@ export class MatCommonModule {
   private _checkDoctypeIsDefined(): void {
     if (this._checkIsEnabled('doctype') && !this._document.doctype) {
       console.warn(
-        'Current document does not have a doctype. This may cause ' +
-        'some Angular Material components not to behave as expected.'
-      );
+          'Current document does not have a doctype. This may cause ' +
+          'some Angular Material components not to behave as expected.');
     }
   }
 
@@ -142,10 +141,9 @@ export class MatCommonModule {
     // See: https://bugzilla.mozilla.org/show_bug.cgi?id=548397
     if (computedStyle && computedStyle.display !== 'none') {
       console.warn(
-        'Could not find Angular Material core theme. Most Material ' +
-        'components may not work as expected. For more info refer ' +
-        'to the theming guide: https://material.angular.io/guide/theming'
-      );
+          'Could not find Angular Material core theme. Most Material ' +
+          'components may not work as expected. For more info refer ' +
+          'to the theming guide: https://material.angular.io/guide/theming');
     }
 
     this._document.body.removeChild(testElement);
@@ -157,8 +155,7 @@ export class MatCommonModule {
       console.warn(
           'The Angular Material version (' + VERSION.full + ') does not match ' +
           'the Angular CDK version (' + CDK_VERSION.full + ').\n' +
-          'Please ensure the versions of these two packages exactly match.'
-      );
+          'Please ensure the versions of these two packages exactly match.');
     }
   }
 }

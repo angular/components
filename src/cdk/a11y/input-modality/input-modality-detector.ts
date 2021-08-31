@@ -7,11 +7,12 @@
  */
 
 import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
-import {Inject, Injectable, InjectionToken, OnDestroy, Optional, NgZone} from '@angular/core';
-import {normalizePassiveListenerOptions, Platform, _getEventTarget} from '@angular/cdk/platform';
+import {_getEventTarget, normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
+
 import {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
@@ -20,7 +21,7 @@ import {
 /**
  * The input modalities detected by this service. Null is used if the input modality is unknown.
  */
-export type InputModality = 'keyboard' | 'mouse' | 'touch' | null;
+export type InputModality = 'keyboard'|'mouse'|'touch'|null;
 
 /** Options to configure the behavior of the InputModalityDetector. */
 export interface InputModalityDetectorOptions {
@@ -33,7 +34,7 @@ export interface InputModalityDetectorOptions {
  * options.
  */
 export const INPUT_MODALITY_DETECTOR_OPTIONS =
-  new InjectionToken<InputModalityDetectorOptions>('cdk-input-modality-detector-options');
+    new InjectionToken<InputModalityDetectorOptions>('cdk-input-modality-detector-options');
 
 /**
  * Default options for the InputModalityDetector.
@@ -87,7 +88,7 @@ const modalityEventListenerOptions = normalizePassiveListenerOptions({
  * update the input modality to keyboard, but in general this service's behavior is largely
  * undefined.
  */
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class InputModalityDetector implements OnDestroy {
   /** Emits whenever an input modality is detected. */
   readonly modalityDetected: Observable<InputModality>;
@@ -104,7 +105,7 @@ export class InputModalityDetector implements OnDestroy {
    * The most recently detected input modality event target. Is null if no input modality has been
    * detected or if the associated event target is null for some unknown reason.
    */
-  _mostRecentTarget: HTMLElement | null = null;
+  _mostRecentTarget: HTMLElement|null = null;
 
   /** The underlying BehaviorSubject that emits whenever an input modality is detected. */
   private readonly _modality = new BehaviorSubject<InputModality>(null);
@@ -122,57 +123,63 @@ export class InputModalityDetector implements OnDestroy {
    * Handles keydown events. Must be an arrow function in order to preserve the context when it gets
    * bound.
    */
-  private _onKeydown = (event: KeyboardEvent) => {
-    // If this is one of the keys we should ignore, then ignore it and don't update the input
-    // modality to keyboard.
-    if (this._options?.ignoreKeys?.some(keyCode => keyCode === event.keyCode)) { return; }
+  private _onKeydown =
+      (event: KeyboardEvent) => {
+        // If this is one of the keys we should ignore, then ignore it and don't update the input
+        // modality to keyboard.
+        if (this._options?.ignoreKeys?.some(keyCode => keyCode === event.keyCode)) {
+          return;
+        }
 
-    this._modality.next('keyboard');
-    this._mostRecentTarget = _getEventTarget(event);
-  }
+        this._modality.next('keyboard');
+        this._mostRecentTarget = _getEventTarget(event);
+      }
 
   /**
    * Handles mousedown events. Must be an arrow function in order to preserve the context when it
    * gets bound.
    */
-  private _onMousedown = (event: MouseEvent) => {
-    // Touches trigger both touch and mouse events, so we need to distinguish between mouse events
-    // that were triggered via mouse vs touch. To do so, check if the mouse event occurs closely
-    // after the previous touch event.
-    if (Date.now() - this._lastTouchMs < TOUCH_BUFFER_MS) { return; }
+  private _onMousedown =
+      (event: MouseEvent) => {
+        // Touches trigger both touch and mouse events, so we need to distinguish between mouse
+        // events that were triggered via mouse vs touch. To do so, check if the mouse event occurs
+        // closely after the previous touch event.
+        if (Date.now() - this._lastTouchMs < TOUCH_BUFFER_MS) {
+          return;
+        }
 
-    // Fake mousedown events are fired by some screen readers when controls are activated by the
-    // screen reader. Attribute them to keyboard input modality.
-    this._modality.next(isFakeMousedownFromScreenReader(event) ? 'keyboard' : 'mouse');
-    this._mostRecentTarget = _getEventTarget(event);
-  }
+        // Fake mousedown events are fired by some screen readers when controls are activated by the
+        // screen reader. Attribute them to keyboard input modality.
+        this._modality.next(isFakeMousedownFromScreenReader(event) ? 'keyboard' : 'mouse');
+        this._mostRecentTarget = _getEventTarget(event);
+      }
 
   /**
    * Handles touchstart events. Must be an arrow function in order to preserve the context when it
    * gets bound.
    */
-  private _onTouchstart = (event: TouchEvent) => {
-    // Same scenario as mentioned in _onMousedown, but on touch screen devices, fake touchstart
-    // events are fired. Again, attribute to keyboard input modality.
-    if (isFakeTouchstartFromScreenReader(event)) {
-      this._modality.next('keyboard');
-      return;
-    }
+  private _onTouchstart =
+      (event: TouchEvent) => {
+        // Same scenario as mentioned in _onMousedown, but on touch screen devices, fake touchstart
+        // events are fired. Again, attribute to keyboard input modality.
+        if (isFakeTouchstartFromScreenReader(event)) {
+          this._modality.next('keyboard');
+          return;
+        }
 
-    // Store the timestamp of this touch event, as it's used to distinguish between mouse events
-    // triggered via mouse vs touch.
-    this._lastTouchMs = Date.now();
+        // Store the timestamp of this touch event, as it's used to distinguish between mouse events
+        // triggered via mouse vs touch.
+        this._lastTouchMs = Date.now();
 
-    this._modality.next('touch');
-    this._mostRecentTarget = _getEventTarget(event);
-  }
+        this._modality.next('touch');
+        this._mostRecentTarget = _getEventTarget(event);
+      }
 
   constructor(
       private readonly _platform: Platform,
       ngZone: NgZone,
       @Inject(DOCUMENT) document: Document,
-      @Optional() @Inject(INPUT_MODALITY_DETECTOR_OPTIONS)
-      options?: InputModalityDetectorOptions,
+      @Optional() @Inject(INPUT_MODALITY_DETECTOR_OPTIONS) options?: InputModalityDetectorOptions,
   ) {
     this._options = {
       ...INPUT_MODALITY_DETECTOR_DEFAULT_OPTIONS,
@@ -185,7 +192,9 @@ export class InputModalityDetector implements OnDestroy {
 
     // If we're not in a browser, this service should do nothing, as there's no relevant input
     // modality to detect.
-    if (!_platform.isBrowser) { return; }
+    if (!_platform.isBrowser) {
+      return;
+    }
 
     // Add the event listeners used to detect the user's input modality.
     ngZone.runOutsideAngular(() => {
@@ -196,7 +205,9 @@ export class InputModalityDetector implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (!this._platform.isBrowser) { return; }
+    if (!this._platform.isBrowser) {
+      return;
+    }
 
     document.removeEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
     document.removeEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);

@@ -64,16 +64,16 @@ export const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
 /** Change event that is being fired whenever the selected state of an option changes. */
 export class MatSelectionListChange {
   constructor(
-    /** Reference to the selection list that emitted the event. */
-    public source: MatSelectionList,
-    /**
-     * Reference to the option that has been changed.
-     * @deprecated Use `options` instead, because some events may change more than one option.
-     * @breaking-change 12.0.0
-     */
-    public option: MatListOption,
-    /** Reference to the options that have been changed. */
-    public options: MatListOption[]) {}
+      /** Reference to the selection list that emitted the event. */
+      public source: MatSelectionList,
+      /**
+       * Reference to the option that has been changed.
+       * @deprecated Use `options` instead, because some events may change more than one option.
+       * @breaking-change 12.0.0
+       */
+      public option: MatListOption,
+      /** Reference to the options that have been changed. */
+      public options: MatListOption[]) {}
 }
 
 /**
@@ -117,8 +117,8 @@ export type MatListOptionCheckboxPosition = 'before'|'after';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatListOption extends _MatListOptionBase implements AfterContentInit, OnDestroy,
-                                                                      OnInit, FocusableOption,
-                                                                      CanDisableRipple {
+                                                                 OnInit, FocusableOption,
+                                                                 CanDisableRipple {
   private _selected = false;
   private _disabled = false;
   private _hasFocus = false;
@@ -132,8 +132,7 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
    * Use to facilitate two-data binding to the `selected` property.
    * @docs-private
    */
-  @Output()
-  readonly selectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() readonly selectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** DOM element containing the item's text. */
   @ViewChild('text') _text: ElementRef;
@@ -143,8 +142,12 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
 
   /** Theme color of the list option. This sets the color of the checkbox. */
   @Input()
-  get color(): ThemePalette { return this._color || this.selectionList.color; }
-  set color(newValue: ThemePalette) { this._color = newValue; }
+  get color(): ThemePalette {
+    return this._color || this.selectionList.color;
+  }
+  set color(newValue: ThemePalette) {
+    this._color = newValue;
+  }
   private _color: ThemePalette;
 
   /**
@@ -154,13 +157,12 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
   private _inputsInitialized = false;
   /** Value of the option */
   @Input()
-  get value(): any { return this._value; }
+  get value(): any {
+    return this._value;
+  }
   set value(newValue: any) {
-    if (
-      this.selected &&
-      !this.selectionList.compareWith(newValue, this.value) &&
-      this._inputsInitialized
-    ) {
+    if (this.selected && !this.selectionList.compareWith(newValue, this.value) &&
+        this._inputsInitialized) {
       this.selected = false;
     }
 
@@ -170,7 +172,9 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return this._disabled || (this.selectionList && this.selectionList.disabled); }
+  get disabled() {
+    return this._disabled || (this.selectionList && this.selectionList.disabled);
+  }
   set disabled(value: any) {
     const newValue = coerceBooleanProperty(value);
 
@@ -182,7 +186,9 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
 
   /** Whether the option is selected. */
   @Input()
-  get selected(): boolean { return this.selectionList.selectedOptions.isSelected(this); }
+  get selected(): boolean {
+    return this.selectionList.selectedOptions.isSelected(this);
+  }
   set selected(value: boolean) {
     const isSelected = coerceBooleanProperty(value);
 
@@ -195,10 +201,10 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
     }
   }
 
-  constructor(private _element: ElementRef<HTMLElement>,
-              private _changeDetector: ChangeDetectorRef,
-              /** @docs-private */
-              @Inject(forwardRef(() => MatSelectionList)) public selectionList: MatSelectionList) {
+  constructor(
+      private _element: ElementRef<HTMLElement>, private _changeDetector: ChangeDetectorRef,
+      /** @docs-private */
+      @Inject(forwardRef(() => MatSelectionList)) public selectionList: MatSelectionList) {
     super();
   }
 
@@ -350,7 +356,9 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatSelectionList extends _MatSelectionListBase implements CanDisableRipple,
-  AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
+                                                                       AfterContentInit,
+                                                                       ControlValueAccessor,
+                                                                       OnDestroy, OnChanges {
   private _multiple = true;
   private _contentInitialized = false;
 
@@ -361,7 +369,8 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
   @ContentChildren(MatListOption, {descendants: true}) options: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
-  @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
+  @Output()
+  readonly selectionChange: EventEmitter<MatSelectionListChange> =
       new EventEmitter<MatSelectionListChange>();
 
   /**
@@ -382,7 +391,9 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
 
   /** Whether the selection list is disabled. */
   @Input()
-  get disabled(): boolean { return this._disabled; }
+  get disabled(): boolean {
+    return this._disabled;
+  }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
 
@@ -396,7 +407,9 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
 
   /** Whether selection is limited to one or multiple items (default multiple). */
   @Input()
-  get multiple(): boolean { return this._multiple; }
+  get multiple(): boolean {
+    return this._multiple;
+  }
   set multiple(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
@@ -432,26 +445,27 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
   /** Whether the list has been destroyed. */
   private _isDestroyed: boolean;
 
-  constructor(private _element: ElementRef<HTMLElement>,
-    // @breaking-change 11.0.0 Remove `tabIndex` parameter.
-    @Attribute('tabindex') tabIndex: string,
-    private _changeDetector: ChangeDetectorRef,
-    // @breaking-change 11.0.0 `_focusMonitor` parameter to become required.
-    private _focusMonitor?: FocusMonitor) {
+  constructor(
+      private _element: ElementRef<HTMLElement>,
+      // @breaking-change 11.0.0 Remove `tabIndex` parameter.
+      @Attribute('tabindex') tabIndex: string, private _changeDetector: ChangeDetectorRef,
+      // @breaking-change 11.0.0 `_focusMonitor` parameter to become required.
+      private _focusMonitor?: FocusMonitor) {
     super();
   }
 
   ngAfterContentInit(): void {
     this._contentInitialized = true;
 
-    this._keyManager = new FocusKeyManager<MatListOption>(this.options)
-      .withWrap()
-      .withTypeAhead()
-      .withHomeAndEnd()
-      // Allow disabled items to be focusable. For accessibility reasons, there must be a way for
-      // screenreader users, that allows reading the different options of the list.
-      .skipPredicate(() => false)
-      .withAllowedModifierKeys(['shiftKey']);
+    this._keyManager =
+        new FocusKeyManager<MatListOption>(this.options)
+            .withWrap()
+            .withTypeAhead()
+            .withHomeAndEnd()
+            // Allow disabled items to be focusable. For accessibility reasons, there must be a way
+            // for screenreader users, that allows reading the different options of the list.
+            .skipPredicate(() => false)
+            .withAllowedModifierKeys(['shiftKey']);
 
     if (this._value) {
       this._setOptionsFromValues(this._value);
@@ -484,19 +498,19 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
 
     // @breaking-change 11.0.0 Remove null assertion once _focusMonitor is required.
     this._focusMonitor?.monitor(this._element)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(origin => {
-        if (origin === 'keyboard' || origin === 'program') {
-          let toFocus = 0;
-          for (let i = 0; i < this.options.length; i++) {
-            if (this.options.get(i)?.selected) {
-              toFocus = i;
-              break;
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(origin => {
+          if (origin === 'keyboard' || origin === 'program') {
+            let toFocus = 0;
+            for (let i = 0; i < this.options.length; i++) {
+              if (this.options.get(i)?.selected) {
+                toFocus = i;
+                break;
+              }
             }
+            this._keyManager.setActiveItem(toFocus);
           }
-          this._keyManager.setActiveItem(toFocus);
-        }
-      });
+        });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -541,7 +555,7 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
    * Removes an option from the selection list and updates the active item.
    * @returns Currently-active item.
    */
-  _removeOptionFromList(option: MatListOption): MatListOption | null {
+  _removeOptionFromList(option: MatListOption): MatListOption|null {
     const optionIndex = this._getOptionIndex(option);
 
     if (optionIndex > -1 && this._keyManager.activeItemIndex === optionIndex) {
@@ -675,9 +689,7 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
    * and emits an event if anything changed.
    */
   private _setAllOptionsSelected(
-    isSelected: boolean,
-    skipDisabled?: boolean,
-    isUserInput?: boolean): MatListOption[] {
+      isSelected: boolean, skipDisabled?: boolean, isUserInput?: boolean): MatListOption[] {
     // Keep track of whether anything changed, because we only want to
     // emit the changed event when something actually changed.
     const changedOptions: MatListOption[] = [];

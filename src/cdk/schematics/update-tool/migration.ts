@@ -19,7 +19,7 @@ export interface MigrationFailure {
   position?: LineAndCharacter;
 }
 
-export type PostMigrationAction = void | {
+export type PostMigrationAction = void|{
   /** Whether the package manager should run upon migration completion. */
   runPackageManager: boolean;
 };

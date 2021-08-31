@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'toolbar-multirow-example.html',
   styleUrls: ['toolbar-multirow-example.css'],
 })
-export class ToolbarMultirowExample {}
+export class ToolbarMultirowExample {
+}

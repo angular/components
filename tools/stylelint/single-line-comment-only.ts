@@ -1,10 +1,10 @@
-import {createPlugin, utils} from 'stylelint';
 import {basename} from 'path';
+import {createPlugin, utils} from 'stylelint';
 
 const ruleName = 'material/single-line-comment-only';
 const messages = utils.ruleMessages(ruleName, {
   expected: () => 'Multi-line comments are not allowed (e.g. /* */). ' +
-                  'Use single-line comments instead (//).',
+      'Use single-line comments instead (//).',
 });
 
 /**
@@ -27,12 +27,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {filePatter
       // The `raws.inline` property isn't in the typing so we need to cast to any. Also allow
       // comments starting with `!` since they're used to tell minifiers to preserve the comment.
       if (!(comment.raws as any).inline && !comment.text.startsWith('!')) {
-        utils.report({
-          result,
-          ruleName,
-          message: messages.expected(),
-          node: comment
-        });
+        utils.report({result, ruleName, message: messages.expected(), node: comment});
       }
     });
   };

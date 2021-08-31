@@ -7,14 +7,15 @@
  */
 
 export {
-  MatMenuDefaultOptions,
+  _MatMenuBase,
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
-  _MatMenuBase,
+  MatMenuDefaultOptions,
 } from './menu';
 export {MatMenuItem} from './menu-item';
-export {MatMenuTrigger, MAT_MENU_SCROLL_STRATEGY} from './menu-trigger';
-export {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
+export {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
+export {MAT_MENU_SCROLL_STRATEGY, MatMenuTrigger} from './menu-trigger';
+
 export * from './menu-module';
 export * from './menu-animations';
 export * from './menu-content';

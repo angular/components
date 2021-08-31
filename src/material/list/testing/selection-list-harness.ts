@@ -83,7 +83,8 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
    */
   static with(options: ListOptionHarnessFilters = {}): HarnessPredicate<MatListOptionHarness> {
     return getListItemPredicate(MatListOptionHarness, options)
-        .addOption('is selected', options.selected,
+        .addOption(
+            'is selected', options.selected,
             async (harness, selected) => await harness.isSelected() === selected);
   }
 
@@ -91,8 +92,8 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
 
   /** Gets the position of the checkbox relative to the list option content. */
   async getCheckboxPosition(): Promise<MatListOptionCheckboxPosition> {
-    return await (await this._itemContent()).hasClass('mat-list-item-content-reverse') ?
-        'after' : 'before';
+    return await (await this._itemContent()).hasClass('mat-list-item-content-reverse') ? 'after' :
+                                                                                         'before';
   }
 
   /** Whether the list option is selected. */

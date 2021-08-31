@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'button-toggle-appearance-example.html',
   styleUrls: ['button-toggle-appearance-example.css'],
 })
-export class ButtonToggleAppearanceExample {}
+export class ButtonToggleAppearanceExample {
+}

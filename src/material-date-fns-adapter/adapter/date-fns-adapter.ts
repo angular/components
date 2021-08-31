@@ -9,21 +9,21 @@
 import {Inject, Injectable, Optional} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
-  Locale,
-  getMonth,
-  getYear,
+  addDays,
+  addMonths,
+  addYears,
+  format,
+  formatISO,
   getDate,
   getDay,
   getDaysInMonth,
-  formatISO,
-  addYears,
-  addMonths,
-  addDays,
-  isValid,
+  getMonth,
+  getYear,
   isDate,
-  format,
-  parseISO,
+  isValid,
+  Locale,
   parse,
+  parseISO,
 } from 'date-fns';
 
 /** Creates an array and fills it with values. */
@@ -73,16 +73,15 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     return getDay(date);
   }
 
-  getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+  getMonthNames(style: 'long'|'short'|'narrow'): string[] {
     const pattern = MONTH_FORMATS[style];
     return range(12, i => this.format(new Date(2017, i, 1), pattern));
   }
 
   getDateNames(): string[] {
-    const dtf = typeof Intl !== 'undefined' ? new Intl.DateTimeFormat(this.locale.code, {
-      day: 'numeric',
-      timeZone: 'utc'
-    }) : null;
+    const dtf = typeof Intl !== 'undefined' ?
+        new Intl.DateTimeFormat(this.locale.code, {day: 'numeric', timeZone: 'utc'}) :
+        null;
 
     return range(31, i => {
       if (dtf) {
@@ -98,7 +97,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     });
   }
 
-  getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+  getDayOfWeekNames(style: 'long'|'short'|'narrow'): string[] {
     const pattern = DAY_OF_WEEK_FORMATS[style];
     return range(7, i => this.format(new Date(2017, 0, i + 1), pattern));
   }
@@ -150,7 +149,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     return new Date();
   }
 
-  parse(value: any, parseFormat: string | string[]): Date | null {
+  parse(value: any, parseFormat: string|string[]): Date|null {
     if (typeof value == 'string' && value.length > 0) {
       const iso8601Date = parseISO(value);
 
@@ -211,7 +210,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
    * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
    * invalid date for all other values.
    */
-  override deserialize(value: any): Date | null {
+  override deserialize(value: any): Date|null {
     if (typeof value === 'string') {
       if (!value) {
         return null;

@@ -1,8 +1,10 @@
-import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChildren} from '@angular/core';
+import {fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {defaultRippleAnimationConfig} from '@angular/material/core';
-import {dispatchMouseEvent} from '../../cdk/testing/private';
 import {By} from '@angular/platform-browser';
+
+import {dispatchMouseEvent} from '../../cdk/testing/private';
+
 import {MatListItem, MatListModule} from './index';
 
 describe('MatList', () => {
@@ -13,10 +15,20 @@ describe('MatList', () => {
     TestBed.configureTestingModule({
       imports: [MatListModule],
       declarations: [
-        ListWithOneAnchorItem, ListWithOneItem, ListWithTwoLineItem, ListWithThreeLineItem,
-        ListWithAvatar, ListWithItemWithCssClass, ListWithDynamicNumberOfLines,
-        ListWithMultipleItems, ListWithManyLines, NavListWithOneAnchorItem, ActionListWithoutType,
-        ActionListWithType, ListWithIndirectDescendantLines, ListWithDisabledItems,
+        ListWithOneAnchorItem,
+        ListWithOneItem,
+        ListWithTwoLineItem,
+        ListWithThreeLineItem,
+        ListWithAvatar,
+        ListWithItemWithCssClass,
+        ListWithDynamicNumberOfLines,
+        ListWithMultipleItems,
+        ListWithManyLines,
+        NavListWithOneAnchorItem,
+        ActionListWithoutType,
+        ActionListWithType,
+        ListWithIndirectDescendantLines,
+        ListWithDisabledItems,
       ],
     });
 
@@ -101,9 +113,11 @@ describe('MatList', () => {
     const list = fixture.debugElement.children[0];
     const listItem = fixture.debugElement.children[0].query(By.css('mat-list-item'))!;
     expect(list.nativeElement.getAttribute('role'))
-      .withContext('Expect mat-list no role').toBeNull();
+        .withContext('Expect mat-list no role')
+        .toBeNull();
     expect(listItem.nativeElement.getAttribute('role'))
-      .withContext('Expect mat-list-item no role').toBeNull();
+        .withContext('Expect mat-list-item no role')
+        .toBeNull();
   });
 
   it('should not show ripples for non-nav lists', () => {
@@ -218,60 +232,66 @@ describe('MatList', () => {
   });
 
   it('should disable item ripples when list ripples are disabled via the input in nav list',
-    fakeAsync(() => {
-      const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
-      fixture.detectChanges();
+     fakeAsync(() => {
+       const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
+       fixture.detectChanges();
 
-      const rippleTarget = fixture.nativeElement.querySelector('.mat-list-item-content');
+       const rippleTarget = fixture.nativeElement.querySelector('.mat-list-item-content');
 
-      dispatchMouseEvent(rippleTarget, 'mousedown');
-      dispatchMouseEvent(rippleTarget, 'mouseup');
+       dispatchMouseEvent(rippleTarget, 'mousedown');
+       dispatchMouseEvent(rippleTarget, 'mouseup');
 
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected ripples to be enabled by default.').toBe(1);
+       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+           .withContext('Expected ripples to be enabled by default.')
+           .toBe(1);
 
-      // Wait for the ripples to go away.
-      tick(enterDuration + exitDuration);
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected ripples to go away.').toBe(0);
+       // Wait for the ripples to go away.
+       tick(enterDuration + exitDuration);
+       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+           .withContext('Expected ripples to go away.')
+           .toBe(0);
 
-      fixture.componentInstance.disableListRipple = true;
-      fixture.detectChanges();
+       fixture.componentInstance.disableListRipple = true;
+       fixture.detectChanges();
 
-      dispatchMouseEvent(rippleTarget, 'mousedown');
-      dispatchMouseEvent(rippleTarget, 'mouseup');
+       dispatchMouseEvent(rippleTarget, 'mousedown');
+       dispatchMouseEvent(rippleTarget, 'mouseup');
 
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples after list ripples are disabled.').toBe(0);
-    }));
+       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+           .withContext('Expected no ripples after list ripples are disabled.')
+           .toBe(0);
+     }));
 
   it('should disable item ripples when list ripples are disabled via the input in an action list',
-    fakeAsync(() => {
-      const fixture = TestBed.createComponent(ActionListWithoutType);
-      fixture.detectChanges();
+     fakeAsync(() => {
+       const fixture = TestBed.createComponent(ActionListWithoutType);
+       fixture.detectChanges();
 
-      const rippleTarget = fixture.nativeElement.querySelector('.mat-list-item-content');
+       const rippleTarget = fixture.nativeElement.querySelector('.mat-list-item-content');
 
-      dispatchMouseEvent(rippleTarget, 'mousedown');
-      dispatchMouseEvent(rippleTarget, 'mouseup');
+       dispatchMouseEvent(rippleTarget, 'mousedown');
+       dispatchMouseEvent(rippleTarget, 'mouseup');
 
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected ripples to be enabled by default.').toBe(1);
+       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+           .withContext('Expected ripples to be enabled by default.')
+           .toBe(1);
 
-      // Wait for the ripples to go away.
-      tick(enterDuration + exitDuration);
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected ripples to go away.').toBe(0);
+       // Wait for the ripples to go away.
+       tick(enterDuration + exitDuration);
+       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+           .withContext('Expected ripples to go away.')
+           .toBe(0);
 
-      fixture.componentInstance.disableListRipple = true;
-      fixture.detectChanges();
+       fixture.componentInstance.disableListRipple = true;
+       fixture.detectChanges();
 
-      dispatchMouseEvent(rippleTarget, 'mousedown');
-      dispatchMouseEvent(rippleTarget, 'mouseup');
+       dispatchMouseEvent(rippleTarget, 'mousedown');
+       dispatchMouseEvent(rippleTarget, 'mouseup');
 
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-        .withContext('Expected no ripples after list ripples are disabled.').toBe(0);
-    }));
+       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+           .withContext('Expected no ripples after list ripples are disabled.')
+           .toBe(0);
+     }));
 
 
   it('should pick up indirect descendant lines', () => {
@@ -314,7 +334,6 @@ describe('MatList', () => {
 
     expect(listItems.every(item => item.classList.contains('mat-list-item-disabled'))).toBe(true);
   });
-
 });
 
 class BaseTestList {
@@ -326,81 +345,99 @@ class BaseTestList {
   showThirdLine: boolean = false;
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <a mat-list-item>
       Paprika
     </a>
-  </mat-list>`})
+  </mat-list>`
+})
 class ListWithOneAnchorItem extends BaseTestList {
   // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
   // it doesn't get populated.
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-nav-list [disableRipple]="disableListRipple">
     <a mat-list-item [disableRipple]="disableItemRipple">
       Paprika
     </a>
-  </mat-nav-list>`})
+  </mat-nav-list>`
+})
 class NavListWithOneAnchorItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
   disableItemRipple: boolean = false;
   disableListRipple: boolean = false;
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-action-list [disableRipple]="disableListRipple">
     <button mat-list-item [disableRipple]="disableItemRipple">
       Paprika
     </button>
-  </mat-action-list>`})
+  </mat-action-list>`
+})
 class ActionListWithoutType extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
   disableListRipple = false;
   disableItemRipple = false;
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-action-list>
     <button mat-list-item type="submit">
       Paprika
     </button>
-  </mat-action-list>`})
+  </mat-action-list>`
+})
 class ActionListWithType extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item>
       Paprika
     </mat-list-item>
-  </mat-list>`})
-class ListWithOneItem extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithOneItem extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
       <img src="">
       <h3 mat-line>{{item.name}}</h3>
       <p mat-line>{{item.description}}</p>
     </mat-list-item>
-  </mat-list>`})
-class ListWithTwoLineItem extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithTwoLineItem extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
       <h3 mat-line>{{item.name}}</h3>
       <p mat-line>{{item.description}}</p>
       <p mat-line>Some other text</p>
     </mat-list-item>
-  </mat-list>`})
-class ListWithThreeLineItem extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithThreeLineItem extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
       <h3 mat-line>Line 1</h3>
@@ -408,10 +445,13 @@ class ListWithThreeLineItem extends BaseTestList { }
       <p mat-line>Line 3</p>
       <p mat-line>Line 4</p>
     </mat-list-item>
-  </mat-list>`})
-class ListWithManyLines extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithManyLines extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item>
       <img src="" mat-list-avatar>
@@ -420,35 +460,46 @@ class ListWithManyLines extends BaseTestList { }
     <mat-list-item>
       Pepper
     </mat-list-item>
-  </mat-list>`})
-class ListWithAvatar extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithAvatar extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item class="test-class" *ngFor="let item of items">
       <h3 mat-line>{{item.name}}</h3>
       <p mat-line>{{item.description}}</p>
     </mat-list-item>
-  </mat-list>`})
-class ListWithItemWithCssClass extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithItemWithCssClass extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
       <h3 mat-line>{{item.name}}</h3>
       <p mat-line>{{item.description}}</p>
       <p mat-line *ngIf="showThirdLine">Some other text</p>
     </mat-list-item>
-  </mat-list>`})
-class ListWithDynamicNumberOfLines extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithDynamicNumberOfLines extends BaseTestList {
+}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
       {{item.name}}
     </mat-list-item>
-  </mat-list>`})
-class ListWithMultipleItems extends BaseTestList { }
+  </mat-list>`
+})
+class ListWithMultipleItems extends BaseTestList {
+}
 
 // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
 @Component({
@@ -466,12 +517,14 @@ class ListWithIndirectDescendantLines extends BaseTestList {
 }
 
 
-@Component({template: `
+@Component({
+  template: `
   <mat-list [disabled]="listDisabled">
     <mat-list-item [disabled]="firstItemDisabled">One</mat-list-item>
     <mat-list-item>Two</mat-list-item>
     <mat-list-item>Three</mat-list-item>
-  </mat-list>`})
+  </mat-list>`
+})
 class ListWithDisabledItems {
   firstItemDisabled = false;
   listDisabled = false;

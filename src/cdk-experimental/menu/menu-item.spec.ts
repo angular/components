@@ -1,10 +1,11 @@
-import {Component, Type, ElementRef} from '@angular/core';
+import {Component, ElementRef, Type} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItem} from './menu-item';
-import {CDK_MENU} from './menu-interface';
+
 import {CdkMenu} from './menu';
+import {CDK_MENU} from './menu-interface';
+import {CdkMenuItem} from './menu-item';
+import {CdkMenuModule} from './menu-module';
 
 describe('MenuItem', () => {
   describe('with no complex inner elements', () => {
@@ -13,15 +14,17 @@ describe('MenuItem', () => {
     let nativeButton: HTMLButtonElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [SingleMenuItem],
-        providers: [
-          {provide: CDK_MENU, useClass: CdkMenu},
-          // View engine can't figure out the ElementRef to inject so we need to provide a fake
-          {provide: ElementRef, useValue: new ElementRef<null>(null)},
-        ],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [SingleMenuItem],
+            providers: [
+              {provide: CDK_MENU, useClass: CdkMenu},
+              // View engine can't figure out the ElementRef to inject so we need to provide a fake
+              {provide: ElementRef, useValue: new ElementRef<null>(null)},
+            ],
+          })
+          .compileComponents();
     }));
 
     beforeEach(() => {
@@ -74,15 +77,17 @@ describe('MenuItem', () => {
     function createComponent<T>(componentClass: Type<T>) {
       let fixture: ComponentFixture<T>;
 
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [componentClass, MatIcon],
-        providers: [
-          {provide: CDK_MENU, useClass: CdkMenu},
-          // View engine can't figure out the ElementRef to inject so we need to provide a fake
-          {provide: ElementRef, useValue: new ElementRef<null>(null)},
-        ],
-      }).compileComponents();
+      TestBed
+          .configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [componentClass, MatIcon],
+            providers: [
+              {provide: CDK_MENU, useClass: CdkMenu},
+              // View engine can't figure out the ElementRef to inject so we need to provide a fake
+              {provide: ElementRef, useValue: new ElementRef<null>(null)},
+            ],
+          })
+          .compileComponents();
 
       fixture = TestBed.createComponent(componentClass);
       fixture.detectChanges();
@@ -100,35 +105,32 @@ describe('MenuItem', () => {
       expect(menuItem.getLabel()).toEqual('Click me!');
     });
 
-    it(
-      'should get the text for menu item with single nested component with the material ' +
-        'icon class',
-      () => {
-        createComponent(MenuItemWithIconClass);
-        expect(menuItem.getLabel()).toEqual('Click me!');
-      }
-    );
+    it('should get the text for menu item with single nested component with the material ' +
+           'icon class',
+       () => {
+         createComponent(MenuItemWithIconClass);
+         expect(menuItem.getLabel()).toEqual('Click me!');
+       });
 
     it('should get the text for a menu item with bold marked text', () => {
       createComponent(MenuItemWithBoldElement);
       expect(menuItem.getLabel()).toEqual('Click me!');
     });
 
-    it(
-      'should get the text for a menu item with nested icon, nested icon class and nested ' +
-        'wrapping elements',
-      () => {
-        createComponent(MenuItemWithMultipleNestings);
-        expect(menuItem.getLabel()).toEqual('Click me!');
-      }
-    );
+    it('should get the text for a menu item with nested icon, nested icon class and nested ' +
+           'wrapping elements',
+       () => {
+         createComponent(MenuItemWithMultipleNestings);
+         expect(menuItem.getLabel()).toEqual('Click me!');
+       });
   });
 });
 
 @Component({
   template: `<button cdkMenuItem>Click me!</button>`,
 })
-class SingleMenuItem {}
+class SingleMenuItem {
+}
 
 @Component({
   template: `
@@ -138,7 +140,8 @@ class SingleMenuItem {}
     </button>
   `,
 })
-class MenuItemWithIcon {}
+class MenuItemWithIcon {
+}
 @Component({
   template: `
     <button cdkMenuItem>
@@ -147,12 +150,14 @@ class MenuItemWithIcon {}
     </button>
   `,
 })
-class MenuItemWithIconClass {}
+class MenuItemWithIconClass {
+}
 
 @Component({
   template: ` <button cdkMenuItem><b>Click</b> me!</button> `,
 })
-class MenuItemWithBoldElement {}
+class MenuItemWithBoldElement {
+}
 
 @Component({
   template: `
@@ -168,10 +173,12 @@ class MenuItemWithBoldElement {}
     </button>
   `,
 })
-class MenuItemWithMultipleNestings {}
+class MenuItemWithMultipleNestings {
+}
 
 @Component({
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
 })
-class MatIcon {}
+class MatIcon {
+}

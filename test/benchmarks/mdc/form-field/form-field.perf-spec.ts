@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {$, browser} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/bazel/benchmark/driver-utilities';
+import {$, browser} from 'protractor';
 
 function runFormFieldRenderBenchmark(testId: string, showBtnId: string) {
   return runBenchmark({
@@ -24,11 +24,11 @@ describe('form field performance benchmarks', () => {
     browser.angularAppRoot('#root');
   });
 
-  it('renders an input in a form field', async() => {
+  it('renders an input in a form field', async () => {
     await runFormFieldRenderBenchmark('input-form-field-render', '#show-input');
   });
 
-  it('renders an textarea in a form field', async() => {
+  it('renders an textarea in a form field', async () => {
     await runFormFieldRenderBenchmark('textarea-form-field-render', '#show-textarea');
   });
 });

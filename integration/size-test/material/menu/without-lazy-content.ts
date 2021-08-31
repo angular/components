@@ -11,11 +11,13 @@ import {MatMenuModule} from '@angular/material/menu';
     <mat-menu #menu="matMenu"></mat-menu>
   `,
 })
-export class TestComponent {}
+export class TestComponent {
+}
 
 @NgModule({
   imports: [MatMenuModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

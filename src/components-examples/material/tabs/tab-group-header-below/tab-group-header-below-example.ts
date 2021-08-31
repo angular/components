@@ -7,4 +7,5 @@ import {Component} from '@angular/core';
   selector: 'tab-group-header-below-example',
   templateUrl: 'tab-group-header-below-example.html',
 })
-export class TabGroupHeaderBelowExample {}
+export class TabGroupHeaderBelowExample {
+}

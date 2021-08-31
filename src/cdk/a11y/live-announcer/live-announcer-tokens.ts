@@ -12,10 +12,10 @@ import {InjectionToken} from '@angular/core';
 // as a workaround for https://github.com/angular/angular/issues/22559
 
 /** Possible politeness levels. */
-export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
+export type AriaLivePoliteness = 'off'|'polite'|'assertive';
 
 export const LIVE_ANNOUNCER_ELEMENT_TOKEN =
-    new InjectionToken<HTMLElement | null>('liveAnnouncerElement', {
+    new InjectionToken<HTMLElement|null>('liveAnnouncerElement', {
       providedIn: 'root',
       factory: LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY,
     });

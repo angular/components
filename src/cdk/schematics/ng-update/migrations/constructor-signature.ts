@@ -95,10 +95,11 @@ export class ConstructorSignatureMigration extends Migration<UpgradeData> {
 
       const expressionName = isNewExpression ? `new ${className}` : 'super';
       const signatures = classSignatures
-          .map(signature =>
-              signature.map(t => t === null ? 'any' : this.typeChecker.typeToString(t)))
-          .map(signature => `${expressionName}(${signature.join(', ')})`)
-          .join(' or ');
+                             .map(
+                                 signature => signature.map(
+                                     t => t === null ? 'any' : this.typeChecker.typeToString(t)))
+                             .map(signature => `${expressionName}(${signature.join(', ')})`)
+                             .join(' or ');
 
       this.createFailureAtNode(
           node,

@@ -9,12 +9,14 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
-import {JAN} from '../testing';
 import {By} from '@angular/platform-browser';
+
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {JAN} from '../testing';
+
 import {MatCalendarBody} from './calendar-body';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 
@@ -36,9 +38,13 @@ describe('MatMultiYearView', () => {
         MultiYearViewWithMinMaxDate,
         MultiYearViewWithDateClass,
       ],
-      providers: [
-        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
-      ]
+      providers: [{
+        provide: Directionality,
+        useFactory: () => dir =
+        {
+          value: 'ltr'
+        }
+      }]
     });
 
     TestBed.compileComponents();
@@ -114,7 +120,7 @@ describe('MatMultiYearView', () => {
         beforeEach(() => {
           calendarInstance = fixture.componentInstance;
           calendarBodyEl =
-            fixture.debugElement.nativeElement.querySelector('.mat-calendar-body') as HTMLElement;
+              fixture.debugElement.nativeElement.querySelector('.mat-calendar-body') as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
           dir.value = 'ltr';
           fixture.componentInstance.date = new Date(2017, JAN, 1);
@@ -150,28 +156,24 @@ describe('MatMultiYearView', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', UP_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 - yearsPerRow, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerRow, JAN, 1));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', UP_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 - yearsPerRow * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerRow * 2, JAN, 1));
         });
 
         it('should go down a row on down arrow press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', DOWN_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 + yearsPerRow, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerRow, JAN, 1));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', DOWN_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 + yearsPerRow * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerRow * 2, JAN, 1));
         });
 
         it('should go to first year in current range on home press', () => {
@@ -202,33 +204,27 @@ describe('MatMultiYearView', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_UP);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 - yearsPerPage, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerPage, JAN, 1));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_UP);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-              .toEqual(new Date(2017 - yearsPerPage * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerPage * 2, JAN, 1));
         });
 
         it('should go to same index in next year range on page down press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_DOWN);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 + yearsPerPage, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerPage, JAN, 1));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_DOWN);
           fixture.detectChanges();
 
-          expect(calendarInstance.date)
-            .toEqual(new Date(2017 + yearsPerPage * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerPage * 2, JAN, 1));
         });
-
       });
     });
-
   });
 
   describe('multi year view with date filter', () => {
@@ -262,7 +258,6 @@ describe('MatMultiYearView', () => {
 
       expect(spy).not.toHaveBeenCalled();
     });
-
   });
 
   describe('multi year view with minDate only', () => {
@@ -326,7 +321,7 @@ describe('MatMultiYearView', () => {
 
     it('should end last page with maxDate', () => {
       testComponent.minDate = new Date(2006, JAN, 1);
-      testComponent.maxDate = new Date (2020, JAN, 1);
+      testComponent.maxDate = new Date(2020, JAN, 1);
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
@@ -335,7 +330,7 @@ describe('MatMultiYearView', () => {
 
     it('should disable dates before minDate', () => {
       testComponent.minDate = new Date(2006, JAN, 1);
-      testComponent.maxDate = new Date (2020, JAN, 1);
+      testComponent.maxDate = new Date(2020, JAN, 1);
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
@@ -369,7 +364,6 @@ describe('MatMultiYearView', () => {
       expect(dateClassSpy).toHaveBeenCalledWith(jasmine.any(Date), 'multi-year');
     });
   });
-
 });
 
 @Component({
@@ -396,8 +390,8 @@ class StandardMultiYearView {
 })
 class MultiYearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
-  minDate: Date | null = null;
-  maxDate: Date | null = null;
+  minDate: Date|null = null;
+  maxDate: Date|null = null;
   dateFilter(date: Date) {
     return date.getFullYear() !== 2017;
   }
@@ -411,8 +405,8 @@ class MultiYearViewWithDateFilter {
 })
 class MultiYearViewWithMinMaxDate {
   activeDate = new Date(2019, JAN, 1);
-  minDate: Date | null;
-  maxDate: Date | null;
+  minDate: Date|null;
+  maxDate: Date|null;
 }
 
 

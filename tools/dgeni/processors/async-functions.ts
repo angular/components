@@ -5,9 +5,8 @@ import {MethodMemberDoc} from 'dgeni-packages/typescript/api-doc-types/MethodMem
 import * as ts from 'typescript';
 
 /** Type describing a function-like API doc (i.e. a function, or a class method member). */
-type FunctionLikeDoc = (FunctionExportDoc|MethodMemberDoc) & {
-  returns?: {description: string},
-  isAsync?: boolean;
+type FunctionLikeDoc = (FunctionExportDoc|MethodMemberDoc)&{
+  returns?: {description: string}, isAsync?: boolean;
 };
 
 /**
@@ -51,7 +50,7 @@ function getTypeOfFunctionLikeDoc(doc: FunctionLikeDoc): string|null {
     return doc.type;
   }
 
-  const decl = doc.declaration as ts.MethodDeclaration|ts.FunctionDeclaration;
+  const decl = doc.declaration as ts.MethodDeclaration | ts.FunctionDeclaration;
   const signature = doc.typeChecker.getSignatureFromDeclaration(decl);
 
   if (!signature) {

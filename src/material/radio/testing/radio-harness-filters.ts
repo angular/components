@@ -17,7 +17,7 @@ export interface RadioGroupHarnessFilters extends BaseHarnessFilters {
 /** A set of criteria that can be used to filter a list of `MatRadioButtonHarness` instances. */
 export interface RadioButtonHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose label matches the given value. */
-  label?: string | RegExp;
+  label?: string|RegExp;
   /** Only find instances whose name attribute is the given value. */
   name?: string;
 }

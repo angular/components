@@ -7,23 +7,24 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {CdkStepHeader, StepState} from '@angular/cdk/stepper';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
   OnDestroy,
-  ViewEncapsulation,
   TemplateRef,
-  AfterViewInit,
+  ViewEncapsulation,
 } from '@angular/core';
+import {CanColor, mixinColor} from '@angular/material/core';
 import {Subscription} from 'rxjs';
+
 import {MatStepLabel} from './step-label';
-import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
-import {CdkStepHeader, StepState} from '@angular/cdk/stepper';
-import {mixinColor, CanColor} from '@angular/material/core';
+import {MatStepperIntl} from './stepper-intl';
 
 
 // Boilerplate for applying mixins to MatStepHeader.
@@ -47,14 +48,14 @@ const _MatStepHeaderBase = mixinColor(class MatStepHeaderBase extends CdkStepHea
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatStepHeader extends _MatStepHeaderBase implements AfterViewInit, OnDestroy,
-  CanColor {
+                                                                 CanColor {
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
   @Input() state: StepState;
 
   /** Label of the given step. */
-  @Input() label: MatStepLabel | string;
+  @Input() label: MatStepLabel|string;
 
   /** Error message to display when there's an error. */
   @Input() errorMessage: string;
@@ -78,10 +79,8 @@ export class MatStepHeader extends _MatStepHeaderBase implements AfterViewInit, 
   @Input() disableRipple: boolean;
 
   constructor(
-    public _intl: MatStepperIntl,
-    private _focusMonitor: FocusMonitor,
-    _elementRef: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef) {
+      public _intl: MatStepperIntl, private _focusMonitor: FocusMonitor,
+      _elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef) {
     super(_elementRef);
     this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
@@ -105,12 +104,12 @@ export class MatStepHeader extends _MatStepHeaderBase implements AfterViewInit, 
   }
 
   /** Returns string label of given step if it is a text label. */
-  _stringLabel(): string | null {
+  _stringLabel(): string|null {
     return this.label instanceof MatStepLabel ? null : this.label;
   }
 
   /** Returns MatStepLabel if the label of given step is a template label. */
-  _templateLabel(): MatStepLabel | null {
+  _templateLabel(): MatStepLabel|null {
     return this.label instanceof MatStepLabel ? this.label : null;
   }
 
@@ -121,11 +120,7 @@ export class MatStepHeader extends _MatStepHeaderBase implements AfterViewInit, 
 
   /** Template context variables that are exposed to the `matStepperIcon` instances. */
   _getIconContext(): MatStepperIconContext {
-    return {
-      index: this.index,
-      active: this.active,
-      optional: this.optional
-    };
+    return {index: this.index, active: this.active, optional: this.optional};
   }
 
   _getDefaultTextForState(state: StepState): string {

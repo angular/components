@@ -32,15 +32,37 @@ interface FakeYtNamespace {
 
 export function createFakeYtNamespace(): FakeYtNamespace {
   const playerSpy: jasmine.SpyObj<YT.Player> = jasmine.createSpyObj('Player', [
-    'getPlayerState', 'destroy', 'cueVideoById', 'loadVideoById', 'pauseVideo', 'stopVideo',
-    'seekTo', 'isMuted', 'mute', 'unMute', 'getVolume', 'getPlaybackRate',
-    'getAvailablePlaybackRates', 'getVideoLoadedFraction', 'getPlayerState', 'getCurrentTime',
-    'getPlaybackQuality', 'getAvailableQualityLevels', 'getDuration', 'getVideoUrl',
-    'getVideoEmbedCode', 'playVideo', 'setSize', 'setVolume', 'setPlaybackQuality',
-    'setPlaybackRate', 'addEventListener', 'removeEventListener',
+    'getPlayerState',
+    'destroy',
+    'cueVideoById',
+    'loadVideoById',
+    'pauseVideo',
+    'stopVideo',
+    'seekTo',
+    'isMuted',
+    'mute',
+    'unMute',
+    'getVolume',
+    'getPlaybackRate',
+    'getAvailablePlaybackRates',
+    'getVideoLoadedFraction',
+    'getPlayerState',
+    'getCurrentTime',
+    'getPlaybackQuality',
+    'getAvailableQualityLevels',
+    'getDuration',
+    'getVideoUrl',
+    'getVideoEmbedCode',
+    'playVideo',
+    'setSize',
+    'setVolume',
+    'setPlaybackQuality',
+    'setPlaybackRate',
+    'addEventListener',
+    'removeEventListener',
   ]);
 
-  let playerConfig: YT.PlayerOptions | undefined;
+  let playerConfig: YT.PlayerOptions|undefined;
   const boundListeners = new Map<keyof YT.Events, Set<(event: any) => void>>();
   const playerCtorSpy = jasmine.createSpy('Player Constructor');
 

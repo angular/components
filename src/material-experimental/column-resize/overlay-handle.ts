@@ -7,6 +7,20 @@
  */
 
 import {
+  ColumnResize,
+  ColumnResizeNotifierSource,
+  HeaderRowEventDispatcher,
+  ResizeOverlayHandle,
+  ResizeRef,
+} from '@angular/cdk-experimental/column-resize';
+import {Directionality} from '@angular/cdk/bidi';
+import {
+  _COALESCED_STYLE_SCHEDULER,
+  _CoalescedStyleScheduler,
+  CdkColumnDef,
+} from '@angular/cdk/table';
+import {DOCUMENT} from '@angular/common';
+import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -14,20 +28,6 @@ import {
   NgZone,
   ViewEncapsulation,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {
-  CdkColumnDef,
-  _CoalescedStyleScheduler,
-  _COALESCED_STYLE_SCHEDULER,
-} from '@angular/cdk/table';
-import {Directionality} from '@angular/cdk/bidi';
-import {
-  ColumnResize,
-  ColumnResizeNotifierSource,
-  HeaderRowEventDispatcher,
-  ResizeOverlayHandle,
-  ResizeRef,
-} from '@angular/cdk-experimental/column-resize';
 
 import {AbstractMatColumnResize} from './column-resize-directives/common';
 
@@ -45,17 +45,14 @@ export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
   protected readonly document: Document;
 
   constructor(
-      protected readonly columnDef: CdkColumnDef,
-      protected readonly columnResize: ColumnResize,
-      protected readonly directionality: Directionality,
-      protected readonly elementRef: ElementRef,
+      protected readonly columnDef: CdkColumnDef, protected readonly columnResize: ColumnResize,
+      protected readonly directionality: Directionality, protected readonly elementRef: ElementRef,
       protected readonly eventDispatcher: HeaderRowEventDispatcher,
       protected readonly ngZone: NgZone,
       protected readonly resizeNotifier: ColumnResizeNotifierSource,
       protected readonly resizeRef: ResizeRef,
-      @Inject(_COALESCED_STYLE_SCHEDULER)
-          protected readonly styleScheduler: _CoalescedStyleScheduler,
-      @Inject(DOCUMENT) document: any) {
+      @Inject(_COALESCED_STYLE_SCHEDULER) protected readonly styleScheduler:
+          _CoalescedStyleScheduler, @Inject(DOCUMENT) document: any) {
     super();
     this.document = document;
   }
@@ -64,9 +61,8 @@ export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
     super.updateResizeActive(active);
 
     this.resizeRef.overlayRef.updateSize({
-      height: active ?
-          (this.columnResize as AbstractMatColumnResize).getTableHeight() :
-          this.resizeRef.origin.nativeElement!.offsetHeight
+      height: active ? (this.columnResize as AbstractMatColumnResize).getTableHeight() :
+                       this.resizeRef.origin.nativeElement!.offsetHeight
     });
   }
 }

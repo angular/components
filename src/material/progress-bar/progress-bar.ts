@@ -50,9 +50,7 @@ const _MatProgressBarBase = mixinColor(class {
  * @docs-private
  */
 export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocation>(
-  'mat-progress-bar-location',
-  {providedIn: 'root', factory: MAT_PROGRESS_BAR_LOCATION_FACTORY}
-);
+    'mat-progress-bar-location', {providedIn: 'root', factory: MAT_PROGRESS_BAR_LOCATION_FACTORY});
 
 /**
  * Stubbed out location for `MatProgressBar`.
@@ -74,7 +72,7 @@ export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
   };
 }
 
-export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
+export type ProgressBarMode = 'determinate'|'indeterminate'|'buffer'|'query';
 
 /** Default `mat-progress-bar` options that can be overridden. */
 export interface MatProgressBarDefaultOptions {
@@ -87,7 +85,7 @@ export interface MatProgressBarDefaultOptions {
 
 /** Injection token to be used to override the default options for `mat-progress-bar`. */
 export const MAT_PROGRESS_BAR_DEFAULT_OPTIONS =
-  new InjectionToken<MatProgressBarDefaultOptions>('MAT_PROGRESS_BAR_DEFAULT_OPTIONS');
+    new InjectionToken<MatProgressBarDefaultOptions>('MAT_PROGRESS_BAR_DEFAULT_OPTIONS');
 
 
 /** Counter used to generate unique IDs for progress bars. */
@@ -117,17 +115,18 @@ let progressbarId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressBar extends _MatProgressBarBase implements CanColor,
-                                                      AfterViewInit, OnDestroy {
-  constructor(elementRef: ElementRef, private _ngZone: NgZone,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-              /**
-               * @deprecated `location` parameter to be made required.
-               * @breaking-change 8.0.0
-               */
-              @Optional() @Inject(MAT_PROGRESS_BAR_LOCATION) location?: MatProgressBarLocation,
-              @Optional() @Inject(MAT_PROGRESS_BAR_DEFAULT_OPTIONS)
-                  defaults?: MatProgressBarDefaultOptions) {
+export class MatProgressBar extends _MatProgressBarBase implements CanColor, AfterViewInit,
+                                                                   OnDestroy {
+  constructor(
+      elementRef: ElementRef, private _ngZone: NgZone,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+      /**
+       * @deprecated `location` parameter to be made required.
+       * @breaking-change 8.0.0
+       */
+      @Optional() @Inject(MAT_PROGRESS_BAR_LOCATION) location?: MatProgressBarLocation,
+      @Optional() @Inject(MAT_PROGRESS_BAR_DEFAULT_OPTIONS) defaults?:
+          MatProgressBarDefaultOptions) {
     super(elementRef);
 
     // We need to prefix the SVG reference with the current path, otherwise they won't work
@@ -155,7 +154,9 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor,
 
   /** Value of the progress bar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
-  get value(): number { return this._value; }
+  get value(): number {
+    return this._value;
+  }
   set value(v: number) {
     this._value = clamp(coerceNumberProperty(v) || 0);
   }
@@ -163,8 +164,12 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor,
 
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
-  get bufferValue(): number { return this._bufferValue; }
-  set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
+  get bufferValue(): number {
+    return this._bufferValue;
+  }
+  set bufferValue(v: number) {
+    this._bufferValue = clamp(v || 0);
+  }
   private _bufferValue: number = 0;
 
   @ViewChild('primaryValueBar') _primaryValueBar: ElementRef;
@@ -221,13 +226,13 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor,
       const element = this._primaryValueBar.nativeElement;
 
       this._animationEndSubscription =
-        (fromEvent(element, 'transitionend') as Observable<TransitionEvent>)
-          .pipe(filter(((e: TransitionEvent) => e.target === element)))
-          .subscribe(() => {
-            if (this.mode === 'determinate' || this.mode === 'buffer') {
-              this._ngZone.run(() => this.animationEnd.next({value: this.value}));
-            }
-          });
+          (fromEvent(element, 'transitionend') as Observable<TransitionEvent>)
+              .pipe(filter(((e: TransitionEvent) => e.target === element)))
+              .subscribe(() => {
+                if (this.mode === 'determinate' || this.mode === 'buffer') {
+                  this._ngZone.run(() => this.animationEnd.next({value: this.value}));
+                }
+              });
     }));
   }
 

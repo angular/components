@@ -26,25 +26,21 @@ function getBazelActionArguments() {
 
 if (require.main === module) {
   const [
-    // Path that refers to the package where the current Bazel target is defined.
-    bazelLabelPackagePath,
-    // Path that is relative to the execroot and is the output directory for the docs.
-    outputDirPath,
-    // Remaining arguments that will be used to compute the entry points that need to be parsed.
-    ...entryPointArgs
-  ] = getBazelActionArguments();
+      // Path that refers to the package where the current Bazel target is defined.
+      bazelLabelPackagePath,
+      // Path that is relative to the execroot and is the output directory for the docs.
+      outputDirPath,
+      // Remaining arguments that will be used to compute the entry points that need to be parsed.
+      ...entryPointArgs] = getBazelActionArguments();
 
   const execRootPath = process.cwd();
   const packagePath = join(execRootPath, bazelLabelPackagePath);
 
   // Configure the Dgeni docs package to respect our passed options from the Bazel rule.
-  apiDocsPackage.config(function(readTypeScriptModules: ReadTypeScriptModules,
-                                 tsParser: TsParser,
-                                 entryPointGrouper: EntryPointGrouper,
-                                 templateFinder: any,
-                                 writeFilesProcessor: any,
-                                 readFilesProcessor: any) {
-
+  apiDocsPackage.config(function(
+      readTypeScriptModules: ReadTypeScriptModules, tsParser: TsParser,
+      entryPointGrouper: EntryPointGrouper, templateFinder: any, writeFilesProcessor: any,
+      readFilesProcessor: any) {
     // Set the base path for the "readFilesProcessor" to the execroot. This is necessary because
     // otherwise the "writeFilesProcessor" is not able to write to the specified output path.
     readFilesProcessor.basePath = execRootPath;
@@ -110,6 +106,3 @@ if (require.main === module) {
     process.exit(1);
   });
 }
-
-
-

@@ -13,10 +13,12 @@ export function runHarnessTests(
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [buttonToggleModule],
-      declarations: [ButtonToggleHarnessTest],
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [buttonToggleModule],
+          declarations: [ButtonToggleHarnessTest],
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(ButtonToggleHarnessTest);
     fixture.detectChanges();
@@ -139,4 +141,3 @@ export function runHarnessTests(
 class ButtonToggleHarnessTest {
   disabled = true;
 }
-

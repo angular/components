@@ -65,17 +65,14 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'input-modality',
     loadChildren:
-      'input-modality/input-modality-detector-demo-module#InputModalityDetectorDemoModule',
+        'input-modality/input-modality-detector-demo-module#InputModalityDetectorDemoModule',
   },
   {path: 'list', loadChildren: 'list/list-demo-module#ListDemoModule'},
   {
     path: 'live-announcer',
     loadChildren: 'live-announcer/live-announcer-demo-module#LiveAnnouncerDemoModule'
   },
-  {
-    path: 'menubar',
-    loadChildren: 'menubar/mat-menubar-demo-module#MatMenuBarDemoModule'
-  },
+  {path: 'menubar', loadChildren: 'menubar/mat-menubar-demo-module#MatMenuBarDemoModule'},
   {
     path: 'mdc-autocomplete',
     loadChildren: 'mdc-autocomplete/mdc-autocomplete-demo-module#MdcAutocompleteDemoModule'
@@ -102,7 +99,7 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'mdc-progress-spinner',
     loadChildren:
-      'mdc-progress-spinner/mdc-progress-spinner-demo-module#MdcProgressSpinnerDemoModule'
+        'mdc-progress-spinner/mdc-progress-spinner-demo-module#MdcProgressSpinnerDemoModule'
   },
   {path: 'mdc-radio', loadChildren: 'mdc-radio/mdc-radio-demo-module#MdcRadioDemoModule'},
   {path: 'mdc-select', loadChildren: 'mdc-select/mdc-select-demo-module#MdcSelectDemoModule'},

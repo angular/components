@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CdkTableModule} from '@angular/cdk/table';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material-experimental/mdc-core';
-import {MatRecycleRows, MatTable} from './table';
-import {CdkTableModule} from '@angular/cdk/table';
+
 import {
   MatCell,
   MatCellDef,
@@ -24,10 +24,11 @@ import {
   MatFooterRowDef,
   MatHeaderRow,
   MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatRowDef,
-  MatNoDataRow
+  MatRowDef
 } from './row';
+import {MatRecycleRows, MatTable} from './table';
 import {MatTextColumn} from './text-column';
 
 const EXPORTED_DECLARATIONS = [

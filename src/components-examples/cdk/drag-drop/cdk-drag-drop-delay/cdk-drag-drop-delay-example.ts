@@ -8,4 +8,5 @@ import {Component} from '@angular/core';
   templateUrl: 'cdk-drag-drop-delay-example.html',
   styleUrls: ['cdk-drag-drop-delay-example.css'],
 })
-export class CdkDragDropDelayExample {}
+export class CdkDragDropDelayExample {
+}

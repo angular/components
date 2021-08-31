@@ -17,4 +17,5 @@ import {MatSlider} from './slider';
   exports: [MatSlider, MatCommonModule],
   declarations: [MatSlider],
 })
-export class MatSliderModule {}
+export class MatSliderModule {
+}

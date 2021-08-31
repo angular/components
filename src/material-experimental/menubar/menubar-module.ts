@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CdkMenuModule} from '@angular/cdk-experimental/menu';
+import {NgModule} from '@angular/core';
+
 import {MatMenuBar} from './menubar';
 import {MatMenuBarItem} from './menubar-item';
 
@@ -16,4 +17,5 @@ import {MatMenuBarItem} from './menubar-item';
   exports: [MatMenuBar, MatMenuBarItem],
   declarations: [MatMenuBar, MatMenuBarItem],
 })
-export class MatMenuBarModule {}
+export class MatMenuBarModule {
+}

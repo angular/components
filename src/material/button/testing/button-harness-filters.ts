@@ -11,5 +11,5 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 /** A set of criteria that can be used to filter a list of `MatButtonHarness` instances. */
 export interface ButtonHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
+  text?: string|RegExp;
 }

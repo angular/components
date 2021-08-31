@@ -1,36 +1,39 @@
+import {DataSource} from '@angular/cdk/table';
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
   fakeAsync,
   flushMicrotasks,
   TestBed,
-  tick
+  tick,
+  waitForAsync
 } from '@angular/core/testing';
-import {MatTable, MatTableDataSource, MatTableModule} from './index';
-import {DataSource} from '@angular/cdk/table';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {MatSort, MatSortHeader, MatSortModule} from '@angular/material/sort';
 import {MatPaginator, MatPaginatorModule} from '@angular/material-experimental/mdc-paginator';
+import {MatSort, MatSortHeader, MatSortModule} from '@angular/material/sort';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BehaviorSubject, Observable} from 'rxjs';
+
+import {MatTable, MatTableDataSource, MatTableModule} from './index';
 
 describe('MDC-based MatTable', () => {
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
-      declarations: [
-        MatTableApp,
-        MatTableWithWhenRowApp,
-        ArrayDataSourceMatTableApp,
-        NativeHtmlTableApp,
-        MatTableWithSortApp,
-        MatTableWithPaginatorApp,
-        StickyTableApp,
-        TableWithNgContainerRow,
-        NestedTableApp,
-        MatFlexTableApp,
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
+          declarations: [
+            MatTableApp,
+            MatTableWithWhenRowApp,
+            ArrayDataSourceMatTableApp,
+            NativeHtmlTableApp,
+            MatTableWithSortApp,
+            MatTableWithPaginatorApp,
+            StickyTableApp,
+            TableWithNgContainerRow,
+            NestedTableApp,
+            MatFlexTableApp,
+          ],
+        })
+        .compileComponents();
   }));
 
   describe('with basic data source', () => {
@@ -76,7 +79,7 @@ describe('MDC-based MatTable', () => {
         ['a_1'],
         ['a_2'],
         ['a_3'],
-        ['a_4'], // With multiple rows, this row shows up along with the special 'when' fourth_row
+        ['a_4'],  // With multiple rows, this row shows up along with the special 'when' fourth_row
         ['fourth_row'],
         ['Footer A'],
       ]);
@@ -171,7 +174,6 @@ describe('MDC-based MatTable', () => {
       const tbodyElement = fixture.nativeElement.querySelector('tbody');
       expect(tbodyElement.classList).toContain('mdc-data-table__content');
     });
-
   });
 
   it('should render with MatTableDataSource and sort', () => {
@@ -203,23 +205,23 @@ describe('MDC-based MatTable', () => {
   });
 
   it('should apply custom sticky CSS class to sticky cells', fakeAsync(() => {
-    let fixture = TestBed.createComponent(StickyTableApp);
-    fixture.detectChanges();
-    flushMicrotasks();
+       let fixture = TestBed.createComponent(StickyTableApp);
+       fixture.detectChanges();
+       flushMicrotasks();
 
-    const stuckCellElement = fixture.nativeElement.querySelector('table th')!;
-    expect(stuckCellElement.classList).toContain('mat-mdc-table-sticky');
-  }));
+       const stuckCellElement = fixture.nativeElement.querySelector('table th')!;
+       expect(stuckCellElement.classList).toContain('mat-mdc-table-sticky');
+     }));
 
   // Note: needs to be fakeAsync so it catches the error.
   it('should not throw when a row definition is on an ng-container', fakeAsync(() => {
-    const fixture = TestBed.createComponent(TableWithNgContainerRow);
+       const fixture = TestBed.createComponent(TableWithNgContainerRow);
 
-    expect(() => {
-      fixture.detectChanges();
-      tick();
-    }).not.toThrow();
-  }));
+       expect(() => {
+         fixture.detectChanges();
+         tick();
+       }).not.toThrow();
+     }));
 
   it('should be able to render a flexbox-based table', () => {
     expect(() => {
@@ -281,113 +283,120 @@ describe('MDC-based MatTable', () => {
     });
 
     it('should update the page index when switching to a smaller data set from a page',
-        fakeAsync(() => {
-          // Add 20 rows so we can switch pages.
-          for (let i = 0; i < 20; i++) {
-            component.underlyingDataSource.addData();
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-          }
+       fakeAsync(() => {
+         // Add 20 rows so we can switch pages.
+         for (let i = 0; i < 20; i++) {
+           component.underlyingDataSource.addData();
+           fixture.detectChanges();
+           tick();
+           fixture.detectChanges();
+         }
 
-          // Go to the last page.
-          fixture.componentInstance.paginator.lastPage();
-          fixture.detectChanges();
+         // Go to the last page.
+         fixture.componentInstance.paginator.lastPage();
+         fixture.detectChanges();
 
-          // Switch to a smaller data set.
-          dataSource.data = [{a: 'a_0', b: 'b_0', c: 'c_0'}];
-          fixture.detectChanges();
-          tick();
-          fixture.detectChanges();
+         // Switch to a smaller data set.
+         dataSource.data = [{a: 'a_0', b: 'b_0', c: 'c_0'}];
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
 
-          expectTableToMatchContent(tableElement, [
-            ['Column A', 'Column B', 'Column C'],
-            ['a_0', 'b_0', 'c_0'],
-            ['Footer A', 'Footer B', 'Footer C'],
-          ]);
-        }));
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_0', 'b_0', 'c_0'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
+       }));
 
     it('should be able to filter the table contents', fakeAsync(() => {
-      // Change filter to a_1, should match one row
-      dataSource.filter = 'a_1';
-      fixture.detectChanges();
-      expect(dataSource.filteredData.length).toBe(1);
-      expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['a_1', 'b_1', 'c_1'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
+         // Change filter to a_1, should match one row
+         dataSource.filter = 'a_1';
+         fixture.detectChanges();
+         expect(dataSource.filteredData.length).toBe(1);
+         expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_1', 'b_1', 'c_1'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
 
-      flushMicrotasks();  // Resolve promise that updates paginator's length
-      expect(dataSource.paginator!.length).toBe(1);
+         flushMicrotasks();  // Resolve promise that updates paginator's length
+         expect(dataSource.paginator!.length).toBe(1);
 
-      // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
-      dataSource.filter = '  A_2  ';
-      fixture.detectChanges();
-      expect(dataSource.filteredData.length).toBe(1);
-      expect(dataSource.filteredData[0]).toBe(dataSource.data[1]);
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['a_2', 'b_2', 'c_2'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
+         // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
+         dataSource.filter = '  A_2  ';
+         fixture.detectChanges();
+         expect(dataSource.filteredData.length).toBe(1);
+         expect(dataSource.filteredData[0]).toBe(dataSource.data[1]);
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_2', 'b_2', 'c_2'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
 
-      // Change filter to empty string, should match all rows
-      dataSource.filter = '';
-      fixture.detectChanges();
-      expect(dataSource.filteredData.length).toBe(3);
-      expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
-      expect(dataSource.filteredData[1]).toBe(dataSource.data[1]);
-      expect(dataSource.filteredData[2]).toBe(dataSource.data[2]);
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['a_1', 'b_1', 'c_1'],
-        ['a_2', 'b_2', 'c_2'],
-        ['a_3', 'b_3', 'c_3'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
+         // Change filter to empty string, should match all rows
+         dataSource.filter = '';
+         fixture.detectChanges();
+         expect(dataSource.filteredData.length).toBe(3);
+         expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
+         expect(dataSource.filteredData[1]).toBe(dataSource.data[1]);
+         expect(dataSource.filteredData[2]).toBe(dataSource.data[2]);
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_1', 'b_1', 'c_1'],
+           ['a_2', 'b_2', 'c_2'],
+           ['a_3', 'b_3', 'c_3'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
 
-      // Change filter function and filter, should match to rows with zebra.
-      dataSource.filterPredicate = (data, filter) => {
-        let dataStr;
-        switch (data.a) {
-          case 'a_1': dataStr = 'elephant'; break;
-          case 'a_2': dataStr = 'zebra'; break;
-          case 'a_3': dataStr = 'monkey'; break;
-          default: dataStr = '';
-        }
+         // Change filter function and filter, should match to rows with zebra.
+         dataSource.filterPredicate = (data, filter) => {
+           let dataStr;
+           switch (data.a) {
+             case 'a_1':
+               dataStr = 'elephant';
+               break;
+             case 'a_2':
+               dataStr = 'zebra';
+               break;
+             case 'a_3':
+               dataStr = 'monkey';
+               break;
+             default:
+               dataStr = '';
+           }
 
-        return dataStr.indexOf(filter) != -1;
-      };
-      dataSource.filter = 'zebra';
-      fixture.detectChanges();
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['a_2', 'b_2', 'c_2'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
+           return dataStr.indexOf(filter) != -1;
+         };
+         dataSource.filter = 'zebra';
+         fixture.detectChanges();
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_2', 'b_2', 'c_2'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
 
-      // Change the filter to a falsy value that might come in from the view.
-      dataSource.filter = 0 as any;
-      fixture.detectChanges();
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
-    }));
+         // Change the filter to a falsy value that might come in from the view.
+         dataSource.filter = 0 as any;
+         fixture.detectChanges();
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
+       }));
 
     it('should not match concatenated words', fakeAsync(() => {
-      // Set the value to the last character of the first
-      // column plus the first character of the second column.
-      dataSource.filter = '1b';
-      fixture.detectChanges();
-      expect(dataSource.filteredData.length).toBe(0);
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
-    }));
+         // Set the value to the last character of the first
+         // column plus the first character of the second column.
+         dataSource.filter = '1b';
+         fixture.detectChanges();
+         expect(dataSource.filteredData.length).toBe(0);
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
+       }));
 
     it('should be able to sort the table contents', () => {
       // Activate column A sort
@@ -415,10 +424,14 @@ describe('MDC-based MatTable', () => {
       // Change sort function to customize how it sorts - first column 1, then 3, then 2
       dataSource.sortingDataAccessor = data => {
         switch (data.a) {
-          case 'a_1': return 'elephant';
-          case 'a_2': return 'zebra';
-          case 'a_3': return 'monkey';
-          default: return '';
+          case 'a_1':
+            return 'elephant';
+          case 'a_2':
+            return 'zebra';
+          case 'a_3':
+            return 'monkey';
+          default:
+            return '';
         }
       };
       component.sort.direction = '';
@@ -519,35 +532,35 @@ describe('MDC-based MatTable', () => {
     });
 
     it('should be able to page the table contents', fakeAsync(() => {
-      // Add 100 rows, should only display first 5 since page length is 5
-      for (let i = 0; i < 100; i++) {
-        component.underlyingDataSource.addData();
-      }
-      fixture.detectChanges();
-      flushMicrotasks();  // Resolve promise that updates paginator's length
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['a_1', 'b_1', 'c_1'],
-        ['a_2', 'b_2', 'c_2'],
-        ['a_3', 'b_3', 'c_3'],
-        ['a_4', 'b_4', 'c_4'],
-        ['a_5', 'b_5', 'c_5'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
+         // Add 100 rows, should only display first 5 since page length is 5
+         for (let i = 0; i < 100; i++) {
+           component.underlyingDataSource.addData();
+         }
+         fixture.detectChanges();
+         flushMicrotasks();  // Resolve promise that updates paginator's length
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_1', 'b_1', 'c_1'],
+           ['a_2', 'b_2', 'c_2'],
+           ['a_3', 'b_3', 'c_3'],
+           ['a_4', 'b_4', 'c_4'],
+           ['a_5', 'b_5', 'c_5'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
 
-      // Navigate to the next page
-      component.paginator.nextPage();
-      fixture.detectChanges();
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
-        ['a_6', 'b_6', 'c_6'],
-        ['a_7', 'b_7', 'c_7'],
-        ['a_8', 'b_8', 'c_8'],
-        ['a_9', 'b_9', 'c_9'],
-        ['a_10', 'b_10', 'c_10'],
-        ['Footer A', 'Footer B', 'Footer C'],
-      ]);
-    }));
+         // Navigate to the next page
+         component.paginator.nextPage();
+         fixture.detectChanges();
+         expectTableToMatchContent(tableElement, [
+           ['Column A', 'Column B', 'Column C'],
+           ['a_6', 'b_6', 'c_6'],
+           ['a_7', 'b_7', 'c_7'],
+           ['a_8', 'b_8', 'c_8'],
+           ['a_9', 'b_9', 'c_9'],
+           ['a_10', 'b_10', 'c_10'],
+           ['Footer A', 'Footer B', 'Footer C'],
+         ]);
+       }));
 
     it('should sort strings with numbers larger than MAX_SAFE_INTEGER correctly', () => {
       const large = '9563256840123535';
@@ -579,7 +592,6 @@ describe('MDC-based MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
-
   });
 });
 
@@ -591,12 +603,18 @@ interface TestData {
 
 class FakeDataSource extends DataSource<TestData> {
   _dataChange = new BehaviorSubject<TestData[]>([]);
-  get data() { return this._dataChange.getValue(); }
-  set data(data: TestData[]) { this._dataChange.next(data); }
+  get data() {
+    return this._dataChange.getValue();
+  }
+  set data(data: TestData[]) {
+    this._dataChange.next(data);
+  }
 
   constructor() {
     super();
-    for (let i = 0; i < 4; i++) { this.addData(); }
+    for (let i = 0; i < 4; i++) {
+      this.addData();
+    }
   }
 
   connect(): Observable<TestData[]> {
@@ -609,11 +627,7 @@ class FakeDataSource extends DataSource<TestData> {
     const nextIndex = this.data.length + 1;
 
     let copiedData = this.data.slice();
-    copiedData.push({
-      a: `a_${nextIndex}`,
-      b: `b_${nextIndex}`,
-      c: `c_${nextIndex}`
-    });
+    copiedData.push({a: `a_${nextIndex}`, b: `b_${nextIndex}`, c: `c_${nextIndex}`});
 
     this.data = copiedData;
   }
@@ -655,7 +669,7 @@ class FakeDataSource extends DataSource<TestData> {
   `
 })
 class MatTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource|null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
@@ -689,7 +703,7 @@ class MatTableApp {
   `
 })
 class NativeHtmlTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource|null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -742,7 +756,7 @@ class NativeHtmlTableApp {
   `
 })
 class NestedTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource|null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -789,7 +803,7 @@ class StickyTableApp {
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource|null = new FakeDataSource();
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -971,7 +985,7 @@ class MatTableWithPaginatorApp implements OnInit {
   `
 })
 class TableWithNgContainerRow {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource|null = new FakeDataSource();
   columnsToRender = ['column_a'];
 }
 
@@ -1009,7 +1023,7 @@ class TableWithNgContainerRow {
   `
 })
 class MatFlexTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource|null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   @ViewChild(MatTable) table: MatTable<TestData>;
 }

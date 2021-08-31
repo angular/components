@@ -2,36 +2,39 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {
-  MatDatepickerModule,
-  DateRange,
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
-  DefaultMatCalendarRangeStrategy,
-} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {MatCalendarHarness, CalendarView} from './calendar-harness';
+import {
+  DateRange,
+  DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
+
+import {CalendarView, MatCalendarHarness} from './calendar-harness';
 
 /** Date at which the calendars are set. */
 const calendarDate = new Date(2020, 7, 1);
 
 /** Shared tests to run on both the original and MDC-based calendars. */
 export function runCalendarHarnessTests(
-    datepickerModule: typeof MatDatepickerModule,
-    calendarHarness: typeof MatCalendarHarness) {
+    datepickerModule: typeof MatDatepickerModule, calendarHarness: typeof MatCalendarHarness) {
   let fixture: ComponentFixture<CalendarHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, datepickerModule],
-      declarations: [CalendarHarnessTest],
-      providers: [{
-        // Usually it's the date range picker that provides the default range selection strategy,
-        // but since we're testing the calendar on its own, we have to provide it manually.
-        provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-        useClass: DefaultMatCalendarRangeStrategy
-      }]
-    }).compileComponents();
+    await TestBed
+        .configureTestingModule({
+          imports: [MatNativeDateModule, datepickerModule],
+          declarations: [CalendarHarnessTest],
+          providers: [{
+            // Usually it's the date range picker that provides the default range selection
+            // strategy,
+            // but since we're testing the calendar on its own, we have to provide it manually.
+            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+            useClass: DefaultMatCalendarRangeStrategy
+          }]
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(CalendarHarnessTest);
     fixture.detectChanges();
@@ -139,11 +142,11 @@ export function runCalendarHarnessTests(
   it('should get the state of the cell within the main range', async () => {
     const calendar = await loader.getHarness(calendarHarness.with({selector: '#range'}));
     const allCells = await calendar.getCells();
-    const [initialStartStates, initialInRangeStates, initialEndStates] = await parallel(() => [
-      parallel(() => allCells.map(cell => cell.isRangeStart())),
-      parallel(() => allCells.map(cell => cell.isInRange())),
-      parallel(() => allCells.map(cell => cell.isRangeEnd()))
-    ]);
+    const [initialStartStates, initialInRangeStates, initialEndStates] = await parallel(
+        () =>
+            [parallel(() => allCells.map(cell => cell.isRangeStart())),
+             parallel(() => allCells.map(cell => cell.isInRange())),
+             parallel(() => allCells.map(cell => cell.isRangeEnd()))]);
 
     expect(initialStartStates.every(state => state === false)).toBe(true);
     expect(initialInRangeStates.every(state => state === false)).toBe(true);
@@ -172,11 +175,11 @@ export function runCalendarHarnessTests(
   it('should get the state of the cell within the comparison range', async () => {
     const calendar = await loader.getHarness(calendarHarness.with({selector: '#range'}));
     const allCells = await calendar.getCells();
-    const [initialStartStates, initialInRangeStates, initialEndStates] = await parallel(() => [
-      parallel(() => allCells.map(cell => cell.isComparisonRangeStart())),
-      parallel(() => allCells.map(cell => cell.isInComparisonRange())),
-      parallel(() => allCells.map(cell => cell.isComparisonRangeEnd()))
-    ]);
+    const [initialStartStates, initialInRangeStates, initialEndStates] = await parallel(
+        () =>
+            [parallel(() => allCells.map(cell => cell.isComparisonRangeStart())),
+             parallel(() => allCells.map(cell => cell.isInComparisonRange())),
+             parallel(() => allCells.map(cell => cell.isComparisonRangeEnd()))]);
 
     expect(initialStartStates.every(state => state === false)).toBe(true);
     expect(initialInRangeStates.every(state => state === false)).toBe(true);
@@ -207,11 +210,11 @@ export function runCalendarHarnessTests(
   it('should get the state of the cell within the preview range', async () => {
     const calendar = await loader.getHarness(calendarHarness.with({selector: '#range'}));
     const allCells = await calendar.getCells();
-    const [initialStartStates, initialInRangeStates, initialEndStates] = await parallel(() => [
-      parallel(() => allCells.map(cell => cell.isPreviewRangeStart())),
-      parallel(() => allCells.map(cell => cell.isInPreviewRange())),
-      parallel(() => allCells.map(cell => cell.isPreviewRangeEnd()))
-    ]);
+    const [initialStartStates, initialInRangeStates, initialEndStates] = await parallel(
+        () =>
+            [parallel(() => allCells.map(cell => cell.isPreviewRangeStart())),
+             parallel(() => allCells.map(cell => cell.isInPreviewRange())),
+             parallel(() => allCells.map(cell => cell.isPreviewRangeEnd()))]);
 
     expect(initialStartStates.every(state => state === false)).toBe(true);
     expect(initialInRangeStates.every(state => state === false)).toBe(true);
@@ -289,7 +292,6 @@ export function runCalendarHarnessTests(
     const cells = await calendar.getCells({inPreviewRange: true});
     expect(await parallel(() => cells.map(cell => cell.getText()))).toEqual(['5', '6', '7', '8']);
   });
-
 }
 
 @Component({

@@ -23,4 +23,5 @@ import {MatBottomSheetContainer} from './bottom-sheet-container';
   declarations: [MatBottomSheetContainer],
   entryComponents: [MatBottomSheetContainer],
 })
-export class MatBottomSheetModule {}
+export class MatBottomSheetModule {
+}
