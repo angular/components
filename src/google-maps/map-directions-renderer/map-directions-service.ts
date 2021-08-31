@@ -25,7 +25,7 @@ export interface MapDirectionsResponse {
  */
 @Injectable({providedIn: 'root'})
 export class MapDirectionsService {
-  private _directionsService: google.maps.DirectionsService|undefined;
+  private _directionsService: google.maps.DirectionsService | undefined;
 
   constructor(private readonly _ngZone: NgZone) {}
 
@@ -42,11 +42,10 @@ export class MapDirectionsService {
         this._directionsService = new google.maps.DirectionsService();
       }
 
-      const callback =
-          (
-            result: google.maps.DirectionsResult|undefined,
-            status: google.maps.DirectionsStatus
-          ) => {
+      const callback = (
+        result: google.maps.DirectionsResult | undefined,
+        status: google.maps.DirectionsStatus,
+      ) => {
         this._ngZone.run(() => {
           observer.next({result, status});
           observer.complete();

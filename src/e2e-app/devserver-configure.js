@@ -6,5 +6,5 @@ require.config({
 
     // Support for lazy-loading of component examples.
     '@angular/components-examples': 'angular_material/src/components-examples',
-  }
+  },
 });

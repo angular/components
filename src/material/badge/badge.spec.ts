@@ -11,12 +11,10 @@ describe('MatBadge', () => {
   let badgeDebugElement: DebugElement;
 
   beforeEach(fakeAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [MatBadgeModule],
-          declarations: [BadgeTestApp, PreExistingBadge, NestedBadge, BadgeOnTemplate],
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [MatBadgeModule],
+      declarations: [BadgeTestApp, PreExistingBadge, NestedBadge, BadgeOnTemplate],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BadgeTestApp);
     testComponent = fixture.debugElement.componentInstance;
@@ -229,7 +227,6 @@ describe('MatBadge', () => {
       TestBed.createComponent(BadgeOnTemplate);
     }).toThrowError(/matBadge must be attached to an element node/);
   });
-
 });
 
 /** Test component that contains a MatBadge. */
@@ -248,7 +245,7 @@ describe('MatBadge', () => {
           [matBadgeDisabled]="badgeDisabled">
       home
     </span>
-  `
+  `,
 })
 class BadgeTestApp {
   @ViewChild(MatBadge) badgeInstance: MatBadge;
@@ -262,18 +259,15 @@ class BadgeTestApp {
   badgeDisabled = false;
 }
 
-
 @Component({
   template: `
     <span matBadge="Hello">
       home
       <div class="mat-badge-content">Pre-existing badge</div>
     </span>
-  `
+  `,
 })
-class PreExistingBadge {
-}
-
+class PreExistingBadge {}
 
 @Component({
   template: `
@@ -281,16 +275,13 @@ class PreExistingBadge {
       home
       <span matBadge="Hi">Something</span>
     </span>
-  `
+  `,
 })
-class NestedBadge {
-}
-
+class NestedBadge {}
 
 @Component({
   template: `
     <ng-template matBadge="1">Notifications</ng-template>
-  `
+  `,
 })
-class BadgeOnTemplate {
-}
+class BadgeOnTemplate {}

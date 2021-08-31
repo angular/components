@@ -4,8 +4,12 @@ import {BuildPackage} from './build-package';
 import {tsCompile} from './ts-compile';
 
 /** Compiles the TypeScript sources of a primary or secondary entry point. */
-export async function compileEntryPoint(buildPackage: BuildPackage, tsconfigName: string,
-                                        secondaryEntryPoint = '', es5OutputPath?: string) {
+export async function compileEntryPoint(
+  buildPackage: BuildPackage,
+  tsconfigName: string,
+  secondaryEntryPoint = '',
+  es5OutputPath?: string,
+) {
   const entryPointPath = join(buildPackage.sourceDir, secondaryEntryPoint);
   const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
   const ngcFlags = ['-p', entryPointTsconfigPath];
@@ -19,7 +23,8 @@ export async function compileEntryPoint(buildPackage: BuildPackage, tsconfigName
   // Blocked on: https://github.com/angular/angular/issues/33724
   return tsCompile('tsc', ngcFlags).catch(() => {
     const error = chalk.red(
-        `Failed to compile ${secondaryEntryPoint} using ${entryPointTsconfigPath}`);
+      `Failed to compile ${secondaryEntryPoint} using ${entryPointTsconfigPath}`,
+    );
     console.error(error);
     return Promise.reject(error);
   });

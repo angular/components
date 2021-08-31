@@ -23,7 +23,8 @@ import {Component, Injector, Input, OnInit, ViewContainerRef} from '@angular/cor
       Could not find example {{id}}
     </div>
   `,
-  styles: [`
+  styles: [
+    `
     .label {
       display: flex;
       justify-content: space-between;
@@ -42,21 +43,25 @@ import {Component, Injector, Input, OnInit, ViewContainerRef} from '@angular/cor
       color: #666;
       white-space: pre;
     }
-  `]
+  `,
+  ],
 })
 export class Example implements OnInit {
   /** ID of the material example to display. */
   @Input() id: string;
 
   @Input()
-  get showLabel(): boolean { return this._showLabel; }
-  set showLabel(v: boolean) { this._showLabel = coerceBooleanProperty(v); }
+  get showLabel(): boolean {
+    return this._showLabel;
+  }
+  set showLabel(v: boolean) {
+    this._showLabel = coerceBooleanProperty(v);
+  }
   _showLabel: boolean;
 
   title: string;
 
-  constructor(private _injector: Injector,
-              private _viewContainerRef: ViewContainerRef) {}
+  constructor(private _injector: Injector, private _viewContainerRef: ViewContainerRef) {}
 
   async ngOnInit() {
     this.title = EXAMPLE_COMPONENTS[this.id].title;

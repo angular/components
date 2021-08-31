@@ -13,7 +13,7 @@ const {readdirSync, readFileSync, existsSync} = require('fs');
  * within the real filesystem.
  * TODO: Simplify if Bazel on Windows uses runfile symlinking.
  */
-exports.getNpmPackagesFromRunfiles = function() {
+exports.getNpmPackagesFromRunfiles = function () {
   // Path to the Bazel runfiles manifest if present. This file is present if runfiles are
   // not symlinked into the runfiles directory.
   const runfilesManifestPath = process.env.RUNFILES_MANIFEST_FILE;
@@ -33,4 +33,4 @@ exports.getNpmPackagesFromRunfiles = function() {
       name: relative(workspacePath, runfilePath).split(sep)[0],
       pkgPath: realPath,
     }));
-}
+};

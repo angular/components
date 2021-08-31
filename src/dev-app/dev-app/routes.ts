@@ -14,38 +14,38 @@ export const DEV_APP_ROUTES: Routes = [
   {path: '', component: DevAppHome},
   {
     path: 'autocomplete',
-    loadChildren: 'autocomplete/autocomplete-demo-module#AutocompleteDemoModule'
+    loadChildren: 'autocomplete/autocomplete-demo-module#AutocompleteDemoModule',
   },
   {path: 'badge', loadChildren: 'badge/badge-demo-module#BadgeDemoModule'},
   {
     path: 'bottom-sheet',
-    loadChildren: 'bottom-sheet/bottom-sheet-demo-module#BottomSheetDemoModule'
+    loadChildren: 'bottom-sheet/bottom-sheet-demo-module#BottomSheetDemoModule',
   },
   {path: 'baseline', loadChildren: 'baseline/baseline-demo-module#BaselineDemoModule'},
   {path: 'button', loadChildren: 'button/button-demo-module#ButtonDemoModule'},
   {
     path: 'button-toggle',
-    loadChildren: 'button-toggle/button-toggle-demo-module#ButtonToggleDemoModule'
+    loadChildren: 'button-toggle/button-toggle-demo-module#ButtonToggleDemoModule',
   },
   {path: 'card', loadChildren: 'card/card-demo-module#CardDemoModule'},
   {
     path: 'cdk-experimental-combobox',
-    loadChildren: 'cdk-experimental-combobox/cdk-combobox-demo-module#CdkComboboxDemoModule'
+    loadChildren: 'cdk-experimental-combobox/cdk-combobox-demo-module#CdkComboboxDemoModule',
   },
   {
     path: 'cdk-experimental-listbox',
-    loadChildren: 'cdk-experimental-listbox/cdk-listbox-demo-module#CdkListboxDemoModule'
+    loadChildren: 'cdk-experimental-listbox/cdk-listbox-demo-module#CdkListboxDemoModule',
   },
   {
     path: 'cdk-experimental-menu',
-    loadChildren: 'cdk-experimental-menu/cdk-menu-demo-module#CdkMenuDemoModule'
+    loadChildren: 'cdk-experimental-menu/cdk-menu-demo-module#CdkMenuDemoModule',
   },
   {path: 'checkbox', loadChildren: 'checkbox/checkbox-demo-module#CheckboxDemoModule'},
   {path: 'chips', loadChildren: 'chips/chips-demo-module#ChipsDemoModule'},
   {path: 'clipboard', loadChildren: 'clipboard/clipboard-demo-module#ClipboardDemoModule'},
   {
     path: 'column-resize',
-    loadChildren: 'column-resize/column-resize-demo-module#ColumnResizeDemoModule'
+    loadChildren: 'column-resize/column-resize-demo-module#ColumnResizeDemoModule',
   },
   {path: 'datepicker', loadChildren: 'datepicker/datepicker-demo-module#DatepickerDemoModule'},
   {path: 'dialog', loadChildren: 'dialog/dialog-demo-module#DialogDemoModule'},
@@ -54,7 +54,7 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'expansion', loadChildren: 'expansion/expansion-demo-module#ExpansionDemoModule'},
   {
     path: 'focus-origin',
-    loadChildren: 'focus-origin/focus-origin-demo-module#FocusOriginDemoModule'
+    loadChildren: 'focus-origin/focus-origin-demo-module#FocusOriginDemoModule',
   },
   {path: 'focus-trap', loadChildren: 'focus-trap/focus-trap-demo-module#FocusTrapDemoModule'},
   {path: 'google-map', loadChildren: 'google-map/google-map-demo-module#GoogleMapDemoModule'},
@@ -70,25 +70,25 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'list', loadChildren: 'list/list-demo-module#ListDemoModule'},
   {
     path: 'live-announcer',
-    loadChildren: 'live-announcer/live-announcer-demo-module#LiveAnnouncerDemoModule'
+    loadChildren: 'live-announcer/live-announcer-demo-module#LiveAnnouncerDemoModule',
   },
   {
     path: 'menubar',
-    loadChildren: 'menubar/mat-menubar-demo-module#MatMenuBarDemoModule'
+    loadChildren: 'menubar/mat-menubar-demo-module#MatMenuBarDemoModule',
   },
   {
     path: 'mdc-autocomplete',
-    loadChildren: 'mdc-autocomplete/mdc-autocomplete-demo-module#MdcAutocompleteDemoModule'
+    loadChildren: 'mdc-autocomplete/mdc-autocomplete-demo-module#MdcAutocompleteDemoModule',
   },
   {path: 'mdc-button', loadChildren: 'mdc-button/mdc-button-demo-module#MdcButtonDemoModule'},
   {path: 'mdc-card', loadChildren: 'mdc-card/mdc-card-demo-module#MdcCardDemoModule'},
   {
     path: 'mdc-checkbox',
-    loadChildren: 'mdc-checkbox/mdc-checkbox-demo-module#MdcCheckboxDemoModule'
+    loadChildren: 'mdc-checkbox/mdc-checkbox-demo-module#MdcCheckboxDemoModule',
   },
   {
     path: 'mdc-progress-bar',
-    loadChildren: 'mdc-progress-bar/mdc-progress-bar-demo-module#MdcProgressBarDemoModule'
+    loadChildren: 'mdc-progress-bar/mdc-progress-bar-demo-module#MdcProgressBarDemoModule',
   },
   {path: 'mdc-chips', loadChildren: 'mdc-chips/mdc-chips-demo-module#MdcChipsDemoModule'},
   {path: 'mdc-dialog', loadChildren: 'mdc-dialog/mdc-dialog-demo-module#MdcDialogDemoModule'},
@@ -97,23 +97,23 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'mdc-menu', loadChildren: 'mdc-menu/mdc-menu-demo-module#MdcMenuDemoModule'},
   {
     path: 'mdc-paginator',
-    loadChildren: 'mdc-paginator/mdc-paginator-demo-module#MdcPaginatorDemoModule'
+    loadChildren: 'mdc-paginator/mdc-paginator-demo-module#MdcPaginatorDemoModule',
   },
   {
     path: 'mdc-progress-spinner',
     loadChildren:
-      'mdc-progress-spinner/mdc-progress-spinner-demo-module#MdcProgressSpinnerDemoModule'
+      'mdc-progress-spinner/mdc-progress-spinner-demo-module#MdcProgressSpinnerDemoModule',
   },
   {path: 'mdc-radio', loadChildren: 'mdc-radio/mdc-radio-demo-module#MdcRadioDemoModule'},
   {path: 'mdc-select', loadChildren: 'mdc-select/mdc-select-demo-module#MdcSelectDemoModule'},
   {path: 'mdc-sidenav', loadChildren: 'mdc-sidenav/mdc-sidenav-demo-module#MdcSidenavDemoModule'},
   {
     path: 'mdc-snack-bar',
-    loadChildren: 'mdc-snack-bar/mdc-snack-bar-demo-module#MdcSnackBarDemoModule'
+    loadChildren: 'mdc-snack-bar/mdc-snack-bar-demo-module#MdcSnackBarDemoModule',
   },
   {
     path: 'mdc-slide-toggle',
-    loadChildren: 'mdc-slide-toggle/mdc-slide-toggle-demo-module#MdcSlideToggleDemoModule'
+    loadChildren: 'mdc-slide-toggle/mdc-slide-toggle-demo-module#MdcSlideToggleDemoModule',
   },
   {path: 'mdc-slider', loadChildren: 'mdc-slider/mdc-slider-demo-module#MdcSliderDemoModule'},
   {path: 'mdc-table', loadChildren: 'mdc-table/mdc-table-demo-module#MdcTableDemoModule'},
@@ -124,16 +124,16 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'platform', loadChildren: 'platform/platform-demo-module#PlatformDemoModule'},
   {
     path: 'popover-edit',
-    loadChildren: 'popover-edit/popover-edit-demo-module#PopoverEditDemoModule'
+    loadChildren: 'popover-edit/popover-edit-demo-module#PopoverEditDemoModule',
   },
   {path: 'portal', loadChildren: 'portal/portal-demo-module#PortalDemoModule'},
   {
     path: 'progress-bar',
-    loadChildren: 'progress-bar/progress-bar-demo-module#ProgressBarDemoModule'
+    loadChildren: 'progress-bar/progress-bar-demo-module#ProgressBarDemoModule',
   },
   {
     path: 'progress-spinner',
-    loadChildren: 'progress-spinner/progress-spinner-demo-module#ProgressSpinnerDemoModule'
+    loadChildren: 'progress-spinner/progress-spinner-demo-module#ProgressSpinnerDemoModule',
   },
   {path: 'radio', loadChildren: 'radio/radio-demo-module#RadioDemoModule'},
   {path: 'ripple', loadChildren: 'ripple/ripple-demo-module#RippleDemoModule'},
@@ -141,7 +141,7 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'sidenav', loadChildren: 'sidenav/sidenav-demo-module#SidenavDemoModule'},
   {
     path: 'slide-toggle',
-    loadChildren: 'slide-toggle/slide-toggle-demo-module#SlideToggleDemoModule'
+    loadChildren: 'slide-toggle/slide-toggle-demo-module#SlideToggleDemoModule',
   },
   {path: 'slider', loadChildren: 'slider/slider-demo-module#SliderDemoModule'},
   {path: 'snack-bar', loadChildren: 'snack-bar/snack-bar-demo-module#SnackBarDemoModule'},
@@ -150,7 +150,7 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'table-scroll-container',
     loadChildren:
-        'table-scroll-container/table-scroll-container-demo-module#TableScrollContainerDemoModule',
+      'table-scroll-container/table-scroll-container-demo-module#TableScrollContainerDemoModule',
   },
   {path: 'tabs', loadChildren: 'tabs/tabs-demo-module#TabsDemoModule'},
   {path: 'toolbar', loadChildren: 'toolbar/toolbar-demo-module#ToolbarDemoModule'},
@@ -160,11 +160,11 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'screen-type', loadChildren: 'screen-type/screen-type-demo-module#ScreenTypeDemoModule'},
   {
     path: 'connected-overlay',
-    loadChildren: 'connected-overlay/connected-overlay-demo-module#ConnectedOverlayDemoModule'
+    loadChildren: 'connected-overlay/connected-overlay-demo-module#ConnectedOverlayDemoModule',
   },
   {
     path: 'virtual-scroll',
-    loadChildren: 'virtual-scroll/virtual-scroll-demo-module#VirtualScrollDemoModule'
+    loadChildren: 'virtual-scroll/virtual-scroll-demo-module#VirtualScrollDemoModule',
   },
   {
     path: 'youtube-player',

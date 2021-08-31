@@ -26,7 +26,7 @@ describe('InputModalityDetector', () => {
       providers: [
         {provide: Platform, useValue: {isBrowser}},
         {provide: INPUT_MODALITY_DETECTOR_OPTIONS, useValue: options},
-      ]
+      ],
     });
 
     detector = TestBed.inject(InputModalityDetector);

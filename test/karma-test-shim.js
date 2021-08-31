@@ -13,7 +13,7 @@ var specFiles = Object.keys(window.__karma__.files).filter(isMaterialSpecFile);
 // Configure the Angular test bed and run all specs once configured.
 configureTestBed()
   .then(runMaterialSpecs)
-  .then(__karma__.start, function(error) {
+  .then(__karma__.start, function (error) {
     // Passing in the error object directly to Karma won't log out the stack trace and
     // passing the `originalErr` doesn't work correctly either. We have to log out the
     // stack trace so we can actually debug errors before the tests have started.
@@ -21,13 +21,14 @@ configureTestBed()
     __karma__.error(error);
   });
 
-
 /** Runs the Angular Material specs in Karma. */
 function runMaterialSpecs() {
   // By importing all spec files, Karma will run the tests directly.
-  return Promise.all(specFiles.map(function(fileName) {
-    return System.import(fileName);
-  }));
+  return Promise.all(
+    specFiles.map(function (fileName) {
+      return System.import(fileName);
+    }),
+  );
 }
 
 /** Whether the specified file is part of Angular Material. */
@@ -40,7 +41,7 @@ function configureTestBed() {
   return Promise.all([
     System.import('@angular/core'),
     System.import('@angular/core/testing'),
-    System.import('@angular/platform-browser-dynamic/testing')
+    System.import('@angular/platform-browser-dynamic/testing'),
   ]).then(function (providers) {
     var core = providers[0];
     var testing = providers[1];
@@ -51,7 +52,7 @@ function configureTestBed() {
     testing.TestBed.initTestEnvironment(
       testingBrowser.BrowserDynamicTestingModule,
       testingBrowser.platformBrowserDynamicTesting(),
-      {teardown: {destroyAfterEach: true}}
+      {teardown: {destroyAfterEach: true}},
     );
   });
 }

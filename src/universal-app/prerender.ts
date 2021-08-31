@@ -13,9 +13,9 @@ import {KitchenSinkRootServerModuleNgFactory} from './kitchen-sink-root.ngfactor
 // Resolve the path to the "index.html" through Bazel runfile resolution.
 const indexHtmlPath = require.resolve('./index.html');
 
-const result = renderModuleFactory(
-    KitchenSinkRootServerModuleNgFactory,
-    {document: readFileSync(indexHtmlPath, 'utf-8')});
+const result = renderModuleFactory(KitchenSinkRootServerModuleNgFactory, {
+  document: readFileSync(indexHtmlPath, 'utf-8'),
+});
 
 result
   .then(content => {

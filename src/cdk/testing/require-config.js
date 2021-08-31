@@ -3,5 +3,5 @@
 require.config({
   paths: {
     'kagekiri': '/base/npm/node_modules/kagekiri/dist/kagekiri.umd.min',
-  }
+  },
 });

@@ -21,10 +21,10 @@ import {MatMenuItem} from './menu-item';
     MatRippleModule,
     MatCommonModule,
     OverlayModule,
-    _MatMenuDirectivesModule
+    _MatMenuDirectivesModule,
   ],
   exports: [CdkScrollableModule, MatMenu, MatCommonModule, MatMenuItem, _MatMenuDirectivesModule],
   declarations: [MatMenu, MatMenuItem],
-  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER]
+  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatMenuModule {}

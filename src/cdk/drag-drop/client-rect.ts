@@ -20,7 +20,7 @@ export function getMutableClientRect(element: Element): ClientRect {
     bottom: clientRect.bottom,
     left: clientRect.left,
     width: clientRect.width,
-    height: clientRect.height
+    height: clientRect.height,
   };
 }
 
@@ -56,14 +56,20 @@ export function adjustClientRect(clientRect: ClientRect, top: number, left: numb
  * @param pointerX Coordinates along the X axis.
  * @param pointerY Coordinates along the Y axis.
  */
-export function isPointerNearClientRect(rect: ClientRect,
-                                        threshold: number,
-                                        pointerX: number,
-                                        pointerY: number): boolean {
+export function isPointerNearClientRect(
+  rect: ClientRect,
+  threshold: number,
+  pointerX: number,
+  pointerY: number,
+): boolean {
   const {top, right, bottom, left, width, height} = rect;
   const xThreshold = width * threshold;
   const yThreshold = height * threshold;
 
-  return pointerY > top - yThreshold && pointerY < bottom + yThreshold &&
-         pointerX > left - xThreshold && pointerX < right + xThreshold;
+  return (
+    pointerY > top - yThreshold &&
+    pointerY < bottom + yThreshold &&
+    pointerX > left - xThreshold &&
+    pointerX < right + xThreshold
+  );
 }

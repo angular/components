@@ -8,7 +8,7 @@ import {
   momentAdapterPackage,
   luxonAdapterPackage,
   dateFnsAdapterPackage,
-  youTubePlayerPackage
+  youTubePlayerPackage,
 } from './packages';
 
 // Build tasks have to be imported first, because the other tasks depend on them.

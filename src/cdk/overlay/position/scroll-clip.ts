@@ -27,7 +27,6 @@ export function isElementScrolledOutsideView(element: ClientRect, scrollContaine
   });
 }
 
-
 /**
  * Gets whether an element is clipped by any of its scrolling containers.
  * @param element Dimensions of the element (from getBoundingClientRect)

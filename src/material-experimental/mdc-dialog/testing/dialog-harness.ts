@@ -9,14 +9,14 @@
 import {HarnessPredicate} from '@angular/cdk/testing';
 import {
   DialogHarnessFilters,
-  MatDialogHarness as NonMdcDialogHarness
+  MatDialogHarness as NonMdcDialogHarness,
 } from '@angular/material/dialog/testing';
 
 /** Selectors for different sections of the mat-dialog that can contain user content. */
 export const enum MatDialogSection {
   TITLE = '.mat-mdc-dialog-title',
   CONTENT = '.mat-mdc-dialog-content',
-  ACTIONS = '.mat-mdc-dialog-actions'
+  ACTIONS = '.mat-mdc-dialog-actions',
 }
 
 /** Harness for interacting with a standard `MatDialog` in tests. */

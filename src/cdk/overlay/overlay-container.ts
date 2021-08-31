@@ -29,10 +29,10 @@ const globalsForTest = (typeof window !== 'undefined' ? window : {}) as {} as Te
  * down the testing `NgModule` (see https://github.com/angular/angular/issues/18831).
  */
 const isTestEnvironment =
-    (typeof globalsForTest.__karma__ !== 'undefined' && !!globalsForTest.__karma__) ||
-    (typeof globalsForTest.jasmine !== 'undefined' && !!globalsForTest.jasmine) ||
-    (typeof globalsForTest.jest !== 'undefined' && !!globalsForTest.jest) ||
-    (typeof globalsForTest.Mocha !== 'undefined' && !!globalsForTest.Mocha);
+  (typeof globalsForTest.__karma__ !== 'undefined' && !!globalsForTest.__karma__) ||
+  (typeof globalsForTest.jasmine !== 'undefined' && !!globalsForTest.jasmine) ||
+  (typeof globalsForTest.jest !== 'undefined' && !!globalsForTest.jest) ||
+  (typeof globalsForTest.Mocha !== 'undefined' && !!globalsForTest.Mocha);
 
 /** Container inside which all overlays will render. */
 @Injectable({providedIn: 'root'})
@@ -74,9 +74,9 @@ export class OverlayContainer implements OnDestroy {
     const containerClass = 'cdk-overlay-container';
 
     if (this._platform.isBrowser || isTestEnvironment) {
-      const oppositePlatformContainers =
-          this._document.querySelectorAll(`.${containerClass}[platform="server"], ` +
-                                          `.${containerClass}[platform="test"]`);
+      const oppositePlatformContainers = this._document.querySelectorAll(
+        `.${containerClass}[platform="server"], ` + `.${containerClass}[platform="test"]`,
+      );
 
       // Remove any old containers from the opposite platform.
       // This can happen when transitioning from the server to the client.

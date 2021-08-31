@@ -62,5 +62,5 @@ export {
   setLines,
   ShowOnDirtyErrorStateMatcher,
   ThemePalette,
-  VERSION
+  VERSION,
 } from '@angular/material/core';

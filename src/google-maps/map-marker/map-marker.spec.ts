@@ -8,19 +8,21 @@ import {
   createMapConstructorSpy,
   createMapSpy,
   createMarkerConstructorSpy,
-  createMarkerSpy
+  createMarkerSpy,
 } from '../testing/fake-google-map-utils';
 import {DEFAULT_MARKER_OPTIONS, MapMarker} from './map-marker';
 
 describe('MapMarker', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [GoogleMapsModule],
+        declarations: [TestApp],
+      });
+    }),
+  );
 
   beforeEach(() => {
     TestBed.compileComponents();
@@ -83,7 +85,7 @@ describe('MapMarker', () => {
       label: 'marker label',
       clickable: false,
       icon: 'icon name',
-      visible: undefined
+      visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -110,7 +112,7 @@ describe('MapMarker', () => {
       clickable: true,
       icon: 'icon name',
       map: mapSpy,
-      visible: undefined
+      visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -239,8 +241,8 @@ describe('MapMarker', () => {
 class TestApp {
   @ViewChild(MapMarker) marker: MapMarker;
   title?: string;
-  position?: google.maps.LatLng|google.maps.LatLngLiteral;
-  label?: string|google.maps.MarkerLabel;
+  position?: google.maps.LatLng | google.maps.LatLngLiteral;
+  label?: string | google.maps.MarkerLabel;
   clickable?: boolean;
   options?: google.maps.MarkerOptions;
   icon?: string;

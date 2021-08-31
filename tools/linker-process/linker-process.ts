@@ -19,7 +19,7 @@ const logger = new ConsoleLogger(LogLevel.info);
 /** Basic interface describing a Babel AST node path. */
 interface NodePath {
   type: string;
-  parentPath: NodePath|undefined;
+  parentPath: NodePath | undefined;
   node: any;
   buildCodeFrameError<T>(message: string, ctor: T): T;
 }
@@ -50,8 +50,10 @@ function isNgDeclareCallExpression(nodePath: NodePath): boolean {
 
   // Expect the `ngDeclare` identifier to be used as part of a property access that
   // is invoked within a call expression. e.g. `i0.ɵɵngDeclare<>`.
-  return nodePath.parentPath?.type === 'MemberExpression' &&
-         nodePath.parentPath.parentPath?.type === 'CallExpression';
+  return (
+    nodePath.parentPath?.type === 'MemberExpression' &&
+    nodePath.parentPath.parentPath?.type === 'CallExpression'
+  );
 }
 
 /** Gets the AMD module name for a given Bazel manifest path */
@@ -105,9 +107,11 @@ function processFileWithLinker(diskFilePath: string, fileContent: string): strin
     Identifier: (astPath: NodePath) => {
       if (isNgDeclareCallExpression(astPath)) {
         throw astPath.buildCodeFrameError(
-          'Found Angular declaration that has not been linked.', Error);
+          'Found Angular declaration that has not been linked.',
+          Error,
+        );
       }
-    }
+    },
   });
 
   return code;
@@ -115,7 +119,7 @@ function processFileWithLinker(diskFilePath: string, fileContent: string): strin
 
 if (require.main === module) {
   const [outputDirExecPath, outputDirManifestPath, amdMappingFileExecPath, ...inputFiles] =
-      getBazelActionArguments();
+    getBazelActionArguments();
   const amdModuleMappings = new Map<string, string>();
 
   for (const inputFileArg of inputFiles) {

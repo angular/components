@@ -11,9 +11,7 @@ export const merge: MergeConfig = {
   // use the Github API merge strategy. That way we ensure that PRs show up as `Merged`.
   githubApiMerge: {
     default: 'squash',
-    labels: [
-      {pattern: 'preserve commits', method: 'rebase'}
-    ]
+    labels: [{pattern: 'preserve commits', method: 'rebase'}],
   },
   claSignedLabel: 'cla: yes',
   mergeReadyLabel: 'merge ready',

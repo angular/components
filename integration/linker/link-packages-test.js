@@ -77,17 +77,19 @@ function testPackage(pkg) {
         ast: true,
         filename: diskFilePath,
         filenameRelative: debugFileName,
-        plugins: [linkerPlugin]
+        plugins: [linkerPlugin],
       });
 
       // Naively check if there are any Angular declarations left that haven't been linked.
       traverse(ast, {
-        Identifier: (astPath) => {
+        Identifier: astPath => {
           if (astPath.node.name.startsWith('ɵɵngDeclare')) {
             throw astPath.buildCodeFrameError(
-                'Found Angular declaration that has not been linked.', Error);
+              'Found Angular declaration that has not been linked.',
+              Error,
+            );
           }
-        }
+        },
       });
 
       passedFiles.push(debugFileName);
@@ -96,5 +98,5 @@ function testPackage(pkg) {
     }
   }
 
-  return {passedFiles, failures}
+  return {passedFiles, failures};
 }

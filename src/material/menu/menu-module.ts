@@ -22,11 +22,8 @@ import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-
  */
 @NgModule({
   exports: [MatMenuTrigger, MatMenuContent, MatCommonModule],
-  declarations: [
-    MatMenuTrigger,
-    MatMenuContent,
-  ],
-  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER]
+  declarations: [MatMenuTrigger, MatMenuContent],
+  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class _MatMenuDirectivesModule {}
 
@@ -40,6 +37,6 @@ export class _MatMenuDirectivesModule {}
   ],
   exports: [CdkScrollableModule, MatCommonModule, MatMenu, MatMenuItem, _MatMenuDirectivesModule],
   declarations: [MatMenu, MatMenuItem],
-  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER]
+  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatMenuModule {}

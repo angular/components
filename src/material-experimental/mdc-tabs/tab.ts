@@ -38,6 +38,10 @@ export class MatTab extends BaseMatTab {
 
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MatTabLabel)
-  override get templateLabel(): MatTabLabel { return this._templateLabel; }
-  override set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  override get templateLabel(): MatTabLabel {
+    return this._templateLabel;
+  }
+  override set templateLabel(value: MatTabLabel) {
+    this._setTemplateLabelInput(value);
+  }
 }

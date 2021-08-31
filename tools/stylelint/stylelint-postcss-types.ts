@@ -10,5 +10,5 @@ export {
   Declaration,
   Node,
   Result,
-  Root
+  Root,
 } from 'stylelint/node_modules/postcss';

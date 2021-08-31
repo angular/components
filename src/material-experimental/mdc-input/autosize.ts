@@ -25,5 +25,4 @@ import {Directive} from '@angular/core';
     'rows': '1',
   },
 })
-export class MatTextareaAutosize extends BaseTextareaAutosize {
-}
+export class MatTextareaAutosize extends BaseTextareaAutosize {}

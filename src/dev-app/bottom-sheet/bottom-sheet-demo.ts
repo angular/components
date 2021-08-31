@@ -13,7 +13,6 @@ import {
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
 
-
 const defaultConfig = new MatBottomSheetConfig();
 
 @Component({
@@ -26,7 +25,7 @@ export class BottomSheetDemo {
     hasBackdrop: defaultConfig.hasBackdrop,
     disableClose: defaultConfig.disableClose,
     backdropClass: defaultConfig.backdropClass,
-    direction: 'ltr'
+    direction: 'ltr',
   };
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
@@ -42,7 +41,6 @@ export class BottomSheetDemo {
   }
 }
 
-
 @Component({
   template: `
     <mat-nav-list>
@@ -51,7 +49,7 @@ export class BottomSheetDemo {
         <span mat-line>Description</span>
       </a>
     </mat-nav-list>
-  `
+  `,
 })
 export class ExampleBottomSheet {
   constructor(private _bottomSheet: MatBottomSheetRef) {}

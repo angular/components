@@ -30,7 +30,6 @@ import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
 
-
 // Boilerplate for applying mixins to the sort header.
 /** @docs-private */
 const _MatSortHeaderBase = mixinDisabled(class {});
@@ -93,10 +92,12 @@ interface MatSortHeaderColumnDef {
     matSortAnimations.arrowOpacity,
     matSortAnimations.arrowPosition,
     matSortAnimations.allowChildren,
-  ]
+  ],
 })
-export class MatSortHeader extends _MatSortHeaderBase
-    implements CanDisable, MatSortable, OnDestroy, OnInit, AfterViewInit {
+export class MatSortHeader
+  extends _MatSortHeaderBase
+  implements CanDisable, MatSortable, OnDestroy, OnInit, AfterViewInit
+{
   private _rerenderSubscription: Subscription;
 
   /**
@@ -110,7 +111,7 @@ export class MatSortHeader extends _MatSortHeaderBase
    * position through the animation. If animations are currently disabled, the fromState is removed
    * so that there is no animation displayed.
    */
-  _viewState: ArrowViewStateTransition = { };
+  _viewState: ArrowViewStateTransition = {};
 
   /** The direction the arrow should be facing according to the current state. */
   _arrowDirection: SortDirection = '';
@@ -134,24 +135,30 @@ export class MatSortHeader extends _MatSortHeaderBase
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
-  get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
+  get disableClear(): boolean {
+    return this._disableClear;
+  }
+  set disableClear(v) {
+    this._disableClear = coerceBooleanProperty(v);
+  }
   private _disableClear: boolean;
 
   constructor(
-              /**
-               * @deprecated `_intl` parameter isn't being used anymore and it'll be removed.
-               * @breaking-change 13.0.0
-               */
-              public _intl: MatSortHeaderIntl,
-              private _changeDetectorRef: ChangeDetectorRef,
-              // `MatSort` is not optionally injected, but just asserted manually w/ better error.
-              // tslint:disable-next-line: lightweight-tokens
-              @Optional() public _sort: MatSort,
-              @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
-                  public _columnDef: MatSortHeaderColumnDef,
-              private _focusMonitor: FocusMonitor,
-              private _elementRef: ElementRef<HTMLElement>) {
+    /**
+     * @deprecated `_intl` parameter isn't being used anymore and it'll be removed.
+     * @breaking-change 13.0.0
+     */
+    public _intl: MatSortHeaderIntl,
+    private _changeDetectorRef: ChangeDetectorRef,
+    // `MatSort` is not optionally injected, but just asserted manually w/ better error.
+    // tslint:disable-next-line: lightweight-tokens
+    @Optional() public _sort: MatSort,
+    @Inject('MAT_SORT_HEADER_COLUMN_DEF')
+    @Optional()
+    public _columnDef: MatSortHeaderColumnDef,
+    private _focusMonitor: FocusMonitor,
+    private _elementRef: ElementRef<HTMLElement>,
+  ) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
@@ -172,8 +179,9 @@ export class MatSortHeader extends _MatSortHeaderBase
 
     // Initialize the direction of the arrow and set the view state to be immediately that state.
     this._updateArrowDirection();
-    this._setAnimationTransitionState(
-        {toState: this._isSorted() ? 'active' : this._arrowDirection});
+    this._setAnimationTransitionState({
+      toState: this._isSorted() ? 'active' : this._arrowDirection,
+    });
 
     this._sort.register(this);
   }
@@ -202,7 +210,9 @@ export class MatSortHeader extends _MatSortHeaderBase
    */
   _setIndicatorHintVisible(visible: boolean) {
     // No-op if the sort header is disabled - should not make the hint visible.
-    if (this._isDisabled() && visible) { return; }
+    if (this._isDisabled() && visible) {
+      return;
+    }
 
     this._showIndicatorHint = visible;
 
@@ -222,7 +232,7 @@ export class MatSortHeader extends _MatSortHeaderBase
    * no animation appears.
    */
   _setAnimationTransitionState(viewState: ArrowViewStateTransition) {
-    this._viewState = viewState || { };
+    this._viewState = viewState || {};
 
     // If the animation for arrow position state (opacity/translation) should be disabled,
     // remove the fromState so that it jumps right to the toState.
@@ -256,8 +266,10 @@ export class MatSortHeader extends _MatSortHeaderBase
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
-    return this._sort.active == this.id &&
-        (this._sort.direction === 'asc' || this._sort.direction === 'desc');
+    return (
+      this._sort.active == this.id &&
+      (this._sort.direction === 'asc' || this._sort.direction === 'desc')
+    );
   }
 
   /** Returns the animation state for the arrow direction (indicator and pointers). */
@@ -282,9 +294,7 @@ export class MatSortHeader extends _MatSortHeaderBase
    * only be changed once the arrow displays again (hint or activation).
    */
   _updateArrowDirection() {
-    this._arrowDirection = this._isSorted() ?
-        this._sort.direction :
-        (this.start || this._sort.start);
+    this._arrowDirection = this._isSorted() ? this._sort.direction : this.start || this._sort.start;
   }
 
   _isDisabled() {
@@ -312,28 +322,31 @@ export class MatSortHeader extends _MatSortHeaderBase
 
   /** Handles changes in the sorting state. */
   private _handleStateChanges() {
-    this._rerenderSubscription =
-      merge(this._sort.sortChange, this._sort._stateChanges, this._intl.changes).subscribe(() => {
-        if (this._isSorted()) {
-          this._updateArrowDirection();
+    this._rerenderSubscription = merge(
+      this._sort.sortChange,
+      this._sort._stateChanges,
+      this._intl.changes,
+    ).subscribe(() => {
+      if (this._isSorted()) {
+        this._updateArrowDirection();
 
-          // Do not show the animation if the header was already shown in the right position.
-          if (this._viewState.toState === 'hint' || this._viewState.toState === 'active') {
-            this._disableViewStateAnimation = true;
-          }
-
-          this._setAnimationTransitionState({fromState: this._arrowDirection, toState: 'active'});
-          this._showIndicatorHint = false;
+        // Do not show the animation if the header was already shown in the right position.
+        if (this._viewState.toState === 'hint' || this._viewState.toState === 'active') {
+          this._disableViewStateAnimation = true;
         }
 
-        // If this header was recently active and now no longer sorted, animate away the arrow.
-        if (!this._isSorted() && this._viewState && this._viewState.toState === 'active') {
-          this._disableViewStateAnimation = false;
-          this._setAnimationTransitionState({fromState: 'active', toState: this._arrowDirection});
-        }
+        this._setAnimationTransitionState({fromState: this._arrowDirection, toState: 'active'});
+        this._showIndicatorHint = false;
+      }
 
-        this._changeDetectorRef.markForCheck();
-      });
+      // If this header was recently active and now no longer sorted, animate away the arrow.
+      if (!this._isSorted() && this._viewState && this._viewState.toState === 'active') {
+        this._disableViewStateAnimation = false;
+        this._setAnimationTransitionState({fromState: 'active', toState: this._arrowDirection});
+      }
+
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   static ngAcceptInputType_disableClear: BooleanInput;

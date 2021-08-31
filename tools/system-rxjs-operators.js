@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-
 // Workaround for an issue where RxJS cannot be used with UMD bundles only. This is because
 // rxjs only ships one UMD bundle and expects everyone to only use the named "rxjs" AMD module.
 // Since our code internally loads operators from "rxjs/operators/index", we need to make sure
@@ -16,7 +15,7 @@
 if (typeof define === 'function' && define.amd) {
   // Note that this needs to be in ES5, because we load it
   // directly into the browser without transpiling.
-  define(['exports', 'rxjs'], function(exports, rxjs) {
+  define(['exports', 'rxjs'], function (exports, rxjs) {
     // Re-export all operators in this AMD module.
     Object.assign(exports, rxjs.operators);
   });

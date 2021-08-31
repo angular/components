@@ -30,7 +30,6 @@ import {Subject} from 'rxjs';
 import {MAT_TAB_CONTENT} from './tab-content';
 import {MAT_TAB_LABEL, MatTabLabel} from './tab-label';
 
-
 // Boilerplate for applying mixins to MatTab.
 /** @docs-private */
 const _MatTabBase = mixinDisabled(class {});
@@ -53,8 +52,12 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MAT_TAB_LABEL)
-  get templateLabel(): MatTabLabel { return this._templateLabel; }
-  set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  get templateLabel(): MatTabLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: MatTabLabel) {
+    this._setTemplateLabelInput(value);
+  }
   protected _templateLabel: MatTabLabel;
 
   /**
@@ -108,7 +111,8 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
-    @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any) {
+    @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any,
+  ) {
     super();
   }
 
@@ -124,7 +128,9 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
 
   ngOnInit(): void {
     this._contentPortal = new TemplatePortal(
-        this._explicitContent || this._implicitContent, this._viewContainerRef);
+      this._explicitContent || this._implicitContent,
+      this._viewContainerRef,
+    );
   }
 
   /**
