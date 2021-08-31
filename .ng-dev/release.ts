@@ -71,7 +71,22 @@ export const releasePackages = [
 
 /** Configuration for the `ng-dev release` command. */
 export const release: ReleaseConfig = {
-  releaseNotes: {useReleaseTitle: true, groupOrder: releasePackages},
+  releaseNotes: {
+    useReleaseTitle: true,
+    groupOrder: releasePackages,
+    categorizeCommit: commit => {
+      const [packageName, entryPointName] = commit.scope.split('/');
+      const entryPointPrefix = entryPointName ? `**${entryPointName}:** ` : '';
+
+      // In the `angular/components` repository, commit messages may include entry-point
+      // information in the scope. We expect commits to be grouped based on their package
+      // name. Commits are then described with their subject and optional entry-point name.
+      return {
+        groupName: packageName,
+        description: `${entryPointPrefix}${commit.subject}`,
+      };
+    },
+  },
   publishRegistry: 'https://wombat-dressing-room.appspot.com',
   npmPackages: releasePackages.map(pkg => `@angular/${pkg}`),
   buildPackages: async () => {
@@ -79,5 +94,5 @@ export const release: ReleaseConfig = {
     // script results in an invocation of Bazel for any `yarn ng-dev` command.
     const {performNpmReleaseBuild} = await import('../scripts/build-packages-dist');
     return performNpmReleaseBuild();
-  }
+  },
 };
