@@ -1,3 +1,17 @@
+<a name="12.2.4"></a>
+# 12.2.4 "pulp-porpoise" (2021-09-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7177d33906](https://github.com/angular/components/commit/7177d3390618dad3c6a7cf65054e7e4f869dce3d) | fix | **testing:** fix value stringification in harnesses ([#23421](https://github.com/angular/components/pull/23421)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [116766d13e](https://github.com/angular/components/commit/116766d13ecbf4f45da638945609412c470c2ead) | fix | **tabs:** tab header border reset when parent has a background color ([#23450](https://github.com/angular/components/pull/23450)) |
+## Special Thanks
+Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Rameshwor Shrestha
+
+
 <a name="12.2.3"></a>
 # 12.2.3 "meteorite-mango" (2021-08-25)
 ### material/datepicker
