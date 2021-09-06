@@ -6,7 +6,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {PortalModule, CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {A11yModule, FocusTrap, CdkTrapFocus} from '../index';
 import {By} from '@angular/platform-browser';
@@ -91,10 +91,11 @@ describe('FocusTrap', () => {
   describe('with bindings', () => {
     let fixture: ComponentFixture<FocusTrapWithBindings>;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(FocusTrapWithBindings);
       fixture.detectChanges();
-    });
+      tick();
+    }));
 
     it('should clean up its anchor sibling elements on destroy', () => {
       const rootElement = fixture.debugElement.nativeElement as HTMLElement;
@@ -298,26 +299,51 @@ describe('FocusTrap', () => {
 
   });
 
-  it('should put anchors inside the outlet when set at the root of a template portal', () => {
-    const fixture = TestBed.createComponent(FocusTrapInsidePortal);
-    const instance = fixture.componentInstance;
-    fixture.detectChanges();
-    const outlet: HTMLElement = fixture.nativeElement.querySelector('.portal-outlet');
+  it('should put anchors inside the outlet when set at the root of a template portal',
+    fakeAsync(() => {
+      const fixture = TestBed.createComponent(FocusTrapInsidePortal);
+      const instance = fixture.componentInstance;
+      fixture.detectChanges();
+      const outlet: HTMLElement = fixture.nativeElement.querySelector('.portal-outlet');
 
-    expect(outlet.querySelectorAll('button').length)
-      .withContext('Expected no buttons inside the outlet on init.').toBe(0);
-    expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
-      .withContext('Expected no focus trap anchors inside the outlet on init.').toBe(0);
+      expect(outlet.querySelectorAll('button').length)
+        .withContext('Expected no buttons inside the outlet on init.').toBe(0);
+      expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
+        .withContext('Expected no focus trap anchors inside the outlet on init.').toBe(0);
 
-    const portal = new TemplatePortal(instance.template, instance.viewContainerRef);
-    instance.portalOutlet.attachTemplatePortal(portal);
-    fixture.detectChanges();
+      const portal = new TemplatePortal(instance.template, instance.viewContainerRef);
+      instance.portalOutlet.attachTemplatePortal(portal);
+      fixture.detectChanges();
+      tick();
 
-    expect(outlet.querySelectorAll('button').length)
-      .withContext('Expected one button inside the outlet after attaching.').toBe(1);
-    expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
-      .withContext('Expected two focus trap anchors in the outlet after attaching.').toBe(2);
-  });
+      expect(outlet.querySelectorAll('button').length)
+        .withContext('Expected one button inside the outlet after attaching.').toBe(1);
+      expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
+        .withContext('Expected two focus trap anchors in the outlet after attaching.').toBe(2);
+    }));
+
+  it('should put anchors inside the outlet when set at the root of a template portal',
+    fakeAsync(() => {
+      const fixture = TestBed.createComponent(FocusTrapInsidePortal);
+      const instance = fixture.componentInstance;
+      fixture.detectChanges();
+      const outlet: HTMLElement = fixture.nativeElement.querySelector('.portal-outlet');
+
+      expect(outlet.querySelectorAll('button').length)
+        .withContext('Expected no buttons inside the outlet on init.').toBe(0);
+      expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
+        .withContext('Expected no focus trap anchors inside the outlet on init.').toBe(0);
+
+      const portal = new TemplatePortal(instance.template, instance.viewContainerRef);
+      instance.portalOutlet.attachTemplatePortal(portal);
+      fixture.detectChanges();
+      tick();
+
+      expect(outlet.querySelectorAll('button').length)
+        .withContext('Expected one button inside the outlet after attaching.').toBe(1);
+      expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
+        .withContext('Expected two focus trap anchors in the outlet after attaching.').toBe(2);
+    }));
 });
 
 /** Gets the currently-focused element while accounting for the shadow DOM. */
