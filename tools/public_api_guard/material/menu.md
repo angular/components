@@ -170,7 +170,7 @@ export class MatMenuContent extends _MatMenuContentBase {
 }
 
 // @public (undocumented)
-export class _MatMenuContentBase implements OnDestroy {
+export abstract class _MatMenuContentBase implements OnDestroy {
     constructor(_template: TemplateRef<any>, _componentFactoryResolver: ComponentFactoryResolver, _appRef: ApplicationRef, _injector: Injector, _viewContainerRef: ViewContainerRef, _document: any, _changeDetectorRef?: ChangeDetectorRef | undefined);
     attach(context?: any): void;
     readonly _attached: Subject<void>;
@@ -286,8 +286,14 @@ export class MatMenuTrigger extends _MatMenuTriggerBase {
 }
 
 // @public (undocumented)
-export class _MatMenuTriggerBase implements AfterContentInit, OnDestroy {
+export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy {
     constructor(_overlay: Overlay, _element: ElementRef<HTMLElement>, _viewContainerRef: ViewContainerRef, scrollStrategy: any, parentMenu: MatMenuPanel, _menuItemInstance: MatMenuItem, _dir: Directionality, _focusMonitor?: FocusMonitor | undefined);
+    // (undocumented)
+    get _ariaControl(): string | null | undefined;
+    // (undocumented)
+    get _ariaExpanded(): true | null;
+    // (undocumented)
+    _ariaHaspopup: boolean;
     closeMenu(): void;
     // @deprecated (undocumented)
     get _deprecatedMatMenuTriggerFor(): MatMenuPanel;
