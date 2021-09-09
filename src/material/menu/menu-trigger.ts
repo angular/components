@@ -71,21 +71,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
 
 // TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
 
-/** Directive applied to an element that should trigger a `mat-menu`. */
-@Directive({
-  selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
-  host: {
-    'class': 'mat-menu-trigger',
-    'aria-haspopup': 'true',
-    '[attr.aria-expanded]': 'menuOpen || null',
-    '[attr.aria-controls]': 'menuOpen ? menu.panelId : null',
-    '(mousedown)': '_handleMousedown($event)',
-    '(keydown)': '_handleKeydown($event)',
-    '(click)': '_handleClick($event)',
-  },
-  exportAs: 'matMenuTrigger'
-})
-export class MatMenuTrigger implements AfterContentInit, OnDestroy {
+@Directive()
+export class _MatMenuTriggerBase implements AfterContentInit, OnDestroy {
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
@@ -597,3 +584,19 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
 }
+
+/** Directive applied to an element that should trigger a `mat-menu`. */
+@Directive({
+  selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
+  host: {
+    'class': 'mat-menu-trigger',
+    'aria-haspopup': 'true',
+    '[attr.aria-expanded]': 'menuOpen || null',
+    '[attr.aria-controls]': 'menuOpen ? menu.panelId : null',
+    '(mousedown)': '_handleMousedown($event)',
+    '(keydown)': '_handleKeydown($event)',
+    '(click)': '_handleClick($event)',
+  },
+  exportAs: 'matMenuTrigger'
+})
+export class MatMenuTrigger extends _MatMenuTriggerBase {}
