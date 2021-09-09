@@ -14,12 +14,6 @@ import {_MatMenuContentBase, _MatMenuTriggerBase, MAT_MENU_CONTENT} from '@angul
   selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
   host: {
     'class': 'mat-mdc-menu-trigger',
-    'aria-haspopup': 'true',
-    '[attr.aria-expanded]': 'menuOpen || null',
-    '[attr.aria-controls]': 'menuOpen ? menu.panelId : null',
-    '(mousedown)': '_handleMousedown($event)',
-    '(keydown)': '_handleKeydown($event)',
-    '(click)': '_handleClick($event)',
   },
   exportAs: 'matMenuTrigger'
 })

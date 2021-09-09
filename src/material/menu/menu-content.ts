@@ -30,7 +30,7 @@ import {Subject} from 'rxjs';
 export const MAT_MENU_CONTENT = new InjectionToken<MatMenuContent>('MatMenuContent');
 
 @Directive()
-export class _MatMenuContentBase implements OnDestroy {
+export abstract class _MatMenuContentBase implements OnDestroy {
   private _portal: TemplatePortal<any>;
   private _outlet: DomPortalOutlet;
 
