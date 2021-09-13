@@ -20,7 +20,7 @@
   // In order to ensure proper alignment of the floating label, we reset its line-height.
   // The line-height is not important as the element is absolutely positioned and only has one line
   // of text.
-  .mat-mdc-form-field .mdc-floating-label {
+  .mat-mdc-form-field .mdc-floating-label.mdc-floating-label {
     line-height: normal;
   }
 
