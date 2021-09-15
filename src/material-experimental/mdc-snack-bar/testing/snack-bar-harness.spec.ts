@@ -15,7 +15,7 @@ describe('MDC-based MatSnackBarHarness', () => {
   runHarnessTests(MatSnackBarModule, MatSnackBar, MatSnackBarHarness as any);
 });
 
-describe('Non-MDC-based MatSnackBarHarness', () => {
+describe('MDC-based MatSnackBarHarness (MDC only behavior)', () => {
   let fixture: ComponentFixture<SnackbarHarnessTest>;
   let loader: HarnessLoader;
 
