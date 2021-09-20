@@ -29,7 +29,7 @@ import {
   mixinDisabled,
   mixinTabIndex,
 } from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
 
@@ -72,9 +72,6 @@ export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K>
   override ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 /**
@@ -111,8 +108,8 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K>
 
   /** Whether the node is disabled. */
   @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
   private _disabled = false;
 
   /** Tabindex for the node. */
@@ -155,6 +152,4 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K>
   override ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

@@ -178,7 +178,7 @@ export class MatFormField extends _MatFormFieldBase
   /** Whether the required marker should be hidden. */
   @Input()
   get hideRequiredMarker(): boolean { return this._hideRequiredMarker; }
-  set hideRequiredMarker(value: boolean) {
+  set hideRequiredMarker(value: BooleanInput) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
   private _hideRequiredMarker: boolean;
@@ -607,6 +607,4 @@ export class MatFormField extends _MatFormFieldBase
     // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
     return document.documentElement!.contains(element);
   }
-
-  static ngAcceptInputType_hideRequiredMarker: BooleanInput;
 }

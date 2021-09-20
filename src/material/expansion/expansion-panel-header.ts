@@ -25,7 +25,6 @@ import {
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
-import {NumberInput} from '@angular/cdk/coercion';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {MatAccordionTogglePosition} from './accordion-base';
@@ -225,8 +224,6 @@ export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase i
     this._parentChangeSubscription.unsubscribe();
     this._focusMonitor.stopMonitoring(this._element);
   }
-
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 /**

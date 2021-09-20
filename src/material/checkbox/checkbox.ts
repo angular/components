@@ -7,7 +7,7 @@
  */
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewChecked,
   Attribute,
@@ -151,7 +151,7 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
   /** Whether the checkbox is required. */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+  set required(value: BooleanInput) { this._required = coerceBooleanProperty(value); }
   private _required: boolean;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
@@ -245,8 +245,8 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
    * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
    */
   @Input()
-  override get disabled() { return this._disabled; }
-  override set disabled(value: any) {
+  override get disabled(): boolean { return this._disabled; }
+  override set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this.disabled) {
@@ -264,7 +264,7 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
    */
   @Input()
   get indeterminate(): boolean { return this._indeterminate; }
-  set indeterminate(value: boolean) {
+  set indeterminate(value: BooleanInput) {
     const changed = value != this._indeterminate;
     this._indeterminate = coerceBooleanProperty(value);
 
@@ -488,10 +488,4 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
       nativeCheckbox.nativeElement.indeterminate = value;
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_indeterminate: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }

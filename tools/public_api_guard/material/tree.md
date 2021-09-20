@@ -36,10 +36,8 @@ import { ViewContainerRef } from '@angular/core';
 // @public
 export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, DoCheck, OnDestroy, OnInit {
     constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, differs: IterableDiffers, tabIndex: string);
-    get disabled(): any;
-    set disabled(value: any);
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
+    get disabled(): boolean;
+    set disabled(value: BooleanInput);
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -123,10 +121,6 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
 export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K> implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, tabIndex: string);
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: NumberInput;
-    // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -166,7 +160,7 @@ export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
     get indent(): number | string;
     set indent(indent: number | string);
     get level(): number;
-    set level(value: number);
+    set level(value: NumberInput);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodePadding<any, any>, "[matTreeNodePadding]", never, { "level": "matTreeNodePadding"; "indent": "matTreeNodePaddingIndent"; }, {}, never>;
     // (undocumented)

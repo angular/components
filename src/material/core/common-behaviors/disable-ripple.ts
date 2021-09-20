@@ -25,7 +25,7 @@ export function mixinDisableRipple<T extends Constructor<{}>>(base: T): CanDisab
     private _disableRipple: boolean = false;
 
     /** Whether the ripple effect is disabled or not. */
-    get disableRipple() { return this._disableRipple; }
+    get disableRipple(): boolean { return this._disableRipple; }
     set disableRipple(value: any) { this._disableRipple = coerceBooleanProperty(value); }
 
     constructor(...args: any[]) { super(...args); }

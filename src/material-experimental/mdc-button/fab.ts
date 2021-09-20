@@ -87,9 +87,9 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
 export class MatFabButton extends MatButtonBase {
   override _isFab = true;
 
-  private _extended: boolean;
   get extended(): boolean { return this._extended; }
-  set extended(value: boolean) { this._extended = coerceBooleanProperty(value); }
+  set extended(value: BooleanInput) { this._extended = coerceBooleanProperty(value); }
+  private _extended: boolean;
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
@@ -99,8 +99,6 @@ export class MatFabButton extends MatButtonBase {
     this._options = this._options || defaults;
     this.color = this.defaultColor = this._options!.color || defaults.color;
   }
-
-  static ngAcceptInputType_extended: BooleanInput;
 }
 
 /**
@@ -171,9 +169,9 @@ export class MatMiniFabButton extends MatButtonBase {
 export class MatFabAnchor extends MatAnchor {
   override _isFab = true;
 
-  private _extended: boolean;
   get extended(): boolean { return this._extended; }
-  set extended(value: boolean) { this._extended = coerceBooleanProperty(value); }
+  set extended(value: BooleanInput) { this._extended = coerceBooleanProperty(value); }
+  private _extended: boolean;
 
 
   constructor(
@@ -184,8 +182,6 @@ export class MatFabAnchor extends MatAnchor {
     this._options = this._options || defaults;
     this.color = this.defaultColor = this._options!.color || defaults.color;
   }
-
-  static ngAcceptInputType_extended: BooleanInput;
 }
 
 /**

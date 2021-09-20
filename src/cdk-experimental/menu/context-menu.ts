@@ -114,10 +114,10 @@ export class CdkContextMenuTrigger implements OnDestroy {
 
   /** Whether the context menu should be disabled. */
   @Input('cdkContextMenuDisabled')
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -324,6 +324,4 @@ export class CdkContextMenuTrigger implements OnDestroy {
       this._menuPanel._menuStack = null;
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

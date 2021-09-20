@@ -94,7 +94,7 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
    */
   @Input('matChipInputAddOnBlur')
   get addOnBlur(): boolean { return this._addOnBlur; }
-  set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
+  set addOnBlur(value: BooleanInput) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
   /**
@@ -119,7 +119,7 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
   /** Whether the input is disabled. */
   @Input()
   get disabled(): boolean { return this._disabled || (this._chipGrid && this._chipGrid.disabled); }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
   private _disabled: boolean = false;
 
   /** Whether the input is empty. */
@@ -244,7 +244,4 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
   }
-
-  static ngAcceptInputType_addOnBlur: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

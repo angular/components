@@ -43,7 +43,7 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('cdkSelectionToggleIndex')
   get index(): number|undefined { return this._index; }
-  set index(index: number|undefined) { this._index = coerceNumberProperty(index); }
+  set index(index: NumberInput) { this._index = coerceNumberProperty(index); }
   protected _index?: number;
 
   /** The checked state of the selection toggle */
@@ -98,6 +98,4 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   private _isSelected(): boolean {
     return this._selection.isSelected(this.value, this.index);
   }
-
-  static ngAcceptInputType_index: NumberInput;
 }

@@ -144,7 +144,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   override get disabled(): boolean {
     return this.ngControl ? !!this.ngControl.disabled : this._disabled;
   }
-  override set disabled(value: boolean) {
+  override set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._syncChipsState();
   }
@@ -172,7 +172,6 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
    * @docs-private
    */
   @Input()
-  @Input()
   get placeholder(): string {
     return this._chipInput ? this._chipInput.placeholder : this._placeholder;
   }
@@ -193,7 +192,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   get required(): boolean {
     return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -521,9 +520,4 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   private _focusInput() {
     this._chipInput.focus();
   }
-
-  // Even though this member is inherited, we explicitly need to set it here as the `disabled`
-  // input is overwritten in this class too. This is needed for the lint rule.
-  static override ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }

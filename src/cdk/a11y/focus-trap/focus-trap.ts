@@ -395,7 +395,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   /** Whether the focus trap is active. */
   @Input('cdkTrapFocus')
   get enabled(): boolean { return this.focusTrap.enabled; }
-  set enabled(value: boolean) { this.focusTrap.enabled = coerceBooleanProperty(value); }
+  set enabled(value: BooleanInput) { this.focusTrap.enabled = coerceBooleanProperty(value); }
 
   /**
    * Whether the directive should automatically move focus into the trapped region upon
@@ -403,7 +403,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
    */
   @Input('cdkTrapFocusAutoCapture')
   get autoCapture(): boolean { return this._autoCapture; }
-  set autoCapture(value: boolean) { this._autoCapture = coerceBooleanProperty(value); }
+  set autoCapture(value: BooleanInput) { this._autoCapture = coerceBooleanProperty(value); }
   private _autoCapture: boolean;
 
   constructor(
@@ -455,7 +455,4 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
     this._previouslyFocusedElement = _getFocusedElementPierceShadowDom();
     this.focusTrap.focusInitialElementWhenReady();
   }
-
-  static ngAcceptInputType_enabled: BooleanInput;
-  static ngAcceptInputType_autoCapture: BooleanInput;
 }

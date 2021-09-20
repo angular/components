@@ -312,7 +312,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
    */
   @Input()
   get touchUi(): boolean { return this._touchUi; }
-  set touchUi(value: boolean) {
+  set touchUi(value: BooleanInput) {
     this._touchUi = coerceBooleanProperty(value);
   }
   private _touchUi = false;
@@ -323,7 +323,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
     return this._disabled === undefined && this.datepickerInput ?
         this.datepickerInput.disabled : !!this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
@@ -348,7 +348,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
    */
   @Input()
   get restoreFocus(): boolean { return this._restoreFocus; }
-  set restoreFocus(value: boolean) {
+  set restoreFocus(value: BooleanInput) {
     this._restoreFocus = coerceBooleanProperty(value);
   }
   private _restoreFocus = true;
@@ -394,7 +394,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   /** Whether the calendar is open. */
   @Input()
   get opened(): boolean { return this._opened; }
-  set opened(value: boolean) {
+  set opened(value: BooleanInput) {
     coerceBooleanProperty(value) ? this.open() : this.close();
   }
   private _opened = false;
@@ -716,9 +716,4 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
       }))
     );
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_opened: BooleanInput;
-  static ngAcceptInputType_touchUi: BooleanInput;
-  static ngAcceptInputType_restoreFocus: BooleanInput;
 }

@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   AfterContentInit,
@@ -155,10 +155,10 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     if (this.removeIcon) {
-      this.removeIcon.disabled = value;
+      this.removeIcon.disabled = this._disabled;
     }
   }
   protected _disabled: boolean = false;
@@ -180,7 +180,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
    */
   @Input()
   get removable(): boolean { return this._removable; }
-  set removable(value: boolean) {
+  set removable(value: BooleanInput) {
     this._removable = coerceBooleanProperty(value);
   }
   protected _removable: boolean = true;
@@ -190,7 +190,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
    */
   @Input()
   get highlighted(): boolean { return this._highlighted; }
-  set highlighted(value: boolean) {
+  set highlighted(value: BooleanInput) {
     this._highlighted = coerceBooleanProperty(value);
   }
   protected _highlighted: boolean = false;
@@ -446,10 +446,4 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   /** Overridden by MatChipRow. */
   protected _onEditFinish() {}
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_removable: BooleanInput;
-  static ngAcceptInputType_highlighted: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }

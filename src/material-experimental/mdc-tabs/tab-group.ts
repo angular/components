@@ -61,7 +61,7 @@ export class MatTabGroup extends _MatTabGroupBase {
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
   get fitInkBarToContent(): boolean { return this._fitInkBarToContent; }
-  set fitInkBarToContent(v: boolean) {
+  set fitInkBarToContent(v: BooleanInput) {
     this._fitInkBarToContent = coerceBooleanProperty(v);
     this._changeDetectorRef.markForCheck();
   }
@@ -75,6 +75,4 @@ export class MatTabGroup extends _MatTabGroupBase {
     this.fitInkBarToContent = defaultConfig && defaultConfig.fitInkBarToContent != null ?
         defaultConfig.fitInkBarToContent : false;
   }
-
-  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
 }

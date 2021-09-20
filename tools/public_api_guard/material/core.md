@@ -255,8 +255,6 @@ export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisabl
     label: string;
     _labelId: string;
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptgroupBase, never, never, { "label": "label"; }, {}, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptgroupBase, [{ optional: true; }]>;
@@ -276,9 +274,9 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: _MatOptgroupBase);
     get active(): boolean;
     deselect(): void;
-    get disabled(): any;
-    set disabled(value: any);
-    get disableRipple(): boolean | undefined;
+    get disabled(): boolean;
+    set disabled(value: BooleanInput);
+    get disableRipple(): boolean;
     focus(_origin?: FocusOrigin, options?: FocusOptions_2): void;
     _getAriaSelected(): boolean | null;
     _getHostElement(): HTMLElement;
@@ -289,8 +287,6 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     _handleKeydown(event: KeyboardEvent): void;
     id: string;
     get multiple(): boolean | undefined;
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)

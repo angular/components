@@ -49,12 +49,12 @@ export class MatGridTile {
   /** Amount of rows that the grid tile takes up. */
   @Input()
   get rowspan(): number { return this._rowspan; }
-  set rowspan(value: number) { this._rowspan = Math.round(coerceNumberProperty(value)); }
+  set rowspan(value: NumberInput) { this._rowspan = Math.round(coerceNumberProperty(value)); }
 
   /** Amount of columns that the grid tile takes up. */
   @Input()
   get colspan(): number { return this._colspan; }
-  set colspan(value: number) { this._colspan = Math.round(coerceNumberProperty(value)); }
+  set colspan(value: NumberInput) { this._colspan = Math.round(coerceNumberProperty(value)); }
 
   /**
    * Sets the style of the grid-tile element.  Needs to be set manually to avoid
@@ -63,9 +63,6 @@ export class MatGridTile {
   _setStyle(property: string, value: any): void {
     (this._element.nativeElement.style as any)[property] = value;
   }
-
-  static ngAcceptInputType_rowspan: NumberInput;
-  static ngAcceptInputType_colspan: NumberInput;
 }
 
 @Component({

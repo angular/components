@@ -135,7 +135,7 @@ export class MatSortHeader extends _MatSortHeaderBase
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
   get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
+  set disableClear(v: BooleanInput) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
 
   constructor(
@@ -335,7 +335,4 @@ export class MatSortHeader extends _MatSortHeaderBase
         this._changeDetectorRef.markForCheck();
       });
   }
-
-  static ngAcceptInputType_disableClear: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

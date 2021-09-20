@@ -84,9 +84,6 @@ export class MatNavList extends _MatListBase implements CanDisable, CanDisableRi
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Component({
@@ -136,9 +133,6 @@ export class MatList extends _MatListBase implements CanDisable, CanDisableRippl
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**
@@ -224,8 +218,8 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return this._disabled || !!(this._list && this._list.disabled); }
-  set disabled(value: boolean) {
+  get disabled(): boolean { return this._disabled || !!(this._list && this._list.disabled); }
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -249,7 +243,4 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

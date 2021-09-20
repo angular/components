@@ -67,7 +67,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   get selected(): boolean {
     return this._selected;
   }
-  set selected(value: boolean) {
+  set selected(value: BooleanInput) {
     if (!this._disabled) {
       this._selected = coerceBooleanProperty(value);
     }
@@ -77,7 +77,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
@@ -191,9 +191,6 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   setInactiveStyles() {
     this._active = false;
   }
-
-  static ngAcceptInputType_selected: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Directive({
@@ -256,16 +253,17 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
-    this._updateSelectionOnMultiSelectionChange(value);
-    this._multiple = coerceBooleanProperty(value);
+  set multiple(value: BooleanInput) {
+    const coercedValue = coerceBooleanProperty(value);
+    this._updateSelectionOnMultiSelectionChange(coercedValue);
+    this._multiple = coercedValue;
   }
 
   @Input()
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
@@ -274,7 +272,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get useActiveDescendant(): boolean {
     return this._useActiveDescendant;
   }
-  set useActiveDescendant(shouldUseActiveDescendant: boolean) {
+  set useActiveDescendant(shouldUseActiveDescendant: BooleanInput) {
     this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
   }
 
@@ -283,7 +281,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get autoFocus(): boolean {
     return this._autoFocus;
   }
-  set autoFocus(shouldAutoFocus: boolean) {
+  set autoFocus(shouldAutoFocus: BooleanInput) {
     this._autoFocus = coerceBooleanProperty(shouldAutoFocus);
   }
 
@@ -547,11 +545,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       }
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_useActiveDescendant: BooleanInput;
-  static ngAcceptInputType_autoFocus: BooleanInput;
 }
 
 /** Change event that is being fired whenever the selected state of an option changes. */

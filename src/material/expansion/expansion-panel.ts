@@ -106,7 +106,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   get hideToggle(): boolean {
     return this._hideToggle || (this.accordion && this.accordion.hideToggle);
   }
-  set hideToggle(value: boolean) {
+  set hideToggle(value: BooleanInput) {
     this._hideToggle = coerceBooleanProperty(value);
   }
 
@@ -238,8 +238,6 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
 
     return false;
   }
-
-  static ngAcceptInputType_hideToggle: BooleanInput;
 }
 
 /**

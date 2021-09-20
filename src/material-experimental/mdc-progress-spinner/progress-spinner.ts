@@ -151,7 +151,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
     return this.mode === 'determinate' ? this._value : 0;
   }
 
-  set value(v: number) {
+  set value(v: NumberInput) {
     this._value = Math.max(0, Math.min(100, coerceNumberProperty(v)));
     this._syncFoundation();
   }
@@ -164,7 +164,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
     return this._diameter;
   }
 
-  set diameter(size: number) {
+  set diameter(size: NumberInput) {
     this._diameter = coerceNumberProperty(size);
     this._syncFoundation();
   }
@@ -177,7 +177,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
     return this._strokeWidth ?? this.diameter / 10;
   }
 
-  set strokeWidth(value: number) {
+  set strokeWidth(value: NumberInput) {
     this._strokeWidth = coerceNumberProperty(value);
   }
 
@@ -232,10 +232,6 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements After
       foundation.setDeterminate(mode === 'determinate');
     }
   }
-
-  static ngAcceptInputType_diameter: NumberInput;
-  static ngAcceptInputType_strokeWidth: NumberInput;
-  static ngAcceptInputType_value: NumberInput;
 }
 
 /**

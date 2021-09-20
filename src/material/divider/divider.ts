@@ -28,15 +28,12 @@ export class MatDivider {
   /** Whether the divider is vertically aligned. */
   @Input()
   get vertical(): boolean { return this._vertical; }
-  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }
+  set vertical(value: BooleanInput) { this._vertical = coerceBooleanProperty(value); }
   private _vertical: boolean = false;
 
   /** Whether the divider is an inset divider. */
   @Input()
   get inset(): boolean { return this._inset; }
-  set inset(value: boolean) { this._inset = coerceBooleanProperty(value); }
+  set inset(value: BooleanInput) { this._inset = coerceBooleanProperty(value); }
   private _inset: boolean = false;
-
-  static ngAcceptInputType_vertical: BooleanInput;
-  static ngAcceptInputType_inset: BooleanInput;
 }

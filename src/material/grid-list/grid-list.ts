@@ -86,7 +86,7 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
   /** Amount of columns in the grid list. */
   @Input()
   get cols(): number { return this._cols; }
-  set cols(value: number) {
+  set cols(value: NumberInput) {
     this._cols = Math.max(1, Math.round(coerceNumberProperty(value)));
   }
 
@@ -178,6 +178,4 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
       (this._element.nativeElement.style as any)[style[0]] = style[1];
     }
   }
-
-  static ngAcceptInputType_cols: NumberInput;
 }

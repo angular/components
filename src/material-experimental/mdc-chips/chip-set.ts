@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -121,7 +121,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   /** Whether the chip set is disabled. */
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._syncChipsState();
   }
@@ -333,7 +333,4 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
     return false;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }

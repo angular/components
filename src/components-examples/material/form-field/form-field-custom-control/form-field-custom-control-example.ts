@@ -97,7 +97,7 @@ export class MyTelInput
   get required(): boolean {
     return this._required;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -107,7 +107,7 @@ export class MyTelInput
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._disabled ? this.parts.disable() : this.parts.enable();
     this.stateChanges.next();
@@ -232,7 +232,4 @@ export class MyTelInput
     this.autoFocusNext(control, nextElement);
     this.onChange(this.value);
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }

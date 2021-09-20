@@ -142,7 +142,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     }
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
 
     // Browsers may not fire the blur event if the input is disabled too quickly.
@@ -175,7 +175,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
    */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+  set required(value: BooleanInput) { this._required = coerceBooleanProperty(value); }
   protected _required = false;
 
   /** Input type of the element. */
@@ -209,7 +209,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
    */
   @Input()
   get value(): string { return this._inputValueAccessor.value; }
-  set value(value: string) {
+  set value(value: any) {
     if (value !== this.value) {
       this._inputValueAccessor.value = value;
       this.stateChanges.next();
@@ -219,7 +219,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
   /** Whether the element is readonly. */
   @Input()
   get readonly(): boolean { return this._readonly; }
-  set readonly(value: boolean) { this._readonly = coerceBooleanProperty(value); }
+  set readonly(value: BooleanInput) { this._readonly = coerceBooleanProperty(value); }
   private _readonly = false;
 
   protected _neverEmptyInputTypes = [
@@ -471,12 +471,4 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
       this.focus();
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_readonly: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-
-  // Accept `any` to avoid conflicts with other directives on `<input>` that may
-  // accept different types.
-  static ngAcceptInputType_value: any;
 }

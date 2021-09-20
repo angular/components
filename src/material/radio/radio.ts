@@ -11,7 +11,6 @@ import {
   BooleanInput,
   coerceBooleanProperty,
   coerceNumberProperty,
-  NumberInput,
 } from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
@@ -202,7 +201,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
   /** Whether the radio group is disabled */
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
@@ -210,7 +209,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
   /** Whether the radio group is required */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
@@ -311,9 +310,6 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
     this.disabled = isDisabled;
     this._changeDetector.markForCheck();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }
 
 /**
@@ -376,7 +372,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   /** Whether this radio button is checked. */
   @Input()
   get checked(): boolean { return this._checked; }
-  set checked(value: boolean) {
+  set checked(value: BooleanInput) {
     const newCheckedState = coerceBooleanProperty(value);
     if (this._checked !== newCheckedState) {
       this._checked = newCheckedState;
@@ -430,7 +426,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   get disabled(): boolean {
     return this._disabled || (this.radioGroup !== null && this.radioGroup.disabled);
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._setDisabled(coerceBooleanProperty(value));
   }
 
@@ -439,7 +435,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   get required(): boolean {
     return this._required || (this.radioGroup && this.radioGroup.required);
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
 
@@ -613,12 +609,6 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
       this._changeDetector.markForCheck();
     }
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 

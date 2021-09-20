@@ -62,7 +62,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
   get minRows(): number { return this._minRows; }
-  set minRows(value: number) {
+  set minRows(value: NumberInput) {
     this._minRows = coerceNumberProperty(value);
     this._setMinHeight();
   }
@@ -70,7 +70,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Maximum amount of rows in the textarea. */
   @Input('cdkAutosizeMaxRows')
   get maxRows(): number { return this._maxRows; }
-  set maxRows(value: number) {
+  set maxRows(value: NumberInput) {
     this._maxRows = coerceNumberProperty(value);
     this._setMaxHeight();
   }
@@ -78,7 +78,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Whether autosizing is enabled or not */
   @Input('cdkTextareaAutosize')
   get enabled(): boolean { return this._enabled; }
-  set enabled(value: boolean) {
+  set enabled(value: BooleanInput) {
     value = coerceBooleanProperty(value);
 
     // Only act if the actual value changed. This specifically helps to not run
@@ -364,8 +364,4 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       textarea.setSelectionRange(selectionStart, selectionEnd);
     }
   }
-
-  static ngAcceptInputType_minRows: NumberInput;
-  static ngAcceptInputType_maxRows: NumberInput;
-  static ngAcceptInputType_enabled: BooleanInput;
 }

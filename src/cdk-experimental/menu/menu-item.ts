@@ -61,7 +61,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -276,6 +276,4 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   ngOnDestroy() {
     this._destroyed.next();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

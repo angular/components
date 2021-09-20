@@ -58,7 +58,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     _animationStartListener(event: AnimationEvent_2): void;
     _animationState: 'open-instant' | 'open' | 'void';
     get autoFocus(): AutoFocusTarget | string | boolean;
-    set autoFocus(value: AutoFocusTarget | string | boolean);
+    set autoFocus(value: AutoFocusTarget | string | BooleanInput);
     close(): Promise<MatDrawerToggleResult>;
     readonly closedStart: Observable<void>;
     readonly _closedStream: Observable<void>;
@@ -66,18 +66,12 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     // (undocumented)
     _container?: MatDrawerContainer | undefined;
     get disableClose(): boolean;
-    set disableClose(value: boolean);
+    set disableClose(value: BooleanInput);
     // (undocumented)
     _getWidth(): number;
     get mode(): MatDrawerMode;
     set mode(value: MatDrawerMode);
     readonly _modeChanged: Subject<void>;
-    // (undocumented)
-    static ngAcceptInputType_autoFocus: AutoFocusTarget | string | BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disableClose: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_opened: BooleanInput;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -87,7 +81,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     readonly onPositionChanged: EventEmitter<void>;
     open(openedVia?: FocusOrigin): Promise<MatDrawerToggleResult>;
     get opened(): boolean;
-    set opened(value: boolean);
+    set opened(value: BooleanInput);
     readonly openedChange: EventEmitter<boolean>;
     readonly openedStart: Observable<void>;
     readonly _openedStream: Observable<void>;
@@ -110,7 +104,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     constructor(_dir: Directionality, _element: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, defaultAutosize?: boolean, _animationMode?: string | undefined);
     _allDrawers: QueryList<MatDrawer>;
     get autosize(): boolean;
-    set autosize(value: boolean);
+    set autosize(value: BooleanInput);
     readonly backdropClick: EventEmitter<void>;
     // (undocumented)
     _backdropOverride: boolean | null;
@@ -130,14 +124,10 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     };
     _drawers: QueryList<MatDrawer>;
     get end(): MatDrawer | null;
-    get hasBackdrop(): any;
-    set hasBackdrop(value: any);
+    get hasBackdrop(): boolean;
+    set hasBackdrop(value: BooleanInput);
     // (undocumented)
     _isShowingBackdrop(): boolean;
-    // (undocumented)
-    static ngAcceptInputType_autosize: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_hasBackdrop: BooleanInput;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -180,17 +170,11 @@ export type MatDrawerToggleResult = 'open' | 'close';
 // @public (undocumented)
 export class MatSidenav extends MatDrawer {
     get fixedBottomGap(): number;
-    set fixedBottomGap(value: number);
+    set fixedBottomGap(value: NumberInput);
     get fixedInViewport(): boolean;
-    set fixedInViewport(value: boolean);
+    set fixedInViewport(value: BooleanInput);
     get fixedTopGap(): number;
-    set fixedTopGap(value: number);
-    // (undocumented)
-    static ngAcceptInputType_fixedBottomGap: NumberInput;
-    // (undocumented)
-    static ngAcceptInputType_fixedInViewport: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_fixedTopGap: NumberInput;
+    set fixedTopGap(value: NumberInput);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSidenav, "mat-sidenav", ["matSidenav"], { "fixedInViewport": "fixedInViewport"; "fixedTopGap": "fixedTopGap"; "fixedBottomGap": "fixedBottomGap"; }, {}, never, ["*"]>;
     // (undocumented)

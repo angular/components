@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -107,8 +106,6 @@ export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, O
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
   }
-
-  static ngAcceptInputType_sticky: BooleanInput;
 }
 
 // Boilerplate for applying mixins to CdkFooterRowDef.
@@ -138,8 +135,6 @@ export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, O
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
   }
-
-  static ngAcceptInputType_sticky: BooleanInput;
 }
 
 /**

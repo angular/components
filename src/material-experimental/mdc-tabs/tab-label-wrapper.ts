@@ -33,7 +33,9 @@ export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
   get fitInkBarToContent(): boolean { return this._foundation.getFitToContent(); }
-  set fitInkBarToContent(v: boolean) { this._foundation.setFitToContent(coerceBooleanProperty(v)); }
+  set fitInkBarToContent(v: BooleanInput) {
+    this._foundation.setFitToContent(coerceBooleanProperty(v));
+  }
 
   constructor(elementRef: ElementRef, @Inject(DOCUMENT) _document: any) {
     super(elementRef);
@@ -48,6 +50,4 @@ export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
   ngOnDestroy() {
     this._foundation.destroy();
   }
-
-  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
 }

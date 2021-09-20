@@ -121,7 +121,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** Whether the input is required. */
   @Input()
   get required(): boolean { return !!this._required; }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
   private _required: boolean;
@@ -179,7 +179,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
       (this._startInput.disabled && this._endInput.disabled) :
       this._groupDisabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._groupDisabled) {
@@ -393,7 +393,4 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
       this._endInput._registerModel(model);
     }
   }
-
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

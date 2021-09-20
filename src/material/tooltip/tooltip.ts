@@ -8,7 +8,12 @@
 import {AnimationEvent} from '@angular/animations';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput,
+} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {
@@ -168,7 +173,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   /** Disables the display of the tooltip. */
   @Input('matTooltipDisabled')
   get disabled(): boolean { return this._disabled; }
-  set disabled(value) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
 
     // If tooltip is disabled, hide immediately.
@@ -180,10 +185,20 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   }
 
   /** The default delay in ms before showing the tooltip after show is called */
-  @Input('matTooltipShowDelay') showDelay: number = this._defaultOptions.showDelay;
+  @Input('matTooltipShowDelay')
+  get showDelay(): number { return this._showDelay; }
+  set showDelay(value: NumberInput) {
+    this._showDelay = coerceNumberProperty(value);
+  }
+  private _showDelay = this._defaultOptions.showDelay;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
-  @Input('matTooltipHideDelay') hideDelay: number = this._defaultOptions.hideDelay;
+  @Input('matTooltipHideDelay')
+  get hideDelay(): number { return this._hideDelay; }
+  set hideDelay(value: NumberInput) {
+    this._hideDelay = coerceNumberProperty(value);
+  }
+  private _hideDelay = this._defaultOptions.hideDelay;
 
   /**
    * How touch gestures should be handled by the tooltip. On touch devices the tooltip directive
@@ -716,10 +731,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       style.webkitTapHighlightColor = 'transparent';
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_hideDelay: NumberInput;
-  static ngAcceptInputType_showDelay: NumberInput;
 }
 
 /**

@@ -105,13 +105,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   /** Whether the tab group should grow to the size of the active tab. */
   @Input()
   get dynamicHeight(): boolean { return this._dynamicHeight; }
-  set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
+  set dynamicHeight(value: BooleanInput) { this._dynamicHeight = coerceBooleanProperty(value); }
   private _dynamicHeight: boolean;
 
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number | null { return this._selectedIndex; }
-  set selectedIndex(value: number | null) {
+  set selectedIndex(value: NumberInput) {
     this._indexToSelect = coerceNumberProperty(value, null);
   }
   private _selectedIndex: number | null = null;
@@ -135,7 +135,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
    */
   @Input()
   get contentTabIndex(): number | null { return this._contentTabIndex; }
-  set contentTabIndex(value: number | null) {
+  set contentTabIndex(value: NumberInput) {
     this._contentTabIndex = coerceNumberProperty(value, null);
   }
   private _contentTabIndex: number | null;
@@ -415,12 +415,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
       this._tabHeader.focusIndex = index;
     }
   }
-
-  static ngAcceptInputType_dynamicHeight: BooleanInput;
-  static ngAcceptInputType_animationDuration: NumberInput;
-  static ngAcceptInputType_selectedIndex: NumberInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_contentTabIndex: NumberInput;
 }
 
 /**

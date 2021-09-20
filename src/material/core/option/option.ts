@@ -65,11 +65,11 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.group && this.group.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean { return (this.group && this.group.disabled) || this._disabled; }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
 
   /** Whether ripples for the option are disabled. */
-  get disableRipple() { return this._parent && this._parent.disableRipple; }
+  get disableRipple(): boolean { return !!(this._parent && this._parent.disableRipple); }
 
   /** Event emitted when the option is selected or deselected. */
   // tslint:disable-next-line:no-output-on-prefix
@@ -227,8 +227,6 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   private _emitSelectionChangeEvent(isUserInput = false): void {
     this.onSelectionChange.emit(new MatOptionSelectionChange(this, isUserInput));
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**

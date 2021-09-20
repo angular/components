@@ -64,14 +64,14 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
   private _disabled: boolean = false;
 
   @Input()
   get openActions(): OpenAction[] {
     return this._openActions;
   }
-  set openActions(action: OpenAction[]) {
+  set openActions(action: OpenActionInput) {
     this._openActions = this._coerceOpenActionProperty(action);
   }
   private _openActions: OpenAction[] = ['click'];
@@ -79,7 +79,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   /** Whether the textContent is automatically updated upon change of the combobox value. */
   @Input()
   get autoSetText(): boolean { return this._autoSetText; }
-  set autoSetText(value: boolean) { this._autoSetText = coerceBooleanProperty(value); }
+  set autoSetText(value: BooleanInput) { this._autoSetText = coerceBooleanProperty(value); }
   private _autoSetText: boolean = true;
 
   @Output('comboboxPanelOpened') readonly opened: EventEmitter<void> = new EventEmitter<void>();
@@ -276,16 +276,12 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this._panelContent;
   }
 
-  private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
+  private _coerceOpenActionProperty(input: OpenActionInput): OpenAction[] {
     let actions = typeof input === 'string' ? input.trim().split(/[ ,]+/) : input;
     if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
-      actions.some(a => allowedOpenActions.indexOf(a) === -1)) {
+      (!actions || actions.some(a => allowedOpenActions.indexOf(a) === -1))) {
       throw Error(`${input} is not a support open action for CdkCombobox`);
     }
     return actions as OpenAction[];
   }
-
-  static ngAcceptInputType_openActions: OpenActionInput;
-  static ngAcceptInputType_autoSetText: OpenActionInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

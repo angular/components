@@ -50,7 +50,7 @@ export class Example implements OnInit {
 
   @Input()
   get showLabel(): boolean { return this._showLabel; }
-  set showLabel(v: boolean) { this._showLabel = coerceBooleanProperty(v); }
+  set showLabel(v: BooleanInput) { this._showLabel = coerceBooleanProperty(v); }
   _showLabel: boolean;
 
   title: string;
@@ -62,6 +62,4 @@ export class Example implements OnInit {
     this.title = EXAMPLE_COMPONENTS[this.id].title;
     this._viewContainerRef.createComponent(await loadExampleFactory(this.id, this._injector));
   }
-
-  static ngAcceptInputType_showLabel: BooleanInput;
 }

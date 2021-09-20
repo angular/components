@@ -111,7 +111,7 @@ export class MatSort extends _MatSortBase
    */
   @Input('matSortDisableClear')
   get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v: boolean) { this._disableClear = coerceBooleanProperty(v); }
+  set disableClear(v: BooleanInput) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
@@ -186,9 +186,6 @@ export class MatSort extends _MatSortBase
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableClear: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /** Returns the sort direction cycle to use given the provided parameters of order and clear. */

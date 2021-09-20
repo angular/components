@@ -173,7 +173,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
   get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
     this._syncChipsState();
   }
@@ -223,7 +223,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
   get required(): boolean {
     return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -268,7 +268,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
    */
   @Input()
   get disabled(): boolean { return this.ngControl ? !!this.ngControl.disabled : this._disabled; }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._syncChipsState();
   }
@@ -283,7 +283,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
    */
   @Input()
   get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) {
+  set selectable(value: BooleanInput) {
     this._selectable = coerceBooleanProperty(value);
 
     if (this.chips) {
@@ -795,9 +795,4 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
       });
     }
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_selectable: BooleanInput;
 }

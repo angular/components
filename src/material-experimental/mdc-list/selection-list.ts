@@ -99,7 +99,7 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
   /** Whether selection is limited to one or multiple items (default multiple). */
   @Input()
   get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
@@ -348,8 +348,6 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
   get options(): QueryList<MatListOption> {
     return this._items;
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
 }
 
 // TODO: replace with class using inheritance once material-components-web/pull/6256 is available.

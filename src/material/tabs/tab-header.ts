@@ -44,8 +44,8 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
 
   /** Whether the ripple effect is disabled or not. */
   @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: any) { this._disableRipple = coerceBooleanProperty(value); }
+  get disableRipple(): boolean { return this._disableRipple; }
+  set disableRipple(value: BooleanInput) { this._disableRipple = coerceBooleanProperty(value); }
   private _disableRipple: boolean = false;
 
   constructor(elementRef: ElementRef,
@@ -102,6 +102,4 @@ export class MatTabHeader extends _MatTabHeaderBase {
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

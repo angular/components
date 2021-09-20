@@ -166,7 +166,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** Whether the toggle group is vertical. */
   @Input()
   get vertical(): boolean { return this._vertical; }
-  set vertical(value: boolean) {
+  set vertical(value: BooleanInput) {
     this._vertical = coerceBooleanProperty(value);
   }
 
@@ -202,14 +202,14 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** Whether multiple button toggles can be selected. */
   @Input()
   get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
   }
 
   /** Whether multiple button toggle group is disabled. */
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
 
     if (this._buttonToggles) {
@@ -376,10 +376,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     // it is used by Angular to sync up the two-way data binding.
     this.valueChange.emit(this.value);
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_vertical: BooleanInput;
 }
 
 // Boilerplate for applying mixins to the MatButtonToggle class.
@@ -462,7 +458,7 @@ export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, Aft
   get checked(): boolean {
     return this.buttonToggleGroup ? this.buttonToggleGroup._isSelected(this) : this._checked;
   }
-  set checked(value: boolean) {
+  set checked(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._checked) {
@@ -481,7 +477,7 @@ export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, Aft
   get disabled(): boolean {
     return this._disabled || (this.buttonToggleGroup && this.buttonToggleGroup.disabled);
   }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
   private _disabled: boolean = false;
 
   /** Event emitted when the group value changes. */
@@ -572,10 +568,4 @@ export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, Aft
     // Use `markForCheck` to explicit update button toggle's status.
     this._changeDetectorRef.markForCheck();
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_vertical: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

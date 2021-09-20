@@ -65,7 +65,7 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
     return this.disabled || this._disableRipple || this._listBase.disableRipple ||
            this._noopAnimations;
   }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  set disableRipple(value: BooleanInput) { this._disableRipple = coerceBooleanProperty(value); }
   private _disableRipple: boolean = false;
 
   /** Whether the list-item is disabled. */
@@ -73,7 +73,7 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   @HostBinding('attr.aria-disabled')
   @Input()
   get disabled(): boolean { return this._disabled || (this._listBase && this._listBase.disabled); }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
   private _disabled = false;
 
   private _subscriptions = new Subscription();
@@ -166,9 +166,6 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
           }));
     });
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 @Directive()
@@ -180,16 +177,13 @@ export abstract class MatListBase {
   /** Whether ripples for all list items is disabled. */
   @Input()
   get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  set disableRipple(value: BooleanInput) { this._disableRipple = coerceBooleanProperty(value); }
   private _disableRipple: boolean = false;
 
   /** Whether all list items are disabled. */
   @HostBinding('attr.aria-disabled')
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: BooleanInput) { this._disabled = coerceBooleanProperty(value); }
   private _disabled = false;
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

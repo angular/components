@@ -115,7 +115,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
   get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
     this._updateMdcSelectionClasses();
     this._syncListboxProperties();
@@ -139,7 +139,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
    */
   @Input()
   get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) {
+  set selectable(value: BooleanInput) {
     this._selectable = coerceBooleanProperty(value);
     this._updateMdcSelectionClasses();
     this._syncListboxProperties();
@@ -163,7 +163,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
   /** Whether this chip listbox is required. */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
   protected _required: boolean = false;
@@ -548,8 +548,4 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
 
     this._lastDestroyedChipIndex = null;
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_selectable: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }

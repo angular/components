@@ -75,7 +75,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   get value(): D | null {
     return this._model ? this._getValueFromModel(this._model.selection) : this._pendingValue;
   }
-  set value(value: D | null) {
+  set value(value: any) {
     this._assignValueProgrammatically(value);
   }
   protected _model: MatDateSelectionModel<S, D> | undefined;
@@ -83,7 +83,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   /** Whether the datepicker-input is disabled. */
   @Input()
   get disabled(): boolean { return !!this._disabled || this._parentDisabled(); }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
     const element = this._elementRef.nativeElement;
 
@@ -375,11 +375,6 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     const filter = this._getDateFilter();
     return !filter || filter(value);
   }
-
-  // Accept `any` to avoid conflicts with other directives on `<input>` that
-  // may accept different types.
-  static ngAcceptInputType_value: any;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**

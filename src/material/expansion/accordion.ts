@@ -58,7 +58,7 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase,
   /** Whether the expansion indicator should be hidden. */
   @Input()
   get hideToggle(): boolean { return this._hideToggle; }
-  set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
+  set hideToggle(show: BooleanInput) { this._hideToggle = coerceBooleanProperty(show); }
   private _hideToggle: boolean = false;
 
   /**
@@ -98,6 +98,4 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase,
     super.ngOnDestroy();
     this._ownHeaders.destroy();
   }
-
-  static ngAcceptInputType_hideToggle: BooleanInput;
 }

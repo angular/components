@@ -137,7 +137,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   /** Whether the option is selected. */
   @Input()
   get selected(): boolean { return this._selectionList.selectedOptions.isSelected(this); }
-  set selected(value: boolean) {
+  set selected(value: BooleanInput) {
     const isSelected = coerceBooleanProperty(value);
 
     if (isSelected !== this._selected) {
@@ -267,6 +267,4 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   _markForCheck() {
     this._changeDetectorRef.markForCheck();
   }
-
-  static ngAcceptInputType_selected: BooleanInput;
 }

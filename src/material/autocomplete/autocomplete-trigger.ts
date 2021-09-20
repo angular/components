@@ -177,7 +177,7 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
    */
   @Input('matAutocompleteDisabled')
   get autocompleteDisabled(): boolean { return this._autocompleteDisabled; }
-  set autocompleteDisabled(value: boolean) {
+  set autocompleteDisabled(value: BooleanInput) {
     this._autocompleteDisabled = coerceBooleanProperty(value);
   }
 
@@ -742,8 +742,6 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
       }
     }
   }
-
-  static ngAcceptInputType_autocompleteDisabled: BooleanInput;
 }
 
 

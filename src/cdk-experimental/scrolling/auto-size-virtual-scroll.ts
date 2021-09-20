@@ -447,7 +447,7 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
    */
   @Input()
   get minBufferPx(): number { return this._minBufferPx; }
-  set minBufferPx(value: number) { this._minBufferPx = coerceNumberProperty(value); }
+  set minBufferPx(value: NumberInput) { this._minBufferPx = coerceNumberProperty(value); }
   _minBufferPx = 100;
 
   /**
@@ -458,7 +458,7 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
    */
   @Input()
   get maxBufferPx(): number { return this._maxBufferPx; }
-  set maxBufferPx(value: number) { this._maxBufferPx = coerceNumberProperty(value); }
+  set maxBufferPx(value: NumberInput) { this._maxBufferPx = coerceNumberProperty(value); }
   _maxBufferPx = 200;
 
   /** The scroll strategy used by this directive. */
@@ -467,7 +467,4 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
   ngOnChanges() {
     this._scrollStrategy.updateBufferSize(this.minBufferPx, this.maxBufferPx);
   }
-
-  static ngAcceptInputType_minBufferPx: NumberInput;
-  static ngAcceptInputType_maxBufferPx: NumberInput;
 }

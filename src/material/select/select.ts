@@ -318,7 +318,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
   /** Whether the component is required. */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -327,7 +327,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
   /** Whether the user should be allowed to select multiple options. */
   @Input()
   get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     if (this._selectionModel && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMatSelectDynamicMultipleError();
     }
@@ -339,7 +339,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
   /** Whether to center the active option over the trigger. */
   @Input()
   get disableOptionCentering(): boolean { return this._disableOptionCentering; }
-  set disableOptionCentering(value: boolean) {
+  set disableOptionCentering(value: BooleanInput) {
     this._disableOptionCentering = coerceBooleanProperty(value);
   }
   private _disableOptionCentering = this._defaultOptions?.disableOptionCentering ?? false;
@@ -389,7 +389,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
   /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
   @Input()
   get typeaheadDebounceInterval(): number { return this._typeaheadDebounceInterval; }
-  set typeaheadDebounceInterval(value: number) {
+  set typeaheadDebounceInterval(value: NumberInput) {
     this._typeaheadDebounceInterval = coerceNumberProperty(value);
   }
   private _typeaheadDebounceInterval: number;
@@ -1053,14 +1053,6 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
   get shouldLabelFloat(): boolean {
     return this._panelOpen || !this.empty || (this._focused && !!this._placeholder);
   }
-
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_disableOptionCentering: BooleanInput;
-  static ngAcceptInputType_typeaheadDebounceInterval: NumberInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 @Component({

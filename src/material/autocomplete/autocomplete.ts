@@ -143,7 +143,7 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
    */
   @Input()
   get autoActiveFirstOption(): boolean { return this._autoActiveFirstOption; }
-  set autoActiveFirstOption(value: boolean) {
+  set autoActiveFirstOption(value: BooleanInput) {
     this._autoActiveFirstOption = coerceBooleanProperty(value);
   }
   private _autoActiveFirstOption: boolean;
@@ -272,9 +272,6 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     classList[this._visibleClass] = this.showPanel;
     classList[this._hiddenClass] = !this.showPanel;
   }
-
-  static ngAcceptInputType_autoActiveFirstOption: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 @Component({

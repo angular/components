@@ -123,7 +123,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
   /** The index of the active tab. */
   get selectedIndex(): number { return this._selectedIndex; }
-  set selectedIndex(value: number) {
+  set selectedIndex(value: NumberInput) {
     value = coerceNumberProperty(value);
 
     if (this._selectedIndex != value) {
@@ -585,6 +585,4 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     return {maxScrollDistance, distance: this._scrollDistance};
   }
-
-  static ngAcceptInputType_selectedIndex: NumberInput;
 }
