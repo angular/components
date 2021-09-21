@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/menu-surface' as mdc-menu-surface;
@@ -47,6 +48,18 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
+
+  // When the 2014 typography config is mapped to the 2018 config, the font-weight that winds up
+  // getting used for menu items looks slightly off. In this case we override it to a value that
+  // looks better.
+  @if (typography.private-typography-is-2014-config($config-or-theme)) {
+    $config: map.merge($config, (
+        body-1: map.merge(map.get($config, body-1), (
+          font-weight: 400
+        ))
+    ));
+  }
+
   @include mdc-helpers.mat-using-mdc-typography($config) {
     @include mdc-menu-surface.core-styles(mdc-helpers.$mat-typography-styles-query);
 
