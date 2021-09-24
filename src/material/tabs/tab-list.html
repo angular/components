@@ -9,11 +9,11 @@
        matTabLabelWrapper
        mat-ripple
        cdkMonitorElementFocus
-       *ngFor="let tab of _tabs; let i = index"
+       *ngFor="let tab of _tabLabels; let i = index"
        [id]="_getTabLabelId(i)"
        [attr.tabIndex]="_getTabIndex(tab, i)"
        [attr.aria-posinset]="i + 1"
-       [attr.aria-setsize]="_tabs.length"
+       [attr.aria-setsize]="_tabLabels.length"
        [attr.aria-controls]="_getTabContentId(i)"
        [attr.aria-selected]="selectedIndex == i"
        [attr.aria-label]="tab.ariaLabel || null"
@@ -31,7 +31,9 @@
       </ng-template>
 
       <!-- If there is not a label template, fall back to the text label. -->
-      <ng-template [ngIf]="!tab.templateLabel">{{tab.textLabel}}</ng-template>
+      <ng-template [ngIf]="!tab.templateLabel">
+        {{tab.textLabel}}
+      </ng-template>
     </div>
   </div>
 </mat-tab-header>

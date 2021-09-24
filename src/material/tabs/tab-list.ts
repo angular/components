@@ -11,6 +11,8 @@ import {BooleanInput, NumberInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
+  ContentChildren,
+  Directive,
   ElementRef,
   EventEmitter,
   Input,
@@ -20,9 +22,39 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import {CanColor, CanDisableRipple, mixinColor, mixinDisableRipple} from '@angular/material/core';
+import {
+  CanColor,
+  CanDisableRipple,
+  mixinColor,
+  mixinDisabled,
+  mixinDisableRipple
+} from '@angular/material/core';
 
-import {MatTab} from '.';
+import {MatTabLabel} from './tab-label';
+
+// Boilerplate for applying mixins to MatTab.
+/** @docs-private */
+const _MatTabListLabelMixinBase = mixinDisabled(class {});
+
+@Directive({
+  selector: 'mat-tab-list-label, matTabListLabel',
+  inputs: ['disabled'],
+})
+export class MatTabListLabel extends _MatTabListLabelMixinBase {
+  /** Aria label for the tab label. */
+  @Input() ariaLabel: string;
+
+  /**
+   * Reference to the element that the tab label is labelled by.
+   */
+  @Input() ariaLabelledby: string;
+
+  /** Content for the tab label given by `<ng-template mat-tab-label>`. */
+  @Input() templateLabel: MatTabLabel;
+
+  /** Plain text label for the tab label, used when there is no template label. */
+  @Input() textLabel: string = '';
+}
 
 // Boilerplate for applying mixins to MatTabList.
 /** @docs-private */
@@ -55,9 +87,8 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
                                                                 CanDisableRipple {
   @ViewChild('tabHeader') _tabHeader: MatTabListBaseHeader;
 
-  // TODO: use list of tab label template instead of mat tab query list.
   /** All of the tabs that belong to the group. */
-  @Input('tabs') _tabs: QueryList<MatTab>;
+  @ContentChildren(MatTabListLabel) _tabLabels: QueryList<MatTabListLabel>;
 
   /** The index of the active tab. */
   @Input() selectedIndex: number|null = null;
@@ -115,9 +146,8 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     this.selectedIndexChange.emit(index);
   }
 
-  // TODO: Refactor to use tab label directive instead of tab component.
   /** Retrieves the tabindex for the tab. */
-  _getTabIndex(tab: MatTab, idx: number): number|null {
+  _getTabIndex(tab: MatTabListLabel, idx: number): number|null {
     if (tab.disabled) {
       return null;
     }

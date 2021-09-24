@@ -1,11 +1,17 @@
 <mat-tab-list #tabList
-              [tabs]="_tabs"
               [groupId]="_groupId"
               [selectedIndex]="selectedIndex || 0"
               [disableRipple]="disableRipple"
               [disablePagination]="disablePagination"
               (focusChange)="_focusChanged($event)"
               (selectedIndexChange)="_handleSelectedIndexChange($event)">
+              <mat-tab-list-label *ngFor="let tab of _tabs"
+                                  [disabled]="tab.disabled"
+                                  [ariaLabel]="tab.ariaLabel"
+                                  [ariaLabelledby]="tab.ariaLabelledby"
+                                  [templateLabel]="tab.templateLabel"
+                                  [textLabel]="tab.textLabel">
+              </mat-tab-list-label>
 </mat-tab-list>
 
 <div
