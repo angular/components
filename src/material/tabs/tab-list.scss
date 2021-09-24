@@ -1,0 +1,20 @@
+@use '../core/style/variables';
+@use './tabs-common';
+
+// Wraps each tab label
+.mat-tab-label {
+  @include tabs-common.tab-label;
+  position: relative;
+}
+
+@media (variables.$xsmall) {
+  .mat-tab-label {
+    padding: 0 12px;
+  }
+}
+
+@media (variables.$small) {
+  .mat-tab-label {
+    padding: 0 12px;
+  }
+}

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusOrigin} from '@angular/cdk/a11y';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -31,7 +32,6 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {FocusOrigin} from '@angular/cdk/a11y';
 import {
   CanColor,
   CanDisableRipple,
@@ -42,8 +42,10 @@ import {
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {merge, Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
+import {MatTabList} from './tab-list';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -85,10 +87,9 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
    */
   abstract _allTabs: QueryList<MatTab>;
   abstract _tabBodyWrapper: ElementRef;
-  abstract _tabHeader: MatTabGroupBaseHeader;
 
   /** All of the tabs that belong to the group. */
-  _tabs: QueryList<MatTab> = new QueryList<MatTab>();
+  readonly _tabs: QueryList<MatTab> = new QueryList<MatTab>();
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -177,7 +178,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   @Output() readonly selectedTabChange: EventEmitter<MatTabChangeEvent> =
       new EventEmitter<MatTabChangeEvent>(true);
 
-  private _groupId: number;
+  readonly _groupId: number;
 
   constructor(elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,
@@ -300,23 +301,14 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   }
 
   /** Re-aligns the ink bar to the selected tab element. */
-  realignInkBar() {
-    if (this._tabHeader) {
-      this._tabHeader._alignInkBarToSelectedTab();
-    }
-  }
+  abstract realignInkBar(): void;
 
   /**
    * Sets focus to a particular tab.
    * @param index Index of the tab to be focused.
    */
-  focusTab(index: number) {
-    const header = this._tabHeader;
+  abstract focusTab(index: number): void;
 
-    if (header) {
-      header.focusIndex = index;
-    }
-  }
 
   _focusChanged(index: number) {
     this.focusChange.emit(this._createChangeEvent(index));
@@ -390,32 +382,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     this.animationDone.emit();
   }
 
-  /** Handle click events, setting new selected index if appropriate. */
-  _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number) {
-    if (!tab.disabled) {
-      this.selectedIndex = tabHeader.focusIndex = index;
-    }
-  }
-
-  /** Retrieves the tabindex for the tab. */
-  _getTabIndex(tab: MatTab, idx: number): number | null {
-    if (tab.disabled) {
-      return null;
-    }
-    return this.selectedIndex === idx ? 0 : -1;
-  }
-
-  /** Callback for when the focused state of a tab has changed. */
-  _tabFocusChanged(focusOrigin: FocusOrigin, index: number) {
-    // Mouse/touch focus happens during the `mousedown`/`touchstart` phase which
-    // can cause the tab to be moved out from under the pointer, interrupting the
-    // click sequence (see #21898). We don't need to scroll the tab into view for
-    // such cases anyway, because it will be done when the tab becomes selected.
-    if (focusOrigin && focusOrigin !== 'mouse' && focusOrigin !== 'touch') {
-      this._tabHeader.focusIndex = index;
-    }
-  }
-
   static ngAcceptInputType_dynamicHeight: BooleanInput;
   static ngAcceptInputType_animationDuration: NumberInput;
   static ngAcceptInputType_selectedIndex: NumberInput;
@@ -450,12 +416,28 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 export class MatTabGroup extends _MatTabGroupBase {
   @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  @ViewChild('tabHeader') _tabHeader: MatTabGroupBaseHeader;
+  @ViewChild('tabList', {static: true}) _tabList: MatTabList;
 
   constructor(elementRef: ElementRef,
               changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, defaultConfig, animationMode);
+  }
+
+  realignInkBar() {
+    this._tabList.realignInkBar();
+  }
+
+  focusTab(index: number) {
+    this._tabList.focusTab(index);
+  }
+
+  _handleSelectedIndexChange(index: number) {
+    const tab = this._tabs.get(index);
+    if (!(tab && tab.disabled)) {
+      this.selectedIndex = index;
+      this.focusTab(index);
+    }
   }
 }
