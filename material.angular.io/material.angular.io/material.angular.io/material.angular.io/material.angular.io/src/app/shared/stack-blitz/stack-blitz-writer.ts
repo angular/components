@@ -1,11 +1,10 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable, NgZone} from '@angular/core';
-import {VERSION} from '@angular/material/core';
+import {Injectable, NgZone, Version, VERSION as NG_VERSION} from '@angular/core';
+import {VERSION as MAT_VERSION} from '@angular/material/core';
 import {EXAMPLE_COMPONENTS, ExampleData} from '@angular/components-examples';
 import {Observable} from 'rxjs';
 import {shareReplay, take} from 'rxjs/operators';
 
-import {materialVersion} from '../version/version';
 
 const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1';
 
@@ -56,18 +55,19 @@ const TEST_TEMPLATE_FILES = [
   'src/test/jasmine-setup.ts'
 ];
 
-const TAGS: string[] = ['angular', 'material', 'example'];
-const angularVersion = '^13.0.0-next.0';
+const TAGS = ['angular', 'material', 'example'];
+const angularVersion = getVersionString(NG_VERSION);
+const componentsVersion = getVersionString(MAT_VERSION);
 
 const dependencies = {
-  '@angular/cdk': materialVersion,
+  '@angular/cdk': componentsVersion,
   '@angular/animations': angularVersion,
   '@angular/common': angularVersion,
   '@angular/compiler': angularVersion,
   '@angular/core': angularVersion,
   '@angular/forms': angularVersion,
-  '@angular/material': materialVersion,
-  '@angular/material-moment-adapter': materialVersion,
+  '@angular/material': componentsVersion,
+  '@angular/material-moment-adapter': componentsVersion,
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
@@ -78,14 +78,14 @@ const dependencies = {
 };
 
 const testDependencies = {
-  '@angular/cdk': materialVersion,
+  '@angular/cdk': componentsVersion,
   '@angular/animations': angularVersion,
   '@angular/common': angularVersion,
   '@angular/compiler': angularVersion,
   '@angular/core': angularVersion,
   '@angular/forms': angularVersion,
-  '@angular/material': materialVersion,
-  '@angular/material-moment-adapter': materialVersion,
+  '@angular/material': componentsVersion,
+  '@angular/material-moment-adapter': componentsVersion,
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
@@ -96,6 +96,18 @@ const testDependencies = {
   'tslib': '^2.2.0',
   'zone.js': '^0.11.4',
 };
+
+function getVersionString(version: Version): string {
+  let suffix = '';
+
+  if (version.full.includes('-next')) {
+    suffix = '-next.0';
+  } else if (version.full.includes('-rc')) {
+    suffix = '-rc.0';
+  }
+
+  return `^${version.major}.${version.minor}.0${suffix}`;
+}
 
 /**
  * StackBlitz writer, write example files to StackBlitz.
@@ -252,7 +264,7 @@ export class StackBlitzWriter {
       fileContent = fileContent
         .replace(/material-docs-example/g, data.selectorName)
         .replace(/{{title}}/g, data.description)
-        .replace(/{{version}}/g, VERSION.full);
+        .replace(/{{version}}/g, MAT_VERSION.full);
     } else if (fileName === 'src/main.ts') {
       const joinedComponentNames = data.componentNames.join(', ');
       // Replace the component name in `main.ts`.
