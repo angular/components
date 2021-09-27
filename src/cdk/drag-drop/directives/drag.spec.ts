@@ -1517,11 +1517,11 @@ describe('CdkDrag', () => {
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
 
-      expect(dragElement.style.webkitTapHighlightColor).toBeFalsy();
+      expect((dragElement.style as any).webkitTapHighlightColor).toBeFalsy();
 
       startDraggingViaMouse(fixture, handle);
 
-      expect(dragElement.style.webkitTapHighlightColor).toBe('transparent');
+      expect((dragElement.style as any).webkitTapHighlightColor).toBe('transparent');
 
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       fixture.detectChanges();
@@ -1529,7 +1529,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mouseup', 50, 100);
       fixture.detectChanges();
 
-      expect(dragElement.style.webkitTapHighlightColor).toBeFalsy();
+      expect((dragElement.style as any).webkitTapHighlightColor).toBeFalsy();
     }));
 
     it('should preserve any existing `webkitTapHighlightColor`', fakeAsync(() => {
@@ -1543,11 +1543,11 @@ describe('CdkDrag', () => {
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
 
-      dragElement.style.webkitTapHighlightColor = 'purple';
+      (dragElement.style as any).webkitTapHighlightColor = 'purple';
 
       startDraggingViaMouse(fixture, handle);
 
-      expect(dragElement.style.webkitTapHighlightColor).toBe('transparent');
+      expect((dragElement.style as any).webkitTapHighlightColor).toBe('transparent');
 
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       fixture.detectChanges();
@@ -1555,7 +1555,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mouseup', 50, 100);
       fixture.detectChanges();
 
-      expect(dragElement.style.webkitTapHighlightColor).toBe('purple');
+      expect((dragElement.style as any).webkitTapHighlightColor).toBe('purple');
     }));
 
     it('should throw if drag handle is attached to an ng-container', fakeAsync(() => {
