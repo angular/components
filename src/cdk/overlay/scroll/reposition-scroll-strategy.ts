@@ -63,7 +63,7 @@ export class RepositionScrollStrategy implements ScrollStrategy {
           // we have a way of exposing the trigger element to the scroll strategy.
           const parentRects = [{width, height, bottom: height, right: width, top: 0, left: 0}];
 
-          if (isElementScrolledOutsideView(overlayRect, parentRects)) {
+          if (isElementScrolledOutsideView(overlayRect, parentRects as any)) {
             this.disable();
             this._ngZone.run(() => this._overlayRef.detach());
           }

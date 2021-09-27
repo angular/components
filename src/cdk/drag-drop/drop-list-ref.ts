@@ -569,8 +569,10 @@ export class DropListRef<T = any> {
     if (!verticalScrollDirection && !horizontalScrollDirection) {
       const {width, height} = this._viewportRuler.getViewportSize();
       const clientRect = {width, height, top: 0, right: width, bottom: height, left: 0};
-      verticalScrollDirection = getVerticalScrollDirection(clientRect, pointerY);
-      horizontalScrollDirection = getHorizontalScrollDirection(clientRect, pointerX);
+      verticalScrollDirection =
+          getVerticalScrollDirection(clientRect as any, pointerY);
+      horizontalScrollDirection =
+          getHorizontalScrollDirection(clientRect as any, pointerX);
       scrollNode = window;
     }
 
@@ -845,7 +847,9 @@ export class DropListRef<T = any> {
       return false;
     }
 
-    const elementFromPoint = this._getShadowRoot().elementFromPoint(x, y) as HTMLElement | null;
+    const elementFromPoint =
+        (this._getShadowRoot() as any).elementFromPoint(x, y) as HTMLElement |
+        null;
 
     // If there's no element at the pointer position, then
     // the client rect is probably scrolled out of the view.

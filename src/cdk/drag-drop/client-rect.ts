@@ -21,7 +21,7 @@ export function getMutableClientRect(element: Element): ClientRect {
     left: clientRect.left,
     width: clientRect.width,
     height: clientRect.height
-  };
+  } as any;
 }
 
 /**
@@ -42,11 +42,11 @@ export function isInsideClientRect(clientRect: ClientRect, x: number, y: number)
  * @param left Amount to add to the `left` position.
  */
 export function adjustClientRect(clientRect: ClientRect, top: number, left: number) {
-  clientRect.top += top;
-  clientRect.bottom = clientRect.top + clientRect.height;
+  (clientRect as any).top += top;
+  (clientRect as any).bottom = clientRect.top + clientRect.height;
 
-  clientRect.left += left;
-  clientRect.right = clientRect.left + clientRect.width;
+  (clientRect as any).left += left;
+  (clientRect as any).right = clientRect.left + clientRect.width;
 }
 
 /**

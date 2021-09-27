@@ -109,7 +109,7 @@ export class ViewportRuler implements OnDestroy {
       right: scrollPosition.left + width,
       height,
       width,
-    };
+    } as any;
   }
 
   /** Gets the (top, left) scroll position of the viewport. */

@@ -756,7 +756,8 @@ export class DragRef<T = any> {
     this._toggleNativeDragInteractions();
 
     if (this._handles) {
-      this._rootElement.style.webkitTapHighlightColor = this._rootElementTapHighlight;
+      (this._rootElement.style as any).webkitTapHighlightColor =
+          this._rootElementTapHighlight;
     }
 
     if (!this._hasStartedDragging) {
@@ -884,8 +885,9 @@ export class DragRef<T = any> {
     // otherwise iOS will still add it, even though all the drag interactions on the handle
     // are disabled.
     if (this._handles.length) {
-      this._rootElementTapHighlight = rootElement.style.webkitTapHighlightColor || '';
-      rootElement.style.webkitTapHighlightColor = 'transparent';
+      this._rootElementTapHighlight =
+          (rootElement.style as any).webkitTapHighlightColor || '';
+      (rootElement.style as any).webkitTapHighlightColor = 'transparent';
     }
 
     this._hasStartedDragging = this._hasMoved = false;

@@ -1040,13 +1040,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const scrollPosition = this._viewportRuler.getViewportScrollPosition();
 
     return {
-      top:    scrollPosition.top + this._viewportMargin,
-      left:   scrollPosition.left + this._viewportMargin,
-      right:  scrollPosition.left + width - this._viewportMargin,
+      top: scrollPosition.top + this._viewportMargin,
+      left: scrollPosition.left + this._viewportMargin,
+      right: scrollPosition.left + width - this._viewportMargin,
       bottom: scrollPosition.top + height - this._viewportMargin,
-      width:  width  - (2 * this._viewportMargin),
+      width: width - (2 * this._viewportMargin),
       height: height - (2 * this._viewportMargin),
-    };
+    } as any;
   }
 
   /** Whether the we're dealing with an RTL context */
@@ -1134,7 +1134,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       right: origin.x + width,
       height,
       width
-    };
+    } as any;
   }
 }
 
@@ -1240,5 +1240,5 @@ function getRoundedBoundingClientRect(clientRect: ClientRect): ClientRect {
     left: Math.floor(clientRect.left),
     width: Math.floor(clientRect.width),
     height: Math.floor(clientRect.height)
-  };
+  } as any;
 }
