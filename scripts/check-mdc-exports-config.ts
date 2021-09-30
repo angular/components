@@ -19,7 +19,14 @@ export const config = {
       // ControlValueAccessor implementation detail.
       'MAT_SLIDER_VALUE_ACCESSOR',
       // Irrelevant for the MDC implementation, because the slider doesn't dispatch any events.
-      'MatSliderChange',
+      'MatSliderChange'
     ],
-  } as {[entryPointName: string]: string[]},
+    'mdc-tabs': [
+      // These components have not been implemented for MDC, but should once MDC tabs have been
+      // decomposed.
+      'MatTabList', 'MatTabListLabel'
+    ]
+  } as {
+    [entryPointName: string]: string[]
+  }
 };

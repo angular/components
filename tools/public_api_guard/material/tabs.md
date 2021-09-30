@@ -28,11 +28,11 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/common';
-import * as i11 from '@angular/material/core';
-import * as i12 from '@angular/cdk/portal';
-import * as i13 from '@angular/cdk/observers';
-import * as i14 from '@angular/cdk/a11y';
+import * as i12 from '@angular/common';
+import * as i13 from '@angular/material/core';
+import * as i14 from '@angular/cdk/portal';
+import * as i15 from '@angular/cdk/observers';
+import * as i16 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
@@ -207,10 +207,18 @@ export class MatTabGroup extends _MatTabGroupBase {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, defaultConfig?: MatTabsConfig, animationMode?: string);
     // (undocumented)
     _allTabs: QueryList<MatTab>;
+    focusTab(index: number): void;
+    // (undocumented)
+    _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
+    // (undocumented)
+    _handleSelectedIndexChange(index: number): void;
+    realignInkBar(): void;
     // (undocumented)
     _tabBodyWrapper: ElementRef;
     // (undocumented)
-    _tabHeader: MatTabGroupBaseHeader;
+    get _tabHeader(): MatTabHeader;
+    // (undocumented)
+    _tabList: MatTabList;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabGroup, "mat-tab-group", ["matTabGroup"], { "color": "color"; "disableRipple": "disableRipple"; }, {}, ["_allTabs"], never>;
     // (undocumented)
@@ -238,11 +246,11 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     readonly focusChange: EventEmitter<MatTabChangeEvent>;
     // (undocumented)
     _focusChanged(index: number): void;
-    focusTab(index: number): void;
+    abstract focusTab(index: number): void;
     _getTabContentId(i: number): string;
-    _getTabIndex(tab: MatTab, idx: number): number | null;
     _getTabLabelId(i: number): string;
-    _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
+    // (undocumented)
+    readonly _groupId: number;
     headerPosition: MatTabHeaderPosition;
     // (undocumented)
     static ngAcceptInputType_animationDuration: NumberInput;
@@ -259,7 +267,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    realignInkBar(): void;
+    abstract realignInkBar(): void;
     _removeTabBodyWrapperHeight(): void;
     get selectedIndex(): number | null;
     set selectedIndex(value: number | null);
@@ -268,10 +276,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     _setTabBodyWrapperHeight(tabHeight: number): void;
     // (undocumented)
     abstract _tabBodyWrapper: ElementRef;
-    _tabFocusChanged(focusOrigin: FocusOrigin, index: number): void;
-    // (undocumented)
-    abstract _tabHeader: MatTabGroupBaseHeader;
-    _tabs: QueryList<MatTab>;
+    readonly _tabs: QueryList<MatTab>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<_MatTabGroupBase, never, never, { "dynamicHeight": "dynamicHeight"; "selectedIndex": "selectedIndex"; "headerPosition": "headerPosition"; "animationDuration": "animationDuration"; "contentTabIndex": "contentTabIndex"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, never>;
     // (undocumented)
@@ -389,6 +394,63 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
 }
 
 // @public
+export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple, CanColor {
+    constructor(elementRef: ElementRef);
+    disablePagination: boolean;
+    readonly focusChange: EventEmitter<number>;
+    // (undocumented)
+    _focusChanged(index: number): void;
+    focusTab(index: number): void;
+    _getTabContentId(i: number): string;
+    _getTabIndex(tab: MatTabListLabel, idx: number): number | null;
+    _getTabLabelId(i: number): string;
+    groupId: number | null;
+    _handleClick(index: number): void;
+    // (undocumented)
+    _handleSelectFocusedIndex(index: number): void;
+    // (undocumented)
+    static ngAcceptInputType_contentTabIndex: BooleanInput;
+    // (undocumented)
+    static ngAcceptInputType_disableRipple: BooleanInput;
+    // (undocumented)
+    static ngAcceptInputType_selectedIndex: NumberInput;
+    realignInkBar(): void;
+    selectedIndex: number;
+    readonly selectedIndexChange: EventEmitter<number>;
+    _tabFocusChanged(focusOrigin: FocusOrigin, index: number): void;
+    // (undocumented)
+    _tabHeader: MatTabHeader;
+    _tabLabels: QueryList<MatTabListLabel>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabList, "mat-tab-list", ["matTabList"], { "color": "color"; "disableRipple": "disableRipple"; "selectedIndex": "selectedIndex"; "groupId": "groupId"; "disablePagination": "disablePagination"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; }, ["_tabLabels"], never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabList, never>;
+}
+
+// @public (undocumented)
+interface MatTabListBaseHeader {
+    // (undocumented)
+    _alignInkBarToSelectedTab: () => void;
+    // (undocumented)
+    focusIndex: number;
+}
+
+// @public
+export class MatTabListLabel extends _MatTabListLabelMixinBase {
+    ariaLabel: string;
+    ariaLabelledby: string;
+    get templateLabel(): MatTabLabel | null;
+    get _templateLabelContent(): MatTabLabel | null;
+    set _templateLabelContent(value: MatTabLabel | null);
+    _templateLabelInput: MatTabLabel | null;
+    textLabel: string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabListLabel, "mat-tab-list-label, matTabListLabel", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; "_templateLabelInput": "templateLabel"; "textLabel": "textLabel"; }, {}, ["_templateLabelContent"]>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabListLabel, never>;
+}
+
+// @public
 export class MatTabNav extends _MatTabNavBase {
     constructor(elementRef: ElementRef, dir: Directionality, ngZone: NgZone, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, platform: Platform, animationMode?: string);
     // (undocumented)
@@ -454,7 +516,7 @@ export class MatTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, [typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i4.MatInkBar, typeof i5.MatTabLabelWrapper, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i7.MatTabBody, typeof i7.MatTabBodyPortal, typeof i8.MatTabHeader, typeof i9.MatTabContent], [typeof i10.CommonModule, typeof i11.MatCommonModule, typeof i12.PortalModule, typeof i11.MatRippleModule, typeof i13.ObserversModule, typeof i14.A11yModule], [typeof i11.MatCommonModule, typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i9.MatTabContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, [typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i4.MatInkBar, typeof i5.MatTabLabelWrapper, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i7.MatTabBody, typeof i7.MatTabBodyPortal, typeof i8.MatTabHeader, typeof i9.MatTabContent, typeof i10.MatTabList, typeof i11.MatTabListLabel], [typeof i12.CommonModule, typeof i13.MatCommonModule, typeof i14.PortalModule, typeof i13.MatRippleModule, typeof i15.ObserversModule, typeof i16.A11yModule], [typeof i13.MatCommonModule, typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i9.MatTabContent]>;
 }
 
 // @public
