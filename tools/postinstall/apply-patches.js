@@ -110,12 +110,6 @@ function applyPatches() {
   // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1208.
   applyPatch(path.join(__dirname, './manifest_externs_hermeticity.patch'));
 
-  // Workaround for https://github.com/angular/angular/issues/33452:
-  searchAndReplace(
-      /angular_compiler_options = {/, `$&
-          "strictTemplates": True,`,
-      'node_modules/@angular/bazel/src/ng_module.bzl');
-
   // More info in https://github.com/angular/angular/pull/33786
   shelljs.rm('-rf', [
     'node_modules/rxjs/add/',

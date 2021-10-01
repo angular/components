@@ -86,6 +86,7 @@ def ng_module(
         tsconfig = None,
         flat_module_out_file = None,
         testonly = False,
+        strict_templates = True,
         **kwargs):
     if not tsconfig:
         tsconfig = _getDefaultTsConfig(testonly)
@@ -139,6 +140,7 @@ def ng_module(
         deps = local_deps,
         tsconfig = tsconfig,
         testonly = testonly,
+        strict_templates = strict_templates,
         **kwargs
     )
 
