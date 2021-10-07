@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 // Mixin to create a css class for each fill, stroke, and stop-color for a given color.
 @mixin _svgColorProperties($className, $color) {

@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 // Mixin to apply theme colors for docs generated from markdown files in the material2 repo.
 @mixin theme($theme) {
