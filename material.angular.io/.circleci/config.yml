@@ -12,7 +12,7 @@ version: 2.1
 
 # Cache key for CircleCI. We want to invalidate the cache whenever the Yarn lock file changes.
 var_1: &cache_key material-angular-io-{{ .Branch }}-{{ checksum "yarn.lock" }}
-var_2: &default_docker_image circleci/node:16.6.0-browsers
+var_2: &default_docker_image circleci/node:16.10.0-browsers
 
 # Settings common to each job
 var_3: &job_defaults
