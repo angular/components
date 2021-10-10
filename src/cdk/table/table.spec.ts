@@ -108,7 +108,7 @@ describe('CdkTable', () => {
       });
 
       it('with the right accessibility roles', () => {
-        expect(tableElement.getAttribute('role')).toBe('table');
+        expect(tableElement.getAttribute('role')).toBe('grid');
 
         expect(getHeaderRows(tableElement)[0].getAttribute('role')).toBe('row');
         const header = getHeaderRows(tableElement)[0];
