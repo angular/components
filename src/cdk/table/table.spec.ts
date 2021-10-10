@@ -119,7 +119,7 @@ describe('CdkTable', () => {
         getRows(tableElement).forEach(row => {
           expect(row.getAttribute('role')).toBe('row');
           getCells(row).forEach(cell => {
-            expect(cell.getAttribute('role')).toBe('cell');
+            expect(cell.getAttribute('role')).toBe('gridcell');
           });
         });
       });
