@@ -1,7 +1,5 @@
-@use 'sass:map';
 @use 'sass:math';
 @use '../mdc-helpers/mdc-helpers';
-@use '../../material/core/theming/palette';
 @use '@material/theme/theme-color' as mdc-theme-color;
 
 // Width of the Material Design form-field select arrow.
