@@ -57,6 +57,9 @@ export interface MatTabListBaseHeader {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   inputs: ['color', 'disableRipple'],
+  host: {
+    role: 'tablist',
+  }
 })
 export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple, CanColor {
   @ViewChild('tabHeader') _tabHeader: MatTabHeader;
