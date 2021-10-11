@@ -439,13 +439,10 @@ interface MatTabListBaseHeader {
 export class MatTabListLabel extends _MatTabListLabelMixinBase {
     ariaLabel: string;
     ariaLabelledby: string;
-    get templateLabel(): MatTabLabel | null;
-    get _templateLabelContent(): MatTabLabel | null;
-    set _templateLabelContent(value: MatTabLabel | null);
-    _templateLabelInput: MatTabLabel | null;
-    textLabel: string;
+    _template: TemplateRef<void>;
+    get templateLabel(): TemplateRef<void>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabListLabel, "mat-tab-list-label, matTabListLabel", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; "_templateLabelInput": "templateLabel"; "textLabel": "textLabel"; }, {}, ["_templateLabelContent"]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabListLabel, "mat-tab-list-label", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never, ["*"]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabListLabel, never>;
 }

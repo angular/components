@@ -8,9 +8,14 @@
               <mat-tab-list-label *ngFor="let tab of _tabs"
                                   [disabled]="tab.disabled"
                                   [ariaLabel]="tab.ariaLabel"
-                                  [ariaLabelledby]="tab.ariaLabelledby"
-                                  [templateLabel]="tab.templateLabel"
-                                  [textLabel]="tab.textLabel">
+                                  [ariaLabelledby]="tab.ariaLabelledby">
+                <!-- If there is not a label template, fall back to the text label. -->
+                <ng-template [ngIf]="!tab.templateLabel">{{tab.textLabel}}</ng-template>
+
+                <!-- If there is a label template, use it. -->
+                <ng-template [ngIf]="tab.templateLabel">
+                  <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+                </ng-template>
               </mat-tab-list-label>
 </mat-tab-list>
 

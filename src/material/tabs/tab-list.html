@@ -25,13 +25,7 @@
        (cdkFocusChange)="_tabFocusChanged($event, i)">
 
     <div class="mat-tab-label-content">
-      <!-- If there is a label template, use it. -->
-      <ng-template [ngIf]="tabLabel.templateLabel">
-        <ng-template [cdkPortalOutlet]="tabLabel.templateLabel"></ng-template>
-      </ng-template>
-
-      <!-- If there is not a label template, fall back to the text label. -->
-      <ng-template [ngIf]="!tabLabel.templateLabel">{{tabLabel.textLabel}}</ng-template>
+      <ng-template [ngTemplateOutlet]="tabLabel.templateLabel"></ng-template>
     </div>
   </div>
 </mat-tab-header>
