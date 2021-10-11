@@ -396,6 +396,8 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
 // @public
 export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple, CanColor {
     constructor(elementRef: ElementRef);
+    get backgroundColor(): ThemePalette;
+    set backgroundColor(value: ThemePalette);
     disablePagination: boolean;
     readonly focusChange: EventEmitter<number>;
     // (undocumented)
@@ -422,7 +424,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     _tabHeader: MatTabHeader;
     _tabLabels: QueryList<MatTabListLabel>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabList, "mat-tab-list", ["matTabList"], { "color": "color"; "disableRipple": "disableRipple"; "selectedIndex": "selectedIndex"; "groupId": "groupId"; "disablePagination": "disablePagination"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; }, ["_tabLabels"], never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabList, "mat-tab-list", ["matTabList"], { "color": "color"; "disableRipple": "disableRipple"; "selectedIndex": "selectedIndex"; "groupId": "groupId"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; }, ["_tabLabels"], never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabList, never>;
 }

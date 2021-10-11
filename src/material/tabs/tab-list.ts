@@ -20,7 +20,13 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {CanColor, CanDisableRipple, mixinColor, mixinDisableRipple} from '@angular/material/core';
+import {
+  CanColor,
+  CanDisableRipple,
+  mixinColor,
+  mixinDisableRipple,
+  ThemePalette
+} from '@angular/material/core';
 import {MatTabHeader} from './tab-header';
 import {MatTabListLabel} from './tab-list-label';
 
@@ -69,6 +75,24 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
    * layout recalculations if it's known that pagination won't be required.
    */
   @Input() disablePagination: boolean;
+
+  /** Background color of the tab group. */
+  @Input()
+  get backgroundColor(): ThemePalette {
+    return this._backgroundColor;
+  }
+  set backgroundColor(value: ThemePalette) {
+    const nativeElement: HTMLElement = this._elementRef.nativeElement;
+
+    nativeElement.classList.remove(`mat-background-${this.backgroundColor}`);
+
+    if (value) {
+      nativeElement.classList.add(`mat-background-${value}`);
+    }
+
+    this._backgroundColor = value;
+  }
+  private _backgroundColor: ThemePalette;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
