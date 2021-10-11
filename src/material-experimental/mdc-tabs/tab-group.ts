@@ -25,16 +25,11 @@ import {
   _MatTabGroupBase,
   MAT_TAB_GROUP,
   MAT_TABS_CONFIG,
-  MatTabHeader,
   MatTabsConfig,
 } from '@angular/material/tabs';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatTab} from './tab';
-
-interface MatTabGroupBaseHeader {
-  _alignInkBarToSelectedTab: () => void;
-  focusIndex: number;
-}
+import {MatTabHeader} from './tab-header';
 
 /**
  * Material design tab-group component. Supports basic tab pairs (label + content) and includes
@@ -110,7 +105,7 @@ export class MatTabGroup extends _MatTabGroupBase {
   }
 
   /** Handle click events, setting new selected index if appropriate. */
-  _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number) {
+  _handleClick(tab: MatTab, tabHeader: MatTabHeader, index: number) {
     if (!tab.disabled) {
       this.selectedIndex = tabHeader.focusIndex = index;
     }

@@ -46,11 +46,6 @@ import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {MatTabHeader} from './tab-header';
 import {MatTabList} from './tab-list';
 
-interface MatTabGroupBaseHeader {
-  _alignInkBarToSelectedTab: () => void;
-  focusIndex: number;
-}
-
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
 
@@ -485,7 +480,7 @@ export class MatTabGroup extends _MatTabGroupBase {
   // function value). Although _handleClick is library-internal and should not be consumed
   // publicly, we prioritize backwards compatibility. Therefore, _handleSelectedIndexChange calls
   // _handleClick to enable the desired override behavior.
-  _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number) {
+  _handleClick(tab: MatTab, tabHeader: MatTabHeader, index: number) {
     if (!tab.disabled) {
       this.selectedIndex = tabHeader.focusIndex = index;
     }

@@ -209,7 +209,7 @@ export class MatTabGroup extends _MatTabGroupBase {
     _allTabs: QueryList<MatTab>;
     focusTab(index: number): void;
     // (undocumented)
-    _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
+    _handleClick(tab: MatTab, tabHeader: MatTabHeader, index: number): void;
     // (undocumented)
     _handleSelectedIndexChange(index: number): void;
     realignInkBar(): void;
