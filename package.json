@@ -218,7 +218,7 @@
     "shelljs": "^0.8.3",
     "stylelint": "^13.8.0",
     "terser": "^4.8.0",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.2.1",
     "tsickle": "0.39.1",
     "tslint": "^6.1.3",
     "tsutils": "^3.17.1",
