@@ -1,6 +1,11 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+// This code runs within Bazel where the environment does not have access to
+// the system Chrome browser. To workaround this we use Puppeteer to provide
+// a local version of Chromium that can run within Bazel.
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 module.exports = function (config) {
   config.set({
     basePath: '',
