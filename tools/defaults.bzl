@@ -65,7 +65,15 @@ def sass_library(**kwargs):
 def npm_sass_library(**kwargs):
     _npm_sass_library(**kwargs)
 
-def ts_library(tsconfig = None, deps = [], testonly = False, devmode_module = None, **kwargs):
+def ts_library(
+        tsconfig = None,
+        deps = [],
+        testonly = False,
+        # TODO(devversion): disallow configuration of the target when schematics use ESM.
+        devmode_target = None,
+        prodmode_target = None,
+        devmode_module = None,
+        **kwargs):
     # Add tslib because we use import helpers for all public packages.
     local_deps = ["@npm//tslib"] + deps
 
@@ -85,10 +93,10 @@ def ts_library(tsconfig = None, deps = [], testonly = False, devmode_module = No
         # For prodmode, the target is set to `ES2020`. `@bazel/typecript` sets `ES2015` by default. Note
         # that this should be in sync with the `ng_module` tsconfig generation to emit proper APF v13.
         # https://github.com/bazelbuild/rules_nodejs/blob/901df3868e3ceda177d3ed181205e8456a5592ea/third_party/github.com/bazelbuild/rules_typescript/internal/common/tsconfig.bzl#L195
-        prodmode_target = "es2020",
+        prodmode_target = prodmode_target if prodmode_target != None else "es2020",
         # We also set devmode output to the same settings as prodmode as a first step in combining
         # devmode and prodmode output. We will not rely on AMD output anyway due to the linker processing.
-        devmode_target = "es2020",
+        devmode_target = devmode_target if devmode_target != None else "es2020",
         devmode_module = devmode_module if devmode_module != None else "esnext",
         tsconfig = tsconfig,
         testonly = testonly,
