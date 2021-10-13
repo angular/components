@@ -347,10 +347,10 @@ def node_integration_test(data = [], tool_mappings = {}, **kwargs):
             # because the `yarn_bin` target is not a self-contained standalone binary.
             "@nodejs//:yarn_files",
         ],
-        tool_mappings = dict(tool_mappings, **{
+        tool_mappings = dict({
             "@nodejs//:yarn_bin": "yarn",
             "@nodejs//:node_bin": "node",
-        }),
+        }, **tool_mappings),
         **kwargs
     )
 

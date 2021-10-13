@@ -8,6 +8,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Add NodeJS rules
 http_archive(
     name = "build_bazel_rules_nodejs",
+    patches = ["//tools:multiple-node-versions.patch"],
     sha256 = "3635797a96c7bfcd0d265dacd722a07335e64d6ded9834af8d3f1b7ba5a25bba",
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.3.0/rules_nodejs-4.3.0.tar.gz"],
 )
@@ -58,6 +59,16 @@ check_bazel_version("4.0.0")
 node_repositories(
     node_version = "16.10.0",
     package_json = ["//:package.json"],
+)
+
+load("@build_bazel_rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+# This call sets up another repository for Node 12.x used in integration tests. This
+# allows us to ensure our schematic code works with NodeJS v12 LTS. The Node v12.x
+# version is not fetched unless explicitly requested by the tests.
+nodejs_register_toolchains(
+    name = "node12",
+    node_version = "12.20.0",
 )
 
 load("//tools:integration.bzl", "create_npm_package_archive_build_file")
