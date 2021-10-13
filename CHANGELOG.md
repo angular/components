@@ -119,6 +119,7 @@ Amy Sorto, Jeremy Elbourn, Marco Marche, Miles Malerba and Zach Arend
 ## Special Thanks
 Benjamin Kindle, Jeremy Elbourn, Kristiyan Kostadinov, Marco Marche, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.7"></a>
 # 12.2.7 "ceramic-cup" (2021-09-23)
@@ -143,6 +144,7 @@ Benjamin Kindle, Jeremy Elbourn, Kristiyan Kostadinov, Marco Marche, Miles Maler
 ## Special Thanks
 Benjamin Kindle, Jeremy Elbourn, Kristiyan Kostadinov, Marco Marche, Miles Malerba, Wagner Maciel and Zach Arend
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="13.0.0-next.5"></a>
 # 13.0.0-next.5 "fuzzy-puppy" (2021-09-15)
@@ -178,6 +180,7 @@ Benjamin Kindle, Jeremy Elbourn, Kristiyan Kostadinov, Marco Marche, Miles Maler
 ## Special Thanks
 Andrew Seguin, Jeremy Elbourn, Kristiyan Kostadinov, Miles Malerba, Naveed Baloch and Paul Gschwendtner
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.6"></a>
 # 12.2.6 "polyaspartic-polygon" (2021-09-15)
@@ -202,6 +205,7 @@ Andrew Seguin, Jeremy Elbourn, Kristiyan Kostadinov, Miles Malerba, Naveed Baloc
 ## Special Thanks
 Kristiyan Kostadinov, Miles Malerba, Naveed Baloch and Paul Gschwendtner
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="13.0.0-next.4"></a>
 # 13.0.0-next.4 "copper-duckling" (2021-09-08)
@@ -221,6 +225,7 @@ Kristiyan Kostadinov, Miles Malerba, Naveed Baloch and Paul Gschwendtner
 ## Special Thanks
 Brandon Yanofsky, Daniil Rabizo, Kristiyan Kostadinov, Paul Gschwendtner, Zach Arend and bjarkler
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.5"></a>
 # 12.2.5 "copper-duckling" (2021-09-08)
@@ -233,6 +238,7 @@ Brandon Yanofsky, Daniil Rabizo, Kristiyan Kostadinov, Paul Gschwendtner, Zach A
 ## Special Thanks
 Brandon Yanofsky, Daniil Rabizo, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="13.0.0-next.3"></a>
 # 13.0.0-next.3 "pith-panther" (2021-09-01)
@@ -251,6 +257,7 @@ Brandon Yanofsky, Daniil Rabizo, Kristiyan Kostadinov, Paul Gschwendtner and Zac
 ## Special Thanks
 Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Rameshwor Shrestha
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.4"></a>
 # 12.2.4 "pulp-porpoise" (2021-09-01)
@@ -265,6 +272,7 @@ Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Rameshwor Shrestha
 ## Special Thanks
 Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Rameshwor Shrestha
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="13.0.0-next.2"></a>
 # 13.0.0-next.2 "emerald-earring" (2021-08-26)
@@ -313,6 +321,7 @@ Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Rameshwor Shrestha
 ## Special Thanks
 Amy Sorto, Kristiyan Kostadinov, Michael-James, Paul Gschwendtner, Wagner Maciel and mmalerba
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.3"></a>
 # 12.2.3 "meteorite-mango" (2021-08-25)
@@ -331,6 +340,7 @@ Amy Sorto, Kristiyan Kostadinov, Michael-James, Paul Gschwendtner, Wagner Maciel
 ## Special Thanks:
 Amy Sorto, Kristiyan Kostadinov, Michael-James, Paul Gschwendtner and Wagner Maciel
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="13.0.0-next.1"></a>
 # 13.0.0-next.1 "gold-guitar" (2021-08-18)
@@ -361,6 +371,7 @@ Amy Sorto, Kristiyan Kostadinov, Michael-James, Paul Gschwendtner and Wagner Mac
 ## Special Thanks:
 Joey Perrott, Kristiyan Kostadinov, Michael Prentice, Paul Gschwendtner and Wagner Maciel
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.2"></a>
 # 12.2.2 "leather-library" (2021-08-18)
@@ -375,6 +386,7 @@ Joey Perrott, Kristiyan Kostadinov, Michael Prentice, Paul Gschwendtner and Wagn
 ## Special Thanks:
 Joey Perrott, Kristiyan Kostadinov and Paul Gschwendtner
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="13.0.0-next.0"></a>
 # 13.0.0-next.0 "plastic-toy" (2021-08-11)
@@ -609,6 +621,7 @@ Joey Perrott, Kristiyan Kostadinov and Paul Gschwendtner
 ## Special Thanks:
 Alex Morris, Amy Sorto, Andrew Seguin, Annie Wang, Guilherme Rossato, Jeremy Elbourn, Jeri Peier, Joey Perrott, Kishan Gajera, Kristiyan Kostadinov, Lai Seng, Luke Gatchell, Md. Enzam Hossain, Michael-James, Miles Malerba, Németh Tamás, Paul Gschwendtner, Rafał Sławik, Tobias Schneider, Wagner Maciel, Zach Arend, Zack Elliott, cpatin10, mmalerba and subsetdht
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="12.2.1"></a>
 # 12.2.1 "concrete-wall" (2021-08-11)
@@ -4166,6 +4179,7 @@ It was always required, but is now correctly listed in the `package.json`.
 * **tabs:** avoid hitting change detection if text content hasn't changed ([#14251](https://github.com/angular/material2/issues/14251)) ([9778af2](https://github.com/angular/material2/commit/9778af2)), closes [#14249](https://github.com/angular/material2/issues/14249)
 * **tabs:** blurry text in scrolled header on some browsers ([#14303](https://github.com/angular/material2/issues/14303)) ([f7c8026](https://github.com/angular/material2/commit/f7c8026))
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.1.0"></a>
 # 7.1.0 "stone-silhouette" (2018-11-20)
@@ -4287,7 +4301,7 @@ It was always required, but is now correctly listed in the `package.json`.
 * **focus-monitor:** mark event listeners as passive ([#13532](https://github.com/angular/material2/issues/13532)) ([bfc00a0](https://github.com/angular/material2/commit/bfc00a0))
 * **list:** reduce css selector size ([#12571](https://github.com/angular/material2/issues/12571)) ([e31e011](https://github.com/angular/material2/commit/e31e011))
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.4"></a>
 ## 7.0.4 "brick-dress" (2018-11-13)
@@ -4325,7 +4339,7 @@ It was always required, but is now correctly listed in the `package.json`.
 * **snackbar:** set aria role based on if announcement message is provided ([#13993](https://github.com/angular/material2/issues/13993)) ([199583b](https://github.com/angular/material2/commit/199583b))
 * **stepper:** fix text contrast ratio of stepper labels ([#14012](https://github.com/angular/material2/issues/14012)) ([01605d0](https://github.com/angular/material2/commit/01605d0))
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.3"></a>
 ## 7.0.3 "lyrium-longboard" (2018-11-06)
@@ -4355,7 +4369,7 @@ It was always required, but is now correctly listed in the `package.json`.
 * **virtual-scroll:** not removing view from container if it's outside the template cache ([#13916](https://github.com/angular/material2/issues/13916)) ([7c202ec](https://github.com/angular/material2/commit/7c202ec)), closes [#13901](https://github.com/angular/material2/issues/13901)
 * bazel support for downstream apps ([#13836](https://github.com/angular/material2/issues/13836)) ([61dbd26](https://github.com/angular/material2/commit/61dbd26))
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.2"></a>
 ## 7.0.2 limestone-linguine (2018-10-26)
@@ -4381,7 +4395,7 @@ It was always required, but is now correctly listed in the `package.json`.
 * **drag-utils:** add utility function for cloning array items from one array to another ([#13743](https://github.com/angular/material2/issues/13743)) ([13395c5](https://github.com/angular/material2/commit/13395c5)), closes [#13100](https://github.com/angular/material2/issues/13100)
 * **ng-add:** add preview URLs for theme choices ([#13723](https://github.com/angular/material2/issues/13723)) ([f1d1fc5](https://github.com/angular/material2/commit/f1d1fc5)), closes [/github.com/angular/angular-cli/blob/907ce5c94c774147c4b52870b3522aed4e087c76/packages/schematics/angular/ng-new/schema.json#L121](https://github.com//github.com/angular/angular-cli/blob/907ce5c94c774147c4b52870b3522aed4e087c76/packages/schematics/angular/ng-new/schema.json/issues/L121) [#13708](https://github.com/angular/material2/issues/13708)
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.1"></a>
 ## 7.0.1 emerald-egret (2018-10-22)
@@ -4416,7 +4430,7 @@ It was always required, but is now correctly listed in the `package.json`.
 
 * **focus-monitor:** mark event listeners as passive ([#13532](https://github.com/angular/material2/issues/13532)) ([ba0c820](https://github.com/angular/material2/commit/ba0c820))
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0"></a>
 # 7.0.0 amethyst-ammonite (2018-10-17)
@@ -4515,6 +4529,7 @@ optional parameters which are expected to become required in v8.
 * **icon:** not taking current path after initialization  ([#13641](https://github.com/angular/material2/issues/13641)) ([df9ec7](https://github.com/angular/material2/commit/df9ec7))
 * **list:** action list items clickable area not stretching the full width ([#13099](https://github.com/angular/material2/issues/13099)) ([f3057fa](https://github.com/angular/material2/commit/f3057fa))
 
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0-rc.2"></a>
 # 7.0.0-rc.2 (2018-10-15)
@@ -4533,7 +4548,7 @@ optional parameters which are expected to become required in v8.
 
 * **schematics:** prompt for name when generating component ([#13518](https://github.com/angular/material2/issues/13518)) ([9085de7](https://github.com/angular/material2/commit/9085de7))
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0-rc.1"></a>
 # 7.0.0-rc.1 (2018-10-09)
@@ -4579,7 +4594,7 @@ optional parameters which are expected to become required in v8.
 * **datepicker:** add ng-content to datepicker header ([#13236](https://github.com/angular/material2/issues/13236)) ([3fc0d36](https://github.com/angular/material2/commit/3fc0d36)), closes [#13212](https://github.com/angular/material2/issues/13212)
 * **schematics:** create drag-drop schematic ([#13368](https://github.com/angular/material2/issues/13368)) ([72ccd8b](https://github.com/angular/material2/commit/72ccd8b))
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0-rc.0"></a>
 # 7.0.0-rc.0 (2018-10-02)
@@ -4649,7 +4664,7 @@ optional parameters which are expected to become required in v8.
 
 * **ripple:** deprecated `[matRippleSpeedFactor]` and `baseSpeedFactor` for the ripples have been removed. Use the new animation config instead.
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0-beta.2"></a>
 # 7.0.0-beta.2 (2018-09-20)
@@ -4709,7 +4724,7 @@ $myTheme: ...
 
 and then invoke `angular-material-theme` with the `$myTheme` variable.
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0-beta.1"></a>
 # 7.0.0-beta.1 (2018-09-17)
@@ -4763,7 +4778,7 @@ and then invoke `angular-material-theme` with the `$myTheme` variable.
 
 * **overlay:** The `flexibleDiemsions` property on `CdkConnectedOverlay` has been renamed to `flexibleDimensions`
 
-
+<!-- CHANGELOG SPLIT MARKER -->
 
 <a name="7.0.0-beta.0"></a>
 # [7.0.0-beta.0](https://github.com/angular/material2/compare/6.4.0...7.0.0-beta.0) (2018-08-30)
