@@ -36,5 +36,4 @@ import {StepperExamplesModule} from '@angular/components-examples/material/stepp
   ],
   declarations: [StepperDemo],
 })
-export class StepperDemoModule {
-}
+export class StepperDemoModule {}
