@@ -14,21 +14,22 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/material/core';
 import { NgZone } from '@angular/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
-export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDisable {
+export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, CanDisable {
     constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _ariaDescriber: AriaDescriber, _renderer: Renderer2, _animationMode?: string | undefined);
     get color(): ThemePalette;
     set color(value: ThemePalette);
-    get content(): string | number | undefined | null;
-    set content(newContent: string | number | undefined | null);
+    content: string | number | undefined | null;
     get description(): string;
     set description(newDescription: string);
     getBadgeElement(): HTMLElement | undefined;
+    _hasContent: boolean;
     get hidden(): boolean;
     set hidden(val: boolean);
     _id: number;
@@ -41,9 +42,9 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
     // (undocumented)
     static ngAcceptInputType_overlap: BooleanInput;
     // (undocumented)
-    ngOnDestroy(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
-    ngOnInit(): void;
+    ngOnDestroy(): void;
     get overlap(): boolean;
     set overlap(val: boolean);
     position: MatBadgePosition;
