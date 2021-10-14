@@ -175,7 +175,7 @@ export class MatSortHeader extends _MatSortHeaderBase
               private _focusMonitor: FocusMonitor,
               private _elementRef: ElementRef<HTMLElement>,
               /** @breaking-change 14.0.0 _ariaDescriber will be required. */
-              @Optional() private _ariaDescriber?: AriaDescriber | null) {
+              @Inject(AriaDescriber) @Optional() private _ariaDescriber?: AriaDescriber | null) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
