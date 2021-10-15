@@ -50,7 +50,7 @@
     "tsc": "node ./node_modules/typescript/bin/tsc",
     "prepare": "husky install"
   },
-  "version": "12.2.9",
+  "version": "12.2.10",
   "dependencies": {
     "@angular/animations": "12.2.2",
     "@angular/common": "12.2.2",
