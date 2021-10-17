@@ -32,7 +32,7 @@ export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   zoom = 4;
 
-  readonly directionsResults$: Observable<google.maps.DirectionsResult|undefined>;
+  directionsResults$: Observable<google.maps.DirectionsResult|undefined>;
 
   constructor(mapDirectionsService: MapDirectionsService) {
     const request: google.maps.DirectionsRequest = {
