@@ -38,6 +38,7 @@ const DEFAULT_WIDTH = "500px";
 // @public
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     constructor(_elementRef: ElementRef, _ngZone: NgZone, platformId: Object);
+    readonly mapReady: EventEmitter<google.maps.Map>;
     readonly authFailure: EventEmitter<void>;
     readonly boundsChanged: Observable<void>;
     // (undocumented)
