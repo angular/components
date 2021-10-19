@@ -25,7 +25,7 @@
       // `theme-styles` are included in the `tab` mixin inside `_tabs-common.scss`. Currently
       // they are not, because `theme-styles` outputs the token values directly, rather than
       // generating CSS variables.
-      @include mdc-tab-theme.theme-styles(map.merge(mdc-tab-theme.$light-theme, (
+      @include mdc-tab-theme.primary-navigation-tab-theme-styles(map.merge(mdc-tab-theme.$primary-light-theme, (
         container-color: $surface,
         inactive-focus-state-layer-color: $on-surface,
         inactive-hover-state-layer-color: $on-surface,
@@ -127,7 +127,7 @@
     // `theme-styles` are included in the `tab` mixin inside `_tabs-common.scss`. Currently
     // they are not, because `theme-styles` outputs the token values directly, rather than
     // generating CSS variables.
-    @include mdc-tab-theme.theme-styles((
+    @include mdc-tab-theme.primary-navigation-tab-theme-styles((
       active-focus-state-layer-color: $color,
       active-hover-state-layer-color: $color,
       active-pressed-state-layer-color: $color,
