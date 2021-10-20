@@ -28,7 +28,7 @@ import {
   ThemePalette
 } from '@angular/material/core';
 import {MatTabHeader} from './tab-header';
-import {MatTabListLabel} from './tab-list-label';
+import {MatTabListItem} from './tab-list-item';
 
 
 // Boilerplate for applying mixins to MatTabList.
@@ -64,8 +64,8 @@ export interface MatTabListBaseHeader {
 export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple, CanColor {
   @ViewChild('tabHeader') _tabHeader: MatTabHeader;
 
-  /** All of the tabs that belong to the group. */
-  @ContentChildren(MatTabListLabel, {descendants: false}) _tabLabels: QueryList<MatTabListLabel>;
+  /** All of the tab list item that belong to the group. */
+  @ContentChildren(MatTabListItem, {descendants: false}) _tabListItems: QueryList<MatTabListItem>;
 
   /** The index of the active tab. */
   @Input() selectedIndex: number = 0;
@@ -142,7 +142,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
   }
 
   /** Retrieves the tabindex for the tab. */
-  _getTabIndex(tab: MatTabListLabel, idx: number): number|null {
+  _getTabIndex(tab: MatTabListItem, idx: number): number|null {
     if (tab.disabled) {
       return null;
     }

@@ -24,7 +24,7 @@ export const config = {
     'mdc-tabs': [
       // These components have not been implemented for MDC, but should once MDC tabs have been
       // decomposed.
-      'MatTabList', 'MatTabListLabel'
+      'MatTabList', 'MatTabListItem'
     ]
   } as {
     [entryPointName: string]: string[]

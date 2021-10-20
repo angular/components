@@ -21,7 +21,7 @@ import {MatTabHeader} from './tab-header';
 import {MatTabLabel} from './tab-label';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatTabList} from './tab-list';
-import {MatTabListLabel} from './tab-list-label';
+import {MatTabListItem} from './tab-list-item';
 import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
 
 @NgModule({
@@ -56,7 +56,8 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabHeader,
     MatTabContent,
     MatTabList,
-    MatTabListLabel,
+    MatTabListItem,
   ],
 })
-export class MatTabsModule {}
+export class MatTabsModule {
+}

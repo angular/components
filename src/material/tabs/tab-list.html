@@ -9,23 +9,23 @@
        matTabLabelWrapper
        mat-ripple
        cdkMonitorElementFocus
-       *ngFor="let tabLabel of _tabLabels; let i = index"
+       *ngFor="let listItem of _tabListItems; let i = index"
        [id]="_getTabLabelId(i)"
-       [attr.tabIndex]="_getTabIndex(tabLabel, i)"
+       [attr.tabIndex]="_getTabIndex(listItem, i)"
        [attr.aria-posinset]="i + 1"
-       [attr.aria-setsize]="_tabLabels.length"
+       [attr.aria-setsize]="_tabListItems.length"
        [attr.aria-controls]="_getTabContentId(i)"
        [attr.aria-selected]="selectedIndex == i"
-       [attr.aria-label]="tabLabel.ariaLabel || null"
-       [attr.aria-labelledby]="(!tabLabel.ariaLabel && tabLabel.ariaLabelledby) ? tabLabel.ariaLabelledby : null"
+       [attr.aria-label]="listItem.ariaLabel || null"
+       [attr.aria-labelledby]="(!listItem.ariaLabel && listItem.ariaLabelledby) ? listItem.ariaLabelledby : null"
        [class.mat-tab-label-active]="selectedIndex == i"
-       [disabled]="tabLabel.disabled"
-       [matRippleDisabled]="tabLabel.disabled || disableRipple"
+       [disabled]="listItem.disabled"
+       [matRippleDisabled]="listItem.disabled || disableRipple"
        (click)="_handleClick(i)"
        (cdkFocusChange)="_tabFocusChanged($event, i)">
 
     <div class="mat-tab-label-content">
-      <ng-template [ngTemplateOutlet]="tabLabel._template"></ng-template>
+      <ng-template [ngTemplateOutlet]="listItem._template"></ng-template>
     </div>
   </div>
 </mat-tab-header>
