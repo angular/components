@@ -485,4 +485,8 @@ export class MatTabGroup extends _MatTabGroupBase {
       this.selectedIndex = tabHeader.focusIndex = index;
     }
   }
+
+  _getGroupIdString(): string {
+    return `${this._groupId}`;
+  }
 }

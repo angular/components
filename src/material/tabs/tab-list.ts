@@ -73,7 +73,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
   @Input() selectedIndex: number = 0;
 
   /** The id of the groupId of the tab group that owns this list. */
-  @Input() groupId: number | null = null;
+  @Input() groupId: string | null = null;
 
   /**
    * Whether pagination should be disabled. This can be used to avoid unnecessary

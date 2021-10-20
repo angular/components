@@ -209,6 +209,8 @@ export class MatTabGroup extends _MatTabGroupBase {
     _allTabs: QueryList<MatTab>;
     focusTab(index: number): void;
     // (undocumented)
+    _getGroupIdString(): string;
+    // (undocumented)
     _handleClick(tab: MatTab, tabHeader: MatTabHeader, index: number): void;
     // (undocumented)
     _handleSelectedIndexChange(index: number): void;
@@ -406,7 +408,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     _getTabContentId(i: number): string;
     _getTabIndex(tab: MatTabListLabel, idx: number): number | null;
     _getTabLabelId(i: number): string;
-    groupId: number | null;
+    groupId: string | null;
     _handleClick(index: number): void;
     // (undocumented)
     _handleSelectFocusedIndex(index: number): void;
