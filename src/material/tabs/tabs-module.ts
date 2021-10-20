@@ -59,5 +59,4 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabListItem,
   ],
 })
-export class MatTabsModule {
-}
+export class MatTabsModule {}

@@ -18,26 +18,28 @@ import {
   Output,
   QueryList,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CanColor,
   CanDisableRipple,
   mixinColor,
   mixinDisableRipple,
-  ThemePalette
+  ThemePalette,
 } from '@angular/material/core';
 import {MatTabHeader} from './tab-header';
 import {MatTabListItem} from './tab-list-item';
 
-
 // Boilerplate for applying mixins to MatTabList.
 /** @docs-private */
 const _MatTabListMixinBase = mixinColor(
-    mixinDisableRipple(class {
+  mixinDisableRipple(
+    class {
       constructor(public _elementRef: ElementRef) {}
-    }),
-    'primary');
+    },
+  ),
+  'primary',
+);
 
 export interface MatTabListBaseHeader {
   _alignInkBarToSelectedTab: () => void;
@@ -59,7 +61,7 @@ export interface MatTabListBaseHeader {
   inputs: ['color', 'disableRipple'],
   host: {
     role: 'tablist',
-  }
+  },
 })
 export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple, CanColor {
   @ViewChild('tabHeader') _tabHeader: MatTabHeader;
@@ -71,7 +73,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
   @Input() selectedIndex: number = 0;
 
   /** The id of the groupId of the tab group that owns this list. */
-  @Input() groupId: number|null = null;
+  @Input() groupId: number | null = null;
 
   /**
    * Whether pagination should be disabled. This can be used to avoid unnecessary
@@ -103,9 +105,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
   /** Event emitted when focus has changed within a tab group. */
   @Output() readonly focusChange: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(
-      elementRef: ElementRef,
-  ) {
+  constructor(elementRef: ElementRef) {
     super(elementRef);
   }
 
@@ -142,7 +142,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
   }
 
   /** Retrieves the tabindex for the tab. */
-  _getTabIndex(tab: MatTabListItem, idx: number): number|null {
+  _getTabIndex(tab: MatTabListItem, idx: number): number | null {
     if (tab.disabled) {
       return null;
     }

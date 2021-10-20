@@ -58,17 +58,17 @@ export class MatTabChangeEvent {
 }
 
 /** Possible positions for the tab header. */
-export type MatTabHeaderPosition = 'above'|'below';
+export type MatTabHeaderPosition = 'above' | 'below';
 
 // Boilerplate for applying mixins to MatTabGroup.
 /** @docs-private */
 const _MatTabGroupMixinBase = mixinColor(
-    mixinDisableRipple(
-        class {
-          constructor(public _elementRef: ElementRef) {}
-        },
-        ),
-    'primary',
+  mixinDisableRipple(
+    class {
+      constructor(public _elementRef: ElementRef) {}
+    },
+  ),
+  'primary',
 );
 
 /**
@@ -76,10 +76,10 @@ const _MatTabGroupMixinBase = mixinColor(
  * @docs-private
  */
 @Directive()
-export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements AfterContentInit,
-                                                                                AfterContentChecked,
-                                                                                OnDestroy, CanColor,
-                                                                                CanDisableRipple {
+export abstract class _MatTabGroupBase
+  extends _MatTabGroupMixinBase
+  implements AfterContentInit, AfterContentChecked, OnDestroy, CanColor, CanDisableRipple
+{
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
@@ -91,7 +91,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   readonly _tabs: QueryList<MatTab> = new QueryList<MatTab>();
 
   /** The tab index that should be selected after the content has been checked. */
-  private _indexToSelect: number|null = 0;
+  private _indexToSelect: number | null = 0;
 
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
@@ -114,13 +114,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
   /** The index of the active tab. */
   @Input()
-  get selectedIndex(): number|null {
+  get selectedIndex(): number | null {
     return this._selectedIndex;
   }
-  set selectedIndex(value: number|null) {
+  set selectedIndex(value: number | null) {
     this._indexToSelect = coerceNumberProperty(value, null);
   }
-  private _selectedIndex: number|null = null;
+  private _selectedIndex: number | null = null;
 
   /** Position of the tab header. */
   @Input() headerPosition: MatTabHeaderPosition = 'above';
@@ -142,13 +142,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
    * Read more at https://www.w3.org/TR/wai-aria-practices/examples/tabs/tabs-2/tabs.html
    */
   @Input()
-  get contentTabIndex(): number|null {
+  get contentTabIndex(): number | null {
     return this._contentTabIndex;
   }
-  set contentTabIndex(value: number|null) {
+  set contentTabIndex(value: number | null) {
     this._contentTabIndex = coerceNumberProperty(value, null);
   }
-  private _contentTabIndex: number|null;
+  private _contentTabIndex: number | null;
 
   /**
    * Whether pagination should be disabled. This can be used to avoid unnecessary
@@ -186,27 +186,28 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
   /** Event emitted when the tab selection has changed. */
   @Output()
-  readonly selectedTabChange: EventEmitter<MatTabChangeEvent> =
-      new EventEmitter<MatTabChangeEvent>(true);
+  readonly selectedTabChange: EventEmitter<MatTabChangeEvent> = new EventEmitter<MatTabChangeEvent>(
+    true,
+  );
 
   readonly _groupId: number;
 
   constructor(
-      elementRef: ElementRef,
-      protected _changeDetectorRef: ChangeDetectorRef,
-      @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+    elementRef: ElementRef,
+    protected _changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
   ) {
     super(elementRef);
     this._groupId = nextId++;
-    this.animationDuration = defaultConfig && defaultConfig.animationDuration ?
-        defaultConfig.animationDuration :
-        '500ms';
-    this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
-        defaultConfig.disablePagination :
-        false;
+    this.animationDuration =
+      defaultConfig && defaultConfig.animationDuration ? defaultConfig.animationDuration : '500ms';
+    this.disablePagination =
+      defaultConfig && defaultConfig.disablePagination != null
+        ? defaultConfig.disablePagination
+        : false;
     this.dynamicHeight =
-        defaultConfig && defaultConfig.dynamicHeight != null ? defaultConfig.dynamicHeight : false;
+      defaultConfig && defaultConfig.dynamicHeight != null ? defaultConfig.dynamicHeight : false;
     this.contentTabIndex = defaultConfig?.contentTabIndex ?? null;
   }
 
@@ -301,9 +302,9 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     // the closest group to the tab is the current one.
     this._allTabs.changes.pipe(startWith(this._allTabs)).subscribe((tabs: QueryList<MatTab>) => {
       this._tabs.reset(
-          tabs.filter(tab => {
-            return tab._closestTabGroup === this || !tab._closestTabGroup;
-          }),
+        tabs.filter(tab => {
+          return tab._closestTabGroup === this || !tab._closestTabGroup;
+        }),
       );
       this._tabs.notifyOnChanges();
     });
@@ -348,14 +349,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
       this._tabLabelSubscription.unsubscribe();
     }
 
-    this._tabLabelSubscription = merge(...this._tabs.map(tab => tab._stateChanges))
-                                     .subscribe(
-                                         () => this._changeDetectorRef.markForCheck(),
-                                     );
+    this._tabLabelSubscription = merge(...this._tabs.map(tab => tab._stateChanges)).subscribe(() =>
+      this._changeDetectorRef.markForCheck(),
+    );
   }
 
   /** Clamps the given index to the bounds of 0 and the tabs length. */
-  private _clampTabIndex(index: number|null): number {
+  private _clampTabIndex(index: number | null): number {
     // Note the `|| 0`, which ensures that values like NaN can't get through
     // and which would otherwise throw the component into an infinite loop
     // (since Math.max(NaN, 0) === NaN).
@@ -448,10 +448,10 @@ export class MatTabGroup extends _MatTabGroupBase {
   }
 
   constructor(
-      elementRef: ElementRef,
-      changeDetectorRef: ChangeDetectorRef,
-      @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+    elementRef: ElementRef,
+    changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
   ) {
     super(elementRef, changeDetectorRef, defaultConfig, animationMode);
   }

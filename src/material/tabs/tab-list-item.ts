@@ -12,7 +12,7 @@ import {
   Input,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {mixinDisabled} from '@angular/material/core';
 

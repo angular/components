@@ -112,7 +112,7 @@ export class MatTabGroup extends _MatTabGroupBase {
   }
 
   /** Retrieves the tabindex for the tab. */
-  _getTabIndex(tab: MatTab, idx: number): number|null {
+  _getTabIndex(tab: MatTab, idx: number): number | null {
     if (tab.disabled) {
       return null;
     }
