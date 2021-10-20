@@ -39,11 +39,4 @@ export class MatTabListLabel extends _MatTabListLabelMixinBase {
    * Reference to the element that the tab label is labelled by.
    */
   @Input() ariaLabelledby: string;
-
-  /**
-   * Returns this label's template label.
-   */
-  get templateLabel(): TemplateRef<void> {
-    return this._template;
-  }
 }
