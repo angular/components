@@ -406,7 +406,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     _focusChanged(index: number): void;
     focusTab(index: number): void;
     _getTabContentId(i: number): string;
-    _getTabIndex(tab: MatTabListLabel, idx: number): number | null;
+    _getTabIndex(tab: MatTabListItem, idx: number): number | null;
     _getTabLabelId(i: number): string;
     groupId: string | null;
     _handleClick(index: number): void;
@@ -424,7 +424,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     _tabFocusChanged(focusOrigin: FocusOrigin, index: number): void;
     // (undocumented)
     _tabHeader: MatTabHeader;
-    _tabListItems: QueryList<MatTabListLabel>;
+    _tabListItems: QueryList<MatTabListItem>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabList, "mat-tab-list", ["matTabList"], { "color": "color"; "disableRipple": "disableRipple"; "selectedIndex": "selectedIndex"; "groupId": "groupId"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; }, ["_tabListItems"], never>;
     // (undocumented)
@@ -440,14 +440,14 @@ interface MatTabListBaseHeader {
 }
 
 // @public
-export class MatTabListLabel extends _MatTabListItemMixinBase {
+export class MatTabListItem extends _MatTabListItemMixinBase {
     ariaLabel: string;
     ariaLabelledby: string;
     _template: TemplateRef<void>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabListLabel, "mat-tab-list-item", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never, ["*"]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabListItem, "mat-tab-list-item", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never, ["*"]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabListLabel, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabListItem, never>;
 }
 
 // @public
