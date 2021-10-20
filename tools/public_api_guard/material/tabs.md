@@ -422,9 +422,9 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     _tabFocusChanged(focusOrigin: FocusOrigin, index: number): void;
     // (undocumented)
     _tabHeader: MatTabHeader;
-    _tabLabels: QueryList<MatTabListLabel>;
+    _tabListItems: QueryList<MatTabListLabel>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabList, "mat-tab-list", ["matTabList"], { "color": "color"; "disableRipple": "disableRipple"; "selectedIndex": "selectedIndex"; "groupId": "groupId"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; }, ["_tabLabels"], never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabList, "mat-tab-list", ["matTabList"], { "color": "color"; "disableRipple": "disableRipple"; "selectedIndex": "selectedIndex"; "groupId": "groupId"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; }, ["_tabListItems"], never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabList, never>;
 }
@@ -438,13 +438,12 @@ interface MatTabListBaseHeader {
 }
 
 // @public
-export class MatTabListLabel extends _MatTabListLabelMixinBase {
+export class MatTabListLabel extends _MatTabListItemMixinBase {
     ariaLabel: string;
     ariaLabelledby: string;
     _template: TemplateRef<void>;
-    get templateLabel(): TemplateRef<void>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabListLabel, "mat-tab-list-label", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never, ["*"]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabListLabel, "mat-tab-list-item", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never, ["*"]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabListLabel, never>;
 }
@@ -515,7 +514,7 @@ export class MatTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, [typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i4.MatInkBar, typeof i5.MatTabLabelWrapper, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i7.MatTabBody, typeof i7.MatTabBodyPortal, typeof i8.MatTabHeader, typeof i9.MatTabContent, typeof i10.MatTabList, typeof i11.MatTabListLabel], [typeof i12.CommonModule, typeof i13.MatCommonModule, typeof i14.PortalModule, typeof i13.MatRippleModule, typeof i15.ObserversModule, typeof i16.A11yModule], [typeof i13.MatCommonModule, typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i9.MatTabContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, [typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i4.MatInkBar, typeof i5.MatTabLabelWrapper, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i7.MatTabBody, typeof i7.MatTabBodyPortal, typeof i8.MatTabHeader, typeof i9.MatTabContent, typeof i10.MatTabList, typeof i11.MatTabListItem], [typeof i12.CommonModule, typeof i13.MatCommonModule, typeof i14.PortalModule, typeof i13.MatRippleModule, typeof i15.ObserversModule, typeof i16.A11yModule], [typeof i13.MatCommonModule, typeof i1.MatTabGroup, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i6.MatTabNav, typeof i6.MatTabLink, typeof i9.MatTabContent]>;
 }
 
 // @public
