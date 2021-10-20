@@ -7,10 +7,11 @@
               [disablePagination]="disablePagination"
               (focusChange)="_focusChanged($event)"
               (selectedIndexChange)="_handleSelectedIndexChange($event)">
-  <mat-tab-list-item *ngFor="let tab of _tabs"
-                      [disabled]="tab.disabled"
-                      [ariaLabel]="tab.ariaLabel"
-                      [ariaLabelledby]="tab.ariaLabelledby">
+  <ng-template mat-tab-list-item
+               *ngFor="let tab of _tabs"
+               [disabled]="tab.disabled"
+               [ariaLabel]="tab.ariaLabel"
+               [ariaLabelledby]="tab.ariaLabelledby">
     <!-- If there is not a label template, fall back to the text label. -->
     <ng-template [ngIf]="!tab.templateLabel">{{tab.textLabel}}</ng-template>
 
@@ -18,7 +19,7 @@
     <ng-template [ngIf]="tab.templateLabel">
       <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
     </ng-template>
-  </mat-tab-list-item>
+  </ng-template>
 </mat-tab-list>
 
 <div
