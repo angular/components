@@ -441,11 +441,13 @@ interface MatTabListBaseHeader {
 
 // @public
 export class MatTabListItem extends _MatTabListItemMixinBase {
+    constructor(_template: TemplateRef<void>);
     ariaLabel: string;
     ariaLabelledby: string;
+    // (undocumented)
     _template: TemplateRef<void>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabListItem, "mat-tab-list-item", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never, ["*"]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabListItem, "[mat-tab-list-item], [matTabListItem]", never, { "disabled": "disabled"; "ariaLabel": "ariaLabel"; "ariaLabelledby": "ariaLabelledby"; }, {}, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabListItem, never>;
 }
