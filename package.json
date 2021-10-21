@@ -46,7 +46,8 @@
     "check-mdc-exports": "ts-node --project scripts/tsconfig.json scripts/check-mdc-exports.ts",
     "check-tooling-setup": "yarn tsc --project tools/tsconfig.json && yarn tsc --project .ng-dev/tsconfig.json",
     "tsc": "node ./node_modules/typescript/bin/tsc",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test-mdc-migration": "yarn build; cd integration/mdc-migration-example/; rm -rf node_modules; yarn; ng generate @angular/material:mdc-migration"
   },
   "version": "13.1.0-next.0",
   "dependencies": {
