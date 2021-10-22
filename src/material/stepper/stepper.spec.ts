@@ -1333,8 +1333,8 @@ describe('MatStepper', () => {
       expect(fixture.debugElement
         .query(By.css('#headerError0')).nativeElement.textContent).toBe('This field is required');
       
-        stepper.selectedIndex = 0;
-        stepper.steps.get(1)!.hasError = true;
+      stepper.selectedIndex = 0;
+      stepper.steps.get(1)!.hasError = true;
       prevButtonNativeEl.click();
       fixture.detectChanges();
 
