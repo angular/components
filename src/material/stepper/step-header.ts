@@ -93,6 +93,7 @@ export class MatStepHeader
 
   ngAfterViewInit() {
     this._focusMonitor.monitor(this._elementRef, true);
+    this._elementRef.nativeElement.setAttribute('aria-describedby', 'headerError' + this.index);
   }
 
   ngOnDestroy() {

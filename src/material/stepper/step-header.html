@@ -19,7 +19,7 @@
 <div class="mat-step-label"
      [class.mat-step-label-active]="active"
      [class.mat-step-label-selected]="selected"
-     [class.mat-step-label-error]="state == 'error'">
+     [class.mat-step-label-error]="state === 'error'" aria-live="assertive">
   <!-- If there is a label template, use it. -->
   <div class="mat-step-text-label" *ngIf="_templateLabel()">
     <ng-container [ngTemplateOutlet]="_templateLabel()!.template"></ng-container>
@@ -28,6 +28,6 @@
   <div class="mat-step-text-label" *ngIf="_stringLabel()">{{label}}</div>
 
   <div class="mat-step-optional" *ngIf="optional && state != 'error'">{{_intl.optionalLabel}}</div>
-  <div class="mat-step-sub-label-error" *ngIf="state == 'error'">{{errorMessage}}</div>
+  <div id="{{'headerError' + index}}" class="mat-step-sub-label-error" role="alert" *ngIf="state === 'error'">{{errorMessage}}</div>
 </div>
 

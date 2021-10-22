@@ -17,6 +17,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
 import {RouterModule} from '@angular/router';
 import {StepperDemo} from './stepper-demo';
+import {StepperExamplesModule} from '@angular/components-examples/material/stepper';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import {StepperDemo} from './stepper-demo';
     MatSelectModule,
     ReactiveFormsModule,
     RouterModule.forChild([{path: '', component: StepperDemo}]),
+    StepperExamplesModule,
   ],
   declarations: [StepperDemo],
 })

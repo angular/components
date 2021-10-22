@@ -7,6 +7,7 @@ ng_module(
     srcs = glob(["**/*.ts"]),
     assets = ["stepper-demo.html"],
     deps = [
+        "//src/components-examples/material/stepper",
         "//src/material/button",
         "//src/material/checkbox",
         "//src/material/core",

@@ -487,7 +487,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   }
 
   private _getDefaultIndicatorLogic(step: CdkStep, isCurrentStep: boolean): StepState {
-    if (step._showError() && step.hasError && !isCurrentStep) {
+    if (step._showError() && step.hasError) {
       return STEP_STATE.ERROR;
     } else if (!step.completed || isCurrentStep) {
       return STEP_STATE.NUMBER;
@@ -501,7 +501,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     isCurrentStep: boolean,
     state: StepState = STEP_STATE.NUMBER,
   ): StepState {
-    if (step._showError() && step.hasError && !isCurrentStep) {
+    if (step._showError() && step.hasError) {
       return STEP_STATE.ERROR;
     } else if (step.completed && !isCurrentStep) {
       return STEP_STATE.DONE;
