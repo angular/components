@@ -21,12 +21,21 @@ export class ThemingApiMigration extends DevkitMigration<null> {
   override visitStylesheet(stylesheet: ResolvedResource): void {
     if (extname(stylesheet.filePath) === '.scss') {
       const content = stylesheet.content;
-      const migratedContent = content ? migrateFileContent(content,
-        '@angular/material/', '@angular/cdk/', '@angular/material', '@angular/cdk',
-        undefined, /material\/prebuilt-themes|cdk\/.*-prebuilt/) : content;
+      const migratedContent = content
+        ? migrateFileContent(
+            content,
+            '@angular/material/',
+            '@angular/cdk/',
+            '@angular/material',
+            '@angular/cdk',
+            undefined,
+            /material\/prebuilt-themes|cdk\/.*-prebuilt/,
+          )
+        : content;
 
       if (migratedContent && migratedContent !== content) {
-        this.fileSystem.edit(stylesheet.filePath)
+        this.fileSystem
+          .edit(stylesheet.filePath)
           .remove(0, stylesheet.content.length)
           .insertLeft(0, migratedContent);
         ThemingApiMigration.migratedFileCount++;
@@ -35,12 +44,18 @@ export class ThemingApiMigration extends DevkitMigration<null> {
   }
 
   /** Logs out the number of migrated files at the end of the migration. */
-  static override globalPostMigration(_tree: unknown, context: SchematicContext): void {
+  static override globalPostMigration(
+    _tree: unknown,
+    _targetVersion: TargetVersion,
+    context: SchematicContext,
+  ): void {
     const count = ThemingApiMigration.migratedFileCount;
 
     if (count > 0) {
-      context.logger.info(`Migrated ${count === 1 ? `1 file` : `${count} files`} to the ` +
-                          `new Angular Material theming API.`);
+      context.logger.info(
+        `Migrated ${count === 1 ? `1 file` : `${count} files`} to the ` +
+          `new Angular Material theming API.`,
+      );
       ThemingApiMigration.migratedFileCount = 0;
     }
   }
