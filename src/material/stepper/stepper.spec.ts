@@ -1358,11 +1358,11 @@ describe('MatStepper', () => {
 
     it('should show error state after jumping back to error State', () => {
       createFixture(true);
-      const nextButtonNativeEl = fixture.debugElement
-          .queryAll(By.directive(MatStepperNext))[0].nativeElement;
+      const nextButtonNativeEl = fixture.debugElement.queryAll(By.directive(MatStepperNext))[0]
+        .nativeElement;
 
-          const prevButtonNativeEl = fixture.debugElement
-          .queryAll(By.directive(MatStepperNext))[0].nativeElement;
+      const prevButtonNativeEl = fixture.debugElement.queryAll(By.directive(MatStepperNext))[0]
+        .nativeElement;
 
       stepper.selectedIndex = 1;
       stepper.steps.first.hasError = true;
@@ -1371,9 +1371,10 @@ describe('MatStepper', () => {
 
       expect(stepper._getIndicatorType(0)).toBe(STEP_STATE.ERROR);
       expect(stepper._getIndicatorType(1)).toBe(STEP_STATE.NUMBER);
-      expect(fixture.debugElement
-        .query(By.css('#headerError0')).nativeElement.textContent).toBe('This field is required');
-      
+      expect(fixture.debugElement.query(By.css('#headerError0')).nativeElement.textContent).toBe(
+        'This field is required',
+      );
+
       stepper.selectedIndex = 0;
       stepper.steps.get(1)!.hasError = true;
       prevButtonNativeEl.click();
@@ -1381,10 +1382,12 @@ describe('MatStepper', () => {
 
       expect(stepper._getIndicatorType(0)).toBe(STEP_STATE.ERROR);
       expect(stepper._getIndicatorType(1)).toBe(STEP_STATE.ERROR);
-      expect(fixture.debugElement
-        .query(By.css('#headerError0')).nativeElement.textContent).toBe('This field is required');
-        expect(fixture.debugElement
-          .query(By.css('#headerError1')).nativeElement.textContent).toBe('field2 is required too');
+      expect(fixture.debugElement.query(By.css('#headerError0')).nativeElement.textContent).toBe(
+        'This field is required',
+      );
+      expect(fixture.debugElement.query(By.css('#headerError1')).nativeElement.textContent).toBe(
+        'field2 is required too',
+      );
     });
 
     it('should respect a custom falsy hasError value', () => {
