@@ -5,7 +5,7 @@
 # More details can be found here:
 # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/.
 
-name: Deploying dev-app to firebase previews
+name: Deploying dev-app to Firebase previews
 
 on:
   workflow_run:
@@ -22,7 +22,7 @@ jobs:
 
       - name: 'Download artifact from build job'
         run: |
-          ./scripts/github/fetch-workflow-artifact.js ${{secrets.GITHUB_TOKEN}} \
+          ./scripts/github/fetch-workflow-artifact.mjs ${{secrets.GITHUB_TOKEN}} \
             ${{github.event.workflow_run.id}} devapp > devapp.zip
 
       - name: Extracting workflow artifact into Firebase public directory.
