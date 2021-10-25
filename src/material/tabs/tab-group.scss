@@ -16,7 +16,7 @@
 }
 
 // Note that we only want to target direct descendant tabs.
-.mat-tab-group[mat-stretch-tabs] > mat-tab-list > .mat-tab-header .mat-tab-label {
+.mat-tab-group[mat-stretch-tabs] > .mat-tab-list-container > .mat-tab-header .mat-tab-label {
   flex-basis: 0;
   flex-grow: 1;
 }

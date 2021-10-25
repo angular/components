@@ -10,7 +10,7 @@
 
 .mat-tab-labels {
   @include tabs-common.paginated-tab-header-item-wrapper(
-    'mat-tab-list > .mat-tab-header'
+    '.mat-tab-list-container > .mat-tab-header'
   );
 }
 

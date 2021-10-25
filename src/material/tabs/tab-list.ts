@@ -61,6 +61,7 @@ export interface MatTabListBaseHeader {
   inputs: ['color', 'disableRipple'],
   host: {
     role: 'tablist',
+    class: 'mat-tab-list-container',
   },
 })
 export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple, CanColor {

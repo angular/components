@@ -42,13 +42,13 @@
   }
 
   // Remove header border when there is a background color
-  .mat-tab-group[class*='mat-background-'] > mat-tab-list > .mat-tab-header,
+  .mat-tab-group[class*='mat-background-'] > .mat-tab-list-container > .mat-tab-header,
   .mat-tab-nav-bar[class*='mat-background-'] {
     border-bottom: none;
     border-top: none;
   }
 
-  mat-tab-list, .mat-tab-nav-bar {
+  .mat-tab-list-container, .mat-tab-nav-bar {
     $theme-colors: (
       primary: $primary,
       accent: $accent,
