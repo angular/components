@@ -15,7 +15,8 @@ openssl aes-256-cbc -d -in scripts/bazel/gcp_token -md md5 -k ${GCP_DECRYPT_TOKE
 
 # Set the "GOOGLE_APPLICATION_CREDENTIALS" environment variable. It should point to the GCP credentials
 # file. Bazel will then automatically picks up the credentials from that variable.
-# https://github.com/bazelbuild/bazel/blob/master/third_party/grpc/include/grpc/grpc_security.h#L134-L137
+# https://docs.bazel.build/versions/main/command-line-reference.html#flag--google_default_credentials
+# https://cloud.google.com/docs/authentication/production.
 if [[ ! -z "${BASH_ENV}" ]]; then
   # CircleCI uses the `BASH_ENV` variable for environment variables.
   echo "export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/.gcp_credentials" >> ${BASH_ENV}
