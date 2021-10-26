@@ -7,8 +7,9 @@
     "path": {
       "type": "string",
       "format": "path",
-      "description": "The path to migrate.",
-      "visible": false
+      "description": "The path to migrate. (Defaults to the current working directory)",
+      "alias": "p",
+      "default": ""
     },
     "components": {
       "type": "array",

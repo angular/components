@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "mdc-migration-example": {
+    "mdc-migration": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/mdc-migration-example",
+            "outputPath": "dist/mdc-migration",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "mdc-migration-example:build:production"
+              "browserTarget": "mdc-migration:build:production"
             },
             "development": {
-              "browserTarget": "mdc-migration-example:build:development"
+              "browserTarget": "mdc-migration:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mdc-migration-example:build"
+            "browserTarget": "mdc-migration:build"
           }
         },
         "test": {
@@ -101,11 +101,12 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "watch": false
           }
         }
       }
     }
   },
-  "defaultProject": "mdc-migration-example"
+  "defaultProject": "mdc-migration"
 }

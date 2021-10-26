@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Schema} from './schema';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import * as path from 'path';
+import {Schema} from './schema';
 
 /** Groups of components that must be migrated together. */
 const migrationGroups = [
@@ -50,10 +51,10 @@ function getComponentsToMigrate(requested: string[]): Set<string> {
 
 export default function (options: Schema): Rule {
   const componentsToMigrate = getComponentsToMigrate(options.components);
+  // TOOD(mmalerba): Use a workspace-releative rather than absolute path.
+  const pathToMigrate = path.resolve(options.path ?? process.cwd());
 
-  // TODO(mmalerba): options.path comes through as undefined.
-  // I assume it should be the cwd?
-  console.log('Will migrate', [...componentsToMigrate], 'for', options.path);
+  console.log('Will migrate', [...componentsToMigrate], 'for', pathToMigrate);
 
   return (tree: Tree, context: SchematicContext) => tree;
 }
