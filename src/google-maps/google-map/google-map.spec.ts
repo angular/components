@@ -363,7 +363,7 @@ describe('GoogleMap', () => {
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].mapTypeId).toBe('satellite');
   });
 
-  it('should emit mapInitalized event when the map is initated', () => {
+  it('should emit mapInitalized event when the map is initialized', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
