@@ -363,6 +363,21 @@ describe('GoogleMap', () => {
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].mapTypeId).toBe('satellite');
   });
 
+  it('should emit mapInitalized event when the map is initated', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+    spyOn(fixture.componentInstance.map.mapInitalized, 'emit');
+
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.map.mapInitalized.emit).toHaveBeenCalledWith(
+        fixture.componentInstance.map.googleMap,
+      );
+    });
+  });
+
   it('should emit authFailure event when window.gm_authFailure is called', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);

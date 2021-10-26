@@ -104,8 +104,9 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   }
   private _options = DEFAULT_OPTIONS;
 
-  /** Event Emitted when GoogleMap is Ready */
-  @Output() readonly mapReady: EventEmitter<google.maps.Map> = new EventEmitter<google.maps.Map>();
+  /** Event emitted when the map is initalized. */
+  @Output() readonly mapInitalized: EventEmitter<google.maps.Map> =
+    new EventEmitter<google.maps.Map>();
 
   /**
    * See
@@ -308,7 +309,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
         this.googleMap = new google.maps.Map(this._mapEl, this._combineOptions());
       });
       this._eventManager.setTarget(this.googleMap);
-      this.mapReady.emit(this.googleMap);
+      this.mapInitalized.emit(this.googleMap);
     }
   }
 
