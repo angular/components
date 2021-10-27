@@ -17,7 +17,7 @@ index 9dcdc60..4927e75 100644
      implementation = _resolved_toolchain_impl,
 -    toolchains = ["@rules_nodejs//nodejs:toolchain_type"],
 +    toolchains = ["@build_bazel_rules_nodejs//nodejs:toolchain_type"],
-     incompatible_use_toolchain_transition = True,
+
  )
  """
 @@ -107,7 +107,7 @@ toolchain(
