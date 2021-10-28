@@ -2850,6 +2850,11 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
+"@stackblitz/sdk@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@stackblitz/sdk/-/sdk-1.5.2.tgz#8589c4f6dd8df69bc82f67c2677754ef87ab16f3"
+  integrity sha512-rV8HJb7pti8UBROgVUbxc6f1DGxuUpaGCdQvxvHcGecwqqVMB4XAOzeGuk4HkQLmyCrH/9qTbNA6ch4FwQZRDQ==
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"

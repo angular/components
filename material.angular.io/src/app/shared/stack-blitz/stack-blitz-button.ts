@@ -11,25 +11,29 @@ import {StackBlitzWriter} from './stack-blitz-writer';
 })
 export class StackBlitzButton {
   /**
-   * The button becomes disabled if the user hovers over the button before the StackBlitz form
-   * is created. After the form is created, the button becomes enabled again.
-   * The form creation usually happens extremely quickly, but we handle the case of the
+   * The button becomes disabled if the user hovers over the button before the StackBlitz
+   * is ready for opening. After the StackBlitz is ready, the button becomes enabled again.
+   *
+   * The StackBlitz preparation usually happens extremely quickly, but we handle the case of the
    * StackBlitz not yet being ready for people with poor network connections or slow devices.
    */
   isDisabled = false;
+
   exampleData: ExampleData | undefined;
 
   /**
-   * Form used to submit the data to Stackblitz.
-   * Important! it needs to be constructed ahead-of-time, because doing so on-demand
-   * will cause Firefox to block the submit as a popup, because it didn't happen within
-   * the same tick as the user interaction.
+   * Function that can be invoked to open the StackBlitz window synchronously.
+   *
+   * **Note**: All files for the StackBlitz need to be loaded and prepared ahead-of-time,
+   * because doing so on-demand will cause Firefox to block the submit as a popup as the
+   * form submission (used internally to create the StackBlitz) didn't happen within the
+   * same tick as the user interaction.
    */
-  private _stackBlitzForm: HTMLFormElement | undefined;
+  private _openStackBlitzFn: (() => void) | null = null;
 
   @HostListener('mouseover')
   onMouseOver() {
-    this.isDisabled = !this._stackBlitzForm;
+    this.isDisabled = this._openStackBlitzFn === null;
   }
 
   @Input()
@@ -37,9 +41,9 @@ export class StackBlitzButton {
     if (example) {
       const isTest = example.includes('harness');
       this.exampleData = new ExampleData(example);
-      this.stackBlitzWriter.constructStackBlitzForm(example, this.exampleData, isTest)
-        .then(form => {
-          this._stackBlitzForm = form;
+      this.stackBlitzWriter.createStackBlitzForExample(example, this.exampleData, isTest)
+        .then(openFn => {
+          this._openStackBlitzFn = openFn;
           this.isDisabled = false;
         });
     } else {
@@ -49,16 +53,8 @@ export class StackBlitzButton {
 
   constructor(private stackBlitzWriter: StackBlitzWriter) {}
 
-  openStackBlitz(): void {
-    // When the form is submitted, it must be in the document body. The standard of forms is not
-    // to submit if it is detached from the document. See the following chromium commit for
-    // more details:
-    // https://chromium.googlesource.com/chromium/src/+/962c2a22ddc474255c776aefc7abeba00edc7470%5E!
-    if (this._stackBlitzForm) {
-      document.body.appendChild(this._stackBlitzForm);
-      this._stackBlitzForm.submit();
-      document.body.removeChild(this._stackBlitzForm);
-    }
+  async openStackBlitz(): Promise<void> {
+    this._openStackBlitzFn?.();
   }
 }
 
