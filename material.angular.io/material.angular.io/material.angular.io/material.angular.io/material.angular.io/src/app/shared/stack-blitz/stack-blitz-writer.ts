@@ -66,26 +66,32 @@ export class StackBlitzWriter {
   constructor(private _http: HttpClient, private _ngZone: NgZone) {}
 
   /** Opens a StackBlitz for the specified example. */
-  async createStackBlitzForExample(exampleId: string, data: ExampleData,
-                                   isTest: boolean): Promise<() => void> {
-    // Run outside the zone since this form doesn't interact with Angular
+  createStackBlitzForExample(exampleId: string, data: ExampleData,
+                             isTest: boolean): Promise<() => void> {
+    // Run outside the zone since the creation doesn't interact with Angular
     // and the file requests can cause excessive change detections.
-    return await this._ngZone.runOutsideAngular(async () => {
+    return this._ngZone.runOutsideAngular(async () => {
       const files = await this._buildInMemoryFileDictionary(data, exampleId, isTest);
       const exampleMainFile = `src/app/${data.indexFilename}`;
 
       return () => {
-        this._openStackBlitz(`Angular Components - ${exampleId} example`, exampleMainFile, files);
+        this._openStackBlitz({
+          files,
+          title: `Angular Components - ${data.description}`,
+          description: `${data.description}\n\nAuto-generated from: https://material.angular.io`,
+          openFile: exampleMainFile,
+        });
       };
     });
   }
 
-  /** Opens a new WebContainer-based StackBlitz with the given files. */
-  private _openStackBlitz(title: string, openFile: string, files: FileDictionary): void {
+  /** Opens a new WebContainer-based StackBlitz for the given files. */
+  private _openStackBlitz({title, description, openFile, files}:
+      {title: string, description: string, openFile: string, files: FileDictionary}): void {
     stackblitz.openProject({
       title,
       files,
-      description: title,
+      description,
       template: PROJECT_TEMPLATE,
       tags: PROJECT_TAGS,
     }, {openFile});
@@ -147,6 +153,14 @@ export class StackBlitzWriter {
    */
   private _replaceExamplePlaceholders(data: ExampleData, fileName: string,
                                       fileContent: string, isTest: boolean): string {
+    // Replaces the version placeholder in the `index.html` and `package.json` file.
+    // Technically we invalidate the `package-lock.json` file for the StackBlitz boilerplate
+    // by dynamically changing the version in the `package.json`, but the Turbo package manager
+    // seems to be able to partially re-use the lock file to speed up the module tree computation,
+    // so providing a lock file is still reasonable while modifying the `package.json`.
+    if (fileName === 'src/index.html' || fileName === 'package.json') {
+      fileContent = fileContent.replace(/\${version}/g, MAT_VERSION.full);
+    }
 
     if (fileName === 'src/index.html') {
       // Replace the component selector in `index,html`.
@@ -154,8 +168,7 @@ export class StackBlitzWriter {
       // <button-demo></button-demo>
       fileContent = fileContent
         .replace(/material-docs-example/g, data.selectorName)
-        .replace(/\${title}/g, data.description)
-        .replace(/\${version}/g, MAT_VERSION.full);
+        .replace(/\${title}/g, data.description);
     } else if (fileName === '.stackblitzrc') {
       fileContent = fileContent
         .replace(/\${startCommand}/, isTest ? 'turbo test' : 'turbo start');
