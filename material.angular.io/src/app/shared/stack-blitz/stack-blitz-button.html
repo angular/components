@@ -1,6 +1,5 @@
-<button mat-icon-button type="button" (click)="openStackBlitz()" [disabled]="isDisabled"
-        [attr.aria-label]="isDisabled ? 'Building StackBlitz example...' : 'Edit this example in StackBlitz'"
-        [matTooltip]="isDisabled ? 'Building ' + exampleData?.description + ' StackBlitz example...' :
-        'Edit ' + exampleData?.description + ' example in StackBlitz'">
+<button mat-icon-button type="button" (click)="openStackBlitz()"
+        aria-label="Edit this example in StackBlitz"
+        [matTooltip]="'Edit ' + exampleData?.description + ' example in StackBlitz'">
   <mat-icon>open_in_new</mat-icon>
 </button>

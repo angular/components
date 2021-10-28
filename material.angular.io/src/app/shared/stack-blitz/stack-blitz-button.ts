@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, NgModule} from '@angular/core';
+import {Component, Input, NgModule, NgZone} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -10,15 +10,6 @@ import {StackBlitzWriter} from './stack-blitz-writer';
   templateUrl: './stack-blitz-button.html',
 })
 export class StackBlitzButton {
-  /**
-   * The button becomes disabled if the user hovers over the button before the StackBlitz
-   * is ready for opening. After the StackBlitz is ready, the button becomes enabled again.
-   *
-   * The StackBlitz preparation usually happens extremely quickly, but we handle the case of the
-   * StackBlitz not yet being ready for people with poor network connections or slow devices.
-   */
-  isDisabled = false;
-
   exampleData: ExampleData | undefined;
 
   /**
@@ -31,30 +22,33 @@ export class StackBlitzButton {
    */
   private _openStackBlitzFn: (() => void) | null = null;
 
-  @HostListener('mouseover')
-  onMouseOver() {
-    this.isDisabled = this._openStackBlitzFn === null;
-  }
-
   @Input()
-  set example(example: string | undefined) {
-    if (example) {
-      const isTest = example.includes('harness');
-      this.exampleData = new ExampleData(example);
-      this.stackBlitzWriter.createStackBlitzForExample(example, this.exampleData, isTest)
-        .then(openFn => {
-          this._openStackBlitzFn = openFn;
-          this.isDisabled = false;
-        });
+  set example(exampleId: string | undefined) {
+    if (exampleId) {
+      this.exampleData = new ExampleData(exampleId);
+      this._prepareStackBlitzForExample(exampleId, this.exampleData);
     } else {
-      this.isDisabled = true;
+      this.exampleData = undefined;
+      this._openStackBlitzFn = null;
     }
   }
 
-  constructor(private stackBlitzWriter: StackBlitzWriter) {}
+  constructor(private stackBlitzWriter: StackBlitzWriter, private ngZone: NgZone) {}
 
-  async openStackBlitz(): Promise<void> {
-    this._openStackBlitzFn?.();
+  openStackBlitz(): void {
+    if (this._openStackBlitzFn === null) {
+      alert('StackBlitz is not ready yet. Please try again in a few seconds.');
+    } else {
+      this._openStackBlitzFn?.();
+    }
+  }
+
+  private _prepareStackBlitzForExample(exampleId: string, data: ExampleData): void {
+    this.ngZone.runOutsideAngular(async () => {
+      const isTest = exampleId.includes('harness');
+      this._openStackBlitzFn = await this.stackBlitzWriter
+        .createStackBlitzForExample(exampleId, data, isTest);
+    });
   }
 }
 
