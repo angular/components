@@ -39,7 +39,7 @@ export class StackBlitzButton {
     if (this._openStackBlitzFn === null) {
       alert('StackBlitz is not ready yet. Please try again in a few seconds.');
     } else {
-      this._openStackBlitzFn?.();
+      this._openStackBlitzFn();
     }
   }
 
