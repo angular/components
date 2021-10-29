@@ -4,6 +4,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {StackBlitzWriter} from './stack-blitz-writer';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'stack-blitz-button',
@@ -33,13 +34,17 @@ export class StackBlitzButton {
     }
   }
 
-  constructor(private stackBlitzWriter: StackBlitzWriter, private ngZone: NgZone) {}
+  constructor(
+    private stackBlitzWriter: StackBlitzWriter,
+    private ngZone: NgZone,
+    private snackBar: MatSnackBar) {}
 
   openStackBlitz(): void {
-    if (this._openStackBlitzFn === null) {
-      alert('StackBlitz is not ready yet. Please try again in a few seconds.');
-    } else {
+    if (this._openStackBlitzFn) {
       this._openStackBlitzFn();
+    } else {
+      this.snackBar.open('StackBlitz is not ready yet. Please try again in a few seconds.',
+          undefined, {duration: 5000});
     }
   }
 
@@ -53,7 +58,7 @@ export class StackBlitzButton {
 }
 
 @NgModule({
-  imports: [MatTooltipModule, MatButtonModule, MatIconModule],
+  imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatSnackBarModule],
   exports: [StackBlitzButton],
   declarations: [StackBlitzButton],
   providers: [StackBlitzWriter],
