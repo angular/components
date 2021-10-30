@@ -78,7 +78,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^32.3.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "firebase-tools": "^9.18.0",
+    "firebase-tools": "^9.21.0",
     "imagemin": "^7.0.1",
     "imagemin-pngquant": "^9.0.2",
     "jasmine-core": "^3.7.1",
