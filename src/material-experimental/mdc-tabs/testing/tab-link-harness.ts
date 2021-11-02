@@ -33,6 +33,11 @@ export class MatTabLinkHarness extends ComponentHarness {
     return (await this.host()).text();
   }
 
+  /** Gets the aria-label of the tab. */
+  async getAriaLabel(): Promise<string | null> {
+    return (await this.host()).getAttribute('aria-label');
+  }
+
   /** Whether the link is active. */
   async isActive(): Promise<boolean> {
     const host = await this.host();

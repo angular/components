@@ -1,4 +1,5 @@
 import {HarnessLoader} from '@angular/cdk/testing';
+import {expectAlignedWith} from '@angular/cdk/testing/private/e2e';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -65,6 +66,12 @@ export function runTabNavBarHarnessTests(
     expect(await links[2].getLabel()).toBe('Third');
   });
 
+  it('should be able to get the aria label of links', () => {
+    const navBar = await loader.getHarness(tabNavBarHarness);
+    const links = await navBar.getLinks();
+    expect(await links[0].getAriaLabel()).toBe('The first tab');
+  });
+
   it('should be able to get disabled state of link', async () => {
     const navBar = await loader.getHarness(tabNavBarHarness);
     const links = await navBar.getLinks();
@@ -97,7 +104,7 @@ export function runTabNavBarHarnessTests(
 @Component({
   template: `
     <nav mat-tab-nav-bar>
-      <a href="#" (click)="select(0, $event)" [active]="activeLink === 0" matTabLink>First</a>
+      <a href="#" (click)="select(0, $event)" aria-label="The first tab" [active]="activeLink === 0" matTabLink>First</a>
       <a href="#" (click)="select(1, $event)" [active]="activeLink === 1" matTabLink>Second</a>
       <a
         href="#"
