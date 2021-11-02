@@ -66,7 +66,7 @@ export function runTabNavBarHarnessTests(
     expect(await links[2].getLabel()).toBe('Third');
   });
 
-  it('should be able to get the aria label of links', () => {
+  it('should be able to get the aria label of links', async () => {
     const navBar = await loader.getHarness(tabNavBarHarness);
     const links = await navBar.getLinks();
     expect(await links[0].getAriaLabel()).toBe('The first tab');
