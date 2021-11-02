@@ -1,5 +1,4 @@
 import {HarnessLoader} from '@angular/cdk/testing';
-import {expectAlignedWith} from '@angular/cdk/testing/private/e2e';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
