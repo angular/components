@@ -1,3 +1,10 @@
+<a name="12.2.13"></a>
+# 12.2.13 "aluminum-cardamom" (2021-11-03)
+## Special Thanks
+Kristiyan Kostadinov, Paul Gschwendtner and Suguru Inatomi
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="12.2.12"></a>
 # 12.2.12 "silk-shoe" (2021-10-27)
 ### cdk
