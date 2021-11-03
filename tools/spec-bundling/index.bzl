@@ -105,10 +105,12 @@ def spec_bundle(name, platform, deps, **kwargs):
         template = "//tools/spec-bundling:esbuild.config-tmpl.mjs",
         output_name = "%s_config.mjs" % name,
         substitutions = select({
-            # Pass through whether partial compilation is enabled or not. This is helpful
-            # for our integration tests which run all tests in partial compilation mode.
-            "//tools:partial_compilation_enabled": {"TMPL_PARTIAL_COMPILATION_ENABLED": "true"},
-            "//conditions:default": {"TMPL_PARTIAL_COMPILATION_ENABLED": "false"},
+            # Depending on whether partial compilation is enabled, we may want to run the linker
+            # to test the Angular compiler linker AOT processing. Additionally, a config setting
+            # can forcibly disable the linker to ensure tests rely on JIT linking at runtime.
+            "//tools:force_partial_jit_compilation_enabled": {"TMPL_RUN_LINKER": "false"},
+            "//tools:partial_compilation_enabled": {"TMPL_RUN_LINKER": "true"},
+            "//conditions:default": {"TMPL_RUN_LINKER": "false"},
         }),
     )
 
