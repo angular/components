@@ -16,7 +16,7 @@ Amy Sorto, Andrew Seguin, Jeremy Elbourn, Kristiyan Kostadinov, Paul Gschwendtne
 
 If your application imports styles from `~@angular/cdk`, the `@import`/`@use` statements need to
 be updated to omit the tilde. The tilde syntax is deprecated within the webpack `sass-loader` and
-does not work with [APF v13](https://angular.io/guide/angular-package-format).
+does not work with [APF v13](https://v13.angular.io/guide/angular-package-format).
 
 ```scss
 // before
@@ -37,7 +37,7 @@ Additional breaking changes:
 
 If your application imports styles from `~@angular/material`, the `@import`/`@use` statements need to
 be updated to omit the tilde. The tilde syntax is deprecated within the webpack `sass-loader` and
-does not work with [APF v13](https://angular.io/guide/angular-package-format).
+does not work with [APF v13](https://v13.angular.io/guide/angular-package-format).
 
 ```scss
 // before
