@@ -55,3 +55,43 @@ export class GoogleMapDemo {
                            [directions]="directionsResults"></map-directions-renderer>
 </google-map>
 ```
+
+
+## Example if there are more than 2 points (source, destination, waypoints) - same html as above - only changed typescript
+```typescript
+// google-maps-demo.component.ts
+import {MapDirectionsService} from '@angular/google-maps';
+import {Component} from '@angular/core';
+
+@Component({
+  selector: 'google-map-demo',
+  templateUrl: 'google-map-demo.html',
+})
+export class GoogleMapDemo {
+  center: google.maps.LatLngLiteral = {
+      lat: 38.55802857181021,
+      lng: -97.90987645772991
+  };
+  zoom = 4;
+
+  directionsResults$: Observable<google.maps.DirectionsResult|undefined>;
+
+  constructor(mapDirectionsService: MapDirectionsService, private service: StopService) {
+    // Example to get the stops from the backend
+    this.service.getStopsForRoute(this.route.snapshot.params.id).then(result => {
+      let stops = result.stops;
+      let waypoints = []
+      for(let i = 1; i < stops.length - 1; i++) {
+          waypoints.push({location: `${stops[i].city},${stops[i].state}`, stopover: true});
+      }
+      request = {
+        origin: `Chicago,IL`,
+        destination: `Clearwater,FL`,
+        waypoints: waypoints,
+        travelMode: google.maps.TravelMode.DRIVING
+      };
+      this.directionsResults$ = this.mapDirectionsService.route(request).pipe(map(response => response.result));
+    }
+  }
+}
+```
