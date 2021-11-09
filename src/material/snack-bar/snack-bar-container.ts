@@ -75,7 +75,7 @@ export class MatSnackBarContainer extends BasePortalOutlet
   private readonly _announceDelay: number = 150;
 
   /** The timeout for announcing the snack bar's content. */
-  private _announceTimeoutId: any;
+  private _announceTimeoutId: number;
 
   /** Whether the component has been destroyed. */
   private _destroyed = false;
