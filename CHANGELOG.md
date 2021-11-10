@@ -1,14 +1,3 @@
-<a name="12.2.13"></a>
-# 12.2.13 "sandstone-salamander" (2021-11-10)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [a0cf5220f8](https://github.com/angular/components/commit/a0cf5220f8bad29c3ce979d25b96177cb79d390f) | fix | **core:** test environment check not picking up jest ([#23722](https://github.com/angular/components/pull/23722)) ([#23924](https://github.com/angular/components/pull/23924)) |
-## Special Thanks
-Kristiyan Kostadinov, Paul Gschwendtner and Suguru Inatomi
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="12.2.12"></a>
 # 12.2.12 "silk-shoe" (2021-10-27)
 ### cdk
