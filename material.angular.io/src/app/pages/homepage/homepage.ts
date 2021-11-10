@@ -1,4 +1,5 @@
-import {Component, HostBinding, NgModule, OnInit} from '@angular/core';
+import {Component, HostBinding, Inject, NgModule, OnInit, Optional} from '@angular/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {MatButtonModule} from '@angular/material/button';
 import {FooterModule} from '../../shared/footer/footer';
@@ -18,13 +19,19 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.html',
-  styleUrls: ['./homepage.scss']
+  styleUrls: ['./homepage.scss'],
 })
 export class Homepage implements OnInit {
   @HostBinding('class.main-content') readonly mainContentClass = true;
+  @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
+
   isNextVersion = location.hostname.startsWith('next.material.angular.io');
 
-  constructor(public _componentPageTitle: ComponentPageTitle, public guideItems: GuideItems) {
+  constructor(
+    public _componentPageTitle: ComponentPageTitle,
+    public guideItems: GuideItems,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string) {
+    this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 
   ngOnInit(): void {

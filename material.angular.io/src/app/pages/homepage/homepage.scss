@@ -181,6 +181,10 @@ $margin-promotion-sections-small: 15px;
     img {
       transition: 0.3s ease-in-out;
       width: 100%;
+
+      :host(.animations-disabled) & {
+        transition: none;
+      }
     }
 
     &:hover, &:focus {
