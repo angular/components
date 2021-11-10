@@ -5,13 +5,16 @@ import {
   Directive,
   ElementRef,
   HostBinding,
+  Inject,
   Input,
+  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 @Directive({
@@ -38,6 +41,7 @@ export class Carousel implements AfterContentInit {
   @Input('aria-label') ariaLabel: string | undefined;
   @ContentChildren(CarouselItem) items!: QueryList<CarouselItem>;
   @ViewChild('list') list!: ElementRef<HTMLElement>;
+  @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
   position = 0;
   showPrevArrow = false;
   showNextArrow = true;
@@ -64,6 +68,10 @@ export class Carousel implements AfterContentInit {
         this._scrollToActiveItem();
       }
     }
+  }
+
+  constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string) {
+    this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 
   ngAfterContentInit(): void {

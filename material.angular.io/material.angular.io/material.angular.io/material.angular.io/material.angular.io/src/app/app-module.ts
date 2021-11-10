@@ -9,10 +9,13 @@ import {MATERIAL_DOCS_ROUTES} from './routes';
 import {NavBarModule} from './shared/navbar';
 import {CookiePopupModule} from './shared/cookie-popup/cookie-popup-module';
 
+const prefersReducedMotion = typeof matchMedia === 'function' ?
+  matchMedia('(prefers-reduced-motion)').matches : false;
+
 @NgModule({
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule.withConfig({disableAnimations: prefersReducedMotion}),
     RouterModule.forRoot(MATERIAL_DOCS_ROUTES, {
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',

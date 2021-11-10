@@ -14,7 +14,6 @@
 
     .docs-link {
       color: mat.get-color-from-palette($foreground, secondary-text);
-      transition: color 100ms;
 
       &:hover,
       &.docs-active {
