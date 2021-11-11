@@ -575,7 +575,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
         providers: [
           {
             provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
-            useValue: {useUtc: true},
+            useValue: {useUtc: true, firstDayOfWeek: 1},
           },
         ],
       }).compileComponents();
@@ -588,6 +588,10 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
     it('should create Luxon date in UTC', () => {
       // Use 0 since createDate takes 0-indexed months.
       expect(adapter.createDate(2017, 0, 5).toISO()).toBe(DateTime.utc(2017, JAN, 5).toISO());
+    });
+
+    it('should get first day of week', () => {
+      expect(adapter.getFirstDayOfWeek()).toBe(1);
     });
 
     it('should create today in UTC', () => {
