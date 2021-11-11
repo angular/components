@@ -12,7 +12,6 @@ import {HttpClientModule} from '@angular/common/http';
   declarations: [MaterialDocsExample],
   imports: [
     BrowserAnimationsModule,
-    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
