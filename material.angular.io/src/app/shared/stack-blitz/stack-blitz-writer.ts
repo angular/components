@@ -35,6 +35,7 @@ export const TEMPLATE_FILES = [
   'tsconfig.app.json',
   'tsconfig.json',
   'tsconfig.spec.json',
+  'src/favicon.ico',
   'src/index.html',
   'src/main.ts',
   'src/material.module.ts',
