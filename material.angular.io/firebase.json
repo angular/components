@@ -40,7 +40,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; child-src 'self' blob:; connect-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net https://api.github.com;"
+            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; child-src 'self' blob:; connect-src 'self' https://material.angular.io https://www.google-analytics.com https://stats.g.doubleclick.net https://api.github.com;"
           }
         ]
       },
