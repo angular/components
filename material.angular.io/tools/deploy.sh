@@ -36,7 +36,13 @@ projectId=${PROJECT_ID[$version, $mode]}
 
 # Prevent deployment if we have a pre-release version, using the cdk
 # version as a proxy for all components repo package versions.
-
+cdk_prerelease=$(cat package.json | grep cdk | egrep next\|rc)
+if [[ "${cdk_prerelease}" ]]; then
+  if [[ "${version}" == "stable" && "${mode}" == "prod" ]]; then
+    echo "Cannot publish a prerelease version to stable prod"
+    exit 1
+  fi
+fi
 
 echo ""
 echo "NOTE: Make sure to refresh the docs-content to match the new version of docs."
