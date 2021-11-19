@@ -38,7 +38,11 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   private _positionStrategy: PositionStrategy | undefined;
   private _scrollStrategy: ScrollStrategy | undefined;
   private _locationChanges: SubscriptionLike = Subscription.EMPTY;
-  private _backdropClickHandler = (event: MouseEvent) => this._backdropClick.next(event);
+  private _backdropClickHandler = (event: MouseEvent) => {
+    if (this._backdropClick.observers.length) {
+      this._ngZone.run(() => this._backdropClick.next(event));
+    }
+  };
   private _backdropTransitionendHandler = (event: TransitionEvent) => {
     this._disposeBackdrop(event.target as HTMLElement | null);
   };
@@ -385,7 +389,9 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
     // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).
-    this._backdropElement.addEventListener('click', this._backdropClickHandler);
+    this._ngZone.runOutsideAngular(() => {
+      this._backdropElement!.addEventListener('click', this._backdropClickHandler);
+    });
 
     // Add class to fade-in the backdrop after one frame.
     if (typeof requestAnimationFrame !== 'undefined') {

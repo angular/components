@@ -14,6 +14,7 @@ import {
   Injectable,
   EventEmitter,
   NgZone,
+  ApplicationRef,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MockNgZone, dispatchFakeEvent} from '../testing/private';
@@ -1072,6 +1073,65 @@ describe('Overlay', () => {
       expect(strategy.disable).not.toHaveBeenCalled();
       expect(strategy.detach).not.toHaveBeenCalled();
     }));
+  });
+});
+
+// This is moved to a separate `describe` block because the first `describe` block
+// mocks the `NgZone` with `MockNgZone`, which doesn't notify Angular about scheduled and invoked tasks
+// and doesn't run `ApplicationRef.tick()`.
+describe('Change detection behavior', () => {
+  let appRef: ApplicationRef;
+  let overlay: Overlay;
+  let componentPortal: ComponentPortal<PizzaMsg>;
+  let overlayContainerElement: HTMLElement;
+  let overlayContainer: OverlayContainer;
+  let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
+
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [OverlayModule, PortalModule],
+      }).compileComponents();
+    }),
+  );
+
+  beforeEach(inject(
+    [ApplicationRef, Overlay, OverlayContainer],
+    (ar: ApplicationRef, o: Overlay, oc: OverlayContainer) => {
+      appRef = ar;
+      overlay = o;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+
+      const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+      fixture.detectChanges();
+      componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
+      viewContainerFixture = fixture;
+    },
+  ));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
+  });
+
+  it('should not run change detection if the backdrop is clicked but there are no `backdropClick` listeners', () => {
+    const config = new OverlayConfig({hasBackdrop: true});
+    const overlayRef = overlay.create(config);
+    overlayRef.attach(componentPortal);
+
+    viewContainerFixture.detectChanges();
+    const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    expect(backdrop).toBeTruthy();
+
+    spyOn(appRef, 'tick');
+
+    expect(appRef.tick).toHaveBeenCalledTimes(0);
+    backdrop.click();
+    expect(appRef.tick).toHaveBeenCalledTimes(0);
+
+    overlayRef.backdropClick().subscribe();
+    backdrop.click();
+    expect(appRef.tick).toHaveBeenCalledTimes(1);
   });
 });
 
