@@ -20,6 +20,7 @@ import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import * as i4 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -108,7 +109,8 @@ export interface MatSortDefaultOptions {
 export class MatSortHeader extends _MatSortHeaderBase implements CanDisable, MatSortable, OnDestroy, OnInit, AfterViewInit {
     constructor(
     _intl: MatSortHeaderIntl, _changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef, _focusMonitor: FocusMonitor, _elementRef: ElementRef<HTMLElement>,
-    _ariaDescriber?: AriaDescriber | null | undefined);
+    _ariaDescriber?: AriaDescriber | null | undefined,
+    _ngZone?: NgZone | undefined);
     _arrowDirection: SortDirection;
     arrowPosition: 'before' | 'after';
     // (undocumented)
@@ -122,7 +124,7 @@ export class MatSortHeader extends _MatSortHeaderBase implements CanDisable, Mat
     // (undocumented)
     _handleClick(): void;
     // (undocumented)
-    _handleKeydown(event: KeyboardEvent): void;
+    _handleKeydown: (event: KeyboardEvent) => void;
     id: string;
     // @deprecated (undocumented)
     _intl: MatSortHeaderIntl;
@@ -154,7 +156,7 @@ export class MatSortHeader extends _MatSortHeaderBase implements CanDisable, Mat
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "disabled": "disabled"; "id": "mat-sort-header"; "arrowPosition": "arrowPosition"; "start": "start"; "sortActionDescription": "sortActionDescription"; "disableClear": "disableClear"; }, {}, never, ["*"]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, [null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, [null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public

@@ -17,6 +17,7 @@ import {
   ElementRef,
   Inject,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -76,7 +77,6 @@ interface MatSortHeaderColumnDef {
   host: {
     'class': 'mat-sort-header',
     '(click)': '_handleClick()',
-    '(keydown)': '_handleKeydown($event)',
     '(mouseenter)': '_setIndicatorHintVisible(true)',
     '(mouseleave)': '_setIndicatorHintVisible(false)',
     '[attr.aria-sort]': '_getAriaSortAttribute()',
@@ -182,6 +182,8 @@ export class MatSortHeader
     private _elementRef: ElementRef<HTMLElement>,
     /** @breaking-change 14.0.0 _ariaDescriber will be required. */
     @Optional() private _ariaDescriber?: AriaDescriber | null,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private _ngZone?: NgZone,
   ) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
@@ -194,6 +196,14 @@ export class MatSortHeader
     }
 
     this._handleStateChanges();
+
+    if (_ngZone) {
+      _ngZone.runOutsideAngular(() => {
+        _elementRef.nativeElement.addEventListener('keydown', this._handleKeydown);
+      });
+    } else {
+      _elementRef.nativeElement.addEventListener('keydown', this._handleKeydown);
+    }
   }
 
   ngOnInit() {
@@ -229,6 +239,7 @@ export class MatSortHeader
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._sort.deregister(this);
     this._rerenderSubscription.unsubscribe();
+    this._elementRef.nativeElement.removeEventListener('keydown', this._handleKeydown);
   }
 
   /**
@@ -284,12 +295,24 @@ export class MatSortHeader
     }
   }
 
-  _handleKeydown(event: KeyboardEvent) {
+  _handleKeydown = (event: KeyboardEvent): void => {
+    const toggleOnInteraction = (): void => {
+      this._toggleOnInteraction();
+      // The `keydown` listener was previously added through the host listener; host listeners run
+      // `markViewDirty()` internally, so we have to run `markForCheck()` manually to be backwards-compatible.
+      this._changeDetectorRef.markForCheck();
+    };
+
     if (!this._isDisabled() && (event.keyCode === SPACE || event.keyCode === ENTER)) {
       event.preventDefault();
-      this._toggleOnInteraction();
+      /** @breaking-change 14.0.0 _ngZone will be required. */
+      if (this._ngZone) {
+        this._ngZone.run(toggleOnInteraction);
+      } else {
+        toggleOnInteraction();
+      }
     }
-  }
+  };
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {

@@ -1,12 +1,14 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {CdkTableModule} from '@angular/cdk/table';
+import {BACKSPACE, ENTER, SPACE, TAB} from '@angular/cdk/keycodes';
 import {
   createFakeEvent,
   createMouseEvent,
+  dispatchKeyboardEvent,
   dispatchMouseEvent,
   wrappedErrorMessage,
 } from '../../cdk/testing/private';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {ApplicationRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
@@ -438,6 +440,25 @@ describe('MatSort', () => {
       descriptionId = sortButton.getAttribute('aria-describedby');
       descriptionElement = document.getElementById(descriptionId);
       expect(descriptionElement?.textContent).toBe('Sort 2nd column');
+    });
+
+    it('should not run change detection if the keydown event code is not space or enter', () => {
+      const appRef = TestBed.inject(ApplicationRef);
+      spyOn(appRef, 'tick');
+      const headerElement = fixture.nativeElement.querySelector('#defaultA');
+
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+      dispatchKeyboardEvent(headerElement, 'keydown', BACKSPACE);
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+
+      dispatchKeyboardEvent(headerElement, 'keydown', ENTER);
+      expect(appRef.tick).toHaveBeenCalledTimes(1);
+
+      dispatchKeyboardEvent(headerElement, 'keydown', TAB);
+      expect(appRef.tick).toHaveBeenCalledTimes(1);
+
+      dispatchKeyboardEvent(headerElement, 'keydown', SPACE);
+      expect(appRef.tick).toHaveBeenCalledTimes(2);
     });
   });
 

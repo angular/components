@@ -50,6 +50,7 @@ ng_test_library(
     deps = [
         ":sort",
         "//src/cdk/collections",
+        "//src/cdk/keycodes",
         "//src/cdk/table",
         "//src/cdk/testing/private",
         "//src/material/table",
