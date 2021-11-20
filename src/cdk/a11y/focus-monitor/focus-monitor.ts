@@ -440,7 +440,9 @@ export class FocusMonitor implements OnDestroy {
   }
 
   private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {
-    this._ngZone.run(() => subject.next(origin));
+    if (subject.observers.length) {
+      this._ngZone.run(() => subject.next(origin));
+    }
   }
 
   private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {
