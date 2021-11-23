@@ -312,7 +312,7 @@ export class MatFormField
     }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
-    control.stateChanges.pipe(startWith(null)).subscribe(() => {
+    control.stateChanges.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
       this._validatePlaceholders();
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
@@ -337,19 +337,21 @@ export class MatFormField
     });
 
     // Run change detection and update the outline if the suffix or prefix changes.
-    merge(this._prefixChildren.changes, this._suffixChildren.changes).subscribe(() => {
-      this._outlineGapCalculationNeededOnStable = true;
-      this._changeDetectorRef.markForCheck();
-    });
+    merge(this._prefixChildren.changes, this._suffixChildren.changes)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => {
+        this._outlineGapCalculationNeededOnStable = true;
+        this._changeDetectorRef.markForCheck();
+      });
 
     // Re-validate when the number of hints changes.
-    this._hintChildren.changes.pipe(startWith(null)).subscribe(() => {
+    this._hintChildren.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
       this._processHints();
       this._changeDetectorRef.markForCheck();
     });
 
     // Update the aria-described by when the number of errors changes.
-    this._errorChildren.changes.pipe(startWith(null)).subscribe(() => {
+    this._errorChildren.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
     });
@@ -435,7 +437,7 @@ export class MatFormField
         this._showAlwaysAnimate = true;
 
         fromEvent(this._label.nativeElement, 'transitionend')
-          .pipe(take(1))
+          .pipe(take(1), takeUntil(this._destroyed))
           .subscribe(() => {
             this._showAlwaysAnimate = false;
           });
