@@ -86,7 +86,10 @@ $calendar-weekday-table-font-size: 11px !default;
   .mat-calendar-body-label {
     color: theming.get-color-from-palette($foreground, secondary-text);
   }
-
+  // align with input.mat-input-element
+  .mat-date-range-input {
+    margin-top: typography-utils.private-coerce-unitless-to-em(-$line-spacing);
+  }
   .mat-calendar-body-cell-content,
   .mat-date-range-input-separator {
     color: theming.get-color-from-palette($foreground, text);
