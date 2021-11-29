@@ -99,6 +99,25 @@ describe('LuxonDateAdapter', () => {
     ]);
   });
 
+  it('should get month names in a czech locale', () => {
+    adapter.setLocale('cs-CZ');
+
+    expect(adapter.getMonthNames('long')).toEqual([
+      'leden',
+      'únor',
+      'březen',
+      'duben',
+      'květen',
+      'červen',
+      'červenec',
+      'srpen',
+      'září',
+      'říjen',
+      'listopad',
+      'prosinec',
+    ]);
+  });
+
   it('should get month names in a different locale', () => {
     adapter.setLocale('da-DK');
 
