@@ -1,0 +1,9 @@
+{
+  "extends": "./bazel-tsconfig-build.json",
+  "compilerOptions": {
+    "plugins": [
+      {"name": "tsec", "exemptionConfig": "./tsec-exemption.json"}
+    ]
+  }
+}
+

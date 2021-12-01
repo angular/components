@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html", "ts_library")
+load("@npm//tsec:index.bzl", "tsec_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,6 +12,12 @@ ts_library(
     deps = [
         "@npm//@angular/core",
     ],
+)
+
+tsec_test(
+    name = "coercion_tsec_test",
+    target = "coercion",
+    tsconfig = "//src:tsec_config",
 )
 
 ts_library(

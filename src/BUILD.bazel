@@ -32,8 +32,7 @@ dgeni_api_docs(
         # Add all Angular packages to the sources because some Material exports use
         # Angular exports and these should not cause any warnings when Dgeni uses the
         # type checker to parse our TypeScript sources.
-        "@npm//@angular/core",
-        "@npm//@angular/common",
+        "@npm//@angular/core", "@npm//@angular/common",
         "@npm//@angular/forms",
         "@npm//@angular/animations",
         "@npm//@angular/platform-browser",
@@ -48,4 +47,13 @@ dgeni_api_docs(
 ts_library(
     name = "dev_mode_types",
     srcs = ["dev-mode-types.d.ts"],
+)
+
+ts_config(
+    name = "tsec_config",
+    src = "tsconfig-tsec.json",
+    deps = [
+        ":bazel-tsconfig-build.json",
+        ":tsec-exemption.json",
+    ],
 )

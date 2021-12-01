@@ -1,0 +1,17 @@
+{
+  "ban-trustedtypes-createpolicy": [
+    "material/icon/trusted-types.ts"
+  ],
+  "ban-element-innerhtml-assignments": [
+    "material/icon/icon-registry.ts"
+  ],
+  "ban-element-setattribute": [
+    "cdk/a11y/aria-describer/aria-reference.ts",
+    "material-experimental/mdc-checkbox/checkbox.ts",
+    "material-experimental/mdc-list/interactive-list-base.ts",
+    "material-experimental/mdc-progress-spinner/progress-spinner.ts",
+    "material-experimental/mdc-slide-toggle/slide-toggle.ts",
+    "material/icon/icon-registry.ts",
+    "material/icon/icon.ts"
+  ]
+}
