@@ -118,7 +118,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /**
    * Given a data node, determines what the children of that node are.
    *
-   * One of levelAccessor or childrenAccessor should be specified, not both.
+   * One of levelAccessor or childrenAccessor must be specified, not both.
    * This is enforced at run-time.
    */
   @Input() childrenAccessor: (dataNode: T) => T[] | Observable<T[]>;
