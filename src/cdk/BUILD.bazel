@@ -1,6 +1,5 @@
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS", "CDK_ENTRYPOINTS_WITH_STYLES", "CDK_SCSS_LIBS", "CDK_TARGETS")
 load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
-load("@npm//tsec:index.bzl", "tsec_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,12 +10,6 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = ["@npm//@angular/core"],
-)
-
-tsec_test(
-    name = "cdk_tsec_test",
-    target = "cdk",
-    tsconfig = "//src:tsec_config",
 )
 
 # List of style files that need to be copied to the root of the CDK package. We do this

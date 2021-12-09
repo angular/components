@@ -32,6 +32,17 @@ integration_test = _integration_test
 esbuild = _esbuild
 esbuild_config = _esbuild_config
 
+def _make_tsec_test(target):
+    package_name = native.package_name()
+    if not package_name.startswith("src/components-examples") and \
+       not package_name.endswith("/testing") and \
+       not package_name.endswith("/schematics"):
+        _tsec_test(
+            name = target + "_tsec_test",
+            target = target,
+            tsconfig = "//src:tsec_config",
+        )
+
 def _compute_module_name(testonly):
     current_pkg = native.package_name()
 
@@ -110,6 +121,9 @@ def ts_library(
         **kwargs
     )
 
+    if module_name and not testonly:
+        _make_tsec_test(kwargs["name"])
+
 def ng_module(
         deps = [],
         srcs = [],
@@ -148,12 +162,8 @@ def ng_module(
         **kwargs
     )
 
-    if not testonly:
-        _tsec_test(
-            name = kwargs["name"] + "_tsec_test",
-            target = kwargs["name"],
-            tsconfig = "//src:tsec_config",
-        )
+    if module_name and not testonly:
+        _make_tsec_test(kwargs["name"])
 
 def ng_package(name, data = [], deps = [], externals = PKG_EXTERNALS, readme_md = None, visibility = None, **kwargs):
     # If no readme file has been specified explicitly, use the default readme for

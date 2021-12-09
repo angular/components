@@ -55,6 +55,6 @@ ts_config(
     src = "tsconfig-tsec.json",
     deps = [
         ":bazel-tsconfig-build.json",
-        ":tsec-exemption.json",
+        "//goldens:tsec-exemption.json",
     ],
 )
