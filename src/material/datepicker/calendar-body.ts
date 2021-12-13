@@ -200,7 +200,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     this._ngZone.runOutsideAngular(() => {
       this._ngZone.onStable.pipe(take(1)).subscribe(() => {
         const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
-          '.mat-calendar-body-active',
+          '.mat-calendar-body-active button,[role="button"]',
         );
 
         if (activeCell) {

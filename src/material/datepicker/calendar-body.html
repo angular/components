@@ -30,7 +30,6 @@
       role="gridcell"
       class="mat-calendar-body-cell"
       [ngClass]="item.cssClasses"
-      [tabindex]="_isActiveCell(rowIndex, colIndex) ? 0 : -1"
       [attr.data-mat-row]="rowIndex"
       [attr.data-mat-col]="colIndex"
       [class.mat-calendar-body-disabled]="!item.enabled"
@@ -46,20 +45,23 @@
       [class.mat-calendar-body-preview-start]="_isPreviewStart(item.compareValue)"
       [class.mat-calendar-body-preview-end]="_isPreviewEnd(item.compareValue)"
       [class.mat-calendar-body-in-preview]="_isInPreview(item.compareValue)"
-      [attr.aria-label]="item.ariaLabel"
-      [attr.aria-disabled]="!item.enabled || null"
-      [attr.aria-selected]="_isSelected(item.compareValue)"
-      [attr.aria-current]="todayValue === item.compareValue ? 'date' : null"
-      (click)="_cellClicked(item, $event)"
       [style.width]="_cellWidth"
       [style.paddingTop]="_cellPadding"
       [style.paddingBottom]="_cellPadding">
-      <div class="mat-calendar-body-cell-content mat-focus-indicator"
+      <div role="button" class="mat-calendar-body-cell-content mat-focus-indicator"
         [class.mat-calendar-body-selected]="_isSelected(item.compareValue)"
         [class.mat-calendar-body-comparison-identical]="_isComparisonIdentical(item.compareValue)"
-        [class.mat-calendar-body-today]="todayValue === item.compareValue">
+        [class.mat-calendar-body-today]="todayValue === item.compareValue"
+        (click)="_cellClicked(item, $event)"
+        [tabindex]="_isActiveCell(rowIndex, colIndex) ? 0 : -1"
+        [attr.aria-label]="item.ariaLabel"
+        [attr.aria-current]="todayValue === item.compareValue ? 'date' : null"
+        [attr.aria-disabled]="!item.enabled || null"
+        [attr.aria-pressed]="_isSelected(item.compareValue)"
+        [attr.aria-selected]="_isSelected(item.compareValue)"
+	>
         {{item.displayValue}}
       </div>
-      <div class="mat-calendar-body-cell-preview"></div>
+      <div class="mat-calendar-body-cell-preview" aria-hidden="true"></div>
   </td>
 </tr>
