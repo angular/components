@@ -52,7 +52,6 @@ $calendar-range-end-body-cell-size:
 .mat-calendar-body-cell::before,
 .mat-calendar-body-cell::after,
 .mat-calendar-body-cell-preview {
-  content: '';
   position: absolute;
   top: $calendar-body-cell-content-margin;
   left: 0;
