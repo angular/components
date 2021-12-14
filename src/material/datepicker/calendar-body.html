@@ -26,8 +26,10 @@
       [style.paddingBottom]="_cellPadding">
     {{_firstRowOffset >= labelMinRequiredCells ? label : ''}}
   </td>
-  <td *ngFor="let item of row; let colIndex = index"
-      role="gridcell"
+  <div role="gridcell" *ngFor="let item of row; let colIndex = index" style="display: contents;">
+  <!-- TODO(zarend): install prettier in vim and fix the code formatting -->
+  <td 
+      role="button"
       class="mat-calendar-body-cell"
       [ngClass]="item.cssClasses"
       [tabindex]="_isActiveCell(rowIndex, colIndex) ? 0 : -1"
@@ -62,4 +64,5 @@
       </div>
       <div class="mat-calendar-body-cell-preview"></div>
   </td>
+  </div>
 </tr>
