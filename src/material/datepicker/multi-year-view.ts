@@ -218,6 +218,21 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     );
   }
 
+  _yearBecomesActive(event: MatCalendarUserEvent<number>) {
+    const year = event.value;
+    let month = this._dateAdapter.getMonth(this.activeDate);
+    let daysInMonth = this._dateAdapter.getNumDaysInMonth(
+      this._dateAdapter.createDate(year, month, 1),
+    );
+    this.activeDateChange.emit(
+      this._dateAdapter.createDate(
+        year,
+        month,
+        Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth),
+      ),
+    );
+  }
+
   /** Handles keydown events on the calendar body when calendar is in multi-year view. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
     const oldActiveDate = this._activeDate;
@@ -278,6 +293,12 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
       this.activeDateChange.emit(this.activeDate);
     }
 
+    if (!event.isTrusted) {
+      // Manually triggered events in unit tests do not trigger change detection.
+      this._changeDetectorRef.detectChanges();
+    }
+
+    // Focuses the active cell after the child component recieves the updated data from `this.activeDate`.
     this._focusActiveCell();
     // Prevent unexpected default actions such as form submission.
     event.preventDefault();

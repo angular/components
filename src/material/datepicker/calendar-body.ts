@@ -122,6 +122,9 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange = new EventEmitter<MatCalendarUserEvent<number>>();
 
+  /** Emits when a new date becomes active. */
+  @Output() readonly activeValueChange = new EventEmitter<MatCalendarUserEvent<number>>();
+
   /** Emits when the preview has changed as a result of a user action. */
   @Output() readonly previewChange = new EventEmitter<
     MatCalendarUserEvent<MatCalendarCell | null>
@@ -150,6 +153,13 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   _cellClicked(cell: MatCalendarCell, event: MouseEvent): void {
     if (cell.enabled) {
       this.selectedValueChange.emit({value: cell.value, event});
+    }
+  }
+
+  /** Called when a cell is focused. */
+  _cellFocused(cell: MatCalendarCell, event: FocusEvent): void {
+    if (cell.enabled) {
+      this.activeValueChange.emit({value: cell.value, event});
     }
   }
 

@@ -200,8 +200,10 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 export class MatCalendarBody implements OnChanges, OnDestroy {
     constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
     activeCell: number;
+    readonly activeValueChange: EventEmitter<MatCalendarUserEvent<number>>;
     cellAspectRatio: number;
     _cellClicked(cell: MatCalendarCell, event: MouseEvent): void;
+    _cellFocused(cell: MatCalendarCell, event: FocusEvent): void;
     _cellPadding: string;
     _cellWidth: string;
     comparisonEnd: number | null;
@@ -239,7 +241,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     startValue: number;
     todayValue: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "isRange": "isRange"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; "previewStart": "previewStart"; "previewEnd": "previewEnd"; }, { "selectedValueChange": "selectedValueChange"; "previewChange": "previewChange"; }, never, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "isRange": "isRange"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; "previewStart": "previewStart"; "previewEnd": "previewEnd"; }, { "selectedValueChange": "selectedValueChange"; "activeValueChange": "activeValueChange"; "previewChange": "previewChange"; }, never, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCalendarBody, never>;
 }
@@ -759,6 +761,8 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     comparisonStart: D | null;
     // (undocumented)
     _dateAdapter: DateAdapter<D>;
+    // (undocumented)
+    _dateBecomesActive(event: MatCalendarUserEvent<number>): void;
     dateClass: MatCalendarCellClassFunction<D>;
     dateFilter: (date: D) => boolean;
     _dateSelected(event: MatCalendarUserEvent<number>): void;
@@ -831,6 +835,8 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     readonly selectedChange: EventEmitter<D>;
     _selectedYear: number | null;
     _todayYear: number;
+    // (undocumented)
+    _yearBecomesActive(event: MatCalendarUserEvent<number>): void;
     _years: MatCalendarCell[][];
     readonly yearSelected: EventEmitter<D>;
     _yearSelected(event: MatCalendarUserEvent<number>): void;
@@ -907,6 +913,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     set maxDate(value: D | null);
     get minDate(): D | null;
     set minDate(value: D | null);
+    _monthBecomesActive(event: MatCalendarUserEvent<number>): void;
     _months: MatCalendarCell[][];
     readonly monthSelected: EventEmitter<D>;
     _monthSelected(event: MatCalendarUserEvent<number>): void;

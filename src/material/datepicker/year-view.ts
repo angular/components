@@ -198,6 +198,25 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     );
   }
 
+  /** Handles when a new month becomes active. */
+  _monthBecomesActive(event: MatCalendarUserEvent<number>) {
+    const month = event.value;
+    const normalizedDate = this._dateAdapter.createDate(
+      this._dateAdapter.getYear(this.activeDate),
+      month,
+      1,
+    );
+
+    const daysInMonth = this._dateAdapter.getNumDaysInMonth(normalizedDate);
+
+    this.activeDateChange.emit(
+      this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this.activeDate),
+        month,
+        Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth),
+      ),
+    );
+  }
   /** Handles keydown events on the calendar body when calendar is in year view. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
     // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
@@ -261,6 +280,12 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
       this.activeDateChange.emit(this.activeDate);
     }
 
+    if (!event.isTrusted) {
+      // Manually triggered events in unit tests do not trigger change detection.
+      this._changeDetectorRef.detectChanges();
+    }
+
+    // Focuses the active cell after the child component recieves the updated data from `this.activeDate`.
     this._focusActiveCell();
     // Prevent unexpected default actions such as form submission.
     event.preventDefault();
