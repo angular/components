@@ -252,6 +252,28 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
+  _dateBecomesActive(event: MatCalendarUserEvent<number>) {
+    const date = event.value;
+    const selectedYear = this._dateAdapter.getYear(this.activeDate);
+    const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
+    const activeDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
+    let rangeStartDate: number | null;
+    let rangeEndDate: number | null;
+
+    if (this._activeDate instanceof DateRange) {
+      rangeStartDate = this._getDateInCurrentMonth(this._activeDate.start);
+      rangeEndDate = this._getDateInCurrentMonth(this._activeDate.end);
+    } else {
+      rangeStartDate = rangeEndDate = this._getDateInCurrentMonth(this._activeDate);
+    }
+
+    if (rangeStartDate !== date || rangeEndDate !== date) {
+      this.activeDateChange.emit(activeDate);
+    }
+
+    this._changeDetectorRef.markForCheck();
+  }
+
   /** Handles keydown events on the calendar body when calendar is in month view. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
     // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
@@ -329,7 +351,6 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       this.activeDateChange.emit(this.activeDate);
     }
 
-    this._focusActiveCell();
     // Prevent unexpected default actions such as form submission.
     event.preventDefault();
   }
