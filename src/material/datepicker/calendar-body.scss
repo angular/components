@@ -31,7 +31,12 @@ $calendar-range-end-body-cell-size:
   padding-right: $calendar-body-label-side-padding;
 }
 
+.mat-calendar-body-cell-wrapper {
+  display: contents;
+}
+
 .mat-calendar-body-cell {
+  display: table-cell;
   position: relative;
   height: 0;
   line-height: 0;

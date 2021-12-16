@@ -337,7 +337,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
       // Only reset the preview end value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
-      if (event.target && isTableCell(event.target as HTMLElement)) {
+      if (event.target && ((event.target as HTMLElement).parentElement) && isTableCell((event.target as HTMLElement).parentElement as HTMLElement)) {
         this._ngZone.run(() => this.previewChange.emit({value: null, event}));
       }
     }
@@ -350,7 +350,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     if (isTableCell(element)) {
       cell = element;
     } else if (isTableCell(element.parentNode!)) {
-      cell = element.parentNode as HTMLElement;
+      cell = element;
     }
 
     if (cell) {
