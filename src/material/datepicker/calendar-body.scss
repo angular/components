@@ -38,6 +38,7 @@ $calendar-range-end-body-cell-size:
   text-align: center;
   outline: none;
   cursor: pointer;
+  display: table-cell;
 }
 
 // We use ::before to apply a background to the body cell, because we need to apply a border
