@@ -1388,7 +1388,7 @@ describe('MatDialog', () => {
 
       tick(500);
       viewContainerFixture.detectChanges();
-      expect(lastFocusOrigin!).toBe('program');
+      expect(lastFocusOrigin).toBe(null);
 
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
@@ -1421,7 +1421,7 @@ describe('MatDialog', () => {
 
       tick(500);
       viewContainerFixture.detectChanges();
-      expect(lastFocusOrigin!).toBe('program');
+      expect(lastFocusOrigin).toBe(null);
 
       const backdrop = overlayContainerElement.querySelector(
         '.cdk-overlay-backdrop',
