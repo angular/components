@@ -149,13 +149,14 @@ describe('MatMonthView', () => {
             fixture.detectChanges();
           });
 
-          it('should decrement date on left arrow press', () => {
+          fit('should decrement date on left arrow press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
             expect(calendarInstance.date).toEqual(new Date(2017, JAN, 4));
 
             calendarInstance.date = new Date(2017, JAN, 1);
             fixture.detectChanges();
+            expect(calendarInstance.date).toEqual(new Date(2017, JAN, 1));
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
@@ -653,7 +654,16 @@ describe('MatMonthView', () => {
       (_userSelection)="userSelectionSpy($event)"></mat-month-view>`,
 })
 class StandardMonthView {
-  date = new Date(2017, JAN, 5);
+  get date(): Date {
+    console.log('test code. `get date`', this._date);
+    return this._date;
+  }
+  set date(date: Date) {
+    console.log('test code. `set date`', date);
+    this._date = date;
+  }
+  _date = new Date(2017, JAN, 5);
+
   selected: Date | DateRange<Date> = new Date(2017, JAN, 10);
   selectedChangeSpy = jasmine.createSpy('selectedChange');
   userSelectionSpy = jasmine.createSpy('userSelection');

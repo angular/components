@@ -252,7 +252,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
-  _dateBecomesActive(event: MatCalendarUserEvent<number>) {
+  _dayBecomesActive(event: MatCalendarUserEvent<number>) {
     const date = event.value;
     const selectedYear = this._dateAdapter.getYear(this.activeDate);
     const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
@@ -266,6 +266,8 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     } else {
       rangeStartDate = rangeEndDate = this._getDateInCurrentMonth(this._activeDate);
     }
+
+    this.activeDate = activeDate;
 
     if (rangeStartDate !== date || rangeEndDate !== date) {
       this.activeDateChange.emit(activeDate);
@@ -348,8 +350,11 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     }
 
     if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
+      console.log("firing activeDateChange", this.activeDate);
       this.activeDateChange.emit(this.activeDate);
     }
+
+    this._focusActiveCell();
 
     // Prevent unexpected default actions such as form submission.
     event.preventDefault();

@@ -24,7 +24,7 @@
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
          (selectedValueChange)="_dateSelected($event)"
-         (activeValueChange)="_dateBecomesActive($event)"
+         (activeValueChange)="_dayBecomesActive($event)"
          (previewChange)="_previewChanged($event)"
          (keyup)="_handleCalendarBodyKeyup($event)"
          (keydown)="_handleCalendarBodyKeydown($event)">
