@@ -52,7 +52,7 @@
     "@angular/router": "^13.1.0",
     "@angular/youtube-player": "^13.1.1",
     "@stackblitz/sdk": "^1.5.2",
-    "material-components-web": "14.0.0-canary.1af7c1c4a.0",
+    "material-components-web": "14.0.0-canary.7d8ea4624.0",
     "moment": "^2.29.1",
     "rxjs": "^6.6.7",
     "tslib": "^2.3.0",
