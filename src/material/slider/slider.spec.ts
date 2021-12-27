@@ -438,6 +438,13 @@ describe('MatSlider', () => {
         expect(sliderInstance.percent).toBe(1);
       },
     );
+
+    it('should calculate percentage propertly when min,max,value are zero', () => {
+      sliderInstance.value = 0;
+      sliderInstance.min = 0;
+      sliderInstance.max = 0;
+      expect(sliderInstance.percent).toBe(1);
+    });
   });
 
   describe('slider with set value', () => {
