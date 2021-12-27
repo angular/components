@@ -874,6 +874,12 @@ export class MatSlider
 
   /** Calculates the percentage of the slider that a value is. */
   private _calculatePercentage(value: number | null) {
+    // when min,max,value are all zero, the fraction becomes NAN, because we divide 0/0
+    // so we have to explicitely return 1 in this case
+    if (value === 0 && this.min === 0 && this.max === 0) {
+      return 1;
+    }
+
     return ((value || 0) - this.min) / (this.max - this.min);
   }
 
