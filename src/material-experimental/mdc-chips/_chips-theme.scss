@@ -9,95 +9,35 @@
 @use '../../material/core/typography/typography';
 @use '../../material/core/theming/theming';
 
-@mixin _base-chip($is-dark) {
-  $on-surface-state-content: if($is-dark, mdc-color-palette.$grey-50, mdc-color-palette.$grey-900);
-  $surface:
-    color.mix(mdc-theme-color.prop-value(on-surface), mdc-theme-color.prop-value(surface), 12%);
+// Customizes the appearance of a chip. Note that ideally we would be doing this using the
+// `theme-styles` mixin, however it has the following problems:
+// 1. Some of MDC's base styles have **very** high specificity. E.g. setting the background of a
+// non-selected, enabled chip uses a selector like `.chip:not(.selected):not(.disabled)` instead of
+// just `.chip`. This specificity increase has a ripple effect over all other components that are
+// built on top of ours, making overrides extremely difficult and brittle.
+// 2. Including the individual mixins allows us to avoid a lot of unnecessary CSS (~35kb in the
+// dev app theme).
+@mixin _chip-variant($background, $foreground) {
+  @include mdc-chip-theme.container-color($background);
+  @include mdc-chip-theme.icon-color($foreground);
+  @include mdc-chip-theme.trailing-action-color($foreground);
+  @include mdc-chip-theme.checkmark-color($foreground);
+  @include mdc-chip-theme.text-label-color($foreground);
 
-  // TODO(crisbeto): ideally the $label-text-color would be something along the lines of:
-  // `if($is-dark, mdc-color-palette.$grey-100, mdc-color-palette.$grey-800)`, because it allows
-  // the user to distinguish between when the primary action is focused versus the remove icon.
-  // The problem is that the color contrast is worse and there are a lot of Google screenshot tests
-  // that expect the darker color.
-  $label-text-color: $on-surface-state-content;
-
-  @include mdc-chip-theme.theme-styles((
-    flat-focus-outline-color: $on-surface-state-content,
-    flat-unselected-focus-outline-color: $on-surface-state-content,
-    focus-label-text-color: $on-surface-state-content,
-    focus-outline-color: $on-surface-state-content,
-    hover-label-text-color: $on-surface-state-content,
-    pressed-label-text-color: $on-surface-state-content,
-    unselected-focus-label-text-color: $on-surface-state-content,
-    unselected-hover-label-text-color: $on-surface-state-content,
-    unselected-pressed-label-text-color: $on-surface-state-content,
-    with-trailing-icon-trailing-icon-color: $on-surface-state-content,
-    with-leading-icon-leading-icon-color: $on-surface-state-content,
-
-    elevated-disabled-container-color: $surface,
-    elevated-container-color: $surface,
-    elevated-unselected-container-color: $surface,
-
-    with-icon-unselected-icon-color: $label-text-color,
-    unselected-label-text-color: $label-text-color,
-    label-text-color: $label-text-color,
-    disabled-label-text-color: $label-text-color,
-  ));
-
-  // We should be able to customize this using the `with-icon-selected-disabled-icon-color` key,
-  // but the MDC validation blocks us, even though they have a lookup for it.
-  @include mdc-chip-theme.checkmark-color((disabled: $label-text-color));
+  // Technically the avatar is only supposed to have an image, but we also allow for icons.
+  // Set the color so the icons inherit the correct color.
+  .mat-mdc-chip-avatar {
+    color: $foreground;
+  }
 }
 
 @mixin _colored-chip($palette) {
   $background: theming.get-color-from-palette($palette);
   $foreground: theming.get-color-from-palette($palette, default-contrast);
 
-  &.mat-mdc-chip-selected {
-    @include mdc-chip-theme.theme-styles((
-      elevated-selected-container-color: $background,
-      flat-selected-container-color: $background,
-
-      selected-focus-label-text-color: $foreground,
-      selected-hover-label-text-color: $foreground,
-      selected-pressed-label-text-color: $foreground,
-      with-icon-selected-focus-icon-color: $foreground,
-      with-icon-selected-hover-icon-color: $foreground,
-      with-icon-selected-pressed-icon-color: $foreground,
-      with-trailing-icon-trailing-icon-color: $foreground,
-
-      with-icon-focus-icon-color: $foreground,
-      with-icon-hover-icon-color: $foreground,
-      with-icon-pressed-icon-color: $foreground,
-
-      selected-label-text-color: $foreground,
-      with-icon-selected-icon-color: $foreground,
-
-      // TODO: the previous styles preserved the color when disabled and selected. It seems like
-      // this could be supported by passing in `selected-disabled-label-text-color`, but the
-      // theme key validation rejects it.
-    ));
-  }
-
-
+  &.mat-mdc-chip-selected,
   &.mat-mdc-chip-highlighted {
-    $icon-color: $foreground;
-    $icon-map: (
-      enabled: $icon-color,
-      disabled: $icon-color,
-      hover: $icon-color,
-      focus: $icon-color
-    );
-
-    @include mdc-chip-theme.container-color($background);
-    @include mdc-chip-theme.icon-color($icon-map);
-    @include mdc-chip-theme.trailing-action-color($icon-map);
-    @include mdc-chip-theme.text-label-color((
-      enabled: $foreground,
-      disabled: $foreground,
-      hover: $foreground,
-      focus: $foreground
-    ));
+    @include _chip-variant($background, $foreground);
   }
 }
 
@@ -111,7 +51,10 @@
 
   @include mdc-helpers.mat-using-mdc-theme($config) {
     .mat-mdc-standard-chip {
-      @include _base-chip($is-dark);
+      @include _chip-variant(
+        color.mix(mdc-theme-color.prop-value(on-surface), mdc-theme-color.prop-value(surface), 12%),
+        if($is-dark, mdc-color-palette.$grey-50, mdc-color-palette.$grey-900)
+      );
 
       &.mat-primary {
         @include _colored-chip($primary);
