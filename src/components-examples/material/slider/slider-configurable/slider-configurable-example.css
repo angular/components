@@ -4,17 +4,20 @@
 
 .example-section {
   display: flex;
+  flex-wrap: wrap;
   align-content: center;
   align-items: center;
-  height: 60px;
 }
 
 .example-margin {
   margin: 8px;
 }
+.example-width {
+  width: min(calc(100% - 16px), 300px);
+}
 
 .mat-slider-horizontal {
-  width: 300px;
+  width: min(calc(100% - 16px), 300px);
 }
 
 .mat-slider-vertical {
