@@ -13,11 +13,13 @@
   margin: 8px;
 }
 .example-width {
-  width: min(calc(100% - 16px), 300px);
+  max-width: 180px;
+  width: 100%;
 }
 
 .mat-slider-horizontal {
-  width: min(calc(100% - 16px), 300px);
+  max-width: 300px;
+  width: 100%;
 }
 
 .mat-slider-vertical {
