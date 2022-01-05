@@ -338,7 +338,7 @@ export class MatCheckbox
       this.indeterminate = false;
       // tslint:disable:max-line-length
       // We use `Promise.resolve().then` to ensure the same timing as the original `MatCheckbox`:
-      // https://github.com/angular/components/blob/309d5644aa610ee083c56a823ce7c422988730e8/src/lib/checkbox/checkbox.ts#L381
+      // https://github.com/angular/components/blob/309d5644aa610ee083c56a823ce7c422988730e8/src/material/checkbox/checkbox.ts#L381
       // tslint:enable:max-line-length
       Promise.resolve().then(() => this.indeterminateChange.next(this.indeterminate));
     } else {

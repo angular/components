@@ -18,7 +18,8 @@ import {MatMenuModule} from '@angular/material/menu';
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
 })
-export class MenuBenchmarkApp {}
+export class MenuBenchmarkApp {
+}
 
 @NgModule({
   declarations: [MenuBenchmarkApp],
