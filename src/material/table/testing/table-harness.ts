@@ -6,7 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentContainerComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
+import {
+  ComponentHarness,
+  ComponentHarnessConstructor,
+  ContentContainerComponentHarness,
+  HarnessPredicate,
+  parallel,
+} from '@angular/cdk/testing';
 import {TableHarnessFilters, RowHarnessFilters} from './table-harness-filters';
 import {
   MatRowHarness,
@@ -24,33 +30,42 @@ export interface MatTableHarnessColumnsText {
   };
 }
 
-/** Harness for interacting with a standard mat-table in tests. */
-export class MatTableHarness extends ContentContainerComponentHarness<string> {
-  /** The selector for the host element of a `MatTableHarness` instance. */
-  static hostSelector = '.mat-table';
+interface RowBase extends ComponentHarness {
+  getCellTextByColumnName(): Promise<MatRowHarnessColumnsText>;
+  getCellTextByIndex(): Promise<string[]>;
+}
 
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a table with specific attributes.
-   * @param options Options for narrowing the search
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with(options: TableHarnessFilters = {}): HarnessPredicate<MatTableHarness> {
-    return new HarnessPredicate(MatTableHarness, options);
-  }
+export abstract class _MatTableHarnessBase<
+  HeaderRowType extends ComponentHarnessConstructor<HeaderRow> & {
+    with: (options?: RowHarnessFilters) => HarnessPredicate<HeaderRow>;
+  },
+  HeaderRow extends RowBase,
+  RowType extends ComponentHarnessConstructor<Row> & {
+    with: (options?: RowHarnessFilters) => HarnessPredicate<Row>;
+  },
+  Row extends RowBase,
+  FooterRowType extends ComponentHarnessConstructor<FooterRow> & {
+    with: (options?: RowHarnessFilters) => HarnessPredicate<FooterRow>;
+  },
+  FooterRow extends RowBase,
+> extends ContentContainerComponentHarness<string> {
+  protected abstract _headerRowHarness: HeaderRowType;
+  protected abstract _rowHarness: RowType;
+  protected abstract _footerRowHarness: FooterRowType;
 
   /** Gets all of the header rows in a table. */
-  async getHeaderRows(filter: RowHarnessFilters = {}): Promise<MatHeaderRowHarness[]> {
-    return this.locatorForAll(MatHeaderRowHarness.with(filter))();
+  async getHeaderRows(filter: RowHarnessFilters = {}): Promise<HeaderRow[]> {
+    return this.locatorForAll(this._headerRowHarness.with(filter))();
   }
 
   /** Gets all of the regular data rows in a table. */
-  async getRows(filter: RowHarnessFilters = {}): Promise<MatRowHarness[]> {
-    return this.locatorForAll(MatRowHarness.with(filter))();
+  async getRows(filter: RowHarnessFilters = {}): Promise<Row[]> {
+    return this.locatorForAll(this._rowHarness.with(filter))();
   }
 
   /** Gets all of the footer rows in a table. */
-  async getFooterRows(filter: RowHarnessFilters = {}): Promise<MatFooterRowHarness[]> {
-    return this.locatorForAll(MatFooterRowHarness.with(filter))();
+  async getFooterRows(filter: RowHarnessFilters = {}): Promise<FooterRow[]> {
+    return this.locatorForAll(this._footerRowHarness.with(filter))();
   }
 
   /** Gets the text inside the entire table organized by rows. */
@@ -64,7 +79,7 @@ export class MatTableHarness extends ContentContainerComponentHarness<string> {
     const [headerRows, footerRows, dataRows] = await parallel(() => [
       this.getHeaderRows(),
       this.getFooterRows(),
-      this.getRows()
+      this.getRows(),
     ]);
 
     const text: MatTableHarnessColumnsText = {};
@@ -82,7 +97,7 @@ export class MatTableHarness extends ContentContainerComponentHarness<string> {
           text[columnName] = {
             headerText: getCellTextsByColumn(headerData, columnName),
             footerText: getCellTextsByColumn(footerData, columnName),
-            text: []
+            text: [],
           };
         }
 
@@ -91,6 +106,31 @@ export class MatTableHarness extends ContentContainerComponentHarness<string> {
     });
 
     return text;
+  }
+}
+
+/** Harness for interacting with a standard mat-table in tests. */
+export class MatTableHarness extends _MatTableHarnessBase<
+  typeof MatHeaderRowHarness,
+  MatHeaderRowHarness,
+  typeof MatRowHarness,
+  MatRowHarness,
+  typeof MatFooterRowHarness,
+  MatFooterRowHarness
+> {
+  /** The selector for the host element of a `MatTableHarness` instance. */
+  static hostSelector = '.mat-table';
+  protected _headerRowHarness = MatHeaderRowHarness;
+  protected _rowHarness = MatRowHarness;
+  protected _footerRowHarness = MatFooterRowHarness;
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a table with specific attributes.
+   * @param options Options for narrowing the search
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with(options: TableHarnessFilters = {}): HarnessPredicate<MatTableHarness> {
+    return new HarnessPredicate(MatTableHarness, options);
   }
 }
 

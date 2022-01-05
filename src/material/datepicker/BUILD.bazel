@@ -18,12 +18,12 @@ ng_module(
     ),
     assets = [
         ":datepicker-content.css",
+        ":datepicker-actions.css",
         ":datepicker-toggle.css",
         ":date-range-input.css",
         ":calendar-body.css",
         ":calendar.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/datepicker",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -31,10 +31,10 @@ ng_module(
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
+        "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/material/button",
         "//src/material/core",
-        "//src/material/dialog",
         "//src/material/form-field",
         "//src/material/input",
         "@npm//@angular/animations",
@@ -59,6 +59,7 @@ sass_binary(
 sass_binary(
     name = "datepicker_toggle_scss",
     src = "datepicker-toggle.scss",
+    deps = ["//src/cdk/a11y:a11y_scss_lib"],
 )
 
 sass_binary(
@@ -70,13 +71,21 @@ sass_binary(
 sass_binary(
     name = "calendar_body_scss",
     src = "calendar-body.scss",
-    deps = ["//src/cdk/a11y:a11y_scss_lib"],
+    deps = [
+        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "date_range_input_scss",
     src = "date-range-input.scss",
     deps = ["//src/material/core:core_scss_lib"],
+)
+
+sass_binary(
+    name = "datepicker_actions_scss",
+    src = "datepicker-actions.scss",
 )
 
 ng_test_library(
@@ -91,13 +100,14 @@ ng_test_library(
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
+        "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
         "//src/material/core",
-        "//src/material/dialog",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/testing",
+        "@npm//@angular/common",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
         "@npm//@angular/platform-browser-dynamic",

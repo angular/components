@@ -12,48 +12,85 @@ import {parse5} from '@angular/cdk/schematics';
 const STANDARD_HAMMERJS_EVENTS = [
   // Events supported by the "HammerGesturesPlugin". See:
   // angular/angular/blob/0119f46d/packages/platform-browser/src/dom/events/hammer_gestures.ts#L19
-  'pan',       'panstart',    'panmove',    'panend',    'pancancel',    'panleft',
-  'panright',  'panup',       'pandown',    'pinch',     'pinchstart',   'pinchmove',
-  'pinchend',  'pinchcancel', 'pinchin',    'pinchout',  'press',        'pressup',
-  'rotate',    'rotatestart', 'rotatemove', 'rotateend', 'rotatecancel', 'swipe',
-  'swipeleft', 'swiperight',  'swipeup',    'swipedown', 'tap',
+  'pan',
+  'panstart',
+  'panmove',
+  'panend',
+  'pancancel',
+  'panleft',
+  'panright',
+  'panup',
+  'pandown',
+  'pinch',
+  'pinchstart',
+  'pinchmove',
+  'pinchend',
+  'pinchcancel',
+  'pinchin',
+  'pinchout',
+  'press',
+  'pressup',
+  'rotate',
+  'rotatestart',
+  'rotatemove',
+  'rotateend',
+  'rotatecancel',
+  'swipe',
+  'swipeleft',
+  'swiperight',
+  'swipeup',
+  'swipedown',
+  'tap',
 ];
 
 /** List of events which are provided by the deprecated Angular Material "GestureConfig". */
-const CUSTOM_MATERIAL_HAMMERJS_EVENS =
-    ['longpress', 'slide', 'slidestart', 'slideend', 'slideright', 'slideleft'];
+const CUSTOM_MATERIAL_HAMMERJS_EVENS = [
+  'longpress',
+  'slide',
+  'slidestart',
+  'slideend',
+  'slideright',
+  'slideleft',
+];
 
 /**
  * Parses the specified HTML and searches for elements with Angular outputs listening to
  * one of the known HammerJS events. This check naively assumes that the bindings never
  * match on a component output, but only on the Hammer plugin.
  */
-export function isHammerJsUsedInTemplate(html: string):
-    {standardEvents: boolean, customEvents: boolean} {
-  const document =
-      parse5.parseFragment(html, {sourceCodeLocationInfo: true}) as parse5.DefaultTreeDocument;
+export function isHammerJsUsedInTemplate(html: string): {
+  standardEvents: boolean;
+  customEvents: boolean;
+} {
+  const document = parse5.parseFragment(html, {sourceCodeLocationInfo: true});
   let customEvents = false;
   let standardEvents = false;
-  const visitNodes = nodes => {
-    nodes.forEach((node: parse5.DefaultTreeElement) => {
-      if (node.attrs) {
-        for (let attr of node.attrs) {
-          if (!customEvents && CUSTOM_MATERIAL_HAMMERJS_EVENS.some(e => `(${e})` === attr.name)) {
-            customEvents = true;
-          }
-          if (!standardEvents && STANDARD_HAMMERJS_EVENTS.some(e => `(${e})` === attr.name)) {
-            standardEvents = true;
-          }
+  const visitNodes = (nodes: parse5.ChildNode[]) => {
+    nodes.forEach(node => {
+      if (!isElement(node)) {
+        return;
+      }
+
+      for (let attr of node.attrs) {
+        if (!customEvents && CUSTOM_MATERIAL_HAMMERJS_EVENS.some(e => `(${e})` === attr.name)) {
+          customEvents = true;
+        }
+        if (!standardEvents && STANDARD_HAMMERJS_EVENTS.some(e => `(${e})` === attr.name)) {
+          standardEvents = true;
         }
       }
 
       // Do not continue traversing the AST if both type of HammerJS
       // usages have been detected already.
-      if (node.childNodes && (!customEvents || !standardEvents)) {
+      if (!customEvents || !standardEvents) {
         visitNodes(node.childNodes);
       }
     });
   };
   visitNodes(document.childNodes);
   return {customEvents, standardEvents};
+}
+
+function isElement(node: any): node is parse5.Element {
+  return !!node.attrs;
 }

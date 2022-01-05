@@ -22,33 +22,38 @@ export class MatNativeOptionHarness extends ComponentHarness {
    */
   static with(options: NativeOptionHarnessFilters = {}) {
     return new HarnessPredicate(MatNativeOptionHarness, options)
-        .addOption('text', options.text,
-            async (harness, title) =>
-                HarnessPredicate.stringMatches(await harness.getText(), title))
-        .addOption('index', options.index,
-            async (harness, index) => await harness.getIndex() === index)
-        .addOption('isSelected', options.isSelected,
-            async (harness, isSelected) => await harness.isSelected() === isSelected);
-
+      .addOption('text', options.text, async (harness, title) =>
+        HarnessPredicate.stringMatches(await harness.getText(), title),
+      )
+      .addOption(
+        'index',
+        options.index,
+        async (harness, index) => (await harness.getIndex()) === index,
+      )
+      .addOption(
+        'isSelected',
+        options.isSelected,
+        async (harness, isSelected) => (await harness.isSelected()) === isSelected,
+      );
   }
 
   /** Gets the option's label text. */
   async getText(): Promise<string> {
-    return (await this.host()).getProperty('label');
+    return (await this.host()).getProperty<string>('label');
   }
 
   /** Index of the option within the native `select` element. */
   async getIndex(): Promise<number> {
-    return (await this.host()).getProperty('index');
+    return (await this.host()).getProperty<number>('index');
   }
 
   /** Gets whether the option is disabled. */
   async isDisabled(): Promise<boolean> {
-    return (await this.host()).getProperty('disabled');
+    return (await this.host()).getProperty<boolean>('disabled');
   }
 
   /** Gets whether the option is selected. */
   async isSelected(): Promise<boolean> {
-    return (await this.host()).getProperty('selected');
+    return (await this.host()).getProperty<boolean>('selected');
   }
 }

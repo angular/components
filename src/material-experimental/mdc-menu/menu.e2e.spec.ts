@@ -5,7 +5,7 @@ import {
   expectLocation,
   expectToExist,
   pressKeys,
-} from '@angular/cdk/testing/private/e2e';
+} from '../../cdk/testing/private/e2e';
 
 const presenceOf = ExpectedConditions.presenceOf;
 const not = ExpectedConditions.not;
@@ -158,11 +158,9 @@ describe('MDC-based menu', () => {
       await pressKeys(shiftTab, Key.ENTER, shiftTab);
       await expectFocusOn(page.start());
     });
-
   });
 
   describe('position - ', () => {
-
     it('should default menu alignment to "after below" when not set', async () => {
       await page.trigger().click();
 
@@ -203,6 +201,5 @@ describe('MDC-based menu', () => {
       // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y
       await expectLocation(page.combinedMenu(), {x: trigger.x - 52, y: trigger.y - 44});
     });
-
   });
 });

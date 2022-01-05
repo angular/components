@@ -20,7 +20,6 @@ ng_module(
         ":snack-bar-container.css",
         ":simple-snack-bar.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/snack-bar",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -52,7 +51,6 @@ sass_binary(
 sass_binary(
     name = "simple_snack_bar_scss",
     src = "simple-snack-bar.scss",
-    deps = ["//src/material/core:core_scss_lib"],
 )
 
 ng_test_library(
@@ -65,6 +63,7 @@ ng_test_library(
         ":snack-bar",
         "//src/cdk/a11y",
         "//src/cdk/overlay",
+        "//src/cdk/platform",
         "@npm//@angular/common",
         "@npm//@angular/platform-browser",
     ],

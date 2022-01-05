@@ -1,4 +1,4 @@
-import {GithubConfig} from '@angular/dev-infra-private/utils/config';
+import {GithubConfig} from '@angular/dev-infra-private/ng-dev/utils/config';
 
 /**
  * Github configuration for the ng-dev command. This repository is
@@ -6,5 +6,6 @@ import {GithubConfig} from '@angular/dev-infra-private/utils/config';
  */
 export const github: GithubConfig = {
   owner: 'angular',
-  name: 'components'
+  name: 'components',
+  mainBranchName: 'master',
 };

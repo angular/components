@@ -5,16 +5,12 @@ that drives a stepped workflow. Material stepper extends the CDK stepper and has
 styling.
 
 ### Stepper variants
-There are two stepper components: `mat-horizontal-stepper` and `mat-vertical-stepper`. They
-can be used the same way. The only difference is the orientation of stepper.
+There are two stepper variants: `horizontal` and `vertical`. You can switch between the two using
+the `orientation` attribute.
 
 <!-- example(stepper-overview) -->
 
 <!-- example(stepper-vertical) -->
-
-`mat-horizontal-stepper` selector can be used to create a horizontal stepper, and
-`mat-vertical-stepper` can be used to create a vertical stepper. `mat-step` components need to be
-placed inside either one of the two stepper components.
 
 ### Labels
 If a step's label is only text, then the `label` attribute can be used.
@@ -29,7 +25,7 @@ For more complex labels, add a template with the `matStepLabel` directive inside
               "region": "step-label"}) -->
 
 #### Label position
-For `mat-horizontal-stepper` it's possible to define the position of the label. `end` is the
+For a horizontal `mat-stepper` it's possible to define the position of the label. `end` is the
 default value, while `bottom` will place it under the step icon instead of at its side.
 This behaviour is controlled by `labelPosition` property.
 
@@ -45,10 +41,10 @@ There are two button directives to support navigation between different steps:
               "region": "buttons"}) -->
 
 ### Linear stepper
-The `linear` attribute can be set on `mat-horizontal-stepper` and `mat-vertical-stepper` to create
-a linear stepper that requires the user to complete previous steps before proceeding to following
-steps. For each `mat-step`, the `stepControl` attribute can be set to the top level
-`AbstractControl` that is used to check the validity of the step.
+The `linear` attribute can be set on `mat-stepper` to create a linear stepper that requires the
+user to complete previous steps before proceeding to following steps. For each `mat-step`, the
+`stepControl` attribute can be set to the top level `AbstractControl` that is used to check the
+validity of the step.
 
 There are two possible approaches. One is using a single form for stepper, and the other is
 using a different form for each step.
@@ -64,7 +60,7 @@ are completed.
 
 ```html
 <form [formGroup]="formGroup">
-  <mat-horizontal-stepper formArrayName="formArray" linear>
+  <mat-stepper formArrayName="formArray" linear>
     <mat-step formGroupName="0" [stepControl]="formArray.get([0])">
       ...
       <div>
@@ -79,13 +75,13 @@ are completed.
       </div>
     </mat-step>
     ...
-  </mat-horizontal-stepper>
+  </mat-stepper>
 </form>
 ```
 
 #### Using a different form for each step
 ```html
-<mat-vertical-stepper linear>
+<mat-stepper orientation="vertical" linear>
   <mat-step [stepControl]="formGroup1">
     <form [formGroup]="formGroup1">
       ...
@@ -96,7 +92,7 @@ are completed.
       ...
     </form>
   </mat-step>
-</mat-vertical-stepper>
+</mat-stepper>
 ```
 ### Types of steps
 
@@ -180,14 +176,27 @@ will not affect steppers marked as `linear`.
 
 <!-- example(stepper-errors) -->
 
+### Lazy rendering
+By default, the stepper will render all of it's content when it's initialized. If you have some
+content that you want to defer until the particular step is opened, you can put it inside
+an `ng-template` with the `matStepContent` attribute.
+
+<!-- example(stepper-lazy-content) -->
+
+### Responsive stepper
+If your app supports a wide variety of screens and a stepper's layout doesn't fit a particular
+screen size, you can control its `orientation` dynamically to change the layout based on the
+viewport.
+
+<!-- example(stepper-responsive) -->
+
 ### Keyboard interaction
-- <kbd>LEFT_ARROW</kbd>: Focuses the previous step header
-- <kbd>RIGHT_ARROW</kbd>: Focuses the next step header
-- <kbd>HOME</kbd>: Focuses the first step header
-- <kbd>END</kbd>: Focuses the last step header
-- <kbd>ENTER</kbd>, <kbd>SPACE</kbd>: Selects the step that the focus is currently on
-- <kbd>TAB</kbd>: Focuses the next tabbable element
-- <kbd>SHIFT</kbd>+<kbd>TAB</kbd>: Focuses the previous tabbable element
+| Keyboard shortcut      | Action                          |
+|------------------------|---------------------------------|
+| <kbd>Left Arrow</kbd>  | Focus the previous step header. |
+| <kbd>Right Arrow</kbd> | Focus the next step header.     |
+| <kbd>Enter</kbd>       | Select the focused step.        |
+| <kbd>Space</kbd>       | Select the focused step.        |
 
 ### Localizing labels
 Labels used by the stepper are provided through `MatStepperIntl`. Localization of these messages
@@ -203,6 +212,8 @@ can be done by providing a subclass with translated values in your application r
 export class MyApp {}
 ```
 
+<!-- example(stepper-intl) -->
+
 ### Accessibility
 The stepper is treated as a tabbed view for accessibility purposes, so it is given
 `role="tablist"` by default. The header of step that can be clicked to select the step
@@ -211,3 +222,23 @@ is given `role="tab"`, and the content that can be expanded upon selection is gi
 step content is automatically set based on step selection change.
 
 The stepper and each step should be given a meaningful label via `aria-label` or `aria-labelledby`.
+
+Prefer verticl steppers when building for small screen sizes, as horizontal
+steppers typically take up significantly more horizontal space thus introduce
+horizontal scrolling. Applications with multiple scrolling dimensions make
+content harder to consume for some users. See the [Responsive Stepper section](#responsive-stepper)
+above for an example on building a stepper that adjusts its layout based on
+viewport size.
+
+#### Forms
+Steppers often contain forms and form controls. If validation errors inside of a
+stepper's form prevents moving to another step, make sure that your form
+controls communicate error messages to assistive technology. This helps the user
+know why they can't advance to another step. You can accomplish this by using
+`<mat-error>` with `<mat-form-field>`, or by using an ARIA live region.
+
+When a step contains a forms validation error, `MatStepper` will display the
+error in the step's header if specified. See the [Error State section](#error-state)
+for an example of a stepper with an error message. For non-linear steppers, you
+should use an ARIA live region to announce error messages when users navigate
+away from a step with an error message.

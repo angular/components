@@ -9,7 +9,6 @@ const exampleCommentRegex = /<!--\s*example\(([^)]+)\)\s*-->/g;
  * files that can be used in the Angular Material docs.
  */
 export class DocsMarkdownRenderer extends Renderer {
-
   /** Set of fragment links discovered in the currently rendered file. */
   private _referencedFragments = new Set<string>();
 
@@ -21,11 +20,11 @@ export class DocsMarkdownRenderer extends Renderer {
 
   /**
    * Transforms a markdown heading into the corresponding HTML output. In our case, we
-   * want to create a header-link for each H3 and H4 heading. This allows users to jump to
+   * want to create a header-link for each H2, H3, and H4 heading. This allows users to jump to
    * specific parts of the docs.
    */
   heading(label: string, level: number, raw: string) {
-    if (level === 3 || level === 4) {
+    if (level === 2 || level === 3 || level === 4 || level === 5 || level === 6) {
       const headingId = this._slugger.slug(raw);
       return `
         <h${level} id="${headingId}" class="docs-header-link">
@@ -79,17 +78,20 @@ export class DocsMarkdownRenderer extends Renderer {
    */
   html(html: string) {
     html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
-        // using [\s\S]* because .* does not match line breaks
-        if (content.match(/\{[\s\S]*\}/g)) {
-          const {example, file, region} = JSON.parse(content);
-          return `<div material-docs-example="${example}"
+      // using [\s\S]* because .* does not match line breaks
+      if (content.match(/\{[\s\S]*\}/g)) {
+        const {example, file, region} = JSON.parse(content) as {
+          example: string;
+          file: string;
+          region: string;
+        };
+        return `<div material-docs-example="${example}"
                              ${file ? `file="${file}"` : ''}
                              ${region ? `region="${region}"` : ''}></div>`;
-        } else {
-          return `<div material-docs-example="${content}"></div>`;
-        }
+      } else {
+        return `<div material-docs-example="${content}"></div>`;
       }
-    );
+    });
 
     return super.html(html);
   }

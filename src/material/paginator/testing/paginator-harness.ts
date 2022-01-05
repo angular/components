@@ -6,35 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {
+  AsyncFactoryFn,
+  ComponentHarness,
+  HarnessPredicate,
+  TestElement,
+} from '@angular/cdk/testing';
 import {MatSelectHarness} from '@angular/material/select/testing';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {PaginatorHarnessFilters} from './paginator-harness-filters';
 
-
-/** Harness for interacting with a standard mat-paginator in tests. */
-export class MatPaginatorHarness extends ComponentHarness {
-  /** Selector used to find paginator instances. */
-  static hostSelector = '.mat-paginator';
-  private _nextButton = this.locatorFor('.mat-paginator-navigation-next');
-  private _previousButton = this.locatorFor('.mat-paginator-navigation-previous');
-  private _firstPageButton = this.locatorForOptional('.mat-paginator-navigation-first');
-  private _lastPageButton = this.locatorForOptional('.mat-paginator-navigation-last');
-  private _select = this.locatorForOptional(MatSelectHarness.with({
-    ancestor: '.mat-paginator-page-size'
-  }));
-  private _pageSizeFallback = this.locatorFor('.mat-paginator-page-size-value');
-  private _rangeLabel = this.locatorFor('.mat-paginator-range-label');
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatPaginatorHarness` that meets
-   * certain criteria.
-   * @param options Options for filtering which paginator instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with(options: PaginatorHarnessFilters = {}): HarnessPredicate<MatPaginatorHarness> {
-    return new HarnessPredicate(MatPaginatorHarness, options);
-  }
+export abstract class _MatPaginatorHarnessBase extends ComponentHarness {
+  protected abstract _nextButton: AsyncFactoryFn<TestElement>;
+  protected abstract _previousButton: AsyncFactoryFn<TestElement>;
+  protected abstract _firstPageButton: AsyncFactoryFn<TestElement | null>;
+  protected abstract _lastPageButton: AsyncFactoryFn<TestElement | null>;
+  protected abstract _select: AsyncFactoryFn<
+    | (ComponentHarness & {
+        getValueText(): Promise<string>;
+        clickOptions(...filters: unknown[]): Promise<void>;
+      })
+    | null
+  >;
+  protected abstract _pageSizeFallback: AsyncFactoryFn<TestElement>;
+  protected abstract _rangeLabel: AsyncFactoryFn<TestElement>;
 
   /** Goes to the next page in the paginator. */
   async goToNextPage(): Promise<void> {
@@ -52,8 +47,10 @@ export class MatPaginatorHarness extends ComponentHarness {
 
     // The first page button isn't enabled by default so we need to check for it.
     if (!button) {
-      throw Error('Could not find first page button inside paginator. ' +
-                  'Make sure that `showFirstLastButtons` is enabled.');
+      throw Error(
+        'Could not find first page button inside paginator. ' +
+          'Make sure that `showFirstLastButtons` is enabled.',
+      );
     }
 
     return button.click();
@@ -65,8 +62,10 @@ export class MatPaginatorHarness extends ComponentHarness {
 
     // The last page button isn't enabled by default so we need to check for it.
     if (!button) {
-      throw Error('Could not find last page button inside paginator. ' +
-                  'Make sure that `showFirstLastButtons` is enabled.');
+      throw Error(
+        'Could not find last page button inside paginator. ' +
+          'Make sure that `showFirstLastButtons` is enabled.',
+      );
     }
 
     return button.click();
@@ -82,8 +81,10 @@ export class MatPaginatorHarness extends ComponentHarness {
     // The select is only available if the `pageSizeOptions` are
     // set to an array with more than one item.
     if (!select) {
-      throw Error('Cannot find page size selector in paginator. ' +
-                  'Make sure that the `pageSizeOptions` have been configured.');
+      throw Error(
+        'Cannot find page size selector in paginator. ' +
+          'Make sure that the `pageSizeOptions` have been configured.',
+      );
     }
 
     return select.clickOptions({text: `${size}`});
@@ -99,5 +100,32 @@ export class MatPaginatorHarness extends ComponentHarness {
   /** Gets the text of the range labe of the paginator. */
   async getRangeLabel(): Promise<string> {
     return (await this._rangeLabel()).text();
+  }
+}
+
+/** Harness for interacting with a standard mat-paginator in tests. */
+export class MatPaginatorHarness extends _MatPaginatorHarnessBase {
+  /** Selector used to find paginator instances. */
+  static hostSelector = '.mat-paginator';
+  protected _nextButton = this.locatorFor('.mat-paginator-navigation-next');
+  protected _previousButton = this.locatorFor('.mat-paginator-navigation-previous');
+  protected _firstPageButton = this.locatorForOptional('.mat-paginator-navigation-first');
+  protected _lastPageButton = this.locatorForOptional('.mat-paginator-navigation-last');
+  protected _select = this.locatorForOptional(
+    MatSelectHarness.with({
+      ancestor: '.mat-paginator-page-size',
+    }),
+  );
+  protected _pageSizeFallback = this.locatorFor('.mat-paginator-page-size-value');
+  protected _rangeLabel = this.locatorFor('.mat-paginator-range-label');
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a `MatPaginatorHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which paginator instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with(options: PaginatorHarnessFilters = {}): HarnessPredicate<MatPaginatorHarness> {
+    return new HarnessPredicate(MatPaginatorHarness, options);
   }
 }

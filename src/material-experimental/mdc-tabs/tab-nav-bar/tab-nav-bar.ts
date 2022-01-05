@@ -20,7 +20,9 @@ import {
   OnDestroy,
   AfterContentInit,
   NgZone,
-  ChangeDetectorRef, OnInit, Input,
+  ChangeDetectorRef,
+  OnInit,
+  Input,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -32,7 +34,7 @@ import {
   _MatTabNavBase,
   _MatTabLinkBase,
   MAT_TABS_CONFIG,
-  MatTabsConfig
+  MatTabsConfig,
 } from '@angular/material/tabs';
 import {DOCUMENT} from '@angular/common';
 import {Directionality} from '@angular/cdk/bidi';
@@ -42,7 +44,6 @@ import {MatInkBar, MatInkBarItem, MatInkBarFoundation} from '../ink-bar';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -61,7 +62,7 @@ import {takeUntil} from 'rxjs/operators';
     '[class.mat-primary]': 'color !== "warn" && color !== "accent"',
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
-    '[class._mat-animation-noopable]' : '_animationMode === "NoopAnimations"',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,8 +70,10 @@ import {takeUntil} from 'rxjs/operators';
 export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
-  get fitInkBarToContent(): boolean { return this._fitInkBarToContent.value; }
-  set fitInkBarToContent(v: boolean) {
+  get fitInkBarToContent(): boolean {
+    return this._fitInkBarToContent.value;
+  }
+  set fitInkBarToContent(v: BooleanInput) {
     this._fitInkBarToContent.next(coerceBooleanProperty(v));
     this._changeDetectorRef.markForCheck();
   }
@@ -79,32 +82,36 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
   @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
   @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
   @ViewChild('tabList', {static: true}) _tabList: ElementRef;
+  @ViewChild('tabListInner', {static: true}) _tabListInner: ElementRef;
   @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
   _inkBar: MatInkBar;
 
-  constructor(elementRef: ElementRef,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-              @Optional() @Inject(MAT_TABS_CONFIG) defaultConfig?: MatTabsConfig) {
+  constructor(
+    elementRef: ElementRef,
+    @Optional() dir: Directionality,
+    ngZone: NgZone,
+    changeDetectorRef: ChangeDetectorRef,
+    viewportRuler: ViewportRuler,
+    platform: Platform,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+    @Optional() @Inject(MAT_TABS_CONFIG) defaultConfig?: MatTabsConfig,
+  ) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
-    this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
-        defaultConfig.disablePagination : false;
-    this.fitInkBarToContent = defaultConfig && defaultConfig.fitInkBarToContent != null ?
-        defaultConfig.fitInkBarToContent : false;
+    this.disablePagination =
+      defaultConfig && defaultConfig.disablePagination != null
+        ? defaultConfig.disablePagination
+        : false;
+    this.fitInkBarToContent =
+      defaultConfig && defaultConfig.fitInkBarToContent != null
+        ? defaultConfig.fitInkBarToContent
+        : false;
   }
 
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     this._inkBar = new MatInkBar(this._items);
     super.ngAfterContentInit();
   }
-
-  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -125,7 +132,8 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
     '[attr.tabIndex]': 'tabIndex',
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[class.mdc-tab--active]': 'active',
-  }
+    '(focus)': '_handleFocus()',
+  },
 })
 export class MatTabLink extends _MatTabLinkBase implements MatInkBarItem, OnInit, OnDestroy {
   _foundation = new MatInkBarFoundation(this.elementRef.nativeElement, this._document);
@@ -135,10 +143,12 @@ export class MatTabLink extends _MatTabLinkBase implements MatInkBarItem, OnInit
   constructor(
     tabNavBar: MatTabNav,
     elementRef: ElementRef,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions|null,
-    @Attribute('tabindex') tabIndex: string, focusMonitor: FocusMonitor,
+    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions | null,
+    @Attribute('tabindex') tabIndex: string,
+    focusMonitor: FocusMonitor,
     @Inject(DOCUMENT) private _document: any,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
     super(tabNavBar, elementRef, globalRippleOptions, tabIndex, focusMonitor, animationMode);
 
     tabNavBar._fitInkBarToContent.pipe(takeUntil(this._destroyed)).subscribe(fitInkBarToContent => {
@@ -150,7 +160,7 @@ export class MatTabLink extends _MatTabLinkBase implements MatInkBarItem, OnInit
     this._foundation.init();
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
     super.ngOnDestroy();

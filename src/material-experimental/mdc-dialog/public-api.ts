@@ -13,11 +13,12 @@ export * from './dialog-container';
 export * from './module';
 
 export {
+  AutoFocusTarget,
   MatDialogState,
   MatDialogConfig,
   matDialogAnimations,
   throwMatDialogContentAlreadyAttachedError,
   DialogRole,
   DialogPosition,
-  MAT_DIALOG_SCROLL_STRATEGY_FACTORY
+  MAT_DIALOG_SCROLL_STRATEGY_FACTORY,
 } from '@angular/material/dialog';

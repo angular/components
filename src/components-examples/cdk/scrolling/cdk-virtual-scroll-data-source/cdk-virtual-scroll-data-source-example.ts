@@ -18,17 +18,19 @@ export class MyDataSource extends DataSource<string | undefined> {
   private _pageSize = 100;
   private _cachedData = Array.from<string>({length: this._length});
   private _fetchedPages = new Set<number>();
-  private _dataStream = new BehaviorSubject<(string | undefined)[]>(this._cachedData);
-  private _subscription = new Subscription();
+  private readonly _dataStream = new BehaviorSubject<(string | undefined)[]>(this._cachedData);
+  private readonly _subscription = new Subscription();
 
   connect(collectionViewer: CollectionViewer): Observable<(string | undefined)[]> {
-    this._subscription.add(collectionViewer.viewChange.subscribe(range => {
-      const startPage = this._getPageForIndex(range.start);
-      const endPage = this._getPageForIndex(range.end - 1);
-      for (let i = startPage; i <= endPage; i++) {
-        this._fetchPage(i);
-      }
-    }));
+    this._subscription.add(
+      collectionViewer.viewChange.subscribe(range => {
+        const startPage = this._getPageForIndex(range.start);
+        const endPage = this._getPageForIndex(range.end - 1);
+        for (let i = startPage; i <= endPage; i++) {
+          this._fetchPage(i);
+        }
+      }),
+    );
     return this._dataStream;
   }
 
@@ -48,9 +50,11 @@ export class MyDataSource extends DataSource<string | undefined> {
 
     // Use `setTimeout` to simulate fetching data from server.
     setTimeout(() => {
-      this._cachedData.splice(page * this._pageSize, this._pageSize,
-          ...Array.from({length: this._pageSize})
-              .map((_, i) => `Item #${page * this._pageSize + i}`));
+      this._cachedData.splice(
+        page * this._pageSize,
+        this._pageSize,
+        ...Array.from({length: this._pageSize}).map((_, i) => `Item #${page * this._pageSize + i}`),
+      );
       this._dataStream.next(this._cachedData);
     }, Math.random() * 1000 + 200);
   }

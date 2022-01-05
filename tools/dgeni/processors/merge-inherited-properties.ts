@@ -11,7 +11,8 @@ import {getInheritedDocsOfClass} from '../common/class-inheritance';
  * dgeni package.
  */
 export function mergeInheritedProperties(
-    exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {
+  exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>,
+) {
   return new MergeInheritedProperties(exportSymbolsToDocsMap);
 }
 
@@ -24,11 +25,13 @@ export class MergeInheritedProperties implements Processor {
 
   constructor(
     /** Shared map that can be used to resolve docs through symbols. */
-    private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {}
+    private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>,
+  ) {}
 
   $process(docs: DocCollection) {
-    return docs.filter(doc => doc.docType === 'class')
-        .forEach(doc => this._addInheritedProperties(doc));
+    return docs
+      .filter(doc => doc.docType === 'class')
+      .forEach(doc => this._addInheritedProperties(doc));
   }
 
   private _addInheritedProperties(doc: ClassExportDoc) {
@@ -52,6 +55,7 @@ export class MergeInheritedProperties implements Processor {
       // by using an instance comparison.
       // tslint:disable-next-line:ban Need to use Object.assign to preserve the prototype.
       const newMemberDoc = Object.assign(Object.create(memberDoc), memberDoc);
+
       newMemberDoc.containerDoc = destination;
       destination.members.push(newMemberDoc);
     }

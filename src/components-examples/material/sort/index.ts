@@ -2,21 +2,15 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatSortModule} from '@angular/material/sort';
 import {SortOverviewExample} from './sort-overview/sort-overview-example';
+import {SortHarnessExample} from './sort-harness/sort-harness-example';
 
-export {SortOverviewExample};
+export {SortHarnessExample, SortOverviewExample};
 
-const EXAMPLES = [
-  SortOverviewExample,
-];
+const EXAMPLES = [SortHarnessExample, SortOverviewExample];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatSortModule,
-  ],
+  imports: [CommonModule, MatSortModule],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
-export class SortExamplesModule {
-}
+export class SortExamplesModule {}

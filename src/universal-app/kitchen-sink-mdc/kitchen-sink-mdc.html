@@ -104,10 +104,16 @@
 <mat-slide-toggle>with a label</mat-slide-toggle>
 
 <h2>MDC Slider</h2>
-<mat-slider></mat-slider>
-<mat-slider value="50"></mat-slider>
-<mat-slider tickInterval="1" min="1" max="10" value="5" thumbLabel></mat-slider>
-<mat-slider disabled></mat-slider>
+<mat-slider>
+  <input matSliderThumb value="60">
+</mat-slider>
+<mat-slider>
+  <input matSliderThumb value="50" disabled>
+</mat-slider>
+<mat-slider min="200" max="500" step="100" discrete showTickMarks>
+  <input value="300" matSliderStartThumb>
+  <input value="400" matSliderEndThumb>
+</mat-slider>
 
 <h2>MDC Tabs</h2>
 
@@ -135,7 +141,8 @@
 <h2>MDC Paginator</h2>
 
 <mat-paginator [length]="100"
-               [pageSizeOptions]="[5, 10, 25, 100]">
+               [pageSizeOptions]="[5, 10, 25, 100]"
+               aria-label="Select page">
 </mat-paginator>
 
 <h2>MDC Table</h2>

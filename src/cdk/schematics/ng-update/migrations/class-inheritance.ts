@@ -26,14 +26,13 @@ export class ClassInheritanceMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.propertyNames.size !== 0;
 
-  init(): void {
+  override init(): void {
     getVersionUpgradeData(this, 'propertyNames')
-        .filter(data => data.limitedTo && data.limitedTo.classes)
-        .forEach(
-            data => data.limitedTo.classes.forEach(name => this.propertyNames.set(name, data)));
+      .filter(data => data.limitedTo && data.limitedTo.classes)
+      .forEach(data => data.limitedTo.classes.forEach(name => this.propertyNames.set(name, data)));
   }
 
-  visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node): void {
     if (ts.isClassDeclaration(node)) {
       this._visitClassDeclaration(node);
     }
@@ -52,11 +51,12 @@ export class ClassInheritanceMigration extends Migration<UpgradeData> {
 
       if (data) {
         this.createFailureAtNode(
-            node,
-            `Found class "${className}" which extends class ` +
-                `"${typeName}". Please note that the base class property ` +
-                `"${data.replace}" has changed to "${data.replaceWith}". ` +
-                `You may need to update your class as well.`);
+          node,
+          `Found class "${className}" which extends class ` +
+            `"${typeName}". Please note that the base class property ` +
+            `"${data.replace}" has changed to "${data.replaceWith}". ` +
+            `You may need to update your class as well.`,
+        );
       }
     });
   }

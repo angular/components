@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "sass_library")
-load("//tools:npm_sass_library.bzl", "npm_sass_library")
+load("//tools:defaults.bzl", "npm_sass_library", "sass_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -10,7 +9,9 @@ filegroup(
 
 npm_sass_library(
     name = "mdc_scss_deps_lib",
-    deps = ["@npm//material-components-web"],
+    deps = [
+        "@npm//material-components-web",
+    ],
 )
 
 sass_library(

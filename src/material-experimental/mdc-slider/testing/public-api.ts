@@ -7,3 +7,5 @@
  */
 
 export * from './slider-harness';
+export * from './slider-thumb-harness';
+export * from './slider-harness-filters';

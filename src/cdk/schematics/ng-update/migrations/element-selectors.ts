@@ -23,27 +23,27 @@ export class ElementSelectorsMigration extends Migration<UpgradeData> {
   data = getVersionUpgradeData(this, 'elementSelectors');
 
   // Only enable the migration rule if there is upgrade data.
-  enabled = this.data.length !== 0;
+  enabled: boolean = this.data.length !== 0;
 
-  visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node): void {
     if (ts.isStringLiteralLike(node)) {
       this._visitStringLiteralLike(node);
     }
   }
 
-  visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource): void {
     this.data.forEach(selector => {
       findAllSubstringIndices(template.content, selector.replace)
-          .map(offset => template.start + offset)
-          .forEach(start => this._replaceSelector(template.filePath, start, selector));
+        .map(offset => template.start + offset)
+        .forEach(start => this._replaceSelector(template.filePath, start, selector));
     });
   }
 
-  visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(selector => {
       findAllSubstringIndices(stylesheet.content, selector.replace)
-          .map(offset => stylesheet.start + offset)
-          .forEach(start => this._replaceSelector(stylesheet.filePath, start, selector));
+        .map(offset => stylesheet.start + offset)
+        .forEach(start => this._replaceSelector(stylesheet.filePath, start, selector));
     });
   }
 
@@ -57,14 +57,18 @@ export class ElementSelectorsMigration extends Migration<UpgradeData> {
 
     this.data.forEach(selector => {
       findAllSubstringIndices(textContent, selector.replace)
-          .map(offset => node.getStart() + offset)
-          .forEach(start => this._replaceSelector(filePath, start, selector));
+        .map(offset => node.getStart() + offset)
+        .forEach(start => this._replaceSelector(filePath, start, selector));
     });
   }
 
-  private _replaceSelector(filePath: WorkspacePath, start: number,
-                           data: ElementSelectorUpgradeData) {
-    this.fileSystem.edit(filePath)
+  private _replaceSelector(
+    filePath: WorkspacePath,
+    start: number,
+    data: ElementSelectorUpgradeData,
+  ) {
+    this.fileSystem
+      .edit(filePath)
       .remove(start, data.replace.length)
       .insertRight(start, data.replaceWith);
   }

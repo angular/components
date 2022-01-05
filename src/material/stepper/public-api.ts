@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export {StepperOrientation, StepState} from '@angular/cdk/stepper';
 export * from './stepper-module';
 export * from './step-label';
 export * from './stepper';
@@ -14,3 +15,4 @@ export * from './step-header';
 export * from './stepper-intl';
 export * from './stepper-animations';
 export * from './stepper-icon';
+export * from './step-content';

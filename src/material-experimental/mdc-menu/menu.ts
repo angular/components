@@ -14,7 +14,7 @@ import {
   Inject,
   NgZone,
   Provider,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
@@ -49,28 +49,18 @@ export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: Provider = {
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
   },
-  animations: [
-    matMenuAnimations.transformMenu,
-    matMenuAnimations.fadeInItems
-  ],
-  providers: [
-    {provide: MAT_MENU_PANEL, useExisting: MatMenu},
-  ]
+  animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
+  providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],
 })
 export class MatMenu extends _MatMenuBase {
-  constructor(_elementRef: ElementRef<HTMLElement>,
-              _ngZone: NgZone,
-              @Inject(MAT_MENU_DEFAULT_OPTIONS) _defaultOptions: MatMenuDefaultOptions) {
-    super(_elementRef, _ngZone, _defaultOptions);
-  }
+  protected override _elevationPrefix = 'mat-mdc-elevation-z';
+  protected override _baseElevation = 8;
 
-  setElevation(_depth: number) {
-    // TODO(crisbeto): MDC's styles come with elevation already and we haven't mapped our mixins
-    // to theirs. Disable the elevation stacking for now until everything has been mapped.
-    // The following unit tests should be re-enabled:
-    // - should not remove mat-elevation class from overlay when panelClass is changed
-    // - should increase the sub-menu elevation based on its depth
-    // - should update the elevation when the same menu is opened at a different depth
-    // - should not increase the elevation if the user specified a custom one
+  constructor(
+    _elementRef: ElementRef<HTMLElement>,
+    _ngZone: NgZone,
+    @Inject(MAT_MENU_DEFAULT_OPTIONS) _defaultOptions: MatMenuDefaultOptions,
+  ) {
+    super(_elementRef, _ngZone, _defaultOptions);
   }
 }

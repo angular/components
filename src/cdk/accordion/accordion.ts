@@ -40,18 +40,24 @@ export class CdkAccordion implements OnDestroy, OnChanges {
 
   /** Whether the accordion should allow multiple expanded accordion items simultaneously. */
   @Input()
-  get multi(): boolean { return this._multi; }
-  set multi(multi: boolean) { this._multi = coerceBooleanProperty(multi); }
+  get multi(): boolean {
+    return this._multi;
+  }
+  set multi(multi: BooleanInput) {
+    this._multi = coerceBooleanProperty(multi);
+  }
   private _multi: boolean = false;
 
   /** Opens all enabled accordion items in an accordion where multi is enabled. */
   openAll(): void {
-    this._openCloseAll(true);
+    if (this._multi) {
+      this._openCloseAllActions.next(true);
+    }
   }
 
   /** Closes all enabled accordion items in an accordion where multi is enabled. */
   closeAll(): void {
-    this._openCloseAll(false);
+    this._openCloseAllActions.next(false);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -60,13 +66,6 @@ export class CdkAccordion implements OnDestroy, OnChanges {
 
   ngOnDestroy() {
     this._stateChanges.complete();
+    this._openCloseAllActions.complete();
   }
-
-  private _openCloseAll(expanded: boolean): void {
-    if (this.multi) {
-      this._openCloseAllActions.next(expanded);
-    }
-  }
-
-  static ngAcceptInputType_multi: BooleanInput;
 }

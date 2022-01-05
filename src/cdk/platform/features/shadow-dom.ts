@@ -19,7 +19,7 @@ export function _supportsShadowDom(): boolean {
 }
 
 /** Gets the shadow root of an element, if supported and the element is inside the Shadow DOM. */
-export function _getShadowRoot(element: HTMLElement): Node | null {
+export function _getShadowRoot(element: HTMLElement): ShadowRoot | null {
   if (_supportsShadowDom()) {
     const rootNode = element.getRootNode ? element.getRootNode() : null;
 
@@ -31,4 +31,33 @@ export function _getShadowRoot(element: HTMLElement): Node | null {
   }
 
   return null;
+}
+
+/**
+ * Gets the currently-focused element on the page while
+ * also piercing through Shadow DOM boundaries.
+ */
+export function _getFocusedElementPierceShadowDom(): HTMLElement | null {
+  let activeElement =
+    typeof document !== 'undefined' && document
+      ? (document.activeElement as HTMLElement | null)
+      : null;
+
+  while (activeElement && activeElement.shadowRoot) {
+    const newActiveElement = activeElement.shadowRoot.activeElement as HTMLElement | null;
+    if (newActiveElement === activeElement) {
+      break;
+    } else {
+      activeElement = newActiveElement;
+    }
+  }
+
+  return activeElement;
+}
+
+/** Gets the target of an event while accounting for Shadow DOM. */
+export function _getEventTarget<T extends EventTarget>(event: Event): T | null {
+  // If an event is bound outside the Shadow DOM, the `event.target` will
+  // point to the shadow root so we have to use `composedPath` instead.
+  return (event.composedPath ? event.composedPath()[0] : event.target) as T | null;
 }

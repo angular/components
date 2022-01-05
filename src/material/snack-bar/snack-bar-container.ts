@@ -39,9 +39,9 @@ import {MatSnackBarConfig} from './snack-bar-config';
  */
 export interface _SnackBarContainer {
   snackBarConfig: MatSnackBarConfig;
-  _onAnnounce: Subject<any>;
-  _onExit: Subject<any>;
-  _onEnter: Subject<any>;
+  readonly _onAnnounce: Subject<any>;
+  readonly _onExit: Subject<any>;
+  readonly _onEnter: Subject<any>;
   enter: () => void;
   exit: () => Observable<void>;
   attachTemplatePortal: <C>(portal: TemplatePortal<C>) => EmbeddedViewRef<C>;
@@ -66,11 +66,13 @@ export interface _SnackBarContainer {
   host: {
     'class': 'mat-snack-bar-container',
     '[@state]': '_animationState',
-    '(@state.done)': 'onAnimationEnd($event)'
+    '(@state.done)': 'onAnimationEnd($event)',
   },
 })
-export class MatSnackBarContainer extends BasePortalOutlet
-    implements OnDestroy, _SnackBarContainer {
+export class MatSnackBarContainer
+  extends BasePortalOutlet
+  implements OnDestroy, _SnackBarContainer
+{
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
 
@@ -98,14 +100,20 @@ export class MatSnackBarContainer extends BasePortalOutlet
   /** aria-live value for the live region. */
   _live: AriaLivePoliteness;
 
+  /**
+   * Role of the live region. This is only for Firefox as there is a known issue where Firefox +
+   * JAWS does not read out aria-live message.
+   */
+  _role?: 'status' | 'alert';
+
   constructor(
     private _ngZone: NgZone,
     private _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _platform: Platform,
     /** The snack bar configuration. */
-    public snackBarConfig: MatSnackBarConfig) {
-
+    public snackBarConfig: MatSnackBarConfig,
+  ) {
     super();
 
     // Use aria-live rather than a live role like 'alert' or 'status'
@@ -116,6 +124,17 @@ export class MatSnackBarContainer extends BasePortalOutlet
       this._live = 'off';
     } else {
       this._live = 'polite';
+    }
+
+    // Only set role for Firefox. Set role based on aria-live because setting role="alert" implies
+    // aria-live="assertive" which may cause issues if aria-live is set to "polite" above.
+    if (this._platform.FIREFOX) {
+      if (this._live === 'polite') {
+        this._role = 'status';
+      }
+      if (this._live === 'assertive') {
+        this._role = 'alert';
+      }
     }
   }
 
@@ -138,11 +157,11 @@ export class MatSnackBarContainer extends BasePortalOutlet
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  attachDomPortal = (portal: DomPortal) => {
+  override attachDomPortal = (portal: DomPortal) => {
     this._assertNotAttached();
     this._applySnackBarClasses();
     return this._portalOutlet.attachDomPortal(portal);
-  }
+  };
 
   /** Handle end of animations, updating the state of the snackbar. */
   onAnimationEnd(event: AnimationEvent) {
@@ -254,9 +273,11 @@ export class MatSnackBarContainer extends BasePortalOutlet
             // If an element in the snack bar content is focused before being moved
             // track it and restore focus after moving to the live region.
             let focusedElement: HTMLElement | null = null;
-            if (this._platform.isBrowser &&
-                document.activeElement instanceof HTMLElement &&
-                inertElement.contains(document.activeElement)) {
+            if (
+              this._platform.isBrowser &&
+              document.activeElement instanceof HTMLElement &&
+              inertElement.contains(document.activeElement)
+            ) {
               focusedElement = document.activeElement;
             }
 

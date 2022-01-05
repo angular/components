@@ -1,4 +1,4 @@
-<div class="mat-step-header-ripple" matRipple
+<div class="mat-step-header-ripple mat-focus-indicator" matRipple
      [matRippleTrigger]="_getHostElement()"
      [matRippleDisabled]="disableRipple"></div>
 
@@ -9,8 +9,10 @@
       [ngTemplateOutlet]="iconOverrides[state]"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
     <ng-container *ngSwitchDefault [ngSwitch]="state">
-      <span *ngSwitchCase="'number'">{{_getDefaultTextForState(state)}}</span>
-      <mat-icon *ngSwitchDefault>{{_getDefaultTextForState(state)}}</mat-icon>
+      <span aria-hidden="true" *ngSwitchCase="'number'">{{_getDefaultTextForState(state)}}</span>
+      <span class="cdk-visually-hidden" *ngIf="state === 'done'">{{_intl.completedLabel}}</span>
+      <span class="cdk-visually-hidden" *ngIf="state === 'edit'">{{_intl.editableLabel}}</span>
+      <mat-icon aria-hidden="true" *ngSwitchDefault>{{_getDefaultTextForState(state)}}</mat-icon>
     </ng-container>
   </div>
 </div>

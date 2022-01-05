@@ -12,7 +12,6 @@ import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatCommonModule} from '@angular/material/core';
 import {MatCalendar, MatCalendarHeader} from './calendar';
@@ -31,13 +30,12 @@ import {MatYearView} from './year-view';
 import {MatDateRangeInput} from './date-range-input';
 import {MatStartDate, MatEndDate} from './date-range-input-parts';
 import {MatDateRangePicker} from './date-range-picker';
-
+import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './datepicker-actions';
 
 @NgModule({
   imports: [
     CommonModule,
     MatButtonModule,
-    MatDialogModule,
     OverlayModule,
     A11yModule,
     PortalModule,
@@ -60,6 +58,9 @@ import {MatDateRangePicker} from './date-range-picker';
     MatStartDate,
     MatEndDate,
     MatDateRangePicker,
+    MatDatepickerActions,
+    MatDatepickerCancel,
+    MatDatepickerApply,
   ],
   declarations: [
     MatCalendar,
@@ -77,14 +78,10 @@ import {MatDateRangePicker} from './date-range-picker';
     MatStartDate,
     MatEndDate,
     MatDateRangePicker,
+    MatDatepickerActions,
+    MatDatepickerCancel,
+    MatDatepickerApply,
   ],
-  providers: [
-    MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
-  ],
-  entryComponents: [
-    MatDatepickerContent,
-    MatCalendarHeader,
-  ]
+  providers: [MatDatepickerIntl, MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatDatepickerModule {}

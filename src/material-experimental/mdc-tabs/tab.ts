@@ -13,7 +13,7 @@ import {
   TemplateRef,
   ContentChild,
 } from '@angular/core';
-import {MatTab as BaseMatTab} from '@angular/material/tabs';
+import {MatTab as BaseMatTab, MAT_TAB} from '@angular/material/tabs';
 import {MatTabContent} from './tab-content';
 import {MatTabLabel} from './tab-label';
 
@@ -28,16 +28,21 @@ import {MatTabLabel} from './tab-label';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
+  providers: [{provide: MAT_TAB, useExisting: MatTab}],
 })
 export class MatTab extends BaseMatTab {
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
   @ContentChild(MatTabContent, {read: TemplateRef, static: true})
-  _explicitContent: TemplateRef<any>;
+  override _explicitContent: TemplateRef<any>;
 
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MatTabLabel)
-  get templateLabel(): MatTabLabel { return this._templateLabel; }
-  set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  override get templateLabel(): MatTabLabel {
+    return this._templateLabel;
+  }
+  override set templateLabel(value: MatTabLabel) {
+    this._setTemplateLabelInput(value);
+  }
 }

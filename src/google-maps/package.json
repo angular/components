@@ -17,15 +17,14 @@
   },
   "homepage": "https://github.com/angular/components/tree/master/src/google-maps#readme",
   "dependencies": {
-    "@types/googlemaps": "^3.39.3",
+    "@types/google.maps": "^3.45.6",
     "tslib": "0.0.0-TSLIB"
   },
   "peerDependencies": {
     "@angular/core": "0.0.0-NG",
-    "@angular/common": "0.0.0-NG"
+    "@angular/common": "0.0.0-NG",
+    "rxjs": "0.0.0-RXJS"
   },
   "sideEffects": false,
-  "publishConfig": {
-    "registry": "https://wombat-dressing-room.appspot.com"
-  }
+  "ng-update": {}
 }

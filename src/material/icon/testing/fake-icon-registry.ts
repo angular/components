@@ -10,11 +10,9 @@ import {Injectable, NgModule, OnDestroy} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {Observable, of as observableOf} from 'rxjs';
 
-// tslint:disable:no-any Impossible to tell param types.
 type PublicApi<T> = {
-  [K in keyof T]: T[K] extends (...x: any[]) => T ? (...x: any[]) => PublicApi<T> : T[K]
+  [K in keyof T]: T[K] extends (...x: any[]) => T ? (...x: any[]) => PublicApi<T> : T[K];
 };
-// tslint:enable:no-any
 
 /**
  * A null icon registry that must be imported to allow disabling of custom
@@ -78,7 +76,11 @@ export class FakeMatIconRegistry implements PublicApi<MatIconRegistry>, OnDestro
     return this;
   }
 
-  ngOnDestroy() { }
+  addSvgIconResolver(): this {
+    return this;
+  }
+
+  ngOnDestroy() {}
 
   private _generateEmptySvg(): SVGElement {
     const emptySvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -95,7 +97,6 @@ export class FakeMatIconRegistry implements PublicApi<MatIconRegistry>, OnDestro
 
 /** Import this module in tests to install the null icon registry. */
 @NgModule({
-  providers: [{provide: MatIconRegistry, useClass: FakeMatIconRegistry}]
+  providers: [{provide: MatIconRegistry, useClass: FakeMatIconRegistry}],
 })
-export class MatIconTestingModule {
-}
+export class MatIconTestingModule {}

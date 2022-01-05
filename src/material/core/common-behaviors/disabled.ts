@@ -7,7 +7,7 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Constructor} from './constructor';
+import {AbstractConstructor, Constructor} from './constructor';
 
 /** @docs-private */
 export interface CanDisable {
@@ -15,17 +15,23 @@ export interface CanDisable {
   disabled: boolean;
 }
 
-/** @docs-private */
-export type CanDisableCtor = Constructor<CanDisable>;
+type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
 /** Mixin to augment a directive with a `disabled` property. */
+export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 export function mixinDisabled<T extends Constructor<{}>>(base: T): CanDisableCtor & T {
   return class extends base {
     private _disabled: boolean = false;
 
-    get disabled() { return this._disabled; }
-    set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+    get disabled(): boolean {
+      return this._disabled;
+    }
+    set disabled(value: any) {
+      this._disabled = coerceBooleanProperty(value);
+    }
 
-    constructor(...args: any[]) { super(...args); }
+    constructor(...args: any[]) {
+      super(...args);
+    }
   };
 }

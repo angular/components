@@ -20,15 +20,14 @@ ng_module(
         ],
     ),
     assets = [
+        ":button_high_contrast_scss",
         ":button_scss",
         ":fab_scss",
         ":icon-button_scss",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-button",
     deps = [
         "//src/cdk/platform",
         "//src/material-experimental/mdc-core",
-        "@npm//@material/ripple",
     ],
 )
 
@@ -54,10 +53,16 @@ sass_binary(
     ],
     deps = [
         ":button_base_scss_lib",
-        "//src/cdk/a11y:a11y_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
+)
+
+sass_binary(
+    name = "button_high_contrast_scss",
+    src = "button-high-contrast.scss",
+    include_paths = ["external/npm/node_modules"],
+    deps = ["//src/cdk/a11y:a11y_scss_lib"],
 )
 
 sass_binary(
@@ -105,10 +110,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = ["@npm//:node_modules/@material/ripple/dist/mdc.ripple.js"],
     deps = [
         ":button_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

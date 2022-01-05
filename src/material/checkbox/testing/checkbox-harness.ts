@@ -7,44 +7,27 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {
+  AsyncFactoryFn,
+  ComponentHarness,
+  HarnessPredicate,
+  TestElement,
+} from '@angular/cdk/testing';
 import {CheckboxHarnessFilters} from './checkbox-harness-filters';
 
-/** Harness for interacting with a standard mat-checkbox in tests. */
-export class MatCheckboxHarness extends ComponentHarness {
-  /** The selector for the host element of a `MatCheckbox` instance. */
-  static hostSelector = '.mat-checkbox';
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatCheckboxHarness` that meets
-   * certain criteria.
-   * @param options Options for filtering which checkbox instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with(options: CheckboxHarnessFilters = {}): HarnessPredicate<MatCheckboxHarness> {
-    return new HarnessPredicate(MatCheckboxHarness, options)
-        .addOption(
-            'label', options.label,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
-        // We want to provide a filter option for "name" because the name of the checkbox is
-        // only set on the underlying input. This means that it's not possible for developers
-        // to retrieve the harness of a specific checkbox with name through a CSS selector.
-        .addOption('name', options.name, async (harness, name) => await harness.getName() === name);
-  }
-
-  private _label = this.locatorFor('.mat-checkbox-label');
-  private _input = this.locatorFor('input');
-  private _inputContainer = this.locatorFor('.mat-checkbox-inner-container');
+export abstract class _MatCheckboxHarnessBase extends ComponentHarness {
+  protected abstract _input: AsyncFactoryFn<TestElement>;
+  protected abstract _label: AsyncFactoryFn<TestElement>;
 
   /** Whether the checkbox is checked. */
   async isChecked(): Promise<boolean> {
-    const checked = (await this._input()).getProperty('checked');
+    const checked = (await this._input()).getProperty<boolean>('checked');
     return coerceBooleanProperty(await checked);
   }
 
   /** Whether the checkbox is in an indeterminate state. */
   async isIndeterminate(): Promise<boolean> {
-    const indeterminate = (await this._input()).getProperty('indeterminate');
+    const indeterminate = (await this._input()).getProperty<string>('indeterminate');
     return coerceBooleanProperty(await indeterminate);
   }
 
@@ -56,7 +39,7 @@ export class MatCheckboxHarness extends ComponentHarness {
 
   /** Whether the checkbox is required. */
   async isRequired(): Promise<boolean> {
-    const required = (await this._input()).getProperty('required');
+    const required = (await this._input()).getProperty<boolean>('required');
     return coerceBooleanProperty(await required);
   }
 
@@ -67,22 +50,22 @@ export class MatCheckboxHarness extends ComponentHarness {
   }
 
   /** Gets the checkbox's name. */
-  async getName(): Promise<string|null> {
+  async getName(): Promise<string | null> {
     return (await this._input()).getAttribute('name');
   }
 
   /** Gets the checkbox's value. */
-  async getValue(): Promise<string|null> {
-    return (await this._input()).getProperty('value');
+  async getValue(): Promise<string | null> {
+    return (await this._input()).getProperty<string | null>('value');
   }
 
   /** Gets the checkbox's aria-label. */
-  async getAriaLabel(): Promise<string|null> {
+  async getAriaLabel(): Promise<string | null> {
     return (await this._input()).getAttribute('aria-label');
   }
 
   /** Gets the checkbox's aria-labelledby. */
-  async getAriaLabelledby(): Promise<string|null> {
+  async getAriaLabelledby(): Promise<string | null> {
     return (await this._input()).getAttribute('aria-labelledby');
   }
 
@@ -113,9 +96,7 @@ export class MatCheckboxHarness extends ComponentHarness {
    * are using `MAT_CHECKBOX_DEFAULT_OPTIONS` to change the behavior on click, calling this method
    * might not have the expected result.
    */
-  async toggle(): Promise<void> {
-    return (await this._inputContainer()).click();
-  }
+  abstract toggle(): Promise<void>;
 
   /**
    * Puts the checkbox in a checked state by toggling it if it is currently unchecked, or doing
@@ -143,5 +124,42 @@ export class MatCheckboxHarness extends ComponentHarness {
     if (await this.isChecked()) {
       await this.toggle();
     }
+  }
+}
+
+/** Harness for interacting with a standard mat-checkbox in tests. */
+export class MatCheckboxHarness extends _MatCheckboxHarnessBase {
+  /** The selector for the host element of a `MatCheckbox` instance. */
+  static hostSelector = '.mat-checkbox';
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a `MatCheckboxHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which checkbox instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with(options: CheckboxHarnessFilters = {}): HarnessPredicate<MatCheckboxHarness> {
+    return (
+      new HarnessPredicate(MatCheckboxHarness, options)
+        .addOption('label', options.label, (harness, label) =>
+          HarnessPredicate.stringMatches(harness.getLabelText(), label),
+        )
+        // We want to provide a filter option for "name" because the name of the checkbox is
+        // only set on the underlying input. This means that it's not possible for developers
+        // to retrieve the harness of a specific checkbox with name through a CSS selector.
+        .addOption(
+          'name',
+          options.name,
+          async (harness, name) => (await harness.getName()) === name,
+        )
+    );
+  }
+
+  protected _input = this.locatorFor('input');
+  protected _label = this.locatorFor('.mat-checkbox-label');
+  private _inputContainer = this.locatorFor('.mat-checkbox-inner-container');
+
+  async toggle(): Promise<void> {
+    return (await this._inputContainer()).click();
   }
 }

@@ -12,15 +12,9 @@ import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 
-
 @NgModule({
-  imports: [
-    OverlayModule,
-    MatCommonModule,
-    PortalModule,
-  ],
+  imports: [OverlayModule, MatCommonModule, PortalModule],
   exports: [MatBottomSheetContainer, MatCommonModule],
   declarations: [MatBottomSheetContainer],
-  entryComponents: [MatBottomSheetContainer],
 })
 export class MatBottomSheetModule {}

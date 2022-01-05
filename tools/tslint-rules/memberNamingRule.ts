@@ -35,7 +35,7 @@ class Walker extends Lint.RuleWalker {
     }, {} as {[key: string]: RegExp});
   }
 
-  visitClassDeclaration(node: ts.ClassDeclaration) {
+  override visitClassDeclaration(node: ts.ClassDeclaration) {
     node.members.forEach(member => {
       // Members without a modifier are considered public.
       if (!member.modifiers || tsutils.hasModifier(member.modifiers, ts.SyntaxKind.PublicKeyword)) {
@@ -50,7 +50,7 @@ class Walker extends Lint.RuleWalker {
     super.visitClassDeclaration(node);
   }
 
-  visitConstructorDeclaration(node: ts.ConstructorDeclaration) {
+  override visitConstructorDeclaration(node: ts.ConstructorDeclaration) {
     node.parameters.forEach(param => {
       const modifiers = param.modifiers;
 
@@ -61,8 +61,10 @@ class Walker extends Lint.RuleWalker {
         this._validateNode(param, 'private');
       } else if (tsutils.hasModifier(modifiers, ts.SyntaxKind.ProtectedKeyword)) {
         this._validateNode(param, 'protected');
-      } else if (tsutils.hasModifier(modifiers, ts.SyntaxKind.ReadonlyKeyword) ||
-                 tsutils.hasModifier(modifiers, ts.SyntaxKind.PublicKeyword)) {
+      } else if (
+        tsutils.hasModifier(modifiers, ts.SyntaxKind.ReadonlyKeyword) ||
+        tsutils.hasModifier(modifiers, ts.SyntaxKind.PublicKeyword)
+      ) {
         this._validateNode(param, 'public');
       }
     });
@@ -86,8 +88,10 @@ class Walker extends Lint.RuleWalker {
    * @param node Node to be validated.
    * @param modifier Modifier to validate against.
    */
-  private _validateNode(node: ts.Node & {name: ts.PropertyName | ts.BindingName},
-                        modifier: 'public' | 'private' | 'protected') {
+  private _validateNode(
+    node: ts.Node & {name: ts.PropertyName | ts.BindingName},
+    modifier: 'public' | 'private' | 'protected',
+  ) {
     const pattern = this._config[modifier];
 
     if (pattern) {

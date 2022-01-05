@@ -24,7 +24,6 @@ ng_module(
         ":option/option.css",
         ":option/optgroup.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/core",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk",
@@ -47,9 +46,13 @@ ALL_THEMING_FILES = [
     # on the `_all-typography` file.
     "_core.scss",
     "color/_all-color.scss",
+    "color/_all-color.import.scss",
     "density/private/_all-density.scss",
+    "density/private/_all-density.import.scss",
     "theming/_all-theme.scss",
+    "theming/_all-theme.import.scss",
     "typography/_all-typography.scss",
+    "typography/_all-typography.import.scss",
 ]
 
 sass_library(
@@ -140,7 +143,10 @@ ng_web_test_suite(
 
 markdown_to_html(
     name = "overview",
-    srcs = ["ripple/ripple.md"],
+    srcs = [
+        "core.md",
+        "ripple/ripple.md",
+    ],
 )
 
 filegroup(

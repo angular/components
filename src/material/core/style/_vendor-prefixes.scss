@@ -1,8 +1,7 @@
-/* stylelint-disable material/no-prefixes */
+// stylelint-disable material/no-prefixes
 @mixin user-select($value) {
   -webkit-user-select: $value;
   -moz-user-select: $value;
-  -ms-user-select: $value;
   user-select: $value;
 }
 
@@ -19,6 +18,8 @@
     @content;
   }
 
+  // Note: this isn't necessary anymore since we don't support
+  // IE, but it caused some presubmit failures in #23416.
   &:-ms-input-placeholder {
     @content;
   }
@@ -39,8 +40,18 @@
   backface-visibility: $value;
 }
 
-@mixin position-sticky {
-  position: -webkit-sticky;
-  position: sticky;
+@mixin position-sticky($important: false) {
+  position: -webkit-sticky #{if($important, '!important', '')};
+  position: sticky #{if($important, '!important', '')};
 }
-/* stylelint-enable */
+
+@mixin private-color-adjust($value) {
+  -webkit-print-color-adjust: $value;
+  color-adjust: $value;
+}
+
+@mixin private-background-clip($value) {
+  -webkit-background-clip: $value;
+  background-clip: $value;
+}
+// stylelint-enable

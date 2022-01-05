@@ -7,20 +7,11 @@ import {BadgeHarnessExample} from './badge-harness/badge-harness-example';
 
 export {BadgeOverviewExample, BadgeHarnessExample};
 
-const EXAMPLES = [
-  BadgeOverviewExample,
-  BadgeHarnessExample
-];
+const EXAMPLES = [BadgeOverviewExample, BadgeHarnessExample];
 
 @NgModule({
-  imports: [
-    MatBadgeModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
+  imports: [MatBadgeModule, MatButtonModule, MatIconModule],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
-export class BadgeExamplesModule {
-}
+export class BadgeExamplesModule {}

@@ -11,7 +11,7 @@ import {
   BasePortalOutlet,
   CdkPortalOutlet,
   ComponentPortal,
-  TemplatePortal
+  TemplatePortal,
 } from '@angular/cdk/portal';
 import {
   AfterViewChecked,
@@ -20,12 +20,15 @@ import {
   ComponentRef,
   ElementRef,
   EmbeddedViewRef,
+  Inject,
   NgZone,
   OnDestroy,
+  Optional,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {MatSnackBarConfig, _SnackBarContainer} from '@angular/material/snack-bar';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCSnackbarAdapter, MDCSnackbarFoundation} from '@material/snackbar';
 import {Platform} from '@angular/cdk/platform';
 import {Observable, Subject} from 'rxjs';
@@ -41,7 +44,7 @@ const MDC_SNACKBAR_LABEL_CLASS = 'mdc-snackbar__label';
  * @docs-private
  */
 @Component({
-  selector: 'mat-mdc-snack-bar-container',
+  selector: 'mat-snack-bar-container',
   templateUrl: 'snack-bar-container.html',
   styleUrls: ['snack-bar-container.css'],
   // In Ivy embedded views will be change detected from their declaration place, rather than
@@ -57,10 +60,13 @@ const MDC_SNACKBAR_LABEL_CLASS = 'mdc-snackbar__label';
     // been dismissed and will soon be removed from the DOM. This is used by the snackbar
     // test harness.
     '[attr.mat-exit]': `_exiting ? '' : null`,
-  }
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+  },
 })
-export class MatSnackBarContainer extends BasePortalOutlet
-    implements _SnackBarContainer, AfterViewChecked, OnDestroy {
+export class MatSnackBarContainer
+  extends BasePortalOutlet
+  implements _SnackBarContainer, AfterViewChecked, OnDestroy
+{
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
 
@@ -81,6 +87,12 @@ export class MatSnackBarContainer extends BasePortalOutlet
 
   /** Whether the snack bar is currently exiting. */
   _exiting = false;
+
+  /**
+   * Role of the live region. This is only for Firefox as there is a known issue where Firefox +
+   * JAWS does not read out aria-live message.
+   */
+  _role?: 'status' | 'alert';
 
   private _mdcAdapter: MDCSnackbarAdapter = {
     addClass: (className: string) => this._setClass(className, true),
@@ -111,10 +123,12 @@ export class MatSnackBarContainer extends BasePortalOutlet
   @ViewChild('label', {static: true}) _label: ElementRef;
 
   constructor(
-      private _elementRef: ElementRef<HTMLElement>,
-      public snackBarConfig: MatSnackBarConfig,
-      private _platform: Platform,
-      private _ngZone: NgZone) {
+    private _elementRef: ElementRef<HTMLElement>,
+    public snackBarConfig: MatSnackBarConfig,
+    private _platform: Platform,
+    private _ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+  ) {
     super();
 
     // Use aria-live rather than a live role like 'alert' or 'status'
@@ -125,6 +139,17 @@ export class MatSnackBarContainer extends BasePortalOutlet
       this._live = 'off';
     } else {
       this._live = 'polite';
+    }
+
+    // Only set role for Firefox. Set role based on aria-live because setting role="alert" implies
+    // aria-live="assertive" which may cause issues if aria-live is set to "polite" above.
+    if (this._platform.FIREFOX) {
+      if (this._live === 'polite') {
+        this._role = 'status';
+      }
+      if (this._live === 'assertive') {
+        this._role = 'alert';
+      }
     }
 
     // `MatSnackBar` will use the config's timeout to determine when the snack bar should be closed.
@@ -182,8 +207,7 @@ export class MatSnackBarContainer extends BasePortalOutlet
   }
 
   private _setClass(cssClass: string, active: boolean) {
-    const classList = this._elementRef.nativeElement.classList;
-    active ? classList.add(cssClass) : classList.remove(cssClass);
+    this._elementRef.nativeElement.classList.toggle(cssClass, active);
   }
 
   /** Applies the user-configured CSS classes to the snack bar. */
@@ -221,8 +245,10 @@ export class MatSnackBarContainer extends BasePortalOutlet
             // If an element in the snack bar content is focused before being moved
             // track it and restore focus after moving to the live region.
             let focusedElement: HTMLElement | null = null;
-            if (document.activeElement instanceof HTMLElement &&
-                inertElement.contains(document.activeElement)) {
+            if (
+              document.activeElement instanceof HTMLElement &&
+              inertElement.contains(document.activeElement)
+            ) {
               focusedElement = document.activeElement;
             }
 

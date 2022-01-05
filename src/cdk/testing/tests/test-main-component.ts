@@ -8,6 +8,7 @@
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
+import {FormControl} from '@angular/forms';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,7 +17,7 @@ import {
   NgZone,
   OnDestroy,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 
 @Component({
@@ -45,6 +46,7 @@ export class TestMainComponent implements OnDestroy {
   _shadowDomSupported = _supportsShadowDom();
   clickResult = {x: -1, y: -1};
   rightClickResult = {x: -1, y: -1, button: -1};
+  numberControl = new FormControl();
 
   @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
   @ViewChild('taskStateResult') taskStateResultElement: ElementRef<HTMLElement>;
@@ -70,7 +72,7 @@ export class TestMainComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    document.body.removeChild(this._fakeOverlayElement);
+    this._fakeOverlayElement.remove();
   }
 
   click() {
@@ -94,7 +96,8 @@ export class TestMainComponent implements OnDestroy {
     this._assignRelativeCoordinates(event, this.clickResult);
 
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
-      .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
+      .map(key => (event.getModifierState(key) ? key.toLowerCase() : ''))
+      .join('-');
   }
 
   onRightClick(event: MouseEvent) {
@@ -102,7 +105,8 @@ export class TestMainComponent implements OnDestroy {
     this._assignRelativeCoordinates(event, this.rightClickResult);
 
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
-    .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
+      .map(key => (event.getModifierState(key) ? key.toLowerCase() : ''))
+      .join('-');
   }
 
   onCustomEvent(event: any) {
@@ -110,12 +114,14 @@ export class TestMainComponent implements OnDestroy {
   }
 
   runTaskOutsideZone() {
-    this._zone.runOutsideAngular(() => setTimeout(() => {
-      this.taskStateResultElement.nativeElement.textContent = 'result';
-    }, 100));
+    this._zone.runOutsideAngular(() =>
+      setTimeout(() => {
+        this.taskStateResultElement.nativeElement.textContent = 'result';
+      }, 100),
+    );
   }
 
-  private _assignRelativeCoordinates(event: MouseEvent, obj: {x: number, y: number}) {
+  private _assignRelativeCoordinates(event: MouseEvent, obj: {x: number; y: number}) {
     const {top, left} = this.clickTestElement.nativeElement.getBoundingClientRect();
     obj.x = Math.round(event.clientX - left);
     obj.y = Math.round(event.clientY - top);

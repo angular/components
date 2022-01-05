@@ -1,47 +1,47 @@
-@import '@material/button/mixins.import';
-@import '@material/button/variables.import';
-@import '@material/ripple/mixins.import';
-@import '../mdc-helpers/mdc-helpers';
-@import '../../cdk/a11y/a11y';
-@import '_button-base';
+@use '@material/button/button' as mdc-button;
+@use '@material/button/variables' as mdc-button-variables;
+@use '../../material/core/style/private';
+@use '../mdc-helpers/mdc-helpers';
+@use 'button-base';
 
-@include mdc-button-without-ripple($query: $mat-base-styles-query);
+@include mdc-button.without-ripple($query: mdc-helpers.$mat-base-styles-query);
 
-.mat-mdc-button, .mat-mdc-unelevated-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
-  @include mat-private-button-interactive();
-  @include mat-private-button-disabled();
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-disabled();
+  @include button-base.mat-private-button-touch-target(false);
+  @include private.private-animation-noop();
+}
 
-  // MDC expects button icons to contain this HTML content:
-  // ```html
-  //   <span class="mdc-button__icon material-icons">favorite</span>
-  // ```
-  // However, Angular Material expects a `mat-icon` instead. The following
-  // will extend the `mdc-button__icon` styling to the mat icon. Note that
-  // the extended styles inherently only match icons that nest themselves in
-  // a parent `mdc-button`.
-  //
-  // TODO(mmalerba): Have MDC create a mixin for this so we don't have to rely on extending their
-  //  class.
+// MDC expects button icons to contain this HTML content:
+// ```html
+//   <span class="mdc-button__icon material-icons">favorite</span>
+// ```
+// However, Angular Material expects a `mat-icon` instead. The following
+// mixins will style the icons appropriately.
+.mat-mdc-button {
   .mat-icon {
-    @extend .mdc-button__icon;
+    @include mdc-button.icon();
+  }
+  .mdc-button__label + .mat-icon {
+    @include mdc-button.icon-trailing();
   }
 }
 
-// Add an outline to make buttons more visible in high contrast mode. Stroked buttons and FABs
-// don't need a special look in high-contrast mode, because those already have an outline.
-.mat-mdc-button:not(.mdc-button--outlined),
-.mat-mdc-unelevated-button:not(.mdc-button--outlined),
-.mat-mdc-raised-button:not(.mdc-button--outlined),
-.mat-mdc-outlined-button:not(.mdc-button--outlined),
-.mat-mdc-icon-button {
-  @include cdk-high-contrast(active, off) {
-    outline: solid 1px;
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  // Icons inside contained buttons have different styles due to increased button padding
+  .mat-icon {
+    @include mdc-button.icon();
+    @include mdc-button.icon-contained();
   }
-}
 
-@include cdk-high-contrast(active, off) {
-  .mat-mdc-button-base:focus {
-    outline: solid 3px;
+  .mdc-button__label + .mat-icon {
+    @include mdc-button.icon-contained-trailing();
   }
 }
 
@@ -54,9 +54,10 @@
 // then. See: https://github.com/angular/components/issues/13738
 .mat-mdc-outlined-button .mat-mdc-button-ripple,
 .mat-mdc-outlined-button .mdc-button__ripple {
-  top: -$mdc-button-outlined-border-width;
-  left: -$mdc-button-outlined-border-width;
-  bottom: -$mdc-button-outlined-border-width;
-  right: -$mdc-button-outlined-border-width;
-  border: none;
+  $offset: -(mdc-button-variables.$outlined-border-width);
+  top: $offset;
+  left: $offset;
+  bottom: $offset;
+  right: $offset;
+  border-width: $offset;
 }

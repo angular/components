@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
- /// <reference types="googlemaps" />
+/// <reference types="google.maps" />
 
 /**
  * Class for clustering markers on a Google Map.
@@ -16,7 +16,10 @@
  */
 declare class MarkerClusterer {
   constructor(
-      map: google.maps.Map, markers?: google.maps.Marker[], options?: MarkerClustererOptions);
+    map: google.maps.Map,
+    markers?: google.maps.Marker[],
+    options?: MarkerClustererOptions,
+  );
   ariaLabelFn: AriaLabelFn;
   static BATCH_SIZE: number;
   static BATCH_SIZE_IE: number;
@@ -36,7 +39,7 @@ declare class MarkerClusterer {
   getCalculator(): Calculator;
   getClusterClass(): string;
   getClusters(): Cluster[];
-  getEnableRetinalIcons(): boolean;
+  getEnableRetinaIcons(): boolean;
   getGridSize(): number;
   getIgnoreHidden(): boolean;
   getImageExtension(): string;
@@ -63,7 +66,7 @@ declare class MarkerClusterer {
   setBatchSizeIE(batchSizeIE: number): void;
   setCalculator(calculator: Calculator): void;
   setClusterClass(clusterClass: string): void;
-  setEnableRetinalIcons(enableRetinalIcons: boolean): void;
+  setEnableRetinaIcons(enableRetinaIcons: boolean): void;
   setGridSize(gridSize: number): void;
   setIgnoreHidden(ignoreHidden: boolean): void;
   setImageExtension(imageExtension: string): void;
@@ -77,6 +80,8 @@ declare class MarkerClusterer {
   setValues(values: any): void;
   setZIndex(zIndex: number): void;
   setZoomOnClick(zoomOnClick: boolean): void;
+  // Note: This one doesn't appear in the docs page, but it exists at runtime.
+  setOptions(options: MarkerClustererOptions): void;
   unbind(key: string): void;
   unbindAll(): void;
   static CALCULATOR(markers: google.maps.Marker[], numStyles: number): ClusterIconInfo;
@@ -110,7 +115,7 @@ declare interface MarkerClustererOptions {
   batchSizeIE?: number;
   calculator?: Calculator;
   clusterClass?: string;
-  enableRetinalIcons?: boolean;
+  enableRetinaIcons?: boolean;
   gridSize?: number;
   ignoreHidden?: boolean;
   imageExtension?: string;
@@ -173,5 +178,7 @@ declare type AriaLabelFn = (text: string) => string;
  *
  * See googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#calculator
  */
-declare type Calculator =
-    (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;
+declare type Calculator = (
+  markers: google.maps.Marker[],
+  clusterIconStylesCount: number,
+) => ClusterIconInfo;

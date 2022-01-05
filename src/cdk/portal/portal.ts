@@ -7,21 +7,21 @@
  */
 
 import {
-    TemplateRef,
-    ViewContainerRef,
-    ElementRef,
-    ComponentRef,
-    EmbeddedViewRef,
-    Injector,
-    ComponentFactoryResolver,
+  TemplateRef,
+  ViewContainerRef,
+  ElementRef,
+  ComponentRef,
+  EmbeddedViewRef,
+  Injector,
+  ComponentFactoryResolver,
 } from '@angular/core';
 import {
-    throwNullPortalOutletError,
-    throwPortalAlreadyAttachedError,
-    throwNoPortalAttachedError,
-    throwNullPortalError,
-    throwPortalOutletAlreadyDisposedError,
-    throwUnknownPortalTypeError
+  throwNullPortalOutletError,
+  throwPortalAlreadyAttachedError,
+  throwNoPortalAttachedError,
+  throwNullPortalError,
+  throwPortalOutletAlreadyDisposedError,
+  throwUnknownPortalTypeError,
 } from './portal-errors';
 
 /** Interface that can be used to generically type a class. */
@@ -49,7 +49,7 @@ export abstract class Portal<T> {
     }
 
     this._attachedHost = host;
-    return <T> host.attach(this);
+    return <T>host.attach(this);
   }
 
   /** Detach this portal from its host */
@@ -78,7 +78,6 @@ export abstract class Portal<T> {
   }
 }
 
-
 /**
  * A `ComponentPortal` is a portal that instantiates some Component upon attachment.
  */
@@ -103,10 +102,11 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
   componentFactoryResolver?: ComponentFactoryResolver | null;
 
   constructor(
-      component: ComponentType<T>,
-      viewContainerRef?: ViewContainerRef | null,
-      injector?: Injector | null,
-      componentFactoryResolver?: ComponentFactoryResolver | null) {
+    component: ComponentType<T>,
+    viewContainerRef?: ViewContainerRef | null,
+    injector?: Injector | null,
+    componentFactoryResolver?: ComponentFactoryResolver | null,
+  ) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
@@ -144,12 +144,12 @@ export class TemplatePortal<C = any> extends Portal<EmbeddedViewRef<C>> {
    * When a context is provided it will override the `context` property of the `TemplatePortal`
    * instance.
    */
-  attach(host: PortalOutlet, context: C | undefined = this.context): EmbeddedViewRef<C> {
+  override attach(host: PortalOutlet, context: C | undefined = this.context): EmbeddedViewRef<C> {
     this.context = context;
     return super.attach(host);
   }
 
-  detach(): void {
+  override detach(): void {
     this.context = undefined;
     return super.detach();
   }
@@ -169,7 +169,6 @@ export class DomPortal<T = HTMLElement> extends Portal<T> {
     this.element = element instanceof ElementRef ? element.nativeElement : element;
   }
 }
-
 
 /** A `PortalOutlet` is an space that can contain a single `Portal`. */
 export interface PortalOutlet {

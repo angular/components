@@ -11,7 +11,6 @@ import {Component} from '@angular/core';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {ThemePalette} from '@angular/material/core';
 
-
 export interface Person {
   name: string;
 }
@@ -24,7 +23,7 @@ export interface DemoColor {
 @Component({
   selector: 'chips-demo',
   templateUrl: 'chips-demo.html',
-  styleUrls: ['chips-demo.css']
+  styleUrls: ['chips-demo.css'],
 })
 export class ChipsDemo {
   tabIndex = 0;
@@ -46,14 +45,14 @@ export class ChipsDemo {
     {name: 'Topher'},
     {name: 'Elad'},
     {name: 'Kristiyan'},
-    {name: 'Paul'}
+    {name: 'Paul'},
   ];
 
   availableColors: DemoColor[] = [
     {name: 'none', color: undefined},
     {name: 'Primary', color: 'primary'},
     {name: 'Accent', color: 'accent'},
-    {name: 'Warn', color: 'warn'}
+    {name: 'Warn', color: 'warn'},
   ];
 
   displayMessage(message: string): void {
@@ -61,17 +60,15 @@ export class ChipsDemo {
   }
 
   add(event: MatChipInputEvent): void {
-    const {input, value} = event;
+    const value = (event.value || '').trim();
 
     // Add our person
-    if ((value || '').trim()) {
-      this.people.push({ name: value.trim() });
+    if (value) {
+      this.people.push({name: value});
     }
 
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+    // Clear the input value
+    event.chipInput!.clear();
   }
 
   remove(person: Person): void {

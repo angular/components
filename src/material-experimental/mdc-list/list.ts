@@ -12,13 +12,20 @@ import {
   Component,
   ContentChildren,
   ElementRef,
+  Inject,
   NgZone,
+  Optional,
   QueryList,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {MatLine} from '@angular/material-experimental/mdc-core';
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+} from '@angular/material-experimental/mdc-core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatListBase, MatListItemBase} from './list-base';
+import {MatListItemLine, MatListItemMeta, MatListItemTitle} from './list-item-sections';
 
 @Component({
   selector: 'mat-list',
@@ -30,9 +37,7 @@ import {MatListBase, MatListItemBase} from './list-base';
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {provide: MatListBase, useExisting: MatList},
-  ]
+  providers: [{provide: MatListBase, useExisting: MatList}],
 })
 export class MatList extends MatListBase {}
 
@@ -41,18 +46,30 @@ export class MatList extends MatListBase {}
   exportAs: 'matListItem',
   host: {
     'class': 'mat-mdc-list-item mdc-list-item',
-    '[class.mat-mdc-list-item-with-avatar]': '_hasIconOrAvatar()',
+    '[class.mdc-list-item--with-leading-avatar]': '_avatars.length !== 0',
+    '[class.mdc-list-item--with-leading-icon]': '_icons.length !== 0',
+    '[class.mdc-list-item--with-trailing-meta]': '_meta.length !== 0',
+    '[class._mat-animation-noopable]': '_noopAnimations',
   },
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatListItem extends MatListItemBase {
-  @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
-      QueryList<ElementRef<Element>>;
+  @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;
+  @ContentChildren(MatListItemTitle, {descendants: true}) _titles: QueryList<MatListItemTitle>;
+  @ContentChildren(MatListItemMeta, {descendants: true}) _meta: QueryList<MatListItemMeta>;
+  @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
   @ViewChild('text') _itemText: ElementRef<HTMLElement>;
 
-  constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase, platform: Platform) {
-    super(element, ngZone, listBase, platform);
+  constructor(
+    element: ElementRef,
+    ngZone: NgZone,
+    listBase: MatListBase,
+    platform: Platform,
+    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
+    super(element, ngZone, listBase, platform, globalRippleOptions, animationMode);
   }
 }

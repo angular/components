@@ -1,0 +1,161 @@
+@use 'sass:map';
+@use '../../material/core/style/variables';
+@use '../../material/core/style/vendor-prefixes';
+@use '../../material/core/theming/theming';
+
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  $primary: map.get($config, primary);
+  $foreground: map.get($config, foreground);
+
+  $non-resizable-hover-divider: theming.get-color-from-palette($foreground, divider);
+  $resizable-hover-divider: theming.get-color-from-palette($primary, 600);
+  $resizable-active-divider: theming.get-color-from-palette($primary, 600);
+
+  // TODO: these styles don't really belong in the `color` part of the theme.
+  // We should figure out a better place for them.
+  // Required for resizing to work properly.
+  .mat-column-resize-table.cdk-column-resize-with-resized-column {
+    table-layout: fixed;
+  }
+
+  .mat-column-resize-flex {
+    .mat-header-cell,
+    .mat-mdc-header-cell,
+    .mat-cell,
+    .mat-mdc-cell {
+      box-sizing: border-box;
+      min-width: 32px;
+    }
+  }
+
+  .mat-header-cell,
+  .mat-mdc-header-cell {
+    position: relative;
+  }
+
+  .mat-resizable {
+    box-sizing: border-box;
+  }
+
+  .mat-header-cell:not(.mat-resizable)::after,
+  .mat-mdc-header-cell:not(.mat-resizable)::after,
+  .mat-resizable-handle {
+    background: transparent;
+    bottom: 0;
+    position: absolute;
+    top: 0;
+    transition: background variables.$swift-ease-in-duration
+      variables.$swift-ease-in-timing-function;
+    width: 1px;
+  }
+
+  .mat-header-cell:not(.mat-resizable)::after,
+  .mat-mdc-header-cell:not(.mat-resizable)::after {
+    content: '';
+  }
+
+  .mat-header-cell:not(.mat-resizable)::after,
+  .mat-mdc-header-cell:not(.mat-resizable)::after,
+  .mat-resizable-handle {
+    right: 0;
+  }
+
+  .mat-header-row.cdk-column-resize-hover-or-active,
+  .mat-mdc-header-row.cdk-column-resize-hover-or-active {
+    .mat-header-cell,
+    .mat-mdc-header-cell {
+      border-right: none;
+    }
+
+    .mat-header-cell:not(.mat-resizable)::after,
+    .mat-mdc-header-cell:not(.mat-resizable)::after {
+      background: $non-resizable-hover-divider;
+    }
+
+    .mat-resizable-handle {
+      background: $resizable-hover-divider;
+    }
+  }
+
+  [dir='rtl'] {
+    .mat-header-cell:not(.mat-resizable)::after,
+    .mat-mdc-header-cell:not(.mat-resizable)::after,
+    .mat-resizable-handle {
+      left: 0;
+      right: auto;
+    }
+
+    .mat-header-row.cdk-column-resize-hover-or-active,
+    .mat-mdc-header-row.cdk-column-resize-hover-or-active {
+      .mat-header-cell,
+      .mat-mdc-header-cell {
+        border-left: none;
+      }
+    }
+  }
+
+  .mat-resizable.cdk-resizable-overlay-thumb-active > .mat-resizable-handle {
+    opacity: 0;
+    transition: none;
+  }
+
+  .mat-resizable-handle:focus,
+  .mat-header-row.cdk-column-resize-hover-or-active .mat-resizable-handle:focus,
+  .mat-mdc-header-row.cdk-column-resize-hover-or-active .mat-resizable-handle:focus {
+    background: $resizable-active-divider;
+    outline: none;
+  }
+
+  .mat-column-resize-overlay-thumb {
+    background: transparent;
+    cursor: col-resize;
+    height: 100%;
+    transition: background variables.$swift-ease-in-duration
+      variables.$swift-ease-in-timing-function;
+    @include vendor-prefixes.user-select(none);
+    width: 100%;
+
+    &:active {
+      background: linear-gradient(90deg,
+          transparent, transparent 7px,
+          $resizable-active-divider 7px, $resizable-active-divider 9px,
+          transparent 9px, transparent);
+      will-change: transform;
+
+      .mat-column-resize-overlay-thumb-top {
+        background: linear-gradient(90deg,
+            transparent, transparent 4px,
+            $resizable-active-divider 4px, $resizable-active-divider 12px,
+            transparent 12px, transparent);
+      }
+    }
+  }
+
+  .mat-column-resize-overlay-thumb-top {
+    width: 100%;
+  }
+}
+
+@mixin typography($config-or-theme) {}
+
+@mixin density($config-or-theme) {}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-column-resize') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}

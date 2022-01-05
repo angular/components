@@ -1,14 +1,18 @@
-@import '@material/fab/mixins.import';
-@import '@material/button/variables.import';
-@import '@material/theme/variables.import';
-@import '../mdc-helpers/mdc-helpers';
-@import '_button-base';
+@use '@material/fab' as mdc-fab;
+@use '../../material/core/style/private';
+@use '../mdc-helpers/mdc-helpers';
+@use 'button-base';
 
-@include mdc-fab-without-ripple($query: $mat-base-styles-query);
+@include mdc-fab.without-ripple($query: mdc-helpers.$mat-base-styles-query);
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
-  @include mat-private-button-interactive();
-  @include mat-private-button-disabled();
+  @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-disabled();
+  @include button-base.mat-private-button-touch-target(true);
+  @include private.private-animation-noop();
+
+  // Prevent the button from shrinking since it's always supposed to be a circle.
+  flex-shrink: 0;
 
   // MDC adds some styles to fab and mini-fab that conflict with some of our focus indicator
   // styles and don't actually do anything. This undoes those conflicting styles.
@@ -22,11 +26,33 @@
   //   <span class="mdc-fab__icon material-icons">favorite</span>
   // ```
   // However, Angular Material expects a `mat-icon` instead. The following
-  // will extend the `mdc-fab__icon` styling to the mat icon. Note that
-  // the extended styles inherently only match icons that nest themselves in
-  // a parent `mdc-fab`.
-  .mat-icon {
-    @extend .mdc-fab__icon;
+  // mixin will style the icons appropriately.
+  // stylelint-disable-next-line selector-class-pattern
+  .mat-icon, .material-icons {
+    @include mdc-fab.icon_();
   }
 }
 
+.mat-mdc-extended-fab {
+  @include mdc-fab.extended_($query: mdc-helpers.$mat-base-styles-query);
+
+  // stylelint-disable-next-line selector-class-pattern
+  .mat-icon, .material-icons {
+    @include mdc-fab.extended-icon-padding(
+      mdc-fab.$extended-icon-padding,
+      mdc-fab.$extended-label-padding
+    );
+  }
+
+  // For Extended FAB with text label followed by icon.
+  // We are checking for the a button class because white this is a FAB it
+  // uses the same template as button.
+  // stylelint-disable-next-line selector-class-pattern
+  .mdc-button__label + .mat-icon, .mdc-button__label + .material-icons {
+    @include mdc-fab.extended-icon-padding(
+      mdc-fab.$extended-icon-padding,
+      mdc-fab.$extended-label-padding,
+      $is-icon-at-end: true
+    );
+  }
+}

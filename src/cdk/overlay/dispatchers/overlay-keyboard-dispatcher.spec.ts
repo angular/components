@@ -1,11 +1,10 @@
 import {TestBed, inject} from '@angular/core/testing';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../testing/private';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {Component, NgModule} from '@angular/core';
-import {OverlayModule, OverlayContainer, Overlay} from '../index';
+import {Component} from '@angular/core';
+import {OverlayModule, Overlay} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
 import {ComponentPortal} from '@angular/cdk/portal';
-
 
 describe('OverlayKeyboardDispatcher', () => {
   let keyboardDispatcher: OverlayKeyboardDispatcher;
@@ -13,7 +12,8 @@ describe('OverlayKeyboardDispatcher', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, TestComponentModule],
+      imports: [OverlayModule],
+      declarations: [TestComponent],
     });
 
     inject([OverlayKeyboardDispatcher, Overlay], (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
@@ -21,10 +21,6 @@ describe('OverlayKeyboardDispatcher', () => {
       overlay = o;
     })();
   });
-
-  afterEach(inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
-    overlayContainer.ngOnDestroy();
-  }));
 
   it('should track overlays in order as they are attached and detached', () => {
     const overlayOne = overlay.create();
@@ -35,18 +31,25 @@ describe('OverlayKeyboardDispatcher', () => {
     keyboardDispatcher.add(overlayTwo);
 
     expect(keyboardDispatcher._attachedOverlays.length)
-        .toBe(2, 'Expected both overlays to be tracked.');
-    expect(keyboardDispatcher._attachedOverlays[0]).toBe(overlayOne, 'Expected one to be first.');
-    expect(keyboardDispatcher._attachedOverlays[1]).toBe(overlayTwo, 'Expected two to be last.');
+      .withContext('Expected both overlays to be tracked.')
+      .toBe(2);
+    expect(keyboardDispatcher._attachedOverlays[0])
+      .withContext('Expected one to be first.')
+      .toBe(overlayOne);
+    expect(keyboardDispatcher._attachedOverlays[1])
+      .withContext('Expected two to be last.')
+      .toBe(overlayTwo);
 
     // Detach first one and re-attach it
     keyboardDispatcher.remove(overlayOne);
     keyboardDispatcher.add(overlayOne);
 
     expect(keyboardDispatcher._attachedOverlays[0])
-        .toBe(overlayTwo, 'Expected two to now be first.');
+      .withContext('Expected two to now be first.')
+      .toBe(overlayTwo);
     expect(keyboardDispatcher._attachedOverlays[1])
-        .toBe(overlayOne, 'Expected one to now be last.');
+      .withContext('Expected one to now be last.')
+      .toBe(overlayOne);
   });
 
   it('should dispatch body keyboard events to the most recently attached overlay', () => {
@@ -82,8 +85,7 @@ describe('OverlayKeyboardDispatcher', () => {
     dispatchKeyboardEvent(button, 'keydown', ESCAPE);
 
     expect(spy).not.toHaveBeenCalled();
-
-    button.parentNode!.removeChild(button);
+    button.remove();
   });
 
   it('should complete the keydown stream on dispose', () => {
@@ -177,21 +179,9 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayTwoSpy).not.toHaveBeenCalled();
     expect(overlayOneSpy).toHaveBeenCalled();
   });
-
 });
 
-
 @Component({
-  template: 'Hello'
+  template: 'Hello',
 })
-class TestComponent { }
-
-
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-@NgModule({
-  exports: [TestComponent],
-  declarations: [TestComponent],
-  entryComponents: [TestComponent],
-})
-class TestComponentModule { }
+class TestComponent {}

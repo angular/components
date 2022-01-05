@@ -14,7 +14,11 @@ source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/
 { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
 # --- end runfiles.bash initialization v2 ---
 
-if [[ ! -z "RUNFILES_DIR" ]]; then
+# If we do not run the devserver as part of a test, we always enforce runfile
+# resolution when invoking the devserver NodeJS binary. This is necessary as
+# runfile trees are disabled as part of this repository. The devserver NodeJS
+# binary would not find a relative runfile tree directory and error out.
+if [[ -z "${TEST_SRCDIR:-""}" ]]; then
   export RUNFILES_MANIFEST_ONLY="1"
 fi
 
@@ -26,4 +30,4 @@ devserverBin=$(rlocation "angular_material/tools/dev-server/dev-server_bin.sh")
 
 # Start the devserver with the given arguments. The arguments will be
 # substituted based on the rule attributes.
-${devserverBin} TEMPLATED_args
+${devserverBin} TEMPLATED_args "$@"

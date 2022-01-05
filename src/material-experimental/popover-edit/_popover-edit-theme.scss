@@ -1,0 +1,177 @@
+@use 'sass:map';
+@use '../../cdk/a11y';
+@use '../../material/core/style/variables';
+@use '../../material/core/style/private';
+@use '../../material/core/theming/theming';
+@use '../../material/core/typography/typography';
+@use '../../material/core/typography/typography-utils';
+
+@function _hover-content-background($direction, $background-color) {
+  @return linear-gradient($direction, rgba($background-color, 0), $background-color 8px);
+}
+
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  $background: map.get($config, background);
+  $foreground: map.get($config, foreground);
+  $primary: map.get($config, primary);
+  $background-color: theming.get-color-from-palette($background, 'card');
+
+  // TODO: these structural styles don't belong in the `color` part of a theme.
+  // We should figure out a better place for them.
+  .mat-row-hover-content-host-cell {
+    position: relative;
+  }
+
+  .mat-row-hover-content {
+    align-items: center;
+    background: _hover-content-background(90deg, $background-color);
+    bottom: 0;
+    display: flex;
+    opacity: 0;
+    padding: 0 4px 1px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: opacity variables.$swift-ease-in-duration variables.$swift-ease-in-timing-function;
+  }
+
+  .mat-row-hover-content-rtl {
+    background: _hover-content-background(270deg, $background-color);
+    left: 0;
+    right: auto;
+  }
+
+  .mat-row-hover-content-visible {
+    opacity: 1;
+  }
+
+  .mat-popover-edit-cell {
+    position: relative;
+
+    &::after {
+      background-color: theming.get-color-from-palette($primary);
+      bottom: 0;
+      content: '';
+      height: 2px;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      transform-origin: 50%;
+      transform: scaleX(0.5);
+      transition: background-color variables.$swift-ease-in-duration
+        variables.$swift-ease-in-timing-function;
+      visibility: hidden;
+    }
+
+    &:focus {
+      outline: none;
+
+      &::after {
+        opacity: 1;
+        transform: scaleX(1);
+        transition: transform 300ms variables.$swift-ease-out-timing-function,
+                    opacity 100ms variables.$swift-ease-out-timing-function,
+                    background-color 300ms variables.$swift-ease-out-timing-function;
+        visibility: visible;
+      }
+    }
+  }
+
+  .mat-edit-pane {
+    @include private.private-theme-elevation(2, $config);
+    background: $background-color;
+    color: theming.get-color-from-palette($foreground, text);
+    display: block;
+    padding: 16px 24px;
+
+    @include a11y.high-contrast(active, off) {
+      // Note that normally we use 1px for high contrast outline, however here we use 3,
+      // because the popover is rendered on top of a table which already has some borders
+      // and doesn't have a backdrop. The thicker outline makes it easier to differentiate.
+      outline: solid 3px;
+    }
+  }
+
+  .mat-edit-lens {
+    display: block;
+    width: 100%;
+  }
+
+  [mat-edit-title] {
+    display: block;
+    margin: 0;
+  }
+
+  [mat-edit-content],
+  [mat-edit-fill] {
+    display: block;
+
+    mat-form-field {
+      display: block;
+
+      // Clear the top padding, because we don't have a label on it and the reserved space
+      // can throw off the alignment when there isn't a header (see discussion in #17600).
+      &:not(.mat-form-field-has-label) .mat-form-field-infix {
+        padding-top: 0;
+      }
+    }
+
+    // Make mat-selection-lists inside of the look more like mat-select popups.
+    mat-selection-list {
+      max-height: 256px; // Same as mat-select.
+      overflow-y: auto;
+    }
+  }
+
+  [mat-edit-fill] {
+    margin: -16px -24px;
+
+    mat-selection-list:first-child {
+      padding-top: 0;
+    }
+  }
+
+  [mat-edit-actions] {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin: 8px -16px -8px;
+  }
+
+  [mat-edit-fill] + [mat-edit-actions] {
+    margin-top: 16px;
+  }
+}
+
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2014-config(
+      theming.get-typography-config($config-or-theme));
+  [mat-edit-title] {
+    @include typography-utils.typography-level($config, title);
+  }
+}
+
+
+@mixin density($config-or-theme) {}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-popover-edit') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}

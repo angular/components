@@ -1,20 +1,19 @@
 import {ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
 import {Component, ViewChild, Type, Provider} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {dispatchMouseEvent} from '../../cdk/testing/private';
 import {ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material-experimental/mdc-select';
 import {By} from '@angular/platform-browser';
 import {MatPaginatorModule, MatPaginator, MatPaginatorIntl} from './index';
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
 
-
 describe('MDC-based MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
       declarations: [type],
-      providers: [MatPaginatorIntl, ...providers]
+      providers: [MatPaginatorIntl, ...providers],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(type);
@@ -23,67 +22,92 @@ describe('MDC-based MatPaginator', () => {
   }
 
   describe('with the default internationalization provider', () => {
-    it('should show the right range text', () => {
-      const fixture = createComponent(MatPaginatorApp);
-      const component = fixture.componentInstance;
-      const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+    describe('showing the right range text', () => {
+      it('should show second page of list of 100, each page contains 10 items', () => {
+        const fixture = createComponent(MatPaginatorApp);
+        const component = fixture.componentInstance;
+        const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+        component.length = 100;
+        component.pageSize = 10;
+        component.pageIndex = 1;
+        fixture.detectChanges();
+        expect(rangeElement.textContent!.trim()).toBe('11 – 20 of 100');
+      });
 
-      // View second page of list of 100, each page contains 10 items.
-      component.length = 100;
-      component.pageSize = 10;
-      component.pageIndex = 1;
-      fixture.detectChanges();
-      expect(rangeElement.innerText.trim()).toBe('11 – 20 of 100');
+      it('should show third page of list of 200, each page contains 20 items', () => {
+        const fixture = createComponent(MatPaginatorApp);
+        const component = fixture.componentInstance;
+        const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+        component.length = 200;
+        component.pageSize = 20;
+        component.pageIndex = 2;
+        fixture.detectChanges();
+        expect(rangeElement.textContent!.trim()).toBe('41 – 60 of 200');
+      });
 
-      // View third page of list of 200, each page contains 20 items.
-      component.length = 200;
-      component.pageSize = 20;
-      component.pageIndex = 2;
-      fixture.detectChanges();
-      expect(rangeElement.innerText.trim()).toBe('41 – 60 of 200');
+      it('should show first page of list of 0, each page contains 5 items', () => {
+        const fixture = createComponent(MatPaginatorApp);
+        const component = fixture.componentInstance;
+        const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+        component.length = 0;
+        component.pageSize = 5;
+        component.pageIndex = 2;
+        fixture.detectChanges();
+        expect(rangeElement.textContent!.trim()).toBe('0 of 0');
+      });
 
-      // View first page of list of 0, each page contains 5 items.
-      component.length = 0;
-      component.pageSize = 5;
-      component.pageIndex = 2;
-      fixture.detectChanges();
-      expect(rangeElement.innerText.trim()).toBe('0 of 0');
+      it('should show third page of list of 12, each page contains 5 items', () => {
+        const fixture = createComponent(MatPaginatorApp);
+        const component = fixture.componentInstance;
+        const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+        component.length = 12;
+        component.pageSize = 5;
+        component.pageIndex = 2;
+        fixture.detectChanges();
+        expect(rangeElement.textContent!.trim()).toBe('11 – 12 of 12');
+      });
 
-      // View third page of list of 12, each page contains 5 items.
-      component.length = 12;
-      component.pageSize = 5;
-      component.pageIndex = 2;
-      fixture.detectChanges();
-      expect(rangeElement.innerText.trim()).toBe('11 – 12 of 12');
+      it('should show third page of list of 10, each page contains 5 items', () => {
+        const fixture = createComponent(MatPaginatorApp);
+        const component = fixture.componentInstance;
+        const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+        component.length = 10;
+        component.pageSize = 5;
+        component.pageIndex = 2;
+        fixture.detectChanges();
+        expect(rangeElement.textContent!.trim()).toBe('11 – 15 of 10');
+      });
 
-      // View third page of list of 10, each page contains 5 items.
-      component.length = 10;
-      component.pageSize = 5;
-      component.pageIndex = 2;
-      fixture.detectChanges();
-      expect(rangeElement.innerText.trim()).toBe('11 – 15 of 10');
-
-      // View third page of list of -5, each page contains 5 items.
-      component.length = -5;
-      component.pageSize = 5;
-      component.pageIndex = 2;
-      fixture.detectChanges();
-      expect(rangeElement.innerText.trim()).toBe('11 – 15 of 0');
+      it('should show third page of list of -5, each page contains 5 items', () => {
+        const fixture = createComponent(MatPaginatorApp);
+        const component = fixture.componentInstance;
+        const rangeElement = fixture.nativeElement.querySelector('.mat-mdc-paginator-range-label');
+        component.length = -5;
+        component.pageSize = 5;
+        component.pageIndex = 2;
+        fixture.detectChanges();
+        expect(rangeElement.textContent!.trim()).toBe('11 – 15 of 0');
+      });
     });
 
     it('should show right aria-labels for select and buttons', () => {
       const fixture = createComponent(MatPaginatorApp);
-      const select = fixture.nativeElement.querySelector('.mat-mdc-select');
-      expect(select.getAttribute('aria-label')).toBe('Items per page:');
 
       expect(getPreviousButton(fixture).getAttribute('aria-label')).toBe('Previous page');
       expect(getNextButton(fixture).getAttribute('aria-label')).toBe('Next page');
+
+      const select = fixture.nativeElement.querySelector('.mat-mdc-select');
+      const selectLabelIds = select.getAttribute('aria-labelledby')?.split(/\s/g) as string[];
+      const selectLabelTexts = selectLabelIds?.map(labelId => {
+        return fixture.nativeElement.querySelector(`#${labelId}`)?.textContent?.trim();
+      });
+      expect(selectLabelTexts).toContain('Items per page:');
     });
 
     it('should re-render when the i18n labels change', () => {
       const fixture = createComponent(MatPaginatorApp);
       const label = fixture.nativeElement.querySelector('.mat-mdc-paginator-page-size-label');
-      const intl = TestBed.get<MatPaginatorIntl>(MatPaginatorIntl);
+      const intl = TestBed.inject(MatPaginatorIntl);
 
       intl.itemsPerPageLabel = '1337 items per page';
       intl.changes.next();
@@ -103,10 +127,12 @@ describe('MDC-based MatPaginator', () => {
       dispatchMouseEvent(getNextButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(1);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 0,
-        pageIndex: 1
-      }));
+      expect(component.pageEvent).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          previousPageIndex: 0,
+          pageIndex: 1,
+        }),
+      );
     });
 
     it('should be able to go to the previous page', () => {
@@ -120,29 +146,29 @@ describe('MDC-based MatPaginator', () => {
       dispatchMouseEvent(getPreviousButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 1,
-        pageIndex: 0
-      }));
+      expect(component.pageEvent).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          previousPageIndex: 1,
+          pageIndex: 0,
+        }),
+      );
     });
   });
 
   it('should be able to show the first/last buttons', () => {
     const fixture = createComponent(MatPaginatorApp);
-    expect(getFirstButton(fixture))
-        .toBeNull('Expected first button to not exist.');
+    expect(getFirstButton(fixture)).withContext('Expected first button to not exist.').toBeNull();
 
-    expect(getLastButton(fixture))
-        .toBeNull('Expected last button to not exist.');
+    expect(getLastButton(fixture)).withContext('Expected last button to not exist.').toBeNull();
 
     fixture.componentInstance.showFirstLastButtons = true;
     fixture.detectChanges();
 
     expect(getFirstButton(fixture))
-        .toBeTruthy('Expected first button to be rendered.');
+      .withContext('Expected first button to be rendered.')
+      .toBeTruthy();
 
-    expect(getLastButton(fixture))
-        .toBeTruthy('Expected last button to be rendered.');
+    expect(getLastButton(fixture)).withContext('Expected last button to be rendered.').toBeTruthy();
   });
 
   it('should mark itself as initialized', fakeAsync(() => {
@@ -150,7 +176,7 @@ describe('MDC-based MatPaginator', () => {
     const component = fixture.componentInstance;
     const paginator = component.paginator;
     let isMarkedInitialized = false;
-    paginator.initialized.subscribe(() => isMarkedInitialized = true);
+    paginator.initialized.subscribe(() => (isMarkedInitialized = true));
 
     tick();
     expect(isMarkedInitialized).toBeTruthy();
@@ -213,10 +239,12 @@ describe('MDC-based MatPaginator', () => {
       dispatchMouseEvent(getLastButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(9);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 0,
-        pageIndex: 9
-      }));
+      expect(component.pageEvent).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          previousPageIndex: 0,
+          pageIndex: 9,
+        }),
+      );
     });
 
     it('should be able to go to the first page via the first page button', () => {
@@ -227,10 +255,12 @@ describe('MDC-based MatPaginator', () => {
       dispatchMouseEvent(getFirstButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-        previousPageIndex: 3,
-        pageIndex: 0
-      }));
+      expect(component.pageEvent).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          previousPageIndex: 3,
+          pageIndex: 0,
+        }),
+      );
     });
 
     it('should disable navigating to the next page if at last page', () => {
@@ -256,7 +286,6 @@ describe('MDC-based MatPaginator', () => {
       expect(component.pageEvent).not.toHaveBeenCalled();
       expect(paginator.pageIndex).toBe(0);
     });
-
   });
 
   it('should mark for check when inputs are changed directly', () => {
@@ -336,30 +365,36 @@ describe('MDC-based MatPaginator', () => {
     component.pageEvent.calls.reset();
     paginator._changePageSize(25);
 
-    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-      pageIndex: 1,
-      pageSize: 25
-    }));
+    expect(component.pageEvent).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        pageIndex: 1,
+        pageSize: 25,
+      }),
+    );
 
     // The first item on the page is still 25. Change the page size to 8 so that we should now be
     // on the fourth page where the top item is index 24.
     component.pageEvent.calls.reset();
     paginator._changePageSize(8);
 
-    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-      pageIndex: 3,
-      pageSize: 8
-    }));
+    expect(component.pageEvent).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        pageIndex: 3,
+        pageSize: 8,
+      }),
+    );
 
     // The first item on the page is 24. Change the page size to 16 so that we should now be
     // on the first page where the top item is index 0.
     component.pageEvent.calls.reset();
     paginator._changePageSize(25);
 
-    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
-      pageIndex: 0,
-      pageSize: 25
-    }));
+    expect(component.pageEvent).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        pageIndex: 0,
+        pageSize: 25,
+      }),
+    );
   });
 
   it('should keep track of the right number of pages', () => {
@@ -414,19 +449,22 @@ describe('MDC-based MatPaginator', () => {
     const element = fixture.nativeElement;
 
     expect(element.querySelector('.mat-mdc-paginator-page-size'))
-        .toBeTruthy('Expected select to be rendered.');
+      .withContext('Expected select to be rendered.')
+      .toBeTruthy();
 
     fixture.componentInstance.hidePageSize = true;
     fixture.detectChanges();
 
     expect(element.querySelector('.mat-mdc-paginator-page-size'))
-        .toBeNull('Expected select to be removed.');
+      .withContext('Expected select to be removed.')
+      .toBeNull();
   });
 
   it('should be able to disable all the controls in the paginator via the binding', () => {
     const fixture = createComponent(MatPaginatorApp);
-    const select: MatSelect =
-        fixture.debugElement.query(By.directive(MatSelect))!.componentInstance;
+    const select: MatSelect = fixture.debugElement.query(
+      By.directive(MatSelect),
+    )!.componentInstance;
 
     fixture.componentInstance.pageIndex = 1;
     fixture.componentInstance.showFirstLastButtons = true;
@@ -448,17 +486,18 @@ describe('MDC-based MatPaginator', () => {
     expect(getLastButton(fixture).hasAttribute('disabled')).toBe(true);
   });
 
-
   it('should be able to configure the default options via a provider', () => {
-    const fixture = createComponent(MatPaginatorWithoutInputsApp, [{
-      provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
-      useValue: {
-        pageSize: 7,
-        pageSizeOptions: [7, 14, 21],
-        hidePageSize: true,
-        showFirstLastButtons: true
-      } as MatPaginatorDefaultOptions
-    }]);
+    const fixture = createComponent(MatPaginatorWithoutInputsApp, [
+      {
+        provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
+        useValue: {
+          pageSize: 7,
+          pageSizeOptions: [7, 14, 21],
+          hidePageSize: true,
+          showFirstLastButtons: true,
+        } as MatPaginatorDefaultOptions,
+      },
+    ]);
     const paginator = fixture.componentInstance.paginator;
 
     expect(paginator.pageSize).toBe(7);
@@ -467,6 +506,11 @@ describe('MDC-based MatPaginator', () => {
     expect(paginator.showFirstLastButtons).toBe(true);
   });
 
+  it('should set `role="group"` on the host element', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    const hostElement = fixture.nativeElement.querySelector('mat-paginator');
+    expect(hostElement.getAttribute('role')).toBe('group');
+  });
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
@@ -551,8 +595,8 @@ class MatPaginatorWithoutOptionsApp {
                    [pageSizeOptions]="['5', '10', '25', '100']"
                    length="100">
     </mat-paginator>
-  `
-  })
+  `,
+})
 class MatPaginatorWithStringValues {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }

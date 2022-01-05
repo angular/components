@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './paginator-module';
+export * from './module';
 export * from './paginator';
 export {
   MatPaginatorIntl,
@@ -14,4 +14,3 @@ export {
   MAT_PAGINATOR_INTL_PROVIDER,
   PageEvent,
 } from '@angular/material/paginator';
-

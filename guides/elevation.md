@@ -1,17 +1,19 @@
-Angular Material's elevation classes and mixins allow you to add separation between elements along
-the z-axis. All material design elements have resting elevations. In addition, some elements may
-change their elevation in response to user interaction. The
-[Material Design spec](https://material.io/design/environment/elevation.html)
-explains how to best use elevation.
+# Applying Elevation
 
-Angular Material provides two ways to control the elevation of elements: predefined CSS classes
-and mixins.
+[The Material Design specification][material-elevation] gives guidance on expressing elevation on
+UI elements by adding shadows. Angular Material provides CSS classes and Sass mixins for adding
+these shadows.
 
-### Predefined CSS classes
+[material-elevation]: https://material.io/design/environment/elevation.html
 
-The easiest way to add elevation to an element is to simply add one of the predefined CSS classes
-`mat-elevation-z#` where `#` is the elevation number you want, 0-24. Dynamic elevation can be
-achieved by switching elevation classes:
+## Elevation CSS classes
+
+The `core-theme` Sass mixin, described in the [theming guide][], emits CSS classes for applying
+elevation. These classes follow the pattern `mat-elevation-z#`, where `#` is the elevation number
+you want, from 0 to 24. These predefined classes use the CSS `box-shadow` settings defined by the
+Material Design specification.
+
+You can dynamically change elevation on an element by swapping elevation CSS classes.
 
 ```html
 <div [class.mat-elevation-z2]="!isActive" [class.mat-elevation-z8]="isActive"></div>
@@ -19,44 +21,50 @@ achieved by switching elevation classes:
 
 <!-- example(elevation-overview) -->
 
-### Mixins
+[theming-guide]: https://material.angular.io/guide/theming#applying-a-theme-to-components
 
-Elevations can also be added in CSS via the `mat-elevation` mixin, which takes a number 0-24
-indicating the elevation of the element as well as optional arguments for the elevation shadow's
-color tone and opacity.
+## Elevation Sass mixins
 
-Since an elevation shadow consists of multiple shadow components of varying opacities, the
-`$opacity` argument of the mixin is considered a factor by which to scale these initial values
-rather than an absolute value.
-
-In order to use the mixin, you must import `~@angular/material/theming`:
+In addition to the predefined CSS classes, you can apply elevation styles using the `elevation`
+Sass mixin. This mixin accepts a `$zValue` and an optional `$color`. The `$zValue` is a number from
+0 to 24, representing the semantic elevation of the element, that controls the intensity of the
+box-shadow. You can use the `$color` parameter to further customize the shadow appearance.
 
 ```scss
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
 
 .my-class-with-default-shadow {
   // Adds a shadow for elevation level 2 with default color and full opacity:
-  @include mat-elevation(2);
+  @include mat.elevation(2);
 }
 
 .my-class-with-custom-shadow {
   // Adds a shadow for elevation level 2 with color #e91e63 and 80% of the default opacity:
-  @include mat-elevation(2, #e91e63, 0.8);
+  @include mat.elevation(2, #e91e63, 0.8);
 }
 ```
 
-For convenience, you can use the `mat-elevation-transition` mixin to add a transition when the
-elevation changes:
+### Overridable elevation
+
+When authoring a component, you may want to specify a default elevation that the component consumer
+can override. You can accomplish this by using the `overridable-elevation` Sass mixin. This behaves
+identically to the `elevation` mixin, except that the styles only apply when the element does not
+have a CSS class matching the pattern `mat-elevation-z#`, as described in
+[Elevation CSS classes](#elevation-css-classes) above.
+
+### Animating elevation
+
+You can use the `elevation-transition` mixin to add a transition when elevation changes.
 
 ```scss
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
 
 .my-class {
-  @include mat-elevation-transition;
-  @include mat-elevation(2);
+  @include mat.elevation-transition();
+  @include mat.elevation(2);
 
   &:active {
-    @include mat-elevation(8);
+    @include mat.elevation(8);
   }
 }
 ```

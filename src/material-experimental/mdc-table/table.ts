@@ -6,14 +6,36 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Directive,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   CDK_TABLE_TEMPLATE,
   CdkTable,
   _CoalescedStyleScheduler,
   _COALESCED_STYLE_SCHEDULER,
+  CDK_TABLE,
+  STICKY_POSITIONING_LISTENER,
 } from '@angular/cdk/table';
-import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cdk/collections';
+import {
+  _DisposeViewRepeaterStrategy,
+  _RecycleViewRepeaterStrategy,
+  _VIEW_REPEATER_STRATEGY,
+} from '@angular/cdk/collections';
+
+/**
+ * Enables the recycle view repeater strategy, which reduces rendering latency. Not compatible with
+ * tables that animate rows.
+ */
+@Directive({
+  selector: 'mat-table[recycleRows], table[mat-table][recycleRows]',
+  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
+})
+export class MatRecycleRows {}
 
 @Component({
   selector: 'mat-table, table[mat-table]',
@@ -26,10 +48,13 @@ import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cd
   },
   providers: [
     {provide: CdkTable, useExisting: MatTable},
+    {provide: CDK_TABLE, useExisting: MatTable},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
     // TODO(michaeljamesparsons) Abstract the view repeater strategy to a directive API so this code
     //  is only included in the build if used.
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
+    // Prevent nested tables from seeing this table's StickyPositioningListener.
+    {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
@@ -38,15 +63,20 @@ import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cd
 })
 export class MatTable<T> extends CdkTable<T> implements OnInit {
   /** Overrides the sticky CSS class set by the `CdkTable`. */
-  protected stickyCssClass = 'mat-mdc-table-sticky';
+  protected override stickyCssClass = 'mat-mdc-table-sticky';
 
   /** Overrides the need to add position: sticky on every sticky cell element in `CdkTable`. */
-  protected needsPositionStickyOnElement = false;
+  protected override needsPositionStickyOnElement = false;
 
-  // After ngOnInit, the `CdkTable` has created and inserted the table sections (thead, tbody,
-  // tfoot). MDC requires the `mdc-data-table__content` class to be added to the body.
-  ngOnInit() {
+  override ngOnInit() {
     super.ngOnInit();
-    this._elementRef.nativeElement.querySelector('tbody').classList.add('mdc-data-table__content');
+
+    // After ngOnInit, the `CdkTable` has created and inserted the table sections (thead, tbody,
+    // tfoot). MDC requires the `mdc-data-table__content` class to be added to the body. Note that
+    // this only applies to native tables, because we don't wrap the content of flexbox-based ones.
+    if (this._isNativeHtmlTable) {
+      const tbody = this._elementRef.nativeElement.querySelector('tbody');
+      tbody.classList.add('mdc-data-table__content');
+    }
   }
 }

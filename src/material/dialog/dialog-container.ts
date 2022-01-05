@@ -7,13 +7,20 @@
  */
 
 import {AnimationEvent} from '@angular/animations';
-import {FocusMonitor, FocusOrigin, FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
+import {
+  FocusMonitor,
+  FocusOrigin,
+  FocusTrap,
+  FocusTrapFactory,
+  InteractivityChecker,
+} from '@angular/cdk/a11y';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
   ComponentPortal,
   DomPortal,
-  TemplatePortal
+  TemplatePortal,
 } from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -26,6 +33,7 @@ import {
   EmbeddedViewRef,
   EventEmitter,
   Inject,
+  NgZone,
   Optional,
   ViewChild,
   ViewEncapsulation,
@@ -73,7 +81,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
    * whether the focus style will be applied when returning focus to its original location
    * after the dialog is closed.
    */
-  _closeInteractionType: FocusOrigin|null = null;
+  _closeInteractionType: FocusOrigin | null = null;
 
   /** ID of the element that should be considered as the dialog's label. */
   _ariaLabelledBy: string | null;
@@ -88,8 +96,10 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     @Optional() @Inject(DOCUMENT) _document: any,
     /** The dialog configuration. */
     public _config: MatDialogConfig,
-    private _focusMonitor?: FocusMonitor) {
-
+    private readonly _interactivityChecker: InteractivityChecker,
+    private readonly _ngZone: NgZone,
+    private _focusMonitor?: FocusMonitor,
+  ) {
     super();
     this._ariaLabelledBy = _config.ariaLabelledBy || null;
     this._document = _document;
@@ -104,9 +114,6 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     // Save the previously focused element. This element will be re-focused
     // when the dialog closes.
     this._capturePreviouslyFocusedElement();
-    // Move focus onto the dialog immediately in order to prevent the user
-    // from accidentally opening multiple dialogs at the same time.
-    this._focusDialogContainer();
   }
 
   /**
@@ -139,39 +146,90 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  attachDomPortal = (portal: DomPortal) => {
+  override attachDomPortal = (portal: DomPortal) => {
     if (this._portalOutlet.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throwMatDialogContentAlreadyAttachedError();
     }
 
     return this._portalOutlet.attachDomPortal(portal);
-  }
+  };
 
   /** Moves focus back into the dialog if it was moved out. */
   _recaptureFocus() {
     if (!this._containsFocus()) {
-      const focusContainer = !this._config.autoFocus || !this._focusTrap.focusInitialElement();
-
-      if (focusContainer) {
-        this._elementRef.nativeElement.focus();
-      }
+      this._trapFocus();
     }
   }
 
-  /** Moves the focus inside the focus trap. */
+  /**
+   * Focuses the provided element. If the element is not focusable, it will add a tabIndex
+   * attribute to forcefully focus it. The attribute is removed after focus is moved.
+   * @param element The element to focus.
+   */
+  private _forceFocus(element: HTMLElement, options?: FocusOptions) {
+    if (!this._interactivityChecker.isFocusable(element)) {
+      element.tabIndex = -1;
+      // The tabindex attribute should be removed to avoid navigating to that element again
+      this._ngZone.runOutsideAngular(() => {
+        element.addEventListener('blur', () => element.removeAttribute('tabindex'));
+        element.addEventListener('mousedown', () => element.removeAttribute('tabindex'));
+      });
+    }
+    element.focus(options);
+  }
+
+  /**
+   * Focuses the first element that matches the given selector within the focus trap.
+   * @param selector The CSS selector for the element to set focus to.
+   */
+  private _focusByCssSelector(selector: string, options?: FocusOptions) {
+    let elementToFocus = this._elementRef.nativeElement.querySelector(
+      selector,
+    ) as HTMLElement | null;
+    if (elementToFocus) {
+      this._forceFocus(elementToFocus, options);
+    }
+  }
+
+  /**
+   * Moves the focus inside the focus trap. When autoFocus is not set to 'dialog', if focus
+   * cannot be moved then focus will go to the dialog container.
+   */
   protected _trapFocus() {
-    // If we were to attempt to focus immediately, then the content of the dialog would not yet be
+    const element = this._elementRef.nativeElement;
+    // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
-    // wait for the microtask queue to be empty.
-    if (this._config.autoFocus) {
-      this._focusTrap.focusInitialElementWhenReady();
-    } else if (!this._containsFocus()) {
-      // Otherwise ensure that focus is on the dialog container. It's possible that a different
-      // component tried to move focus while the open animation was running. See:
-      // https://github.com/angular/components/issues/16215. Note that we only want to do this
-      // if the focus isn't inside the dialog already, because it's possible that the consumer
-      // turned off `autoFocus` in order to move focus themselves.
-      this._elementRef.nativeElement.focus();
+    // wait for the microtask queue to be empty when setting focus when autoFocus isn't set to
+    // dialog. If the element inside the dialog can't be focused, then the container is focused
+    // so the user can't tab into other elements behind it.
+    switch (this._config.autoFocus) {
+      case false:
+      case 'dialog':
+        // Ensure that focus is on the dialog container. It's possible that a different
+        // component tried to move focus while the open animation was running. See:
+        // https://github.com/angular/components/issues/16215. Note that we only want to do this
+        // if the focus isn't inside the dialog already, because it's possible that the consumer
+        // turned off `autoFocus` in order to move focus themselves.
+        if (!this._containsFocus()) {
+          element.focus();
+        }
+        break;
+      case true:
+      case 'first-tabbable':
+        this._focusTrap.focusInitialElementWhenReady().then(focusedSuccessfully => {
+          // If we weren't able to find a focusable element in the dialog, then focus the dialog
+          // container instead.
+          if (!focusedSuccessfully) {
+            this._focusDialogContainer();
+          }
+        });
+        break;
+      case 'first-heading':
+        this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
+        break;
+      default:
+        this._focusByCssSelector(this._config.autoFocus!);
+        break;
     }
   }
 
@@ -180,17 +238,24 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     const previousElement = this._elementFocusedBeforeDialogWasOpened;
 
     // We need the extra check, because IE can set the `activeElement` to null in some cases.
-    if (this._config.restoreFocus && previousElement &&
-        typeof previousElement.focus === 'function') {
-      const activeElement = this._document.activeElement;
+    if (
+      this._config.restoreFocus &&
+      previousElement &&
+      typeof previousElement.focus === 'function'
+    ) {
+      const activeElement = _getFocusedElementPierceShadowDom();
       const element = this._elementRef.nativeElement;
 
       // Make sure that focus is still inside the dialog or is on the body (usually because a
       // non-focusable element like the backdrop was clicked) before moving it. It's possible that
       // the consumer moved it themselves before the animation was done, in which case we shouldn't
       // do anything.
-      if (!activeElement || activeElement === this._document.body || activeElement === element ||
-          element.contains(activeElement)) {
+      if (
+        !activeElement ||
+        activeElement === this._document.body ||
+        activeElement === element ||
+        element.contains(activeElement)
+      ) {
         if (this._focusMonitor) {
           this._focusMonitor.focusVia(previousElement, this._closeInteractionType);
           this._closeInteractionType = null;
@@ -213,7 +278,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
   /** Captures the element that was focused before the dialog was opened. */
   private _capturePreviouslyFocusedElement() {
     if (this._document) {
-      this._elementFocusedBeforeDialogWasOpened = this._document.activeElement as HTMLElement;
+      this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
     }
   }
 
@@ -228,7 +293,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
   /** Returns whether focus is inside the dialog. */
   private _containsFocus() {
     const element = this._elementRef.nativeElement;
-    const activeElement = this._document.activeElement;
+    const activeElement = _getFocusedElementPierceShadowDom();
     return element === activeElement || element.contains(activeElement);
   }
 }

@@ -15,7 +15,6 @@ import {
   Output,
   EventEmitter,
   Inject,
-  HostListener,
   NgZone,
   OnDestroy,
 } from '@angular/core';
@@ -35,7 +34,7 @@ import {Toggler, MENU_AIM, MenuAim} from './menu-aim';
 /** Removes all icons from within the given element. */
 function removeIcons(element: Element) {
   for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
-    icon.parentNode?.removeChild(icon);
+    icon.remove();
   }
 }
 
@@ -53,6 +52,12 @@ function removeIcons(element: Element) {
     'role': 'menuitem',
     'class': 'cdk-menu-item',
     '[attr.aria-disabled]': 'disabled || null',
+    '(blur)': '_resetTabIndex()',
+    '(mouseout)': '_resetTabIndex()',
+    '(focus)': '_setTabIndex()',
+    '(mouseenter)': '_setTabIndex($event)',
+    '(click)': 'trigger()',
+    '(keydown)': '_onKeydown($event)',
   },
 })
 export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, OnDestroy {
@@ -61,7 +66,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -70,7 +75,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
    * If this MenuItem is a regular MenuItem, outputs when it is triggered by a keyboard or mouse
    * event.
    */
-  @Output('cdkMenuItemTriggered') triggered: EventEmitter<void> = new EventEmitter();
+  @Output('cdkMenuItemTriggered') readonly triggered: EventEmitter<void> = new EventEmitter();
 
   /**
    * The tabindex for this menu item managed internally and used for implementing roving a
@@ -79,7 +84,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   _tabindex: 0 | -1 = -1;
 
   /** Emits when the menu item is destroyed. */
-  private readonly _destroyed: Subject<void> = new Subject();
+  private readonly _destroyed = new Subject<void>();
 
   constructor(
     readonly _elementRef: ElementRef<HTMLElement>,
@@ -90,7 +95,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
     // `CdkMenuItem` is commonly used in combination with a `CdkMenuItemTrigger`.
     // tslint:disable-next-line: lightweight-tokens
-    @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger
+    @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger,
   ) {
     this._setupMouseEnter();
 
@@ -104,12 +109,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     this._elementRef.nativeElement.focus();
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('blur')
-  @HostListener('mouseout')
   /** Reset the _tabindex to -1. */
   _resetTabIndex() {
     if (!this._isStandaloneItem()) {
@@ -117,12 +116,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     }
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('focus')
-  @HostListener('mouseenter', ['$event'])
   /**
    * Set the tab index to 0 if not disabled and it's a focus event, or a mouse enter if this element
    * is not in a menu bar.
@@ -143,11 +136,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     return !this._parentMenu;
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('click')
   /**
    * If the menu item is not disabled and the element does not have a menu trigger attached, emit
    * on the cdkMenuItemTriggered emitter and close all open menus.
@@ -192,11 +180,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     return clone.textContent?.trim() || '';
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('keydown', ['$event'])
   /**
    * Handles keyboard events for the menu item, specifically either triggering the user defined
    * callback or opening/closing the current menu based on whether the left or right arrow key was
@@ -244,7 +227,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
         fromEvent(this._elementRef.nativeElement, 'mouseenter')
           .pipe(
             filter(() => !this._getMenuStack()?.isEmpty() && !this.hasMenu()),
-            takeUntil(this._destroyed)
+            takeUntil(this._destroyed),
           )
           .subscribe(() => {
             if (this._menuAim) {
@@ -252,7 +235,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
             } else {
               closeOpenSiblings();
             }
-          })
+          }),
       );
     }
   }
@@ -276,6 +259,4 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   ngOnDestroy() {
     this._destroyed.next();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

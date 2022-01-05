@@ -2,14 +2,17 @@
   "compilerOptions": {
     "noUnusedParameters": false,
     "noUnusedLocals": false,
-    "lib": ["es2015", "dom", "es2016.array.include"],
+    "lib": ["es2020", "dom"],
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
-    "target": "es2015",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "target": "es2020",
     "types": [
       "node"
     ]

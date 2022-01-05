@@ -1,31 +1,26 @@
-@import '@material/chips/mixins.import';
-@import '../../material/core/style/layout-common';
-@import '../../cdk/a11y/a11y';
-@import '../mdc-helpers/mdc-helpers';
+@use '@material/chips/deprecated' as mdc-chips;
+@use '@material/ripple' as mdc-ripple;
+@use '../../material/core/style/layout-common';
+@use '../../cdk/a11y';
+@use '../mdc-helpers/mdc-helpers';
 
-@include mdc-chip-without-ripple($query: $mat-base-styles-query);
-@include mdc-chip-set-core-styles($query: $mat-base-styles-query);
+@include mdc-chips.without-ripple($query: mdc-helpers.$mat-base-styles-query);
+@include mdc-chips.set-core-styles($query: mdc-helpers.$mat-base-styles-query);
 
 .mat-mdc-chip {
   // MDC uses a pointer cursor
   cursor: default;
 
   &._mat-animation-noopable {
-    // MDC's chip removal works by toggling a class on the chip, waiting for its transitions
-    // to finish and emitting the remove event at the end. The problem is that if our animations
-    // were disabled via the `NoopAnimationsModule`, the element won't have a transition and
-    // `transitionend` won't fire. We work around the issue by assigning a very short transition.
-    transition-duration: 1ms;
-
-    // Disables the chip enter animation.
     animation: none;
+    transition: none;
 
     .mdc-chip__checkmark-svg {
       transition: none;
     }
   }
 
-  @include cdk-high-contrast(active, off) {
+  @include a11y.high-contrast(active, off) {
     outline: solid 1px;
 
     &:focus {
@@ -37,7 +32,7 @@
 
 // The ripple container should match the bounds of the entire chip.
 .mat-mdc-chip-ripple {
-  @include mat-fill;
+  @include layout-common.fill;
 
   // Disable pointer events for the ripple container and state overlay because the container
   // will overlay the user content and we don't want to disable mouse events on the user content.
@@ -53,10 +48,10 @@
 // We currently don't use the MDC ripple due to size concerns, therefore we need to add some
 // additional styles to restore these states.
 .mdc-chip__ripple {
-  @include mdc-ripple-target-common($query: structure);
+  @include mdc-ripple.target-common($query: structure);
 
   &::after, &::before {
-    @include mat-fill;
+    @include layout-common.fill;
     content: '';
     pointer-events: none;
     opacity: 0;
@@ -101,15 +96,15 @@ input.mat-mdc-chip-input {
 }
 
 // The margin value is set in MDC.
-$mat-mdc-chip-margin: 4px;
+$chip-margin: 4px;
 
 // Don't let the chip margin increase the mat-form-field height.
 .mat-mdc-chip-grid {
-  margin: -$mat-mdc-chip-margin;
+  margin: -$chip-margin;
 
   // Keep the mat-chip-grid height the same even when there are no chips.
   input.mat-mdc-chip-input {
-    margin: $mat-mdc-chip-margin;
+    margin: $chip-margin;
   }
 }
 
@@ -118,7 +113,7 @@ $mat-mdc-chip-margin: 4px;
     transition: none;
   }
 
-  @include cdk-high-contrast(black-on-white, off) {
+  @include a11y.high-contrast(black-on-white, off) {
     // SVG colors won't be changed in high contrast mode and since the checkmark is white
     // by default, it'll blend in with the background in black-on-white mode. Override the color
     // to ensure that it's visible. We need !important, because the theme styles are very specific.
@@ -129,6 +124,29 @@ $mat-mdc-chip-margin: 4px;
 // Needed for the focus indicator.
 .mat-mdc-chip-row-focusable-text-content {
   position: relative;
+}
+
+.mat-mdc-chip-remove {
+  // Reset the user agent styles in case a button is used.
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0;
+  background: none;
+
+  .mat-icon {
+    width: inherit;
+    height: inherit;
+    font-size: inherit;
+  }
+}
+
+// Single-selection chips show their selected state using a background color which won't be visible
+// in high contrast mode. This isn't necessary in multi-selection since there's a checkmark.
+.mat-mdc-chip-selected:not(.mat-mdc-chip-multiple) {
+  @include a11y.high-contrast(active, off) {
+    outline-width: 3px;
+  }
 }
 
 .mat-mdc-chip-row-focusable-text-content,

@@ -29,45 +29,55 @@ export class InputNamesMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(name => {
       const currentSelector = `[${name.replace}]`;
       const updatedSelector = `[${name.replaceWith}]`;
 
       findAllSubstringIndices(stylesheet.content, currentSelector)
-          .map(offset => stylesheet.start + offset)
-          .forEach(
-              start => this._replaceInputName(
-                  stylesheet.filePath, start, currentSelector.length, updatedSelector));
+        .map(offset => stylesheet.start + offset)
+        .forEach(start =>
+          this._replaceInputName(
+            stylesheet.filePath,
+            start,
+            currentSelector.length,
+            updatedSelector,
+          ),
+        );
     });
   }
 
-  visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource): void {
     this.data.forEach(name => {
       const limitedTo = name.limitedTo;
       const relativeOffsets: number[] = [];
 
       if (limitedTo.attributes) {
         relativeOffsets.push(
-            ...findInputsOnElementWithAttr(template.content, name.replace, limitedTo.attributes));
+          ...findInputsOnElementWithAttr(template.content, name.replace, limitedTo.attributes),
+        );
       }
 
       if (limitedTo.elements) {
         relativeOffsets.push(
-            ...findInputsOnElementWithTag(template.content, name.replace, limitedTo.elements));
+          ...findInputsOnElementWithTag(template.content, name.replace, limitedTo.elements),
+        );
       }
 
-      relativeOffsets.map(offset => template.start + offset)
-          .forEach(
-              start => this._replaceInputName(
-                  template.filePath, start, name.replace.length, name.replaceWith));
+      relativeOffsets
+        .map(offset => template.start + offset)
+        .forEach(start =>
+          this._replaceInputName(template.filePath, start, name.replace.length, name.replaceWith),
+        );
     });
   }
 
-  private _replaceInputName(filePath: WorkspacePath, start: number, width: number,
-                            newName: string) {
-    this.fileSystem.edit(filePath)
-      .remove(start, width)
-      .insertRight(start, newName);
+  private _replaceInputName(
+    filePath: WorkspacePath,
+    start: number,
+    width: number,
+    newName: string,
+  ) {
+    this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newName);
   }
 }

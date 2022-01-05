@@ -31,9 +31,9 @@ export interface RippleGlobalOptions {
   disabled?: boolean;
 
   /**
-   * Configuration for the animation duration of the ripples. There are two phases with different
-   * durations for the ripples. The animation durations will be overwritten if the
-   * `NoopAnimationsModule` is being used.
+   * Default configuration for the animation duration of the ripples. There are two phases with
+   * different durations for the ripples: `enter` and `leave`. The durations will be overwritten
+   * by the value of `matRippleAnimation` or if the `NoopAnimationsModule` is included.
    */
   animation?: RippleAnimationConfig;
 
@@ -45,19 +45,19 @@ export interface RippleGlobalOptions {
 }
 
 /** Injection token that can be used to specify the global ripple options. */
-export const MAT_RIPPLE_GLOBAL_OPTIONS =
-    new InjectionToken<RippleGlobalOptions>('mat-ripple-global-options');
+export const MAT_RIPPLE_GLOBAL_OPTIONS = new InjectionToken<RippleGlobalOptions>(
+  'mat-ripple-global-options',
+);
 
 @Directive({
   selector: '[mat-ripple], [matRipple]',
   exportAs: 'matRipple',
   host: {
     'class': 'mat-ripple',
-    '[class.mat-ripple-unbounded]': 'unbounded'
-  }
+    '[class.mat-ripple-unbounded]': 'unbounded',
+  },
 })
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
-
   /** Custom color for all ripples. */
   @Input('matRippleColor') color: string;
 
@@ -89,8 +89,13 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * by using the `launch()` method.
    */
   @Input('matRippleDisabled')
-  get disabled() { return this._disabled; }
+  get disabled() {
+    return this._disabled;
+  }
   set disabled(value: boolean) {
+    if (value) {
+      this.fadeOutAllNonPersistent();
+    }
     this._disabled = value;
     this._setupTriggerEventsIfEnabled();
   }
@@ -101,7 +106,9 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * Defaults to the directive's host element.
    */
   @Input('matRippleTrigger')
-  get trigger() { return this._trigger || this._elementRef.nativeElement; }
+  get trigger() {
+    return this._trigger || this._elementRef.nativeElement;
+  }
   set trigger(trigger: HTMLElement) {
     this._trigger = trigger;
     this._setupTriggerEventsIfEnabled();
@@ -117,12 +124,13 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   /** Whether ripple directive is initialized and the input bindings are set. */
   private _isInitialized: boolean = false;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>,
-              ngZone: NgZone,
-              platform: Platform,
-              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
-
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    ngZone: NgZone,
+    platform: Platform,
+    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
+  ) {
     this._globalOptions = globalOptions || {};
     this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform);
   }
@@ -141,6 +149,11 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     this._rippleRenderer.fadeOutAll();
   }
 
+  /** Fades out all currently showing non-persistent ripple elements. */
+  fadeOutAllNonPersistent() {
+    this._rippleRenderer.fadeOutAllNonPersistent();
+  }
+
   /**
    * Ripple configuration from the directive's input values.
    * @docs-private Implemented as part of RippleTarget
@@ -153,7 +166,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
       animation: {
         ...this._globalOptions.animation,
         ...(this._animationMode === 'NoopAnimations' ? {enterDuration: 0, exitDuration: 0} : {}),
-        ...this.animation
+        ...this.animation,
       },
       terminateOnPointerUp: this._globalOptions.terminateOnPointerUp,
     };
@@ -181,9 +194,11 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   launch(config: RippleConfig): RippleRef;
 
   /**
-   * Launches a manual ripple at the specified coordinates within the element.
-   * @param x Coordinate within the element, along the X axis at which to fade-in the ripple.
-   * @param y Coordinate within the element, along the Y axis at which to fade-in the ripple.
+   * Launches a manual ripple at the specified coordinates relative to the viewport.
+   * @param x Coordinate along the X axis at which to fade-in the ripple. Coordinate
+   *   should be relative to the viewport.
+   * @param y Coordinate along the Y axis at which to fade-in the ripple. Coordinate
+   *   should be relative to the viewport.
    * @param config Optional ripple configuration for the manual ripple.
    */
   launch(x: number, y: number, config?: RippleConfig): RippleRef;
@@ -197,4 +212,3 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     }
   }
 }
-

@@ -17,7 +17,15 @@ export interface NavListHarnessFilters extends BaseHarnessFilters {}
 export interface SelectionListHarnessFilters extends BaseHarnessFilters {}
 
 export interface BaseListItemHarnessFilters extends BaseHarnessFilters {
-  text?: string|RegExp;
+  title?: string | RegExp;
+  secondaryText?: string | RegExp | null;
+  tertiaryText?: string | RegExp | null;
+  fullText?: string | RegExp;
+  /**
+   * @deprecated Use the `fullText` filter instead.
+   * @breaking-change 16.0.0
+   */
+  text?: string | RegExp;
 }
 
 export interface ListItemHarnessFilters extends BaseListItemHarnessFilters {}
@@ -25,7 +33,7 @@ export interface ListItemHarnessFilters extends BaseListItemHarnessFilters {}
 export interface ActionListItemHarnessFilters extends BaseListItemHarnessFilters {}
 
 export interface NavListItemHarnessFilters extends BaseListItemHarnessFilters {
-  href?: string|RegExp|null;
+  href?: string | RegExp | null;
 }
 
 export interface ListOptionHarnessFilters extends BaseListItemHarnessFilters {
@@ -33,5 +41,5 @@ export interface ListOptionHarnessFilters extends BaseListItemHarnessFilters {
 }
 
 export interface SubheaderHarnessFilters extends BaseHarnessFilters {
-  text?: string|RegExp;
+  text?: string | RegExp;
 }

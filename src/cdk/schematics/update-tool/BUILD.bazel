@@ -5,11 +5,12 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "update-tool",
     srcs = glob(["**/*.ts"]),
-    # Schematics do not need to run in browsers and can use `commonjs`
-    # as format instead the default `umd` format.
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
     devmode_module = "commonjs",
-    module_name = "@angular/cdk/schematics/update-tool",
+    devmode_target = "es2015",
     prodmode_module = "commonjs",
+    prodmode_target = "es2015",
     tsconfig = ":tsconfig.json",
     deps = [
         "@npm//@types/node",

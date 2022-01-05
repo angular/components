@@ -14,7 +14,6 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/cdk/accordion",
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/collections",
@@ -42,7 +41,7 @@ ng_web_test_suite(
 
 markdown_to_html(
     name = "overview",
-    srcs = [],
+    srcs = [":accordion.md"],
 )
 
 filegroup(
