@@ -18,7 +18,6 @@ import {
   Optional,
   OnInit,
   NgZone,
-  HostListener,
   ElementRef,
   Inject,
   Self,
@@ -60,6 +59,8 @@ import {MENU_AIM, MenuAim} from './menu-aim';
     'class': 'cdk-menu',
     '[class.cdk-menu-inline]': '_isInline()',
     '[attr.aria-orientation]': 'orientation',
+    '(focus)': 'focusFirstItem()',
+    '(keydown)': '_handleKeyEvent($event)',
   },
   providers: [
     {provide: CdkMenuGroup, useExisting: CdkMenu},
@@ -115,7 +116,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     @Optional() private readonly _dir?: Directionality,
     // `CdkMenuPanel` is always used in combination with a `CdkMenu`.
     // tslint:disable-next-line: lightweight-tokens
-    @Optional() private readonly _menuPanel?: CdkMenuPanel
+    @Optional() private readonly _menuPanel?: CdkMenuPanel,
   ) {
     super();
   }
@@ -124,7 +125,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     this._registerWithParentPanel();
   }
 
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     super.ngAfterContentInit();
 
     this._completeChangeEmitter();
@@ -136,11 +137,6 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     this._menuAim?.initialize(this, this._pointerTracker!);
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('focus')
   /** Place focus on the first MenuItem in the menu and set the focus origin. */
   focusFirstItem(focusOrigin: FocusOrigin = 'program') {
     this._keyManager.setFocusOrigin(focusOrigin);
@@ -153,11 +149,6 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     this._keyManager.setLastItemActive();
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('keydown', ['$event'])
   /** Handle keyboard events for the Menu. */
   _handleKeyEvent(event: KeyboardEvent) {
     const keyManager = this._keyManager;
@@ -261,30 +252,32 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   private _subscribeToMenuStack() {
     this._menuStack.closed
       .pipe(takeUntil(this.closed))
-      .subscribe((item: MenuStackItem) => this._closeOpenMenu(item));
+      .subscribe(item => this._closeOpenMenu(item));
 
     this._menuStack.emptied
       .pipe(takeUntil(this.closed))
-      .subscribe((event: FocusNext) => this._toggleMenuFocus(event));
+      .subscribe(event => this._toggleMenuFocus(event));
   }
 
   /**
    * Close the open menu if the current active item opened the requested MenuStackItem.
    * @param item the MenuStackItem requested to be closed.
    */
-  private _closeOpenMenu(menu: MenuStackItem) {
+  private _closeOpenMenu(menu: MenuStackItem | undefined) {
     const keyManager = this._keyManager;
     const trigger = this._openItem;
     if (menu === trigger?.getMenuTrigger()?.getMenu()) {
-      trigger.getMenuTrigger()?.closeMenu();
+      trigger?.getMenuTrigger()?.closeMenu();
       // If the user has moused over a sibling item we want to focus the element under mouse focus
       // not the trigger which previously opened the now closed menu.
-      keyManager.setActiveItem(this._pointerTracker?.activeElement || trigger);
+      if (trigger) {
+        keyManager.setActiveItem(this._pointerTracker?.activeElement || trigger);
+      }
     }
   }
 
   /** Set focus the either the current, previous or next item based on the FocusNext event. */
-  private _toggleMenuFocus(event: FocusNext) {
+  private _toggleMenuFocus(event: FocusNext | undefined) {
     const keyManager = this._keyManager;
     switch (event) {
       case FocusNext.nextItem:
@@ -319,14 +312,14 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
         mergeMap((list: QueryList<CdkMenuItem>) =>
           list
             .filter(item => item.hasMenu())
-            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition)))
+            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition))),
         ),
         mergeAll(),
         switchMap((item: CdkMenuItem) => {
           this._openItem = item;
           return item.getMenuTrigger()!.closed;
         }),
-        takeUntil(this.closed)
+        takeUntil(this.closed),
       )
       .subscribe(() => (this._openItem = undefined));
   }
@@ -346,7 +339,8 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     return this._menuStack instanceof NoopMenuStack;
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy();
     this._emitClosedEvent();
     this._pointerTracker?.destroy();
   }

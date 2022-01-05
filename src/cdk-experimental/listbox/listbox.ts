@@ -10,10 +10,17 @@ import {
   AfterContentInit,
   ContentChildren,
   Directive,
-  ElementRef, EventEmitter, forwardRef,
-  Inject, InjectionToken,
-  Input, OnDestroy, OnInit, Optional, Output,
-  QueryList
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Inject,
+  InjectionToken,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  QueryList,
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
 import {DOWN_ARROW, ENTER, SPACE, UP_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
@@ -31,7 +38,7 @@ let listboxId = 0;
 export const CDK_LISTBOX_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => CdkListbox),
-  multi: true
+  multi: true,
 };
 
 export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
@@ -51,8 +58,8 @@ export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
     '[attr.aria-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-active]': '_active',
-    '[class.cdk-option-selected]': 'selected'
-  }
+    '[class.cdk-option-selected]': 'selected',
+  },
 })
 export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightable {
   private _selected: boolean = false;
@@ -67,7 +74,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   get selected(): boolean {
     return this._selected;
   }
-  set selected(value: boolean) {
+  set selected(value: BooleanInput) {
     if (!this._disabled) {
       this._selected = coerceBooleanProperty(value);
     }
@@ -77,7 +84,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
@@ -93,12 +100,12 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     this._value = value;
   }
 
-  @Output() readonly selectionChange: EventEmitter<OptionSelectionChangeEvent<T>> =
-      new EventEmitter<OptionSelectionChangeEvent<T>>();
+  @Output() readonly selectionChange = new EventEmitter<OptionSelectionChangeEvent<T>>();
 
-  constructor(private readonly _elementRef: ElementRef,
-              @Inject(forwardRef(() => CdkListbox)) readonly listbox: CdkListbox<T>) {
-  }
+  constructor(
+    private readonly _elementRef: ElementRef,
+    @Inject(forwardRef(() => CdkListbox)) readonly listbox: CdkListbox<T>,
+  ) {}
 
   /** Toggles the selected state, emits a change event through the injected listbox. */
   toggle() {
@@ -145,14 +152,14 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /** Returns true if the option or listbox are disabled, and false otherwise. */
   _isInteractionDisabled(): boolean {
-    return (this.listbox.disabled || this._disabled);
+    return this.listbox.disabled || this._disabled;
   }
 
   /** Emits a change event extending the Option Selection Change Event interface. */
   private _emitSelectionChange(isUserInput = false) {
     this.selectionChange.emit({
       source: this,
-      isUserInput: isUserInput
+      isUserInput: isUserInput,
     });
   }
 
@@ -174,7 +181,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   private _removeIcons(element: Element) {
     // TODO: make this a configurable function that can removed any desired type of node.
     for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
-      icon.parentNode?.removeChild(icon);
+      icon.remove();
     }
   }
 
@@ -191,9 +198,6 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   setInactiveStyles() {
     this._active = false;
   }
-
-  static ngAcceptInputType_selected: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Directive({
@@ -209,12 +213,11 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
-    '[attr.aria-orientation]': 'orientation'
+    '[attr.aria-orientation]': 'orientation',
   },
-  providers: [CDK_LISTBOX_VALUE_ACCESSOR]
+  providers: [CDK_LISTBOX_VALUE_ACCESSOR],
 })
 export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, ControlValueAccessor {
-
   _listKeyManager: ActiveDescendantKeyManager<CdkOption<T>>;
   _selectionModel: SelectionModel<CdkOption<T>>;
   _tabIndex = 0;
@@ -230,7 +233,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
     return options.changes.pipe(
       startWith(options),
-      switchMap(() => merge(...options.map(option => option.selectionChange)))
+      switchMap(() => merge(...options.map(option => option.selectionChange))),
     );
   }) as Observable<OptionSelectionChangeEvent<T>>;
 
@@ -243,8 +246,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption<T>>;
 
-  @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent<T>> =
-      new EventEmitter<ListboxSelectionChangeEvent<T>>();
+  @Output() readonly selectionChange = new EventEmitter<ListboxSelectionChangeEvent<T>>();
 
   @Input() id = `cdk-listbox-${listboxId++}`;
 
@@ -256,16 +258,17 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
-    this._updateSelectionOnMultiSelectionChange(value);
-    this._multiple = coerceBooleanProperty(value);
+  set multiple(value: BooleanInput) {
+    const coercedValue = coerceBooleanProperty(value);
+    this._updateSelectionOnMultiSelectionChange(coercedValue);
+    this._multiple = coercedValue;
   }
 
   @Input()
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
@@ -274,7 +277,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get useActiveDescendant(): boolean {
     return this._useActiveDescendant;
   }
-  set useActiveDescendant(shouldUseActiveDescendant: boolean) {
+  set useActiveDescendant(shouldUseActiveDescendant: BooleanInput) {
     this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
   }
 
@@ -283,7 +286,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get autoFocus(): boolean {
     return this._autoFocus;
   }
-  set autoFocus(shouldAutoFocus: boolean) {
+  set autoFocus(shouldAutoFocus: BooleanInput) {
     this._autoFocus = coerceBooleanProperty(shouldAutoFocus);
   }
 
@@ -296,8 +299,8 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   constructor(
     @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
-    @Optional() private readonly _dir?: Directionality
-  ) { }
+    @Optional() private readonly _dir?: Directionality,
+  ) {}
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<CdkOption<T>>(this.multiple);
@@ -329,10 +332,10 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   private _initKeyManager() {
     this._listKeyManager = new ActiveDescendantKeyManager(this._options)
-        .withWrap()
-        .withTypeAhead()
-        .withHomeAndEnd()
-        .withAllowedModifierKeys(['shiftKey']);
+      .withWrap()
+      .withTypeAhead()
+      .withHomeAndEnd()
+      .withAllowedModifierKeys(['shiftKey']);
 
     if (this.orientation === 'vertical') {
       this._listKeyManager.withVerticalOrientation();
@@ -346,17 +349,17 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   }
 
   private _initSelectionModel() {
-    this._selectionModel.changed.pipe(takeUntil(this._destroyed))
-        .subscribe((event: SelectionChange<CdkOption<T>>) => {
+    this._selectionModel.changed
+      .pipe(takeUntil(this._destroyed))
+      .subscribe((event: SelectionChange<CdkOption<T>>) => {
+        for (const option of event.added) {
+          option.selected = true;
+        }
 
-      for (const option of event.added) {
-        option.selected = true;
-      }
-
-      for (const option of event.removed) {
-        option.selected = false;
-      }
-    });
+        for (const option of event.removed) {
+          option.selected = false;
+        }
+      });
   }
 
   _keydown(event: KeyboardEvent) {
@@ -373,16 +376,16 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
         this._toggleActiveOption();
       }
       event.preventDefault();
-
     } else {
       manager.onKeydown(event);
     }
 
     /** Will select an option if shift was pressed while navigating to the option */
-    const isArrow = (keyCode === UP_ARROW
-        || keyCode === DOWN_ARROW
-        || keyCode === LEFT_ARROW
-        || keyCode === RIGHT_ARROW);
+    const isArrow =
+      keyCode === UP_ARROW ||
+      keyCode === DOWN_ARROW ||
+      keyCode === LEFT_ARROW ||
+      keyCode === RIGHT_ARROW;
     if (isArrow && event.shiftKey && previousActiveIndex !== this._listKeyManager.activeItemIndex) {
       this._toggleActiveOption();
     }
@@ -392,7 +395,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   _emitChangeEvent(option: CdkOption<T>) {
     this.selectionChange.emit({
       source: this,
-      option: option
+      option: option,
     });
   }
 
@@ -403,8 +406,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       this.deselect(previouslySelected);
     }
 
-    option.selected ? this._selectionModel.select(option) :
-                      this._selectionModel.deselect(option);
+    option.selected ? this._selectionModel.select(option) : this._selectionModel.deselect(option);
   }
 
   _updatePanelForSelection(option: CdkOption<T>) {
@@ -450,8 +452,10 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       // Deselect all options instead of arbitrarily keeping one of the selected options.
       this.setAllSelected(false);
     } else if (!this.multiple && value) {
-      this._selectionModel =
-          new SelectionModel<CdkOption<T>>(value, this._selectionModel?.selected);
+      this._selectionModel = new SelectionModel<CdkOption<T>>(
+        value,
+        this._selectionModel?.selected,
+      );
     }
   }
 
@@ -547,11 +551,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       }
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_useActiveDescendant: BooleanInput;
-  static ngAcceptInputType_autoFocus: BooleanInput;
 }
 
 /** Change event that is being fired whenever the selected state of an option changes. */

@@ -28,10 +28,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {
-  CanColor, CanColorCtor,
-  mixinColor,
-} from '@angular/material/core';
+import {CanColor, mixinColor} from '@angular/material/core';
 import {fromEvent, merge, Subject} from 'rxjs';
 import {startWith, take, takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './error';
@@ -51,26 +48,20 @@ import {Platform} from '@angular/cdk/platform';
 import {NgControl} from '@angular/forms';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
-
 let nextUniqueId = 0;
 const floatingLabelScale = 0.75;
 const outlineGapPadding = 5;
-
 
 /**
  * Boilerplate for applying mixins to MatFormField.
  * @docs-private
  */
-class MatFormFieldBase {
-  constructor(public _elementRef: ElementRef) { }
-}
-
-/**
- * Base class to which we're applying the form field mixins.
- * @docs-private
- */
-const _MatFormFieldMixinBase: CanColorCtor & typeof MatFormFieldBase =
-    mixinColor(MatFormFieldBase, 'primary');
+const _MatFormFieldBase = mixinColor(
+  class {
+    constructor(public _elementRef: ElementRef) {}
+  },
+  'primary',
+);
 
 /** Possible appearance styles for the form field. */
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
@@ -96,8 +87,9 @@ export interface MatFormFieldDefaultOptions {
  * Injection token that can be used to configure the
  * default options for all form field within an app.
  */
-export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
-    new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
+export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDefaultOptions>(
+  'MAT_FORM_FIELD_DEFAULT_OPTIONS',
+);
 
 /**
  * Injection token that can be used to inject an instances of `MatFormField`. It serves
@@ -137,8 +129,6 @@ export const MAT_FORM_FIELD = new InjectionToken<MatFormField>('MatFormField');
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-form-field-autofilled]': '_control.autofilled',
     '[class.mat-focused]': '_control.focused',
-    '[class.mat-accent]': 'color == "accent"',
-    '[class.mat-warn]': 'color == "warn"',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -151,14 +141,12 @@ export const MAT_FORM_FIELD = new InjectionToken<MatFormField>('MatFormField');
   inputs: ['color'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {provide: MAT_FORM_FIELD, useExisting: MatFormField},
-  ]
+  providers: [{provide: MAT_FORM_FIELD, useExisting: MatFormField}],
 })
-
-export class MatFormField extends _MatFormFieldMixinBase
-    implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy, CanColor {
-
+export class MatFormField
+  extends _MatFormFieldBase
+  implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy, CanColor
+{
   /**
    * Whether the outline gap needs to be calculated
    * immediately on the next change detection run.
@@ -168,11 +156,13 @@ export class MatFormField extends _MatFormFieldMixinBase
   /** Whether the outline gap needs to be calculated next time the zone has stabilized. */
   private _outlineGapCalculationNeededOnStable = false;
 
-  private _destroyed = new Subject<void>();
+  private readonly _destroyed = new Subject<void>();
 
   /** The form-field appearance style. */
   @Input()
-  get appearance(): MatFormFieldAppearance { return this._appearance; }
+  get appearance(): MatFormFieldAppearance {
+    return this._appearance;
+  }
   set appearance(value: MatFormFieldAppearance) {
     const oldValue = this._appearance;
 
@@ -186,8 +176,10 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   /** Whether the required marker should be hidden. */
   @Input()
-  get hideRequiredMarker(): boolean { return this._hideRequiredMarker; }
-  set hideRequiredMarker(value: boolean) {
+  get hideRequiredMarker(): boolean {
+    return this._hideRequiredMarker;
+  }
+  set hideRequiredMarker(value: BooleanInput) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
   private _hideRequiredMarker: boolean;
@@ -201,14 +193,18 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
 
   /** Whether the label can float or not. */
-  _canLabelFloat(): boolean { return this.floatLabel !== 'never'; }
+  _canLabelFloat(): boolean {
+    return this.floatLabel !== 'never';
+  }
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState: string = '';
 
   /** Text for the form field hint. */
   @Input()
-  get hintLabel(): string { return this._hintLabel; }
+  get hintLabel(): string {
+    return this._hintLabel;
+  }
   set hintLabel(value: string) {
     this._hintLabel = value;
     this._processHints();
@@ -244,12 +240,6 @@ export class MatFormField extends _MatFormFieldMixinBase
   /** Whether the Angular animations are enabled. */
   _animationsEnabled: boolean;
 
-  /**
-   * @deprecated
-   * @breaking-change 8.0.0
-   */
-  @ViewChild('underline') underlineRef: ElementRef;
-
   @ViewChild('connectionContainer', {static: true}) _connectionContainerRef: ElementRef;
   @ViewChild('inputContainer') _inputContainerRef: ElementRef;
   @ViewChild('label') private _label: ElementRef<HTMLElement>;
@@ -276,33 +266,31 @@ export class MatFormField extends _MatFormFieldMixinBase
   @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
 
   constructor(
-      public _elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
-      /**
-       * @deprecated `_labelOptions` parameter no longer being used. To be removed.
-       * @breaking-change 12.0.0
-       */
-      @Inject(ElementRef)
-          // Use `ElementRef` here so Angular has something to inject.
-          _labelOptions: any,
-      @Optional() private _dir: Directionality,
-      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaults:
-          MatFormFieldDefaultOptions, private _platform: Platform, private _ngZone: NgZone,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode: string) {
-    super(_elementRef);
+    elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef,
+    @Optional() private _dir: Directionality,
+    @Optional()
+    @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
+    private _defaults: MatFormFieldDefaultOptions,
+    private _platform: Platform,
+    private _ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode: string,
+  ) {
+    super(elementRef);
 
     this.floatLabel = this._getDefaultFloatLabelState();
     this._animationsEnabled = _animationMode !== 'NoopAnimations';
 
     // Set the default through here so we invoke the setter on the first run.
-    this.appearance = (_defaults && _defaults.appearance) ? _defaults.appearance : 'legacy';
-    this._hideRequiredMarker = (_defaults && _defaults.hideRequiredMarker != null) ?
-        _defaults.hideRequiredMarker : false;
+    this.appearance = _defaults && _defaults.appearance ? _defaults.appearance : 'legacy';
+    this._hideRequiredMarker =
+      _defaults && _defaults.hideRequiredMarker != null ? _defaults.hideRequiredMarker : false;
   }
 
   /**
    * Gets the id of the label element. If no label is present, returns `null`.
    */
-  getLabelId(): string|null {
+  getLabelId(): string | null {
     return this._hasFloatingLabel() ? this._labelId : null;
   }
 
@@ -324,7 +312,7 @@ export class MatFormField extends _MatFormFieldMixinBase
     }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
-    control.stateChanges.pipe(startWith(null!)).subscribe(() => {
+    control.stateChanges.pipe(startWith(null)).subscribe(() => {
       this._validatePlaceholders();
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
@@ -404,7 +392,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
 
   _hasPlaceholder() {
-    return !!(this._control && this._control.placeholder || this._placeholderChild);
+    return !!((this._control && this._control.placeholder) || this._placeholderChild);
   }
 
   _hasLabel() {
@@ -412,25 +400,30 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
 
   _shouldLabelFloat() {
-    return this._canLabelFloat() &&
-        ((this._control && this._control.shouldLabelFloat) || this._shouldAlwaysFloat());
+    return (
+      this._canLabelFloat() &&
+      ((this._control && this._control.shouldLabelFloat) || this._shouldAlwaysFloat())
+    );
   }
 
   _hideControlPlaceholder() {
     // In the legacy appearance the placeholder is promoted to a label if no label is given.
-    return this.appearance === 'legacy' && !this._hasLabel() ||
-        this._hasLabel() && !this._shouldLabelFloat();
+    return (
+      (this.appearance === 'legacy' && !this._hasLabel()) ||
+      (this._hasLabel() && !this._shouldLabelFloat())
+    );
   }
 
   _hasFloatingLabel() {
     // In the legacy appearance the placeholder is promoted to a label if no label is given.
-    return this._hasLabel() || this.appearance === 'legacy' && this._hasPlaceholder();
+    return this._hasLabel() || (this.appearance === 'legacy' && this._hasPlaceholder());
   }
 
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
-    return (this._errorChildren && this._errorChildren.length > 0 &&
-        this._control.errorState) ? 'error' : 'hint';
+    return this._errorChildren && this._errorChildren.length > 0 && this._control.errorState
+      ? 'error'
+      : 'hint';
   }
 
   /** Animates the placeholder up and locks it in position. */
@@ -441,9 +434,11 @@ export class MatFormField extends _MatFormFieldMixinBase
       if (this._animationsEnabled && this._label) {
         this._showAlwaysAnimate = true;
 
-        fromEvent(this._label.nativeElement, 'transitionend').pipe(take(1)).subscribe(() => {
-          this._showAlwaysAnimate = false;
-        });
+        fromEvent(this._label.nativeElement, 'transitionend')
+          .pipe(take(1))
+          .subscribe(() => {
+            this._showAlwaysAnimate = false;
+          });
       }
 
       this.floatLabel = 'always';
@@ -456,8 +451,11 @@ export class MatFormField extends _MatFormFieldMixinBase
    * or child element with the `mat-placeholder` directive).
    */
   private _validatePlaceholders() {
-    if (this._control.placeholder && this._placeholderChild &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (
+      this._control.placeholder &&
+      this._placeholderChild &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
       throw getMatFormFieldPlaceholderConflictError();
     }
   }
@@ -506,16 +504,20 @@ export class MatFormField extends _MatFormFieldMixinBase
       let ids: string[] = [];
 
       // TODO(wagnermaciel): Remove the type check when we find the root cause of this bug.
-      if (this._control.userAriaDescribedBy &&
-        typeof this._control.userAriaDescribedBy === 'string') {
+      if (
+        this._control.userAriaDescribedBy &&
+        typeof this._control.userAriaDescribedBy === 'string'
+      ) {
         ids.push(...this._control.userAriaDescribedBy.split(' '));
       }
 
       if (this._getDisplayedMessages() === 'hint') {
-        const startHint = this._hintChildren ?
-            this._hintChildren.find(hint => hint.align === 'start') : null;
-        const endHint = this._hintChildren ?
-            this._hintChildren.find(hint => hint.align === 'end') : null;
+        const startHint = this._hintChildren
+          ? this._hintChildren.find(hint => hint.align === 'start')
+          : null;
+        const endHint = this._hintChildren
+          ? this._hintChildren.find(hint => hint.align === 'end')
+          : null;
 
         if (startHint) {
           ids.push(startHint.id);
@@ -548,8 +550,12 @@ export class MatFormField extends _MatFormFieldMixinBase
   updateOutlineGap() {
     const labelEl = this._label ? this._label.nativeElement : null;
 
-    if (this.appearance !== 'outline' || !labelEl || !labelEl.children.length ||
-        !labelEl.textContent!.trim()) {
+    if (
+      this.appearance !== 'outline' ||
+      !labelEl ||
+      !labelEl.children.length ||
+      !labelEl.textContent!.trim()
+    ) {
       return;
     }
 
@@ -605,13 +611,13 @@ export class MatFormField extends _MatFormFieldMixinBase
       gapEls[i].style.width = `${gapWidth}px`;
     }
 
-    this._outlineGapCalculationNeededOnStable =
-        this._outlineGapCalculationNeededImmediately = false;
+    this._outlineGapCalculationNeededOnStable = this._outlineGapCalculationNeededImmediately =
+      false;
   }
 
   /** Gets the start end of the rect considering the current directionality. */
   private _getStartEnd(rect: ClientRect): number {
-    return (this._dir && this._dir.value === 'rtl') ? rect.right : rect.left;
+    return this._dir && this._dir.value === 'rtl' ? rect.right : rect.left;
   }
 
   /** Checks whether the form field is attached to the DOM. */
@@ -629,6 +635,4 @@ export class MatFormField extends _MatFormFieldMixinBase
     // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
     return document.documentElement!.contains(element);
   }
-
-  static ngAcceptInputType_hideRequiredMarker: BooleanInput;
 }

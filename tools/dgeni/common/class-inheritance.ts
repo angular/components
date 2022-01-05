@@ -1,14 +1,34 @@
 // tslint:disable:no-bitwise
 
+import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
 import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
 import {ClassLikeExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassLikeExportDoc';
 import {InterfaceExportDoc} from 'dgeni-packages/typescript/api-doc-types/InterfaceExportDoc';
 import * as ts from 'typescript';
+import {MemberDoc} from 'dgeni-packages/typescript/api-doc-types/MemberDoc';
+
+/** Type describing class like documents which have been created through inheritance. */
+export type InheritanceCreatedClassLikeDoc = ClassLikeExportDoc & {_inheritanceCreated?: true};
+
+/** Whether the given API doc has been created through inheritance. */
+export function isInheritanceCreatedDoc(doc: ApiDoc): doc is ClassLikeExportDoc {
+  // For member docs, we look if the containing API doc has been created through
+  // inheritance.
+  if (doc instanceof MemberDoc) {
+    return isInheritanceCreatedDoc(doc.containerDoc);
+  }
+
+  return (
+    doc instanceof ClassLikeExportDoc &&
+    (doc as InheritanceCreatedClassLikeDoc)._inheritanceCreated === true
+  );
+}
 
 /** Gets all class like export documents which the given doc inherits from. */
 export function getInheritedDocsOfClass(
-    doc: ClassLikeExportDoc,
-    exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>): ClassLikeExportDoc[] {
+  doc: ClassLikeExportDoc,
+  exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>,
+): ClassLikeExportDoc[] {
   const result: ClassLikeExportDoc[] = [];
   const typeChecker = doc.typeChecker;
   for (let info of doc.extendsClauses) {
@@ -36,9 +56,11 @@ export function getInheritedDocsOfClass(
  * multiple classes will result in multiple Dgeni API documents for each class.
  */
 function getClassLikeDocsFromType(
-    type: ts.Type, baseDoc: ClassLikeExportDoc,
-    exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>): ClassLikeExportDoc[] {
-  let aliasSymbol: ts.Symbol|undefined = undefined;
+  type: ts.Type,
+  baseDoc: ClassLikeExportDoc,
+  exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>,
+): ClassLikeExportDoc[] {
+  let aliasSymbol: ts.Symbol | undefined = undefined;
   let symbol: ts.Symbol = type.symbol;
   const typeChecker = baseDoc.typeChecker;
 
@@ -53,8 +75,9 @@ function getClassLikeDocsFromType(
   // class augmentation. e.g. "BaseClass & CanColor".
   if (type.isIntersection()) {
     return type.types.reduce(
-        (res, t) => [...res, ...getClassLikeDocsFromType(t, baseDoc, exportSymbolsToDocsMap)],
-        [] as ClassLikeExportDoc[]);
+      (res, t) => [...res, ...getClassLikeDocsFromType(t, baseDoc, exportSymbolsToDocsMap)],
+      [] as ClassLikeExportDoc[],
+    );
   } else if (symbol) {
     // If the given symbol has already been registered within Dgeni, we use the
     // existing symbol instead of creating a new one. The dgeni typescript package
@@ -63,15 +86,18 @@ function getClassLikeDocsFromType(
     if (exportSymbolsToDocsMap.has(symbol)) {
       return [exportSymbolsToDocsMap.get(symbol)!];
     }
-    let createdDoc: ClassLikeExportDoc|null = null;
+    let createdDoc: InheritanceCreatedClassLikeDoc | null = null;
     if ((symbol.flags & ts.SymbolFlags.Class) !== 0) {
       createdDoc = new ClassExportDoc(baseDoc.host, baseDoc.moduleDoc, symbol, aliasSymbol);
     } else if ((symbol.flags & ts.SymbolFlags.Interface) !== 0) {
       createdDoc = new InterfaceExportDoc(baseDoc.host, baseDoc.moduleDoc, symbol, aliasSymbol);
     }
-    // If a new document has been created, add it to the shared symbol
-    // docs map and return it.
+
     if (createdDoc) {
+      // Mark the created document. This allows us to distinguish between documents which
+      // have been resolved by Dgeni automatically, and docs which are manually resolved.
+      createdDoc._inheritanceCreated = true;
+      // If a new document has been created, add it to the shared symbol.
       exportSymbolsToDocsMap.set(aliasSymbol || symbol, createdDoc);
       return [createdDoc];
     }

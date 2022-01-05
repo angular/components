@@ -21,10 +21,6 @@ describe('AriaDescriber', () => {
     fixture.detectChanges();
   }
 
-  afterEach(() => {
-    ariaDescriber.ngOnDestroy();
-  });
-
   it('should initialize without the message container', () => {
     createFixture();
     expect(getMessagesContainer()).toBeNull();
@@ -128,19 +124,26 @@ describe('AriaDescriber', () => {
     const descriptionNode = fixture.nativeElement.querySelector('#description-with-existing-id');
 
     expect(document.body.contains(descriptionNode))
-        .toBe(true, 'Expected node to be inside the document to begin with.');
-    expect(getMessagesContainer()).toBeNull('Expected no messages container on init.');
+      .withContext('Expected node to be inside the document to begin with.')
+      .toBe(true);
+    expect(getMessagesContainer())
+      .withContext('Expected no messages container on init.')
+      .toBeNull();
 
     ariaDescriber.describe(component.element1, descriptionNode);
 
     expectMessage(component.element1, 'Hello');
     expect(getMessagesContainer())
-        .toBeNull('Expected no messages container after the element was described.');
+      .withContext('Expected no messages container after the element was described.')
+      .toBeNull();
 
     ariaDescriber.removeDescription(component.element1, descriptionNode);
 
-    expect(document.body.contains(descriptionNode)).toBe(true,
-        'Expected description node to still be in the DOM after it is no longer being used.');
+    expect(document.body.contains(descriptionNode))
+      .withContext(
+        'Expected description node to still be in the DOM after it is' + 'no longer being used.',
+      )
+      .toBe(true);
   });
 
   it('should keep nodes set as descriptions inside their original position in the DOM', () => {
@@ -148,18 +151,22 @@ describe('AriaDescriber', () => {
     const descriptionNode = fixture.nativeElement.querySelector('#description-with-existing-id');
     const initialParent = descriptionNode.parentNode;
 
-    expect(initialParent).toBeTruthy('Expected node to have a parent initially.');
+    expect(initialParent).withContext('Expected node to have a parent initially.').toBeTruthy();
 
     ariaDescriber.describe(component.element1, descriptionNode);
 
     expectMessage(component.element1, 'Hello');
-    expect(descriptionNode.parentNode).toBe(initialParent,
-        'Expected node to stay inside the same parent when used as a description.');
+    expect(descriptionNode.parentNode)
+      .withContext('Expected node to stay inside the same parent when used as a description.')
+      .toBe(initialParent);
 
     ariaDescriber.removeDescription(component.element1, descriptionNode);
 
-    expect(descriptionNode.parentNode).toBe(initialParent,
-      'Expected node to stay inside the same parent after not being used as a description.');
+    expect(descriptionNode.parentNode)
+      .withContext(
+        'Expected node to stay inside the same parent after not ' + 'being used as a description.',
+      )
+      .toBe(initialParent);
   });
 
   it('should be able to unregister messages while having others registered', () => {
@@ -212,10 +219,7 @@ describe('AriaDescriber', () => {
 
     // Use `querySelectorAll` with an attribute since `getElementById` will stop at the first match.
     expect(document.querySelectorAll(`[id='${MESSAGES_CONTAINER_ID}']`).length).toBe(1);
-
-    if (extraContainer.parentNode) {
-      extraContainer.parentNode.removeChild(extraContainer);
-    }
+    extraContainer.remove();
   });
 
   it('should not describe messages that match up with the aria-label of the element', () => {
@@ -247,7 +251,8 @@ describe('AriaDescriber', () => {
     const descriptionNode = fixture.nativeElement.querySelector('#description-with-existing-id');
 
     expect(document.body.contains(descriptionNode))
-        .toBe(true, 'Expected node to be inside the document to begin with.');
+      .withContext('Expected node to be inside the document to begin with.')
+      .toBe(true);
 
     ariaDescriber.describe(component.element1, descriptionNode);
 
@@ -257,8 +262,11 @@ describe('AriaDescriber', () => {
     ariaDescriber.ngOnDestroy();
 
     expect(component.element1.hasAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE)).toBe(false);
-    expect(document.body.contains(descriptionNode)).toBe(true,
-        'Expected description node to still be in the DOM after it is no longer being used.');
+    expect(document.body.contains(descriptionNode))
+      .withContext(
+        'Expected description node to still be in the DOM after ' + 'it is no longer being used.',
+      )
+      .toBe(true);
   });
 
   it('should remove the aria-describedby attribute if there are no more messages', () => {
@@ -326,7 +334,6 @@ describe('AriaDescriber', () => {
     ariaDescriber.removeDescription(component.element1, 'My Message', 'tooltip');
     expect(getMessageElements()).toBeNull();
   });
-
 });
 
 function getMessagesContainer() {
@@ -335,7 +342,9 @@ function getMessagesContainer() {
 
 function getMessageElements(): Element[] | null {
   const messagesContainer = getMessagesContainer();
-  if (!messagesContainer) { return null; }
+  if (!messagesContainer) {
+    return null;
+  }
 
   return messagesContainer ? Array.prototype.slice.call(messagesContainer.children) : null;
 }
@@ -383,17 +392,24 @@ function expectMessage(el: Element, message: string) {
 })
 class TestApp {
   @ViewChild('element1') _element1: ElementRef<HTMLElement>;
-  get element1(): Element { return this._element1.nativeElement; }
+  get element1(): Element {
+    return this._element1.nativeElement;
+  }
 
   @ViewChild('element2') _element2: ElementRef<HTMLElement>;
-  get element2(): Element { return this._element2.nativeElement; }
+  get element2(): Element {
+    return this._element2.nativeElement;
+  }
 
   @ViewChild('element3') _element3: ElementRef<HTMLElement>;
-  get element3(): Element { return this._element3.nativeElement; }
+  get element3(): Element {
+    return this._element3.nativeElement;
+  }
 
   @ViewChild('element4') _element4: ElementRef<HTMLElement>;
-  get element4(): Element { return this._element4.nativeElement; }
+  get element4(): Element {
+    return this._element4.nativeElement;
+  }
 
-
-  constructor(public ariaDescriber: AriaDescriber) { }
+  constructor(public ariaDescriber: AriaDescriber) {}
 }

@@ -88,8 +88,10 @@
 /src/cdk/text-field/**                             @mmalerba
 /src/cdk/tree/**                                   @jelbourn @andrewseguin
 
-# Moment adapter package
+# Date adapters
 /src/material-moment-adapter/**                    @mmalerba
+/src/material-luxon-adapter/**                     @crisbeto
+/src/material-date-fns-adapter/**                  @crisbeto
 
 # Material experimental package
 /src/material-experimental/*                       @jelbourn
@@ -117,6 +119,7 @@
 /src/material-experimental/mdc-slide-toggle/**     @crisbeto
 /src/material-experimental/mdc-slider/**           @devversion
 /src/material-experimental/mdc-tabs/**             @crisbeto
+/src/material-experimental/mdc-tooltip/**          @crisbeto
 /src/material-experimental/mdc-sidenav/**          @crisbeto
 /src/material-experimental/mdc-table/**            @andrewseguin
 /src/material-experimental/mdc-theming/**          @mmalerba
@@ -133,6 +136,7 @@
 /src/cdk-experimental/menu/**                      @jelbourn @andy9775
 /src/cdk-experimental/popover-edit/**              @kseamon @andrewseguin
 /src/cdk-experimental/scrolling/**                 @mmalerba
+/src/cdk-experimental/table-scroll-container/**    @kseamon @andrewseguin
 /src/cdk-experimental/listbox/**                   @nielsr98 @jelbourn
 /src/cdk-experimental/selection/**                 @yifange @jelbourn
 
@@ -173,6 +177,8 @@
 /src/dev-app/grid-list/**                          @jelbourn
 /src/dev-app/icon/**                               @jelbourn
 /src/dev-app/input/**                              @mmalerba
+/src/dev-app/layout/**                             @jelbourn
+/src/dev-app/input-modality/**                     @jelbourn @zelliott
 /src/dev-app/list/**                               @jelbourn @crisbeto @devversion
 /src/dev-app/live-announcer/**                     @jelbourn
 /src/dev-app/mdc-button/**                         @andrewseguin
@@ -196,6 +202,7 @@
 /src/dev-app/mdc-slider/**                         @devversion
 /src/dev-app/mdc-table/**                          @andrewseguin
 /src/dev-app/mdc-tabs/**                           @crisbeto
+/src/dev-app/mdc-tooltip/**                        @crisbeto
 /src/dev-app/menu/**                               @crisbeto
 /src/dev-app/menubar/**                            @jelbourn @andy9775
 /src/dev-app/overlay/**                            @jelbourn @crisbeto
@@ -215,6 +222,7 @@
 /src/dev-app/snack-bar/**                          @jelbourn @crisbeto
 /src/dev-app/stepper/**                            @mmalerba
 /src/dev-app/table/**                              @andrewseguin
+/src/dev-app/table-scroll-container/**             @kseamon @andrewseguin
 /src/dev-app/tabs/**                               @andrewseguin
 /src/dev-app/toolbar/**                            @devversion
 /src/dev-app/tooltip/**                            @andrewseguin
@@ -340,6 +348,7 @@
 
 # Misc
 /.github/**                                        @angular/dev-infra-components
+/.husky/**                                         @angular/dev-infra-components
 /.github/CODEOWNERS                                @angular/dev-infra-components @jelbourn
 /.github/ISSUE_TEMPLATE/**                         @andrewseguin @jelbourn
 /.vscode/**                                        @angular/dev-infra-components @mmalerba

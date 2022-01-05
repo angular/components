@@ -11,7 +11,6 @@ import {Inject, Injectable} from '@angular/core';
 import {OverlayReference} from '../overlay-reference';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 
-
 /**
  * Service for dispatching keyboard events that land on the body to appropriate overlay ref,
  * if any. It maintains a list of attached overlays to determine best suited overlay based
@@ -19,13 +18,12 @@ import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
  */
 @Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-
   constructor(@Inject(DOCUMENT) document: any) {
     super(document);
   }
 
   /** Add a new overlay to the list of attached overlay refs. */
-  add(overlayRef: OverlayReference): void {
+  override add(overlayRef: OverlayReference): void {
     super.add(overlayRef);
 
     // Lazily start dispatcher once first overlay is added
@@ -59,5 +57,5 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
         break;
       }
     }
-  }
+  };
 }

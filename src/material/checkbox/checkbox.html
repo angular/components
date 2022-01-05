@@ -21,7 +21,7 @@
          [matRippleDisabled]="_isRippleDisabled()"
          [matRippleRadius]="20"
          [matRippleCentered]="true"
-         [matRippleAnimation]="{enterDuration: 150}">
+         [matRippleAnimation]="{enterDuration: _animationMode === 'NoopAnimations' ? 0 : 150}">
       <span class="mat-ripple-element mat-checkbox-persistent-ripple"></span>
     </span>
     <span class="mat-checkbox-frame"></span>
@@ -30,7 +30,8 @@
            focusable="false"
            class="mat-checkbox-checkmark"
            viewBox="0 0 24 24"
-           xml:space="preserve">
+           xml:space="preserve"
+           aria-hidden="true">
         <path class="mat-checkbox-checkmark-path"
               fill="none"
               stroke="white"

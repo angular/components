@@ -4,9 +4,11 @@
  * amount, the script will fail with a non-zero exit code.
  */
 
-import * as chalk from 'chalk';
 import {readFileSync, statSync, writeFileSync} from 'fs';
 import {parse, stringify} from 'yaml';
+import {runfiles} from '@bazel/runfiles';
+
+const chalk = require('chalk');
 
 /**
  * Absolute byte deviation from the expected value that is allowed. If the
@@ -30,8 +32,8 @@ type Golden = {[testId: string]: number};
  *                 with the actual measured size.
  */
 const [testId, testFileRootpath, isApprove] = process.argv.slice(2);
-const testFilePath = require.resolve(`angular_material/${testFileRootpath}`);
-const goldenFilePath = require.resolve('../../goldens/size-test.yaml');
+const testFilePath = runfiles.resolveWorkspaceRelative(testFileRootpath);
+const goldenFilePath = runfiles.resolveWorkspaceRelative('goldens/size-test.yaml');
 
 const golden: Golden = parse(readFileSync(goldenFilePath, 'utf8')) || {};
 const fileStat = statSync(testFilePath);
@@ -55,7 +57,7 @@ if (golden[testId] === undefined) {
 const expectedSize = Number(golden[testId]);
 const absoluteSizeDiff = Math.abs(actualSize - expectedSize);
 const deviatedByPercentage =
-    absoluteSizeDiff > (expectedSize * PERCENTAGE_DEVIATION_THRESHOLD / 100);
+  absoluteSizeDiff > (expectedSize * PERCENTAGE_DEVIATION_THRESHOLD) / 100;
 const deviatedByAbsoluteDiff = absoluteSizeDiff > ABSOLUTE_BYTE_THRESHOLD;
 
 // Always print the expected and actual size so that it's easier to find culprit
@@ -80,7 +82,9 @@ function printApproveCommand() {
 
 /** Gets the lexicographically sorted size-test golden. */
 function getSortedGolden(): Golden {
-  return Object.keys(golden).sort().reduce((result: Golden, key: string) => {
-    return {...result, [key]: golden[key]};
-  }, {} as Golden);
+  return Object.keys(golden)
+    .sort()
+    .reduce((result: Golden, key: string) => {
+      return {...result, [key]: golden[key]};
+    }, {} as Golden);
 }

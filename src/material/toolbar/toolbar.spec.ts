@@ -5,20 +5,21 @@ import {CommonModule} from '@angular/common';
 import {MatToolbarModule} from './index';
 
 describe('MatToolbar', () => {
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatToolbarModule, CommonModule],
+        declarations: [
+          ToolbarSingleRow,
+          ToolbarMultipleRows,
+          ToolbarMixedRowModes,
+          ToolbarMultipleIndirectRows,
+        ],
+      });
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatToolbarModule, CommonModule],
-      declarations: [
-        ToolbarSingleRow,
-        ToolbarMultipleRows,
-        ToolbarMixedRowModes,
-        ToolbarMultipleIndirectRows,
-      ],
-    });
-
-    TestBed.compileComponents();
-  }));
+      TestBed.compileComponents();
+    }),
+  );
 
   describe('with single row', () => {
     let fixture: ComponentFixture<ToolbarSingleRow>;
@@ -51,19 +52,22 @@ describe('MatToolbar', () => {
     });
 
     it('should not wrap the first row contents inside of a generated element', () => {
-      expect(toolbarElement.firstElementChild!.tagName).toBe('SPAN',
-          'Expected the <span> element of the first row to be a direct child of the toolbar');
+      expect(toolbarElement.firstElementChild!.tagName)
+        .withContext(
+          'Expected the <span> element of the first row to be a direct child ' + 'of the toolbar',
+        )
+        .toBe('SPAN');
     });
   });
 
   describe('with multiple rows', () => {
-
     it('should project each toolbar-row element inside of the toolbar', () => {
       const fixture = TestBed.createComponent(ToolbarMultipleRows);
       fixture.detectChanges();
 
       expect(fixture.debugElement.queryAll(By.css('.mat-toolbar > .mat-toolbar-row')).length)
-        .toBe(2, 'Expected one toolbar row to be present while no content is projected.');
+        .withContext('Expected one toolbar row to be present while no content is projected.')
+        .toBe(2);
     });
 
     it('should throw an error if different toolbar modes are mixed', () => {
@@ -98,18 +102,15 @@ describe('MatToolbar', () => {
 
       expect(toolbar.classList).toContain('mat-toolbar-multiple-rows');
     });
-
   });
-
 });
-
 
 @Component({
   template: `
     <mat-toolbar [color]="toolbarColor">
       <span>First Row</span>
     </mat-toolbar>
-  `
+  `,
 })
 class ToolbarSingleRow {
   toolbarColor: string;
@@ -121,7 +122,7 @@ class ToolbarSingleRow {
       <mat-toolbar-row>First Row</mat-toolbar-row>
       <mat-toolbar-row>Second Row</mat-toolbar-row>
     </mat-toolbar>
-  `
+  `,
 })
 class ToolbarMultipleRows {}
 
@@ -131,12 +132,11 @@ class ToolbarMultipleRows {}
       First Row
       <mat-toolbar-row *ngIf="showToolbarRow">Second Row</mat-toolbar-row>
     </mat-toolbar>
-  `
+  `,
 })
 class ToolbarMixedRowModes {
   showToolbarRow: boolean = true;
 }
-
 
 @Component({
   // The ng-container is there so we have a node with a directive between the toolbar and the rows.
@@ -147,6 +147,6 @@ class ToolbarMixedRowModes {
         <mat-toolbar-row>Second Row</mat-toolbar-row>
       </ng-container>
     </mat-toolbar>
-  `
+  `,
 })
 class ToolbarMultipleIndirectRows {}

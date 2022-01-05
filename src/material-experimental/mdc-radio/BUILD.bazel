@@ -18,7 +18,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":radio_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-radio",
     deps = [
         "//src/cdk/a11y",
         "//src/cdk/coercion",
@@ -27,7 +26,6 @@ ng_module(
         "//src/material/radio",
         "@npm//@angular/forms",
         "@npm//@material/radio",
-        "@npm//@material/ripple",
     ],
 )
 
@@ -73,13 +71,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-        "@npm//:node_modules/@material/radio/dist/mdc.radio.js",
-    ],
     deps = [
         ":radio_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

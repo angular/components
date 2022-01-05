@@ -7,12 +7,8 @@ export {CdkPlatformOverviewExample};
 const EXAMPLES = [CdkPlatformOverviewExample];
 
 @NgModule({
-  imports: [
-    PlatformModule,
-  ],
+  imports: [PlatformModule],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
-export class CdkPlatformExamplesModule {
-}
+export class CdkPlatformExamplesModule {}

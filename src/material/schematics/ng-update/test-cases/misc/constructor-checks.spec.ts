@@ -1,20 +1,20 @@
 import {createTestCaseSetup, resolveBazelPath} from '@angular/cdk/schematics/testing';
-import {MIGRATION_PATH} from '../../../index.spec';
+import {MIGRATION_PATH} from '../../../paths';
 
 describe('constructor checks', () => {
   it('should properly report invalid constructor expression signatures', async () => {
-    const {runFixers} = await createTestCaseSetup(
-        'migration-v6', MIGRATION_PATH,
-        [resolveBazelPath(__dirname, './constructor-checks_input.ts')]);
+    const {runFixers} = await createTestCaseSetup('migration-v6', MIGRATION_PATH, [
+      resolveBazelPath(__dirname, './constructor-checks_input.ts'),
+    ]);
 
     const {logOutput} = await runFixers();
 
-    expect(logOutput).toMatch(
-        /@22:13 - Found "NativeDateAdapter"/,
-        'Expected the constructor checks to report if an argument is not assignable.');
-    expect(logOutput).not.toMatch(
-        /@24.*Found "NativeDateAdapter".*/,
-        'Expected the constructor to not report if an argument is assignable.');
+    expect(logOutput)
+      .withContext('Expected the constructor checks to report if an argument is not assignable.')
+      .toMatch(/@22:13 - Found "NativeDateAdapter"/);
+    expect(logOutput)
+      .not.withContext('Expected the constructor to not report if an argument is assignable.')
+      .toMatch(/@24.*Found "NativeDateAdapter".*/);
 
     expect(logOutput).not.toMatch(/Found "NonMaterialClass".*: new NonMaterialClass\(\)/);
 

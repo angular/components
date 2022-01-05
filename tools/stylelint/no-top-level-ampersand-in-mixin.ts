@@ -3,8 +3,8 @@ import {basename} from 'path';
 
 const ruleName = 'material/no-top-level-ampersand-in-mixin';
 const messages = utils.ruleMessages(ruleName, {
-  expected: () => `Selectors starting with an ampersand ` +
-                  `are not allowed inside top-level mixin rules`
+  expected: () =>
+    `Selectors starting with an ampersand ` + `are not allowed inside top-level mixin rules`,
 });
 
 /** Config options for the rule. */
@@ -24,7 +24,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
 
     const options = _options as RuleOptions;
     const filePattern = new RegExp(options.filePattern);
-    const fileName = basename(root.source!.input.file!);
+    const fileName = basename(root.source.input.file);
 
     if (!filePattern.test(fileName)) {
       return;
@@ -32,8 +32,12 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
 
     root.walkAtRules(node => {
       // Skip non-mixin atrules and internal mixins.
-      if (!node.nodes || node.name !== 'mixin' || node.params.startsWith('_') ||
-          node.params.startsWith('mat-private-') || node.params.startsWith('mat-mdc-private-')) {
+      if (
+        !node.nodes ||
+        node.name !== 'mixin' ||
+        node.params.startsWith('_') ||
+        node.params.startsWith('private-')
+      ) {
         return;
       }
 
@@ -43,7 +47,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
             result,
             ruleName,
             message: messages.expected(),
-            node: childNode
+            node: childNode,
           });
         }
       });
@@ -51,6 +55,4 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
   };
 });
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
 export default plugin;

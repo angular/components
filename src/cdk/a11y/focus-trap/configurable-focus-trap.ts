@@ -21,8 +21,10 @@ import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
  */
 export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap {
   /** Whether the FocusTrap is enabled. */
-  get enabled(): boolean { return this._enabled; }
-  set enabled(value: boolean) {
+  override get enabled(): boolean {
+    return this._enabled;
+  }
+  override set enabled(value: boolean) {
     this._enabled = value;
     if (this._enabled) {
       this._focusTrapManager.register(this);
@@ -38,13 +40,14 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     _document: Document,
     private _focusTrapManager: FocusTrapManager,
     private _inertStrategy: FocusTrapInertStrategy,
-    config: ConfigurableFocusTrapConfig) {
+    config: ConfigurableFocusTrapConfig,
+  ) {
     super(_element, _checker, _ngZone, _document, config.defer);
     this._focusTrapManager.register(this);
   }
 
   /** Notifies the FocusTrapManager that this FocusTrap will be destroyed. */
-  destroy() {
+  override destroy() {
     this._focusTrapManager.deregister(this);
     super.destroy();
   }

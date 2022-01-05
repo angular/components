@@ -7,6 +7,7 @@
  */
 
 import {ViewportRuler} from '@angular/cdk/scrolling';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {getMutableClientRect, adjustClientRect} from './client-rect';
 
 /** Object holding the scroll position of something. */
@@ -18,10 +19,13 @@ interface ScrollPosition {
 /** Keeps track of the scroll position and dimensions of the parents of an element. */
 export class ParentPositionTracker {
   /** Cached positions of the scrollable parent elements. */
-  readonly positions = new Map<Document|HTMLElement, {
-    scrollPosition: ScrollPosition,
-    clientRect?: ClientRect
-  }>();
+  readonly positions = new Map<
+    Document | HTMLElement,
+    {
+      scrollPosition: ScrollPosition;
+      clientRect?: ClientRect;
+    }
+  >();
 
   constructor(private _document: Document, private _viewportRuler: ViewportRuler) {}
 
@@ -31,7 +35,7 @@ export class ParentPositionTracker {
   }
 
   /** Caches the positions. Should be called at the beginning of a drag sequence. */
-  cache(elements: HTMLElement[] | ReadonlyArray<HTMLElement>) {
+  cache(elements: readonly HTMLElement[]) {
     this.clear();
     this.positions.set(this._document, {
       scrollPosition: this._viewportRuler.getViewportScrollPosition(),
@@ -40,24 +44,20 @@ export class ParentPositionTracker {
     elements.forEach(element => {
       this.positions.set(element, {
         scrollPosition: {top: element.scrollTop, left: element.scrollLeft},
-        clientRect: getMutableClientRect(element)
+        clientRect: getMutableClientRect(element),
       });
     });
   }
 
   /** Handles scrolling while a drag is taking place. */
   handleScroll(event: Event): ScrollPosition | null {
-    const target = event.target as HTMLElement | Document;
+    const target = _getEventTarget<HTMLElement | Document>(event)!;
     const cachedPosition = this.positions.get(target);
 
     if (!cachedPosition) {
       return null;
     }
 
-    // Used when figuring out whether an element is inside the scroll parent. If the scrolled
-    // parent is the `document`, we use the `documentElement`, because IE doesn't support
-    // `contains` on the `document`.
-    const scrolledParentNode = target === this._document ? target.documentElement : target;
     const scrollPosition = cachedPosition.scrollPosition;
     let newTop: number;
     let newLeft: number;
@@ -77,7 +77,7 @@ export class ParentPositionTracker {
     // Go through and update the cached positions of the scroll
     // parents that are inside the element that was scrolled.
     this.positions.forEach((position, node) => {
-      if (position.clientRect && target !== node && scrolledParentNode.contains(node)) {
+      if (position.clientRect && target !== node && target.contains(node)) {
         adjustClientRect(position.clientRect, topDifference, leftDifference);
       }
     });

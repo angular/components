@@ -7,7 +7,6 @@
  */
 
 import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,9 +23,6 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
-  CanColorCtor,
-  CanDisableCtor,
-  CanDisableRippleCtor,
   MatRipple,
   mixinColor,
   mixinDisabled,
@@ -52,13 +48,15 @@ const BUTTON_HOST_ATTRIBUTES = [
 ];
 
 // Boilerplate for applying mixins to MatButton.
-/** @docs-private */
-class MatButtonBase {
-  constructor(public _elementRef: ElementRef) {}
-}
-
-const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor &
-    typeof MatButtonBase = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonBase)));
+const _MatButtonBase = mixinColor(
+  mixinDisabled(
+    mixinDisableRipple(
+      class {
+        constructor(public _elementRef: ElementRef) {}
+      },
+    ),
+  ),
+);
 
 /**
  * Material design button.
@@ -83,9 +81,10 @@ const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor 
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatButton extends _MatButtonMixinBase
-    implements AfterViewInit, OnDestroy, CanDisable, CanColor, CanDisableRipple, FocusableOption {
-
+export class MatButton
+  extends _MatButtonBase
+  implements AfterViewInit, OnDestroy, CanDisable, CanColor, CanDisableRipple, FocusableOption
+{
   /** Whether the button is round. */
   readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
@@ -95,9 +94,11 @@ export class MatButton extends _MatButtonMixinBase
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
-  constructor(elementRef: ElementRef,
-              private _focusMonitor: FocusMonitor,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
+  constructor(
+    elementRef: ElementRef,
+    private _focusMonitor: FocusMonitor,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
+  ) {
     super(elementRef);
 
     // For each of the variant selectors that is present in the button's host
@@ -147,9 +148,6 @@ export class MatButton extends _MatButtonMixinBase
   _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -184,7 +182,8 @@ export class MatAnchor extends MatButton {
   constructor(
     focusMonitor: FocusMonitor,
     elementRef: ElementRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+  ) {
     super(elementRef, focusMonitor, animationMode);
   }
 

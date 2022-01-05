@@ -15,19 +15,28 @@ import {
   Component,
   ContentChildren,
   ElementRef,
+  EventEmitter,
   Inject,
   InjectionToken,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
+  Optional,
+  Output,
   QueryList,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {MatLine, ThemePalette} from '@angular/material-experimental/mdc-core';
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+  ThemePalette,
+} from '@angular/material-experimental/mdc-core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatListBase, MatListItemBase} from './list-base';
 import {LIST_OPTION, ListOption, MatListOptionCheckboxPosition} from './list-option-types';
+import {MatListItemLine, MatListItemTitle} from './list-item-sections';
 
 /**
  * Injection token that can be used to reference instances of an `SelectionList`. It serves
@@ -46,13 +55,10 @@ export interface SelectionList extends MatListBase {
   color: ThemePalette;
   selectedOptions: SelectionModel<MatListOption>;
   compareWith: (o1: any, o2: any) => boolean;
-  _value: string[]|null;
+  _value: string[] | null;
   _reportValueChange: () => void;
   _onTouched: () => void;
 }
-
-/** Unique id for created list options. */
-let uniqueId = 0;
 
 @Component({
   selector: 'mat-list-option',
@@ -64,9 +70,19 @@ let uniqueId = 0;
     // As per MDC, only list items in single selection mode should receive the `--selected`
     // class. For multi selection, the checkbox is used as indicator.
     '[class.mdc-list-item--selected]': 'selected && !_selectionList.multiple',
-    '[class.mat-mdc-list-item-with-avatar]': '_hasIconOrAvatar()',
+    // Based on the checkbox position and whether there are icons or avatars, we apply MDC's
+    // list-item `--leading` and `--trailing` classes.
+    '[class.mdc-list-item--with-leading-avatar]': '_hasProjected("avatars", "before")',
+    '[class.mdc-list-item--with-leading-icon]': '_hasProjected("icons", "before")',
+    '[class.mdc-list-item--with-trailing-icon]': '_hasProjected("icons", "after")',
+    '[class.mat-mdc-list-option-with-trailing-avatar]': '_hasProjected("avatars", "after")',
+    // Based on the checkbox position, we apply the `--leading` or `--trailing` MDC classes
+    // which ensure that the checkbox is positioned correctly within the list item.
+    '[class.mdc-list-item--with-leading-checkbox]': '_hasCheckboxAt("before")',
+    '[class.mdc-list-item--with-trailing-checkbox]': '_hasCheckboxAt("after")',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
+    '[class._mat-animation-noopable]': '_noopAnimations',
     '(blur)': '_handleBlur()',
   },
   templateUrl: 'list-option.html',
@@ -75,35 +91,40 @@ let uniqueId = 0;
   providers: [
     {provide: MatListItemBase, useExisting: MatListOption},
     {provide: LIST_OPTION, useExisting: MatListOption},
-  ]
+  ],
 })
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
-  /**
-   * This is set to true after the first OnChanges cycle so we don't
-   * clear the value of `selected` in the first cycle.
-   */
-  private _inputsInitialized = false;
-
+  @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;
+  @ContentChildren(MatListItemTitle, {descendants: true}) _titles: QueryList<MatListItemTitle>;
+  @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
   @ViewChild('text') _itemText: ElementRef<HTMLElement>;
 
-  @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
-    QueryList<ElementRef<Element>>;
-
-  /** Unique id for the text. Used for describing the underlying checkbox input. */
-  _optionTextId: string = `mat-mdc-list-option-text-${uniqueId++}`;
+  /**
+   * Emits when the selected state of the option has changed.
+   * Use to facilitate two-data binding to the `selected` property.
+   * @docs-private
+   */
+  @Output()
+  readonly selectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: MatListOptionCheckboxPosition = 'after';
 
   /** Theme color of the list option. This sets the color of the checkbox. */
   @Input()
-  get color(): ThemePalette { return this._color || this._selectionList.color; }
-  set color(newValue: ThemePalette) { this._color = newValue; }
+  get color(): ThemePalette {
+    return this._color || this._selectionList.color;
+  }
+  set color(newValue: ThemePalette) {
+    this._color = newValue;
+  }
   private _color: ThemePalette;
 
   /** Value of the option */
   @Input()
-  get value(): any { return this._value; }
+  get value(): any {
+    return this._value;
+  }
   set value(newValue: any) {
     if (this.selected && newValue !== this.value && this._inputsInitialized) {
       this.selected = false;
@@ -115,24 +136,38 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
 
   /** Whether the option is selected. */
   @Input()
-  get selected(): boolean { return this._selectionList.selectedOptions.isSelected(this); }
-  set selected(value: boolean) {
+  get selected(): boolean {
+    return this._selectionList.selectedOptions.isSelected(this);
+  }
+  set selected(value: BooleanInput) {
     const isSelected = coerceBooleanProperty(value);
 
     if (isSelected !== this._selected) {
       this._setSelected(isSelected);
-      this._selectionList._reportValueChange();
+
+      if (isSelected || this._selectionList.multiple) {
+        this._selectionList._reportValueChange();
+      }
     }
   }
   private _selected = false;
 
+  /**
+   * This is set to true after the first OnChanges cycle so we don't
+   * clear the value of `selected` in the first cycle.
+   */
+  private _inputsInitialized = false;
+
   constructor(
-      element: ElementRef,
-      ngZone: NgZone,
-      platform: Platform,
-      @Inject(SELECTION_LIST) public _selectionList: SelectionList,
-      private _changeDetectorRef: ChangeDetectorRef) {
-    super(element, ngZone, _selectionList, platform);
+    element: ElementRef,
+    ngZone: NgZone,
+    platform: Platform,
+    @Inject(SELECTION_LIST) public _selectionList: SelectionList,
+    private _changeDetectorRef: ChangeDetectorRef,
+    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
+    super(element, ngZone, _selectionList, platform, globalRippleOptions, animationMode);
 
     // By default, we mark all options as unselected. The MDC list foundation will
     // automatically update the attribute based on selection. Note that we need to
@@ -164,7 +199,9 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     this._inputsInitialized = true;
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+
     if (this.selected) {
       // We have to delay this until the next tick in order
       // to avoid changed after checked errors.
@@ -184,14 +221,24 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     this._hostElement.focus();
   }
 
-  /** Whether the checkbox should be shown at the given position. */
-  _shouldShowCheckboxAt(position: MatListOptionCheckboxPosition): boolean {
+  /** Whether a checkbox is shown at the given position. */
+  _hasCheckboxAt(position: MatListOptionCheckboxPosition): boolean {
     return this._selectionList.multiple && this._getCheckboxPosition() === position;
   }
 
-  /** Whether icons and avatars should be shown at the given position. */
-  _shouldShowIconsAndAvatarsAt(position: 'before'|'after'): boolean {
-    return this._getCheckboxPosition() !== position && this._hasIconOrAvatar();
+  /** Whether icons or avatars are shown at the given position. */
+  _hasIconsOrAvatarsAt(position: 'before' | 'after'): boolean {
+    return this._hasProjected('icons', position) || this._hasProjected('avatars', position);
+  }
+
+  /** Gets whether the given type of element is projected at the specified position. */
+  _hasProjected(type: 'icons' | 'avatars', position: 'before' | 'after'): boolean {
+    // If the checkbox is shown at the specified position, neither icons or
+    // avatars can be shown at the position.
+    return (
+      this._getCheckboxPosition() !== position &&
+      (type === 'avatars' ? this._avatars.length !== 0 : this._icons.length !== 0)
+    );
   }
 
   _handleBlur() {
@@ -220,6 +267,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
       this._selectionList.selectedOptions.deselect(this);
     }
 
+    this.selectedChange.emit(selected);
     this._changeDetectorRef.markForCheck();
     return true;
   }
@@ -232,6 +280,4 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   _markForCheck() {
     this._changeDetectorRef.markForCheck();
   }
-
-  static ngAcceptInputType_selected: BooleanInput;
 }

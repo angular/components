@@ -14,11 +14,16 @@ the positions `before` and `after` should be used instead of `left` and `right`,
 | Position  | Description                                                                          |
 |-----------|--------------------------------------------------------------------------------------|
 | `above`   | Always display above the element                                                     |
-| `below `  | Always display beneath the element                                                   |
+| `below`   | Always display beneath the element                                                   |
 | `left`    | Always display to the left of the element                                            |
 | `right`   | Always display to the right of the element                                           |
 | `before`  | Display to the left in left-to-right layout and to the right in right-to-left layout |
-| `after`   | Display to the right in left-to-right layout and to the left in right-to-left layout|
+| `after`   | Display to the right in left-to-right layout and to the left in right-to-left layout |
+
+Based on the position in which the tooltip is shown, the `.mat-tooltip-panel` element will receive a
+CSS class that can be used for style (e.g. to add an arrow). The possible classes are
+`mat-tooltip-panel-above`, `mat-tooltip-panel-below`, `mat-tooltip-panel-left`,
+`mat-tooltip-panel-right`.
 
 <!-- example(tooltip-position) -->
 
@@ -61,13 +66,12 @@ shown.
 
 ### Accessibility
 
-Elements with the `matTooltip` will add an `aria-describedby` label that provides a reference
+`MatTooltip` adds an `aria-describedby` description that provides a reference
 to a visually hidden element containing the tooltip's message. This provides screenreaders the
-information needed to read out the tooltip's contents when the end-user focuses on the element
-triggering the tooltip. The element referenced via `aria-describedby` is not the tooltip itself,
+information needed to read out the tooltip's contents when the end-user focuses on tooltip's
+trigger. The element referenced by `aria-describedby` is not the tooltip itself,
 but instead an invisible copy of the tooltip content that is always present in the DOM.
 
-If a tooltip will only be shown manually via click, keypress, etc., then extra care should be taken
-such that the action behaves similarly for screen-reader users. One possible approach would be
-to use the `LiveAnnouncer` from the `cdk/a11y` package to announce the tooltip content on such
-an interaction.
+Avoid interactions that exclusively show a tooltip with pointer events like click and mouseenter.
+Always ensure that keyboard users can perform the same set of actions available to mouse and
+touch users.

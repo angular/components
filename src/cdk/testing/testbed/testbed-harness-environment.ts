@@ -13,7 +13,7 @@ import {
   HarnessEnvironment,
   HarnessLoader,
   stopHandlingAutoChangeDetectionStatus,
-  TestElement
+  TestElement,
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
 import {Observable} from 'rxjs';
@@ -29,7 +29,7 @@ export interface TestbedHarnessEnvironmentOptions {
 
 /** The default environment options. */
 const defaultEnvironmentOptions: TestbedHarnessEnvironmentOptions = {
-  queryFn: (selector: string, root: Element) => root.querySelectorAll(selector)
+  queryFn: (selector: string, root: Element) => root.querySelectorAll(selector),
 };
 
 /** Whether auto change detection is currently disabled. */
@@ -96,8 +96,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /** The options for this environment. */
   private _options: TestbedHarnessEnvironmentOptions;
 
-  protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>,
-      options?: TestbedHarnessEnvironmentOptions) {
+  protected constructor(
+    rawRootElement: Element,
+    private _fixture: ComponentFixture<unknown>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
     this._taskState = TaskStateZoneInterceptor.setup();
@@ -109,8 +112,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
-  static loader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions):
-      HarnessLoader {
+  static loader(
+    fixture: ComponentFixture<unknown>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ): HarnessLoader {
     return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
   }
 
@@ -118,8 +123,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * Creates a `HarnessLoader` at the document root. This can be used if harnesses are
    * located outside of a fixture (e.g. overlays appended to the document body).
    */
-  static documentRootLoader(fixture: ComponentFixture<unknown>,
-      options?: TestbedHarnessEnvironmentOptions): HarnessLoader {
+  static documentRootLoader(
+    fixture: ComponentFixture<unknown>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ): HarnessLoader {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
@@ -138,13 +145,20 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * of the fixture.
    */
   static async harnessForFixture<T extends ComponentHarness>(
-      fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>,
-      options?: TestbedHarnessEnvironmentOptions): Promise<T> {
+    fixture: ComponentFixture<unknown>,
+    harnessType: ComponentHarnessConstructor<T>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ): Promise<T> {
     const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
     await environment.forceStabilize();
     return environment.createComponentHarness(harnessType, fixture.nativeElement);
   }
 
+  /**
+   * Flushes change detection and async tasks captured in the Angular zone.
+   * In most cases it should not be necessary to call this manually. However, there may be some edge
+   * cases where it is needed to fully flush animation events.
+   */
   async forceStabilize(): Promise<void> {
     if (!disableAutoChangeDetection) {
       if (this._destroyed) {
@@ -155,6 +169,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     }
   }
 
+  /**
+   * Waits for all scheduled or running async tasks to complete. This allows harness
+   * authors to wait for async tasks outside of the Angular zone.
+   */
   async waitForTasksOutsideAngular(): Promise<void> {
     // If we run in the fake async zone, we run "flush" to run any scheduled tasks. This
     // ensures that the harnesses behave inside of the FakeAsyncTestZone similar to the
@@ -173,18 +191,24 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     await this._taskState.pipe(takeWhile(state => !state.stable)).toPromise();
   }
 
+  /** Gets the root element for the document. */
   protected getDocumentRoot(): Element {
     return document.body;
   }
 
+  /** Creates a `TestElement` from a raw element. */
   protected createTestElement(element: Element): TestElement {
     return new UnitTestElement(element, () => this.forceStabilize());
   }
 
+  /** Creates a `HarnessLoader` rooted at the given raw element. */
   protected createEnvironment(element: Element): HarnessEnvironment<Element> {
     return new TestbedHarnessEnvironment(element, this._fixture, this._options);
   }
 
+  /**
+   * Gets a list of all elements matching the given selector under this environment's root element.
+   */
   protected async getAllRawElements(selector: string): Promise<Element[]> {
     await this.forceStabilize();
     return Array.from(this._options.queryFn(selector, this.rawRootElement));

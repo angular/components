@@ -43,7 +43,7 @@ export class ClassNamesMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node): void {
     if (ts.isIdentifier(node)) {
       this._visitIdentifier(node);
     }
@@ -99,7 +99,8 @@ export class ClassNamesMigration extends Migration<UpgradeData> {
     const classData = this.data.find(data => data.replace === identifier.text)!;
     const filePath = this.fileSystem.resolve(identifier.getSourceFile().fileName);
 
-    this.fileSystem.edit(filePath)
+    this.fileSystem
+      .edit(filePath)
       .remove(identifier.getStart(), identifier.getWidth())
       .insertRight(identifier.getStart(), classData.replaceWith);
   }

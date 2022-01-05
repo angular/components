@@ -11,7 +11,7 @@ import {
   coerceNumberProperty,
   coerceElement,
   BooleanInput,
-  NumberInput
+  NumberInput,
 } from '@angular/cdk/coercion';
 import {
   AfterContentInit,
@@ -39,16 +39,18 @@ export class MutationObserverFactory {
   }
 }
 
-
 /** An injectable service that allows watching elements for changes to their content. */
 @Injectable({providedIn: 'root'})
 export class ContentObserver implements OnDestroy {
   /** Keeps track of the existing MutationObservers so they can be reused. */
-  private _observedElements = new Map<Element, {
-    observer: MutationObserver | null,
-    stream: Subject<MutationRecord[]>,
-    count: number
-  }>();
+  private _observedElements = new Map<
+    Element,
+    {
+      observer: MutationObserver | null;
+      readonly stream: Subject<MutationRecord[]>;
+      count: number;
+    }
+  >();
 
   constructor(private _mutationObserverFactory: MutationObserverFactory) {}
 
@@ -94,7 +96,7 @@ export class ContentObserver implements OnDestroy {
         observer.observe(element, {
           characterData: true,
           childList: true,
-          subtree: true
+          subtree: true,
         });
       }
       this._observedElements.set(element, {observer, stream, count: 1});
@@ -130,7 +132,6 @@ export class ContentObserver implements OnDestroy {
   }
 }
 
-
 /**
  * Directive that triggers a callback whenever the content of
  * its associated element has changed.
@@ -141,15 +142,17 @@ export class ContentObserver implements OnDestroy {
 })
 export class CdkObserveContent implements AfterContentInit, OnDestroy {
   /** Event emitted for each change in the element's content. */
-  @Output('cdkObserveContent') event = new EventEmitter<MutationRecord[]>();
+  @Output('cdkObserveContent') readonly event = new EventEmitter<MutationRecord[]>();
 
   /**
    * Whether observing content is disabled. This option can be used
    * to disconnect the underlying MutationObserver until it is needed.
    */
   @Input('cdkObserveContentDisabled')
-  get disabled() { return this._disabled; }
-  set disabled(value: any) {
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._disabled ? this._unsubscribe() : this._subscribe();
   }
@@ -157,8 +160,10 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
   /** Debounce interval for emitting the changes. */
   @Input()
-  get debounce(): number { return this._debounce; }
-  set debounce(value: number) {
+  get debounce(): number {
+    return this._debounce;
+  }
+  set debounce(value: NumberInput) {
     this._debounce = coerceNumberProperty(value);
     this._subscribe();
   }
@@ -166,9 +171,11 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
   private _currentSubscription: Subscription | null = null;
 
-  constructor(private _contentObserver: ContentObserver,
-              private _elementRef: ElementRef<HTMLElement>,
-              private _ngZone: NgZone) {}
+  constructor(
+    private _contentObserver: ContentObserver,
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {}
 
   ngAfterContentInit() {
     if (!this._currentSubscription && !this.disabled) {
@@ -189,23 +196,20 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
     // Bringing it back inside can cause things like infinite change detection loops and changed
     // after checked errors if people's code isn't handling it properly.
     this._ngZone.runOutsideAngular(() => {
-      this._currentSubscription =
-          (this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream).subscribe(this.event);
+      this._currentSubscription = (
+        this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream
+      ).subscribe(this.event);
     });
   }
 
   private _unsubscribe() {
     this._currentSubscription?.unsubscribe();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_debounce: NumberInput;
 }
-
 
 @NgModule({
   exports: [CdkObserveContent],
   declarations: [CdkObserveContent],
-  providers: [MutationObserverFactory]
+  providers: [MutationObserverFactory],
 })
 export class ObserversModule {}

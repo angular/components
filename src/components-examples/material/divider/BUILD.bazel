@@ -1,18 +1,26 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "divider",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     assets = glob([
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/divider",
     deps = [
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material/divider",
+        "//src/material/divider/testing",
         "//src/material/list",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-browser-dynamic",
+        "@npm//@types/jasmine",
     ],
 )
 
@@ -23,4 +31,22 @@ filegroup(
         "**/*.css",
         "**/*.ts",
     ]),
+)
+
+ng_test_library(
+    name = "unit_tests_lib",
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":divider",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/divider",
+        "//src/material/divider/testing",
+        "@npm//@angular/platform-browser-dynamic",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_tests_lib"],
 )

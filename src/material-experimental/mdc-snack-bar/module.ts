@@ -10,25 +10,15 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
+import {MatButtonModule} from '@angular/material-experimental/mdc-button';
 import {MatCommonModule} from '@angular/material-experimental/mdc-core';
 
 import {MatSimpleSnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
-import {
-  MatSnackBarAction,
-  MatSnackBarActions,
-  MatSnackBarLabel
-} from './snack-bar-content';
+import {MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel} from './snack-bar-content';
 
 @NgModule({
-  imports: [
-    OverlayModule,
-    PortalModule,
-    CommonModule,
-    MatButtonModule,
-    MatCommonModule,
-  ],
+  imports: [OverlayModule, PortalModule, CommonModule, MatButtonModule, MatCommonModule],
   exports: [
     MatCommonModule,
     MatSnackBarContainer,
@@ -43,10 +33,5 @@ import {
     MatSnackBarActions,
     MatSnackBarAction,
   ],
-  entryComponents: [
-    MatSimpleSnackBar,
-    MatSnackBarContainer,
-  ],
 })
-export class MatSnackBarModule {
-}
+export class MatSnackBarModule {}

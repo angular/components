@@ -8,19 +8,21 @@ import {
   createMapConstructorSpy,
   createMapSpy,
   createMarkerConstructorSpy,
-  createMarkerSpy
+  createMarkerSpy,
 } from '../testing/fake-google-map-utils';
 import {DEFAULT_MARKER_OPTIONS, MapMarker} from './map-marker';
 
 describe('MapMarker', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [GoogleMapsModule],
+        declarations: [TestApp],
+      });
+    }),
+  );
 
   beforeEach(() => {
     TestBed.compileComponents();
@@ -45,6 +47,8 @@ describe('MapMarker', () => {
       title: undefined,
       label: undefined,
       clickable: undefined,
+      icon: undefined,
+      visible: undefined,
       map: mapSpy,
     });
   });
@@ -55,6 +59,8 @@ describe('MapMarker', () => {
       title: 'marker title',
       label: 'marker label',
       clickable: false,
+      icon: 'icon.png',
+      visible: false,
       map: mapSpy,
     };
     const markerSpy = createMarkerSpy(options);
@@ -65,6 +71,8 @@ describe('MapMarker', () => {
     fixture.componentInstance.title = options.title;
     fixture.componentInstance.label = options.label;
     fixture.componentInstance.clickable = options.clickable;
+    fixture.componentInstance.icon = 'icon.png';
+    fixture.componentInstance.visible = false;
     fixture.detectChanges();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith(options);
@@ -77,6 +85,7 @@ describe('MapMarker', () => {
       label: 'marker label',
       clickable: false,
       icon: 'icon name',
+      visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -103,6 +112,7 @@ describe('MapMarker', () => {
       clickable: true,
       icon: 'icon name',
       map: mapSpy,
+      visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -221,6 +231,8 @@ describe('MapMarker', () => {
                            [label]="label"
                            [clickable]="clickable"
                            [options]="options"
+                           [icon]="icon"
+                           [visible]="visible"
                            (mapClick)="handleClick()"
                            (positionChanged)="handlePositionChanged()">
                </map-marker>
@@ -228,11 +240,13 @@ describe('MapMarker', () => {
 })
 class TestApp {
   @ViewChild(MapMarker) marker: MapMarker;
-  title?: string;
-  position?: google.maps.LatLng|google.maps.LatLngLiteral;
-  label?: string|google.maps.MarkerLabel;
-  clickable?: boolean;
+  title?: string | null;
+  position?: google.maps.LatLng | google.maps.LatLngLiteral | null;
+  label?: string | google.maps.MarkerLabel | null;
+  clickable?: boolean | null;
   options?: google.maps.MarkerOptions;
+  icon?: string;
+  visible?: boolean;
 
   handleClick() {}
 

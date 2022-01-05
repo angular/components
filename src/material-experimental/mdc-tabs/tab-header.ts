@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -54,24 +53,25 @@ export class MatTabHeader extends _MatTabHeaderBase implements AfterContentInit 
   @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items: QueryList<MatTabLabelWrapper>;
   @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
   @ViewChild('tabList', {static: true}) _tabList: ElementRef;
+  @ViewChild('tabListInner', {static: true}) _tabListInner: ElementRef;
   @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
   _inkBar: MatInkBar;
 
-  constructor(elementRef: ElementRef,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+    elementRef: ElementRef,
+    changeDetectorRef: ChangeDetectorRef,
+    viewportRuler: ViewportRuler,
+    @Optional() dir: Directionality,
+    ngZone: NgZone,
+    platform: Platform,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
 
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     this._inkBar = new MatInkBar(this._items);
     super.ngAfterContentInit();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

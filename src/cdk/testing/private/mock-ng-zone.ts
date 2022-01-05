@@ -8,7 +8,6 @@
 
 import {EventEmitter, Injectable, NgZone} from '@angular/core';
 
-
 /**
  * Mock synchronous NgZone implementation that can be used
  * to flush out `onStable` subscriptions in tests.
@@ -18,17 +17,17 @@ import {EventEmitter, Injectable, NgZone} from '@angular/core';
  */
 @Injectable()
 export class MockNgZone extends NgZone {
-  onStable: EventEmitter<any> = new EventEmitter(false);
+  override readonly onStable = new EventEmitter(false);
 
   constructor() {
     super({enableLongStackTrace: false});
   }
 
-  run(fn: Function): any {
+  override run(fn: Function): any {
     return fn();
   }
 
-  runOutsideAngular(fn: Function): any {
+  override runOutsideAngular(fn: Function): any {
     return fn();
   }
 

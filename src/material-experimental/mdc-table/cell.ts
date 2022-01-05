@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {Directive, Input} from '@angular/core';
 import {
   CdkCell,
   CdkCellDef,
-  CdkColumnDef, CdkFooterCell, CdkFooterCellDef,
+  CdkColumnDef,
+  CdkFooterCell,
+  CdkFooterCellDef,
   CdkHeaderCell,
   CdkHeaderCellDef,
 } from '@angular/cdk/table';
@@ -22,7 +23,7 @@ import {
  */
 @Directive({
   selector: '[matCellDef]',
-  providers: [{provide: CdkCellDef, useExisting: MatCellDef}]
+  providers: [{provide: CdkCellDef, useExisting: MatCellDef}],
 })
 export class MatCellDef extends CdkCellDef {}
 
@@ -32,7 +33,7 @@ export class MatCellDef extends CdkCellDef {}
  */
 @Directive({
   selector: '[matHeaderCellDef]',
-  providers: [{provide: CdkHeaderCellDef, useExisting: MatHeaderCellDef}]
+  providers: [{provide: CdkHeaderCellDef, useExisting: MatHeaderCellDef}],
 })
 export class MatHeaderCellDef extends CdkHeaderCellDef {}
 
@@ -42,7 +43,7 @@ export class MatHeaderCellDef extends CdkHeaderCellDef {}
  */
 @Directive({
   selector: '[matFooterCellDef]',
-  providers: [{provide: CdkFooterCellDef, useExisting: MatFooterCellDef}]
+  providers: [{provide: CdkFooterCellDef, useExisting: MatFooterCellDef}],
 })
 export class MatFooterCellDef extends CdkFooterCellDef {}
 
@@ -55,14 +56,18 @@ export class MatFooterCellDef extends CdkFooterCellDef {}
   inputs: ['sticky'],
   providers: [
     {provide: CdkColumnDef, useExisting: MatColumnDef},
-    {provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: MatColumnDef}
+    {provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: MatColumnDef},
   ],
 })
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
   @Input('matColumnDef')
-  get name(): string { return this._name; }
-  set name(name: string) { this._setNameInput(name); }
+  override get name(): string {
+    return this._name;
+  }
+  override set name(name: string) {
+    this._setNameInput(name);
+  }
 
   /**
    * Add "mat-column-" prefix in addition to "cdk-column-" prefix.
@@ -70,12 +75,10 @@ export class MatColumnDef extends CdkColumnDef {
    * will change from type string[] to string.
    * @docs-private
    */
-  protected _updateColumnCssClassName() {
+  protected override _updateColumnCssClassName() {
     super._updateColumnCssClassName();
     this._columnCssClassName!.push(`mat-column-${this.cssClassFriendlyName}`);
   }
-
-  static ngAcceptInputType_sticky: BooleanInput;
 }
 
 /** Header cell template container that adds the right classes and role. */
@@ -93,7 +96,6 @@ export class MatHeaderCell extends CdkHeaderCell {}
   selector: 'mat-footer-cell, td[mat-footer-cell]',
   host: {
     'class': 'mat-mdc-footer-cell mdc-data-table__cell',
-    'role': 'gridcell',
   },
 })
 export class MatFooterCell extends CdkFooterCell {}
@@ -103,7 +105,6 @@ export class MatFooterCell extends CdkFooterCell {}
   selector: 'mat-cell, td[mat-cell]',
   host: {
     'class': 'mat-mdc-cell mdc-data-table__cell',
-    'role': 'gridcell',
   },
 })
 export class MatCell extends CdkCell {}

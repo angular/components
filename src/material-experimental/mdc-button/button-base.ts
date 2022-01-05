@@ -6,23 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
-import {Directive, ElementRef, HostListener, NgZone, ViewChild} from '@angular/core';
+import {Directive, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {
   CanColor,
-  CanColorCtor,
   CanDisable,
-  CanDisableCtor,
   CanDisableRipple,
-  CanDisableRippleCtor,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
-  RippleAnimationConfig
 } from '@angular/material-experimental/mdc-core';
-import {numbers} from '@material/ripple';
 import {FocusOrigin} from '@angular/cdk/a11y';
 
 /** Inputs common to all buttons. */
@@ -41,14 +35,8 @@ export const MAT_BUTTON_HOST = {
   '[class.mat-mdc-button-base]': 'true',
 };
 
-/** Configuration for the ripple animation. */
-const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
-  enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
-  exitDuration: numbers.FG_DEACTIVATION_MS
-};
-
 /** List of classes to add to buttons instances based on host attribute selector. */
-const HOST_SELECTOR_MDC_CLASS_PAIR: {selector: string, mdcClasses: string[]}[] = [
+const HOST_SELECTOR_MDC_CLASS_PAIR: {selector: string; mdcClasses: string[]}[] = [
   {
     selector: 'mat-button',
     mdcClasses: ['mdc-button', 'mat-mdc-button'],
@@ -76,37 +64,42 @@ const HOST_SELECTOR_MDC_CLASS_PAIR: {selector: string, mdcClasses: string[]}[] =
   {
     selector: 'mat-icon-button',
     mdcClasses: ['mdc-icon-button', 'mat-mdc-icon-button'],
-  }
+  },
 ];
 
 // Boilerplate for applying mixins to MatButton.
 /** @docs-private */
-export class MatButtonMixinCore {
-  constructor(public _elementRef: ElementRef) {}
-}
-
-export const _MatButtonBaseMixin: CanDisableRippleCtor&CanDisableCtor&CanColorCtor&
-    typeof MatButtonMixinCore = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonMixinCore)));
+export const _MatButtonMixin = mixinColor(
+  mixinDisabled(
+    mixinDisableRipple(
+      class {
+        constructor(public _elementRef: ElementRef) {}
+      },
+    ),
+  ),
+);
 
 /** Base class for all buttons.  */
 @Directive()
-export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, CanColor,
-                                                                  CanDisableRipple {
-  /** The ripple animation configuration to use for the buttons. */
-  _rippleAnimation: RippleAnimationConfig =
-      this._animationMode === 'NoopAnimations' ?
-          {enterDuration: 0, exitDuration: 0} :
-          RIPPLE_ANIMATION_CONFIG;
-
+export class MatButtonBase
+  extends _MatButtonMixin
+  implements CanDisable, CanColor, CanDisableRipple
+{
   /** Whether the ripple is centered on the button. */
   _isRippleCentered = false;
+
+  /** Whether this button is a FAB. Used to apply the correct class on the ripple. */
+  _isFab = false;
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
   constructor(
-      elementRef: ElementRef, public _platform: Platform, public _ngZone: NgZone,
-      public _animationMode?: string) {
+    elementRef: ElementRef,
+    public _platform: Platform,
+    public _ngZone: NgZone,
+    public _animationMode?: string,
+  ) {
     super(elementRef);
 
     const classList = (elementRef.nativeElement as HTMLElement).classList;
@@ -135,9 +128,6 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /** Shared inputs by buttons using the `<a>` tag */
@@ -165,21 +155,18 @@ export const MAT_ANCHOR_HOST = {
 /**
  * Anchor button base.
  */
-@Directive()
+@Directive({
+  host: {
+    '(click)': '_haltDisabledEvents($event)',
+  },
+})
 export class MatAnchorBase extends MatButtonBase {
   tabIndex: number;
 
-  constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone,
-              animationMode?: string) {
+  constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(mmalerba): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click', ['$event'])
   _haltDisabledEvents(event: Event) {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {

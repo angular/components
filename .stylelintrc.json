@@ -1,5 +1,8 @@
 {
+  "customSyntax": "postcss-scss",
   "defaultSeverity": "error",
+  "reportNeedlessDisables": true,
+  "reportInvalidScopeDisables": true,
   "plugins": [
     "./tools/stylelint/loader-rule.js",
     "./tools/stylelint/no-prefixes/index.ts",
@@ -8,16 +11,26 @@
     "./tools/stylelint/no-nested-mixin.ts",
     "./tools/stylelint/no-concrete-rules.ts",
     "./tools/stylelint/no-top-level-ampersand-in-mixin.ts",
-    "./tools/stylelint/theme-mixin-api.ts"
+    "./tools/stylelint/theme-mixin-api.ts",
+    "./tools/stylelint/no-import.ts",
+    "./tools/stylelint/single-line-comment-only.ts",
+    "./tools/stylelint/no-unused-import.ts"
   ],
   "rules": {
     "material/no-prefixes": [true, {
-      "browsers": ["last 2 versions", "not ie <= 10", "not ie_mob <= 10"],
+      "browsers": ["last 2 versions", "not dead", "not and_qq > 0", "not OperaMini all", "not ie > 0", "not edge < 78"],
       "filePattern": "**/!(*-example.css)"
     }],
     "material/theme-mixin-api": true,
     "material/selector-no-deep": true,
     "material/no-nested-mixin": true,
+    "material/no-unused-import": true,
+    "material/single-line-comment-only": [true, {
+      "filePattern": "\\.scss$"
+    }],
+    "material/no-import": [true, {
+      "exclude": "\\.import\\.scss$"
+    }],
     "material/no-ampersand-beyond-selector-start": [true, {
       "filePattern": "-theme\\.scss$"
     }],
@@ -69,8 +82,8 @@
     "declaration-block-semicolon-newline-after": "always-multi-line",
     "declaration-colon-space-after": "always-single-line",
     "declaration-property-value-disallowed-list": [
-        {"/.*/": ["initial"]},
-        {"message": "The `initial` value is not supported in IE."}
+      {"/.*/": ["initial"]},
+      {"message": "The `initial` value is not supported in IE."}
     ],
 
     "block-closing-brace-newline-after": "always",

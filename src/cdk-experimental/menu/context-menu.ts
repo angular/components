@@ -31,7 +31,7 @@ import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
 import {Subject, merge} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuPanel} from './menu-panel';
-import {MenuStack, MenuStackItem} from './menu-stack';
+import {MenuStack} from './menu-stack';
 import {throwExistingMenuStackError} from './menu-errors';
 import {isClickInsideMenuOverlay} from './menu-item-trigger';
 
@@ -64,7 +64,7 @@ export type ContextMenuOptions = {
 
 /** Injection token for the ContextMenu options object. */
 export const CDK_CONTEXT_MENU_DEFAULT_OPTIONS = new InjectionToken<ContextMenuOptions>(
-  'cdk-context-menu-default-options'
+  'cdk-context-menu-default-options',
 );
 
 /** The coordinates of where the context menu should open. */
@@ -114,10 +114,10 @@ export class CdkContextMenuTrigger implements OnDestroy {
 
   /** Whether the context menu should be disabled. */
   @Input('cdkContextMenuDisabled')
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -129,7 +129,7 @@ export class CdkContextMenuTrigger implements OnDestroy {
   private _panelContent: TemplatePortal;
 
   /** Emits when the element is destroyed. */
-  private readonly _destroyed: Subject<void> = new Subject();
+  private readonly _destroyed = new Subject<void>();
 
   /** The menu stack for this trigger and its associated menus. */
   private readonly _menuStack = new MenuStack();
@@ -142,7 +142,7 @@ export class CdkContextMenuTrigger implements OnDestroy {
     private readonly _overlay: Overlay,
     private readonly _contextMenuTracker: ContextMenuTracker,
     @Inject(CDK_CONTEXT_MENU_DEFAULT_OPTIONS) private readonly _options: ContextMenuOptions,
-    @Optional() private readonly _directionality?: Directionality
+    @Optional() private readonly _directionality?: Directionality,
   ) {
     this._setMenuStackListener();
   }
@@ -159,15 +159,17 @@ export class CdkContextMenuTrigger implements OnDestroy {
       // disconnected from this one.
       this._menuStack.closeSubMenuOf(this._menuPanel._menu!);
 
-      (this._overlayRef!.getConfig()
-        .positionStrategy as FlexibleConnectedPositionStrategy).setOrigin(coordinates);
+      (
+        this._overlayRef!.getConfig().positionStrategy as FlexibleConnectedPositionStrategy
+      ).setOrigin(coordinates);
       this._overlayRef!.updatePosition();
     } else {
       this.opened.next();
 
       if (this._overlayRef) {
-        (this._overlayRef.getConfig()
-          .positionStrategy as FlexibleConnectedPositionStrategy).setOrigin(coordinates);
+        (
+          this._overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy
+        ).setOrigin(coordinates);
         this._overlayRef.updatePosition();
       } else {
         this._overlayRef = this._overlay.create(this._getOverlayConfig(coordinates));
@@ -233,7 +235,7 @@ export class CdkContextMenuTrigger implements OnDestroy {
    * @param coordinates the location to place the opened menu
    */
   private _getOverlayPositionStrategy(
-    coordinates: ContextMenuCoordinates
+    coordinates: ContextMenuCoordinates,
   ): FlexibleConnectedPositionStrategy {
     return this._overlay
       .position()
@@ -271,7 +273,7 @@ export class CdkContextMenuTrigger implements OnDestroy {
 
   /** Subscribe to the menu stack close events and close this menu when requested. */
   private _setMenuStackListener() {
-    this._menuStack.closed.pipe(takeUntil(this._destroyed)).subscribe((item: MenuStackItem) => {
+    this._menuStack.closed.pipe(takeUntil(this._destroyed)).subscribe(item => {
       if (item === this._menuPanel._menu && this.isOpen()) {
         this.closed.next();
         this._overlayRef!.detach();
@@ -324,6 +326,4 @@ export class CdkContextMenuTrigger implements OnDestroy {
       this._menuPanel._menuStack = null;
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

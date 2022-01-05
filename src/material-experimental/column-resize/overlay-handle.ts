@@ -12,6 +12,7 @@ import {
   ElementRef,
   Inject,
   NgZone,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
@@ -39,34 +40,39 @@ import {AbstractMatColumnResize} from './column-resize-directives/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {'class': 'mat-column-resize-overlay-thumb'},
-  template: '',
+  template: '<div #top class="mat-column-resize-overlay-thumb-top"></div>',
 })
 export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
   protected readonly document: Document;
 
+  @ViewChild('top', {static: true}) topElement: ElementRef<HTMLElement>;
+
   constructor(
-      protected readonly columnDef: CdkColumnDef,
-      protected readonly columnResize: ColumnResize,
-      protected readonly directionality: Directionality,
-      protected readonly elementRef: ElementRef,
-      protected readonly eventDispatcher: HeaderRowEventDispatcher,
-      protected readonly ngZone: NgZone,
-      protected readonly resizeNotifier: ColumnResizeNotifierSource,
-      protected readonly resizeRef: ResizeRef,
-      @Inject(_COALESCED_STYLE_SCHEDULER)
-          protected readonly styleScheduler: _CoalescedStyleScheduler,
-      @Inject(DOCUMENT) document: any) {
+    protected readonly columnDef: CdkColumnDef,
+    protected readonly columnResize: ColumnResize,
+    protected readonly directionality: Directionality,
+    protected readonly elementRef: ElementRef,
+    protected readonly eventDispatcher: HeaderRowEventDispatcher,
+    protected readonly ngZone: NgZone,
+    protected readonly resizeNotifier: ColumnResizeNotifierSource,
+    protected readonly resizeRef: ResizeRef,
+    @Inject(_COALESCED_STYLE_SCHEDULER)
+    protected readonly styleScheduler: _CoalescedStyleScheduler,
+    @Inject(DOCUMENT) document: any,
+  ) {
     super();
     this.document = document;
   }
 
-  protected updateResizeActive(active: boolean): void {
+  protected override updateResizeActive(active: boolean): void {
     super.updateResizeActive(active);
 
+    const originHeight = this.resizeRef.origin.nativeElement.offsetHeight;
+    this.topElement.nativeElement.style.height = `${originHeight}px`;
     this.resizeRef.overlayRef.updateSize({
-      height: active ?
-          (this.columnResize as AbstractMatColumnResize).getTableHeight() :
-          this.resizeRef.origin.nativeElement!.offsetHeight
+      height: active
+        ? (this.columnResize as AbstractMatColumnResize).getTableHeight()
+        : originHeight,
     });
   }
 }

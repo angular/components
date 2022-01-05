@@ -13,20 +13,20 @@ const Prefixes = require('autoprefixer/lib/prefixes');
  */
 export class NeedsPrefix {
   private _prefixes: {
-    add: {[key: string]: any},
-    browsers: any
+    add: Record<string, any>;
+    browsers: {selected: string[]};
   };
 
   constructor(browsers: string[]) {
     this._prefixes = new Prefixes(
       autoprefixer.data.prefixes,
-      new Browsers(autoprefixer.data.browsers, browsers)
+      new Browsers(autoprefixer.data.browsers, browsers),
     );
   }
 
   /** Checks whether an @-rule needs to be prefixed. */
   atRule(identifier: string): boolean {
-    return this._prefixes.add[`@${identifier.toLowerCase()}`];
+    return !!this._prefixes.add[`@${identifier.toLowerCase()}`];
   }
 
   /** Checks whether a selector needs to be prefixed. */
@@ -42,20 +42,25 @@ export class NeedsPrefix {
   }
 
   /** Checks whether a property needs to be prefixed. */
-  property(identifier: string): boolean {
+  property(identifier: string, value: string): string[] {
     // `fill` is an edge case since it was part of a proposal that got renamed to `stretch`.
     // see: https://www.w3.org/TR/css-sizing-3/#changes
     if (!identifier || identifier === 'fill') {
-      return false;
+      return [];
+    }
+
+    // `text-decoration` is another edge case which is supported
+    // unprefixed everywhere, except for the shorthand which requires a
+    // prefix on iOS. See: https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration
+    if (identifier === 'text-decoration' && !value.includes(' ')) {
+      return [];
     }
 
     const needsPrefix = autoprefixer.data.prefixes[identifier.toLowerCase()];
-    const browsersThatNeedPrefix = needsPrefix ? needsPrefix.browsers : null;
-
-    return !!browsersThatNeedPrefix &&
-           !!this._prefixes.browsers.selected.find((browser: string) => {
-             return browsersThatNeedPrefix.indexOf(browser) > -1;
-           });
+    const browsersThatNeedPrefix = (needsPrefix as {browsers: string[]} | null)?.browsers || [];
+    return browsersThatNeedPrefix.filter(browser =>
+      this._prefixes.browsers.selected.includes(browser),
+    );
   }
 
   /** Checks whether a CSS property value needs to be prefixed. */
@@ -64,11 +69,14 @@ export class NeedsPrefix {
       return false;
     }
 
-    const possiblePrefixableValues = this._prefixes.add[prop.toLowerCase()] &&
-        this._prefixes.add[prop.toLowerCase()].values;
+    const possiblePrefixableValues =
+      this._prefixes.add[prop.toLowerCase()] && this._prefixes.add[prop.toLowerCase()].values;
 
-    return !!possiblePrefixableValues && possiblePrefixableValues.some((valueObj: any) => {
-      return value.toLowerCase() === valueObj.name;
-    });
+    return (
+      !!possiblePrefixableValues &&
+      possiblePrefixableValues.some((valueObj: any) => {
+        return value.toLowerCase() === valueObj.name;
+      })
+    );
   }
 }

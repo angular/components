@@ -10,7 +10,6 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-
 /**
  * Data source for nested tree.
  *
@@ -18,23 +17,24 @@ import {map} from 'rxjs/operators';
  * or collapse. The expansion/collapsion will be handled by TreeControl and each non-leaf node.
  */
 export class MatTreeNestedDataSource<T> extends DataSource<T> {
-  _data = new BehaviorSubject<T[]>([]);
-
   /**
    * Data for the nested tree
    */
-  get data() { return this._data.value; }
-  set data(value: T[]) { this._data.next(value); }
+  get data() {
+    return this._data.value;
+  }
+  set data(value: T[]) {
+    this._data.next(value);
+  }
+  private readonly _data = new BehaviorSubject<T[]>([]);
 
   connect(collectionViewer: CollectionViewer): Observable<T[]> {
-    return merge(...[collectionViewer.viewChange, this._data])
-      .pipe(map(() => {
-        return this.data;
-      }));
+    return merge(...([collectionViewer.viewChange, this._data] as Observable<unknown>[])).pipe(
+      map(() => this.data),
+    );
   }
 
   disconnect() {
     // no op
   }
 }
-

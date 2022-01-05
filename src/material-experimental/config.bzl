@@ -43,6 +43,8 @@ entryPoints = [
     "mdc-table/testing",
     "mdc-tabs",
     "mdc-tabs/testing",
+    "mdc-tooltip",
+    "mdc-tooltip/testing",
     "menubar",
     "popover-edit",
     "selection",

@@ -1,0 +1,30 @@
+{
+  "name": "@angular/material-luxon-adapter",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular Material Luxon Adapter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/components.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/components/issues"
+  },
+  "homepage": "https://github.com/angular/components#readme",
+  "peerDependencies": {
+    "@angular/material": "0.0.0-PLACEHOLDER",
+    "@angular/core": "0.0.0-NG",
+    "luxon": "^2.0.0"
+  },
+  "dependencies": {
+    "tslib": "0.0.0-TSLIB"
+  },
+  "ng-update": {
+    "packageGroup": [
+      "@angular/material",
+      "@angular/cdk",
+      "@angular/material-luxon-adapter"
+    ]
+  },
+  "sideEffects": false
+}

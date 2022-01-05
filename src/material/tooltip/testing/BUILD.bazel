@@ -8,7 +8,6 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/material/tooltip/testing",
     deps = [
         "//src/cdk/testing",
     ],
@@ -24,7 +23,6 @@ ng_test_library(
     srcs = ["shared.spec.ts"],
     deps = [
         ":testing",
-        "//src/cdk/platform",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/tooltip",

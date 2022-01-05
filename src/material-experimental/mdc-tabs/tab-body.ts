@@ -25,7 +25,7 @@ import {
   matTabsAnimations,
   _MatTabBodyBase,
 } from '@angular/material/tabs';
-import {PortalHostDirective} from '@angular/cdk/portal';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {Directionality} from '@angular/cdk/bidi';
 import {DOCUMENT} from '@angular/common';
 
@@ -34,14 +34,15 @@ import {DOCUMENT} from '@angular/common';
  * @docs-private
  */
 @Directive({
-  selector: '[matTabBodyHost]'
+  selector: '[matTabBodyHost]',
 })
 export class MatTabBodyPortal extends BaseMatTabBodyPortal {
   constructor(
     componentFactoryResolver: ComponentFactoryResolver,
     viewContainerRef: ViewContainerRef,
     @Inject(forwardRef(() => MatTabBody)) host: MatTabBody,
-    @Inject(DOCUMENT) _document: any) {
+    @Inject(DOCUMENT) _document: any,
+  ) {
     super(componentFactoryResolver, viewContainerRef, host, _document);
   }
 }
@@ -62,11 +63,13 @@ export class MatTabBodyPortal extends BaseMatTabBodyPortal {
   },
 })
 export class MatTabBody extends _MatTabBodyBase {
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  @ViewChild(CdkPortalOutlet) _portalHost: CdkPortalOutlet;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
     @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef) {
+    changeDetectorRef: ChangeDetectorRef,
+  ) {
     super(elementRef, dir, changeDetectorRef);
   }
 }

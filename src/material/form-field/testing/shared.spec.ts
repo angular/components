@@ -1,8 +1,5 @@
 import {ComponentHarness, HarnessLoader, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {
-  createFakeEvent,
-  dispatchFakeEvent,
-} from '@angular/cdk/testing/private';
+import {createFakeEvent, dispatchFakeEvent} from '../../../cdk/testing/private';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -12,37 +9,49 @@ import {MatFormFieldHarness} from './form-field-harness';
 
 /** Shared tests to run on both the original and MDC-based form-field's. */
 export function runHarnessTests(
-    modules: Type<any>[], {formFieldHarness, inputHarness, selectHarness, isMdcImplementation}: {
-      formFieldHarness: typeof MatFormFieldHarness,
-      inputHarness: Type<any>,
-      selectHarness: Type<any>,
-      isMdcImplementation: boolean
-    }) {
+  modules: Type<any>[],
+  {
+    formFieldHarness,
+    inputHarness,
+    selectHarness,
+    datepickerInputHarness,
+    dateRangeInputHarness,
+    isMdcImplementation,
+  }: {
+    formFieldHarness: typeof MatFormFieldHarness;
+    inputHarness: Type<any>;
+    selectHarness: Type<any>;
+    datepickerInputHarness: Type<any>;
+    dateRangeInputHarness: Type<any>;
+    isMdcImplementation: boolean;
+  },
+) {
   let fixture: ComponentFixture<FormFieldHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed
-        .configureTestingModule({
-          imports: [NoopAnimationsModule, ReactiveFormsModule, ...modules],
-          declarations: [FormFieldHarnessTest],
-        })
-        .compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [NoopAnimationsModule, ReactiveFormsModule, ...modules],
+      declarations: [FormFieldHarnessTest],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FormFieldHarnessTest);
+    fixture.componentInstance.isMdc = isMdcImplementation;
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
   it('should be able to load harnesses', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
-    expect(formFields.length).toBe(5);
+    expect(formFields.length).toBe(7);
   });
 
   it('should be able to load form-field that matches specific selector', async () => {
-    const formFieldMatches = await loader.getAllHarnesses(formFieldHarness.with({
-      selector: '#first-form-field',
-    }));
+    const formFieldMatches = await loader.getAllHarnesses(
+      formFieldHarness.with({
+        selector: '#first-form-field',
+      }),
+    );
     expect(formFieldMatches.length).toBe(1);
   });
 
@@ -57,18 +66,21 @@ export function runHarnessTests(
 
   it('should be able to get control of form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
-    expect(await formFields[0].getControl() instanceof inputHarness).toBe(true);
-    expect(await formFields[1].getControl() instanceof inputHarness).toBe(true);
-    expect(await formFields[2].getControl() instanceof selectHarness).toBe(true);
-    expect(await formFields[3].getControl() instanceof inputHarness).toBe(true);
-    expect(await formFields[4].getControl() instanceof inputHarness).toBe(true);
+    expect((await formFields[0].getControl()) instanceof inputHarness).toBe(true);
+    expect((await formFields[1].getControl()) instanceof inputHarness).toBe(true);
+    expect((await formFields[2].getControl()) instanceof selectHarness).toBe(true);
+    expect((await formFields[3].getControl()) instanceof inputHarness).toBe(true);
+    expect((await formFields[4].getControl()) instanceof inputHarness).toBe(true);
+    expect((await formFields[5].getControl()) instanceof datepickerInputHarness).toBe(true);
+    expect((await formFields[6].getControl()) instanceof dateRangeInputHarness).toBe(true);
   });
 
   it('should be able to get custom control of form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     expect(await formFields[0].getControl(CustomControlHarness)).toBe(null);
-    expect(await formFields[1].getControl(CustomControlHarness) instanceof CustomControlHarness)
-        .toBe(true);
+    expect(
+      (await formFields[1].getControl(CustomControlHarness)) instanceof CustomControlHarness,
+    ).toBe(true);
     expect(await formFields[2].getControl(CustomControlHarness)).toBe(null);
     expect(await formFields[3].getControl(CustomControlHarness)).toBe(null);
     expect(await formFields[4].getControl(CustomControlHarness)).toBe(null);
@@ -78,7 +90,7 @@ export function runHarnessTests(
     const predicate = new HarnessPredicate(CustomControlHarness, {});
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     expect(await formFields[0].getControl(predicate)).toBe(null);
-    expect(await formFields[1].getControl(predicate) instanceof CustomControlHarness).toBe(true);
+    expect((await formFields[1].getControl(predicate)) instanceof CustomControlHarness).toBe(true);
     expect(await formFields[2].getControl(predicate)).toBe(null);
     expect(await formFields[3].getControl(predicate)).toBe(null);
     expect(await formFields[4].getControl(predicate)).toBe(null);
@@ -140,8 +152,9 @@ export function runHarnessTests(
 
     // Dispatch an "animationstart" event on the input to trigger the
     // autofill monitor.
-    fixture.nativeElement.querySelector('#first-form-field input')
-        .dispatchEvent(autofillTriggerEvent);
+    fixture.nativeElement
+      .querySelector('#first-form-field input')
+      .dispatchEvent(autofillTriggerEvent);
 
     expect(await formFields[0].isAutofilled()).toBe(true);
     expect(await formFields[1].isAutofilled()).toBe(false);
@@ -191,13 +204,13 @@ export function runHarnessTests(
   it('should be able to get the prefix text of a form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     const prefixTexts = await parallel(() => formFields.map(f => f.getPrefixText()));
-    expect(prefixTexts).toEqual(['prefix_textprefix_text_2', '', '', '', '']);
+    expect(prefixTexts).toEqual(['prefix_textprefix_text_2', '', '', '', '', '', '']);
   });
 
   it('should be able to get the suffix text of a form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     const suffixTexts = await parallel(() => formFields.map(f => f.getSuffixText()));
-    expect(suffixTexts).toEqual(['suffix_text', '', '', '', '']);
+    expect(suffixTexts).toEqual(['suffix_text', '', '', '', '', '', '']);
   });
 
   it('should be able to check if form field has been touched', async () => {
@@ -243,11 +256,14 @@ export function runHarnessTests(
 @Component({
   template: `
     <mat-form-field id="first-form-field" [floatLabel]="shouldLabelFloat">
-      <span matPrefix>prefix_text</span>
-      <span matPrefix>prefix_text_2</span>
+      <span matPrefix *ngIf="!isMdc">prefix_text</span>
+      <span matPrefix *ngIf="!isMdc">prefix_text_2</span>
+      <span matTextPrefix *ngIf="isMdc">prefix_text</span>
+      <span matTextPrefix *ngIf="isMdc">prefix_text_2</span>
       <input matInput value="Sushi" name="favorite-food" placeholder="With placeholder"
              [disabled]="isDisabled">
-      <span matSuffix>suffix_text</span>
+      <span matSuffix *ngIf="!isMdc">suffix_text</span>
+      <span matTextSuffix *ngIf="isMdc">suffix_text</span>
     </mat-form-field>
 
     <mat-form-field appearance="standard" color="warn" id="with-errors">
@@ -280,13 +296,29 @@ export function runHarnessTests(
       <mat-label>Label</mat-label>
       <input matInput>
     </mat-form-field>
-  `
+
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="datepicker">
+      <mat-datepicker #datepicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Date range</mat-label>
+      <mat-date-range-input [rangePicker]="rangePicker">
+        <input matStartDate placeholder="Start date"/>
+        <input matEndDate placeholder="End date"/>
+      </mat-date-range-input>
+      <mat-date-range-picker #rangePicker></mat-date-range-picker>
+    </mat-form-field>
+  `,
 })
 class FormFieldHarnessTest {
   requiredControl = new FormControl('Initial value', [Validators.required]);
-  shouldLabelFloat: 'always'|'auto' = 'auto';
+  shouldLabelFloat: 'always' | 'auto' = 'auto';
   hasLabel = false;
   isDisabled = false;
+  isMdc = false;
 
   setupAsyncValidator() {
     this.requiredControl.setValidators(() => null);

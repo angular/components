@@ -1,17 +1,16 @@
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatMenuModule} from '@angular/material/menu';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatMenuHarness} from './menu-harness';
 
 /** Shared tests to run on both the original and MDC-based menues. */
 export function runHarnessTests(
-    menuModule: typeof MatMenuModule, menuHarness: typeof MatMenuHarness) {
-  let overlayContainer: OverlayContainer;
-
+  menuModule: typeof MatMenuModule,
+  menuHarness: typeof MatMenuHarness,
+) {
   describe('single-level menu', () => {
     let fixture: ComponentFixture<MenuHarnessTest>;
     let loader: HarnessLoader;
@@ -21,10 +20,6 @@ export function runHarnessTests(
         imports: [menuModule, NoopAnimationsModule],
         declarations: [MenuHarnessTest],
       }).compileComponents();
-
-      inject([OverlayContainer], (oc: OverlayContainer) => {
-        overlayContainer = oc;
-      })();
 
       fixture = TestBed.createComponent(MenuHarnessTest);
       fixture.detectChanges();
@@ -107,19 +102,9 @@ export function runHarnessTests(
         declarations: [NestedMenuHarnessTest],
       }).compileComponents();
 
-      inject([OverlayContainer], (oc: OverlayContainer) => {
-        overlayContainer = oc;
-      })();
-
       fixture = TestBed.createComponent(NestedMenuHarnessTest);
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);
-    });
-
-    afterEach(() => {
-      // Angular won't call this for us so we need to do it ourselves to avoid leaks.
-      overlayContainer.ngOnDestroy();
-      overlayContainer = null!;
     });
 
     it('should get submenus', async () => {
@@ -155,7 +140,8 @@ export function runHarnessTests(
     it('should throw when item is not found', async () => {
       const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
       await expectAsync(menu1.clickItem({text: 'Fake Item'})).toBeRejectedWithError(
-          /Could not find item matching {"text":"Fake Item"}/);
+        /Could not find item matching {"text":"Fake Item"}/,
+      );
     });
 
     it('should select item in nested menu', async () => {
@@ -167,7 +153,8 @@ export function runHarnessTests(
     it('should throw when intermediate item does not have submenu', async () => {
       const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
       await expectAsync(menu1.clickItem({text: 'Leaf Item 1'}, {})).toBeRejectedWithError(
-          /Item matching {"text":"Leaf Item 1"} does not have a submenu/);
+        /Item matching {"text":"Leaf Item 1"} does not have a submenu/,
+      );
     });
   });
 }
@@ -181,9 +168,9 @@ export function runHarnessTests(
         <menu mat-menu-item>Profile</menu>
         <menu mat-menu-item>Account</menu>
       </mat-menu>
-  `
+  `,
 })
-class MenuHarnessTest { }
+class MenuHarnessTest {}
 
 @Component({
   template: `
@@ -206,7 +193,7 @@ class MenuHarnessTest { }
       <mat-menu #menu4>
         <button mat-menu-item (click)="lastClickedLeaf = 3">Leaf Item 3</button>
       </mat-menu>
-  `
+  `,
 })
 class NestedMenuHarnessTest {
   lastClickedLeaf = 0;

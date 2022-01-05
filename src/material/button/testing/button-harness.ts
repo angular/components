@@ -10,20 +10,12 @@ import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/t
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ButtonHarnessFilters} from './button-harness-filters';
 
-
 /** Harness for interacting with a standard mat-button in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
   // TODO(jelbourn) use a single class, like `.mat-button-base`
   /** The selector for the host element of a `MatButton` instance. */
-  static hostSelector = [
-    '[mat-button]',
-    '[mat-raised-button]',
-    '[mat-flat-button]',
-    '[mat-icon-button]',
-    '[mat-stroked-button]',
-    '[mat-fab]',
-    '[mat-mini-fab]',
-  ].join(',');
+  static hostSelector = `[mat-button], [mat-raised-button], [mat-flat-button], [mat-icon-button],
+                         [mat-stroked-button], [mat-fab], [mat-mini-fab]`;
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatButtonHarness` that meets
@@ -32,9 +24,11 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: ButtonHarnessFilters = {}): HarnessPredicate<MatButtonHarness> {
-    return new HarnessPredicate(MatButtonHarness, options)
-        .addOption('text', options.text,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
+    return new HarnessPredicate(MatButtonHarness, options).addOption(
+      'text',
+      options.text,
+      (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text),
+    );
   }
 
   /**

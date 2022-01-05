@@ -6,11 +6,14 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "sources",
     srcs = glob(["**/*.ts"]),
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
         "//tools/region-parser",
         "@npm//@types/fs-extra",
         "@npm//@types/node",
+        "@npm//fs-extra",
     ],
 )
 
@@ -22,4 +25,9 @@ nodejs_binary(
         "@npm//highlight.js",
     ],
     entry_point = ":highlight-files.ts",
+    templated_args = [
+        # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
+        # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
+        "--bazel_patch_module_resolver",
+    ],
 )

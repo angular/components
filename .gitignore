@@ -10,6 +10,9 @@
 node_modules
 /bower_components
 
+# Angular CLI project cache
+.angular/
+
 # Dart
 /.pub
 /.packages
@@ -25,6 +28,9 @@ node_modules
 /.idea
 /.vscode/launch.json
 /*.iml
+/.vs
+*.swo
+*.swp
 
 # misc
 .DS_Store
@@ -42,3 +48,6 @@ testem.log
 *.log
 .ng-dev.user*
 .husky/_
+
+# Variables that are inlined into the dev app index.html
+/src/dev-app/variables.json

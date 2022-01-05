@@ -7,8 +7,9 @@ import {MatButtonToggleGroupHarness} from './button-toggle-group-harness';
 
 /** Shared tests to run on both the original and MDC-based button toggle group. */
 export function runHarnessTests(
-    buttonToggleModule: typeof MatButtonToggleModule,
-    buttonToggleGroupHarness: typeof MatButtonToggleGroupHarness) {
+  buttonToggleModule: typeof MatButtonToggleModule,
+  buttonToggleGroupHarness: typeof MatButtonToggleGroupHarness,
+) {
   let fixture: ComponentFixture<ButtonToggleGroupHarnessTest>;
   let loader: HarnessLoader;
 
@@ -28,7 +29,7 @@ export function runHarnessTests(
     expect(groups.length).toBe(1);
   });
 
-  it('should load the the toggles inside the group', async () => {
+  it('should load the toggles inside the group', async () => {
     const group = await loader.getHarness(buttonToggleGroupHarness);
     const toggles = await group.getToggles();
     expect(toggles.length).toBe(2);
@@ -62,11 +63,10 @@ export function runHarnessTests(
       <mat-button-toggle value="1">One</mat-button-toggle>
       <mat-button-toggle value="2">Two</mat-button-toggle>
     </mat-button-toggle-group>
-  `
+  `,
 })
 class ButtonToggleGroupHarnessTest {
   disabled = false;
   vertical = false;
   appearance: MatButtonToggleAppearance = 'standard';
 }
-

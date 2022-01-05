@@ -15,7 +15,6 @@ import {
   OnDestroy,
   Optional,
   NgZone,
-  HostListener,
   ElementRef,
   Inject,
   Self,
@@ -46,6 +45,8 @@ import {MenuAim, MENU_AIM} from './menu-aim';
     'class': 'cdk-menu-bar',
     'tabindex': '0',
     '[attr.aria-orientation]': 'orientation',
+    '(focus)': 'focusFirstItem()',
+    '(keydown)': '_handleKeyEvent($event)',
   },
   providers: [
     {provide: CdkMenuGroup, useExisting: CdkMenuBar},
@@ -81,12 +82,12 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
     private readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLElement>,
     @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
-    @Optional() private readonly _dir?: Directionality
+    @Optional() private readonly _dir?: Directionality,
   ) {
     super();
   }
 
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     super.ngAfterContentInit();
 
     this._setKeyManager();
@@ -97,11 +98,6 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
     this._menuAim?.initialize(this, this._pointerTracker!);
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('focus')
   /** Place focus on the first MenuItem in the menu and set the focus origin. */
   focusFirstItem(focusOrigin: FocusOrigin = 'program') {
     this._keyManager.setFocusOrigin(focusOrigin);
@@ -114,11 +110,6 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
     this._keyManager.setLastItemActive();
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('keydown', ['$event'])
   /**
    * Handle keyboard events, specifically changing the focused element and/or toggling the active
    * items menu.
@@ -199,25 +190,27 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
   private _subscribeToMenuStack() {
     this._menuStack.closed
       .pipe(takeUntil(this._destroyed))
-      .subscribe((item: MenuStackItem) => this._closeOpenMenu(item));
+      .subscribe(item => this._closeOpenMenu(item));
 
     this._menuStack.emptied
       .pipe(takeUntil(this._destroyed))
-      .subscribe((event: FocusNext) => this._toggleOpenMenu(event));
+      .subscribe(event => this._toggleOpenMenu(event));
   }
 
   /**
    * Close the open menu if the current active item opened the requested MenuStackItem.
    * @param item the MenuStackItem requested to be closed.
    */
-  private _closeOpenMenu(menu: MenuStackItem) {
+  private _closeOpenMenu(menu: MenuStackItem | undefined) {
     const trigger = this._openItem;
     const keyManager = this._keyManager;
     if (menu === trigger?.getMenuTrigger()?.getMenu()) {
-      trigger.getMenuTrigger()?.closeMenu();
+      trigger?.getMenuTrigger()?.closeMenu();
       // If the user has moused over a sibling item we want to focus the element under mouse focus
       // not the trigger which previously opened the now closed menu.
-      keyManager.setActiveItem(this._pointerTracker?.activeElement || trigger);
+      if (trigger) {
+        keyManager.setActiveItem(this._pointerTracker?.activeElement || trigger);
+      }
     }
   }
 
@@ -225,7 +218,7 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
    * Set focus to either the current, previous or next item based on the FocusNext event, then
    * open the previous or next item.
    */
-  private _toggleOpenMenu(event: FocusNext) {
+  private _toggleOpenMenu(event: FocusNext | undefined) {
     const keyManager = this._keyManager;
     switch (event) {
       case FocusNext.nextItem:
@@ -268,14 +261,14 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
         mergeMap((list: QueryList<CdkMenuItem>) =>
           list
             .filter(item => item.hasMenu())
-            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition)))
+            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition))),
         ),
         mergeAll(),
         switchMap((item: CdkMenuItem) => {
           this._openItem = item;
           return item.getMenuTrigger()!.closed;
         }),
-        takeUntil(this._destroyed)
+        takeUntil(this._destroyed),
       )
       .subscribe(() => (this._openItem = undefined));
   }
@@ -285,7 +278,7 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
     return !!this._openItem;
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
     super.ngOnDestroy();
 
     this._destroyed.next();

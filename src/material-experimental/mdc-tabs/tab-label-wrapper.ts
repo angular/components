@@ -22,23 +22,29 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   host: {
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[attr.aria-disabled]': '!!disabled',
-  }
+  },
 })
-export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
-    implements MatInkBarItem, OnInit, OnDestroy {
+export class MatTabLabelWrapper
+  extends BaseMatTabLabelWrapper
+  implements MatInkBarItem, OnInit, OnDestroy
+{
   private _document: Document;
 
   _foundation: MatInkBarFoundation;
 
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
-  get fitInkBarToContent(): boolean { return this._foundation.getFitToContent(); }
-  set fitInkBarToContent(v: boolean) { this._foundation.setFitToContent(coerceBooleanProperty(v)); }
+  get fitInkBarToContent(): boolean {
+    return this._foundation.getFitToContent();
+  }
+  set fitInkBarToContent(v: BooleanInput) {
+    this._foundation.setFitToContent(coerceBooleanProperty(v));
+  }
 
-  constructor(public elementRef: ElementRef, @Inject(DOCUMENT) _document: any) {
+  constructor(elementRef: ElementRef, @Inject(DOCUMENT) _document: any) {
     super(elementRef);
     this._document = _document;
-    this._foundation = new MatInkBarFoundation(this.elementRef.nativeElement, this._document);
+    this._foundation = new MatInkBarFoundation(elementRef.nativeElement, this._document);
   }
 
   ngOnInit() {
@@ -48,11 +54,4 @@ export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
   ngOnDestroy() {
     this._foundation.destroy();
   }
-
-  /** Sets focus on the wrapper element */
-  focus(): void {
-    this.elementRef.nativeElement.focus();
-  }
-
-  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
 }

@@ -1,20 +1,27 @@
-@import '@material/notched-outline/variables.import';
-@import '@material/textfield/variables.import';
-@import 'form-field-sizing';
+@use '@material/textfield/variables' as mdc-textfield-variables;
 
 // Mixin that can be included to override the default MDC text-field
 // styles to fit our needs. See individual comments for context on why
 // certain MDC styles need to be modified.
-@mixin mat-mdc-private-text-field-structure-overrides() {
+@mixin private-text-field-structure-overrides() {
   // Unset the border set by MDC. We move the border (which serves as the Material Design
   // text-field bottom line) into its own element. This is necessary because we want the
   // bottom-line to span across the whole form-field (including prefixes and suffixes). Also
   // we ensure that font styles are inherited for input elements. We do this because inputs by
   // default have explicit font styles from the user agent, and we set the desired font styles
   // in the parent `mat-form-field` element (for better custom form-field control support).
-  .mat-mdc-input-element {
+  // Note: We increase specificity here because the MDC textfield seems to override this,
+  // depending on the CSS order, with an affix selector joint with the input.
+  .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
     font: inherit;
     border: none;
+  }
+
+  // In order to ensure proper alignment of the floating label, we reset its line-height.
+  // The line-height is not important as the element is absolutely positioned and only has one line
+  // of text.
+  .mat-mdc-form-field .mdc-floating-label.mdc-floating-label {
+    line-height: normal;
   }
 
   // Reset the height that MDC sets on native input elements. We cannot rely on their
@@ -23,9 +30,17 @@
   // not work for us since we support arbitrary form field controls which don't necessarily
   // use an `input` element. We organize the vertical spacing on the infix container.
   .mdc-text-field--no-label:not(.mdc-text-field--textarea)
-  .mat-mdc-input-element.mdc-text-field__input,
-  .mat-mdc-text-field-wrapper .mat-mdc-input-element {
+    .mat-mdc-form-field-input-control.mdc-text-field__input,
+  .mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control {
     height: auto;
+  }
+
+  // Color inputs are a special case, because setting their height to
+  // `auto` will collapse them. The height value is an arbitrary number
+  // which was extracted from the user agent styles of Chrome and Firefox.
+  .mat-mdc-text-field-wrapper
+    .mat-mdc-form-field-input-control.mdc-text-field__input[type='color'] {
+    height: 23px;
   }
 
   // Root element of the mdc-text-field. As explained in the height overwrites above, MDC
@@ -36,12 +51,37 @@
     flex: auto;
   }
 
+  // The icon prefix/suffix is closer to the edge of the form-field than the infix is in a
+  // form-field with no prefix/suffix. Therefore the standard padding has to be removed when showing
+  // an icon prefix or suffix. We can't rely on MDC's styles for this because we use a different
+  // structure for our form-field in order to support arbitrary height input elements.
+  .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
+    padding-left: 0;
+  }
+  .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    padding-right: 0;
+  }
+  [dir='rtl'] {
+    // Undo the above padding removals which only apply in LTR languages.
+    .mat-mdc-text-field-wrapper {
+      padding-left: mdc-textfield-variables.$padding-horizontal;
+      padding-right: mdc-textfield-variables.$padding-horizontal;
+    }
+    // ...and apply the correct padding resets for RTL languages.
+    .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+      padding-left: 0;
+    }
+    .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
+      padding-right: 0;
+    }
+  }
+
   // The default MDC text-field implementation does not support labels which always float.
   // MDC only renders the placeholder if the input is focused. We extend this to show the
   // placeholder if the form-field label is set to always float.
   // TODO(devversion): consider getting a mixin or variables for this (currently not available).
   // Stylelint no-prefixes rule disabled because MDC text-field only uses "::placeholder" too.
-  /* stylelint-disable-next-line material/no-prefixes */
+  // stylelint-disable-next-line material/no-prefixes
   .mat-mdc-form-field-label-always-float .mdc-text-field__input::placeholder {
     transition-delay: 40ms;
     transition-duration: 110ms;
@@ -85,4 +125,5 @@
   .mat-mdc-text-field-wrapper::before {
     content: none;
   }
+
 }

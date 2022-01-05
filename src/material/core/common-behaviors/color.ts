@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Constructor} from './constructor';
+import {AbstractConstructor, Constructor} from './constructor';
 import {ElementRef} from '@angular/core';
 
 /** @docs-private */
@@ -18,8 +18,7 @@ export interface CanColor {
   defaultColor: ThemePalette | undefined;
 }
 
-/** @docs-private */
-export type CanColorCtor = Constructor<CanColor>;
+type CanColorCtor = Constructor<CanColor> & AbstractConstructor<CanColor>;
 
 /** @docs-private */
 export interface HasElementRef {
@@ -30,13 +29,21 @@ export interface HasElementRef {
 export type ThemePalette = 'primary' | 'accent' | 'warn' | undefined;
 
 /** Mixin to augment a directive with a `color` property. */
+export function mixinColor<T extends AbstractConstructor<HasElementRef>>(
+  base: T,
+  defaultColor?: ThemePalette,
+): CanColorCtor & T;
 export function mixinColor<T extends Constructor<HasElementRef>>(
-    base: T, defaultColor?: ThemePalette): CanColorCtor & T {
+  base: T,
+  defaultColor?: ThemePalette,
+): CanColorCtor & T {
   return class extends base {
     private _color: ThemePalette;
     defaultColor = defaultColor;
 
-    get color(): ThemePalette { return this._color; }
+    get color(): ThemePalette {
+      return this._color;
+    }
     set color(value: ThemePalette) {
       const colorPalette = value || this.defaultColor;
 
@@ -60,4 +67,3 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
     }
   };
 }
-

@@ -1,40 +1,31 @@
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatAutocompleteHarness} from '@angular/material/autocomplete/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 /**
  * Function that can be used to run the shared autocomplete harness tests for either the non-MDC or
- * MDC based checkbox harness.
+ * MDC based autocomplete harness.
  */
 export function runHarnessTests(
-    autocompleteModule: typeof MatAutocompleteModule,
-    autocompleteHarness: typeof MatAutocompleteHarness) {
+  autocompleteModule: typeof MatAutocompleteModule,
+  autocompleteHarness: typeof MatAutocompleteHarness,
+) {
   let fixture: ComponentFixture<AutocompleteHarnessTest>;
   let loader: HarnessLoader;
-  let overlayContainer: OverlayContainer;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [autocompleteModule],
+      imports: [NoopAnimationsModule, autocompleteModule],
       declarations: [AutocompleteHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AutocompleteHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
-    inject([OverlayContainer], (oc: OverlayContainer) => {
-      overlayContainer = oc;
-    })();
-  });
-
-  afterEach(() => {
-    // Angular won't call this for us so we need to do it ourselves to avoid leaks.
-    overlayContainer.ngOnDestroy();
-    overlayContainer = null!;
   });
 
   it('should load all autocomplete harnesses', async () => {
@@ -145,7 +136,8 @@ export function runHarnessTests(
     const input = await loader.getHarness(autocompleteHarness.with({selector: '#plain'}));
     await input.enterText('New');
     await expectAsync(input.selectOption({text: 'Texas'})).toBeRejectedWithError(
-        /Could not find a mat-option matching {"text":"Texas"}/);
+      /Could not find a mat-option matching {"text":"Texas"}/,
+    );
   });
 }
 
@@ -168,7 +160,7 @@ export function runHarnessTests(
     <textarea id="textarea" [matAutocomplete]="autocomplete"></textarea>
     <input id="prefilled" [matAutocomplete]="autocomplete" value="Prefilled value">
     <input id="grouped" [matAutocomplete]="groupedAutocomplete">
-  `
+  `,
 })
 class AutocompleteHarnessTest {
   states = [
@@ -193,8 +185,8 @@ class AutocompleteHarnessTest {
         {code: 'KS', name: 'Kansas'},
         {code: 'KY', name: 'Kentucky'},
         {code: 'LA', name: 'Louisiana'},
-        {code: 'ME', name: 'Maine'}
-      ]
+        {code: 'ME', name: 'Maine'},
+      ],
     },
     {
       name: 'Two',
@@ -204,7 +196,7 @@ class AutocompleteHarnessTest {
         {code: 'SD', name: 'South Dakota'},
         {code: 'TN', name: 'Tennessee'},
         {code: 'TX', name: 'Texas'},
-      ]
+      ],
     },
     {
       name: 'Three',
@@ -212,8 +204,8 @@ class AutocompleteHarnessTest {
         {code: 'UT', name: 'Utah'},
         {code: 'WA', name: 'Washington'},
         {code: 'WV', name: 'West Virginia'},
-        {code: 'WI', name: 'Wisconsin'}
-      ]
-    }
+        {code: 'WI', name: 'Wisconsin'},
+      ],
+    },
   ];
 }

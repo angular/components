@@ -7,45 +7,44 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  HostListener,
-  Inject,
-  OnDestroy,
-  QueryList
-} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Inject, OnDestroy, QueryList} from '@angular/core';
 import {MDCListAdapter, MDCListFoundation} from '@material/list';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {MatListBase, MatListItemBase} from './list-base';
 
-@Directive()
+@Directive({
+  host: {
+    '(keydown)': '_handleKeydown($event)',
+    '(click)': '_handleClick($event)',
+    '(focusin)': '_handleFocusin($event)',
+    '(focusout)': '_handleFocusout($event)',
+  },
+})
 /** @docs-private */
 export abstract class MatInteractiveListBase<T extends MatListItemBase>
-  extends MatListBase implements AfterViewInit, OnDestroy {
-
-  @HostListener('keydown', ['$event'])
+  extends MatListBase
+  implements AfterViewInit, OnDestroy
+{
   _handleKeydown(event: KeyboardEvent) {
     const index = this._indexForElement(event.target as HTMLElement);
-    this._foundation.handleKeydown(
-      event, this._elementAtIndex(index) === event.target, index);
+    this._foundation.handleKeydown(event, this._elementAtIndex(index) === event.target, index);
   }
 
-  @HostListener('click', ['$event'])
   _handleClick(event: MouseEvent) {
-    // The `toggleCheckbox` parameter can always be `true` as it only has an effect if the list
-    // is recognized as checkbox selection list. For such lists, we would always want to toggle
-    // the checkbox on list item click. MDC added this parameter so that they can avoid dispatching
-    // a fake `change` event when the checkbox is directly clicked for the list item. We don't
-    // need this as we require such list item checkboxes to stop propagation of the change event.
+    // The `isCheckboxAlreadyUpdatedInAdapter` parameter can always be `false` as it only has an
+    // effect if the list is recognized as checkbox selection list. For such lists, we would
+    // always want to toggle the checkbox on list item click. MDC added this parameter so that
+    // they can avoid dispatching a fake `change` event when the checkbox is directly clicked
+    // for the list item. We don't need this as we do not have an underlying native checkbox
+    // that is reachable by users through interaction.
     // https://github.com/material-components/material-components-web/blob/08ca4d0ec5f359bc3a20bd2a302fa6b733b5e135/packages/mdc-list/component.ts#L308-L310
-    this._foundation.handleClick(this._indexForElement(event.target as HTMLElement),
-      /* toggleCheckbox */ true);
+    this._foundation.handleClick(
+      this._indexForElement(event.target as HTMLElement),
+      /* isCheckboxAlreadyUpdatedInAdapter */ false,
+    );
   }
 
-  @HostListener('focusin', ['$event'])
   _handleFocusin(event: FocusEvent) {
     const itemIndex = this._indexForElement(event.target as HTMLElement);
     const tabIndex = this._itemsArr[itemIndex]?._hostElement.tabIndex;
@@ -59,12 +58,11 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
       this._clearTabindexForAllItems();
     }
 
-    this._foundation.handleFocusIn(event, itemIndex);
+    this._foundation.handleFocusIn(itemIndex);
   }
 
-  @HostListener('focusout', ['$event'])
   _handleFocusout(event: FocusEvent) {
-    this._foundation.handleFocusOut(event, this._indexForElement(event.target as HTMLElement));
+    this._foundation.handleFocusOut(this._indexForElement(event.target as HTMLElement));
   }
 
   /** Items in the interactive list. */
@@ -77,8 +75,7 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
 
   private _subscriptions = new Subscription();
 
-  protected constructor(public _element: ElementRef<HTMLElement>,
-                        @Inject(DOCUMENT) document: any) {
+  protected constructor(public _element: ElementRef<HTMLElement>, @Inject(DOCUMENT) document: any) {
     super();
     this._document = document;
     this._isNonInteractive = false;
@@ -108,16 +105,18 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
   }
 
   protected _watchListItems() {
-    this._subscriptions.add(this._items.changes.pipe(startWith(null)).subscribe(() => {
-      this._itemsArr = this._items.toArray();
-      // Whenever the items change, the foundation needs to be notified through the `layout`
-      // method. It caches items for the typeahead and detects the list type based on the items.
-      this._foundation.layout();
+    this._subscriptions.add(
+      this._items.changes.pipe(startWith(null)).subscribe(() => {
+        this._itemsArr = this._items.toArray();
+        // Whenever the items change, the foundation needs to be notified through the `layout`
+        // method. It caches items for the typeahead and detects the list type based on the items.
+        this._foundation.layout();
 
-      // The list items changed, so we reset the tabindex for all items and
-      // designate one list item that will be reachable through tab.
-      this._resetTabindexToFirstSelectedOrFocusedItem();
-    }));
+        // The list items changed, so we reset the tabindex for all items and
+        // designate one list item that will be reachable through tab.
+        this._resetTabindexToFirstSelectedOrFocusedItem();
+      }),
+    );
   }
 
   /**
@@ -145,20 +144,20 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
     (this._foundation as any).setTabindexToFirstSelectedOrFocusedItem();
   }
 
-  _elementAtIndex(index: number): HTMLElement|undefined {
+  _elementAtIndex(index: number): HTMLElement | undefined {
     return this._itemsArr[index]?._hostElement;
   }
 
   _indexForElement(element: Element | null): number {
-    return element ?
-      this._itemsArr.findIndex(i => i._hostElement.contains(element)) : -1;
+    return element ? this._itemsArr.findIndex(i => i._hostElement.contains(element)) : -1;
   }
 }
 
 // TODO: replace with class once material-components-web/pull/6256 is available.
 /** Gets an instance of `MDcListAdapter` for the given interactive list. */
 export function getInteractiveListAdapter(
-    list: MatInteractiveListBase<MatListItemBase>): MDCListAdapter {
+  list: MatInteractiveListBase<MatListItemBase>,
+): MDCListAdapter {
   return {
     getListItemCount() {
       return list._items.length;
@@ -209,10 +208,17 @@ export function getInteractiveListAdapter(
     // The following methods have a dummy implementation in the base class because they are only
     // applicable to certain types of lists. They should be implemented for the concrete classes
     // where they are applicable.
-    hasCheckboxAtIndex() { return false; },
-    hasRadioAtIndex(index: number) { return false; },
+    hasCheckboxAtIndex() {
+      return false;
+    },
+    hasRadioAtIndex(index: number) {
+      return false;
+    },
     setCheckedCheckboxOrRadioAtIndex(index: number, checked: boolean) {},
-    isCheckboxCheckedAtIndex(index: number) { return false; },
+    isCheckboxCheckedAtIndex(index: number) {
+      return false;
+    },
+    notifySelectionChange() {},
     notifyAction() {},
   };
 }

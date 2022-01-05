@@ -7,7 +7,6 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -25,7 +24,7 @@ import {
   Optional,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -35,7 +34,6 @@ import {
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
 import {GridKeyManagerRow} from './grid-key-manager';
-
 
 /** Represents an event fired on an individual `mat-chip` when it is edited. */
 export interface MatChipEditedEvent extends MatChipEvent {
@@ -68,21 +66,23 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '(dblclick)': '_dblclick($event)',
     '(keydown)': '_keydown($event)',
     '(focusin)': '_focusin($event)',
-    '(focusout)': '_focusout($event)'
+    '(focusout)': '_focusout($event)',
   },
   providers: [{provide: MatChip, useExisting: MatChipRow}],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipRow extends MatChip implements AfterContentInit, AfterViewInit,
-  GridKeyManagerRow<HTMLElement> {
-  protected basicChipAttrName = 'mat-basic-chip-row';
+export class MatChipRow
+  extends MatChip
+  implements AfterContentInit, AfterViewInit, GridKeyManagerRow<HTMLElement>
+{
+  protected override basicChipAttrName = 'mat-basic-chip-row';
 
   @Input() editable: boolean = false;
 
   /** Emitted when the chip is edited. */
   @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
-      new EventEmitter<MatChipEditedEvent>();
+    new EventEmitter<MatChipEditedEvent>();
 
   /**
    * The focusable wrapper element in the first gridcell, which contains all
@@ -99,18 +99,27 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   /** The focusable grid cells for this row. Implemented as part of GridKeyManagerRow. */
   cells!: HTMLElement[];
 
+  /**
+   * Timeout used to give some time between `focusin` and `focusout`
+   * in order to determine whether focus has left the chip.
+   */
+  private _focusoutTimeout: number | null;
+
   constructor(
     @Inject(DOCUMENT) private readonly _document: any,
     changeDetectorRef: ChangeDetectorRef,
-    elementRef: ElementRef, ngZone: NgZone,
+    elementRef: ElementRef,
+    ngZone: NgZone,
     @Optional() dir: Directionality,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-        globalRippleOptions?: RippleGlobalOptions) {
+    @Optional()
+    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
+    globalRippleOptions?: RippleGlobalOptions,
+  ) {
     super(changeDetectorRef, elementRef, ngZone, dir, animationMode, globalRippleOptions);
   }
 
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     super.ngAfterContentInit();
 
     if (this.removeIcon) {
@@ -124,11 +133,11 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     }
   }
 
-  ngAfterViewInit() {
+  override ngAfterViewInit() {
     super.ngAfterViewInit();
-    this.cells = this.removeIcon ?
-      [this.chipContent.nativeElement, this.removeIcon._elementRef.nativeElement] :
-      [this.chipContent.nativeElement];
+    this.cells = this.removeIcon
+      ? [this.chipContent.nativeElement, this.removeIcon._elementRef.nativeElement]
+      : [this.chipContent.nativeElement];
   }
 
   /**
@@ -153,12 +162,13 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
    * to the other gridcell.
    */
   _focusout(event: FocusEvent) {
-    this._hasFocusInternal = false;
+    if (this._focusoutTimeout) {
+      clearTimeout(this._focusoutTimeout);
+    }
+
     // Wait to see if focus moves to the other gridcell
-    setTimeout(() => {
-      if (this._hasFocus()) {
-        return;
-      }
+    this._focusoutTimeout = setTimeout(() => {
+      this._hasFocusInternal = false;
       this._onBlur.next({chip: this});
       this._handleInteraction(event);
     });
@@ -166,6 +176,11 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
 
   /** Records that the chip has focus when one of the gridcells is focused. */
   _focusin(event: FocusEvent) {
+    if (this._focusoutTimeout) {
+      clearTimeout(this._focusoutTimeout);
+      this._focusoutTimeout = null;
+    }
+
     this._hasFocusInternal = true;
     this._handleInteraction(event);
   }
@@ -213,18 +228,20 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     return this._chipFoundation.isEditing();
   }
 
-  protected _onEditStart() {
+  protected override _onEditStart() {
     // Defer initializing the input so it has time to be added to the DOM.
     setTimeout(() => {
       this._getEditInput().initialize(this.value);
     });
   }
 
-  protected _onEditFinish() {
+  protected override _onEditFinish() {
     // If the edit input is still focused or focus was returned to the body after it was destroyed,
     // return focus to the chip contents.
-    if (this._document.activeElement === this._getEditInput().getNativeElement() ||
-        this._document.activeElement === this._document.body) {
+    if (
+      this._document.activeElement === this._getEditInput().getNativeElement() ||
+      this._document.activeElement === this._document.body
+    ) {
       this.chipContent.nativeElement.focus();
     }
     this.edited.emit({chip: this, value: this._getEditInput().getValue()});
@@ -237,6 +254,4 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   private _getEditInput(): MatChipEditInput {
     return this.contentEditInput || this.defaultEditInput!;
   }
-
-  static ngAcceptInputType_editable: BooleanInput;
 }

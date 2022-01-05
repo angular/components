@@ -7,7 +7,7 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="googlemaps" />
+/// <reference types="google.maps" />
 
 import {Directive, Input, OnDestroy, OnInit, Output, NgZone} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
@@ -28,9 +28,9 @@ import {MapEventManager} from '../map-event-manager';
 export class MapRectangle implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(this._ngZone);
   private readonly _options = new BehaviorSubject<google.maps.RectangleOptions>({});
-  private readonly _bounds =
-      new BehaviorSubject<google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral|undefined>(
-          undefined);
+  private readonly _bounds = new BehaviorSubject<
+    google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | undefined
+  >(undefined);
 
   private readonly _destroyed = new Subject<void>();
 
@@ -47,120 +47,110 @@ export class MapRectangle implements OnInit, OnDestroy {
   }
 
   @Input()
-  set bounds(bounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral) {
+  set bounds(bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral) {
     this._bounds.next(bounds);
   }
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.boundsChanged
-   */
-  @Output()
-  boundsChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('bounds_changed');
+   */ @Output() readonly boundsChanged: Observable<void> =
+    this._eventManager.getLazyEmitter<void>('bounds_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.click
    */
-  @Output()
-  rectangleClick: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('click');
+  @Output() readonly rectangleClick: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('click');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dblclick
    */
-  @Output()
-  rectangleDblclick: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('dblclick');
+  @Output() readonly rectangleDblclick: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dblclick');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.drag
    */
-  @Output()
-  rectangleDrag: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('drag');
+  @Output() readonly rectangleDrag: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('drag');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dragend
    */
-  @Output()
-  rectangleDragend: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('dragend');
+  @Output() readonly rectangleDragend: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dragend');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dragstart
    */
-  @Output()
-  rectangleDragstart: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('dragstart');
+  @Output() readonly rectangleDragstart: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dragstart');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mousedown
    */
-  @Output()
-  rectangleMousedown: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mousedown');
+  @Output() readonly rectangleMousedown: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mousedown');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mousemove
    */
-  @Output()
-  rectangleMousemove: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mousemove');
+  @Output() readonly rectangleMousemove: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mousemove');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseout
    */
-  @Output()
-  rectangleMouseout: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseout');
+  @Output() readonly rectangleMouseout: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseout');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseover
    */
-  @Output()
-  rectangleMouseover: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseover');
+  @Output() readonly rectangleMouseover: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseover');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseup
    */
-  @Output()
-  rectangleMouseup: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseup');
+  @Output() readonly rectangleMouseup: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseup');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.rightclick
    */
-  @Output()
-  rectangleRightclick: Observable<google.maps.MouseEvent> =
-      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('rightclick');
+  @Output() readonly rectangleRightclick: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
 
   constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {
-      this._combineOptions().pipe(take(1)).subscribe(options => {
-        // Create the object outside the zone so its events don't trigger change detection.
-        // We'll bring it back in inside the `MapEventManager` only for the events that the
-        // user has subscribed to.
-        this._ngZone.runOutsideAngular(() => {
-          this.rectangle = new google.maps.Rectangle(options);
+      this._combineOptions()
+        .pipe(take(1))
+        .subscribe(options => {
+          // Create the object outside the zone so its events don't trigger change detection.
+          // We'll bring it back in inside the `MapEventManager` only for the events that the
+          // user has subscribed to.
+          this._ngZone.runOutsideAngular(() => {
+            this.rectangle = new google.maps.Rectangle(options);
+          });
+          this._assertInitialized();
+          this.rectangle.setMap(this._map.googleMap!);
+          this._eventManager.setTarget(this.rectangle);
         });
-        this._assertInitialized();
-        this.rectangle.setMap(this._map.googleMap!);
-        this._eventManager.setTarget(this.rectangle);
-      });
 
       this._watchForOptionsChanges();
       this._watchForBoundsChanges();
@@ -180,7 +170,7 @@ export class MapRectangle implements OnInit, OnDestroy {
    * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getBounds
    */
-  getBounds(): google.maps.LatLngBounds {
+  getBounds(): google.maps.LatLngBounds | null {
     this._assertInitialized();
     return this.rectangle.getBounds();
   }
@@ -213,13 +203,15 @@ export class MapRectangle implements OnInit, OnDestroy {
   }
 
   private _combineOptions(): Observable<google.maps.RectangleOptions> {
-    return combineLatest([this._options, this._bounds]).pipe(map(([options, bounds]) => {
-      const combinedOptions: google.maps.RectangleOptions = {
-        ...options,
-        bounds: bounds || options.bounds,
-      };
-      return combinedOptions;
-    }));
+    return combineLatest([this._options, this._bounds]).pipe(
+      map(([options, bounds]) => {
+        const combinedOptions: google.maps.RectangleOptions = {
+          ...options,
+          bounds: bounds || options.bounds,
+        };
+        return combinedOptions;
+      }),
+    );
   }
 
   private _watchForOptionsChanges() {
@@ -242,13 +234,15 @@ export class MapRectangle implements OnInit, OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._map.googleMap) {
         throw Error(
-            'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.');
+          'Cannot access Google Map information before the API has been initialized. ' +
+            'Please wait for the API to load before trying to interact with it.',
+        );
       }
       if (!this.rectangle) {
         throw Error(
-            'Cannot interact with a Google Map Rectangle before it has been initialized. ' +
-            'Please wait for the Rectangle to load before trying to interact with it.');
+          'Cannot interact with a Google Map Rectangle before it has been initialized. ' +
+            'Please wait for the Rectangle to load before trying to interact with it.',
+        );
       }
     }
   }

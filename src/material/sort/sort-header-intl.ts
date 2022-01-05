@@ -20,16 +20,8 @@ export class MatSortHeaderIntl {
    * components if the labels have changed after initialization.
    */
   readonly changes: Subject<void> = new Subject<void>();
-
-  /**
-   * ARIA label for the sorting button.
-   * @deprecated Not used anymore. To be removed.
-   * @breaking-change 8.0.0
-   */
-  sortButtonLabel = (id: string) => {
-    return `Change sorting for ${id}`;
-  }
 }
+
 /** @docs-private */
 export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl) {
   return parentIntl || new MatSortHeaderIntl();
@@ -40,6 +32,5 @@ export const MAT_SORT_HEADER_INTL_PROVIDER = {
   // If there is already an MatSortHeaderIntl available, use that. Otherwise, provide a new one.
   provide: MatSortHeaderIntl,
   deps: [[new Optional(), new SkipSelf(), MatSortHeaderIntl]],
-  useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY
+  useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY,
 };
-
