@@ -29,7 +29,8 @@ $mat-dialog-button-horizontal-margin: 8px !default;
   // aligns actions at the end of the container.
   justify-content: start;
 
-  // .align-center and .align-end are set by directive input "align"
+  // .mat-mdc-dialog-actions-align-{center|end} are set by directive input "align"
+  // [align='center'] and [align='right'] are kept for backwards compability
   &.mat-mdc-dialog-actions-align-center, &[align='center'] {
     justify-content: center;
   }
