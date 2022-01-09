@@ -148,7 +148,7 @@ export class MatDialogContent {}
   },
 })
 export class MatDialogActions {
-  @Input() align?: 'center' | 'end' = undefined;
+  @Input() align?: 'start' | 'center' | 'end' = 'start';
 }
 
 /**
