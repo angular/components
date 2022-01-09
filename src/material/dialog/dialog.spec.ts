@@ -1,21 +1,16 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
-  createKeyboardEvent,
-  dispatchEvent,
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
-  patchElementFocus,
-} from '@angular/cdk/testing/private';
-import {Location} from '@angular/common';
-import {SpyLocation} from '@angular/common/testing';
+  ComponentFixture,
+  fakeAsync,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick,
+  flush,
+} from '@angular/core/testing';
 import {
   ChangeDetectionStrategy,
   Component,
-  ComponentFactoryResolver,
   Directive,
   Inject,
   Injector,
@@ -26,15 +21,6 @@ import {
   NgZone,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Location} from '@angular/common';
@@ -54,13 +40,12 @@ import {
 } from '../../cdk/testing/private';
 import {
   MAT_DIALOG_DATA,
-  MAT_DIALOG_DEFAULT_OPTIONS,
   MatDialog,
   MatDialogModule,
   MatDialogRef,
+  MAT_DIALOG_DEFAULT_OPTIONS,
   MatDialogState,
 } from './index';
-
 import {Subject} from 'rxjs';
 
 describe('MatDialog', () => {
@@ -1396,8 +1381,7 @@ describe('MatDialog', () => {
       button.focus();
 
       // Patch the element focus after the initial and real focus, because otherwise the
-      // `activeElement` won't be set, and the dialog won't be able to restore focus to an
-      // element.
+      // `activeElement` won't be set, and the dialog won't be able to restore focus to an element.
       patchElementFocus(button);
 
       dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -1430,8 +1414,7 @@ describe('MatDialog', () => {
       button.focus();
 
       // Patch the element focus after the initial and real focus, because otherwise the
-      // `activeElement` won't be set, and the dialog won't be able to restore focus to an
-      // element.
+      // `activeElement` won't be set, and the dialog won't be able to restore focus to an element.
       patchElementFocus(button);
 
       dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -1640,10 +1623,9 @@ describe('MatDialog', () => {
         'Expected the focus to change when dialog was opened.',
       );
 
+      // Start the closing sequence and move focus out of dialog.
       dialogRef.close();
-      flushMicrotasks();
-      viewContainerFixture.detectChanges();
-      tick(500);
+      otherButton.focus();
 
       expect(document.activeElement!.id)
         .withContext('Expected focus to be on the alternate button.')
@@ -1752,7 +1734,7 @@ describe('MatDialog', () => {
           .toBe(title.id);
       }));
 
-      it('should add align-* class according to given [align] input in [mat-dialog-actions]', () => {
+      it('should add mat-dialog-actions-align-* class according to given [align] input in [mat-dialog-actions]', () => {
         let actions = overlayContainerElement.querySelector('mat-dialog-actions')!;
 
         expect(actions)

@@ -39,7 +39,6 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {numbers} from '@material/dialog';
 import {Subject} from 'rxjs';
-
 import {
   MatDialog,
   MatDialogModule,
@@ -1672,7 +1671,7 @@ describe('MDC-based MatDialog', () => {
           .toBe(title.id);
       }));
 
-      it('should add align-* class according to given [align] input in [mat-dialog-actions]', () => {
+      it('should add mat-mdc-dialog-actions-align-* class according to given [align] input in [mat-dialog-actions]', () => {
         let actions = overlayContainerElement.querySelector('mat-dialog-actions')!;
 
         expect(actions)
