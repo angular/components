@@ -173,7 +173,7 @@ export class JazzDialog {
       </p>
     </mat-dialog-content>
 
-    <mat-dialog-actions [attr.align]="actionsAlignment">
+    <mat-dialog-actions [align]="actionsAlignment">
       <button
         mat-raised-button
         color="primary"
