@@ -101,15 +101,6 @@ export function runCalendarHarnessTests(
     expect(await targetCell.isSelected()).toBe(true);
   });
 
-  it('should get the aria-label of a cell', async () => {
-    const calendar = await loader.getHarness(calendarHarness.with({selector: '#single'}));
-    const cells = await calendar.getCells();
-
-    expect(await cells[0].getAriaLabel()).toBe('August 1, 2020');
-    expect(await cells[15].getAriaLabel()).toBe('August 16, 2020');
-    expect(await cells[30].getAriaLabel()).toBe('August 31, 2020');
-  });
-
   it('should get the disabled state of a cell', async () => {
     fixture.componentInstance.minDate = new Date(
       calendarDate.getFullYear(),

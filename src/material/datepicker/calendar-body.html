@@ -46,7 +46,6 @@
       [class.mat-calendar-body-preview-start]="_isPreviewStart(item.compareValue)"
       [class.mat-calendar-body-preview-end]="_isPreviewEnd(item.compareValue)"
       [class.mat-calendar-body-in-preview]="_isInPreview(item.compareValue)"
-      [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
       [attr.aria-selected]="_isSelected(item.compareValue)"
       [attr.aria-current]="todayValue === item.compareValue ? 'date' : null"
@@ -58,7 +57,18 @@
         [class.mat-calendar-body-selected]="_isSelected(item.compareValue)"
         [class.mat-calendar-body-comparison-identical]="_isComparisonIdentical(item.compareValue)"
         [class.mat-calendar-body-today]="todayValue === item.compareValue">
-        {{item.displayValue}}
+        <!--
+          Usually we'd want to set the label as an `aria-label` attribute, but VoiceOver where it
+          will read out both the `aria-label` and the cell content which is repetitive. We work
+          around the issue by rendering it as a hidden element and hiding the visual label with
+          `aria-hidden`. An alternative approach is to keep the `aria-label` and only set
+          `aria-hidden` on the visual content, but that causes VoiceOver to read out the
+          word "blank" after each cell.
+        -->
+        <span class="cdk-visually-hidden">{{item.ariaLabel}}</span>
+        <span
+          class="mat-calendar-body-cell-visual-label"
+          aria-hidden="true">{{item.displayValue}}</span>
       </div>
       <div class="mat-calendar-body-cell-preview" aria-hidden="true"></div>
   </td>

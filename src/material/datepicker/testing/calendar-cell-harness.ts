@@ -16,6 +16,9 @@ export class MatCalendarCellHarness extends ComponentHarness {
   /** Reference to the inner content element inside the cell. */
   private _content = this.locatorFor('.mat-calendar-body-cell-content');
 
+  /** Inner element containing the visual label. */
+  private _visualLabel = this.locatorFor('.mat-calendar-body-cell-visual-label');
+
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatCalendarCellHarness`
    * that meets certain criteria.
@@ -56,10 +59,14 @@ export class MatCalendarCellHarness extends ComponentHarness {
 
   /** Gets the text of the calendar cell. */
   async getText(): Promise<string> {
-    return (await this._content()).text();
+    return (await this._visualLabel()).text();
   }
 
-  /** Gets the aria-label of the calendar cell. */
+  /**
+   * Gets the aria-label of the calendar cell.
+   * @deprecated Calendar cells no longer have an `aria-label`. To be removed.
+   * @breaking-change 14.0.0
+   */
   async getAriaLabel(): Promise<string> {
     // We're guaranteed for the `aria-label` to be defined
     // since this is a private element that we control.

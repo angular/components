@@ -47,49 +47,17 @@ describe('MatCalendarBody', () => {
     });
 
     it('highlights today', () => {
-      const todayCells = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-today')!;
-      expect(todayCells.length).toBe(1);
-
-      const todayCell = todayCells[0];
-
-      expect(todayCell).not.toBeNull();
-      expect(todayCell.textContent!.trim()).toBe('3');
-    });
-
-    it('sets aria-current="date" on today', () => {
-      const todayCells = calendarBodyNativeElement.querySelectorAll(
-        '[aria-current="date"] .mat-calendar-body-today',
-      )!;
-      expect(todayCells.length).toBe(1);
-
-      const todayCell = todayCells[0];
-
-      expect(todayCell).not.toBeNull();
-      expect(todayCell.textContent!.trim()).toBe('3');
-    });
-
-    it('does not highlight today if today is not within the scope', () => {
-      testComponent.todayValue = 100000;
-      fixture.detectChanges();
-
       const todayCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-today')!;
-      expect(todayCell).toBeNull();
-    });
-
-    it('does not set aria-current="date" on any cell if today is not ' + 'the scope', () => {
-      testComponent.todayValue = 100000;
-      fixture.detectChanges();
-
-      const todayCell = calendarBodyNativeElement.querySelector(
-        '[aria-current="date"] .mat-calendar-body-today',
-      )!;
-      expect(todayCell).toBeNull();
+      const todayContent = todayCell.querySelector('.mat-calendar-body-cell-visual-label')!;
+      expect(todayCell).not.toBeNull();
+      expect(todayContent.textContent!.trim()).toBe('3');
     });
 
     it('highlights selected', () => {
       const selectedCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-selected')!;
+      const selectedContent = selectedCell.querySelector('.mat-calendar-body-cell-visual-label')!;
       expect(selectedCell).not.toBeNull();
-      expect(selectedCell.innerHTML.trim()).toBe('4');
+      expect(selectedContent.textContent!.trim()).toBe('4');
     });
 
     it('should set aria-selected correctly', () => {
@@ -132,15 +100,24 @@ describe('MatCalendarBody', () => {
     });
 
     it('should mark active date', () => {
-      expect((cellEls[10] as HTMLElement).innerText.trim()).toBe('11');
-      expect(cellEls[10].classList).toContain('mat-calendar-body-active');
+      const cell = cellEls[10] as HTMLElement;
+      const content = cell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+
+      expect(content.innerText.trim()).toBe('11');
+      expect(cell.classList).toContain('mat-calendar-body-active');
     });
 
     it('should set a class on even dates', () => {
-      expect((cellEls[0] as HTMLElement).innerText.trim()).toBe('1');
-      expect((cellEls[1] as HTMLElement).innerText.trim()).toBe('2');
-      expect(cellEls[0].classList).not.toContain('even');
-      expect(cellEls[1].classList).toContain('even');
+      const labelClass = '.mat-calendar-body-cell-visual-label';
+      const firstCell = cellEls[0] as HTMLElement;
+      const secondCell = cellEls[1] as HTMLElement;
+      const firstContent = firstCell.querySelector(labelClass) as HTMLElement;
+      const secondContent = secondCell.querySelector(labelClass) as HTMLElement;
+
+      expect(firstContent.innerText.trim()).toBe('1');
+      expect(secondContent.innerText.trim()).toBe('2');
+      expect(firstCell.classList).not.toContain('even');
+      expect(secondCell.classList).toContain('even');
     });
 
     it('should have a focus indicator', () => {

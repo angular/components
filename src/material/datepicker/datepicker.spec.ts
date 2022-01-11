@@ -681,7 +681,7 @@ describe('MatDatepicker', () => {
         testComponent.datepicker.open();
         fixture.detectChanges();
 
-        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell')!;
+        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell-visual-label')!;
 
         // When the calendar is in year view, the first cell should be for a month rather than
         // for a date.
@@ -732,7 +732,7 @@ describe('MatDatepicker', () => {
         testComponent.datepicker.open();
         fixture.detectChanges();
 
-        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell')!;
+        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell-visual-label')!;
 
         // When the calendar is in year view, the first cell should be for a month rather than
         // for a date.

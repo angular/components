@@ -536,7 +536,10 @@ describe('MatDateRangeInput', () => {
           '.mat-calendar-body-range-end',
         ].join(','),
       ),
-    ).map(cell => cell.textContent!.trim());
+    ).map(cell => {
+      const content = cell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+      return content.textContent!.trim();
+    });
 
     expect(rangeTexts).toEqual(['2', '3', '4', '5']);
   }));
@@ -569,7 +572,10 @@ describe('MatDateRangeInput', () => {
           '.mat-calendar-body-comparison-end',
         ].join(','),
       ),
-    ).map(cell => cell.textContent!.trim());
+    ).map(cell => {
+      const content = cell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+      return content.textContent!.trim();
+    });
 
     expect(rangeTexts).toEqual(['2', '3', '4', '5']);
   }));

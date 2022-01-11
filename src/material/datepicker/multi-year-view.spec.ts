@@ -62,8 +62,10 @@ describe('MatMultiYearView', () => {
     });
 
     it('shows selected year if in same range', () => {
-      let selectedEl = multiYearViewNativeElement.querySelector('.mat-calendar-body-selected')!;
-      expect(selectedEl.innerHTML.trim()).toBe('2020');
+      const selectedContent = multiYearViewNativeElement.querySelector(
+        '.mat-calendar-body-selected .mat-calendar-body-cell-visual-label',
+      )!;
+      expect(selectedContent.innerHTML.trim()).toBe('2020');
     });
 
     it('does not show selected year if in different range', () => {
@@ -79,8 +81,10 @@ describe('MatMultiYearView', () => {
       (cellEls[cellEls.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
-      let selectedEl = multiYearViewNativeElement.querySelector('.mat-calendar-body-selected')!;
-      expect(selectedEl.innerHTML.trim()).toBe('2039');
+      const selectedContent = multiYearViewNativeElement.querySelector(
+        '.mat-calendar-body-selected .mat-calendar-body-cell-visual-label',
+      )!;
+      expect(selectedContent.textContent!.trim()).toBe('2039');
     });
 
     it('should emit the selected year on cell clicked', () => {
@@ -94,9 +98,12 @@ describe('MatMultiYearView', () => {
     });
 
     it('should mark active date', () => {
-      let cellEls = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
-      expect((cellEls[1] as HTMLElement).innerText.trim()).toBe('2017');
-      expect(cellEls[1].classList).toContain('mat-calendar-body-active');
+      const cellEls = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      const cell = cellEls[1] as HTMLElement;
+      const content = cell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+
+      expect(content.innerText.trim()).toBe('2017');
+      expect(cell.classList).toContain('mat-calendar-body-active');
     });
 
     describe('a11y', () => {
@@ -278,7 +285,12 @@ describe('MatMultiYearView', () => {
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
-      expect((cells[0] as HTMLElement).innerText.trim()).toBe('2014');
+      const firstCell = cells[0] as HTMLElement;
+      const content = firstCell.querySelector(
+        '.mat-calendar-body-cell-visual-label',
+      ) as HTMLElement;
+
+      expect(content.innerText.trim()).toBe('2014');
     });
   });
 
@@ -301,7 +313,9 @@ describe('MatMultiYearView', () => {
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
-      expect((cells[cells.length - 1] as HTMLElement).innerText.trim()).toBe('2020');
+      const lastCell = cells[cells.length - 1] as HTMLElement;
+      const content = lastCell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+      expect(content.innerText.trim()).toBe('2020');
     });
   });
 
@@ -324,7 +338,9 @@ describe('MatMultiYearView', () => {
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
-      expect((cells[cells.length - 1] as HTMLElement).innerText.trim()).toBe('2020');
+      const lastCell = cells[cells.length - 1] as HTMLElement;
+      const content = lastCell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+      expect(content.innerText.trim()).toBe('2020');
     });
 
     it('should disable dates before minDate', () => {

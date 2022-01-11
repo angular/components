@@ -84,8 +84,10 @@ describe('MatMonthView', () => {
       });
 
       it('shows selected date if in same month', () => {
-        let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected')!;
-        expect(selectedEl.innerHTML.trim()).toBe('10');
+        const selectedContent = monthViewNativeElement.querySelector(
+          '.mat-calendar-body-selected .mat-calendar-body-cell-visual-label',
+        )!;
+        expect(selectedContent.textContent!.trim()).toBe('10');
       });
 
       it('does not show selected date if in different month', () => {
@@ -97,18 +99,23 @@ describe('MatMonthView', () => {
       });
 
       it('fires selected change event on cell clicked', () => {
-        let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+        const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
         (cellEls[cellEls.length - 1] as HTMLElement).click();
         fixture.detectChanges();
 
-        let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected')!;
-        expect(selectedEl.innerHTML.trim()).toBe('31');
+        const selectedContent = monthViewNativeElement.querySelector(
+          '.mat-calendar-body-selected .mat-calendar-body-cell-visual-label',
+        )!;
+        expect(selectedContent.textContent!.trim()).toBe('31');
       });
 
       it('should mark active date', () => {
-        let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
-        expect((cellEls[4] as HTMLElement).innerText.trim()).toBe('5');
-        expect(cellEls[4].classList).toContain('mat-calendar-body-active');
+        const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+        const cell = cellEls[4] as HTMLElement;
+        const content = cell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+
+        expect(content.innerText.trim()).toBe('5');
+        expect(cell.classList).toContain('mat-calendar-body-active');
       });
 
       describe('a11y', () => {

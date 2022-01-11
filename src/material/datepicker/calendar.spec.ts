@@ -67,17 +67,21 @@ describe('MatCalendar', () => {
       calendarInstance.updateTodaysDate();
       fixture.detectChanges();
 
-      let todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
-      expect(todayCell).not.toBeNull();
-      expect(todayCell.innerHTML.trim()).toBe('1');
+      let todayContent = calendarElement.querySelector(
+        '.mat-calendar-body-today .mat-calendar-body-cell-visual-label',
+      )!;
+      expect(todayContent).not.toBeNull();
+      expect(todayContent.innerHTML.trim()).toBe('1');
 
       fakeToday = new Date(2018, 0, 10);
       calendarInstance.updateTodaysDate();
       fixture.detectChanges();
 
-      todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
-      expect(todayCell).not.toBeNull();
-      expect(todayCell.innerHTML.trim()).toBe('10');
+      todayContent = calendarElement.querySelector(
+        '.mat-calendar-body-today .mat-calendar-body-cell-visual-label',
+      )!;
+      expect(todayContent).not.toBeNull();
+      expect(todayContent.innerHTML.trim()).toBe('10');
     }));
 
     it('should be in month view with specified month active', () => {

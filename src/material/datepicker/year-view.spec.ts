@@ -66,8 +66,10 @@ describe('MatYearView', () => {
     });
 
     it('shows selected month if in same year', () => {
-      let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-body-selected')!;
-      expect(selectedEl.innerHTML.trim()).toBe('MAR');
+      const selectedContent = yearViewNativeElement.querySelector(
+        '.mat-calendar-body-selected .mat-calendar-body-cell-visual-label',
+      )!;
+      expect(selectedContent.textContent!.trim()).toBe('MAR');
     });
 
     it('does not show selected month if in different year', () => {
@@ -83,8 +85,10 @@ describe('MatYearView', () => {
       (cellEls[cellEls.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
-      let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-body-selected')!;
-      expect(selectedEl.innerHTML.trim()).toBe('DEC');
+      const selectedContent = yearViewNativeElement.querySelector(
+        '.mat-calendar-body-selected .mat-calendar-body-cell-visual-label',
+      )!;
+      expect(selectedContent.textContent!.trim()).toBe('DEC');
     });
 
     it('should emit the selected month on cell clicked', () => {
@@ -98,9 +102,12 @@ describe('MatYearView', () => {
     });
 
     it('should mark active date', () => {
-      let cellEls = yearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
-      expect((cellEls[0] as HTMLElement).innerText.trim()).toBe('JAN');
-      expect(cellEls[0].classList).toContain('mat-calendar-body-active');
+      const cellEls = yearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      const cell = cellEls[0] as HTMLElement;
+      const content = cell.querySelector('.mat-calendar-body-cell-visual-label') as HTMLElement;
+
+      expect(content.innerText.trim()).toBe('JAN');
+      expect(cell.classList).toContain('mat-calendar-body-active');
     });
 
     it('should allow selection of month with less days than current active date', () => {

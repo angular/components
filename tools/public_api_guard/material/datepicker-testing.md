@@ -54,6 +54,7 @@ export interface DateRangeInputHarnessFilters extends BaseHarnessFilters {
 export class MatCalendarCellHarness extends ComponentHarness {
     blur(): Promise<void>;
     focus(): Promise<void>;
+    // @deprecated
     getAriaLabel(): Promise<string>;
     getText(): Promise<string>;
     // (undocumented)
