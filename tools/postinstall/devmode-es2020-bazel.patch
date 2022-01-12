@@ -1,7 +1,7 @@
 diff --git node_modules/@angular/bazel/src/ng_module/ng_module.bzl node_modules/@angular/bazel//src/ng_module/ng_module.bzl
 index 3520997..adf46e8 100644
---- node_modules/@angular/bazel//src/ng_module/ng_module.bzl
-+++ node_modules/@angular/bazel//src/ng_module/ng_module.bzl
+--- node_modules/@angular/bazel/src/ng_module/ng_module.bzl
++++ node_modules/@angular/bazel/src/ng_module/ng_module.bzl
 @@ -276,9 +276,8 @@ def _ngc_tsconfig(ctx, files, srcs, **kwargs):
          # Note: Keep in sync with the `prodmode_target` for `ts_library` in `tools/defaults.bzl`
          tsconfig["compilerOptions"]["target"] = "es2020"
