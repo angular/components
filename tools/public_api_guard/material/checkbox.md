@@ -28,6 +28,7 @@ import { InjectionToken } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
@@ -44,7 +45,7 @@ export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOption
 export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
-export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple, FocusableOption {
+export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccessor, OnInit, AfterViewInit, AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple, FocusableOption {
     constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _focusMonitor: FocusMonitor, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
     // (undocumented)
     _animationMode?: string | undefined;
@@ -75,6 +76,8 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     _onInputClick(event: Event): void;
     // (undocumented)
     _onInteractionEvent(event: Event): void;

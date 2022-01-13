@@ -1,8 +1,15 @@
 import {ComponentFixture, fakeAsync, TestBed, flush, flushMicrotasks} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {Component, DebugElement, ViewChild, Type, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ViewChild,
+  Type,
+  ChangeDetectionStrategy,
+  ApplicationRef,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {dispatchFakeEvent} from '../../cdk/testing/private';
+import {createMouseEvent, dispatchFakeEvent} from '../../cdk/testing/private';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MatCheckbox,
@@ -668,6 +675,19 @@ describe('MatCheckbox', () => {
         checkboxNativeElement.querySelector('.mat-checkbox-ripple')!;
 
       expect(checkboxRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
+    });
+
+    it('should not run change detection when the `change` event is dispatched on the native input', () => {
+      const appRef = TestBed.inject(ApplicationRef);
+      const event = createMouseEvent('change');
+
+      spyOn(appRef, 'tick');
+      spyOn(event, 'stopPropagation').and.callThrough();
+
+      fixture.nativeElement.querySelector('.mat-checkbox-input').dispatchEvent(event);
+
+      expect(appRef.tick).not.toHaveBeenCalled();
+      expect(event.stopPropagation).toHaveBeenCalled();
     });
   });
 

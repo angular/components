@@ -18,7 +18,9 @@ import {
   forwardRef,
   Inject,
   Input,
+  NgZone,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   ViewChild,
@@ -88,7 +90,7 @@ const _MatCheckboxBase = mixinColor(
 })
 export class MatCheckbox
   extends _MatCheckboxBase
-  implements AfterViewInit, OnDestroy, ControlValueAccessor, CanColor, CanDisable
+  implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, CanColor, CanDisable
 {
   /**
    * The `aria-label` attribute to use for the input element. In most cases, `aria-labelledby` will
@@ -176,7 +178,7 @@ export class MatCheckbox
   @ViewChild('checkbox') _checkbox: ElementRef<HTMLElement>;
 
   /** The native input element. */
-  @ViewChild('nativeCheckbox') _nativeCheckbox: ElementRef<HTMLInputElement>;
+  @ViewChild('nativeCheckbox', {static: true}) _nativeCheckbox: ElementRef<HTMLInputElement>;
 
   /** The native label element. */
   @ViewChild('label') _label: ElementRef<HTMLElement>;
@@ -239,6 +241,8 @@ export class MatCheckbox
     @Optional()
     @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
     private _options?: MatCheckboxDefaultOptions,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private readonly _ngZone?: NgZone,
   ) {
     super(elementRef);
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
@@ -249,6 +253,17 @@ export class MatCheckbox
     this.color = this.defaultColor = this._options!.color || defaults.color;
   }
 
+  ngOnInit(): void {
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() =>
+        this._nativeCheckbox.nativeElement.addEventListener('change', this._onInteractionEvent),
+      );
+    } else {
+      this._nativeCheckbox.nativeElement.addEventListener('change', this._onInteractionEvent);
+    }
+  }
+
   ngAfterViewInit() {
     this._syncIndeterminate(this._indeterminate);
     this._checkboxFoundation.init();
@@ -256,6 +271,7 @@ export class MatCheckbox
 
   ngOnDestroy() {
     this._checkboxFoundation.destroy();
+    this._nativeCheckbox.nativeElement.removeEventListener('change', this._onInteractionEvent);
   }
 
   /**
@@ -391,4 +407,6 @@ export class MatCheckbox
       nativeCheckbox.nativeElement.indeterminate = value;
     }
   }
+
+  private _onInteractionEvent = (event: Event): void => event.stopPropagation();
 }

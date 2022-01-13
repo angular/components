@@ -1,5 +1,11 @@
-import {dispatchFakeEvent} from '../../cdk/testing/private';
-import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
+import {createMouseEvent, dispatchFakeEvent} from '../../cdk/testing/private';
+import {
+  ApplicationRef,
+  ChangeDetectionStrategy,
+  Component,
+  DebugElement,
+  Type,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material-experimental/mdc-core';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
@@ -583,6 +589,19 @@ describe('MDC-based MatCheckbox', () => {
       )!;
 
       expect(checkboxRippleNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+    });
+
+    it('should not run change detection when the `change` event is dispatched on the native input', () => {
+      const appRef = TestBed.inject(ApplicationRef);
+      const event = createMouseEvent('change');
+
+      spyOn(appRef, 'tick');
+      spyOn(event, 'stopPropagation').and.callThrough();
+
+      fixture.nativeElement.querySelector('.mdc-checkbox__native-control').dispatchEvent(event);
+
+      expect(appRef.tick).not.toHaveBeenCalled();
+      expect(event.stopPropagation).toHaveBeenCalled();
     });
   });
 

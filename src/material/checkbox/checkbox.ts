@@ -26,6 +26,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   AfterViewInit,
+  OnInit,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -132,6 +133,7 @@ export class MatCheckbox
   extends _MatCheckboxBase
   implements
     ControlValueAccessor,
+    OnInit,
     AfterViewInit,
     AfterViewChecked,
     OnDestroy,
@@ -192,7 +194,7 @@ export class MatCheckbox
   @Input() value: string;
 
   /** The native `<input type="checkbox">` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  @ViewChild('input', {static: true}) _inputElement: ElementRef<HTMLInputElement>;
 
   /** Reference to the ripple instance of the checkbox. */
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -226,6 +228,12 @@ export class MatCheckbox
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
+  ngOnInit(): void {
+    this._ngZone.runOutsideAngular(() =>
+      this._inputElement.nativeElement.addEventListener('change', this._onInteractionEvent),
+    );
+  }
+
   ngAfterViewInit() {
     this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
       if (!focusOrigin) {
@@ -249,6 +257,7 @@ export class MatCheckbox
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
+    this._inputElement.nativeElement.removeEventListener('change', this._onInteractionEvent);
   }
 
   /**
