@@ -16,6 +16,8 @@ import {
   Inject,
   Optional,
   OnDestroy,
+  OnInit,
+  ElementRef,
 } from '@angular/core';
 import {Clipboard} from './clipboard';
 import {PendingCopy} from './pending-copy';
@@ -37,11 +39,8 @@ export const CDK_COPY_TO_CLIPBOARD_CONFIG = new InjectionToken<CdkCopyToClipboar
  */
 @Directive({
   selector: '[cdkCopyToClipboard]',
-  host: {
-    '(click)': 'copy()',
-  },
 })
-export class CdkCopyToClipboard implements OnDestroy {
+export class CdkCopyToClipboard implements OnInit, OnDestroy {
   /** Content to be copied. */
   @Input('cdkCopyToClipboard') text: string = '';
 
@@ -67,6 +66,7 @@ export class CdkCopyToClipboard implements OnDestroy {
   private _currentTimeout: any;
 
   constructor(
+    private _host: ElementRef<HTMLElement>,
     private _clipboard: Clipboard,
     private _ngZone: NgZone,
     @Optional() @Inject(CDK_COPY_TO_CLIPBOARD_CONFIG) config?: CdkCopyToClipboardConfig,
@@ -74,6 +74,12 @@ export class CdkCopyToClipboard implements OnDestroy {
     if (config && config.attempts != null) {
       this.attempts = config.attempts;
     }
+  }
+
+  ngOnInit(): void {
+    this._ngZone.runOutsideAngular(() => {
+      this._host.nativeElement.addEventListener('click', this._clickHandler);
+    });
   }
 
   /** Copies the current text to the clipboard. */
@@ -109,5 +115,14 @@ export class CdkCopyToClipboard implements OnDestroy {
     this._pending.forEach(copy => copy.destroy());
     this._pending.clear();
     this._destroyed = true;
+    this._host.nativeElement.removeEventListener('click', this._clickHandler);
   }
+
+  private _clickHandler = (): void => {
+    if (this.copied.observers.length) {
+      this._ngZone.run(() => this.copy());
+    } else {
+      this.copy();
+    }
+  };
 }

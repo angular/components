@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {ApplicationRef, Component, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {Clipboard} from './clipboard';
 import {ClipboardModule} from './clipboard-module';
 import {PendingCopy} from './pending-copy';
+import {CdkCopyToClipboard} from './copy-to-clipboard';
 
 const COPY_CONTENT = 'copy content';
 
@@ -130,4 +131,44 @@ describe('CdkCopyToClipboard', () => {
     expect(fakeCopy.copy).toHaveBeenCalledTimes(2);
     expect(fakeCopy.destroy).toHaveBeenCalledTimes(1);
   }));
+});
+
+describe('change detection behavior', () => {
+  @Component({
+    template: `
+      <button [cdkCopyToClipboard]="content"></button>
+    `,
+  })
+  class CopyToClipboardChangeDetectionHost {
+    content = '';
+    @ViewChild(CdkCopyToClipboard, {static: true}) copyToClipboard!: CdkCopyToClipboard;
+  }
+
+  let fixture: ComponentFixture<CopyToClipboardChangeDetectionHost>;
+
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [ClipboardModule],
+      declarations: [CopyToClipboardChangeDetectionHost],
+    }),
+  );
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(CopyToClipboardChangeDetectionHost);
+    fixture.detectChanges();
+  });
+
+  it('should run change detection only if there are `cdkCopyToClipboardCopied` listeners', () => {
+    const appRef = TestBed.inject(ApplicationRef);
+    spyOn(appRef, 'tick');
+
+    const button = fixture.nativeElement.querySelector('button');
+    button.click();
+    expect(appRef.tick).not.toHaveBeenCalled();
+
+    fixture.componentInstance.copyToClipboard.copied.subscribe();
+
+    button.click();
+    expect(appRef.tick).toHaveBeenCalled();
+  });
 });
