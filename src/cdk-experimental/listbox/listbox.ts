@@ -16,6 +16,7 @@ import {
   Inject,
   InjectionToken,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -50,8 +51,6 @@ export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
     'role': 'option',
     'class': 'cdk-option',
     '(click)': 'toggle()',
-    '(focus)': 'activate()',
-    '(blur)': 'deactivate()',
     '[id]': 'id',
     '[attr.aria-selected]': 'selected || null',
     '[attr.tabindex]': '_getTabIndex()',
@@ -61,7 +60,9 @@ export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
     '[class.cdk-option-selected]': 'selected',
   },
 })
-export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightable {
+export class CdkOption<T = unknown>
+  implements ListKeyManagerOption, Highlightable, OnInit, OnDestroy
+{
   private _selected: boolean = false;
   private _disabled: boolean = false;
   private _value: T;
@@ -105,7 +106,27 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   constructor(
     private readonly _elementRef: ElementRef,
     @Inject(forwardRef(() => CdkListbox)) readonly listbox: CdkListbox<T>,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private readonly _ngZone?: NgZone,
   ) {}
+
+  ngOnInit(): void {
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() => {
+        this._elementRef.nativeElement.addEventListener('focus', this._focusHandler);
+        this._elementRef.nativeElement.addEventListener('blur', this._blurHandler);
+      });
+    } else {
+      this._elementRef.nativeElement.addEventListener('focus', this._focusHandler);
+      this._elementRef.nativeElement.addEventListener('blur', this._blurHandler);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._elementRef.nativeElement.removeEventListener('focus', this._focusHandler);
+    this._elementRef.nativeElement.removeEventListener('blur', this._blurHandler);
+  }
 
   /** Toggles the selected state, emits a change event through the injected listbox. */
   toggle() {
@@ -198,6 +219,9 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   setInactiveStyles() {
     this._active = false;
   }
+
+  private _focusHandler = (): void => this.activate();
+  private _blurHandler = (): void => this.deactivate();
 }
 
 @Directive({

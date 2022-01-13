@@ -1,9 +1,10 @@
 import {ComponentFixture, waitForAsync, TestBed, tick, fakeAsync} from '@angular/core/testing';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {ApplicationRef, Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkOption, CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox} from './index';
 import {
   createKeyboardEvent,
+  dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../cdk/testing/private';
@@ -349,6 +350,21 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionInstances[1].selected).toBeTrue();
       expect(fixture.componentInstance.changedOption).toBeDefined();
       expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[1].id);
+    });
+
+    describe('change detection behavior', () => {
+      it('should not run change detection when `focus` and `blur` events are dispatched on options', () => {
+        const appRef = TestBed.inject(ApplicationRef);
+        spyOn(appRef, 'tick');
+
+        dispatchFakeEvent(optionElements[0], 'focus');
+        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(optionInstances[0]._active).toEqual(true);
+
+        dispatchFakeEvent(optionElements[0], 'blur');
+        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(optionInstances[0]._active).toEqual(false);
+      });
     });
   });
 
