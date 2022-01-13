@@ -435,6 +435,10 @@ describe('MDC-based MatRadio', () => {
         ),
       ).toBe(true);
     });
+
+    it('should not run change detection when the native input is clicked', () => {
+      // No need to assert. There's no `click` event listener on the input.
+    });
   });
 
   describe('group with ngModel', () => {

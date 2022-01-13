@@ -1,8 +1,8 @@
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {ApplicationRef, Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {dispatchFakeEvent} from '../../cdk/testing/private';
+import {createMouseEvent, dispatchFakeEvent} from '../../cdk/testing/private';
 
 import {MAT_RADIO_DEFAULT_OPTIONS} from './radio';
 import {MatRadioButton, MatRadioChange, MatRadioGroup, MatRadioModule} from './index';
@@ -426,6 +426,21 @@ describe('MatRadio', () => {
           element.classList.contains('mat-focus-indicator'),
         ),
       ).toBe(true);
+    });
+
+    it('should not run change detection when the native input is clicked', () => {
+      const appRef = TestBed.inject(ApplicationRef);
+      const event = createMouseEvent('click');
+
+      spyOn(appRef, 'tick');
+      spyOn(event, 'stopPropagation').and.callThrough();
+
+      fixture.nativeElement.querySelector('.mat-radio-input').dispatchEvent(event);
+
+      // Previously, `tick()` would've been called 2 times since we also have a `change` listener on
+      // the input element.
+      expect(appRef.tick).toHaveBeenCalledTimes(1);
+      expect(event.stopPropagation).toHaveBeenCalled();
     });
   });
 

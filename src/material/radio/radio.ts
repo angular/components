@@ -24,6 +24,7 @@ import {
   Inject,
   InjectionToken,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -501,7 +502,7 @@ export abstract class _MatRadioButtonBase
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  @ViewChild('input', {static: true}) _inputElement: ElementRef<HTMLInputElement>;
 
   /** Whether animations are disabled. */
   _noopAnimations: boolean;
@@ -662,7 +663,7 @@ export abstract class _MatRadioButtonBase
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatRadioButton extends _MatRadioButtonBase {
+export class MatRadioButton extends _MatRadioButtonBase implements OnInit, OnDestroy {
   constructor(
     @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
     elementRef: ElementRef,
@@ -674,6 +675,8 @@ export class MatRadioButton extends _MatRadioButtonBase {
     @Inject(MAT_RADIO_DEFAULT_OPTIONS)
     providerOverride?: MatRadioDefaultOptions,
     @Attribute('tabindex') tabIndex?: string,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private readonly _ngZone?: NgZone,
   ) {
     super(
       radioGroup,
@@ -685,5 +688,22 @@ export class MatRadioButton extends _MatRadioButtonBase {
       providerOverride,
       tabIndex,
     );
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() =>
+        this._inputElement.nativeElement.addEventListener('click', this._onInputClick),
+      );
+    } else {
+      this._inputElement.nativeElement.addEventListener('click', this._onInputClick);
+    }
+  }
+
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this._inputElement.nativeElement.removeEventListener('click', this._onInputClick);
   }
 }
