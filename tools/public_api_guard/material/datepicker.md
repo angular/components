@@ -415,7 +415,8 @@ export class MatDatepickerCancel {
 
 // @public
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extends _MatDatepickerContentBase implements OnInit, AfterViewInit, OnDestroy, CanColor {
-    constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>, intl: MatDatepickerIntl);
+    constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>, intl: MatDatepickerIntl,
+    _ngZone?: NgZone | undefined);
     _actionsPortal: TemplatePortal | null;
     readonly _animationDone: Subject<void>;
     _animationState: 'enter-dropdown' | 'enter-dialog' | 'void';
@@ -426,6 +427,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extend
     comparisonEnd: D | null;
     comparisonStart: D | null;
     datepicker: MatDatepickerBase<any, S, D>;
+    _datepickerCloseButton: ElementRef<HTMLButtonElement>;
     // (undocumented)
     _getSelected(): D | DateRange<D> | null;
     // (undocumented)
@@ -442,7 +444,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extend
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatDatepickerContent<any, any>, "mat-datepicker-content", ["matDatepickerContent"], { "color": "color"; }, {}, never, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatDatepickerContent<any, any>, [null, null, null, null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatDatepickerContent<any, any>, [null, null, null, null, { optional: true; }, null, { optional: true; }]>;
 }
 
 // @public

@@ -9,7 +9,15 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../cdk/testing/private';
-import {Component, Type, ViewChild, Provider, Directive, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Type,
+  ViewChild,
+  Provider,
+  Directive,
+  ViewEncapsulation,
+  ApplicationRef,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
@@ -1957,6 +1965,29 @@ describe('MatDatepicker', () => {
         const overlay = document.querySelector('.cdk-global-overlay-wrapper')!;
 
         expect(overlay.getAttribute('dir')).toBe('rtl');
+      });
+    });
+
+    describe('change detection behavior', () => {
+      let fixture: ComponentFixture<StandardDatepicker>;
+
+      beforeEach(() => {
+        fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
+        fixture.componentInstance.opened = true;
+        fixture.detectChanges();
+      });
+
+      it('should not run change detection when the `focus` and `blur` events are dispatched on the datepicker close button', () => {
+        const appRef = TestBed.inject(ApplicationRef);
+        spyOn(appRef, 'tick');
+
+        const button = document.querySelector('.mat-datepicker-close-button') as HTMLButtonElement;
+        dispatchFakeEvent(button, 'focus');
+        dispatchFakeEvent(button, 'blur');
+
+        // Currently, change detection is triggered only by `FocusMonitor` which is setup within the `MatButton`.
+        // Previously, it would've been called 4 times because of the `mat-datepicker-close-button`.
+        expect(appRef.tick).toHaveBeenCalledTimes(2);
       });
     });
   });

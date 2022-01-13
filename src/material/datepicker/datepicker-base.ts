@@ -41,7 +41,7 @@ import {
   OnInit,
 } from '@angular/core';
 import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
-import {merge, Subject, Observable, Subscription} from 'rxjs';
+import {merge, Subject, Observable, Subscription, fromEvent} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {MatCalendar, MatCalendarView} from './calendar';
@@ -127,6 +127,10 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
 
+  /** The native `<button class="mat-datepicker-close-button"></button>` element */
+  @ViewChild('button', {static: true, read: ElementRef})
+  _datepickerCloseButton: ElementRef<HTMLButtonElement>;
+
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepickerBase<any, S, D>;
 
@@ -163,6 +167,8 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
     @Inject(MAT_DATE_RANGE_SELECTION_STRATEGY)
     private _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>,
     intl: MatDatepickerIntl,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private readonly _ngZone?: NgZone,
   ) {
     super(elementRef);
     this._closeButtonText = intl.closeCalendarLabel;
@@ -174,6 +180,12 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
     // possible, but `_actionsPortal` isn't available in the constructor so we do it in `ngOnInit`.
     this._model = this._actionsPortal ? this._globalModel.clone() : this._globalModel;
     this._animationState = this.datepicker.touchUi ? 'enter-dialog' : 'enter-dropdown';
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() => this._setupFocusAndBlurListeners());
+    } else {
+      this._setupFocusAndBlurListeners();
+    }
   }
 
   ngAfterViewInit() {
@@ -234,6 +246,24 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
     if (this._model !== this._globalModel) {
       this._globalModel.updateSelection(this._model.selection, this);
     }
+  }
+
+  private _setupFocusAndBlurListeners(): void {
+    this._datepickerCloseButton.nativeElement.classList.add('cdk-visually-hidden');
+
+    this._subscriptions.add(
+      fromEvent(this._datepickerCloseButton.nativeElement, 'focus').subscribe(() => {
+        this._closeButtonFocused = true;
+        this._datepickerCloseButton.nativeElement.classList.remove('cdk-visually-hidden');
+      }),
+    );
+
+    this._subscriptions.add(
+      fromEvent(this._datepickerCloseButton.nativeElement, 'blur').subscribe(() => {
+        this._closeButtonFocused = false;
+        this._datepickerCloseButton.nativeElement.classList.add('cdk-visually-hidden');
+      }),
+    );
   }
 }
 

@@ -25,12 +25,10 @@
 
   <!-- Invisible close button for screen reader users. -->
   <button
+    #button
     type="button"
     mat-raised-button
     [color]="color || 'primary'"
     class="mat-datepicker-close-button"
-    [class.cdk-visually-hidden]="!_closeButtonFocused"
-    (focus)="_closeButtonFocused = true"
-    (blur)="_closeButtonFocused = false"
     (click)="datepicker.close()">{{ _closeButtonText }}</button>
 </div>
