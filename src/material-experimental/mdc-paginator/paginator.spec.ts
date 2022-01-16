@@ -511,6 +511,31 @@ describe('MDC-based MatPaginator', () => {
     const hostElement = fixture.nativeElement.querySelector('mat-paginator');
     expect(hostElement.getAttribute('role')).toBe('group');
   });
+
+  it('should update the page index when switching to a smaller length', fakeAsync(() => {
+    const fixture = createComponent(MatPaginatorApp);
+    const instance = fixture.componentInstance;
+    instance.length = 50;
+    instance.pageSize = 10;
+    instance.pageIndex = 4;
+    fixture.detectChanges();
+
+    expect(instance.paginator.pageIndex).toBe(4);
+
+    instance.pageEvent.calls.reset();
+
+    instance.length = 10;
+    fixture.detectChanges();
+    tick();
+
+    expect(instance.paginator.pageIndex).toBe(0);
+    expect(instance.pageEvent).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        previousPageIndex: 4,
+        pageIndex: 0,
+      }),
+    );
+  }));
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {

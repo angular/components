@@ -129,6 +129,18 @@ export abstract class _MatPaginatorBase<
   }
   set length(value: NumberInput) {
     this._length = coerceNumberProperty(value);
+
+    const maxPageIndex = Math.max(this.getNumberOfPages() - 1, 0);
+    const currentPageIndex = this._pageIndex;
+
+    if (currentPageIndex > maxPageIndex && this.initialized) {
+      // Needs to happen on the next tick, in order to avoid "changed after checked" errors.
+      Promise.resolve().then(() => {
+        this._pageIndex = maxPageIndex;
+        this._emitPageEvent(currentPageIndex);
+      });
+    }
+
     this._changeDetectorRef.markForCheck();
   }
   private _length = 0;
