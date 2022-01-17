@@ -424,7 +424,7 @@ export class MatSlider
     // For a horizontal slider in RTL languages we push the ticks container off the left edge
     // instead of the right edge to avoid causing a horizontal scrollbar to appear.
     let sign = !this.vertical && this._getDirection() == 'rtl' ? '' : '-';
-    let offset = (this._tickIntervalPercent / 2) * 100;
+    let offset = (this._getTickIntervalPercent() / 2) * 100;
     return {
       'transform': `translate${axis}(${sign}${offset}%)`,
     };
@@ -432,7 +432,7 @@ export class MatSlider
 
   /** CSS styles for the ticks element. */
   _getTicksStyles(): {[key: string]: string} {
-    let tickSize = this._tickIntervalPercent * 100;
+    let tickSize = this._getTickIntervalPercent() * 100;
     let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
     let axis = this.vertical ? 'Y' : 'X';
     // Depending on the direction we pushed the ticks container, push the ticks the opposite
@@ -502,6 +502,10 @@ export class MatSlider
   _shouldInvertMouseCoords() {
     const shouldInvertAxis = this._shouldInvertAxis();
     return this._getDirection() == 'rtl' && !this.vertical ? !shouldInvertAxis : shouldInvertAxis;
+  }
+  /** It returns safe tick interval percent coercing NaN and Infinity to fallback */
+  private _getTickIntervalPercent(fallback = 0) {
+    return isSafeNumber(this._tickIntervalPercent) ? this._tickIntervalPercent : fallback;
   }
 
   /** The language direction for this slider element. */
@@ -883,7 +887,8 @@ export class MatSlider
 
   /** Calculates the percentage of the slider that a value is. */
   private _calculatePercentage(value: number | null) {
-    return ((value || 0) - this.min) / (this.max - this.min);
+    const percentage = ((value || 0) - this.min) / (this.max - this.min);
+    return isSafeNumber(percentage) ? percentage : 0;
   }
 
   /** Calculates the value a percentage of the slider corresponds to. */
@@ -952,6 +957,11 @@ export class MatSlider
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
   }
+}
+
+/** Checks if number is safe for calculation */
+function isSafeNumber(value: number) {
+  return !isNaN(value) && isFinite(value);
 }
 
 /** Returns whether an event is a touch event. */
