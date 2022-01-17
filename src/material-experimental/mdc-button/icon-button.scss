@@ -1,13 +1,30 @@
+@use 'sass:map';
 @use '@material/icon-button/icon-button' as mdc-icon-button;
+@use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '../../material/core/style/private';
 @use '../mdc-helpers/mdc-helpers';
 @use 'button-base';
 
-@include mdc-icon-button.without-ripple(
-  $query: mdc-helpers.$mat-base-styles-query
-);
+@include mdc-helpers.disable-fallback-declarations {
+  @include mdc-icon-button.without-ripple($query: mdc-helpers.$mat-base-styles-query);
+}
 
 .mat-mdc-icon-button {
+  @include mdc-helpers.disable-fallback-declarations {
+    @include mdc-icon-button-theme.theme-styles(map.merge(mdc-icon-button-theme.$light-theme, (
+      icon-color: inherit,
+      focus-state-layer-color: #000,
+      hover-state-layer-color: #000,
+      pressed-state-layer-color: #000,
+
+      // We don't change the color on focus/hover so exclude
+      // these styles both to reduce bundle size and specificity.
+      focus-icon-color: null,
+      hover-icon-color: null,
+      pressed-icon-color: null,
+    )));
+  }
+
   @include button-base.mat-private-button-interactive() {
     border-radius: 50%;
   }
@@ -18,7 +35,12 @@
   // Prevent the button from shrinking since it's always supposed to be a circle.
   flex-shrink: 0;
 
-  @include button-base.mat-private-button-disabled();
+  @include button-base.mat-private-button-disabled() {
+    // The color is already dimmed when the button is disabled. Restore the opacity both to
+    // help with the color contrast and to align with what we had before switching to the new API.
+    opacity: 1;
+  };
+
   @include button-base.mat-private-button-touch-target(true);
   @include private.private-animation-noop();
 

@@ -1,48 +1,56 @@
+@use 'sass:map';
 @use '@material/icon-button/mixins' as mdc-icon-button;
-@use '@material/ripple/ripple-theme' as mdc-ripple-theme;
+@use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
+@use '@material/theme/theme-color' as mdc-theme-color;
 @use '../mdc-helpers/mdc-helpers';
 @use '../../material/core/theming/theming';
 @use '../../material/core/typography/typography';
 @use './button-theme-private';
 
+@mixin _icon-button-variant($color) {
+  @include mdc-icon-button-theme.theme((
+    icon-color: $color,
+    focus-state-layer-color: $color,
+    hover-state-layer-color: $color,
+    pressed-state-layer-color: $color,
+  ));
+  @include button-theme-private.ripple-ink-color($color);
+}
+
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   @include mdc-helpers.mat-using-mdc-theme($config) {
+    $is-dark: map.get($config, is-dark);
+    $on-surface: mdc-theme-color.prop-value(on-surface);
+    $disabled-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
+
     .mat-mdc-icon-button {
-      @include mdc-ripple-theme.states(
-          $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: button-theme-private.$button-state-target);
+      @include button-theme-private.ripple-ink-color($on-surface);
+      @include mdc-icon-button-theme.theme(button-theme-private.add-ripple-opacities($is-dark, (
+        focus-state-layer-color: $on-surface,
+        hover-state-layer-color: $on-surface,
+        pressed-state-layer-color: $on-surface,
+      )));
 
       &.mat-primary {
-        @include mdc-ripple-theme.states-base-color(primary,
-          $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: button-theme-private.$button-state-target);
-        @include mdc-icon-button.ink-color(primary, $query: mdc-helpers.$mat-theme-styles-query);
-        @include button-theme-private.ripple-ink-color(primary);
+        @include _icon-button-variant(mdc-theme-color.prop-value(primary));
       }
 
       &.mat-accent {
-        @include mdc-ripple-theme.states-base-color(secondary,
-          $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: button-theme-private.$button-state-target);
-        @include mdc-icon-button.ink-color(secondary, $query: mdc-helpers.$mat-theme-styles-query);
-        @include button-theme-private.ripple-ink-color(secondary);
+        @include _icon-button-variant(mdc-theme-color.prop-value(secondary));
       }
 
       &.mat-warn {
-        @include mdc-ripple-theme.states-base-color(error,
-          $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: button-theme-private.$button-state-target);
-        @include mdc-icon-button.ink-color(error, $query: mdc-helpers.$mat-theme-styles-query);
-        @include button-theme-private.ripple-ink-color(error);
+        @include _icon-button-variant(mdc-theme-color.prop-value(error));
       }
 
       @include button-theme-private.apply-disabled-style() {
-        @include button-theme-private.apply-disabled-color();
+        @include mdc-icon-button-theme.theme((
+          icon-color: $disabled-color,
+          disabled-icon-color: $disabled-color,
+        ));
       }
     }
-
-    @include mdc-icon-button.without-ripple($query: mdc-helpers.$mat-theme-styles-query);
   }
 }
 
