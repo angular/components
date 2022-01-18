@@ -71,6 +71,8 @@ $drawer-over-drawer-z-index: 4;
   // section.
   visibility: hidden;
 
+  will-change: background-color, visibility;
+
   &.mat-drawer-shown {
     visibility: visible;
   }
@@ -94,6 +96,7 @@ $drawer-over-drawer-z-index: 4;
   display: block;
   height: 100%;
   overflow: auto;
+  will-change: transform, margin-left, margin-right;
 
   .mat-drawer-transition & {
     transition: {
