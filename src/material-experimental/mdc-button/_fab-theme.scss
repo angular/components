@@ -8,13 +8,9 @@
 @use './button-theme-private';
 
 @mixin _fab-variant($foreground, $background) {
-  @include button-theme-private.ripple-ink-color($foreground);
   @include mdc-fab-theme.theme((
     container-color: $background,
     icon-color: $foreground,
-    focus-state-layer-color: $foreground,
-    hover-state-layer-color: $foreground,
-    pressed-state-layer-color: $foreground,
   ));
 
   --mat-mdc-fab-color: #{$foreground};
@@ -27,7 +23,7 @@
     $is-dark: map.get($config, is-dark);
 
     .mat-mdc-fab, .mat-mdc-mini-fab {
-      @include mdc-fab-theme.theme(button-theme-private.add-ripple-opacities($is-dark));
+      @include button-theme-private.ripple-theme-styles($config, true);
 
       &.mat-unthemed {
         @include _fab-variant($on-surface, mdc-theme-color.prop-value(surface));

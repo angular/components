@@ -7,16 +7,6 @@
 @use '../../material/core/typography/typography';
 @use './button-theme-private';
 
-@mixin _icon-button-variant($color) {
-  @include mdc-icon-button-theme.theme((
-    icon-color: $color,
-    focus-state-layer-color: $color,
-    hover-state-layer-color: $color,
-    pressed-state-layer-color: $color,
-  ));
-  @include button-theme-private.ripple-ink-color($color);
-}
-
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   @include mdc-helpers.mat-using-mdc-theme($config) {
@@ -25,23 +15,18 @@
     $disabled-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
 
     .mat-mdc-icon-button {
-      @include button-theme-private.ripple-ink-color($on-surface);
-      @include mdc-icon-button-theme.theme(button-theme-private.add-ripple-opacities($is-dark, (
-        focus-state-layer-color: $on-surface,
-        hover-state-layer-color: $on-surface,
-        pressed-state-layer-color: $on-surface,
-      )));
+      @include button-theme-private.ripple-theme-styles($config, false);
 
       &.mat-primary {
-        @include _icon-button-variant(mdc-theme-color.prop-value(primary));
+        @include mdc-icon-button-theme.theme((icon-color: mdc-theme-color.prop-value(primary)));
       }
 
       &.mat-accent {
-        @include _icon-button-variant(mdc-theme-color.prop-value(secondary));
+        @include mdc-icon-button-theme.theme((icon-color: mdc-theme-color.prop-value(secondary)));
       }
 
       &.mat-warn {
-        @include _icon-button-variant(mdc-theme-color.prop-value(error));
+        @include mdc-icon-button-theme.theme((icon-color: (mdc-theme-color.prop-value(error))));
       }
 
       @include button-theme-private.apply-disabled-style() {

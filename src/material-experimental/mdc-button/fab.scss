@@ -1,5 +1,4 @@
 @use '@material/fab' as mdc-fab;
-@use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '../../material/core/style/private';
 @use '../mdc-helpers/mdc-helpers';
@@ -16,20 +15,11 @@
 
   @include mdc-helpers.disable-fallback-declarations {
     // Theme configuration is copied over from MDC, because it isn't exported
-    @include mdc-fab.theme-styles((
+    @include mdc-fab.theme-styles(button-base.mat-private-button-remove-ripple((
       container-color: transparent,
       container-shape: mdc-fab.$shape-radius,
-      focus-state-layer-color: #000,
-      hover-state-layer-color: #000,
       icon-color: inherit,
-      pressed-state-layer-color: #000,
-
-      // These aren't defined in MDC's theme, but we need
-      // them for the focus/hover indication to work.
-      focus-state-layer-opacity: 0,
-      hover-state-layer-opacity: 0,
-      pressed-state-layer-opacity: 0,
-    ));
+    )));
 
     // TODO(crisbeto): the elevation can be controlled using `container-elevation` in `theme-styles`
     // however when it is passed in, MDC throws an error that `container-shadow-color` isn't

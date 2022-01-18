@@ -13,40 +13,28 @@
 
 @mixin _button-variant($color) {
   @include mdc-button-text-theme.theme((
-    focus-state-layer-color: $color,
-    hover-state-layer-color: $color,
     label-text-color: $color,
-    pressed-state-layer-color: $color,
   ));
 }
 
 @mixin _unelevated-button-variant($foreground, $background) {
   @include mdc-button-filled-theme.theme((
     container-color: $background,
-    focus-state-layer-color: $foreground,
-    hover-state-layer-color: $foreground,
     label-text-color: $foreground,
-    pressed-state-layer-color: $foreground,
   ));
 }
 
 @mixin _raised-button-variant($foreground, $background) {
   @include mdc-button-protected-theme.theme((
     container-color: $background,
-    focus-state-layer-color: $foreground,
-    hover-state-layer-color: $foreground,
     label-text-color: $foreground,
-    pressed-state-layer-color: $foreground,
   ));
 }
 
 @mixin _outlined-button-variant($color) {
   @include mdc-button-outlined-theme.theme((
-    focus-state-layer-color: $color,
-    hover-state-layer-color: $color,
     label-text-color: $color,
     outline-color: $color,
-    pressed-state-layer-color: $color,
   ));
 }
 
@@ -66,8 +54,6 @@
     $on-error: mdc-theme-color.prop-value(on-error);
 
     .mat-mdc-button {
-      @include mdc-button-text-theme.theme(button-theme-private.add-ripple-opacities($is-dark));
-
       &.mat-unthemed {
         @include _button-variant($on-surface);
       }
@@ -95,8 +81,6 @@
     }
 
     .mat-mdc-unelevated-button {
-      @include mdc-button-filled-theme.theme(button-theme-private.add-ripple-opacities($is-dark));
-
       &.mat-unthemed {
         @include _unelevated-button-variant($on-surface, $surface);
       }
@@ -126,9 +110,6 @@
     }
 
     .mat-mdc-raised-button {
-      @include mdc-button-protected-theme.theme(
-        button-theme-private.add-ripple-opacities($is-dark));
-
       &.mat-unthemed {
         @include _raised-button-variant($on-surface, $surface);
       }
@@ -159,8 +140,6 @@
     }
 
     .mat-mdc-outlined-button {
-      @include mdc-button-outlined-theme.theme(button-theme-private.add-ripple-opacities($is-dark));
-
       &.mat-unthemed {
         @include _outlined-button-variant($on-surface);
       }
@@ -191,31 +170,11 @@
 
     // Ripple colors
     .mat-mdc-button, .mat-mdc-outlined-button {
-      &.mat-primary {
-        @include button-theme-private.ripple-ink-color($primary);
-      }
-
-      &.mat-accent {
-        @include button-theme-private.ripple-ink-color($secondary);
-      }
-
-      &.mat-warn {
-        @include button-theme-private.ripple-ink-color($error);
-      }
+      @include button-theme-private.ripple-theme-styles($config, false);
     }
 
     .mat-mdc-raised-button, .mat-mdc-unelevated-button {
-      &.mat-primary {
-        @include button-theme-private.ripple-ink-color($on-primary);
-      }
-
-      &.mat-accent {
-        @include button-theme-private.ripple-ink-color($on-secondary);
-      }
-
-      &.mat-warn {
-        @include button-theme-private.ripple-ink-color($on-error);
-      }
+      @include button-theme-private.ripple-theme-styles($config, true);
     }
   }
 }
