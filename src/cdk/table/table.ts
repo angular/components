@@ -620,7 +620,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       this._customRowDefs,
       this._customHeaderRowDefs,
       this._customFooterRowDefs,
-      this._columnDefsByName
+      this._columnDefsByName,
     ].forEach(def => {
       def.clear();
     });
@@ -685,8 +685,10 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._updateNoDataRow();
 
     // Allow the new row data to render before measuring it.
-    // @breaking-change 14.0.0 Remove undefined check once _ngZone is required.
-    if (this._ngZone && NgZone.isInAngularZone()) {
+    // We have to check if the `_ngZone` is an instance of the `NgZone` before calling `NgZone.isInAngularZone()`.
+    // Since the zone may be nooped through `BootstrapOptions` when bootstrapping a root module (`{ngZone: 'noop'}`).
+    // That will lead to a runtime exception `Zone is not defined`, since the `Zone` global won't be available.
+    if (this._ngZone instanceof NgZone && NgZone.isInAngularZone()) {
       this._ngZone.onStable.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
         this.updateStickyColumnStyles();
       });
