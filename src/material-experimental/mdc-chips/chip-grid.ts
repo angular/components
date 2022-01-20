@@ -353,7 +353,9 @@ export class MatChipGrid
     if (this._chips.length > 0) {
       this._keyManager.setFirstCellActive();
     } else {
-      this._focusInput();
+      // Delay until the next tick, because this can cause a "changed after checked"
+      // error if the input does something on focus (e.g. opens an autocomplete).
+      Promise.resolve().then(() => this._chipInput.focus());
     }
 
     this.stateChanges.next();
@@ -547,10 +549,5 @@ export class MatChipGrid
     }
 
     this._lastDestroyedChipIndex = null;
-  }
-
-  /** Focus input element. */
-  private _focusInput() {
-    this._chipInput.focus();
   }
 }
