@@ -5,6 +5,9 @@ $non-touch-calendar-width:
 // Based on the natural height of the calendar in a month with 6 rows of dates
 // (largest the calendar will get).
 $non-touch-calendar-height: 354px;
+
+// Height should be auto, when the custom header is provided.
+// This will prevent the content from overflowing.
 $non-touch-custom-header-calendar-height: auto;
 
 // Ideally the calendar would have a constant aspect ratio, no matter its size, and we would base
@@ -32,6 +35,7 @@ $touch-max-height: 788px;
     height: $non-touch-calendar-height;
   }
 
+  // Override mat-calendar's height when custom header is provided
   .mat-datepicker-custom-header .mat-calendar {
     height: $non-touch-custom-header-calendar-height;
   }
