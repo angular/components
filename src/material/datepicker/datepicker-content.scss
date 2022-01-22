@@ -5,6 +5,7 @@ $non-touch-calendar-width:
 // Based on the natural height of the calendar in a month with 6 rows of dates
 // (largest the calendar will get).
 $non-touch-calendar-height: 354px;
+$non-touch-custom-header-calendar-height: auto;
 
 // Ideally the calendar would have a constant aspect ratio, no matter its size, and we would base
 // these measurements off the aspect ratio. Unfortunately, the aspect ratio does change a little as
@@ -29,6 +30,10 @@ $touch-max-height: 788px;
   .mat-calendar {
     width: $non-touch-calendar-width;
     height: $non-touch-calendar-height;
+  }
+
+  .mat-datepicker-custom-header .mat-calendar {
+    height: $non-touch-custom-header-calendar-height;
   }
 
   // Note that this selector doesn't technically have to be nested, but we want the slightly
