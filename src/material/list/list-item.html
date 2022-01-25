@@ -1,13 +1,13 @@
-<span class="mat-list-item-content">
-  <span class="mat-list-item-ripple" mat-ripple
+<div class="mat-list-item-content">
+  <div class="mat-list-item-ripple" mat-ripple
        [matRippleTrigger]="_getHostElement()"
        [matRippleDisabled]="_isRippleDisabled()">
-  </span>
+  </div>
 
   <ng-content select="[mat-list-avatar], [mat-list-icon], [matListAvatar], [matListIcon]">
   </ng-content>
 
-  <span class="mat-list-text"><ng-content select="[mat-line], [matLine]"></ng-content></span>
+  <div class="mat-list-text"><ng-content select="[mat-line], [matLine]"></ng-content></div>
 
   <ng-content></ng-content>
-</span>
+</div>
