@@ -424,7 +424,7 @@ export class MatSlider
     // For a horizontal slider in RTL languages we push the ticks container off the left edge
     // instead of the right edge to avoid causing a horizontal scrollbar to appear.
     let sign = !this.vertical && this._getDirection() == 'rtl' ? '' : '-';
-    let offset = (this._getTickIntervalPercent() / 2) * 100;
+    let offset = (this._tickIntervalPercent / 2) * 100;
     return {
       'transform': `translate${axis}(${sign}${offset}%)`,
     };
@@ -432,7 +432,7 @@ export class MatSlider
 
   /** CSS styles for the ticks element. */
   _getTicksStyles(): {[key: string]: string} {
-    let tickSize = this._getTickIntervalPercent() * 100;
+    let tickSize = this._tickIntervalPercent * 100;
     let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
     let axis = this.vertical ? 'Y' : 'X';
     // Depending on the direction we pushed the ticks container, push the ticks the opposite
@@ -502,10 +502,6 @@ export class MatSlider
   _shouldInvertMouseCoords() {
     const shouldInvertAxis = this._shouldInvertAxis();
     return this._getDirection() == 'rtl' && !this.vertical ? !shouldInvertAxis : shouldInvertAxis;
-  }
-  /** It returns safe tick interval percent coercing NaN and Infinity to fallback */
-  private _getTickIntervalPercent(fallback = 0) {
-    return isSafeNumber(this._tickIntervalPercent) ? this._tickIntervalPercent : fallback;
   }
 
   /** The language direction for this slider element. */
@@ -864,15 +860,17 @@ export class MatSlider
       return;
     }
 
+    let tickIntervalPercent: number;
     if (this.tickInterval == 'auto') {
       let trackSize = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
       let pixelsPerStep = (trackSize * this.step) / (this.max - this.min);
       let stepsPerTick = Math.ceil(MIN_AUTO_TICK_SEPARATION / pixelsPerStep);
       let pixelsPerTick = stepsPerTick * this.step;
-      this._tickIntervalPercent = pixelsPerTick / trackSize;
+      tickIntervalPercent = pixelsPerTick / trackSize;
     } else {
-      this._tickIntervalPercent = (this.tickInterval * this.step) / (this.max - this.min);
+      tickIntervalPercent = (this.tickInterval * this.step) / (this.max - this.min);
     }
+    this._tickIntervalPercent = isSafeNumber(tickIntervalPercent) ? tickIntervalPercent : 0;
   }
 
   /** Creates a slider change object from the specified value. */
