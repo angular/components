@@ -115,7 +115,7 @@ describe('StackBlitzWriter', () => {
       'src/app/app.module.ts': `import {ExampleComponent, AdditionalComp} from './test';`,
       'src/app/test.ts': `ExampleComponent
 
-/**  Copyright 2021 Google LLC. All Rights Reserved.
+/**  Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at https://angular.io/license */`,
     });
