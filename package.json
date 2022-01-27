@@ -198,7 +198,7 @@
     "moment": "^2.18.1",
     "node-fetch": "^2.6.0",
     "parse5": "^6.0.1",
-    "postcss": "^8.2.1",
+    "postcss": "^8.4.5",
     "postcss-scss": "^4.0.2",
     "protractor": "^7.0.0",
     "reflect-metadata": "^0.1.3",
