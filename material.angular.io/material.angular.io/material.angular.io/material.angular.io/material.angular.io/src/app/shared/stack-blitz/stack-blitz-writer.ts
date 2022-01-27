@@ -24,6 +24,10 @@ const TEMPLATE_PATH = '/assets/stack-blitz/';
 /**
  * List of boilerplate files for an example StackBlitz.
  * This currently matches files needed for a basic Angular CLI project.
+ * 
+ * Note: The template files match up with a basic app generated through `ng new`.
+ * StackBlitz does not support binary files like `favicon.ico`, so we removed that
+ * file from the boilerplate.
  */
 export const TEMPLATE_FILES = [
   '.gitignore',
@@ -35,7 +39,6 @@ export const TEMPLATE_FILES = [
   'tsconfig.app.json',
   'tsconfig.json',
   'tsconfig.spec.json',
-  'src/favicon.ico',
   'src/index.html',
   'src/main.ts',
   'src/material.module.ts',
