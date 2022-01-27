@@ -41,20 +41,23 @@ export class ThemingStylesMigration extends Migration<string[], SchematicContext
 
   override visitStylesheet(stylesheet: ResolvedResource) {
     let namespace: string;
-    const shouldMigrateButton = this.upgradeData.includes('all') || this.upgradeData.includes('button');
+    const shouldMigrateButton =
+      this.upgradeData.includes('all') || this.upgradeData.includes('button');
 
-    const processor = new postcss.Processor([{
-      postcssPlugin: 'button-plugin',
-      AtRule: function(atRule) {
-        if (isAngularMaterialImport(atRule)) {
-          namespace = parseNamespace(atRule);
-          return;
-        }
-        if (shouldMigrateButton && button.updateMixin(namespace, atRule)) {
-          return;
-        }
-      }
-    }]);
+    const processor = new postcss.Processor([
+      {
+        postcssPlugin: 'button-plugin',
+        AtRule: function (atRule) {
+          if (isAngularMaterialImport(atRule)) {
+            namespace = parseNamespace(atRule);
+            return;
+          }
+          if (shouldMigrateButton && button.updateMixin(namespace, atRule)) {
+            return;
+          }
+        },
+      },
+    ]);
 
     const result = processor.process(stylesheet.content);
     this.fileSystem.overwrite(stylesheet.filePath, result.toString());

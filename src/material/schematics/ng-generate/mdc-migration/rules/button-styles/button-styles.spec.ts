@@ -19,11 +19,14 @@ describe('button styles', () => {
   }
 
   it('should do nothing if button is not specified', async () => {
-    cliAppTree.create(themeFile, `
+    cliAppTree.create(
+      themeFile,
+      `
       @use '@angular/material' as mat;
       $theme: ();
       @include mat.button-theme($theme);
-    `);
+    `,
+    );
     const tree = await migrate({tsconfig, components: []});
     expect(tree.readContent(themeFile)).toBe(`
       @use '@angular/material' as mat;
@@ -33,11 +36,14 @@ describe('button styles', () => {
   });
 
   it('should replace the old theme with the new ones', async () => {
-    cliAppTree.create(themeFile, `
+    cliAppTree.create(
+      themeFile,
+      `
       @use '@angular/material' as mat;
       $theme: ();
       @include mat.button-theme($theme);
-    `);
+    `,
+    );
     const tree = await migrate({tsconfig, components: ['button']});
     expect(tree.readContent(themeFile)).toBe(`
       @use '@angular/material' as mat;
@@ -52,11 +58,14 @@ describe('button styles', () => {
   });
 
   it('should use the correct namespace', async () => {
-    cliAppTree.create(themeFile, `
+    cliAppTree.create(
+      themeFile,
+      `
       @use '@angular/material' as arbitrary;
       $theme: ();
       @include arbitrary.button-theme($theme);
-    `);
+    `,
+    );
     const tree = await migrate({tsconfig, components: ['button']});
     expect(tree.readContent(themeFile)).toBe(`
       @use '@angular/material' as arbitrary;
@@ -71,13 +80,16 @@ describe('button styles', () => {
   });
 
   it('should handle updating multiple themes', async () => {
-    cliAppTree.create(themeFile, `
+    cliAppTree.create(
+      themeFile,
+      `
       @use '@angular/material' as mat;
       $light-theme: ();
       $dark-theme: ();
       @include mat.button-theme($light-theme);
       @include mat.button-theme($dark-theme);
-    `);
+    `,
+    );
     const tree = await migrate({tsconfig, components: ['button']});
     expect(tree.readContent(themeFile)).toBe(`
       @use '@angular/material' as mat;
@@ -99,7 +111,9 @@ describe('button styles', () => {
   });
 
   it('should preserve whitespace', async () => {
-    cliAppTree.create(themeFile, `
+    cliAppTree.create(
+      themeFile,
+      `
       @use '@angular/material' as mat;
       $theme: ();
 
@@ -107,7 +121,8 @@ describe('button styles', () => {
       @include mat.button-theme($theme);
 
 
-    `);
+    `,
+    );
     const tree = await migrate({tsconfig, components: ['button']});
     expect(tree.readContent(themeFile)).toBe(`
       @use '@angular/material' as mat;

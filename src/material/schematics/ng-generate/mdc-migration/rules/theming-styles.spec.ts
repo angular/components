@@ -19,11 +19,14 @@ describe('theming styles', () => {
   }
 
   it('should update all of the themes', async () => {
-    cliAppTree.create(themeFile, `
+    cliAppTree.create(
+      themeFile,
+      `
       @use '@angular/material' as mat;
       $light-theme: ();
       @include mat.button-theme($theme);
-    `);
+    `,
+    );
     const tree = await migrate({tsconfig, components: ['all']});
     expect(tree.readContent(themeFile)).toBe(`
       @use '@angular/material' as mat;

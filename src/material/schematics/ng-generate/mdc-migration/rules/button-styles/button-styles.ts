@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as postcss from "postcss";
+import * as postcss from 'postcss';
 
 const OLD_MIXIN = 'button-theme';
 const NEW_MIXINS = [
