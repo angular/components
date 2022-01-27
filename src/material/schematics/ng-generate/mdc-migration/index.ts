@@ -71,7 +71,7 @@ export default function (options: Schema): Rule {
     const {hasFailures} = project.migrate(
       [ThemingStylesMigration],
       null,
-      null,
+      [...componentsToMigrate],
       additionalStylesheetPaths,
     );
 

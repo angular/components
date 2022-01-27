@@ -1,17 +1,16 @@
 import {createTestApp, patchDevkitTreeToExposeTypeScript} from '@angular/cdk/schematics/testing';
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
 import {Schema} from '../schema';
-import {runfiles} from '@bazel/runfiles';
+import {COLLECTION_PATH} from '../../../paths';
 
 describe('theming styles', () => {
   let runner: SchematicTestRunner;
   let cliAppTree: UnitTestTree;
+  const tsconfig = '/projects/material/tsconfig.app.json';
+  const themeFile = '/projects/material/src/theme.scss';
 
   beforeEach(async () => {
-    runner = new SchematicTestRunner(
-      '@angular/material',
-      runfiles.resolveWorkspaceRelative('src/material/schematics/collection.json'),
-    );
+    runner = new SchematicTestRunner('schematics', COLLECTION_PATH);
     cliAppTree = patchDevkitTreeToExposeTypeScript(await createTestApp(runner));
   });
 
@@ -19,22 +18,22 @@ describe('theming styles', () => {
     return await runner.runSchematicAsync('mdcMigration', options, cliAppTree).toPromise();
   }
 
-  it('should work', async () => {
-    cliAppTree.create(
-      '/projects/material/src/theme.scss',
-      `
-        @use '@angular/material' as mat;
-
-        $my-theme: ();
-        @include mat.all-component-themes($my-theme);
-    `,
-    );
-
-    const result = await migrate({
-      tsconfig: '/projects/material/tsconfig.app.json',
-      components: ['all'],
-    });
-
-    expect(result.readContent('/projects/material/src/theme.scss')).toContain('$some-var:');
+  it('should update all of the themes', async () => {
+    cliAppTree.create(themeFile, `
+      @use '@angular/material' as mat;
+      $light-theme: ();
+      @include mat.button-theme($theme);
+    `);
+    const tree = await migrate({tsconfig, components: ['all']});
+    expect(tree.readContent(themeFile)).toBe(`
+      @use '@angular/material' as mat;
+      $light-theme: ();
+      @include mat.mdc-button-theme($theme);
+      @include mat.mdc-button-typography($theme);
+      @include mat.mdc-fab-theme($theme);
+      @include mat.mdc-fab-typography($theme);
+      @include mat.mdc-icon-theme($theme);
+      @include mat.mdc-icon-typography($theme);
+    `);
   });
 });

@@ -8,12 +8,55 @@
 
 import {Migration, ResolvedResource} from '@angular/cdk/schematics';
 import {SchematicContext} from '@angular-devkit/schematics';
+import * as postcss from 'postcss';
+import * as button from './button-styles/button-styles';
 
-export class ThemingStylesMigration extends Migration<null, SchematicContext> {
+/**
+ * Returns whether the given AtRule is an import for @angular/material styles.
+ *
+ * @param atRule a postcss AtRule node.
+ * @returns true if the given AtRule is an import for @angular/material styles.
+ */
+function isAngularMaterialImport(atRule: postcss.AtRule): boolean {
+  if (atRule.name !== 'use') {
+    return false;
+  }
+  const params = postcss.list.space(atRule.params);
+  return params[0] === "'@angular/material'";
+}
+
+/**
+ * Parses the given @use AtRule and returns the namespace being used.
+ *
+ * @param atRule a postcss @use AtRule.
+ * @returns the namespace being used.
+ */
+function parseNamespace(atRule: postcss.AtRule): string {
+  const params = postcss.list.space(atRule.params);
+  return params[params.length - 1];
+}
+
+export class ThemingStylesMigration extends Migration<string[], SchematicContext> {
   enabled = true;
 
   override visitStylesheet(stylesheet: ResolvedResource) {
-    // TODO: Implement this migration. This is just a placeholder currently.
-    this.fileSystem.edit(stylesheet.filePath).insertRight(0, '$some-var: #fff;');
+    let namespace: string;
+    const shouldMigrateButton = this.upgradeData.includes('all') || this.upgradeData.includes('button');
+
+    const processor = new postcss.Processor([{
+      postcssPlugin: 'button-plugin',
+      AtRule: function(atRule) {
+        if (isAngularMaterialImport(atRule)) {
+          namespace = parseNamespace(atRule);
+          return;
+        }
+        if (shouldMigrateButton && button.updateMixin(namespace, atRule)) {
+          return;
+        }
+      }
+    }]);
+
+    const result = processor.process(stylesheet.content);
+    this.fileSystem.overwrite(stylesheet.filePath, result.toString());
   }
 }
