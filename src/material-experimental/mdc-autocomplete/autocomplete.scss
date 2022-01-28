@@ -1,21 +1,27 @@
-@use '@material/menu-surface/mixins' as mdc-menu-surface;
+@use '@material/menu-surface' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list;
+@use '../mdc-helpers/mdc-helpers';
 @use '../../cdk/a11y';
-
-@include mdc-menu-surface.core-styles($query: structure);
 
 // Note that the `.mdc-menu-surface` is here in order to bump up the specificity
 // and avoid interference with `mat-menu` which uses the same mixins from MDC.
 .mdc-menu-surface.mat-mdc-autocomplete-panel {
   width: 100%; // Ensures that the panel matches the overlay width.
   max-height: 256px; // Prevents lists with a lot of option from growing too high.
-  position: static; // MDC uses `absolute` by default which will throw off our positioning.
   visibility: hidden;
+  overflow: auto;
   // MDC sets the transform-origin programmatically based on whether the dropdown is above or
   // below the input. We use our own positioning logic, so we need to set this ourselves.
   transform-origin: center top;
+  box-sizing: border-box;
 
-  @include mdc-list.list-base($query: structure);
+  @include mdc-helpers.disable-fallback-declarations {
+    // The only structural style we use from MDC is the border radius so we include it
+    // ourselves, instead of going through the `core-styles` mixin.
+    @include mdc-menu-surface.shape-radius(mdc-menu-surface.$shape-radius, false, structure);
+    @include mdc-list.list-base($query: structure);
+  }
+
   @include a11y.high-contrast(active, off) {
     outline: solid 1px;
   }
