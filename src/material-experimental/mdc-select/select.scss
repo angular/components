@@ -3,6 +3,7 @@
 @use '@material/list/evolution-mixins' as mdc-list;
 @use '../../material/core/style/variables';
 @use '../../material/core/style/vendor-prefixes';
+@use '../mdc-helpers/mdc-helpers';
 @use '../../cdk/a11y';
 
 $mat-select-arrow-size: 5px !default;
@@ -15,8 +16,6 @@ $scale: 0.75 !default;
 
 // We base the select panel styling on top of MDC's menu styles and we
 // implement the trigger ourselves since MDC doesn't provide an equivalent.
-
-@include mdc-menu-surface.core-styles($query: structure);
 
 .mat-mdc-select {
   display: inline-block;
@@ -86,10 +85,17 @@ $scale: 0.75 !default;
 .mdc-menu-surface.mat-mdc-select-panel {
   width: 100%; // Ensures that the panel matches the overlay width.
   max-height: $mat-select-panel-max-height;
-  position: static; // MDC uses `absolute` by default which will throw off our positioning.
   outline: 0;
+  overflow: auto;
+  box-sizing: border-box;
 
-  @include mdc-list.list-base($query: structure);
+  @include mdc-helpers.disable-fallback-declarations {
+    // The only structural style we use from MDC is the border radius so we include it
+    // ourselves, instead of going through the `core-styles` mixin.
+    @include mdc-menu-surface.shape-radius(mdc-menu-surface.$shape-radius, false, structure);
+    @include mdc-list.list-base($query: structure);
+  }
+
   @include a11y.high-contrast(active, off) {
     outline: solid 1px;
   }
