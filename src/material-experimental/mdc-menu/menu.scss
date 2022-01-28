@@ -7,20 +7,15 @@
 @use '../../cdk/a11y';
 @use '../mdc-helpers/mdc-helpers';
 
-@include mdc-menu-surface.core-styles($query: structure);
-
 // Prevent rendering mat-menu as it can affect the flex layout.
 mat-menu {
   display: none;
 }
 
 .mat-mdc-menu-content {
-  @include mdc-list-mixins.list-base($query: structure);
-}
-
-.mat-mdc-menu-panel {
-  @include a11y.high-contrast(active, off) {
-    outline: solid 1px;
+  @include mdc-helpers.disable-fallback-declarations {
+    @include mdc-list-mixins.list-base($query: structure);
+    box-sizing: border-box;
   }
 }
 
@@ -31,9 +26,15 @@ mat-menu {
   // styling to make scrolling smoother. MDC doesn't include the `min-width` and `max-width`, even
   // though they're explicitly defined in spec.
   @include menu-common.base;
+  @include mdc-helpers.disable-fallback-declarations {
+    // The only structural style we use from MDC is the border radius so we include it
+    // ourselves, instead of going through the `core-styles` mixin.
+    @include mdc-menu-surface.shape-radius(mdc-menu-surface.$shape-radius, false, structure);
+  }
 
-  // The CDK positioning uses flexbox to anchor the element, whereas MDC uses `position: absolute`.
-  position: static;
+  @include a11y.high-contrast(active, off) {
+    outline: solid 1px;
+  }
 }
 
 .mat-mdc-menu-item {
