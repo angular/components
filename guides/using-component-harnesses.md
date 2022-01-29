@@ -28,7 +28,7 @@ The following sections will illustrate these benefits in more detail.
 ## Which kinds of tests can use harnesses?
 
 The Angular CDK's component harnesses are designed to work in multiple different test environments.
-Support currently includes Angular's Testbed environment in Karma unit tests and Selenium Webdriver
+Support currently includes Angular's Testbed environment in Karma unit tests and Selenium WebDriver
 end-to-end (e2e) tests. You can also support additional environments by creating custom extensions
 of the CDK's `HarnessEnvironment` and `TestElement` classes.
 
@@ -65,7 +65,7 @@ different paths.
   are in. 
 - `@angular/cdk/testing/testbed` contains symbols that are used only in Karma tests.
 - `@angular/cdk/testing/selenium-webdriver` (not shown above) contains symbols that are used only in
-  Selenium Webdriver tests.
+  Selenium WebDriver tests.
 
 ## Loading an Angular Material harness
 

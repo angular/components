@@ -48,8 +48,8 @@ learn how to use a specific harness.
 
 These classes correspond to different implementations of the component harness system with bindings
 for specific test environments. Any given test must only import _one_ of these classes. Karma-based
-unit tests should use the `TestbedHarnessEnvironment`, while Selenium Webdriver-based end-to-end tests
-should use the `SeleniumWebdriverHarnessEnvironment`. Additional environments require custom bindings; see
+unit tests should use the `TestbedHarnessEnvironment`, while Selenium WebDriver-based end-to-end tests
+should use the `SeleniumWebDriverHarnessEnvironment`. Additional environments require custom bindings; see
 [API for harness environment authors](#api-for-harness-environment-authors) for more information on
 alternate test environments.
 
@@ -113,7 +113,7 @@ it('loads harnesses', async () => {
 | ------ | ----------- |
 | `loader(): HarnessLoader` | Gets a `HarnessLoader` instance for the current HTML document, rooted at the document's root element. |
 
-Since Selenium Webdriver does not deal with fixtures, the API in this environment is simpler. The
+Since Selenium WebDriver does not deal with fixtures, the API in this environment is simpler. The
 `HarnessLoader` returned by the `loader()` method should be sufficient for loading all necessary
 `ComponentHarness` instances.
 
@@ -304,7 +304,7 @@ The functions created with the locator methods described above all return `TestE
 | `dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;` | Dispatches an event with a particular name. |
 
 `TestElement` is an abstraction designed to work across different test environments (Karma,
-Selenium Webdriver, etc). When using harnesses, you should perform all DOM interaction via this interface.
+Selenium WebDriver, etc). When using harnesses, you should perform all DOM interaction via this interface.
 Other means of accessing DOM elements (e.g. `document.querySelector`) will not work in all test
 environments.
 
@@ -574,7 +574,7 @@ may need to explicitly wait for tasks outside `NgZone`, as this does not happen 
 
 Harness environment authors are developers who want to add support for using component harnesses in
 additional testing environments. Out-of-the-box, Angular CDK's component harnesses can be used in
-Selenium Webdriver E2E tests and Karma unit tests. Developers can support additional environments by
+Selenium WebDriver E2E tests and Karma unit tests. Developers can support additional environments by
 creating custom implementations of `TestElement` and `HarnessEnvironment`.
 
 #### Creating a `TestElement` implementation for the environment
@@ -583,7 +583,7 @@ The first step in adding support for a new testing environment is to create a `T
 implementation. The `TestElement` interface serves as an environment-agnostic representation of a
 DOM element; it lets harnesses interact with DOM elements regardless of the underlying environment.
 Because some environments don't support interacting with DOM elements synchronously
-(e.g. webdriver), all of the `TestElement` methods are asynchronous, returning a `Promise` with the
+(e.g. WebDriver), all of the `TestElement` methods are asynchronous, returning a `Promise` with the
 result of the operation.
 
 | Method | Description |
