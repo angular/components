@@ -49,7 +49,7 @@ provides a tab-like UI for navigating between routes.
 The `mat-tab-nav-bar` is not tied to any particular router; it works with normal `<a>` elements and
 uses the `active` property to determine which tab is currently active. The corresponding
 `<router-outlet>` must be wrapped in an `<mat-tab-nav-panel>` component and should typically be
-placed relatively close to the `mat-tab-nav-bar` (see [Accessibility](#Accessibility)).
+placed relatively close to the `mat-tab-nav-bar` (see [Accessibility](#accessibility)).
 
 ### Lazy Loading
 By default, the tab contents are eagerly loaded. Eagerly loaded tabs
