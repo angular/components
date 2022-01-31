@@ -1081,6 +1081,27 @@ describe('MatAutocomplete', () => {
         .toBe(false);
     });
 
+    it('should not interfere with the ENTER key when pressing a modifier', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+
+      expect(input.value).withContext('Expected input to start off blank.').toBeFalsy();
+      expect(trigger.panelOpen).withContext('Expected panel to start off open.').toBe(true);
+
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      flush();
+      fixture.detectChanges();
+
+      Object.defineProperty(ENTER_EVENT, 'altKey', {get: () => true});
+      fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).withContext('Expected panel to remain open.').toBe(true);
+      expect(input.value).withContext('Expected input to remain blank.').toBeFalsy();
+      expect(ENTER_EVENT.defaultPrevented)
+        .withContext('Expected the default ENTER action not to have been prevented.')
+        .toBe(false);
+    }));
+
     it('should fill the text field, not select an option, when SPACE is entered', () => {
       typeInElement(input, 'New');
       fixture.detectChanges();
@@ -2265,6 +2286,34 @@ describe('MatAutocomplete', () => {
       subscription!.unsubscribe();
     }));
 
+    it('should emit to `optionSelections` if the list of options changes', fakeAsync(() => {
+      const spy = jasmine.createSpy('option selection spy');
+      const subscription = fixture.componentInstance.trigger.optionSelections.subscribe(spy);
+      const openAndSelectFirstOption = () => {
+        fixture.detectChanges();
+        fixture.componentInstance.trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+      };
+
+      fixture.componentInstance.states = [{code: 'OR', name: 'Oregon'}];
+      fixture.detectChanges();
+
+      openAndSelectFirstOption();
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      fixture.componentInstance.states = [{code: 'WV', name: 'West Virginia'}];
+      fixture.detectChanges();
+
+      openAndSelectFirstOption();
+      expect(spy).toHaveBeenCalledTimes(2);
+
+      subscription!.unsubscribe();
+    }));
+
     it('should reposition the panel when the amount of options changes', fakeAsync(() => {
       const formField = fixture.debugElement.query(By.css('.mat-form-field'))!.nativeElement;
       const inputReference = formField.querySelector('.mat-form-field-flex');
@@ -2822,6 +2871,29 @@ describe('MatAutocomplete', () => {
 
     expect(event.source).toBe(fixture.componentInstance.autocomplete);
     expect(event.option.value).toBe('Washington');
+  }));
+
+  it('should refocus the input after the selection event is emitted', fakeAsync(() => {
+    const events: string[] = [];
+    const fixture = createComponent(AutocompleteWithSelectEvent);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input');
+
+    fixture.componentInstance.trigger.openPanel();
+    zone.simulateZoneExit();
+    fixture.detectChanges();
+
+    const options = overlayContainerElement.querySelectorAll(
+      'mat-option',
+    ) as NodeListOf<HTMLElement>;
+    spyOn(input, 'focus').and.callFake(() => events.push('focus'));
+    fixture.componentInstance.optionSelected.and.callFake(() => events.push('select'));
+
+    options[1].click();
+    tick();
+    fixture.detectChanges();
+
+    expect(events).toEqual(['select', 'focus']);
   }));
 
   it('should emit an event when a newly-added option is selected', fakeAsync(() => {

@@ -672,13 +672,19 @@ export class MatSlider
         const oldValue = this.value;
         this._isSliding = 'pointer';
         this._lastPointerEvent = event;
-        event.preventDefault();
         this._focusHostElement();
         this._onMouseenter(); // Simulate mouseenter in case this is a mobile device.
         this._bindGlobalEvents(event);
         this._focusHostElement();
         this._updateValueFromPosition(pointerPosition);
         this._valueOnSlideStart = oldValue;
+
+        // Despite the fact that we explicitly bind active events, in some cases the browser
+        // still dispatches non-cancelable events which cause this call to throw an error.
+        // There doesn't appear to be a good way of avoiding them. See #23820.
+        if (event.cancelable) {
+          event.preventDefault();
+        }
 
         // Emit a change and input event if the value changed.
         if (oldValue != this.value) {
@@ -793,7 +799,10 @@ export class MatSlider
 
   /** Increments the slider by the given number of steps (negative number decrements). */
   private _increment(numSteps: number) {
-    this.value = this._clamp((this.value || 0) + this.step * numSteps, this.min, this.max);
+    // Pre-clamp the current value since it's allowed to be
+    // out of bounds when assigned programmatically.
+    const clampedValue = this._clamp(this.value || 0, this.min, this.max);
+    this.value = this._clamp(clampedValue + this.step * numSteps, this.min, this.max);
   }
 
   /** Calculate the new value from the new physical location. The value will always be snapped. */
@@ -851,15 +860,17 @@ export class MatSlider
       return;
     }
 
+    let tickIntervalPercent: number;
     if (this.tickInterval == 'auto') {
       let trackSize = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
       let pixelsPerStep = (trackSize * this.step) / (this.max - this.min);
       let stepsPerTick = Math.ceil(MIN_AUTO_TICK_SEPARATION / pixelsPerStep);
       let pixelsPerTick = stepsPerTick * this.step;
-      this._tickIntervalPercent = pixelsPerTick / trackSize;
+      tickIntervalPercent = pixelsPerTick / trackSize;
     } else {
-      this._tickIntervalPercent = (this.tickInterval * this.step) / (this.max - this.min);
+      tickIntervalPercent = (this.tickInterval * this.step) / (this.max - this.min);
     }
+    this._tickIntervalPercent = isSafeNumber(tickIntervalPercent) ? tickIntervalPercent : 0;
   }
 
   /** Creates a slider change object from the specified value. */
@@ -874,7 +885,8 @@ export class MatSlider
 
   /** Calculates the percentage of the slider that a value is. */
   private _calculatePercentage(value: number | null) {
-    return ((value || 0) - this.min) / (this.max - this.min);
+    const percentage = ((value || 0) - this.min) / (this.max - this.min);
+    return isSafeNumber(percentage) ? percentage : 0;
   }
 
   /** Calculates the value a percentage of the slider corresponds to. */
@@ -943,6 +955,11 @@ export class MatSlider
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
   }
+}
+
+/** Checks if number is safe for calculation */
+function isSafeNumber(value: number) {
+  return !isNaN(value) && isFinite(value);
 }
 
 /** Returns whether an event is a touch event. */

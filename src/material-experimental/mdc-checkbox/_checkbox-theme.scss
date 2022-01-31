@@ -9,48 +9,16 @@
 @use '../../material/core/typography/typography';
 @use '../../material/core/theming/theming';
 @use '../../material/core/ripple/ripple-theme';
-
-
-// Mixin that includes the checkbox theme styles with a given palette.
-// By default, the MDC checkbox always uses the `secondary` palette.
-@mixin private-checkbox-styles-with-color($color, $mdcColor) {
-  $on-surface: mdc-theme-color.prop-value(on-surface);
-  $border-color: rgba($on-surface, color.opacity(mdc-checkbox-theme.$border-color));
-  $disabled-color: rgba($on-surface, color.opacity(mdc-checkbox-theme.$disabled-color));
-
-  @include mdc-checkbox-theme.theme((
-    selected-checkmark-color: mdc-theme-color.prop-value(on-#{$mdcColor}),
-
-    selected-focus-icon-color: $color,
-    selected-hover-icon-color: $color,
-    selected-hover-state-layer-color: $color,
-    selected-icon-color: $color,
-    selected-pressed-icon-color: $color,
-    unselected-focus-icon-color: $color,
-    unselected-hover-icon-color: $color,
-
-    selected-focus-state-layer-color: $on-surface,
-    selected-pressed-state-layer-color: $on-surface,
-    unselected-focus-state-layer-color: $on-surface,
-    unselected-hover-state-layer-color: $on-surface,
-    unselected-pressed-state-layer-color: $on-surface,
-
-    disabled-selected-icon-color: $disabled-color,
-    disabled-unselected-icon-color: $disabled-color,
-
-    unselected-icon-color: $border-color,
-    unselected-pressed-icon-color: $border-color,
-  ));
-}
+@use './checkbox-private';
 
 // Apply ripple colors to the MatRipple element and the MDC ripple element when the
 // checkbox is selected.
-@mixin _selected-ripple-colors($theme, $mdcColor) {
+@mixin _selected-ripple-colors($theme, $mdc-color) {
   .mdc-checkbox--selected ~ {
     .mat-mdc-checkbox-ripple {
       @include ripple-theme.color((
           foreground: (
-              base: mdc-theme-color.prop-value($mdcColor)
+              base: mdc-theme-color.prop-value($mdc-color)
           ),
       ));
     }
@@ -84,17 +52,17 @@
       // class for accent and warn style, and applying the appropriate overrides below. Since we
       // don't use MDC's ripple, we also need to set the color for our replacement ripple.
       &.mat-primary {
-        @include private-checkbox-styles-with-color($primary, primary);
+        @include checkbox-private.private-checkbox-styles-with-color($primary, primary);
         @include _selected-ripple-colors($primary, primary);
       }
 
       &.mat-accent {
-        @include private-checkbox-styles-with-color($accent, secondary);
+        @include checkbox-private.private-checkbox-styles-with-color($accent, secondary);
         @include _selected-ripple-colors($accent, secondary);
       }
 
       &.mat-warn {
-        @include private-checkbox-styles-with-color($warn, error);
+        @include checkbox-private.private-checkbox-styles-with-color($warn, error);
         @include _selected-ripple-colors($warn, error);
       }
     }
@@ -112,16 +80,19 @@
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  .mat-mdc-checkbox .mdc-checkbox {
-    @include mdc-checkbox-theme.density(
-      $density-scale,
-      $query: mdc-helpers.$mat-base-styles-query
-    );
-  }
 
-  @if ($density-scale == -2 or $density-scale == 'minimum') {
-    .mat-mdc-checkbox-touch-target {
-      display: none;
+  @include mdc-helpers.disable-fallback-declarations {
+    .mat-mdc-checkbox .mdc-checkbox {
+      @include mdc-checkbox-theme.density(
+        $density-scale,
+        $query: mdc-helpers.$mat-base-styles-query
+      );
+    }
+
+    @if ($density-scale == -2 or $density-scale == 'minimum') {
+      .mat-mdc-checkbox-touch-target {
+        display: none;
+      }
     }
   }
 }

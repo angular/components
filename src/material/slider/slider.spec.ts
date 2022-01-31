@@ -18,7 +18,8 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   createKeyboardEvent,
-} from '../../cdk/testing/private';
+  createTouchEvent,
+} from '@angular/cdk/testing/private';
 import {Component, DebugElement, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -242,6 +243,17 @@ describe('MatSlider', () => {
     it('should have a focus indicator', () => {
       expect(sliderNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
+
+    it('should not try to preventDefault on a non-cancelable event', () => {
+      const event = createTouchEvent('touchstart');
+      const spy = spyOn(event, 'preventDefault');
+      Object.defineProperty(event, 'cancelable', {value: false});
+
+      dispatchEvent(sliderNativeElement, event);
+      fixture.detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+    });
   });
 
   describe('disabled slider', () => {
@@ -438,6 +450,26 @@ describe('MatSlider', () => {
         expect(sliderInstance.percent).toBe(1);
       },
     );
+    it('should properly update ticks when max value changed to 0', () => {
+      testComponent.min = 0;
+      testComponent.max = 100;
+      fixture.detectChanges();
+
+      dispatchMouseenterEvent(sliderNativeElement);
+      fixture.detectChanges();
+
+      expect(ticksElement.style.backgroundSize).toBe('6% 2px');
+      expect(ticksElement.style.transform).toContain('translateX(3%)');
+
+      testComponent.max = 0;
+      fixture.detectChanges();
+
+      dispatchMouseenterEvent(sliderNativeElement);
+      fixture.detectChanges();
+
+      expect(ticksElement.style.backgroundSize).toBe('0% 2px');
+      expect(ticksElement.style.transform).toContain('translateX(0%)');
+    });
   });
 
   describe('slider with set value', () => {
@@ -962,6 +994,7 @@ describe('MatSlider', () => {
     let sliderNativeElement: HTMLElement;
     let testComponent: SliderWithChangeHandler;
     let sliderInstance: MatSlider;
+    let trackFillElement: HTMLElement;
 
     beforeEach(() => {
       fixture = createComponent(SliderWithChangeHandler);
@@ -974,6 +1007,7 @@ describe('MatSlider', () => {
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
+      trackFillElement = sliderNativeElement.querySelector('.mat-slider-track-fill') as HTMLElement;
     });
 
     it('should increment slider by 1 on up arrow pressed', () => {
@@ -1026,6 +1060,21 @@ describe('MatSlider', () => {
       expect(testComponent.onInput).toHaveBeenCalledTimes(1);
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(99);
+    });
+
+    it('should decrement from max when interacting after out-of-bounds value is assigned', () => {
+      sliderInstance.max = 100;
+      sliderInstance.value = 200;
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(200);
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 1, 1)');
+
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', LEFT_ARROW);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(99);
+      expect(trackFillElement.style.transform).toContain('scale3d(0.99, 1, 1)');
     });
 
     it('should increment slider by 10 on page up pressed', () => {
