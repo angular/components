@@ -1679,7 +1679,7 @@ describe('MDC-based MatDialog', () => {
           .not.toHaveClass('mat-mdc-dialog-actions-align-center');
         expect(actions)
           .withContext('Expected action buttons to have class align-end')
-          .not.toHaveClass('mat-mdc-dialog-actions-align-end');
+          .toHaveClass('mat-mdc-dialog-actions-align-end');
       });
     }
   });
