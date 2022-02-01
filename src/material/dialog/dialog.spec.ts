@@ -1734,7 +1734,7 @@ describe('MatDialog', () => {
           .toBe(title.id);
       }));
 
-      it('should add mat-dialog-actions-align-* class according to given [align] input in [mat-dialog-actions]', () => {
+      it('should add correct css class according to given [align] input in [mat-dialog-actions]', () => {
         let actions = overlayContainerElement.querySelector('mat-dialog-actions')!;
 
         expect(actions)
