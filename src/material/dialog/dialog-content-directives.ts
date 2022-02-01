@@ -152,6 +152,9 @@ export class MatDialogContent {}
   },
 })
 export class MatDialogActions {
+  /**
+   * Horizontal alignment of action buttons.
+   */
   @Input() align?: 'start' | 'center' | 'end' = 'start';
 }
 
