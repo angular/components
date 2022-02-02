@@ -345,7 +345,7 @@ describe('MatMdcInput without forms', () => {
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
     expect(label.nativeElement.textContent).toBe('hello');
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   }));
 
   it('should show the required star when using a FormControl', fakeAsync(() => {
@@ -355,7 +355,7 @@ describe('MatMdcInput without forms', () => {
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
     expect(label.nativeElement.textContent).toBe('Hello');
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   }));
 
   it('should not hide the required star if input is disabled', () => {
@@ -367,7 +367,7 @@ describe('MatMdcInput without forms', () => {
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
     expect(label.nativeElement.textContent).toBe('hello');
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   });
 
   it('hide label required star when set to hide the required marker', fakeAsync(() => {
@@ -376,13 +376,13 @@ describe('MatMdcInput without forms', () => {
 
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
     expect(label.nativeElement.textContent).toBe('hello');
 
     fixture.componentInstance.hideRequiredMarker = true;
     fixture.detectChanges();
 
-    expect(label.nativeElement.classList).not.toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeFalsy();
     expect(label.nativeElement.textContent).toBe('hello');
   }));
 
