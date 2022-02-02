@@ -197,21 +197,23 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell(movePreview = true) {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-        const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
-          '.mat-calendar-body-active',
-        );
+    setTimeout(() => {
+      this._ngZone.runOutsideAngular(() => {
+        this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+          const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
+            '.mat-calendar-body-active',
+          );
 
-        if (activeCell) {
-          if (!movePreview) {
-            this._skipNextFocus = true;
+          if (activeCell) {
+            if (!movePreview) {
+              this._skipNextFocus = true;
+            }
+
+            activeCell.focus();
           }
-
-          activeCell.focus();
-        }
+        });
       });
-    });
+    }, 50);
   }
 
   /** Gets whether a value is the start of the main range. */
