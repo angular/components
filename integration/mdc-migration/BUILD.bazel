@@ -1,6 +1,9 @@
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("//tools:integration.bzl", "CLI_PROJECT_MAPPINGS")
-load("//tools:defaults.bzl", "node_integration_test")
+load("//tools:defaults.bzl", "node_integration_test", "ts_library")
+
+# TODO(mmalerba): Consider extracting infrastructure for running golden tests against other future migrations.
 
 npmPackageMappings = dicts.add(
     CLI_PROJECT_MAPPINGS,
@@ -11,9 +14,51 @@ npmPackageMappings = dicts.add(
     },
 )
 
+ts_library(
+    name = "verify_golden_lib",
+    srcs = ["verify-golden.ts"],
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    deps = [
+        "@npm//@types/node",
+    ],
+)
+
+nodejs_binary(
+    name = "verify_golden",
+    data = [":verify_golden_lib"],
+    entry_point = ":verify-golden.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+)
+
+IGNORED_FILES = [
+    ".angular",
+    ".yarn_cache_folder",
+    "node_modules",
+    "package.json",
+    "yarn.lock",
+]
+
+filegroup(
+    name = "test_project",
+    srcs = glob([
+        "sample-project/**/*",
+    ]),
+)
+
+filegroup(
+    name = "golden_project",
+    srcs = glob([
+        "golden/**/*",
+    ]),
+)
+
 node_integration_test(
     name = "test",
-    srcs = glob(["**/*"]),
+    srcs = glob([
+        "golden/**/*",
+        "sample-project/**/*",
+    ]),
     commands = [
         # Note: We use a cache folder within the integration test as otherwise
         # the NPM package mapped archive would be cached in the system.
@@ -22,13 +67,63 @@ node_integration_test(
         "yarn install --cache-folder .yarn_cache_folder/",
         "yarn ng generate @angular/material:mdc-migration -c all --tsconfig tsconfig.app.json",
         "yarn test",
+        " ".join([
+            "$(rootpath :verify_golden)",
+            "false",
+            "../golden",
+            "integration/mdc-migration/golden",
+        ] + IGNORED_FILES),
+    ],
+    data = [
+        ":golden_project",
+        ":test_project",
+        ":verify_golden",
     ],
     npm_packages = npmPackageMappings,
+    setup_chromium = True,
     tags = [
-        # Chromium cannot run in Sandbox. For this test, sandbox is disabled.
-        # Additionally, we need to disable RBE as this test relies on internet
-        # access for installing the NPM packages.
-        "no-sandbox",
-        "no-remote-exec",
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
     ],
+    # Sample project becomes the working directory for the integration test, ensuring
+    # that its project `package.json` is substitued with the NPM package mappings etc.
+    working_dir = "sample-project/",
+)
+
+# `blaze run` this target to approve new golden.
+node_integration_test(
+    name = "approve",
+    srcs = glob([
+        "golden/**/*",
+        "sample-project/**/*",
+    ]),
+    commands = [
+        # Note: We use a cache folder within the integration test as otherwise
+        # the NPM package mapped archive would be cached in the system.
+        # See: https://github.com/yarnpkg/yarn/issues/2165.
+        # TODO(devversion): determine if a solution/workaround could live in the test runner.
+        "yarn install --cache-folder .yarn_cache_folder/",
+        "yarn ng generate @angular/material:mdc-migration -c all --tsconfig tsconfig.app.json",
+        " ".join([
+            "$(rootpath :verify_golden)",
+            "true",
+            "../golden",
+            "integration/mdc-migration/golden",
+        ] + IGNORED_FILES),
+    ],
+    data = [
+        ":golden_project",
+        ":test_project",
+        ":verify_golden",
+    ],
+    npm_packages = npmPackageMappings,
+    setup_chromium = True,
+    tags = [
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
+        "manual",
+    ],
+    # Sample project becomes the working directory for the integration test, ensuring
+    # that its project `package.json` is substitued with the NPM package mappings etc.
+    working_dir = "sample-project/",
 )
