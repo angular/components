@@ -345,7 +345,7 @@ describe('MDC-based MatSelectionList without forms', () => {
       const event = dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
-      expect(getFocusIndex()).toBe(0);
+      expect(getFocusIndex()).toBe(1); // Skips 0th item because it is disabled.
       expect(event.defaultPrevented).toBe(true);
     });
 

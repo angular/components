@@ -42,6 +42,7 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
     this._foundation.handleClick(
       this._indexForElement(event.target as HTMLElement),
       /* isCheckboxAlreadyUpdatedInAdapter */ false,
+      event,
     );
   }
 
@@ -84,6 +85,7 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
   protected _initWithAdapter(adapter: MDCListAdapter) {
     this._adapter = adapter;
     this._foundation = new MDCListFoundation(adapter);
+    this._foundation.setDisabledItemsFocusable(false);
   }
 
   ngAfterViewInit() {
