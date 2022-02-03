@@ -1,22 +1,26 @@
+/*
+ * Verifies (and approves if requested) a test project directory against a golden directory.
+ * Expected usage:
+ * verify-golden \
+ *   &lt;should_approve (true | false)&gt; \
+ *   &lt;golden_directory (relative to cwd)&gt; \
+ *   &lt;golden_directory (relative to workspace)&gt; \
+ *   ...&lt;ignored_files (relative to cwd)&gt;
+ */
+
 import {promises as fsPromises, Stats} from 'fs';
 import path from 'path';
 
-// Expected usage:
-// verify-golden \
-//   <should_approve (true | false)> \
-//   <golden_directory (relative to cwd)> \
-//   <golden_directory (relative to workspace)> \
-//   ...<ignored_files (relative to cwd)>
-
 const CURRENT_WORKING_DIRECTORY = process.cwd();
-const SHOULD_APPROVE = Boolean(process.argv[2]);
+const SHOULD_APPROVE = process.argv[2].toLowerCase() === 'true';
 const TEST_DIRECTORY = CURRENT_WORKING_DIRECTORY;
 const GOLDEN_DIRECTORY = path.join(CURRENT_WORKING_DIRECTORY, process.argv[3]);
-const APPROVED_GOLDEN_DIRECTORY = path.join(
-  process.env.BUILD_WORKSPACE_DIRECTORY!,
-  process.argv[4],
-);
 const IGNORED_FILES = new Set(process.argv.slice(5));
+
+if (SHOULD_APPROVE && !process.env.BUILD_WORKSPACE_DIRECTORY) {
+  console.error('Approval command must be run with `bazel run`.');
+  process.exit(1);
+}
 
 /** Represents a diff between a test and golden file. */
 interface FileDiff {
@@ -174,6 +178,10 @@ async function copyFiles(
     const diffs = await verify(TEST_DIRECTORY, GOLDEN_DIRECTORY, '.', IGNORED_FILES);
     if (diffs.length) {
       if (SHOULD_APPROVE) {
+        const APPROVED_GOLDEN_DIRECTORY = path.join(
+          process.env.BUILD_WORKSPACE_DIRECTORY!,
+          process.argv[4],
+        );
         await fsPromises.rm(APPROVED_GOLDEN_DIRECTORY, {recursive: true, force: true});
         await copyFiles(TEST_DIRECTORY, APPROVED_GOLDEN_DIRECTORY, '.', IGNORED_FILES);
         process.exit(0);
