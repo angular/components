@@ -24,6 +24,7 @@ export class GoogleMapDemoModule {
 
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
