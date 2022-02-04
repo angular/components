@@ -70,6 +70,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { GoogleMap } from '@angular/google-maps';
 
 @Component({
   selector: 'google-maps-demo',
