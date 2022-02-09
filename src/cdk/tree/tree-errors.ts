@@ -31,11 +31,20 @@ export function getTreeMissingMatchingNodeDefError() {
 }
 
 /**
- * Returns an error to be thrown when there are tree control.
+ * Returns an error to be thrown when there is no tree control.
  * @docs-private
  */
 export function getTreeControlMissingError() {
-  return Error(`Could not find a tree control for the tree.`);
+  return Error(`Could not find a tree control, levelAccessor, or childrenAccessor for the tree.`);
+}
+
+/**
+ * Returns an error to be thrown when there are multiple ways of specifying children or level
+ * provided to the tree.
+ * @docs-private
+ */
+export function getMultipleTreeControlsError() {
+  return Error(`More than one of tree control, levelAccessor, or childrenAccessor were provided.`);
 }
 
 /**
