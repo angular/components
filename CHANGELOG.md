@@ -4,7 +4,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [4b6e83274](https://github.com/angular/components/commit/4b6e83274b45053523b21cbb075b2c0d0de63690) | fix | **scrolling:** fix scrolling in appendOnly mode ([#24153](https://github.com/angular/components/pull/24153)) |
-| [d232f6b4c](https://github.com/angular/components/commit/d232f6b4cfceb5656af95dee8c95347c0ea56cee) | perf | **overlay:** add event listeners for overlay dispatchers outside of zone ([#23962](https://github.com/angular/components/pull/23962)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
