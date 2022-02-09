@@ -35,8 +35,8 @@ export class CdkTreeNodeToggle<T, K = T> {
 
   _toggle(event: Event): void {
     this.recursive
-      ? this._tree.treeControl?.toggleDescendants(this._treeNode.data)
-      : this._tree.treeControl?.toggle(this._treeNode.data);
+      ? this._tree.toggleDescendants(this._treeNode.data)
+      : this._tree.toggle(this._treeNode.data);
 
     event.stopPropagation();
   }

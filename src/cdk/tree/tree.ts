@@ -29,24 +29,34 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject,
+  concat,
   isObservable,
+  merge,
   Observable,
   of as observableOf,
   Subject,
   Subscription,
 } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {reduce, switchMap, take, takeUntil} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {
   getMultipleTreeControlsError,
+  getTreeControlFunctionsMissingError,
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceNumberProperty} from '@angular/cdk/coercion';
+
+function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
+  if (!isObservable(data)) {
+    return observableOf(data);
+  }
+  return data;
+}
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -357,22 +367,38 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   /** Whether the data node is expanded or collapsed. Returns true if it's expanded. */
   isExpanded(dataNode: T): boolean {
-    throw new Error('not implemented');
+    return (
+      this.treeControl?.isExpanded(dataNode) ??
+      this._expansionModel?.isSelected(this._trackExpansionKey(dataNode)) ??
+      false
+    );
   }
 
   /** If the data node is currently expanded, collapse it. Otherwise, expand it. */
   toggle(dataNode: T): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.toggle(dataNode);
+    } else if (this._expansionModel) {
+      this._expansionModel.toggle(this._trackExpansionKey(dataNode));
+    }
   }
 
   /** Expand the data node. If it is already expanded, does nothing. */
   expand(dataNode: T): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.expand(dataNode);
+    } else if (this._expansionModel) {
+      this._expansionModel.select(this._trackExpansionKey(dataNode));
+    }
   }
 
   /** Collapse the data node. If it is already collapsed, does nothing. */
   collapse(dataNode: T): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.collapse(dataNode);
+    } else if (this._expansionModel) {
+      this._expansionModel.deselect(this._trackExpansionKey(dataNode));
+    }
   }
 
   /**
@@ -380,29 +406,72 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * Otherwise, expand it and all its descendants.
    */
   toggleDescendants(dataNode: T): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.toggleDescendants(dataNode);
+    } else if (this._expansionModel) {
+      if (this.isExpanded(dataNode)) {
+        this.collapseDescendants(dataNode);
+      } else {
+        this.expandDescendants(dataNode);
+      }
+    }
   }
 
   /**
-   * Expand the data node and all its descendants. If they are already expanded, does nothing.
-   */
+   * Expand the data node and all its descendants. If they are already expanded, does nothing. */
   expandDescendants(dataNode: T): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.expandDescendants(dataNode);
+    } else if (this._expansionModel) {
+      const expansionModel = this._expansionModel;
+      this._getDescendants(dataNode)
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(children => {
+          expansionModel.select(...children.map(child => this._trackExpansionKey(child)));
+        });
+    }
   }
 
   /** Collapse the data node and all its descendants. If it is already collapsed, does nothing. */
   collapseDescendants(dataNode: T): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.collapseDescendants(dataNode);
+    } else if (this._expansionModel) {
+      const expansionModel = this._expansionModel;
+      this._getDescendants(dataNode)
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(children => {
+          expansionModel.deselect(...children.map(child => this._trackExpansionKey(child)));
+        });
+    }
   }
 
   /** Expands all data nodes in the tree. */
   expandAll(): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.expandAll();
+    } else if (this._expansionModel) {
+      const expansionModel = this._expansionModel;
+      this._getAllDescendants()
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(children => {
+          expansionModel.select(...children.map(child => this._trackExpansionKey(child)));
+        });
+    }
   }
 
   /** Collapse all data nodes in the tree. */
   collapseAll(): void {
-    throw new Error('not implemented');
+    if (this.treeControl) {
+      this.treeControl.collapseAll();
+    } else if (this._expansionModel) {
+      const expansionModel = this._expansionModel;
+      this._getAllDescendants()
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(children => {
+          expansionModel.deselect(...children.map(child => this._trackExpansionKey(child)));
+        });
+    }
   }
 
   /** Level accessor, used for compatibility between the old Tree and new Tree */
@@ -413,6 +482,72 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /** Children accessor, used for compatibility between the old Tree and new Tree */
   _getChildrenAccessor() {
     return this.treeControl?.getChildren ?? this.childrenAccessor;
+  }
+
+  private _getAllDescendants(): Observable<T[]> {
+    return merge(...(this._dataNodes?.map(dataNode => this._getDescendants(dataNode)) ?? []));
+  }
+
+  private _getDescendants(dataNode: T): Observable<T[]> {
+    if (this.treeControl) {
+      return observableOf(this.treeControl.getDescendants(dataNode));
+    }
+    if (this.levelAccessor) {
+      // If we have no known nodes, we wouldn't be able to determine descendants
+      if (!this._dataNodes) {
+        return observableOf([]);
+      }
+      const startIndex = this._dataNodes.indexOf(dataNode);
+      const results: T[] = [dataNode];
+
+      // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
+      // The level of descendants of a tree node must be greater than the level of the given
+      // tree node.
+      // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
+      // If we reach a node whose level is greater than the level of the tree node, we hit a
+      // sibling of an ancestor.
+      const currentLevel = this.levelAccessor(dataNode);
+      for (
+        let i = startIndex + 1;
+        i < this._dataNodes.length && currentLevel < this.levelAccessor(this._dataNodes[i]);
+        i++
+      ) {
+        results.push(this._dataNodes[i]);
+      }
+      return observableOf(results);
+    }
+    if (this.childrenAccessor) {
+      return this._getChildrenRecursively(dataNode).pipe(
+        reduce(
+          (memo: T[], next) => {
+            memo.push(...next);
+            return memo;
+          },
+          [dataNode],
+        ),
+      );
+    }
+    throw getTreeControlMissingError();
+  }
+
+  private _getChildrenRecursively(dataNode: T): Observable<T[]> {
+    if (!this.childrenAccessor) {
+      return observableOf([]);
+    }
+
+    return coerceObservable(this.childrenAccessor(dataNode)).pipe(
+      take(1),
+      switchMap(children => {
+        return concat(
+          observableOf(children),
+          ...children.map(child => this._getChildrenRecursively(child)),
+        );
+      }),
+    );
+  }
+
+  private _trackExpansionKey(dataNode: T): K {
+    return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
   }
 }
 
