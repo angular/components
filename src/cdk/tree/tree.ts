@@ -106,7 +106,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * @deprecated Use one of `levelAccessor` or `childrenAccessor`
    * @breaking-change 14.0.0
    */
-  @Input() treeControl: TreeControl<T, K> | null;
+  @Input() treeControl?: TreeControl<T, K>;
 
   /**
    * Given a data node, determines what tree level the node is at.
@@ -135,7 +135,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /**
    * Given a data node, determines the key by which we determine whether or not this node is expanded.
    */
-  @Input() expansionKey: ((dataNode: T) => K) | null;
+  @Input() expansionKey?: (dataNode: T) => K;
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
@@ -352,44 +352,35 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /** Whether the data node is expanded or collapsed. Returns true if it's expanded. */
-  isExpanded(dataNode: T): boolean {
-  }
+  isExpanded(dataNode: T): boolean {}
 
   /** If the data node is currently expanded, collapse it. Otherwise, expand it. */
-  toggle(dataNode: T): void {
-  }
+  toggle(dataNode: T): void {}
 
   /** Expand the data node. If it is already expanded, does nothing. */
-  expand(dataNode: T): void {
-  }
+  expand(dataNode: T): void {}
 
   /** Collapse the data node. If it is already collapsed, does nothing. */
-  collapse(dataNode: T): void {
-  }
+  collapse(dataNode: T): void {}
 
   /**
    * If the data node is currently expanded, collapse it and all its descendants.
    * Otherwise, expand it and all its descendants.
    */
-  toggleDescendants(dataNode: T): void {
-  }
+  toggleDescendants(dataNode: T): void {}
 
   /**
    * Expand the data node and all its descendants. If they are already expanded, does nothing. */
-  expandDescendants(dataNode: T): void {
-  }
+  expandDescendants(dataNode: T): void {}
 
   /** Collapse the data node and all its descendants. If it is already collapsed, does nothing. */
-  collapseDescendants(dataNode: T): void {
-  }
+  collapseDescendants(dataNode: T): void {}
 
   /** Expands all data nodes in the tree. */
-  expandAll(): void {
-  }
+  expandAll(): void {}
 
   /** Collapse all data nodes in the tree. */
-  collapseAll(): void {
-  }
+  collapseAll(): void {}
 
   /** Level accessor, used for compatibility between the old Tree and new Tree */
   _getLevelAccessor() {
