@@ -106,7 +106,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * @deprecated Use one of `levelAccessor` or `childrenAccessor`
    * @breaking-change 14.0.0
    */
-  @Input() treeControl: TreeControl<T, K>;
+  @Input() treeControl: TreeControl<T, K> | null;
 
   /**
    * Given a data node, determines what tree level the node is at.
@@ -132,6 +132,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    */
   @Input() trackBy: TrackByFunction<T>;
 
+  /**
+   * Given a data node, determines the key by which we determine whether or not this node is expanded.
+   */
+  @Input() expansionKey: ((dataNode: T) => K) | null;
+
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
 
@@ -154,14 +159,27 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     end: Number.MAX_VALUE,
   });
 
+  private _expansionModel?: SelectionModel<K>;
+  /** Maintain a synchronous cache of the currently known data nodes. */
+  private _dataNodes?: readonly T[];
+
   constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.treeControl && !this._getLevelAccessor && !this._getChildrenAccessor) {
+      const provided = [this.treeControl, this.levelAccessor, this.childrenAccessor].filter(
+        value => !!value,
+      ).length;
+      if (provided > 1) {
+        throw getMultipleTreeControlsError();
+      } else if (provided === 0) {
         throw getTreeControlMissingError();
       }
+    }
+
+    if (!this.treeControl) {
+      this._expansionModel = new SelectionModel(true);
     }
   }
 
@@ -251,6 +269,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
     parentData?: T,
   ) {
+    this._dataNodes = data;
     const changes = dataDiffer.diff(data);
     if (!changes) {
       return;
@@ -332,13 +351,53 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     }
   }
 
+  /** Whether the data node is expanded or collapsed. Returns true if it's expanded. */
+  isExpanded(dataNode: T): boolean {
+  }
+
+  /** If the data node is currently expanded, collapse it. Otherwise, expand it. */
+  toggle(dataNode: T): void {
+  }
+
+  /** Expand the data node. If it is already expanded, does nothing. */
+  expand(dataNode: T): void {
+  }
+
+  /** Collapse the data node. If it is already collapsed, does nothing. */
+  collapse(dataNode: T): void {
+  }
+
+  /**
+   * If the data node is currently expanded, collapse it and all its descendants.
+   * Otherwise, expand it and all its descendants.
+   */
+  toggleDescendants(dataNode: T): void {
+  }
+
+  /**
+   * Expand the data node and all its descendants. If they are already expanded, does nothing. */
+  expandDescendants(dataNode: T): void {
+  }
+
+  /** Collapse the data node and all its descendants. If it is already collapsed, does nothing. */
+  collapseDescendants(dataNode: T): void {
+  }
+
+  /** Expands all data nodes in the tree. */
+  expandAll(): void {
+  }
+
+  /** Collapse all data nodes in the tree. */
+  collapseAll(): void {
+  }
+
   /** Level accessor, used for compatibility between the old Tree and new Tree */
-  private _getLevelAccessor() {
+  _getLevelAccessor() {
     return this.treeControl?.getLevel ?? this.levelAccessor;
   }
 
   /** Children accessor, used for compatibility between the old Tree and new Tree */
-  private _getChildrenAccessor() {
+  _getChildrenAccessor() {
     return this.treeControl?.getChildren ?? this.childrenAccessor;
   }
 }
@@ -357,7 +416,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit {
   /**
    * The role of the tree node.
-   * @deprecated The correct role is 'treeitem', 'group' should not be used. This input will be
+   *
+   * @deprecated This will be ignored; the tree will automatically determine the appropriate role for the tree node. This input will be
    *   removed in a future version.
    * @breaking-change 12.0.0 Remove this input
    */
@@ -368,6 +428,20 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   set role(_role: 'treeitem' | 'group') {
     // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.setAttribute('role', _role);
+  }
+
+  @Input() isExpandable: boolean = false;
+
+  @Input()
+  get isExpanded(): boolean {
+    return this._tree.isExpanded(this._data);
+  }
+  set isExpanded(isExpanded: boolean) {
+    if (isExpanded) {
+      this._tree.expand(this._data);
+    } else {
+      this._tree.collapse(this._data);
+    }
   }
 
   /**
@@ -397,17 +471,11 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   }
   protected _data: T;
 
-  get isExpanded(): boolean {
-    return this._tree.treeControl.isExpanded(this._data);
-  }
-
   get level(): number {
     // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
     // aria-level off the parent node and use it as the level for this node (note aria-level is
     // 1-indexed, while this property is 0-indexed, so we don't need to increment).
-    return this._tree.treeControl.getLevel
-      ? this._tree.treeControl.getLevel(this._data)
-      : this._parentNodeAriaLevel;
+    return this._tree._getLevelAccessor()?.(this._data) ?? this._parentNodeAriaLevel;
   }
 
   constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
@@ -439,15 +507,10 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
 
   // TODO: role should eventually just be set in the component host
   protected _setRoleFromData(): void {
-    if (
-      !this._tree.treeControl.isExpandable &&
-      !this._tree.treeControl.getChildren &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)
-    ) {
-      throw getTreeControlFunctionsMissingError();
-    }
     this.role = 'treeitem';
   }
+
+  static ngAcceptInputType_recursive: BooleanInput;
 }
 
 function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
