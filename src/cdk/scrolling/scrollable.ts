@@ -49,7 +49,13 @@ export class CdkScrollable implements OnInit, OnDestroy {
 
   private _elementScrolled: Observable<Event> = new Observable((observer: Observer<Event>) =>
     this.ngZone.runOutsideAngular(() =>
-      fromEvent(this.elementRef.nativeElement, 'scroll')
+      /* it seems like scroll-events are not fired on the documentElement, event if it's the actual scrolling element */
+      fromEvent(
+        this.elementRef.nativeElement === document.documentElement
+          ? document
+          : this.elementRef.nativeElement,
+        'scroll',
+      )
         .pipe(takeUntil(this._destroyed))
         .subscribe(observer),
     ),

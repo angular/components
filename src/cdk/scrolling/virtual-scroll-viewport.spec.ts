@@ -772,9 +772,9 @@ describe('CdkVirtualScrollViewport', () => {
         spyOn(dispatcher, 'register').and.callThrough();
         spyOn(dispatcher, 'deregister').and.callThrough();
         finishInit(fixture);
-        expect(dispatcher.register).toHaveBeenCalledWith(testComponent.viewport);
+        expect(dispatcher.register).toHaveBeenCalledWith(testComponent.viewport.scrollable);
         fixture.destroy();
-        expect(dispatcher.deregister).toHaveBeenCalledWith(testComponent.viewport);
+        expect(dispatcher.deregister).toHaveBeenCalledWith(testComponent.viewport.scrollable);
       }),
     ));
 

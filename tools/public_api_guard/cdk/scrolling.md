@@ -136,6 +136,35 @@ export type CdkVirtualForOfContext<T> = {
     odd: boolean;
 };
 
+// @public (undocumented)
+export abstract class CdkVirtualScrollable extends CdkScrollable {
+    constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir?: Directionality);
+    // (undocumented)
+    measureViewportSize(orientation: 'horizontal' | 'vertical'): number;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollable, never, never, {}, {}, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollable, [null, null, null, { optional: true; }]>;
+}
+
+// @public (undocumented)
+export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
+    constructor(elementRef: ElementRef, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir: Directionality);
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableElement, "[cdk-virtual-scrollable-element], [cdkVirtualScrollableElement]", never, {}, {}, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollableElement, [null, null, null, { optional: true; }]>;
+}
+
+// @public (undocumented)
+export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
+    constructor(scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir: Directionality);
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableWindow, "cdk-virtual-scroll-viewport[scrollable-window]", never, {}, {}, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollableWindow, [null, null, { optional: true; }]>;
+}
+
 // @public
 export interface CdkVirtualScrollRepeater<T> {
     // (undocumented)
@@ -145,8 +174,8 @@ export interface CdkVirtualScrollRepeater<T> {
 }
 
 // @public
-export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, _scrollStrategy: VirtualScrollStrategy, dir: Directionality, scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler);
+export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
+    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, _scrollStrategy: VirtualScrollStrategy, dir: Directionality, scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, renderer: Renderer2, scrollable: CdkVirtualScrollable);
     get appendOnly(): boolean;
     set appendOnly(value: BooleanInput);
     attach(forOf: CdkVirtualScrollRepeater<any>): void;
@@ -163,12 +192,16 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     measureRenderedContentSize(): number;
     measureScrollOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
     // (undocumented)
+    measureViewportOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     get orientation(): 'horizontal' | 'vertical';
     set orientation(orientation: 'horizontal' | 'vertical');
     readonly renderedRangeStream: Observable<ListRange>;
+    // (undocumented)
+    scrollable: CdkVirtualScrollable;
     readonly scrolledIndexChange: Observable<number>;
     scrollToIndex(index: number, behavior?: ScrollBehavior): void;
     scrollToOffset(offset: number, behavior?: ScrollBehavior): void;
@@ -180,7 +213,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkVirtualScrollViewport, "cdk-virtual-scroll-viewport", never, { "orientation": "orientation"; "appendOnly": "appendOnly"; }, { "scrolledIndexChange": "scrolledIndexChange"; }, never, ["*"], false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollViewport, [null, null, null, { optional: true; }, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollViewport, [null, null, null, { optional: true; }, { optional: true; }, null, null, null, { optional: true; }]>;
 }
 
 // @public
@@ -299,6 +332,9 @@ export interface ViewportScrollPosition {
 
 // @public
 export const VIRTUAL_SCROLL_STRATEGY: InjectionToken<VirtualScrollStrategy>;
+
+// @public (undocumented)
+export const VIRTUAL_SCROLLABLE: InjectionToken<CdkVirtualScrollable>;
 
 // @public
 export interface VirtualScrollStrategy {

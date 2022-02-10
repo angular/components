@@ -178,3 +178,25 @@
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
+
+<h2>Custom virtual scroller</h2>
+
+<div class="demo-viewport" cdk-virtual-scrollable-element>
+  <p>Content before virtual scrolling items</p>
+  <cdk-virtual-scroll-viewport itemSize="50">
+    <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
+         [style.height.px]="size">
+      Item #{{i}} - ({{size}}px)
+    </div>
+  </cdk-virtual-scroll-viewport>
+  <p>Content after virtual scrolling items</p>
+</div>
+
+<h2>Window virtual scroller</h2>
+
+<cdk-virtual-scroll-viewport scrollable-window itemSize="50">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
+       [style.height.px]="size">
+    Item #{{i}} - ({{size}}px)
+  </div>
+</cdk-virtual-scroll-viewport>
