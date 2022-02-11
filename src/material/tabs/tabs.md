@@ -112,7 +112,7 @@ When using `MatTabNavGroup`, always specify a label for the `<nav>` element.
 
 #### Keyboard interaction
 
-`MatTabGroup` implements the following keyboard interactions.
+`MatTabGroup` and `MatTabNavBar` both implement the following keyboard interactions:
 
 | Shortcut             | Action                     |
 |----------------------|----------------------------|
@@ -121,6 +121,3 @@ When using `MatTabNavGroup`, always specify a label for the `<nav>` element.
 | `HOME`               | Move focus to first tab    |
 | `END`                | Move focus to last tab     |
 | `SPACE` or `ENTER`   | Switch to focused tab      |
-
-`MatTabNavBar` does not add additional keyboard handling, deferring to the native behavior of
-anchor elements.
