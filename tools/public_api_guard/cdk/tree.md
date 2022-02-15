@@ -78,10 +78,12 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
 // @public
 export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef);
+    childrenAccessor?: (dataNode: T) => T[] | Observable<T[]>;
     get dataSource(): DataSource<T> | Observable<T[]> | T[];
     set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]);
     _getNodeDef(data: T, i: number): CdkTreeNodeDef<T>;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
+    levelAccessor?: (dataNode: T) => number;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -93,13 +95,14 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     _nodeOutlet: CdkTreeNodeOutlet;
     renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     trackBy: TrackByFunction<T>;
+    // @deprecated
     treeControl: TreeControl<T, K>;
     readonly viewChange: BehaviorSubject<{
         start: number;
         end: number;
     }>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": "dataSource"; "treeControl": "treeControl"; "trackBy": "trackBy"; }, {}, ["_nodeDefs"], never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": "dataSource"; "treeControl": "treeControl"; "levelAccessor": "levelAccessor"; "childrenAccessor": "childrenAccessor"; "trackBy": "trackBy"; }, {}, ["_nodeDefs"], never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTree<any, any>, never>;
 }
