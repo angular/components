@@ -103,7 +103,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /**
    * The tree controller
    *
-   * @deprecated Use one of levelAccessor or childrenAccessor
+   * @deprecated Use one of `levelAccessor` or `childrenAccessor`
+   * @breaking-change 14.0.0
    */
   @Input() treeControl: TreeControl<T, K>;
 
@@ -158,7 +159,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.treeControl && !this.getLevelAccessor && !this.getChildrenAccessor) {
+      if (!this.treeControl && !this._getLevelAccessor && !this._getChildrenAccessor) {
         throw getTreeControlMissingError();
       }
     }
@@ -309,7 +310,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
     // If the tree is flat tree, then use the `getLevel` function in flat tree control
     // Otherwise, use the level of parent node.
-    const levelAccessor = this.getLevelAccessor();
+    const levelAccessor = this._getLevelAccessor();
     if (levelAccessor) {
       context.level = levelAccessor(nodeData);
     } else if (typeof parentData !== 'undefined' && this._levels.has(parentData)) {
@@ -332,12 +333,12 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /** Level accessor, used for compatibility between the old Tree and new Tree */
-  private getLevelAccessor() {
+  private _getLevelAccessor() {
     return this.treeControl?.getLevel ?? this.levelAccessor;
   }
 
   /** Children accessor, used for compatibility between the old Tree and new Tree */
-  private getChildrenAccessor() {
+  private _getChildrenAccessor() {
     return this.treeControl?.getChildren ?? this.childrenAccessor;
   }
 }
