@@ -1,3 +1,18 @@
+<a name="13.2.3"></a>
+# 13.2.3 "platinum-pen" (2022-02-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2c73b2df6](https://github.com/angular/components/commit/2c73b2df64d784c203829317b3f78d38e7b7c009) | fix | **menu:** position classes not update when window is resized ([#24385](https://github.com/angular/components/pull/24385)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8c632ee87](https://github.com/angular/components/commit/8c632ee8781e5c60b46e4255e034218d03e54a68) | fix | **column-resize:** Fix bug in hover logic introduced by IE cleanup ([#24396](https://github.com/angular/components/pull/24396)) |
+## Special Thanks
+Karl Seamon, Kristiyan Kostadinov, Paul Gschwendtner, Zach Arend and Zack Elliott
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="13.2.2"></a>
 # 13.2.2 "enamel-eagle" (2022-02-09)
 ### cdk
