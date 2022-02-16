@@ -10,6 +10,7 @@ import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
+  Input,
   ContentChildren,
   ElementRef,
   Inject,
@@ -46,6 +47,7 @@ export class MatList extends MatListBase {}
   exportAs: 'matListItem',
   host: {
     'class': 'mat-mdc-list-item mdc-list-item',
+    '[class.mdc-list-item--activated]': 'activated',
     '[class.mdc-list-item--with-leading-avatar]': '_avatars.length !== 0',
     '[class.mdc-list-item--with-leading-icon]': '_icons.length !== 0',
     '[class.mdc-list-item--with-trailing-meta]': '_meta.length !== 0',
@@ -61,6 +63,15 @@ export class MatListItem extends MatListItemBase {
   @ContentChildren(MatListItemMeta, {descendants: true}) _meta: QueryList<MatListItemMeta>;
   @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
   @ViewChild('text') _itemText: ElementRef<HTMLElement>;
+
+  @Input()
+  get activated() {
+    return this._activated;
+  }
+  set activated(activated) {
+    this._activated = activated;
+  }
+  _activated = false;
 
   constructor(
     element: ElementRef,
