@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 
 /**
  * @title Chips avatar
+ * @description An avatar inside a chip
  */
 @Component({
   selector: 'chips-avatar-example',
