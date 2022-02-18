@@ -126,6 +126,8 @@ export class MatFormField extends _MatFormFieldBase implements AfterContentInit,
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    get persistHints(): boolean;
+    set persistHints(value: boolean);
     // (undocumented)
     _placeholderChild: MatPlaceholder;
     // (undocumented)
@@ -140,7 +142,7 @@ export class MatFormField extends _MatFormFieldBase implements AfterContentInit,
     updateOutlineGap(): void;
     protected _validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"], ["[matPrefix]", "*", "mat-placeholder", "mat-label", "[matSuffix]", "mat-error", "mat-hint:not([align='end'])", "mat-hint[align='end']"]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "persistHints": "persistHints"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"], ["[matPrefix]", "*", "mat-placeholder", "mat-label", "[matSuffix]", "mat-error", "mat-hint:not([align='end'])", "mat-hint[align='end']"]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, [null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -184,6 +186,8 @@ export interface MatFormFieldDefaultOptions {
     floatLabel?: FloatLabelType;
     // (undocumented)
     hideRequiredMarker?: boolean;
+    // (undocumented)
+    persistHints?: boolean;
 }
 
 // @public (undocumented)

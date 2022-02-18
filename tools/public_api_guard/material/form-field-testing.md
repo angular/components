@@ -38,6 +38,8 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
     // (undocumented)
     protected _hints: AsyncFactoryFn<TestElement[]>;
     // (undocumented)
+    protected _hintsWrapper: AsyncFactoryFn<TestElement | null>;
+    // (undocumented)
     static hostSelector: string;
     // (undocumented)
     protected _inputControl: AsyncFactoryFn<MatInputHarness | null>;
@@ -65,6 +67,7 @@ export abstract class _MatFormFieldHarnessBase<ControlHarness extends MatFormFie
     getControl(): Promise<ControlHarness | null>;
     getControl<X extends MatFormFieldControlHarness>(type: ComponentHarnessConstructor<X>): Promise<X | null>;
     getControl<X extends MatFormFieldControlHarness>(type: HarnessPredicate<X>): Promise<X | null>;
+    getHintWrapperState(): Promise<'detached' | 'attached' | 'hidden'>;
     getLabel(): Promise<string | null>;
     getPrefixText(): Promise<string>;
     getSuffixText(): Promise<string>;
@@ -75,6 +78,8 @@ export abstract class _MatFormFieldHarnessBase<ControlHarness extends MatFormFie
     abstract hasLabel(): Promise<boolean>;
     // (undocumented)
     protected abstract _hints: AsyncFactoryFn<TestElement[]>;
+    // (undocumented)
+    protected abstract _hintsWrapper: AsyncFactoryFn<TestElement | null>;
     // (undocumented)
     protected abstract _inputControl: AsyncFactoryFn<ControlHarness | null>;
     isAutofilled(): Promise<boolean>;

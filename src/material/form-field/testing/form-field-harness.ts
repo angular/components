@@ -40,6 +40,7 @@ export abstract class _MatFormFieldHarnessBase<
   protected abstract _label: AsyncFactoryFn<TestElement | null>;
   protected abstract _errors: AsyncFactoryFn<TestElement[]>;
   protected abstract _hints: AsyncFactoryFn<TestElement[]>;
+  protected abstract _hintsWrapper: AsyncFactoryFn<TestElement | null>;
   protected abstract _inputControl: AsyncFactoryFn<ControlHarness | null>;
   protected abstract _selectControl: AsyncFactoryFn<ControlHarness | null>;
   protected abstract _datepickerInputControl: AsyncFactoryFn<ControlHarness | null>;
@@ -58,6 +59,23 @@ export abstract class _MatFormFieldHarnessBase<
   async getLabel(): Promise<string | null> {
     const labelEl = await this._label();
     return labelEl ? labelEl.text() : null;
+  }
+
+  /**
+   * Gets the current state of the hint wrapper.
+   * @return `"detached"` if the wrapper is detached from the DOM, `"attached"`
+   * if attached to the DOM, or `"hidden"` if attached but hidden via CSS.
+   */
+  async getHintWrapperState(): Promise<'detached' | 'attached' | 'hidden'> {
+    const hintWrapper = await this._hintsWrapper();
+    if (!hintWrapper) {
+      return 'detached';
+    }
+    const hintWrapperCssDisplay = await hintWrapper.getCssValue('display');
+    if (hintWrapperCssDisplay === 'none') {
+      return 'hidden';
+    }
+    return 'attached';
   }
 
   /** Whether the form-field has errors. */
@@ -237,6 +255,7 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
   protected _label = this.locatorForOptional('.mat-form-field-label');
   protected _errors = this.locatorForAll('.mat-error');
   protected _hints = this.locatorForAll('mat-hint, .mat-hint');
+  protected _hintsWrapper = this.locatorForOptional('.mat-form-field-hint-wrapper');
   protected _inputControl = this.locatorForOptional(MatInputHarness);
   protected _selectControl = this.locatorForOptional(MatSelectHarness);
   protected _datepickerInputControl = this.locatorForOptional(MatDatepickerInputHarness);

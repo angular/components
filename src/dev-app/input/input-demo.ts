@@ -36,6 +36,7 @@ export class InputDemo {
   errorMessageExample2: string;
   errorMessageExample3: string;
   errorMessageExample4: string;
+  errorMessageExample5: string;
   dividerColorExample1: string;
   dividerColorExample2: string;
   dividerColorExample3: string;

@@ -43,7 +43,7 @@ export function runHarnessTests(
 
   it('should be able to load harnesses', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
-    expect(formFields.length).toBe(7);
+    expect(formFields.length).toBe(8);
   });
 
   it('should be able to load form-field that matches specific selector', async () => {
@@ -195,22 +195,45 @@ export function runHarnessTests(
   it('should be able to get hint messages of form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     expect(await formFields[1].getTextHints()).toEqual(['Hint 1', 'Hint 2']);
+    expect(await formFields[7].getTextHints()).toEqual(['Persisted hint 1', 'Persisted hint 2']);
 
     fixture.componentInstance.requiredControl.setValue('');
     dispatchFakeEvent(fixture.nativeElement.querySelector('#with-errors input'), 'blur');
+    dispatchFakeEvent(fixture.nativeElement.querySelector('#with-persisted-hint input'), 'blur');
     expect(await formFields[1].getTextHints()).toEqual([]);
+    expect(await formFields[7].getTextHints()).toEqual(['Persisted hint 1', 'Persisted hint 2']);
+  });
+
+  it('should be able to check the state of the hint wrapper', async () => {
+    const formFields = await loader.getAllHarnesses(formFieldHarness);
+    expect(await formFields[1].getHintWrapperState()).toBe('attached');
+    expect(await formFields[7].getHintWrapperState()).toBe('attached');
+
+    fixture.componentInstance.requiredControl.setValue('');
+    dispatchFakeEvent(fixture.nativeElement.querySelector('#with-errors input'), 'blur');
+    expect(await formFields[1].getHintWrapperState()).toBe('detached');
+    dispatchFakeEvent(fixture.nativeElement.querySelector('#with-persisted-hint input'), 'blur');
+    expect(await formFields[7].getHintWrapperState()).toBe('hidden');
+
+    fixture.componentInstance.isPersistingHints = true;
+    expect(await formFields[1].getHintWrapperState()).toBe('hidden');
+    expect(await formFields[7].getHintWrapperState()).toBe('hidden');
+
+    fixture.componentInstance.requiredControl.setValue('test');
+    expect(await formFields[1].getHintWrapperState()).toBe('attached');
+    expect(await formFields[7].getHintWrapperState()).toBe('attached');
   });
 
   it('should be able to get the prefix text of a form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     const prefixTexts = await parallel(() => formFields.map(f => f.getPrefixText()));
-    expect(prefixTexts).toEqual(['prefix_textprefix_text_2', '', '', '', '', '', '']);
+    expect(prefixTexts).toEqual(['prefix_textprefix_text_2', '', '', '', '', '', '', '']);
   });
 
   it('should be able to get the suffix text of a form-field', async () => {
     const formFields = await loader.getAllHarnesses(formFieldHarness);
     const suffixTexts = await parallel(() => formFields.map(f => f.getSuffixText()));
-    expect(suffixTexts).toEqual(['suffix_text', '', '', '', '', '', '']);
+    expect(suffixTexts).toEqual(['suffix_text', '', '', '', '', '', '', '']);
   });
 
   it('should be able to check if form field has been touched', async () => {
@@ -266,7 +289,7 @@ export function runHarnessTests(
       <span matTextSuffix *ngIf="isMdc">suffix_text</span>
     </mat-form-field>
 
-    <mat-form-field appearance="standard" color="warn" id="with-errors">
+    <mat-form-field appearance="standard" color="warn" [persistHints]="isPersistingHints" id="with-errors">
       <span class="custom-control">Custom control harness</span>
       <input matInput [formControl]="requiredControl">
 
@@ -311,6 +334,14 @@ export function runHarnessTests(
       </mat-date-range-input>
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
+
+    <mat-form-field [persistHints]="true" id="with-persisted-hint">
+      <mat-label>Label</mat-label>
+      <input matInput [formControl]="requiredControl" />
+      <mat-error>Error</mat-error>
+      <mat-hint align="start">Persisted hint 1</mat-hint>
+      <mat-hint align="end">Persisted hint 2</mat-hint>
+    </mat-form-field>
   `,
 })
 class FormFieldHarnessTest {
@@ -319,6 +350,7 @@ class FormFieldHarnessTest {
   hasLabel = false;
   isDisabled = false;
   isMdc = false;
+  isPersistingHints = false;
 
   setupAsyncValidator() {
     this.requiredControl.setValidators(() => null);

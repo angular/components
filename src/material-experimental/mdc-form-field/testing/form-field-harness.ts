@@ -53,6 +53,7 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
   protected _label = this.locatorForOptional('.mdc-floating-label');
   protected _errors = this.locatorForAll('.mat-mdc-form-field-error');
   protected _hints = this.locatorForAll('.mat-mdc-form-field-hint');
+  protected _hintsWrapper = this.locatorForOptional('.mat-mdc-form-field-hint-wrapper');
   protected _inputControl = this.locatorForOptional(MatInputHarness);
   protected _selectControl = this.locatorForOptional(MatSelectHarness);
   protected _datepickerInputControl = this.locatorForOptional(MatDatepickerInputHarness);

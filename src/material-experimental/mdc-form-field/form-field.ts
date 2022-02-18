@@ -70,6 +70,7 @@ export type SubscriptSizing = 'fixed' | 'dynamic';
  */
 export interface MatFormFieldDefaultOptions {
   appearance?: MatFormFieldAppearance;
+  persistHints?: boolean;
   hideRequiredMarker?: boolean;
   floatLabel?: FloatLabelType;
   subscriptSizing?: SubscriptSizing;
@@ -254,6 +255,20 @@ export class MatFormField
 
   /** Width of the outline notch. */
   _outlineNotchWidth = 0;
+
+  /**
+   * Whether the hint element(s) should be persisted when errors are present (hidden with CSS), or should be detached from the DOM altogether (default).
+   */
+  @Input()
+  get persistHints(): boolean {
+    return this._persistHints;
+  }
+
+  set persistHints(value: boolean) {
+    this._persistHints = value;
+  }
+
+  private _persistHints: boolean;
 
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {

@@ -85,12 +85,21 @@
 
     <h4>With hint</h4>
 
-    <mat-form-field>
-      <mat-label>Example</mat-label>
-      <input matInput [(ngModel)]="errorMessageExample2" required>
-      <mat-error>This field is required</mat-error>
-      <mat-hint>Please type something here</mat-hint>
-    </mat-form-field>
+    <p>
+      <mat-form-field>
+        <mat-label>Example</mat-label>
+        <input matInput [(ngModel)]="errorMessageExample2" required>
+        <mat-error>This field is required</mat-error>
+        <mat-hint>Please type something here</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field [persistHints]="true">
+        <mat-label>Example</mat-label>
+        <input matInput [(ngModel)]="errorMessageExample3" required />
+        <mat-error>This field is required</mat-error>
+        <mat-hint>Please type something here<br>This hint is hidden with CSS on error, rather than detached.</mat-hint>
+      </mat-form-field>
+    </p>
 
 
     <form novalidate>
@@ -98,7 +107,7 @@
 
       <mat-form-field>
         <mat-label>Example</mat-label>
-        <input matInput name="example" [(ngModel)]="errorMessageExample3" required>
+        <input matInput name="example" [(ngModel)]="errorMessageExample4" required>
         <mat-error>This field is required</mat-error>
       </mat-form-field>
 
@@ -109,7 +118,7 @@
     <mat-form-field>
       <mat-label>Example</mat-label>
       <input matInput
-        [(ngModel)]="errorMessageExample4"
+        [(ngModel)]="errorMessageExample5"
         [errorStateMatcher]="customErrorStateMatcher"
         required>
       <mat-error>This field is required</mat-error>

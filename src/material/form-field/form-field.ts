@@ -81,6 +81,7 @@ export interface MatFormFieldDefaultOptions {
    * `never`, or `auto` (only when necessary).
    */
   floatLabel?: FloatLabelType;
+  persistHints?: boolean;
 }
 
 /**
@@ -218,6 +219,20 @@ export class MatFormField
   readonly _labelId = `mat-form-field-label-${nextUniqueId++}`;
 
   /**
+   * Whether the hint element(s) should be persisted when errors are present (hidden with CSS), or should be detached from the DOM altogether (default).
+   */
+  @Input()
+  get persistHints(): boolean {
+    return this._persistHints;
+  }
+
+  set persistHints(value: boolean) {
+    this._persistHints = value;
+  }
+
+  private _persistHints: boolean;
+
+  /**
    * Whether the label should always float, never float or float as the user types.
    *
    * Note: only the legacy appearance supports the `never` option. `never` was originally added as a
@@ -285,6 +300,8 @@ export class MatFormField
     this.appearance = _defaults && _defaults.appearance ? _defaults.appearance : 'legacy';
     this._hideRequiredMarker =
       _defaults && _defaults.hideRequiredMarker != null ? _defaults.hideRequiredMarker : false;
+    this._persistHints =
+      _defaults && 'persistHints' in _defaults ? Boolean(_defaults.persistHints) : false;
   }
 
   /**

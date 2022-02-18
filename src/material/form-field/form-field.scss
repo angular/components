@@ -226,6 +226,11 @@ $default-infix-width: 180px !default;
   display: flex;
 }
 
+// Hides hints when [persistHints]=true and the form-field is in an error state.
+.mat-form-field-hint-wrapper-persist.mat-form-field-hint-wrapper-persist-inactive {
+  display: none;
+}
+
 // Spacer used to make sure start and end hints have enough space between them.
 .mat-form-field-hint-spacer {
   flex: 1 0 $hint-min-space;
