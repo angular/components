@@ -64,6 +64,7 @@ export class MatListItem extends MatListItemBase {
   @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
   @ViewChild('text') _itemText: ElementRef<HTMLElement>;
 
+  /** Indicates whether an item in a `<mat-nav-list>` is the currently active page. */
   @Input()
   get activated() {
     return this._activated;
