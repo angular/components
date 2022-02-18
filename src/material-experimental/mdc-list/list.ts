@@ -27,6 +27,7 @@ import {
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatListBase, MatListItemBase} from './list-base';
 import {MatListItemLine, MatListItemMeta, MatListItemTitle} from './list-item-sections';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 @Component({
   selector: 'mat-list',
@@ -70,7 +71,7 @@ export class MatListItem extends MatListItemBase {
     return this._activated;
   }
   set activated(activated) {
-    this._activated = activated;
+    this._activated = coerceBooleanProperty(activated);
   }
   _activated = false;
 
