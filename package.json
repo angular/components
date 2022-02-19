@@ -17,7 +17,7 @@
     "postinstall": "node tools/postinstall/apply-patches.js",
     "build": "ts-node --project scripts/tsconfig.json ./scripts/build-packages-dist.ts",
     "build-and-check-release-output": "ts-node --project scripts/tsconfig.json scripts/build-and-check-release-output.ts",
-    "build-docs-content": "node ./scripts/build-docs-content.js",
+    "build-docs-content": "ts-node --project scripts/tsconfig.json ./scripts/build-docs-content.ts",
     "dev-app": "ibazel run //src/dev-app:devserver",
     "test": "node ./scripts/run-component-tests.js",
     "test-local": "yarn -s test --local",
@@ -48,6 +48,8 @@
     "check-mdc-exports": "ts-node --project scripts/tsconfig.json scripts/check-mdc-exports.ts",
     "check-tooling-setup": "yarn tsc --project tools/tsconfig.json && yarn tsc --project .ng-dev/tsconfig.json",
     "tsc": "node ./node_modules/typescript/bin/tsc",
+    "ci-push-deploy-docs-app": "ts-node --project scripts/tsconfig.json scripts/docs-deploy/deploy-ci-push.ts",
+    "ci-docs-monitor-test": "ts-node --project scripts/tsconfig.json scripts/docs-deploy/monitoring/ci-test.ts",
     "prepare": "husky install"
   },
   "version": "13.2.6",
@@ -73,7 +75,7 @@
     "@angular/bazel": "13.2.0",
     "@angular/cli": "13.2.0",
     "@angular/compiler-cli": "13.2.0",
-    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#b6656cffbd46bb3637b09b08561e5f1a147603c9",
+    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#7544378ad9aa94cdfe256aaaa923c107f45175a2",
     "@angular/localize": "13.2.0",
     "@angular/platform-browser-dynamic": "13.2.0",
     "@angular/platform-server": "13.2.0",
@@ -217,7 +219,8 @@
     "typescript-4.4": "npm:typescript@4.4.2",
     "vrsource-tslint-rules": "6.0.0",
     "yaml": "^1.10.2",
-    "yargs": "^17.3.1"
+    "yargs": "^17.3.1",
+    "zx": "^4.3.0"
   },
   "resolutions": {
     "@angular/dev-infra-private/typescript": "~4.5.2",
