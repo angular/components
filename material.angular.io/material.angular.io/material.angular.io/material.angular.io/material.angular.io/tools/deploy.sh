@@ -54,4 +54,6 @@ read -rp "Press <ENTER> to continue.."
 
 yarn prod-build
 yarn firebase use $projectId
-yarn firebase deploy
+yarn firebase target:clear hosting mat-aio
+yarn firebase target:apply hosting mat-aio $projectId
+yarn firebase deploy --only hosting:mat-aio
