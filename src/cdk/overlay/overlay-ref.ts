@@ -10,12 +10,14 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
 import {Location} from '@angular/common';
-import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
+import {NoopNgZoneChecker} from '@angular/cdk/platform';
+import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
+import {Observable, Subject, merge, SubscriptionLike, Subscription, from} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
+
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {OverlayReference} from './overlay-reference';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
@@ -127,7 +129,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // Update the position once the zone is stable so that the overlay will be fully rendered
     // before attempting to position it, as the position may depend on the size of the rendered
     // content.
-    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+    this._getScheduleObservable().subscribe(() => {
       // The overlay could've been detached before the zone has stabilized.
       if (this.hasAttached()) {
         this.updatePosition();
@@ -184,6 +186,11 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     }
 
     const detachmentResult = this._portalOutlet.detach();
+    // The `_portalOutlet.detach()` will destroy the attached view but it won't run the global change detection
+    // to remove DOM nodes if the zone is nooped, there's nothing that tells Angular to run the `tick()`.
+    if (NoopNgZoneChecker.isNoopNgZone()) {
+      this._config.appRef?.tick();
+    }
 
     // Only emit after everything is detached.
     this._detachments.next();
@@ -460,7 +467,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       // We can't remove the host here immediately, because the overlay pane's content
       // might still be animating. This stream helps us avoid interrupting the animation
       // by waiting for the pane to become empty.
-      const subscription = this._ngZone.onStable
+      const subscription = this._getScheduleObservable()
         .pipe(takeUntil(merge(this._attachments, this._detachments)))
         .subscribe(() => {
           // Needs a couple of checks for the pane and host, because
@@ -513,6 +520,14 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       clearTimeout(this._backdropTimeout);
       this._backdropTimeout = undefined;
     }
+  }
+
+  private _getScheduleObservable() {
+    // Use onStable when in the context of an ongoing change detection cycle so that we
+    // do not accidentally trigger additional cycles.
+    return NoopNgZoneChecker.isNoopNgZone()
+      ? from(Promise.resolve(undefined))
+      : this._ngZone.onStable.pipe(take(1));
   }
 }
 

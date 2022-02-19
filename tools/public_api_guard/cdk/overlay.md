@@ -4,6 +4,7 @@
 
 ```ts
 
+import { ApplicationRef } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ComponentFactoryResolver } from '@angular/core';
@@ -275,6 +276,7 @@ export class Overlay {
 // @public
 export class OverlayConfig {
     constructor(config?: OverlayConfig);
+    appRef?: ApplicationRef;
     backdropClass?: string | string[];
     direction?: Direction | Directionality;
     disposeOnNavigation?: boolean;

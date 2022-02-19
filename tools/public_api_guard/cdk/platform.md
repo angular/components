@@ -25,6 +25,11 @@ export function getSupportedInputTypes(): Set<string>;
 export function _isTestEnvironment(): boolean;
 
 // @public
+export class NoopNgZoneChecker {
+    static isNoopNgZone(): boolean;
+}
+
+// @public
 export function normalizePassiveListenerOptions(options: AddEventListenerOptions): AddEventListenerOptions | boolean;
 
 // @public

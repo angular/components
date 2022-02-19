@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ApplicationRef} from '@angular/core';
 import {PositionStrategy} from './position/position-strategy';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ScrollStrategy, NoopScrollStrategy} from './scroll/index';
@@ -57,6 +58,12 @@ export class OverlayConfig {
    * the `HashLocationStrategy`).
    */
   disposeOnNavigation?: boolean = false;
+
+  /**
+   * The `ApplicationRef` should be provided when the zone is nooped to run the `tick()`
+   * when the content is detached.
+   */
+  appRef?: ApplicationRef;
 
   constructor(config?: OverlayConfig) {
     if (config) {
