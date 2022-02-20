@@ -1,11 +1,11 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
-import {VERSION as MAT_VERSION} from '@angular/material/core';
 import {EXAMPLE_COMPONENTS, ExampleData} from '@angular/components-examples';
 import {Observable} from 'rxjs';
 import {shareReplay, take} from 'rxjs/operators';
 
 import stackblitz from '@stackblitz/sdk';
+import {normalizedMaterialVersion} from '../normalized-version';
 
 const COPYRIGHT =
   `Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
@@ -163,7 +163,7 @@ export class StackBlitzWriter {
     // seems to be able to partially re-use the lock file to speed up the module tree computation,
     // so providing a lock file is still reasonable while modifying the `package.json`.
     if (fileName === 'src/index.html' || fileName === 'package.json') {
-      fileContent = fileContent.replace(/\${version}/g, MAT_VERSION.full);
+      fileContent = fileContent.replace(/\${version}/g, normalizedMaterialVersion);
     }
 
     if (fileName === 'src/index.html') {
