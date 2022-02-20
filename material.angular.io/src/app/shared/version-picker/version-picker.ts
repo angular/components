@@ -4,8 +4,8 @@ import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {VERSION} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {normalizedMaterialVersion} from '../normalized-version';
 
 const versionUrl = 'https://material.angular.io/assets/versions.json';
 
@@ -17,11 +17,11 @@ interface VersionInfo {
 
 @Component({
   selector: 'version-picker',
-  templateUrl: './version-picker.html'
+  templateUrl: './version-picker.html',
 })
 export class VersionPicker {
   /** The currently running version of Material. */
-  materialVersion = VERSION.full;
+  materialVersion = normalizedMaterialVersion;
   /** The possible versions of the doc site. */
   docVersions = this.http.get<VersionInfo[]>(versionUrl);
 
@@ -41,6 +41,6 @@ export class VersionPicker {
 @NgModule({
   imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, CommonModule],
   exports: [VersionPicker],
-  declarations: [VersionPicker]
+  declarations: [VersionPicker],
 })
 export class VersionPickerModule {}
