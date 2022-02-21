@@ -12,7 +12,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/cdk/bidi';
+import * as i7 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
 import { ListRange } from '@angular/cdk/collections';
@@ -63,10 +63,14 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
 export class CdkScrollable implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir?: Directionality | undefined);
     // (undocumented)
+    protected readonly _destroyed: Subject<void>;
+    // (undocumented)
     protected dir?: Directionality | undefined;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
     elementScrolled(): Observable<Event>;
+    // (undocumented)
+    protected _elementScrolled: Observable<Event>;
     getElementRef(): ElementRef<HTMLElement>;
     measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
     // (undocumented)
@@ -140,6 +144,8 @@ export type CdkVirtualForOfContext<T> = {
 export abstract class CdkVirtualScrollable extends CdkScrollable {
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir?: Directionality);
     // (undocumented)
+    abstract getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
+    // (undocumented)
     measureViewportSize(orientation: 'horizontal' | 'vertical'): number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollable, never, never, {}, {}, never>;
@@ -151,6 +157,8 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
 export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
     constructor(elementRef: ElementRef, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir: Directionality);
     // (undocumented)
+    getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
+    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableElement, "[cdk-virtual-scrollable-element], [cdkVirtualScrollableElement]", never, {}, {}, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollableElement, [null, null, null, { optional: true; }]>;
@@ -159,6 +167,10 @@ export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
 // @public (undocumented)
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
     constructor(scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir: Directionality);
+    // (undocumented)
+    protected _elementScrolled: Observable<Event>;
+    // (undocumented)
+    getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableWindow, "cdk-virtual-scroll-viewport[scrollable-window]", never, {}, {}, never>;
     // (undocumented)
@@ -175,7 +187,7 @@ export interface CdkVirtualScrollRepeater<T> {
 
 // @public
 export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, _scrollStrategy: VirtualScrollStrategy, dir: Directionality, scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, renderer: Renderer2, scrollable: CdkVirtualScrollable);
+    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, _scrollStrategy: VirtualScrollStrategy, dir: Directionality, scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, scrollable: CdkVirtualScrollable);
     get appendOnly(): boolean;
     set appendOnly(value: BooleanInput);
     attach(forOf: CdkVirtualScrollRepeater<any>): void;
@@ -184,6 +196,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     detach(): void;
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
+    // (undocumented)
+    getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     getDataLength(): number;
     getOffsetToRenderedContentStart(): number | null;
     getRenderedRange(): ListRange;
@@ -213,7 +227,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkVirtualScrollViewport, "cdk-virtual-scroll-viewport", never, { "orientation": "orientation"; "appendOnly": "appendOnly"; }, { "scrolledIndexChange": "scrolledIndexChange"; }, never, ["*"], false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollViewport, [null, null, null, { optional: true; }, { optional: true; }, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollViewport, [null, null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
 }
 
 // @public
@@ -283,7 +297,7 @@ export class ScrollingModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<ScrollingModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<ScrollingModule, [typeof i2.CdkFixedSizeVirtualScroll, typeof i3.CdkVirtualForOf, typeof i4.CdkVirtualScrollViewport], [typeof i5.BidiModule, typeof CdkScrollableModule], [typeof i5.BidiModule, typeof CdkScrollableModule, typeof i2.CdkFixedSizeVirtualScroll, typeof i3.CdkVirtualForOf, typeof i4.CdkVirtualScrollViewport]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<ScrollingModule, [typeof i2.CdkFixedSizeVirtualScroll, typeof i3.CdkVirtualForOf, typeof i4.CdkVirtualScrollViewport, typeof i5.CdkVirtualScrollableWindow, typeof i6.CdkVirtualScrollableElement], [typeof i7.BidiModule, typeof CdkScrollableModule], [typeof i7.BidiModule, typeof CdkScrollableModule, typeof i2.CdkFixedSizeVirtualScroll, typeof i3.CdkVirtualForOf, typeof i4.CdkVirtualScrollViewport, typeof i5.CdkVirtualScrollableWindow, typeof i6.CdkVirtualScrollableElement]>;
 }
 
 // @public (undocumented)

@@ -28,4 +28,6 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
     const viewportEl = this.elementRef.nativeElement;
     return orientation === 'horizontal' ? viewportEl.clientWidth : viewportEl.clientHeight;
   }
+
+  abstract getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
 }

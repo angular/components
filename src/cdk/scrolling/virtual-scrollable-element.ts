@@ -27,4 +27,11 @@ export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
   ) {
     super(elementRef, scrollDispatcher, ngZone, dir);
   }
+
+  getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+    return (
+      this.getElementRef().nativeElement.getBoundingClientRect()[from] -
+      this.measureScrollOffset(from)
+    );
+  }
 }

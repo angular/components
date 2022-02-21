@@ -20,7 +20,6 @@ import {
   OnInit,
   Optional,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -69,8 +68,11 @@ const SCROLL_SCHEDULER =
   providers: [
     {
       provide: CdkScrollable,
-      useFactory: (scrollViewport: CdkVirtualScrollViewport) => scrollViewport.scrollable,
-      deps: [CdkVirtualScrollViewport],
+      useFactory: (
+        virtualScrollable: CdkVirtualScrollable | null,
+        viewport: CdkVirtualScrollViewport,
+      ) => virtualScrollable || viewport,
+      deps: [CdkVirtualScrollable, CdkVirtualScrollViewport],
     },
   ],
 })
@@ -86,6 +88,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   get orientation() {
     return this._orientation;
   }
+
   set orientation(orientation: 'horizontal' | 'vertical') {
     if (this._orientation !== orientation) {
       this._orientation = orientation;
@@ -182,7 +185,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     @Optional() dir: Directionality,
     scrollDispatcher: ScrollDispatcher,
     viewportRuler: ViewportRuler,
-    renderer: Renderer2,
     @Optional() @Inject(VIRTUAL_SCROLLABLE) public scrollable: CdkVirtualScrollable,
   ) {
     super(elementRef, scrollDispatcher, ngZone, dir);
@@ -197,7 +199,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
     if (!this.scrollable) {
       // No scrollable is provided, so the virtual-scroll-viewport needs to become a scrollable
-      renderer.addClass(this.elementRef.nativeElement, 'cdk-virtual-scrollable');
+      this.elementRef.nativeElement.classList.add('cdk-virtual-scrollable');
       this.scrollable = this;
     }
   }
@@ -290,6 +292,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   /** Get the current rendered range of items. */
   getRenderedRange(): ListRange {
     return this._renderedRange;
+  }
+
+  getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+    return this.getElementRef().nativeElement.getBoundingClientRect()[from];
   }
 
   /**
@@ -425,9 +431,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       fromRect = this.orientation === 'horizontal' ? 'left' : 'top';
     }
 
-    const scrollerClientRect = this.scrollable
-      .getElementRef()
-      .nativeElement.getBoundingClientRect()[fromRect];
+    const scrollerClientRect = this.scrollable.getBoundingClientRectWithScrollOffset(fromRect);
     const viewportClientRect = this.elementRef.nativeElement.getBoundingClientRect()[fromRect];
 
     return viewportClientRect - scrollerClientRect;

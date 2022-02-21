@@ -8,6 +8,8 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {Directive, ElementRef, NgZone, Optional} from '@angular/core';
+import {fromEvent, Observable, Observer} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
@@ -16,7 +18,18 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableWindow}],
 })
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
+  protected override _elementScrolled: Observable<Event> = new Observable(
+    (observer: Observer<Event>) =>
+      this.ngZone.runOutsideAngular(() =>
+        fromEvent(document, 'scroll').pipe(takeUntil(this._destroyed)).subscribe(observer),
+      ),
+  );
+
   constructor(scrollDispatcher: ScrollDispatcher, ngZone: NgZone, @Optional() dir: Directionality) {
     super(new ElementRef(document.documentElement), scrollDispatcher, ngZone, dir);
+  }
+
+  getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+    return this.getElementRef().nativeElement.getBoundingClientRect()[from];
   }
 }
