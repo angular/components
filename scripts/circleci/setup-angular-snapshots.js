@@ -14,6 +14,16 @@
  * Read more here: https://yarnpkg.com/lang/en/docs/package-json/#toc-resolutions
  */
 
+/**
+ * Regular expression matching packages we would like to install snapshots for.
+ *
+ * Assumes that all matched packages will have corresponding snapshot Github
+ * repositories under the Angular organization.
+ *
+ * Note that specific packages can be excluded in the `ignorePackages` array below.
+ */
+const targetPackageRegex = /^@(angular|angular-devkit|schematics)\//;
+
 /** List of packages which should not be updated to a snapshot build. */
 const ignorePackages = [
   // Skip update for the shared dev-infra package. We do not want to update to a snapshot
@@ -41,7 +51,7 @@ const snapshotPackages = Object.keys({
   ...packageJson.dependencies,
   ...packageJson.devDependencies,
 }).filter(
-  packageName => packageName.startsWith('@angular/') && !ignorePackages.includes(packageName),
+  packageName => targetPackageRegex.test(packageName) && !ignorePackages.includes(packageName),
 );
 
 console.log('Setting up snapshot builds for:\n');
@@ -49,7 +59,10 @@ console.log(`  ${snapshotPackages.map(n => `${n}${packageSuffix}`).join('\n  ')}
 
 // Setup the snapshot version for each Angular package specified in the "package.json" file.
 snapshotPackages.forEach(packageName => {
-  const buildsUrl = `github:angular/${packageName.split('/')[1]}-builds${tag ? `#${tag}` : ''}`;
+  const parts = packageName.split('/');
+  const scopeName = parts[0].substring(1);
+  const snapshotRepoPrefix = scopeName === 'angular' ? parts[1] : `${scopeName}-${parts[1]}`;
+  const buildsUrl = `github:angular/${snapshotRepoPrefix}-builds${tag ? `#${tag}` : ''}`;
 
   // Add resolutions for each package in the format "**/{PACKAGE}" so that all
   // nested versions of that specific Angular package will have the same version.
