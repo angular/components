@@ -522,24 +522,23 @@ export class MatFormField
         ids.push(...this._control.userAriaDescribedBy.split(' '));
       }
 
-      if (this._getDisplayedMessages() === 'hint') {
-        const startHint = this._hintChildren
-          ? this._hintChildren.find(hint => hint.align === 'start')
-          : null;
-        const endHint = this._hintChildren
-          ? this._hintChildren.find(hint => hint.align === 'end')
-          : null;
+      const startHint = this._hintChildren
+        ? this._hintChildren.find(hint => hint.align === 'start')
+        : null;
+      if (startHint) {
+        ids.push(startHint.id);
+      } else if (this._hintLabel) {
+        ids.push(this._hintLabelId);
+      }
 
-        if (startHint) {
-          ids.push(startHint.id);
-        } else if (this._hintLabel) {
-          ids.push(this._hintLabelId);
-        }
+      const endHint = this._hintChildren
+        ? this._hintChildren.find(hint => hint.align === 'end')
+        : null;
+      if (endHint) {
+        ids.push(endHint.id);
+      }
 
-        if (endHint) {
-          ids.push(endHint.id);
-        }
-      } else if (this._errorChildren) {
+      if (this._getDisplayedMessages() === 'error' && this._errorChildren) {
         ids.push(...this._errorChildren.map(error => error.id));
       }
 

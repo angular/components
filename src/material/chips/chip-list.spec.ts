@@ -19,6 +19,7 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  isVisible,
   MockNgZone,
   typeInElement,
 } from '../../cdk/testing/private';
@@ -51,11 +52,6 @@ import {MatInputModule} from '../input/index';
 import {MatChip} from './chip';
 import {MatChipInputEvent} from './chip-input';
 import {MatChipEvent, MatChipList, MatChipRemove, MatChipsModule} from './index';
-
-function querySelectorAllVisible(containerEl: HTMLElement, selector: string) {
-  const elements = Array.from(containerEl.querySelectorAll(selector));
-  return elements.filter(e => getComputedStyle(e).getPropertyValue('display') !== 'none');
-}
 
 describe('MatChipList', () => {
   let fixture: ComponentFixture<any>;
@@ -1415,7 +1411,7 @@ describe('MatChipList', () => {
         expect(containerEl.querySelectorAll('mat-error').length)
           .withContext('Expected one error message to have been rendered.')
           .toBe(1);
-        expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
+        expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
           .withContext('Expected no hints to be shown.')
           .toBe(0);
 
@@ -1430,7 +1426,7 @@ describe('MatChipList', () => {
           expect(containerEl.querySelectorAll('mat-error').length)
             .withContext('Expected no error messages when the input is valid.')
             .toBe(0);
-          expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
+          expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
             .withContext('Expected one hint to be shown once the input is valid.')
             .toBe(1);
         });
@@ -1444,7 +1440,7 @@ describe('MatChipList', () => {
       expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
     });
 
-    it('sets the aria-describedby to reference errors when in error state', () => {
+    it('sets the aria-describedby to reference hints and errors when in error state', () => {
       const hintId = fixture.debugElement
         .query(By.css('.mat-hint'))!
         .nativeElement.getAttribute('id');
@@ -1463,7 +1459,7 @@ describe('MatChipList', () => {
       describedBy = chipListEl.getAttribute('aria-describedby');
 
       expect(errorIds).withContext('errors should be shown').toBeTruthy();
-      expect(describedBy).toBe(errorIds);
+      expect(describedBy).toBe(`${hintId} ${errorIds}`);
     });
   });
 

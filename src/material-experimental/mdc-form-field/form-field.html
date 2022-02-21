@@ -87,7 +87,7 @@
   </div>
 
   <div class="mat-mdc-form-field-hint-wrapper"
-       [class.mat-mdc-form-field-hint-wrapper-inactive]="displayedMessages !== 'hint'"
+       [class.mat-mdc-form-field-hint-wrapper-active]="displayedMessages === 'hint'"
        [@transitionMessages]="displayedMessages === 'hint' ? 'enter' : 'exit'">
     <mat-hint *ngIf="hintLabel" [id]="_hintLabelId">{{hintLabel}}</mat-hint>
     <ng-content select="mat-hint:not([align='end'])"></ng-content>

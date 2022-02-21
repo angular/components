@@ -8,6 +8,7 @@
 
 export * from './wrapped-error-message';
 export * from './mock-ng-zone';
+export * from './is-visible';
 export * from './text-dedent';
 
 // Re-exported for convenience.

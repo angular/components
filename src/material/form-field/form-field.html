@@ -81,7 +81,7 @@
     </div>
 
     <div class="mat-form-field-hint-wrapper"
-      [class.mat-form-field-hint-wrapper-inactive]="displayedMessages !== 'hint'"
+      [class.mat-form-field-hint-wrapper-active]="displayedMessages === 'hint'"
       [@transitionMessages]="displayedMessages === 'hint' ? 'enter' : 'exit'">
       <!-- TODO(mmalerba): use an actual <mat-hint> once all selectors are switched to mat-* -->
       <div *ngIf="hintLabel" [id]="_hintLabelId" class="mat-hint">{{hintLabel}}</div>

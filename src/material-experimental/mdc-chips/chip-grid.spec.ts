@@ -15,6 +15,7 @@ import {
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
+  isVisible,
   MockNgZone,
   typeInElement,
 } from '@angular/cdk/testing/private';
@@ -36,11 +37,6 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MDCChipAnimation} from '@material/chips';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
-
-function querySelectorAllVisible(containerEl: HTMLElement, selector: string) {
-  const elements = Array.from(containerEl.querySelectorAll(selector));
-  return elements.filter(e => getComputedStyle(e).getPropertyValue('display') !== 'none');
-}
 
 describe('MDC-based MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
@@ -950,7 +946,7 @@ describe('MDC-based MatChipGrid', () => {
         expect(containerEl.querySelectorAll('mat-error').length)
           .withContext('Expected one error message to have been rendered.')
           .toBe(1);
-        expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
+        expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
           .withContext('Expected no hints to be shown.')
           .toBe(0);
 
@@ -966,7 +962,7 @@ describe('MDC-based MatChipGrid', () => {
           expect(containerEl.querySelectorAll('mat-error').length)
             .withContext('Expected no error messages when the input is valid.')
             .toBe(0);
-          expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
+          expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
             .withContext('Expected one hint to be shown once the input is valid.')
             .toBe(1);
         });
@@ -982,7 +978,7 @@ describe('MDC-based MatChipGrid', () => {
       expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
     });
 
-    it('sets the aria-describedby on the input to reference errors when in error state', fakeAsync(() => {
+    it('sets the aria-describedby on the input to reference hints and errors when in error state', fakeAsync(() => {
       let hintId = fixture.debugElement
         .query(By.css('.mat-mdc-form-field-hint'))!
         .nativeElement.getAttribute('id');
@@ -1005,7 +1001,7 @@ describe('MDC-based MatChipGrid', () => {
       let errorDescribedBy = inputEl.getAttribute('aria-describedby');
 
       expect(errorIds).withContext('errors should be shown').toBeTruthy();
-      expect(errorDescribedBy).toBe(errorIds);
+      expect(errorDescribedBy).toBe(`${hintId} ${errorIds}`);
     }));
   });
 

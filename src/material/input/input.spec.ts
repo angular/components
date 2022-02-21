@@ -2,6 +2,7 @@ import {getSupportedInputTypes, _supportsShadowDom} from '@angular/cdk/platform'
 import {
   createFakeEvent,
   dispatchFakeEvent,
+  isVisible,
   wrappedErrorMessage,
   MockNgZone,
 } from '../../cdk/testing/private';
@@ -46,11 +47,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Directionality, Direction} from '@angular/cdk/bidi';
 import {Subject} from 'rxjs';
 import {MatInputModule, MatInput, MAT_INPUT_VALUE_ACCESSOR} from './index';
-
-function querySelectorAllVisible(containerEl: HTMLElement, selector: string) {
-  const elements = Array.from(containerEl.querySelectorAll(selector));
-  return elements.filter(e => getComputedStyle(e).getPropertyValue('display') !== 'none');
-}
 
 describe('MatInput without forms', () => {
   it('should default to floating labels', fakeAsync(() => {
@@ -614,7 +610,9 @@ describe('MatInput without forms', () => {
     fixture.componentInstance.formControl.markAsTouched();
     fixture.componentInstance.formControl.setErrors({invalid: true});
     fixture.detectChanges();
-    expect(input.getAttribute('aria-describedby')).toMatch(/^custom-error mat-error-\d+$/);
+    expect(input.getAttribute('aria-describedby')).toMatch(
+      /^custom-error mat-hint-\d+ mat-error-\d+$/,
+    );
 
     fixture.componentInstance.label = '';
     fixture.componentInstance.userDescribedByValue = '';
@@ -1230,7 +1228,7 @@ describe('MatInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length)
         .withContext('Expected one error message to have been rendered.')
         .toBe(1);
-      expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
+      expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
         .withContext('Expected no hints to be shown.')
         .toBe(0);
 
@@ -1245,7 +1243,7 @@ describe('MatInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length)
         .withContext('Expected no error messages when the input is valid.')
         .toBe(0);
-      expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
+      expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
         .withContext('Expected one hint to be shown once the input is valid.')
         .toBe(1);
     }));
@@ -1274,7 +1272,7 @@ describe('MatInput with forms', () => {
       expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
     }));
 
-    it('sets the aria-describedby to reference errors when in error state', fakeAsync(() => {
+    it('sets the aria-describedby to reference hints and errors when in error state', fakeAsync(() => {
       const hintId = fixture.debugElement
         .query(By.css('.mat-hint'))!
         .nativeElement.getAttribute('id');
@@ -1293,7 +1291,7 @@ describe('MatInput with forms', () => {
       describedBy = inputEl.getAttribute('aria-describedby');
 
       expect(errorIds).withContext('errors should be shown').toBeTruthy();
-      expect(describedBy).toBe(errorIds);
+      expect(describedBy).toBe(`${hintId} ${errorIds}`);
     }));
 
     it('should set `aria-invalid` to true if the input is empty', fakeAsync(() => {

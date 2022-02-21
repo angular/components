@@ -46,14 +46,14 @@
     order: 1;
   }
 
-  // Clears the floats on the hints. This is necessary for the hint animation to work.
+  // Hides hints when the form-field is in an error state.
   .mat-mdc-form-field-hint-wrapper {
-    display: flex;
+    display: none;
   }
 
-  // Hides hints when the form-field is in an error state.
-  .mat-mdc-form-field-hint-wrapper-inactive .mat-mdc-form-field-hint {
-    display: none;
+  // Clears the floats on the hints. This is necessary for the hint animation to work.
+  .mat-mdc-form-field-hint-wrapper-active {
+    display: flex;
   }
 
 
