@@ -137,7 +137,11 @@ export abstract class _MatFormFieldHarnessBase<
   /** Gets hint messages which are currently displayed in the form-field. */
   async getTextHints(): Promise<string[]> {
     const hints = await this._hints();
-    return parallel(() => hints.map(e => e.text()));
+    const hintsOrNullIfHidden = await parallel(() =>
+      hints.map(e => e.getCssValue('display').then(css => (css === 'none' ? null : e))),
+    );
+    const visibleHints = hintsOrNullIfHidden.filter(Boolean) as TestElement[];
+    return parallel(() => visibleHints.map(e => e.text()));
   }
 
   /** Gets the text inside the prefix element. */

@@ -39,6 +39,11 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
 import {getSupportedInputTypes} from '@angular/cdk/platform';
 
+function querySelectorAllVisible(containerEl: HTMLElement, selector: string) {
+  const elements = Array.from(containerEl.querySelectorAll(selector));
+  return elements.filter(e => getComputedStyle(e).getPropertyValue('display') !== 'none');
+}
+
 describe('MatMdcInput without forms', () => {
   it('should default to floating labels', fakeAsync(() => {
     let fixture = createComponent(MatInputWithLabel);
@@ -1094,7 +1099,7 @@ describe('MatMdcInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length)
         .withContext('Expected one error message to have been rendered.')
         .toBe(1);
-      expect(containerEl.querySelectorAll('mat-hint').length)
+      expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
         .withContext('Expected no hints to be shown.')
         .toBe(0);
 
@@ -1109,7 +1114,7 @@ describe('MatMdcInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length)
         .withContext('Expected no error messages when the input is valid.')
         .toBe(0);
-      expect(containerEl.querySelectorAll('mat-hint').length)
+      expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
         .withContext('Expected one hint to be shown once the input is valid.')
         .toBe(1);
     }));

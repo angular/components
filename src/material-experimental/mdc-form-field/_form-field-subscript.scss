@@ -51,6 +51,12 @@
     display: flex;
   }
 
+  // Hides hints when the form-field is in an error state.
+  .mat-mdc-form-field-hint-wrapper-inactive .mat-mdc-form-field-hint {
+    display: none;
+  }
+
+
   // Spacer used to make sure start and end hints have enough space between them.
   .mat-mdc-form-field-hint-spacer {
     flex: 1 0 form-field-sizing.$mat-form-field-hint-min-space;

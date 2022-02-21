@@ -52,6 +52,11 @@ import {MatChip} from './chip';
 import {MatChipInputEvent} from './chip-input';
 import {MatChipEvent, MatChipList, MatChipRemove, MatChipsModule} from './index';
 
+function querySelectorAllVisible(containerEl: HTMLElement, selector: string) {
+  const elements = Array.from(containerEl.querySelectorAll(selector));
+  return elements.filter(e => getComputedStyle(e).getPropertyValue('display') !== 'none');
+}
+
 describe('MatChipList', () => {
   let fixture: ComponentFixture<any>;
   let chipListDebugElement: DebugElement;
@@ -1410,7 +1415,7 @@ describe('MatChipList', () => {
         expect(containerEl.querySelectorAll('mat-error').length)
           .withContext('Expected one error message to have been rendered.')
           .toBe(1);
-        expect(containerEl.querySelectorAll('mat-hint').length)
+        expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
           .withContext('Expected no hints to be shown.')
           .toBe(0);
 
@@ -1425,7 +1430,7 @@ describe('MatChipList', () => {
           expect(containerEl.querySelectorAll('mat-error').length)
             .withContext('Expected no error messages when the input is valid.')
             .toBe(0);
-          expect(containerEl.querySelectorAll('mat-hint').length)
+          expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
             .withContext('Expected one hint to be shown once the input is valid.')
             .toBe(1);
         });

@@ -47,6 +47,11 @@ import {Directionality, Direction} from '@angular/cdk/bidi';
 import {Subject} from 'rxjs';
 import {MatInputModule, MatInput, MAT_INPUT_VALUE_ACCESSOR} from './index';
 
+function querySelectorAllVisible(containerEl: HTMLElement, selector: string) {
+  const elements = Array.from(containerEl.querySelectorAll(selector));
+  return elements.filter(e => getComputedStyle(e).getPropertyValue('display') !== 'none');
+}
+
 describe('MatInput without forms', () => {
   it('should default to floating labels', fakeAsync(() => {
     const fixture = createComponent(MatInputWithId);
@@ -1225,7 +1230,7 @@ describe('MatInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length)
         .withContext('Expected one error message to have been rendered.')
         .toBe(1);
-      expect(containerEl.querySelectorAll('mat-hint').length)
+      expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
         .withContext('Expected no hints to be shown.')
         .toBe(0);
 
@@ -1240,7 +1245,7 @@ describe('MatInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length)
         .withContext('Expected no error messages when the input is valid.')
         .toBe(0);
-      expect(containerEl.querySelectorAll('mat-hint').length)
+      expect(querySelectorAllVisible(containerEl, 'mat-hint').length)
         .withContext('Expected one hint to be shown once the input is valid.')
         .toBe(1);
     }));
