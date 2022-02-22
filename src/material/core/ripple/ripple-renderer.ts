@@ -139,12 +139,19 @@ export class RippleRenderer implements EventListenerObject {
     // We enforce a style recalculation by calling `getComputedStyle` and *accessing* a property.
     // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
     const computedStyles = window.getComputedStyle(ripple);
-    const transitionProperty = computedStyles.transitionProperty;
+    const userTransitionProperty = computedStyles.transitionProperty;
+    const userTransitionDuration = computedStyles.transitionDuration;
 
-    // Note: We detect whether animation is forcibly disabled through CSS by the use
-    // of `transition: none`. This is technically unexpected since animations are
-    // controlled through the animation config, but this exists for backwards compatibility
-    const animationForciblyDisabledThroughCss = transitionProperty === 'none';
+    // Note: We detect whether animation is forcibly disabled through CSS by the use of
+    // `transition: none`. This is technically unexpected since animations are controlled
+    // through the animation config, but this exists for backwards compatibility. This logic does
+    // not need to be super accurate since it covers some edge cases which can be easily avoided by users.
+    const animationForciblyDisabledThroughCss =
+      userTransitionProperty === 'none' ||
+      // Note: The canonical unit for serialized CSS `<time>` properties is seconds. Additionally
+      // some browsers expand the duration for every property (in our case `opacity` and `transform`).
+      userTransitionDuration === '0s' ||
+      userTransitionDuration === '0s, 0s';
 
     // Exposed reference to the ripple that will be returned.
     const rippleRef = new RippleRef(this, ripple, config, animationForciblyDisabledThroughCss);

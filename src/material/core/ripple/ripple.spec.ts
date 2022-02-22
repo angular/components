@@ -44,6 +44,7 @@ describe('MatRipple', () => {
         RippleContainerWithoutBindings,
         RippleContainerWithNgIf,
         RippleCssTransitionNone,
+        RippleCssTransitionDurationZero,
       ],
     });
   });
@@ -788,6 +789,19 @@ describe('MatRipple', () => {
       dispatchMouseEvent(rippleTarget, 'mouseup');
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     });
+
+    it('should handle forcibly disabled animations through CSS `transition-duration: 0ms`', async () => {
+      fixture = TestBed.createComponent(RippleCssTransitionDurationZero);
+      fixture.detectChanges();
+
+      rippleTarget = fixture.nativeElement.querySelector('.mat-ripple');
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    });
   });
 });
 
@@ -845,3 +859,10 @@ class RippleContainerWithNgIf {
   encapsulation: ViewEncapsulation.None,
 })
 class RippleCssTransitionNone {}
+
+@Component({
+  styles: [`* { transition-duration: 0ms !important; }`],
+  template: `<div id="container" matRipple></div>`,
+  encapsulation: ViewEncapsulation.None,
+})
+class RippleCssTransitionDurationZero {}
