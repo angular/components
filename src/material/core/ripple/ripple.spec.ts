@@ -7,7 +7,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -43,6 +43,7 @@ describe('MatRipple', () => {
         RippleContainerWithInputBindings,
         RippleContainerWithoutBindings,
         RippleContainerWithNgIf,
+        RippleCssTransitionNone,
       ],
     });
   });
@@ -773,6 +774,21 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     });
   });
+
+  describe('edge cases', () => {
+    it('should handle forcibly disabled animations through CSS `transition: none`', async () => {
+      fixture = TestBed.createComponent(RippleCssTransitionNone);
+      fixture.detectChanges();
+
+      rippleTarget = fixture.nativeElement.querySelector('.mat-ripple');
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    });
+  });
 });
 
 @Component({
@@ -822,3 +838,10 @@ class RippleContainerWithNgIf {
   @ViewChild(MatRipple) ripple: MatRipple;
   isDestroyed = false;
 }
+
+@Component({
+  styles: [`* { transition: none !important; }`],
+  template: `<div id="container" matRipple></div>`,
+  encapsulation: ViewEncapsulation.None,
+})
+class RippleCssTransitionNone {}

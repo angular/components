@@ -114,7 +114,7 @@ export class RippleRenderer implements EventListenerObject {
     const radius = config.radius || distanceToFurthestCorner(x, y, containerRect);
     const offsetX = x - containerRect.left;
     const offsetY = y - containerRect.top;
-    const duration = animationConfig.enterDuration;
+    const enterDuration = animationConfig.enterDuration;
 
     const ripple = document.createElement('div');
     ripple.classList.add('mat-ripple-element');
@@ -130,20 +130,30 @@ export class RippleRenderer implements EventListenerObject {
       ripple.style.backgroundColor = config.color;
     }
 
-    ripple.style.transitionDuration = `${duration}ms`;
+    ripple.style.transitionDuration = `${enterDuration}ms`;
 
     this._containerElement.appendChild(ripple);
 
     // By default the browser does not recalculate the styles of dynamically created
-    // ripple elements. This is critical because then the `scale` would not animate properly.
-    enforceStyleRecalculation(ripple);
+    // ripple elements. This is critical to ensure that the `scale` animates properly.
+    // We enforce a style recalculation by calling `getComputedStyle` and *accessing* a property.
+    // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
+    const computedStyles = window.getComputedStyle(ripple);
+    const transitionProperty = computedStyles.transitionProperty;
 
-    // We use a 3d transform here in order to avoid an issue in Safari where
-    // the ripples aren't clipped when inside the shadow DOM (see #24028).
-    ripple.style.transform = 'scale3d(1, 1, 1)';
+    // Note: We detect whether animation is forcibly disabled through CSS by the use
+    // of `transition: none`. This is technically unexpected since animations are
+    // controlled through the animation config, but this exists for backwards compatibility
+    const animationForciblyDisabledThroughCss = transitionProperty === 'none';
 
     // Exposed reference to the ripple that will be returned.
-    const rippleRef = new RippleRef(this, ripple, config);
+    const rippleRef = new RippleRef(this, ripple, config, animationForciblyDisabledThroughCss);
+
+    // Start the enter animation by setting the transform/scale to 100%. The animation will
+    // execute as part of this statement because we forced a style recalculation before.
+    // Note: We use a 3d transform here in order to avoid an issue in Safari where
+    // the ripples aren't clipped when inside the shadow DOM (see #24028).
+    ripple.style.transform = 'scale3d(1, 1, 1)';
 
     rippleRef.state = RippleState.FADING_IN;
 
@@ -156,7 +166,7 @@ export class RippleRenderer implements EventListenerObject {
 
     // Do not register the `transition` event listener if fade-in and fade-out duration
     // are set to zero. The events won't fire anyway and we can save resources here.
-    if (duration || animationConfig.exitDuration) {
+    if (!animationForciblyDisabledThroughCss && (enterDuration || animationConfig.exitDuration)) {
       this._ngZone.runOutsideAngular(() => {
         ripple.addEventListener('transitionend', () => this._finishRippleTransition(rippleRef));
       });
@@ -164,7 +174,7 @@ export class RippleRenderer implements EventListenerObject {
 
     // In case there is no fade-in transition duration, we need to manually call the transition
     // end listener because `transitionend` doesn't fire if there is no transition.
-    if (!duration) {
+    if (animationForciblyDisabledThroughCss || !enterDuration) {
       this._finishRippleTransition(rippleRef);
     }
 
@@ -200,7 +210,7 @@ export class RippleRenderer implements EventListenerObject {
 
     // In case there is no fade-out transition duration, we need to manually call the
     // transition end listener because `transitionend` doesn't fire if there is no transition.
-    if (!animationConfig.exitDuration) {
+    if (rippleRef._animationForciblyDisabledThroughCss || !animationConfig.exitDuration) {
       this._finishRippleTransition(rippleRef);
     }
   }
@@ -369,14 +379,6 @@ export class RippleRenderer implements EventListenerObject {
       }
     }
   }
-}
-
-/** Enforces a style recalculation of a DOM element by computing its styles. */
-function enforceStyleRecalculation(element: HTMLElement) {
-  // Enforce a style recalculation by calling `getComputedStyle` and accessing any property.
-  // Calling `getPropertyValue` is important to let optimizers know that this is not a noop.
-  // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
-  window.getComputedStyle(element).getPropertyValue('opacity');
 }
 
 /**
