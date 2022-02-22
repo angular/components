@@ -6,7 +6,15 @@
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   @include mdc-helpers.mat-using-mdc-theme($config) {
+    // Save original values of MDC global variables. We need to save these so we can restore the
+    // variables to their original values and prevent unintended side effects from using this mixin.
+    $orig-content-ink-opacity: mdc-dialog.$content-ink-opacity;
+
+    mdc-dialog.$content-ink-opacity: 1;
     @include mdc-dialog.core-styles($query: mdc-helpers.$mat-theme-styles-query);
+
+    // Restore original values of MDC global variables.
+    mdc-dialog.$content-ink-opacity: $orig-content-ink-opacity;
   }
 }
 
