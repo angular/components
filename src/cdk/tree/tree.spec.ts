@@ -1141,18 +1141,6 @@ describe('CdkTree', () => {
         }
       }).toThrowError(getTreeControlFunctionsMissingError().message);
     }));
-
-    it('should throw an error when missing function in flat tree', fakeAsync(() => {
-      configureCdkTreeTestingModule([FlatCdkErrorTreeApp]);
-      expect(() => {
-        try {
-          TestBed.createComponent(FlatCdkErrorTreeApp).detectChanges();
-          flush();
-        } catch {
-          flush();
-        }
-      }).toThrowError(getTreeControlFunctionsMissingError().message);
-    }));
   });
 
   describe('with depth', () => {
@@ -1662,37 +1650,6 @@ class NestedCdkErrorTreeApp {
   isExpandable = (node: TestData) => node.children.length > 0;
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
-
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
-
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
-}
-
-class FakeTreeControl extends BaseTreeControl<TestData> {
-  getDescendants(_: TestData): TestData[] {
-    return this.dataNodes;
-  }
-
-  expandAll(): void {
-    // No op
-  }
-}
-@Component({
-  template: `
-    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
-                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-         <ng-template cdkTreeNodeOutlet></ng-template>
-      </cdk-tree-node>
-    </cdk-tree>
-  `,
-})
-class FlatCdkErrorTreeApp {
-  getLevel = (node: TestData) => node.level;
-
-  isExpandable = (node: TestData) => node.children.length > 0;
-
-  treeControl: TreeControl<TestData> = new FakeTreeControl();
 
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
 
