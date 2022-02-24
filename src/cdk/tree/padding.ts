@@ -80,9 +80,10 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
 
   /** The padding indent value for the tree node. Returns a string with px numbers if not null. */
   _paddingIndent(): string | null {
-    const levelAccessor = this._tree._getLevelAccessor();
     const nodeLevel =
-      this._treeNode.data && levelAccessor ? levelAccessor(this._treeNode.data) : null;
+      this._treeNode.data && this._tree.treeControl?.getLevel
+        ? this._tree.treeControl.getLevel(this._treeNode.data)
+        : null;
     const level = this._level == null ? nodeLevel : this._level;
     return typeof level === 'number' ? `${level * this._indent}${this.indentUnits}` : null;
   }
