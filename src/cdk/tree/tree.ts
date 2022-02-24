@@ -41,13 +41,12 @@ import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {
   getMultipleTreeControlsError,
-  getTreeControlFunctionsMissingError,
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-import {BooleanInput, coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -160,8 +159,12 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     end: Number.MAX_VALUE,
   });
 
+  // TODO(cassc): will be used in a future PR
+  // tslint:disable-next-line:no-unused-variable
   private _expansionModel?: SelectionModel<K>;
   /** Maintain a synchronous cache of the currently known data nodes. */
+  // TODO(cassc): will be used in a future PR
+  // tslint:disable-next-line:no-unused-variable
   private _dataNodes?: readonly T[];
 
   constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
@@ -381,7 +384,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /**
-   * Expand the data node and all its descendants. If they are already expanded, does nothing. */
+   * Expand the data node and all its descendants. If they are already expanded, does nothing.
+   */
   expandDescendants(dataNode: T): void {
     throw new Error('not implemented');
   }
@@ -519,8 +523,6 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   protected _setRoleFromData(): void {
     this.role = 'treeitem';
   }
-
-  static ngAcceptInputType_recursive: BooleanInput;
 }
 
 function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
