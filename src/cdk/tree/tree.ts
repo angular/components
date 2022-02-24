@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FocusableOption} from '@angular/cdk/a11y';
-import {CollectionViewer, DataSource, isDataSource} from '@angular/cdk/collections';
+import {CollectionViewer, DataSource, isDataSource, SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
   ChangeDetectionStrategy,
@@ -40,13 +40,14 @@ import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {
+  getMultipleTreeControlsError,
   getTreeControlFunctionsMissingError,
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceNumberProperty} from '@angular/cdk/coercion';
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -352,35 +353,53 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /** Whether the data node is expanded or collapsed. Returns true if it's expanded. */
-  isExpanded(dataNode: T): boolean {}
+  isExpanded(dataNode: T): boolean {
+    throw new Error('not implemented');
+  }
 
   /** If the data node is currently expanded, collapse it. Otherwise, expand it. */
-  toggle(dataNode: T): void {}
+  toggle(dataNode: T): void {
+    throw new Error('not implemented');
+  }
 
   /** Expand the data node. If it is already expanded, does nothing. */
-  expand(dataNode: T): void {}
+  expand(dataNode: T): void {
+    throw new Error('not implemented');
+  }
 
   /** Collapse the data node. If it is already collapsed, does nothing. */
-  collapse(dataNode: T): void {}
+  collapse(dataNode: T): void {
+    throw new Error('not implemented');
+  }
 
   /**
    * If the data node is currently expanded, collapse it and all its descendants.
    * Otherwise, expand it and all its descendants.
    */
-  toggleDescendants(dataNode: T): void {}
+  toggleDescendants(dataNode: T): void {
+    throw new Error('not implemented');
+  }
 
   /**
    * Expand the data node and all its descendants. If they are already expanded, does nothing. */
-  expandDescendants(dataNode: T): void {}
+  expandDescendants(dataNode: T): void {
+    throw new Error('not implemented');
+  }
 
   /** Collapse the data node and all its descendants. If it is already collapsed, does nothing. */
-  collapseDescendants(dataNode: T): void {}
+  collapseDescendants(dataNode: T): void {
+    throw new Error('not implemented');
+  }
 
   /** Expands all data nodes in the tree. */
-  expandAll(): void {}
+  expandAll(): void {
+    throw new Error('not implemented');
+  }
 
   /** Collapse all data nodes in the tree. */
-  collapseAll(): void {}
+  collapseAll(): void {
+    throw new Error('not implemented');
+  }
 
   /** Level accessor, used for compatibility between the old Tree and new Tree */
   _getLevelAccessor() {
