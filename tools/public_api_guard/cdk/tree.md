@@ -150,8 +150,6 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     get level(): number;
     static mostRecentTreeNode: CdkTreeNode<any> | null;
     // (undocumented)
-    static ngAcceptInputType_recursive: BooleanInput;
-    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
