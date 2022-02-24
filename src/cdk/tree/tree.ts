@@ -448,14 +448,7 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
 
   @Input()
   get isExpanded(): boolean {
-    return this._tree.isExpanded(this._data);
-  }
-  set isExpanded(isExpanded: boolean) {
-    if (isExpanded) {
-      this._tree.expand(this._data);
-    } else {
-      this._tree.collapse(this._data);
-    }
+    return !!this._tree.treeControl?.isExpanded(this._data);
   }
 
   /**
