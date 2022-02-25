@@ -201,6 +201,8 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
     closePanel(): void;
     connectedTo: _MatAutocompleteOriginBase;
     // (undocumented)
+    _handleBlur(event: FocusEvent): void;
+    // (undocumented)
     _handleClick(): void;
     // (undocumented)
     _handleFocus(): void;

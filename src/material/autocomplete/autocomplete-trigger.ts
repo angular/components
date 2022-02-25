@@ -480,6 +480,12 @@ export abstract class _MatAutocompleteTriggerBase
     }
   }
 
+  _handleBlur(event: FocusEvent) {
+    if (!this.panelOpen || !event.isTrusted) {
+      this._onTouched();
+    }
+  }
+
   /**
    * In "auto" mode, the label will animate down as soon as focus is lost.
    * This causes the value to jump when selecting an option with the mouse.
@@ -600,6 +606,7 @@ export abstract class _MatAutocompleteTriggerBase
       this._element.nativeElement.focus();
     }
 
+    this._onTouched();
     this.closePanel();
   }
 
@@ -835,8 +842,8 @@ export abstract class _MatAutocompleteTriggerBase
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
     '(focusin)': '_handleFocus()',
-    '(blur)': '_onTouched()',
     '(input)': '_handleInput($event)',
+    '(blur)': '_handleBlur($event)',
     '(keydown)': '_handleKeydown($event)',
     '(click)': '_handleClick()',
   },
