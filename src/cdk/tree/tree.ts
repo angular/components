@@ -43,13 +43,12 @@ import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {
   getMultipleTreeControlsError,
-  getTreeControlFunctionsMissingError,
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-import {BooleanInput, coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   if (!isObservable(data)) {
@@ -418,7 +417,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /**
-   * Expand the data node and all its descendants. If they are already expanded, does nothing. */
+   * Expand the data node and all its descendants. If they are already expanded, does nothing.
+   */
   expandDescendants(dataNode: T): void {
     if (this.treeControl) {
       this.treeControl.expandDescendants(dataNode);
