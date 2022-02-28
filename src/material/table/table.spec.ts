@@ -432,6 +432,18 @@ describe('MatTable', () => {
       ]);
     });
 
+    it('should emit if the sortingDataAccessor changes', () => {
+      const spy = jasmine.createSpy('data changes spy');
+      const subscription = dataSource.connect().subscribe(spy);
+
+      // Reset the `calls` since the data source emits upon subscription as well.
+      spy.calls.reset();
+      dataSource.sortingDataAccessor = () => '';
+
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
+    });
+
     it('should by default correctly sort an empty string', () => {
       // Activate column A sort
       dataSource.data[0].a = ' ';
