@@ -168,12 +168,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     end: Number.MAX_VALUE,
   });
 
-  // TODO(cassc): will be used in a future PR
-  // tslint:disable-next-line:no-unused-variable
+  /** Keep track of which nodes are expanded. */
   private _expansionModel?: SelectionModel<K>;
   /** Maintain a synchronous cache of the currently known data nodes. */
-  // TODO(cassc): will be used in a future PR
-  // tslint:disable-next-line:no-unused-variable
   private _dataNodes?: readonly T[];
 
   constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
@@ -583,7 +580,14 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
 
   @Input()
   get isExpanded(): boolean {
-    return !!this._tree.treeControl?.isExpanded(this._data);
+    return !!this._tree.isExpanded(this._data);
+  }
+  set isExpanded(isExpanded: boolean) {
+    if (isExpanded) {
+      this._tree.expand(this.data);
+    } else {
+      this._tree.collapse(this.data);
+    }
   }
 
   /**
