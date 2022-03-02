@@ -23,6 +23,7 @@ import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
+  AfterContentChecked,
   ChangeDetectorRef,
   Directive,
   ElementRef,
@@ -98,7 +99,7 @@ export function getMatAutocompleteMissingPanelError(): Error {
 /** Base class with all of the `MatAutocompleteTrigger` functionality. */
 @Directive()
 export abstract class _MatAutocompleteTriggerBase
-  implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
+  implements ControlValueAccessor, AfterViewInit, AfterContentChecked, OnChanges, OnDestroy
 {
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal;
@@ -136,6 +137,12 @@ export abstract class _MatAutocompleteTriggerBase
    * but which hasn't been propagated to the model value yet.
    */
   private _pendingAutoselectedOption: _MatOptionBase | null;
+
+  /** Whether the component has been initializied. */
+  private _isInitialized: boolean;
+
+  /** Initial value that should be shown after the component is initialized. */
+  private _initialValueToSelect: any;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -231,6 +238,15 @@ export abstract class _MatAutocompleteTriggerBase
         this._overlayRef!.updatePosition();
       }
     }
+  }
+
+  ngAfterContentChecked() {
+    if (!this._isInitialized && typeof this._initialValueToSelect !== 'undefined') {
+      this._assignOptionValue(this._initialValueToSelect);
+      this._initialValueToSelect = undefined;
+    }
+
+    this._isInitialized = true;
   }
 
   ngOnDestroy() {
@@ -380,7 +396,14 @@ export abstract class _MatAutocompleteTriggerBase
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
-    Promise.resolve(null).then(() => this._assignOptionValue(value));
+    if (this._isInitialized) {
+      this._assignOptionValue(value);
+    } else {
+      // If the component isn't initialized yet, defer until the first CD pass, otherwise we'll
+      // miss the initial `displayWith` value. By deferring until the first `AfterContentChecked`
+      // we avoid making the method async while preventing "changed after checked" errors.
+      this._initialValueToSelect = value;
+    }
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -576,12 +599,8 @@ export abstract class _MatAutocompleteTriggerBase
   private _updateNativeInputValue(value: string): void {
     // If it's used within a `MatFormField`, we should set it through the property so it can go
     // through change detection.
-    if (this._formField) {
-      this._formField._control.value = value;
-    } else {
-      this._element.nativeElement.value = value;
-    }
-
+    const target = this._formField?._control || this._element.nativeElement;
+    target.value = value;
     this._previousValue = value;
   }
 

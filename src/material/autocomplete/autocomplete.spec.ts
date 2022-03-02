@@ -3355,6 +3355,16 @@ describe('MatAutocomplete', () => {
 
     expect(fixture.componentInstance.trigger.panelOpen).toBe(true);
   });
+
+  it('should evaluate `displayWith` before assigning the initial value', fakeAsync(() => {
+    const fixture = createComponent(PreselectedAutocompleteDisplayWith);
+    const input = fixture.nativeElement.querySelector('input');
+
+    fixture.detectChanges();
+    flush();
+
+    expect(input.value).toBe('Alaska');
+  }));
 });
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
@@ -3789,4 +3799,28 @@ class AutocompleteWithActivatedEvent {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <input matInput [matAutocomplete]="auto" [formControl]="stateCtrl">
+    </mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let state of states" [value]="state">
+        <span>{{ state.name }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  `,
+})
+class PreselectedAutocompleteDisplayWith {
+  stateCtrl = new FormControl({code: 'AK', name: 'Alaska'});
+  states = [
+    {code: 'AL', name: 'Alabama'},
+    {code: 'AK', name: 'Alaska'},
+  ];
+
+  displayFn(value: any): string {
+    return value && typeof value === 'object' ? value.name : value;
+  }
 }

@@ -6,6 +6,7 @@
 
 import { _AbstractConstructor } from '@angular/material/core';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
@@ -190,7 +191,7 @@ export class MatAutocompleteTrigger extends _MatAutocompleteTriggerBase {
 }
 
 // @public
-export abstract class _MatAutocompleteTriggerBase implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
+export abstract class _MatAutocompleteTriggerBase implements ControlValueAccessor, AfterViewInit, AfterContentChecked, OnChanges, OnDestroy {
     constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _viewContainerRef: ViewContainerRef, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality, _formField: MatFormField, _document: any, _viewportRuler: ViewportRuler, _defaults?: MatAutocompleteDefaultOptions | undefined);
     protected abstract _aboveClass: string;
     get activeOption(): _MatOptionBase | null;
@@ -208,6 +209,8 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
     _handleInput(event: KeyboardEvent): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
