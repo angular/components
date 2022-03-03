@@ -8,7 +8,7 @@ describe('template migrations', () => {
 
   async function runMigrationTest(oldFileContent: string, newFileContent: string) {
     cliAppTree.create(TEMPLATE_FILE, oldFileContent);
-    const tree = await migrateComponent('', runner, cliAppTree);
+    const tree = await migrateComponent('card', runner, cliAppTree);
     expect(tree.readContent(TEMPLATE_FILE)).toBe(newFileContent);
   }
 
