@@ -12,11 +12,15 @@ import {StyleMigrator} from './style-migrator';
 import * as compiler from '@angular/compiler';
 
 /**
- * Traverses the given tree of nodes and runs the given callback for each Element node encountered.
+ * Traverses the given tree of nodes and runs the given callbacks for each Element node encountered.
+ *
+ * Note that updates to the start tags of html element should be done in the postorder callback,
+ * and updates to the end tags of html elements should be done in the preorder callback to avoid
+ * issues with line collisions.
  *
  * @param nodes The nodes of the ast from a parsed template.
  * @param preorderCallback A function that gets run for each Element node in a preorder traversal.
- * @param preorderCallback A function that gets run for each Element node in a postorder traversal.
+ * @param postorderCallback A function that gets run for each Element node in a postorder traversal.
  */
 function visitElements(
   nodes: compiler.TmplAstNode[],
