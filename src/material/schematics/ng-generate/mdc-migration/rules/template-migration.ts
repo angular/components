@@ -15,17 +15,20 @@ import * as compiler from '@angular/compiler';
  * Traverses the given tree of nodes and runs the given callback for each Element node encountered.
  *
  * @param nodes The nodes of the ast from a parsed template.
- * @param callback A function that gets run for each Element node.
+ * @param preorderCallback A function that gets run for each Element node in a preorder traversal.
+ * @param preorderCallback A function that gets run for each Element node in a postorder traversal.
  */
 function visitElements(
   nodes: compiler.TmplAstNode[],
-  callback: (node: compiler.TmplAstElement) => void,
+  preorderCallback: (node: compiler.TmplAstElement) => void = () => {},
+  postorderCallback: (node: compiler.TmplAstElement) => void = () => {},
 ): void {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
     if (node instanceof compiler.TmplAstElement) {
-      visitElements(node.children, callback);
-      callback(node);
+      preorderCallback(node);
+      visitElements(node.children, preorderCallback, postorderCallback);
+      postorderCallback(node);
     }
   }
 }
