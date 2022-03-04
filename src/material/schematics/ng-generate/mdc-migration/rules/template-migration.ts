@@ -24,8 +24,8 @@ function visitElements(
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
     if (node instanceof compiler.TmplAstElement) {
-      callback(node);
       visitElements(node.children, callback);
+      callback(node);
     }
   }
 }

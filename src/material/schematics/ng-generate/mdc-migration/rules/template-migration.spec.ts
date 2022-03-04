@@ -7,7 +7,7 @@ describe('template migrations', () => {
   let cliAppTree: UnitTestTree;
 
   async function runMigrationTest(oldFileContent: string, newFileContent: string) {
-    cliAppTree.create(TEMPLATE_FILE, oldFileContent);
+    cliAppTree.overwrite(TEMPLATE_FILE, oldFileContent);
     const tree = await migrateComponent('card', runner, cliAppTree);
     expect(tree.readContent(TEMPLATE_FILE)).toBe(newFileContent);
   }
