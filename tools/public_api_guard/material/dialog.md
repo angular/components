@@ -165,6 +165,7 @@ export class MatDialogConfig<D = any> {
     closeOnNavigation?: boolean;
     componentFactoryResolver?: ComponentFactoryResolver;
     data?: D | null;
+    delayFocusTrap?: boolean;
     direction?: Direction;
     disableClose?: boolean;
     hasBackdrop?: boolean;
@@ -185,6 +186,8 @@ export class MatDialogConfig<D = any> {
 
 // @public
 export class MatDialogContainer extends _MatDialogContainerBase {
+    // (undocumented)
+    _initializeWithAttachedContent(): void;
     _onAnimationDone({ toState, totalTime }: AnimationEvent_2): void;
     _onAnimationStart({ toState, totalTime }: AnimationEvent_2): void;
     _startExitAnimation(): void;

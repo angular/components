@@ -117,8 +117,6 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     if (this._document) {
       this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
     }
-
-    this._trapFocus();
   }
 
   /**
@@ -326,6 +324,10 @@ export class MatDialogContainer extends _MatDialogContainerBase {
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone({toState, totalTime}: AnimationEvent) {
     if (toState === 'enter') {
+      if (this._config.delayFocusTrap) {
+        this._trapFocus();
+      }
+
       this._animationStateChanged.next({state: 'opened', totalTime});
     } else if (toState === 'exit') {
       this._restoreFocus();
@@ -349,5 +351,13 @@ export class MatDialogContainer extends _MatDialogContainerBase {
     // Mark the container for check so it can react if the
     // view container is using OnPush change detection.
     this._changeDetectorRef.markForCheck();
+  }
+
+  override _initializeWithAttachedContent() {
+    super._initializeWithAttachedContent();
+
+    if (!this._config.delayFocusTrap) {
+      this._trapFocus();
+    }
   }
 }
