@@ -28,56 +28,56 @@
     pointer-events: none;
     border: $border-width $border-style transparent;
     border-radius: $border-radius;
-
-    .cdk-high-contrast-active & {
-      display: none;
-    }
   }
+
+  // Above is styling for focus indicators
+  // Below is unecessary per component customizations
+  // REMOVE BELOW
 
   // By default, all focus indicators are flush with the bounding box of their
   // host element. For particular elements (listed below), default inset/offset
   // values are necessary to ensure that the focus indicator is sufficiently
   // contrastive and renders appropriately.
 
-  .mat-focus-indicator.mat-flat-button::before,
-  .mat-focus-indicator.mat-raised-button::before,
-  .mat-focus-indicator.mat-fab::before,
-  .mat-focus-indicator.mat-mini-fab::before,
-  .mat-focus-indicator.mat-chip::before,
-  .mat-focus-indicator.mat-sort-header-container::before {
-    margin: -($border-width + 2px);
-  }
+  // .mat-focus-indicator.mat-flat-button::before,
+  // .mat-focus-indicator.mat-raised-button::before,
+  // .mat-focus-indicator.mat-fab::before,
+  // .mat-focus-indicator.mat-mini-fab::before,
+  // .mat-focus-indicator.mat-chip::before,
+  // .mat-focus-indicator.mat-sort-header-container::before {
+  //   margin: -($border-width + 2px);
+  // }
 
-  .mat-focus-indicator.mat-stroked-button::before,
-  .mat-focus-indicator.mat-calendar-body-cell-content::before {
-    margin: -($border-width + 3px);
-  }
+  // .mat-focus-indicator.mat-stroked-button::before,
+  // .mat-focus-indicator.mat-calendar-body-cell-content::before {
+  //   margin: -($border-width + 3px);
+  // }
 
-  .mat-focus-indicator.mat-tab-link::before,
-  .mat-focus-indicator.mat-tab-label::before {
-    margin: 5px;
-  }
+  // .mat-focus-indicator.mat-tab-link::before,
+  // .mat-focus-indicator.mat-tab-label::before {
+  //   margin: 5px;
+  // }
 
-  // Render the focus indicator on focus. Defining a pseudo element's
-  // content will cause it to render.
+  // // Render the focus indicator on focus. Defining a pseudo element's
+  // // content will cause it to render.
 
-  // Checkboxes, radios, and slide toggles render focus indicators when the
-  // associated visually-hidden input is focused.
-  .mat-checkbox-input:focus ~ .mat-focus-indicator::before,
-  .mat-radio-input:focus ~ .mat-focus-indicator::before,
-  .mat-slide-toggle-input:focus ~ .mat-slide-toggle-thumb-container .mat-focus-indicator::before,
+  // // Checkboxes, radios, and slide toggles render focus indicators when the
+  // // associated visually-hidden input is focused.
+  // .mat-checkbox-input:focus ~ .mat-focus-indicator::before,
+  // .mat-radio-input:focus ~ .mat-focus-indicator::before,
+  // .mat-slide-toggle-input:focus ~ .mat-slide-toggle-thumb-container .mat-focus-indicator::before,
 
-  // For options, render the focus indicator when the class .mat-active
-  // is present.
-  .mat-focus-indicator.mat-option.mat-active::before,
+  // // For options, render the focus indicator when the class .mat-active
+  // // is present.
+  // .mat-focus-indicator.mat-option.mat-active::before,
 
-  // For calendar cells, render the focus indicator when the parent cell is
-  // focused.
-  .mat-calendar-body-cell:focus .mat-focus-indicator::before,
+  // // For calendar cells, render the focus indicator when the parent cell is
+  // // focused.
+  // .mat-calendar-body-cell:focus .mat-focus-indicator::before,
 
-  // Stepper headers have the focus indicator as a descendant,
-  // because `::before` is used for other styling.
-  .mat-step-header:focus .mat-focus-indicator::before,
+  // // Stepper headers have the focus indicator as a descendant,
+  // // because `::before` is used for other styling.
+  // .mat-step-header:focus .mat-focus-indicator::before,
 
   // For all other components, render the focus indicator on focus.
   .mat-focus-indicator:focus::before {
@@ -85,11 +85,30 @@
   }
 }
 
-// Mixin that ensures focus indicator host elements are positioned so that the focus indicator
-// pseudo element within is positioned relative to the host. Private mixin included within
-// `mat-core`.
-@mixin private-strong-focus-indicators-positioning() {
+@mixin strong-focus-indicators-base() {
+  .mat-focus-indicator::before {
+    --mat-focus-indicator-border-width: var(--mat-focus-indicator-border-width-custom, 3px);
+    --mat-focus-indicator-border-style: var(--mat-focus-indicator-border-style-custom, solid);
+    --mat-focus-indicator-border-radius: var(--mat-focus-indicator-border-radius-custom, 4px);
+    --mat-focus-indicator-border-color: var(--mat-focus-indicator-border-color-custom, transparent);
+
+    @include layout-common.fill();
+    box-sizing: border-box;
+    pointer-events: none;
+    border: var(--mat-focus-indicator-border-width) var(--mat-focus-indicator-border-style)
+      var(--mat-focus-indicator-border-color);
+    border-radius: var(--mat-focus-indicator-border-radius);
+  }
   .mat-focus-indicator {
     position: relative;
   }
 }
+
+// Mixin that ensures focus indicator host elements are positioned so that the focus indicator
+// pseudo element within is positioned relative to the host. Private mixin included within
+// `mat-core`.
+// @mixin private-strong-focus-indicators-positioning() {
+//   .mat-focus-indicator {
+//     position: relative;
+//   }
+// }
