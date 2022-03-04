@@ -9,13 +9,16 @@
 @mixin core($typography-config: null) {
   @include all-typography.all-component-typographies($typography-config);
   @include ripple.ripple();
-  @include cdk.a11y-visually-hidden();
-  @include cdk.overlay();
-  @include cdk.text-field-autosize();
-  @include cdk.text-field-autofill();
-
-  @include focus-indicators.private-strong-focus-indicators-positioning();
+  @include a11y.a11y-visually-hidden();
+  @include overlay.overlay();
+  @include text-field.text-field-autosize();
+  @include text-field.text-field-autofill();
+  @include focus-indicators.strong-focus-indicators-base();
   @include _mdc-core();
+
+  @include a11y.high-contrast() {
+    @include focus-indicators.strong-focus-indicators();
+  }
 }
 
 // Mixin that renders all of the core MDC styles. Private mixin included with `mat-core`.
