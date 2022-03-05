@@ -4,7 +4,11 @@ import {
   MatTestDialogOpenerModule,
   MatTestDialogOpener,
 } from '@angular/material-experimental/mdc-dialog/testing';
-import {MAT_DIALOG_DATA, MatDialogState} from '@angular/material-experimental/mdc-dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogState,
+} from '@angular/material-experimental/mdc-dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MDC-based MatTestDialogOpener', () => {
@@ -37,10 +41,41 @@ describe('MDC-based MatTestDialogOpener', () => {
     const dialogContainer = document.querySelector('mat-dialog-container');
     expect(dialogContainer!.innerHTML).toContain('Data: test');
   }));
+
+  it('should get closed result data', fakeAsync(() => {
+    const config = {data: 'test'};
+    const fixture = TestBed.createComponent(
+      MatTestDialogOpener.withComponent<ExampleComponent, ExampleDialogResult>(
+        ExampleComponent,
+        config,
+      ),
+    );
+    flush();
+    const closeButton = document.querySelector('#close-btn') as HTMLElement;
+    closeButton.click();
+    flush();
+    expect(fixture.componentInstance.closedResult).toEqual({reason: 'closed'});
+  }));
 });
 
+interface ExampleDialogResult {
+  reason: string;
+}
+
 /** Simple component for testing MatTestDialogOpener. */
-@Component({template: 'Data: {{data}}'})
+@Component({
+  template: `
+    Data: {{data}}
+    <button id="close-btn" (click)="close()">Close</button>
+  `,
+})
 class ExampleComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    public dialogRef: MatDialogRef<ExampleComponent, ExampleDialogResult>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
+
+  close() {
+    this.dialogRef.close({reason: 'closed'});
+  }
 }

@@ -60,20 +60,20 @@ export const enum MatDialogSection {
 }
 
 // @public
-export class MatTestDialogOpener extends _MatTestDialogOpenerBase<MatDialogContainer> {
+export class MatTestDialogOpener<T, R> extends _MatTestDialogOpenerBase<MatDialogContainer, T, R> {
     constructor(dialog: MatDialog);
-    static withComponent(component: ComponentType<unknown>, config?: MatDialogConfig): typeof MatTestDialogOpener;
+    static withComponent<T, R>(component: ComponentType<T>, config?: MatDialogConfig): ComponentType<MatTestDialogOpener<T, R>>;
 }
 
 // @public
-export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase> implements OnDestroy {
+export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase, T, R> implements OnDestroy {
     constructor(dialog: _MatDialogBase<C>);
-    closedResult: unknown;
-    static component: ComponentType<unknown> | undefined;
-    static config: MatDialogConfig | undefined;
+    closedResult: R | undefined;
+    protected static component: ComponentType<unknown> | undefined;
+    protected static config: MatDialogConfig | undefined;
     // (undocumented)
     dialog: _MatDialogBase<C>;
-    dialogRef: MatDialogRef<unknown>;
+    dialogRef: MatDialogRef<T, R>;
     // (undocumented)
     ngOnDestroy(): void;
 }

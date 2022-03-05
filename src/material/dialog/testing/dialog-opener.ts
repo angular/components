@@ -25,11 +25,13 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import {Subscription} from 'rxjs';
-import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 /** Base class for a component that immediately opens a dialog when created. */
 @Directive()
-export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase> implements OnDestroy {
+export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase, T, R>
+  implements OnDestroy
+{
   /** Component that should be opened with the MatDialog `open` method. */
   protected static component: ComponentType<unknown> | undefined;
 
@@ -37,10 +39,10 @@ export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase> impleme
   protected static config: MatDialogConfig | undefined;
 
   /** MatDialogRef returned from the MatDialog `open` method. */
-  dialogRef: MatDialogRef<unknown>;
+  dialogRef: MatDialogRef<T, R>;
 
   /** Data passed to the `MatDialog` close method. */
-  closedResult: unknown;
+  closedResult: R | undefined;
 
   private readonly _afterClosedSubscription: Subscription;
 
@@ -49,11 +51,11 @@ export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase> impleme
       throw new Error(`MatTestDialogOpener does not have a component provided.`);
     }
 
-    this.dialogRef = this.dialog.open(
-      _MatTestDialogOpenerBase.component,
+    this.dialogRef = this.dialog.open<T, R>(
+      _MatTestDialogOpenerBase.component as ComponentType<T>,
       _MatTestDialogOpenerBase.config || {},
     );
-    this._afterClosedSubscription = this.dialogRef.afterClosed().subscribe((result: unknown) => {
+    this._afterClosedSubscription = this.dialogRef.afterClosed().subscribe(result => {
       this.closedResult = result;
     });
   }
@@ -72,16 +74,16 @@ export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase> impleme
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatTestDialogOpener extends _MatTestDialogOpenerBase<MatDialogContainer> {
+export class MatTestDialogOpener<T, R> extends _MatTestDialogOpenerBase<MatDialogContainer, T, R> {
   constructor(dialog: MatDialog) {
     super(dialog);
   }
 
   /** Static method that prepares this class to open the provided component. */
-  static withComponent(component: ComponentType<unknown>, config?: MatDialogConfig) {
+  static withComponent<T, R>(component: ComponentType<T>, config?: MatDialogConfig) {
     _MatTestDialogOpenerBase.component = component;
     _MatTestDialogOpenerBase.config = config;
-    return MatTestDialogOpener;
+    return MatTestDialogOpener as ComponentType<MatTestDialogOpener<T, R>>;
   }
 }
 
