@@ -60,9 +60,9 @@ export const enum MatDialogSection {
 }
 
 // @public
-export class MatTestDialogOpener<T, R> extends _MatTestDialogOpenerBase<MatDialogContainer, T, R> {
+export class MatTestDialogOpener<T = unknown, R = unknown> extends _MatTestDialogOpenerBase<MatDialogContainer, T, R> {
     constructor(dialog: MatDialog);
-    static withComponent<T, R>(component: ComponentType<T>, config?: MatDialogConfig): ComponentType<MatTestDialogOpener<T, R>>;
+    static withComponent<T = unknown, R = unknown>(component: ComponentType<T>, config?: MatDialogConfig): ComponentType<MatTestDialogOpener<T, R>>;
 }
 
 // @public
