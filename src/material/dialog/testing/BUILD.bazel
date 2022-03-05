@@ -14,6 +14,7 @@ ts_library(
         "//src/cdk/testing",
         "//src/material/dialog",
         "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
         "@npm//rxjs",
     ],
 )

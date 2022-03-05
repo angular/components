@@ -15,6 +15,7 @@ import {
   MatDialogModule,
   MatDialogConfig,
 } from '@angular/material-experimental/mdc-dialog';
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 /** Test component that immediately opens a dialog when bootstrapped. */
 @Component({
@@ -38,6 +39,6 @@ export class MatTestDialogOpener extends _MatTestDialogOpenerBase<MatDialogConta
 
 @NgModule({
   declarations: [MatTestDialogOpener],
-  imports: [MatDialogModule],
+  imports: [MatDialogModule, NoopAnimationsModule],
 })
 export class MatTestDialogOpenerModule {}

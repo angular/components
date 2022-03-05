@@ -25,15 +25,16 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import {Subscription} from 'rxjs';
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 /** Base class for a component that immediately opens a dialog when created. */
 @Directive()
 export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase> implements OnDestroy {
   /** Component that should be opened with the MatDialog `open` method. */
-  static component: ComponentType<unknown> | undefined;
+  protected static component: ComponentType<unknown> | undefined;
 
   /** Config that should be provided to the MatDialog `open` method. */
-  static config: MatDialogConfig | undefined;
+  protected static config: MatDialogConfig | undefined;
 
   /** MatDialogRef returned from the MatDialog `open` method. */
   dialogRef: MatDialogRef<unknown>;
@@ -86,7 +87,6 @@ export class MatTestDialogOpener extends _MatTestDialogOpenerBase<MatDialogConta
 
 @NgModule({
   declarations: [MatTestDialogOpener],
-  imports: [MatDialogModule],
-  providers: [{provide: _MatDialogBase, useExisting: MatDialog}],
+  imports: [MatDialogModule, NoopAnimationsModule],
 })
 export class MatTestDialogOpenerModule {}
