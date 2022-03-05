@@ -74,13 +74,20 @@ export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase, T, R>
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatTestDialogOpener<T, R> extends _MatTestDialogOpenerBase<MatDialogContainer, T, R> {
+export class MatTestDialogOpener<T = unknown, R = unknown> extends _MatTestDialogOpenerBase<
+  MatDialogContainer,
+  T,
+  R
+> {
   constructor(dialog: MatDialog) {
     super(dialog);
   }
 
   /** Static method that prepares this class to open the provided component. */
-  static withComponent<T, R>(component: ComponentType<T>, config?: MatDialogConfig) {
+  static withComponent<T = unknown, R = unknown>(
+    component: ComponentType<T>,
+    config?: MatDialogConfig,
+  ) {
     _MatTestDialogOpenerBase.component = component;
     _MatTestDialogOpenerBase.config = config;
     return MatTestDialogOpener as ComponentType<MatTestDialogOpener<T, R>>;
