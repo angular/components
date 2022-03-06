@@ -174,7 +174,6 @@ export class TooltipComponent extends _TooltipComponentBase {
 export abstract class _TooltipComponentBase implements OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, animationMode?: string);
     afterHidden(): Observable<void>;
-    _animationsDisabled: boolean;
     _handleAnimationEnd({ animationName }: AnimationEvent): void;
     _handleBodyInteraction(): void;
     // (undocumented)

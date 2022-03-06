@@ -2,5 +2,4 @@
      class="mat-tooltip"
      (animationend)="_handleAnimationEnd($event)"
      [ngClass]="tooltipClass"
-     [class._mat-animation-noopable]="_animationsDisabled"
      [class.mat-tooltip-handset]="(_isHandset | async)?.matches">{{message}}</div>

@@ -20,7 +20,7 @@ $handset-margin: 24px;
 
   &._mat-animation-noopable {
     animation: none;
-    transform: none;
+    transform: scale(1);
   }
 
   @include a11y.high-contrast(active, off) {

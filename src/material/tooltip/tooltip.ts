@@ -860,7 +860,7 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   _mouseLeaveHideDelay: number;
 
   /** Whether animations are currently disabled. */
-  _animationsDisabled: boolean;
+  private _animationsDisabled: boolean;
 
   /** Reference to the internal tooltip element. */
   abstract _tooltip: ElementRef<HTMLElement>;
@@ -895,15 +895,9 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     // Cancel the delayed hide if it is scheduled
     clearTimeout(this._hideTimeoutId);
 
-    // Body interactions should cancel the tooltip if there is a delay in showing.
-    this._closeOnInteraction = true;
     this._showTimeoutId = setTimeout(() => {
-      this._toogleVisibility(true);
+      this._toggleVisibility(true);
       this._showTimeoutId = undefined;
-
-      // Mark for check so if any parent component has set the
-      // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._markForCheck();
     }, delay);
   }
 
@@ -916,12 +910,8 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     clearTimeout(this._showTimeoutId);
 
     this._hideTimeoutId = setTimeout(() => {
-      this._toogleVisibility(false);
+      this._toggleVisibility(false);
       this._hideTimeoutId = undefined;
-
-      // Mark for check so if any parent component has set the
-      // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._markForCheck();
     }, delay);
   }
 
@@ -984,30 +974,45 @@ export abstract class _TooltipComponentBase implements OnDestroy {
 
   /** Handles the cleanup after an animation has finished. */
   private _finalizeAnimation(toVisible: boolean) {
-    if (!toVisible && !this.isVisible()) {
+    if (toVisible) {
+      this._closeOnInteraction = true;
+    } else if (!this.isVisible()) {
       this._onHide.next();
     }
-
-    this._closeOnInteraction = true;
   }
 
   /** Toggles the visibility of the tooltip element. */
-  private _toogleVisibility(isVisible: boolean) {
+  private _toggleVisibility(isVisible: boolean) {
     // We set the classes directly here ourselves so that toggling the tooltip state
     // isn't bound by change detection. This allows us to hide it even if the
     // view ref has been detached from the CD tree.
-    const classList = this._tooltip.nativeElement.classList;
+    const tooltip = this._tooltip.nativeElement;
     const showClass = this._showAnimation;
     const hideClass = this._hideAnimation;
-    classList.remove(isVisible ? hideClass : showClass);
-    classList.add(isVisible ? showClass : hideClass);
+    tooltip.classList.remove(isVisible ? hideClass : showClass);
+    tooltip.classList.add(isVisible ? showClass : hideClass);
     this._isVisible = isVisible;
+
+    // It's common for internal apps to disable animations using `* { animation: none !important }`
+    // which can break the opening sequence. Try to detect such cases and work around them.
+    if (isVisible && !this._animationsDisabled && typeof getComputedStyle === 'function') {
+      const styles = getComputedStyle(tooltip);
+
+      // Use `getPropertyValue` to avoid issues with property renaming.
+      if (
+        styles.getPropertyValue('animation-duration') === '0s' ||
+        styles.getPropertyValue('animation-name') === 'none'
+      ) {
+        this._animationsDisabled = true;
+      }
+    }
 
     if (isVisible) {
       this._onShow();
     }
 
     if (this._animationsDisabled) {
+      tooltip.classList.add('_mat-animation-noopable');
       this._finalizeAnimation(isVisible);
     }
   }
