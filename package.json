@@ -91,6 +91,7 @@
     "@bazel/runfiles": "4.4.5",
     "@bazel/terser": "4.4.5",
     "@bazel/typescript": "4.4.5",
+    "@bazel/worker": "4.4.5",
     "@firebase/app-types": "^0.7.0",
     "@material/animation": "14.0.0-canary.9736ddce9.0",
     "@material/auto-init": "14.0.0-canary.9736ddce9.0",
