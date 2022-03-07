@@ -43,7 +43,7 @@ export function visitElements(
  *
  * @param html text of the template to parse
  * @param filePath URL to use for source mapping of the parsed template
- * @returns
+ * @returns the updated template html.
  */
 export function parseTemplate(template: string, templateUrl: string = ''): compiler.ParsedTemplate {
   return compiler.parseTemplate(template, templateUrl, {
@@ -87,7 +87,7 @@ export function replaceEndTag(html: string, node: compiler.TmplAstElement, tag: 
  * @param offset An offset index to start at.
  * @param oldSubstr The old substring to be replaced.
  * @param newSubstr A new substring.
- * @returns
+ * @returns the updated string.
  */
 function replaceAt(str: string, offset: number, oldSubstr: string, newSubstr: string): string {
   const index = offset;
