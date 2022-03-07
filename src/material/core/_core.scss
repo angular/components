@@ -17,9 +17,6 @@
   @include text-field.text-field-autofill();
   @include focus-indicators.strong-focus-indicators-base();
   @include _mdc-core();
-  @include a11y.high-contrast() {
-    @include focus-indicators.strong-focus-indicators();
-  }
 }
 
 // Mixin that renders all of the core MDC styles. Private mixin included with `mat-core`.
@@ -33,5 +30,22 @@
 @mixin _mdc-strong-focus-indicators-positioning() {
   .mat-mdc-focus-indicator {
     position: relative;
+
+    &::before {
+      --mat-focus-indicator-border-width: var(--mat-focus-indicator-border-width-custom, 3px);
+      --mat-focus-indicator-border-style: var(--mat-focus-indicator-border-style-custom, solid);
+      --mat-focus-indicator-border-radius: var(--mat-focus-indicator-border-radius-custom, 4px);
+      --mat-focus-indicator-border-color: var(
+        --mat-focus-indicator-border-color-custom,
+        transparent
+      );
+
+      @include layout-common.fill();
+      box-sizing: border-box;
+      pointer-events: none;
+      border: var(--mat-focus-indicator-border-width) var(--mat-focus-indicator-border-style)
+        var(--mat-focus-indicator-border-color);
+      border-radius: var(--mat-focus-indicator-border-radius);
+    }
   }
 }
