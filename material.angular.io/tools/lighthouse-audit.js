@@ -6,19 +6,21 @@ const lighthouse = require('lighthouse');
 const printer = require('lighthouse/lighthouse-cli/printer');
 const logger = require('lighthouse-logger');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
+
+const projectDir = path.join(__dirname, '../');
+const reportsDir = path.join(projectDir, 'dist/reports');
 
 // Constants
-const AUDIT_CATEGORIES =
-    [ 'accessibility', 'best-practices', 'performance', 'pwa', 'seo' ];
+const AUDIT_CATEGORIES = ['accessibility', 'best-practices', 'performance', 'pwa', 'seo'];
 /**
  * @type {LH.Flags}
  */
 const LIGHTHOUSE_FLAGS = {
-  logLevel : process.env.CI ? 'error' : 'info'
+  logLevel: process.env.CI ? 'error' : 'info',
 }; // Be less verbose on CI.
-const SKIPPED_HTTPS_AUDITS = [
-  'uses-long-cache-ttl', 'canonical', 'uses-text-compression'
-];
+const SKIPPED_HTTPS_AUDITS = ['uses-long-cache-ttl', 'canonical', 'uses-text-compression'];
 const VIEWER_URL = 'https://googlechrome.github.io/lighthouse/viewer';
 const WAIT_FOR_SW_DELAY = 5000;
 
@@ -62,26 +64,30 @@ _main(process.argv.slice(2)).then(() => console.log('Audit completed.'));
  * @private
  */
 async function _main(args) {
-  const {url, minScores, logFile} = parseInput(args);
+  const {url, minScores} = parseInput(args);
   const isOnHttp = /^http:/.test(url);
   /**
    * @type {LH.Flags}
    */
   const lhFlags = {
     ...LIGHTHOUSE_FLAGS,
-    onlyCategories : Object.keys(minScores).sort()
+    onlyCategories: Object.keys(minScores).sort(),
   };
   /**
    * @type {LH.Config.Json}
    */
   const lhConfig = {
-    extends : 'lighthouse:default',
+    extends: 'lighthouse:default',
     // Since the Angular ServiceWorker waits for the app to stabilize before
     // registering, wait a few seconds after load to allow Lighthouse to
     // reliably detect it.
-    passes :
-        [ {passName : 'defaultPass', pauseAfterLoadMs : WAIT_FOR_SW_DELAY} ],
+    passes: [{passName: 'defaultPass', pauseAfterLoadMs: WAIT_FOR_SW_DELAY}],
   };
+
+  await cleanupAndPrepareReportsDir();
+
+  // Always generate report/log files.
+  const logFile = path.join(reportsDir, `${url.replace(/\//g, '-')}--report.json`);
 
   console.log(`Running web-app audits for '${url}'...`);
   console.log(`  Audit categories: ${lhFlags.onlyCategories.join(', ')}`);
@@ -102,8 +108,7 @@ async function _main(args) {
       onError('Lighthouse failed to return any results.');
     }
     const success = await processResults(results, minScores, logFile);
-    console.log(
-        `\n(Completed in ${((Date.now() - startTime) / 1000).toFixed(1)}s.)\n`);
+    console.log(`\n(Completed in ${((Date.now() - startTime) / 1000).toFixed(1)}s.)\n`);
 
     if (!success) {
       onError('One or more scores are below the minimum required.');
@@ -128,8 +133,11 @@ function formatScore(score) {
  * @returns {Promise<LH.RunnerResult | undefined>} the result of the Lighthouse run
  */
 async function launchChromeAndRunLighthouse(url, flags, config) {
-  const browser = await puppeteer.launch();
-  flags.port = (new URL(browser.wsEndpoint())).port;
+  const browser = await puppeteer.launch({
+    // Allow for a custom chromium to be provided (e.g. for M1 native support)
+    executablePath: process.env.CHROMIUM_BIN,
+  });
+  flags.port = new URL(browser.wsEndpoint()).port;
 
   try {
     return await lighthouse(url, flags, config);
@@ -147,14 +155,22 @@ function onError(err) {
   process.exit(1);
 }
 
+async function cleanupAndPrepareReportsDir() {
+  try {
+    await fs.promises.rm(reportsDir, {recursive: true});
+  } catch {}
+
+  await fs.promises.mkdir(reportsDir, {recursive: true});
+}
+
 /**
  * Parse CLI args and throw errors if any are invalid.
  * @param {string[]} args <url> <min-scores> [<log-file>]
- * @returns {{url: string, minScores: {all?: number, performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}, logFile?: string}}
+ * @returns {{url: string, minScores: {all?: number, performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}}}
  *  the validated URL, parsed minimum scores, and optional file path to write the report to
  */
 function parseInput(args) {
-  const [url, minScoresRaw, logFile] = args;
+  const [url, minScoresRaw] = args;
 
   if (!url) {
     onError('Invalid arguments: <url> not specified.');
@@ -163,21 +179,22 @@ function parseInput(args) {
   }
 
   const minScores = parseMinScores(minScoresRaw || '');
-  const unknownCategories =
-      Object.keys(minScores).filter(cat => !AUDIT_CATEGORIES.includes(cat));
-  const allValuesValid =
-      Object.values(minScores).every(x => (0 <= x) && (x <= 1));
+  const unknownCategories = Object.keys(minScores).filter(cat => !AUDIT_CATEGORIES.includes(cat));
+  const allValuesValid = Object.values(minScores).every(x => 0 <= x && x <= 1);
 
   if (unknownCategories.length > 0) {
-    onError(`Invalid arguments: <min-scores> contains unknown category(-ies): ${
-        unknownCategories.join(', ')}`);
+    onError(
+      `Invalid arguments: <min-scores> contains unknown category(-ies): ${unknownCategories.join(
+        ', '
+      )}`
+    );
   } else if (!allValuesValid) {
     onError(
-        `Invalid arguments: <min-scores> has non-numeric or out-of-range values: ${
-            minScoresRaw}`);
+      `Invalid arguments: <min-scores> has non-numeric or out-of-range values: ${minScoresRaw}`
+    );
   }
 
-  return {url, minScores, logFile};
+  return {url, minScores};
 }
 
 /**
@@ -202,13 +219,15 @@ function parseMinScores(raw) {
     raw = `all:${raw}`;
   }
 
-  raw.split(',')
-      .map(x => x.split(':'))
-      .forEach(([ key, val ]) => minScores[key] = Number(val) / 100);
+  raw
+    .split(',')
+    .map(x => x.split(':'))
+    .forEach(([key, val]) => (minScores[key] = Number(val) / 100));
 
   if (minScores.hasOwnProperty('all')) {
-    AUDIT_CATEGORIES.forEach(cat => minScores.hasOwnProperty(cat) ||
-                                    (minScores[cat] = minScores.all));
+    AUDIT_CATEGORIES.forEach(
+      cat => minScores.hasOwnProperty(cat) || (minScores[cat] = minScores.all)
+    );
     delete minScores.all;
   }
 
@@ -236,19 +255,23 @@ async function processResults(results, minScores, logFile) {
   console.log(`\nLighthouse version: ${lhVersion}`);
   console.log('\nAudit results:');
 
-  const maxTitleLen =
-      Math.max(...Object.values(categories).map(({title}) => title.length));
-  return Object.keys(categories).sort().reduce((aggr, cat) => {
-    const {title, score} = categories[cat];
-    const paddedTitle = `${title}:`.padEnd(maxTitleLen + 1);
-    const minScore = minScores[cat];
-    const passed = !isNaN(score) && (score >= minScore);
+  const maxTitleLen = Math.max(...Object.values(categories).map(({title}) => title.length));
+  return Object.keys(categories)
+    .sort()
+    .reduce((aggr, cat) => {
+      const {title, score} = categories[cat];
+      const paddedTitle = `${title}:`.padEnd(maxTitleLen + 1);
+      const minScore = minScores[cat];
+      const passed = !isNaN(score) && score >= minScore;
 
-    console.log(`  - ${paddedTitle}  ${formatScore(score)}  (Required: ${
-        formatScore(minScore)})  ${passed ? 'OK' : 'FAILED'}`);
+      console.log(
+        `  - ${paddedTitle}  ${formatScore(score)}  (Required: ${formatScore(minScore)})  ${
+          passed ? 'OK' : 'FAILED'
+        }`
+      );
 
-    return aggr && passed;
-  }, true);
+      return aggr && passed;
+    }, true);
 }
 
 /**
@@ -257,7 +280,6 @@ async function processResults(results, minScores, logFile) {
  * @param {LH.Config.Json} config
  */
 function skipHttpsAudits(config) {
-  console.log(
-      `  Skipping HTTPS-related audits: ${SKIPPED_HTTPS_AUDITS.join(', ')}`);
-  config.settings = {...config.settings, skipAudits : SKIPPED_HTTPS_AUDITS};
+  console.log(`  Skipping HTTPS-related audits: ${SKIPPED_HTTPS_AUDITS.join(', ')}`);
+  config.settings = {...config.settings, skipAudits: SKIPPED_HTTPS_AUDITS};
 }
