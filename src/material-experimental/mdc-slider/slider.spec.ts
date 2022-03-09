@@ -180,7 +180,7 @@ describe('MDC-based MatSlider', () => {
 
     it('should have a strong focus indicator in each of the thumbs', () => {
       const indicators = sliderElement.querySelectorAll(
-        '.mat-mdc-slider-visual-thumb .mat-mdc-focus-indicator',
+        '.mat-mdc-slider-visual-thumb .mat-focus-indicator',
       );
       expect(indicators.length).toBe(2);
     });

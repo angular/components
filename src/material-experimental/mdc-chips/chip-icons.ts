@@ -92,7 +92,7 @@ export const MAT_CHIP_REMOVE = new InjectionToken<MatChipRemove>('MatChipRemove'
   selector: '[matChipRemove]',
   host: {
     'class':
-      'mat-mdc-chip-remove mat-mdc-chip-trailing-icon mat-mdc-focus-indicator ' +
+      'mat-mdc-chip-remove mat-mdc-chip-trailing-icon mat-focus-indicator ' +
       'mdc-evolution-chip__icon mdc-evolution-chip__icon--trailing',
     'role': 'button',
     '[attr.aria-hidden]': 'null',

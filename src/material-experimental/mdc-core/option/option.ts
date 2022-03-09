@@ -41,7 +41,7 @@ import {MatOptgroup} from './optgroup';
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    'class': 'mat-mdc-option mat-mdc-focus-indicator mdc-list-item',
+    'class': 'mat-mdc-option mat-focus-indicator mdc-list-item',
   },
   styleUrls: ['option.css'],
   templateUrl: 'option.html',

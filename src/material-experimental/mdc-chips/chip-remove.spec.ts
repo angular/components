@@ -123,7 +123,7 @@ describe('MDC-based Chip Remove', () => {
 
     it('should have a focus indicator', fakeAsync(() => {
       const buttonElement = chipNativeElement.querySelector('.mdc-evolution-chip__icon--trailing')!;
-      expect(buttonElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+      expect(buttonElement.classList.contains('mat-focus-indicator')).toBe(true);
     }));
   });
 });

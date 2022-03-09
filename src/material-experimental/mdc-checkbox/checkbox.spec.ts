@@ -582,7 +582,7 @@ describe('MDC-based MatCheckbox', () => {
         '.mat-mdc-checkbox-ripple',
       )!;
 
-      expect(checkboxRippleNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+      expect(checkboxRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
   });
 

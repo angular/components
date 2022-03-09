@@ -2673,9 +2673,7 @@ describe('MDC-based MatMenu', () => {
     );
 
     expect(
-      menuItemNativeElements.every(element =>
-        element.classList.contains('mat-mdc-focus-indicator'),
-      ),
+      menuItemNativeElements.every(element => element.classList.contains('mat-focus-indicator')),
     ).toBe(true);
   }));
 });

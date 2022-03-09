@@ -22,7 +22,7 @@
   $border-radius: map.get($config, border-radius);
 
   // Base styles for focus indicators.
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     @include layout-common.fill();
     box-sizing: border-box;
     pointer-events: none;
@@ -39,38 +39,38 @@
   // values are necessary to ensure that the focus indicator is sufficiently
   // contrastive and renders appropriately.
 
-  .mat-mdc-unelevated-button .mat-mdc-focus-indicator::before,
-  .mat-mdc-raised-button .mat-mdc-focus-indicator::before,
-  .mdc-fab .mat-mdc-focus-indicator::before,
-  .mat-mdc-chip-action-label .mat-mdc-focus-indicator::before {
+  .mat-mdc-unelevated-button .mat-focus-indicator::before,
+  .mat-mdc-raised-button .mat-focus-indicator::before,
+  .mdc-fab .mat-focus-indicator::before,
+  .mat-mdc-chip-action-label .mat-focus-indicator::before {
     margin: -($border-width + 2px);
   }
 
-  .mat-mdc-outlined-button .mat-mdc-focus-indicator::before {
+  .mat-mdc-outlined-button .mat-focus-indicator::before {
     margin: -($border-width + 3px);
   }
 
-  .mat-mdc-focus-indicator.mat-mdc-chip-remove::before {
+  .mat-focus-indicator.mat-mdc-chip-remove::before {
     margin: -$border-width;
   }
 
   // MDC sets a padding a on the button which stretches out the focus indicator.
-  .mat-mdc-focus-indicator.mat-mdc-chip-remove::before {
+  .mat-focus-indicator.mat-mdc-chip-remove::before {
     left: 8px;
     right: 8px;
   }
 
-  .mat-mdc-focus-indicator.mat-mdc-tab::before,
-  .mat-mdc-focus-indicator.mat-mdc-tab-link::before {
+  .mat-focus-indicator.mat-mdc-tab::before,
+  .mat-focus-indicator.mat-mdc-tab-link::before {
     margin: 5px;
   }
 
   // These components have to set `border-radius: 50%` in order to support density scaling
   // which will clip a square focus indicator so we have to turn it into a circle.
-  .mat-mdc-checkbox-ripple.mat-mdc-focus-indicator::before,
-  .mat-radio-ripple.mat-mdc-focus-indicator::before,
-  .mat-mdc-slider .mat-mdc-focus-indicator::before,
-  .mat-mdc-slide-toggle .mat-mdc-focus-indicator::before {
+  .mat-mdc-checkbox-ripple.mat-focus-indicator::before,
+  .mat-radio-ripple.mat-focus-indicator::before,
+  .mat-mdc-slider .mat-focus-indicator::before,
+  .mat-mdc-slide-toggle .mat-focus-indicator::before {
     border-radius: 50%;
   }
 
@@ -79,26 +79,26 @@
 
   // For checkboxes, radios and slide toggles, render the focus indicator when we know
   // the hidden input is focused (slightly different for each control).
-  .mdc-checkbox__native-control:focus ~ .mat-mdc-focus-indicator::before,
-  .mat-mdc-slide-toggle-focused .mat-mdc-focus-indicator::before,
-  .mat-mdc-radio-button.cdk-focused .mat-mdc-focus-indicator::before,
+  .mdc-checkbox__native-control:focus ~ .mat-focus-indicator::before,
+  .mat-mdc-slide-toggle-focused .mat-focus-indicator::before,
+  .mat-mdc-radio-button.cdk-focused .mat-focus-indicator::before,
 
   // In the chips the individual actions have focus so we target a different element.
-  .mat-mdc-chip-action:focus .mat-mdc-focus-indicator::before,
+  .mat-mdc-chip-action:focus .mat-focus-indicator::before,
 
   // For buttons and list items, render the focus indicator when the parent
   // button or list item is focused.
-  .mat-mdc-button-base:focus .mat-mdc-focus-indicator::before,
-  .mat-mdc-list-item:focus > .mat-mdc-focus-indicator::before,
+  .mat-mdc-button-base:focus .mat-focus-indicator::before,
+  .mat-mdc-list-item:focus > .mat-focus-indicator::before,
 
   // For options, render the focus indicator when the class .mat-mdc-option-active is present.
-  .mat-mdc-focus-indicator.mat-mdc-option-active::before,
+  .mat-focus-indicator.mat-mdc-option-active::before,
 
   // In the MDC slider the focus indicator is inside the thumb.
-  .mdc-slider__thumb--focused .mat-mdc-focus-indicator::before,
+  .mdc-slider__thumb--focused .mat-focus-indicator::before,
 
     // For all other components, render the focus indicator on focus.
-  .mat-mdc-focus-indicator:focus::before {
+  .mat-focus-indicator:focus::before {
     content: '';
   }
 }

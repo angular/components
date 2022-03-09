@@ -3,7 +3,7 @@
 @use '../../material/core/theming/theming';
 
 @mixin _border-color($color) {
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     border-color: $color;
   }
 }

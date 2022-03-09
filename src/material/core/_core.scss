@@ -7,7 +7,7 @@
 @use './focus-indicators/focus-indicators';
 @use './typography/all-typography';
 
-// Mixin that renders all of the core styles that are not theme-dependent.
+// Mixin that renders all core styles that are not theme-dependent.
 @mixin core($typography-config: null) {
   @include all-typography.all-component-typographies($typography-config);
   @include ripple.ripple();
@@ -17,19 +17,4 @@
   @include text-field.text-field-autofill();
 
   @include focus-indicators.private-strong-focus-indicators-positioning();
-  @include _mdc-core();
-}
-
-// Mixin that renders all of the core MDC styles. Private mixin included with `mat-core`.
-@mixin _mdc-core() {
-  @include _mdc-strong-focus-indicators-positioning();
-}
-
-// Mixin that ensures focus indicator host elements are positioned so that the focus indicator
-// pseudo element within is positioned relative to the host. Private mixin included within
-// `_mat-mdc-core`.
-@mixin _mdc-strong-focus-indicators-positioning() {
-  .mat-mdc-focus-indicator {
-    position: relative;
-  }
 }

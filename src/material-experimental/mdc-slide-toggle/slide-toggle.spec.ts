@@ -344,7 +344,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
     it('should have a focus indicator', fakeAsync(() => {
       const rippleElement = slideToggleElement.querySelector('.mat-mdc-slide-toggle-ripple')!;
-      expect(rippleElement.classList).toContain('mat-mdc-focus-indicator');
+      expect(rippleElement.classList).toContain('mat-focus-indicator');
     }));
   });
 

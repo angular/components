@@ -73,7 +73,7 @@ describe('MDC-based MatList', () => {
       .queryAll(By.css('mat-list-item'))
       .map(debugEl => debugEl.nativeElement as HTMLElement);
 
-    expect(listItems.every(i => i.querySelector('.mat-mdc-focus-indicator') !== null))
+    expect(listItems.every(i => i.querySelector('.mat-focus-indicator') !== null))
       .withContext('Expected all list items to have a strong focus indicator element.')
       .toBe(true);
   });

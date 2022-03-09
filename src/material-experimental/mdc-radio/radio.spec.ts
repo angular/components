@@ -431,7 +431,7 @@ describe('MDC-based MatRadio', () => {
 
       expect(
         radioRippleNativeElements.every(element =>
-          element.classList.contains('mat-mdc-focus-indicator'),
+          element.classList.contains('mat-focus-indicator'),
         ),
       ).toBe(true);
     });

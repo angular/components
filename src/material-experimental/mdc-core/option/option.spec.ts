@@ -203,7 +203,7 @@ describe('MatOption component', () => {
     const fixture = TestBed.createComponent(BasicOption);
     const optionNativeElement = fixture.debugElement.query(By.directive(MatOption))!.nativeElement;
 
-    expect(optionNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+    expect(optionNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
   });
 
   describe('inside inert group', () => {

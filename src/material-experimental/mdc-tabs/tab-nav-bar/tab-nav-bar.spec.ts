@@ -424,9 +424,7 @@ describe('MDC-based MatTabNavBar', () => {
       ];
 
       expect(
-        tabLinkNativeElements.every(element =>
-          element.classList.contains('mat-mdc-focus-indicator'),
-        ),
+        tabLinkNativeElements.every(element => element.classList.contains('mat-focus-indicator')),
       ).toBe(true);
     });
   });
