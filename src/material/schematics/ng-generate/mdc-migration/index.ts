@@ -11,7 +11,7 @@ import {Schema} from './schema';
 import {DevkitFileSystem, UpdateProject, findStylesheetFiles} from '@angular/cdk/schematics';
 import {ThemingStylesMigration} from './rules/theming-styles';
 import {TemplateMigration} from './rules/template-migration';
-import {MIGRATORS} from './rules';
+import {ComponentMigrator, MIGRATORS} from './rules';
 import {dirname} from 'path';
 import {StyleMigrator} from './rules/style-migrator';
 
@@ -62,7 +62,7 @@ export default function (options: Schema): Rule {
   console.log('Migrating:', [...componentsToMigrate]);
   console.log('Directory:', migrationDir);
 
-  const migrators: StyleMigrator[] = [];
+  const migrators: ComponentMigrator[] = [];
   for (let i = 0; i < MIGRATORS.length; i++) {
     if (componentsToMigrate.has(MIGRATORS[i].component)) {
       migrators.push(MIGRATORS[i]);
