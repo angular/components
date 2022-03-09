@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Subject, Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 
 /** Events to emit as specified by the caller once the MenuStack is empty. */
 export const enum FocusNext {
@@ -20,7 +21,7 @@ export const enum FocusNext {
  */
 export interface MenuStackItem {
   /** A reference to the previous Menus MenuStack instance. */
-  _menuStack: MenuStack | null;
+  _menuStack?: MenuStack;
 }
 
 /**
@@ -29,6 +30,7 @@ export interface MenuStackItem {
  * from the `empty` observable specifying the next focus action which the listener should perform
  * as requested by the closer.
  */
+@Injectable()
 export class MenuStack {
   /** All MenuStackItems tracked by this MenuStack. */
   private readonly _elements: MenuStackItem[] = [];
@@ -125,10 +127,4 @@ export class MenuStack {
   peek(): MenuStackItem | undefined {
     return this._elements[this._elements.length - 1];
   }
-}
-
-/** NoopMenuStack is a placeholder MenuStack used for inline menus. */
-export class NoopMenuStack extends MenuStack {
-  /** Noop push - does not add elements to the MenuStack. */
-  override push(_: MenuStackItem) {}
 }

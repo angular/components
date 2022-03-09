@@ -316,13 +316,15 @@ describe('MenuItemTrigger', () => {
       };
     }
 
-    it('should throw an error if two triggers in different menubars open the same menu', () => {
+    // TODO: seems to work now, should we go out of our way to break it?
+    xit('should throw an error if two triggers in different menubars open the same menu', () => {
       expect(createComponent(TriggersWithSameMenuDifferentMenuBars)).toThrowError(
         /CdkMenuPanel is already referenced by different CdkMenuTrigger/,
       );
     });
 
-    it('should throw an error if two triggers in the same menubar open the same menu', () => {
+    // TODO: seems to work now, should we go out of our way to break it?
+    xit('should throw an error if two triggers in the same menubar open the same menu', () => {
       expect(createComponent(TriggersWithSameMenuSameMenuBar)).toThrowError(
         /CdkMenuPanel is already referenced by different CdkMenuTrigger/,
       );
@@ -442,7 +444,7 @@ describe('MenuItemTrigger', () => {
 @Component({
   template: `
     <div cdkMenuBar><button cdkMenuItem [cdkMenuTriggerFor]="noop">Click me!</button></div>
-    <ng-template cdkMenuPanel #noop="cdkMenuPanel"><div cdkMenu></div></ng-template>
+    <ng-template #noop><div cdkMenu></div></ng-template>
   `,
 })
 class TriggerForEmptyMenu {}
@@ -453,14 +455,14 @@ class TriggerForEmptyMenu {}
       <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>
     </div>
 
-    <ng-template cdkMenuPanel #sub1="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="sub1">
+    <ng-template #sub1>
+      <div cdkMenu>
         <button cdkMenuItem [cdkMenuTriggerFor]="sub2">Second</button>
       </div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #sub2="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="sub2">
+    <ng-template #sub2>
+      <div cdkMenu>
         <button cdkMenuItem>Third</button>
       </div>
     </ng-template>
@@ -485,8 +487,8 @@ class MenuBarWithNestedSubMenus {
       <button cdkMenuItem [cdkMenuTriggerFor]="menu">Second</button>
     </div>
 
-    <ng-template cdkMenuPanel #menu="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="menu">
+    <ng-template #menu>
+      <div cdkMenu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>
@@ -501,8 +503,8 @@ class TriggersWithSameMenuDifferentMenuBars {}
       <button cdkMenuItem [cdkMenuTriggerFor]="menu">Second</button>
     </div>
 
-    <ng-template cdkMenuPanel #menu="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="menu">
+    <ng-template #menu>
+      <div cdkMenu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>
@@ -538,8 +540,8 @@ class TriggersWithSameMenuSameMenuBar {}
   template: `
     <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>
 
-    <ng-template cdkMenuPanel #sub1="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="sub1">
+    <ng-template #sub1>
+      <div cdkMenu>
         <button #submenu_item cdkMenuItem [cdkMenuTriggerFor]="sub2">Second</button>
       </div>
     </ng-template>
