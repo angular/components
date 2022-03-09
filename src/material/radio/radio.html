@@ -1,24 +1,31 @@
 <!-- TODO(jelbourn): render the radio on either side of the content -->
 <!-- TODO(mtlin): Evaluate trade-offs of using native radio vs. cost of additional bindings. -->
+<!--
+  Keep this outside of the <label>, otherwise some screen
+  reader / browser combinations mess up the group index. See #23580.
+-->
+<input
+  #input
+  class="mat-radio-input"
+  type="radio"
+  [id]="inputId"
+  [checked]="checked"
+  [disabled]="disabled"
+  [tabIndex]="tabIndex"
+  [attr.name]="name"
+  [attr.value]="value"
+  [required]="required"
+  [attr.aria-label]="ariaLabel"
+  [attr.aria-labelledby]="ariaLabelledby"
+  [attr.aria-describedby]="ariaDescribedby"
+  (change)="_onInputInteraction($event)"
+  (click)="_onInputClick($event)">
+
 <label [attr.for]="inputId" class="mat-radio-label" #label>
   <!-- The actual 'radio' part of the control. -->
   <span class="mat-radio-container">
     <span class="mat-radio-outer-circle"></span>
     <span class="mat-radio-inner-circle"></span>
-    <input #input class="mat-radio-input" type="radio"
-        [id]="inputId"
-        [checked]="checked"
-        [disabled]="disabled"
-        [tabIndex]="tabIndex"
-        [attr.name]="name"
-        [attr.value]="value"
-        [required]="required"
-        [attr.aria-label]="ariaLabel"
-        [attr.aria-labelledby]="ariaLabelledby"
-        [attr.aria-describedby]="ariaDescribedby"
-        (change)="_onInputInteraction($event)"
-        (click)="_onInputClick($event)">
-
     <!-- The ripple comes after the input so that we can target it with a CSS
          sibling selector when the input is focused. -->
     <span mat-ripple class="mat-radio-ripple mat-focus-indicator"

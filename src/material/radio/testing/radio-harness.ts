@@ -190,7 +190,7 @@ export class MatRadioGroupHarness extends _MatRadioGroupHarnessBase<
 export abstract class _MatRadioButtonHarnessBase extends ComponentHarness {
   protected abstract _textLabel: AsyncFactoryFn<TestElement>;
   protected abstract _clickLabel: AsyncFactoryFn<TestElement>;
-  private _input = this.locatorFor('input');
+  private _input = this.locatorFor('input[type="radio"]');
 
   /** Whether the radio-button is checked. */
   async isChecked(): Promise<boolean> {

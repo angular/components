@@ -13,6 +13,7 @@ $ripple-radius: 20px;
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
   outline: 0;
+  position: relative;
 }
 
 // Inner label container, wrapping entire element.
@@ -195,18 +196,38 @@ $ripple-radius: 20px;
 }
 
 .mat-radio-input {
-  opacity: 0;
+  // Move the input in the middle and towards the bottom so
+  // the native validation messages are aligned correctly.
   position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
   cursor: inherit;
+  opacity: 0;
+  bottom: 0;
+  left: 0;
+  width: $size;
+  height: $size;
+
+  // Resets the user agent styling.
+  margin: 0;
+  padding: 0;
 
   // Puts the input behind the circle while keeping it visible so that
   // it allows `click` events to propagate up to the `label` wrapper.
   z-index: -1;
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+}
+
+.mat-radio-input-before {
+  left: auto;
+  right: 0;
+
+  [dir='rtl'] & {
+    right: auto;
+    left: 0;
+  }
 }
 
 @include a11y.high-contrast(active, off) {
