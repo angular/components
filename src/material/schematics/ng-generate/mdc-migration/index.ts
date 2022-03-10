@@ -13,7 +13,6 @@ import {ThemingStylesMigration} from './rules/theming-styles';
 import {TemplateMigration} from './rules/template-migration';
 import {ComponentMigrator, MIGRATORS} from './rules';
 import {dirname} from 'path';
-import {StyleMigrator} from './rules/style-migrator';
 
 /** Groups of components that must be migrated together. */
 const migrationGroups = [
