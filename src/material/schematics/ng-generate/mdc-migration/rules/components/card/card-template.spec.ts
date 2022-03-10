@@ -22,27 +22,27 @@ describe('card template migrator', () => {
   });
 
   it('should update single', async () => {
-    await runMigrationTest('<mat-card></mat-card>', '<mat-card appearance="outline"></mat-card>');
+    await runMigrationTest('<mat-card></mat-card>', '<mat-card appearance="outlined"></mat-card>');
   });
 
   it('should update multiple same-line unnested', async () => {
     await runMigrationTest(
       '<mat-card></mat-card><mat-card></mat-card>',
-      '<mat-card appearance="outline"></mat-card><mat-card appearance="outline"></mat-card>',
+      '<mat-card appearance="outlined"></mat-card><mat-card appearance="outlined"></mat-card>',
     );
   });
 
   it('should update multiple same-line nested', async () => {
     await runMigrationTest(
       '<mat-card><mat-card></mat-card></mat-card>',
-      '<mat-card appearance="outline"><mat-card appearance="outline"></mat-card></mat-card>',
+      '<mat-card appearance="outlined"><mat-card appearance="outlined"></mat-card></mat-card>',
     );
   });
 
   it('should update multiple same-line nested and unnested', async () => {
     await runMigrationTest(
       '<mat-card><mat-card></mat-card><mat-card></mat-card></mat-card>',
-      '<mat-card appearance="outline"><mat-card appearance="outline"></mat-card><mat-card appearance="outline"></mat-card></mat-card>',
+      '<mat-card appearance="outlined"><mat-card appearance="outlined"></mat-card><mat-card appearance="outlined"></mat-card></mat-card>',
     );
   });
 
@@ -53,8 +53,8 @@ describe('card template migrator', () => {
         <mat-card></mat-card>
       `,
       `
-        <mat-card appearance="outline"></mat-card>
-        <mat-card appearance="outline"></mat-card>
+        <mat-card appearance="outlined"></mat-card>
+        <mat-card appearance="outlined"></mat-card>
       `,
     );
   });
@@ -67,8 +67,8 @@ describe('card template migrator', () => {
         </mat-card>
       `,
       `
-        <mat-card appearance="outline">
-          <mat-card appearance="outline"></mat-card>
+        <mat-card appearance="outlined">
+          <mat-card appearance="outlined"></mat-card>
         </mat-card>
       `,
     );
@@ -83,9 +83,9 @@ describe('card template migrator', () => {
         </mat-card>
       `,
       `
-        <mat-card appearance="outline">
-          <mat-card appearance="outline"></mat-card>
-          <mat-card appearance="outline"></mat-card>
+        <mat-card appearance="outlined">
+          <mat-card appearance="outlined"></mat-card>
+          <mat-card appearance="outlined"></mat-card>
         </mat-card>
       `,
     );

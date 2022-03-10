@@ -18,6 +18,6 @@ export class CardTemplateMigrator extends TemplateMigrator {
     if (node.name !== this.tagName) {
       return template;
     }
-    return addAttribute(template, node, 'appearance', 'outline');
+    return addAttribute(template, node, 'appearance', 'outlined');
   }
 }
