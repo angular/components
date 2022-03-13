@@ -527,7 +527,6 @@ export abstract class _MatAutocompleteTriggerBase
           // that were created, and flatten it so our stream only emits closing events...
           switchMap(() => {
             const wasOpen = this.panelOpen;
-            this._resetActiveItem();
             this.autocomplete._setVisibility();
             this._changeDetectorRef.detectChanges();
 
@@ -539,6 +538,7 @@ export abstract class _MatAutocompleteTriggerBase
               // can happen if the users opens the panel and there are no options, but the
               // options come in slightly later or as a result of the value changing.
               if (wasOpen !== this.panelOpen) {
+                this._resetActiveItem();
                 this.autocomplete.opened.emit();
               }
             }
@@ -653,6 +653,7 @@ export abstract class _MatAutocompleteTriggerBase
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.
     if (this.panelOpen && wasOpen !== this.panelOpen) {
+      this._resetActiveItem();
       this.autocomplete.opened.emit();
     }
   }

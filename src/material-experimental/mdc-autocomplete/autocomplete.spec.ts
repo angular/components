@@ -2256,6 +2256,32 @@ describe('MDC-based MatAutocomplete', () => {
       componentOptions.slice(1).forEach(option => expect(option.deselect).not.toHaveBeenCalled());
     }));
 
+    it('should not reset the active item if the options list changes while open', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      const DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+      tick();
+
+      const classList = overlayContainerElement.querySelector('mat-option')!.classList;
+      expect(classList)
+        .withContext('Expected first option to be highlighted.')
+        .toContain('mat-mdc-option-active');
+
+      fixture.componentInstance.states.push({code: 'PR', name: 'Puerto Rico'});
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(classList)
+        .withContext('Expected first option to stay highlighted.')
+        .toContain('mat-mdc-option-active');
+    }));
+
     it('should be able to preselect the first option', fakeAsync(() => {
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
       fixture.componentInstance.trigger.openPanel();
@@ -2276,6 +2302,7 @@ describe('MDC-based MatAutocomplete', () => {
         testComponent.trigger.autocomplete.autoActiveFirstOption = true;
         testComponent.states[0].disabled = true;
         testComponent.states[1].disabled = true;
+        fixture.detectChanges();
         testComponent.trigger.openPanel();
         fixture.detectChanges();
         zone.simulateZoneExit();
