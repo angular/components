@@ -38,10 +38,10 @@ import {mapTo, mergeAll, mergeMap, startWith, switchMap, take, takeUntil} from '
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU, Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
-import {FocusNext, MenuStack, MenuStackItem} from './menu-stack';
+import {FocusNext, MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
 import {MENU_AIM, MenuAim} from './menu-aim';
-import {MenuTrigger} from './menu-trigger';
+import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -97,8 +97,8 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   constructor(
     private readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() readonly _menuStack?: MenuStack,
-    @Optional() private _parentTrigger?: MenuTrigger,
+    @Optional() @Inject(MENU_STACK) readonly _menuStack?: MenuStack,
+    @Optional() @Inject(MENU_TRIGGER) private _parentTrigger?: MenuTrigger,
     @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality,
   ) {

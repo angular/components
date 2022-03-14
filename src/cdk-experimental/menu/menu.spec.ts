@@ -1,25 +1,24 @@
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
-  tick,
   flush,
+  TestBed,
+  tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {Component, ViewChild, ViewChildren, QueryList, ElementRef} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {TAB} from '@angular/cdk/keycodes';
 import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
   createMouseEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
 } from '../../cdk/testing/private';
 import {By} from '@angular/platform-browser';
 import {CdkMenu} from './menu';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItem} from './menu-item';
-import {MenuStack} from './menu-stack';
 
 describe('Menu', () => {
   describe('as checkbox group', () => {

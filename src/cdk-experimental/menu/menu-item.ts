@@ -8,27 +8,27 @@
 
 import {
   Directive,
-  Input,
-  Optional,
-  Self,
   ElementRef,
-  Output,
   EventEmitter,
   Inject,
+  Input,
   NgZone,
   OnDestroy,
+  Optional,
+  Output,
+  Self,
 } from '@angular/core';
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusableOption} from '@angular/cdk/a11y';
-import {SPACE, ENTER, RIGHT_ARROW, LEFT_ARROW} from '@angular/cdk/keycodes';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
-import {Subject, fromEvent} from 'rxjs';
-import {takeUntil, filter} from 'rxjs/operators';
+import {fromEvent, Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
-import {Menu, CDK_MENU} from './menu-interface';
-import {FocusNext, MenuStack} from './menu-stack';
+import {CDK_MENU, Menu} from './menu-interface';
+import {FocusNext, MENU_STACK, MenuStack} from './menu-stack';
 import {FocusableElement} from './pointer-focus-tracker';
-import {Toggler, MENU_AIM, MenuAim} from './menu-aim';
+import {MENU_AIM, MenuAim, Toggler} from './menu-aim';
 
 // TODO refactor this to be configurable allowing for custom elements to be removed
 /** Removes all icons from within the given element. */
@@ -89,7 +89,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   constructor(
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _ngZone: NgZone,
-    @Optional() private readonly _menuStack?: MenuStack,
+    @Optional() @Inject(MENU_STACK) private readonly _menuStack?: MenuStack,
     @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
     @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality,

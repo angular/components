@@ -17,6 +17,6 @@ export * from './menu-group';
 export * from './context-menu';
 export * from './menu-trigger';
 
-export {MenuStack, MenuStackItem} from './menu-stack';
+export {MenuStack, MenuStackItem, MENU_STACK} from './menu-stack';
 export {CDK_MENU} from './menu-interface';
 export {TargetMenuAim, MenuAim, MENU_AIM, CdkTargetMenuAim} from './menu-aim';

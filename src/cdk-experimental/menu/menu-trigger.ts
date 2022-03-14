@@ -6,9 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Inject, Injectable, InjectionToken, Injector} from '@angular/core';
 import {Menu} from './menu-interface';
-import {MenuStack} from './menu-stack';
+import {MENU_STACK, MenuStack} from './menu-stack';
+
+/** Injection token used for an implementation of MenuStack. */
+export const MENU_TRIGGER = new InjectionToken<MenuTrigger>('cdk-menu-trigger');
 
 @Injectable()
 export class MenuTrigger {
@@ -16,15 +19,15 @@ export class MenuTrigger {
 
   protected childMenu?: Menu;
 
-  constructor(protected injector: Injector, protected menuStack: MenuStack) {}
+  constructor(protected injector: Injector, @Inject(MENU_STACK) protected menuStack: MenuStack) {}
 
   protected getChildMenuInjector() {
     this._childMenuInjector =
       this._childMenuInjector ||
       Injector.create({
         providers: [
-          {provide: MenuTrigger, useValue: this},
-          {provide: MenuStack, useValue: this.menuStack},
+          {provide: MENU_TRIGGER, useValue: this},
+          {provide: MENU_STACK, useValue: this.menuStack},
         ],
         parent: this.injector,
       });

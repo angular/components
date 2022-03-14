@@ -14,7 +14,7 @@ import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
 import {CDK_MENU, Menu} from './menu-interface';
 import {MENU_AIM, MenuAim} from './menu-aim';
-import {MenuStack} from './menu-stack';
+import {MENU_STACK, MenuStack} from './menu-stack';
 
 /**
  * A directive providing behavior for the "menuitemradio" ARIA role, which behaves similarly to
@@ -44,7 +44,7 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
     private readonly _selectionDispatcher: UniqueSelectionDispatcher,
     element: ElementRef<HTMLElement>,
     ngZone: NgZone,
-    @Optional() menuStack?: MenuStack,
+    @Optional() @Inject(MENU_STACK) menuStack?: MenuStack,
     @Optional() @Inject(CDK_MENU) parentMenu?: Menu,
     @Optional() @Inject(MENU_AIM) menuAim?: MenuAim,
     @Optional() dir?: Directionality,

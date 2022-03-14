@@ -34,9 +34,9 @@ import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angu
 import {fromEvent, merge, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
-import {FocusNext, MenuStack} from './menu-stack';
+import {FocusNext, MENU_STACK, MenuStack} from './menu-stack';
 import {MENU_AIM, MenuAim} from './menu-aim';
-import {MenuTrigger} from './menu-trigger';
+import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
 
 /**
  * Whether the target element is a menu item to be ignored by the overlay background click handler.
@@ -77,10 +77,10 @@ export function isClickInsideMenuOverlay(target: Element): boolean {
     '[attr.aria-expanded]': 'isMenuOpen()',
   },
   providers: [
-    {provide: MenuTrigger, useExisting: CdkMenuItemTrigger},
+    {provide: MENU_TRIGGER, useExisting: CdkMenuItemTrigger},
     {
-      provide: MenuStack,
-      deps: [[new Optional(), new SkipSelf(), MenuStack]],
+      provide: MENU_STACK,
+      deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
       useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || new MenuStack(),
     },
   ],
@@ -110,11 +110,11 @@ export class CdkMenuItemTrigger extends MenuTrigger implements OnDestroy {
 
   constructor(
     injector: Injector,
-    menuStack: MenuStack,
     private readonly _elementRef: ElementRef<HTMLElement>,
     protected readonly _viewContainerRef: ViewContainerRef,
     private readonly _overlay: Overlay,
     private readonly _ngZone: NgZone,
+    @Inject(MENU_STACK) menuStack: MenuStack,
     @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
     @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _directionality?: Directionality,

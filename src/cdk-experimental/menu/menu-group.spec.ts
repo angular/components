@@ -5,7 +5,6 @@ import {CdkMenuModule} from './menu-module';
 import {CdkMenuGroup} from './menu-group';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItemRadio} from './menu-item-radio';
-import {MenuStack} from './menu-stack';
 import {CdkMenuItem} from './menu-item';
 
 describe('MenuGroup', () => {

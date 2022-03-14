@@ -32,9 +32,9 @@ import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {merge, partition, Subject} from 'rxjs';
 import {skip, takeUntil} from 'rxjs/operators';
-import {MenuStack} from './menu-stack';
+import {MENU_STACK, MenuStack} from './menu-stack';
 import {isClickInsideMenuOverlay} from './menu-item-trigger';
-import {MenuTrigger} from './menu-trigger';
+import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
 
 /** Tracks the last open context menu trigger across the entire application. */
 @Injectable({providedIn: 'root'})
@@ -86,8 +86,8 @@ export type ContextMenuCoordinates = {x: number; y: number};
     // In cases where the first menu item in the context menu is a trigger the submenu opens on a
     // hover event. Offsetting the opened context menu by 2px prevents this from occurring.
     {provide: CDK_CONTEXT_MENU_DEFAULT_OPTIONS, useValue: {offsetX: 2, offsetY: 2}},
-    {provide: MenuTrigger, useExisting: CdkContextMenuTrigger},
-    {provide: MenuStack, useClass: MenuStack},
+    {provide: MENU_TRIGGER, useExisting: CdkContextMenuTrigger},
+    {provide: MENU_STACK, useClass: MenuStack},
   ],
 })
 export class CdkContextMenuTrigger extends MenuTrigger implements OnDestroy {
@@ -125,10 +125,10 @@ export class CdkContextMenuTrigger extends MenuTrigger implements OnDestroy {
 
   constructor(
     injector: Injector,
-    menuStack: MenuStack,
     protected readonly _viewContainerRef: ViewContainerRef,
     private readonly _overlay: Overlay,
     private readonly _contextMenuTracker: ContextMenuTracker,
+    @Inject(MENU_STACK) menuStack: MenuStack,
     @Inject(CDK_CONTEXT_MENU_DEFAULT_OPTIONS) private readonly _options: ContextMenuOptions,
     @Optional() private readonly _directionality?: Directionality,
   ) {
