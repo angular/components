@@ -95,10 +95,22 @@ export function addAttribute(
   name: string,
   value: string,
 ): string {
+  if (node.startSourceSpan.start.line === node.startSourceSpan.end.line) {
+    const index = node.startSourceSpan.start.offset + node.name.length + 1;
+    const prefix = html.slice(0, index);
+    const suffix = html.slice(index);
+    return prefix + ` ${name}="${value}"` + suffix;
+  }
+  const ctx = node.startSourceSpan.end.getContext(1000, 2)!;
+  const lastAttrStr = ctx.before.split('\n')[1];
+  const lastAttrNode = node.attributes[node.attributes.length - 1];
+  const indentation = lastAttrStr.split(lastAttrNode.name)[0];
+
   const index = node.startSourceSpan.start.offset + node.name.length + 1;
   const prefix = html.slice(0, index);
   const suffix = html.slice(index);
-  return prefix + ` ${name}="${value}"` + suffix;
+
+  return prefix + '\n' + indentation + `${name}="${value}"` + suffix;
 }
 
 /**
