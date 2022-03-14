@@ -306,36 +306,57 @@ describe('MenuItemTrigger', () => {
      * @param componentClass the component to create
      */
     function createComponent<T>(componentClass: Type<T>) {
-      return function () {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [componentClass],
-        }).compileComponents();
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [componentClass],
+      }).compileComponents();
 
-        TestBed.createComponent(componentClass).detectChanges();
-      };
+      const fixture = TestBed.createComponent(componentClass);
+      fixture.detectChanges();
+      return fixture;
     }
 
-    // TODO: seems to work now, should we go out of our way to break it?
-    xit('should throw an error if two triggers in different menubars open the same menu', () => {
-      expect(createComponent(TriggersWithSameMenuDifferentMenuBars)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/,
-      );
+    it('should allow two triggers in different menubars to open the same menu', () => {
+      const fixture = createComponent(TriggersWithSameMenuDifferentMenuBars);
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.triggers.get(0)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
+      fixture.componentInstance.triggers.get(0)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.triggers.get(1)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
     });
 
-    // TODO: seems to work now, should we go out of our way to break it?
-    xit('should throw an error if two triggers in the same menubar open the same menu', () => {
-      expect(createComponent(TriggersWithSameMenuSameMenuBar)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/,
-      );
+    it('should allow two triggers in the same menubar open the same menu', () => {
+      const fixture = createComponent(TriggersWithSameMenuSameMenuBar);
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.triggers.get(0)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
+      fixture.componentInstance.triggers.get(0)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.triggers.get(1)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
     });
 
-    // TODO uncomment once we figure out why this is failing in Ivy
-    // it('should throw an error if a trigger in a submenu references its parent menu', () => {
-    //   expect(createComponent(TriggerOpensItsMenu)).toThrowError(
-    //     /CdkMenuPanel is already referenced by different CdkMenuTrigger/
-    //   );
-    // });
+    it('should allow a trigger in a submenu references its parent menu', () => {
+      const fixture = createComponent(TriggerOpensItsMenu);
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      expect(fixture.componentInstance.triggers.length).toBe(1);
+      fixture.componentInstance.triggers.get(0)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
+      expect(fixture.componentInstance.triggers.length).toBe(2);
+      fixture.componentInstance.triggers.get(1)!.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(2);
+      expect(fixture.componentInstance.triggers.length).toBe(3);
+    });
   });
 
   describe('standalone', () => {
@@ -494,7 +515,10 @@ class MenuBarWithNestedSubMenus {
     </ng-template>
   `,
 })
-class TriggersWithSameMenuDifferentMenuBars {}
+class TriggersWithSameMenuDifferentMenuBars {
+  @ViewChildren(CdkMenuItemTrigger) triggers: QueryList<CdkMenuItemTrigger>;
+  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
 
 @Component({
   template: `
@@ -510,32 +534,30 @@ class TriggersWithSameMenuDifferentMenuBars {}
     </ng-template>
   `,
 })
-class TriggersWithSameMenuSameMenuBar {}
+class TriggersWithSameMenuSameMenuBar {
+  @ViewChildren(CdkMenuItemTrigger) triggers: QueryList<CdkMenuItemTrigger>;
+  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
 
 // TODO uncomment once we figure out why this is failing in Ivy
-// @Component({
-//   template: `
-//     <div cdkMenuBar>
-//       <button cdkMenuItem [cdkMenuTriggerFor]="menu"></button>
-//     </div>
+@Component({
+  template: `
+    <div cdkMenuBar>
+      <button cdkMenuItem [cdkMenuTriggerFor]="menu"></button>
+    </div>
 
-//     <ng-template cdkMenuPanel #menu="cdkMenuPanel">
-//       <div cdkMenu [cdkMenuPanel]="menu">
-//         <button cdkMenuItem [cdkMenuTriggerFor]="menu"></button>
-//       </div>
-//     </ng-template>
-//   `,
-// })
-// class TriggerOpensItsMenu implements AfterViewInit {
-//   @ViewChild(CdkMenuItem, {read: ElementRef}) trigger: ElementRef<HTMLButtonElement>;
+    <ng-template #menu>
+      <div cdkMenu>
+        <button cdkMenuItem [cdkMenuTriggerFor]="menu"></button>
+      </div>
+    </ng-template>
+  `,
+})
+class TriggerOpensItsMenu {
+  @ViewChildren(CdkMenuItemTrigger) triggers: QueryList<CdkMenuItemTrigger>;
+  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
 
-//   constructor(private readonly _changeDetector: ChangeDetectorRef) {}
-
-//   ngAfterViewInit() {
-//     this.trigger.nativeElement.click();
-//     this._changeDetector.detectChanges();
-//   }
-// }
 @Component({
   template: `
     <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>

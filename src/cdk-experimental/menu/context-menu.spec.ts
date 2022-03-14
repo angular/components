@@ -389,21 +389,28 @@ describe('CdkContextMenuTrigger', () => {
      * @param componentClass the component to create
      */
     function createComponent<T>(componentClass: Type<T>) {
-      return function () {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [componentClass],
-        }).compileComponents();
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [componentClass],
+      }).compileComponents();
 
-        TestBed.createComponent(componentClass).detectChanges();
-      };
+      const fixture = TestBed.createComponent(componentClass);
+      fixture.detectChanges();
+      return fixture;
     }
 
-    // TODO: seems to work now, should we go out of our way to break it?
-    xit('should throw an error if context and menubar trigger share a menu', () => {
-      expect(createComponent(MenuBarAndContextTriggerShareMenu)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/,
-      );
+    it('should allow a context menu and menubar trigger share a menu', () => {
+      const fixture = createComponent(MenuBarAndContextTriggerShareMenu);
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.menuBarTrigger.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
+      fixture.componentInstance.menuBarTrigger.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.contextTrigger.open({x: 0, y: 0});
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
     });
   });
 });
@@ -531,4 +538,8 @@ class ContextMenuWithMenuBarAndInlineMenu {
     </ng-template>
   `,
 })
-class MenuBarAndContextTriggerShareMenu {}
+class MenuBarAndContextTriggerShareMenu {
+  @ViewChild(CdkMenuItemTrigger) menuBarTrigger: CdkMenuItemTrigger;
+  @ViewChild(CdkContextMenuTrigger) contextTrigger: CdkContextMenuTrigger;
+  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
