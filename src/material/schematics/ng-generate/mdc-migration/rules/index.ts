@@ -13,6 +13,7 @@ import {CheckboxStylesMigrator} from './components/checkbox/checkbox-styles';
 import {ChipsStylesMigrator} from './components/chips/chips-styles';
 import {DialogStylesMigrator} from './components/dialog/dialog-styles';
 import {ListStylesMigrator} from './components/list/list-styles';
+import {MenuStylesMigrator} from './components/menu/menu-styles';
 import {PaginatorStylesMigrator} from './components/paginator/paginator-styles';
 import {ProgressBarStylesMigrator} from './components/progress-bar/progress-bar-styles';
 import {ProgressSpinnerStylesMigrator} from './components/progress-spinner/progress-spinner-styles';
@@ -55,6 +56,10 @@ export const MIGRATORS: ComponentMigrator[] = [
   {
     component: 'list',
     styles: new ListStylesMigrator(),
+  },
+  {
+    component: 'menu',
+    styles: new MenuStylesMigrator(),
   },
   {
     component: 'paginator',
