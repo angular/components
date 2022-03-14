@@ -30,5 +30,5 @@ export abstract class TemplateMigrator {
    * @param node A template ast element.
    * @returns The data needed to update this node.
    */
-  abstract getUpdates(node: compiler.TmplAstElement): Update[]
+  abstract getUpdates(node: compiler.TmplAstElement): Update[];
 }

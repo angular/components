@@ -19,9 +19,11 @@ export class CardTemplateMigrator extends TemplateMigrator {
       return [];
     }
 
-    return [{
-      location: node.startSourceSpan.end,
-      updateFn: html => addAttribute(html, node, 'appearance', 'outlined'),
-    }];
+    return [
+      {
+        location: node.startSourceSpan.end,
+        updateFn: html => addAttribute(html, node, 'appearance', 'outlined'),
+      },
+    ];
   }
 }
