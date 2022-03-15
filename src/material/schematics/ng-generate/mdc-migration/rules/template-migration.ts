@@ -32,6 +32,7 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
       template.content = update.updateFn(template.content);
     });
 
+    migrators.forEach(m => m.onComplete());
     this.fileSystem.overwrite(template.filePath, template.content);
   }
 }

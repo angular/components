@@ -11,11 +11,8 @@ import {TemplateMigrator, Update} from '../../template-migrator';
 import {addAttribute} from '../../tree-traversal';
 
 export class CardTemplateMigrator extends TemplateMigrator {
-  component = 'card';
-  tagName = 'mat-card';
-
   getUpdates(node: TmplAstElement): Update[] {
-    if (node.name !== this.tagName) {
+    if (node.name !== 'mat-card') {
       return [];
     }
 

@@ -18,12 +18,6 @@ export interface Update {
 }
 
 export abstract class TemplateMigrator {
-  /** The name of the component that this migration handles. */
-  abstract component: string;
-
-  /** The tag name to be updated in the template. */
-  abstract tagName: string;
-
   /**
    * Returns the data needed to update the given node.
    *
@@ -31,4 +25,7 @@ export abstract class TemplateMigrator {
    * @returns The data needed to update this node.
    */
   abstract getUpdates(node: compiler.TmplAstElement): Update[];
+
+  /** Runs once a template has finished being updated. */
+  onComplete(): void {}
 }
