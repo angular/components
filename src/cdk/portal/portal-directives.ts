@@ -151,13 +151,10 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     const viewContainerRef =
       portal.viewContainerRef != null ? portal.viewContainerRef : this._viewContainerRef;
 
-    const resolver = portal.componentFactoryResolver || this._componentFactoryResolver;
-    const componentFactory = resolver.resolveComponentFactory(portal.component);
-    const ref = viewContainerRef.createComponent(
-      componentFactory,
-      viewContainerRef.length,
-      portal.injector || viewContainerRef.injector,
-    );
+    const ref = viewContainerRef.createComponent(portal.component, {
+      index: viewContainerRef.length,
+      injector: portal.injector || viewContainerRef.injector,
+    });
 
     // If we're using a view container that's different from the injected one (e.g. when the portal
     // specifies its own) we need to move the component into the outlet, otherwise it'll be rendered

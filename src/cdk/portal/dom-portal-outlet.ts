@@ -54,11 +54,10 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // When the ViewContainerRef is missing, we use the factory to create the component directly
     // and then manually attach the view to the application.
     if (portal.viewContainerRef) {
-      componentRef = portal.viewContainerRef.createComponent(
-        componentFactory,
-        portal.viewContainerRef.length,
-        portal.injector || portal.viewContainerRef.injector,
-      );
+      componentRef = portal.viewContainerRef.createComponent(portal.component, {
+        index: portal.viewContainerRef.length,
+        injector: portal.injector || portal.viewContainerRef.injector,
+      });
 
       this.setDisposeFn(() => componentRef.destroy());
     } else {
