@@ -57,10 +57,13 @@ export class ContextMenuTracker {
 /** Configuration options passed to the context menu. */
 export type ContextMenuOptions = {
   /** The opened menus X coordinate offset from the triggering position. */
-  offsetX: number;
+  offsetX?: number;
 
   /** The opened menus Y coordinate offset from the triggering position. */
-  offsetY: number;
+  offsetY?: number;
+
+  /** Ordered list of preferred positions, from most to least desirable. */
+  preferredPositions?: ConnectedPosition[];
 };
 
 /** Injection token for the ContextMenu options object. */
@@ -83,9 +86,6 @@ export type ContextMenuCoordinates = {x: number; y: number};
     '(contextmenu)': '_openOnContextMenu($event)',
   },
   providers: [
-    // In cases where the first menu item in the context menu is a trigger the submenu opens on a
-    // hover event. Offsetting the opened context menu by 2px prevents this from occurring.
-    {provide: CDK_CONTEXT_MENU_DEFAULT_OPTIONS, useValue: {offsetX: 2, offsetY: 2}},
     {provide: MENU_TRIGGER, useExisting: CdkContextMenuTrigger},
     {provide: MENU_STACK, useClass: MenuStack},
   ],
@@ -129,7 +129,9 @@ export class CdkContextMenuTrigger extends MenuTrigger implements OnDestroy {
     private readonly _overlay: Overlay,
     private readonly _contextMenuTracker: ContextMenuTracker,
     @Inject(MENU_STACK) menuStack: MenuStack,
-    @Inject(CDK_CONTEXT_MENU_DEFAULT_OPTIONS) private readonly _options: ContextMenuOptions,
+    @Optional()
+    @Inject(CDK_CONTEXT_MENU_DEFAULT_OPTIONS)
+    private readonly _options?: ContextMenuOptions,
     @Optional() private readonly _directionality?: Directionality,
   ) {
     super(injector, menuStack);
@@ -230,25 +232,21 @@ export class CdkContextMenuTrigger extends MenuTrigger implements OnDestroy {
   private _getOverlayPositionStrategy(
     coordinates: ContextMenuCoordinates,
   ): FlexibleConnectedPositionStrategy {
+    // In cases where the first menu item in the context menu is a trigger the submenu opens on a
+    // hover event. We offset the context menu 2px by default to prevent this from occurring.
     return this._overlay
       .position()
       .flexibleConnectedTo(coordinates)
-      .withDefaultOffsetX(this._options.offsetX)
-      .withDefaultOffsetY(this._options.offsetY)
-      .withPositions(this._getOverlayPositions());
-  }
-
-  /**
-   * Determine and return where to position the opened menu relative to the mouse location.
-   */
-  private _getOverlayPositions(): ConnectedPosition[] {
-    // TODO: this should be configurable through the injected context menu options
-    return [
-      {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top'},
-      {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top'},
-      {originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom'},
-      {originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom'},
-    ];
+      .withDefaultOffsetX(this._options?.offsetX ?? 2)
+      .withDefaultOffsetY(this._options?.offsetY ?? 2)
+      .withPositions(
+        this._options?.preferredPositions ?? [
+          {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top'},
+          {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top'},
+          {originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom'},
+          {originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom'},
+        ],
+      );
   }
 
   /**

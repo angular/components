@@ -287,7 +287,6 @@ export class CdkMenuItemTrigger extends MenuTrigger implements OnDestroy {
 
   /** Determine and return where to position the opened menu relative to the menu item */
   private _getOverlayPositions(): ConnectedPosition[] {
-    // TODO: use a common positioning config from (possibly) cdk/overlay
     return !this._parentMenu || this._parentMenu.orientation === 'horizontal'
       ? [
           {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
