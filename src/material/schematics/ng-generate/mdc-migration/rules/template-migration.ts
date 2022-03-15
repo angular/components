@@ -26,12 +26,7 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
       }
     });
 
-    updates.sort((a, b) => {
-      if (a.location.line !== b.location.line) {
-        return b.location.line - a.location.line;
-      }
-      return b.location.col - a.location.col;
-    });
+    updates.sort((a, b) => b.location.offset - a.location.offset);
 
     updates.forEach(update => {
       template.content = update.updateFn(template.content);
