@@ -15,11 +15,11 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
 
   getUpdates(node: compiler.TmplAstElement): Update[] {
     if (node.name === 'mat-chip-list') {
-      return this.buildChipListUpdates(node);
+      return this._buildChipListUpdates(node);
     }
 
     if (node.name === 'input') {
-      this.storeChipRefs(node);
+      this._storeChipRefs(node);
     }
 
     return [];
@@ -41,12 +41,17 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
    * @param listboxTag The new tag name if the chipListNode is a listbox.
    * @returns The start and end tag updates for the given node.
    */
-  private buildUpdates(node: compiler.TmplAstElement, chipListNode: compiler.TmplAstElement, gridTag: string, listboxTag: string): Update[] {
+  private _buildUpdates(
+    node: compiler.TmplAstElement,
+    chipListNode: compiler.TmplAstElement,
+    gridTag: string,
+    listboxTag: string,
+  ): Update[] {
     return [
       {
         location: node.startSourceSpan.start,
         updateFn: html => {
-          return this.isChipGrid(chipListNode)
+          return this._isChipGrid(chipListNode)
             ? replaceStartTag(html, node, gridTag)
             : replaceStartTag(html, node, listboxTag);
         },
@@ -54,7 +59,7 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
       {
         location: node.endSourceSpan!.start,
         updateFn: html => {
-          return this.isChipGrid(chipListNode)
+          return this._isChipGrid(chipListNode)
             ? replaceEndTag(html, node, gridTag)
             : replaceEndTag(html, node, listboxTag);
         },
@@ -63,7 +68,7 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
   }
 
   /** Stores the matChipInputFor references on given input. */
-  private storeChipRefs(node: compiler.TmplAstElement): void {
+  private _storeChipRefs(node: compiler.TmplAstElement): void {
     for (let i = 0; i < node.inputs.length; i++) {
       if (node.inputs[i].name === 'matChipInputFor') {
         this.chipInputAttrs.push(node.inputs[i]);
@@ -75,15 +80,15 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
    * Builds and returns the updates for the given
    * mat-chip-list node as well as any mat-chip-lists it contains.
    */
-  private buildChipListUpdates(node: compiler.TmplAstElement): Update[] {
+  private _buildChipListUpdates(node: compiler.TmplAstElement): Update[] {
     return [
-      ...this.buildUpdates(node, node, 'mat-chip-grid', 'mat-chip-listbox'),
-      ...this.buildChipUpdates(node),
+      ...this._buildUpdates(node, node, 'mat-chip-grid', 'mat-chip-listbox'),
+      ...this._buildChipUpdates(node),
     ];
   }
 
   /** Builds and returns the updates for the mat-chips inside the given mat-chip-list node. */
-  private buildChipUpdates(node: compiler.TmplAstElement): Update[] {
+  private _buildChipUpdates(node: compiler.TmplAstElement): Update[] {
     const updates: Update[] = [];
 
     // Recursively check the children of the mat-chip-list for mat-chip elements.
@@ -95,10 +100,8 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
 
       // Update each mat-chip depending on whether the
       // base mat-chip-list is referenced by an input.
-      updates.push(
-        ...this.buildUpdates(child, node, 'mat-chip-row', 'mat-chip-option')
-      );
-    }
+      updates.push(...this._buildUpdates(child, node, 'mat-chip-row', 'mat-chip-option'));
+    };
 
     visitElements(node.children, handleMatChipUpdates);
     return updates;
@@ -110,7 +113,7 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
    * This is determined by whether the given mat-chip-list is referenced by any inputs. If it is,
    * then the node is a mat-chip-grid. Otherwise, it is a mat-chip-listbox.
    */
-  private isChipGrid(node: compiler.TmplAstElement): boolean {
+  private _isChipGrid(node: compiler.TmplAstElement): boolean {
     return node.references.some(ref => {
       return this.chipInputAttrs.some(attr => {
         const value = attr.value as compiler.ASTWithSource;
