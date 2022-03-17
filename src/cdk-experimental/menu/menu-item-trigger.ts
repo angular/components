@@ -29,6 +29,8 @@ import {
   Overlay,
   OverlayConfig,
   OverlayRef,
+  STANDARD_DROPDOWN_ADJACENT_POSITIONS,
+  STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
 import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {fromEvent, merge, Subject} from 'rxjs';
@@ -288,18 +290,8 @@ export class CdkMenuItemTrigger extends MenuTrigger implements OnDestroy {
   /** Determine and return where to position the opened menu relative to the menu item */
   private _getOverlayPositions(): ConnectedPosition[] {
     return !this._parentMenu || this._parentMenu.orientation === 'horizontal'
-      ? [
-          {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
-          {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom'},
-          {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top'},
-          {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom'},
-        ]
-      : [
-          {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top'},
-          {originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom'},
-          {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top'},
-          {originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom'},
-        ];
+      ? STANDARD_DROPDOWN_BELOW_POSITIONS
+      : STANDARD_DROPDOWN_ADJACENT_POSITIONS;
   }
 
   /**

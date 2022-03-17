@@ -27,6 +27,7 @@ import {
   Overlay,
   OverlayConfig,
   OverlayRef,
+  STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -239,14 +240,7 @@ export class CdkContextMenuTrigger extends MenuTrigger implements OnDestroy {
       .flexibleConnectedTo(coordinates)
       .withDefaultOffsetX(this._options?.offsetX ?? 2)
       .withDefaultOffsetY(this._options?.offsetY ?? 2)
-      .withPositions(
-        this._options?.preferredPositions ?? [
-          {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top'},
-          {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top'},
-          {originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom'},
-          {originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom'},
-        ],
-      );
+      .withPositions(this._options?.preferredPositions ?? STANDARD_DROPDOWN_BELOW_POSITIONS);
   }
 
   /**
