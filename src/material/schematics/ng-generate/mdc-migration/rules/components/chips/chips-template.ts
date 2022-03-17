@@ -8,25 +8,88 @@
 
 import * as compiler from '@angular/compiler';
 import {TemplateMigrator, Update} from '../../template-migrator';
-import {replaceStartTag, replaceEndTag, visitElements} from '../../tree-traversal';
+import {replaceStartTag, replaceEndTag} from '../../tree-traversal';
+
+/** Stores a mat-chip-list with the mat-chip elements nested within it. */
+interface ChipMap {
+  chipList: compiler.TmplAstElement;
+  chips: compiler.TmplAstElement[];
+}
 
 export class ChipsTemplateMigrator extends TemplateMigrator {
-  chipInputAttrs: compiler.TmplAstBoundAttribute[] = [];
+  /** The matChipInputFor attributes found while traversing the template ast. */
+  private _chipInputAttrs: compiler.TmplAstBoundAttribute[] = [];
 
-  getUpdates(node: compiler.TmplAstElement): Update[] {
+  /** The current ChipMap being built. */
+  private _chipMap: ChipMap | null;
+
+  /** Contains all of the ChipMaps found while traversing the template ast. */
+  private _chipMaps: ChipMap[] = [];
+
+  override postorder(node: compiler.TmplAstElement): void {
     if (node.name === 'mat-chip-list') {
-      return this._buildChipListUpdates(node);
+      this._chipMaps.push(this._chipMap!);
+      this._chipMap = null;
     }
-
-    if (node.name === 'input') {
-      this._storeChipRefs(node);
-    }
-
-    return [];
   }
 
-  override onComplete(): void {
-    this.chipInputAttrs = [];
+  override preorder(node: compiler.TmplAstElement): void {
+    switch (node.name) {
+      case 'mat-chip-list':
+        this._handleChipListNode(node);
+        break;
+      case 'mat-chip':
+        this._handleChipNode(node);
+        break;
+      case 'input':
+        this._storeChipRefs(node);
+        break;
+    }
+  }
+
+  override getUpdates(): Update[] {
+    this._chipMaps.forEach(chipMap => {
+      chipMap.chips.forEach(chip => {
+        this.updates.push(
+          ...this._buildUpdates(chip, chipMap.chipList, 'mat-chip-row', 'mat-chip-option'),
+        );
+      });
+    });
+
+    return this.updates;
+  }
+
+  override reset(): void {
+    super.reset();
+    this._chipInputAttrs = [];
+    this._chipMaps = [];
+  }
+
+  private _handleChipListNode(node: compiler.TmplAstElement): void {
+    this._chipMap = {
+      chipList: node,
+      chips: [],
+    };
+
+    this.updates.push(...this._buildUpdates(node, node, 'mat-chip-grid', 'mat-chip-listbox'));
+  }
+
+  private _handleChipNode(node: compiler.TmplAstElement): void {
+    if (this._chipMap) {
+      this._chipMap.chips.push(node);
+      return;
+    }
+
+    this.updates.push(
+      {
+        location: node.startSourceSpan.start,
+        updateFn: html => replaceStartTag(html, node, 'mat-chip-option'),
+      },
+      {
+        location: node.startSourceSpan.start,
+        updateFn: html => replaceEndTag(html, node, 'mat-chip-option'),
+      },
+    );
   }
 
   /**
@@ -71,40 +134,10 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
   private _storeChipRefs(node: compiler.TmplAstElement): void {
     for (let i = 0; i < node.inputs.length; i++) {
       if (node.inputs[i].name === 'matChipInputFor') {
-        this.chipInputAttrs.push(node.inputs[i]);
-      }
-    }
-  }
-
-  /**
-   * Builds and returns the updates for the given
-   * mat-chip-list node as well as any mat-chip-lists it contains.
-   */
-  private _buildChipListUpdates(node: compiler.TmplAstElement): Update[] {
-    return [
-      ...this._buildUpdates(node, node, 'mat-chip-grid', 'mat-chip-listbox'),
-      ...this._buildChipUpdates(node),
-    ];
-  }
-
-  /** Builds and returns the updates for the mat-chips inside the given mat-chip-list node. */
-  private _buildChipUpdates(node: compiler.TmplAstElement): Update[] {
-    const updates: Update[] = [];
-
-    // Recursively check the children of the mat-chip-list for mat-chip elements.
-    const handleMatChipUpdates = (child: compiler.TmplAstElement) => {
-      if (child.name !== 'mat-chip') {
-        visitElements(child.children, handleMatChipUpdates);
+        this._chipInputAttrs.push(node.inputs[i]);
         return;
       }
-
-      // Update each mat-chip depending on whether the
-      // base mat-chip-list is referenced by an input.
-      updates.push(...this._buildUpdates(child, node, 'mat-chip-row', 'mat-chip-option'));
-    };
-
-    visitElements(node.children, handleMatChipUpdates);
-    return updates;
+    }
   }
 
   /**
@@ -112,10 +145,14 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
    *
    * This is determined by whether the given mat-chip-list is referenced by any inputs. If it is,
    * then the node is a mat-chip-grid. Otherwise, it is a mat-chip-listbox.
+   *
+   * IMPORTANT: This function should only be used in an updateFn callback. This function assumes
+   * the entire tree has already been traversed and all matChipInputFor attributes have been
+   * found and stored.
    */
   private _isChipGrid(node: compiler.TmplAstElement): boolean {
     return node.references.some(ref => {
-      return this.chipInputAttrs.some(attr => {
+      return this._chipInputAttrs.some(attr => {
         const value = attr.value as compiler.ASTWithSource;
         return value.source === ref.name;
       });

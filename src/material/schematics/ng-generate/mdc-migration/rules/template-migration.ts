@@ -20,19 +20,19 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
     const migrators = this.upgradeData.filter(m => m.template).map(m => m.template!);
     const updates: Update[] = [];
 
-    visitElements(ast.nodes, node => {
-      for (let i = 0; i < migrators.length; i++) {
-        updates.push(...migrators[i].getUpdates(node));
-      }
-    });
+    visitElements(
+      ast.nodes,
+      node => migrators.forEach(m => m.preorder(node)),
+      node => migrators.forEach(m => m.postorder(node)),
+    );
 
+    migrators.forEach(m => updates.push(...m.getUpdates()));
     updates.sort((a, b) => b.location.offset - a.location.offset);
-
     updates.forEach(update => {
       template.content = update.updateFn(template.content);
     });
 
-    migrators.forEach(m => m.onComplete());
+    migrators.forEach(m => m.reset());
     this.fileSystem.overwrite(template.filePath, template.content);
   }
 }

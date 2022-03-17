@@ -11,16 +11,14 @@ import {TemplateMigrator, Update} from '../../template-migrator';
 import {addAttribute} from '../../tree-traversal';
 
 export class CardTemplateMigrator extends TemplateMigrator {
-  getUpdates(node: TmplAstElement): Update[] {
+  override preorder(node: TmplAstElement): void {
     if (node.name !== 'mat-card') {
-      return [];
+      return;
     }
 
-    return [
-      {
-        location: node.startSourceSpan.end,
-        updateFn: html => addAttribute(html, node, 'appearance', 'outlined'),
-      },
-    ];
+    this.updates.push({
+      location: node.startSourceSpan.end,
+      updateFn: html => addAttribute(html, node, 'appearance', 'outlined'),
+    });
   }
 }
