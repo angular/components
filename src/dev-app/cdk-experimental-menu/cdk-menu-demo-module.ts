@@ -12,7 +12,7 @@ import {RouterModule} from '@angular/router';
 import {CdkMenuModule} from '@angular/cdk-experimental/menu';
 import {CdkMenuExamplesModule} from '@angular/components-examples/cdk-experimental/menu';
 
-import {CdkMenuDemo, DemoCustomMenuOptions} from './cdk-menu-demo';
+import {CdkMenuDemo} from './cdk-menu-demo';
 
 @NgModule({
   imports: [
@@ -21,6 +21,6 @@ import {CdkMenuDemo, DemoCustomMenuOptions} from './cdk-menu-demo';
     CdkMenuExamplesModule,
     RouterModule.forChild([{path: '', component: CdkMenuDemo}]),
   ],
-  declarations: [CdkMenuDemo, DemoCustomMenuOptions],
+  declarations: [CdkMenuDemo],
 })
 export class CdkMenuDemoModule {}

@@ -92,6 +92,9 @@ export class CdkMenuItemTrigger extends MenuTrigger implements OnDestroy {
   @Input('cdkMenuTriggerFor')
   _menuTemplateRef?: TemplateRef<unknown>;
 
+  /** A list of preferred menu positions to be used when constructing the `FlexibleConnectedPositionStrategy` for this trigger's menu. */
+  @Input('cdkMenuPosition') menuPosition: ConnectedPosition[];
+
   /** Emits when the attached menu is requested to open */
   @Output('cdkMenuOpened') readonly opened: EventEmitter<void> = new EventEmitter();
 
@@ -289,9 +292,12 @@ export class CdkMenuItemTrigger extends MenuTrigger implements OnDestroy {
 
   /** Determine and return where to position the opened menu relative to the menu item */
   private _getOverlayPositions(): ConnectedPosition[] {
-    return !this._parentMenu || this._parentMenu.orientation === 'horizontal'
-      ? STANDARD_DROPDOWN_BELOW_POSITIONS
-      : STANDARD_DROPDOWN_ADJACENT_POSITIONS;
+    return (
+      this.menuPosition ??
+      (!this._parentMenu || this._parentMenu.orientation === 'horizontal'
+        ? STANDARD_DROPDOWN_BELOW_POSITIONS
+        : STANDARD_DROPDOWN_ADJACENT_POSITIONS)
+    );
   }
 
   /**
