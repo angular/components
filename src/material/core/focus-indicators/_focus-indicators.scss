@@ -1,5 +1,5 @@
-// @use 'sass:map';
-// @use '../style/layout-common';
+@use 'sass:map';
+@use '../style/layout-common';
 
 /// Mixin that turns on strong focus indicators.
 ///
@@ -7,116 +7,58 @@
 ///   .my-app {
 ///     @include mat-strong-focus-indicators($config);
 ///   }
-// @mixin strong-focus-indicators($config: ()) {
-//   // Default focus indicator config.
-//   $default-config: (
-//     border-style: solid,
-//     border-width: 3px,
-//     border-radius: 4px,
-//   );
 
-//   // Merge default config with user config.
-//   $config: map.merge($default-config, $config);
-//   $border-style: map.get($config, border-style);
-//   $border-width: map.get($config, border-width);
-//   $border-radius: map.get($config, border-radius);
+// Mixin that handles null values for CSS variables
+@mixin _create-variable($name, $value) {
+  @if ($value) {
+    --#{$name}: #{$value};
+  }
+}
 
-//   --mat-focus-indicator-border-style-custom: #{$border-style};
-//   --mat-focus-indicator-border-width-custom: #{$border-width};
-//   --mat-focus-indicator-border-radius-custom: #{$border-radius};
+// Mixin to dedup CSS Variables for the strong-focus-indicators mixin
+@mixin _strong-focus-indicators-helper($config) {
+  $border-style: map.get($config, border-style);
+  $border-width: map.get($config, border-width);
+  $border-radius: map.get($config, border-radius);
+  $border-color: map.get($config, border-color);
 
-//   // Base styles for focus indicators.
-//   .mat-focus-indicator::before {
-//     @include layout-common.fill();
-//     box-sizing: border-box;
-//     pointer-events: none;
-//     border: $border-width $border-style transparent;
-//     border-radius: $border-radius;
-//   }
+  @include _create-variable('mat-focus-indicator-border-style-custom', $border-style);
+  @include _create-variable('mat-focus-indicator-border-width-custom', $border-width);
+  @include _create-variable('mat-focus-indicator-border-radius-custom', $border-radius);
+  @include _create-variable('mat-focus-indicator-border-color-custom', $border-color);
+}
 
-// Above is styling for focus indicators (KEEP)
-// Below is unecessary per component customizations
-// REMOVE BELOW to line 85
+@mixin strong-focus-indicators($config: ()) {
+  // Default focus indicator config.
+  $default-config: (
+    border-style: solid,
+    border-width: 3px,
+    border-radius: 4px,
+    border-color: black,
+  );
 
-// By default, all focus indicators are flush with the bounding box of their
-// host element. For particular elements (listed below), default inset/offset
-// values are necessary to ensure that the focus indicator is sufficiently
-// contrastive and renders appropriately.
+  // Merge default config with user config.
+  $config: map.merge($default-config, $config);
 
-// .mat-focus-indicator.mat-flat-button::before,
-// .mat-focus-indicator.mat-raised-button::before,
-// .mat-focus-indicator.mat-fab::before,
-// .mat-focus-indicator.mat-mini-fab::before,
-// .mat-focus-indicator.mat-chip::before,
-// .mat-focus-indicator.mat-sort-header-container::before {
-//   margin: -($border-width + 2px);
-// }
+  @if (&) {
+    @include _strong-focus-indicators-helper($config);
+  } @else {
+    :root {
+      @include _strong-focus-indicators-helper($config);
+    }
+  }
 
-// .mat-focus-indicator.mat-stroked-button::before,
-// .mat-focus-indicator.mat-calendar-body-cell-content::before {
-//   margin: -($border-width + 3px);
-// }
+  // Base styles for focus indicators.
+  .mat-focus-indicator::before {
+    @include layout-common.fill();
+    box-sizing: border-box;
+    pointer-events: none;
+    border: $border-width $border-style transparent;
+    border-radius: $border-radius;
+  }
 
-// .mat-focus-indicator.mat-tab-link::before,
-// .mat-focus-indicator.mat-tab-label::before {
-//   margin: 5px;
-// }
-
-// // Render the focus indicator on focus. Defining a pseudo element's
-// // content will cause it to render.
-
-// // Checkboxes, radios, and slide toggles render focus indicators when the
-// // associated visually-hidden input is focused.
-// .mat-checkbox-input:focus ~ .mat-focus-indicator::before,
-// .mat-radio-input:focus ~ .mat-focus-indicator::before,
-// .mat-slide-toggle-input:focus ~ .mat-slide-toggle-thumb-container .mat-focus-indicator::before,
-
-// // For options, render the focus indicator when the class .mat-active
-// // is present.
-// .mat-focus-indicator.mat-option.mat-active::before,
-
-// // For calendar cells, render the focus indicator when the parent cell is
-// // focused.
-// .mat-calendar-body-cell:focus .mat-focus-indicator::before,
-
-// // Stepper headers have the focus indicator as a descendant,
-// // because `::before` is used for other styling.
-// .mat-step-header:focus .mat-focus-indicator::before,
-
-// KEEP Below ::before: For all other components, render the focus indicator on focus.
-//   .mat-focus-indicator:focus::before {
-//     content: '';
-//   }
-// }
-
-// @mixin strong-focus-indicators-base() {
-//   .mat-focus-indicator {
-//     position: relative;
-
-//     &::before {
-//       --mat-focus-indicator-border-width: var(--mat-focus-indicator-border-width-custom, 3px);
-//       --mat-focus-indicator-border-style: var(--mat-focus-indicator-border-style-custom, solid);
-//       --mat-focus-indicator-border-radius: var(--mat-focus-indicator-border-radius-custom, 4px);
-//       --mat-focus-indicator-border-color: var(
-//         --mat-focus-indicator-border-color-custom,
-//         transparent
-//       );
-
-//       @include layout-common.fill();
-//       box-sizing: border-box;
-//       pointer-events: none;
-//       border: var(--mat-focus-indicator-border-width) var(--mat-focus-indicator-border-style)
-//         var(--mat-focus-indicator-border-color);
-//       border-radius: var(--mat-focus-indicator-border-radius);
-//     }
-//   }
-// }
-
-// Mixin that ensures focus indicator host elements are positioned so that the focus indicator
-// pseudo element within is positioned relative to the host. Private mixin included within
-// `mat-core`.
-// @mixin private-strong-focus-indicators-positioning() {
-//   .mat-focus-indicator {
-//     position: relative;
-//   }
-// }
+  // For all other components, render the focus indicator on focus.
+  .mat-focus-indicator:focus::before {
+    content: '';
+  }
+}
