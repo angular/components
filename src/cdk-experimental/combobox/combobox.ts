@@ -307,7 +307,11 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
 
   /** Registers the content's id and the content type with the panel. */
   _registerContent(contentId: string, contentType: AriaHasPopupValue) {
-    if (contentType !== 'listbox' && contentType !== 'dialog') {
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      contentType !== 'listbox' &&
+      contentType !== 'dialog'
+    ) {
       throw Error('CdkComboboxPanel currently only supports listbox or dialog content.');
     }
     this.contentId = contentId;
