@@ -35,9 +35,6 @@ var_5: &yarn_install
 # https://circleci.com/blog/deep-diving-into-circleci-workspaces/
 var_6: &workspace_location ~/
 
-orbs:
-  build-tools: circleci/build-tools@2.9.0
-
 commands:
   store_build_output:
     description: 'Stores build artifacts'
@@ -52,26 +49,12 @@ commands:
           root: *workspace_location
           paths:
             - dist
-  # Command for checking out the source code from GitHub. This also ensures that the source code
-  # can be merged to the master branch without conflicts.
-  checkout_and_rebase:
-    description: Checkout and verify clean merge with master
-    steps:
-      - checkout
-      - run:
-          name: Set git user.name and user.email for rebase.
-          # User is required for rebase.
-          command: |
-            git config user.name "angular-ci"
-            git config user.email "angular-ci"
-      - build-tools/merge-with-parent:
-          parent: master
 
 jobs:
   lint:
     <<: *job_defaults
     steps:
-    - checkout_and_rebase
+    - checkout
     - restore_cache:
         key: *cache_key
     - *yarn_install
@@ -85,7 +68,7 @@ jobs:
     # https://circleci.com/docs/2.0/configuration-reference/#resource_class
     resource_class: large
     steps:
-    - checkout_and_rebase
+    - checkout
     - restore_cache:
         key: *cache_key
     - *yarn_install
@@ -96,7 +79,7 @@ jobs:
   test:
     <<: *job_defaults
     steps:
-    - checkout_and_rebase
+    - checkout
     - restore_cache:
         key: *cache_key
     - *yarn_install
@@ -107,7 +90,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *workspace_location
-      - checkout_and_rebase
+      - checkout
       - restore_cache:
           key: *cache_key
       - *yarn_install
@@ -118,7 +101,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *workspace_location
-      - checkout_and_rebase
+      - checkout
       - restore_cache:
           key: *cache_key
       - *yarn_install
