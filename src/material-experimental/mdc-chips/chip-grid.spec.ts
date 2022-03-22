@@ -15,7 +15,6 @@ import {
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-  isVisible,
   MockNgZone,
   typeInElement,
 } from '@angular/cdk/testing/private';
@@ -946,7 +945,16 @@ describe('MDC-based MatChipGrid', () => {
         expect(containerEl.querySelectorAll('mat-error').length)
           .withContext('Expected one error message to have been rendered.')
           .toBe(1);
-        expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
+        let hintWrapper = containerEl.querySelector('.mat-mdc-form-field-hint-wrapper') as Element;
+        expect(hintWrapper.classList)
+          .withContext('Expected hint wrapper to not have active class.')
+          .not.toContain('mat-mdc-form-field-hint-wrapper-active');
+        expect(getComputedStyle(hintWrapper).display)
+          .withContext('Expected hint wrapper to not be displayed.')
+          .toBe('none');
+        expect(
+          containerEl.querySelectorAll('.mat-mdc-form-field-hint-wrapper-active mat-hint').length,
+        )
           .withContext('Expected no hints to be shown.')
           .toBe(0);
 
@@ -962,7 +970,16 @@ describe('MDC-based MatChipGrid', () => {
           expect(containerEl.querySelectorAll('mat-error').length)
             .withContext('Expected no error messages when the input is valid.')
             .toBe(0);
-          expect(Array.from(containerEl.querySelectorAll('mat-hint')).filter(isVisible).length)
+          hintWrapper = containerEl.querySelector('.mat-mdc-form-field-hint-wrapper') as Element;
+          expect(hintWrapper.classList)
+            .withContext('Expected hint wrapper to have active class.')
+            .toContain('mat-mdc-form-field-hint-wrapper-active');
+          expect(getComputedStyle(hintWrapper).display)
+            .withContext('Expected hint wrapper to be displayed.')
+            .not.toBe('none');
+          expect(
+            containerEl.querySelectorAll('.mat-mdc-form-field-hint-wrapper-active mat-hint').length,
+          )
             .withContext('Expected one hint to be shown once the input is valid.')
             .toBe(1);
         });

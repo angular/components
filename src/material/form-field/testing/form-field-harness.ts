@@ -134,7 +134,10 @@ export abstract class _MatFormFieldHarnessBase<
     return parallel(() => errors.map(e => e.text()));
   }
 
-  /** Gets hint messages which are currently displayed in the form-field. Does not include hints that are attached to the DOM but hidden. */
+  /**
+   * Gets hint messages which are currently displayed in the form-field.
+   * Does not include hints that are attached to the DOM but hidden.
+   */
   async getTextHints(): Promise<string[]> {
     const hints = await this._hints();
     return parallel(() => hints.map(e => e.text()));
@@ -236,9 +239,7 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
   protected _suffixContainer = this.locatorForOptional('.mat-form-field-suffix');
   protected _label = this.locatorForOptional('.mat-form-field-label');
   protected _errors = this.locatorForAll('.mat-error');
-  protected _hints = this.locatorForAll(
-    '.mat-form-field-hint-wrapper-active mat-hint, .mat-form-field-hint-wrapper-active .mat-hint',
-  );
+  protected _hints = this.locatorForAll('.mat-form-field-hint-wrapper-active .mat-hint');
   protected _inputControl = this.locatorForOptional(MatInputHarness);
   protected _selectControl = this.locatorForOptional(MatSelectHarness);
   protected _datepickerInputControl = this.locatorForOptional(MatDatepickerInputHarness);
