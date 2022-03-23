@@ -3,12 +3,13 @@
 // Core styles that can be used to apply material design treatments to any element.
 @use './ripple/ripple';
 @use './focus-indicators/focus-indicators';
+@use 'style/focus-indicators';
 @use './typography/all-typography';
 
-// Private sass variables that will be used as reference throughout component stylesheets
+// Private sass variables that will be used as reference throughout component stylesheets.
 $private-default-focus-indicator-border-width: 3px;
 $private-default-focus-indicator-border-style: solid;
-$private-default-focus-indicator-border-color: black;
+$private-default-focus-indicator-border-color: transparent;
 $private-default-focus-indicator-border-radius: 4px;
 
 // Mixin that renders all of the core styles that are not theme-dependent.
@@ -19,32 +20,13 @@ $private-default-focus-indicator-border-radius: 4px;
   @include overlay.overlay();
   @include text-field.text-field-autosize();
   @include text-field.text-field-autofill();
+  @include focus-indicators.private-structural-styling();
 
   .mat-focus-indicator {
-    @include _structural_styling('mat');
+    @include private-structural-styling('mat');
   }
 
   .mat-mdc-focus-indicator {
-    @include _structural_styling('mat-mdc');
-  }
-}
-
-@mixin _structural_styling($library) {
-  position: relative;
-
-  &::before {
-    @include layout-common.fill();
-    box-sizing: border-box;
-    pointer-events: none;
-    border: var(
-        --#{$library}-focus-indicator-border-width,
-        $private-default-focus-indicator-border-width
-      )
-      var(--#{$library}-focus-indicator-border-style, $private-default-focus-indicator-border-style)
-      var(--#{$library}-focus-indicator-border-color, $private-default-focus-indicator-border-color);
-    border-radius: var(
-      --#{$library}-focus-indicator-border-radius,
-      $private-default-focus-indicator-border-radius
-    );
+    @include private-structural-styling('mat-mdc');
   }
 }
