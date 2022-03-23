@@ -102,7 +102,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
 
   private _overlayRef: OverlayRef;
   private _panelPortal: TemplatePortal;
-  private _panelInjector?: Injector;
 
   contentId: string = '';
   contentType: AriaHasPopupValue;
@@ -275,9 +274,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
   }
 
   private _getPanelInjector() {
-    this._panelInjector =
-      this._panelInjector || Injector.create({providers: [], parent: this._injector});
-    return this._panelInjector;
+    return this._injector;
   }
 
   private _getPanelContent() {
