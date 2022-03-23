@@ -8,7 +8,7 @@
 ///     @include mat-strong-focus-indicators($config);
 ///   }
 
-// Mixin that handles null values for CSS variables
+// Mixin that handles null values and defines CSS variables accordingly
 @mixin _create-variable($name, $value) {
   @if ($value) {
     --#{$name}: #{$value};
@@ -22,18 +22,15 @@
   $border-radius: map.get($config, border-radius);
   $border-color: map.get($config, border-color);
 
-  @include _create-variable('mat-focus-indicator-border-style-custom', $border-style);
-  @include _create-variable('mat-focus-indicator-border-width-custom', $border-width);
-  @include _create-variable('mat-focus-indicator-border-radius-custom', $border-radius);
-  @include _create-variable('mat-focus-indicator-border-color-custom', $border-color);
+  @include _create-variable('mat-focus-indicator-border-style', $border-style);
+  @include _create-variable('mat-focus-indicator-border-width', $border-width);
+  @include _create-variable('mat-focus-indicator-border-radius', $border-radius);
+  @include _create-variable('mat-focus-indicator-border-color', $border-color);
 }
 
 @mixin strong-focus-indicators($config: ()) {
   // Default focus indicator config.
   $default-config: (
-    border-style: solid,
-    border-width: 3px,
-    border-radius: 4px,
     border-color: black,
   );
 
