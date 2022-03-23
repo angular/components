@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@629c2de402a417ea7690ca6ce3f33229e27606a5  # renovate: tag=v2.0.0
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
       - uses: ./.github/actions/yarn-install
 
       - name: 'Download artifact from build job'
@@ -36,7 +36,7 @@ jobs:
           echo "::set-output name=number::$(cat ./dist/dev-app-web-pkg/pr_number)"
           echo "::set-output name=sha::$(cat ./dist/dev-app-web-pkg/pr_sha)"
 
-      - uses: FirebaseExtended/action-hosting-deploy@3a02c012c6a9b183828eeb456247327a894fc698 # renovate: tag=v0.0.0
+      - uses: FirebaseExtended/action-hosting-deploy@276388dd6c2cde23455b30293105cc866c22282d # renovate: tag=v0.0.0
         id: deploy
         with:
           repoToken: '${{secrets.GITHUB_TOKEN}}'
