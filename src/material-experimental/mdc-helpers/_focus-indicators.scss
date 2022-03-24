@@ -11,8 +11,6 @@
   // Merge default config with user config.
   $config: map.merge($default-config, $config);
 
-  @include focus-indicators.private-customize-focus-indicators($config, 'mat-mdc');
-
   // Base styles for focus indicators.
   .mat-mdc-focus-indicator::before {
     @include layout-common.fill();
