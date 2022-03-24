@@ -1,10 +1,3 @@
-/// Mixin that turns on strong focus indicators.
-///
-/// @example
-///   .my-app {
-///     @include mat-strong-focus-indicators($config);
-///   }
-
 // Private sass variables that will be used as reference throughout component stylesheets.
 $private-default-focus-indicator-border-width: 3px;
 $private-default-focus-indicator-border-style: solid;
@@ -16,8 +9,6 @@ $private-default-focus-indicator-border-radius: 4px;
   .#{$prefix}-focus-indicator {
     position: relative;
 
-    // Render the focus indicator on focus. Defining a pseudo element's
-    // content will cause it to render.
     &::before {
       @include layout-common.fill();
       box-sizing: border-box;
@@ -40,7 +31,8 @@ $private-default-focus-indicator-border-radius: 4px;
       );
     }
 
-    // For all other components, render the focus indicator on focus.
+    // By default, render the focus indicator when the focus indicator host element takes focus.
+    // Defining a pseudo element's content will cause it to render.
     &:focus::before {
       content: '';
     }
