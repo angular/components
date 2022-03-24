@@ -2,13 +2,6 @@
 @use '../style/layout-common';
 @use '../style/focus-indicators';
 
-/// Mixin that turns on strong focus indicators.
-///
-/// @example
-///   .my-app {
-///     @include mat-strong-focus-indicators($config);
-///   }
-
 @mixin strong-focus-indicators($config: ()) {
   // Default focus indicator config.
   $default-config: (
@@ -27,10 +20,5 @@
     pointer-events: none;
     border: $border-width $border-style transparent;
     border-radius: $border-radius;
-  }
-
-  // For all other components, render the focus indicator on focus.
-  .mat-focus-indicator:focus::before {
-    content: '';
   }
 }
