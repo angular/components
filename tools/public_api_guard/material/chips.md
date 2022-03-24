@@ -256,7 +256,8 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     _uid: string;
     protected _updateFocusForDestroyedChips(): void;
     protected _updateTabIndex(): void;
-    userAriaDescribedBy: string;
+    get userAriaDescribedBy(): string;
+    set userAriaDescribedBy(userAriaDescribedBy: string);
     _userTabIndex: number | null;
     get value(): any;
     set value(value: any);

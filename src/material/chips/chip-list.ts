@@ -197,7 +197,16 @@ export class MatChipList
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input('aria-describedby') userAriaDescribedBy: string;
+  @Input('aria-describedby')
+  get userAriaDescribedBy(): string {
+    return this._userAriaDescribedBy;
+  }
+  set userAriaDescribedBy(userAriaDescribedBy: string) {
+    this._userAriaDescribedBy = userAriaDescribedBy;
+    this.stateChanges.next();
+  }
+
+  private _userAriaDescribedBy: string;
 
   /** An object used to control when error messages are shown. */
   @Input() override errorStateMatcher: ErrorStateMatcher;

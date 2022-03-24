@@ -749,6 +749,8 @@ describe('MatChipList', () => {
     let nativeChips: HTMLElement[];
 
     describe('single selection', () => {
+      let chipListEl: HTMLElement;
+
       beforeEach(() => {
         fixture = createComponent(BasicChipList);
         fixture.detectChanges();
@@ -757,6 +759,7 @@ describe('MatChipList', () => {
           .queryAll(By.css('mat-chip'))
           .map(chip => chip.nativeElement);
         chips = fixture.componentInstance.chips;
+        chipListEl = fixture.debugElement.query(By.css('mat-chip-list'))!.nativeElement;
       });
 
       it('should take an initial view value with reactive forms', () => {
@@ -948,6 +951,22 @@ describe('MatChipList', () => {
         fixture.detectChanges();
 
         expect(formField.classList).not.toContain('mat-focused');
+      }));
+
+      it('should set `aria-describedby` to the id of the mat-hint', fakeAsync(() => {
+        expect(chipListEl.getAttribute('aria-describedby')).toBeNull();
+
+        fixture.componentInstance.hint = 'test';
+        fixture.detectChanges();
+        const hint = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
+        expect(chipListEl.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
+        expect(chipListEl.getAttribute('aria-describedby')).toMatch(/^mat-hint-\d+$/);
+      }));
+
+      it('should support user binding to `aria-describedby`', fakeAsync(() => {
+        fixture.componentInstance.ariaDescribedBy = 'test';
+        fixture.detectChanges();
+        expect(chipListEl.getAttribute('aria-describedby')).toBe('test');
       }));
     });
 
@@ -1586,11 +1605,13 @@ class FormFieldChipList {
   template: `
     <mat-form-field>
       <mat-chip-list placeholder="Food" [formControl]="control"
+        [aria-describedby]="ariaDescribedBy"
         [tabIndex]="tabIndexOverride" [selectable]="selectable">
         <mat-chip *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
           {{ food.viewValue }}
         </mat-chip>
       </mat-chip-list>
+      <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
     </mat-form-field>
   `,
 })
@@ -1605,7 +1626,9 @@ class BasicChipList {
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
+  ariaDescribedBy: string = '';
   control = new FormControl<string | null>(null);
+  hint: string;
   tabIndexOverride: number;
   selectable: boolean;
 
