@@ -20,14 +20,14 @@
 }
 
 // Mixin that handles null values and defines CSS variables accordingly.
-@mixin private-create-variable($name, $value) {
+@mixin _create-variable($name, $value) {
   @if ($value) {
     --#{$name}: #{$value};
   }
 }
 
 // Mixin that dedups CSS Variables for the strong-focus-indicators mixin.
-@mixin private-strong-focus-indicators-helper($config, $prefix) {
+@mixin private-customize-focus-indicators($config, $prefix) {
   $border-style: map.get($config, border-style);
   $border-width: map.get($config, border-width);
   $border-radius: map.get($config, border-radius);
