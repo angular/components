@@ -4,7 +4,7 @@
 
 // Core styles that can be used to apply material design treatments to any element.
 @use './ripple/ripple';
-@use 'style/focus-indicators';
+@use './style/focus-indicators';
 @use './typography/all-typography';
 
 // Private sass variables that will be used as reference throughout component stylesheets.
@@ -21,13 +21,12 @@ $private-default-focus-indicator-border-radius: 4px;
   @include overlay.overlay();
   @include text-field.text-field-autosize();
   @include text-field.text-field-autofill();
-  @include focus-indicators.private-structural-styling();
 
   .mat-focus-indicator {
-    @include private-structural-styling('mat');
+    @include focus-indicators.private-structural-styling('mat');
   }
 
   .mat-mdc-focus-indicator {
-    @include private-structural-styling('mat-mdc');
+    @include focus-indicators.private-structural-styling('mat-mdc');
   }
 }

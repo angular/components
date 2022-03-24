@@ -10,8 +10,6 @@
 ///   }
 
 @mixin strong-focus-indicators($config: ()) {
-  @include focus-indicators.private-strong-focus-indicators-helper();
-
   // Default focus indicator config.
   $default-config: (
     border-color: black,
@@ -20,13 +18,7 @@
   // Merge default config with user config.
   $config: map.merge($default-config, $config);
 
-  @if (&) {
-    @include private-strong-focus-indicators-helper($config, 'mat-mdc');
-  } @else {
-    :root {
-      @include private-strong-focus-indicators-helper($config, 'mat-mdc');
-    }
-  }
+  @include focus-indicators.private-customize-focus-indicators($config, 'mat-mdc');
 
   // Base styles for focus indicators.
   .mat-mdc-focus-indicator::before {
