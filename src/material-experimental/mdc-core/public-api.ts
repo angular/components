@@ -11,21 +11,15 @@ export {
   AnimationCurves,
   AnimationDurations,
   CanColor,
-  CanColorCtor,
   CanDisable,
-  CanDisableCtor,
   CanDisableRipple,
-  CanDisableRippleCtor,
   CanUpdateErrorState,
-  CanUpdateErrorStateCtor,
   DateAdapter,
   defaultRippleAnimationConfig,
   ErrorStateMatcher,
   GranularSanityChecks,
   HasInitialized,
-  HasInitializedCtor,
   HasTabIndex,
-  HasTabIndexCtor,
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
   MAT_DATE_LOCALE_FACTORY,
@@ -35,8 +29,6 @@ export {
   MatCommonModule,
   MatDateFormats,
   MATERIAL_SANITY_CHECKS,
-  MatLine,
-  MatLineModule,
   MatNativeDateModule,
   MatPseudoCheckbox,
   MatPseudoCheckboxModule,
@@ -62,5 +54,11 @@ export {
   setLines,
   ShowOnDirtyErrorStateMatcher,
   ThemePalette,
-  VERSION
+  VERSION,
+  // Note: These need to be exposed privately for cross-package type inference. e.g. if the
+  // experimental package uses a mixin, TS will try to write an explicit type reference that
+  // is equivalent to e.g. `CanColorCtor`. For this it needs these two helpers as otherwise it
+  // would generate a deep cross-package import that breaks in the NPM package output.
+  _AbstractConstructor,
+  _Constructor,
 } from '@angular/material/core';

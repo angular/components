@@ -1,1 +1,10 @@
 node_modules
+
+integration/harness-e2e-cli/.angular
+integration/harness-e2e-cli/node_modules
+
+integration/ng-update-v13/.angular
+integration/ng-update-v13/node_modules
+
+integration/ng-add/.angular
+integration/ng-add/node_modules

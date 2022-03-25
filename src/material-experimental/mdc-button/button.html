@@ -1,4 +1,8 @@
-<span class="mdc-button__ripple"></span>
+<span
+    class="mat-mdc-button-persistent-ripple"
+    [class.mdc-button__ripple]="!_isFab && !_isIconButton"
+    [class.mdc-fab__ripple]="_isFab"
+    [class.mdc-icon-button__ripple]="_isIconButton"></span>
 
 <ng-content select=".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd])">
 </ng-content>
@@ -15,7 +19,8 @@
 <span class="mat-mdc-focus-indicator"></span>
 
 <span matRipple class="mat-mdc-button-ripple"
-     [matRippleAnimation]="_rippleAnimation"
      [matRippleDisabled]="_isRippleDisabled()"
-     [matRippleCentered]="_isRippleCentered"
+     [matRippleCentered]="_isIconButton"
      [matRippleTrigger]="_elementRef.nativeElement"></span>
+
+<span class="mat-mdc-button-touch-target"></span>

@@ -1,6 +1,6 @@
-@import '../core/style/variables';
-@import '../core/style/elevation';
-@import '../../cdk/a11y/a11y';
+@use '../core/style/variables';
+@use '../core/style/elevation';
+@use '../../cdk/a11y';
 
 .mat-expansion-panel {
   $border-radius: 4px;
@@ -10,8 +10,8 @@
   margin: 0;
   border-radius: $border-radius;
   overflow: hidden;
-  transition: margin 225ms $mat-fast-out-slow-in-timing-function,
-      mat-elevation-transition-property-value();
+  transition: margin 225ms variables.$fast-out-slow-in-timing-function,
+      elevation.private-transition-property-value();
 
   // Required so that the `box-shadow` works after the focus indicator relatively positions the
   // header.
@@ -33,7 +33,7 @@
     }
   }
 
-  @include cdk-high-contrast(active, off) {
+  @include a11y.high-contrast(active, off) {
     outline: solid 1px;
   }
 
@@ -48,6 +48,16 @@
   display: flex;
   flex-direction: column;
   overflow: visible;
+
+  // Usually the `visibility: hidden` added by the animation is enough to prevent focus from
+  // entering the collapsed content, but children with their own `visibility` can override it.
+  // In other components we set a `display: none` at the root to stop focus from reaching the
+  // elements, however we can't do that here, because the content can determine the width
+  // of an expansion panel. The most practical fallback is to use `!important` to override
+  // any custom visibility.
+  &[style*='visibility: hidden'] * {
+    visibility: hidden !important;
+  }
 }
 
 .mat-expansion-panel-body {

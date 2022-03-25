@@ -6,6 +6,8 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "example-module-lib",
     srcs = glob(["**/*.ts"]),
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
         "@npm//@types/node",
@@ -21,4 +23,7 @@ nodejs_binary(
         "@npm//typescript",
     ],
     entry_point = ":bazel-bin.ts",
+    # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
+    # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
+    templated_args = ["--bazel_patch_module_resolver"],
 )

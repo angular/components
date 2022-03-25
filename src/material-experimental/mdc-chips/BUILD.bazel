@@ -17,8 +17,10 @@ ng_module(
             "**/*.spec.ts",
         ],
     ),
-    assets = [":chips_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-chips",
+    assets = [
+        ":chip_scss",
+        ":chip_set_scss",
+    ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
         "//src/material-experimental/mdc-core",
@@ -28,7 +30,6 @@ ng_module(
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@material/chips",
-        "@npm//@material/ripple",
     ],
 )
 
@@ -42,8 +43,21 @@ sass_library(
 )
 
 sass_binary(
-    name = "chips_scss",
-    src = "chips.scss",
+    name = "chip_scss",
+    src = "chip.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+sass_binary(
+    name = "chip_set_scss",
+    src = "chip-set.scss",
     include_paths = [
         "external/npm/node_modules",
     ],
@@ -83,16 +97,7 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/textfield/dist/mdc.textfield.js",
-        "@npm//:node_modules/@material/line-ripple/dist/mdc.lineRipple.js",
-        "@npm//:node_modules/@material/notched-outline/dist/mdc.notchedOutline.js",
-        "@npm//:node_modules/@material/dom/dist/mdc.dom.js",
-        "@npm//:node_modules/@material/chips/dist/mdc.chips.js",
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-    ],
     deps = [
         ":chips_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )

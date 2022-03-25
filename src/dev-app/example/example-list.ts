@@ -29,7 +29,8 @@ import {Component, Input} from '@angular/core';
       </mat-expansion-panel>
     </mat-accordion>
   `,
-  styles: [`
+  styles: [
+    `
     mat-expansion-panel {
       box-shadow: none !important;
       border-radius: 0 !important;
@@ -50,7 +51,8 @@ import {Component, Input} from '@angular/core';
       color: #666;
       font-size: 12px;
     }
-  `]
+  `,
+  ],
 })
 export class ExampleList {
   /** Type of examples being displayed. */
@@ -63,12 +65,10 @@ export class ExampleList {
   get expandAll(): boolean {
     return this._expandAll;
   }
-  set expandAll(v: boolean) {
+  set expandAll(v: BooleanInput) {
     this._expandAll = coerceBooleanProperty(v);
   }
   _expandAll: boolean;
 
   exampleComponents = EXAMPLE_COMPONENTS;
-
-  static ngAcceptInputType_expandAll: BooleanInput;
 }

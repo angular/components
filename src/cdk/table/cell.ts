@@ -11,14 +11,13 @@ import {
   ContentChild,
   Directive,
   ElementRef,
-  Input,
-  TemplateRef,
   Inject,
+  Input,
   Optional,
+  TemplateRef,
 } from '@angular/core';
 import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
 import {CDK_TABLE} from './tokens';
-
 
 /** Base interface for a cell definition. Captures a column's cell template definition. */
 export interface CellDef {
@@ -55,8 +54,8 @@ export class CdkFooterCellDef implements CellDef {
 // Boilerplate for applying mixins to CdkColumnDef.
 /** @docs-private */
 class CdkColumnDefBase {}
-const _CdkColumnDefBase: CanStickCtor&typeof CdkColumnDefBase =
-    mixinHasStickyInput(CdkColumnDefBase);
+const _CdkColumnDefBase: CanStickCtor & typeof CdkColumnDefBase =
+  mixinHasStickyInput(CdkColumnDefBase);
 
 /**
  * Column definition for the CDK table.
@@ -70,8 +69,12 @@ const _CdkColumnDefBase: CanStickCtor&typeof CdkColumnDefBase =
 export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   /** Unique name for this column. */
   @Input('cdkColumnDef')
-  get name(): string { return this._name; }
-  set name(name: string) { this._setNameInput(name); }
+  get name(): string {
+    return this._name;
+  }
+  set name(name: string) {
+    this._setNameInput(name);
+  }
   protected _name: string;
 
   /**
@@ -83,7 +86,7 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   get stickyEnd(): boolean {
     return this._stickyEnd;
   }
-  set stickyEnd(v: boolean) {
+  set stickyEnd(v: BooleanInput) {
     const prevValue = this._stickyEnd;
     this._stickyEnd = coerceBooleanProperty(v);
     this._hasStickyChanged = prevValue !== this._stickyEnd;
@@ -134,28 +137,20 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
    * @docs-private
    */
   protected _setNameInput(value: string) {
-    // If the directive is set without a name (updated programatically), then this setter will
-    // trigger with an empty string and should not overwrite the programatically set value.
+    // If the directive is set without a name (updated programmatically), then this setter will
+    // trigger with an empty string and should not overwrite the programmatically set value.
     if (value) {
       this._name = value;
-      this.cssClassFriendlyName = value.replace(/[^a-z0-9_-]/ig, '-');
+      this.cssClassFriendlyName = value.replace(/[^a-z0-9_-]/gi, '-');
       this._updateColumnCssClassName();
     }
   }
-
-  static ngAcceptInputType_sticky: BooleanInput;
-  static ngAcceptInputType_stickyEnd: BooleanInput;
 }
 
 /** Base class for the cells. Adds a CSS classname that identifies the column it renders in. */
 export class BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    // If IE 11 is dropped before we switch to setting a single class name, change to multi param
-    // with destructuring.
-    const classList = elementRef.nativeElement.classList;
-    for (const className of columnDef._columnCssClassName) {
-      classList.add(className);
-    }
+    elementRef.nativeElement.classList.add(...columnDef._columnCssClassName);
   }
 }
 
@@ -178,12 +173,16 @@ export class CdkHeaderCell extends BaseCdkCell {
   selector: 'cdk-footer-cell, td[cdk-footer-cell]',
   host: {
     'class': 'cdk-footer-cell',
-    'role': 'gridcell',
   },
 })
 export class CdkFooterCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
+    if (columnDef._table?._elementRef.nativeElement.nodeType === 1) {
+      const tableRole = columnDef._table._elementRef.nativeElement.getAttribute('role');
+      const role = tableRole === 'grid' || tableRole === 'treegrid' ? 'gridcell' : 'cell';
+      elementRef.nativeElement.setAttribute('role', role);
+    }
   }
 }
 
@@ -192,11 +191,15 @@ export class CdkFooterCell extends BaseCdkCell {
   selector: 'cdk-cell, td[cdk-cell]',
   host: {
     'class': 'cdk-cell',
-    'role': 'gridcell',
   },
 })
 export class CdkCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
+    if (columnDef._table?._elementRef.nativeElement.nodeType === 1) {
+      const tableRole = columnDef._table._elementRef.nativeElement.getAttribute('role');
+      const role = tableRole === 'grid' || tableRole === 'treegrid' ? 'gridcell' : 'cell';
+      elementRef.nativeElement.setAttribute('role', role);
+    }
   }
 }

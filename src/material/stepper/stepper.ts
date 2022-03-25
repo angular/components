@@ -7,13 +7,12 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   CdkStep,
   CdkStepper,
   StepContentPositionState,
   STEPPER_GLOBAL_OPTIONS,
-  StepperOptions
+  StepperOptions,
 } from '@angular/cdk/stepper';
 import {AnimationEvent} from '@angular/animations';
 import {
@@ -23,30 +22,36 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   EventEmitter,
   forwardRef,
   Inject,
   Input,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
   SkipSelf,
   TemplateRef,
   ViewChildren,
+  ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
-import {DOCUMENT} from '@angular/common';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
-import {Subject} from 'rxjs';
-import {takeUntil, distinctUntilChanged} from 'rxjs/operators';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {Subject, Subscription} from 'rxjs';
+import {takeUntil, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
-import {matStepperAnimations} from './stepper-animations';
+import {
+  DEFAULT_HORIZONTAL_ANIMATION_DURATION,
+  DEFAULT_VERTICAL_ANIMATION_DURATION,
+  matStepperAnimations,
+} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
+import {MatStepContent} from './step-content';
 
 @Component({
   selector: 'mat-step',
@@ -59,18 +64,49 @@ import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
   exportAs: 'matStep',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatStep extends CdkStep implements ErrorStateMatcher {
+export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
+  private _isSelected = Subscription.EMPTY;
+
   /** Content for step label given by `<ng-template matStepLabel>`. */
-  @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
+  @ContentChild(MatStepLabel) override stepLabel: MatStepLabel;
 
   /** Theme color for the particular step. */
   @Input() color: ThemePalette;
 
-  /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
-  constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
-              @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
-              @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+  /** Content that will be rendered lazily. */
+  @ContentChild(MatStepContent, {static: false}) _lazyContent: MatStepContent;
+
+  /** Currently-attached portal containing the lazy content. */
+  _portal: TemplatePortal;
+
+  constructor(
+    @Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
+    @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
+    private _viewContainerRef: ViewContainerRef,
+    @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions,
+  ) {
     super(stepper, stepperOptions);
+  }
+
+  ngAfterContentInit() {
+    this._isSelected = this._stepper.steps.changes
+      .pipe(
+        switchMap(() => {
+          return this._stepper.selectionChange.pipe(
+            map(event => event.selectedStep === this),
+            startWith(this._stepper.selected === this),
+          );
+        }),
+      )
+      .subscribe(isSelected => {
+        if (isSelected && this._lazyContent && !this._portal) {
+          this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef!);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._isSelected.unsubscribe();
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
@@ -86,17 +122,40 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   }
 }
 
-
-@Directive({selector: '[matStepper]', providers: [{provide: CdkStepper, useExisting: MatStepper}]})
+@Component({
+  selector: 'mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]',
+  exportAs: 'matStepper, matVerticalStepper, matHorizontalStepper',
+  templateUrl: 'stepper.html',
+  styleUrls: ['stepper.css'],
+  inputs: ['selectedIndex'],
+  host: {
+    '[class.mat-stepper-horizontal]': 'orientation === "horizontal"',
+    '[class.mat-stepper-vertical]': 'orientation === "vertical"',
+    '[class.mat-stepper-label-position-end]':
+      'orientation === "horizontal" && labelPosition == "end"',
+    '[class.mat-stepper-label-position-bottom]':
+      'orientation === "horizontal" && labelPosition == "bottom"',
+    '[class.mat-stepper-header-position-bottom]': 'headerPosition === "bottom"',
+    '[attr.aria-orientation]': 'orientation',
+    'role': 'tablist',
+  },
+  animations: [
+    matStepperAnimations.horizontalStepTransition,
+    matStepperAnimations.verticalStepTransition,
+  ],
+  providers: [{provide: CdkStepper, useExisting: MatStepper}],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
+  @ViewChildren(MatStepHeader) override _stepHeader: QueryList<MatStepHeader>;
 
   /** Full list of steps inside the stepper, including inside nested steppers. */
-  @ContentChildren(MatStep, {descendants: true}) _steps: QueryList<MatStep>;
+  @ContentChildren(MatStep, {descendants: true}) override _steps: QueryList<MatStep>;
 
   /** Steps that belong to the current stepper, excluding ones from nested steppers. */
-  readonly steps: QueryList<MatStep> = new QueryList<MatStep>();
+  override readonly steps: QueryList<MatStep> = new QueryList<MatStep>();
 
   /** Custom icon overrides passed in by the consumer. */
   @ContentChildren(MatStepperIcon, {descendants: true}) _icons: QueryList<MatStepperIcon>;
@@ -110,104 +169,81 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   /** Theme color for all of the steps in stepper. */
   @Input() color: ThemePalette;
 
+  /**
+   * Whether the label should display in bottom or end position.
+   * Only applies in the `horizontal` orientation.
+   */
+  @Input()
+  labelPosition: 'bottom' | 'end' = 'end';
+
+  /**
+   * Position of the stepper's header.
+   * Only applies in the `horizontal` orientation.
+   */
+  @Input()
+  headerPosition: 'top' | 'bottom' = 'top';
+
   /** Consumer-specified template-refs to be used to override the header icons. */
-  _iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};
+  _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>> = {};
 
   /** Stream of animation `done` events when the body expands/collapses. */
-  _animationDone = new Subject<AnimationEvent>();
+  readonly _animationDone = new Subject<AnimationEvent>();
 
-  ngAfterContentInit() {
+  /** Duration for the animation. Will be normalized to milliseconds if no units are set. */
+  @Input()
+  get animationDuration(): string {
+    return this._animationDuration;
+  }
+  set animationDuration(value: string) {
+    this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
+  }
+  private _animationDuration = '';
+
+  constructor(
+    @Optional() dir: Directionality,
+    changeDetectorRef: ChangeDetectorRef,
+    elementRef: ElementRef<HTMLElement>,
+  ) {
+    super(dir, changeDetectorRef, elementRef);
+    const nodeName = elementRef.nativeElement.nodeName.toLowerCase();
+    this.orientation = nodeName === 'mat-vertical-stepper' ? 'vertical' : 'horizontal';
+  }
+
+  override ngAfterContentInit() {
     super.ngAfterContentInit();
-    this._icons.forEach(({name, templateRef}) => this._iconOverrides[name] = templateRef);
+    this._icons.forEach(({name, templateRef}) => (this._iconOverrides[name] = templateRef));
 
     // Mark the component for change detection whenever the content children query changes
     this.steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._stateChanged();
     });
 
-    this._animationDone.pipe(
-      // This needs a `distinctUntilChanged` in order to avoid emitting the same event twice due
-      // to a bug in animations where the `.done` callback gets invoked twice on some browsers.
-      // See https://github.com/angular/angular/issues/24084
-      distinctUntilChanged((x, y) => x.fromState === y.fromState && x.toState === y.toState),
-      takeUntil(this._destroyed)
-    ).subscribe(event => {
-      if ((event.toState as StepContentPositionState) === 'current') {
-        this.animationDone.emit();
-      }
-    });
+    this._animationDone
+      .pipe(
+        // This needs a `distinctUntilChanged` in order to avoid emitting the same event twice due
+        // to a bug in animations where the `.done` callback gets invoked twice on some browsers.
+        // See https://github.com/angular/angular/issues/24084
+        distinctUntilChanged((x, y) => x.fromState === y.fromState && x.toState === y.toState),
+        takeUntil(this._destroyed),
+      )
+      .subscribe(event => {
+        if ((event.toState as StepContentPositionState) === 'current') {
+          this.animationDone.emit();
+        }
+      });
   }
 
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
-}
-
-@Component({
-  selector: 'mat-horizontal-stepper',
-  exportAs: 'matHorizontalStepper',
-  templateUrl: 'stepper-horizontal.html',
-  styleUrls: ['stepper.css'],
-  inputs: ['selectedIndex'],
-  host: {
-    'class': 'mat-stepper-horizontal',
-    '[class.mat-stepper-label-position-end]': 'labelPosition == "end"',
-    '[class.mat-stepper-label-position-bottom]': 'labelPosition == "bottom"',
-    'aria-orientation': 'horizontal',
-    'role': 'tablist',
-  },
-  animations: [matStepperAnimations.horizontalStepTransition],
-  providers: [
-    {provide: MatStepper, useExisting: MatHorizontalStepper},
-    {provide: CdkStepper, useExisting: MatHorizontalStepper}
-  ],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatHorizontalStepper extends MatStepper {
-  /** Whether the label should display in bottom or end position. */
-  @Input()
-  labelPosition: 'bottom' | 'end' = 'end';
-
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
-}
-
-@Component({
-  selector: 'mat-vertical-stepper',
-  exportAs: 'matVerticalStepper',
-  templateUrl: 'stepper-vertical.html',
-  styleUrls: ['stepper.css'],
-  inputs: ['selectedIndex'],
-  host: {
-    'class': 'mat-stepper-vertical',
-    'aria-orientation': 'vertical',
-    'role': 'tablist',
-  },
-  animations: [matStepperAnimations.verticalStepTransition],
-  providers: [
-    {provide: MatStepper, useExisting: MatVerticalStepper},
-    {provide: CdkStepper, useExisting: MatVerticalStepper}
-  ],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatVerticalStepper extends MatStepper {
-  constructor(
-    @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef,
-    // @breaking-change 8.0.0 `elementRef` and `_document` parameters to become required.
-    elementRef?: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) _document?: any) {
-    super(dir, changeDetectorRef, elementRef, _document);
-    this._orientation = 'vertical';
+  _stepIsNavigable(index: number, step: MatStep): boolean {
+    return step.completed || this.selectedIndex === index || !this.linear;
   }
 
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
+  _getAnimationDuration() {
+    if (this.animationDuration) {
+      return this.animationDuration;
+    }
+
+    return this.orientation === 'horizontal'
+      ? DEFAULT_HORIZONTAL_ANIMATION_DURATION
+      : DEFAULT_VERTICAL_ANIMATION_DURATION;
+  }
 }

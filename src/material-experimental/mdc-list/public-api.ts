@@ -12,12 +12,10 @@ export * from './module';
 export * from './nav-list';
 export * from './selection-list';
 export * from './list-option';
-export * from './list-styling';
+export * from './subheader';
+export * from './list-item-sections';
+
 export {MatListOptionCheckboxPosition} from './list-option-types';
 export {MatListOption} from './list-option';
 
-export {
-  MAT_LIST,
-  MAT_NAV_LIST,
-  MAT_SELECTION_LIST_VALUE_ACCESSOR,
-} from '@angular/material/list';
+export {MAT_LIST, MAT_NAV_LIST, MAT_SELECTION_LIST_VALUE_ACCESSOR} from '@angular/material/list';

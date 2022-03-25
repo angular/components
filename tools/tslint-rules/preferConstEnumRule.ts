@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import * as Lint from 'tslint';
 import * as tsutils from 'tsutils';
 
@@ -12,7 +12,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class Walker extends Lint.RuleWalker {
-  visitEnumDeclaration(node: ts.EnumDeclaration) {
+  override visitEnumDeclaration(node: ts.EnumDeclaration) {
     if (!tsutils.hasModifier(node.modifiers, ts.SyntaxKind.ConstKeyword)) {
       this.addFailureAtNode(node.name, 'Enums should be declared as `const enum`.');
     }

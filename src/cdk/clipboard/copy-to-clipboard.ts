@@ -27,8 +27,9 @@ export interface CdkCopyToClipboardConfig {
 }
 
 /** Injection token that can be used to provide the default options to `CdkCopyToClipboard`. */
-export const CKD_COPY_TO_CLIPBOARD_CONFIG =
-    new InjectionToken<CdkCopyToClipboardConfig>('CKD_COPY_TO_CLIPBOARD_CONFIG');
+export const CDK_COPY_TO_CLIPBOARD_CONFIG = new InjectionToken<CdkCopyToClipboardConfig>(
+  'CDK_COPY_TO_CLIPBOARD_CONFIG',
+);
 
 /**
  * Provides behavior for a button that when clicked copies content into user's
@@ -38,7 +39,7 @@ export const CKD_COPY_TO_CLIPBOARD_CONFIG =
   selector: '[cdkCopyToClipboard]',
   host: {
     '(click)': 'copy()',
-  }
+  },
 })
 export class CdkCopyToClipboard implements OnDestroy {
   /** Content to be copied. */
@@ -54,7 +55,7 @@ export class CdkCopyToClipboard implements OnDestroy {
    * Emits when some text is copied to the clipboard. The
    * emitted value indicates whether copying was successful.
    */
-  @Output('cdkCopyToClipboardCopied') copied = new EventEmitter<boolean>();
+  @Output('cdkCopyToClipboardCopied') readonly copied = new EventEmitter<boolean>();
 
   /** Copies that are currently being attempted. */
   private _pending = new Set<PendingCopy>();
@@ -68,8 +69,8 @@ export class CdkCopyToClipboard implements OnDestroy {
   constructor(
     private _clipboard: Clipboard,
     private _ngZone: NgZone,
-    @Optional() @Inject(CKD_COPY_TO_CLIPBOARD_CONFIG) config?: CdkCopyToClipboardConfig) {
-
+    @Optional() @Inject(CDK_COPY_TO_CLIPBOARD_CONFIG) config?: CdkCopyToClipboardConfig,
+  ) {
     if (config && config.attempts != null) {
       this.attempts = config.attempts;
     }

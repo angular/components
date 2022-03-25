@@ -14,9 +14,9 @@ export class SidenavFixedExample {
     this.options = fb.group({
       bottom: 0,
       fixed: false,
-      top: 0
+      top: 0,
     });
   }
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
+  shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }

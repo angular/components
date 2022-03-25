@@ -1,41 +1,66 @@
-@import '@material/checkbox/functions.import';
-@import '@material/checkbox/mixins.import';
-@import '@material/form-field/mixins.import';
-@import '@material/ripple/variables.import';
-@import '../mdc-helpers/mdc-helpers';
-@import '../../material/core/style/_layout-common.scss';
+@use '@material/checkbox/checkbox' as mdc-checkbox;
+@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
+@use '@material/form-field' as mdc-form-field;
+@use '@material/ripple' as mdc-ripple;
+@use '@material/touch-target' as mdc-touch-target;
+@use 'sass:map';
+@use '../../cdk/a11y';
+@use '../mdc-helpers/mdc-helpers';
+@use '../../material/core/style/layout-common';
+@use '../../material/core/style/vendor-prefixes';
+@use './checkbox-private';
 
-@include mdc-checkbox-without-ripple($query: $mat-base-styles-query);
-@include mdc-form-field-core-styles($query: $mat-base-styles-query);
+@include mdc-helpers.disable-fallback-declarations {
+  @include mdc-checkbox.static-styles($query: mdc-helpers.$mat-base-styles-query);
+  @include mdc-form-field.core-styles($query: mdc-helpers.$mat-base-styles-query);
+}
+
+// Apply base styles to the MDC ripple to adjust appearance for state changes (hover, focus, press)
+@mixin _ripple-base-styles() {
+  .mdc-checkbox__ripple {
+    opacity: 0;
+  }
+}
 
 .mat-mdc-checkbox {
   // The host node defaults to `diplay: inline` so
   // we have to change it in order for margins to work.
   display: inline-block;
 
-  // The MDC checkbox styles related to the hover state are intertwined with the MDC ripple styles.
-  // We currently don't use the MDC ripple due to size concerns, therefore we need to add some
-  // additional styles to restore the hover state.
-  .mdc-checkbox:hover
-      .mdc-checkbox__native-control:not([disabled]) ~ .mdc-checkbox__background::before {
-    opacity: map-get($mdc-ripple-dark-ink-opacities, hover);
-    transform: scale(1);
-    transition: mdc-checkbox-transition-enter(opacity, 0, 80ms),
-                mdc-checkbox-transition-enter(transform, 0, 80ms);
+  .mdc-checkbox {
+    // MDC theme styles also include structural styles so we have to include the theme at least
+    // once here. The values will be overwritten by our own theme file afterwards.
+    @include mdc-helpers.disable-fallback-declarations {
+      @include mdc-checkbox-theme.theme-styles(checkbox-private.$private-checkbox-theme-config);
+    }
+
+    // The MDC checkbox styles related to the hover state are intertwined with the MDC ripple
+    // styles. We currently don't use the MDC ripple due to size concerns, therefore we need to
+    // add some additional styles to restore the hover state.
+    &:hover .mdc-checkbox__native-control:not([disabled]) ~ .mdc-checkbox__ripple {
+      opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
+      transform: scale(1);
+      transition: mdc-checkbox-transition-enter(opacity, 0, 80ms),
+      mdc-checkbox-transition-enter(transform, 0, 80ms);
+    }
+
+    // Note that the :not([disabled]) here isn't necessary, but we need it for the
+    // extra specificity so that the hover styles don't override the focus styles.
+    .mdc-checkbox__native-control:not([disabled]):focus ~ .mdc-checkbox__ripple {
+      opacity: map.get(mdc-ripple.$dark-ink-opacities, hover) +
+        map.get(mdc-ripple.$dark-ink-opacities, focus);
+
+      @include a11y.high-contrast(active, off) {
+        outline: solid 3px;
+        opacity: 1;
+      }
+    }
   }
 
-  // Note that the :not([disabled]) here isn't necessary, but we need it for the
-  // extra specificity so that the hover styles don't override the focus styles.
-  .mdc-checkbox
-      .mdc-checkbox__native-control:not([disabled]):focus ~ .mdc-checkbox__background::before {
-    opacity: map-get($mdc-ripple-dark-ink-opacities, hover) +
-                 map-get($mdc-ripple-dark-ink-opacities, focus);
-  }
 
-  // We use an Angular Material ripple rather than an MDC ripple due to size concerns, so we need to
-  // style it appropriately.
-  .mat-ripple-element {
-    opacity: map-get($mdc-ripple-dark-ink-opacities, press);
+  .mdc-checkbox__background {
+    // force browser to show background-color when using the print function
+    @include vendor-prefixes.private-color-adjust(exact);
   }
 
   // Angular Material supports disabling all animations when NoopAnimationsModule is imported.
@@ -54,10 +79,12 @@
   label:empty {
     display: none;
   }
+
+  @include _ripple-base-styles();
 }
 
-.mat-mdc-checkbox-ripple {
-  @include mat-fill();
+.mat-mdc-checkbox-ripple, .mdc-checkbox__ripple {
+  @include layout-common.fill();
 
   // Usually the ripple radius would be specified through the MatRipple input, but
   // since we dynamically adjust the size of the ripple container, we cannot use a
@@ -70,4 +97,11 @@
   &:not(:empty) {
     transform: translateZ(0);
   }
+}
+
+// Element used to provide a larger tap target for users on touch devices.
+.mat-mdc-checkbox-touch-target {
+  @include mdc-touch-target.touch-target(
+    $set-width: true,
+    $query: mdc-helpers.$mat-base-styles-query);
 }

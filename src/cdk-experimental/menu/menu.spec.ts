@@ -1,33 +1,32 @@
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
-  tick,
   flush,
+  TestBed,
+  tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {Component, ViewChild, ViewChildren, QueryList, ElementRef} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {TAB} from '@angular/cdk/keycodes';
 import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
   createMouseEvent,
   dispatchEvent,
-} from '@angular/cdk/testing/private';
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+} from '../../cdk/testing/private';
 import {By} from '@angular/platform-browser';
 import {CdkMenu} from './menu';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItem} from './menu-item';
-import {CdkMenuPanel} from './menu-panel';
-import {MenuStack} from './menu-stack';
 
 describe('Menu', () => {
   describe('as checkbox group', () => {
     let fixture: ComponentFixture<MenuCheckboxGroup>;
     let menuItems: CdkMenuItemCheckbox[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(
+      waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule],
           declarations: [MenuCheckboxGroup],
@@ -36,14 +35,13 @@ describe('Menu', () => {
         fixture = TestBed.createComponent(MenuCheckboxGroup);
         fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
         fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
         fixture.detectChanges();
 
         menuItems = fixture.debugElement
           .queryAll(By.directive(CdkMenuItemCheckbox))
           .map(element => element.injector.get(CdkMenuItemCheckbox));
-      })
+      }),
     );
 
     it('should toggle menuitemcheckbox', () => {
@@ -64,7 +62,8 @@ describe('Menu', () => {
     let fixture: ComponentFixture<MenuCheckboxGroup>;
     let menuItems: CdkMenuItemCheckbox[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(
+      waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule],
           declarations: [MenuCheckboxGroup],
@@ -73,14 +72,13 @@ describe('Menu', () => {
         fixture = TestBed.createComponent(MenuCheckboxGroup);
         fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
         fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
         fixture.detectChanges();
 
         menuItems = fixture.debugElement
           .queryAll(By.directive(CdkMenuItemCheckbox))
           .map(element => element.injector.get(CdkMenuItemCheckbox));
-      })
+      }),
     );
 
     it('should emit on click', () => {
@@ -99,7 +97,8 @@ describe('Menu', () => {
     let menuItems: CdkMenuItemCheckbox[];
     let menu: CdkMenu;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(
+      waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule],
           declarations: [MenuWithNestedGroup],
@@ -108,7 +107,6 @@ describe('Menu', () => {
         fixture = TestBed.createComponent(MenuWithNestedGroup);
         fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
         fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
         fixture.detectChanges();
 
@@ -117,7 +115,7 @@ describe('Menu', () => {
         menuItems = fixture.debugElement
           .queryAll(By.directive(CdkMenuItemCheckbox))
           .map(element => element.injector.get(CdkMenuItemCheckbox));
-      })
+      }),
     );
 
     it('should not emit change from root menu ', () => {
@@ -143,7 +141,8 @@ describe('Menu', () => {
         .map(element => element.injector.get(CdkMenuItemCheckbox));
     };
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(
+      waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule],
           declarations: [MenuWithConditionalGroup],
@@ -152,13 +151,12 @@ describe('Menu', () => {
         fixture = TestBed.createComponent(MenuWithConditionalGroup);
         fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
         fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
         fixture.detectChanges();
 
         menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
         menuItems = getMenuItems();
-      })
+      }),
     );
 
     it('should not emit after the menu group element renders', () => {
@@ -182,12 +180,13 @@ describe('Menu', () => {
     let nativeMenu: HTMLElement;
     let nativeMenuItems: HTMLElement[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(
+      waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule],
           declarations: [InlineMenu],
         }).compileComponents();
-      })
+      }),
     );
 
     beforeEach(() => {
@@ -209,7 +208,7 @@ describe('Menu', () => {
       dispatchKeyboardEvent(document, 'keydown', TAB);
       nativeMenu.focus();
 
-      expect(document.querySelector(':focus')).toEqual(nativeMenuItems[0]);
+      expect(document.activeElement).toEqual(nativeMenuItems[0]);
     });
   });
 
@@ -259,12 +258,14 @@ describe('Menu', () => {
 
       let nativeMenus: HTMLElement[];
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [WithComplexNestedMenus],
-        }).compileComponents();
-      }));
+      beforeEach(
+        waitForAsync(() => {
+          TestBed.configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [WithComplexNestedMenus],
+          }).compileComponents();
+        }),
+      );
 
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenus);
@@ -378,13 +379,13 @@ describe('Menu', () => {
             editPosition,
             {x: printPosition.x + 5, y: printPosition.y + 1},
             nativeMenus[0],
-            100
+            100,
           );
           detectChanges();
 
           expect(numEnterEvents).toBe(4);
           expect(nativeMenus.length).toBe(1);
-        })
+        }),
       );
 
       it('should close the edit menu after moving towards submenu and stopping', fakeAsync(() => {
@@ -403,7 +404,7 @@ describe('Menu', () => {
             y: sharePosition.y + sharePosition.height - 10,
           },
           nativeMenus[0],
-          100
+          100,
         );
         tick(2000);
         detectChanges();
@@ -455,12 +456,14 @@ describe('Menu', () => {
 
       let nativeMenus: HTMLElement[];
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [WithComplexNestedMenusOnBottom],
-        }).compileComponents();
-      }));
+      beforeEach(
+        waitForAsync(() => {
+          TestBed.configureTestingModule({
+            imports: [CdkMenuModule],
+            declarations: [WithComplexNestedMenusOnBottom],
+          }).compileComponents();
+        }),
+      );
 
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenusOnBottom);
@@ -584,14 +587,14 @@ describe('Menu', () => {
             {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
             {x: printPosition.x + 10, y: printPosition.y - 10},
             nativeMenus[0],
-            100
+            100,
           );
           detectChanges();
           flush();
 
           expect(numEnterEvents).toBe(4);
           expect(nativeMenus.length).toBe(1);
-        })
+        }),
       );
 
       it('should close the edit menu after moving towards submenu and stopping', fakeAsync(() => {
@@ -607,7 +610,7 @@ describe('Menu', () => {
             y: sharePosition.y + 10,
           },
           nativeMenus[0],
-          100
+          100,
         );
         tick(2000);
         detectChanges();
@@ -640,8 +643,8 @@ describe('Menu', () => {
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
     </div>
-    <ng-template cdkMenuPanel #panel="cdkMenuPanel">
-      <ul cdkMenu [cdkMenuPanel]="panel">
+    <ng-template #panel>
+      <ul cdkMenu>
         <li role="none">
           <button checked="true" cdkMenuItemCheckbox>first</button>
         </li>
@@ -654,7 +657,6 @@ describe('Menu', () => {
 })
 class MenuCheckboxGroup {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
-  @ViewChild(CdkMenuPanel) readonly panel: CdkMenuPanel;
 }
 
 @Component({
@@ -662,8 +664,8 @@ class MenuCheckboxGroup {
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
     </div>
-    <ng-template cdkMenuPanel #panel="cdkMenuPanel">
-      <ul cdkMenu [cdkMenuPanel]="panel">
+    <ng-template #panel>
+      <ul cdkMenu>
         <li>
           <ul cdkMenuGroup>
             <li><button cdkMenuCheckbox>first</button></li>
@@ -675,7 +677,6 @@ class MenuCheckboxGroup {
 })
 class MenuWithNestedGroup {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
-  @ViewChild(CdkMenuPanel) readonly panel: CdkMenuPanel;
 }
 
 @Component({
@@ -683,8 +684,8 @@ class MenuWithNestedGroup {
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
     </div>
-    <ng-template cdkMenuPanel #panel="cdkMenuPanel">
-      <ul cdkMenu [cdkMenuPanel]="panel">
+    <ng-template #panel>
+      <ul cdkMenu>
         <li><button cdkMenuItemCheckbox>first</button></li>
         <div *ngIf="renderInnerGroup">
           <ul cdkMenuGroup>
@@ -698,7 +699,6 @@ class MenuWithNestedGroup {
 class MenuWithConditionalGroup {
   renderInnerGroup = false;
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
-  @ViewChild(CdkMenuPanel) readonly panel: CdkMenuPanel;
 }
 
 @Component({
@@ -717,13 +717,12 @@ class InlineMenu {}
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
     </div>
 
-    <ng-template cdkMenuPanel #file="cdkMenuPanel">
+    <ng-template #file>
       <div
         id="file_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
         cdkTargetMenuAim
-        [cdkMenuPanel]="file"
       >
         <button #edit_trigger cdkMenuItem [cdkMenuTriggerFor]="edit">Edit</button>
         <button #share_trigger cdkMenuItem [cdkMenuTriggerFor]="share">Share</button>
@@ -733,14 +732,12 @@ class InlineMenu {}
       </div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #edit="cdkMenuPanel">
+    <ng-template #edit>
       <div
         id="edit_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
         cdkTargetMenuAim
-        [cdkMenuPanel]="edit"
-        id="edit_menu"
       >
         <button cdkMenuItem>Undo</button>
         <button cdkMenuItem>Redo</button>
@@ -750,13 +747,12 @@ class InlineMenu {}
       </div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #share="cdkMenuPanel">
+    <ng-template #share>
       <div
         id="share_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
         cdkTargetMenuAim
-        [cdkMenuPanel]="share"
       >
         <button cdkMenuItem>GVC</button>
         <button cdkMenuItem>Gmail</button>
@@ -778,13 +774,12 @@ class WithComplexNestedMenus {
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
     </div>
 
-    <ng-template cdkMenuPanel #file="cdkMenuPanel">
+    <ng-template #file>
       <div
         id="file_menu"
         style="display: flex; flex-direction: column"
         cdkMenu
         cdkTargetMenuAim
-        [cdkMenuPanel]="file"
       >
         <button cdkMenuItem>Print</button>
         <button cdkMenuItem>Rename</button>
@@ -794,14 +789,12 @@ class WithComplexNestedMenus {
       </div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #edit="cdkMenuPanel">
+    <ng-template #edit>
       <div
         id="edit_menu"
         style="display: flex; flex-direction: column"
         cdkMenu
         cdkTargetMenuAim
-        [cdkMenuPanel]="edit"
-        id="edit_menu"
       >
         <button cdkMenuItem>Undo</button>
         <button cdkMenuItem>Redo</button>
@@ -811,13 +804,12 @@ class WithComplexNestedMenus {
       </div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #share="cdkMenuPanel">
+    <ng-template #share>
       <div
         id="share_menu"
         style="display: flex; flex-direction: column"
         cdkMenu
         cdkTargetMenuAim
-        [cdkMenuPanel]="share"
       >
         <button cdkMenuItem>GVC</button>
         <button cdkMenuItem>Gmail</button>

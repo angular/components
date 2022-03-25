@@ -23,33 +23,35 @@ export class AttributeSelectorsMigration extends Migration<UpgradeData> {
   data = getVersionUpgradeData(this, 'attributeSelectors');
 
   // Only enable the migration rule if there is upgrade data.
-  enabled = this.data.length !== 0;
+  enabled: boolean = this.data.length !== 0;
 
-  visitNode(node: ts.Node) {
+  override visitNode(node: ts.Node) {
     if (ts.isStringLiteralLike(node)) {
       this._visitStringLiteralLike(node);
     }
   }
 
-  visitTemplate(template: ResolvedResource) {
+  override visitTemplate(template: ResolvedResource) {
     this.data.forEach(selector => {
       findAllSubstringIndices(template.content, selector.replace)
-          .map(offset => template.start + offset)
-          .forEach(start => this._replaceSelector(template.filePath, start, selector));
+        .map(offset => template.start + offset)
+        .forEach(start => this._replaceSelector(template.filePath, start, selector));
     });
   }
 
-  visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(selector => {
       const currentSelector = `[${selector.replace}]`;
       const updatedSelector = `[${selector.replaceWith}]`;
 
       findAllSubstringIndices(stylesheet.content, currentSelector)
-          .map(offset => stylesheet.start + offset)
-          .forEach(
-              start => this._replaceSelector(
-                  stylesheet.filePath, start,
-                  {replace: currentSelector, replaceWith: updatedSelector}));
+        .map(offset => stylesheet.start + offset)
+        .forEach(start =>
+          this._replaceSelector(stylesheet.filePath, start, {
+            replace: currentSelector,
+            replaceWith: updatedSelector,
+          }),
+        );
     });
   }
 
@@ -63,14 +65,18 @@ export class AttributeSelectorsMigration extends Migration<UpgradeData> {
 
     this.data.forEach(selector => {
       findAllSubstringIndices(literalText, selector.replace)
-          .map(offset => literal.getStart() + offset)
-          .forEach(start => this._replaceSelector(filePath, start, selector));
+        .map(offset => literal.getStart() + offset)
+        .forEach(start => this._replaceSelector(filePath, start, selector));
     });
   }
 
-  private _replaceSelector(filePath: WorkspacePath, start: number,
-                           data: AttributeSelectorUpgradeData) {
-    this.fileSystem.edit(filePath)
+  private _replaceSelector(
+    filePath: WorkspacePath,
+    start: number,
+    data: AttributeSelectorUpgradeData,
+  ) {
+    this.fileSystem
+      .edit(filePath)
       .remove(start, data.replace.length)
       .insertRight(start, data.replaceWith);
   }

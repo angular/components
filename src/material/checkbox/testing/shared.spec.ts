@@ -1,4 +1,3 @@
-import {Platform} from '@angular/cdk/platform';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
@@ -12,20 +11,18 @@ import {MatCheckboxHarness} from '@angular/material/checkbox/testing/checkbox-ha
  * MDC based checkbox harness.
  */
 export function runHarnessTests(
-    checkboxModule: typeof MatCheckboxModule, checkboxHarness: typeof MatCheckboxHarness) {
-  let platform: Platform;
+  checkboxModule: typeof MatCheckboxModule,
+  checkboxHarness: typeof MatCheckboxHarness,
+) {
   let fixture: ComponentFixture<CheckboxHarnessTest>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed
-        .configureTestingModule({
-          imports: [checkboxModule, ReactiveFormsModule],
-          declarations: [CheckboxHarnessTest],
-        })
-        .compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [checkboxModule, ReactiveFormsModule],
+      declarations: [CheckboxHarnessTest],
+    }).compileComponents();
 
-    platform = TestBed.inject(Platform);
     fixture = TestBed.createComponent(CheckboxHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -155,11 +152,6 @@ export function runHarnessTests(
   });
 
   it('should not toggle disabled checkbox', async () => {
-    if (platform.FIREFOX) {
-      // do run this test on firefox as click events on the label of a disabled checkbox
-      // cause the value to be changed. https://bugzilla.mozilla.org/show_bug.cgi?id=1540995
-      return;
-    }
     const disabledCheckbox = await loader.getHarness(checkboxHarness.with({label: 'Second'}));
     expect(await disabledCheckbox.isChecked()).toBe(false);
     await disabledCheckbox.toggle();
@@ -181,7 +173,7 @@ export function runHarnessTests(
         Second
       </mat-checkbox>
       <span id="second-label">Second checkbox</span>
-  `
+  `,
 })
 class CheckboxHarnessTest {
   ctrl = new FormControl(true);

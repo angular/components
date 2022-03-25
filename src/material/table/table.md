@@ -106,14 +106,38 @@ automatically trigger an update to the rows each time a new data array is emitte
 
 #### DataSource
 
-For most real-world applications, providing the table a DataSource instance will be the best way to
-manage data. The DataSource is meant to serve a place to encapsulate any sorting, filtering,
+For most real-world applications, providing the table a `DataSource` instance will be the best way to
+manage data. The `DataSource` is meant to serve as a place to encapsulate any sorting, filtering,
 pagination, and data retrieval logic specific to the application.
 
-A DataSource is simply a base class that has two functions: `connect` and `disconnect`. The
-`connect` function will be called by the table to receive a stream that emits the data array that
-should be rendered. The table will call `disconnect` when the table is destroyed, which may be the
-right time to clean up any subscriptions that may have been registered during the connect process.
+A `DataSource` is simply a class that has at a minimum the following methods: `connect` and
+`disconnect`. The `connect` method will be called by the table to provide an `Observable` that emits
+the data array that should be rendered. The table will call `disconnect` when the table is destroyed,
+which may be the right time to clean up any subscriptions that may have been registered in the
+`connect` method.
+
+Although Angular Material provides a ready-made table `DataSource` class, `MatTableDataSource`, you may
+want to create your own custom `DataSource` class for more complex use cases. This can be done by
+extending the abstract `DataSource` class with a custom `DataSource` class that then implements the
+`connect` and `disconnect` methods. For use cases where the custom `DataSource` must also inherit
+functionality by extending a different base class, the `DataSource` base class can be
+implemented instead (`MyCustomDataSource extends SomeOtherBaseClass implements DataSource`) to
+respect Typescript's restriction to only implement one base class.
+
+### Styling Columns
+
+Each table cell has an automatically generated class based on which column it appears in. The format for this
+generated class is `mat-column-NAME`. For example, cells in a column named "symbol" can be targeted with the
+selector `.mat-column-symbol`.
+
+<!-- example(table-column-styling) -->
+
+### Row Templates
+
+Event handlers and property binding on the row templates will be applied to each row rendered by the table. For example,
+adding a `(click)` handler to the row template will cause each individual row to call the handler when clicked.
+
+<!-- example(table-row-binding) -->
 
 ### Features
 
@@ -333,9 +357,6 @@ To do this, add the `sticky` or `stickyEnd` directive to the `ng-container` colu
 
 <!--- example(table-sticky-columns) -->
 
-This feature is supported by Chrome, Firefox, Safari, and Edge. It is not supported in IE, but
-it does fail gracefully so that the rows simply do not stick.
-
 Note that on Safari mobile when using the flex-based table, a cell stuck in more than one direction
 will struggle to stay in the correct position as you scroll. For example, if a header row is stuck
 to the top and the first column is stuck, then the top-left-most cell will appear jittery as you
@@ -352,13 +373,15 @@ to resolve this.
 When using the `multiTemplateDataRows` directive to support multiple rows for each data object, the context of `*matRowDef` is the same except that the `index` value is replaced by `dataIndex` and `renderIndex`.
 
 ### Accessibility
-Tables without text or labels should be given a meaningful label via `aria-label` or
-`aria-labelledby`. The `aria-readonly` defaults to `true` if it's not set.
 
-Table's default role is `grid`, and it can be changed to `treegrid` through `role` attribute.
+By default, `MatTable` applies `role="table"`, assuming the table's contains primarily static
+content. You can change the role by explicitly setting `role="grid"` or `role="treegrid"` on the
+table element. While changing the role will update child element roles, such as changing
+`role="cell"` to `role="gridcell"`, this does _not_ apply additional keyboard input handling or
+focus management to the table.
 
-`mat-table` does not manage any focus/keyboard interaction on its own. Users can add desired
-focus/keyboard interactions in their application.
+Always provide an accessible label for your tables via `aria-label` or `aria-labelledby` on the
+table element.
 
 ### Tables with `display: flex`
 
@@ -397,3 +420,15 @@ selectors. For example, `<table mat-table>` becomes `<mat-table>`; `<tr mat-row>
 
 Note that this approach means you cannot include certain native-table features such colspan/rowspan
 or have columns that resize themselves based on their content.
+
+### Tables with `MatRipple`
+
+By default, `MatTable` does not set up Material Design ripples for rows. A ripple effect can be
+added to table rows by using the `MatRipple` directive from `@angular/material/core`. Due to
+limitations in browsers, ripples cannot be applied native `th` or `tr` elements. The recommended
+approach for setting up ripples is using the non-native `display: flex` variant of `MatTable`.
+
+<!--- example(table-with-ripples) -->
+
+More details about ripples on native table rows and their limitations can be found [in this issue](https://github.com/angular/components/issues/11883#issuecomment-634942981).
+

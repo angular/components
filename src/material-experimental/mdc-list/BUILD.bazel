@@ -23,10 +23,11 @@ ng_module(
         ":list_scss",
         ":list_option_scss",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-list",
     deps = [
         "//src:dev_mode_types",
+        "//src/cdk/coercion",
         "//src/cdk/collections",
+        "//src/cdk/observers",
         "//src/material-experimental/mdc-core",
         "//src/material/divider",
         "//src/material/list",
@@ -65,6 +66,7 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
+        ":mdc_list_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
@@ -90,12 +92,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/list/dist/mdc.list.js",
-    ],
     deps = [
         ":list_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

@@ -34,13 +34,13 @@ export class SelectionModel<T> {
   }
 
   /** Event emitted when the value has changed. */
-  changed: Subject<SelectionChange<T>> = new Subject();
+  readonly changed = new Subject<SelectionChange<T>>();
 
   constructor(
     private _multiple = false,
     initiallySelectedValues?: T[],
-    private _emitChanges = true) {
-
+    private _emitChanges = true,
+  ) {
     if (initiallySelectedValues && initiallySelectedValues.length) {
       if (_multiple) {
         initiallySelectedValues.forEach(value => this._markSelected(value));
@@ -132,7 +132,7 @@ export class SelectionModel<T> {
       this.changed.next({
         source: this,
         added: this._selectedToEmit,
-        removed: this._deselectedToEmit
+        removed: this._deselectedToEmit,
       });
 
       this._deselectedToEmit = [];

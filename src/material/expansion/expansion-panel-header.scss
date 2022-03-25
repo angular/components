@@ -1,4 +1,7 @@
-@import './expansion-variables';
+@use '../core/style/layout-common';
+@use '../../cdk/a11y';
+@use './expansion-variables';
+@use './expansion-mixins';
 
 .mat-expansion-panel-header {
   display: flex;
@@ -6,7 +9,7 @@
   align-items: center;
   padding: 0 24px;
   border-radius: inherit;
-  transition: height $mat-expansion-panel-header-transition;
+  transition: height expansion-variables.$header-transition;
 
   // If the `NoopAnimationsModule` is used, disable the height transition.
   &._mat-animation-noopable {
@@ -52,6 +55,7 @@
   display: flex;
   flex-grow: 1;
   margin-right: 16px;
+  align-items: center;
 
   [dir='rtl'] & {
     margin-right: 0;
@@ -63,10 +67,8 @@
   flex-grow: 2;
 }
 
-/**
- * Creates the expansion indicator arrow. Done using ::after rather than having
- * additional nodes in the template.
- */
+// Creates the expansion indicator arrow. Done using ::after
+// rather than havingadditional nodes in the template.
 .mat-expansion-indicator::after {
   border-style: solid;
   border-width: 0 2px 2px 0;
@@ -75,4 +77,25 @@
   padding: 3px;
   transform: rotate(45deg);
   vertical-align: middle;
+}
+
+@include a11y.high-contrast(active, off) {
+  @include expansion-mixins.private-expansion-focus {
+    &::before {
+      // These styles are identical to the ones generated for all
+      // `.mat-focus-indicator` when strong focus indication is enabled.
+      // We have to repeat them, because strong focus is opt-in.
+      @include layout-common.fill();
+      box-sizing: border-box;
+      pointer-events: none;
+      border: 3px solid;
+      border-radius: 4px;
+      content: '';
+    }
+  }
+  .mat-expansion-panel-content {
+    border-top: 1px solid;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
 }

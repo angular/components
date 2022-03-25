@@ -1,33 +1,34 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "datepicker",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     assets = glob([
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/datepicker",
-    tsconfig = ":tsconfig",
     deps = [
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material-moment-adapter",
         "//src/material/button",
+        "//src/material/card",
         "//src/material/core",
         "//src/material/datepicker",
+        "//src/material/datepicker/testing",
         "//src/material/icon",
         "//src/material/input",
         "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-browser-dynamic",
+        "@npm//@types/jasmine",
         "@npm//moment",
     ],
-)
-
-ts_config(
-    name = "tsconfig",
-    src = "tsconfig-build.json",
-    deps = ["//src:bazel-tsconfig-build.json"],
 )
 
 filegroup(
@@ -37,4 +38,25 @@ filegroup(
         "**/*.css",
         "**/*.ts",
     ]),
+)
+
+ng_test_library(
+    name = "unit_tests_lib",
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":datepicker",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/core",
+        "//src/material/datepicker",
+        "//src/material/datepicker/testing",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-browser-dynamic",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_tests_lib"],
 )

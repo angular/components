@@ -20,14 +20,15 @@ let nextId = 0;
 @Directive()
 export abstract class CdkMenuItemSelectable extends CdkMenuItem {
   /** Event emitted when the selectable item is clicked */
-  @Output('cdkMenuItemToggled') toggled: EventEmitter<CdkMenuItemSelectable> = new EventEmitter();
+  @Output('cdkMenuItemToggled') readonly toggled: EventEmitter<CdkMenuItemSelectable> =
+    new EventEmitter();
 
   /** Whether the element is checked */
   @Input()
-  get checked() {
+  get checked(): boolean {
     return this._checked;
   }
-  set checked(value: boolean) {
+  set checked(value: BooleanInput) {
     this._checked = coerceBooleanProperty(value);
   }
   private _checked = false;
@@ -39,11 +40,9 @@ export abstract class CdkMenuItemSelectable extends CdkMenuItem {
   @Input() id: string = `cdk-selectable-item-${nextId++}`;
 
   /** If the element is not disabled emit the click event */
-  trigger() {
+  override trigger() {
     if (!this.disabled) {
       this.toggled.next(this);
     }
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
 }

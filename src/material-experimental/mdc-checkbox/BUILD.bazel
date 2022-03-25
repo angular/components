@@ -20,17 +20,14 @@ ng_module(
         ],
     ),
     assets = [":checkbox_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-checkbox",
     deps = [
         "//src/cdk/coercion",
         "//src/material-experimental/mdc-core",
         "//src/material/checkbox",
         "@npm//@angular/animations",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@material/checkbox",
-        "@npm//@material/ripple",
     ],
 )
 
@@ -50,6 +47,7 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
+        ":mdc_checkbox_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
         "//src/material/core:core_scss_lib",
@@ -75,13 +73,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/checkbox/dist/mdc.checkbox.js",
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-    ],
     deps = [
         ":checkbox_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

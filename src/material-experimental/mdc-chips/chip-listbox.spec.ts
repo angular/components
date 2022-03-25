@@ -1,29 +1,20 @@
-import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {END, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB} from '@angular/cdk/keycodes';
-import {
-  createKeyboardEvent,
-  dispatchEvent,
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
-  MockNgZone,
-} from '@angular/cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent, MockNgZone} from '../../cdk/testing/private';
 import {
   Component,
   DebugElement,
   NgZone,
-  Provider,
   QueryList,
   Type,
   ViewChild,
-  ViewChildren
+  ViewChildren,
+  EventEmitter,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
-import {MatChip, MatChipListbox, MatChipOption, MatChipsModule} from './index';
-
+import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
 
 describe('MDC-based MatChipListbox', () => {
   let fixture: ComponentFixture<any>;
@@ -32,15 +23,14 @@ describe('MDC-based MatChipListbox', () => {
   let chipListboxInstance: MatChipListbox;
   let testComponent: StandardChipListbox;
   let chips: QueryList<MatChipOption>;
-  let manager: FocusKeyManager<MatChip>;
   let zone: MockNgZone;
-  let dirChange: Subject<Direction>;
+  let directionality: {value: Direction; change: EventEmitter<Direction>};
+  let primaryActions: NodeListOf<HTMLElement>;
 
   describe('StandardChipList', () => {
     describe('basic behaviors', () => {
-
       beforeEach(() => {
-        setupStandardListbox();
+        createComponent(StandardChipListbox);
       });
 
       it('should add the `mat-mdc-chip-set` class', () => {
@@ -52,8 +42,12 @@ describe('MDC-based MatChipListbox', () => {
         fixture.detectChanges();
         tick();
 
-        const chipsValid = chips.toArray().every(chip =>
-            !chip.selectable && !chip._elementRef.nativeElement.hasAttribute('aria-selected'));
+        const chipsValid = chips
+          .toArray()
+          .every(
+            chip =>
+              !chip.selectable && !chip._elementRef.nativeElement.hasAttribute('aria-selected'),
+          );
 
         expect(chipsValid).toBe(true);
       }));
@@ -95,6 +89,13 @@ describe('MDC-based MatChipListbox', () => {
         expect(chipListboxNativeElement.hasAttribute('role')).toBe(false);
       });
 
+      it('should be able to set a custom role', () => {
+        testComponent.role = 'grid';
+        fixture.detectChanges();
+
+        expect(chipListboxNativeElement.getAttribute('role')).toBe('grid');
+      });
+
       it('should not set aria-required when it does not have a role', () => {
         testComponent.chips = [];
         fixture.detectChanges();
@@ -102,23 +103,25 @@ describe('MDC-based MatChipListbox', () => {
         expect(chipListboxNativeElement.hasAttribute('role')).toBe(false);
         expect(chipListboxNativeElement.hasAttribute('aria-required')).toBe(false);
       });
-
     });
 
     describe('with selected chips', () => {
       beforeEach(() => {
         fixture = createComponent(SelectedChipListbox);
-        fixture.detectChanges();
-        chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
-        chipListboxNativeElement = chipListboxDebugElement.nativeElement;
       });
 
       it('should not override chips selected', () => {
         const instanceChips = fixture.componentInstance.chips.toArray();
 
-        expect(instanceChips[0].selected).toBe(true, 'Expected first option to be selected.');
-        expect(instanceChips[1].selected).toBe(false, 'Expected second option to be not selected.');
-        expect(instanceChips[2].selected).toBe(true, 'Expected third option to be selected.');
+        expect(instanceChips[0].selected)
+          .withContext('Expected first option to be selected.')
+          .toBe(true);
+        expect(instanceChips[1].selected)
+          .withContext('Expected second option to be not selected.')
+          .toBe(false);
+        expect(instanceChips[2].selected)
+          .withContext('Expected third option to be selected.')
+          .toBe(true);
       });
 
       it('should have role listbox', () => {
@@ -129,37 +132,35 @@ describe('MDC-based MatChipListbox', () => {
         fixture.componentInstance.foods = [];
         fixture.detectChanges();
 
-        expect(chipListboxNativeElement.getAttribute('role')).toBeNull('Expect no role attribute');
+        expect(chipListboxNativeElement.getAttribute('role'))
+          .withContext('Expect no role attribute')
+          .toBeNull();
       });
     });
 
     describe('focus behaviors', () => {
-
       beforeEach(() => {
-        setupStandardListbox();
-        manager = chipListboxInstance._keyManager;
+        createComponent(StandardChipListbox);
       });
 
       it('should focus the first chip on focus', () => {
         chipListboxInstance.focus();
         fixture.detectChanges();
 
-        expect(manager.activeItemIndex).toBe(0);
+        expect(document.activeElement).toBe(primaryActions[0]);
       });
 
-      it('should watch for chip focus', () => {
-        let array = chips.toArray();
-        let lastIndex = array.length - 1;
-        let lastItem = array[lastIndex];
-
-        lastItem.focus();
+      it('should focus the primary action when calling the `focus` method', () => {
+        chips.last.focus();
         fixture.detectChanges();
 
-        expect(manager.activeItemIndex).toBe(lastIndex);
+        expect(document.activeElement).toBe(primaryActions[primaryActions.length - 1]);
       });
 
       it('should not be able to become focused when disabled', () => {
-        expect(chipListboxInstance.focused).toBe(false, 'Expected listbox to not be focused.');
+        expect(chipListboxInstance.focused)
+          .withContext('Expected listbox to not be focused.')
+          .toBe(false);
 
         chipListboxInstance.disabled = true;
         fixture.detectChanges();
@@ -167,8 +168,9 @@ describe('MDC-based MatChipListbox', () => {
         chipListboxInstance.focus();
         fixture.detectChanges();
 
-        expect(chipListboxInstance.focused).toBe(false,
-          'Expected listbox to continue not to be focused');
+        expect(chipListboxInstance.focused)
+          .withContext('Expected listbox to continue not to be focused')
+          .toBe(false);
       });
 
       it('should remove the tabindex from the listbox if it is disabled', () => {
@@ -181,10 +183,8 @@ describe('MDC-based MatChipListbox', () => {
       });
 
       describe('on chip destroy', () => {
-
         it('should focus the next item', () => {
-          let array = chips.toArray();
-          let midItem = array[2];
+          const midItem = chips.get(2)!;
 
           // Focus the middle item
           midItem.focus();
@@ -193,41 +193,39 @@ describe('MDC-based MatChipListbox', () => {
           testComponent.chips.splice(2, 1);
           fixture.detectChanges();
 
-          // It focuses the 4th item (now at index 2)
-          expect(manager.activeItemIndex).toEqual(2);
+          // It focuses the 4th item
+          expect(document.activeElement).toBe(primaryActions[3]);
         });
 
         it('should focus the previous item', () => {
-          let array = chips.toArray();
-          let lastIndex = array.length - 1;
-          let lastItem = array[lastIndex];
-
           // Focus the last item
-          lastItem.focus();
+          chips.last.focus();
 
           // Destroy the last item
           testComponent.chips.pop();
           fixture.detectChanges();
+
           // It focuses the next-to-last item
-          expect(manager.activeItemIndex).toEqual(lastIndex - 1);
+          expect(document.activeElement).toBe(primaryActions[primaryActions.length - 2]);
         });
 
-        it('should not focus if chip listbox is not focused', () => {
-          let array = chips.toArray();
-          let midItem = array[2];
+        it('should not focus if chip listbox is not focused', fakeAsync(() => {
+          const midItem = chips.get(2)!;
 
           // Focus and blur the middle item
           midItem.focus();
-          midItem._blur();
+          (document.activeElement as HTMLElement).blur();
+          tick();
           zone.simulateZoneExit();
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
           fixture.detectChanges();
+          tick();
 
           // Should not have focus
-          expect(chipListboxInstance._keyManager.activeItemIndex).toEqual(-1);
-        });
+          expect(chipListboxNativeElement.contains(document.activeElement)).toBe(false);
+        }));
 
         it('should focus the listbox if the last focused item is removed', () => {
           testComponent.chips = [0];
@@ -247,275 +245,228 @@ describe('MDC-based MatChipListbox', () => {
     describe('keyboard behavior', () => {
       describe('LTR (default)', () => {
         beforeEach(() => {
-          setupStandardListbox();
-          manager = chipListboxInstance._keyManager;
+          createComponent(StandardChipListbox);
         });
 
         it('should focus previous item when press LEFT ARROW', () => {
-          let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
-
-          let array = chips.toArray();
-          let lastIndex = array.length - 1;
-          let lastItem = array[lastIndex];
+          const lastIndex = primaryActions.length - 1;
 
           // Focus the last item in the array
-          lastItem.focus();
-          expect(manager.activeItemIndex).toEqual(lastIndex);
+          chips.last.focus();
+          expect(document.activeElement).toBe(primaryActions[lastIndex]);
 
           // Press the LEFT arrow
-          dispatchKeyboardEvent(lastNativeChip, 'keydown', LEFT_ARROW);
-          chipListboxInstance._blur(); // Simulate focus leaving the listbox and going to the chip.
+          dispatchKeyboardEvent(primaryActions[lastIndex], 'keydown', LEFT_ARROW);
           fixture.detectChanges();
 
           // It focuses the next-to-last item
-          expect(manager.activeItemIndex).toEqual(lastIndex - 1);
+          expect(document.activeElement).toBe(primaryActions[lastIndex - 1]);
         });
 
         it('should focus next item when press RIGHT ARROW', () => {
-          let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          let firstNativeChip = nativeChips[0] as HTMLElement;
-
-          let array = chips.toArray();
-          let firstItem = array[0];
-
           // Focus the last item in the array
-          firstItem.focus();
-          expect(manager.activeItemIndex).toEqual(0);
+          chips.first.focus();
+          expect(document.activeElement).toBe(primaryActions[0]);
 
           // Press the RIGHT arrow
-          dispatchKeyboardEvent(firstNativeChip, 'keydown', RIGHT_ARROW);
-          chipListboxInstance._blur(); // Simulate focus leaving the listbox and going to the chip.
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', RIGHT_ARROW);
           fixture.detectChanges();
 
           // It focuses the next-to-last item
-          expect(manager.activeItemIndex).toEqual(1);
+          expect(document.activeElement).toBe(primaryActions[1]);
         });
 
         it('should not handle arrow key events from non-chip elements', () => {
-          const initialActiveIndex = manager.activeItemIndex;
+          const previousActiveElement = document.activeElement;
 
           dispatchKeyboardEvent(chipListboxNativeElement, 'keydown', RIGHT_ARROW);
           fixture.detectChanges();
 
-          expect(manager.activeItemIndex)
-              .toBe(initialActiveIndex, 'Expected focused item not to have changed.');
+          expect(document.activeElement)
+            .withContext('Expected focused item not to have changed.')
+            .toBe(previousActiveElement);
         });
 
         it('should focus the first item when pressing HOME', () => {
-          const nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          const lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
-          const HOME_EVENT = createKeyboardEvent('keydown', HOME);
-          const array = chips.toArray();
-          const lastItem = array[array.length - 1];
+          const lastAction = primaryActions[primaryActions.length - 1];
+          chips.last.focus();
+          expect(document.activeElement).toBe(lastAction);
 
-          lastItem.focus();
-          expect(manager.activeItemIndex).toBe(array.length - 1);
-
-          dispatchEvent(lastNativeChip, HOME_EVENT);
+          const event = dispatchKeyboardEvent(lastAction, 'keydown', HOME);
           fixture.detectChanges();
 
-          expect(manager.activeItemIndex).toBe(0);
-          expect(HOME_EVENT.defaultPrevented).toBe(true);
+          expect(document.activeElement).toBe(primaryActions[0]);
+          expect(event.defaultPrevented).toBe(true);
         });
 
         it('should focus the last item when pressing END', () => {
-          const nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          const END_EVENT = createKeyboardEvent('keydown', END);
+          chips.first.focus();
+          expect(document.activeElement).toBe(primaryActions[0]);
 
-          expect(manager.activeItemIndex).toBe(-1);
-
-          dispatchEvent(nativeChips[0], END_EVENT);
+          const event = dispatchKeyboardEvent(primaryActions[0], 'keydown', END);
           fixture.detectChanges();
 
-          expect(manager.activeItemIndex).toBe(chips.length - 1);
-          expect(END_EVENT.defaultPrevented).toBe(true);
+          expect(document.activeElement).toBe(primaryActions[primaryActions.length - 1]);
+          expect(event.defaultPrevented).toBe(true);
         });
       });
 
       describe('RTL', () => {
         beforeEach(() => {
-          setupStandardListbox('rtl');
-          manager = chipListboxInstance._keyManager;
+          createComponent(StandardChipListbox, 'rtl');
         });
 
         it('should focus previous item when press RIGHT ARROW', () => {
-          let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
-
-          let array = chips.toArray();
-          let lastIndex = array.length - 1;
-          let lastItem = array[lastIndex];
+          const lastIndex = primaryActions.length - 1;
 
           // Focus the last item in the array
-          lastItem.focus();
-          expect(manager.activeItemIndex).toEqual(lastIndex);
+          chips.last.focus();
+          expect(document.activeElement).toBe(primaryActions[lastIndex]);
 
           // Press the RIGHT arrow
-          dispatchKeyboardEvent(lastNativeChip, 'keydown', RIGHT_ARROW);
-          chipListboxInstance._blur(); // Simulate focus leaving the listbox and going to the chip.
+          dispatchKeyboardEvent(primaryActions[lastIndex], 'keydown', RIGHT_ARROW);
           fixture.detectChanges();
 
           // It focuses the next-to-last item
-          expect(manager.activeItemIndex).toEqual(lastIndex - 1);
+          expect(document.activeElement).toBe(primaryActions[lastIndex - 1]);
         });
 
         it('should focus next item when press LEFT ARROW', () => {
-          let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          let firstNativeChip = nativeChips[0] as HTMLElement;
-
-          let array = chips.toArray();
-          let firstItem = array[0];
-
           // Focus the last item in the array
-          firstItem.focus();
-          expect(manager.activeItemIndex).toEqual(0);
+          chips.first.focus();
+          expect(document.activeElement).toBe(primaryActions[0]);
 
           // Press the LEFT arrow
-          dispatchKeyboardEvent(firstNativeChip, 'keydown', LEFT_ARROW);
-          chipListboxInstance._blur(); // Simulate focus leaving the listbox and going to the chip.
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', LEFT_ARROW);
           fixture.detectChanges();
 
           // It focuses the next-to-last item
-          expect(manager.activeItemIndex).toEqual(1);
+          expect(document.activeElement).toBe(primaryActions[1]);
         });
 
         it('should allow focus to escape when tabbing away', fakeAsync(() => {
-          chipListboxInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+          dispatchKeyboardEvent(chipListboxNativeElement, 'keydown', TAB);
 
           expect(chipListboxInstance.tabIndex)
-            .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
+            .withContext('Expected tabIndex to be set to -1 temporarily.')
+            .toBe(-1);
 
-          tick();
+          flush();
 
-          expect(chipListboxInstance.tabIndex).toBe(0, 'Expected tabIndex to be reset back to 0');
+          expect(chipListboxInstance.tabIndex)
+            .withContext('Expected tabIndex to be reset back to 0')
+            .toBe(0);
         }));
 
-        it(`should use user defined tabIndex`, fakeAsync(() => {
+        it('should use user defined tabIndex', fakeAsync(() => {
           chipListboxInstance.tabIndex = 4;
 
           fixture.detectChanges();
 
           expect(chipListboxInstance.tabIndex)
-            .toBe(4, 'Expected tabIndex to be set to user defined value 4.');
+            .withContext('Expected tabIndex to be set to user defined value 4.')
+            .toBe(4);
 
-          chipListboxInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+          dispatchKeyboardEvent(chipListboxNativeElement, 'keydown', TAB);
 
           expect(chipListboxInstance.tabIndex)
-            .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
+            .withContext('Expected tabIndex to be set to -1 temporarily.')
+            .toBe(-1);
 
-          tick();
+          flush();
 
-          expect(chipListboxInstance.tabIndex).toBe(4, 'Expected tabIndex to be reset back to 4');
+          expect(chipListboxInstance.tabIndex)
+            .withContext('Expected tabIndex to be reset back to 4')
+            .toBe(4);
         }));
       });
 
       it('should account for the direction changing', () => {
-        setupStandardListbox();
-        manager = chipListboxInstance._keyManager;
+        createComponent(StandardChipListbox);
 
-        let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-        let firstNativeChip = nativeChips[0] as HTMLElement;
+        chips.first.focus();
+        expect(document.activeElement).toBe(primaryActions[0]);
 
-        let array = chips.toArray();
-        let firstItem = array[0];
-
-        firstItem.focus();
-        expect(manager.activeItemIndex).toBe(0);
-
-        dispatchKeyboardEvent(firstNativeChip, 'keydown', RIGHT_ARROW);
-        chipListboxInstance._blur();
+        dispatchKeyboardEvent(primaryActions[0], 'keydown', RIGHT_ARROW);
         fixture.detectChanges();
 
-        expect(manager.activeItemIndex).toBe(1);
+        expect(document.activeElement).toBe(primaryActions[1]);
 
-        dirChange.next('rtl');
+        directionality.value = 'rtl';
         fixture.detectChanges();
 
-        dispatchKeyboardEvent(firstNativeChip, 'keydown', RIGHT_ARROW);
-        chipListboxInstance._blur();
+        dispatchKeyboardEvent(primaryActions[1], 'keydown', RIGHT_ARROW);
         fixture.detectChanges();
 
-        expect(manager.activeItemIndex).toBe(0);
+        expect(document.activeElement).toBe(primaryActions[0]);
       });
     });
 
     describe('selection logic', () => {
-      let nativeChips: HTMLElement[];
-
       beforeEach(() => {
         fixture = createComponent(BasicChipListbox);
-        fixture.detectChanges();
-
-        nativeChips = fixture.debugElement.queryAll(By.css('mat-chip-option'))
-            .map((chip) => chip.nativeElement);
-
-        chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
-        chipListboxInstance = chipListboxDebugElement.componentInstance;
-        chips = chipListboxInstance._chips;
-
       });
 
       it('should remove selection if chip has been removed', fakeAsync(() => {
         const instanceChips = fixture.componentInstance.chips;
         const chipListbox = fixture.componentInstance.chipListbox;
-        const firstChip = nativeChips[0];
-        dispatchKeyboardEvent(firstChip, 'keydown', SPACE);
+        dispatchKeyboardEvent(primaryActions[0], 'keydown', SPACE);
         fixture.detectChanges();
 
-        expect(instanceChips.first.selected).toBe(true, 'Expected first option to be selected.');
-        expect(chipListbox.selected).toBe(chips.first, 'Expected first option to be selected.');
+        expect(instanceChips.first.selected)
+          .withContext('Expected first option to be selected.')
+          .toBe(true);
+        expect(chipListbox.selected)
+          .withContext('Expected first option to be selected.')
+          .toBe(chips.first);
 
         fixture.componentInstance.foods = [];
         fixture.detectChanges();
         tick();
 
         expect(chipListbox.selected)
-          .toBe(undefined, 'Expected selection to be removed when option no longer exists.');
+          .withContext('Expected selection to be removed when option no longer exists.')
+          .toBe(undefined);
       }));
-
 
       it('should select an option that was added after initialization', () => {
         fixture.componentInstance.foods.push({viewValue: 'Potatoes', value: 'potatoes-8'});
         fixture.detectChanges();
 
-        nativeChips = fixture.debugElement.queryAll(By.css('mat-chip-option'))
-          .map((chip) => chip.nativeElement);
-        const lastChip = nativeChips[8];
-        dispatchKeyboardEvent(lastChip, 'keydown', SPACE);
+        primaryActions = chipListboxNativeElement.querySelectorAll<HTMLElement>(
+          '.mdc-evolution-chip__action--primary',
+        );
+
+        dispatchKeyboardEvent(primaryActions[8], 'keydown', SPACE);
         fixture.detectChanges();
 
         expect(fixture.componentInstance.chipListbox.value)
-          .toContain('potatoes-8', 'Expect value contain the value of the last option');
+          .withContext('Expect value contain the value of the last option')
+          .toContain('potatoes-8');
         expect(fixture.componentInstance.chips.last.selected)
-          .toBeTruthy('Expect last option selected');
+          .withContext('Expect last option selected')
+          .toBeTruthy();
       });
 
       it('should not select disabled chips', () => {
         const array = chips.toArray();
-        const disabledChip = nativeChips[2];
-        dispatchKeyboardEvent(disabledChip, 'keydown', SPACE);
+        dispatchKeyboardEvent(primaryActions[2], 'keydown', SPACE);
         fixture.detectChanges();
 
         expect(fixture.componentInstance.chipListbox.value)
-          .toBeUndefined('Expect value to be undefined');
-        expect(array[2].selected).toBeFalsy('Expect disabled chip not selected');
+          .withContext('Expect value to be undefined')
+          .toBeUndefined();
+        expect(array[2].selected).withContext('Expect disabled chip not selected').toBeFalsy();
         expect(fixture.componentInstance.chipListbox.selected)
-          .toBeUndefined('Expect no selected chips');
+          .withContext('Expect no selected chips')
+          .toBeUndefined();
       });
     });
 
     describe('chip list with chip input', () => {
-      let nativeChips: HTMLElement[];
-
       describe('single selection', () => {
         beforeEach(() => {
           fixture = createComponent(BasicChipListbox);
-          fixture.detectChanges();
-
-          nativeChips = fixture.debugElement.queryAll(By.css('mat-chip-option'))
-            .map((chip) => chip.nativeElement);
-          chips = fixture.componentInstance.chips;
         });
 
         it('should take an initial view value with reactive forms', fakeAsync(() => {
@@ -524,38 +475,43 @@ describe('MDC-based MatChipListbox', () => {
           tick();
           const array = chips.toArray();
 
-          expect(array[1].selected).toBeTruthy('Expect pizza-1 chip to be selected');
+          expect(array[1].selected).withContext('Expect pizza-1 chip to be selected').toBeTruthy();
 
-          dispatchKeyboardEvent(nativeChips[1], 'keydown', SPACE);
+          dispatchKeyboardEvent(primaryActions[1], 'keydown', SPACE);
           fixture.detectChanges();
+          flush();
 
-          expect(array[1].selected).toBeFalsy(
-            'Expect chip to be not selected after toggle selected');
+          expect(array[1].selected)
+            .withContext('Expect chip to be not selected after toggle selected')
+            .toBeFalsy();
         }));
 
         it('should set the view value from the form', () => {
           const chipListbox = fixture.componentInstance.chipListbox;
           const array = chips.toArray();
 
-          expect(chipListbox.value).toBeFalsy('Expect chip listbox to have no initial value');
+          expect(chipListbox.value)
+            .withContext('Expect chip listbox to have no initial value')
+            .toBeFalsy();
 
           fixture.componentInstance.control.setValue('pizza-1');
           fixture.detectChanges();
 
-          expect(array[1].selected).toBeTruthy('Expect chip to be selected');
+          expect(array[1].selected).withContext('Expect chip to be selected').toBeTruthy();
         });
 
         it('should update the form value when the view changes', fakeAsync(() => {
           expect(fixture.componentInstance.control.value)
-            .toEqual(null, `Expected the control's value to be empty initially.`);
+            .withContext(`Expected the control's value to be empty initially.`)
+            .toEqual(null);
 
-          dispatchKeyboardEvent(nativeChips[0], 'keydown', SPACE);
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', SPACE);
           fixture.detectChanges();
-
-          tick();
+          flush();
 
           expect(fixture.componentInstance.control.value)
-            .toEqual('steak-0', `Expected control's value to be set to the new option.`);
+            .withContext(`Expected control's value to be set to the new option.`)
+            .toEqual('steak-0');
         }));
 
         it('should clear the selection when a nonexistent option value is selected', () => {
@@ -565,16 +521,17 @@ describe('MDC-based MatChipListbox', () => {
           fixture.detectChanges();
 
           expect(array[1].selected)
-            .toBeTruthy(`Expected chip with the value to be selected.`);
+            .withContext(`Expected chip with the value to be selected.`)
+            .toBeTruthy();
 
           fixture.componentInstance.control.setValue('gibberish');
 
           fixture.detectChanges();
 
           expect(array[1].selected)
-            .toBeFalsy(`Expected chip with the old value not to be selected.`);
+            .withContext(`Expected chip with the old value not to be selected.`)
+            .toBeFalsy();
         });
-
 
         it('should clear the selection when the control is reset', () => {
           const array = chips.toArray();
@@ -586,56 +543,66 @@ describe('MDC-based MatChipListbox', () => {
           fixture.detectChanges();
 
           expect(array[1].selected)
-            .toBeFalsy(`Expected chip with the old value not to be selected.`);
+            .withContext(`Expected chip with the old value not to be selected.`)
+            .toBeFalsy();
         });
 
         it('should set the control to touched when the chip listbox is touched', fakeAsync(() => {
           expect(fixture.componentInstance.control.touched)
-            .toBe(false, 'Expected the control to start off as untouched.');
+            .withContext('Expected the control to start off as untouched.')
+            .toBe(false);
 
           const nativeChipListbox = fixture.debugElement.query(
-            By.css('mat-chip-listbox'))!.nativeElement;
+            By.css('mat-chip-listbox'),
+          )!.nativeElement;
           dispatchFakeEvent(nativeChipListbox, 'blur');
           tick();
 
           expect(fixture.componentInstance.control.touched)
-            .toBe(true, 'Expected the control to be touched.');
+            .withContext('Expected the control to be touched.')
+            .toBe(true);
         }));
 
         it('should not set touched when a disabled chip listbox is touched', fakeAsync(() => {
           expect(fixture.componentInstance.control.touched)
-            .toBe(false, 'Expected the control to start off as untouched.');
+            .withContext('Expected the control to start off as untouched.')
+            .toBe(false);
 
           fixture.componentInstance.control.disable();
           const nativeChipListbox = fixture.debugElement.query(
-            By.css('mat-chip-listbox'))!.nativeElement;
+            By.css('mat-chip-listbox'),
+          )!.nativeElement;
           dispatchFakeEvent(nativeChipListbox, 'blur');
           tick();
 
           expect(fixture.componentInstance.control.touched)
-            .toBe(false, 'Expected the control to stay untouched.');
+            .withContext('Expected the control to stay untouched.')
+            .toBe(false);
         }));
 
-        it('should set the control to dirty when the chip listbox\'s value changes in the DOM',
-          () => {
+        it("should set the control to dirty when the chip listbox's value changes in the DOM", () => {
           expect(fixture.componentInstance.control.dirty)
-            .toEqual(false, `Expected control to start out pristine.`);
+            .withContext(`Expected control to start out pristine.`)
+            .toEqual(false);
 
-          dispatchKeyboardEvent(nativeChips[1], 'keydown', SPACE);
+          dispatchKeyboardEvent(primaryActions[1], 'keydown', SPACE);
           fixture.detectChanges();
 
           expect(fixture.componentInstance.control.dirty)
-            .toEqual(true, `Expected control to be dirty after value was changed by user.`);
+            .withContext(`Expected control to be dirty after value was changed by user.`)
+            .toEqual(true);
         });
 
         it('should not set the control to dirty when the value changes programmatically', () => {
           expect(fixture.componentInstance.control.dirty)
-            .toEqual(false, `Expected control to start out pristine.`);
+            .withContext(`Expected control to start out pristine.`)
+            .toEqual(false);
 
           fixture.componentInstance.control.setValue('pizza-1');
 
           expect(fixture.componentInstance.control.dirty)
-            .toEqual(false, `Expected control to stay pristine after programmatic change.`);
+            .withContext(`Expected control to stay pristine after programmatic change.`)
+            .toEqual(false);
         });
 
         it('should be able to programmatically select a falsy option', () => {
@@ -643,14 +610,13 @@ describe('MDC-based MatChipListbox', () => {
           TestBed.resetTestingModule();
 
           const falsyFixture = createComponent(FalsyValueChipListbox);
-          falsyFixture.detectChanges();
-
           falsyFixture.componentInstance.control.setValue([0]);
           falsyFixture.detectChanges();
           falsyFixture.detectChanges();
 
           expect(falsyFixture.componentInstance.chips.first.selected)
-            .toBe(true, 'Expected first option to be selected');
+            .withContext('Expected first option to be selected')
+            .toBe(true);
         });
 
         it('should not focus the active chip when the value is set programmatically', () => {
@@ -668,10 +634,6 @@ describe('MDC-based MatChipListbox', () => {
       describe('multiple selection', () => {
         beforeEach(() => {
           fixture = createComponent(MultiSelectionChipListbox);
-          fixture.detectChanges();
-
-          nativeChips = fixture.debugElement.queryAll(By.css('mat-chip-option'))
-            .map((chip) => chip.nativeElement);
           chips = fixture.componentInstance.chips;
         });
 
@@ -681,37 +643,41 @@ describe('MDC-based MatChipListbox', () => {
 
           const array = chips.toArray();
 
-          expect(array[1].selected).toBeTruthy('Expect pizza-1 chip to be selected');
+          expect(array[1].selected).withContext('Expect pizza-1 chip to be selected').toBeTruthy();
 
-          dispatchKeyboardEvent(nativeChips[1], 'keydown', SPACE);
+          dispatchKeyboardEvent(primaryActions[1], 'keydown', SPACE);
           fixture.detectChanges();
 
-          expect(array[1].selected).toBeFalsy(
-            'Expect chip to be not selected after toggle selected');
+          expect(array[1].selected)
+            .withContext('Expect chip to be not selected after toggle selected')
+            .toBeFalsy();
         });
 
         it('should set the view value from the form', () => {
           const chipListbox = fixture.componentInstance.chipListbox;
           const array = chips.toArray();
 
-          expect(chipListbox.value).toBeFalsy('Expect chip listbox to have no initial value');
+          expect(chipListbox.value)
+            .withContext('Expect chip listbox to have no initial value')
+            .toBeFalsy();
 
           fixture.componentInstance.control.setValue(['pizza-1']);
           fixture.detectChanges();
 
-          expect(array[1].selected).toBeTruthy('Expect chip to be selected');
+          expect(array[1].selected).withContext('Expect chip to be selected').toBeTruthy();
         });
 
         it('should update the form value when the view changes', () => {
-
           expect(fixture.componentInstance.control.value)
-            .toEqual(null, `Expected the control's value to be empty initially.`);
+            .withContext(`Expected the control's value to be empty initially.`)
+            .toEqual(null);
 
-          dispatchKeyboardEvent(nativeChips[0], 'keydown', SPACE);
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', SPACE);
           fixture.detectChanges();
 
           expect(fixture.componentInstance.control.value)
-            .toEqual(['steak-0'], `Expected control's value to be set to the new option.`);
+            .withContext(`Expected control's value to be set to the new option.`)
+            .toEqual(['steak-0']);
         });
 
         it('should clear the selection when a nonexistent option value is selected', () => {
@@ -721,14 +687,16 @@ describe('MDC-based MatChipListbox', () => {
           fixture.detectChanges();
 
           expect(array[1].selected)
-            .toBeTruthy(`Expected chip with the value to be selected.`);
+            .withContext(`Expected chip with the value to be selected.`)
+            .toBeTruthy();
 
           fixture.componentInstance.control.setValue(['gibberish']);
 
           fixture.detectChanges();
 
           expect(array[1].selected)
-            .toBeFalsy(`Expected chip with the old value not to be selected.`);
+            .withContext(`Expected chip with the old value not to be selected.`)
+            .toBeFalsy();
         });
 
         it('should clear the selection when the control is reset', () => {
@@ -741,38 +709,32 @@ describe('MDC-based MatChipListbox', () => {
           fixture.detectChanges();
 
           expect(array[1].selected)
-            .toBeFalsy(`Expected chip with the old value not to be selected.`);
+            .withContext(`Expected chip with the old value not to be selected.`)
+            .toBeFalsy();
         });
       });
     });
   });
 
-  function createComponent<T>(component: Type<T>, providers: Provider[] = []):
-        ComponentFixture<T> {
+  function createComponent<T>(
+    component: Type<T>,
+    direction: Direction = 'ltr',
+  ): ComponentFixture<T> {
+    directionality = {
+      value: direction,
+      change: new EventEmitter(),
+    };
+
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatChipsModule,
-      ],
+      imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
       declarations: [component],
       providers: [
-        {provide: NgZone, useFactory: () => zone = new MockNgZone()},
-        ...providers
-      ]
+        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
+        {provide: Directionality, useValue: directionality},
+      ],
     }).compileComponents();
 
-    return TestBed.createComponent<T>(component);
-  }
-
-  function setupStandardListbox(direction: Direction = 'ltr') {
-    dirChange = new Subject();
-    fixture = createComponent(StandardChipListbox, [{
-      provide: Directionality, useFactory: () => ({
-        value: direction.toLowerCase(),
-        change: dirChange
-      })
-    }]);
+    fixture = TestBed.createComponent<T>(component);
     fixture.detectChanges();
 
     chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
@@ -780,17 +742,22 @@ describe('MDC-based MatChipListbox', () => {
     chipListboxInstance = chipListboxDebugElement.componentInstance;
     testComponent = fixture.debugElement.componentInstance;
     chips = chipListboxInstance._chips;
+    primaryActions = chipListboxNativeElement.querySelectorAll<HTMLElement>(
+      '.mdc-evolution-chip__action--primary',
+    );
+
+    return fixture;
   }
 });
 
 @Component({
   template: `
-    <mat-chip-listbox [tabIndex]="tabIndex" [selectable]="selectable">
+    <mat-chip-listbox [tabIndex]="tabIndex" [selectable]="selectable" [role]="role">
       <mat-chip-option *ngFor="let i of chips" (select)="chipSelect(i)"
         (deselect)="chipDeselect(i)">
         {{name}} {{i + 1}}
       </mat-chip-option>
-    </mat-chip-listbox>`
+    </mat-chip-listbox>`,
 })
 class StandardChipListbox {
   name: string = 'Test';
@@ -799,6 +766,7 @@ class StandardChipListbox {
   chipDeselect: (index?: number) => void = () => {};
   tabIndex: number = 0;
   chips = [0, 1, 2, 3, 4];
+  role: string | null = null;
 }
 
 @Component({
@@ -809,7 +777,7 @@ class StandardChipListbox {
           {{ food.viewValue }}
         </mat-chip-option>
       </mat-chip-listbox>
-  `
+  `,
 })
 class BasicChipListbox {
   foods: any[] = [
@@ -840,7 +808,7 @@ class BasicChipListbox {
           {{ food.viewValue }}
         </mat-chip-option>
       </mat-chip-listbox>
-  `
+  `,
 })
 class MultiSelectionChipListbox {
   foods: any[] = [
@@ -869,7 +837,7 @@ class MultiSelectionChipListbox {
           {{ food.viewValue }}
         </mat-chip-option>
       </mat-chip-listbox>
-  `
+  `,
 })
 class FalsyValueChipListbox {
   foods: any[] = [
@@ -887,7 +855,7 @@ class FalsyValueChipListbox {
             {{ food.viewValue }}
         </mat-chip-option>
     </mat-chip-listbox>
-  `
+  `,
 })
 class SelectedChipListbox {
   foods: any[] = [

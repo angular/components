@@ -1,0 +1,24 @@
+load("//tools:defaults.bzl", "ng_module")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "layout",
+    srcs = glob(["**/*.ts"]),
+    assets = glob([
+        "**/*.html",
+        "**/*.css",
+    ]),
+    deps = [
+        "//src/cdk/layout",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob([
+        "**/*.html",
+        "**/*.css",
+        "**/*.ts",
+    ]),
+)

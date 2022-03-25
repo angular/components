@@ -1,359 +1,224 @@
-@import '@material/button/mixins.import';
-@import '@material/button/variables.import';
-@import '@material/fab/mixins.import';
-@import '@material/ripple/mixins.import';
-@import '@material/icon-button/mixins.import';
-@import '@material/theme/mixins.import';
-@import '../../material/core/ripple/ripple';
-@import '../mdc-helpers/mdc-helpers';
+@use 'sass:map';
+@use '@material/button/button' as mdc-button;
+@use '@material/button/button-theme' as mdc-button-theme;
+@use '@material/button/button-text-theme' as mdc-button-text-theme;
+@use '@material/button/button-filled-theme' as mdc-button-filled-theme;
+@use '@material/button/button-protected-theme' as mdc-button-protected-theme;
+@use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
+@use '@material/theme/theme-color' as mdc-theme-color;
+@use '../../material/core/typography/typography';
+@use '../mdc-helpers/mdc-helpers';
+@use '../../material/core/theming/theming';
+@use './button-theme-private';
 
-// Selector for the element that has a background color and opacity applied to its ::before and
-// ::after for state interactions (hover, active, focus). Their API calls this their
-// "ripple target", but we do not use it as our ripple, just state color.
-$mat-button-state-target: '.mdc-button__ripple';
-
-// Applies the disabled theme color to the text color.
-@mixin _mat-button-disabled-color() {
-  @include mdc-theme-prop(color,
-      mdc-theme-ink-color-for-fill_(disabled, $mdc-theme-background));
-}
-
-// Wraps the content style in a selector for the disabled state.
-// MDC adds theme color by using :not(:disabled), so just using [disabled] once will not
-// override this, neither will it apply to anchor tags. This needs to override the
-// previously set theme color, so it must be ordered after the theme styles.
-// TODO(andrewseguin): Discuss with the MDC team to see if we can avoid the :not(:disabled) by
-// manually styling disabled buttons with a [disabled] selector.
-@mixin _mat-button-apply-disabled-style() {
-  &[disabled][disabled] {
-    @content;
-  }
-}
-
-// The MDC button's ripple ink color is based on the theme color, not on the foreground base
-// which is what the ripple mixin uses. This creates a new theme that sets the color to the
-// foreground base to appropriately color the ink.
-@mixin _mat-button-ripple-ink-color($mdcColor) {
-  @include mat-ripple-theme((
-    foreground: (
-      base: mdc-theme-prop-value($mdcColor)
-    ),
+@mixin _button-variant($color) {
+  @include mdc-button-text-theme.theme((
+    label-text-color: $color,
   ));
 }
 
-// Applies the disabled theme background color for raised buttons. Value is taken from
-// mixin `mdc-button--filled`.
-// TODO(andrewseguin): Discuss with the MDC team about providing a variable for the 0.12 value
-// or otherwise have a mixin we can call to apply this style for both button and anchors.
-@mixin _mat-button-disabled-background() {
-  @include mdc-theme-prop(background-color, rgba(mdc-theme-prop-value(on-surface), 0.12));
+@mixin _unelevated-button-variant($foreground, $background) {
+  @include mdc-button-filled-theme.theme((
+    container-color: $background,
+    label-text-color: $foreground,
+  ));
 }
 
+@mixin _raised-button-variant($foreground, $background) {
+  @include mdc-button-protected-theme.theme((
+    container-color: $background,
+    label-text-color: $foreground,
+  ));
+}
 
-@mixin mat-mdc-button-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  @include mat-using-mdc-theme($config) {
-    // Add state interactions for hover, focus, press, active. Colors are changed based on
-    // the mixin mdc-states-base-color
-    .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button {
-      @include mdc-states(
-        $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-    }
+@mixin _outlined-button-variant($color) {
+  @include mdc-button-outlined-theme.theme((
+    label-text-color: $color,
+  ));
+}
 
-    .mat-mdc-button, .mat-mdc-outlined-button {
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  @include mdc-helpers.mat-using-mdc-theme($config) {
+    $is-dark: map.get($config, is-dark);
+    $on-surface: mdc-theme-color.prop-value(on-surface);
+    $surface: mdc-theme-color.prop-value(surface);
+    $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
+    $disabled-container-color: rgba($on-surface, 0.12);
+    $primary: mdc-theme-color.prop-value(primary);
+    $on-primary: mdc-theme-color.prop-value(on-primary);
+    $secondary: mdc-theme-color.prop-value(secondary);
+    $on-secondary: mdc-theme-color.prop-value(on-secondary);
+    $error: mdc-theme-color.prop-value(error);
+    $on-error: mdc-theme-color.prop-value(on-error);
+
+    .mat-mdc-button {
       &.mat-unthemed {
-        @include mdc-button-ink-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
+        @include _button-variant($on-surface);
       }
 
       &.mat-primary {
-        @include mdc-button-ink-color(primary, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          primary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include _mat-button-ripple-ink-color(primary);
+        @include _button-variant($primary);
       }
 
       &.mat-accent {
-        @include mdc-button-ink-color(secondary, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          secondary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include _mat-button-ripple-ink-color(secondary);
+        @include _button-variant($secondary);
       }
 
       &.mat-warn {
-        @include mdc-button-ink-color(error, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          error, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include _mat-button-ripple-ink-color(error);
+        @include _button-variant($error);
+      }
+
+      @include button-theme-private.apply-disabled-style() {
+        @include mdc-button-text-theme.theme((
+          // We need to pass both the disabled and enabled values, because the enabled
+          // ones apply to anchors while the disabled ones are for buttons.
+          disabled-label-text-color: $disabled-ink-color,
+          label-text-color: $disabled-ink-color
+        ));
       }
     }
 
-    .mat-mdc-raised-button,
     .mat-mdc-unelevated-button {
       &.mat-unthemed {
-        @include mdc-button-container-fill-color(
-            $mdc-theme-surface, $query: $mat-theme-styles-query);
-        @include mdc-button-ink-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          $mdc-theme-on-surface, $query: $mat-theme-styles-query,
-          $ripple-target: $mat-button-state-target);
+        @include _unelevated-button-variant($on-surface, $surface);
       }
 
       &.mat-primary {
-        @include mdc-button-container-fill-color(primary, $query: $mat-theme-styles-query);
-        @include mdc-button-ink-color(on-primary, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          on-primary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include _mat-button-ripple-ink-color(on-primary);
+        @include _unelevated-button-variant($on-primary, $primary);
       }
 
       &.mat-accent {
-        @include mdc-button-container-fill-color(secondary, $query: $mat-theme-styles-query);
-        @include mdc-button-ink-color(on-secondary, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          on-secondary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include _mat-button-ripple-ink-color(on-secondary);
+        @include _unelevated-button-variant($on-secondary, $secondary);
       }
 
       &.mat-warn {
-        @include mdc-button-container-fill-color(error, $query: $mat-theme-styles-query);
-        @include mdc-button-ink-color(on-error, $query: $mat-theme-styles-query);
-        @include mdc-states-base-color(
-          on-error, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include _mat-button-ripple-ink-color(on-error);
+        @include _unelevated-button-variant($on-error, $error);
       }
 
-      @include _mat-button-apply-disabled-style() {
-        @include _mat-button-disabled-background();
-      }
-    }
-
-    .mat-mdc-outlined-button {
-      &.mat-unthemed {
-        @include mdc-button-outline-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
-      }
-
-      &.mat-primary {
-        @include mdc-button-outline-color(primary, $query: $mat-theme-styles-query);
-      }
-
-      &.mat-accent {
-        @include mdc-button-outline-color(secondary, $query: $mat-theme-styles-query);
-      }
-
-      &.mat-warn {
-        @include mdc-button-outline-color(error, $query: $mat-theme-styles-query);
-      }
-
-      @include _mat-button-apply-disabled-style() {
-        @include mdc-theme-prop(border-color,
-            mdc-theme-ink-color-for-fill_(disabled, $mdc-theme-background));
+      @include button-theme-private.apply-disabled-style() {
+        @include mdc-button-filled-theme.theme((
+          // We need to pass both the disabled and enabled values, because the enabled
+          // ones apply to anchors while the disabled ones are for buttons.
+          disabled-container-color: $disabled-container-color,
+          disabled-label-text-color: $disabled-ink-color,
+          container-color: $disabled-container-color,
+          label-text-color: $disabled-ink-color,
+        ));
       }
     }
 
     .mat-mdc-raised-button {
-      @include _mat-button-apply-disabled-style() {
-        @include mdc-elevation(0, $query: $mat-theme-styles-query);
+      &.mat-unthemed {
+        @include _raised-button-variant($on-surface, $surface);
+      }
+
+      &.mat-primary {
+        @include _raised-button-variant($on-primary, $primary);
+      }
+
+      &.mat-accent {
+        @include _raised-button-variant($on-secondary, $secondary);
+      }
+
+      &.mat-warn {
+        @include _raised-button-variant($on-error, $error);
+      }
+
+      @include button-theme-private.apply-disabled-style() {
+        @include mdc-button-protected-theme.theme((
+          // We need to pass both the disabled and enabled values, because the enabled
+          // ones apply to anchors while the disabled ones are for buttons.
+          disabled-container-color: $disabled-container-color,
+          disabled-label-text-color: $disabled-ink-color,
+          container-color: $disabled-container-color,
+          label-text-color: $disabled-ink-color,
+          container-elevation: 0,
+        ));
       }
     }
 
-    .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button {
-      @include _mat-button-apply-disabled-style() {
-        @include _mat-button-disabled-color();
+    .mat-mdc-outlined-button {
+      @include mdc-button-outlined-theme.theme((
+        outline-color: rgba(mdc-theme-color.prop-value(on-surface), 0.12)
+      ));
+
+      &.mat-unthemed {
+        @include _outlined-button-variant($on-surface);
+      }
+
+      &.mat-primary {
+        @include _outlined-button-variant($primary);
+      }
+
+      &.mat-accent {
+        @include _outlined-button-variant($secondary);
+      }
+
+      &.mat-warn {
+        @include _outlined-button-variant($error);
+      }
+
+      @include button-theme-private.apply-disabled-style() {
+        @include mdc-button-outlined-theme.theme((
+          // We need to pass both the disabled and enabled values, because the enabled
+          // ones apply to anchors while the disabled ones are for buttons.
+          label-text-color: $disabled-ink-color,
+          disabled-label-text-color: $disabled-ink-color,
+          outline-color: rgba($on-surface, 0.12),
+          disabled-outline-color: rgba($on-surface, 0.12),
+        ));
       }
     }
 
-    @include mdc-button-without-ripple($query: $mat-theme-styles-query);
+    // Ripple colors
+    .mat-mdc-button, .mat-mdc-outlined-button {
+      @include button-theme-private.ripple-theme-styles($config, false);
+    }
+
+    .mat-mdc-raised-button, .mat-mdc-unelevated-button {
+      @include button-theme-private.ripple-theme-styles($config, true);
+    }
   }
 }
 
-@mixin mat-mdc-button-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
-  @include mat-using-mdc-typography($config) {
-    @include mdc-button-without-ripple($query: $mat-typography-styles-query);
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2018-config(
+      theming.get-typography-config($config-or-theme));
+  @include mdc-helpers.mat-using-mdc-typography($config) {
+    @include mdc-button.without-ripple($query: mdc-helpers.$mat-typography-styles-query);
   }
 }
 
-@mixin mat-mdc-button-density($config-or-theme) {
-  $density-scale: mat-get-density-config($config-or-theme);
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
   .mat-mdc-button,
   .mat-mdc-raised-button,
   .mat-mdc-unelevated-button,
   .mat-mdc-outlined-button {
-    @include mdc-button-density($density-scale, $query: $mat-base-styles-query);
+    // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
+    &.mat-mdc-button-base {
+      @include mdc-button-theme.density($density-scale, $query: mdc-helpers.$mat-base-styles-query);
+      @include button-theme-private.touch-target-density($density-scale);
+    }
   }
 }
 
-@mixin mat-mdc-button-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-button') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-mdc-button') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
 
     @if $color != null {
-      @include mat-mdc-button-color($color);
+      @include color($color);
     }
     @if $density != null {
-      @include mat-mdc-button-density($density);
+      @include density($density);
     }
     @if $typography != null {
-      @include mat-mdc-button-typography($typography);
-    }
-  }
-}
-
-@mixin mat-mdc-fab-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  @include mat-using-mdc-theme($config) {
-    .mat-mdc-fab, .mat-mdc-mini-fab {
-      @include mdc-states(
-          $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-
-      &.mat-unthemed {
-        @include mdc-states-base-color(
-          $mdc-theme-on-surface, $query: $mat-theme-styles-query,
-          $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color($mdc-theme-surface, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
-      }
-
-      &.mat-primary {
-        @include mdc-states-base-color(
-          on-primary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(primary, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color(on-primary, $query: $mat-theme-styles-query);
-        @include _mat-button-ripple-ink-color(on-primary);
-      }
-
-      &.mat-accent {
-        @include mdc-states-base-color(
-          on-secondary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(secondary, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color(on-secondary, $query: $mat-theme-styles-query);
-        @include _mat-button-ripple-ink-color(on-secondary);
-      }
-
-      &.mat-warn {
-        @include mdc-states-base-color(
-          on-error, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(error, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color(on-error, $query: $mat-theme-styles-query);
-        @include _mat-button-ripple-ink-color(on-error);
-      }
-
-      @include _mat-button-apply-disabled-style() {
-        @include _mat-button-disabled-color();
-        @include _mat-button-disabled-background();
-        @include mdc-elevation(0, $query: $mat-theme-styles-query);
-      }
-    }
-
-    @include mdc-fab-without-ripple($query: $mat-theme-styles-query);
-  }
-}
-
-@mixin mat-mdc-fab-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
-  @include mat-using-mdc-typography($config) {
-    @include mdc-fab-without-ripple($query: $mat-typography-styles-query);
-  }
-}
-
-@mixin mat-mdc-fab-density($config-or-theme) {}
-
-@mixin mat-mdc-fab-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-fab') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
-
-    @if $color != null {
-      @include mat-mdc-fab-color($color);
-    }
-    @if $density != null {
-      @include mat-mdc-fab-density($density);
-    }
-    @if $typography != null {
-      @include mat-mdc-fab-typography($typography);
-    }
-  }
-}
-
-
-@mixin mat-mdc-icon-button-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  @include mat-using-mdc-theme($config) {
-    .mat-mdc-icon-button {
-      @include mdc-states(
-          $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-
-      &.mat-unthemed {
-        @include mdc-states-base-color(
-          $mdc-theme-on-surface, $query: $mat-theme-styles-query,
-          $ripple-target: $mat-button-state-target);
-        @include mdc-icon-button-ink-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
-      }
-
-      &.mat-primary {
-        @include mdc-states-base-color(
-          primary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-icon-button-ink-color(primary, $query: $mat-theme-styles-query);
-        @include _mat-button-ripple-ink-color(primary);
-      }
-
-      &.mat-accent {
-        @include mdc-states-base-color(
-          secondary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-icon-button-ink-color(secondary, $query: $mat-theme-styles-query);
-        @include _mat-button-ripple-ink-color(secondary);
-      }
-
-      &.mat-warn {
-        @include mdc-states-base-color(
-          error, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-icon-button-ink-color(error, $query: $mat-theme-styles-query);
-        @include _mat-button-ripple-ink-color(error);
-      }
-
-      @include _mat-button-apply-disabled-style() {
-        @include _mat-button-disabled-color();
-      }
-    }
-
-    @include mdc-icon-button-without-ripple($query: $mat-theme-styles-query);
-  }
-}
-
-@mixin mat-mdc-icon-button-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
-  @include mat-using-mdc-typography($config) {
-    @include mdc-icon-button-without-ripple($query: $mat-typography-styles-query);
-  }
-}
-
-@mixin mat-mdc-icon-button-density($config-or-theme) {
-  $density-scale: mat-get-density-config($config-or-theme);
-  .mat-mdc-icon-button {
-    @include mdc-icon-button-density($density-scale, $query: $mat-base-styles-query);
-  }
-}
-
-@mixin mat-mdc-icon-button-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-icon-button') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
-
-    @if $color != null {
-      @include mat-mdc-icon-button-color($color);
-    }
-    @if $density != null {
-      @include mat-mdc-icon-button-density($density);
-    }
-    @if $typography != null {
-      @include mat-mdc-icon-button-typography($typography);
+      @include typography($typography);
     }
   }
 }

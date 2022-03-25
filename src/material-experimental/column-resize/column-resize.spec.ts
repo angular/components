@@ -1,17 +1,9 @@
-import {
-  Component,
-  Directive,
-  ElementRef,
-  Type,
-  ViewChild,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flushMicrotasks, inject} from '@angular/core/testing';
+import {Component, Directive, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flushMicrotasks} from '@angular/core/testing';
 import {BidiModule} from '@angular/cdk/bidi';
 import {DataSource} from '@angular/cdk/collections';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
 
@@ -43,8 +35,9 @@ function getOptInDirectiveStrings() {
 }
 
 function getTableTemplate(defaultEnabled: boolean) {
-  const directives = defaultEnabled ?
-      getDefaultEnabledDirectiveStrings() : getOptInDirectiveStrings();
+  const directives = defaultEnabled
+    ? getDefaultEnabledDirectiveStrings()
+    : getOptInDirectiveStrings();
 
   return `
       <style>
@@ -97,8 +90,9 @@ function getTableTemplate(defaultEnabled: boolean) {
 }
 
 function getFlexTemplate(defaultEnabled: boolean) {
-  const directives = defaultEnabled ?
-      getDefaultEnabledDirectiveStrings() : getOptInDirectiveStrings();
+  const directives = defaultEnabled
+    ? getDefaultEnabledDirectiveStrings()
+    : getOptInDirectiveStrings();
 
   return `
       <style>
@@ -165,8 +159,16 @@ abstract class BaseTestComponent {
   dataSource = new ElementDataSource();
   direction = 'ltr';
 
+  getTableHeight(): number {
+    return this.table.nativeElement.querySelector('.mat-table').offsetHeight;
+  }
+
   getTableWidth(): number {
     return this.table.nativeElement.querySelector('.mat-table').offsetWidth;
+  }
+
+  getHeaderRowHeight(): number {
+    return this.table.nativeElement.querySelector('.mat-header-row .mat-header-cell').offsetHeight;
   }
 
   getColumnElement(index: number): HTMLElement {
@@ -195,37 +197,49 @@ abstract class BaseTestComponent {
     return document.querySelectorAll('.mat-column-resize-overlay-thumb')[index] as HTMLElement;
   }
 
+  getOverlayThumbTopElement(index: number): HTMLElement {
+    return document.querySelectorAll('.mat-column-resize-overlay-thumb-top')[index] as HTMLElement;
+  }
+
   getOverlayThumbPosition(index: number): number {
     const thumbPositionElement = this.getOverlayThumbElement(index)!.parentNode as HTMLElement;
     const left = parseInt(thumbPositionElement.style.left!, 10);
-    const translateX = Number(/translateX\((-?\d+)px\)/.exec(
-        thumbPositionElement.style.transform)?.[1] ?? 0);
+    const translateX = Number(
+      /translateX\((-?\d+)px\)/.exec(thumbPositionElement.style.transform)?.[1] ?? 0,
+    );
     return left + translateX;
   }
 
   beginColumnResizeWithMouse(index: number, button = 0): void {
     const thumbElement = this.getOverlayThumbElement(index);
-    this.table.nativeElement!.dispatchEvent(new MouseEvent('mouseleave',
-        {bubbles: true, relatedTarget: thumbElement, button}));
-    thumbElement.dispatchEvent(new MouseEvent('mousedown', {
-      bubbles: true,
-      screenX: MOUSE_START_OFFSET,
-      button
-    } as MouseEventInit));
+    this.table.nativeElement!.dispatchEvent(
+      new MouseEvent('mouseleave', {bubbles: true, relatedTarget: thumbElement, button}),
+    );
+    thumbElement.dispatchEvent(
+      new MouseEvent('mousedown', {
+        bubbles: true,
+        screenX: MOUSE_START_OFFSET,
+        button,
+      } as MouseEventInit),
+    );
   }
 
   updateResizeWithMouseInProgress(totalDelta: number): void {
-    document.dispatchEvent(new MouseEvent('mousemove', {
-      bubbles: true,
-      screenX: MOUSE_START_OFFSET + totalDelta,
-    } as MouseEventInit));
+    document.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        screenX: MOUSE_START_OFFSET + totalDelta,
+      } as MouseEventInit),
+    );
   }
 
   completeResizeWithMouseInProgress(totalDelta: number): void {
-    document.dispatchEvent(new MouseEvent('mouseup', {
-      bubbles: true,
-      screenX: MOUSE_START_OFFSET + totalDelta,
-    } as MouseEventInit));
+    document.dispatchEvent(
+      new MouseEvent('mouseup', {
+        bubbles: true,
+        screenX: MOUSE_START_OFFSET + totalDelta,
+      } as MouseEventInit),
+    );
   }
 
   resizeColumnWithMouse(index: number, resizeDelta: number): void {
@@ -237,17 +251,17 @@ abstract class BaseTestComponent {
 
 @Directive()
 abstract class BaseTestComponentRtl extends BaseTestComponent {
-  direction = 'rtl';
+  override direction = 'rtl';
 
-  getColumnOriginPosition(index: number): number {
+  override getColumnOriginPosition(index: number): number {
     return this.getColumnElement(index).offsetLeft;
   }
 
-  updateResizeWithMouseInProgress(totalDelta: number): void {
+  override updateResizeWithMouseInProgress(totalDelta: number): void {
     super.updateResizeWithMouseInProgress(-totalDelta);
   }
 
-  completeResizeWithMouseInProgress(totalDelta: number): void {
+  override completeResizeWithMouseInProgress(totalDelta: number): void {
     super.completeResizeWithMouseInProgress(-totalDelta);
   }
 }
@@ -318,38 +332,41 @@ const approximateMatcher = {
       result.pass = actual === expected || actual === expected + 1 || actual === expected - 1;
 
       return result;
-    }
-  })
+    },
+  }),
 };
 
-const testCases: ReadonlyArray<[Type<object>, Type<BaseTestComponent>, string]> = [
+const testCases = [
   [MatColumnResizeModule, MatResizeTest, 'opt-in table-based mat-table'],
   [MatColumnResizeModule, MatResizeOnPushTest, 'inside OnPush component'],
   [MatColumnResizeModule, MatResizeFlexTest, 'opt-in flex-based mat-table'],
   [
-    MatDefaultEnabledColumnResizeModule, MatResizeDefaultTest,
-    'default enabled table-based mat-table'
+    MatDefaultEnabledColumnResizeModule,
+    MatResizeDefaultTest,
+    'default enabled table-based mat-table',
   ],
   [
-    MatDefaultEnabledColumnResizeModule, MatResizeDefaultRtlTest,
-    'default enabled rtl table-based mat-table'
+    MatDefaultEnabledColumnResizeModule,
+    MatResizeDefaultRtlTest,
+    'default enabled rtl table-based mat-table',
   ],
   [
-    MatDefaultEnabledColumnResizeModule, MatResizeDefaultFlexTest,
-    'default enabled flex-based mat-table'
+    MatDefaultEnabledColumnResizeModule,
+    MatResizeDefaultFlexTest,
+    'default enabled flex-based mat-table',
   ],
   [
-    MatDefaultEnabledColumnResizeModule, MatResizeDefaultFlexRtlTest,
-    'default enabled rtl flex-based mat-table'
+    MatDefaultEnabledColumnResizeModule,
+    MatResizeDefaultFlexRtlTest,
+    'default enabled rtl flex-based mat-table',
   ],
-];
+] as const;
 
 describe('Material Popover Edit', () => {
   for (const [resizeModule, componentClass, label] of testCases) {
     describe(label, () => {
       let component: BaseTestComponent;
       let fixture: ComponentFixture<BaseTestComponent>;
-      let overlayContainer: OverlayContainer;
 
       beforeEach(fakeAsync(() => {
         jasmine.addMatchers(approximateMatcher);
@@ -358,40 +375,53 @@ describe('Material Popover Edit', () => {
           imports: [BidiModule, MatTableModule, resizeModule],
           declarations: [componentClass],
         }).compileComponents();
-        inject([OverlayContainer], (oc: OverlayContainer) => {
-          overlayContainer = oc;
-        })();
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
         flushMicrotasks();
       }));
 
-      afterEach(() => {
-        // The overlay container's `ngOnDestroy` won't be called between test runs so we need
-        // to call it ourselves, in order to avoid leaking containers between tests and potentially
-        // throwing `querySelector` calls.
-        overlayContainer.ngOnDestroy();
-      });
-
-      it('shows resize handle overlays on header row hover and while a resize handle is in use',
-          fakeAsync(() => {
+      it('shows resize handle overlays on header row hover and while a resize handle is in use', fakeAsync(() => {
         expect(component.getOverlayThumbElement(0)).toBeUndefined();
+
+        const headerRowHeight = component.getHeaderRowHeight();
+        const tableHeight = component.getTableHeight();
 
         component.triggerHoverState();
         fixture.detectChanges();
 
-        expect(component.getOverlayThumbElement(0).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
-        expect(component.getOverlayThumbElement(2).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
+        expect(
+          component.getOverlayThumbElement(0).classList.contains('mat-column-resize-overlay-thumb'),
+        ).toBe(true);
+        expect(
+          component.getOverlayThumbElement(2).classList.contains('mat-column-resize-overlay-thumb'),
+        ).toBe(true);
+
+        (expect(component.getOverlayThumbElement(0).offsetHeight) as any).isApproximately(
+          headerRowHeight,
+        );
+        (expect(component.getOverlayThumbElement(2).offsetHeight) as any).isApproximately(
+          headerRowHeight,
+        );
 
         component.beginColumnResizeWithMouse(0);
 
-        expect(component.getOverlayThumbElement(0).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
-        expect(component.getOverlayThumbElement(2).classList
-            .contains('mat-column-resize-overlay-thumb')).toBe(true);
+        expect(
+          component.getOverlayThumbElement(0).classList.contains('mat-column-resize-overlay-thumb'),
+        ).toBe(true);
+        expect(
+          component.getOverlayThumbElement(2).classList.contains('mat-column-resize-overlay-thumb'),
+        ).toBe(true);
+
+        (expect(component.getOverlayThumbElement(0).offsetHeight) as any).isApproximately(
+          tableHeight,
+        );
+        (expect(component.getOverlayThumbTopElement(0).offsetHeight) as any).isApproximately(
+          headerRowHeight,
+        );
+        (expect(component.getOverlayThumbElement(2).offsetHeight) as any).isApproximately(
+          headerRowHeight,
+        );
 
         component.completeResizeWithMouseInProgress(0);
         component.endHoverState();
@@ -418,7 +448,7 @@ describe('Material Popover Edit', () => {
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
         let nextColumnPositionDelta =
-            component.getColumnOriginPosition(2) - initialNextColumnPosition;
+          component.getColumnOriginPosition(2) - initialNextColumnPosition;
         (expect(thumbPositionDelta) as any).isApproximately(columnPositionDelta);
         (expect(nextColumnPositionDelta) as any).isApproximately(columnPositionDelta);
 
@@ -493,7 +523,7 @@ describe('Material Popover Edit', () => {
       it('notifies subscribers of a completed resize via ColumnResizeNotifier', fakeAsync(() => {
         const initialColumnWidth = component.getColumnWidth(1);
 
-        let resize: ColumnSize|null = null;
+        let resize: ColumnSize | null = null;
         component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
           resize = size;
         });
@@ -513,7 +543,7 @@ describe('Material Popover Edit', () => {
       }));
 
       it('does not notify subscribers of a canceled resize', fakeAsync(() => {
-        let resize: ColumnSize|null = null;
+        let resize: ColumnSize | null = null;
         component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
           resize = size;
         });

@@ -7,12 +7,7 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {
-  Inject,
-  Injectable,
-  Optional,
-  NgZone,
-} from '@angular/core';
+import {Inject, Injectable, Optional, NgZone} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
@@ -27,12 +22,12 @@ export class ConfigurableFocusTrapFactory {
   private _inertStrategy: FocusTrapInertStrategy;
 
   constructor(
-      private _checker: InteractivityChecker,
-      private _ngZone: NgZone,
-      private _focusTrapManager: FocusTrapManager,
-      @Inject(DOCUMENT) _document: any,
-      @Optional() @Inject(FOCUS_TRAP_INERT_STRATEGY) _inertStrategy?: FocusTrapInertStrategy) {
-
+    private _checker: InteractivityChecker,
+    private _ngZone: NgZone,
+    private _focusTrapManager: FocusTrapManager,
+    @Inject(DOCUMENT) _document: any,
+    @Optional() @Inject(FOCUS_TRAP_INERT_STRATEGY) _inertStrategy?: FocusTrapInertStrategy,
+  ) {
     this._document = _document;
     // TODO split up the strategies into different modules, similar to DateAdapter.
     this._inertStrategy = _inertStrategy || new EventListenerFocusTrapInertStrategy();
@@ -52,17 +47,24 @@ export class ConfigurableFocusTrapFactory {
    */
   create(element: HTMLElement, deferCaptureElements: boolean): ConfigurableFocusTrap;
 
-  create(element: HTMLElement, config: ConfigurableFocusTrapConfig | boolean =
-    new ConfigurableFocusTrapConfig()): ConfigurableFocusTrap {
+  create(
+    element: HTMLElement,
+    config: ConfigurableFocusTrapConfig | boolean = {defer: false},
+  ): ConfigurableFocusTrap {
     let configObject: ConfigurableFocusTrapConfig;
     if (typeof config === 'boolean') {
-      configObject = new ConfigurableFocusTrapConfig();
-      configObject.defer = config;
+      configObject = {defer: config};
     } else {
       configObject = config;
     }
     return new ConfigurableFocusTrap(
-        element, this._checker, this._ngZone, this._document, this._focusTrapManager,
-        this._inertStrategy, configObject);
+      element,
+      this._checker,
+      this._ngZone,
+      this._document,
+      this._focusTrapManager,
+      this._inertStrategy,
+      configObject,
+    );
   }
 }

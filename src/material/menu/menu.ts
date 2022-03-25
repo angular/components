@@ -37,6 +37,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, switchMap, take} from 'rxjs/operators';
@@ -70,11 +71,13 @@ export interface MatMenuDefaultOptions {
 }
 
 /** Injection token to be used to override the default options for `mat-menu`. */
-export const MAT_MENU_DEFAULT_OPTIONS =
-    new InjectionToken<MatMenuDefaultOptions>('mat-menu-default-options', {
-      providedIn: 'root',
-      factory: MAT_MENU_DEFAULT_OPTIONS_FACTORY
-    });
+export const MAT_MENU_DEFAULT_OPTIONS = new InjectionToken<MatMenuDefaultOptions>(
+  'mat-menu-default-options',
+  {
+    providedIn: 'root',
+    factory: MAT_MENU_DEFAULT_OPTIONS_FACTORY,
+  },
+);
 
 /** @docs-private */
 export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
@@ -85,28 +88,29 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
     backdropClass: 'cdk-overlay-transparent-backdrop',
   };
 }
-/**
- * Start elevation for the menu panel.
- * @docs-private
- */
-const MAT_MENU_BASE_ELEVATION = 4;
 
 let menuPanelUid = 0;
 
+/** Reason why the menu was closed. */
+export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
+
 /** Base class with all of the `MatMenu` functionality. */
 @Directive()
-export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit,
-  OnDestroy {
+export class _MatMenuBase
+  implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy
+{
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
+  protected _elevationPrefix: string;
+  protected _baseElevation: number;
 
   /** All items inside the menu. Includes items nested inside another menu. */
   @ContentChildren(MatMenuItem, {descendants: true}) _allItems: QueryList<MatMenuItem>;
 
   /** Only the direct descendant menu items. */
-  private _directDescendantItems = new QueryList<MatMenuItem>();
+  _directDescendantItems = new QueryList<MatMenuItem>();
 
   /** Subscription to tab events on the menu panel */
   private _tabSubscription = Subscription.EMPTY;
@@ -118,7 +122,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   _panelAnimationState: 'void' | 'enter' = 'void';
 
   /** Emits whenever an animation on the menu completes. */
-  _animationDone = new Subject<AnimationEvent>();
+  readonly _animationDone = new Subject<AnimationEvent>();
 
   /** Whether the menu is animating. */
   _isAnimating: boolean;
@@ -130,7 +134,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   direction: Direction;
 
   /** Class or list of classes to be added to the overlay panel. */
-  overlayPanelClass: string|string[] = this._defaultOptions.overlayPanelClass || '';
+  overlayPanelClass: string | string[] = this._defaultOptions.overlayPanelClass || '';
 
   /** Class to be added to the backdrop element. */
   @Input() backdropClass: string = this._defaultOptions.backdropClass;
@@ -146,10 +150,15 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 
   /** Position of the menu in the X axis. */
   @Input()
-  get xPosition(): MenuPositionX { return this._xPosition; }
+  get xPosition(): MenuPositionX {
+    return this._xPosition;
+  }
   set xPosition(value: MenuPositionX) {
-    if (value !== 'before' && value !== 'after' &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (
+      value !== 'before' &&
+      value !== 'after' &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
       throwMatMenuInvalidPositionX();
     }
     this._xPosition = value;
@@ -158,7 +167,9 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 
   /** Position of the menu in the Y axis. */
   @Input()
-  get yPosition(): MenuPositionY { return this._yPosition; }
+  get yPosition(): MenuPositionY {
+    return this._yPosition;
+  }
   set yPosition(value: MenuPositionY) {
     if (value !== 'above' && value !== 'below' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throwMatMenuInvalidPositionY();
@@ -185,16 +196,20 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 
   /** Whether the menu should overlap its trigger. */
   @Input()
-  get overlapTrigger(): boolean { return this._overlapTrigger; }
-  set overlapTrigger(value: boolean) {
+  get overlapTrigger(): boolean {
+    return this._overlapTrigger;
+  }
+  set overlapTrigger(value: BooleanInput) {
     this._overlapTrigger = coerceBooleanProperty(value);
   }
   private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
   /** Whether the menu has a backdrop. */
   @Input()
-  get hasBackdrop(): boolean | undefined { return this._hasBackdrop; }
-  set hasBackdrop(value: boolean | undefined) {
+  get hasBackdrop(): boolean | undefined {
+    return this._hasBackdrop;
+  }
+  set hasBackdrop(value: BooleanInput) {
     this._hasBackdrop = coerceBooleanProperty(value);
   }
   private _hasBackdrop: boolean | undefined = this._defaultOptions.hasBackdrop;
@@ -235,26 +250,32 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
    * @breaking-change 8.0.0
    */
   @Input()
-  get classList(): string { return this.panelClass; }
-  set classList(classes: string) { this.panelClass = classes; }
+  get classList(): string {
+    return this.panelClass;
+  }
+  set classList(classes: string) {
+    this.panelClass = classes;
+  }
 
   /** Event emitted when the menu is closed. */
-  @Output() readonly closed: EventEmitter<void | 'click' | 'keydown' | 'tab'> =
-      new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
+  @Output() readonly closed: EventEmitter<MenuCloseReason> = new EventEmitter<MenuCloseReason>();
 
   /**
    * Event emitted when the menu is closed.
    * @deprecated Switch to `closed` instead
    * @breaking-change 8.0.0
    */
-  @Output() close: EventEmitter<void | 'click' | 'keydown' | 'tab'> = this.closed;
+  @Output() readonly close: EventEmitter<MenuCloseReason> = this.closed;
 
   readonly panelId = `mat-menu-panel-${menuPanelUid++}`;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
-    @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
+    @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions,
+    // @breaking-change 15.0.0 `_changeDetectorRef` to become a required parameter.
+    private _changeDetectorRef?: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     this.setPositionClasses();
@@ -268,13 +289,33 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
       .withHomeAndEnd();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
 
-    // If a user manually (programatically) focuses a menu item, we need to reflect that focus
+    // If a user manually (programmatically) focuses a menu item, we need to reflect that focus
     // change back to the key manager. Note that we don't need to unsubscribe here because _focused
     // is internal and we know that it gets completed on destroy.
-    this._directDescendantItems.changes.pipe(
-      startWith(this._directDescendantItems),
-      switchMap(items => merge<MatMenuItem>(...items.map((item: MatMenuItem) => item._focused)))
-    ).subscribe(focusedItem => this._keyManager.updateActiveItem(focusedItem));
+    this._directDescendantItems.changes
+      .pipe(
+        startWith(this._directDescendantItems),
+        switchMap(items => merge(...items.map((item: MatMenuItem) => item._focused))),
+      )
+      .subscribe(focusedItem => this._keyManager.updateActiveItem(focusedItem as MatMenuItem));
+
+    this._directDescendantItems.changes.subscribe((itemsList: QueryList<MatMenuItem>) => {
+      // Move focus to another item, if the active item is removed from the list.
+      // We need to debounce the callback, because multiple items might be removed
+      // in quick succession.
+      const manager = this._keyManager;
+
+      if (this._panelAnimationState === 'enter' && manager.activeItem?._hasFocus()) {
+        const items = itemsList.toArray();
+        const index = Math.max(0, Math.min(items.length - 1, manager.activeItemIndex || 0));
+
+        if (items[index] && !items[index].disabled) {
+          manager.setActiveItem(index);
+        } else {
+          manager.setNextItemActive();
+        }
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -289,7 +330,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     const itemChanges = this._directDescendantItems.changes as Observable<QueryList<MatMenuItem>>;
     return itemChanges.pipe(
       startWith(this._directDescendantItems),
-      switchMap(items => merge(...items.map((item: MatMenuItem) => item._hovered)))
+      switchMap(items => merge(...items.map((item: MatMenuItem) => item._hovered))),
     ) as Observable<MatMenuItem>;
   }
 
@@ -320,24 +361,29 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
           event.preventDefault();
           this.closed.emit('keydown');
         }
-      break;
+        break;
       case LEFT_ARROW:
         if (this.parentMenu && this.direction === 'ltr') {
           this.closed.emit('keydown');
         }
-      break;
+        break;
       case RIGHT_ARROW:
         if (this.parentMenu && this.direction === 'rtl') {
           this.closed.emit('keydown');
         }
-      break;
+        break;
       default:
         if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
           manager.setFocusOrigin('keyboard');
         }
 
         manager.onKeydown(event);
+        return;
     }
+
+    // Don't allow the event to propagate if we've already handled it, or it may
+    // end up reaching other overlays that were opened earlier (see #22694).
+    event.stopPropagation();
   }
 
   /**
@@ -347,9 +393,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   focusFirstItem(origin: FocusOrigin = 'program'): void {
     // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
     if (this.lazyContent) {
-      this._ngZone.onStable
-        .pipe(take(1))
-        .subscribe(() => this._focusFirstItem(origin));
+      this._ngZone.onStable.pipe(take(1)).subscribe(() => this._focusFirstItem(origin));
     } else {
       this._focusFirstItem(origin);
     }
@@ -368,7 +412,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     // Move focus to the menu panel so keyboard events like Escape still work. Also this will
     // give _some_ feedback to screen readers.
     if (!manager.activeItem && this._directDescendantItems.length) {
-      let element = this._directDescendantItems.first._getHostElement().parentElement;
+      let element = this._directDescendantItems.first!._getHostElement().parentElement;
 
       // Because the `mat-menu` is at the DOM insertion point, not inside the overlay, we don't
       // have a nice way of getting a hold of the menu panel. We can't use a `ViewChild` either
@@ -400,9 +444,11 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   setElevation(depth: number): void {
     // The elevation starts at the base and increases by one for each level.
     // Capped at 24 because that's the maximum elevation defined in the Material design spec.
-    const elevation = Math.min(MAT_MENU_BASE_ELEVATION + depth, 24);
-    const newElevation = `mat-elevation-z${elevation}`;
-    const customElevation = Object.keys(this._classList).find(c => c.startsWith('mat-elevation-z'));
+    const elevation = Math.min(this._baseElevation + depth, 24);
+    const newElevation = `${this._elevationPrefix}${elevation}`;
+    const customElevation = Object.keys(this._classList).find(className => {
+      return className.startsWith(this._elevationPrefix);
+    });
 
     if (!customElevation || customElevation === this._previousElevation) {
       if (this._previousElevation) {
@@ -427,6 +473,9 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     classes['mat-menu-after'] = posX === 'after';
     classes['mat-menu-above'] = posY === 'above';
     classes['mat-menu-below'] = posY === 'below';
+
+    // @breaking-change 15.0.0 Remove null check for `_changeDetectorRef`.
+    this._changeDetectorRef?.markForCheck();
   }
 
   /** Starts the enter animation. */
@@ -475,9 +524,6 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
         this._directDescendantItems.notifyOnChanges();
       });
   }
-
-  static ngAcceptInputType_overlapTrigger: BooleanInput;
-  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }
 
 /** @docs-public MatMenu */
@@ -493,17 +539,29 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
   },
-  animations: [
-    matMenuAnimations.transformMenu,
-    matMenuAnimations.fadeInItems
-  ],
-  providers: [
-    {provide: MAT_MENU_PANEL, useExisting: MatMenu},
-  ]
+  animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
+  providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],
 })
 export class MatMenu extends _MatMenuBase {
-  constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone,
-      @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions) {
-    super(elementRef, ngZone, defaultOptions);
+  protected override _elevationPrefix = 'mat-elevation-z';
+  protected override _baseElevation = 4;
+
+  /**
+   * @deprecated `changeDetectorRef` parameter will become a required parameter.
+   * @breaking-change 15.0.0
+   */
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
+    ngZone: NgZone,
+    defaultOptions: MatMenuDefaultOptions,
+  );
+
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
+    ngZone: NgZone,
+    @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions,
+    changeDetectorRef?: ChangeDetectorRef,
+  ) {
+    super(elementRef, ngZone, defaultOptions, changeDetectorRef);
   }
 }

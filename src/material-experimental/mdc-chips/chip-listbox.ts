@@ -6,32 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusKeyManager} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
-  ElementRef,
   EventEmitter,
   forwardRef,
   Input,
-  Optional,
+  OnDestroy,
   Output,
   QueryList,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MDCChipSetFoundation} from '@material/chips';
-import {merge, Observable, Subscription} from 'rxjs';
+import {MDCChipActionType} from '@material/chips';
+import {Observable} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipOption, MatChipSelectionChange} from './chip-option';
 import {MatChipSet} from './chip-set';
-
 
 /** Change event object that is emitted when the chip listbox value has changed. */
 export class MatChipListboxChange {
@@ -39,7 +35,8 @@ export class MatChipListboxChange {
     /** Chip listbox that emitted the event. */
     public source: MatChipListbox,
     /** Value of the chip listbox when the event was emitted. */
-    public value: any) { }
+    public value: any,
+  ) {}
 }
 
 /**
@@ -50,7 +47,7 @@ export class MatChipListboxChange {
 export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatChipListbox),
-  multi: true
+  multi: true,
 };
 
 /**
@@ -59,11 +56,15 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
  */
 @Component({
   selector: 'mat-chip-listbox',
-  template: '<ng-content></ng-content>',
-  styleUrls: ['chips.css'],
+  template: `
+    <span class="mdc-evolution-chip-set__chips" role="presentation">
+      <ng-content></ng-content>
+    </span>
+  `,
+  styleUrls: ['chip-set.css'],
   inputs: ['tabIndex'],
   host: {
-    'class': 'mat-mdc-chip-set mat-mdc-chip-listbox mdc-chip-set',
+    'class': 'mdc-evolution-chip-set mat-mdc-chip-listbox',
     '[attr.role]': 'role',
     '[tabIndex]': 'empty ? -1 : tabIndex',
     // TODO: replace this binding with use of AriaDescriber
@@ -77,26 +78,15 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
     '(focus)': 'focus()',
     '(blur)': '_blur()',
     '(keydown)': '_keydown($event)',
-    '[id]': '_uid',
   },
   providers: [MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipListbox extends MatChipSet implements AfterContentInit, ControlValueAccessor {
-
-  /** Subscription to selection changes in the chips. */
-  private _chipSelectionSubscription: Subscription | null;
-
-  /** Subscription to blur changes in the chips. */
-  private _chipBlurSubscription: Subscription | null;
-
-  /** Subscription to focus changes in the chips. */
-  private _chipFocusSubscription: Subscription | null;
-
-  /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager<MatChip>;
-
+export class MatChipListbox
+  extends MatChipSet
+  implements AfterContentInit, OnDestroy, ControlValueAccessor
+{
   /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
    * @docs-private
@@ -109,21 +99,22 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
    */
   _onChange: (value: any) => void = () => {};
 
-  /** The ARIA role applied to the chip listbox. */
-  get role(): string | null { return this.empty ? null : 'listbox'; }
+  // TODO: MDC uses `grid` here
+  protected override _defaultRole = 'listbox';
 
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
-  get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  get multiple(): boolean {
+    return this._multiple;
+  }
+  set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
-    this._updateMdcSelectionClasses();
     this._syncListboxProperties();
   }
   private _multiple: boolean = false;
 
   /** The array of selected chips inside the chip listbox. */
-  get selected(): MatChipOption[] | MatChipOption  {
+  get selected(): MatChipOption[] | MatChipOption {
     const selectedChips = this._chips.toArray().filter(chip => chip.selected);
     return this.multiple ? selectedChips : selectedChips[0];
   }
@@ -138,10 +129,11 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
    * the chips inside the chip listbox are always ignored.
    */
   @Input()
-  get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) {
+  get selectable(): boolean {
+    return this._selectable;
+  }
+  set selectable(value: BooleanInput) {
     this._selectable = coerceBooleanProperty(value);
-    this._updateMdcSelectionClasses();
     this._syncListboxProperties();
   }
   protected _selectable: boolean = true;
@@ -152,40 +144,45 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
    * should be returned.
    */
   @Input()
-  get compareWith(): (o1: any, o2: any) => boolean { return this._compareWith; }
+  get compareWith(): (o1: any, o2: any) => boolean {
+    return this._compareWith;
+  }
   set compareWith(fn: (o1: any, o2: any) => boolean) {
     this._compareWith = fn;
     this._initializeSelection();
   }
   private _compareWith = (o1: any, o2: any) => o1 === o2;
 
-
   /** Whether this chip listbox is required. */
   @Input()
-  get required(): boolean { return this._required; }
-  set required(value: boolean) {
+  get required(): boolean {
+    return this._required;
+  }
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
   protected _required: boolean = false;
 
   /** Combined stream of all of the child chips' selection change events. */
   get chipSelectionChanges(): Observable<MatChipSelectionChange> {
-    return merge(...this._chips.map(chip => chip.selectionChange));
+    return this._getChipStream<MatChipSelectionChange, MatChipOption>(chip => chip.selectionChange);
   }
 
   /** Combined stream of all of the child chips' focus events. */
   get chipFocusChanges(): Observable<MatChipEvent> {
-    return merge(...this._chips.map(chip => chip._onFocus));
+    return this._getChipStream(chip => chip._onFocus);
   }
 
   /** Combined stream of all of the child chips' blur events. */
   get chipBlurChanges(): Observable<MatChipEvent> {
-    return merge(...this._chips.map(chip => chip._onBlur));
+    return this._getChipStream(chip => chip._onBlur);
   }
 
   /** The value of the listbox, which is the combined value of the selected chips. */
   @Input()
-  get value(): any { return this._value; }
+  get value(): any {
+    return this._value;
+  }
   set value(value: any) {
     this.writeValue(value);
     this._value = value;
@@ -194,30 +191,17 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
 
   /** Event emitted when the selected chip listbox value has been changed by the user. */
   @Output() readonly change: EventEmitter<MatChipListboxChange> =
-      new EventEmitter<MatChipListboxChange>();
+    new EventEmitter<MatChipListboxChange>();
 
   @ContentChildren(MatChipOption, {
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
-    descendants: true
+    descendants: true,
   })
-  _chips: QueryList<MatChipOption>;
+  override _chips: QueryList<MatChipOption>;
 
-  constructor(protected _elementRef: ElementRef,
-              _changeDetectorRef: ChangeDetectorRef,
-              @Optional() _dir: Directionality) {
-    super(_elementRef, _changeDetectorRef, _dir);
-    this._chipSetAdapter.selectChipAtIndex = (index: number, selected: boolean) => {
-      this._setSelected(index, selected);
-    };
-    // Reinitialize the foundation with our overridden adapter
-    this._chipSetFoundation = new MDCChipSetFoundation(this._chipSetAdapter);
-    this._updateMdcSelectionClasses();
-  }
-
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     super.ngAfterContentInit();
-    this._initKeyManager();
 
     this._chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
       // Update listbox selectable/multiple properties on chips
@@ -229,13 +213,20 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
       // Check to see if we have a destroyed chip and need to refocus
       this._updateFocusForDestroyedChips();
     });
+
+    this.chipBlurChanges.pipe(takeUntil(this._destroyed)).subscribe(() => this._blur());
+    this.chipSelectionChanges.pipe(takeUntil(this._destroyed)).subscribe(event => {
+      if (event.isUserInput) {
+        this._propagateChanges();
+      }
+    });
   }
 
   /**
    * Focuses the first selected chip in this chip listbox, or the first non-disabled chip when there
    * are no selected chips.
    */
-  focus(): void {
+  override focus(): void {
     if (this.disabled) {
       return;
     }
@@ -243,10 +234,13 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     const firstSelectedChip = this._getFirstSelectedChip();
 
     if (firstSelectedChip) {
-      const firstSelectedChipIndex = this._chips.toArray().indexOf(firstSelectedChip);
-      this._keyManager.setActiveItem(firstSelectedChipIndex);
+      firstSelectedChip.focus();
     } else if (this._chips.length > 0) {
-      this._keyManager.setFirstItemActive();
+      // MDC sets the tabindex directly on the DOM node when the user is navigating which means
+      // that we may end up with a `0` value from a previous interaction. We reset it manually
+      // here to ensure that the state is correct.
+      this._chips.forEach(chip => chip.primaryAction._updateTabindex(-1));
+      this._chips.first.primaryAction.focus();
     }
   }
 
@@ -291,69 +285,26 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     if (Array.isArray(value)) {
       value.forEach(currentValue => this._selectValue(currentValue, isUserInput));
     } else {
-      const correspondingChip = this._selectValue(value, isUserInput);
-
-      // Shift focus to the active item. Note that we shouldn't do this in multiple
-      // mode, because we don't know what chip the user interacted with last.
-      if (correspondingChip) {
-        if (isUserInput) {
-          this._keyManager.setActiveItem(correspondingChip);
-        }
-      }
-    }
-  }
-
-  /** Selects or deselects a chip by id. */
-  _setSelected(index: number, selected: boolean) {
-    const chip = this._chips.toArray()[index];
-    if (chip && chip.selected != selected) {
-      chip.toggleSelected(true);
+      this._selectValue(value, isUserInput);
     }
   }
 
   /** When blurred, marks the field as touched when focus moved outside the chip listbox. */
   _blur() {
-    if (this.disabled) {
-      return;
-    }
-
-    if (!this.focused) {
-      this._keyManager.setActiveItem(-1);
-    }
-
-    // Wait to see if focus moves to an indivdual chip.
-    setTimeout(() => {
-      if (!this.focused) {
-        this._propagateChanges();
-        this._markAsTouched();
-      }
-    });
-  }
-
-  /**
-   * Removes the `tabindex` from the chip listbox and resets it back afterwards, allowing the
-   * user to tab out of it. This prevents the listbox from capturing focus and redirecting
-   * it back to the first chip, creating a focus trap, if it user tries to tab away.
-   */
-  _allowFocusEscape() {
-    const previousTabIndex = this.tabIndex;
-
-    if (this.tabIndex !== -1) {
-      this.tabIndex = -1;
-
+    if (!this.disabled) {
+      // Wait to see if focus moves to an individual chip.
       setTimeout(() => {
-        this.tabIndex = previousTabIndex;
-        this._changeDetectorRef.markForCheck();
+        if (!this.focused) {
+          this._propagateChanges();
+          this._markAsTouched();
+        }
       });
     }
   }
 
-  /**
-   * Handles custom keyboard shortcuts, and passes other keyboard events to the keyboard manager.
-   */
   _keydown(event: KeyboardEvent) {
-    if (this._originatesFromChip(event)) {
-      this._keyManager.onKeydown(event);
+    if (event.keyCode === TAB) {
+      super._allowFocusEscape();
     }
   }
 
@@ -363,14 +314,14 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     this._changeDetectorRef.markForCheck();
   }
 
- /** Emits change event to set the model value. */
-  private _propagateChanges(fallbackValue?: any): void {
+  /** Emits change event to set the model value. */
+  private _propagateChanges(): void {
     let valueToEmit: any = null;
 
     if (Array.isArray(this.selected)) {
       valueToEmit = this.selected.map(chip => chip.value);
     } else {
-      valueToEmit = this.selected ? this.selected.value : fallbackValue;
+      valueToEmit = this.selected ? this.selected.value : undefined;
     }
     this._value = valueToEmit;
     this.change.emit(new MatChipListboxChange(this, valueToEmit));
@@ -385,9 +336,9 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     setTimeout(() => {
       // Defer setting the value in order to avoid the "Expression
       // has changed after it was checked" errors from Angular.
-      this._chips.forEach(chip => {
+      this._chips.forEach((chip, index) => {
         if (chip.selected) {
-          this._chipSetFoundation.select(chip.id);
+          this._chipSetFoundation.setChipSelected(index, MDCChipActionType.PRIMARY, true);
         }
       });
     });
@@ -410,9 +361,8 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
    * @returns Chip that has the corresponding value.
    */
   private _selectValue(value: any, isUserInput: boolean = true): MatChip | undefined {
-
     const correspondingChip = this._chips.find(chip => {
-      return chip.value != null && this._compareWith(chip.value,  value);
+      return chip.value != null && this._compareWith(chip.value, value);
     });
 
     if (correspondingChip) {
@@ -437,31 +387,6 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     }
   }
 
-  /** Sets the mdc classes for single vs multi selection. */
-  private _updateMdcSelectionClasses() {
-    this._setMdcClass('mdc-chip-set--filter', this.selectable && this.multiple);
-    this._setMdcClass('mdc-chip-set--choice', this.selectable && !this.multiple);
-  }
-
-  /** Initializes the key manager to manage focus. */
-  private _initKeyManager() {
-    this._keyManager = new FocusKeyManager<MatChip>(this._chips)
-      .withWrap()
-      .withVerticalOrientation()
-      .withHomeAndEnd()
-      .withHorizontalOrientation(this._dir ? this._dir.value : 'ltr');
-
-    if (this._dir) {
-      this._dir.change
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(dir => this._keyManager.withHorizontalOrientation(dir));
-    }
-
-    this._keyManager.tabOut.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      this._allowFocusEscape();
-    });
-  }
-
   /** Returns the first selected chip in this listbox, or undefined if no chips are selected. */
   private _getFirstSelectedChip(): MatChipOption | undefined {
     if (Array.isArray(this.selected)) {
@@ -469,66 +394,6 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     } else {
       return this.selected;
     }
-  }
-
-  /** Unsubscribes from all chip events. */
-  protected _dropSubscriptions() {
-    super._dropSubscriptions();
-    if (this._chipSelectionSubscription) {
-      this._chipSelectionSubscription.unsubscribe();
-      this._chipSelectionSubscription = null;
-    }
-
-    if (this._chipBlurSubscription) {
-      this._chipBlurSubscription.unsubscribe();
-      this._chipBlurSubscription = null;
-    }
-
-    if (this._chipFocusSubscription) {
-      this._chipFocusSubscription.unsubscribe();
-      this._chipFocusSubscription = null;
-    }
-  }
-
-  /** Subscribes to events on the child chips. */
-  protected _subscribeToChipEvents() {
-    super._subscribeToChipEvents();
-    this._listenToChipsSelection();
-    this._listenToChipsFocus();
-    this._listenToChipsBlur();
-  }
-
-  /** Subscribes to chip focus events. */
-  private _listenToChipsFocus(): void {
-    this._chipFocusSubscription = this.chipFocusChanges.subscribe((event: MatChipEvent) => {
-      let chipIndex: number = this._chips.toArray().indexOf(event.chip as MatChipOption);
-
-      if (this._isValidIndex(chipIndex)) {
-        this._keyManager.updateActiveItem(chipIndex);
-      }
-    });
-  }
-
-  /** Subscribes to chip blur events. */
-  private _listenToChipsBlur(): void {
-    this._chipBlurSubscription = this.chipBlurChanges.subscribe(() => {
-      this._blur();
-    });
-  }
-
-  /** Subscribes to selection changes in the option chips. */
-  private _listenToChipsSelection(): void {
-    this._chipSelectionSubscription = this.chipSelectionChanges.subscribe(
-      (chipSelectionChange: MatChipSelectionChange) => {
-        this._chipSetFoundation.handleChipSelection({
-          chipId: chipSelectionChange.source.id,
-          selected: chipSelectionChange.selected,
-          shouldIgnore: false
-        });
-        if (chipSelectionChange.isUserInput) {
-          this._propagateChanges();
-        }
-    });
   }
 
   /**
@@ -540,7 +405,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
     if (this._lastDestroyedChipIndex != null) {
       if (this._chips.length) {
         const newChipIndex = Math.min(this._lastDestroyedChipIndex, this._chips.length - 1);
-        this._keyManager.setActiveItem(newChipIndex);
+        this._chips.toArray()[newChipIndex].focus();
       } else {
         this.focus();
       }
@@ -548,8 +413,4 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
 
     this._lastDestroyedChipIndex = null;
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_selectable: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }

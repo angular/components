@@ -1,5 +1,3 @@
-load("@npm//scss-bundle:index.bzl", "scss_bundle")
-load("//src/cdk:config.bzl", "CDK_SCSS_LIBS")
 load(
     "//src/material:config.bzl",
     "MATERIAL_ENTRYPOINTS",
@@ -7,14 +5,13 @@ load(
     "MATERIAL_TARGETS",
     "MATERIAL_TESTING_TARGETS",
 )
-load("//tools:defaults.bzl", "ng_package", "ts_library")
+load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
 ts_library(
     name = "material",
     srcs = ["index.ts"],
-    module_name = "@angular/material",
 )
 
 filegroup(
@@ -22,24 +19,14 @@ filegroup(
     srcs = ["//src/material/%s:overview" % name for name in MATERIAL_ENTRYPOINTS],
 )
 
-scss_bundle(
+# Makes the theming bundle available in the release output as `angular/material/theming`.
+sass_library(
     name = "theming_bundle",
-    outs = ["_theming.scss"],
-    args = [
-        "--entryFile=$(execpath :theming-bundle.scss)",
-        "--outFile=$(execpath :_theming.scss)",
-
-        # The config file has to be passed in explicitly, otherwise the
-        # bundler will still run, but produce massive bundle files.
-        "--config=scss-bundle.config.json",
+    srcs = [
+        "_index.scss",
+        "_theming.scss",
     ],
-    data = CDK_SCSS_LIBS + MATERIAL_SCSS_LIBS + [
-        "theming-bundle.scss",
-        "//src/material/core:theming_scss_lib",
-        # Config file is required by "scss-bundle" and will be automatically
-        # loaded by the CLI. It expects the config to be in the execroot.
-        "//:scss-bundle.config.json",
-    ],
+    deps = ["//src/material/core:theming_scss_lib"],
 )
 
 # Creates the @angular/material package published to npm.
@@ -56,8 +43,6 @@ ng_package(
         "//src/material/prebuilt-themes:pink-bluegrey",
         "//src/material/prebuilt-themes:purple-green",
     ] + MATERIAL_SCSS_LIBS,
-    entry_point = ":index.ts",
-    entry_point_name = "material",
     nested_packages = ["//src/material/schematics:npm_package"],
     tags = ["release-package"],
     deps = MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS,

@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsMaterialNavigation",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "SchematicsMaterialNavigation",
   "title": "Material Navigation Options Schema",
   "type": "object",
   "properties": {
@@ -78,7 +78,7 @@
       "format": "html-selector",
       "description": "The selector to use for the component."
     },
-    "module":  {
+    "module": {
       "type": "string",
       "description": "Allows specification of the declaring module.",
       "alias": "m"
@@ -87,11 +87,6 @@
       "type": "boolean",
       "default": false,
       "description": "Specifies if declaring module exports the component."
-    },
-    "entryComponent": {
-      "type": "boolean",
-      "default": false,
-      "description": "Specifies if the component is an entry component of declaring module."
     },
     "routing": {
       "type": "boolean",

@@ -5,23 +5,26 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Component, ViewChild} from '@angular/core';
 
 describe('MatTableDataSource', () => {
-  const dataSource = new MatTableDataSource();
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule],
-      declarations: [MatSortApp],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, NoopAnimationsModule],
+        declarations: [MatSortApp],
+      }).compileComponents();
+    }),
+  );
 
   describe('sort', () => {
+    let dataSource: MatTableDataSource<any>;
     let fixture: ComponentFixture<MatSortApp>;
     let sort: MatSort;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MatSortApp);
       fixture.detectChanges();
+      dataSource = new MatTableDataSource();
       sort = fixture.componentInstance.sort;
+      dataSource.sort = sort;
     });
 
     /** Test the data source's `sortData` function. */
@@ -51,11 +54,33 @@ describe('MatTableDataSource', () => {
     it('should be able to correctly sort an array of strings and numbers', () => {
       testSortWithValues([3, 'apples', 'bananas', 'cherries', 'lemons', 'strawberries']);
     });
+
+    it('should unsubscribe from the re-render stream when disconnected', () => {
+      const spy = spyOn(dataSource._renderChangesSubscription!, 'unsubscribe');
+      dataSource.disconnect();
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should re-subscribe to the sort stream when re-connecting after being disconnected', () => {
+      dataSource.disconnect();
+      const spy = spyOn(fixture.componentInstance.sort.sortChange, 'subscribe');
+      dataSource.connect();
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should update filteredData even if the data source is disconnected', () => {
+      dataSource.data = [1, 2, 3, 4, 5];
+      expect(dataSource.filteredData).toEqual([1, 2, 3, 4, 5]);
+
+      dataSource.disconnect();
+      dataSource.data = [5, 4, 3, 2, 1];
+      expect(dataSource.filteredData).toEqual([5, 4, 3, 2, 1]);
+    });
   });
 });
 
 @Component({
-  template: `<div matSort matSortDirection="asc"></div>`
+  template: `<div matSort matSortDirection="asc"></div>`,
 })
 class MatSortApp {
   @ViewChild(MatSort) sort: MatSort;

@@ -7,14 +7,13 @@
  */
 
 import {
+  ApplicationRef,
   ComponentFactoryResolver,
   ComponentRef,
   EmbeddedViewRef,
-  ApplicationRef,
   Injector,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal, DomPortal} from './portal';
-
+import {BasePortalOutlet, ComponentPortal, DomPortal, TemplatePortal} from './portal';
 
 /**
  * A PortalOutlet for attaching portals to an arbitrary DOM element outside of the Angular
@@ -24,17 +23,18 @@ export class DomPortalOutlet extends BasePortalOutlet {
   private _document: Document;
 
   constructor(
-      /** Element into which the content is projected. */
-      public outletElement: Element,
-      private _componentFactoryResolver: ComponentFactoryResolver,
-      private _appRef: ApplicationRef,
-      private _defaultInjector: Injector,
+    /** Element into which the content is projected. */
+    public outletElement: Element,
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    private _appRef: ApplicationRef,
+    private _defaultInjector: Injector,
 
-      /**
-       * @deprecated `_document` Parameter to be made required.
-       * @breaking-change 10.0.0
-       */
-      _document?: any) {
+    /**
+     * @deprecated `_document` Parameter to be made required.
+     * @breaking-change 10.0.0
+     */
+    _document?: any,
+  ) {
     super();
     this._document = _document;
   }
@@ -55,9 +55,10 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // and then manually attach the view to the application.
     if (portal.viewContainerRef) {
       componentRef = portal.viewContainerRef.createComponent(
-          componentFactory,
-          portal.viewContainerRef.length,
-          portal.injector || portal.viewContainerRef.injector);
+        componentFactory,
+        portal.viewContainerRef.length,
+        portal.injector || portal.viewContainerRef.injector,
+      );
 
       this.setDisposeFn(() => componentRef.destroy());
     } else {
@@ -71,6 +72,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // At this point the component has been instantiated, so we move it to the location in the DOM
     // where we want it to be rendered.
     this.outletElement.appendChild(this._getComponentRootNode(componentRef));
+    this._attachedPortal = portal;
 
     return componentRef;
   }
@@ -82,7 +84,9 @@ export class DomPortalOutlet extends BasePortalOutlet {
    */
   attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     let viewContainer = portal.viewContainerRef;
-    let viewRef = viewContainer.createEmbeddedView(portal.templateRef, portal.context);
+    let viewRef = viewContainer.createEmbeddedView(portal.templateRef, portal.context, {
+      injector: portal.injector,
+    });
 
     // The method `createEmbeddedView` will add the view as a child of the viewContainer.
     // But for the DomPortalOutlet the view can be added everywhere in the DOM
@@ -95,12 +99,14 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // hook won't be invoked too early.
     viewRef.detectChanges();
 
-    this.setDisposeFn((() => {
+    this.setDisposeFn(() => {
       let index = viewContainer.indexOf(viewRef);
       if (index !== -1) {
         viewContainer.remove(index);
       }
-    }));
+    });
+
+    this._attachedPortal = portal;
 
     // TODO(jelbourn): Return locals from view.
     return viewRef;
@@ -112,7 +118,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
    * @deprecated To be turned into a method.
    * @breaking-change 10.0.0
    */
-  attachDomPortal = (portal: DomPortal) => {
+  override attachDomPortal = (portal: DomPortal) => {
     // @breaking-change 10.0.0 Remove check and error once the
     // `_document` constructor parameter is required.
     if (!this._document && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -130,6 +136,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
 
     element.parentNode!.insertBefore(anchorNode, element);
     this.outletElement.appendChild(element);
+    this._attachedPortal = portal;
 
     super.setDisposeFn(() => {
       // We can't use `replaceWith` here because IE doesn't support it.
@@ -137,16 +144,14 @@ export class DomPortalOutlet extends BasePortalOutlet {
         anchorNode.parentNode.replaceChild(element, anchorNode);
       }
     });
-  }
+  };
 
   /**
    * Clears out a portal from the DOM.
    */
-  dispose(): void {
+  override dispose(): void {
     super.dispose();
-    if (this.outletElement.parentNode != null) {
-      this.outletElement.parentNode.removeChild(this.outletElement);
-    }
+    this.outletElement.remove();
   }
 
   /** Gets the root HTMLElement for an instantiated component. */

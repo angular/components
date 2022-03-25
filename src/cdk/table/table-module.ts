@@ -7,15 +7,32 @@
  */
 
 import {NgModule} from '@angular/core';
-import {HeaderRowOutlet, DataRowOutlet, CdkTable, FooterRowOutlet, NoDataRowOutlet} from './table';
 import {
-  CdkCellOutlet, CdkFooterRow, CdkFooterRowDef, CdkHeaderRow, CdkHeaderRowDef, CdkRow,
+  HeaderRowOutlet,
+  DataRowOutlet,
+  CdkTable,
+  CdkRecycleRows,
+  FooterRowOutlet,
+  NoDataRowOutlet,
+} from './table';
+import {
+  CdkCellOutlet,
+  CdkFooterRow,
+  CdkFooterRowDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkRow,
   CdkRowDef,
-  CdkNoDataRow
+  CdkNoDataRow,
 } from './row';
 import {
-  CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef,
-  CdkFooterCellDef, CdkFooterCell
+  CdkColumnDef,
+  CdkHeaderCellDef,
+  CdkHeaderCell,
+  CdkCell,
+  CdkCellDef,
+  CdkFooterCellDef,
+  CdkFooterCell,
 } from './cell';
 import {CdkTextColumn} from './text-column';
 import {ScrollingModule} from '@angular/cdk/scrolling';
@@ -41,12 +58,13 @@ const EXPORTED_DECLARATIONS = [
   FooterRowOutlet,
   CdkTextColumn,
   CdkNoDataRow,
+  CdkRecycleRows,
   NoDataRowOutlet,
 ];
 
 @NgModule({
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
-  imports: [ScrollingModule]
+  imports: [ScrollingModule],
 })
-export class CdkTableModule { }
+export class CdkTableModule {}

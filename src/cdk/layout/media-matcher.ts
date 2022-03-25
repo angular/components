@@ -21,11 +21,12 @@ export class MediaMatcher {
   private _matchMedia: (query: string) => MediaQueryList;
 
   constructor(private _platform: Platform) {
-    this._matchMedia = this._platform.isBrowser && window.matchMedia ?
-      // matchMedia is bound to the window scope intentionally as it is an illegal invocation to
-      // call it from a different scope.
-      window.matchMedia.bind(window) :
-      noopMatchMedia;
+    this._matchMedia =
+      this._platform.isBrowser && window.matchMedia
+        ? // matchMedia is bound to the window scope intentionally as it is an illegal invocation to
+          // call it from a different scope.
+          window.matchMedia.bind(window)
+        : noopMatchMedia;
   }
 
   /**
@@ -35,7 +36,7 @@ export class MediaMatcher {
    * MediaQueryList for the query provided.
    */
   matchMedia(query: string): MediaQueryList {
-    if (this._platform.WEBKIT) {
+    if (this._platform.WEBKIT || this._platform.BLINK) {
       createEmptyStyleRule(query);
     }
     return this._matchMedia(query);
@@ -43,8 +44,13 @@ export class MediaMatcher {
 }
 
 /**
- * For Webkit engines that only trigger the MediaQueryListListener when
- * there is at least one CSS selector for the respective media query.
+ * Creates an empty stylesheet that is used to work around browser inconsistencies related to
+ * `matchMedia`. At the time of writing, it handles the following cases:
+ * 1. On WebKit browsers, a media query has to have at least one rule in order for `matchMedia`
+ * to fire. We work around it by declaring a dummy stylesheet with a `@media` declaration.
+ * 2. In some cases Blink browsers will stop firing the `matchMedia` listener if none of the rules
+ * inside the `@media` match existing elements on the page. We work around it by having one rule
+ * targeting the `body`. See https://github.com/angular/components/issues/23546.
  */
 function createEmptyStyleRule(query: string) {
   if (mediaQueriesForWebkitCompatibility.has(query)) {
@@ -59,8 +65,7 @@ function createEmptyStyleRule(query: string) {
     }
 
     if (mediaQueryStyleNode.sheet) {
-      (mediaQueryStyleNode.sheet as CSSStyleSheet)
-          .insertRule(`@media ${query} {.fx-query-test{ }}`, 0);
+      mediaQueryStyleNode.sheet.insertRule(`@media ${query} {body{ }}`, 0);
       mediaQueriesForWebkitCompatibility.add(query);
     }
   } catch (e) {
@@ -76,6 +81,6 @@ function noopMatchMedia(query: string): MediaQueryList {
     matches: query === 'all' || query === '',
     media: query,
     addListener: () => {},
-    removeListener: () => {}
+    removeListener: () => {},
   } as any;
 }

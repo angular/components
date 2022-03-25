@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import * as Lint from 'tslint';
 
 /** Lint rule that checks the names of classes and interfaces against a pattern. */
@@ -18,8 +18,13 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 function checkSourceFile(context: Lint.WalkContext<RegExp>) {
   context.sourceFile.forEachChild(function walk(node) {
-    if ((ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node) ||
-      ts.isTypeAliasDeclaration(node)) && node.name && !context.options.test(node.name.text)) {
+    if (
+      (ts.isClassDeclaration(node) ||
+        ts.isInterfaceDeclaration(node) ||
+        ts.isTypeAliasDeclaration(node)) &&
+      node.name &&
+      !context.options.test(node.name.text)
+    ) {
       context.addFailureAtNode(node.name, `Symbol name must match pattern ${context.options}`);
     }
 

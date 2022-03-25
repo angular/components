@@ -14,8 +14,15 @@ import {SchematicsException} from '@angular-devkit/schematics';
  * couldn't be found.
  */
 export function getProjectFromWorkspace(
-    workspace: WorkspaceDefinition,
-    projectName = workspace.extensions.defaultProject as string): ProjectDefinition {
+  workspace: WorkspaceDefinition,
+  projectName: string | undefined,
+): ProjectDefinition {
+  if (!projectName) {
+    // TODO(crisbeto): some schematics APIs have the project name as optional so for now it's
+    // simpler to allow undefined and checking it at runtime. Eventually we should clean this up.
+    throw new SchematicsException('Project name is required.');
+  }
+
   const project = workspace.projects.get(projectName);
 
   if (!project) {

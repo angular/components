@@ -41,19 +41,20 @@ import {MatOptgroup} from './optgroup';
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    'class': 'mat-mdc-option mat-mdc-focus-indicator',
+    'class': 'mat-mdc-option mat-mdc-focus-indicator mdc-list-item',
   },
   styleUrls: ['option.css'],
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatOption extends _MatOptionBase {
+export class MatOption<T = any> extends _MatOptionBase<T> {
   constructor(
     element: ElementRef<HTMLElement>,
     changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
-    @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup) {
+    @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup,
+  ) {
     super(element, changeDetectorRef, parent, group);
   }
 }

@@ -1,41 +1,53 @@
-@import '../../cdk/a11y/a11y';
-@import '../core/style/private';
-@import '../core/theming/palette';
-@import '../core/theming/theming';
-@import '../core/typography/typography-utils';
-@import '../core/density/private/compatibility';
-@import './button-toggle-variables';
+@use 'sass:map';
+@use '../core/style/private';
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+@use '../core/typography/typography-utils';
+@use '../core/density/private/compatibility';
+@use './button-toggle-variables';
 
-@mixin mat-button-toggle-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  $foreground: map-get($config, foreground);
-  $background: map-get($config, background);
-  $divider-color: mat-color($foreground, divider);
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  $foreground: map.get($config, foreground);
+  $background: map.get($config, background);
+  $divider-color: theming.get-color-from-palette($foreground, divider);
+  $theme-divider-color: map.get($foreground, divider);
+
+  // By default the theme usually has an rgba color for the dividers, which can
+  // stack up with the background of a button toggle. This can cause the border
+  // of a selected toggle to look different from an deselected one. We use a solid
+  // color to ensure that the border always stays the same.
+  $divider-color: if(type-of($theme-divider-color) == color,
+    theming.private-rgba-to-hex($theme-divider-color, map.get($background, card)),
+    $theme-divider-color
+  );
 
   .mat-button-toggle-standalone,
   .mat-button-toggle-group {
-    @include mat-private-theme-elevation(2, $config);
+    @include private.private-theme-overridable-elevation(2, $config);
   }
 
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
   .mat-button-toggle-group-appearance-standard {
-    box-shadow: none;
+    &:not([class*='mat-elevation-z']) {
+      box-shadow: none;
+    }
   }
 
   .mat-button-toggle {
-    color: mat-color($foreground, hint-text);
+    color: theming.get-color-from-palette($foreground, hint-text);
 
     .mat-button-toggle-focus-overlay {
-      background-color: mat-color($background, focused-button);
+      background-color: theming.get-color-from-palette($background, focused-button);
     }
   }
 
   .mat-button-toggle-appearance-standard {
-    color: mat-color($foreground, text);
-    background: mat-color($background, card);
+    color: theming.get-color-from-palette($foreground, text);
+    background: theming.get-color-from-palette($background, card);
 
     .mat-button-toggle-focus-overlay {
-      background-color: mat-color($background, focused-button, 1);
+      background-color: theming.get-color-from-palette($background, focused-button, 1);
     }
   }
 
@@ -57,24 +69,24 @@
   }
 
   .mat-button-toggle-checked {
-    background-color: mat-color($background, selected-button);
-    color: mat-color($foreground, secondary-text);
+    background-color: theming.get-color-from-palette($background, selected-button);
+    color: theming.get-color-from-palette($foreground, secondary-text);
 
     &.mat-button-toggle-appearance-standard {
-      color: mat-color($foreground, text);
+      color: theming.get-color-from-palette($foreground, text);
     }
   }
 
   .mat-button-toggle-disabled {
-    color: mat-color($foreground, disabled-button);
-    background-color: mat-color($background, disabled-button-toggle);
+    color: theming.get-color-from-palette($foreground, disabled-button);
+    background-color: theming.get-color-from-palette($background, disabled-button-toggle);
 
     &.mat-button-toggle-appearance-standard {
-      background: mat-color($background, card);
+      background: theming.get-color-from-palette($background, card);
     }
 
     &.mat-button-toggle-checked {
-      background-color: mat-color($background, selected-disabled-button);
+      background-color: theming.get-color-from-palette($background, selected-disabled-button);
     }
   }
 
@@ -84,40 +96,41 @@
   }
 }
 
-@mixin mat-button-toggle-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2014-config(
+      theming.get-typography-config($config-or-theme));
   .mat-button-toggle {
-    font-family: mat-font-family($config);
+    font-family: typography-utils.font-family($config);
   }
 }
 
-@mixin mat-button-toggle-density($config-or-theme) {
-  $density-scale: mat-get-density-config($config-or-theme);
-  $standard-height: mat-private-density-prop-value(
-      $mat-button-toggle-standard-density-config, $density-scale, height);
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+  $standard-height: compatibility.private-density-prop-value(
+      button-toggle-variables.$standard-density-config, $density-scale, height);
 
-  @include mat-private-density-legacy-compatibility() {
+  @include compatibility.private-density-legacy-compatibility() {
     .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
       line-height: $standard-height;
     }
   }
 }
 
-@mixin mat-button-toggle-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
 
     @if $color != null {
-      @include mat-button-toggle-color($color);
+      @include color($color);
     }
     @if $density != null {
-      @include mat-button-toggle-density($density);
+      @include density($density);
     }
     @if $typography != null {
-      @include mat-button-toggle-typography($typography);
+      @include typography($typography);
     }
   }
 }

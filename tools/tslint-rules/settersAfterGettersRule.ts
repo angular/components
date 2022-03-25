@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import * as Lint from 'tslint';
 import * as tsutils from 'tsutils';
 
@@ -12,7 +12,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class Walker extends Lint.RuleWalker {
-  visitGetAccessor(getter: ts.GetAccessorDeclaration) {
+  override visitGetAccessor(getter: ts.GetAccessorDeclaration) {
     if (getter.parent && tsutils.isClassDeclaration(getter.parent)) {
       const getterName = getter.name.getText();
       const setter = getter.parent.members.find(member => {

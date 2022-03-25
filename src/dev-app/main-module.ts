@@ -17,20 +17,21 @@ import {RouterModule} from '@angular/router';
 import {DevAppComponent} from './dev-app';
 import {DevAppDirectionality} from './dev-app/dev-app-directionality';
 import {DevAppModule} from './dev-app/dev-app-module';
-import {DEV_APP_ROUTES} from './dev-app/routes';
+import {DEV_APP_ROUTES} from './routes';
 import {DevAppRippleOptions} from './dev-app/ripple-options';
+import {ANIMATIONS_STORAGE_KEY} from './dev-app/dev-app-layout';
 
 @NgModule({
   imports: [
-    BrowserAnimationsModule,
+    BrowserAnimationsModule.withConfig({
+      disableAnimations: localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true',
+    }),
     BrowserModule,
     DevAppModule,
     HttpClientModule,
     RouterModule.forRoot(DEV_APP_ROUTES),
   ],
-  declarations: [
-    DevAppComponent,
-  ],
+  declarations: [DevAppComponent],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
@@ -38,5 +39,4 @@ import {DevAppRippleOptions} from './dev-app/ripple-options';
   ],
   bootstrap: [DevAppComponent],
 })
-export class MainModule {
-}
+export class MainModule {}

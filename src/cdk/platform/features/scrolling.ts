@@ -22,21 +22,23 @@ export const enum RtlScrollAxisType {
    * scrollLeft is (scrollWidth - clientWidth) when scrolled all the way left and 0 when scrolled
    * all the way right.
    */
-  INVERTED
+  INVERTED,
 }
 
 /** Cached result of the way the browser handles the horizontal scroll axis in RTL mode. */
-let rtlScrollAxisType: RtlScrollAxisType|undefined;
+let rtlScrollAxisType: RtlScrollAxisType | undefined;
 
 /** Cached result of the check that indicates whether the browser supports scroll behaviors. */
-let scrollBehaviorSupported: boolean|undefined;
+let scrollBehaviorSupported: boolean | undefined;
 
 /** Check whether the browser supports scroll behaviors. */
 export function supportsScrollBehavior(): boolean {
   if (scrollBehaviorSupported == null) {
-    // If we're not in the browser, it can't be supported.
-    if (typeof document !== 'object' || !document) {
+    // If we're not in the browser, it can't be supported. Also check for `Element`, because
+    // some projects stub out the global `document` during SSR which can throw us off.
+    if (typeof document !== 'object' || !document || typeof Element !== 'function' || !Element) {
       scrollBehaviorSupported = false;
+      return scrollBehaviorSupported;
     }
 
     // If the element can have a `scrollBehavior` style, we can be sure that it's supported.
@@ -45,7 +47,7 @@ export function supportsScrollBehavior(): boolean {
     } else {
       // At this point we have 3 possibilities: `scrollTo` isn't supported at all, it's
       // supported but it doesn't handle scroll behavior, or it has been polyfilled.
-      const scrollToFunction: Function|undefined = Element.prototype.scrollTo;
+      const scrollToFunction: Function | undefined = Element.prototype.scrollTo;
 
       if (scrollToFunction) {
         // We can detect if the function has been polyfilled by calling `toString` on it. Native
@@ -103,10 +105,10 @@ export function getRtlScrollAxisType(): RtlScrollAxisType {
       // return 0 when we read it again.
       scrollContainer.scrollLeft = 1;
       rtlScrollAxisType =
-          scrollContainer.scrollLeft === 0 ? RtlScrollAxisType.NEGATED : RtlScrollAxisType.INVERTED;
+        scrollContainer.scrollLeft === 0 ? RtlScrollAxisType.NEGATED : RtlScrollAxisType.INVERTED;
     }
 
-    scrollContainer.parentNode!.removeChild(scrollContainer);
+    scrollContainer.remove();
   }
   return rtlScrollAxisType;
 }

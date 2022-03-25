@@ -51,9 +51,7 @@ export class ImportManager {
   /** Map of source files and their analyzed imports. */
   private _importCache = new Map<ts.SourceFile, AnalyzedImport[]>();
 
-  constructor(
-      private _fileSystem: FileSystem,
-      private _printer: ts.Printer) {}
+  constructor(private _fileSystem: FileSystem, private _printer: ts.Printer) {}
 
   /**
    * Analyzes the import of the specified source file if needed. In order to perform
@@ -84,8 +82,12 @@ export class ImportManager {
       // Handles imports resolving to default exports of a module.
       // e.g. `import moment from "moment";`
       if (!node.importClause.namedBindings) {
-        result.push(
-            {moduleName, node, name: node.importClause.name, state: ImportState.UNMODIFIED});
+        result.push({
+          moduleName,
+          node,
+          name: node.importClause.name,
+          state: ImportState.UNMODIFIED,
+        });
         continue;
       }
 
@@ -95,8 +97,10 @@ export class ImportManager {
         result.push({
           moduleName,
           node,
-          specifiers: node.importClause.namedBindings.elements.map(
-              el => ({name: el.name, propertyName: el.propertyName})),
+          specifiers: node.importClause.namedBindings.elements.map(el => ({
+            name: el.name,
+            propertyName: el.propertyName,
+          })),
           state: ImportState.UNMODIFIED,
         });
       } else {
@@ -118,11 +122,14 @@ export class ImportManager {
    * Checks whether the given specifier, which can be relative to the base path,
    * matches the passed module name.
    */
-  private _isModuleSpecifierMatching(basePath: string, specifier: string, moduleName: string):
-      boolean {
-    return specifier.startsWith('.') ?
-        resolve(basePath, specifier) === resolve(basePath, moduleName) :
-        specifier === moduleName;
+  private _isModuleSpecifierMatching(
+    basePath: string,
+    specifier: string,
+    moduleName: string,
+  ): boolean {
+    return specifier.startsWith('.')
+      ? resolve(basePath, specifier) === resolve(basePath, moduleName)
+      : specifier === moduleName;
   }
 
   /** Deletes a given named binding import from the specified source file. */
@@ -131,13 +138,16 @@ export class ImportManager {
     const fileImports = this._analyzeImportsIfNeeded(sourceFile);
 
     for (let importData of fileImports) {
-      if (!this._isModuleSpecifierMatching(sourceDir, importData.moduleName, moduleName) ||
-          !importData.specifiers) {
+      if (
+        !this._isModuleSpecifierMatching(sourceDir, importData.moduleName, moduleName) ||
+        !importData.specifiers
+      ) {
         continue;
       }
 
-      const specifierIndex =
-          importData.specifiers.findIndex(d => (d.propertyName || d.name).text === symbolName);
+      const specifierIndex = importData.specifiers.findIndex(
+        d => (d.propertyName || d.name).text === symbolName,
+      );
       if (specifierIndex !== -1) {
         importData.specifiers.splice(specifierIndex, 1);
         // if the import does no longer contain any specifiers after the removal of the
@@ -179,12 +189,16 @@ export class ImportManager {
    *    the import manager checks for import collisions.
    */
   addImportToSourceFile(
-      sourceFile: ts.SourceFile, symbolName: string|null, moduleName: string, typeImport = false,
-      ignoreIdentifierCollisions: ts.Identifier[] = []): ts.Expression {
+    sourceFile: ts.SourceFile,
+    symbolName: string | null,
+    moduleName: string,
+    typeImport = false,
+    ignoreIdentifierCollisions: ts.Identifier[] = [],
+  ): ts.Expression {
     const sourceDir = dirname(sourceFile.fileName);
     const fileImports = this._analyzeImportsIfNeeded(sourceFile);
 
-    let existingImport: AnalyzedImport|null = null;
+    let existingImport: AnalyzedImport | null = null;
     for (let importData of fileImports) {
       if (!this._isModuleSpecifierMatching(sourceDir, importData.moduleName, moduleName)) {
         continue;
@@ -193,21 +207,23 @@ export class ImportManager {
       // If no symbol name has been specified, the default import is requested. In that
       // case we search for non-namespace and non-specifier imports.
       if (!symbolName && !importData.namespace && !importData.specifiers) {
-        return ts.createIdentifier(importData.name!.text);
+        return ts.factory.createIdentifier(importData.name!.text);
       }
 
       // In case a "Type" symbol is imported, we can't use namespace imports
       // because these only export symbols available at runtime (no types)
       if (importData.namespace && !typeImport) {
-        return ts.createPropertyAccess(
-            ts.createIdentifier(importData.name!.text),
-            ts.createIdentifier(symbolName || 'default'));
+        return ts.factory.createPropertyAccessExpression(
+          ts.factory.createIdentifier(importData.name!.text),
+          ts.factory.createIdentifier(symbolName || 'default'),
+        );
       } else if (importData.specifiers && symbolName) {
-        const existingSpecifier = importData.specifiers.find(
-            s => s.propertyName ? s.propertyName.text === symbolName : s.name.text === symbolName);
+        const existingSpecifier = importData.specifiers.find(s =>
+          s.propertyName ? s.propertyName.text === symbolName : s.name.text === symbolName,
+        );
 
         if (existingSpecifier) {
-          return ts.createIdentifier(existingSpecifier.name.text);
+          return ts.factory.createIdentifier(existingSpecifier.name.text);
         }
 
         // In case the symbol could not be found in an existing import, we
@@ -220,9 +236,12 @@ export class ImportManager {
     // If there is an existing import that matches the specified module, we
     // just update the import specifiers to also import the requested symbol.
     if (existingImport) {
-      const propertyIdentifier = ts.createIdentifier(symbolName!);
-      const generatedUniqueIdentifier =
-          this._getUniqueIdentifier(sourceFile, symbolName!, ignoreIdentifierCollisions);
+      const propertyIdentifier = ts.factory.createIdentifier(symbolName!);
+      const generatedUniqueIdentifier = this._getUniqueIdentifier(
+        sourceFile,
+        symbolName!,
+        ignoreIdentifierCollisions,
+      );
       const needsGeneratedUniqueName = generatedUniqueIdentifier.text !== symbolName;
       const importName = needsGeneratedUniqueName ? generatedUniqueIdentifier : propertyIdentifier;
 
@@ -241,35 +260,49 @@ export class ImportManager {
       return importName;
     }
 
-    let identifier: ts.Identifier|null = null;
-    let newImport: AnalyzedImport|null = null;
+    let identifier: ts.Identifier | null = null;
+    let newImport: AnalyzedImport | null = null;
 
     if (symbolName) {
-      const propertyIdentifier = ts.createIdentifier(symbolName);
-      const generatedUniqueIdentifier =
-          this._getUniqueIdentifier(sourceFile, symbolName, ignoreIdentifierCollisions);
+      const propertyIdentifier = ts.factory.createIdentifier(symbolName);
+      const generatedUniqueIdentifier = this._getUniqueIdentifier(
+        sourceFile,
+        symbolName,
+        ignoreIdentifierCollisions,
+      );
       const needsGeneratedUniqueName = generatedUniqueIdentifier.text !== symbolName;
       identifier = needsGeneratedUniqueName ? generatedUniqueIdentifier : propertyIdentifier;
 
-      const newImportDecl = ts.createImportDeclaration(
-          undefined, undefined, ts.createImportClause(undefined, ts.createNamedImports([])),
-          ts.createStringLiteral(moduleName));
+      const newImportDecl = ts.factory.createImportDeclaration(
+        undefined,
+        undefined,
+        ts.factory.createImportClause(false, undefined, ts.factory.createNamedImports([])),
+        ts.factory.createStringLiteral(moduleName),
+      );
 
       newImport = {
         moduleName,
         node: newImportDecl,
-        specifiers: [{
-          propertyName: needsGeneratedUniqueName ? propertyIdentifier : undefined,
-          name: identifier
-        }],
+        specifiers: [
+          {
+            propertyName: needsGeneratedUniqueName ? propertyIdentifier : undefined,
+            name: identifier,
+          },
+        ],
         state: ImportState.ADDED,
       };
     } else {
-      identifier =
-          this._getUniqueIdentifier(sourceFile, 'defaultExport', ignoreIdentifierCollisions);
-      const newImportDecl = ts.createImportDeclaration(
-          undefined, undefined, ts.createImportClause(identifier, undefined),
-          ts.createStringLiteral(moduleName));
+      identifier = this._getUniqueIdentifier(
+        sourceFile,
+        'defaultExport',
+        ignoreIdentifierCollisions,
+      );
+      const newImportDecl = ts.factory.createImportDeclaration(
+        undefined,
+        undefined,
+        ts.factory.createImportClause(false, identifier, undefined),
+        ts.factory.createStringLiteral(moduleName),
+      );
       newImport = {
         moduleName,
         node: newImportDecl,
@@ -289,10 +322,12 @@ export class ImportManager {
   recordChanges() {
     this._importCache.forEach((fileImports, sourceFile) => {
       const recorder = this._fileSystem.edit(this._fileSystem.resolve(sourceFile.fileName));
-      const lastUnmodifiedImport =
-          fileImports.reverse().find(i => i.state === ImportState.UNMODIFIED);
-      const importStartIndex =
-          lastUnmodifiedImport ? this._getEndPositionOfNode(lastUnmodifiedImport.node) : 0;
+      const lastUnmodifiedImport = fileImports
+        .reverse()
+        .find(i => i.state === ImportState.UNMODIFIED);
+      const importStartIndex = lastUnmodifiedImport
+        ? this._getEndPositionOfNode(lastUnmodifiedImport.node)
+        : 0;
 
       fileImports.forEach(importData => {
         if (importData.state === ImportState.UNMODIFIED) {
@@ -310,38 +345,54 @@ export class ImportManager {
 
         if (importData.specifiers) {
           const namedBindings = importData.node.importClause!.namedBindings as ts.NamedImports;
-          const importSpecifiers =
-              importData.specifiers.map(s => ts.createImportSpecifier(s.propertyName, s.name));
-          const updatedBindings = ts.updateNamedImports(namedBindings, importSpecifiers);
+          const importSpecifiers = importData.specifiers.map(s =>
+            ts.factory.createImportSpecifier(false, s.propertyName, s.name),
+          );
+          const updatedBindings = ts.factory.updateNamedImports(namedBindings, importSpecifiers);
 
           // In case an import has been added newly, we need to print the whole import
           // declaration and insert it at the import start index. Otherwise, we just
           // update the named bindings to not re-print the whole import (which could
           // cause unnecessary formatting changes)
           if (hasFlag(importData, ImportState.ADDED)) {
-            const updatedImport = ts.updateImportDeclaration(
-                importData.node, undefined, undefined,
-                ts.createImportClause(undefined, updatedBindings),
-                ts.createStringLiteral(importData.moduleName));
-            const newImportText =
-                this._printer.printNode(ts.EmitHint.Unspecified, updatedImport, sourceFile);
+            const updatedImport = ts.factory.updateImportDeclaration(
+              importData.node,
+              undefined,
+              undefined,
+              ts.factory.createImportClause(false, undefined, updatedBindings),
+              ts.factory.createStringLiteral(importData.moduleName),
+              undefined,
+            );
+            const newImportText = this._printer.printNode(
+              ts.EmitHint.Unspecified,
+              updatedImport,
+              sourceFile,
+            );
             recorder.insertLeft(
-                importStartIndex,
-                importStartIndex === 0 ? `${newImportText}\n` : `\n${newImportText}`);
+              importStartIndex,
+              importStartIndex === 0 ? `${newImportText}\n` : `\n${newImportText}`,
+            );
             return;
           } else if (hasFlag(importData, ImportState.MODIFIED)) {
-            const newNamedBindingsText =
-                this._printer.printNode(ts.EmitHint.Unspecified, updatedBindings, sourceFile);
+            const newNamedBindingsText = this._printer.printNode(
+              ts.EmitHint.Unspecified,
+              updatedBindings,
+              sourceFile,
+            );
             recorder.remove(namedBindings.getStart(), namedBindings.getWidth());
             recorder.insertRight(namedBindings.getStart(), newNamedBindingsText);
             return;
           }
         } else if (hasFlag(importData, ImportState.ADDED)) {
-          const newImportText =
-              this._printer.printNode(ts.EmitHint.Unspecified, importData.node, sourceFile);
+          const newImportText = this._printer.printNode(
+            ts.EmitHint.Unspecified,
+            importData.node,
+            sourceFile,
+          );
           recorder.insertLeft(
-              importStartIndex,
-              importStartIndex === 0 ? `${newImportText}\n` : `\n${newImportText}`);
+            importStartIndex,
+            importStartIndex === 0 ? `${newImportText}\n` : `\n${newImportText}`,
+          );
           return;
         }
 
@@ -392,21 +443,23 @@ export class ImportManager {
    *    checking for identifier collisions in the given source file.
    */
   private _getUniqueIdentifier(
-      sourceFile: ts.SourceFile, symbolName: string,
-      ignoreIdentifierCollisions: ts.Identifier[]): ts.Identifier {
+    sourceFile: ts.SourceFile,
+    symbolName: string,
+    ignoreIdentifierCollisions: ts.Identifier[],
+  ): ts.Identifier {
     if (this._isUniqueIdentifierName(sourceFile, symbolName, ignoreIdentifierCollisions)) {
       this._recordUsedIdentifier(sourceFile, symbolName);
-      return ts.createIdentifier(symbolName);
+      return ts.factory.createIdentifier(symbolName);
     }
 
-    let name: string|null = null;
+    let name: string | null = null;
     let counter = 1;
     do {
       name = `${symbolName}_${counter++}`;
     } while (!this._isUniqueIdentifierName(sourceFile, name, ignoreIdentifierCollisions));
 
     this._recordUsedIdentifier(sourceFile, name!);
-    return ts.createIdentifier(name!);
+    return ts.factory.createIdentifier(name!);
   }
 
   /**
@@ -417,9 +470,14 @@ export class ImportManager {
    *    checking for identifier collisions in the given source file.
    */
   private _isUniqueIdentifierName(
-      sourceFile: ts.SourceFile, name: string, ignoreIdentifierCollisions: ts.Identifier[]) {
-    if (this._usedIdentifierNames.has(sourceFile) &&
-        this._usedIdentifierNames.get(sourceFile)!.indexOf(name) !== -1) {
+    sourceFile: ts.SourceFile,
+    name: string,
+    ignoreIdentifierCollisions: ts.Identifier[],
+  ) {
+    if (
+      this._usedIdentifierNames.has(sourceFile) &&
+      this._usedIdentifierNames.get(sourceFile)!.indexOf(name) !== -1
+    ) {
       return false;
     }
 
@@ -429,8 +487,11 @@ export class ImportManager {
     const nodeQueue: ts.Node[] = [sourceFile];
     while (nodeQueue.length) {
       const node = nodeQueue.shift()!;
-      if (ts.isIdentifier(node) && node.text === name &&
-          !ignoreIdentifierCollisions.includes(node)) {
+      if (
+        ts.isIdentifier(node) &&
+        node.text === name &&
+        !ignoreIdentifierCollisions.includes(node)
+      ) {
         return false;
       }
       nodeQueue.push(...node.getChildren());
@@ -445,7 +506,9 @@ export class ImportManager {
    */
   private _recordUsedIdentifier(sourceFile: ts.SourceFile, identifierName: string) {
     this._usedIdentifierNames.set(
-        sourceFile, (this._usedIdentifierNames.get(sourceFile) || []).concat(identifierName));
+      sourceFile,
+      (this._usedIdentifierNames.get(sourceFile) || []).concat(identifierName),
+    );
   }
 
   /**

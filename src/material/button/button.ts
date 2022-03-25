@@ -7,7 +7,6 @@
  */
 
 import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,14 +18,12 @@ import {
   Inject,
   Input,
   AfterViewInit,
+  NgZone,
 } from '@angular/core';
 import {
   CanColor,
   CanDisable,
   CanDisableRipple,
-  CanColorCtor,
-  CanDisableCtor,
-  CanDisableRippleCtor,
   MatRipple,
   mixinColor,
   mixinDisabled,
@@ -52,13 +49,15 @@ const BUTTON_HOST_ATTRIBUTES = [
 ];
 
 // Boilerplate for applying mixins to MatButton.
-/** @docs-private */
-class MatButtonBase {
-  constructor(public _elementRef: ElementRef) {}
-}
-
-const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor &
-    typeof MatButtonBase = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonBase)));
+const _MatButtonBase = mixinColor(
+  mixinDisabled(
+    mixinDisableRipple(
+      class {
+        constructor(public _elementRef: ElementRef) {}
+      },
+    ),
+  ),
+);
 
 /**
  * Material design button.
@@ -83,9 +82,10 @@ const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor 
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatButton extends _MatButtonMixinBase
-    implements AfterViewInit, OnDestroy, CanDisable, CanColor, CanDisableRipple, FocusableOption {
-
+export class MatButton
+  extends _MatButtonBase
+  implements AfterViewInit, OnDestroy, CanDisable, CanColor, CanDisableRipple, FocusableOption
+{
   /** Whether the button is round. */
   readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
@@ -95,9 +95,11 @@ export class MatButton extends _MatButtonMixinBase
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
-  constructor(elementRef: ElementRef,
-              private _focusMonitor: FocusMonitor,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
+  constructor(
+    elementRef: ElementRef,
+    private _focusMonitor: FocusMonitor,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
+  ) {
     super(elementRef);
 
     // For each of the variant selectors that is present in the button's host
@@ -147,9 +149,6 @@ export class MatButton extends _MatButtonMixinBase
   _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -163,10 +162,9 @@ export class MatButton extends _MatButtonMixinBase
     // Note that we ignore the user-specified tabindex when it's disabled for
     // consistency with the `mat-button` applied on native buttons where even
     // though they have an index, they're not tabbable.
-    '[attr.tabindex]': 'disabled ? -1 : (tabIndex || 0)',
+    '[attr.tabindex]': 'disabled ? -1 : tabIndex',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '(click)': '_haltDisabledEvents($event)',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-button-disabled]': 'disabled',
     'class': 'mat-focus-indicator',
@@ -177,22 +175,43 @@ export class MatButton extends _MatButtonMixinBase
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatAnchor extends MatButton {
+export class MatAnchor extends MatButton implements AfterViewInit, OnDestroy {
   /** Tabindex of the button. */
   @Input() tabIndex: number;
 
   constructor(
     focusMonitor: FocusMonitor,
     elementRef: ElementRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private _ngZone?: NgZone,
+  ) {
     super(elementRef, focusMonitor, animationMode);
   }
 
-  _haltDisabledEvents(event: Event) {
+  override ngAfterViewInit(): void {
+    super.ngAfterViewInit();
+
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() => {
+        this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+      });
+    } else {
+      this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+    }
+  }
+
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents);
+  }
+
+  _haltDisabledEvents = (event: Event): void => {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
-  }
+  };
 }

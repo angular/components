@@ -1,19 +1,26 @@
 // This contains all of the styles for the badge
 // rather than just the color/theme because of
 // no style sheet support for directives.
-@import '../core/theming/palette';
-@import '../core/theming/theming';
-@import '../core/typography/typography-utils';
-@import '../../cdk/a11y/a11y';
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:math';
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+@use '../core/typography/typography-utils';
+@use '../../cdk/a11y';
 
-$mat-badge-font-size: 12px;
-$mat-badge-font-weight: 600;
-$mat-badge-default-size: 22px !default;
-$mat-badge-small-size: $mat-badge-default-size - 6;
-$mat-badge-large-size: $mat-badge-default-size + 6;
+$font-size: 12px;
+$font-weight: 600;
+$default-size: 22px !default;
+$small-size: $default-size - 6;
+$large-size: $default-size + 6;
+$_badge-structure-emitted: false !default;
 
 // Mixin for building offset given different sizes
-@mixin _mat-badge-size($size) {
+@mixin _badge-size($size) {
+  // This mixin isn't used in the context of a theme so we can disable the ampersand check.
+  // stylelint-disable material/no-ampersand-beyond-selector-start
   .mat-badge-content {
     width: $size;
     height: $size;
@@ -22,13 +29,13 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
 
   &.mat-badge-above {
     .mat-badge-content {
-      top: -$size / 2;
+      top: math.div(-$size, 2);
     }
   }
 
   &.mat-badge-below {
     .mat-badge-content {
-      bottom: -$size / 2;
+      bottom: math.div(-$size, 2);
     }
   }
 
@@ -61,93 +68,51 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
   &.mat-badge-overlap {
     &.mat-badge-before {
       .mat-badge-content {
-        left: -$size / 2;
+        left: math.div(-$size, 2);
       }
     }
 
     [dir='rtl'] &.mat-badge-before {
       .mat-badge-content {
         left: auto;
-        right: -$size / 2;
+        right: math.div(-$size, 2);
       }
     }
 
     &.mat-badge-after {
       .mat-badge-content {
-        right: -$size / 2;
+        right: math.div(-$size, 2);
       }
     }
 
     [dir='rtl'] &.mat-badge-after {
       .mat-badge-content {
         right: auto;
-        left: -$size / 2;
+        left: math.div(-$size, 2);
       }
     }
   }
+  // stylelint-enable
 }
 
-@mixin mat-badge-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  $accent: map-get($config, accent);
-  $warn: map-get($config, warn);
-  $primary: map-get($config, primary);
-  $background: map-get($config, background);
-  $foreground: map-get($config, foreground);
-
-  .mat-badge-content {
-    color: mat-color($primary, default-contrast);
-    background: mat-color($primary);
-
-    @include cdk-high-contrast(active, off) {
-      outline: solid 1px;
-      border-radius: 0;
-    }
-  }
-
-  .mat-badge-accent {
-    .mat-badge-content {
-      background: mat-color($accent);
-      color: mat-color($accent, default-contrast);
-    }
-  }
-
-  .mat-badge-warn {
-    .mat-badge-content {
-      color: mat-color($warn, default-contrast);
-      background: mat-color($warn);
-    }
-  }
-
+// Structural styles for the badge. They have to be included as a part of the theme,
+// because the badge is a directive and we have no other way of attaching styles to it.
+@mixin _badge-structure {
   .mat-badge {
     position: relative;
+  }
+
+  // The badge should make sure its host is overflow visible so that the badge content
+  // can be rendered outside of the element. Some components such as <mat-icon> explicitly
+  // style `overflow: hidden` so this requires extra specificity so that it does not
+  // depend on style load order.
+  .mat-badge.mat-badge {
+    overflow: visible;
   }
 
   .mat-badge-hidden {
     .mat-badge-content {
       display: none;
-    }
-  }
-
-  .mat-badge-disabled {
-    .mat-badge-content {
-      $app-background: mat-color($background, 'background');
-      $badge-color: mat-color($foreground, disabled-button);
-
-      // The disabled color usually has some kind of opacity, but because the badge is overlayed
-      // on top of something else, it won't look good if it's opaque. If it is a color *type*,
-      // we convert it into a solid color by taking the opacity from the rgba value and using
-      // the value to determine the percentage of the background to put into foreground when
-      // mixing the colors together.
-      @if (type-of($badge-color) == color and type-of($app-background) == color) {
-        $badge-opacity: opacity($badge-color);
-        background: mix($app-background, rgba($badge-color, 1), (1 - $badge-opacity) * 100%);
-      }
-      @else {
-        background: $badge-color;
-      }
-
-      color: mat-color($foreground, disabled-text);
     }
   }
 
@@ -177,51 +142,121 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
   }
 
   .mat-badge-small {
-    @include _mat-badge-size($mat-badge-small-size);
+    @include _badge-size($small-size);
   }
+
   .mat-badge-medium {
-    @include _mat-badge-size($mat-badge-default-size);
+    @include _badge-size($default-size);
   }
+
   .mat-badge-large {
-    @include _mat-badge-size($mat-badge-large-size);
+    @include _badge-size($large-size);
   }
 }
 
-@mixin mat-badge-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  $accent: map.get($config, accent);
+  $warn: map.get($config, warn);
+  $primary: map.get($config, primary);
+  $background: map.get($config, background);
+  $foreground: map.get($config, foreground);
+
   .mat-badge-content {
-    font-weight: $mat-badge-font-weight;
-    font-size: $mat-badge-font-size;
-    font-family: mat-font-family($config);
+    color: theming.get-color-from-palette($primary, default-contrast);
+    background: theming.get-color-from-palette($primary);
+
+    @include a11y.high-contrast(active, off) {
+      outline: solid 1px;
+      border-radius: 0;
+    }
+  }
+
+  .mat-badge-accent {
+    .mat-badge-content {
+      background: theming.get-color-from-palette($accent);
+      color: theming.get-color-from-palette($accent, default-contrast);
+    }
+  }
+
+  .mat-badge-warn {
+    .mat-badge-content {
+      color: theming.get-color-from-palette($warn, default-contrast);
+      background: theming.get-color-from-palette($warn);
+    }
+  }
+
+  .mat-badge-disabled {
+    .mat-badge-content {
+      $app-background: theming.get-color-from-palette($background, 'background');
+      $badge-color: theming.get-color-from-palette($foreground, disabled-button);
+
+      // The disabled color usually has some kind of opacity, but because the badge is overlayed
+      // on top of something else, it won't look good if it's opaque. If it is a color *type*,
+      // we convert it into a solid color by taking the opacity from the rgba value and using
+      // the value to determine the percentage of the background to put into foreground when
+      // mixing the colors together.
+      @if (meta.type-of($badge-color) == color and meta.type-of($app-background) == color) {
+        $badge-opacity: opacity($badge-color);
+        background: color.mix($app-background, rgba($badge-color, 1), (1 - $badge-opacity) * 100%);
+      }
+      @else {
+        background: $badge-color;
+      }
+
+      color: theming.get-color-from-palette($foreground, disabled-text);
+    }
+  }
+}
+
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2014-config(
+      theming.get-typography-config($config-or-theme));
+  .mat-badge-content {
+    font-weight: $font-weight;
+    font-size: $font-size;
+    font-family: typography-utils.font-family($config);
   }
 
   .mat-badge-small .mat-badge-content {
     // Set the font size to 75% of the original.
-    font-size: $mat-badge-font-size * 0.75;
+    font-size: $font-size * 0.75;
   }
 
   .mat-badge-large .mat-badge-content {
-    font-size: $mat-badge-font-size * 2;
+    font-size: $font-size * 2;
   }
 }
 
-@mixin _mat-badge-density($config-or-theme) {}
+@mixin _density($config-or-theme) {}
 
-@mixin mat-badge-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-badge') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-badge') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    // Try to reduce the number of times that the structural styles are emitted.
+    @if not $_badge-structure-emitted {
+      @include _badge-structure;
+
+      // Only flip the flag if the mixin is included at the top level. Otherwise the first
+      // inclusion might be inside of a theme class which will exclude the structural styles
+      // from all other themes.
+      @if not & {
+        $_badge-structure-emitted: true !global;
+      }
+    }
 
     @if $color != null {
-      @include mat-badge-color($color);
+      @include color($color);
     }
     @if $density != null {
-      @include _mat-badge-density($density);
+      @include _density($density);
     }
     @if $typography != null {
-      @include mat-badge-typography($typography);
+      @include typography($typography);
     }
   }
 }

@@ -1,98 +1,124 @@
-@use '@material/ripple/mixins' as mdc-ripple;
+@use '@material/textfield' as mdc-textfield;
+@use '@material/floating-label' as mdc-floating-label;
+@use '@material/notched-outline' as mdc-notched-outline;
+@use '@material/line-ripple' as mdc-line-ripple;
+@use '@material/theme/theme-color' as mdc-theme-color;
+@use '@material/typography/typography' as mdc-typography;
+@use '../mdc-helpers/mdc-helpers';
+@use '../../material/core/typography/typography';
+@use 'form-field-density';
+@use 'form-field-subscript';
+@use 'form-field-focus-overlay';
+@use 'form-field-native-select';
+@use 'mdc-text-field-theme-variable-refresh';
+@use '../../material/core/theming/theming';
 
-@import '@material/density/functions.import';
-@import '@material/theme/variables.import';
-@import '@material/textfield/mixins.import';
-@import '@material/textfield/variables.import';
-@import '../mdc-helpers/mdc-helpers';
-@import 'form-field-density';
-@import 'form-field-subscript';
-@import 'form-field-focus-overlay';
-@import 'form-field-native-select';
-@import 'mdc-text-field-theme-variable-refresh';
 
 // Mixin that overwrites the default MDC text-field color styles to be based on
 // the given theme palette. The MDC text-field is styled using `primary` by default.
-@mixin _mat-mdc-text-field-color-styles($palette-name, $query: $mat-theme-styles-query) {
-  $_mdc-text-field-focused-label-color: $mdc-text-field-focused-label-color;
-  $mdc-text-field-focused-label-color: rgba(mdc-theme-prop-value($palette-name), 0.87) !global;
+@mixin _color-styles($palette-name,
+  $query: mdc-helpers.$mat-theme-styles-query) {
+  $orig-focused-label-color: mdc-textfield.$focused-label-color;
+  mdc-textfield.$focused-label-color: rgba(mdc-theme-color.prop-value($palette-name), 0.87);
 
-  @include mdc-text-field-caret-color($palette-name, $query);
-  @include mdc-text-field-line-ripple-color($palette-name, $query);
+  @include mdc-textfield.caret-color($palette-name, $query);
+  @include mdc-textfield.line-ripple-color($palette-name, $query);
 
   .mdc-text-field--focused {
-    @include mdc-text-field-focused_($query);
-
+    @include mdc-textfield.focused_($query);
   }
+
   .mdc-text-field--invalid {
-    @include mdc-text-field-invalid_($query);
+    @include mdc-textfield.invalid_($query);
   }
 
   .mdc-text-field--outlined {
-    @include mdc-text-field-focused-outline-color($palette-name, $query);
+    @include mdc-textfield.focused-outline-color($palette-name, $query);
   }
 
-  $mdc-text-field-focused-label-color: $_mdc-text-field-focused-label-color !global;
+  mdc-textfield.$focused-label-color: $orig-focused-label-color;
 }
 
-@mixin mat-mdc-form-field-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  @include mat-using-mdc-theme($config) {
-    @include mat-mdc-private-text-field-refresh-theme-variables() {
-      @include mdc-text-field-without-ripple($query: $mat-theme-styles-query);
-      @include mdc-floating-label-core-styles($query: $mat-theme-styles-query);
-      @include mdc-notched-outline-core-styles($query: $mat-theme-styles-query);
-      @include mdc-line-ripple-core-styles($query: $mat-theme-styles-query);
-      @include mat-mdc-private-form-field-subscript-color();
-      @include mat-mdc-private-form-field-focus-overlay-color();
-      @include mat-mdc-private-form-field-native-select-color($config);
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  @include mdc-helpers.mat-using-mdc-theme($config) {
+    @include mdc-text-field-theme-variable-refresh.private-text-field-refresh-theme-variables() {
+      @include mdc-textfield.without-ripple($query: mdc-helpers.$mat-theme-styles-query);
+      @include mdc-floating-label.core-styles($query: mdc-helpers.$mat-theme-styles-query);
+      @include mdc-notched-outline.core-styles($query: mdc-helpers.$mat-theme-styles-query);
+      @include mdc-line-ripple.core-styles($query: mdc-helpers.$mat-theme-styles-query);
+      @include form-field-subscript.private-form-field-subscript-color();
+      @include form-field-focus-overlay.private-form-field-focus-overlay-color();
+      @include form-field-native-select.private-form-field-native-select-color($config);
 
       .mat-mdc-form-field.mat-accent {
-        @include _mat-mdc-text-field-color-styles(secondary);
+        @include _color-styles(secondary);
       }
 
       .mat-mdc-form-field.mat-warn {
-        @include _mat-mdc-text-field-color-styles(error);
+        @include _color-styles(error);
       }
     }
   }
 }
 
-@mixin mat-mdc-form-field-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
-  @include mat-using-mdc-typography($config) {
-    @include mdc-text-field-without-ripple($query: $mat-typography-styles-query);
-    @include mdc-floating-label-core-styles($query: $mat-typography-styles-query);
-    @include mdc-notched-outline-core-styles($query: $mat-typography-styles-query);
-    @include mdc-line-ripple-core-styles($query: $mat-typography-styles-query);
-    @include mat-mdc-private-form-field-subscript-typography($config);
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2018-config(
+      theming.get-typography-config($config-or-theme));
+  @include mdc-helpers.mat-using-mdc-typography($config) {
+    @include mdc-textfield.without-ripple($query: mdc-helpers.$mat-typography-styles-query);
+    @include mdc-floating-label.core-styles($query: mdc-helpers.$mat-typography-styles-query);
+    @include mdc-notched-outline.core-styles($query: mdc-helpers.$mat-typography-styles-query);
+    @include mdc-line-ripple.core-styles($query: mdc-helpers.$mat-typography-styles-query);
+    @include form-field-subscript.private-form-field-subscript-typography($config);
 
-    .mat-mdc-form-field {
-      @include mat-typography-level-to-styles($config, input);
+    // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
+    // shows `body1` for text fields though, so we manually override the typography.
+    // Note: Form controls inherit the typography from the parent form field.
+    .mat-mdc-form-field,
+    .mat-mdc-floating-label {
+      @include mdc-typography.typography(body1, $query: mdc-helpers.$mat-typography-styles-query);
+    }
+
+    // Above, we updated the floating label to use the `body1` typography level. The MDC notched
+    // outline overrides this accidentally (only when the label floats) to a `rem`-based value.
+    // This results in different label widths when floated/docked and ultimately breaks the notch
+    // width as it has been measured in the docked state (where `body1` is applied). We try to
+    // unset these styles set by the `mdc-notched-outline`:
+    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
+    .mat-mdc-form-field .mdc-text-field--outlined {
+      // For the non-upgraded notch label (i.e. when rendered on the server), also
+      // use the correct `body1` typography level.
+      .mdc-floating-label--float-above {
+        font-size: mdc-typography.get-size(body1) * 0.75;
+      }
+      .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: mdc-typography.get-size(body1);
+      }
     }
   }
 }
 
-@mixin mat-mdc-form-field-density($config-or-theme) {
-  $density-scale: mat-get-density-config($config-or-theme);
-  @include mat-mdc-private-form-field-density($density-scale);
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+  @include form-field-density.private-form-field-density($density-scale);
 }
 
-@mixin mat-mdc-form-field-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-form-field') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-mdc-form-field') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
 
     @if $color != null {
-      @include mat-mdc-form-field-color($color);
+      @include color($color);
     }
     @if $density != null {
-      @include mat-mdc-form-field-density($density);
+      @include density($density);
     }
     @if $typography != null {
-      @include mat-mdc-form-field-typography($typography);
+      @include typography($typography);
     }
   }
 }

@@ -1,7 +1,7 @@
 import {sync as glob} from 'glob';
 import {readFileSync, writeFileSync} from 'fs';
 import {join, basename} from 'path';
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 // Script that generates mappings from our publicly-exported symbols to their entry points. The
 // mappings are intended to be used by the secondary entry points schematic and should be committed
@@ -12,7 +12,7 @@ const outputPath = join(__dirname, '../temp-entry-points-mapping.json');
 
 glob('**/*.d.ts', {
   absolute: true,
-  cwd: join(__dirname, '../tools/public_api_guard/material')
+  cwd: join(__dirname, '../tools/public_api_guard/material'),
 }).forEach(fileName => {
   const content = readFileSync(fileName, 'utf8');
   const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.ES5);
@@ -49,5 +49,7 @@ function addMapping(moduleName: string, symbolName: string) {
 }
 
 writeFileSync(outputPath, JSON.stringify(mappings, null, 2));
-console.log(`Generated mappings to ${outputPath}. You should move the file to the ` +
-            `proper place yourself.`);
+console.log(
+  `Generated mappings to ${outputPath}. You should move the file to the ` +
+    `proper place yourself.`,
+);

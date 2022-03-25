@@ -24,7 +24,6 @@ ng_module(
         ":tab-nav-bar/tab-nav-bar.css",
         ":tab-nav-bar/tab-link.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-tabs",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -112,10 +111,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = ["@npm//:node_modules/@material/tab-indicator/dist/mdc.tabIndicator.js"],
     deps = [
         ":tabs_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

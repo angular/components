@@ -8,11 +8,10 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/material-experimental/mdc-autocomplete/testing",
     deps = [
-        "//src/cdk/coercion",
         "//src/cdk/testing",
         "//src/material-experimental/mdc-core/testing",
+        "//src/material/autocomplete/testing",
     ],
 )
 

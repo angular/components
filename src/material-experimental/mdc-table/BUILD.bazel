@@ -18,7 +18,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":table_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-table",
     deps = [
         "//src/cdk/table",
         "//src/material-experimental/mdc-core",
@@ -48,6 +47,7 @@ sass_binary(
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
         "//src/material/core:core_scss_lib",
+        "//src/material/table:table_flex_scss_lib",
     ],
 )
 
@@ -64,9 +64,8 @@ ng_test_library(
     deps = [
         ":mdc-table",
         "//src/cdk/table",
-        "//src/material/paginator",
+        "//src/material-experimental/mdc-paginator",
         "//src/material/sort",
-        "//src/material/table",
         "@npm//@angular/platform-browser",
         "@npm//rxjs",
     ],
@@ -74,10 +73,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = ["@npm//:node_modules/@material/data-table/dist/mdc.dataTable.js"],
     deps = [
         ":table_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

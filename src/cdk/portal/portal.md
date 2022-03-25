@@ -50,8 +50,7 @@ A component can use `@ViewChild` or `@ViewChildren` to get a reference to a
 `CdkPortal`.
 
 ##### `ComponentPortal`
-Used to create a portal from a component type. When a component is dynamically created using
-portals, it must be included in the `entryComponents` of its `NgModule`.
+Used to create a portal from a component type.
 
 Usage:
 ```ts
@@ -69,7 +68,7 @@ Usage:
 ```
 
 ```ts
-@ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknow>;
+@ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknown>;
 
 ngAfterViewInit() {
   this.templatePortal = new TemplatePortal(

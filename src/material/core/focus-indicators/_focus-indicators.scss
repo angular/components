@@ -1,5 +1,5 @@
-@import '../theming/theming';
-@import '../style/layout-common';
+@use 'sass:map';
+@use '../style/layout-common';
 
 /// Mixin that turns on strong focus indicators.
 ///
@@ -7,7 +7,7 @@
 ///   .my-app {
 ///     @include mat-strong-focus-indicators($config);
 ///   }
-@mixin mat-strong-focus-indicators($config: ()) {
+@mixin strong-focus-indicators($config: ()) {
   // Default focus indicator config.
   $default-config: (
     border-style: solid,
@@ -16,18 +16,22 @@
   );
 
   // Merge default config with user config.
-  $config: map-merge($default-config, $config);
-  $border-style: map-get($config, border-style);
-  $border-width: map-get($config, border-width);
-  $border-radius: map-get($config, border-radius);
+  $config: map.merge($default-config, $config);
+  $border-style: map.get($config, border-style);
+  $border-width: map.get($config, border-width);
+  $border-radius: map.get($config, border-radius);
 
   // Base styles for focus indicators.
   .mat-focus-indicator::before {
-    @include mat-fill();
+    @include layout-common.fill();
     box-sizing: border-box;
     pointer-events: none;
     border: $border-width $border-style transparent;
     border-radius: $border-radius;
+
+    .cdk-high-contrast-active & {
+      display: none;
+    }
   }
 
   // By default, all focus indicators are flush with the bounding box of their
@@ -71,59 +75,20 @@
   // focused.
   .mat-calendar-body-cell:focus .mat-focus-indicator::before,
 
+  // Stepper headers have the focus indicator as a descendant,
+  // because `::before` is used for other styling.
+  .mat-step-header:focus .mat-focus-indicator::before,
+
   // For all other components, render the focus indicator on focus.
   .mat-focus-indicator:focus::before {
     content: '';
   }
 }
 
-// Mixin that applies the border color for the focus indicators.
-@mixin _mat-strong-focus-indicators-border-color($color) {
-  .mat-focus-indicator::before {
-    border-color: $color;
-  }
-}
-
-@mixin mat-strong-focus-indicators-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  @include _mat-strong-focus-indicators-border-color(mat-color(map-get($config, primary)));
-}
-
-/// Mixin that sets the color of the focus indicators.
-///
-/// @param {color|map} $theme-or-color
-///   If theme, focus indicators are set to the primary color of the theme. If
-///   color, focus indicators are set to that color.
-///
-/// @example
-///   .demo-dark-theme {
-///     @include mat-strong-focus-indicators-theme($dark-theme-map);
-///   }
-///
-/// @example
-///   .demo-red-theme {
-///     @include mat-strong-focus-indicators-theme(#f00);
-///   }
-/* stylelint-disable-next-line material/theme-mixin-api */
-@mixin mat-strong-focus-indicators-theme($theme-or-color) {
-  @if type-of($theme-or-color) != 'map' {
-    @include _mat-strong-focus-indicators-border-color($theme-or-color);
-  }
-  @else {
-    $theme: mat-private-legacy-get-theme($theme-or-color);
-    @include mat-private-check-duplicate-theme-styles($theme, 'mat-strong-focus-indicators') {
-      $color: mat-get-color-config($theme);
-      @if $color != null {
-        @include mat-strong-focus-indicators-color($color);
-      }
-    }
-  }
-}
-
 // Mixin that ensures focus indicator host elements are positioned so that the focus indicator
 // pseudo element within is positioned relative to the host. Private mixin included within
 // `mat-core`.
-@mixin mat-private-strong-focus-indicators-positioning() {
+@mixin private-strong-focus-indicators-positioning() {
   .mat-focus-indicator {
     position: relative;
   }

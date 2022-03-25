@@ -11,7 +11,6 @@ import {OverlayContainer} from './overlay-container';
 import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
 
-
 /**
  * Alternative to OverlayContainer that supports correct displaying of overlay elements in
  * Fullscreen mode
@@ -28,7 +27,7 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
     super(_document, platform);
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
     super.ngOnDestroy();
 
     if (this._fullScreenEventName && this._fullScreenListener) {
@@ -36,7 +35,7 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
     }
   }
 
-  protected _createContainer(): void {
+  protected override _createContainer(): void {
     super._createContainer();
     this._adjustParentForFullscreenChange();
     this._addFullscreenChangeListener(() => this._adjustParentForFullscreenChange());
@@ -90,10 +89,12 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
   getFullscreenElement(): Element {
     const _document = this._document as any;
 
-    return _document.fullscreenElement ||
-           _document.webkitFullscreenElement ||
-           _document.mozFullScreenElement ||
-           _document.msFullscreenElement ||
-           null;
+    return (
+      _document.fullscreenElement ||
+      _document.webkitFullscreenElement ||
+      _document.mozFullScreenElement ||
+      _document.msFullscreenElement ||
+      null
+    );
   }
 }

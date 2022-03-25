@@ -1,13 +1,14 @@
-import {CommitMessageConfig} from '@angular/dev-infra-private/commit-message/config';
+import {CommitMessageConfig} from '@angular/dev-infra-private/ng-dev';
 
 /**
  * The configuration for `ng-dev commit-message` commands.
  */
 export const commitMessage: CommitMessageConfig = {
-  maxLineLength: 120,
+  maxLineLength: Infinity,
   minBodyLength: 0,
   minBodyLengthTypeExcludes: ['docs'],
   scopes: [
+    'multiple', // For when a commit applies to multiple components.
     'cdk-experimental/column-resize',
     'cdk-experimental/combobox',
     'cdk-experimental/dialog',
@@ -16,6 +17,7 @@ export const commitMessage: CommitMessageConfig = {
     'cdk-experimental/popover-edit',
     'cdk-experimental/scrolling',
     'cdk-experimental/selection',
+    'cdk-experimental/table-scroll-container',
     'cdk/a11y',
     'cdk/accordion',
     'cdk/bidi',
@@ -57,18 +59,20 @@ export const commitMessage: CommitMessageConfig = {
     'material-experimental/mdc-progress-spinner',
     'material-experimental/mdc-radio',
     'material-experimental/mdc-select',
-    'material-experimental/mdc-sidenav',
     'material-experimental/mdc-slide-toggle',
     'material-experimental/mdc-slider',
     'material-experimental/mdc-snack-bar',
     'material-experimental/mdc-table',
     'material-experimental/mdc-tabs',
+    'material-experimental/mdc-tooltip',
     'material-experimental/mdc-theming',
     'material-experimental/mdc-typography',
     'material-experimental/menubar',
     'material-experimental/popover-edit',
     'material-experimental/selection',
     'material-moment-adapter',
+    'material-date-fns-adapter',
+    'material-luxon-adapter',
     'material/autocomplete',
     'material/badge',
     'material/bottom-sheet',
@@ -108,6 +112,6 @@ export const commitMessage: CommitMessageConfig = {
     'material/toolbar',
     'material/tooltip',
     'material/tree',
-    'youtube-player'
+    'youtube-player',
   ],
 };

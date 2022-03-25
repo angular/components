@@ -1,0 +1,62 @@
+@use 'sass:map';
+@use '@material/ripple/ripple-theme' as mdc-ripple-theme;
+@use '@material/theme/theme-color' as mdc-theme-color;
+@use '../../material/core/ripple/ripple-theme';
+
+@mixin _ripple-color($color) {
+  --mat-mdc-button-persistent-ripple-color: #{$color};
+  --mat-mdc-button-ripple-color: #{rgba($color, 0.1)};
+}
+
+@mixin ripple-theme-styles($config, $is-filled) {
+  $opacities: if(map.get($config, is-dark),
+    mdc-ripple-theme.$light-ink-opacities, mdc-ripple-theme.$dark-ink-opacities);
+
+  // Ideally these styles would be structural, but MDC bases some of the opacities on the theme.
+  &:hover .mat-mdc-button-persistent-ripple::before {
+    opacity: map.get($opacities, hover);
+  }
+
+  &:focus .mat-mdc-button-persistent-ripple::before {
+    opacity: map.get($opacities, focus);
+  }
+
+  &:active .mat-mdc-button-persistent-ripple::before {
+    opacity: map.get($opacities, press);
+  }
+
+  @include _ripple-color(mdc-theme-color.prop-value(on-surface));
+
+  &.mat-primary {
+    @include _ripple-color(mdc-theme-color.prop-value(if($is-filled, on-primary, primary)));
+  }
+
+  &.mat-accent {
+    @include _ripple-color(mdc-theme-color.prop-value(if($is-filled, on-secondary, secondary)));
+  }
+
+  &.mat-warn {
+    @include _ripple-color(mdc-theme-color.prop-value(if($is-filled, on-error, error)));
+  }
+}
+
+// Wraps the content style in a selector for the disabled state.
+// MDC adds theme color by using :not(:disabled), so just using [disabled] once will not
+// override this, neither will it apply to anchor tags. This needs to override the
+// previously set theme color, so it must be ordered after the theme styles.
+// TODO(andrewseguin): Discuss with the MDC team to see if we can avoid the :not(:disabled) by
+// manually styling disabled buttons with a [disabled] selector.
+@mixin apply-disabled-style() {
+  &[disabled][disabled] {
+    @content;
+  }
+}
+
+// Hides the touch target on lower densities.
+@mixin touch-target-density($scale) {
+  @if ($scale == -2 or $scale == 'minimum') {
+    .mat-mdc-button-touch-target {
+      display: none;
+    }
+  }
+}

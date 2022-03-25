@@ -16,31 +16,27 @@ import {
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './index';
 import {SPACE, ENTER} from '@angular/cdk/keycodes';
-import {
-  dispatchKeyboardEvent,
-  createKeyboardEvent,
-  dispatchEvent,
-} from '@angular/cdk/testing/private';
-
+import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
 
 describe('MatExpansionPanel', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatExpansionModule,
-        NoopAnimationsModule,
-      ],
-      declarations: [
-        PanelWithContent,
-        PanelWithContentInNgIf,
-        PanelWithCustomMargin,
-        LazyPanelWithContent,
-        LazyPanelOpenOnLoad,
-        PanelWithTwoWayBinding,
-      ],
-    });
-    TestBed.compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatExpansionModule, NoopAnimationsModule],
+        declarations: [
+          PanelWithContent,
+          PanelWithContentInNgIf,
+          PanelWithCustomMargin,
+          LazyPanelWithContent,
+          LazyPanelOpenOnLoad,
+          PanelWithTwoWayBinding,
+          PanelWithHeaderTabindex,
+          NestedLazyPanelWithContent,
+        ],
+      });
+      TestBed.compileComponents();
+    }),
+  );
 
   it('should expand and collapse the panel', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
@@ -60,33 +56,70 @@ describe('MatExpansionPanel', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.mat-expansion-panel-header').classList)
-      .toContain('mat-focus-indicator');
+    expect(fixture.nativeElement.querySelector('.mat-expansion-panel-header').classList).toContain(
+      'mat-focus-indicator',
+    );
   }));
 
   it('should be able to render panel content lazily', fakeAsync(() => {
     const fixture = TestBed.createComponent(LazyPanelWithContent);
     const content = fixture.debugElement.query(
-      By.css('.mat-expansion-panel-content'))!.nativeElement;
+      By.css('.mat-expansion-panel-content'),
+    )!.nativeElement;
     fixture.detectChanges();
 
-    expect(content.textContent.trim()).toBe('', 'Expected content element to be empty.');
+    expect(content.textContent.trim())
+      .withContext('Expected content element to be empty.')
+      .toBe('');
 
     fixture.componentInstance.expanded = true;
     fixture.detectChanges();
 
     expect(content.textContent.trim())
-        .toContain('Some content', 'Expected content to be rendered.');
+      .withContext('Expected content to be rendered.')
+      .toContain('Some content');
   }));
 
   it('should render the content for a lazy-loaded panel that is opened on init', fakeAsync(() => {
     const fixture = TestBed.createComponent(LazyPanelOpenOnLoad);
     const content = fixture.debugElement.query(
-      By.css('.mat-expansion-panel-content'))!.nativeElement;
+      By.css('.mat-expansion-panel-content'),
+    )!.nativeElement;
     fixture.detectChanges();
 
     expect(content.textContent.trim())
-        .toContain('Some content', 'Expected content to be rendered.');
+      .withContext('Expected content to be rendered.')
+      .toContain('Some content');
+  }));
+
+  it('should not render lazy content from a child panel inside the parent', fakeAsync(() => {
+    const fixture = TestBed.createComponent(NestedLazyPanelWithContent);
+    fixture.componentInstance.parentExpanded = true;
+    fixture.detectChanges();
+
+    const parentContent: HTMLElement = fixture.nativeElement.querySelector(
+      '.parent-panel .mat-expansion-panel-content',
+    );
+    const childContent: HTMLElement = fixture.nativeElement.querySelector(
+      '.child-panel .mat-expansion-panel-content',
+    );
+
+    expect(parentContent.textContent!.trim()).toBe(
+      'Parent content',
+      'Expected only parent content to be rendered.',
+    );
+    expect(childContent.textContent!.trim()).toBe(
+      '',
+      'Expected child content element to be empty.',
+    );
+
+    fixture.componentInstance.childExpanded = true;
+    fixture.detectChanges();
+
+    expect(childContent.textContent!.trim()).toBe(
+      'Child content',
+      'Expected child content element to be rendered.',
+    );
   }));
 
   it('emit correct events for change in panel expanded state', () => {
@@ -193,15 +226,24 @@ describe('MatExpansionPanel', () => {
     const button = fixture.debugElement.query(By.css('button'))!.nativeElement;
 
     button.focus();
-    expect(document.activeElement).toBe(button, 'Expected button to start off focusable.');
+    expect(document.activeElement)
+      .withContext('Expected button to start off focusable.')
+      .toBe(button);
 
     button.blur();
     fixture.componentInstance.expanded = false;
     fixture.detectChanges();
     tick(250);
 
+    // Enforce a style recalculation as otherwise browsers like Safari on iOS 14 require
+    // us to wait until the next tick using actual async/await. Not retrieving the computed
+    // styles would result in the `visibility: hidden` on the expansion content to not apply.
+    getComputedStyle(button).getPropertyValue('visibility');
+
     button.focus();
-    expect(document.activeElement).not.toBe(button, 'Expected button to no longer be focusable.');
+    expect(document.activeElement)
+      .not.withContext('Expected button to no longer be focusable.')
+      .toBe(button);
   }));
 
   it('should restore focus to header if focused element is inside panel on close', fakeAsync(() => {
@@ -214,13 +256,15 @@ describe('MatExpansionPanel', () => {
     const header = fixture.debugElement.query(By.css('mat-expansion-panel-header'))!.nativeElement;
 
     button.focus();
-    expect(document.activeElement).toBe(button, 'Expected button to start off focusable.');
+    expect(document.activeElement)
+      .withContext('Expected button to start off focusable.')
+      .toBe(button);
 
     fixture.componentInstance.expanded = false;
     fixture.detectChanges();
     tick(250);
 
-    expect(document.activeElement).toBe(header, 'Expected header to be focused.');
+    expect(document.activeElement).withContext('Expected header to be focused.').toBe(header);
   }));
 
   it('should not change focus origin if origin not specified', fakeAsync(() => {
@@ -274,38 +318,41 @@ describe('MatExpansionPanel', () => {
     fixture.detectChanges();
 
     expect(header.querySelector('.mat-expansion-indicator'))
-        .toBeTruthy('Expected indicator to be shown.');
+      .withContext('Expected indicator to be shown.')
+      .toBeTruthy();
 
     fixture.componentInstance.hideToggle = true;
     fixture.detectChanges();
 
     expect(header.querySelector('.mat-expansion-indicator'))
-        .toBeFalsy('Expected indicator to be hidden.');
+      .withContext('Expected indicator to be hidden.')
+      .toBeFalsy();
   });
 
-  it('should update the indicator rotation when the expanded state is toggled programmatically',
-    fakeAsync(() => {
-      const fixture = TestBed.createComponent(PanelWithContent);
+  it('should update the indicator rotation when the expanded state is toggled programmatically', fakeAsync(() => {
+    const fixture = TestBed.createComponent(PanelWithContent);
 
-      fixture.detectChanges();
-      tick(250);
+    fixture.detectChanges();
+    tick(250);
 
-      const arrow = fixture.debugElement.query(By.css('.mat-expansion-indicator'))!.nativeElement;
+    const arrow = fixture.debugElement.query(By.css('.mat-expansion-indicator'))!.nativeElement;
 
-      expect(arrow.style.transform).toBe('rotate(0deg)', 'Expected no rotation.');
+    expect(arrow.style.transform).withContext('Expected no rotation.').toBe('rotate(0deg)');
 
-      fixture.componentInstance.expanded = true;
-      fixture.detectChanges();
-      tick(250);
+    fixture.componentInstance.expanded = true;
+    fixture.detectChanges();
+    tick(250);
 
-      expect(arrow.style.transform).toBe('rotate(180deg)', 'Expected 180 degree rotation.');
-    }));
+    expect(arrow.style.transform)
+      .withContext('Expected 180 degree rotation.')
+      .toBe('rotate(180deg)');
+  }));
 
   it('should make sure accordion item runs ngOnDestroy when expansion panel is destroyed', () => {
     const fixture = TestBed.createComponent(PanelWithContentInNgIf);
     fixture.detectChanges();
     let destroyedOk = false;
-    fixture.componentInstance.panel.destroyed.subscribe(() => destroyedOk = true);
+    fixture.componentInstance.panel.destroyed.subscribe(() => (destroyedOk = true));
     fixture.componentInstance.expansionShown = false;
     fixture.detectChanges();
     expect(destroyedOk).toBe(true);
@@ -326,8 +373,6 @@ describe('MatExpansionPanel', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.expanded).toBe(false);
   });
-
-
 
   it('should emit events for body expanding and collapsing animations', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
@@ -351,19 +396,20 @@ describe('MatExpansionPanel', () => {
   }));
 
   it('should be able to set the default options through the injection token', () => {
-    TestBed
-      .resetTestingModule()
+    TestBed.resetTestingModule()
       .configureTestingModule({
         imports: [MatExpansionModule, NoopAnimationsModule],
         declarations: [PanelWithTwoWayBinding],
-        providers: [{
-          provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
-          useValue: {
-            hideToggle: true,
-            expandedHeight: '10px',
-            collapsedHeight: '16px'
-          }
-        }]
+        providers: [
+          {
+            provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+            useValue: {
+              hideToggle: true,
+              expandedHeight: '10px',
+              collapsedHeight: '16px',
+            },
+          },
+        ],
       })
       .compileComponents();
 
@@ -382,6 +428,14 @@ describe('MatExpansionPanel', () => {
     fixture.detectChanges();
     expect(header.nativeElement.style.height).toBe('10px');
   });
+
+  it('should be able to set a custom tabindex on the header', fakeAsync(() => {
+    const fixture = TestBed.createComponent(PanelWithHeaderTabindex);
+    const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
+    fixture.detectChanges();
+
+    expect(headerEl.getAttribute('tabindex')).toBe('7');
+  }));
 
   describe('disabled state', () => {
     let fixture: ComponentFixture<PanelWithContent>;
@@ -441,8 +495,10 @@ describe('MatExpansionPanel', () => {
       expect(header.classList).toContain('mat-expanded');
     });
 
-    it('should be able to toggle a disabled expansion panel programmatically via the ' +
-      'open/close methods', () => {
+    it(
+      'should be able to toggle a disabled expansion panel programmatically via the ' +
+        'open/close methods',
+      () => {
         const panelInstance = fixture.componentInstance.panel;
 
         expect(panelInstance.expanded).toBe(false);
@@ -462,10 +518,13 @@ describe('MatExpansionPanel', () => {
 
         expect(panelInstance.expanded).toBe(false);
         expect(header.classList).not.toContain('mat-expanded');
-      });
+      },
+    );
 
-    it('should be able to toggle a disabled expansion panel programmatically via the ' +
-      'toggle method', () => {
+    it(
+      'should be able to toggle a disabled expansion panel programmatically via the ' +
+        'toggle method',
+      () => {
         const panelInstance = fixture.componentInstance.panel;
 
         expect(panelInstance.expanded).toBe(false);
@@ -485,11 +544,19 @@ describe('MatExpansionPanel', () => {
 
         expect(panelInstance.expanded).toBe(false);
         expect(header.classList).not.toContain('mat-expanded');
-      });
+      },
+    );
 
+    it('should update the tabindex if the header becomes disabled', () => {
+      expect(header.getAttribute('tabindex')).toBe('0');
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(header.getAttribute('tabindex')).toBe('-1');
+    });
   });
 });
-
 
 @Component({
   template: `
@@ -501,7 +568,7 @@ describe('MatExpansionPanel', () => {
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
     <p>Some content</p>
     <button>I am a button</button>
-  </mat-expansion-panel>`
+  </mat-expansion-panel>`,
 })
 class PanelWithContent {
   expanded = false;
@@ -518,7 +585,7 @@ class PanelWithContent {
     <mat-expansion-panel>
       <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
     </mat-expansion-panel>
-  </div>`
+  </div>`,
 })
 class PanelWithContentInNgIf {
   expansionShown = true;
@@ -529,13 +596,13 @@ class PanelWithContentInNgIf {
   styles: [
     `mat-expansion-panel {
       margin: 13px 37px;
-    }`
+    }`,
   ],
   template: `
   <mat-expansion-panel [expanded]="expanded">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta
     corrupti maxime voluptate accusamus impedit atque incidunt pariatur.
-  </mat-expansion-panel>`
+  </mat-expansion-panel>`,
 })
 class PanelWithCustomMargin {
   expanded = false;
@@ -550,7 +617,7 @@ class PanelWithCustomMargin {
       <p>Some content</p>
       <button>I am a button</button>
     </ng-template>
-  </mat-expansion-panel>`
+  </mat-expansion-panel>`,
 })
 class LazyPanelWithContent {
   expanded = false;
@@ -564,17 +631,40 @@ class LazyPanelWithContent {
     <ng-template matExpansionPanelContent>
       <p>Some content</p>
     </ng-template>
-  </mat-expansion-panel>`
+  </mat-expansion-panel>`,
 })
 class LazyPanelOpenOnLoad {}
-
 
 @Component({
   template: `
   <mat-expansion-panel [(expanded)]="expanded">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
-  </mat-expansion-panel>`
+  </mat-expansion-panel>`,
 })
 class PanelWithTwoWayBinding {
   expanded = false;
+}
+
+@Component({
+  template: `
+  <mat-expansion-panel>
+    <mat-expansion-panel-header tabindex="7">Panel Title</mat-expansion-panel-header>
+  </mat-expansion-panel>`,
+})
+class PanelWithHeaderTabindex {}
+
+@Component({
+  template: `
+    <mat-expansion-panel class="parent-panel" [expanded]="parentExpanded">
+      Parent content
+
+      <mat-expansion-panel class="child-panel" [expanded]="childExpanded">
+        <ng-template matExpansionPanelContent>Child content</ng-template>
+      </mat-expansion-panel>
+    </mat-expansion-panel>
+  `,
+})
+class NestedLazyPanelWithContent {
+  parentExpanded = false;
+  childExpanded = false;
 }

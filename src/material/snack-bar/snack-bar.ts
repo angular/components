@@ -20,7 +20,8 @@ import {
   Optional,
   SkipSelf,
   TemplateRef,
-  OnDestroy, Type,
+  OnDestroy,
+  Type,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {TextOnlySnackBar, SimpleSnackBar} from './simple-snack-bar';
@@ -29,24 +30,22 @@ import {MatSnackBarContainer, _SnackBarContainer} from './snack-bar-container';
 import {MatSnackBarModule} from './snack-bar-module';
 import {MatSnackBarRef} from './snack-bar-ref';
 
-
 /** Injection token that can be used to specify default snack bar. */
-export const MAT_SNACK_BAR_DEFAULT_OPTIONS =
-    new InjectionToken<MatSnackBarConfig>('mat-snack-bar-default-options', {
-      providedIn: 'root',
-      factory: MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY,
-    });
+export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfig>(
+  'mat-snack-bar-default-options',
+  {
+    providedIn: 'root',
+    factory: MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY,
+  },
+);
 
 /** @docs-private */
 export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig {
   return new MatSnackBarConfig();
 }
 
-/**
- * Service to dispatch Material Design snack bar messages.
- */
-@Injectable({providedIn: MatSnackBarModule})
-export class MatSnackBar implements OnDestroy {
+@Injectable()
+export abstract class _MatSnackBarBase implements OnDestroy {
   /**
    * Reference to the current snack bar in the view *at this level* (in the Angular injector tree).
    * If there is a parent snack-bar service, all operations should delegate to that parent
@@ -55,13 +54,13 @@ export class MatSnackBar implements OnDestroy {
   private _snackBarRefAtThisLevel: MatSnackBarRef<any> | null = null;
 
   /** The component that should be rendered as the snack bar's simple component. */
-  protected simpleSnackBarComponent: Type<TextOnlySnackBar> = SimpleSnackBar;
+  protected abstract simpleSnackBarComponent: Type<TextOnlySnackBar>;
 
   /** The container component that attaches the provided template or component. */
-  protected snackBarContainerComponent: Type<_SnackBarContainer> = MatSnackBarContainer;
+  protected abstract snackBarContainerComponent: Type<_SnackBarContainer>;
 
-  /** The CSS class to applie for handset mode. */
-  protected handsetCssClass = 'mat-snack-bar-handset';
+  /** The CSS class to apply for handset mode. */
+  protected abstract handsetCssClass: string;
 
   /** Reference to the currently opened snackbar at *any* level. */
   get _openedSnackBarRef(): MatSnackBarRef<any> | null {
@@ -78,12 +77,13 @@ export class MatSnackBar implements OnDestroy {
   }
 
   constructor(
-      private _overlay: Overlay,
-      private _live: LiveAnnouncer,
-      private _injector: Injector,
-      private _breakpointObserver: BreakpointObserver,
-      @Optional() @SkipSelf() private _parentSnackBar: MatSnackBar,
-      @Inject(MAT_SNACK_BAR_DEFAULT_OPTIONS) private _defaultConfig: MatSnackBarConfig) {}
+    private _overlay: Overlay,
+    private _live: LiveAnnouncer,
+    private _injector: Injector,
+    private _breakpointObserver: BreakpointObserver,
+    @Optional() @SkipSelf() private _parentSnackBar: _MatSnackBarBase,
+    @Inject(MAT_SNACK_BAR_DEFAULT_OPTIONS) private _defaultConfig: MatSnackBarConfig,
+  ) {}
 
   /**
    * Creates and dispatches a snack bar with a custom component for the content, removing any
@@ -92,8 +92,7 @@ export class MatSnackBar implements OnDestroy {
    * @param component Component to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromComponent<T>(component: ComponentType<T>, config?: MatSnackBarConfig):
-      MatSnackBarRef<T> {
+  openFromComponent<T>(component: ComponentType<T>, config?: MatSnackBarConfig): MatSnackBarRef<T> {
     return this._attach(component, config) as MatSnackBarRef<T>;
   }
 
@@ -104,8 +103,10 @@ export class MatSnackBar implements OnDestroy {
    * @param template Template to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig):
-      MatSnackBarRef<EmbeddedViewRef<any>> {
+  openFromTemplate(
+    template: TemplateRef<any>,
+    config?: MatSnackBarConfig,
+  ): MatSnackBarRef<EmbeddedViewRef<any>> {
     return this._attach(template, config);
   }
 
@@ -115,8 +116,11 @@ export class MatSnackBar implements OnDestroy {
    * @param action The label for the snackbar action.
    * @param config Additional configuration options for the snackbar.
    */
-  open(message: string, action: string = '', config?: MatSnackBarConfig):
-      MatSnackBarRef<TextOnlySnackBar> {
+  open(
+    message: string,
+    action: string = '',
+    config?: MatSnackBarConfig,
+  ): MatSnackBarRef<TextOnlySnackBar> {
     const _config = {...this._defaultConfig, ...config};
 
     // Since the user doesn't have access to the component, we can
@@ -151,19 +155,22 @@ export class MatSnackBar implements OnDestroy {
   /**
    * Attaches the snack bar container component to the overlay.
    */
-  private _attachSnackBarContainer(overlayRef: OverlayRef,
-                                     config: MatSnackBarConfig): _SnackBarContainer {
-
+  private _attachSnackBarContainer(
+    overlayRef: OverlayRef,
+    config: MatSnackBarConfig,
+  ): _SnackBarContainer {
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injector = Injector.create({
       parent: userInjector || this._injector,
-      providers: [{provide: MatSnackBarConfig, useValue: config}]
+      providers: [{provide: MatSnackBarConfig, useValue: config}],
     });
 
-    const containerPortal =
-        new ComponentPortal(this.snackBarContainerComponent, config.viewContainerRef, injector);
-    const containerRef: ComponentRef<_SnackBarContainer> =
-        overlayRef.attach(containerPortal);
+    const containerPortal = new ComponentPortal(
+      this.snackBarContainerComponent,
+      config.viewContainerRef,
+      injector,
+    );
+    const containerRef: ComponentRef<_SnackBarContainer> = overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
     return containerRef.instance;
   }
@@ -171,9 +178,10 @@ export class MatSnackBar implements OnDestroy {
   /**
    * Places a new component or a template as the content of the snack bar container.
    */
-  private _attach<T>(content: ComponentType<T> | TemplateRef<T>, userConfig?: MatSnackBarConfig):
-      MatSnackBarRef<T | EmbeddedViewRef<any>> {
-
+  private _attach<T>(
+    content: ComponentType<T> | TemplateRef<T>,
+    userConfig?: MatSnackBarConfig,
+  ): MatSnackBarRef<T | EmbeddedViewRef<any>> {
     const config = {...new MatSnackBarConfig(), ...this._defaultConfig, ...userConfig};
     const overlayRef = this._createOverlay(config);
     const container = this._attachSnackBarContainer(overlayRef, config);
@@ -182,7 +190,7 @@ export class MatSnackBar implements OnDestroy {
     if (content instanceof TemplateRef) {
       const portal = new TemplatePortal(content, null!, {
         $implicit: config.data,
-        snackBarRef
+        snackBarRef,
       } as any);
 
       snackBarRef.instance = container.attachTemplatePortal(portal);
@@ -198,12 +206,12 @@ export class MatSnackBar implements OnDestroy {
     // Subscribe to the breakpoint observer and attach the mat-snack-bar-handset class as
     // appropriate. This class is applied to the overlay element because the overlay must expand to
     // fill the width of the screen for full width snackbars.
-    this._breakpointObserver.observe(Breakpoints.HandsetPortrait).pipe(
-        takeUntil(overlayRef.detachments())
-    ).subscribe(state => {
-      const classList = overlayRef.overlayElement.classList;
-      state.matches ? classList.add(this.handsetCssClass) : classList.remove(this.handsetCssClass);
-    });
+    this._breakpointObserver
+      .observe(Breakpoints.HandsetPortrait)
+      .pipe(takeUntil(overlayRef.detachments()))
+      .subscribe(state => {
+        overlayRef.overlayElement.classList.toggle(this.handsetCssClass, state.matches);
+      });
 
     if (config.announcementMessage) {
       // Wait until the snack bar contents have been announced then deliver this message.
@@ -260,10 +268,10 @@ export class MatSnackBar implements OnDestroy {
     let positionStrategy = this._overlay.position().global();
     // Set horizontal position.
     const isRtl = config.direction === 'rtl';
-    const isLeft = (
-        config.horizontalPosition === 'left' ||
-        (config.horizontalPosition === 'start' && !isRtl) ||
-        (config.horizontalPosition === 'end' && isRtl));
+    const isLeft =
+      config.horizontalPosition === 'left' ||
+      (config.horizontalPosition === 'start' && !isRtl) ||
+      (config.horizontalPosition === 'end' && isRtl);
     const isRight = !isLeft && config.horizontalPosition !== 'center';
     if (isLeft) {
       positionStrategy.left('0');
@@ -295,8 +303,29 @@ export class MatSnackBar implements OnDestroy {
       parent: userInjector || this._injector,
       providers: [
         {provide: MatSnackBarRef, useValue: snackBarRef},
-        {provide: MAT_SNACK_BAR_DATA, useValue: config.data}
-      ]
+        {provide: MAT_SNACK_BAR_DATA, useValue: config.data},
+      ],
     });
+  }
+}
+
+/**
+ * Service to dispatch Material Design snack bar messages.
+ */
+@Injectable({providedIn: MatSnackBarModule})
+export class MatSnackBar extends _MatSnackBarBase {
+  protected simpleSnackBarComponent = SimpleSnackBar;
+  protected snackBarContainerComponent = MatSnackBarContainer;
+  protected handsetCssClass = 'mat-snack-bar-handset';
+
+  constructor(
+    overlay: Overlay,
+    live: LiveAnnouncer,
+    injector: Injector,
+    breakpointObserver: BreakpointObserver,
+    @Optional() @SkipSelf() parentSnackBar: MatSnackBar,
+    @Inject(MAT_SNACK_BAR_DEFAULT_OPTIONS) defaultConfig: MatSnackBarConfig,
+  ) {
+    super(overlay, live, injector, breakpointObserver, parentSnackBar, defaultConfig);
   }
 }

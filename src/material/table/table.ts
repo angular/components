@@ -10,10 +10,26 @@ import {
   CDK_TABLE_TEMPLATE,
   CdkTable,
   CDK_TABLE,
-  _CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER
+  _CoalescedStyleScheduler,
+  _COALESCED_STYLE_SCHEDULER,
+  STICKY_POSITIONING_LISTENER,
 } from '@angular/cdk/table';
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cdk/collections';
+import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
+import {
+  _DisposeViewRepeaterStrategy,
+  _RecycleViewRepeaterStrategy,
+  _VIEW_REPEATER_STRATEGY,
+} from '@angular/cdk/collections';
+
+/**
+ * Enables the recycle view repeater strategy, which reduces rendering latency. Not compatible with
+ * tables that animate rows.
+ */
+@Directive({
+  selector: 'mat-table[recycleRows], table[mat-table][recycleRows]',
+  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
+})
+export class MatRecycleRows {}
 
 /**
  * Wrapper for the CdkTable with Material design styles.
@@ -34,6 +50,8 @@ import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cd
     {provide: CdkTable, useExisting: MatTable},
     {provide: CDK_TABLE, useExisting: MatTable},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
+    // Prevent nested tables from seeing this table's StickyPositioningListener.
+    {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
@@ -42,8 +60,8 @@ import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cd
 })
 export class MatTable<T> extends CdkTable<T> {
   /** Overrides the sticky CSS class set by the `CdkTable`. */
-  protected stickyCssClass = 'mat-table-sticky';
+  protected override stickyCssClass = 'mat-table-sticky';
 
   /** Overrides the need to add position: sticky on every sticky cell element in `CdkTable`. */
-  protected needsPositionStickyOnElement = false;
+  protected override needsPositionStickyOnElement = false;
 }

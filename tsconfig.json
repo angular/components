@@ -4,23 +4,24 @@
   "compilerOptions": {
     "outDir": "./dist/packages/all",
     "experimentalDecorators": true,
-    // Bazel either uses "umd" or "esnext". We replicate this here for IDE support.
-    // https://github.com/bazelbuild/rules_typescript/blob/master/internal/common/tsconfig.bzl#L199
     "module": "esnext",
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": false,
     "strictNullChecks": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "skipLibCheck": true,
     "strictBindCallApply": true,
-    "target": "es2015",
-    "lib": ["es5", "es2015", "dom"],
-    "types": ["jasmine", "resize-observer-browser"],
+    "target": "es2020",
+    "lib": ["es2020", "dom"],
+    "types": ["jasmine"],
     "baseUrl": ".",
     "paths": {
       "@angular/cdk": ["./src/cdk"],
@@ -31,9 +32,14 @@
       "@angular/cdk-experimental/*": ["./src/cdk-experimental/*"],
       "@angular/cdk-experimental": ["./src/cdk-experimental"],
       "@angular/material-moment-adapter": ["./src/material-moment-adapter"],
+      "@angular/material-luxon-adapter": ["./src/material-luxon-adapter"],
+      "@angular/material-date-fns-adapter": ["./src/material-date-fns-adapter"],
       "@angular/components-examples": ["./src/components-examples"],
       "@angular/components-examples/*": ["./src/components-examples/*"]
     }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
   },
   "include": [
     "src/**/*.ts",
@@ -58,7 +64,9 @@
     // Exclude schematic template files and test cases which aren't valid TS files.
     "src/material/schematics/ng-generate/*/files/**/*",
     "src/cdk/schematics/ng-generate/*/files/**/*",
-    "src/cdk/schematics/ng-update/test-cases/**/*",
-    "src/material/schematics/ng-update/test-cases/**/*"
+    "src/cdk/schematics/ng-update/test-cases/**/*_input.ts",
+    "src/cdk/schematics/ng-update/test-cases/**/*_expected_output.ts",
+    "src/material/schematics/ng-update/test-cases/**/*_input.ts",
+    "src/material/schematics/ng-update/test-cases/**/*_expected_output.ts"
   ]
 }

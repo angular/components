@@ -17,7 +17,6 @@ ng_module(
             "fake-youtube-player.ts",
         ],
     ),
-    module_name = "@angular/youtube-player",
     deps = [
         "//src:dev_mode_types",
         "@npm//@angular/common",
@@ -30,8 +29,6 @@ ng_module(
 ng_package(
     name = "npm_package",
     srcs = ["package.json"],
-    entry_point = ":public-api.ts",
-    entry_point_name = "youtube-player",
     tags = ["release-package"],
     deps = [":youtube-player"],
 )

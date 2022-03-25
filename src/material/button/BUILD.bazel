@@ -19,7 +19,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":button.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/button",
     deps = [
         "//src/cdk/a11y",
         "//src/material/core",
@@ -53,6 +52,7 @@ ng_test_library(
     ),
     deps = [
         ":button",
+        "//src/cdk/testing/private",
         "//src/material/core",
         "@npm//@angular/platform-browser",
     ],

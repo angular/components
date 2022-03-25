@@ -2,11 +2,11 @@
   {{!isOptional ? 'Enable optional steps' : 'Disable optional steps'}}
 </button>
 
-<mat-horizontal-stepper linear #stepper>
+<mat-stepper linear #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Fill out your name</ng-template>
-      <mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Name</mat-label>
         <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
       </mat-form-field>
@@ -20,7 +20,7 @@
   <!-- #enddocregion optional -->
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Fill out your address</ng-template>
-      <mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Address</mat-label>
         <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
                required>
@@ -39,4 +39,4 @@
       <button mat-button (click)="stepper.reset()">Reset</button>
     </div>
   </mat-step>
-</mat-horizontal-stepper>
+</mat-stepper>

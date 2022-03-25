@@ -1,79 +1,15 @@
-@import '@material/list/mixins.import';
-@import '@material/list/variables.import';
-@import '../mdc-helpers/mdc-helpers';
+@use '@material/list/evolution-mixins' as mdc-list;
+@use '../mdc-helpers/mdc-helpers';
+@use '../../material/core/style/layout-common';
 
-@include mdc-list-without-ripple($query: $mat-base-styles-query);
+@include mdc-helpers.disable-fallback-declarations {
+  @include mdc-list.without-ripple($query: mdc-helpers.$mat-base-styles-query);
+}
 
 // MDC expects the list element to be a `<ul>`, since we use `<mat-list>` instead we need to
 // explicitly set `display: block`
 .mat-mdc-list-base {
   display: block;
-}
-
-// .mdc-list-item__primary-text adds its own margin settings, so only reset if it doesn't have that
-// class
-.mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__primary-text),
-.mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__primary-text) {
-  margin: 0;
-
-  // Fixes the gap between the 2nd & 3rd lines.
-  &.mdc-list-item__secondary-text {
-    margin-top: -3px;
-  }
-}
-
-
-// MDC does have 2-line support, but it's a per-list setting, whereas ours applies to individual
-// items. Therefore, we need to add our own styles.
-.mat-mdc-2-line {
-  height: 72px;
-
-  .mdc-list-item__text {
-    align-self: flex-start;
-  }
-}
-
-// MDC does not support more than 2 lines, so we need to add our own styles.
-.mat-mdc-3-line {
-  height: 88px;
-
-  .mdc-list-item__text {
-    align-self: flex-start;
-  }
-}
-
-// MDC supports avatars, but it's a per-list setting, whereas ours applies to individual
-// items. Therefore, we need to add our own styles.
-.mat-mdc-list-avatar {
-  // Styles here come from `$mdc-list-graphic-size_`:
-  // https://github.com/material-components/material-components-web/blob/3ca8c4c45a3d2a654ef3cb8fc7525bcde37badf0/packages/mdc-list/_mixins.scss#L538
-  $size: 40px;
-  $margin-value: 72px - $mdc-list-side-padding - $size;
-
-  width: $size;
-  height: $size;
-  border-radius: 50%;
-
-  // Avatars that come before the text have the .mdc-list-item__graphic class.
-  // MDC's .mdc-list--avatar-list class would normally apply overrides to set the appropriate
-  // margins for avatar images, but since ours is a per-list-item setting we need to add similar
-  // styles ourselves.
-  &.mdc-list-item__graphic {
-    margin-left: 0;
-    margin-right: $margin-value;
-
-    [dir='rtl'] & {
-      margin-left: $margin-value;
-      margin-right: 0;
-    }
-  }
-}
-
-.mat-mdc-list-avatar {
-  // MDC's styles don't specify this, but they probably should. It gives a nicer experience when the
-  // image is not 1:1 aspect ratio.
-  // See https://github.com/material-components/material-components-web/issues/5897
-  object-fit: cover;
 }
 
 // MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
@@ -85,6 +21,7 @@
 }
 
 // MDC doesn't have list dividers, so we use mat-divider and style appropriately.
+// TODO(devversion): check if we can use the MDC dividers.
 .mat-mdc-list-item,
 .mat-mdc-list-option {
   .mat-divider-inset {
@@ -94,7 +31,7 @@
     bottom: 0;
   }
 
-  .mat-mdc-list-avatar ~ .mat-divider-inset {
+  .mat-mdc-list-item-avatar ~ .mat-divider-inset {
     margin-left: 72px;
 
     [dir='rtl'] & {
@@ -106,7 +43,7 @@
 // MDC's hover and focus state styles are included with their ripple which we don't use.
 // Instead we add the focus, hover and selected styles ourselves using this pseudo-element
 .mat-mdc-list-item-interactive::before {
-  @include mat-fill();
+  @include layout-common.fill();
   content: '';
   opacity: 0;
 }
@@ -121,6 +58,48 @@
 // focus/selected/hover state. Hence, we need to have a separate list-item spanning
 // element that can be used for strong focus indicators.
 .mat-mdc-list-item > .mat-mdc-focus-indicator {
-  @include mat-fill();
+  @include layout-common.fill();
   pointer-events: none;
+}
+
+.mat-mdc-list-item.mdc-list-item--with-three-lines {
+  // List item lines or titles never wrap. MDC always enables wrapping for secondary text
+  // if the list item has acquired three lines. We unset these styles for line elements.
+  // https://github.com/material-components/material-components-web/blob/348665978ce73694ad4518626dd70cdf5b984113/packages/mdc-list/_evolution-mixins.scss#L205-L206.
+  // TODO: Consider removing once MDC supports the explicit tertiary line list variant.
+  .mat-mdc-list-item-line.mdc-list-item__secondary-text {
+    white-space: nowrap;
+    line-height: normal;
+  }
+
+  // Unscoped content can wrap if the list item has acquired three lines. MDC implements
+  // this functionality for secondary text but there is no proper text ellipsis when
+  // text overflows the third line. These styles ensure the overflow is handled properly.
+  // TODO: Move this to the the MDC list once it drops IE11 support.
+  .mat-mdc-list-item-unscoped-content.mdc-list-item__secondary-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+// MDC doesn't account for button being used as a list item. We override some of
+// the default button styles here so that they look right when used as a list
+// item.
+mat-action-list button {
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
 }

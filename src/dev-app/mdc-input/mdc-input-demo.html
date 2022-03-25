@@ -124,32 +124,50 @@
     <mat-form-field [appearance]="prefixSuffixAppearance" class="demo-text-align-end">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <span matPrefix *ngIf="showPrefix">$&nbsp;</span>
-      <span matSuffix>.00</span>
+      <span matTextPrefix *ngIf="showPrefix">$</span>
+      <span matTextSuffix>.00</span>
     </mat-form-field>
 
     <h4>Text (always outline)</h4>
     <mat-form-field appearance="outline" class="demo-text-align-end">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <span matPrefix>$&nbsp;</span>
-      <span matSuffix>.00</span>
+      <span matTextPrefix>$</span>
+      <span matTextSuffix>.00</span>
     </mat-form-field>
 
     <h4>Icons</h4>
     <mat-form-field [appearance]="prefixSuffixAppearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <mat-icon matPrefix *ngIf="showPrefix">calendar_today</mat-icon>
-      <mat-icon matSuffix>mode_edit</mat-icon>
+      <mat-icon matIconPrefix *ngIf="showPrefix">calendar_today</mat-icon>
+      <mat-icon matIconSuffix>mode_edit</mat-icon>
     </mat-form-field>
 
     <h4>Icon buttons</h4>
     <mat-form-field [appearance]="prefixSuffixAppearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <button mat-icon-button matPrefix *ngIf="showPrefix"><mat-icon>calendar_today</mat-icon></button>
-      <button mat-icon-button matSuffix><mat-icon>mode_edit</mat-icon></button>
+      <button mat-icon-button matIconPrefix *ngIf="showPrefix">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <button mat-icon-button matIconSuffix>
+        <mat-icon>mode_edit</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <h4>Text & Icons</h4>
+    <mat-form-field [appearance]="prefixSuffixAppearance">
+      <mat-label>Amount</mat-label>
+      <input matInput>
+      <span matTextPrefix>$</span>
+      <span matTextSuffix>.00</span>
+      <button mat-icon-button matIconPrefix *ngIf="showPrefix">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <button mat-icon-button matIconSuffix>
+        <mat-icon>mode_edit</mat-icon>
+      </button>
     </mat-form-field>
 
     <p>
@@ -315,8 +333,8 @@
       <mat-form-field style="margin-bottom: 4em">
         <mat-label>Enter text to count</mat-label>
         <textarea matInput #longHint></textarea>
-        <mat-hint>
-          Enter some text to count how many characters are in it. The character count is shown on
+        <mat-hint>Enter
+          some text to count how many characters are in it. The character count is shown on
           the right.
         </mat-hint>
         <mat-hint align="end" style="white-space: nowrap" aria-live="polite">
@@ -371,26 +389,103 @@
       <mat-form-field>
         <mat-label>Prefixed</mat-label>
         <input matInput value="example">
-        <div matPrefix>Example:&nbsp;</div>
+        <span matTextPrefix>Example:&nbsp;</span>
       </mat-form-field>
       <mat-form-field class="demo-text-align-end">
         <mat-label>Suffixed</mat-label>
         <input matInput value="123">
-        <span matSuffix>.00 €</span>
+        <span matTextSuffix>.00 €</span>
       </mat-form-field>
       <br/>
       Both:
       <mat-form-field class="demo-text-align-end">
         <mat-label>Email address</mat-label>
         <input matInput #email="matInput" value="angular-core">
-        <span matPrefix><mat-icon [class.primary]="email.focused">email</mat-icon>&nbsp;</span>
-        <span matSuffix [class.primary]="email.focused">&nbsp;@gmail.com</span>
+        <span matIconPrefix>
+          <mat-icon [class.primary]="email.focused">email</mat-icon>&nbsp;
+        </span>
+        <span matTextSuffix [class.primary]="email.focused">&nbsp;@gmail.com</span>
       </mat-form-field>
     </p>
 
     <p>
       Empty: <mat-form-field><input matInput></mat-form-field>
       <label>Label: <mat-form-field><input matInput></mat-form-field></label>
+    </p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Dynamic Subscript Sizing</mat-toolbar>
+  <mat-card-content>
+    <p>
+      One validation
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput [(ngModel)]="fillAppearance" required>
+        <mat-error>This field is required</mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      One very long validation that wraps
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic"
+          style="width: 212px">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput [(ngModel)]="fillAppearance" required>
+        <mat-error>This field is extremely, very much, absolutely positively required so do not forget it!</mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      One hint and one validation
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput [(ngModel)]="fillAppearance" required>
+        <mat-error>This field is required</mat-error>
+        <mat-hint>Please type something here</mat-hint>
+      </mat-form-field>
+    </p>
+
+    <p>
+      Multiple errors
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput [(ngModel)]="fillAppearance" required>
+        <mat-error>AAA</mat-error>
+        <mat-error>BBB</mat-error>
+        <mat-error>CCC</mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      Multiple hints
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput>
+        <mat-hint>aaa</mat-hint>
+        <mat-hint>bbb</mat-hint>
+        <mat-hint>ccc</mat-hint>
+      </mat-form-field>
+    </p>
+
+    <p>
+      Multiple hints with differing alignment
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput>
+        <mat-hint>aaa</mat-hint>
+        <mat-hint align="end">bbb</mat-hint>
+        <mat-hint align="end">ccc</mat-hint>
+      </mat-form-field>
+    </p>
+
+    <p>
+      No hints or errors
+      <mat-form-field appearance="fill" [color]="color" subscriptSizing="dynamic">
+        <mat-label>Fill appearance</mat-label>
+        <input matInput>
+      </mat-form-field>
     </p>
   </mat-card-content>
 </mat-card>
@@ -679,8 +774,8 @@
         <mat-form-field appearance="outline" class="demo-text-align-end">
           <mat-label>Amount</mat-label>
           <input matInput>
-          <span matPrefix>$&nbsp;</span>
-          <span matSuffix>.00</span>
+          <span matTextPrefix>$&nbsp;</span>
+          <span matTextSuffix>.00</span>
         </mat-form-field>
       </mat-tab>
       <mat-tab label="Tab 2">
@@ -692,9 +787,9 @@
         <mat-form-field appearance="outline" class="demo-text-align-end">
           <mat-label>Amount</mat-label>
           <input matInput>
-          <span matPrefix>$&nbsp;</span>
-          <span matPrefix *ngIf="showSecondPrefix">!&nbsp;</span>
-          <span matSuffix>.00</span>
+          <span matTextPrefix>$&nbsp;</span>
+          <span matTextPrefix *ngIf="showSecondPrefix">!&nbsp;</span>
+          <span matTextSuffix>.00</span>
         </mat-form-field>
       </mat-tab>
     </mat-tab-group>
@@ -711,6 +806,25 @@
       <mat-label>Label</mat-label>
       <input matInput>
     </mat-form-field>
+
+    <p>
+      Textarea alignment
+    </p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Textarea</mat-label>
+      <textarea matInput rows="1"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Input</mat-label>
+      <input matInput>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Input</mat-label>
+      <input matInput>
+    </mat-form-field>
   </mat-card-content>
 </mat-card>
 
@@ -724,7 +838,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Phone number</mat-label>
         <example-tel-input required></example-tel-input>
-        <mat-icon matSuffix>phone</mat-icon>
+        <mat-icon matIconSuffix>phone</mat-icon>
         <mat-hint>Include area code</mat-hint>
       </mat-form-field>
     </p>

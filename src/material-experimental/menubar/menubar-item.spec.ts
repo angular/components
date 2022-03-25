@@ -9,12 +9,14 @@ describe('MatMenuBarItem', () => {
   let menubarItem: MatMenuBarItem;
   let nativeMenubarItem: HTMLElement;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatMenuBarModule, CdkMenuModule],
-      declarations: [SimpleMenuBarItem],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatMenuBarModule, CdkMenuModule],
+        declarations: [SimpleMenuBarItem],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMenuBarItem);
@@ -66,8 +68,8 @@ describe('MatMenuBarItem', () => {
       <mat-menubar-item [cdkMenuTriggerFor]="sub">File</mat-menubar-item>
     </mat-menubar>
 
-    <ng-template cdkMenuPanel #sub="cdkMenuPanel">
-      <div #menu cdkMenu [cdkMenuPanel]="sub">
+    <ng-template #sub>
+      <div #menu cdkMenu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>

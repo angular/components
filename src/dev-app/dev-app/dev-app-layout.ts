@@ -15,6 +15,8 @@ import {DOCUMENT} from '@angular/common';
 
 const isDarkThemeKey = 'ANGULAR_COMPONENTS_DEV_APP_DARK_THEME';
 
+export const ANIMATIONS_STORAGE_KEY = 'ANGULAR_COMPONENTS_ANIMATIONS_DISABLED';
+
 /** Root component for the dev-app demos. */
 @Component({
   selector: 'dev-app-layout',
@@ -53,7 +55,9 @@ export class DevAppLayout {
     {name: 'Grid List', route: '/grid-list'},
     {name: 'Icon', route: '/icon'},
     {name: 'Input', route: '/input'},
+    {name: 'Input Modality', route: '/input-modality'},
     {name: 'List', route: '/list'},
+    {name: 'Layout', route: '/layout'},
     {name: 'Live Announcer', route: '/live-announcer'},
     {name: 'Menu', route: '/menu'},
     {name: 'Menubar', route: '/menubar'},
@@ -74,6 +78,7 @@ export class DevAppLayout {
     {name: 'Snack Bar', route: '/snack-bar'},
     {name: 'Stepper', route: '/stepper'},
     {name: 'Table', route: '/table'},
+    {name: 'Table Scroll Container', route: '/table-scroll-container'},
     {name: 'Tabs', route: '/tabs'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
@@ -95,8 +100,8 @@ export class DevAppLayout {
     {name: 'MDC Progress Bar', route: '/mdc-progress-bar'},
     {name: 'MDC Progress Spinner', route: '/mdc-progress-spinner'},
     {name: 'MDC Tabs', route: '/mdc-tabs'},
+    {name: 'MDC Tooltip', route: '/mdc-tooltip'},
     {name: 'MDC Select', route: '/mdc-select'},
-    {name: 'MDC Sidenav', route: '/mdc-sidenav'},
     {name: 'MDC Slide Toggle', route: '/mdc-slide-toggle'},
     {name: 'MDC Slider', route: '/mdc-slider'},
     {name: 'MDC Snack Bar', route: '/mdc-snack-bar'},
@@ -109,12 +114,17 @@ export class DevAppLayout {
   /** List of possible global density scale values. */
   densityScales = [0, -1, -2, 'minimum', 'maximum'];
 
+  /** Whether animations are disabled. */
+  animationsDisabled = localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true';
+
   constructor(
-      private _element: ElementRef<HTMLElement>, public rippleOptions: DevAppRippleOptions,
-      @Inject(Directionality) public dir: DevAppDirectionality, cdr: ChangeDetectorRef,
-      @Inject(DOCUMENT) private _document: Document) {
+    private _element: ElementRef<HTMLElement>,
+    public rippleOptions: DevAppRippleOptions,
+    @Inject(Directionality) public dir: DevAppDirectionality,
+    cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private _document: Document,
+  ) {
     dir.change.subscribe(() => cdr.markForCheck());
-    this.updateDensityClasses();
     try {
       const isDark = localStorage.getItem(isDarkThemeKey);
       if (isDark != null) {
@@ -180,6 +190,10 @@ export class DevAppLayout {
     }
   }
 
+  toggleAnimations() {
+    localStorage.setItem(ANIMATIONS_STORAGE_KEY, !this.animationsDisabled + '');
+    location.reload();
+  }
 
   /** Gets the index of the next density scale that can be selected. */
   getNextDensityIndex() {
@@ -189,21 +203,13 @@ export class DevAppLayout {
   /** Selects the next possible density scale. */
   selectNextDensity() {
     this.currentDensityIndex = this.getNextDensityIndex();
-    this.updateDensityClasses();
   }
 
   /**
    * Updates the density classes on the host element. Applies a unique class for
    * a given density scale, so that the density styles are conditionally applied.
    */
-  updateDensityClasses() {
-    for (let i = 0; i < this.densityScales.length; i++) {
-      const className = `demo-density-${this.densityScales[i]}`;
-      if (i === this.currentDensityIndex) {
-        this._document.body.classList.add(className);
-      } else {
-        this._document.body.classList.remove(className);
-      }
-    }
+  getDensityClass() {
+    return `demo-density-${this.densityScales[this.currentDensityIndex]}`;
   }
 }

@@ -23,7 +23,7 @@ export class MethodCallArgumentsMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node): void {
     if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
       this._checkPropertyAccessMethodCall(node);
     }
@@ -53,17 +53,18 @@ export class MethodCallArgumentsMigration extends Migration<UpgradeData> {
     // argument is in some cases still assignable to the new parameter type. We could re-use
     // the logic we have in the constructor-signature checks to check for assignability and
     // to make the upgrade data less verbose.
-    const failure =
-        this.data.filter(data => data.method === methodName && data.className === hostTypeName)
-            .map(data => data.invalidArgCounts.find(f => f.count === node.arguments.length))[0];
+    const failure = this.data
+      .filter(data => data.method === methodName && data.className === hostTypeName)
+      .map(data => data.invalidArgCounts.find(f => f.count === node.arguments.length))[0];
 
     if (!failure) {
       return;
     }
 
     this.createFailureAtNode(
-        node,
-        `Found call to "${hostTypeName + '.' + methodName}" ` +
-            `with ${failure.count} arguments. Message: ${failure.message}`);
+      node,
+      `Found call to "${hostTypeName + '.' + methodName}" ` +
+        `with ${failure.count} arguments. Message: ${failure.message}`,
+    );
   }
 }

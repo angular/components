@@ -8,13 +8,10 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/material-experimental/mdc-slider/testing",
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
-        "//src/material/slider/testing",
-        "@npm//rxjs",
-        "@npm//zone.js",
+        "//src/material-experimental/mdc-slider",
     ],
 )
 
@@ -23,18 +20,15 @@ ng_test_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material-experimental/mdc-slider",
-        "//src/material/slider/testing:harness_tests_lib",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/slider/dist/mdc.slider.js",
-    ],
     deps = [
         ":unit_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )

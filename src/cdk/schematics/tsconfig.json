@@ -7,22 +7,21 @@
     "outDir": "../../../dist/packages/cdk/schematics",
     "noEmitOnError": false,
     "strictNullChecks": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noImplicitAny": true,
     "skipDefaultLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": false,
+    "noImplicitThis": true,
     "skipLibCheck": true,
+    "strictFunctionTypes": true,
     "sourceMap": true,
     "target": "es2015",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "types": ["jasmine", "node"]
   },
-  "exclude": [
-    "**/files/**/*",
-    "**/*.spec.ts",
-    "ng-update/test-cases/**/*",
-    "testing/**/*.ts"
-  ],
+  "exclude": ["**/files/**/*", "**/*.spec.ts", "ng-update/test-cases/**/*", "testing/**/*.ts"],
   "bazelOptions": {
     "suppressTsconfigOverrideWarnings": true
   }

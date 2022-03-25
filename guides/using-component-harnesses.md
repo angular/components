@@ -28,14 +28,14 @@ The following sections will illustrate these benefits in more detail.
 ## Which kinds of tests can use harnesses?
 
 The Angular CDK's component harnesses are designed to work in multiple different test environments.
-Support currently includes Angular's Testbed environment in Karma unit tests and Protractor
+Support currently includes Angular's Testbed environment in Karma unit tests and Selenium WebDriver
 end-to-end (e2e) tests. You can also support additional environments by creating custom extensions
 of the CDK's `HarnessEnvironment` and `TestElement` classes.
 
 ## Getting started
 
 The foundation for all test harnesses lives in `@angular/cdk/testing`. Start by importing either
-`TestbedHarnessEnvironment` or `ProtractorHarnessEnvironment` based on whether you're writing a
+`TestbedHarnessEnvironment` or `SeleniumWebDriverHarnessEnvironment` based on whether you're writing a
 unit test or an e2e test. From the `HarnessEnvironment`, you can get a `HarnessLoader` instance,
 which you will use to load Angular Material component harnesses. For example, if we're writing unit
 tests for a `UserProfile` component, the code might look like this:
@@ -64,8 +64,8 @@ different paths.
 - `@angular/cdk/testing` contains symbols that are shared regardless of the environment your tests
   are in. 
 - `@angular/cdk/testing/testbed` contains symbols that are used only in Karma tests.
-- `@angular/cdk/testing/protractor` (not shown above) contains symbols that are used only in
-  Protractor tests.
+- `@angular/cdk/testing/selenium-webdriver` (not shown above) contains symbols that are used only in
+  Selenium WebDriver tests.
 
 ## Loading an Angular Material harness
 
@@ -130,7 +130,7 @@ it('should work', async () => {
   const cancel = await loader.getHarness(MatButtonHarness.with({text: 'Cancel'}));
   // Harness for mat-button with class 'confirm' and whose text is either 'Ok' or 'Okay'.
   const okButton = await loader.getHarness(
-      MatButtonHarness.with({selector: '.confirm', text: /^(Ok|Okay)$/})
+      MatButtonHarness.with({selector: '.confirm', text: /^(Ok|Okay)$/}));
 });
 ```
 
@@ -141,7 +141,7 @@ real user could perform or to inspect component state that a real user might per
 example, `MatButtonHarness` has methods to click, focus, and blur the `mat-button`, as well as
 methods to get the text of the button and its disabled state. Because `MatButton` is a very simple
 component, these harness methods might not seem very different from working directly with the DOM.
-However more complex harnesses like `MatSelectHarness` have methods like `open` and `isOpen` which
+However, more complex harnesses like `MatSelectHarness` have methods like `open` and `isOpen` which
 capture more knowledge about the component's internals.
 
 A test using the `MatButtonHarness` to interact with a `mat-button` might look like the following:
@@ -233,9 +233,9 @@ Specifically in this example, it makes the "open the mat-select" logic more obvi
 reader may not know what clicking on `.mat-select-trigger` does, but `await select.open()` is
 self-explanatory.
 
-The harnesses also make clear which option should be selected. Without the harness, you need a
-comment explaining what `options[1]` means, but with the `MatSelectHarness` you can use the `text`
-filter rather than the index and the code becomes self-documenting.
+The harnesses also make clear which option should be selected. Without the harness, you need a comment that
+explains what `options[1]` means. With `MatSelectHarness`, however, the filter API makes the code
+self-documenting.
 
 Finally, the repeated calls to `detectChanges` and `whenStable()` can obfuscate the underlying
 intent of the test. By using the harness APIs, you eliminate these calls, making the test more
@@ -251,7 +251,7 @@ harnesses, you avoid depending on internal DOM structure directly.
 
 In addition to DOM structure, component asynchronicity often offers a challenge when updating
 components. If a component changes between synchronous and asynchronous, downstream unit tests may
-break do to expectations around timing. Tests then require the addition or removal of some
+break due to expectations around timing. Tests then require the addition or removal of some
 arcane combination of `whenStable`, `flushMicroTasks`, `tick`, or `detectChanges`. Component
 harnesses, however, avoid this problem by normalizing the asynchronicity of all component behaviors 
 with all asynchronous APIs. When a test uses these harnesses, changes to asynchronicity become

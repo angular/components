@@ -22,14 +22,13 @@ export interface Highlightable extends ListKeyManagerOption {
 }
 
 export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
-
   /**
    * Sets the active item to the item at the specified index and adds the
    * active styles to the newly active item. Also removes active styles
    * from the previously active item.
    * @param index Index of the item to be set as active.
    */
-  setActiveItem(index: number): void;
+  override setActiveItem(index: number): void;
 
   /**
    * Sets the active item to the item to the specified one and adds the
@@ -37,9 +36,9 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
    * previously active item.
    * @param item Item to be set as active.
    */
-  setActiveItem(item: T): void;
+  override setActiveItem(item: T): void;
 
-  setActiveItem(index: any): void {
+  override setActiveItem(index: any): void {
     if (this.activeItem) {
       this.activeItem.setInactiveStyles();
     }
@@ -48,5 +47,4 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
       this.activeItem.setActiveStyles();
     }
   }
-
 }

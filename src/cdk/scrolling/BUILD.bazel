@@ -16,7 +16,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":virtual-scroll-viewport.css"] + glob(["**/*.html"]),
-    module_name = "@angular/cdk/scrolling",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/bidi",
@@ -45,6 +44,7 @@ ng_test_library(
         "//src/cdk/bidi",
         "//src/cdk/collections",
         "//src/cdk/testing/private",
+        "@npm//@angular/common",
         "@npm//rxjs",
     ],
 )

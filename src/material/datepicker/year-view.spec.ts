@@ -9,11 +9,11 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
-import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '@angular/material/testing';
+import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody} from './calendar-body';
 import {MatYearView} from './year-view';
@@ -21,27 +21,25 @@ import {MatYearView} from './year-view';
 describe('MatYearView', () => {
   let dir: {value: Direction};
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatNativeDateModule,
-      ],
-      declarations: [
-        MatCalendarBody,
-        MatYearView,
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatNativeDateModule],
+        declarations: [
+          MatCalendarBody,
+          MatYearView,
 
-        // Test components.
-        StandardYearView,
-        YearViewWithDateFilter,
-        YearViewWithDateClass,
-      ],
-      providers: [
-        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
-      ]
-    });
+          // Test components.
+          StandardYearView,
+          YearViewWithDateFilter,
+          YearViewWithDateClass,
+        ],
+        providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+      });
 
-    TestBed.compileComponents();
-  }));
+      TestBed.compileComponents();
+    }),
+  );
 
   describe('standard year view', () => {
     let fixture: ComponentFixture<StandardYearView>;
@@ -118,7 +116,7 @@ describe('MatYearView', () => {
     describe('a11y', () => {
       it('should set the correct role on the internal table node', () => {
         const table = yearViewNativeElement.querySelector('table')!;
-        expect(table.getAttribute('role')).toBe('presentation');
+        expect(table.getAttribute('role')).toBe('grid');
       });
 
       describe('calendar body', () => {
@@ -127,8 +125,9 @@ describe('MatYearView', () => {
 
         beforeEach(() => {
           calendarInstance = fixture.componentInstance;
-          calendarBodyEl =
-            fixture.debugElement.nativeElement.querySelector('.mat-calendar-body') as HTMLElement;
+          calendarBodyEl = fixture.debugElement.nativeElement.querySelector(
+            '.mat-calendar-body',
+          ) as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
           dir.value = 'ltr';
           fixture.componentInstance.date = new Date(2017, JAN, 5);
@@ -293,6 +292,30 @@ describe('MatYearView', () => {
 
           expect(calendarInstance.date).toEqual(new Date(2018, FEB, 28));
         });
+
+        it('should go to date that is focused', () => {
+          const juneCell = fixture.debugElement.nativeElement.querySelector(
+            '[data-mat-row="1"][data-mat-col="1"] button',
+          ) as HTMLElement;
+
+          dispatchFakeEvent(juneCell, 'focus');
+          fixture.detectChanges();
+
+          expect(calendarInstance.date).toEqual(new Date(2017, JUN, 5));
+        });
+
+        it('should not call `.focus()` when the active date is focused', () => {
+          const janCell = fixture.debugElement.nativeElement.querySelector(
+            '[data-mat-row="0"][data-mat-col="0"] button',
+          ) as HTMLElement;
+          const focusSpy = (janCell.focus = jasmine.createSpy('cellFocused'));
+
+          dispatchFakeEvent(janCell, 'focus');
+          fixture.detectChanges();
+
+          expect(calendarInstance.date).toEqual(new Date(2017, JAN, 5));
+          expect(focusSpy).not.toHaveBeenCalled();
+        });
       });
     });
   });
@@ -311,8 +334,11 @@ describe('MatYearView', () => {
       const fixture = TestBed.createComponent(YearViewWithDateFilter);
       const activeDate = fixture.componentInstance.activeDate;
       const spy = spyOn(fixture.componentInstance, 'dateFilter').and.callThrough();
-      fixture.componentInstance.minDate =
-          new Date(activeDate.getFullYear() + 1, activeDate.getMonth(), activeDate.getDate());
+      fixture.componentInstance.minDate = new Date(
+        activeDate.getFullYear() + 1,
+        activeDate.getMonth(),
+        activeDate.getDate(),
+      );
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
@@ -322,13 +348,15 @@ describe('MatYearView', () => {
       const fixture = TestBed.createComponent(YearViewWithDateFilter);
       const activeDate = fixture.componentInstance.activeDate;
       const spy = spyOn(fixture.componentInstance, 'dateFilter').and.callThrough();
-      fixture.componentInstance.maxDate =
-          new Date(activeDate.getFullYear() - 1, activeDate.getMonth(), activeDate.getDate());
+      fixture.componentInstance.maxDate = new Date(
+        activeDate.getFullYear() - 1,
+        activeDate.getMonth(),
+        activeDate.getDate(),
+      );
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
     });
-
   });
 
   describe('year view with custom date classes', () => {
@@ -355,14 +383,12 @@ describe('MatYearView', () => {
       expect(dateClassSpy).toHaveBeenCalledWith(jasmine.any(Date), 'year');
     });
   });
-
 });
-
 
 @Component({
   template: `
     <mat-year-view [(activeDate)]="date" [(selected)]="selected"
-                   (monthSelected)="selectedMonth=$event"></mat-year-view>`
+                   (monthSelected)="selectedMonth=$event"></mat-year-view>`,
 })
 class StandardYearView {
   date = new Date(2017, JAN, 5);
@@ -372,14 +398,13 @@ class StandardYearView {
   @ViewChild(MatYearView) yearView: MatYearView<Date>;
 }
 
-
 @Component({
   template: `
     <mat-year-view
       [activeDate]="activeDate"
       [dateFilter]="dateFilter"
       [minDate]="minDate"
-      [maxDate]="maxDate"></mat-year-view>`
+      [maxDate]="maxDate"></mat-year-view>`,
 })
 class YearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -396,9 +421,8 @@ class YearViewWithDateFilter {
   }
 }
 
-
 @Component({
-  template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`
+  template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`,
 })
 class YearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

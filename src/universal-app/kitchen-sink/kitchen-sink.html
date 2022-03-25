@@ -228,15 +228,17 @@
   </mat-tab>
 </mat-tab-group>
 
-<nav mat-tab-nav-bar>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
  <a mat-tab-link href="https://google.com">Google</a>
  <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
 </nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
 <h2>Paginator</h2>
 
 <mat-paginator [length]="100"
-              [pageSizeOptions]="[5, 10, 25, 100]">
+               [pageSizeOptions]="[5, 10, 25, 100]"
+               aria-label="Select page">
 </mat-paginator>
 
 <h2>Toolbar</h2>
@@ -332,14 +334,14 @@
 
 <h2>Vertical Stepper</h2>
 
-<mat-vertical-stepper>
+<mat-stepper orientation="vertical">
   <mat-step label="Step 1">Content 1</mat-step>
   <mat-step label="Step 1">Content 2</mat-step>
-</mat-vertical-stepper>
+</mat-stepper>
 
 <h2>Vertical Stepper (with label template)</h2>
 
-<mat-vertical-stepper>
+<mat-stepper orientation="vertical">
   <mat-step>
     <ng-template matStepLabel>NgTemplate Label #1</ng-template>
     Content 1
@@ -348,14 +350,14 @@
     <ng-template matStepLabel>NgTemplate Label #2</ng-template>
     Content 2
   </mat-step>
-</mat-vertical-stepper>
+</mat-stepper>
 
 <h2>Horizontal Stepper</h2>
 
-<mat-horizontal-stepper>
+<mat-stepper>
   <mat-step label="Step 1">Content 1</mat-step>
   <mat-step label="Step 2">Content 2</mat-step>
-</mat-horizontal-stepper>
+</mat-stepper>
 
 <h2>Focus trap</h2>
 
@@ -426,6 +428,11 @@
     <map-traffic-layer></map-traffic-layer>
     <map-transit-layer></map-transit-layer>
     <map-bicycling-layer></map-bicycling-layer>
+    <map-heatmap-layer [data]="[
+      {lat: 37.782, lng: -122.447},
+      {lat: 37.782, lng: -122.445},
+      {lat: 37.782, lng: -122.443}
+    ]"></map-heatmap-layer>
 
     <map-marker-clusterer imagePath="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m">
       <map-marker [position]="{lat: 24, lng: 12}"></map-marker>

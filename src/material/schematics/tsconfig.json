@@ -6,18 +6,21 @@
     "outDir": "../../../dist/packages/material/schematics",
     "noEmitOnError": false,
     "strictNullChecks": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
     "noImplicitReturns": true,
     "skipDefaultLibCheck": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "strictFunctionTypes": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "declaration": true,
     "target": "es6",
-    "types": [
-      "jasmine",
-      "node"
-    ],
+    "types": ["jasmine", "node"],
     "baseUrl": ".",
     "paths": {
       "@angular/cdk/schematics": ["../../cdk/schematics"]

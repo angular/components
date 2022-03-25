@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
@@ -23,18 +22,16 @@ import {
   ViewEncapsulation,
   InjectionToken,
   Inject,
+  Optional,
 } from '@angular/core';
-import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {MAT_TAB_CONTENT} from './tab-content';
-import {MAT_TAB_LABEL, MatTabLabel} from './tab-label';
-
+import {MAT_TAB_LABEL, MatTabLabel, MAT_TAB} from './tab-label';
 
 // Boilerplate for applying mixins to MatTab.
 /** @docs-private */
-class MatTabBase {}
-const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
-    mixinDisabled(MatTabBase);
+const _MatTabBase = mixinDisabled(class {});
 
 /**
  * Used to provide a tab group to a tab without causing a circular dependency.
@@ -50,12 +47,17 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
+  providers: [{provide: MAT_TAB, useExisting: MatTab}],
 })
-export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
+export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MAT_TAB_LABEL)
-  get templateLabel(): MatTabLabel { return this._templateLabel; }
-  set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  get templateLabel(): MatTabLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: MatTabLabel) {
+    this._setTemplateLabelInput(value);
+  }
   protected _templateLabel: MatTabLabel;
 
   /**
@@ -78,6 +80,18 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
    * Will be cleared if `aria-label` is set at the same time.
    */
   @Input('aria-labelledby') ariaLabelledby: string;
+
+  /**
+   * Classes to be passed to the tab label inside the mat-tab-header container.
+   * Supports string and string array values, same as `ngClass`.
+   */
+  @Input() labelClass: string | string[];
+
+  /**
+   * Classes to be passed to the tab mat-tab-body container.
+   * Supports string and string array values, same as `ngClass`.
+   */
+  @Input() bodyClass: string | string[];
 
   /** Portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal | null = null;
@@ -109,7 +123,8 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
-    @Inject(MAT_TAB_GROUP) public _closestTabGroup: any) {
+    @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any,
+  ) {
     super();
   }
 
@@ -125,7 +140,9 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
 
   ngOnInit(): void {
     this._contentPortal = new TemplatePortal(
-        this._explicitContent || this._implicitContent, this._viewContainerRef);
+      this._explicitContent || this._implicitContent,
+      this._viewContainerRef,
+    );
   }
 
   /**
@@ -134,15 +151,13 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
    * TS 4.0 doesn't allow properties to override accessors or vice-versa.
    * @docs-private
    */
-  protected _setTemplateLabelInput(value: MatTabLabel) {
-    // Only update the templateLabel via query if there is actually
-    // a MatTabLabel found. This works around an issue where a user may have
-    // manually set `templateLabel` during creation mode, which would then get clobbered
-    // by `undefined` when this query resolves.
-    if (value) {
+  protected _setTemplateLabelInput(value: MatTabLabel | undefined) {
+    // Only update the label if the query managed to find one. This works around an issue where a
+    // user may have manually set `templateLabel` during creation mode, which would then get
+    // clobbered by `undefined` when the query resolves. Also note that we check that the closest
+    // tab matches the current one so that we don't pick up labels from nested tabs.
+    if (value && value._closestTab === this) {
       this._templateLabel = value;
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

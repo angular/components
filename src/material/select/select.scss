@@ -1,15 +1,16 @@
-@import '../core/style/menu-common';
-@import '../core/style/list-common';
-@import '../core/style/variables';
-@import '../core/style/vendor-prefixes';
-@import '../../cdk/a11y/a11y';
+@use 'sass:math';
+@use '../core/style/menu-common';
+@use '../core/style/list-common';
+@use '../core/style/variables';
+@use '../core/style/vendor-prefixes';
+@use '../../cdk/a11y';
 
-$mat-select-arrow-size: 5px !default;
-$mat-select-arrow-margin: 4px !default;
-$mat-select-panel-max-height: 256px !default;
-$mat-select-item-height: 3em !default;
+$arrow-size: 5px !default;
+$arrow-margin: 4px !default;
+$panel-max-height: 256px !default;
+$item-height: 3em !default;
 
-$mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-arrow-margin);
+$placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
 
 .mat-select {
   display: inline-block;
@@ -18,20 +19,20 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
 }
 
 .mat-select-trigger {
-  display: inline-table;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
+  width: 100%;
 
   .mat-select-disabled & {
-    @include user-select(none);
+    @include vendor-prefixes.user-select(none);
     cursor: default;
   }
 }
 
 .mat-select-value {
-  display: table-cell;
-  max-width: 0;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -39,12 +40,14 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
 }
 
 .mat-select-value-text {
-  @include mat-truncate-line();
+  @include list-common.truncate-line();
 }
 
 .mat-select-arrow-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+  height: 16px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
 
   // When used in a box appearance form-field the arrow should be shifted up 50%.
   .mat-form-field-appearance-fill & {
@@ -66,7 +69,8 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   // Animate the arrow position, but only when the transitioning to empty (animate the arrow down)
   // This is in line with the mat-form-field label animation
   .mat-form-field-appearance-standard .mat-select.mat-select-empty & {
-    transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
+    transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
   }
 
   ._mat-animation-noopable.mat-form-field-appearance-standard .mat-select.mat-select-empty & {
@@ -77,10 +81,17 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
 .mat-select-arrow {
   width: 0;
   height: 0;
-  border-left: $mat-select-arrow-size solid transparent;
-  border-right: $mat-select-arrow-size solid transparent;
-  border-top: $mat-select-arrow-size solid;
-  margin: 0 $mat-select-arrow-margin;
+  border-left: $arrow-size solid transparent;
+  border-right: $arrow-size solid transparent;
+  border-top: $arrow-size solid;
+  margin: 0 $arrow-margin;
+
+  // On Safari the arrow won't necessarily get redrawn when the form field is focused or blurred,
+  // which means that its highlighted styling will be stuck in an incorrect state. We can get
+  // Safari to redraw it by adding a transform.
+  .mat-form-field.mat-focused & {
+    transform: translateX(0);
+  }
 }
 
 .mat-select-panel-wrap {
@@ -90,15 +101,15 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
 }
 
 .mat-select-panel {
-  @include mat-menu-base();
+  @include menu-common.base();
   padding-top: 0;
   padding-bottom: 0;
-  max-height: $mat-select-panel-max-height;
+  max-height: $panel-max-height;
   min-width: 100%; // prevents some animation twitching and test inconsistencies in IE11
   border-radius: 4px;
   outline: 0;
 
-  @include cdk-high-contrast(active, off) {
+  @include a11y.high-contrast(active, off) {
     outline: solid 1px;
   }
 }
@@ -108,8 +119,8 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   .mat-optgroup-label,
   .mat-option {
     font-size: inherit;
-    line-height: $mat-select-item-height;
-    height: $mat-select-item-height;
+    line-height: $item-height;
+    height: $item-height;
   }
 }
 
@@ -119,15 +130,16 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   }
 
   .mat-form-field-label {
-    width: calc(100% - #{$mat-select-placeholder-arrow-space});
+    width: calc(100% - #{$placeholder-arrow-space});
   }
 }
 
 .mat-select-placeholder {
   // Delay the transition until the label has animated about a third of the way through, in
   // order to prevent the placeholder from overlapping for a split second.
-  transition: color $swift-ease-out-duration $swift-ease-out-duration / 3
-      $swift-ease-out-timing-function;
+  transition: color variables.$swift-ease-out-duration
+      math.div(variables.$swift-ease-out-duration, 3)
+      variables.$swift-ease-out-timing-function;
 
   ._mat-animation-noopable & {
     transition: none;
@@ -146,4 +158,17 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
     // Prevents the '...' from showing on the parent element.
     display: block;
   }
+}
+
+// Used to prevent inline elements from collapsing if their text bindings
+// become empty. This is preferrable to inserting a blank space, because the
+// space can be read out by screen readers (see #21725).
+.mat-select-min-line:empty::before {
+  content: ' ';
+  white-space: pre;
+  width: 1px;
+
+  // Prevents some browsers from rendering the element in high contrast mode.
+  display: inline-block;
+  opacity: 0;
 }

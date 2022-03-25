@@ -7,7 +7,7 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="googlemaps" />
+/// <reference types="google.maps" />
 
 import {Directive, NgZone, OnDestroy, OnInit} from '@angular/core';
 
@@ -37,8 +37,9 @@ export class MapBaseLayer implements OnInit, OnDestroy {
   private _assertInitialized() {
     if (!this._map.googleMap) {
       throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-          'Please wait for the API to load before trying to interact with it.');
+        'Cannot access Google Map information before the API has been initialized. ' +
+          'Please wait for the API to load before trying to interact with it.',
+      );
     }
   }
 

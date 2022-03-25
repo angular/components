@@ -34,8 +34,6 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
-import {RippleAnimationConfig} from '@angular/material-experimental/mdc-core';
-import {numbers} from '@material/ripple';
 
 // Re-export symbols used by the base Material radio component so that users do not need to depend
 // on both packages.
@@ -49,7 +47,7 @@ export {MatRadioChange, MAT_RADIO_DEFAULT_OPTIONS} from '@angular/material/radio
 export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatRadioGroup),
-  multi: true
+  multi: true,
 };
 
 /**
@@ -57,14 +55,9 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
  * alternative token to the actual `MatRadioGroup` class which could cause unnecessary
  * retention of the class and its component metadata.
  */
-export const MAT_RADIO_GROUP =
-  new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>('MatRadioGroup');
-
-/** Configuration for the ripple animation. */
-const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
-  enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
-  exitDuration: numbers.FG_DEACTIVATION_MS
-};
+export const MAT_RADIO_GROUP = new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>(
+  'MatRadioGroup',
+);
 
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
@@ -84,7 +77,7 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
-      _radios: QueryList<MatRadioButton>;
+  _radios: QueryList<MatRadioButton>;
 }
 
 @Component({
@@ -97,7 +90,10 @@ export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
     '[class.mat-primary]': 'color === "primary"',
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
-    '[attr.tabindex]': 'disabled ? null : -1',
+    '[class.mat-mdc-radio-checked]': 'checked',
+    '[class._mat-animation-noopable]': '_noopAnimations',
+    // Needs to be removed since it causes some a11y issues (see #21266).
+    '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
@@ -112,7 +108,6 @@ export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit, OnDestroy {
-
   private _radioAdapter: MDCRadioAdapter = {
     addClass: (className: string) => this._setClass(className, true),
     removeClass: (className: string) => this._setClass(className, false),
@@ -124,31 +119,39 @@ export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit
     },
   };
 
-  /** Configuration for the underlying ripple. */
-  _rippleAnimation: RippleAnimationConfig = RIPPLE_ANIMATION_CONFIG;
-
   _radioFoundation = new MDCRadioFoundation(this._radioAdapter);
   _classes: {[key: string]: boolean} = {};
 
-  constructor(@Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
-              elementRef: ElementRef,
-              _changeDetector: ChangeDetectorRef,
-              _focusMonitor: FocusMonitor,
-              _radioDispatcher: UniqueSelectionDispatcher,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode?: string,
-              @Optional() @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-              _providerOverride?: MatRadioDefaultOptions,
-              @Attribute('tabindex') tabIndex?: string) {
-    super(radioGroup, elementRef, _changeDetector, _focusMonitor,
-        _radioDispatcher, _animationMode, _providerOverride, tabIndex);
+  constructor(
+    @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
+    elementRef: ElementRef,
+    _changeDetector: ChangeDetectorRef,
+    _focusMonitor: FocusMonitor,
+    _radioDispatcher: UniqueSelectionDispatcher,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+    @Optional()
+    @Inject(MAT_RADIO_DEFAULT_OPTIONS)
+    _providerOverride?: MatRadioDefaultOptions,
+    @Attribute('tabindex') tabIndex?: string,
+  ) {
+    super(
+      radioGroup,
+      elementRef,
+      _changeDetector,
+      _focusMonitor,
+      _radioDispatcher,
+      animationMode,
+      _providerOverride,
+      tabIndex,
+    );
   }
 
-  ngAfterViewInit() {
+  override ngAfterViewInit() {
     super.ngAfterViewInit();
     this._radioFoundation.init();
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
     super.ngOnDestroy();
     this._radioFoundation.destroy();
   }
@@ -159,10 +162,10 @@ export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit
   }
 
   /**
-   * Overrides the parent function so that the foundation can be set with the current disabled
-   * state.
+   * Overrides the parent function so that the foundation can be set with the current
+   * disabled state.
    */
-  protected _setDisabled(value: boolean) {
+  protected override _setDisabled(value: boolean) {
     super._setDisabled(value);
     this._radioFoundation.setDisabled(this.disabled);
   }

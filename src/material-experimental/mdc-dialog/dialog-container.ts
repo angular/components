@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusTrapFactory} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -14,10 +14,10 @@ import {
   Component,
   ElementRef,
   Inject,
-  NgZone,
   OnDestroy,
   Optional,
-  ViewEncapsulation
+  ViewEncapsulation,
+  NgZone,
 } from '@angular/core';
 import {MatDialogConfig, _MatDialogContainerBase} from '@angular/material/dialog';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -28,11 +28,13 @@ import {cssClasses, numbers} from '@material/dialog';
  * @docs-private
  */
 @Component({
-  selector: 'mat-mdc-dialog-container',
+  selector: 'mat-dialog-container',
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // Disabled for consistency with the non-MDC dialog container.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   host: {
     'class': 'mat-mdc-dialog-container mdc-dialog',
     'tabindex': '-1',
@@ -52,27 +54,40 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
   /** Host element of the dialog container component. */
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
   /** Duration of the dialog open animation. */
-  private _openAnimationDuration =
-      this._animationsEnabled ? numbers.DIALOG_ANIMATION_OPEN_TIME_MS : 0;
+  private _openAnimationDuration = this._animationsEnabled
+    ? numbers.DIALOG_ANIMATION_OPEN_TIME_MS
+    : 0;
   /** Duration of the dialog close animation. */
-  private _closeAnimationDuration =
-      this._animationsEnabled ? numbers.DIALOG_ANIMATION_CLOSE_TIME_MS : 0;
+  private _closeAnimationDuration = this._animationsEnabled
+    ? numbers.DIALOG_ANIMATION_CLOSE_TIME_MS
+    : 0;
   /** Current timer for dialog animations. */
-  private _animationTimer: number|null = null;
+  private _animationTimer: number | null = null;
 
   constructor(
-      elementRef: ElementRef,
-      focusTrapFactory: FocusTrapFactory,
-      changeDetectorRef: ChangeDetectorRef,
-      @Optional() @Inject(DOCUMENT) document: any,
-      config: MatDialogConfig,
-      private _ngZone: NgZone,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
-      focusMonitor?: FocusMonitor) {
-    super(elementRef, focusTrapFactory, changeDetectorRef, document, config, focusMonitor);
+    elementRef: ElementRef,
+    focusTrapFactory: FocusTrapFactory,
+    changeDetectorRef: ChangeDetectorRef,
+    @Optional() @Inject(DOCUMENT) document: any,
+    config: MatDialogConfig,
+    checker: InteractivityChecker,
+    ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
+    focusMonitor?: FocusMonitor,
+  ) {
+    super(
+      elementRef,
+      focusTrapFactory,
+      changeDetectorRef,
+      document,
+      config,
+      checker,
+      ngZone,
+      focusMonitor,
+    );
   }
 
-  _initializeWithAttachedContent() {
+  override _initializeWithAttachedContent() {
     // Delegate to the original dialog-container initialization (i.e. saving the
     // previous element, setting up the focus trap and moving focus to the container).
     super._initializeWithAttachedContent();
@@ -151,24 +166,21 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
    * Completes the dialog open by clearing potential animation classes, trapping
    * focus and emitting an opened event.
    */
-  private _finishDialogOpen =
-      () => {
-        this._clearAnimationClasses();
-        this._trapFocus();
-        this._animationStateChanged.emit({state: 'opened', totalTime: this._openAnimationDuration});
-      }
+  private _finishDialogOpen = () => {
+    this._clearAnimationClasses();
+    this._trapFocus();
+    this._animationStateChanged.emit({state: 'opened', totalTime: this._openAnimationDuration});
+  };
 
   /**
    * Completes the dialog close by clearing potential animation classes, restoring
    * focus and emitting a closed event.
    */
-  private _finishDialogClose =
-      () => {
-        this._clearAnimationClasses();
-        this._restoreFocus();
-        this._animationStateChanged.emit(
-            {state: 'closed', totalTime: this._closeAnimationDuration});
-      }
+  private _finishDialogClose = () => {
+    this._clearAnimationClasses();
+    this._restoreFocus();
+    this._animationStateChanged.emit({state: 'closed', totalTime: this._closeAnimationDuration});
+  };
 
   /** Clears all dialog animation classes. */
   private _clearAnimationClasses() {
@@ -180,6 +192,9 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     if (this._animationTimer !== null) {
       clearTimeout(this._animationTimer);
     }
-    this._ngZone.runOutsideAngular(() => this._animationTimer = setTimeout(callback, duration));
+
+    // Note that we want this timer to run inside the NgZone, because we want
+    // the related events like `afterClosed` to be inside the zone as well.
+    this._animationTimer = setTimeout(callback, duration);
   }
 }

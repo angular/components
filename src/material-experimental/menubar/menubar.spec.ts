@@ -2,7 +2,7 @@ import {Component, ViewChild, ElementRef} from '@angular/core';
 import {RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {CdkMenuBar} from '@angular/cdk-experimental/menu';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {MatMenuBarModule} from './menubar-module';
 import {MatMenuBar} from './menubar';
 
@@ -11,12 +11,14 @@ describe('MatMenuBar', () => {
   let matMenubar: MatMenuBar;
   let nativeMatMenubar: HTMLElement;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatMenuBarModule],
-      declarations: [SimpleMatMenuBar],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatMenuBarModule],
+        declarations: [SimpleMatMenuBar],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMatMenuBar);
@@ -51,12 +53,12 @@ describe('MatMenuBar', () => {
   it('should toggle focused items on left/right click', () => {
     nativeMatMenubar.focus();
 
-    expect(document.querySelector(':focus')!.id).toBe('first');
+    expect(document.activeElement!.id).toBe('first');
 
     dispatchKeyboardEvent(nativeMatMenubar, 'keydown', RIGHT_ARROW);
     fixture.detectChanges();
 
-    expect(document.querySelector(':focus')!.id).toBe('second');
+    expect(document.activeElement!.id).toBe('second');
   });
 });
 

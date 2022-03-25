@@ -1,21 +1,29 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "progress-spinner",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     assets = glob([
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/progress-spinner",
     deps = [
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material/card",
         "//src/material/progress-spinner",
+        "//src/material/progress-spinner/testing",
         "//src/material/radio",
         "//src/material/slider",
         "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-browser-dynamic",
+        "@npm//@types/jasmine",
     ],
 )
 
@@ -26,4 +34,22 @@ filegroup(
         "**/*.css",
         "**/*.ts",
     ]),
+)
+
+ng_test_library(
+    name = "unit_tests_lib",
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":progress-spinner",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/progress-spinner",
+        "//src/material/progress-spinner/testing",
+        "@npm//@angular/platform-browser-dynamic",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_tests_lib"],
 )

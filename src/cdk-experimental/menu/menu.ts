@@ -7,42 +7,41 @@
  */
 
 import {
-  Directive,
-  Input,
-  Output,
-  EventEmitter,
-  QueryList,
-  ContentChildren,
   AfterContentInit,
-  OnDestroy,
-  Optional,
-  OnInit,
-  NgZone,
-  HostListener,
+  ContentChildren,
+  Directive,
   ElementRef,
+  EventEmitter,
   Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  QueryList,
   Self,
 } from '@angular/core';
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  UP_ARROW,
   DOWN_ARROW,
   ESCAPE,
-  TAB,
   hasModifierKey,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  TAB,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
 import {merge} from 'rxjs';
-import {take, takeUntil, startWith, mergeMap, mapTo, mergeAll, switchMap} from 'rxjs/operators';
+import {mapTo, mergeAll, mergeMap, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
-import {CdkMenuPanel} from './menu-panel';
-import {Menu, CDK_MENU} from './menu-interface';
+import {CDK_MENU, Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
-import {MenuStack, MenuStackItem, FocusNext, NoopMenuStack} from './menu-stack';
+import {FocusNext, MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
 import {MENU_AIM, MenuAim} from './menu-aim';
+import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -60,6 +59,8 @@ import {MENU_AIM, MenuAim} from './menu-aim';
     'class': 'cdk-menu',
     '[class.cdk-menu-inline]': '_isInline()',
     '[attr.aria-orientation]': 'orientation',
+    '(focus)': 'focusFirstItem()',
+    '(keydown)': '_handleKeyEvent($event)',
   },
   providers: [
     {provide: CdkMenuGroup, useExisting: CdkMenu},
@@ -75,12 +76,6 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
 
   /** Event emitted when the menu is closed. */
   @Output() readonly closed: EventEmitter<void | 'click' | 'tab' | 'escape'> = new EventEmitter();
-
-  // We provide a default MenuStack implementation in case the menu is an inline menu.
-  // For Menus part of a MenuBar nested within a MenuPanel this will be overwritten
-  // to the correct parent MenuStack.
-  /** Track the Menus making up the open menu stack. */
-  _menuStack: MenuStack = new NoopMenuStack();
 
   /** Handles keyboard events for the menu. */
   private _keyManager: FocusKeyManager<CdkMenuItem>;
@@ -99,32 +94,23 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   /** The Menu Item which triggered the open submenu. */
   private _openItem?: CdkMenuItem;
 
-  /**
-   * A reference to the enclosing parent menu panel.
-   *
-   * Required to be set when using ViewEngine since ViewEngine does support injecting a reference to
-   * the parent directive if the parent directive is placed on an `ng-template`. If using Ivy, the
-   * injected value will be used over this one.
-   */
-  @Input('cdkMenuPanel') private readonly _explicitPanel?: CdkMenuPanel;
-
   constructor(
     private readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLElement>,
+    @Optional() @Inject(MENU_STACK) readonly _menuStack?: MenuStack,
+    @Optional() @Inject(MENU_TRIGGER) private _parentTrigger?: MenuTrigger,
     @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality,
-    // `CdkMenuPanel` is always used in combination with a `CdkMenu`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() private readonly _menuPanel?: CdkMenuPanel
   ) {
     super();
   }
 
   ngOnInit() {
-    this._registerWithParentPanel();
+    this._menuStack?.push(this);
+    this._parentTrigger?.registerChildMenu(this);
   }
 
-  ngAfterContentInit() {
+  override ngAfterContentInit() {
     super.ngAfterContentInit();
 
     this._completeChangeEmitter();
@@ -136,11 +122,6 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     this._menuAim?.initialize(this, this._pointerTracker!);
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('focus')
   /** Place focus on the first MenuItem in the menu and set the focus origin. */
   focusFirstItem(focusOrigin: FocusOrigin = 'program') {
     this._keyManager.setFocusOrigin(focusOrigin);
@@ -153,11 +134,6 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     this._keyManager.setLastItemActive();
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('keydown', ['$event'])
   /** Handle keyboard events for the Menu. */
   _handleKeyEvent(event: KeyboardEvent) {
     const keyManager = this._keyManager;
@@ -183,30 +159,17 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
       case ESCAPE:
         if (!hasModifierKey(event)) {
           event.preventDefault();
-          this._menuStack.close(this, FocusNext.currentItem);
+          this._menuStack?.close(this, FocusNext.currentItem);
         }
         break;
 
       case TAB:
-        this._menuStack.closeAll();
+        this._menuStack?.closeAll();
         break;
 
       default:
         keyManager.onKeydown(event);
     }
-  }
-
-  /** Register this menu with its enclosing parent menu panel */
-  private _registerWithParentPanel() {
-    this._getMenuPanel()?._registerMenu(this);
-  }
-
-  /**
-   * Get the enclosing CdkMenuPanel defaulting to the injected reference over the developer
-   * provided reference.
-   */
-  private _getMenuPanel() {
-    return this._menuPanel || this._explicitPanel;
   }
 
   /**
@@ -259,32 +222,34 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
 
   /** Subscribe to the MenuStack close and empty observables. */
   private _subscribeToMenuStack() {
-    this._menuStack.closed
+    this._menuStack?.closed
       .pipe(takeUntil(this.closed))
-      .subscribe((item: MenuStackItem) => this._closeOpenMenu(item));
+      .subscribe(item => this._closeOpenMenu(item));
 
-    this._menuStack.emptied
+    this._menuStack?.emptied
       .pipe(takeUntil(this.closed))
-      .subscribe((event: FocusNext) => this._toggleMenuFocus(event));
+      .subscribe(event => this._toggleMenuFocus(event));
   }
 
   /**
    * Close the open menu if the current active item opened the requested MenuStackItem.
    * @param item the MenuStackItem requested to be closed.
    */
-  private _closeOpenMenu(menu: MenuStackItem) {
+  private _closeOpenMenu(menu: MenuStackItem | undefined) {
     const keyManager = this._keyManager;
     const trigger = this._openItem;
     if (menu === trigger?.getMenuTrigger()?.getMenu()) {
-      trigger.getMenuTrigger()?.closeMenu();
+      trigger?.getMenuTrigger()?.closeMenu();
       // If the user has moused over a sibling item we want to focus the element under mouse focus
       // not the trigger which previously opened the now closed menu.
-      keyManager.setActiveItem(this._pointerTracker?.activeElement || trigger);
+      if (trigger) {
+        keyManager.setActiveItem(this._pointerTracker?.activeElement || trigger);
+      }
     }
   }
 
   /** Set focus the either the current, previous or next item based on the FocusNext event. */
-  private _toggleMenuFocus(event: FocusNext) {
+  private _toggleMenuFocus(event: FocusNext | undefined) {
     const keyManager = this._keyManager;
     switch (event) {
       case FocusNext.nextItem:
@@ -319,14 +284,14 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
         mergeMap((list: QueryList<CdkMenuItem>) =>
           list
             .filter(item => item.hasMenu())
-            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition)))
+            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition))),
         ),
         mergeAll(),
         switchMap((item: CdkMenuItem) => {
           this._openItem = item;
           return item.getMenuTrigger()!.closed;
         }),
-        takeUntil(this.closed)
+        takeUntil(this.closed),
       )
       .subscribe(() => (this._openItem = undefined));
   }
@@ -341,12 +306,11 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
    * always visible in the dom.
    */
   _isInline() {
-    // NoopMenuStack is the default. If this menu is not inline than the NoopMenuStack is replaced
-    // automatically.
-    return this._menuStack instanceof NoopMenuStack;
+    return !this._menuStack;
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy();
     this._emitClosedEvent();
     this._pointerTracker?.destroy();
   }

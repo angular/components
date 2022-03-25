@@ -1,3 +1,4 @@
-@import 'text-field';
+@use 'index' as text-field;
 
-@include cdk-text-field();
+@include text-field.text-field-autosize();
+@include text-field.text-field-autofill();

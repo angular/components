@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   CDK_ROW_TEMPLATE,
   CdkFooterRow,
@@ -15,7 +14,7 @@ import {
   CdkHeaderRowDef,
   CdkRow,
   CdkRowDef,
-  CdkNoDataRow
+  CdkNoDataRow,
 } from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 
@@ -28,9 +27,7 @@ import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '
   providers: [{provide: CdkHeaderRowDef, useExisting: MatHeaderRowDef}],
   inputs: ['columns: matHeaderRowDef', 'sticky: matHeaderRowDefSticky'],
 })
-export class MatHeaderRowDef extends CdkHeaderRowDef {
-  static ngAcceptInputType_sticky: BooleanInput;
-}
+export class MatHeaderRowDef extends CdkHeaderRowDef {}
 
 /**
  * Footer row definition for the mat-table.
@@ -41,9 +38,7 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {
   providers: [{provide: CdkFooterRowDef, useExisting: MatFooterRowDef}],
   inputs: ['columns: matFooterRowDef', 'sticky: matFooterRowDefSticky'],
 })
-export class MatFooterRowDef extends CdkFooterRowDef {
-  static ngAcceptInputType_sticky: BooleanInput;
-}
+export class MatFooterRowDef extends CdkFooterRowDef {}
 
 /**
  * Data row definition for the mat-table.
@@ -55,12 +50,11 @@ export class MatFooterRowDef extends CdkFooterRowDef {
   providers: [{provide: CdkRowDef, useExisting: MatRowDef}],
   inputs: ['columns: matRowDefColumns', 'when: matRowDefWhen'],
 })
-export class MatRowDef<T> extends CdkRowDef<T> {
-}
+export class MatRowDef<T> extends CdkRowDef<T> {}
 
 /** Footer template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  selector: 'tr[mat-header-row]',
+  selector: 'mat-header-row, tr[mat-header-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'mat-mdc-header-row mdc-data-table__header-row',
@@ -73,12 +67,11 @@ export class MatRowDef<T> extends CdkRowDef<T> {
   exportAs: 'matHeaderRow',
   providers: [{provide: CdkHeaderRow, useExisting: MatHeaderRow}],
 })
-export class MatHeaderRow extends CdkHeaderRow {
-}
+export class MatHeaderRow extends CdkHeaderRow {}
 
 /** Footer template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  selector: 'tr[mat-footer-row]',
+  selector: 'mat-footer-row, tr[mat-footer-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'mat-mdc-footer-row mdc-data-table__row',
@@ -91,12 +84,11 @@ export class MatHeaderRow extends CdkHeaderRow {
   exportAs: 'matFooterRow',
   providers: [{provide: CdkFooterRow, useExisting: MatFooterRow}],
 })
-export class MatFooterRow extends CdkFooterRow {
-}
+export class MatFooterRow extends CdkFooterRow {}
 
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  selector: 'tr[mat-row]',
+  selector: 'mat-row, tr[mat-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'mat-mdc-row mdc-data-table__row',
@@ -109,8 +101,7 @@ export class MatFooterRow extends CdkFooterRow {
   exportAs: 'matRow',
   providers: [{provide: CdkRow, useExisting: MatRow}],
 })
-export class MatRow extends CdkRow {
-}
+export class MatRow extends CdkRow {}
 
 /** Row that can be used to display a message when no data is shown in the table. */
 @Directive({
@@ -118,4 +109,5 @@ export class MatRow extends CdkRow {
   providers: [{provide: CdkNoDataRow, useExisting: MatNoDataRow}],
 })
 export class MatNoDataRow extends CdkNoDataRow {
+  override _contentClassName = 'mat-mdc-no-data-row';
 }

@@ -54,7 +54,7 @@ displayed, you can do so using the `displayWith` input.
 ### Tick marks
 By default, sliders do not show tick marks along the thumb track. This can be enabled using the
 `tickInterval` attribute. The value of `tickInterval` should be a number representing the number
-of steps between between ticks. For example a `tickInterval` of `3` with a `step` of `4` will draw
+of steps between ticks. For example a `tickInterval` of `3` with a `step` of `4` will draw
 tick marks at every `3` steps, which is the same as every `12` values.
 
 ```html
@@ -92,5 +92,7 @@ The slider has the following keyboard bindings:
 | Home        | Set the value to the minimum possible.                                             |
 
 ### Accessibility
-Sliders without text or labels should be given a meaningful label via `aria-label` or
+
+`MatSlider` implements the ARIA `role="slider"` pattern, handling keyboard input and focus
+management. Always provide an accessible label for each slider via `aria-label` or
 `aria-labelledby`.

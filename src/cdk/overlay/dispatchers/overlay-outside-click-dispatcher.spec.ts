@@ -1,29 +1,30 @@
 import {TestBed, inject, fakeAsync} from '@angular/core/testing';
-import {Component, NgModule} from '@angular/core';
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {OverlayModule, OverlayContainer, Overlay} from '../index';
+import {ApplicationRef, Component} from '@angular/core';
+import {dispatchFakeEvent, dispatchMouseEvent} from '../../testing/private';
+import {OverlayModule, Overlay} from '../index';
 import {OverlayOutsideClickDispatcher} from './overlay-outside-click-dispatcher';
 import {ComponentPortal} from '@angular/cdk/portal';
 
 describe('OverlayOutsideClickDispatcher', () => {
+  let appRef: ApplicationRef;
   let outsideClickDispatcher: OverlayOutsideClickDispatcher;
   let overlay: Overlay;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, TestComponentModule],
+      imports: [OverlayModule],
+      declarations: [TestComponent],
     });
 
-    inject([OverlayOutsideClickDispatcher, Overlay],
-      (ocd: OverlayOutsideClickDispatcher, o: Overlay) => {
-      outsideClickDispatcher = ocd;
-      overlay = o;
-    })();
+    inject(
+      [ApplicationRef, OverlayOutsideClickDispatcher, Overlay],
+      (ar: ApplicationRef, ocd: OverlayOutsideClickDispatcher, o: Overlay) => {
+        appRef = ar;
+        outsideClickDispatcher = ocd;
+        overlay = o;
+      },
+    )();
   });
-
-  afterEach(inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
-    overlayContainer.ngOnDestroy();
-  }));
 
   it('should track overlays in order as they are attached and detached', () => {
     const overlayOne = overlay.create();
@@ -33,27 +34,30 @@ describe('OverlayOutsideClickDispatcher', () => {
     outsideClickDispatcher.add(overlayTwo);
 
     expect(outsideClickDispatcher._attachedOverlays.length)
-        .toBe(2, 'Expected both overlays to be tracked.');
+      .withContext('Expected both overlays to be tracked.')
+      .toBe(2);
     expect(outsideClickDispatcher._attachedOverlays[0])
-      .toBe(overlayOne, 'Expected one to be first.');
+      .withContext('Expected one to be first.')
+      .toBe(overlayOne);
     expect(outsideClickDispatcher._attachedOverlays[1])
-      .toBe(overlayTwo, 'Expected two to be last.');
+      .withContext('Expected two to be last.')
+      .toBe(overlayTwo);
 
     outsideClickDispatcher.remove(overlayOne);
     outsideClickDispatcher.add(overlayOne);
 
     expect(outsideClickDispatcher._attachedOverlays[0])
-        .toBe(overlayTwo, 'Expected two to now be first.');
+      .withContext('Expected two to now be first.')
+      .toBe(overlayTwo);
     expect(outsideClickDispatcher._attachedOverlays[1])
-        .toBe(overlayOne, 'Expected one to now be last.');
+      .withContext('Expected one to now be last.')
+      .toBe(overlayOne);
 
     overlayOne.dispose();
     overlayTwo.dispose();
   });
 
-  it(
-    'should dispatch mouse click events to the attached overlays',
-    () => {
+  it('should dispatch mouse click events to the attached overlays', () => {
     const overlayOne = overlay.create();
     overlayOne.attach(new ComponentPortal(TestComponent));
     const overlayTwo = overlay.create();
@@ -75,14 +79,39 @@ describe('OverlayOutsideClickDispatcher', () => {
     expect(overlayOneSpy).toHaveBeenCalled();
     expect(overlayTwoSpy).toHaveBeenCalled();
 
-    button.parentNode!.removeChild(button);
+    button.remove();
     overlayOne.dispose();
     overlayTwo.dispose();
   });
 
-  it(
-    'should dispatch mouse click events to the attached overlays even when propagation is stopped',
-    () => {
+  it('should dispatch auxiliary button click events to the attached overlays', () => {
+    const overlayOne = overlay.create();
+    overlayOne.attach(new ComponentPortal(TestComponent));
+    const overlayTwo = overlay.create();
+    overlayTwo.attach(new ComponentPortal(TestComponent));
+
+    const overlayOneSpy = jasmine.createSpy('overlayOne auxiliary click event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo auxiliary click event spy');
+
+    overlayOne.outsidePointerEvents().subscribe(overlayOneSpy);
+    overlayTwo.outsidePointerEvents().subscribe(overlayTwoSpy);
+
+    outsideClickDispatcher.add(overlayOne);
+    outsideClickDispatcher.add(overlayTwo);
+
+    const button = document.createElement('button');
+    document.body.appendChild(button);
+    dispatchFakeEvent(button, 'auxclick');
+
+    expect(overlayOneSpy).toHaveBeenCalled();
+    expect(overlayTwoSpy).toHaveBeenCalled();
+
+    button.remove();
+    overlayOne.dispose();
+    overlayTwo.dispose();
+  });
+
+  it('should dispatch mouse click events to the attached overlays even when propagation is stopped', () => {
     const overlayRef = overlay.create();
     overlayRef.attach(new ComponentPortal(TestComponent));
     const spy = jasmine.createSpy('overlay mouse click event spy');
@@ -97,7 +126,7 @@ describe('OverlayOutsideClickDispatcher', () => {
 
     expect(spy).toHaveBeenCalled();
 
-    button.parentNode!.removeChild(button);
+    button.remove();
     overlayRef.dispose();
   });
 
@@ -142,7 +171,7 @@ describe('OverlayOutsideClickDispatcher', () => {
     button.click();
     expect(spy).toHaveBeenCalled();
 
-    button.parentNode!.removeChild(button);
+    button.remove();
     overlayRef.dispose();
   });
 
@@ -160,6 +189,91 @@ describe('OverlayOutsideClickDispatcher', () => {
     overlayRef.dispose();
   });
 
+  it(
+    'should dispatch an event when a click is started outside the overlay and ' +
+      'released outside of it',
+    () => {
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+      const context = document.createElement('div');
+      document.body.appendChild(context);
+
+      const spy = jasmine.createSpy('overlay mouse click event spy');
+      overlayRef.outsidePointerEvents().subscribe(spy);
+
+      dispatchMouseEvent(context, 'pointerdown');
+      context.click();
+      expect(spy).toHaveBeenCalled();
+
+      context.remove();
+      overlayRef.dispose();
+    },
+  );
+
+  it(
+    'should not dispatch an event when a click is started inside the overlay and ' +
+      'released inside of it',
+    () => {
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+
+      const spy = jasmine.createSpy('overlay mouse click event spy');
+      overlayRef.outsidePointerEvents().subscribe(spy);
+
+      dispatchMouseEvent(overlayRef.overlayElement, 'pointerdown');
+      overlayRef.overlayElement.click();
+      expect(spy).not.toHaveBeenCalled();
+
+      overlayRef.dispose();
+    },
+  );
+
+  it(
+    'should not dispatch an event when a click is started inside the overlay and ' +
+      'released outside of it',
+    () => {
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+      const context = document.createElement('div');
+      document.body.appendChild(context);
+
+      const spy = jasmine.createSpy('overlay mouse click event spy');
+      overlayRef.outsidePointerEvents().subscribe(spy);
+
+      dispatchMouseEvent(overlayRef.overlayElement, 'pointerdown');
+      context.click();
+      expect(spy).not.toHaveBeenCalled();
+
+      context.remove();
+      overlayRef.dispose();
+    },
+  );
+
+  it(
+    'should not dispatch an event when a click is started outside the overlay and ' +
+      'released inside of it',
+    () => {
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+      const context = document.createElement('div');
+      document.body.appendChild(context);
+
+      const spy = jasmine.createSpy('overlay mouse click event spy');
+      overlayRef.outsidePointerEvents().subscribe(spy);
+
+      dispatchMouseEvent(context, 'pointerdown');
+      overlayRef.overlayElement.click();
+      expect(spy).not.toHaveBeenCalled();
+
+      context.remove();
+      overlayRef.dispose();
+    },
+  );
+
   it('should dispatch an event when a context menu is triggered outside the overlay', () => {
     const portal = new ComponentPortal(TestComponent);
     const overlayRef = overlay.create();
@@ -173,7 +287,7 @@ describe('OverlayOutsideClickDispatcher', () => {
     dispatchMouseEvent(context, 'contextmenu');
     expect(spy).toHaveBeenCalled();
 
-    context.parentNode!.removeChild(context);
+    context.remove();
     overlayRef.dispose();
   });
 
@@ -192,8 +306,8 @@ describe('OverlayOutsideClickDispatcher', () => {
   });
 
   it(
-    'should not throw an error when when closing out related components via the' +
-      ' outsidePointerEvents emitter on background click',
+    'should not throw an error when closing out related components via the ' +
+      'outsidePointerEvents emitter on background click',
     fakeAsync(() => {
       const firstOverlayRef = overlay.create();
       firstOverlayRef.attach(new ComponentPortal(TestComponent));
@@ -218,26 +332,79 @@ describe('OverlayOutsideClickDispatcher', () => {
 
       expect(spy).toHaveBeenCalled();
 
-      backgroundElement.parentNode!.removeChild(backgroundElement);
+      backgroundElement.remove();
       firstOverlayRef.dispose();
       secondOverlayRef.dispose();
       thirdOverlayRef.dispose();
-    }
-  ));
+    }),
+  );
+
+  describe('change detection behavior', () => {
+    it('should not run change detection if there is no portal attached to the overlay', () => {
+      spyOn(appRef, 'tick');
+      const overlayRef = overlay.create();
+      outsideClickDispatcher.add(overlayRef);
+
+      const context = document.createElement('div');
+      document.body.appendChild(context);
+
+      overlayRef.outsidePointerEvents().subscribe();
+      dispatchMouseEvent(context, 'click');
+
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not run change detection if the click was made outside the overlay but there are no `outsidePointerEvents` observers', () => {
+      spyOn(appRef, 'tick');
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+      outsideClickDispatcher.add(overlayRef);
+
+      const context = document.createElement('div');
+      document.body.appendChild(context);
+
+      dispatchMouseEvent(context, 'click');
+
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not run change detection if the click was made inside the overlay and there are `outsidePointerEvents` observers', () => {
+      spyOn(appRef, 'tick');
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+      outsideClickDispatcher.add(overlayRef);
+
+      overlayRef.outsidePointerEvents().subscribe();
+      dispatchMouseEvent(overlayRef.overlayElement, 'click');
+
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+    });
+
+    it('should run change detection if the click was made outside the overlay and there are `outsidePointerEvents` observers', () => {
+      spyOn(appRef, 'tick');
+      const portal = new ComponentPortal(TestComponent);
+      const overlayRef = overlay.create();
+      overlayRef.attach(portal);
+      outsideClickDispatcher.add(overlayRef);
+
+      const context = document.createElement('div');
+      document.body.appendChild(context);
+
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+      dispatchMouseEvent(context, 'click');
+      expect(appRef.tick).toHaveBeenCalledTimes(0);
+
+      overlayRef.outsidePointerEvents().subscribe();
+
+      dispatchMouseEvent(context, 'click');
+      expect(appRef.tick).toHaveBeenCalledTimes(1);
+    });
+  });
 });
 
-
 @Component({
-  template: 'Hello'
+  template: 'Hello',
 })
-class TestComponent { }
-
-
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-@NgModule({
-  exports: [TestComponent],
-  declarations: [TestComponent],
-  entryComponents: [TestComponent],
-})
-class TestComponentModule { }
+class TestComponent {}
