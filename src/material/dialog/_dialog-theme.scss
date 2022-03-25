@@ -23,6 +23,9 @@
   .mat-dialog-title {
     @include typography-utils.typography-level($config, title);
   }
+  .mat-dialog-content {
+    @include typography-utils.typography-level($config, body-1);
+  }
 }
 
 @mixin _density($config-or-theme) {}
