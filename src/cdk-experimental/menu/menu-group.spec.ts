@@ -1,38 +1,37 @@
 import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+
 import {By} from '@angular/platform-browser';
-import {CdkMenuModule} from './menu-module';
 import {CdkMenuGroup} from './menu-group';
+import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItemRadio} from './menu-item-radio';
+import {CdkMenuModule} from './menu-module';
 import {CdkMenuPanel} from './menu-panel';
 import {MenuStack} from './menu-stack';
-import {CdkMenuItem} from './menu-item';
 
 describe('MenuGroup', () => {
   describe('with MenuItems as checkbox', () => {
     let fixture: ComponentFixture<CheckboxMenu>;
     let menuItems: CdkMenuItemCheckbox[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [CheckboxMenu],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [CheckboxMenu],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(CheckboxMenu);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(CheckboxMenu);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(e => e.injector.get(CdkMenuItemCheckbox));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemCheckbox))
+        .map(e => e.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should not change state of sibling checked menuitemcheckbox', () => {
       menuItems[1].trigger();
@@ -45,25 +44,23 @@ describe('MenuGroup', () => {
     let fixture: ComponentFixture<MenuWithMultipleRadioGroups>;
     let menuItems: CdkMenuItemRadio[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithMultipleRadioGroups],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuWithMultipleRadioGroups],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemRadio))
-          .map(e => e.injector.get(CdkMenuItemRadio));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemRadio))
+        .map(e => e.injector.get(CdkMenuItemRadio));
+    }));
 
     it('should change state of sibling menuitemradio in same group', () => {
       menuItems[1].trigger();
@@ -93,25 +90,23 @@ describe('MenuGroup', () => {
     let fixture: ComponentFixture<MenuWithMenuItemsAndRadioGroups>;
     let menuItems: CdkMenuItemRadio[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithMenuItemsAndRadioGroups],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuWithMenuItemsAndRadioGroups],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuWithMenuItemsAndRadioGroups);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuWithMenuItemsAndRadioGroups);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemRadio))
-          .map(element => element.injector.get(CdkMenuItemRadio));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemRadio))
+        .map(element => element.injector.get(CdkMenuItemRadio));
+    }));
 
     it('should emit from enclosing radio group only', () => {
       const spies: jasmine.Spy[] = [];

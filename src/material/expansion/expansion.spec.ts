@@ -1,41 +1,40 @@
+import {Component, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
+  ComponentFixture,
   TestBed,
   fakeAsync,
-  tick,
-  ComponentFixture,
   flush,
+  tick,
+  waitForAsync,
 } from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
+  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
   MatExpansionModule,
   MatExpansionPanel,
   MatExpansionPanelHeader,
-  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './index';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
+import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MatExpansionPanel', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatExpansionModule, NoopAnimationsModule],
-        declarations: [
-          PanelWithContent,
-          PanelWithContentInNgIf,
-          PanelWithCustomMargin,
-          LazyPanelWithContent,
-          LazyPanelOpenOnLoad,
-          PanelWithTwoWayBinding,
-          PanelWithHeaderTabindex,
-        ],
-      });
-      TestBed.compileComponents();
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatExpansionModule, NoopAnimationsModule],
+      declarations: [
+        PanelWithContent,
+        PanelWithContentInNgIf,
+        PanelWithCustomMargin,
+        LazyPanelWithContent,
+        LazyPanelOpenOnLoad,
+        PanelWithTwoWayBinding,
+        PanelWithHeaderTabindex,
+      ],
+    });
+    TestBed.compileComponents();
+  }));
 
   it('should expand and collapse the panel', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
