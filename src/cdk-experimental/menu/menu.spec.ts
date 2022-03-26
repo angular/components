@@ -1,51 +1,50 @@
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
   fakeAsync,
-  tick,
   flush,
+  tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {Component, ViewChild, ViewChildren, QueryList, ElementRef} from '@angular/core';
-import {TAB} from '@angular/cdk/keycodes';
 import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
   createMouseEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
 } from '../../cdk/testing/private';
+
 import {By} from '@angular/platform-browser';
 import {CdkMenu} from './menu';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {CdkMenuModule} from './menu-module';
 import {CdkMenuPanel} from './menu-panel';
 import {MenuStack} from './menu-stack';
+import {TAB} from '@angular/cdk/keycodes';
 
 describe('Menu', () => {
   describe('as checkbox group', () => {
     let fixture: ComponentFixture<MenuCheckboxGroup>;
     let menuItems: CdkMenuItemCheckbox[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuCheckboxGroup],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuCheckboxGroup],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuCheckboxGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuCheckboxGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(element => element.injector.get(CdkMenuItemCheckbox));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemCheckbox))
+        .map(element => element.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should toggle menuitemcheckbox', () => {
       expect(menuItems[0].checked).toBeTrue();
@@ -65,25 +64,23 @@ describe('Menu', () => {
     let fixture: ComponentFixture<MenuCheckboxGroup>;
     let menuItems: CdkMenuItemCheckbox[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuCheckboxGroup],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuCheckboxGroup],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuCheckboxGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuCheckboxGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(element => element.injector.get(CdkMenuItemCheckbox));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemCheckbox))
+        .map(element => element.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should emit on click', () => {
       const spy = jasmine.createSpy('cdkMenu change spy');
@@ -101,27 +98,25 @@ describe('Menu', () => {
     let menuItems: CdkMenuItemCheckbox[];
     let menu: CdkMenu;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithNestedGroup],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuWithNestedGroup],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuWithNestedGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuWithNestedGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
+      menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemCheckbox))
-          .map(element => element.injector.get(CdkMenuItemCheckbox));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemCheckbox))
+        .map(element => element.injector.get(CdkMenuItemCheckbox));
+    }));
 
     it('should not emit change from root menu ', () => {
       const spy = jasmine.createSpy('changeSpy for root menu');
@@ -146,24 +141,22 @@ describe('Menu', () => {
         .map(element => element.injector.get(CdkMenuItemCheckbox));
     };
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithConditionalGroup],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuWithConditionalGroup],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuWithConditionalGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuWithConditionalGroup);
+      fixture.detectChanges();
 
-        fixture.componentInstance.panel._menuStack = new MenuStack();
-        fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
-        fixture.detectChanges();
+      fixture.componentInstance.panel._menuStack = new MenuStack();
+      fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
+      fixture.detectChanges();
 
-        menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
-        menuItems = getMenuItems();
-      }),
-    );
+      menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
+      menuItems = getMenuItems();
+    }));
 
     it('should not emit after the menu group element renders', () => {
       const spy = jasmine.createSpy('cdkMenu change');
@@ -186,14 +179,12 @@ describe('Menu', () => {
     let nativeMenu: HTMLElement;
     let nativeMenuItems: HTMLElement[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [InlineMenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [InlineMenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(InlineMenu);
@@ -264,14 +255,12 @@ describe('Menu', () => {
 
       let nativeMenus: HTMLElement[];
 
-      beforeEach(
-        waitForAsync(() => {
-          TestBed.configureTestingModule({
-            imports: [CdkMenuModule],
-            declarations: [WithComplexNestedMenus],
-          }).compileComponents();
-        }),
-      );
+      beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [WithComplexNestedMenus],
+        }).compileComponents();
+      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenus);
@@ -462,14 +451,12 @@ describe('Menu', () => {
 
       let nativeMenus: HTMLElement[];
 
-      beforeEach(
-        waitForAsync(() => {
-          TestBed.configureTestingModule({
-            imports: [CdkMenuModule],
-            declarations: [WithComplexNestedMenusOnBottom],
-          }).compileComponents();
-        }),
-      );
+      beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [WithComplexNestedMenusOnBottom],
+        }).compileComponents();
+      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenusOnBottom);

@@ -37,14 +37,12 @@ describe('Combobox', () => {
     let applyButton: DebugElement;
     let applyButtonElement: HTMLElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkComboboxModule],
-          declarations: [ComboboxToggle, FakeDialogContent],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkComboboxModule],
+        declarations: [ComboboxToggle, FakeDialogContent],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ComboboxToggle);
@@ -203,14 +201,12 @@ describe('Combobox', () => {
     let combobox: DebugElement;
     let comboboxInstance: CdkCombobox<unknown>;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkComboboxModule],
-          declarations: [ComboboxToggle, FakeDialogContent],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkComboboxModule],
+        declarations: [ComboboxToggle, FakeDialogContent],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ComboboxToggle);
@@ -276,14 +272,12 @@ describe('Combobox', () => {
     let comboboxInstance: CdkCombobox<unknown>;
     let comboboxElement: HTMLElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkComboboxModule],
-          declarations: [ComboboxToggle, FakeDialogContent],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkComboboxModule],
+        declarations: [ComboboxToggle, FakeDialogContent],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ComboboxToggle);

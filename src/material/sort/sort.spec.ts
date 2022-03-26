@@ -1,18 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {CdkTableModule} from '@angular/cdk/table';
-import {
-  createFakeEvent,
-  createMouseEvent,
-  dispatchMouseEvent,
-  wrappedErrorMessage,
-} from '../../cdk/testing/private';
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {By} from '@angular/platform-browser';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {MatTableModule} from '../table/index';
+import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {
   MAT_SORT_DEFAULT_OPTIONS,
   MatSort,
@@ -22,33 +10,44 @@ import {
   SortDirection,
 } from './index';
 import {
+  createFakeEvent,
+  createMouseEvent,
+  dispatchMouseEvent,
+  wrappedErrorMessage,
+} from '../../cdk/testing/private';
+import {
   getSortDuplicateSortableIdError,
   getSortHeaderMissingIdError,
   getSortHeaderNotContainedWithinSortError,
   getSortInvalidDirectionError,
 } from './sort-errors';
 
+import {By} from '@angular/platform-browser';
+import {CdkTableModule} from '@angular/cdk/table';
+import {MatTableModule} from '../table/index';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 describe('MatSort', () => {
   describe('without default options', () => {
     let fixture: ComponentFixture<SimpleMatSortApp>;
     let component: SimpleMatSortApp;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-          declarations: [
-            SimpleMatSortApp,
-            CdkTableMatSortApp,
-            MatTableMatSortApp,
-            MatSortHeaderMissingMatSortApp,
-            MatSortDuplicateMatSortableIdsApp,
-            MatSortableMissingIdApp,
-            MatSortableInvalidDirection,
-          ],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
+        declarations: [
+          SimpleMatSortApp,
+          CdkTableMatSortApp,
+          MatTableMatSortApp,
+          MatSortHeaderMissingMatSortApp,
+          MatSortDuplicateMatSortableIdsApp,
+          MatSortableMissingIdApp,
+          MatSortableInvalidDirection,
+        ],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMatSortApp);
@@ -449,22 +448,20 @@ describe('MatSort', () => {
     let fixture: ComponentFixture<MatSortWithoutExplicitInputs>;
     let component: MatSortWithoutExplicitInputs;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-          declarations: [MatSortWithoutExplicitInputs],
-          providers: [
-            {
-              provide: MAT_SORT_DEFAULT_OPTIONS,
-              useValue: {
-                disableClear: true,
-              },
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
+        declarations: [MatSortWithoutExplicitInputs],
+        providers: [
+          {
+            provide: MAT_SORT_DEFAULT_OPTIONS,
+            useValue: {
+              disableClear: true,
             },
-          ],
-        }).compileComponents();
-      }),
-    );
+          },
+        ],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MatSortWithoutExplicitInputs);

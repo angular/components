@@ -1,45 +1,44 @@
-import {SPACE} from '@angular/cdk/keycodes';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, ViewChild, ViewChildren, QueryList} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
-import {By} from '@angular/platform-browser';
+import {MatTabLink, MatTabNav, MatTabsModule} from '../index';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../../cdk/testing/private';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+
+import {By} from '@angular/platform-browser';
+import {SPACE} from '@angular/cdk/keycodes';
 import {Subject} from 'rxjs';
-import {MatTabLink, MatTabNav, MatTabsModule} from '../index';
 
 describe('MatTabNavBar', () => {
   let dir: Direction = 'ltr';
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
 
-  beforeEach(
-    waitForAsync(() => {
-      globalRippleOptions = {};
+  beforeEach(waitForAsync(() => {
+    globalRippleOptions = {};
 
-      TestBed.configureTestingModule({
-        imports: [MatTabsModule],
-        declarations: [
-          SimpleTabNavBarTestApp,
-          TabLinkWithNgIf,
-          TabLinkWithTabIndexBinding,
-          TabLinkWithNativeTabindexAttr,
-          TabBarWithInactiveTabsOnInit,
-          TabBarWithPanel,
-        ],
-        providers: [
-          {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-          {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
-        ],
-      });
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule],
+      declarations: [
+        SimpleTabNavBarTestApp,
+        TabLinkWithNgIf,
+        TabLinkWithTabIndexBinding,
+        TabLinkWithNativeTabindexAttr,
+        TabBarWithInactiveTabsOnInit,
+        TabBarWithPanel,
+      ],
+      providers: [
+        {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
+        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('basic behavior', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;

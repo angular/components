@@ -1,38 +1,37 @@
-import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChildren} from '@angular/core';
+import {MatListItem, MatListModule} from './index';
+import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+
+import {By} from '@angular/platform-browser';
 import {defaultRippleAnimationConfig} from '@angular/material-experimental/mdc-core';
 import {dispatchMouseEvent} from '../../cdk/testing/private';
-import {By} from '@angular/platform-browser';
-import {MatListItem, MatListModule} from './index';
 
 describe('MDC-based MatList', () => {
   // Default ripple durations used for testing.
   const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
-          ListWithOneAnchorItem,
-          ListWithOneItem,
-          ListWithTwoLineItem,
-          ListWithThreeLineItem,
-          ListWithAvatar,
-          ListWithItemWithCssClass,
-          ListWithDynamicNumberOfLines,
-          ListWithMultipleItems,
-          ListWithManyLines,
-          NavListWithOneAnchorItem,
-          ActionListWithoutType,
-          ActionListWithType,
-          ListWithDisabledItems,
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatListModule],
+      declarations: [
+        ListWithOneAnchorItem,
+        ListWithOneItem,
+        ListWithTwoLineItem,
+        ListWithThreeLineItem,
+        ListWithAvatar,
+        ListWithItemWithCssClass,
+        ListWithDynamicNumberOfLines,
+        ListWithMultipleItems,
+        ListWithManyLines,
+        NavListWithOneAnchorItem,
+        ActionListWithoutType,
+        ActionListWithType,
+        ListWithDisabledItems,
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   it('should apply an additional class to lists without lines', () => {
     const fixture = TestBed.createComponent(ListWithOneItem);
