@@ -60,7 +60,18 @@ const _MatButtonBase = mixinColor(
 );
 
 /**
- * Material design button.
+ * Material Design button component. Users interact with a button to perform an action.
+ * See https://material.io/components/buttons
+ *
+ * The `MatButton` class applies to native button elements and captures the appearances for
+ * "text button", "outlined button", and "contained button" per the Material Design
+ * specification. `MatButton` additionally captures an additional "flat" appearance, which matches
+ * "contained" but without elevation.
+ *
+ * Visit https://material.angular.io/components/button/overview for code examples and live demos.
+ *
+ * @example
+ * <button mat-flat-button color="primary">Primary</button>
  */
 @Component({
   selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button],
