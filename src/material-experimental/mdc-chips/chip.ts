@@ -452,13 +452,21 @@ export class MatChip
 
   private _handleTransitionend = (event: TransitionEvent) => {
     if (event.target === this._elementRef.nativeElement) {
-      this._ngZone.run(() => this._chipFoundation.handleTransitionEnd());
+      // The `handleTransitionEnd` calls `adapter.emitEvent` which we handle by calling
+      // `emitCustomEvent`. We don't need to re-enter the Angular zone. First, there might be no
+      // event listeners for the event we dispatch; second, calling `element.dispatchEvent`
+      // doesn't require Angular to run `tick()`.
+      this._chipFoundation.handleTransitionEnd();
     }
   };
 
   private _handleAnimationend = (event: AnimationEvent) => {
     if (event.target === this._elementRef.nativeElement) {
-      this._ngZone.run(() => this._chipFoundation.handleAnimationEnd(event));
+      // The `handleAnimationEnd` calls `adapter.emitEvent` which we handle by calling
+      // `emitCustomEvent`. We don't need to re-enter the Angular zone. First, there might be no
+      // event listeners for the event we dispatch; second, calling `element.dispatchEvent`
+      // doesn't require Angular to run `tick()`.
+      this._chipFoundation.handleAnimationEnd(event);
     }
   };
 }
