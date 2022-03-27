@@ -1,5 +1,6 @@
-import {Component, Type, ElementRef} from '@angular/core';
+import {Component, Type, ElementRef, ApplicationRef} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItem} from './menu-item';
@@ -61,6 +62,50 @@ describe('MenuItem', () => {
 
     it('should not have a menu', () => {
       expect(menuItem.hasMenu()).toBeFalse();
+    });
+
+    describe('change detection behavior when tabindex is being changed', () => {
+      let appRef: ApplicationRef;
+
+      beforeEach(() => {
+        appRef = TestBed.inject(ApplicationRef);
+        spyOn(appRef, 'tick');
+      });
+
+      it('should set the `tabindex` to 0 when `focus` is dispatched', () => {
+        expect(nativeButton.getAttribute('tabindex')).toEqual('-1');
+        dispatchFakeEvent(nativeButton, 'focus');
+        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(nativeButton.getAttribute('tabindex')).toEqual('0');
+      });
+
+      it('should set the `tabindex` to 0 when `mouseenter` is dispatched', () => {
+        expect(nativeButton.getAttribute('tabindex')).toEqual('-1');
+        dispatchFakeEvent(nativeButton, 'mouseenter');
+        // Note: we don't check `tick()` call here because we have another `mouseenter` listener
+        // that closes other sibling menu items and re-enters the Angular zone.
+        expect(nativeButton.getAttribute('tabindex')).toEqual('0');
+      });
+
+      it('should set the `tabindex` to -1 when `blur` is dispatched', () => {
+        expect(nativeButton.getAttribute('tabindex')).toEqual('-1');
+        dispatchFakeEvent(nativeButton, 'focus');
+        expect(nativeButton.getAttribute('tabindex')).toEqual('0');
+
+        dispatchFakeEvent(nativeButton, 'blur');
+        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(nativeButton.getAttribute('tabindex')).toEqual('-1');
+      });
+
+      it('should set the `tabindex` to -1 when `mouseout` is dispatched', () => {
+        expect(nativeButton.getAttribute('tabindex')).toEqual('-1');
+        dispatchFakeEvent(nativeButton, 'focus');
+        expect(nativeButton.getAttribute('tabindex')).toEqual('0');
+
+        dispatchFakeEvent(nativeButton, 'mouseout');
+        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(nativeButton.getAttribute('tabindex')).toEqual('-1');
+      });
     });
   });
 

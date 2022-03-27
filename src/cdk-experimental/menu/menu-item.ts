@@ -22,8 +22,8 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusableOption} from '@angular/cdk/a11y';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
-import {fromEvent, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {fromEvent, merge, Subject} from 'rxjs';
+import {filter, mapTo, takeUntil} from 'rxjs/operators';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
 import {CDK_MENU, Menu} from './menu-interface';
 import {FocusNext, MENU_STACK, MenuStack} from './menu-stack';
@@ -39,15 +39,10 @@ import {MENU_AIM, MenuAim, Toggler} from './menu-aim';
   selector: '[cdkMenuItem]',
   exportAs: 'cdkMenuItem',
   host: {
-    '[tabindex]': '_tabindex',
     'type': 'button',
     'role': 'menuitem',
     'class': 'cdk-menu-item',
     '[attr.aria-disabled]': 'disabled || null',
-    '(blur)': '_resetTabIndex()',
-    '(mouseout)': '_resetTabIndex()',
-    '(focus)': '_setTabIndex()',
-    '(mouseenter)': '_setTabIndex($event)',
     '(click)': 'trigger()',
     '(keydown)': '_onKeydown($event)',
   },
@@ -75,12 +70,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
    */
   @Output('cdkMenuItemTriggered') readonly triggered: EventEmitter<void> = new EventEmitter();
 
-  /**
-   * The tabindex for this menu item managed internally and used for implementing roving a
-   * tab index.
-   */
-  _tabindex: 0 | -1 = -1;
-
   /** Emits when the menu item is destroyed. */
   private readonly _destroyed = new Subject<void>();
 
@@ -96,38 +85,13 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     // tslint:disable-next-line: lightweight-tokens
     @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger,
   ) {
-    this._setupMouseEnter();
-
-    if (this._isStandaloneItem()) {
-      this._tabindex = 0;
-    }
+    this._setupEventListeners();
+    _elementRef.nativeElement.setAttribute('tabindex', this._isStandaloneItem() ? '0' : '-1');
   }
 
   /** Place focus on the element. */
   focus() {
     this._elementRef.nativeElement.focus();
-  }
-
-  /** Reset the _tabindex to -1. */
-  _resetTabIndex() {
-    if (!this._isStandaloneItem()) {
-      this._tabindex = -1;
-    }
-  }
-
-  /**
-   * Set the tab index to 0 if not disabled and it's a focus event, or a mouse enter if this element
-   * is not in a menu bar.
-   */
-  _setTabIndex(event?: MouseEvent) {
-    if (this.disabled) {
-      return;
-    }
-
-    // don't set the tabindex if there are no open sibling or parent menus
-    if (!event || !this._menuStack?.isEmpty()) {
-      this._tabindex = 0;
-    }
   }
 
   /** Whether this menu item is standalone or within a menu or menu bar. */
@@ -208,17 +172,41 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     }
   }
 
-  /**
-   * Subscribe to the mouseenter events and close any sibling menu items if this element is moused
-   * into.
-   */
-  private _setupMouseEnter() {
+  private _setupEventListeners() {
+    const element = this._elementRef.nativeElement;
+
+    this._ngZone.runOutsideAngular(() => {
+      merge(fromEvent(element, 'focus').pipe(mapTo(undefined)), fromEvent(element, 'mouseenter'))
+        .pipe(takeUntil(this._destroyed))
+        .subscribe((event?: Event) => {
+          if (this.disabled) {
+            return;
+          }
+
+          // Don't set the tabindex if there are no open sibling or parent menus.
+          if (!event || !this._menuStack?.isEmpty()) {
+            // Set the tab index to 0 if not disabled and it's a focus event, or a mouse enter if this element
+            // is not in a menu bar.
+            element.setAttribute('tabindex', '0');
+          }
+        });
+
+      merge(fromEvent(element, 'blur'), fromEvent(element, 'mouseout'))
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => {
+          if (!this._isStandaloneItem()) {
+            element.setAttribute('tabindex', '-1');
+          }
+        });
+    });
+
     if (!this._isStandaloneItem()) {
       const closeOpenSiblings = () =>
         this._ngZone.run(() => this._menuStack?.closeSubMenuOf(this._parentMenu!));
 
+      // Subscribe to the mouseenter events and close any sibling menu items if this element is moused into.
       this._ngZone.runOutsideAngular(() =>
-        fromEvent(this._elementRef.nativeElement, 'mouseenter')
+        fromEvent(element, 'mouseenter')
           .pipe(
             filter(() => !this._menuStack?.isEmpty() && !this.hasMenu()),
             takeUntil(this._destroyed),

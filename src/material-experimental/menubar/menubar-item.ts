@@ -29,7 +29,6 @@ function removeIcons(element: Element) {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[tabindex]': '_tabindex',
     'type': 'button',
     'role': 'menuitem',
     'class': 'cdk-menu-item mat-menubar-item',
