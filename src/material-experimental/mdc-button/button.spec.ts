@@ -1,15 +1,19 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ApplicationRef, Component, DebugElement} from '@angular/core';
+import {ApplicationRef, Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MatButtonModule, MatButton, MatFabDefaultOptions, MAT_FAB_DEFAULT_OPTIONS} from './index';
 import {MatRipple, ThemePalette} from '@angular/material-experimental/mdc-core';
 import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
+import {Router} from '@angular/router';
+import {Platform} from '@angular/cdk/platform';
+import {RouterTestingModule} from '@angular/router/testing';
+
+import {MatButtonModule, MatButton, MatFabDefaultOptions, MAT_FAB_DEFAULT_OPTIONS} from './index';
 
 describe('MDC-based MatButton', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatButtonModule],
-      declarations: [TestApp],
+      imports: [MatButtonModule, RouterTestingModule],
+      declarations: [TestApp, TestAppWithRouterLink],
     });
 
     TestBed.compileComponents();
@@ -327,6 +331,31 @@ describe('MDC-based MatButton', () => {
       buttonNativeElements.every(element => !!element.querySelector('.mat-mdc-focus-indicator')),
     ).toBe(true);
   });
+
+  describe('event capturing (https://github.com/angular/components/issues/19428)', () => {
+    it('should capture the event and stop its propagation if the anchor is disabled', () => {
+      const platform = TestBed.inject(Platform);
+      if (platform.FIREFOX) {
+        return;
+      }
+
+      const fixture = TestBed.createComponent(TestAppWithRouterLink);
+      fixture.detectChanges();
+
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigateByUrl');
+
+      const anchorElement = fixture.componentInstance.anchor.nativeElement;
+
+      const event = createMouseEvent('click');
+      spyOn(event, 'preventDefault').and.callThrough();
+      dispatchEvent(anchorElement, event);
+
+      expect(anchorElement.eventListeners().length).toEqual(2);
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(router.navigateByUrl).not.toHaveBeenCalled();
+    });
+  });
 });
 
 describe('MatFabDefaultOptions', () => {
@@ -385,4 +414,14 @@ class TestApp {
   increment() {
     this.clickCount++;
   }
+}
+
+/** https://github.com/angular/components/issues/19428 */
+@Component({
+  template: `
+    <a #anchor mat-button routerLink="/home" [disabled]="true"></a>
+  `,
+})
+export class TestAppWithRouterLink {
+  @ViewChild('anchor', {static: true, read: ElementRef}) anchor: ElementRef;
 }

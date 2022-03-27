@@ -165,12 +165,20 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._ngZone.runOutsideAngular(() => {
-      this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+      this._elementRef.nativeElement.addEventListener(
+        'click',
+        this._haltDisabledEvents,
+        // Note: the `MatAnchor` might be bound to an element that already has `click` listeners
+        // registered. For instance, the `routerLink` will execute its listener first and start
+        // the navigation even if the anchor is disabled. We want to capture the event before other
+        // listeners and stop the event propagation if the anchor is disabled.
+        true,
+      );
     });
   }
 
   ngOnDestroy(): void {
-    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents);
+    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents, true);
   }
 
   _haltDisabledEvents = (event: Event): void => {
