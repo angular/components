@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, InjectionToken} from '@angular/core';
+import {Inject, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
 /** Events to emit as specified by the caller once the MenuStack is empty. */
@@ -26,6 +26,13 @@ export interface MenuStackItem {
 
 /** Injection token used for an implementation of MenuStack. */
 export const MENU_STACK = new InjectionToken<MenuStack>('cdk-menu-stack');
+
+/** A provider that provides the parent menu stack, or a new menu stack if there is no parent one. */
+export const PARENT_OR_NEW_MENU_STACK_PROVIDER = {
+  provide: MENU_STACK,
+  deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
+  useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || new MenuStack(),
+};
 
 /**
  * MenuStack allows subscribers to listen for close events (when a MenuStackItem is popped off

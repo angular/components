@@ -36,7 +36,7 @@ import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angu
 import {fromEvent, merge, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
-import {MENU_STACK, MenuStack} from './menu-stack';
+import {MENU_STACK, MenuStack, PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';
 import {MENU_AIM, MenuAim} from './menu-aim';
 import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
 
@@ -80,11 +80,7 @@ export function isClickInsideMenuOverlay(target: Element): boolean {
   },
   providers: [
     {provide: MENU_TRIGGER, useExisting: CdkMenuItemTrigger},
-    {
-      provide: MENU_STACK,
-      deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
-      useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || new MenuStack(),
-    },
+    PARENT_OR_NEW_MENU_STACK_PROVIDER,
   ],
 })
 export class CdkMenuItemTrigger extends MenuTrigger implements OnDestroy {

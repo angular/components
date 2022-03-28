@@ -87,7 +87,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   constructor(
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _ngZone: NgZone,
-    @Optional() @Inject(MENU_STACK) private readonly _menuStack?: MenuStack,
+    @Inject(MENU_STACK) private readonly _menuStack: MenuStack,
     @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
     @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality,
@@ -125,7 +125,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     }
 
     // don't set the tabindex if there are no open sibling or parent menus
-    if (!event || !this._menuStack?.isEmpty()) {
+    if (!event || !this._menuStack.isEmpty()) {
       this._tabindex = 0;
     }
   }
@@ -142,7 +142,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   trigger() {
     if (!this.disabled && !this.hasMenu()) {
       this.triggered.next();
-      this._menuStack?.closeAll();
+      this._menuStack.closeAll();
     }
   }
 
@@ -192,10 +192,10 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
         if (this._parentMenu && this._isParentVertical()) {
           if (this._dir?.value === 'rtl') {
             event.preventDefault();
-            this._menuStack?.close(this._parentMenu, FocusNext.previousItem);
+            this._menuStack.close(this._parentMenu, FocusNext.previousItem);
           } else if (!this.hasMenu()) {
             event.preventDefault();
-            this._menuStack?.closeAll(FocusNext.nextItem);
+            this._menuStack.closeAll(FocusNext.nextItem);
           }
         }
         break;
@@ -204,10 +204,10 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
         if (this._parentMenu && this._isParentVertical()) {
           if (this._dir?.value !== 'rtl') {
             event.preventDefault();
-            this._menuStack?.close(this._parentMenu, FocusNext.previousItem);
+            this._menuStack.close(this._parentMenu, FocusNext.previousItem);
           } else if (!this.hasMenu()) {
             event.preventDefault();
-            this._menuStack?.closeAll(FocusNext.nextItem);
+            this._menuStack.closeAll(FocusNext.nextItem);
           }
         }
         break;
@@ -221,12 +221,12 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   private _setupMouseEnter() {
     if (!this._isStandaloneItem()) {
       const closeOpenSiblings = () =>
-        this._ngZone.run(() => this._menuStack?.closeSubMenuOf(this._parentMenu!));
+        this._ngZone.run(() => this._menuStack.closeSubMenuOf(this._parentMenu!));
 
       this._ngZone.runOutsideAngular(() =>
         fromEvent(this._elementRef.nativeElement, 'mouseenter')
           .pipe(
-            filter(() => !this._menuStack?.isEmpty() && !this.hasMenu()),
+            filter(() => !this._menuStack.isEmpty() && !this.hasMenu()),
             takeUntil(this._destroyed),
           )
           .subscribe(() => {

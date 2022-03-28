@@ -60,7 +60,7 @@ export abstract class CdkMenuBase
 
   protected constructor(
     readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(MENU_STACK) readonly menuStack?: MenuStack,
+    @Inject(MENU_STACK) readonly menuStack: MenuStack,
     @Optional() protected readonly dir?: Directionality,
   ) {
     super();
@@ -155,7 +155,7 @@ export abstract class CdkMenuBase
 
   /** Subscribe to the MenuStack close and empty observables. */
   private _subscribeToMenuStackClosed() {
-    this.menuStack?.closed
+    this.menuStack.closed
       .pipe(takeUntil(this.destroyed))
       .subscribe(item => this.closeOpenMenu(item));
   }
