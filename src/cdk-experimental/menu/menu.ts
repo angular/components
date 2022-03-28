@@ -50,12 +50,10 @@ import {CdkMenuBase} from './menu-base';
   selector: '[cdkMenu]',
   exportAs: 'cdkMenu',
   host: {
-    '[tabindex]': '_isInline() ? 0 : null',
     'role': 'menu',
     'class': 'cdk-menu',
+    '[tabindex]': '_isInline() ? 0 : null',
     '[class.cdk-menu-inline]': '_isInline()',
-    '[attr.aria-orientation]': 'orientation',
-    '(focus)': 'focusFirstItem()',
     '(keydown)': '_handleKeyEvent($event)',
   },
   providers: [

@@ -27,7 +27,12 @@ import {MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
 import {Menu} from './menu-interface';
 import {PointerFocusTracker} from './pointer-focus-tracker';
 
-@Directive()
+@Directive({
+  host: {
+    '[attr.aria-orientation]': 'orientation',
+    '(focus)': 'focusFirstItem()',
+  },
+})
 export abstract class CdkMenuBase
   extends CdkMenuGroup
   implements Menu, AfterContentInit, OnDestroy
@@ -36,7 +41,7 @@ export abstract class CdkMenuBase
    * Sets the aria-orientation attribute and determines where menus will be opened.
    * Does not affect styling/layout.
    */
-  @Input('cdkMenuOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
+  readonly orientation: 'horizontal' | 'vertical' = 'vertical';
 
   /** All child MenuItem elements nested in this Menu. */
   @ContentChildren(CdkMenuItem, {descendants: true})

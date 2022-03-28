@@ -39,8 +39,6 @@ import {CdkMenuBase} from './menu-base';
     'role': 'menubar',
     'class': 'cdk-menu-bar',
     'tabindex': '0',
-    '[attr.aria-orientation]': 'orientation',
-    '(focus)': 'focusFirstItem()',
     '(keydown)': '_handleKeyEvent($event)',
   },
   providers: [
@@ -50,7 +48,7 @@ import {CdkMenuBase} from './menu-base';
   ],
 })
 export class CdkMenuBar extends CdkMenuBase implements AfterContentInit, OnDestroy {
-  override orientation: 'horizontal' | 'vertical' = 'horizontal';
+  override readonly orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   override menuStack: MenuStack;
 
