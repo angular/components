@@ -33,7 +33,13 @@ import {Directionality} from '@angular/cdk/bidi';
 import {take, takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';
-import {FocusNext, MENU_STACK, MenuStack, PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';
+import {
+  FocusNext,
+  MENU_STACK,
+  MenuStack,
+  PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER,
+  PARENT_OR_NEW_MENU_STACK_PROVIDER,
+} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
 import {MENU_AIM, MenuAim} from './menu-aim';
 import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
@@ -59,7 +65,7 @@ import {CdkMenuBase} from './menu-base';
   providers: [
     {provide: CdkMenuGroup, useExisting: CdkMenu},
     {provide: CDK_MENU, useExisting: CdkMenu},
-    PARENT_OR_NEW_MENU_STACK_PROVIDER,
+    PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER,
   ],
 })
 export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy {

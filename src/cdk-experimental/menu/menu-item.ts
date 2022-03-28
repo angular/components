@@ -148,12 +148,12 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
 
   /** Whether the menu item opens a menu. */
   hasMenu() {
-    return !!this._menuTrigger?.hasMenu();
+    return !!this._menuTrigger;
   }
 
   /** Return true if this MenuItem has an attached menu and it is open. */
   isMenuOpen() {
-    return !!this._menuTrigger?.isMenuOpen();
+    return !!this._menuTrigger?.isOpen();
   }
 
   /**
@@ -191,11 +191,15 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       case RIGHT_ARROW:
         if (this._parentMenu && this._isParentVertical()) {
           if (this._dir?.value === 'rtl') {
-            event.preventDefault();
-            this._menuStack.close(this._parentMenu, FocusNext.previousItem);
+            if (this._menuStack.hasInlineMenu() || this._menuStack.length() > 1) {
+              event.preventDefault();
+              this._menuStack.close(this._parentMenu, FocusNext.previousItem);
+            }
           } else if (!this.hasMenu()) {
-            event.preventDefault();
-            this._menuStack.closeAll(FocusNext.nextItem);
+            if (this._menuStack.hasInlineMenu()) {
+              event.preventDefault();
+              this._menuStack.closeAll(FocusNext.nextItem);
+            }
           }
         }
         break;
@@ -203,11 +207,15 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       case LEFT_ARROW:
         if (this._parentMenu && this._isParentVertical()) {
           if (this._dir?.value !== 'rtl') {
-            event.preventDefault();
-            this._menuStack.close(this._parentMenu, FocusNext.previousItem);
+            if (this._menuStack.hasInlineMenu() || this._menuStack.length() > 1) {
+              event.preventDefault();
+              this._menuStack.close(this._parentMenu, FocusNext.previousItem);
+            }
           } else if (!this.hasMenu()) {
-            event.preventDefault();
-            this._menuStack.closeAll(FocusNext.nextItem);
+            if (this._menuStack.hasInlineMenu()) {
+              event.preventDefault();
+              this._menuStack.closeAll(FocusNext.nextItem);
+            }
           }
         }
         break;

@@ -40,7 +40,7 @@ export abstract class CdkMenuBase
    * Sets the aria-orientation attribute and determines where menus will be opened.
    * Does not affect styling/layout.
    */
-  readonly orientation: 'horizontal' | 'vertical' = 'vertical';
+  orientation: 'horizontal' | 'vertical' = 'vertical';
 
   /** All child MenuItem elements nested in this Menu. */
   @ContentChildren(CdkMenuItem, {descendants: true})
@@ -109,7 +109,7 @@ export abstract class CdkMenuBase
     const keyManager = this.keyManager;
     const trigger = this.openItem;
     if (menu === trigger?.getMenuTrigger()?.getMenu()) {
-      trigger?.getMenuTrigger()?.closeMenu();
+      trigger?.getMenuTrigger()?.close();
       // If the user has moused over a sibling item we want to focus the element under mouse focus
       // not the trigger which previously opened the now closed menu.
       if (trigger) {
