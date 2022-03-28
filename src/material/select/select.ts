@@ -70,7 +70,6 @@ import {
 import {
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
-  CanDisable,
   CanDisableRipple,
   CanUpdateErrorState,
   ErrorStateMatcher,
@@ -80,7 +79,6 @@ import {
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
-  mixinDisabled,
   mixinDisableRipple,
   mixinErrorState,
   mixinTabIndex,
@@ -186,37 +184,28 @@ export class MatSelectChange {
   ) {}
 }
 
+abstract class _MixinBase {
+  abstract disabled: boolean;
+
+  /**
+   * Emits whenever the component state changes and should cause the parent
+   * form-field to update. Implemented as part of `MatFormFieldControl`.
+   * @docs-private
+   */
+  readonly stateChanges = new Subject<void>();
+
+  constructor(
+    public _elementRef: ElementRef,
+    public _defaultErrorStateMatcher: ErrorStateMatcher,
+    public _parentForm: NgForm,
+    public _parentFormGroup: FormGroupDirective,
+    public ngControl: NgControl,
+  ) {}
+}
+
 // Boilerplate for applying mixins to MatSelect.
 /** @docs-private */
-const _MatSelectMixinBase = mixinDisableRipple(
-  mixinTabIndex(
-    mixinDisabled(
-      mixinErrorState(
-        class {
-          /**
-           * Emits whenever the component state changes and should cause the parent
-           * form-field to update. Implemented as part of `MatFormFieldControl`.
-           * @docs-private
-           */
-          readonly stateChanges = new Subject<void>();
-
-          constructor(
-            public _elementRef: ElementRef,
-            public _defaultErrorStateMatcher: ErrorStateMatcher,
-            public _parentForm: NgForm,
-            public _parentFormGroup: FormGroupDirective,
-            /**
-             * Form control bound to the component.
-             * Implemented as part of `MatFormFieldControl`.
-             * @docs-private
-             */
-            public ngControl: NgControl,
-          ) {}
-        },
-      ),
-    ),
-  ),
-);
+const _MatSelectMixinBase = mixinDisableRipple(mixinTabIndex(mixinErrorState(_MixinBase)));
 
 /**
  * Injection token that can be used to reference instances of `MatSelectTrigger`. It serves as
@@ -245,7 +234,6 @@ export abstract class _MatSelectBase<C>
     OnInit,
     DoCheck,
     ControlValueAccessor,
-    CanDisable,
     HasTabIndex,
     MatFormFieldControl<any>,
     CanUpdateErrorState,
@@ -431,7 +419,18 @@ export abstract class _MatSelectBase<C>
   }
   private _value: any;
 
-  /** Aria label of the select. */
+  /** Whether the select can be disabled. */
+  @Input()
+  get disabled(): boolean {
+    const control = this.ngControl;
+    return control && control.disabled !== null ? control.disabled : this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+  protected _disabled = false;
+
+  /** Aria label of the select. If not specified, the placeholder will be used as label. */
   @Input('aria-label') ariaLabel: string = '';
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
