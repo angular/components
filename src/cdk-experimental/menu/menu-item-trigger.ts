@@ -11,11 +11,9 @@ import {
   ElementRef,
   Inject,
   Injector,
-  Input,
   NgZone,
   OnDestroy,
   Optional,
-  TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';

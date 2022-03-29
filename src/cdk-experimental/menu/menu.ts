@@ -38,7 +38,6 @@ import {
   MENU_STACK,
   MenuStack,
   PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER,
-  PARENT_OR_NEW_MENU_STACK_PROVIDER,
 } from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
 import {MENU_AIM, MenuAim} from './menu-aim';

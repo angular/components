@@ -12,9 +12,7 @@ import {
   Inject,
   InjectionToken,
   Injector,
-  Input,
   OnDestroy,
-  Output,
   TemplateRef,
 } from '@angular/core';
 import {Menu} from './menu-interface';

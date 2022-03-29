@@ -8,29 +8,24 @@
 
 import {
   Directive,
-  EventEmitter,
   Inject,
   Injectable,
   Injector,
   Input,
   OnDestroy,
   Optional,
-  Output,
-  TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
-  ConnectedPosition,
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
-  OverlayRef,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {merge, partition, Subject} from 'rxjs';
+import {merge, partition} from 'rxjs';
 import {skip, takeUntil} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
 import {isClickInsideMenuOverlay} from './menu-item-trigger';
