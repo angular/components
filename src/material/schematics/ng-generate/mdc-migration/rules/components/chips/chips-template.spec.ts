@@ -89,4 +89,8 @@ describe('chips template migrator', () => {
       '<mat-chip-listbox #chipList></mat-chip-listbox>',
     );
   });
+
+  it('should update standalone chips', async () => {
+    await runMigrationTest('<mat-chip></mat-chip>', '<mat-chip-option></mat-chip-option>');
+  });
 });

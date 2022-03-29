@@ -18,22 +18,6 @@ export interface Update {
 }
 
 export abstract class TemplateMigrator {
-  /** Stores template updates. By default gets returned by #getUpdates. */
-  protected updates: Update[] = [];
-
-  /** Preorder callback hook for the template AST traversal. */
-  preorder(node: compiler.TmplAstElement): void {}
-
-  /** Postorder callback hook for the template AST traversal. */
-  postorder(node: compiler.TmplAstElement): void {}
-
   /** Returns the data needed to update the given node. */
-  getUpdates(): Update[] {
-    return this.updates;
-  }
-
-  /** Runs once a template has finished being updated. */
-  reset(): void {
-    this.updates = [];
-  }
+  abstract getUpdates(ast: compiler.ParsedTemplate): Update[];
 }

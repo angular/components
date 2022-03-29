@@ -6,19 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TmplAstElement} from '@angular/compiler';
-import {TemplateMigrator} from '../../template-migrator';
-import {addAttribute} from '../../tree-traversal';
+import * as compiler from '@angular/compiler';
+import {TemplateMigrator, Update} from '../../template-migrator';
+import {addAttribute, visitElements} from '../../tree-traversal';
 
 export class CardTemplateMigrator extends TemplateMigrator {
-  override preorder(node: TmplAstElement): void {
-    if (node.name !== 'mat-card') {
-      return;
-    }
+  getUpdates(ast: compiler.ParsedTemplate): Update[] {
+    const updates: Update[] = [];
 
-    this.updates.push({
-      location: node.startSourceSpan.end,
-      updateFn: html => addAttribute(html, node, 'appearance', 'outlined'),
+    visitElements(ast.nodes, (node: compiler.TmplAstElement) => {
+      if (node.name !== 'mat-card') {
+        return;
+      }
+
+      updates.push({
+        location: node.startSourceSpan.end,
+        updateFn: html => addAttribute(html, node, 'appearance', 'outlined'),
+      });
     });
+
+    return updates;
   }
 }
