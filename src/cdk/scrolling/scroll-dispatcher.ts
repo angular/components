@@ -182,7 +182,7 @@ export class ScrollDispatcher implements OnDestroy {
   private _addGlobalListener() {
     this._globalSubscription = this._ngZone.runOutsideAngular(() => {
       const window = this._getWindow();
-      return fromEvent(window.document, 'scroll', { passive: true }).subscribe(() => this._scrolled.next());
+      return fromEvent(window.document, 'scroll').subscribe(() => this._scrolled.next());
     });
   }
 
