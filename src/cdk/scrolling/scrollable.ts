@@ -49,7 +49,7 @@ export class CdkScrollable implements OnInit, OnDestroy {
 
   private _elementScrolled: Observable<Event> = new Observable((observer: Observer<Event>) =>
     this.ngZone.runOutsideAngular(() =>
-      fromEvent(this.elementRef.nativeElement, 'scroll')
+      fromEvent(this.elementRef.nativeElement, 'scroll', { passive: true })
         .pipe(takeUntil(this._destroyed))
         .subscribe(observer),
     ),
