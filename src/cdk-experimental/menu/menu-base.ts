@@ -13,7 +13,6 @@ import {
   Directive,
   ElementRef,
   Inject,
-  Input,
   OnDestroy,
   Optional,
   QueryList,
