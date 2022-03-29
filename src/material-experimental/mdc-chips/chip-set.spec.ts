@@ -4,7 +4,6 @@ import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipSet, MatChipsModule} from './index';
 
-
 describe('MDC-based MatChipSet', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -99,7 +98,6 @@ describe('MDC-based MatChipSet', () => {
 
     expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
   });
-
 });
 
 @Component({
@@ -109,7 +107,7 @@ describe('MDC-based MatChipSet', () => {
           {{name}} {{i + 1}}
         </mat-chip>
       </mat-chip-set>
-  `
+  `,
 })
 class BasicChipSet {
   name: string = 'Test';
@@ -125,7 +123,6 @@ class BasicChipSet {
         </mat-chip>
       </ng-container>
     </mat-chip-set>
-  `
+  `,
 })
-class IndirectDescendantsChipSet extends BasicChipSet {
-}
+class IndirectDescendantsChipSet extends BasicChipSet {}

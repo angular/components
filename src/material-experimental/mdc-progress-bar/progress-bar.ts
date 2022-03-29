@@ -22,7 +22,11 @@ import {
 } from '@angular/core';
 import {CanColor, mixinColor} from '@angular/material-experimental/mdc-core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {ProgressAnimationEnd} from '@angular/material/progress-bar';
+import {
+  MatProgressBarDefaultOptions,
+  MAT_PROGRESS_BAR_DEFAULT_OPTIONS,
+  ProgressAnimationEnd,
+} from '@angular/material/progress-bar';
 import {
   MDCLinearProgressAdapter,
   MDCLinearProgressFoundation,
@@ -34,9 +38,12 @@ import {Directionality} from '@angular/cdk/bidi';
 
 // Boilerplate for applying mixins to MatProgressBar.
 /** @docs-private */
-const _MatProgressBarBase = mixinColor(class {
-  constructor(public _elementRef: ElementRef) {}
-}, 'primary');
+const _MatProgressBarBase = mixinColor(
+  class {
+    constructor(public _elementRef: ElementRef) {}
+  },
+  'primary',
+);
 
 export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
 
@@ -61,13 +68,19 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit, OnDestroy,
-  CanColor {
-
-  constructor(elementRef: ElementRef<HTMLElement>,
-              private _ngZone: NgZone,
-              @Optional() dir?: Directionality,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+export class MatProgressBar
+  extends _MatProgressBarBase
+  implements AfterViewInit, OnDestroy, CanColor
+{
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+    @Optional() dir?: Directionality,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+    @Optional()
+    @Inject(MAT_PROGRESS_BAR_DEFAULT_OPTIONS)
+    defaults?: MatProgressBarDefaultOptions,
+  ) {
     super(elementRef);
     this._isNoopAnimation = _animationMode === 'NoopAnimations';
     if (dir) {
@@ -75,6 +88,14 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
         this._syncFoundation();
         this._foundation?.restartAnimation();
       });
+    }
+
+    if (defaults) {
+      if (defaults.color) {
+        this.color = this.defaultColor = defaults.color;
+      }
+
+      this.mode = defaults.mode || this.mode;
     }
   }
 
@@ -103,9 +124,10 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
       (this._elementRef.nativeElement.style as any)[styleProperty] = value;
     },
     getWidth: () => this._elementRef.nativeElement.offsetWidth,
-    attachResizeObserver: (callback) => {
-      const resizeObserverConstructor = (typeof window !== 'undefined') &&
-                                        (window as unknown as WithMDCResizeObserver).ResizeObserver;
+    attachResizeObserver: callback => {
+      const resizeObserverConstructor =
+        typeof window !== 'undefined' &&
+        (window as unknown as WithMDCResizeObserver).ResizeObserver;
 
       if (resizeObserverConstructor) {
         return this._ngZone.runOutsideAngular(() => {
@@ -124,7 +146,7 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
       }
 
       return null;
-    }
+    },
   };
 
   /** Flag that indicates whether NoopAnimations mode is set to true. */
@@ -132,7 +154,9 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
 
   /** Value of the progress bar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
-  get value(): number { return this._value; }
+  get value(): number {
+    return this._value;
+  }
   set value(v: number) {
     this._value = clamp(v || 0);
     this._syncFoundation();
@@ -141,7 +165,9 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
 
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
-  get bufferValue(): number { return this._bufferValue || 0; }
+  get bufferValue(): number {
+    return this._bufferValue || 0;
+  }
   set bufferValue(v: number) {
     this._bufferValue = clamp(v || 0);
     this._syncFoundation();
@@ -172,7 +198,9 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
    * Mirrored to mode attribute.
    */
   @Input()
-  get mode(): ProgressBarMode { return this._mode; }
+  get mode(): ProgressBarMode {
+    return this._mode;
+  }
   set mode(value: ProgressBarMode) {
     // Note that we don't technically need a getter and a setter here,
     // but we use it to match the behavior of the existing mat-progress-bar.
@@ -193,16 +221,17 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
 
     // Run outside angular so change detection didn't get triggered on every transition end
     // instead only on the animation that we care about (primary value bar's transitionend)
-    this._ngZone.runOutsideAngular((() => {
-      this._animationEndSubscription =
-          (fromEvent(this._primaryBar, 'transitionend') as Observable<TransitionEvent>)
-            .pipe(filter(((e: TransitionEvent) => e.target === this._primaryBar)))
-            .subscribe(() => {
-              if (this.mode === 'determinate' || this.mode === 'buffer') {
-                this._ngZone.run(() => this.animationEnd.next({value: this.value}));
-              }
-            });
-    }));
+    this._ngZone.runOutsideAngular(() => {
+      this._animationEndSubscription = (
+        fromEvent(this._primaryBar, 'transitionend') as Observable<TransitionEvent>
+      )
+        .pipe(filter((e: TransitionEvent) => e.target === this._primaryBar))
+        .subscribe(() => {
+          if (this.mode === 'determinate' || this.mode === 'buffer') {
+            this._ngZone.run(() => this.animationEnd.next({value: this.value}));
+          }
+        });
+    });
   }
 
   ngOnDestroy() {

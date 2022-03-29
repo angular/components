@@ -13,7 +13,7 @@ import {
   TemplateRef,
   ContentChild,
 } from '@angular/core';
-import {MatTab as BaseMatTab} from '@angular/material/tabs';
+import {MatTab as BaseMatTab, MAT_TAB} from '@angular/material/tabs';
 import {MatTabContent} from './tab-content';
 import {MatTabLabel} from './tab-label';
 
@@ -25,9 +25,11 @@ import {MatTabLabel} from './tab-label';
   // that creating the extra class will generate more code than just duplicating the template.
   templateUrl: 'tab.html',
   inputs: ['disabled'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
+  providers: [{provide: MAT_TAB, useExisting: MatTab}],
 })
 export class MatTab extends BaseMatTab {
   /**
@@ -38,6 +40,10 @@ export class MatTab extends BaseMatTab {
 
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MatTabLabel)
-  override get templateLabel(): MatTabLabel { return this._templateLabel; }
-  override set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  override get templateLabel(): MatTabLabel {
+    return this._templateLabel;
+  }
+  override set templateLabel(value: MatTabLabel) {
+    this._setTemplateLabelInput(value);
+  }
 }

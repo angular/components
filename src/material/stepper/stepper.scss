@@ -1,5 +1,7 @@
+@use '@angular/cdk';
+@use 'sass:math';
+
 @use '../core/style/variables';
-@use '../core/style/private';
 @use './stepper-variables';
 
 .mat-stepper-vertical,
@@ -14,6 +16,10 @@
 
   .mat-stepper-label-position-bottom & {
     align-items: flex-start;
+  }
+
+  .mat-stepper-header-position-bottom & {
+    order: 1;
   }
 }
 
@@ -33,7 +39,7 @@
 }
 
 %mat-header-horizontal-line-label-position-bottom {
-  $half-side-gap: private.private-div(stepper-variables.$side-gap, 2);
+  $half-side-gap: math.div(stepper-variables.$side-gap, 2);
   border-top-width: stepper-variables.$line-width;
   border-top-style: solid;
   content: '';
@@ -115,6 +121,11 @@
   }
 }
 
+.mat-horizontal-stepper-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .mat-horizontal-stepper-content {
   outline: 0;
 
@@ -125,11 +136,23 @@
 }
 
 .mat-horizontal-content-container {
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+  }
+
   overflow: hidden;
   padding: 0 stepper-variables.$side-gap stepper-variables.$side-gap stepper-variables.$side-gap;
+
+  .mat-stepper-header-position-bottom & {
+    padding: stepper-variables.$side-gap stepper-variables.$side-gap 0 stepper-variables.$side-gap;
+  }
 }
 
 .mat-vertical-content-container {
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+  }
+
   margin-left: stepper-variables.$vertical-stepper-content-margin;
   border: 0;
   position: relative;

@@ -7,22 +7,26 @@ import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {
   DialogContentExample,
-  DialogContentExampleDialog
+  DialogContentExampleDialog,
 } from './dialog-content/dialog-content-example';
 import {DialogDataExample, DialogDataExampleDialog} from './dialog-data/dialog-data-example';
 import {
   DialogElementsExample,
-  DialogElementsExampleDialog
+  DialogElementsExampleDialog,
 } from './dialog-elements/dialog-elements-example';
 import {
   DialogOverviewExample,
-  DialogOverviewExampleDialog
+  DialogOverviewExampleDialog,
 } from './dialog-overview/dialog-overview-example';
 import {
   DialogFromMenuExample,
-  DialogFromMenuExampleDialog
+  DialogFromMenuExampleDialog,
 } from './dialog-from-menu/dialog-from-menu-example';
 import {DialogHarnessExample} from './dialog-harness/dialog-harness-example';
+import {
+  DialogAnimationsExample,
+  DialogAnimationsExampleDialog,
+} from './dialog-animations/dialog-animations-example';
 
 export {
   DialogContentExample,
@@ -36,6 +40,8 @@ export {
   DialogHarnessExample,
   DialogOverviewExample,
   DialogOverviewExampleDialog,
+  DialogAnimationsExample,
+  DialogAnimationsExampleDialog,
 };
 
 const EXAMPLES = [
@@ -50,6 +56,8 @@ const EXAMPLES = [
   DialogHarnessExample,
   DialogOverviewExample,
   DialogOverviewExampleDialog,
+  DialogAnimationsExample,
+  DialogAnimationsExampleDialog,
 ];
 
 @NgModule({
@@ -63,7 +71,5 @@ const EXAMPLES = [
   ],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
-export class DialogExamplesModule {
-}
+export class DialogExamplesModule {}

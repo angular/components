@@ -1,9 +1,10 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '@angular/material' as mat;
 @use '@material/density' as mdc-density;
 @use '@material/textfield' as mdc-textfield;
-@use 'sass:map';
-@use '../../material/core/theming/theming';
-@use '../../material/core/style/private';
-@use 'form-field-sizing';
+
+@use './form-field-sizing';
 
 // Mixin that sets the vertical spacing for the infix container of filled form fields.
 // We need to apply spacing to the infix container because we removed the input padding
@@ -33,13 +34,13 @@
 
 // Mixin that includes the density styles for form fields. MDC provides their own density
 // styles for MDC text-field which we cannot use. MDC relies on input elements to stretch
-// vertically when the height is reduced as per density scale. This doesn't work for for our
+// vertically when the height is reduced as per density scale. This doesn't work for our
 // form field since we support custom form field controls without a fixed height. Instead, we
 // provide spacing that makes arbitrary controls align as specified in the Material Design
 // specification. In order to support density, we need to adjust the vertical spacing to be
 // based on the density scale.
 @mixin private-form-field-density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
+  $density-scale: mat.get-density-config($config-or-theme);
   // Height of the form field that is based on the current density scale.
   $height: mdc-density.prop-value(
     $density-config: mdc-textfield.$density-config,
@@ -55,7 +56,7 @@
   // cannot update the spacing to explicit numbers based on the density scale. Instead, we
   // determine the height reduction and equally subtract it from the default `top` and `bottom`
   // padding that is provided by the Material Design specification.
-  $vertical-deduction: private.private-div(mdc-textfield.$height - $height, 2);
+  $vertical-deduction: math.div(mdc-textfield.$height - $height, 2);
   // Map that describes the padding for form-fields with label.
   $with-label-padding: (
     top: form-field-sizing.$mat-form-field-with-label-input-padding-top - $vertical-deduction,
@@ -77,8 +78,8 @@
   // on whether a textarea is used. This is not possible in our implementation of the
   // form-field because we do not know what type of form-field control is set up. Hence
   // we always use a fixed position for the label. This does not have any implications.
-  .mat-mdc-form-field .mat-mdc-text-field-wrapper .mdc-floating-label {
-    top: private.private-div($height, 2);
+  .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-floating-label {
+    top: math.div($height, 2);
   }
 
   // For the outline appearance, we re-create the active floating label transform. This is
@@ -107,7 +108,7 @@
     // Update the spacing for filled form fields to account for the hidden floating label.
     @include _infix-vertical-spacing-filled(
           $no-label-padding, $no-label-padding);
-    .mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mdc-floating-label {
+    .mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-floating-label {
         display: none;
     }
   }

@@ -10,20 +10,20 @@ import {inject, InjectionToken, LOCALE_ID} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
 /** InjectionToken for datepicker that can be used to override default locale code. */
-export const MAT_DATE_LOCALE = new InjectionToken<string>('MAT_DATE_LOCALE', {
+export const MAT_DATE_LOCALE = new InjectionToken<{}>('MAT_DATE_LOCALE', {
   providedIn: 'root',
   factory: MAT_DATE_LOCALE_FACTORY,
 });
 
 /** @docs-private */
-export function MAT_DATE_LOCALE_FACTORY(): string {
+export function MAT_DATE_LOCALE_FACTORY(): {} {
   return inject(LOCALE_ID);
 }
 
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
-export abstract class DateAdapter<D> {
+export abstract class DateAdapter<D, L = any> {
   /** The locale to use for all dates. */
-  protected locale: any;
+  protected locale: L;
   protected readonly _localeChanges = new Subject<void>();
 
   /** A stream that emits when the locale changes. */
@@ -195,14 +195,14 @@ export abstract class DateAdapter<D> {
    */
   abstract invalid(): D;
 
- /**
-  * Given a potential date object, returns that same date object if it is
-  * a valid date, or `null` if it's not a valid date.
-  * @param obj The object to check.
-  * @returns A date or `null`.
-  */
+  /**
+   * Given a potential date object, returns that same date object if it is
+   * a valid date, or `null` if it's not a valid date.
+   * @param obj The object to check.
+   * @returns A date or `null`.
+   */
   getValidDateOrNull(obj: unknown): D | null {
-    return this.isDateInstance(obj) && this.isValid(obj as D) ? obj as D : null;
+    return this.isDateInstance(obj) && this.isValid(obj as D) ? (obj as D) : null;
   }
 
   /**
@@ -218,7 +218,7 @@ export abstract class DateAdapter<D> {
    *     deserialized into a null date (e.g. the empty string), or an invalid date.
    */
   deserialize(value: any): D | null {
-    if (value == null || this.isDateInstance(value) && this.isValid(value)) {
+    if (value == null || (this.isDateInstance(value) && this.isValid(value))) {
       return value;
     }
     return this.invalid();
@@ -228,7 +228,7 @@ export abstract class DateAdapter<D> {
    * Sets the locale used for all dates.
    * @param locale The new locale.
    */
-  setLocale(locale: any) {
+  setLocale(locale: L) {
     this.locale = locale;
     this._localeChanges.next();
   }
@@ -241,9 +241,11 @@ export abstract class DateAdapter<D> {
    *     a number greater than 0 if the first date is later.
    */
   compareDate(first: D, second: D): number {
-    return this.getYear(first) - this.getYear(second) ||
-        this.getMonth(first) - this.getMonth(second) ||
-        this.getDate(first) - this.getDate(second);
+    return (
+      this.getYear(first) - this.getYear(second) ||
+      this.getMonth(first) - this.getMonth(second) ||
+      this.getDate(first) - this.getDate(second)
+    );
   }
 
   /**

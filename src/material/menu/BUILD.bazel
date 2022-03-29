@@ -19,7 +19,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":menu.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/menu",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -48,7 +47,7 @@ sass_binary(
     name = "menu_scss",
     src = "menu.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

@@ -1,8 +1,8 @@
+@use '@angular/cdk';
+@use 'sass:math';
+
 @use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
-@use '../core/style/private';
-@use '../../cdk/a11y';
-
 
 // This refers to the thickness of the slider. On a horizontal slider this is the height, on a
 // vertical slider this is the width.
@@ -39,13 +39,13 @@ $focus-ring-size: 30px !default;
 
   &:not(.mat-slider-disabled):active,
   &.mat-slider-sliding:not(.mat-slider-disabled) {
-    @include vendor-prefixes.cursor-grabbing;
+    cursor: grabbing;
   }
 }
 
 .mat-slider-wrapper {
   // force browser to show background-color when using the print function
-  @include vendor-prefixes.private-color-adjust(exact);
+  @include vendor-prefixes.color-adjust(exact);
   position: absolute;
 }
 
@@ -116,7 +116,7 @@ $focus-ring-size: 30px !default;
 
 %_mat-slider-cursor {
   .mat-slider:not(.mat-slider-disabled):not(.mat-slider-sliding) & {
-    @include vendor-prefixes.cursor-grab;
+    cursor: grab;
   }
 }
 
@@ -124,8 +124,8 @@ $focus-ring-size: 30px !default;
   @extend %_mat-slider-cursor;
 
   position: absolute;
-  right: private.private-div(-$thumb-size, 2);
-  bottom: private.private-div(-$thumb-size, 2);
+  right: math.div(-$thumb-size, 2);
+  bottom: math.div(-$thumb-size, 2);
   box-sizing: border-box;
   width: $thumb-size;
   height: $thumb-size;
@@ -153,7 +153,7 @@ $focus-ring-size: 30px !default;
     border-radius  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
     background-color  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
 }
@@ -281,7 +281,7 @@ $focus-ring-size: 30px !default;
 
   .mat-slider-wrapper {
     height: $track-thickness;
-    top: private.private-div($thickness - $track-thickness, 2);
+    top: math.div($thickness - $track-thickness, 2);
     left: $padding;
     right: $padding;
   }
@@ -314,10 +314,10 @@ $focus-ring-size: 30px !default;
     height: $track-thickness;
     width: 100%;
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
       height: 0;
       outline: solid $track-thickness;
-      top: private.private-div($track-thickness, 2);
+      top: math.div($track-thickness, 2);
     }
   }
 
@@ -333,14 +333,14 @@ $focus-ring-size: 30px !default;
   }
 
   .mat-slider-focus-ring {
-    top: private.private-div(-$focus-ring-size, 2);
-    right: private.private-div(-$focus-ring-size, 2);
+    top: math.div(-$focus-ring-size, 2);
+    right: math.div(-$focus-ring-size, 2);
   }
 
   .mat-slider-thumb-label {
-    right: private.private-div(-$thumb-label-size, 2);
+    right: math.div(-$thumb-label-size, 2);
     top: -($thumb-label-size + $thumb-arrow-gap);
-    transform: translateY(private.private-div($thumb-label-size, 2) + $thumb-arrow-gap)
+    transform: translateY(math.div($thumb-label-size, 2) + $thumb-arrow-gap)
         scale(0.01)
         rotate(45deg);
   }
@@ -354,7 +354,7 @@ $focus-ring-size: 30px !default;
       transform: rotate(45deg);
     }
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
       .mat-slider-thumb-label,
       .mat-slider-thumb-label-text {
         transform: none;
@@ -373,7 +373,7 @@ $focus-ring-size: 30px !default;
     width: $track-thickness;
     top: $padding;
     bottom: $padding;
-    left: private.private-div($thickness - $track-thickness, 2);
+    left: math.div($thickness - $track-thickness, 2);
   }
 
   .mat-slider-wrapper::after {
@@ -404,16 +404,16 @@ $focus-ring-size: 30px !default;
     width: $track-thickness;
     height: 100%;
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
       width: 0;
       outline: solid $track-thickness;
-      left: private.private-div($track-thickness, 2);
+      left: math.div($track-thickness, 2);
     }
   }
 
   .mat-slider-focus-ring {
-    bottom: private.private-div(-$focus-ring-size, 2);
-    left: private.private-div(-$focus-ring-size, 2);
+    bottom: math.div(-$focus-ring-size, 2);
+    left: math.div(-$focus-ring-size, 2);
   }
 
   .mat-slider-ticks {
@@ -432,9 +432,9 @@ $focus-ring-size: 30px !default;
   }
 
   .mat-slider-thumb-label {
-    bottom: private.private-div(-$thumb-label-size, 2);
+    bottom: math.div(-$thumb-label-size, 2);
     left: -($thumb-label-size + $thumb-arrow-gap);
-    transform: translateX(private.private-div($thumb-label-size, 2) + $thumb-arrow-gap)
+    transform: translateX(math.div($thumb-label-size, 2) + $thumb-arrow-gap)
         scale(0.01)
         rotate(-45deg);
   }

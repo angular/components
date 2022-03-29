@@ -7,17 +7,9 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="googlemaps" />
+/// <reference types="google.maps" />
 
-import {
-  Directive,
-  ElementRef,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import {Directive, ElementRef, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -38,8 +30,9 @@ import {MapAnchorPoint} from '../map-anchor-point';
 export class MapInfoWindow implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(this._ngZone);
   private readonly _options = new BehaviorSubject<google.maps.InfoWindowOptions>({});
-  private readonly _position =
-      new BehaviorSubject<google.maps.LatLngLiteral|google.maps.LatLng|undefined>(undefined);
+  private readonly _position = new BehaviorSubject<
+    google.maps.LatLngLiteral | google.maps.LatLng | undefined
+  >(undefined);
   private readonly _destroy = new Subject<void>();
 
   /**
@@ -55,7 +48,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   }
 
   @Input()
-  set position(position: google.maps.LatLngLiteral|google.maps.LatLng) {
+  set position(position: google.maps.LatLngLiteral | google.maps.LatLng) {
     this._position.next(position);
   }
 
@@ -64,7 +57,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.closeclick
    */
   @Output() readonly closeclick: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('closeclick');
+    this._eventManager.getLazyEmitter<void>('closeclick');
 
   /**
    * See
@@ -72,14 +65,14 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * #InfoWindow.content_changed
    */
   @Output() readonly contentChanged: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('content_changed');
+    this._eventManager.getLazyEmitter<void>('content_changed');
 
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.domready
    */
   @Output() readonly domready: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('domready');
+    this._eventManager.getLazyEmitter<void>('domready');
 
   /**
    * See
@@ -87,7 +80,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * #InfoWindow.position_changed
    */
   @Output() readonly positionChanged: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('position_changed');
+    this._eventManager.getLazyEmitter<void>('position_changed');
 
   /**
    * See
@@ -95,11 +88,13 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * #InfoWindow.zindex_changed
    */
   @Output() readonly zindexChanged: Observable<void> =
-      this._eventManager.getLazyEmitter<void>('zindex_changed');
+    this._eventManager.getLazyEmitter<void>('zindex_changed');
 
-  constructor(private readonly _googleMap: GoogleMap,
-              private _elementRef: ElementRef<HTMLElement>,
-              private _ngZone: NgZone) {}
+  constructor(
+    private readonly _googleMap: GoogleMap,
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {
@@ -145,9 +140,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * See
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.getContent
    */
-  getContent(): string|Node {
+  getContent(): string | Node | null {
     this._assertInitialized();
-    return this.infoWindow.getContent();
+    return this.infoWindow.getContent() || null;
   }
 
   /**
@@ -155,9 +150,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/info-window
    * #InfoWindow.getPosition
    */
-  getPosition(): google.maps.LatLng|null {
+  getPosition(): google.maps.LatLng | null {
     this._assertInitialized();
-    return this.infoWindow.getPosition();
+    return this.infoWindow.getPosition() || null;
   }
 
   /**
@@ -173,7 +168,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
    * then the position property of the options input is used instead.
    */
-  open(anchor?: MapAnchorPoint) {
+  open(anchor?: MapAnchorPoint, shouldFocus?: boolean) {
     this._assertInitialized();
     const anchorObject = anchor ? anchor.getAnchor() : undefined;
 
@@ -183,19 +178,27 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     // case where the window doesn't have an anchor, but is placed at a particular position.
     if (this.infoWindow.get('anchor') !== anchorObject || !anchorObject) {
       this._elementRef.nativeElement.style.display = '';
-      this.infoWindow.open(this._googleMap.googleMap, anchorObject);
+
+      // The config is cast to `any`, because the internal typings are out of date.
+      this.infoWindow.open({
+        map: this._googleMap.googleMap,
+        anchor: anchorObject,
+        shouldFocus,
+      } as any);
     }
   }
 
   private _combineOptions(): Observable<google.maps.InfoWindowOptions> {
-    return combineLatest([this._options, this._position]).pipe(map(([options, position]) => {
-      const combinedOptions: google.maps.InfoWindowOptions = {
-        ...options,
-        position: position || options.position,
-        content: this._elementRef.nativeElement,
-      };
-      return combinedOptions;
-    }));
+    return combineLatest([this._options, this._position]).pipe(
+      map(([options, position]) => {
+        const combinedOptions: google.maps.InfoWindowOptions = {
+          ...options,
+          position: position || options.position,
+          content: this._elementRef.nativeElement,
+        };
+        return combinedOptions;
+      }),
+    );
   }
 
   private _watchForOptionsChanges() {
@@ -218,14 +221,16 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._googleMap.googleMap) {
         throw Error(
-            'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.');
+          'Cannot access Google Map information before the API has been initialized. ' +
+            'Please wait for the API to load before trying to interact with it.',
+        );
       }
       if (!this.infoWindow) {
         throw Error(
-            'Cannot interact with a Google Map Info Window before it has been ' +
+          'Cannot interact with a Google Map Info Window before it has been ' +
             'initialized. Please wait for the Info Window to load before trying to interact with ' +
-            'it.');
+            'it.',
+        );
       }
     }
   }

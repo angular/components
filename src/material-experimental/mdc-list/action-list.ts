@@ -14,14 +14,12 @@ import {MatListBase} from './list-base';
   exportAs: 'matActionList',
   template: '<ng-content></ng-content>',
   host: {
-    'class': 'mat-mdc-action-list mat-mdc-list-base mdc--list',
+    'class': 'mat-mdc-action-list mat-mdc-list-base mdc-list',
   },
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {provide: MatListBase, useExisting: MatActionList},
-  ]
+  providers: [{provide: MatListBase, useExisting: MatActionList}],
 })
 export class MatActionList extends MatListBase {
   // An navigation list is considered interactive, but does not extend the interactive list

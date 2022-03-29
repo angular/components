@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform, normalizePassiveListenerOptions, _getShadowRoot} from '@angular/cdk/platform';
+import {
+  Platform,
+  normalizePassiveListenerOptions,
+  _getShadowRoot,
+  _getEventTarget,
+} from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
@@ -24,12 +29,7 @@ import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {coerceElement} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
-import {
-  getTarget,
-  InputModalityDetector,
-  TOUCH_BUFFER_MS,
-} from '../input-modality/input-modality-detector';
-
+import {InputModalityDetector, TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
@@ -54,7 +54,7 @@ export const enum FocusMonitorDetectionMode {
    * A focus event's origin is always attributed to the last corresponding
    * mousedown, keydown, or touchstart event, no matter how long ago it occurred.
    */
-  EVENTUAL
+  EVENTUAL,
 }
 
 /** Injectable service-level options for FocusMonitor. */
@@ -63,13 +63,14 @@ export interface FocusMonitorOptions {
 }
 
 /** InjectionToken for FocusMonitorOptions. */
-export const FOCUS_MONITOR_DEFAULT_OPTIONS =
-    new InjectionToken<FocusMonitorOptions>('cdk-focus-monitor-default-options');
+export const FOCUS_MONITOR_DEFAULT_OPTIONS = new InjectionToken<FocusMonitorOptions>(
+  'cdk-focus-monitor-default-options',
+);
 
 type MonitoredElementInfo = {
-  checkChildren: boolean,
-  readonly subject: Subject<FocusOrigin>,
-  rootNode: HTMLElement|ShadowRoot|Document
+  checkChildren: boolean;
+  readonly subject: Subject<FocusOrigin>;
+  rootNode: HTMLElement | ShadowRoot | Document;
 };
 
 /**
@@ -78,9 +79,8 @@ type MonitoredElementInfo = {
  */
 const captureEventListenerOptions = normalizePassiveListenerOptions({
   passive: true,
-  capture: true
+  capture: true,
 });
-
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
 @Injectable({providedIn: 'root'})
@@ -118,7 +118,7 @@ export class FocusMonitor implements OnDestroy {
    * handlers differently from the rest of the events, because the browser won't emit events
    * to the document when focus moves inside of a shadow root.
    */
-  private _rootNodeFocusListenerCount = new Map<HTMLElement|Document|ShadowRoot, number>();
+  private _rootNodeFocusListenerCount = new Map<HTMLElement | Document | ShadowRoot, number>();
 
   /**
    * The specified detection mode, used for attributing the origin of a focus
@@ -134,8 +134,8 @@ export class FocusMonitor implements OnDestroy {
     // Make a note of when the window regains focus, so we can
     // restore the origin info for the focused element.
     this._windowFocused = true;
-    this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
-  }
+    this._windowFocusTimeoutId = window.setTimeout(() => (this._windowFocused = false));
+  };
 
   /** Used to reference correct document/window */
   protected _document?: Document;
@@ -144,13 +144,13 @@ export class FocusMonitor implements OnDestroy {
   private readonly _stopInputModalityDetector = new Subject<void>();
 
   constructor(
-      private _ngZone: NgZone,
-      private _platform: Platform,
-      private readonly _inputModalityDetector: InputModalityDetector,
-      /** @breaking-change 11.0.0 make document required */
-      @Optional() @Inject(DOCUMENT) document: any|null,
-      @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
-          FocusMonitorOptions|null) {
+    private _ngZone: NgZone,
+    private _platform: Platform,
+    private readonly _inputModalityDetector: InputModalityDetector,
+    /** @breaking-change 11.0.0 make document required */
+    @Optional() @Inject(DOCUMENT) document: any | null,
+    @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options: FocusMonitorOptions | null,
+  ) {
     this._document = document;
     this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
@@ -159,14 +159,14 @@ export class FocusMonitor implements OnDestroy {
    * Needs to be an arrow function in order to preserve the context when it gets bound.
    */
   private _rootNodeFocusAndBlurListener = (event: Event) => {
-    const target = getTarget(event);
+    const target = _getEventTarget<HTMLElement>(event);
     const handler = event.type === 'focus' ? this._onFocus : this._onBlur;
 
     // We need to walk up the ancestor chain in order to support `checkChildren`.
     for (let element = target; element; element = element.parentElement) {
       handler.call(this, event as FocusEvent, element);
     }
-  }
+  };
 
   /**
    * Monitors focus on an element and applies appropriate CSS classes.
@@ -186,8 +186,10 @@ export class FocusMonitor implements OnDestroy {
    */
   monitor(element: ElementRef<HTMLElement>, checkChildren?: boolean): Observable<FocusOrigin>;
 
-  monitor(element: HTMLElement | ElementRef<HTMLElement>,
-          checkChildren: boolean = false): Observable<FocusOrigin> {
+  monitor(
+    element: HTMLElement | ElementRef<HTMLElement>,
+    checkChildren: boolean = false,
+  ): Observable<FocusOrigin> {
     const nativeElement = coerceElement(element);
 
     // Do nothing if we're not on the browser platform or the passed in node isn't an element.
@@ -217,7 +219,7 @@ export class FocusMonitor implements OnDestroy {
     const info: MonitoredElementInfo = {
       checkChildren: checkChildren,
       subject: new Subject<FocusOrigin>(),
-      rootNode
+      rootNode,
     };
     this._elementInfo.set(nativeElement, info);
     this._registerGlobalListeners(info);
@@ -266,10 +268,11 @@ export class FocusMonitor implements OnDestroy {
    */
   focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
 
-  focusVia(element: HTMLElement | ElementRef<HTMLElement>,
-          origin: FocusOrigin,
-          options?: FocusOptions): void {
-
+  focusVia(
+    element: HTMLElement | ElementRef<HTMLElement>,
+    origin: FocusOrigin,
+    options?: FocusOptions,
+  ): void {
     const nativeElement = coerceElement(element);
     const focusedElement = this._getDocument().activeElement;
 
@@ -277,8 +280,9 @@ export class FocusMonitor implements OnDestroy {
     // which means that the focus classes won't be updated. If that's the case, update the classes
     // directly without waiting for an event.
     if (nativeElement === focusedElement) {
-      this._getClosestElementsInfo(nativeElement)
-        .forEach(([currentElement, info]) => this._originChanged(currentElement, origin, info));
+      this._getClosestElementsInfo(nativeElement).forEach(([currentElement, info]) =>
+        this._originChanged(currentElement, origin, info),
+      );
     } else {
       this._setOrigin(origin);
 
@@ -304,14 +308,6 @@ export class FocusMonitor implements OnDestroy {
     return doc.defaultView || window;
   }
 
-  private _toggleClass(element: Element, className: string, shouldSet: boolean) {
-    if (shouldSet) {
-      element.classList.add(className);
-    } else {
-      element.classList.remove(className);
-    }
-  }
-
   private _getFocusOrigin(focusEventTarget: HTMLElement | null): FocusOrigin {
     if (this._origin) {
       // If the origin was realized via a touch interaction, we need to perform additional checks
@@ -332,7 +328,7 @@ export class FocusMonitor implements OnDestroy {
     //    events).
     //
     // Because we can't distinguish between these two cases, we default to setting `program`.
-    return (this._windowFocused && this._lastFocusOrigin) ? this._lastFocusOrigin : 'program';
+    return this._windowFocused && this._lastFocusOrigin ? this._lastFocusOrigin : 'program';
   }
 
   /**
@@ -354,8 +350,10 @@ export class FocusMonitor implements OnDestroy {
     // #child, #parent is programmatically focused. This code will attribute the focus to touch
     // instead of program. This is a relatively minor edge-case that can be worked around by using
     // focusVia(parent, 'program') to focus #parent.
-    return (this._detectionMode === FocusMonitorDetectionMode.EVENTUAL) ||
-        !!focusEventTarget?.contains(this._inputModalityDetector._mostRecentTarget);
+    return (
+      this._detectionMode === FocusMonitorDetectionMode.EVENTUAL ||
+      !!focusEventTarget?.contains(this._inputModalityDetector._mostRecentTarget)
+    );
   }
 
   /**
@@ -364,11 +362,11 @@ export class FocusMonitor implements OnDestroy {
    * @param origin The focus origin.
    */
   private _setClasses(element: HTMLElement, origin?: FocusOrigin): void {
-    this._toggleClass(element, 'cdk-focused', !!origin);
-    this._toggleClass(element, 'cdk-touch-focused', origin === 'touch');
-    this._toggleClass(element, 'cdk-keyboard-focused', origin === 'keyboard');
-    this._toggleClass(element, 'cdk-mouse-focused', origin === 'mouse');
-    this._toggleClass(element, 'cdk-program-focused', origin === 'program');
+    element.classList.toggle('cdk-focused', !!origin);
+    element.classList.toggle('cdk-touch-focused', origin === 'touch');
+    element.classList.toggle('cdk-keyboard-focused', origin === 'keyboard');
+    element.classList.toggle('cdk-mouse-focused', origin === 'mouse');
+    element.classList.toggle('cdk-program-focused', origin === 'program');
   }
 
   /**
@@ -381,7 +379,7 @@ export class FocusMonitor implements OnDestroy {
   private _setOrigin(origin: FocusOrigin, isFromInteraction = false): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
-      this._originFromTouchInteraction = (origin === 'touch') && isFromInteraction;
+      this._originFromTouchInteraction = origin === 'touch' && isFromInteraction;
 
       // If we're in IMMEDIATE mode, reset the origin at the next tick (or in `TOUCH_BUFFER_MS` ms
       // for a touch event). We reset the origin at the next tick because Firefox focuses one tick
@@ -391,7 +389,7 @@ export class FocusMonitor implements OnDestroy {
       if (this._detectionMode === FocusMonitorDetectionMode.IMMEDIATE) {
         clearTimeout(this._originTimeoutId);
         const ms = this._originFromTouchInteraction ? TOUCH_BUFFER_MS : 1;
-        this._originTimeoutId = setTimeout(() => this._origin = null, ms);
+        this._originTimeoutId = setTimeout(() => (this._origin = null), ms);
       }
     });
   }
@@ -410,7 +408,7 @@ export class FocusMonitor implements OnDestroy {
     // If we are not counting child-element-focus as focused, make sure that the event target is the
     // monitored element itself.
     const elementInfo = this._elementInfo.get(element);
-    const focusEventTarget = getTarget(event);
+    const focusEventTarget = _getEventTarget<HTMLElement>(event);
     if (!elementInfo || (!elementInfo.checkChildren && element !== focusEventTarget)) {
       return;
     }
@@ -428,17 +426,23 @@ export class FocusMonitor implements OnDestroy {
     // order to focus another child of the monitored element.
     const elementInfo = this._elementInfo.get(element);
 
-    if (!elementInfo || (elementInfo.checkChildren && event.relatedTarget instanceof Node &&
-        element.contains(event.relatedTarget))) {
+    if (
+      !elementInfo ||
+      (elementInfo.checkChildren &&
+        event.relatedTarget instanceof Node &&
+        element.contains(event.relatedTarget))
+    ) {
       return;
     }
 
     this._setClasses(element);
-    this._emitOrigin(elementInfo.subject, null);
+    this._emitOrigin(elementInfo, null);
   }
 
-  private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {
-    this._ngZone.run(() => subject.next(origin));
+  private _emitOrigin(info: MonitoredElementInfo, origin: FocusOrigin) {
+    if (info.subject.observers.length) {
+      this._ngZone.run(() => info.subject.next(origin));
+    }
   }
 
   private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {
@@ -451,10 +455,16 @@ export class FocusMonitor implements OnDestroy {
 
     if (!rootNodeFocusListeners) {
       this._ngZone.runOutsideAngular(() => {
-        rootNode.addEventListener('focus', this._rootNodeFocusAndBlurListener,
-          captureEventListenerOptions);
-        rootNode.addEventListener('blur', this._rootNodeFocusAndBlurListener,
-          captureEventListenerOptions);
+        rootNode.addEventListener(
+          'focus',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
+        rootNode.addEventListener(
+          'blur',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
       });
     }
 
@@ -472,7 +482,9 @@ export class FocusMonitor implements OnDestroy {
       // The InputModalityDetector is also just a collection of global listeners.
       this._inputModalityDetector.modalityDetected
         .pipe(takeUntil(this._stopInputModalityDetector))
-        .subscribe(modality => { this._setOrigin(modality, true /* isFromInteraction */); });
+        .subscribe(modality => {
+          this._setOrigin(modality, true /* isFromInteraction */);
+        });
     }
   }
 
@@ -485,10 +497,16 @@ export class FocusMonitor implements OnDestroy {
       if (rootNodeFocusListeners > 1) {
         this._rootNodeFocusListenerCount.set(rootNode, rootNodeFocusListeners - 1);
       } else {
-        rootNode.removeEventListener('focus', this._rootNodeFocusAndBlurListener,
-          captureEventListenerOptions);
-        rootNode.removeEventListener('blur', this._rootNodeFocusAndBlurListener,
-          captureEventListenerOptions);
+        rootNode.removeEventListener(
+          'focus',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
+        rootNode.removeEventListener(
+          'blur',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
         this._rootNodeFocusListenerCount.delete(rootNode);
       }
     }
@@ -508,10 +526,13 @@ export class FocusMonitor implements OnDestroy {
   }
 
   /** Updates all the state on an element once its focus origin has changed. */
-  private _originChanged(element: HTMLElement, origin: FocusOrigin,
-                         elementInfo: MonitoredElementInfo) {
+  private _originChanged(
+    element: HTMLElement,
+    origin: FocusOrigin,
+    elementInfo: MonitoredElementInfo,
+  ) {
     this._setClasses(element, origin);
-    this._emitOrigin(elementInfo.subject, origin);
+    this._emitOrigin(elementInfo, origin);
     this._lastFocusOrigin = origin;
   }
 
@@ -553,10 +574,9 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     const element = this._elementRef.nativeElement;
-    this._monitorSubscription = this._focusMonitor.monitor(
-      element,
-      element.nodeType === 1 && element.hasAttribute('cdkMonitorSubtreeFocus'))
-    .subscribe(origin => this.cdkFocusChange.emit(origin));
+    this._monitorSubscription = this._focusMonitor
+      .monitor(element, element.nodeType === 1 && element.hasAttribute('cdkMonitorSubtreeFocus'))
+      .subscribe(origin => this.cdkFocusChange.emit(origin));
   }
 
   ngOnDestroy() {

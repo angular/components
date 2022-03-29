@@ -8,8 +8,9 @@ import {MatTabNavBarHarness} from './tab-nav-bar-harness';
 
 /** Shared tests to run on both the original and MDC-based tab nav bars. */
 export function runTabNavBarHarnessTests(
-    tabsModule: typeof MatTabsModule,
-    tabNavBarHarness: typeof MatTabNavBarHarness) {
+  tabsModule: typeof MatTabsModule,
+  tabNavBarHarness: typeof MatTabNavBarHarness,
+) {
   let fixture: ComponentFixture<TabNavBarHarnessTest>;
   let loader: HarnessLoader;
 
@@ -52,7 +53,8 @@ export function runTabNavBarHarnessTests(
   it('should throw error when attempting to click invalid link', async () => {
     const navBar = await loader.getHarness(tabNavBarHarness);
     await expectAsync(navBar.clickLink({label: 'Fake'})).toBeRejectedWithError(
-        /Cannot find mat-tab-link matching filter {"label":"Fake"}/);
+      /Cannot find mat-tab-link matching filter {"label":"Fake"}/,
+    );
   });
 
   it('should be able to get label of links', async () => {
@@ -90,11 +92,17 @@ export function runTabNavBarHarnessTests(
     expect(await links[1].isActive()).toBe(true);
     expect(await links[2].isActive()).toBe(false);
   });
+
+  it('should be able to get the associated tab panel', async () => {
+    const navBar = await loader.getHarness(tabNavBarHarness);
+    const navPanel = await navBar.getPanel();
+    expect(await navPanel.getTextContent()).toBe('Tab content');
+  });
 }
 
 @Component({
   template: `
-    <nav mat-tab-nav-bar>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a href="#" (click)="select(0, $event)" [active]="activeLink === 0" matTabLink>First</a>
       <a href="#" (click)="select(1, $event)" [active]="activeLink === 1" matTabLink>Second</a>
       <a
@@ -104,7 +112,10 @@ export function runTabNavBarHarnessTests(
         [disabled]="isDisabled"
         matTabLink>Third</a>
     </nav>
-  `
+    <mat-tab-nav-panel #tabPanel id="tab-panel">
+      Tab content
+    </mat-tab-nav-panel>
+  `,
 })
 class TabNavBarHarnessTest {
   activeLink = 0;

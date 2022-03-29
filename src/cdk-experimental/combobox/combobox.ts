@@ -5,35 +5,41 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-
-export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
-export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
-
+import {DOCUMENT} from '@angular/common';
 import {
-  AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
+  Inject,
+  InjectionToken,
+  Injector,
   Input,
   OnDestroy,
   Optional,
-  Output, ViewContainerRef
+  Output,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
-import {CdkComboboxPanel, AriaHasPopupValue} from './combobox-panel';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
-  OverlayRef
+  OverlayRef,
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
+import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {DOWN_ARROW, ENTER, ESCAPE, TAB} from '@angular/cdk/keycodes';
 
+export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
+export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
+
 const allowedOpenActions = ['focus', 'click', 'downKey', 'toggle'];
+
+export const CDK_COMBOBOX = new InjectionToken<CdkCombobox>('CDK_COMBOBOX');
 
 @Directive({
   selector: '[cdkCombobox]',
@@ -49,45 +55,54 @@ const allowedOpenActions = ['focus', 'click', 'downKey', 'toggle'];
     '[attr.aria-owns]': 'contentId',
     '[attr.aria-haspopup]': 'contentType',
     '[attr.aria-expanded]': 'isOpen()',
-    '[attr.tabindex]': '_getTabIndex()'
-  }
+    '[attr.tabindex]': '_getTabIndex()',
+  },
+  providers: [{provide: CDK_COMBOBOX, useExisting: CdkCombobox}],
 })
-export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
+export class CdkCombobox<T = unknown> implements OnDestroy {
   @Input('cdkComboboxTriggerFor')
-  get panel(): CdkComboboxPanel<T> | undefined { return this._panel; }
-  set panel(panel: CdkComboboxPanel<T> | undefined) { this._panel = panel; }
-  private _panel: CdkComboboxPanel<T> | undefined;
+  _panelTemplateRef: TemplateRef<unknown>;
 
   @Input()
   value: T | T[];
 
   @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: BooleanInput) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled: boolean = false;
 
   @Input()
   get openActions(): OpenAction[] {
     return this._openActions;
   }
-  set openActions(action: OpenAction[]) {
+  set openActions(action: OpenActionInput) {
     this._openActions = this._coerceOpenActionProperty(action);
   }
   private _openActions: OpenAction[] = ['click'];
 
   /** Whether the textContent is automatically updated upon change of the combobox value. */
   @Input()
-  get autoSetText(): boolean { return this._autoSetText; }
-  set autoSetText(value: boolean) { this._autoSetText = coerceBooleanProperty(value); }
+  get autoSetText(): boolean {
+    return this._autoSetText;
+  }
+  set autoSetText(value: BooleanInput) {
+    this._autoSetText = coerceBooleanProperty(value);
+  }
   private _autoSetText: boolean = true;
 
   @Output('comboboxPanelOpened') readonly opened: EventEmitter<void> = new EventEmitter<void>();
   @Output('comboboxPanelClosed') readonly closed: EventEmitter<void> = new EventEmitter<void>();
-  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]>
-      = new EventEmitter<T[]>();
+  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]> = new EventEmitter<
+    T[]
+  >();
 
   private _overlayRef: OverlayRef;
-  private _panelContent: TemplatePortal;
+  private _panelPortal: TemplatePortal;
+
   contentId: string = '';
   contentType: AriaHasPopupValue;
 
@@ -95,23 +110,10 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     private readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _overlay: Overlay,
     protected readonly _viewContainerRef: ViewContainerRef,
-    @Optional() private readonly _directionality?: Directionality
+    private readonly _injector: Injector,
+    @Inject(DOCUMENT) private readonly _doc: any,
+    @Optional() private readonly _directionality?: Directionality,
   ) {}
-
-  ngAfterContentInit() {
-    this._panel?.valueUpdated.subscribe(data => {
-      this._setComboboxValue(data);
-      this.close();
-    });
-
-    this._panel?.contentIdUpdated.subscribe(id => {
-      this.contentId = id;
-    });
-
-    this._panel?.contentTypeUpdated.subscribe(type => {
-      this.contentType = type;
-    });
-  }
 
   ngOnDestroy() {
     if (this._overlayRef) {
@@ -128,7 +130,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
     if (keyCode === DOWN_ARROW) {
       if (this.isOpen()) {
-        this._panel?.focusContent();
+        // TODO: instead of using a focus function, potentially use cdk/a11y focus trapping
+        this._doc.getElementById(this.contentId)?.focus();
       } else if (this._openActions.indexOf('downKey') !== -1) {
         this.open();
       }
@@ -138,7 +141,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       } else if (this._openActions.indexOf('click') !== -1) {
         this.open();
       }
-
     } else if (keyCode === ESCAPE) {
       event.preventDefault();
       this.close();
@@ -165,7 +167,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   /** Given a click in the document, determines if the click was inside a combobox. */
   _attemptClose(event: MouseEvent) {
     if (this.isOpen()) {
-      let target = event.composedPath ? event.composedPath()[0] : event.target;
+      let target = _getEventTarget(event);
       while (target instanceof Element) {
         if (target.className.indexOf('cdk-combobox') !== -1) {
           return;
@@ -191,7 +193,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
       if (!this._isTextTrigger()) {
-        this._panel?.focusContent();
+        // TODO: instead of using a focus function, potentially use cdk/a11y focus trapping
+        this._doc.getElementById(this.contentId)?.focus();
       }
     }
   }
@@ -211,7 +214,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   /** Returns true if combobox has a child panel. */
   hasPanel(): boolean {
-    return !!this.panel;
+    return !!this._panelTemplateRef;
   }
 
   _getTabIndex(): string | null {
@@ -219,8 +222,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
 
   private _setComboboxValue(value: T | T[]) {
-
-    const valueChanged = (this.value !== value);
+    const valueChanged = this.value !== value;
     this.value = value;
 
     if (valueChanged) {
@@ -229,6 +231,11 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
         this._setTextContent(value);
       }
     }
+  }
+
+  updateAndClose(value: T | T[]) {
+    this._setComboboxValue(value);
+    this.close();
   }
 
   private _setTextContent(content: T | T[]) {
@@ -252,9 +259,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
     return this._overlay
-        .position()
-        .flexibleConnectedTo(this._elementRef)
-        .withPositions(this._getOverlayPositions());
+      .position()
+      .flexibleConnectedTo(this._elementRef)
+      .withPositions(this._getOverlayPositions());
   }
 
   private _getOverlayPositions(): ConnectedPosition[] {
@@ -266,25 +273,45 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     ];
   }
 
-  private _getPanelContent() {
-    const hasPanelChanged = this._panel?._templateRef !== this._panelContent?.templateRef;
-    if (this._panel && (!this._panel || hasPanelChanged)) {
-      this._panelContent = new TemplatePortal(this._panel._templateRef, this._viewContainerRef);
-    }
-
-    return this._panelContent;
+  private _getPanelInjector() {
+    return this._injector;
   }
 
-  private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
+  private _getPanelContent() {
+    const hasPanelChanged = this._panelTemplateRef !== this._panelPortal?.templateRef;
+    if (this._panelTemplateRef && (!this._panelPortal || hasPanelChanged)) {
+      this._panelPortal = new TemplatePortal(
+        this._panelTemplateRef,
+        this._viewContainerRef,
+        undefined,
+        this._getPanelInjector(),
+      );
+    }
+
+    return this._panelPortal;
+  }
+
+  private _coerceOpenActionProperty(input: OpenActionInput): OpenAction[] {
     let actions = typeof input === 'string' ? input.trim().split(/[ ,]+/) : input;
-    if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
-      actions.some(a => allowedOpenActions.indexOf(a) === -1)) {
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      actions?.some(a => allowedOpenActions.indexOf(a) === -1)
+    ) {
       throw Error(`${input} is not a support open action for CdkCombobox`);
     }
     return actions as OpenAction[];
   }
 
-  static ngAcceptInputType_openActions: OpenActionInput;
-  static ngAcceptInputType_autoSetText: OpenActionInput;
-  static ngAcceptInputType_disabled: BooleanInput;
+  /** Registers the content's id and the content type with the panel. */
+  _registerContent(contentId: string, contentType: AriaHasPopupValue) {
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      contentType !== 'listbox' &&
+      contentType !== 'dialog'
+    ) {
+      throw Error('CdkComboboxPanel currently only supports listbox or dialog content.');
+    }
+    this.contentId = contentId;
+    this.contentType = contentType;
+  }
 }

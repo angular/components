@@ -88,6 +88,7 @@ describe('MenuItem', () => {
       fixture.detectChanges();
 
       menuItem = fixture.debugElement.query(By.directive(CdkMenuItem)).injector.get(CdkMenuItem);
+      return fixture;
     }
 
     it('should get the text for a simple menu item with no nested or wrapped elements', () => {
@@ -96,7 +97,10 @@ describe('MenuItem', () => {
     });
 
     it('should get the text for menu item with a single nested mat icon component', () => {
-      createComponent(MenuItemWithIcon);
+      const fixture = createComponent(MenuItemWithIcon);
+      expect(menuItem.getLabel()).toEqual('unicorn Click me!');
+      fixture.componentInstance.typeahead = 'Click me!';
+      fixture.detectChanges();
       expect(menuItem.getLabel()).toEqual('Click me!');
     });
 
@@ -104,9 +108,12 @@ describe('MenuItem', () => {
       'should get the text for menu item with single nested component with the material ' +
         'icon class',
       () => {
-        createComponent(MenuItemWithIconClass);
+        const fixture = createComponent(MenuItemWithIconClass);
+        expect(menuItem.getLabel()).toEqual('unicorn Click me!');
+        fixture.componentInstance.typeahead = 'Click me!';
+        fixture.detectChanges();
         expect(menuItem.getLabel()).toEqual('Click me!');
-      }
+      },
     );
 
     it('should get the text for a menu item with bold marked text', () => {
@@ -118,9 +125,12 @@ describe('MenuItem', () => {
       'should get the text for a menu item with nested icon, nested icon class and nested ' +
         'wrapping elements',
       () => {
-        createComponent(MenuItemWithMultipleNestings);
+        const fixture = createComponent(MenuItemWithMultipleNestings);
+        expect(menuItem.getLabel()).toEqual('unicorn Click menume!');
+        fixture.componentInstance.typeahead = 'Click me!';
+        fixture.detectChanges();
         expect(menuItem.getLabel()).toEqual('Click me!');
-      }
+      },
     );
   });
 });
@@ -132,22 +142,27 @@ class SingleMenuItem {}
 
 @Component({
   template: `
-    <button cdkMenuItem>
+    <button cdkMenuItem [typeahead]="typeahead">
       <mat-icon>unicorn</mat-icon>
       Click me!
     </button>
   `,
 })
-class MenuItemWithIcon {}
+class MenuItemWithIcon {
+  typeahead: string;
+}
+
 @Component({
   template: `
-    <button cdkMenuItem>
+    <button cdkMenuItem [typeahead]="typeahead">
       <div class="material-icons">unicorn</div>
       Click me!
     </button>
   `,
 })
-class MenuItemWithIconClass {}
+class MenuItemWithIconClass {
+  typeahead: string;
+}
 
 @Component({
   template: ` <button cdkMenuItem><b>Click</b> me!</button> `,
@@ -156,7 +171,7 @@ class MenuItemWithBoldElement {}
 
 @Component({
   template: `
-    <button cdkMenuItem>
+    <button cdkMenuItem [typeahead]="typeahead">
       <div>
         <div class="material-icons">unicorn</div>
         <div>
@@ -168,7 +183,9 @@ class MenuItemWithBoldElement {}
     </button>
   `,
 })
-class MenuItemWithMultipleNestings {}
+class MenuItemWithMultipleNestings {
+  typeahead: string;
+}
 
 @Component({
   selector: 'mat-icon',

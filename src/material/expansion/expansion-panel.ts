@@ -39,6 +39,7 @@ import {Subject} from 'rxjs';
 import {distinctUntilChanged, filter, startWith, take} from 'rxjs/operators';
 import {MatAccordionBase, MatAccordionTogglePosition, MAT_ACCORDION} from './accordion-base';
 import {matExpansionAnimations} from './expansion-animations';
+import {MAT_EXPANSION_PANEL} from './expansion-panel-base';
 import {MatExpansionPanelContent} from './expansion-panel-content';
 
 /** MatExpansionPanel's states. */
@@ -63,11 +64,11 @@ export interface MatExpansionPanelDefaultOptions {
 }
 
 /**
- * Injection token that can be used to configure the defalt
+ * Injection token that can be used to configure the default
  * options for the expansion panel component.
  */
 export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
-    new InjectionToken<MatExpansionPanelDefaultOptions>('MAT_EXPANSION_PANEL_DEFAULT_OPTIONS');
+  new InjectionToken<MatExpansionPanelDefaultOptions>('MAT_EXPANSION_PANEL_DEFAULT_OPTIONS');
 
 /**
  * This component can be used as a single element to show expandable content, or as one of
@@ -87,16 +88,19 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering
     // to the same accordion.
     {provide: MAT_ACCORDION, useValue: undefined},
+    {provide: MAT_EXPANSION_PANEL, useExisting: MatExpansionPanel},
   ],
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
-  }
+  },
 })
-export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges,
-  OnDestroy {
+export class MatExpansionPanel
+  extends CdkAccordionItem
+  implements AfterContentInit, OnChanges, OnDestroy
+{
   private _document: Document;
   private _hideToggle = false;
   private _togglePosition: MatAccordionTogglePosition;
@@ -106,7 +110,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   get hideToggle(): boolean {
     return this._hideToggle || (this.accordion && this.accordion.hideToggle);
   }
-  set hideToggle(value: boolean) {
+  set hideToggle(value: BooleanInput) {
     this._hideToggle = coerceBooleanProperty(value);
   }
 
@@ -146,31 +150,38 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   /** Stream of body animation done events. */
   readonly _bodyAnimationDone = new Subject<AnimationEvent>();
 
-  constructor(@Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
-              _changeDetectorRef: ChangeDetectorRef,
-              _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
-              private _viewContainerRef: ViewContainerRef,
-              @Inject(DOCUMENT) _document: any,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
-              @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS) @Optional()
-                  defaultOptions?: MatExpansionPanelDefaultOptions) {
+  constructor(
+    @Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
+    _changeDetectorRef: ChangeDetectorRef,
+    _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
+    private _viewContainerRef: ViewContainerRef,
+    @Inject(DOCUMENT) _document: any,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
+    @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS)
+    @Optional()
+    defaultOptions?: MatExpansionPanelDefaultOptions,
+  ) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
     this._document = _document;
 
     // We need a Subject with distinctUntilChanged, because the `done` event
     // fires twice on some browsers. See https://github.com/angular/angular/issues/24084
-    this._bodyAnimationDone.pipe(distinctUntilChanged((x, y) => {
-      return x.fromState === y.fromState && x.toState === y.toState;
-    })).subscribe(event => {
-      if (event.fromState !== 'void') {
-        if (event.toState === 'expanded') {
-          this.afterExpand.emit();
-        } else if (event.toState === 'collapsed') {
-          this.afterCollapse.emit();
+    this._bodyAnimationDone
+      .pipe(
+        distinctUntilChanged((x, y) => {
+          return x.fromState === y.fromState && x.toState === y.toState;
+        }),
+      )
+      .subscribe(event => {
+        if (event.fromState !== 'void') {
+          if (event.toState === 'expanded') {
+            this.afterExpand.emit();
+          } else if (event.toState === 'collapsed') {
+            this.afterCollapse.emit();
+          }
         }
-      }
-    });
+      });
 
     if (defaultOptions) {
       this.hideToggle = defaultOptions.hideToggle;
@@ -206,15 +217,17 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   }
 
   ngAfterContentInit() {
-    if (this._lazyContent) {
+    if (this._lazyContent && this._lazyContent._expansionPanel === this) {
       // Render the content as soon as the panel becomes open.
-      this.opened.pipe(
-        startWith(null),
-        filter(() => this.expanded && !this._portal),
-        take(1)
-      ).subscribe(() => {
-        this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef);
-      });
+      this.opened
+        .pipe(
+          startWith(null),
+          filter(() => this.expanded && !this._portal),
+          take(1),
+        )
+        .subscribe(() => {
+          this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef);
+        });
     }
   }
 
@@ -238,8 +251,6 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
 
     return false;
   }
-
-  static ngAcceptInputType_hideToggle: BooleanInput;
 }
 
 /**
@@ -248,7 +259,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
 @Directive({
   selector: 'mat-action-row',
   host: {
-    class: 'mat-action-row'
-  }
+    class: 'mat-action-row',
+  },
 })
 export class MatExpansionPanelActionRow {}

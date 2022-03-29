@@ -92,8 +92,9 @@ describe('MapCircle', () => {
     createCircleConstructorSpy(circleSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const circleComponent =
-        fixture.debugElement.query(By.directive(MapCircle))!.injector.get<MapCircle>(MapCircle);
+    const circleComponent = fixture.debugElement
+      .query(By.directive(MapCircle))!
+      .injector.get<MapCircle>(MapCircle);
     fixture.detectChanges();
 
     circleComponent.getCenter();

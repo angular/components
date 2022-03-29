@@ -63,7 +63,7 @@ export const MAT_NAV_LIST = new InjectionToken<MatNavList>('MatNavList');
   exportAs: 'matNavList',
   host: {
     'role': 'navigation',
-    'class': 'mat-nav-list mat-list-base'
+    'class': 'mat-nav-list mat-list-base',
   },
   templateUrl: 'list.html',
   styleUrls: ['list.css'],
@@ -72,8 +72,10 @@ export const MAT_NAV_LIST = new InjectionToken<MatNavList>('MatNavList');
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_NAV_LIST, useExisting: MatNavList}],
 })
-export class MatNavList extends _MatListBase implements CanDisable, CanDisableRipple,
-  OnChanges, OnDestroy {
+export class MatNavList
+  extends _MatListBase
+  implements CanDisable, CanDisableRipple, OnChanges, OnDestroy
+{
   /** Emits when the state of the list changes. */
   readonly _stateChanges = new Subject<void>();
 
@@ -84,9 +86,6 @@ export class MatNavList extends _MatListBase implements CanDisable, CanDisableRi
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Component({
@@ -94,7 +93,7 @@ export class MatNavList extends _MatListBase implements CanDisable, CanDisableRi
   exportAs: 'matList',
   templateUrl: 'list.html',
   host: {
-    'class': 'mat-list mat-list-base'
+    'class': 'mat-list mat-list-base',
   },
   styleUrls: ['list.css'],
   inputs: ['disableRipple', 'disabled'],
@@ -102,8 +101,10 @@ export class MatNavList extends _MatListBase implements CanDisable, CanDisableRi
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_LIST, useExisting: MatList}],
 })
-export class MatList extends _MatListBase implements CanDisable, CanDisableRipple, OnChanges,
-  OnDestroy {
+export class MatList
+  extends _MatListBase
+  implements CanDisable, CanDisableRipple, OnChanges, OnDestroy
+{
   /** Emits when the state of the list changes. */
   readonly _stateChanges = new Subject<void>();
 
@@ -136,9 +137,6 @@ export class MatList extends _MatListBase implements CanDisable, CanDisableRippl
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**
@@ -147,7 +145,7 @@ export class MatList extends _MatListBase implements CanDisable, CanDisableRippl
  */
 @Directive({
   selector: '[mat-list-avatar], [matListAvatar]',
-  host: {'class': 'mat-list-avatar'}
+  host: {'class': 'mat-list-avatar'},
 })
 export class MatListAvatarCssMatStyler {}
 
@@ -157,7 +155,7 @@ export class MatListAvatarCssMatStyler {}
  */
 @Directive({
   selector: '[mat-list-icon], [matListIcon]',
-  host: {'class': 'mat-list-icon'}
+  host: {'class': 'mat-list-icon'},
 })
 export class MatListIconCssMatStyler {}
 
@@ -167,7 +165,7 @@ export class MatListIconCssMatStyler {}
  */
 @Directive({
   selector: '[mat-subheader], [matSubheader]',
-  host: {'class': 'mat-subheader'}
+  host: {'class': 'mat-subheader'},
 })
 export class MatListSubheaderCssMatStyler {}
 
@@ -178,8 +176,6 @@ export class MatListSubheaderCssMatStyler {}
   host: {
     'class': 'mat-list-item mat-focus-indicator',
     '[class.mat-list-item-disabled]': 'disabled',
-    // @breaking-change 8.0.0 Remove `mat-list-item-avatar` in favor of `mat-list-item-with-avatar`.
-    '[class.mat-list-item-avatar]': '_avatar || _icon',
     '[class.mat-list-item-with-avatar]': '_avatar || _icon',
   },
   inputs: ['disableRipple'],
@@ -187,8 +183,10 @@ export class MatListSubheaderCssMatStyler {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatListItem extends _MatListItemMixinBase implements AfterContentInit,
-    CanDisableRipple, OnDestroy {
+export class MatListItem
+  extends _MatListItemMixinBase
+  implements AfterContentInit, CanDisableRipple, OnDestroy
+{
   private _isInteractiveList: boolean = false;
   private _list?: MatNavList | MatList;
   private readonly _destroyed = new Subject<void>();
@@ -197,10 +195,12 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
   @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
 
-  constructor(private _element: ElementRef<HTMLElement>,
-              _changeDetectorRef: ChangeDetectorRef,
-              @Optional() @Inject(MAT_NAV_LIST) navList?: MatNavList,
-              @Optional() @Inject(MAT_LIST) list?: MatList) {
+  constructor(
+    private _element: ElementRef<HTMLElement>,
+    _changeDetectorRef: ChangeDetectorRef,
+    @Optional() @Inject(MAT_NAV_LIST) navList?: MatNavList,
+    @Optional() @Inject(MAT_LIST) list?: MatList,
+  ) {
     super();
     this._isInteractiveList = !!(navList || (list && list._getListType() === 'action-list'));
     this._list = navList || list;
@@ -224,8 +224,10 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return this._disabled || !!(this._list && this._list.disabled); }
-  set disabled(value: boolean) {
+  get disabled(): boolean {
+    return this._disabled || !!(this._list && this._list.disabled);
+  }
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -241,15 +243,13 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
 
   /** Whether this list item should show a ripple effect when clicked. */
   _isRippleDisabled() {
-    return !this._isInteractiveList || this.disableRipple ||
-           !!(this._list && this._list.disableRipple);
+    return (
+      !this._isInteractiveList || this.disableRipple || !!(this._list && this._list.disableRipple)
+    );
   }
 
   /** Retrieves the DOM element of the component host. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

@@ -3,7 +3,7 @@ import {MapDirectionsResponse, MapDirectionsService} from './map-directions-serv
 import {GoogleMapsModule} from '../google-maps-module';
 import {
   createDirectionsServiceConstructorSpy,
-  createDirectionsServiceSpy
+  createDirectionsServiceSpy,
 } from '../testing/fake-google-map-utils';
 
 describe('MapDirectionsService', () => {
@@ -18,7 +18,7 @@ describe('MapDirectionsService', () => {
 
     directionsServiceSpy = createDirectionsServiceSpy();
     directionsServiceConstructorSpy =
-        createDirectionsServiceConstructorSpy(directionsServiceSpy).and.callThrough();
+      createDirectionsServiceConstructorSpy(directionsServiceSpy).and.callThrough();
     mapDirectionsService = TestBed.inject(MapDirectionsService);
   });
 
@@ -31,20 +31,33 @@ describe('MapDirectionsService', () => {
   });
 
   it('initializes the Google Maps Directions Service when `route` is called', () => {
-    mapDirectionsService.route({}).subscribe();
+    mapDirectionsService
+      .route({
+        origin: 'home',
+        destination: 'work',
+        travelMode: 'BICYCLING' as google.maps.TravelMode,
+      })
+      .subscribe();
+
     expect(directionsServiceConstructorSpy).toHaveBeenCalled();
   });
 
   it('calls route on inputs', () => {
-    const result = {};
-    const status = 'OK';
-    directionsServiceSpy.route.and.callFake((_request: google.maps.DirectionsRequest,
-        callback: Function) => {
-      callback(result, status);
+    const result: google.maps.DirectionsResult = {routes: []};
+    const status = 'OK' as google.maps.DirectionsStatus;
+    directionsServiceSpy.route.and.callFake((_request, callback) => {
+      callback?.(result, status);
+      return Promise.resolve(result);
     });
-    const request: google.maps.DirectionsRequest = {};
-    mapDirectionsService.route(request).subscribe(response => {
-      expect(response).toEqual({result, status} as MapDirectionsResponse);
-    });
+
+    mapDirectionsService
+      .route({
+        origin: 'home',
+        destination: 'work',
+        travelMode: 'BICYCLING' as google.maps.TravelMode,
+      })
+      .subscribe(response => {
+        expect(response).toEqual({result, status} as MapDirectionsResponse);
+      });
   });
 });

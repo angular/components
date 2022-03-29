@@ -25,9 +25,11 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: TabHarnessFilters = {}): HarnessPredicate<MatTabHarness> {
-    return new HarnessPredicate(MatTabHarness, options)
-        .addOption('label', options.label,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label));
+    return new HarnessPredicate(MatTabHarness, options).addOption(
+      'label',
+      options.label,
+      (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label),
+    );
   }
 
   /** Gets the label of the tab. */
@@ -36,12 +38,12 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
   }
 
   /** Gets the aria-label of the tab. */
-  async getAriaLabel(): Promise<string|null> {
+  async getAriaLabel(): Promise<string | null> {
     return (await this.host()).getAttribute('aria-label');
   }
 
   /** Gets the value of the "aria-labelledby" attribute. */
-  async getAriaLabelledby(): Promise<string|null> {
+  async getAriaLabelledby(): Promise<string | null> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
@@ -67,16 +69,6 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
     const contentId = await this._getContentId();
     const contentEl = await this.documentRootLocatorFactory().locatorFor(`#${contentId}`)();
     return contentEl.text();
-  }
-
-  /**
-   * Gets a `HarnessLoader` that can be used to load harnesses for components within the tab's
-   * content area.
-   * @deprecated Use `getHarness` or `getChildLoader` instead.
-   * @breaking-change 12.0.0
-   */
-  async getHarnessLoaderForContent(): Promise<HarnessLoader> {
-    return this.getRootHarnessLoader();
   }
 
   protected override async getRootHarnessLoader(): Promise<HarnessLoader> {

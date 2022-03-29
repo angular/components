@@ -1,35 +1,29 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {IconHarnessExample} from './icon-harness-example';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatIconHarness} from '@angular/material/icon/testing';
 import {DomSanitizer} from '@angular/platform-browser';
 
-
 describe('IconHarnessExample', () => {
   let fixture: ComponentFixture<IconHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatIconModule],
-      declarations: [IconHarnessExample]
+      declarations: [IconHarnessExample],
     }).compileComponents();
     const registry = TestBed.inject(MatIconRegistry);
     const sanitizer = TestBed.inject(DomSanitizer);
 
     // We use `bypassSecurityTrustHtml` exclusively for testing here.
-    registry.addSvgIconLiteralInNamespace('svgIcons', 'svgIcon',
-      sanitizer.bypassSecurityTrustHtml('<svg></svg>'));
+    registry.addSvgIconLiteralInNamespace(
+      'svgIcons',
+      'svgIcon',
+      sanitizer.bypassSecurityTrustHtml('<svg></svg>'),
+    );
 
     fixture = TestBed.createComponent(IconHarnessExample);
     fixture.detectChanges();

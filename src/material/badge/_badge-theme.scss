@@ -4,11 +4,12 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
-@use '../core/style/private';
-@use '../../cdk/a11y';
 
 $font-size: 12px;
 $font-weight: 600;
@@ -29,13 +30,13 @@ $_badge-structure-emitted: false !default;
 
   &.mat-badge-above {
     .mat-badge-content {
-      top: private.private-div(-$size, 2);
+      top: math.div(-$size, 2);
     }
   }
 
   &.mat-badge-below {
     .mat-badge-content {
-      bottom: private.private-div(-$size, 2);
+      bottom: math.div(-$size, 2);
     }
   }
 
@@ -68,27 +69,27 @@ $_badge-structure-emitted: false !default;
   &.mat-badge-overlap {
     &.mat-badge-before {
       .mat-badge-content {
-        left: private.private-div(-$size, 2);
+        left: math.div(-$size, 2);
       }
     }
 
     [dir='rtl'] &.mat-badge-before {
       .mat-badge-content {
         left: auto;
-        right: private.private-div(-$size, 2);
+        right: math.div(-$size, 2);
       }
     }
 
     &.mat-badge-after {
       .mat-badge-content {
-        right: private.private-div(-$size, 2);
+        right: math.div(-$size, 2);
       }
     }
 
     [dir='rtl'] &.mat-badge-after {
       .mat-badge-content {
         right: auto;
-        left: private.private-div(-$size, 2);
+        left: math.div(-$size, 2);
       }
     }
   }
@@ -100,6 +101,14 @@ $_badge-structure-emitted: false !default;
 @mixin _badge-structure {
   .mat-badge {
     position: relative;
+  }
+
+  // The badge should make sure its host is overflow visible so that the badge content
+  // can be rendered outside of the element. Some components such as <mat-icon> explicitly
+  // style `overflow: hidden` so this requires extra specificity so that it does not
+  // depend on style load order.
+  .mat-badge.mat-badge {
+    overflow: visible;
   }
 
   .mat-badge-hidden {
@@ -158,7 +167,7 @@ $_badge-structure-emitted: false !default;
     color: theming.get-color-from-palette($primary, default-contrast);
     background: theming.get-color-from-palette($primary);
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
       outline: solid 1px;
       border-radius: 0;
     }

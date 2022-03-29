@@ -12,7 +12,6 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/table",
     deps = [
         "//src/cdk/drag-drop",
         "//src/cdk/table",
@@ -59,6 +58,5 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    exclude_init_script = True,
     deps = [":unit_tests_lib"],
 )

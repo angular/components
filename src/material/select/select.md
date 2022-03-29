@@ -135,19 +135,32 @@ globally cause input errors to show when the input is dirty and invalid.
 ```
 
 ### Keyboard interaction
-
-- <kbd>DOWN_ARROW</kbd>: Focus next option
-- <kbd>UP_ARROW</kbd>: Focus previous option
-- <kbd>ENTER</kbd> or <kbd>SPACE</kbd>: Select focused item
+| Keyboard shortcut                      | Action                                                                |
+|----------------------------------------|-----------------------------------------------------------------------|
+| <kbd>Down Arrow</kbd>                  | Navigate to the next option.                                          |
+| <kbd>Up Arrow</kbd>                    | Navigate to the previous option.                                      |
+| <kbd>Enter</kbd>                       | If closed, open the select panel. If open, selects the active option. |
+| <kbd>Escape</kbd>                      | Close the select panel.                                               |
+| <kbd>Alt</kbd> + <kbd>Up Arrow</kbd>   | Close the select panel.                                               |
+| <kbd>Alt</kbd> + <kbd>Down Arrow</kbd> | Open the select panel if there are any matching options.              |
 
 ### Accessibility
+When possible, prefer a native `<select>` element over `MatSelect`. The native control
+provides the most accessible experience across the widest range of platforms.
 
-The `<mat-select>` component without text or label should be given a meaningful label via
-`aria-label` or `aria-labelledby`.
+`MatSelect` implements the combobox pattern detailed in the [1.2 version of the ARIA
+specification](https://www.w3.org/TR/wai-aria-1.2). The combobox trigger controls a `role="listbox"`
+element opened in a pop-up. Previous versions of the ARIA specification
+required that `role="combobox"` apply to a text input control, but the 1.2 version of the
+specification supports a wider variety of interaction patterns. This newer usage of ARIA works
+in all browser and screen-reader combinations supported by Angular Material.
 
-The `<mat-select>` component has `role="combobox"`, the dropdown panel has `role="listbox"` and options inside select panel have `role="option"`.
+Because the pop-up uses the `role="listbox"` pattern, you should _not_ put other interactive
+controls, such as buttons or checkboxes, inside a select option. Nesting interactive controls like
+this interferes with most assistive technology.
 
-The native `<select>` offers the best accessibility because it is supported directly by screen-readers.
+Always provide an accessible label for the select. This can be done by adding a `<mat-label>`
+inside of `<mat-form-field>`, the `aria-label` attribute, or the `aria-labelledby` attribute.
 
 ### Troubleshooting
 

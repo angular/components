@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-
 /** Interface for a text control that is used to drive interaction with a mat-chip-list. */
 export interface MatChipTextControl {
   /** Unique identifier for the text control. */
@@ -23,5 +22,7 @@ export interface MatChipTextControl {
 
   /** Focuses the text control. */
   focus(): void;
-}
 
+  /** Sets the list of ids the input is described by. */
+  setDescribedByIds(ids: string[]): void;
+}

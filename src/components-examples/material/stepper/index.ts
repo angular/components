@@ -8,9 +8,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatStepperModule} from '@angular/material/stepper';
 import {StepperEditableExample} from './stepper-editable/stepper-editable-example';
 import {StepperErrorsExample} from './stepper-errors/stepper-errors-example';
-import {
-  StepperLabelPositionBottomExample
-} from './stepper-label-position-bottom/stepper-label-position-bottom-example';
+import {StepperLabelPositionBottomExample} from './stepper-label-position-bottom/stepper-label-position-bottom-example';
 import {StepperOptionalExample} from './stepper-optional/stepper-optional-example';
 import {StepperOverviewExample} from './stepper-overview/stepper-overview-example';
 import {StepperStatesExample} from './stepper-states/stepper-states-example';
@@ -19,6 +17,8 @@ import {StepperHarnessExample} from './stepper-harness/stepper-harness-example';
 import {StepperIntlExample} from './stepper-intl/stepper-intl-example';
 import {StepperLazyContentExample} from './stepper-lazy-content/stepper-lazy-content-example';
 import {StepperResponsiveExample} from './stepper-responsive/stepper-responsive-example';
+import {StepperHeaderPositionExample} from './stepper-header-position/stepper-header-position-example';
+import {StepperAnimationsExample} from './stepper-animations/stepper-animations-example';
 
 export {
   StepperEditableExample,
@@ -32,6 +32,8 @@ export {
   StepperVerticalExample,
   StepperLazyContentExample,
   StepperResponsiveExample,
+  StepperHeaderPositionExample,
+  StepperAnimationsExample,
 };
 
 const EXAMPLES = [
@@ -46,6 +48,8 @@ const EXAMPLES = [
   StepperVerticalExample,
   StepperLazyContentExample,
   StepperResponsiveExample,
+  StepperHeaderPositionExample,
+  StepperAnimationsExample,
 ];
 
 @NgModule({
@@ -61,7 +65,5 @@ const EXAMPLES = [
   ],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
-export class StepperExamplesModule {
-}
+export class StepperExamplesModule {}

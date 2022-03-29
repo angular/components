@@ -18,7 +18,13 @@ export interface ModifierKeys {
 
 /** Data that can be attached to a custom event dispatched from a `TestElement`. */
 export type EventData =
-    string | number | boolean | undefined | null | EventData[] | {[key: string]: EventData};
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | EventData[]
+  | {[key: string]: EventData};
 
 /** An enum of non-text keys that can be used with the `sendKeys` method. */
 // NOTE: This is a separate enum from `@angular/cdk/keycodes` because we don't necessarily want to
@@ -57,7 +63,7 @@ export enum TestKey {
   F10,
   F11,
   F12,
-  META
+  META,
 }
 
 /**
@@ -111,13 +117,16 @@ export interface TestElement {
 
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
-   * and attempts to add the string to the Element's value.
+   * and attempts to add the string to the Element's value. Note that some environments cannot
+   * reproduce native browser behavior for keyboard shortcuts such as Tab, Ctrl + A, etc.
+   * @throws An error if no keys have been specified.
    */
   sendKeys(...keys: (string | TestKey)[]): Promise<void>;
 
   /**
-   * Sends the given string to the input as a series of key presses. Also fires input events
-   * and attempts to add the string to the Element's value.
+   * Sends the given string to the input as a series of key presses. Also fires input
+   * events and attempts to add the string to the Element's value.
+   * @throws An error if no keys have been specified.
    */
   sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
 
@@ -137,7 +146,7 @@ export interface TestElement {
   getDimensions(): Promise<ElementDimensions>;
 
   /** Gets the value of a property of an element. */
-  getProperty(name: string): Promise<any>;
+  getProperty<T = any>(name: string): Promise<T>;
 
   /** Checks whether this element matches the given selector. */
   matchesSelector(selector: string): Promise<boolean>;

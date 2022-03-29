@@ -18,11 +18,11 @@ import {
   dispatchMouseEvent,
   createKeyboardEvent,
   dispatchEvent,
-} from '@angular/cdk/testing/private';
+} from '../../cdk/testing/private';
 import {Component} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DATE_FORMATS, MatNativeDateModule} from '@angular/material/core';
-import {DEC, FEB, JAN, MAR, NOV} from '@angular/material/testing';
+import {DEC, FEB, JAN, MAR, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody} from './calendar-body';
 import {MatMonthView} from './month-view';
@@ -38,9 +38,7 @@ describe('MatMonthView', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MatNativeDateModule,
-        ],
+        imports: [MatNativeDateModule],
         declarations: [
           MatCalendarBody,
           MatMonthView,
@@ -51,9 +49,9 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          {provide: Directionality, useFactory: () => dir = {value: 'ltr'}},
-          {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy}
-        ]
+          {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
+          {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
+        ],
       });
 
       TestBed.compileComponents();
@@ -119,13 +117,17 @@ describe('MatMonthView', () => {
 
         it('should set the correct scope on the table headers', () => {
           const nonDividerHeaders = monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-table-header th:not(.mat-calendar-table-header-divider)');
-          const dividerHeader =
-              monthViewNativeElement.querySelector('.mat-calendar-table-header-divider')!;
+            '.mat-calendar-table-header th:not(.mat-calendar-table-header-divider)',
+          );
+          const dividerHeader = monthViewNativeElement.querySelector(
+            '.mat-calendar-table-header-divider',
+          )!;
 
-          expect(Array.from(nonDividerHeaders).every(header => {
-            return header.getAttribute('scope') === 'col';
-          })).toBe(true);
+          expect(
+            Array.from(nonDividerHeaders).every(header => {
+              return header.getAttribute('scope') === 'col';
+            }),
+          ).toBe(true);
           expect(dividerHeader.hasAttribute('scope')).toBe(false);
         });
 
@@ -135,9 +137,9 @@ describe('MatMonthView', () => {
 
           beforeEach(() => {
             calendarInstance = fixture.componentInstance;
-            calendarBodyEl =
-                fixture.debugElement.nativeElement.querySelector(
-                    '.mat-calendar-body') as HTMLElement;
+            calendarBodyEl = fixture.debugElement.nativeElement.querySelector(
+              '.mat-calendar-body',
+            ) as HTMLElement;
             expect(calendarBodyEl).not.toBeNull();
             dir.value = 'ltr';
             fixture.componentInstance.date = new Date(2017, JAN, 5);
@@ -287,6 +289,8 @@ describe('MatMonthView', () => {
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
             fixture.detectChanges();
+            dispatchKeyboardEvent(calendarBodyEl, 'keyup', ENTER);
+            fixture.detectChanges();
 
             expect(testComponent.selected).toEqual(new Date(2017, JAN, 4));
           });
@@ -298,6 +302,8 @@ describe('MatMonthView', () => {
             expect(testComponent.selected).toEqual(new Date(2017, JAN, 10));
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', SPACE);
+            fixture.detectChanges();
+            dispatchKeyboardEvent(calendarBodyEl, 'keyup', SPACE);
             fixture.detectChanges();
 
             expect(testComponent.selected).toEqual(new Date(2017, JAN, 4));
@@ -312,12 +318,15 @@ describe('MatMonthView', () => {
 
             // Note that here we only care that _some_ kind of range is rendered. There are
             // plenty of tests in the calendar body which assert that everything is correct.
-            expect(monthViewNativeElement.querySelectorAll(
-                '.mat-calendar-body-preview-start').length).toBeGreaterThan(0);
-            expect(monthViewNativeElement.querySelectorAll(
-                '.mat-calendar-body-in-preview').length).toBeGreaterThan(0);
-            expect(monthViewNativeElement.querySelectorAll(
-                '.mat-calendar-body-preview-end').length).toBeGreaterThan(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-start').length,
+            ).toBeGreaterThan(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-preview').length,
+            ).toBeGreaterThan(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-end').length,
+            ).toBeGreaterThan(0);
 
             const event = createKeyboardEvent('keydown', ESCAPE, 'Escape');
             spyOn(event, 'stopPropagation');
@@ -325,67 +334,69 @@ describe('MatMonthView', () => {
             fixture.detectChanges();
 
             // Expect the range range to have been cleared.
-            expect(monthViewNativeElement.querySelectorAll([
-              '.mat-calendar-body-preview-start',
-              '.mat-calendar-body-in-preview',
-              '.mat-calendar-body-preview-end'
-            ].join(',')).length).toBe(0);
+            expect(
+              monthViewNativeElement.querySelectorAll(
+                [
+                  '.mat-calendar-body-preview-start',
+                  '.mat-calendar-body-in-preview',
+                  '.mat-calendar-body-preview-end',
+                ].join(','),
+              ).length,
+            ).toBe(0);
             expect(event.stopPropagation).toHaveBeenCalled();
             expect(event.defaultPrevented).toBe(true);
             expect(testComponent.selected).toBeFalsy();
           });
 
-          it('should not cancel the current range selection when pressing escape with a '
-              + 'modifier key', () => {
-                const cellEls = monthViewNativeElement.querySelectorAll(
-                    '.mat-calendar-body-cell');
-                testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
-                fixture.detectChanges();
-                dispatchMouseEvent(cellEls[15], 'mouseenter');
-                fixture.detectChanges();
+          it(
+            'should not cancel the current range selection when pressing escape with a ' +
+              'modifier key',
+            () => {
+              const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+              testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
+              fixture.detectChanges();
+              dispatchMouseEvent(cellEls[15], 'mouseenter');
+              fixture.detectChanges();
 
-                const rangeStarts =
-                    monthViewNativeElement.querySelectorAll(
-                        '.mat-calendar-body-preview-start').length;
-                const rangeMids =
-                    monthViewNativeElement.querySelectorAll(
-                        '.mat-calendar-body-in-preview').length;
-                const rangeEnds =
-                    monthViewNativeElement.querySelectorAll(
-                        '.mat-calendar-body-preview-end').length;
+              const rangeStarts = monthViewNativeElement.querySelectorAll(
+                '.mat-calendar-body-preview-start',
+              ).length;
+              const rangeMids = monthViewNativeElement.querySelectorAll(
+                '.mat-calendar-body-in-preview',
+              ).length;
+              const rangeEnds = monthViewNativeElement.querySelectorAll(
+                '.mat-calendar-body-preview-end',
+              ).length;
 
-                // Note that here we only care that _some_ kind of range is rendered. There are
-                // plenty of tests in the calendar body which assert that everything is correct.
-                expect(rangeStarts).toBeGreaterThan(0);
-                expect(rangeMids).toBeGreaterThan(0);
-                expect(rangeEnds).toBeGreaterThan(0);
+              // Note that here we only care that _some_ kind of range is rendered. There are
+              // plenty of tests in the calendar body which assert that everything is correct.
+              expect(rangeStarts).toBeGreaterThan(0);
+              expect(rangeMids).toBeGreaterThan(0);
+              expect(rangeEnds).toBeGreaterThan(0);
 
-                const event = createKeyboardEvent(
-                    'keydown', ESCAPE, 'Escape', {alt: true});
-                spyOn(event, 'stopPropagation');
-                dispatchEvent(calendarBodyEl, event);
-                fixture.detectChanges();
+              const event = createKeyboardEvent('keydown', ESCAPE, 'Escape', {alt: true});
+              spyOn(event, 'stopPropagation');
+              dispatchEvent(calendarBodyEl, event);
+              fixture.detectChanges();
 
-                expect(
-                    monthViewNativeElement.querySelectorAll(
-                        '.mat-calendar-body-preview-start').length
-                ).toBe(rangeStarts);
-                expect(
-                    monthViewNativeElement.querySelectorAll(
-                        '.mat-calendar-body-in-preview').length
-                ).toBe(rangeMids);
-                expect(
-                    monthViewNativeElement.querySelectorAll(
-                        '.mat-calendar-body-preview-end').length
-                ).toBe(rangeEnds);
-                expect(event.stopPropagation).not.toHaveBeenCalled();
-                expect(event.defaultPrevented).toBe(false);
-                expect(testComponent.selected).toBeTruthy();
-              });
+              expect(
+                monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-start').length,
+              ).toBe(rangeStarts);
+              expect(
+                monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-preview').length,
+              ).toBe(rangeMids);
+              expect(
+                monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-end').length,
+              ).toBe(rangeEnds);
+              expect(event.stopPropagation).not.toHaveBeenCalled();
+              expect(event.defaultPrevented).toBe(false);
+              expect(testComponent.selected).toBeTruthy();
+            },
+          );
 
           it('should clear the preview range when the user is done selecting', () => {
-            const cellEls = monthViewNativeElement.querySelectorAll<HTMLElement>(
-                '.mat-calendar-body-cell');
+            const cellEls =
+              monthViewNativeElement.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
             testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
             fixture.detectChanges();
             dispatchMouseEvent(cellEls[15], 'mouseenter');
@@ -393,92 +404,143 @@ describe('MatMonthView', () => {
 
             // Note that here we only care that _some_ kind of range is rendered. There are
             // plenty of tests in the calendar body which assert that everything is correct.
-            expect(monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-body-preview-start').length).toBeGreaterThan(0);
-            expect(monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-body-in-preview').length).toBeGreaterThan(0);
-            expect(monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-body-preview-end').length).toBeGreaterThan(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-start').length,
+            ).toBeGreaterThan(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-preview').length,
+            ).toBeGreaterThan(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-end').length,
+            ).toBeGreaterThan(0);
 
             cellEls[15].click();
             fixture.detectChanges();
 
-            expect(monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-body-preview-start').length).toBe(0);
-            expect(monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-body-in-preview').length).toBe(0);
-            expect(monthViewNativeElement.querySelectorAll(
-              '.mat-calendar-body-preview-end').length).toBe(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-start').length,
+            ).toBe(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-preview').length,
+            ).toBe(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-end').length,
+            ).toBe(0);
           });
 
           it('should not clear the range when pressing escape while there is no preview', () => {
-            const getRangeElements = () => monthViewNativeElement.querySelectorAll([
-              '.mat-calendar-body-range-start',
-              '.mat-calendar-body-in-range',
-              '.mat-calendar-body-range-end'
-            ].join(','));
+            const getRangeElements = () =>
+              monthViewNativeElement.querySelectorAll(
+                [
+                  '.mat-calendar-body-range-start',
+                  '.mat-calendar-body-in-range',
+                  '.mat-calendar-body-range-end',
+                ].join(','),
+              );
 
             testComponent.selected = new DateRange(
-                new Date(2017, JAN, 10), new Date(2017, JAN, 15));
+              new Date(2017, JAN, 10),
+              new Date(2017, JAN, 15),
+            );
             fixture.detectChanges();
 
             expect(getRangeElements().length)
-            .toBeGreaterThan(0, 'Expected range to be present on init.');
+              .withContext('Expected range to be present on init.')
+              .toBeGreaterThan(0);
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', ESCAPE);
             fixture.detectChanges();
 
             expect(getRangeElements().length)
-            .toBeGreaterThan(0, 'Expected range to be present after pressing the escape key.');
+              .withContext('Expected range to be present after pressing the escape key.')
+              .toBeGreaterThan(0);
           });
 
-          it('should not fire the selected change event when clicking on an already-selected ' +
-              'date while selecting a single date', () => {
-            testComponent.selected = new Date(2017, JAN, 10);
+          it(
+            'should not fire the selected change event when clicking on an already-selected ' +
+              'date while selecting a single date',
+            () => {
+              testComponent.selected = new Date(2017, JAN, 10);
+              fixture.detectChanges();
+
+              expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+
+              const selectedCell = monthViewNativeElement.querySelector(
+                '.mat-calendar-body-selected',
+              ) as HTMLElement;
+              selectedCell.click();
+              fixture.detectChanges();
+
+              expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+            },
+          );
+
+          it(
+            'should fire the selected change event when clicking on an already-selected ' +
+              'date while selecting a range',
+            () => {
+              const selectedDate = new Date(2017, JAN, 10);
+              testComponent.selected = new DateRange(selectedDate, null);
+              fixture.detectChanges();
+
+              expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+
+              const selectedCell = monthViewNativeElement.querySelector(
+                '.mat-calendar-body-selected',
+              ) as HTMLElement;
+              selectedCell.click();
+              fixture.detectChanges();
+
+              expect(fixture.componentInstance.selectedChangeSpy).toHaveBeenCalledWith(
+                selectedDate,
+              );
+            },
+          );
+
+          it(
+            'should fire the _userSelection event with the correct value when clicking ' +
+              'on a selected date',
+            () => {
+              const date = new Date(2017, JAN, 10);
+              testComponent.selected = date;
+              fixture.detectChanges();
+
+              expect(fixture.componentInstance.userSelectionSpy).not.toHaveBeenCalled();
+
+              const selectedCell = monthViewNativeElement.querySelector(
+                '.mat-calendar-body-selected',
+              ) as HTMLElement;
+              selectedCell.click();
+              fixture.detectChanges();
+
+              expect(fixture.componentInstance.userSelectionSpy).toHaveBeenCalledWith(
+                jasmine.objectContaining({value: date}),
+              );
+            },
+          );
+
+          it('should go to month that is focused', () => {
+            const jan11Cell = fixture.debugElement.nativeElement.querySelector(
+              '[data-mat-row="1"][data-mat-col="3"] button',
+            ) as HTMLElement;
+
+            dispatchFakeEvent(jan11Cell, 'focus');
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
-
-            const selectedCell =
-                monthViewNativeElement.querySelector(
-                    '.mat-calendar-body-selected') as HTMLElement;
-            selectedCell.click();
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+            expect(calendarInstance.date).toEqual(new Date(2017, JAN, 11));
           });
 
-          it('should fire the selected change event when clicking on an already-selected ' +
-              'date while selecting a range', () => {
-            const selectedDate = new Date(2017, JAN, 10);
-            testComponent.selected = new DateRange(selectedDate, null);
+          it('should not call `.focus()` when the active date is focused', () => {
+            const jan5Cell = fixture.debugElement.nativeElement.querySelector(
+              '[data-mat-row="0"][data-mat-col="4"] button',
+            ) as HTMLElement;
+            const focusSpy = (jan5Cell.focus = jasmine.createSpy('cellFocused'));
+
+            dispatchFakeEvent(jan5Cell, 'focus');
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
-
-            const selectedCell =
-                monthViewNativeElement.querySelector('.mat-calendar-body-selected') as HTMLElement;
-            selectedCell.click();
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.selectedChangeSpy).toHaveBeenCalledWith(selectedDate);
-          });
-
-          it('should fire the _userSelection event with the correct value when clicking ' +
-              'on a selected date', () => {
-            const date = new Date(2017, JAN, 10);
-            testComponent.selected = date;
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.userSelectionSpy).not.toHaveBeenCalled();
-
-            const selectedCell =
-                monthViewNativeElement.querySelector('.mat-calendar-body-selected') as HTMLElement;
-            selectedCell.click();
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.userSelectionSpy).toHaveBeenCalledWith(
-                jasmine.objectContaining({value: date}));
+            expect(calendarInstance.date).toEqual(new Date(2017, JAN, 5));
+            expect(focusSpy).not.toHaveBeenCalled();
           });
         });
       });
@@ -498,8 +560,11 @@ describe('MatMonthView', () => {
         const fixture = TestBed.createComponent(MonthViewWithDateFilter);
         const activeDate = fixture.componentInstance.activeDate;
         const spy = spyOn(fixture.componentInstance, 'dateFilter').and.callThrough();
-        fixture.componentInstance.minDate =
-            new Date(activeDate.getFullYear() + 1, activeDate.getMonth(), activeDate.getDate());
+        fixture.componentInstance.minDate = new Date(
+          activeDate.getFullYear() + 1,
+          activeDate.getMonth(),
+          activeDate.getDate(),
+        );
         fixture.detectChanges();
 
         expect(spy).not.toHaveBeenCalled();
@@ -509,13 +574,15 @@ describe('MatMonthView', () => {
         const fixture = TestBed.createComponent(MonthViewWithDateFilter);
         const activeDate = fixture.componentInstance.activeDate;
         const spy = spyOn(fixture.componentInstance, 'dateFilter').and.callThrough();
-        fixture.componentInstance.maxDate =
-            new Date(activeDate.getFullYear() - 1, activeDate.getMonth(), activeDate.getDate());
+        fixture.componentInstance.maxDate = new Date(
+          activeDate.getFullYear() - 1,
+          activeDate.getMonth(),
+          activeDate.getDate(),
+        );
         fixture.detectChanges();
 
         expect(spy).not.toHaveBeenCalled();
       });
-
     });
 
     describe('month view with custom date classes', () => {
@@ -550,9 +617,7 @@ describe('MatMonthView', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MatNativeDateModule,
-        ],
+        imports: [MatNativeDateModule],
         declarations: [
           MatCalendarBody,
           MatMonthView,
@@ -577,10 +642,10 @@ describe('MatMonthView', () => {
                 monthYearLabel: {year: 'numeric', month: 'short'},
                 dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric'},
                 monthYearA11yLabel: {year: 'numeric', month: 'long'},
-              }
-            }
+              },
+            },
           },
-        ]
+        ],
       });
 
       TestBed.compileComponents();
@@ -599,7 +664,6 @@ describe('MatMonthView', () => {
   });
 });
 
-
 @Component({
   template: `
     <mat-month-view
@@ -615,14 +679,13 @@ class StandardMonthView {
   userSelectionSpy = jasmine.createSpy('userSelection');
 }
 
-
 @Component({
   template: `
     <mat-month-view
       [activeDate]="activeDate"
       [dateFilter]="dateFilter"
       [minDate]="minDate"
-      [maxDate]="maxDate"></mat-month-view>`
+      [maxDate]="maxDate"></mat-month-view>`,
 })
 class MonthViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -634,7 +697,7 @@ class MonthViewWithDateFilter {
 }
 
 @Component({
-  template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`
+  template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`,
 })
 class MonthViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

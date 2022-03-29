@@ -133,15 +133,17 @@
   </mat-tab>
 </mat-tab-group>
 
-<nav mat-tab-nav-bar>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
  <a mat-tab-link href="https://google.com">Google</a>
  <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
 </nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
 <h2>MDC Paginator</h2>
 
 <mat-paginator [length]="100"
-               [pageSizeOptions]="[5, 10, 25, 100]">
+               [pageSizeOptions]="[5, 10, 25, 100]"
+               aria-label="Select page">
 </mat-paginator>
 
 <h2>MDC Table</h2>

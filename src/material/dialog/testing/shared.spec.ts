@@ -1,52 +1,36 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component, TemplateRef, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogConfig, MatDialogModule} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialogHarness} from './dialog-harness';
 
 /** Shared tests to run on both the original and MDC-based dialog's. */
 export function runHarnessTests(
-    dialogModule: typeof MatDialogModule, dialogHarness: typeof MatDialogHarness,
-    dialogService: typeof MatDialog) {
+  dialogModule: typeof MatDialogModule,
+  dialogHarness: typeof MatDialogHarness,
+  dialogService: typeof MatDialog,
+) {
   let fixture: ComponentFixture<DialogHarnessTest>;
   let loader: HarnessLoader;
-  let overlayContainer: OverlayContainer;
 
   beforeEach(async () => {
     // If the specified dialog service does not match the default `MatDialog` service
     // that is used in the test components below, we provide the `MatDialog` service with
     // the existing instance of the specified dialog service. This allows us to run these
     // tests for the MDC-based version of the dialog too.
-    const providers = dialogService !== MatDialog ?
-        [{provide: MatDialog, useExisting: dialogService}] : undefined;
-    await TestBed
-        .configureTestingModule({
-          imports: [dialogModule, NoopAnimationsModule],
-          declarations: [DialogHarnessTest],
-          providers,
-        })
-        .compileComponents();
+    const providers =
+      dialogService !== MatDialog ? [{provide: MatDialog, useExisting: dialogService}] : undefined;
+    await TestBed.configureTestingModule({
+      imports: [dialogModule, NoopAnimationsModule],
+      declarations: [DialogHarnessTest],
+      providers,
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DialogHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
-    inject([OverlayContainer], (oc: OverlayContainer) => {
-      overlayContainer = oc;
-    })();
-  });
-
-  afterEach(() => {
-    // Close all dialogs upon test exit. This is necessary because the "MatDialog"
-    // service is not destroyed in TestBed automatically, and it could mean that
-    // dialogs are left in the DOM.
-    fixture.componentInstance.dialog.closeAll();
-    fixture.detectChanges();
-
-    // Angular won't call this for us so we need to do it ourselves to avoid leaks.
-    overlayContainer.ngOnDestroy();
   });
 
   it('should load harness for dialog', async () => {
@@ -95,7 +79,7 @@ export function runHarnessTests(
     fixture.componentInstance.open();
     fixture.componentInstance.open({ariaLabelledBy: 'dialog-label'});
     const dialogs = await loader.getAllHarnesses(dialogHarness);
-    expect(await dialogs[0].getAriaLabelledby()).toBe(null);
+    expect(await dialogs[0].getAriaLabelledby()).toMatch(/-dialog-title-\d+/);
     expect(await dialogs[1].getAriaLabelledby()).toBe('dialog-label');
   });
 
@@ -124,12 +108,26 @@ export function runHarnessTests(
     expect(dialogs.length).toBe(1);
   });
 
+  it('should get the text content of each section', async () => {
+    fixture.componentInstance.open();
+    const dialog = await loader.getHarness(dialogHarness);
+    expect(await dialog.getText()).toBe(`I'm the dialog titleI'm the dialog contentCancelOk`);
+    expect(await dialog.getTitleText()).toBe(`I'm the dialog title`);
+    expect(await dialog.getContentText()).toBe(`I'm the dialog content`);
+    expect(await dialog.getActionsText()).toBe(`CancelOk`);
+  });
+
   @Component({
     template: `
     <ng-template>
-      Hello from the dialog!
+      <div matDialogTitle>I'm the dialog title</div>
+      <div matDialogContent>I'm the dialog content</div>
+      <div matDialogActions>
+        <button>Cancel</button>
+        <button>Ok</button>
+      </div>
     </ng-template>
-  `
+    `,
   })
   class DialogHarnessTest {
     @ViewChild(TemplateRef) dialogTmpl: TemplateRef<any>;

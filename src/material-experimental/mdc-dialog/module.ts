@@ -20,11 +20,7 @@ import {
 } from './dialog-content-directives';
 
 @NgModule({
-  imports: [
-    OverlayModule,
-    PortalModule,
-    MatCommonModule,
-  ],
+  imports: [OverlayModule, PortalModule, MatCommonModule],
   exports: [
     MatDialogContainer,
     MatDialogClose,
@@ -40,11 +36,6 @@ import {
     MatDialogActions,
     MatDialogContent,
   ],
-  providers: [
-    MatDialog,
-    MAT_DIALOG_SCROLL_STRATEGY_PROVIDER,
-  ],
-  entryComponents: [MatDialogContainer],
+  providers: [MatDialog, MAT_DIALOG_SCROLL_STRATEGY_PROVIDER],
 })
-export class MatDialogModule {
-}
+export class MatDialogModule {}

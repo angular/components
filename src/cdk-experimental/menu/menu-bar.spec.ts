@@ -28,7 +28,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
   dispatchMouseEvent,
-} from '@angular/cdk/testing/private';
+} from '../../cdk/testing/private';
 import {CdkMenuBar} from './menu-bar';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemRadio} from './menu-item-radio';
@@ -225,7 +225,7 @@ describe('MenuBar', () => {
             expect(document.activeElement).toEqual(menuBarNativeItems[0]);
 
             expect(nativeMenus.length).toBe(0);
-          }
+          },
         );
 
         it('should toggle tabindex of menu bar items with left/right arrow keys', () => {
@@ -264,7 +264,7 @@ describe('MenuBar', () => {
             detectChanges();
 
             expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
-          }
+          },
         );
 
         it(
@@ -277,9 +277,9 @@ describe('MenuBar', () => {
             detectChanges();
 
             expect(document.activeElement).toEqual(
-              fileMenuNativeItems[fileMenuNativeItems.length - 1]
+              fileMenuNativeItems[fileMenuNativeItems.length - 1],
             );
-          }
+          },
         );
 
         it('should open the focused menu items menu and focus first submenu item on space', () => {
@@ -310,7 +310,7 @@ describe('MenuBar', () => {
 
             expect(fileMenuNativeItems[0].tabIndex).toEqual(-1);
             expect(fileMenuNativeItems[1].tabIndex).toEqual(0);
-          }
+          },
         );
       });
 
@@ -369,7 +369,7 @@ describe('MenuBar', () => {
 
           dispatchKeyboardEvent(nativeMenus[0], 'keydown', END);
           expect(document.activeElement).toEqual(
-            fileMenuNativeItems[fileMenuNativeItems.length - 1]
+            fileMenuNativeItems[fileMenuNativeItems.length - 1],
           );
 
           dispatchKeyboardEvent(nativeMenus[0], 'keydown', HOME);
@@ -396,7 +396,7 @@ describe('MenuBar', () => {
           detectChanges();
 
           expect(document.activeElement).toEqual(
-            fileMenuNativeItems[fileMenuNativeItems.length - 1]
+            fileMenuNativeItems[fileMenuNativeItems.length - 1],
           );
         });
 
@@ -414,7 +414,7 @@ describe('MenuBar', () => {
 
             expect(nativeMenus.length).toBe(0);
             expect(spy).toHaveBeenCalledTimes(1);
-          }
+          },
         );
 
         it('should close the submenu on left arrow and place focus back on its trigger', () => {
@@ -442,7 +442,7 @@ describe('MenuBar', () => {
             expect(nativeMenus.length).toBe(1);
             expect(nativeMenus[0].id).toBe('edit_menu');
             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-          }
+          },
         );
 
         it('should close first level menu and focus previous menubar item on left arrow', () => {
@@ -506,16 +506,16 @@ describe('MenuBar', () => {
 
         it('should handle keyboard actions if initial menu is opened programmatically', () => {
           fixture.debugElement
-              .queryAll(By.directive(CdkMenuItem))[0]
-              .injector.get(CdkMenuItem)
-              .getMenuTrigger()!
-              .openMenu();
+            .queryAll(By.directive(CdkMenuItem))[0]
+            .injector.get(CdkMenuItem)
+            .getMenuTrigger()!
+            .openMenu();
           detectChanges();
           fixture.debugElement
-              .queryAll(By.directive(CdkMenuItem))[2]
-              .injector.get(CdkMenuItem)
-              .getMenuTrigger()!
-              .openMenu();
+            .queryAll(By.directive(CdkMenuItem))[2]
+            .injector.get(CdkMenuItem)
+            .getMenuTrigger()!
+            .openMenu();
           detectChanges();
 
           fileMenuNativeItems[0].focus();
@@ -631,7 +631,7 @@ describe('MenuBar', () => {
             expect(nativeMenus.length).toBe(1);
             expect(nativeMenus[0].id).toBe('edit_menu');
             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-          }
+          },
         );
 
         it(
@@ -646,7 +646,7 @@ describe('MenuBar', () => {
             expect(nativeMenus.length).toBe(1);
             expect(nativeMenus[0].id).toBe('edit_menu');
             expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-          }
+          },
         );
       });
     });
@@ -714,7 +714,7 @@ describe('MenuBar', () => {
           expect(fontMenuItems[0].checked).toBeTrue();
           expect(nativeMenus.length).toBe(1);
           expect(nativeMenus[0].id).toBe('font_menu');
-        }
+        },
       );
     });
 
@@ -782,7 +782,7 @@ describe('MenuBar', () => {
           expect(fontMenuItems[1].checked).toBeTrue();
           expect(nativeMenus.length).toBe(1);
           expect(nativeMenus[0].id).toBe('text_menu');
-        }
+        },
       );
     });
   });
@@ -828,7 +828,6 @@ describe('MenuBar', () => {
     it('should close out all open menus when clicked outside the menu tree', () => {
       openMenu();
       expect(popoutMenus.length).toBe(1);
-
 
       fixture.debugElement.query(By.css('#container')).nativeElement.click();
       detectChanges();
@@ -971,9 +970,9 @@ describe('MenuBar', () => {
         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
         detectChanges();
 
-        expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[0]);
-        expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[1]);
-      }
+        expect(document.activeElement).not.toEqual(menuBarNativeItems[0]);
+        expect(document.activeElement).not.toEqual(menuBarNativeItems[1]);
+      },
     );
 
     it(
@@ -999,7 +998,7 @@ describe('MenuBar', () => {
 
         expect(nativeMenus.length).toBe(1);
         expect(nativeMenus[0].id).toBe('edit_menu');
-      }
+      },
     );
 
     it('should not close the menu when re-hovering the trigger', () => {
@@ -1074,8 +1073,8 @@ describe('MenuBar', () => {
 
         dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
 
-        expect(document.querySelector(':focus')).toEqual(fileMenuNativeItems[1]);
-      }
+        expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
+      },
     );
 
     it(
@@ -1090,7 +1089,7 @@ describe('MenuBar', () => {
         detectChanges();
 
         expect(nativeMenus.length).toBe(0);
-      }
+      },
     );
 
     it(
@@ -1101,7 +1100,7 @@ describe('MenuBar', () => {
         detectChanges();
 
         expect(menuBarNativeItems[0].tabIndex).toBe(-1);
-      }
+      },
     );
 
     it(
@@ -1123,7 +1122,7 @@ describe('MenuBar', () => {
 
         expect(menuBarNativeItems[0].tabIndex).toBe(0);
         expect(menuBarNativeItems[1].tabIndex).toBe(-1);
-      }
+      },
     );
 
     it(
@@ -1145,7 +1144,7 @@ describe('MenuBar', () => {
 
         expect(fileMenuNativeItems[0].tabIndex).toBe(-1);
         expect(fileMenuNativeItems[1].tabIndex).toBe(0);
-      }
+      },
     );
   });
 });
@@ -1176,23 +1175,23 @@ class MenuBarRadioGroup {}
         <button cdkMenuItem [cdkMenuTriggerFor]="edit">Edit</button>
       </div>
 
-      <ng-template cdkMenuPanel #file="cdkMenuPanel">
-        <div cdkMenu id="file_menu" [cdkMenuPanel]="file">
+      <ng-template #file>
+        <div cdkMenu id="file_menu">
           <button cdkMenuItem>Save</button>
           <button cdkMenuItem [cdkMenuTriggerFor]="share">Share</button>
           <button cdkMenuItem>Open</button>
         </div>
       </ng-template>
 
-      <ng-template cdkMenuPanel #share="cdkMenuPanel">
-        <div cdkMenu id="share_menu" [cdkMenuPanel]="share">
+      <ng-template #share>
+        <div cdkMenu id="share_menu">
           <button (cdkMenuItemTriggered)="clickEmitter.next()" cdkMenuItem>Email</button>
           <button cdkMenuItem>Chat</button>
         </div>
       </ng-template>
 
-      <ng-template cdkMenuPanel #edit="cdkMenuPanel">
-        <div cdkMenu id="edit_menu" [cdkMenuPanel]="edit">
+      <ng-template #edit>
+        <div cdkMenu id="edit_menu">
           <button cdkMenuItem>Undo</button>
           <button cdkMenuItem>Redo</button>
         </div>
@@ -1216,8 +1215,8 @@ class MultiMenuWithSubmenu {
         <button cdkMenuItem [cdkMenuTriggerFor]="font">Font size</button>
       </div>
 
-      <ng-template cdkMenuPanel #font="cdkMenuPanel">
-        <div cdkMenu id="font_menu" [cdkMenuPanel]="font">
+      <ng-template #font>
+        <div cdkMenu id="font_menu">
           <button cdkMenuItemCheckbox>Small</button>
           <button cdkMenuItemCheckbox>Large</button>
         </div>
@@ -1242,8 +1241,8 @@ class MenuWithCheckboxes {
         <button cdkMenuItem [cdkMenuTriggerFor]="text">Text</button>
       </div>
 
-      <ng-template cdkMenuPanel #text="cdkMenuPanel">
-        <div cdkMenu id="text_menu" [cdkMenuPanel]="text">
+      <ng-template #text>
+        <div cdkMenu id="text_menu">
           <button cdkMenuItemRadio>Bold</button>
           <button cdkMenuItemRadio>Italic</button>
         </div>
@@ -1268,8 +1267,8 @@ class MenuWithRadioButtons {
         <button cdkMenuItem [cdkMenuTriggerFor]="sub1">Trigger</button>
       </div>
 
-      <ng-template cdkMenuPanel #sub1="cdkMenuPanel">
-        <div cdkMenu [cdkMenuPanel]="sub1">
+      <ng-template #sub1>
+        <div cdkMenu>
           <div cdkMenuGroup>
             <button cdkMenuItemCheckbox>Trigger</button>
             <span id="inner-element">A nested non-menuitem element</span>

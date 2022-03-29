@@ -15,7 +15,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {exclude?: 
 
     const excludePattern = options?.exclude ? new RegExp(options.exclude) : null;
 
-    if (excludePattern?.test(basename(root.source!.input.file!))) {
+    if (excludePattern?.test(basename(root.source.input.file))) {
       return;
     }
 
@@ -25,13 +25,11 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {exclude?: 
           result,
           ruleName,
           message: messages.expected(),
-          node: rule
+          node: rule,
         });
-       }
+      }
     });
   };
 });
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
 export default plugin;

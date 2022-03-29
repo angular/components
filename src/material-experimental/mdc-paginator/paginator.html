@@ -1,7 +1,7 @@
 <div class="mat-mdc-paginator-outer-container">
   <div class="mat-mdc-paginator-container">
     <div class="mat-mdc-paginator-page-size" *ngIf="!hidePageSize">
-      <div class="mat-mdc-paginator-page-size-label">
+      <div class="mat-mdc-paginator-page-size-label" id="{{_pageSizeLabelId}}">
         {{_intl.itemsPerPageLabel}}
       </div>
 
@@ -13,7 +13,9 @@
         <mat-select
           [value]="pageSize"
           [disabled]="disabled"
-          [aria-label]="_intl.itemsPerPageLabel"
+          [aria-labelledby]="_pageSizeLabelId"
+          [panelClass]="selectConfig.panelClass || ''"
+          [disableOptionCentering]="selectConfig.disableOptionCentering"
           (selectionChange)="_changePageSize($event.value)">
           <mat-option *ngFor="let pageSizeOption of _displayedPageSizeOptions" [value]="pageSizeOption">
             {{pageSizeOption}}
@@ -27,7 +29,7 @@
     </div>
 
     <div class="mat-mdc-paginator-range-actions">
-      <div class="mat-mdc-paginator-range-label">
+      <div class="mat-mdc-paginator-range-label" aria-live="polite">
         {{_intl.getRangeLabel(pageIndex, pageSize, length)}}
       </div>
 

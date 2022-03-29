@@ -7,7 +7,6 @@
  */
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,8 +16,8 @@ import {
   Inject,
   Optional,
   Input,
-  HostListener,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   CanDisable,
@@ -50,14 +49,17 @@ const _MatMenuItemBase = mixinDisableRipple(mixinDisabled(class {}));
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.disabled]': 'disabled || null',
     'class': 'mat-focus-indicator',
+    '(click)': '_checkDisabled($event)',
+    '(mouseenter)': '_handleMouseEnter()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
 })
-export class MatMenuItem extends _MatMenuItemBase
-    implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy {
-
+export class MatMenuItem
+  extends _MatMenuItemBase
+  implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy
+{
   /** ARIA role for the menu item. */
   @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
 
@@ -73,22 +75,27 @@ export class MatMenuItem extends _MatMenuItemBase
   /** Whether the menu item acts as a trigger for a sub-menu. */
   _triggersSubmenu: boolean = false;
 
+  /**
+   * @deprecated `_document`, `changeDetectorRef` and `focusMonitor` to become required.
+   * @breaking-change 12.0.0
+   */
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
+    document?: any,
+    focusMonitor?: FocusMonitor,
+    parentMenu?: MatMenuPanel<MatMenuItem>,
+    changeDetectorRef?: ChangeDetectorRef,
+  );
+
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
-    /**
-     * @deprecated `_document` parameter is no longer being used and will be removed.
-     * @breaking-change 12.0.0
-     */
-    @Inject(DOCUMENT) _document?: any,
+    @Inject(DOCUMENT) private _document?: any,
     private _focusMonitor?: FocusMonitor,
-    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>) {
-
-    // @breaking-change 8.0.0 make `_focusMonitor` and `document` required params.
+    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>,
+    private _changeDetectorRef?: ChangeDetectorRef,
+  ) {
     super();
-
-    if (_parentMenu && _parentMenu.addItem) {
-      _parentMenu.addItem(this);
-    }
+    _parentMenu?.addItem?.(this);
   }
 
   /** Focuses the menu item. */
@@ -135,12 +142,6 @@ export class MatMenuItem extends _MatMenuItemBase
   }
 
   /** Prevents the default element actions if it is disabled. */
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click', ['$event'])
   _checkDisabled(event: Event): void {
     if (this.disabled) {
       event.preventDefault();
@@ -149,12 +150,6 @@ export class MatMenuItem extends _MatMenuItemBase
   }
 
   /** Emits to the hover stream. */
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('mouseenter')
   _handleMouseEnter() {
     this._hovered.next(this);
   }
@@ -166,13 +161,22 @@ export class MatMenuItem extends _MatMenuItemBase
 
     // Strip away icons so they don't show up in the text.
     for (let i = 0; i < icons.length; i++) {
-      const icon = icons[i];
-      icon.parentNode?.removeChild(icon);
+      icons[i].remove();
     }
 
     return clone.textContent?.trim() || '';
   }
 
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
+  _setHighlighted(isHighlighted: boolean) {
+    // We need to mark this for check for the case where the content is coming from a
+    // `matMenuContent` whose change detection tree is at the declaration position,
+    // not the insertion position. See #23175.
+    // @breaking-change 12.0.0 Remove null check for `_changeDetectorRef`.
+    this._highlighted = isHighlighted;
+    this._changeDetectorRef?.markForCheck();
+  }
+
+  _hasFocus(): boolean {
+    return this._document && this._document.activeElement === this._getHostElement();
+  }
 }

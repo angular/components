@@ -20,6 +20,17 @@ $_emitted-color: () !default;
 $_emitted-typography: () !default;
 $_emitted-density: () !default;
 
+/// Extracts a color from a palette or throws an error if it doesn't exist.
+/// @param {Map} $palette The palette from which to extract a color.
+/// @param {String | Number} $hue The hue for which to get the color.
+@function _get-color-from-palette($palette, $hue) {
+  @if map.has-key($palette, $hue) {
+    @return map.get($palette, $hue);
+  }
+
+  @error 'Hue "' + $hue + '" does not exist in palette. Available hues are: ' + map.keys($palette);
+}
+
 /// For a given hue in a palette, return the contrast color from the map of contrast palettes.
 /// @param {Map} $palette The palette from which to extract a color.
 /// @param {String | Number} $hue The hue for which to get a contrast color.
@@ -40,10 +51,10 @@ $_emitted-density: () !default;
 @function define-palette($base-palette, $default: 500, $lighter: 100, $darker: 700,
   $text: $default) {
   $result: map.merge($base-palette, (
-    default: map.get($base-palette, $default),
-    lighter: map.get($base-palette, $lighter),
-    darker: map.get($base-palette, $darker),
-    text: map.get($base-palette, $text),
+    default: _get-color-from-palette($base-palette, $default),
+    lighter: _get-color-from-palette($base-palette, $lighter),
+    darker: _get-color-from-palette($base-palette, $darker),
+    text: _get-color-from-palette($base-palette, $text),
 
     default-contrast: get-contrast-color-from-palette($base-palette, $default),
     lighter-contrast: get-contrast-color-from-palette($base-palette, $lighter),
@@ -77,7 +88,9 @@ $_emitted-density: () !default;
     @return get-color-from-palette($palette, default, $hue);
   }
 
-  $color: map.get($palette, $hue);
+  // We cast the $hue to a string, because some hues starting with a number, like `700-contrast`,
+  // might be inferred as numbers by Sass. Casting them to string fixes the map lookup.
+  $color: if(map.has-key($palette, $hue), map.get($palette, $hue), map.get($palette, $hue + ''));
 
   @if (meta.type-of($color) != color) {
     // If the $color resolved to something different from a color (e.g. a CSS variable),
@@ -393,7 +406,7 @@ $_emitted-density: () !default;
 //
 //    @mixin my-custom-component-theme($theme) {
 //      .my-comp {
-//        background-color: mat-color(map-get($theme, primary));
+//        background-color: mat.get-color-from-palette(map.get($theme, primary));
 //      }
 //    }
 //
@@ -423,4 +436,13 @@ $_emitted-density: () !default;
     _is-legacy-theme: true,
     color: $theme-or-color-config
   ));
+}
+
+
+// Approximates an rgba color into a solid hex color, given a background color.
+@function private-rgba-to-hex($color, $background-color) {
+  // We convert the rgba color into a solid one by taking the opacity from the rgba
+  // value and using it to determine the percentage of the background to put
+  // into foreground when mixing the colors together.
+  @return mix($background-color, rgba($color, 1), (1 - opacity($color)) * 100%);
 }

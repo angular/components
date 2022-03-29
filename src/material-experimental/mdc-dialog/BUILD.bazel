@@ -18,7 +18,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":dialog_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-dialog",
     deps = [
         "//src/cdk/overlay",
         "//src/cdk/portal",
@@ -32,7 +31,9 @@ sass_library(
     name = "mdc_dialog_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
 )
 
@@ -77,12 +78,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/dialog/dist/mdc.dialog.js",
-    ],
     deps = [
         ":dialog_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

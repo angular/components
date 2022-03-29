@@ -5,14 +5,16 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {Directive, OnDestroy, ElementRef, Self, Optional, Inject, NgZone} from '@angular/core';
+import {Directive, ElementRef, Inject, NgZone, OnDestroy, Optional, Self} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkMenuItemSelectable} from './menu-item-selectable';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
 import {CDK_MENU, Menu} from './menu-interface';
 import {MENU_AIM, MenuAim} from './menu-aim';
+import {MENU_STACK, MenuStack} from './menu-stack';
 
 /**
  * A directive providing behavior for the "menuitemradio" ARIA role, which behaves similarly to
@@ -42,15 +44,16 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
     private readonly _selectionDispatcher: UniqueSelectionDispatcher,
     element: ElementRef<HTMLElement>,
     ngZone: NgZone,
+    @Optional() @Inject(MENU_STACK) menuStack?: MenuStack,
     @Optional() @Inject(CDK_MENU) parentMenu?: Menu,
     @Optional() @Inject(MENU_AIM) menuAim?: MenuAim,
     @Optional() dir?: Directionality,
     /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
     // `CdkMenuItemRadio` is commonly used in combination with a `CdkMenuItemTrigger`.
     // tslint:disable-next-line: lightweight-tokens
-    @Self() @Optional() menuTrigger?: CdkMenuItemTrigger
+    @Self() @Optional() menuTrigger?: CdkMenuItemTrigger,
   ) {
-    super(element, ngZone, parentMenu, menuAim, dir, menuTrigger);
+    super(element, ngZone, menuStack, parentMenu, menuAim, dir, menuTrigger);
 
     this._registerDispatcherListener();
   }
@@ -58,7 +61,7 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
   /** Configure the unique selection dispatcher listener in order to toggle the checked state  */
   private _registerDispatcherListener() {
     this._removeDispatcherListener = this._selectionDispatcher.listen(
-      (id: string, name: string) => (this.checked = this.id === id && this.name === name)
+      (id: string, name: string) => (this.checked = this.id === id && this.name === name),
     );
   }
 

@@ -19,10 +19,10 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":progress-spinner.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/progress-spinner",
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/platform",
+        "//src/cdk/scrolling",
         "//src/material/core",
         "@npm//@angular/animations",
         "@npm//@angular/common",
@@ -40,7 +40,10 @@ sass_library(
 sass_binary(
     name = "progress_spinner_scss",
     src = "progress-spinner.scss",
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 ng_test_library(

@@ -57,8 +57,8 @@ component by following these steps:
    the experimental tabs):
 
    ```scss
-   @use '~@angular/material' as mat;
-   @use '~@angular/material-experimental' as mat-experimental;
+   @use '@angular/material' as mat;
+   @use '@angular/material-experimental' as mat-experimental;
 
    $my-primary: mat.define-palette(mat.$indigo-palette);
    $my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
@@ -80,6 +80,7 @@ The experimental tabs API closely matches the
 as all of the symbols found under `@angular/material/tabs`, except for the following
 differences:
 
+* `MatTabNav` will throw an error in dev mode if a `[tabPanel]` is not provided.
 * `MatTabLink` is defined as a `Component` in the experimental package,
   whereas in the current one it's a `Directive`.
 

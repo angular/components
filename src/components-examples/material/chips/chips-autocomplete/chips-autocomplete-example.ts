@@ -15,8 +15,6 @@ import {map, startWith} from 'rxjs/operators';
   styleUrls: ['chips-autocomplete-example.css'],
 })
 export class ChipsAutocompleteExample {
-  selectable = true;
-  removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl();
   filteredFruits: Observable<string[]>;
@@ -27,8 +25,9 @@ export class ChipsAutocompleteExample {
 
   constructor() {
     this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-        startWith(null),
-        map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+      startWith(null),
+      map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice())),
+    );
   }
 
   add(event: MatChipInputEvent): void {

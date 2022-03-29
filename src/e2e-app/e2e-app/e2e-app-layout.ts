@@ -1,9 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-
 @Component({selector: 'home', template: `<p>e2e website!</p>`})
-export class Home {
-}
+export class Home {}
 
 @Component({
   selector: 'e2e-app-layout',
@@ -29,6 +27,7 @@ export class E2eAppLayout {
     {path: 'progress-bar', title: 'Progress bar'},
     {path: 'progress-spinner', title: 'Progress Spinner'},
     {path: 'radio', title: 'Radios'},
+    {path: 'select', title: 'Select'},
     {path: 'sidenav', title: 'Sidenav'},
     {path: 'slide-toggle', title: 'Slide Toggle'},
     {path: 'stepper', title: 'Stepper'},
@@ -48,6 +47,6 @@ export class E2eAppLayout {
     {path: 'mdc-table', title: 'MDC Table'},
     {path: 'mdc-tabs', title: 'MDC Tabs'},
     {path: 'mdc-progress-bar', title: 'MDC Progress bar'},
-    {path: 'mdc-progress-spinner', title: 'MDC Progress spinner'}
+    {path: 'mdc-progress-spinner', title: 'MDC Progress spinner'},
   ];
 }

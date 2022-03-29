@@ -1,6 +1,5 @@
 import {Component, ElementRef, Type, ViewChild} from '@angular/core';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {ComponentFixture, TestBed, inject, flush, fakeAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, flush, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -29,69 +28,42 @@ describe('MatDatepickerActions', () => {
     return TestBed.createComponent(component);
   }
 
-  afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
-    container.ngOnDestroy();
-  }));
-
-  it('should render the actions inside calendar panel in popup mode', () => {
+  it('should render the actions inside calendar panel in popup mode', fakeAsync(() => {
     const fixture = createComponent(DatepickerWithActions);
     fixture.detectChanges();
     fixture.componentInstance.datepicker.open();
     fixture.detectChanges();
+    tick();
+    flush();
 
     const actions = document.querySelector('.mat-datepicker-content .mat-datepicker-actions');
     expect(actions).toBeTruthy();
     expect(actions?.querySelector('.cancel')).toBeTruthy();
     expect(actions?.querySelector('.apply')).toBeTruthy();
-  });
+  }));
 
-  it('should render the actions inside calendar panel in touch UI mode', () => {
+  it('should render the actions inside calendar panel in touch UI mode', fakeAsync(() => {
     const fixture = createComponent(DatepickerWithActions);
     fixture.componentInstance.touchUi = true;
     fixture.detectChanges();
     fixture.componentInstance.datepicker.open();
     fixture.detectChanges();
+    tick();
+    flush();
 
     const actions = document.querySelector('.mat-datepicker-content .mat-datepicker-actions');
     expect(actions).toBeTruthy();
     expect(actions?.querySelector('.cancel')).toBeTruthy();
     expect(actions?.querySelector('.apply')).toBeTruthy();
-  });
+  }));
 
-  it('should not assign the value or close the datepicker when a value is selected',
-    fakeAsync(() => {
-      const fixture = createComponent(DatepickerWithActions);
-      fixture.detectChanges();
-      const {control, datepicker, onDateChange, input} = fixture.componentInstance;
-      datepicker.open();
-      fixture.detectChanges();
-
-      const content = document.querySelector('.mat-datepicker-content')!;
-      const cells = content.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
-
-      expect(datepicker.opened).toBe(true);
-      expect(input.nativeElement.value).toBeFalsy();
-      expect(control.value).toBeFalsy();
-      expect(onDateChange).not.toHaveBeenCalled();
-      expect(content.querySelector('.mat-calendar-body-selected')).toBeFalsy();
-
-      cells[10].click();
-      fixture.detectChanges();
-      flush();
-
-      expect(datepicker.opened).toBe(true);
-      expect(input.nativeElement.value).toBeFalsy();
-      expect(control.value).toBeFalsy();
-      expect(onDateChange).not.toHaveBeenCalled();
-      expect(content.querySelector('.mat-calendar-body-selected')).toBeTruthy();
-    }));
-
-  it('should close without changing the value when clicking on the cancel button', fakeAsync(() => {
+  it('should not assign the value or close the datepicker when a value is selected', fakeAsync(() => {
     const fixture = createComponent(DatepickerWithActions);
     fixture.detectChanges();
     const {control, datepicker, onDateChange, input} = fixture.componentInstance;
     datepicker.open();
     fixture.detectChanges();
+    tick();
 
     const content = document.querySelector('.mat-datepicker-content')!;
     const cells = content.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
@@ -111,58 +83,16 @@ describe('MatDatepickerActions', () => {
     expect(control.value).toBeFalsy();
     expect(onDateChange).not.toHaveBeenCalled();
     expect(content.querySelector('.mat-calendar-body-selected')).toBeTruthy();
-
-    (content.querySelector('.cancel') as HTMLElement).click();
-    fixture.detectChanges();
-    flush();
-
-    expect(datepicker.opened).toBe(false);
-    expect(input.nativeElement.value).toBeFalsy();
-    expect(control.value).toBeFalsy();
-    expect(onDateChange).not.toHaveBeenCalled();
   }));
 
-  it('should close while keeping the previous control value when clicking on cancel',
-    fakeAsync(() => {
-      const fixture = createComponent(DatepickerWithActions);
-      fixture.detectChanges();
-      const {control, datepicker, onDateChange} = fixture.componentInstance;
-      const value = new Date(2021, 0, 20);
-      control.setValue(value);
-      fixture.detectChanges();
-      datepicker.open();
-      fixture.detectChanges();
-
-      const content = document.querySelector('.mat-datepicker-content')!;
-      const cells = content.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
-
-      expect(datepicker.opened).toBe(true);
-      expect(control.value).toBe(value);
-      expect(onDateChange).not.toHaveBeenCalled();
-
-      cells[10].click();
-      fixture.detectChanges();
-      flush();
-
-      expect(datepicker.opened).toBe(true);
-      expect(control.value).toBe(value);
-      expect(onDateChange).not.toHaveBeenCalled();
-
-      (content.querySelector('.cancel') as HTMLElement).click();
-      fixture.detectChanges();
-      flush();
-
-      expect(datepicker.opened).toBe(false);
-      expect(control.value).toBe(value);
-      expect(onDateChange).not.toHaveBeenCalled();
-    }));
-
-  it('should close and accept the value when clicking on the apply button', fakeAsync(() => {
+  it('should close without changing the value when clicking on the cancel button', fakeAsync(() => {
     const fixture = createComponent(DatepickerWithActions);
     fixture.detectChanges();
     const {control, datepicker, onDateChange, input} = fixture.componentInstance;
     datepicker.open();
     fixture.detectChanges();
+    tick();
+    flush();
 
     const content = document.querySelector('.mat-datepicker-content')!;
     const cells = content.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
@@ -175,6 +105,83 @@ describe('MatDatepickerActions', () => {
 
     cells[10].click();
     fixture.detectChanges();
+    tick();
+    flush();
+
+    expect(datepicker.opened).toBe(true);
+    expect(input.nativeElement.value).toBeFalsy();
+    expect(control.value).toBeFalsy();
+    expect(onDateChange).not.toHaveBeenCalled();
+    expect(content.querySelector('.mat-calendar-body-selected')).toBeTruthy();
+
+    (content.querySelector('.cancel') as HTMLElement).click();
+    fixture.detectChanges();
+    flush();
+
+    expect(datepicker.opened).toBe(false);
+    expect(input.nativeElement.value).toBeFalsy();
+    expect(control.value).toBeFalsy();
+    expect(onDateChange).not.toHaveBeenCalled();
+  }));
+
+  it('should close while keeping the previous control value when clicking on cancel', fakeAsync(() => {
+    const fixture = createComponent(DatepickerWithActions);
+    fixture.detectChanges();
+    const {control, datepicker, onDateChange} = fixture.componentInstance;
+    const value = new Date(2021, 0, 20);
+    control.setValue(value);
+    fixture.detectChanges();
+    datepicker.open();
+    fixture.detectChanges();
+    tick();
+    flush();
+
+    const content = document.querySelector('.mat-datepicker-content')!;
+    const cells = content.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
+
+    expect(datepicker.opened).toBe(true);
+    expect(control.value).toBe(value);
+    expect(onDateChange).not.toHaveBeenCalled();
+
+    cells[10].click();
+    fixture.detectChanges();
+    tick();
+    flush();
+
+    expect(datepicker.opened).toBe(true);
+    expect(control.value).toBe(value);
+    expect(onDateChange).not.toHaveBeenCalled();
+
+    (content.querySelector('.cancel') as HTMLElement).click();
+    fixture.detectChanges();
+    flush();
+
+    expect(datepicker.opened).toBe(false);
+    expect(control.value).toBe(value);
+    expect(onDateChange).not.toHaveBeenCalled();
+  }));
+
+  it('should close and accept the value when clicking on the apply button', fakeAsync(() => {
+    const fixture = createComponent(DatepickerWithActions);
+    fixture.detectChanges();
+    const {control, datepicker, onDateChange, input} = fixture.componentInstance;
+    datepicker.open();
+    fixture.detectChanges();
+    tick();
+    flush();
+
+    const content = document.querySelector('.mat-datepicker-content')!;
+    const cells = content.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
+
+    expect(datepicker.opened).toBe(true);
+    expect(input.nativeElement.value).toBeFalsy();
+    expect(control.value).toBeFalsy();
+    expect(onDateChange).not.toHaveBeenCalled();
+    expect(content.querySelector('.mat-calendar-body-selected')).toBeFalsy();
+
+    cells[10].click();
+    fixture.detectChanges();
+    tick();
     flush();
 
     expect(datepicker.opened).toBe(true);
@@ -199,6 +206,8 @@ describe('MatDatepickerActions', () => {
     const {control, datepicker, onDateChange} = fixture.componentInstance;
     datepicker.open();
     fixture.detectChanges();
+    tick();
+    flush();
 
     let content = document.querySelector('.mat-datepicker-content')!;
     let actions = content.querySelector('.mat-datepicker-actions')!;
@@ -211,6 +220,7 @@ describe('MatDatepickerActions', () => {
 
     cells[10].click();
     fixture.detectChanges();
+    tick();
     flush();
 
     expect(datepicker.opened).toBe(true);
@@ -240,13 +250,13 @@ describe('MatDatepickerActions', () => {
 
     cells[10].click();
     fixture.detectChanges();
+    tick();
     flush();
 
     expect(datepicker.opened).toBe(false);
     expect(control.value).toBeTruthy();
     expect(onDateChange).toHaveBeenCalledTimes(1);
   }));
-
 });
 
 @Component({
@@ -266,7 +276,7 @@ describe('MatDatepickerActions', () => {
         </mat-datepicker-actions>
       </mat-datepicker>
     </mat-form-field>
-  `
+  `,
 })
 class DatepickerWithActions {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;

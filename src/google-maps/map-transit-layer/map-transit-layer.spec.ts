@@ -34,7 +34,7 @@ describe('MapTransitLayer', () => {
   it('initializes a Google Map Transit Layer', () => {
     const transitLayerSpy = createTransitLayerSpy();
     const transitLayerConstructorSpy =
-        createTransitLayerConstructorSpy(transitLayerSpy).and.callThrough();
+      createTransitLayerConstructorSpy(transitLayerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
@@ -50,5 +50,4 @@ describe('MapTransitLayer', () => {
                 <map-transit-layer></map-transit-layer>
             </google-map>`,
 })
-class TestApp {
-}
+class TestApp {}

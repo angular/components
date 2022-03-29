@@ -19,7 +19,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":dialog.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/dialog",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -45,7 +44,7 @@ sass_binary(
     name = "dialog_scss",
     src = "dialog.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

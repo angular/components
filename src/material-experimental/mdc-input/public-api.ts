@@ -8,8 +8,4 @@
 
 export {MatInput} from './input';
 export {MatInputModule} from './module';
-export {MatTextareaAutosize} from './autosize';
-export {
-  getMatInputUnsupportedTypeError,
-  MAT_INPUT_VALUE_ACCESSOR,
-} from '@angular/material/input';
+export {getMatInputUnsupportedTypeError, MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';

@@ -29,19 +29,27 @@ import {Subject} from 'rxjs';
  */
 export const MAT_MENU_CONTENT = new InjectionToken<MatMenuContent>('MatMenuContent');
 
-/**
- * Menu content that will be rendered lazily once the menu is opened.
- */
-@Directive({
-  selector: 'ng-template[matMenuContent]',
-  providers: [{provide: MAT_MENU_CONTENT, useExisting: MatMenuContent}],
-})
-export class MatMenuContent implements OnDestroy {
+@Directive()
+export abstract class _MatMenuContentBase implements OnDestroy {
   private _portal: TemplatePortal<any>;
   private _outlet: DomPortalOutlet;
 
   /** Emits when the menu content has been attached. */
   readonly _attached = new Subject<void>();
+
+  /**
+   * @deprecated `changeDetectorRef` is now a required parameter.
+   * @breaking-change 9.0.0
+   */
+  constructor(
+    template: TemplateRef<any>,
+    componentFactoryResolver: ComponentFactoryResolver,
+    appRef: ApplicationRef,
+    injector: Injector,
+    viewContainerRef: ViewContainerRef,
+    document: any,
+    changeDetectorRef?: ChangeDetectorRef,
+  );
 
   constructor(
     private _template: TemplateRef<any>,
@@ -50,7 +58,8 @@ export class MatMenuContent implements OnDestroy {
     private _injector: Injector,
     private _viewContainerRef: ViewContainerRef,
     @Inject(DOCUMENT) private _document: any,
-    private _changeDetectorRef?: ChangeDetectorRef) {}
+    private _changeDetectorRef?: ChangeDetectorRef,
+  ) {}
 
   /**
    * Attaches the content with a particular context.
@@ -64,8 +73,12 @@ export class MatMenuContent implements OnDestroy {
     this.detach();
 
     if (!this._outlet) {
-      this._outlet = new DomPortalOutlet(this._document.createElement('div'),
-          this._componentFactoryResolver, this._appRef, this._injector);
+      this._outlet = new DomPortalOutlet(
+        this._document.createElement('div'),
+        this._componentFactoryResolver,
+        this._appRef,
+        this._injector,
+      );
     }
 
     const element: HTMLElement = this._template.elementRef.nativeElement;
@@ -81,10 +94,7 @@ export class MatMenuContent implements OnDestroy {
     // not be updated by Angular. By explicitly marking for check here, we tell Angular that
     // it needs to check for new menu items and update the `@ContentChild` in `MatMenu`.
     // @breaking-change 9.0.0 Make change detector ref required
-    if (this._changeDetectorRef) {
-      this._changeDetectorRef.markForCheck();
-    }
-
+    this._changeDetectorRef?.markForCheck();
     this._portal.attach(this._outlet, context);
     this._attached.next();
   }
@@ -105,3 +115,12 @@ export class MatMenuContent implements OnDestroy {
     }
   }
 }
+
+/**
+ * Menu content that will be rendered lazily once the menu is opened.
+ */
+@Directive({
+  selector: 'ng-template[matMenuContent]',
+  providers: [{provide: MAT_MENU_CONTENT, useExisting: MatMenuContent}],
+})
+export class MatMenuContent extends _MatMenuContentBase {}

@@ -77,7 +77,7 @@ require these hues, but you can use these hues when defining a theme as describe
 [Defining a theme](#defining-a-theme) below.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 $my-palette: mat.$indigo-palette;
 ```
@@ -109,7 +109,7 @@ once for your application, even if you define multiple themes. Including the `co
 times will result in duplicate CSS in your application.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @include mat.core();
 ```
@@ -127,7 +127,7 @@ Components use these hues to choose the most appropriate color for different par
 themselves.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 $my-primary: mat.define-palette(mat.$indigo-palette, 500);
 $my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
@@ -141,7 +141,7 @@ the result from `define-palette`. The choice of a light versus a dark theme dete
 background and foreground colors used throughout the components.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 $my-primary: mat.define-palette(mat.$indigo-palette, 500);
 $my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
@@ -174,7 +174,7 @@ Apply the styles for each of the components used in your application by includin
 theme Sass mixins.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @include mat.core();
 
@@ -188,7 +188,7 @@ $my-theme: mat.define-light-theme((
  )
 ));
 
-// Emit theme-dependent styles for common features used across multiple components. 
+// Emit theme-dependent styles for common features used across multiple components.
 @include mat.core-theme($my-theme);
 
 // Emit styles for MatButton based on `$my-theme`. Because the configuration
@@ -206,7 +206,7 @@ component mixins, except they emit styles for `core-theme` and _all_ 35+ compone
 Material. Unless your application uses every single component, this will produce unnecessary CSS.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @include mat.core();
 
@@ -235,10 +235,10 @@ You can use one of these pre-built themes if you don't want to define a custom t
 
 | Theme                  | Light or dark? | Palettes (primary, accent, warn) |
 |------------------------|----------------|----------------------------------|
-| `deeppurple-amber.css` | Dark           | deep-purple, amber, red          |
+| `deeppurple-amber.css` | Light          | deep-purple, amber, red          |
 | `indigo-pink.css`      | Light          | indigo, pink, red                |
 | `pink-bluegrey.css`    | Dark           | pink, bluegrey, red              |
-| `purple-green.css`     | Light          | purple, green, red               |
+| `purple-green.css`     | Dark           | purple, green, red               |
 
 These files include the CSS for every component in the library. To include only the CSS for a subset
 of components, you must use the Sass API detailed in [Defining a theme](#defining-a-theme) above.
@@ -270,7 +270,7 @@ CSS rule declaration. See the [documentation for Sass mixins][sass-mixins] for f
 [sass-mixins]: https://sass-lang.com/documentation/at-rules/mixin
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @include mat.core();
 
@@ -308,12 +308,20 @@ $dark-theme: mat.define-dark-theme((
 
 #### Multiple themes across separate files
 
-You can define multiple themes in seprate files by creating multiple theme files per
+You can define multiple themes in separate files by creating multiple theme files per
 [Defining a theme](#defining-a-theme), adding each of the files to the `styles` of your
 `angular.json`. However, you must additionally set the `inject` option for each of these files to
 `false` in order to prevent all the theme files from being loaded at the same time. When setting
 this property to `false`, your application becomes responsible for manually loading the desired
 file. The approach for this loading depends on your application.
+
+### Application background color
+
+By default, Angular Material does not apply any styles to your DOM outside
+of its own components. If you want to set your application's background color
+to match the components' theme, you can either:
+1. Put your application's main content inside `mat-sidenav-container`, assuming you're using `MatSidenav`, or
+2. Apply the `mat-app-background` CSS class to your main content root element (typically `body`).
 
 ### Scoping style customizations
 
@@ -323,7 +331,7 @@ The example below shows how to customize the color of all buttons inside element
 `.my-special-section` CSS class.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 .my-special-section {
  $special-primary: mat.define-palette(mat.$orange-palette);
@@ -343,7 +351,7 @@ number identifier. You can also access the contrast color for a particular hue b
 hue's number idenfier with `-contrast`.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 $my-palette: mat.define-palette(mat.$indigo-palette);
 
@@ -357,7 +365,7 @@ You can also reference colors using the `"default"`, `"lighter"`, `"darker"`, an
 passed to `define-palette`.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 $my-palette: mat.define-palette(mat.$indigo-palette);
 
@@ -389,7 +397,7 @@ The following example includes strong focus indicator styles in an application a
 the custom theme API.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @include mat.core();
 @include mat.strong-focus-indicators();
@@ -421,7 +429,7 @@ The following example includes strong focus indicator styles with custom setting
 of the custom theme API.
 
 ```scss
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @include mat.core();
 @include mat.strong-focus-indicators((

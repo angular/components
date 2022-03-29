@@ -26,15 +26,18 @@ import {MatInput as BaseMatInput} from '@angular/material/input';
     '[class.mat-form-field-autofill-control]': 'false',
     '[class.mat-input-element]': 'false',
     '[class.mat-form-field-control]': 'false',
+    '[class.mat-native-select-inline]': 'false',
     '[class.mat-input-server]': '_isServer',
-    '[class.mat-mdc-textarea-input]': '_isTextarea',
-    '[class.mat-mdc-form-field-control]': '_isInFormField',
+    '[class.mat-mdc-form-field-textarea-control]': '_isInFormField && _isTextarea',
+    '[class.mat-mdc-form-field-input-control]': '_isInFormField',
     '[class.mdc-text-field__input]': '_isInFormField',
+    '[class.mat-mdc-native-select-inline]': '_isInlineSelect()',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[id]': 'id',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[attr.name]': 'name',
     '[attr.placeholder]': 'placeholder',
     '[attr.readonly]': 'readonly && !_isNativeSelect || null',
     // Only mark the input as invalid for assistive technology if it has a value since the
@@ -45,4 +48,3 @@ import {MatInput as BaseMatInput} from '@angular/material/input';
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
 export class MatInput extends BaseMatInput {}
-

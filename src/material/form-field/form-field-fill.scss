@@ -1,6 +1,7 @@
+@use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/style/variables';
-@use '../core/style/private';
-@use '../../cdk/a11y';
 
 // Styles that only apply to the fill appearance of the form-field.
 
@@ -18,8 +19,7 @@ $fill-line-spacing: 0.75em !default;
 // The scale of the subscript and floating label text w.r.t the value text.
 $fill-subscript-font-scale: 0.75 !default;
 // The horizontal padding between the edge of the subscript box and the start of the subscript text.
-$fill-subscript-padding:
-    private.private-div($fill-side-padding, $fill-subscript-font-scale);
+$fill-subscript-padding: math.div($fill-side-padding, $fill-subscript-font-scale);
 
 
 .mat-form-field-appearance-fill {
@@ -28,8 +28,20 @@ $fill-subscript-padding:
     padding: $fill-line-spacing $fill-side-padding 0
              $fill-side-padding;
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
       outline: solid 1px;
+    }
+  }
+
+  &.mat-form-field-disabled .mat-form-field-flex {
+    @include cdk.high-contrast(active, off) {
+      outline-color: GrayText;
+    }
+  }
+
+  &.mat-focused .mat-form-field-flex {
+    @include cdk.high-contrast(active, off) {
+      outline: dashed 3px;
     }
   }
 
@@ -46,9 +58,10 @@ $fill-subscript-padding:
     bottom: 0;
     height: $fill-underline-ripple-height;
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
+      // In high-contrast mode, we hide the ripple as we have a dashed outline as
+      // focus indicator.
       height: 0;
-      border-top: solid $fill-underline-ripple-height;
     }
   }
 

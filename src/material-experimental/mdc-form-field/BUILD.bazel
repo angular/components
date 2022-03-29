@@ -14,7 +14,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":form_field_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-form-field",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/bidi",
@@ -37,8 +36,9 @@ sass_library(
     ],
     deps = [
         ":form_field_partials",
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
 )
 
@@ -50,24 +50,7 @@ sass_binary(
     ],
     deps = [
         ":form_field_partials",
-        ":mdc_form_field_scss",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
-        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
-    ],
-)
-
-# TODO(devversion): Import all of the individual Sass mixins once feature targeting is available
-# for MDC text-field, notched-outline, floating-label and line-ripple.
-sass_library(
-    name = "mdc_form_field_scss",
-    srcs = [
-        "@npm//:node_modules/@material/floating-label/mdc-floating-label.scss",
-        "@npm//:node_modules/@material/line-ripple/mdc-line-ripple.scss",
-        "@npm//:node_modules/@material/notched-outline/mdc-notched-outline.scss",
-        "@npm//:node_modules/@material/ripple/common.scss",
-        "@npm//:node_modules/@material/textfield/mdc-text-field.scss",
-    ],
-    deps = [
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
 )
@@ -77,6 +60,7 @@ sass_library(
     srcs = [
         "_form-field-density.scss",
         "_form-field-focus-overlay.scss",
+        "_form-field-high-contrast.scss",
         "_form-field-native-select.scss",
         "_form-field-sizing.scss",
         "_form-field-subscript.scss",
@@ -84,7 +68,8 @@ sass_library(
         "_mdc-text-field-textarea-overrides.scss",
     ],
     deps = [
+        "//src/cdk:sass_lib",
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )

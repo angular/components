@@ -3,7 +3,6 @@ import {waitForAsync, TestBed, ComponentFixture} from '@angular/core/testing';
 import {MatChipEditInput, MatChipsModule} from './index';
 import {By} from '@angular/platform-browser';
 
-
 describe('MDC-based MatChipEditInput', () => {
   const DEFAULT_INITIAL_VALUE = 'INITIAL_VALUE';
 
@@ -14,9 +13,7 @@ describe('MDC-based MatChipEditInput', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
-      declarations: [
-        ChipEditInputContainer,
-      ],
+      declarations: [ChipEditInputContainer],
     });
 
     TestBed.compileComponents();
@@ -47,6 +44,6 @@ describe('MDC-based MatChipEditInput', () => {
 });
 
 @Component({
-  template: `<span matChipEditInput></span>`,
+  template: `<mat-chip><span matChipEditInput></span></mat-chip>`,
 })
 class ChipEditInputContainer {}

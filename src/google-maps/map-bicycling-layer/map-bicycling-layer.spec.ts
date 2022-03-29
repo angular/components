@@ -34,7 +34,7 @@ describe('MapBicyclingLayer', () => {
   it('initializes a Google Map Bicycling Layer', () => {
     const bicyclingLayerSpy = createBicyclingLayerSpy();
     const bicyclingLayerConstructorSpy =
-        createBicyclingLayerConstructorSpy(bicyclingLayerSpy).and.callThrough();
+      createBicyclingLayerConstructorSpy(bicyclingLayerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
@@ -50,5 +50,4 @@ describe('MapBicyclingLayer', () => {
                 <map-bicycling-layer></map-bicycling-layer>
             </google-map>`,
 })
-class TestApp {
-}
+class TestApp {}

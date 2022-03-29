@@ -10,7 +10,7 @@ import {
   BooleanInput,
   coerceBooleanProperty,
   coerceNumberProperty,
-  NumberInput
+  NumberInput,
 } from '@angular/cdk/coercion';
 import {
   Directive,
@@ -20,7 +20,6 @@ import {
   DoCheck,
   OnDestroy,
   NgZone,
-  HostListener,
   Optional,
   Inject,
 } from '@angular/core';
@@ -38,6 +37,7 @@ import {DOCUMENT} from '@angular/common';
     // Textarea elements that have the directive applied should have a single row by default.
     // Browsers normally show two rows by default and therefore this limits the minRows binding.
     'rows': '1',
+    '(input)': '_noopInputHandler()',
   },
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
@@ -61,24 +61,30 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
-  get minRows(): number { return this._minRows; }
-  set minRows(value: number) {
+  get minRows(): number {
+    return this._minRows;
+  }
+  set minRows(value: NumberInput) {
     this._minRows = coerceNumberProperty(value);
     this._setMinHeight();
   }
 
   /** Maximum amount of rows in the textarea. */
   @Input('cdkAutosizeMaxRows')
-  get maxRows(): number { return this._maxRows; }
-  set maxRows(value: number) {
+  get maxRows(): number {
+    return this._maxRows;
+  }
+  set maxRows(value: NumberInput) {
     this._maxRows = coerceNumberProperty(value);
     this._setMaxHeight();
   }
 
   /** Whether autosizing is enabled or not */
   @Input('cdkTextareaAutosize')
-  get enabled(): boolean { return this._enabled; }
-  set enabled(value: boolean) {
+  get enabled(): boolean {
+    return this._enabled;
+  }
+  set enabled(value: BooleanInput) {
     value = coerceBooleanProperty(value);
 
     // Only act if the actual value changed. This specifically helps to not run
@@ -89,13 +95,20 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   @Input()
-  get placeholder(): string { return this._textareaElement.placeholder; }
+  get placeholder(): string {
+    return this._textareaElement.placeholder;
+  }
   set placeholder(value: string) {
     this._cachedPlaceholderHeight = undefined;
-    this._textareaElement.placeholder = value;
+
+    if (value) {
+      this._textareaElement.setAttribute('placeholder', value);
+    } else {
+      this._textareaElement.removeAttribute('placeholder');
+    }
+
     this._cacheTextareaPlaceholderHeight();
   }
-
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
@@ -105,38 +118,36 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Used to reference correct document/window */
   protected _document?: Document;
 
-  /** Class that should be applied to the textarea while it's being measured. */
-  private _measuringClass: string;
+  private _hasFocus: boolean;
 
   private _isViewInited = false;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>,
-              private _platform: Platform,
-              private _ngZone: NgZone,
-              /** @breaking-change 11.0.0 make document required */
-              @Optional() @Inject(DOCUMENT) document?: any) {
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    private _platform: Platform,
+    private _ngZone: NgZone,
+    /** @breaking-change 11.0.0 make document required */
+    @Optional() @Inject(DOCUMENT) document?: any,
+  ) {
     this._document = document;
 
     this._textareaElement = this._elementRef.nativeElement as HTMLTextAreaElement;
-    this._measuringClass = _platform.FIREFOX ?
-      'cdk-textarea-autosize-measuring-firefox' :
-      'cdk-textarea-autosize-measuring';
   }
 
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
-    const minHeight = this.minRows && this._cachedLineHeight ?
-        `${this.minRows * this._cachedLineHeight}px` : null;
+    const minHeight =
+      this.minRows && this._cachedLineHeight ? `${this.minRows * this._cachedLineHeight}px` : null;
 
-    if (minHeight)  {
+    if (minHeight) {
       this._textareaElement.style.minHeight = minHeight;
     }
   }
 
   /** Sets the maximum height of the textarea as determined by maxRows. */
   _setMaxHeight(): void {
-    const maxHeight = this.maxRows && this._cachedLineHeight ?
-        `${this.maxRows * this._cachedLineHeight}px` : null;
+    const maxHeight =
+      this.maxRows && this._cachedLineHeight ? `${this.maxRows * this._cachedLineHeight}px` : null;
 
     if (maxHeight) {
       this._textareaElement.style.maxHeight = maxHeight;
@@ -147,7 +158,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     if (this._platform.isBrowser) {
       // Remember the height which we started with in case autosizing is disabled
       this._initialHeight = this._textareaElement.style.height;
-
       this.resizeToFitContent();
 
       this._ngZone.runOutsideAngular(() => {
@@ -156,6 +166,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
         fromEvent(window, 'resize')
           .pipe(auditTime(16), takeUntil(this._destroyed))
           .subscribe(() => this.resizeToFitContent(true));
+
+        this._textareaElement.addEventListener('focus', this._handleFocusEvent);
+        this._textareaElement.addEventListener('blur', this._handleFocusEvent);
       });
 
       this._isViewInited = true;
@@ -164,6 +177,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._textareaElement.removeEventListener('focus', this._handleFocusEvent);
+    this._textareaElement.removeEventListener('blur', this._handleFocusEvent);
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -204,7 +219,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
     this._textareaElement.parentNode!.appendChild(textareaClone);
     this._cachedLineHeight = textareaClone.clientHeight;
-    this._textareaElement.parentNode!.removeChild(textareaClone);
+    textareaClone.remove();
 
     // Min and max heights have to be re-calculated if the cached line height changes
     this._setMinHeight();
@@ -212,13 +227,32 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   private _measureScrollHeight(): number {
+    const element = this._textareaElement;
+    const previousMargin = element.style.marginBottom || '';
+    const isFirefox = this._platform.FIREFOX;
+    const needsMarginFiller = isFirefox && this._hasFocus;
+    const measuringClass = isFirefox
+      ? 'cdk-textarea-autosize-measuring-firefox'
+      : 'cdk-textarea-autosize-measuring';
+
+    // In some cases the page might move around while we're measuring the `textarea` on Firefox. We
+    // work around it by assigning a temporary margin with the same height as the `textarea` so that
+    // it occupies the same amount of space. See #23233.
+    if (needsMarginFiller) {
+      element.style.marginBottom = `${element.clientHeight}px`;
+    }
+
     // Reset the textarea height to auto in order to shrink back to its default size.
     // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
-    this._textareaElement.classList.add(this._measuringClass);
+    element.classList.add(measuringClass);
     // The measuring class includes a 2px padding to workaround an issue with Chrome,
     // so we account for that extra space here by subtracting 4 (2px top + 2px bottom).
-    const scrollHeight = this._textareaElement.scrollHeight - 4;
-    this._textareaElement.classList.remove(this._measuringClass);
+    const scrollHeight = element.scrollHeight - 4;
+    element.classList.remove(measuringClass);
+
+    if (needsMarginFiller) {
+      element.style.marginBottom = previousMargin;
+    }
 
     return scrollHeight;
   }
@@ -238,6 +272,11 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._cachedPlaceholderHeight = this._measureScrollHeight();
     this._textareaElement.value = value;
   }
+
+  /** Handles `focus` and `blur` events. */
+  private _handleFocusEvent = (event: FocusEvent) => {
+    this._hasFocus = event.type === 'focus';
+  };
 
   ngDoCheck() {
     if (this._platform.isBrowser) {
@@ -302,11 +341,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('input')
   _noopInputHandler() {
     // no-op handler that ensures we're running change detection on input events.
   }
@@ -329,7 +363,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
    */
   private _scrollToCaretPosition(textarea: HTMLTextAreaElement) {
     const {selectionStart, selectionEnd} = textarea;
-    const document = this._getDocument();
 
     // IE will throw an "Unspecified error" if we try to set the selection range after the
     // element has been removed from the DOM. Assert that the directive hasn't been destroyed
@@ -337,12 +370,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // Also note that we have to assert that the textarea is focused before we set the
     // selection range. Setting the selection range on a non-focused textarea will cause
     // it to receive focus on IE and Edge.
-    if (!this._destroyed.isStopped && document.activeElement === textarea) {
+    if (!this._destroyed.isStopped && this._hasFocus) {
       textarea.setSelectionRange(selectionStart, selectionEnd);
     }
   }
-
-  static ngAcceptInputType_minRows: NumberInput;
-  static ngAcceptInputType_maxRows: NumberInput;
-  static ngAcceptInputType_enabled: BooleanInput;
 }

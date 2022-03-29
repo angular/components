@@ -8,8 +8,8 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/material-experimental/mdc-slide-toggle/testing",
     deps = [
+        "//src/cdk/coercion",
         "//src/cdk/testing",
         "//src/material/slide-toggle/testing",
     ],
@@ -27,12 +27,7 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/switch/dist/mdc.switch.js",
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-    ],
     deps = [
         ":unit_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )

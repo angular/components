@@ -19,7 +19,6 @@ ng_module(
         ":simple_snack_bar_scss",
         ":snack_bar_container_scss",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-snack-bar",
     deps = [
         "//src:dev_mode_types",
         "//src/material-experimental/mdc-button",
@@ -34,8 +33,9 @@ sass_library(
     name = "mdc_snack_bar_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
-        "//src/material/core:core_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
 )
 
@@ -51,6 +51,7 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
+        "//src/cdk:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
@@ -78,12 +79,7 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/snackbar/dist/mdc.snackbar.js",
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-    ],
     deps = [
         ":unit_test_sources",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )

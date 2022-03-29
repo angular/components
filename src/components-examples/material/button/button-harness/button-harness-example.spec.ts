@@ -1,11 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {ButtonHarnessExample} from './button-harness-example';
 
@@ -14,14 +10,10 @@ describe('ButtonHarnessExample', () => {
   let loader: HarnessLoader;
   let buttonHarness = MatButtonHarness;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatButtonModule],
-      declarations: [ButtonHarnessExample]
+      declarations: [ButtonHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(ButtonHarnessExample);
     fixture.detectChanges();
@@ -29,10 +21,9 @@ describe('ButtonHarnessExample', () => {
   });
 
   it('should load all button harnesses', async () => {
-      const buttons = await loader.getAllHarnesses(MatButtonHarness);
-      expect(buttons.length).toBe(1);
-    }
-  );
+    const buttons = await loader.getAllHarnesses(MatButtonHarness);
+    expect(buttons.length).toBe(1);
+  });
 
   it('should load button with exact text', async () => {
     const buttons = await loader.getAllHarnesses(buttonHarness.with({text: 'Basic button'}));

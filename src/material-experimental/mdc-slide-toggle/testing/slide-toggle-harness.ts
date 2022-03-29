@@ -7,14 +7,15 @@
  */
 
 import {HarnessPredicate} from '@angular/cdk/testing';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   _MatSlideToggleHarnessBase,
-  SlideToggleHarnessFilters
+  SlideToggleHarnessFilters,
 } from '@angular/material/slide-toggle/testing';
-
 
 /** Harness for interacting with a MDC-based mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
+  protected _nativeElement = this.locatorFor('button');
   static hostSelector = '.mat-mdc-slide-toggle';
 
   /**
@@ -25,19 +26,38 @@ export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: SlideToggleHarnessFilters = {}): HarnessPredicate<MatSlideToggleHarness> {
-    return new HarnessPredicate(MatSlideToggleHarness, options)
-        .addOption('label', options.label,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label))
+    return (
+      new HarnessPredicate(MatSlideToggleHarness, options)
+        .addOption('label', options.label, (harness, label) =>
+          HarnessPredicate.stringMatches(harness.getLabelText(), label),
+        )
         // We want to provide a filter option for "name" because the name of the slide-toggle is
         // only set on the underlying input. This means that it's not possible for developers
         // to retrieve the harness of a specific checkbox with name through a CSS selector.
-        .addOption('name', options.name, async (harness, name) => await harness.getName() === name);
+        .addOption(
+          'name',
+          options.name,
+          async (harness, name) => (await harness.getName()) === name,
+        )
+        .addOption(
+          'checked',
+          options.checked,
+          async (harness, checked) => (await harness.isChecked()) == checked,
+        )
+    );
   }
 
-  private _inputContainer = this.locatorFor('.mdc-switch');
-
   async toggle(): Promise<void> {
-    const elToClick = await this.isDisabled() ? this._inputContainer() : this._input();
-    return (await elToClick).click();
+    return (await this._nativeElement()).click();
+  }
+
+  override async isRequired(): Promise<boolean> {
+    const ariaRequired = await (await this._nativeElement()).getAttribute('aria-required');
+    return ariaRequired === 'true';
+  }
+
+  async isChecked(): Promise<boolean> {
+    const checked = (await this._nativeElement()).getAttribute('aria-checked');
+    return coerceBooleanProperty(await checked);
   }
 }

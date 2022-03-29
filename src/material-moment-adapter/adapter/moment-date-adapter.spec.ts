@@ -9,11 +9,14 @@
 import {LOCALE_ID} from '@angular/core';
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
-import {DEC, FEB, JAN, MAR} from '@angular/material/testing';
+import {DEC, FEB, JAN, MAR} from '../../material/testing';
 import {MomentDateModule} from './index';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from './moment-date-adapter';
 
-import * as moment from 'moment';
+import moment from 'moment';
+
+// Import all locales for specs relying on non-US locales.
+import 'moment/min/locales';
 
 describe('MomentDateAdapter', () => {
   let adapter: MomentDateAdapter;
@@ -21,7 +24,7 @@ describe('MomentDateAdapter', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MomentDateModule]
+      imports: [MomentDateModule],
     }).compileComponents();
   }));
 
@@ -31,107 +34,229 @@ describe('MomentDateAdapter', () => {
     adapter.setLocale('en');
 
     assertValidDate = (d: moment.Moment | null, valid: boolean) => {
-      expect(adapter.isDateInstance(d)).not.toBeNull(`Expected ${d} to be a date instance`);
-      expect(adapter.isValid(d!)).toBe(valid,
-          `Expected ${d} to be ${valid ? 'valid' : 'invalid'},` +
-          ` but was ${valid ? 'invalid' : 'valid'}`);
+      expect(adapter.isDateInstance(d))
+        .not.withContext(`Expected ${d} to be a date instance`)
+        .toBeNull();
+      expect(adapter.isValid(d!))
+        .withContext(
+          `Expected ${d} to be ${valid ? 'valid' : 'invalid'}, but ` +
+            `was ${valid ? 'invalid' : 'valid'}`,
+        )
+        .toBe(valid);
     };
   }));
 
   it('should get year', () => {
-    expect(adapter.getYear(moment([2017,  JAN,  1]))).toBe(2017);
+    expect(adapter.getYear(moment([2017, JAN, 1]))).toBe(2017);
   });
 
   it('should get month', () => {
-    expect(adapter.getMonth(moment([2017,  JAN,  1]))).toBe(0);
+    expect(adapter.getMonth(moment([2017, JAN, 1]))).toBe(0);
   });
 
   it('should get date', () => {
-    expect(adapter.getDate(moment([2017,  JAN,  1]))).toBe(1);
+    expect(adapter.getDate(moment([2017, JAN, 1]))).toBe(1);
   });
 
   it('should get day of week', () => {
-    expect(adapter.getDayOfWeek(moment([2017,  JAN,  1]))).toBe(0);
+    expect(adapter.getDayOfWeek(moment([2017, JAN, 1]))).toBe(0);
   });
 
   it('should get same day of week in a locale with a different first day of the week', () => {
     adapter.setLocale('fr');
-    expect(adapter.getDayOfWeek(moment([2017,  JAN,  1]))).toBe(0);
+    expect(adapter.getDayOfWeek(moment([2017, JAN, 1]))).toBe(0);
   });
 
   it('should get long month names', () => {
     expect(adapter.getMonthNames('long')).toEqual([
-      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-      'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ]);
   });
 
   it('should get short month names', () => {
     expect(adapter.getMonthNames('short')).toEqual([
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ]);
   });
 
   it('should get narrow month names', () => {
     expect(adapter.getMonthNames('narrow')).toEqual([
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ]);
   });
 
   it('should get month names in a different locale', () => {
     adapter.setLocale('ja-JP');
     expect(adapter.getMonthNames('long')).toEqual([
-      '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'
+      '1月',
+      '2月',
+      '3月',
+      '4月',
+      '5月',
+      '6月',
+      '7月',
+      '8月',
+      '9月',
+      '10月',
+      '11月',
+      '12月',
     ]);
   });
 
   it('should get date names', () => {
     expect(adapter.getDateNames()).toEqual([
-      '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17',
-      '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
+      '24',
+      '25',
+      '26',
+      '27',
+      '28',
+      '29',
+      '30',
+      '31',
     ]);
   });
 
   it('should get date names in a different locale', () => {
     adapter.setLocale('ar-AE');
     expect(adapter.getDateNames()).toEqual([
-      '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣', '١٤', '١٥', '١٦',
-      '١٧', '١٨', '١٩', '٢٠', '٢١', '٢٢', '٢٣', '٢٤', '٢٥', '٢٦', '٢٧', '٢٨', '٢٩', '٣٠', '٣١'
+      '١',
+      '٢',
+      '٣',
+      '٤',
+      '٥',
+      '٦',
+      '٧',
+      '٨',
+      '٩',
+      '١٠',
+      '١١',
+      '١٢',
+      '١٣',
+      '١٤',
+      '١٥',
+      '١٦',
+      '١٧',
+      '١٨',
+      '١٩',
+      '٢٠',
+      '٢١',
+      '٢٢',
+      '٢٣',
+      '٢٤',
+      '٢٥',
+      '٢٦',
+      '٢٧',
+      '٢٨',
+      '٢٩',
+      '٣٠',
+      '٣١',
     ]);
   });
 
   it('should get long day of week names', () => {
     expect(adapter.getDayOfWeekNames('long')).toEqual([
-      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
     ]);
   });
 
   it('should get short day of week names', () => {
     expect(adapter.getDayOfWeekNames('short')).toEqual([
-      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+      'Sun',
+      'Mon',
+      'Tue',
+      'Wed',
+      'Thu',
+      'Fri',
+      'Sat',
     ]);
   });
 
   it('should get narrow day of week names', () => {
-    expect(adapter.getDayOfWeekNames('narrow')).toEqual([
-      'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
-    ]);
+    expect(adapter.getDayOfWeekNames('narrow')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
   });
 
   it('should get day of week names in a different locale', () => {
     adapter.setLocale('ja-JP');
     expect(adapter.getDayOfWeekNames('long')).toEqual([
-      '日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'
+      '日曜日',
+      '月曜日',
+      '火曜日',
+      '水曜日',
+      '木曜日',
+      '金曜日',
+      '土曜日',
     ]);
   });
 
   it('should get year name', () => {
-    expect(adapter.getYearName(moment([2017,  JAN,  1]))).toBe('2017');
+    expect(adapter.getYearName(moment([2017, JAN, 1]))).toBe('2017');
   });
 
   it('should get year name in a different locale', () => {
     adapter.setLocale('ar-AE');
-    expect(adapter.getYearName(moment([2017,  JAN,  1]))).toBe('٢٠١٧');
+    expect(adapter.getYearName(moment([2017, JAN, 1]))).toBe('٢٠١٧');
   });
 
   it('should get first day of week', () => {
@@ -144,8 +269,7 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should create Moment date', () => {
-    expect(adapter.createDate(2017, JAN, 1).format())
-      .toEqual(moment([2017,  JAN,  1]).format());
+    expect(adapter.createDate(2017, JAN, 1).format()).toEqual(moment([2017, JAN, 1]).format());
   });
 
   it('should not create Moment date with month over/under-flow', () => {
@@ -172,14 +296,17 @@ describe('MomentDateAdapter', () => {
 
   it("should get today's date", () => {
     expect(adapter.sameDate(adapter.today(), moment()))
-        .toBe(true, "should be equal to today's date");
+      .withContext("should be equal to today's date")
+      .toBe(true);
   });
 
   it('should parse string according to given format', () => {
-    expect(adapter.parse('1/2/2017', 'MM/DD/YYYY')!.format())
-        .toEqual(moment([2017,  JAN,  2]).format());
-    expect(adapter.parse('1/2/2017', 'DD/MM/YYYY')!.format())
-        .toEqual(moment([2017,  FEB,  1]).format());
+    expect(adapter.parse('1/2/2017', 'MM/DD/YYYY')!.format()).toEqual(
+      moment([2017, JAN, 2]).format(),
+    );
+    expect(adapter.parse('1/2/2017', 'DD/MM/YYYY')!.format()).toEqual(
+      moment([2017, FEB, 1]).format(),
+    );
   });
 
   it('should parse number', () => {
@@ -187,13 +314,13 @@ describe('MomentDateAdapter', () => {
     expect(adapter.parse(timestamp, 'MM/DD/YYYY')!.format()).toEqual(moment(timestamp).format());
   });
 
-  it ('should parse Date', () => {
+  it('should parse Date', () => {
     let date = new Date(2017, JAN, 1);
     expect(adapter.parse(date, 'MM/DD/YYYY')!.format()).toEqual(moment(date).format());
   });
 
-  it ('should parse Moment date', () => {
-    let date = moment([2017,  JAN,  1]);
+  it('should parse Moment date', () => {
+    let date = moment([2017, JAN, 1]);
     let parsedDate = adapter.parse(date, 'MM/DD/YYYY');
     expect(parsedDate!.format()).toEqual(date.format());
     expect(parsedDate).not.toBe(date);
@@ -207,60 +334,73 @@ describe('MomentDateAdapter', () => {
     let d = adapter.parse('hello', 'MM/DD/YYYY');
     expect(d).not.toBeNull();
     expect(adapter.isDateInstance(d))
-        .toBe(true, 'Expected string to have been fed through Date.parse');
+      .withContext('Expected string to have been fed through Date.parse')
+      .toBe(true);
     expect(adapter.isValid(d as moment.Moment))
-        .toBe(false, 'Expected to parse as "invalid date" object');
+      .withContext('Expected to parse as "invalid date" object')
+      .toBe(false);
   });
 
   it('should format date according to given format', () => {
-    expect(adapter.format(moment([2017,  JAN,  2]), 'MM/DD/YYYY')).toEqual('01/02/2017');
-    expect(adapter.format(moment([2017,  JAN,  2]), 'DD/MM/YYYY')).toEqual('02/01/2017');
+    expect(adapter.format(moment([2017, JAN, 2]), 'MM/DD/YYYY')).toEqual('01/02/2017');
+    expect(adapter.format(moment([2017, JAN, 2]), 'DD/MM/YYYY')).toEqual('02/01/2017');
   });
 
   it('should format with a different locale', () => {
-    expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('Jan 2, 2017');
+    expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('Jan 2, 2017');
     adapter.setLocale('ja-JP');
-    expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2017年1月2日');
+    expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('2017年1月2日');
   });
 
   it('should throw when attempting to format invalid date', () => {
-    expect(() => adapter.format(moment(NaN), 'MM/DD/YYYY'))
-        .toThrowError(/MomentDateAdapter: Cannot format invalid date\./);
+    expect(() => adapter.format(moment(NaN), 'MM/DD/YYYY')).toThrowError(
+      /MomentDateAdapter: Cannot format invalid date\./,
+    );
   });
 
   it('should add years', () => {
-    expect(adapter.addCalendarYears(moment([2017, JAN, 1]), 1).format())
-        .toEqual(moment([2018, JAN, 1]).format());
-    expect(adapter.addCalendarYears(moment([2017, JAN, 1]), -1).format())
-        .toEqual(moment([2016, JAN, 1]).format());
+    expect(adapter.addCalendarYears(moment([2017, JAN, 1]), 1).format()).toEqual(
+      moment([2018, JAN, 1]).format(),
+    );
+    expect(adapter.addCalendarYears(moment([2017, JAN, 1]), -1).format()).toEqual(
+      moment([2016, JAN, 1]).format(),
+    );
   });
 
   it('should respect leap years when adding years', () => {
-    expect(adapter.addCalendarYears(moment([2016, FEB, 29]), 1).format())
-        .toEqual(moment([2017, FEB, 28]).format());
-    expect(adapter.addCalendarYears(moment([2016, FEB, 29]), -1).format())
-        .toEqual(moment([2015, FEB, 28]).format());
+    expect(adapter.addCalendarYears(moment([2016, FEB, 29]), 1).format()).toEqual(
+      moment([2017, FEB, 28]).format(),
+    );
+    expect(adapter.addCalendarYears(moment([2016, FEB, 29]), -1).format()).toEqual(
+      moment([2015, FEB, 28]).format(),
+    );
   });
 
   it('should add months', () => {
-    expect(adapter.addCalendarMonths(moment([2017, JAN, 1]), 1).format())
-        .toEqual(moment([2017, FEB, 1]).format());
-    expect(adapter.addCalendarMonths(moment([2017, JAN, 1]), -1).format())
-        .toEqual(moment([2016, DEC, 1]).format());
+    expect(adapter.addCalendarMonths(moment([2017, JAN, 1]), 1).format()).toEqual(
+      moment([2017, FEB, 1]).format(),
+    );
+    expect(adapter.addCalendarMonths(moment([2017, JAN, 1]), -1).format()).toEqual(
+      moment([2016, DEC, 1]).format(),
+    );
   });
 
   it('should respect month length differences when adding months', () => {
-    expect(adapter.addCalendarMonths(moment([2017, JAN, 31]), 1).format())
-        .toEqual(moment([2017, FEB, 28]).format());
-    expect(adapter.addCalendarMonths(moment([2017, MAR, 31]), -1).format())
-        .toEqual(moment([2017, FEB, 28]).format());
+    expect(adapter.addCalendarMonths(moment([2017, JAN, 31]), 1).format()).toEqual(
+      moment([2017, FEB, 28]).format(),
+    );
+    expect(adapter.addCalendarMonths(moment([2017, MAR, 31]), -1).format()).toEqual(
+      moment([2017, FEB, 28]).format(),
+    );
   });
 
   it('should add days', () => {
-    expect(adapter.addCalendarDays(moment([2017, JAN, 1]), 1).format())
-        .toEqual(moment([2017, JAN, 2]).format());
-    expect(adapter.addCalendarDays(moment([2017, JAN, 1]), -1).format())
-        .toEqual(moment([2016, DEC, 31]).format());
+    expect(adapter.addCalendarDays(moment([2017, JAN, 1]), 1).format()).toEqual(
+      moment([2017, JAN, 2]).format(),
+    );
+    expect(adapter.addCalendarDays(moment([2017, JAN, 1]), -1).format()).toEqual(
+      moment([2016, DEC, 31]).format(),
+    );
   });
 
   it('should clone', () => {
@@ -280,21 +420,21 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should clamp date at lower bound', () => {
-    expect(adapter.clampDate(
-        moment([2017, JAN, 1]), moment([2018, JAN, 1]), moment([2019, JAN, 1])))
-        .toEqual(moment([2018, JAN, 1]));
+    expect(
+      adapter.clampDate(moment([2017, JAN, 1]), moment([2018, JAN, 1]), moment([2019, JAN, 1])),
+    ).toEqual(moment([2018, JAN, 1]));
   });
 
   it('should clamp date at upper bound', () => {
-    expect(adapter.clampDate(
-        moment([2020, JAN, 1]), moment([2018, JAN, 1]), moment([2019, JAN, 1])))
-        .toEqual(moment([2019, JAN, 1]));
+    expect(
+      adapter.clampDate(moment([2020, JAN, 1]), moment([2018, JAN, 1]), moment([2019, JAN, 1])),
+    ).toEqual(moment([2019, JAN, 1]));
   });
 
   it('should clamp date already within bounds', () => {
-    expect(adapter.clampDate(
-        moment([2018, FEB, 1]), moment([2018, JAN, 1]), moment([2019, JAN, 1])))
-        .toEqual(moment([2018, FEB, 1]));
+    expect(
+      adapter.clampDate(moment([2018, FEB, 1]), moment([2018, JAN, 1]), moment([2019, JAN, 1])),
+    ).toEqual(moment([2018, FEB, 1]));
   });
 
   it('should count today as a valid date instance', () => {
@@ -402,7 +542,7 @@ describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
-      providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'}]
+      providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'}],
     }).compileComponents();
   }));
 
@@ -411,7 +551,7 @@ describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
   }));
 
   it('should take the default locale id from the MAT_DATE_LOCALE injection token', () => {
-    expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2017年1月2日');
+    expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('2017年1月2日');
   });
 });
 
@@ -421,7 +561,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
-      providers: [{provide: LOCALE_ID, useValue: 'fr'}]
+      providers: [{provide: LOCALE_ID, useValue: 'fr'}],
     }).compileComponents();
   }));
 
@@ -430,7 +570,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
   }));
 
   it('should take the default locale id from the LOCALE_ID injection token', () => {
-    expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2 janv. 2017');
+    expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('2 janv. 2017');
   });
 });
 
@@ -440,10 +580,12 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
-      providers: [{
-        provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-        useValue: {useUtc: true}
-      }]
+      providers: [
+        {
+          provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+          useValue: {useUtc: true},
+        },
+      ],
     }).compileComponents();
   }));
 
@@ -470,7 +612,6 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
   });
 
   describe('strict mode', () => {
-
     beforeEach(waitForAsync(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
@@ -482,7 +623,7 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
               strict: true,
             },
           },
-        ]
+        ],
       }).compileComponents();
     }));
 
@@ -491,10 +632,12 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
     }));
 
     it('should detect valid strings according to given format', () => {
-      expect(adapter.parse('1/2/2017', 'D/M/YYYY')!.format('l'))
-        .toEqual(moment([2017,  FEB,  1]).format('l'));
-      expect(adapter.parse('February 1, 2017', 'MMMM D, YYYY')!.format('l'))
-        .toEqual(moment([2017,  FEB,  1]).format('l'));
+      expect(adapter.parse('1/2/2017', 'D/M/YYYY')!.format('l')).toEqual(
+        moment([2017, FEB, 1]).format('l'),
+      );
+      expect(adapter.parse('February 1, 2017', 'MMMM D, YYYY')!.format('l')).toEqual(
+        moment([2017, FEB, 1]).format('l'),
+      );
     });
 
     it('should detect invalid strings according to given format', () => {
@@ -502,6 +645,5 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
       expect(adapter.parse('1/2/2017', 'MM/DD/YYYY')!.isValid()).toBe(false);
       expect(adapter.parse('Jan 5, 2017', 'MMMM D, YYYY')!.isValid()).toBe(false);
     });
-
   });
 });

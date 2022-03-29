@@ -74,12 +74,11 @@ describe('MatTableDataSource', () => {
       dataSource.data = [5, 4, 3, 2, 1];
       expect(dataSource.filteredData).toEqual([5, 4, 3, 2, 1]);
     });
-
   });
 });
 
 @Component({
-  template: `<div matSort matSortDirection="asc"></div>`
+  template: `<div matSort matSortDirection="asc"></div>`,
 })
 class MatSortApp {
   @ViewChild(MatSort) sort: MatSort;

@@ -8,7 +8,6 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/material-experimental/mdc-list/testing",
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
@@ -30,20 +29,16 @@ ng_test_library(
     ),
     deps = [
         ":testing",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material-experimental/mdc-list",
         "//src/material/divider/testing",
-        "//src/material/list/testing:harness_tests_lib",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/list/dist/mdc.list.js",
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-    ],
     deps = [
         ":unit_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )

@@ -12,7 +12,6 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "material",
     srcs = ["index.ts"],
-    module_name = "@angular/material",
 )
 
 filegroup(
@@ -20,9 +19,8 @@ filegroup(
     srcs = ["//src/material/%s:overview" % name for name in MATERIAL_ENTRYPOINTS],
 )
 
-# Makes the theming bundle available in the release output as `angular/material/theming`.
 sass_library(
-    name = "theming_bundle",
+    name = "sass_lib",
     srcs = [
         "_index.scss",
         "_theming.scss",
@@ -37,15 +35,13 @@ ng_package(
         "package.json",
     ],
     data = [
-        ":theming_bundle",
+        ":sass_lib",
         "//src/material/core:theming_scss_lib",
         "//src/material/prebuilt-themes:deeppurple-amber",
         "//src/material/prebuilt-themes:indigo-pink",
         "//src/material/prebuilt-themes:pink-bluegrey",
         "//src/material/prebuilt-themes:purple-green",
     ] + MATERIAL_SCSS_LIBS,
-    entry_point = ":index.ts",
-    entry_point_name = "material",
     nested_packages = ["//src/material/schematics:npm_package"],
     tags = ["release-package"],
     deps = MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS,

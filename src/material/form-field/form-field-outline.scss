@@ -1,5 +1,7 @@
+@use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/style/variables';
-@use '../core/style/private';
 
 // Styles that only apply to the outline appearance of the form-field.
 
@@ -16,8 +18,7 @@ $outline-width: 1px;
 // The width of the thick outline (used for focus, hover, and error state).
 $outline-thick-width: 2px;
 // The horizontal padding between the edge of the subscript box and the start of the subscript text.
-$outline-subscript-padding:
-    private.private-div($outline-side-padding, $outline-subscript-font-scale);
+$outline-subscript-padding: math.div($outline-side-padding, $outline-subscript-font-scale);
 
 
 .mat-form-field-appearance-outline {
@@ -117,6 +118,12 @@ $outline-subscript-padding:
     }
   }
 
+  &.mat-focused .mat-form-field-outline-thick {
+    @include cdk.high-contrast(active, off) {
+      border: 3px dashed;
+    }
+  }
+
   &:not(.mat-form-field-disabled) .mat-form-field-flex:hover {
     & .mat-form-field-outline {
       opacity: 0;
@@ -130,6 +137,12 @@ $outline-subscript-padding:
 
   .mat-form-field-subscript-wrapper {
     padding: 0 $outline-subscript-padding;
+  }
+
+  &.mat-form-field-disabled .mat-form-field-outline {
+    @include cdk.high-contrast(active, off) {
+      color: GrayText;
+    }
   }
 
   &._mat-animation-noopable {

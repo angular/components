@@ -5,6 +5,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
 nodejs_test(
     name = "linker",
     data = [
+        "link-packages-test.mjs",
         "//integration:npm-packages-from-runfiles",
         "//src/cdk:npm_package",
         "//src/cdk-experimental:npm_package",
@@ -14,10 +15,8 @@ nodejs_test(
         "//src/youtube-player:npm_package",
         "@npm//@angular/compiler-cli",
         "@npm//@babel/core",
-        "@npm//@babel/traverse",
         "@npm//chalk",
         "@npm//glob",
     ],
-    entry_point = "link-packages-test.js",
-    tags = ["partial-compilation-integration"],
+    entry_point = "link-packages-test.mjs",
 )

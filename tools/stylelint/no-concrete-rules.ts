@@ -3,7 +3,7 @@ import {basename} from 'path';
 
 const ruleName = 'material/no-concrete-rules';
 const messages = utils.ruleMessages(ruleName, {
-  expected: pattern => `CSS rules must be placed inside a mixin for files matching '${pattern}'.`
+  expected: pattern => `CSS rules must be placed inside a mixin for files matching '${pattern}'.`,
 });
 
 /** Config options for the rule. */
@@ -15,15 +15,14 @@ interface RuleOptions {
  * Stylelint plugin that will log a warning for all top-level CSS rules.
  * Can be used in theme files to ensure that everything is inside a mixin.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options) => {
+const plugin = createPlugin(ruleName, (isEnabled: boolean, options: RuleOptions) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
     }
 
-    const options = _options as RuleOptions;
     const filePattern = new RegExp(options.filePattern);
-    const fileName = basename(root.source!.input.file!);
+    const fileName = basename(root.source.input.file);
 
     if (!filePattern.test(fileName) || !root.nodes) {
       return;
@@ -38,13 +37,11 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options) => {
           result,
           ruleName,
           node,
-          message: messages.expected(filePattern)
+          message: messages.expected(filePattern),
         });
       }
     });
   };
 });
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
 export default plugin;

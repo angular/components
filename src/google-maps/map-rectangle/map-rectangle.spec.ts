@@ -81,8 +81,9 @@ describe('MapRectangle', () => {
     createRectangleConstructorSpy(rectangleSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const rectangleComponent = fixture.debugElement.query(By.directive(
-        MapRectangle))!.injector.get<MapRectangle>(MapRectangle);
+    const rectangleComponent = fixture.debugElement
+      .query(By.directive(MapRectangle))!
+      .injector.get<MapRectangle>(MapRectangle);
     fixture.detectChanges();
 
     rectangleComponent.getBounds();

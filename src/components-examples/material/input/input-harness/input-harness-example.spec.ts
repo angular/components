@@ -1,11 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatInputHarness} from '@angular/material/input/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {MatInputModule} from '@angular/material/input';
 import {InputHarnessExample} from './input-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -15,14 +11,10 @@ describe('InputHarnessExample', () => {
   let fixture: ComponentFixture<InputHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatInputModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [InputHarnessExample]
+      declarations: [InputHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(InputHarnessExample);
     fixture.detectChanges();

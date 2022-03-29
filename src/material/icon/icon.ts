@@ -21,20 +21,35 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {CanColor, ThemePalette, mixinColor} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 
 import {MatIconRegistry} from './icon-registry';
 
-
 // Boilerplate for applying mixins to MatIcon.
 /** @docs-private */
-const _MatIconBase = mixinColor(class {
-  constructor(public _elementRef: ElementRef) {}
-});
+const _MatIconBase = mixinColor(
+  class {
+    constructor(public _elementRef: ElementRef) {}
+  },
+);
+
+/** Default options for `mat-icon`.  */
+export interface MatIconDefaultOptions {
+  /** Default color of the icon. */
+  color?: ThemePalette;
+  /** Font set that the icon is a part of. */
+  fontSet?: string;
+}
+
+/** Injection token to be used to override the default options for `mat-icon`. */
+export const MAT_ICON_DEFAULT_OPTIONS = new InjectionToken<MatIconDefaultOptions>(
+  'MAT_ICON_DEFAULT_OPTIONS',
+);
 
 /**
  * Injection token used to provide the current location to `MatIcon`.
@@ -43,7 +58,7 @@ const _MatIconBase = mixinColor(class {
  */
 export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-location', {
   providedIn: 'root',
-  factory: MAT_ICON_LOCATION_FACTORY
+  factory: MAT_ICON_LOCATION_FACTORY,
 });
 
 /**
@@ -62,10 +77,9 @@ export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
   return {
     // Note that this needs to be a function, rather than a property, because Angular
     // will only resolve it once, but we want the current path on each call.
-    getPathname: () => _location ? (_location.pathname + _location.search) : ''
+    getPathname: () => (_location ? _location.pathname + _location.search : ''),
   };
 }
-
 
 /** SVG attributes that accept a FuncIRI (e.g. `url(<something>)`). */
 const funcIriAttributes = [
@@ -80,7 +94,7 @@ const funcIriAttributes = [
   'marker-mid',
   'marker-end',
   'mask',
-  'stroke'
+  'stroke',
 ];
 
 /** Selector that can be used to find all elements that are using a `FuncIRI`. */
@@ -143,14 +157,16 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   get inline(): boolean {
     return this._inline;
   }
-  set inline(inline: boolean) {
+  set inline(inline: BooleanInput) {
     this._inline = coerceBooleanProperty(inline);
   }
   private _inline: boolean = false;
 
   /** Name of the icon in the SVG icon set. */
   @Input()
-  get svgIcon(): string { return this._svgIcon; }
+  get svgIcon(): string {
+    return this._svgIcon;
+  }
   set svgIcon(value: string) {
     if (value !== this._svgIcon) {
       if (value) {
@@ -165,7 +181,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Font set that the icon is a part of. */
   @Input()
-  get fontSet(): string { return this._fontSet; }
+  get fontSet(): string {
+    return this._fontSet;
+  }
   set fontSet(value: string) {
     const newValue = this._cleanupFontValue(value);
 
@@ -178,7 +196,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Name of an icon within a font set. */
   @Input()
-  get fontIcon(): string { return this._fontIcon; }
+  get fontIcon(): string {
+    return this._fontIcon;
+  }
   set fontIcon(value: string) {
     const newValue = this._cleanupFontValue(value);
 
@@ -189,7 +209,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   }
   private _fontIcon: string;
 
-  private _previousFontSetClass: string;
+  private _previousFontSetClass: string[] = [];
   private _previousFontIconClass: string;
 
   _svgName: string | null;
@@ -199,17 +219,32 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _previousPath?: string;
 
   /** Keeps track of the elements and attributes that we've prefixed with the current path. */
-  private _elementsWithExternalReferences?: Map<Element, {name: string, value: string}[]>;
+  private _elementsWithExternalReferences?: Map<Element, {name: string; value: string}[]>;
 
   /** Subscription to the current in-progress SVG icon request. */
   private _currentIconFetch = Subscription.EMPTY;
 
   constructor(
-      elementRef: ElementRef<HTMLElement>, private _iconRegistry: MatIconRegistry,
-      @Attribute('aria-hidden') ariaHidden: string,
-      @Inject(MAT_ICON_LOCATION) private _location: MatIconLocation,
-      private readonly _errorHandler: ErrorHandler) {
+    elementRef: ElementRef<HTMLElement>,
+    private _iconRegistry: MatIconRegistry,
+    @Attribute('aria-hidden') ariaHidden: string,
+    @Inject(MAT_ICON_LOCATION) private _location: MatIconLocation,
+    private readonly _errorHandler: ErrorHandler,
+    @Optional()
+    @Inject(MAT_ICON_DEFAULT_OPTIONS)
+    defaults?: MatIconDefaultOptions,
+  ) {
     super(elementRef);
+
+    if (defaults) {
+      if (defaults.color) {
+        this.color = this.defaultColor = defaults.color;
+      }
+
+      if (defaults.fontSet) {
+        this.fontSet = defaults.fontSet;
+      }
+    }
 
     // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
     // the right thing to do for the majority of icon use-cases.
@@ -237,9 +272,12 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
     const parts = iconName.split(':');
     switch (parts.length) {
-      case 1: return ['', parts[0]]; // Use default namespace.
-      case 2: return <[string, string]>parts;
-      default: throw Error(`Invalid icon name: "${iconName}"`); // TODO: add an ngDevMode check
+      case 1:
+        return ['', parts[0]]; // Use default namespace.
+      case 2:
+        return <[string, string]>parts;
+      default:
+        throw Error(`Invalid icon name: "${iconName}"`); // TODO: add an ngDevMode check
     }
   }
 
@@ -283,15 +321,6 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _setSvgElement(svg: SVGElement) {
     this._clearSvgElement();
 
-    // Workaround for IE11 and Edge ignoring `style` tags inside dynamically-created SVGs.
-    // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10898469/
-    // Do this before inserting the element into the DOM, in order to avoid a style recalculation.
-    const styleTags = svg.querySelectorAll('style') as NodeListOf<HTMLStyleElement>;
-
-    for (let i = 0; i < styleTags.length; i++) {
-      styleTags[i].textContent += ' ';
-    }
-
     // Note: we do this fix here, rather than the icon registry, because the
     // references have to point to the URL at the time that the icon was created.
     const path = this._location.getPathname();
@@ -317,7 +346,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
       // 1 corresponds to Node.ELEMENT_NODE. We remove all non-element nodes in order to get rid
       // of any loose text nodes, as well as any SVG elements in order to remove any old icons.
       if (child.nodeType !== 1 || child.nodeName.toLowerCase() === 'svg') {
-        layoutElement.removeChild(child);
+        child.remove();
       }
     }
   }
@@ -328,21 +357,17 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
 
     const elem: HTMLElement = this._elementRef.nativeElement;
-    const fontSetClass = this.fontSet ?
-        this._iconRegistry.classNameForFontAlias(this.fontSet) :
-        this._iconRegistry.getDefaultFontSetClass();
+    const fontSetClasses = (
+      this.fontSet
+        ? [this._iconRegistry.classNameForFontAlias(this.fontSet)]
+        : this._iconRegistry.getDefaultFontSetClass()
+    ).filter(className => className.length > 0);
 
-    if (fontSetClass != this._previousFontSetClass) {
-      if (this._previousFontSetClass) {
-        elem.classList.remove(this._previousFontSetClass);
-      }
-      if (fontSetClass) {
-        elem.classList.add(fontSetClass);
-      }
-      this._previousFontSetClass = fontSetClass;
-    }
+    this._previousFontSetClass.forEach(className => elem.classList.remove(className));
+    fontSetClasses.forEach(className => elem.classList.add(className));
+    this._previousFontSetClass = fontSetClasses;
 
-    if (this.fontIcon != this._previousFontIconClass) {
+    if (this.fontIcon !== this._previousFontIconClass) {
       if (this._previousFontIconClass) {
         elem.classList.remove(this._previousFontIconClass);
       }
@@ -385,8 +410,8 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
    */
   private _cacheChildrenWithExternalReferences(element: SVGElement) {
     const elementsWithFuncIri = element.querySelectorAll(funcIriAttributeSelector);
-    const elements = this._elementsWithExternalReferences =
-        this._elementsWithExternalReferences || new Map();
+    const elements = (this._elementsWithExternalReferences =
+      this._elementsWithExternalReferences || new Map());
 
     for (let i = 0; i < elementsWithFuncIri.length; i++) {
       funcIriAttributes.forEach(attr => {
@@ -409,7 +434,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   }
 
   /** Sets a new SVG icon with a particular name. */
-  private _updateSvgIcon(rawName: string|undefined) {
+  private _updateSvgIcon(rawName: string | undefined) {
     this._svgNamespace = null;
     this._svgName = null;
     this._currentIconFetch.unsubscribe();
@@ -425,14 +450,16 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
         this._svgName = iconName;
       }
 
-      this._currentIconFetch = this._iconRegistry.getNamedSvgIcon(iconName, namespace)
-          .pipe(take(1))
-          .subscribe(svg => this._setSvgElement(svg), (err: Error) => {
+      this._currentIconFetch = this._iconRegistry
+        .getNamedSvgIcon(iconName, namespace)
+        .pipe(take(1))
+        .subscribe(
+          svg => this._setSvgElement(svg),
+          (err: Error) => {
             const errorMessage = `Error retrieving icon ${namespace}:${iconName}! ${err.message}`;
             this._errorHandler.handleError(new Error(errorMessage));
-          });
+          },
+        );
     }
   }
-
-  static ngAcceptInputType_inline: BooleanInput;
 }

@@ -100,10 +100,14 @@ autocomplete is attached to using the `matAutocompleteOrigin` directive together
 ```
 
 ### Keyboard interaction
-- <kbd>DOWN_ARROW</kbd>: Next option becomes active
-- <kbd>UP_ARROW</kbd>: Previous option becomes active
-- <kbd>ENTER</kbd>: Selects currently active item
-- <kbd>ESCAPE</kbd>: Closes the autocomplete panel
+| Keyboard shortcut                      | Action                                                         |
+|----------------------------------------|----------------------------------------------------------------|
+| <kbd>Down Arrow</kbd>                  | Navigate to the next option.                                   |
+| <kbd>Up Arrow</kbd>                    | Navigate to the previous option.                               |
+| <kbd>Enter</kbd>                       | Select the active option.                                      |
+| <kbd>Escape</kbd>                      | Close the autocomplete panel.                                  |
+| <kbd>Alt</kbd> + <kbd>Up Arrow</kbd>   | Close the autocomplete panel.                                  |
+| <kbd>Alt</kbd> + <kbd>Down Arrow</kbd> | Open the autocomplete panel if there are any matching options. |
 
 ### Option groups
 `mat-option` can be collected into groups using the `mat-optgroup` element:
@@ -112,8 +116,16 @@ autocomplete is attached to using the `matAutocompleteOrigin` directive together
               "region":"mat-autocomplete"}) -->
 
 ### Accessibility
-The input for an autocomplete without text or labels should be given a meaningful label via
-`aria-label` or `aria-labelledby`.
 
-The autocomplete trigger is given `role="combobox"`. The trigger sets `aria-owns` to the
-autocomplete's id, and sets `aria-activedescendant` to the active option's id.
+`MatAutocomplete` implements the ARIA combobox interaction pattern. The text input trigger specifies
+`role="combobox"` while the content of the pop-up applies `role="listbox"`. Because of this listbox
+pattern, you should _not_ put other interactive controls, such as buttons or checkboxes, inside
+an autocomplete option. Nesting interactive controls like this interferes with most assistive
+technology.
+
+Always provide an accessible label for the autocomplete. This can be done by using a
+`<mat-label>` inside of `<mat-form-field>`, a native `<label>` element, the `aria-label`
+attribute, or the `aria-labelledby` attribute.
+
+`MatAutocomplete` preserves focus on the text trigger, using `aria-activedescendant` to support
+navigation though the autocomplete options.

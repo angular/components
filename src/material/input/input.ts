@@ -14,7 +14,6 @@ import {
   Directive,
   DoCheck,
   ElementRef,
-  HostListener,
   Inject,
   Input,
   NgZone,
@@ -23,17 +22,12 @@ import {
   Optional,
   Self,
 } from '@angular/core';
-import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {
-  CanUpdateErrorState,
-  ErrorStateMatcher,
-  mixinErrorState,
-} from '@angular/material/core';
+import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
+import {CanUpdateErrorState, ErrorStateMatcher, mixinErrorState} from '@angular/material/core';
 import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
-
 
 // Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
 const MAT_INPUT_INVALID_TYPES = [
@@ -45,20 +39,35 @@ const MAT_INPUT_INVALID_TYPES = [
   'radio',
   'range',
   'reset',
-  'submit'
+  'submit',
 ];
 
 let nextUniqueId = 0;
 
 // Boilerplate for applying mixins to MatInput.
 /** @docs-private */
-const _MatInputBase = mixinErrorState(class {
-  constructor(public _defaultErrorStateMatcher: ErrorStateMatcher,
-              public _parentForm: NgForm,
-              public _parentFormGroup: FormGroupDirective,
-              /** @docs-private */
-              public ngControl: NgControl) {}
-});
+const _MatInputBase = mixinErrorState(
+  class {
+    /**
+     * Emits whenever the component state changes and should cause the parent
+     * form field to update. Implemented as part of `MatFormFieldControl`.
+     * @docs-private
+     */
+    readonly stateChanges = new Subject<void>();
+
+    constructor(
+      public _defaultErrorStateMatcher: ErrorStateMatcher,
+      public _parentForm: NgForm,
+      public _parentFormGroup: FormGroupDirective,
+      /**
+       * Form control bound to the component.
+       * Implemented as part of `MatFormFieldControl`.
+       * @docs-private
+       */
+      public ngControl: NgControl,
+    ) {}
+  },
+);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
@@ -80,16 +89,29 @@ const _MatInputBase = mixinErrorState(class {
     '[attr.data-placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[attr.name]': 'name || null',
     '[attr.readonly]': 'readonly && !_isNativeSelect || null',
+    '[class.mat-native-select-inline]': '_isInlineSelect()',
     // Only mark the input as invalid for assistive technology if it has a value since the
     // state usually overlaps with `aria-required` when the input is empty and can be redundant.
     '[attr.aria-invalid]': '(empty && required) ? null : errorState',
     '[attr.aria-required]': 'required',
+    '(focus)': '_focusChanged(true)',
+    '(blur)': '_focusChanged(false)',
+    '(input)': '_onInput()',
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
-export class MatInput extends _MatInputBase implements MatFormFieldControl<any>, OnChanges,
-    OnDestroy, AfterViewInit, DoCheck, CanUpdateErrorState {
+export class MatInput
+  extends _MatInputBase
+  implements
+    MatFormFieldControl<any>,
+    OnChanges,
+    OnDestroy,
+    AfterViewInit,
+    DoCheck,
+    CanUpdateErrorState
+{
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
@@ -142,7 +164,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     }
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
 
     // Browsers may not fire the blur event if the input is disabled too quickly.
@@ -159,8 +181,12 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
    * @docs-private
    */
   @Input()
-  get id(): string { return this._id; }
-  set id(value: string) { this._id = value || this._uid; }
+  get id(): string {
+    return this._id;
+  }
+  set id(value: string) {
+    this._id = value || this._uid;
+  }
   protected _id: string;
 
   /**
@@ -170,17 +196,29 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
   @Input() placeholder: string;
 
   /**
+   * Name of the input.
+   * @docs-private
+   */
+  @Input() name: string;
+
+  /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
   @Input()
-  get required(): boolean { return this._required; }
-  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
-  protected _required = false;
+  get required(): boolean {
+    return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
+  }
+  set required(value: BooleanInput) {
+    this._required = coerceBooleanProperty(value);
+  }
+  protected _required: boolean | undefined;
 
   /** Input type of the element. */
   @Input()
-  get type(): string { return this._type; }
+  get type(): string {
+    return this._type;
+  }
   set type(value: string) {
     this._type = value || 'text';
     this._validateType();
@@ -208,8 +246,10 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
    * @docs-private
    */
   @Input()
-  get value(): string { return this._inputValueAccessor.value; }
-  set value(value: string) {
+  get value(): string {
+    return this._inputValueAccessor.value;
+  }
+  set value(value: any) {
     if (value !== this.value) {
       this._inputValueAccessor.value = value;
       this.stateChanges.next();
@@ -218,8 +258,12 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
 
   /** Whether the element is readonly. */
   @Input()
-  get readonly(): boolean { return this._readonly; }
-  set readonly(value: boolean) { this._readonly = coerceBooleanProperty(value); }
+  get readonly(): boolean {
+    return this._readonly;
+  }
+  set readonly(value: BooleanInput) {
+    this._readonly = coerceBooleanProperty(value);
+  }
   private _readonly = false;
 
   protected _neverEmptyInputTypes = [
@@ -228,23 +272,23 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     'datetime-local',
     'month',
     'time',
-    'week'
+    'week',
   ].filter(t => getSupportedInputTypes().has(t));
 
   constructor(
-      protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-      protected _platform: Platform,
-      @Optional() @Self() ngControl: NgControl,
-      @Optional() _parentForm: NgForm,
-      @Optional() _parentFormGroup: FormGroupDirective,
-      _defaultErrorStateMatcher: ErrorStateMatcher,
-      @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-      private _autofillMonitor: AutofillMonitor,
-      ngZone: NgZone,
-      // TODO: Remove this once the legacy appearance has been removed. We only need
-      // to inject the form-field for determining whether the placeholder has been promoted.
-      @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
-
+    protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    protected _platform: Platform,
+    @Optional() @Self() ngControl: NgControl,
+    @Optional() _parentForm: NgForm,
+    @Optional() _parentFormGroup: FormGroupDirective,
+    _defaultErrorStateMatcher: ErrorStateMatcher,
+    @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
+    private _autofillMonitor: AutofillMonitor,
+    ngZone: NgZone,
+    // TODO: Remove this once the legacy appearance has been removed. We only need
+    // to inject the form field for determining whether the placeholder has been promoted.
+    @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField,
+  ) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
     const element = this._elementRef.nativeElement;
@@ -264,24 +308,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     // exists on iOS, we only bother to install the listener on iOS.
     if (_platform.IOS) {
       ngZone.runOutsideAngular(() => {
-        _elementRef.nativeElement.addEventListener('keyup', (event: Event) => {
-          const el = event.target as HTMLInputElement;
-
-          // Note: We specifically check for 0, rather than `!el.selectionStart`, because the two
-          // indicate different things. If the value is 0, it means that the caret is at the start
-          // of the input, whereas a value of `null` means that the input doesn't support
-          // manipulating the selection range. Inputs that don't support setting the selection range
-          // will throw an error so we want to avoid calling `setSelectionRange` on them. See:
-          // https://html.spec.whatwg.org/multipage/input.html#do-not-apply
-          if (!el.value && el.selectionStart === 0 && el.selectionEnd === 0) {
-            // Note: Just setting `0, 0` doesn't fix the issue. Setting
-            // `1, 1` fixes it for the first time that you type text and
-            // then hold delete. Toggling to `1, 1` and then back to
-            // `0, 0` seems to completely fix it.
-            el.setSelectionRange(1, 1);
-            el.setSelectionRange(0, 0);
-          }
-        });
+        _elementRef.nativeElement.addEventListener('keyup', this._iOSKeyupListener);
       });
     }
 
@@ -291,8 +318,9 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     this._isInFormField = !!_formField;
 
     if (this._isNativeSelect) {
-      this.controlType = (element as HTMLSelectElement).multiple ? 'mat-native-select-multiple' :
-                                                                   'mat-native-select';
+      this.controlType = (element as HTMLSelectElement).multiple
+        ? 'mat-native-select-multiple'
+        : 'mat-native-select';
     }
   }
 
@@ -314,6 +342,10 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
 
     if (this._platform.isBrowser) {
       this._autofillMonitor.stopMonitoring(this._elementRef.nativeElement);
+    }
+
+    if (this._platform.IOS) {
+      this._elementRef.nativeElement.removeEventListener('keyup', this._iOSKeyupListener);
     }
   }
 
@@ -340,28 +372,14 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     this._elementRef.nativeElement.focus(options);
   }
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
   /** Callback for the cases where the focused state of the input changes. */
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('focus', ['true'])
-  @HostListener('blur', ['false'])
-  // tslint:enable:no-host-decorator-in-concrete
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused && (!this.readonly || !isFocused)) {
+    if (isFocused !== this.focused) {
       this.focused = isFocused;
       this.stateChanges.next();
     }
   }
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('input')
   _onInput() {
     // This is a noop function and is used to let Angular know whenever the value changes.
     // Angular will run a new change detection each time the `input` event has been dispatched.
@@ -378,12 +396,17 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     // screen readers will read it out twice: once from the label and once from the attribute.
     // TODO: can be removed once we get rid of the `legacy` style for the form field, because it's
     // the only one that supports promoting the placeholder to a label.
-    const placeholder = this._formField?._hideControlPlaceholder?.() ? null : this.placeholder;
+    const formField = this._formField;
+    const placeholder =
+      formField && formField.appearance === 'legacy' && !formField._hasLabel?.()
+        ? null
+        : this.placeholder;
     if (placeholder !== this._previousPlaceholder) {
       const element = this._elementRef.nativeElement;
       this._previousPlaceholder = placeholder;
-      placeholder ?
-          element.setAttribute('placeholder', placeholder) : element.removeAttribute('placeholder');
+      placeholder
+        ? element.setAttribute('placeholder', placeholder)
+        : element.removeAttribute('placeholder');
     }
   }
 
@@ -399,8 +422,10 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
 
   /** Make sure the input is a supported type. */
   protected _validateType() {
-    if (MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1 &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (
+      MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1 &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
       throw getMatInputUnsupportedTypeError(this._type);
     }
   }
@@ -422,8 +447,12 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
    * @docs-private
    */
   get empty(): boolean {
-    return !this._isNeverEmpty() && !this._elementRef.nativeElement.value && !this._isBadInput() &&
-        !this.autofilled;
+    return (
+      !this._isNeverEmpty() &&
+      !this._elementRef.nativeElement.value &&
+      !this._isBadInput() &&
+      !this.autofilled
+    );
   }
 
   /**
@@ -440,8 +469,12 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
 
       // On most browsers the `selectedIndex` will always be 0, however on IE and Edge it'll be
       // -1 if the `value` is set to something, that isn't in the list of options, at a later point.
-      return this.focused || selectElement.multiple || !this.empty ||
-             !!(selectElement.selectedIndex > -1 && firstOption && firstOption.label);
+      return (
+        this.focused ||
+        selectElement.multiple ||
+        !this.empty ||
+        !!(selectElement.selectedIndex > -1 && firstOption && firstOption.label)
+      );
     } else {
       return this.focused || !this.empty;
     }
@@ -472,11 +505,28 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     }
   }
 
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_readonly: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
+  /** Whether the form control is a native select that is displayed inline. */
+  _isInlineSelect(): boolean {
+    const element = this._elementRef.nativeElement as HTMLSelectElement;
+    return this._isNativeSelect && (element.multiple || element.size > 1);
+  }
 
-  // Accept `any` to avoid conflicts with other directives on `<input>` that may
-  // accept different types.
-  static ngAcceptInputType_value: any;
+  private _iOSKeyupListener = (event: Event): void => {
+    const el = event.target as HTMLInputElement;
+
+    // Note: We specifically check for 0, rather than `!el.selectionStart`, because the two
+    // indicate different things. If the value is 0, it means that the caret is at the start
+    // of the input, whereas a value of `null` means that the input doesn't support
+    // manipulating the selection range. Inputs that don't support setting the selection range
+    // will throw an error so we want to avoid calling `setSelectionRange` on them. See:
+    // https://html.spec.whatwg.org/multipage/input.html#do-not-apply
+    if (!el.value && el.selectionStart === 0 && el.selectionEnd === 0) {
+      // Note: Just setting `0, 0` doesn't fix the issue. Setting
+      // `1, 1` fixes it for the first time that you type text and
+      // then hold delete. Toggling to `1, 1` and then back to
+      // `0, 0` seems to completely fix it.
+      el.setSelectionRange(1, 1);
+      el.setSelectionRange(0, 0);
+    }
+  };
 }

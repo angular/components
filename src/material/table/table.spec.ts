@@ -16,7 +16,6 @@ import {MatTableModule} from './index';
 import {MatTable} from './table';
 import {MatTableDataSource} from './table-data-source';
 
-
 describe('MatTable', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -91,17 +90,19 @@ describe('MatTable', () => {
       const table = fixture.nativeElement.querySelector('.mat-table')!;
       const initialData = fixture.componentInstance.dataSource!.data;
 
-      expect(table.textContent.trim()).not.toContain('No data');
+      expect(table.querySelector('.mat-no-data-row')).toBeFalsy();
 
       fixture.componentInstance.dataSource!.data = [];
       fixture.detectChanges();
 
-      expect(table.textContent.trim()).toContain('No data');
+      const noDataRow: HTMLElement = table.querySelector('.mat-no-data-row');
+      expect(noDataRow).toBeTruthy();
+      expect(noDataRow.getAttribute('role')).toBe('row');
 
       fixture.componentInstance.dataSource!.data = initialData;
       fixture.detectChanges();
 
-      expect(table.textContent.trim()).not.toContain('No data');
+      expect(table.querySelector('.mat-no-data-row')).toBeFalsy();
     });
 
     it('should show the no data row if there is no data on init', () => {
@@ -110,9 +111,8 @@ describe('MatTable', () => {
       fixture.detectChanges();
 
       const table = fixture.nativeElement.querySelector('.mat-table')!;
-      expect(table.textContent.trim()).toContain('No data');
+      expect(table.querySelector('.mat-no-data-row')).toBeTruthy();
     });
-
   });
 
   it('should be able to render a table correctly with native elements', () => {
@@ -154,17 +154,19 @@ describe('MatTable', () => {
     const dataSource = fixture.componentInstance.dataSource!;
     const initialData = dataSource.data;
 
-    expect(tbody.textContent.trim()).not.toContain('No data');
+    expect(tbody.querySelector('.mat-no-data-row')).toBeFalsy();
 
     dataSource.data = [];
     fixture.detectChanges();
 
-    expect(tbody.textContent.trim()).toContain('No data');
+    const noDataRow: HTMLElement = tbody.querySelector('.mat-no-data-row');
+    expect(noDataRow).toBeTruthy();
+    expect(noDataRow.getAttribute('role')).toBe('row');
 
     dataSource.data = initialData;
     fixture.detectChanges();
 
-    expect(tbody.textContent.trim()).not.toContain('No data');
+    expect(tbody.querySelector('.mat-no-data-row')).toBeFalsy();
   });
 
   it('should render with MatTableDataSource and sort', () => {
@@ -266,32 +268,31 @@ describe('MatTable', () => {
       ]);
     });
 
-    it('should update the page index when switching to a smaller data set from a page',
-      fakeAsync(() => {
-        // Add 20 rows so we can switch pages.
-        for (let i = 0; i < 20; i++) {
-          component.underlyingDataSource.addData();
-          fixture.detectChanges();
-          tick();
-          fixture.detectChanges();
-        }
-
-        // Go to the last page.
-        fixture.componentInstance.paginator.lastPage();
-        fixture.detectChanges();
-
-        // Switch to a smaller data set.
-        dataSource.data = [{a: 'a_0', b: 'b_0', c: 'c_0'}];
+    it('should update the page index when switching to a smaller data set from a page', fakeAsync(() => {
+      // Add 20 rows so we can switch pages.
+      for (let i = 0; i < 20; i++) {
+        component.underlyingDataSource.addData();
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
+      }
 
-        expectTableToMatchContent(tableElement, [
-          ['Column A', 'Column B', 'Column C'],
-          ['a_0', 'b_0', 'c_0'],
-          ['Footer A', 'Footer B', 'Footer C'],
-        ]);
-      }));
+      // Go to the last page.
+      fixture.componentInstance.paginator.lastPage();
+      fixture.detectChanges();
+
+      // Switch to a smaller data set.
+      dataSource.data = [{a: 'a_0', b: 'b_0', c: 'c_0'}];
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_0', 'b_0', 'c_0'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    }));
 
     it('should be able to filter the table contents', fakeAsync(() => {
       // Change filter to a_1, should match one row
@@ -305,7 +306,7 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-      flushMicrotasks();  // Resolve promise that updates paginator's length
+      flushMicrotasks(); // Resolve promise that updates paginator's length
       expect(dataSource.paginator!.length).toBe(1);
 
       // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
@@ -338,10 +339,17 @@ describe('MatTable', () => {
       dataSource.filterPredicate = (data, filter) => {
         let dataStr;
         switch (data.a) {
-          case 'a_1': dataStr = 'elephant'; break;
-          case 'a_2': dataStr = 'zebra'; break;
-          case 'a_3': dataStr = 'monkey'; break;
-          default: dataStr = '';
+          case 'a_1':
+            dataStr = 'elephant';
+            break;
+          case 'a_2':
+            dataStr = 'zebra';
+            break;
+          case 'a_3':
+            dataStr = 'monkey';
+            break;
+          default:
+            dataStr = '';
         }
 
         return dataStr.indexOf(filter) != -1;
@@ -401,10 +409,14 @@ describe('MatTable', () => {
       // Change sort function to customize how it sorts - first column 1, then 3, then 2
       dataSource.sortingDataAccessor = data => {
         switch (data.a) {
-          case 'a_1': return 'elephant';
-          case 'a_2': return 'zebra';
-          case 'a_3': return 'monkey';
-          default: return '';
+          case 'a_1':
+            return 'elephant';
+          case 'a_2':
+            return 'zebra';
+          case 'a_3':
+            return 'monkey';
+          default:
+            return '';
         }
       };
       component.sort.direction = '';
@@ -460,7 +472,6 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-
       // Expect that undefined row comes after the other values
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
@@ -490,7 +501,6 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-
       // Expect that zero comes after the negative numbers and before
       // the positive ones when switching the sorting direction.
       component.sort.sort(component.sortHeader);
@@ -510,7 +520,7 @@ describe('MatTable', () => {
         component.underlyingDataSource.addData();
       }
       fixture.detectChanges();
-      flushMicrotasks();  // Resolve promise that updates paginator's length
+      flushMicrotasks(); // Resolve promise that updates paginator's length
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
@@ -554,7 +564,6 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
@@ -566,23 +575,67 @@ describe('MatTable', () => {
       ]);
     });
 
+    it('should fall back to empty table if invalid data is passed in', () => {
+      component.underlyingDataSource.addData();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      dataSource.data = null!;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      component.underlyingDataSource.addData();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['a_5', 'b_5', 'c_5'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      dataSource.data = {} as any;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    });
   });
 });
 
 interface TestData {
-  a: string|number|undefined;
-  b: string|number|undefined;
-  c: string|number|undefined;
+  a: string | number | undefined;
+  b: string | number | undefined;
+  c: string | number | undefined;
 }
 
 class FakeDataSource extends DataSource<TestData> {
   _dataChange = new BehaviorSubject<TestData[]>([]);
-  get data() { return this._dataChange.getValue(); }
-  set data(data: TestData[]) { this._dataChange.next(data); }
+  get data() {
+    return this._dataChange.getValue();
+  }
+  set data(data: TestData[]) {
+    this._dataChange.next(data);
+  }
 
   constructor() {
     super();
-    for (let i = 0; i < 4; i++) { this.addData(); }
+    for (let i = 0; i < 4; i++) {
+      this.addData();
+    }
   }
 
   connect(): Observable<TestData[]> {
@@ -598,7 +651,7 @@ class FakeDataSource extends DataSource<TestData> {
     copiedData.push({
       a: `a_${nextIndex}`,
       b: `b_${nextIndex}`,
-      c: `c_${nextIndex}`
+      c: `c_${nextIndex}`,
     });
 
     this.data = copiedData;
@@ -636,7 +689,7 @@ class FakeDataSource extends DataSource<TestData> {
       <div *matNoDataRow>No data</div>
       <mat-footer-row *matFooterRowDef="columnsToRender"></mat-footer-row>
     </mat-table>
-  `
+  `,
 })
 class MatTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -670,7 +723,7 @@ class MatTableApp {
         <td>No data</td>
       </tr>
     </table>
-  `
+  `,
 })
 class NativeHtmlTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -720,7 +773,7 @@ class NativeHtmlTableApp {
       <tr mat-header-row *matHeaderRowDef="columnsToRender"></tr>
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
-  `
+  `,
 })
 class NestedHtmlTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -738,7 +791,7 @@ class NestedHtmlTableApp {
       <tr mat-header-row *matHeaderRowDef="columnsToRender; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
-  `
+  `,
 })
 class StickyTableApp {
   dataSource = new FakeDataSource();
@@ -746,7 +799,6 @@ class StickyTableApp {
 
   @ViewChild(MatTable) table: MatTable<TestData>;
 }
-
 
 @Component({
   template: `
@@ -766,7 +818,7 @@ class StickyTableApp {
       <mat-row *matRowDef="let row; columns: ['special_column']; when: isFourthRow"></mat-row>
       <mat-footer-row *matFooterRowDef="['column_a']"></mat-footer-row>
     </mat-table>
-  `
+  `,
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
@@ -775,7 +827,6 @@ class MatTableWithWhenRowApp {
 
   @ViewChild(MatTable) table: MatTable<TestData>;
 }
-
 
 @Component({
   template: `
@@ -804,7 +855,7 @@ class MatTableWithWhenRowApp {
     </mat-table>
 
     <mat-paginator [pageSize]="5"></mat-paginator>
-  `
+  `,
 })
 class ArrayDataSourceMatTableApp implements AfterViewInit {
   underlyingDataSource = new FakeDataSource();
@@ -835,7 +886,6 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
   }
 }
 
-
 @Component({
   template: `
     <mat-table [dataSource]="dataSource" matSort>
@@ -857,7 +907,7 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
       <mat-header-row *matHeaderRowDef="columnsToRender"></mat-header-row>
       <mat-row *matRowDef="let row; columns: columnsToRender"></mat-row>
     </mat-table>
-  `
+  `,
 })
 class MatTableWithSortApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
@@ -908,7 +958,7 @@ class MatTableWithSortApp implements OnInit {
     </mat-table>
 
     <mat-paginator [pageSize]="5"></mat-paginator>
-  `
+  `,
 })
 class MatTableWithPaginatorApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
@@ -949,13 +999,12 @@ class MatTableWithPaginatorApp implements OnInit {
         <mat-row></mat-row>
       </ng-container>
     </mat-table>
-  `
+  `,
 })
 class TableWithNgContainerRow {
   dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a'];
 }
-
 
 function getElements(element: Element, query: string): Element[] {
   return [].slice.call(element.querySelectorAll(query));

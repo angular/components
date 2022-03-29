@@ -7,7 +7,7 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="googlemaps" />
+/// <reference types="google.maps" />
 
 import {Directive} from '@angular/core';
 
@@ -48,8 +48,9 @@ export class MapBicyclingLayer extends MapBaseLayer {
   private _assertLayerInitialized(): asserts this is {bicyclingLayer: google.maps.BicyclingLayer} {
     if (!this.bicyclingLayer) {
       throw Error(
-          'Cannot interact with a Google Map Bicycling Layer before it has been initialized. ' +
-          'Please wait for the Transit Layer to load before trying to interact with it.');
+        'Cannot interact with a Google Map Bicycling Layer before it has been initialized. ' +
+          'Please wait for the Transit Layer to load before trying to interact with it.',
+      );
     }
   }
 }

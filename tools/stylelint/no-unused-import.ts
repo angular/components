@@ -1,17 +1,17 @@
-import {createPlugin, Plugin, utils} from 'stylelint';
+import {createPlugin, utils} from 'stylelint';
 import {basename, join} from 'path';
-import {Result, Root} from './stylelint-postcss-types';
 
 const ruleName = 'material/no-unused-import';
 const messages = utils.ruleMessages(ruleName, {
   expected: (namespace: string) => `Namespace ${namespace} is not being used.`,
-  invalid: (rule: string) => `Failed to extract namespace from ${rule}. material/no-unused-` +
-                             `imports Stylelint rule likely needs to be updated.`
+  invalid: (rule: string) =>
+    `Failed to extract namespace from ${rule}. material/no-unused-` +
+    `imports Stylelint rule likely needs to be updated.`,
 });
 
 /** Stylelint plugin that flags unused `@use` statements. */
-const factory = (isEnabled: boolean, _options: never, context: {fix: boolean}) => {
-  return (root: Root, result: Result) => {
+const plugin = createPlugin(ruleName, (isEnabled: boolean, _options, context) => {
+  return (root, result) => {
     if (!isEnabled) {
       return;
     }
@@ -28,7 +28,7 @@ const factory = (isEnabled: boolean, _options: never, context: {fix: boolean}) =
             result,
             ruleName,
             message: messages.invalid(rule.params),
-            node: rule
+            node: rule,
           });
         } else if (!fileContent.includes(namespace + '.')) {
           if (context.fix) {
@@ -38,20 +38,22 @@ const factory = (isEnabled: boolean, _options: never, context: {fix: boolean}) =
               result,
               ruleName,
               message: messages.expected(namespace),
-              node: rule
+              node: rule,
             });
           }
         }
-       }
+      }
     });
   };
-};
+});
 
 /** Extracts the namespace of an `@use` rule from its parameters.  */
-function extractNamespaceFromUseStatement(params: string): string|null {
+function extractNamespaceFromUseStatement(params: string): string | null {
   const openQuoteIndex = Math.max(params.indexOf(`"`), params.indexOf(`'`));
-  const closeQuoteIndex =
-      Math.max(params.indexOf(`"`, openQuoteIndex + 1), params.indexOf(`'`, openQuoteIndex + 1));
+  const closeQuoteIndex = Math.max(
+    params.indexOf(`"`, openQuoteIndex + 1),
+    params.indexOf(`'`, openQuoteIndex + 1),
+  );
 
   if (closeQuoteIndex > -1) {
     const asExpression = 'as ';
@@ -60,12 +62,13 @@ function extractNamespaceFromUseStatement(params: string): string|null {
 
     // If we found an ` as ` expression, we consider the rest of the text as the namespace.
     if (asIndex > -1) {
-      return withIndex == -1 ?
-          params.slice(asIndex + asExpression.length).trim() :
-          params.slice(asIndex + asExpression.length, withIndex).trim();
+      return withIndex == -1
+        ? params.slice(asIndex + asExpression.length).trim()
+        : params.slice(asIndex + asExpression.length, withIndex).trim();
     }
 
-    const importPath = params.slice(openQuoteIndex + 1, closeQuoteIndex)
+    const importPath = params
+      .slice(openQuoteIndex + 1, closeQuoteIndex)
       // Sass allows for leading underscores to be omitted and it technically supports .scss.
       .replace(/^_|(\.import)?\.scss$|\.import$/g, '');
 
@@ -82,9 +85,4 @@ function extractNamespaceFromUseStatement(params: string): string|null {
   return null;
 }
 
-// Note: We need to cast the value explicitly to `Plugin` because the stylelint types
-// do not type the context parameter. https://stylelint.io/developer-guide/rules#add-autofix
-const plugin = createPlugin(ruleName, factory as unknown as Plugin);
-plugin.ruleName = ruleName;
-plugin.messages = messages;
-module.exports = plugin;
+export default plugin;

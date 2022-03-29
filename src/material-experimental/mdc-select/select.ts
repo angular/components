@@ -13,6 +13,7 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
+  ElementRef,
   OnInit,
   QueryList,
   ViewEncapsulation,
@@ -23,6 +24,7 @@ import {
   MatOption,
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
+  _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
 } from '@angular/material-experimental/mdc-core';
 import {CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
@@ -36,7 +38,8 @@ export class MatSelectChange {
     /** Reference to the select that emitted the change event. */
     public source: MatSelect,
     /** Current value of the select that emitted the event. */
-    public value: any) { }
+    public value: any,
+  ) {}
 }
 
 /**
@@ -83,7 +86,7 @@ export class MatSelectTrigger {}
   animations: [matSelectAnimations.transformPanel],
   providers: [
     {provide: MatFormFieldControl, useExisting: MatSelect},
-    {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect}
+    {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
   ],
 })
 export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit, AfterViewInit {
@@ -103,12 +106,12 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
       originY: 'top',
       overlayX: 'start',
       overlayY: 'bottom',
-      panelClass: 'mat-mdc-select-panel-above'
+      panelClass: 'mat-mdc-select-panel-above',
     },
   ];
 
   /** Ideal origin for the overlay panel. */
-  _preferredOverlayOrigin: CdkOverlayOrigin | undefined;
+  _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
 
   /** Width of the overlay panel. */
   _overlayWidth: number;
@@ -121,26 +124,22 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
 
   override ngOnInit() {
     super.ngOnInit();
-    this._viewportRuler.change().pipe(takeUntil(this._destroy)).subscribe(() => {
-      if (this.panelOpen) {
-        this._overlayWidth = this._getOverlayWidth();
-        this._changeDetectorRef.detectChanges();
-      }
-    });
+    this._viewportRuler
+      .change()
+      .pipe(takeUntil(this._destroy))
+      .subscribe(() => {
+        if (this.panelOpen) {
+          this._overlayWidth = this._getOverlayWidth();
+          this._changeDetectorRef.detectChanges();
+        }
+      });
   }
 
   ngAfterViewInit() {
     // Note that it's important that we read this in `ngAfterViewInit`, because
     // reading it earlier will cause the form field to return a different element.
     if (this._parentFormField) {
-      // TODO(crisbeto): currently the MDC select is based on the standard one which uses the
-      // connected overlay directive for its panel. In order to keep the logic as similar as
-      // possible, we have to use the directive here which only accepts a `CdkOverlayOrigin` as
-      // its origin. For now we fake an origin directive by constructing an object that looks
-      // like it, although eventually we should switch to creating the OverlayRef here directly.
-      this._preferredOverlayOrigin = {
-        elementRef: this._parentFormField.getConnectedOverlayOrigin()
-      };
+      this._preferredOverlayOrigin = this._parentFormField.getConnectedOverlayOrigin();
     }
   }
 
@@ -163,14 +162,22 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
 
     if (option) {
       const panel: HTMLElement = this.panel.nativeElement;
+      const labelCount = _countGroupLabelsBeforeOption(index, this.options, this.optionGroups);
       const element = option._getHostElement();
 
-      panel.scrollTop = _getOptionScrollPosition(
-        element.offsetTop,
-        element.offsetHeight,
-        panel.scrollTop,
-        panel.offsetHeight
-      );
+      if (index === 0 && labelCount === 1) {
+        // If we've got one group label before the option and we're at the top option,
+        // scroll the list to the top. This is better UX than scrolling the list to the
+        // top of the option, because it allows the user to read the top group's label.
+        panel.scrollTop = 0;
+      } else {
+        panel.scrollTop = _getOptionScrollPosition(
+          element.offsetTop,
+          element.offsetHeight,
+          panel.scrollTop,
+          panel.offsetHeight,
+        );
+      }
     }
   }
 
@@ -184,7 +191,10 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
 
   /** Gets how wide the overlay panel should be. */
   private _getOverlayWidth() {
-    const refToMeasure = (this._preferredOverlayOrigin?.elementRef || this._elementRef);
+    const refToMeasure =
+      this._preferredOverlayOrigin instanceof CdkOverlayOrigin
+        ? this._preferredOverlayOrigin.elementRef
+        : this._preferredOverlayOrigin || this._elementRef;
     return refToMeasure.nativeElement.getBoundingClientRect().width;
   }
 }

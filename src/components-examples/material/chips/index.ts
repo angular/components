@@ -13,6 +13,7 @@ import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {ChipsHarnessExample} from './chips-harness/chips-harness-example';
 import {ChipsFormControlExample} from './chips-form-control/chips-form-control-example';
+import {ChipsAvatarExample} from './chips-avatar/chips-avatar-example';
 import {MatButtonModule} from '@angular/material/button';
 
 export {
@@ -22,7 +23,8 @@ export {
   ChipsOverviewExample,
   ChipsStackedExample,
   ChipsHarnessExample,
-  ChipsFormControlExample
+  ChipsFormControlExample,
+  ChipsAvatarExample,
 };
 
 const EXAMPLES = [
@@ -33,6 +35,7 @@ const EXAMPLES = [
   ChipsStackedExample,
   ChipsHarnessExample,
   ChipsFormControlExample,
+  ChipsAvatarExample,
 ];
 
 @NgModule({
@@ -48,7 +51,5 @@ const EXAMPLES = [
   ],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
-export class ChipsExamplesModule {
-}
+export class ChipsExamplesModule {}

@@ -8,15 +8,12 @@ load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["mdc_require_config.js"])
-
 ts_library(
     name = "material-experimental",
     srcs = glob(
         ["*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/material-experimental",
     deps = ["@npm//@angular/core"],
 )
 
@@ -32,7 +29,7 @@ sass_library(
 )
 
 sass_library(
-    name = "theming_bundle",
+    name = "sass_lib",
     srcs = ["_index.scss"],
     deps = [":theming_scss_lib"],
 )
@@ -41,10 +38,9 @@ ng_package(
     name = "npm_package",
     srcs = ["package.json"],
     data = [
-        ":theming_bundle",
+        ":sass_lib",
         ":theming_scss_lib",
     ],
-    entry_point = ":public-api.ts",
     tags = ["release-package"],
     deps = MATERIAL_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TESTING_TARGETS,
 )

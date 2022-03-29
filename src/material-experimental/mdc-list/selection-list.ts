@@ -24,7 +24,7 @@ import {
   Output,
   QueryList,
   SimpleChanges,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '@angular/material-experimental/mdc-core';
@@ -38,7 +38,7 @@ import {MatListOption, SELECTION_LIST, SelectionList} from './list-option';
 const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatSelectionList),
-  multi: true
+  multi: true,
 };
 
 /** Change event that is being fired whenever the selected state of an option changes. */
@@ -53,7 +53,8 @@ export class MatSelectionListChange {
      */
     public option: MatListOption,
     /** Reference to the options that have been changed. */
-    public options: MatListOption[]) {}
+    public options: MatListOption[],
+  ) {}
 }
 
 @Component({
@@ -74,9 +75,10 @@ export class MatSelectionListChange {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatSelectionList extends MatInteractiveListBase<MatListOption>
-    implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-
+export class MatSelectionList
+  extends MatInteractiveListBase<MatListOption>
+  implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
+{
   private _multiple = true;
   private _initialized = false;
 
@@ -98,14 +100,17 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
 
   /** Whether selection is limited to one or multiple items (default multiple). */
   @Input()
-  get multiple(): boolean { return this._multiple; }
-  set multiple(value: boolean) {
+  get multiple(): boolean {
+    return this._multiple;
+  }
+  set multiple(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
       if ((typeof ngDevMode === 'undefined' || ngDevMode) && this._initialized) {
         throw new Error(
-          'Cannot change `multiple` mode of mat-selection-list after initialization.');
+          'Cannot change `multiple` mode of mat-selection-list after initialization.',
+        );
       }
 
       this._multiple = newValue;
@@ -120,7 +125,7 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
   private _onChange: (value: any) => void = (_: any) => {};
 
   /** Keeps track of the currently-selected value. */
-  _value: string[]|null;
+  _value: string[] | null;
 
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
@@ -169,13 +174,16 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
     const disabledChanges = changes['disabled'];
     const disableRippleChanges = changes['disableRipple'];
 
-    if ((disableRippleChanges && !disableRippleChanges.firstChange) ||
-      (disabledChanges && !disabledChanges.firstChange)) {
+    if (
+      (disableRippleChanges && !disableRippleChanges.firstChange) ||
+      (disabledChanges && !disabledChanges.firstChange)
+    ) {
       this._markOptionsForCheck();
     }
   }
 
   override ngOnDestroy() {
+    super.ngOnDestroy();
     this._destroyed.next();
     this._destroyed.complete();
     this._isDestroyed = true;
@@ -281,12 +289,13 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
 
   private _syncSelectedOptionsWithFoundation() {
     if (this._multiple) {
-      this._foundation.setSelectedIndex(this.selectedOptions.selected
-          .map(o => this._itemsArr.indexOf(o)));
+      this._foundation.setSelectedIndex(
+        this.selectedOptions.selected.map(o => this._itemsArr.indexOf(o)),
+      );
     } else {
       const selected = this.selectedOptions.selected[0];
-      const index = selected === undefined ?
-          mdcListNumbers.UNSET_INDEX : this._itemsArr.indexOf(selected);
+      const index =
+        selected === undefined ? mdcListNumbers.UNSET_INDEX : this._itemsArr.indexOf(selected);
       this._foundation.setSelectedIndex(index);
     }
   }
@@ -348,8 +357,6 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
   get options(): QueryList<MatListOption> {
     return this._items;
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
 }
 
 // TODO: replace with class using inheritance once material-components-web/pull/6256 is available.
@@ -391,8 +398,8 @@ function getSelectionListAdapter(list: MatSelectionList): MDCListAdapter {
 
       baseAdapter.setAttributeForElementIndex(index, attribute, value);
     },
-    notifyAction(index: number): void {
-      list._emitChangeEvent([list._itemsArr[index]]);
+    notifySelectionChange(changedIndices: number[]): void {
+      list._emitChangeEvent(changedIndices.map(index => list._itemsArr[index]));
     },
   };
 }

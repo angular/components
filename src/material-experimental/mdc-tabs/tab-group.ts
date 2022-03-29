@@ -41,16 +41,20 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   inputs: ['color', 'disableRipple'],
-  providers: [{
-    provide: MAT_TAB_GROUP,
-    useExisting: MatTabGroup
-  }],
+  providers: [
+    {
+      provide: MAT_TAB_GROUP,
+      useExisting: MatTabGroup,
+    },
+  ],
   host: {
     'class': 'mat-mdc-tab-group',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
+    '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {
@@ -60,21 +64,35 @@ export class MatTabGroup extends _MatTabGroupBase {
 
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
-  get fitInkBarToContent(): boolean { return this._fitInkBarToContent; }
-  set fitInkBarToContent(v: boolean) {
+  get fitInkBarToContent(): boolean {
+    return this._fitInkBarToContent;
+  }
+  set fitInkBarToContent(v: BooleanInput) {
     this._fitInkBarToContent = coerceBooleanProperty(v);
     this._changeDetectorRef.markForCheck();
   }
   private _fitInkBarToContent = false;
 
-  constructor(elementRef: ElementRef,
-              changeDetectorRef: ChangeDetectorRef,
-              @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
-    super(elementRef, changeDetectorRef, defaultConfig, animationMode);
-    this.fitInkBarToContent = defaultConfig && defaultConfig.fitInkBarToContent != null ?
-        defaultConfig.fitInkBarToContent : false;
+  /** Whether tabs should be stretched to fill the header. */
+  @Input('mat-stretch-tabs')
+  get stretchTabs(): boolean {
+    return this._stretchTabs;
   }
+  set stretchTabs(v: BooleanInput) {
+    this._stretchTabs = coerceBooleanProperty(v);
+  }
+  private _stretchTabs = true;
 
-  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
+  constructor(
+    elementRef: ElementRef,
+    changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
+    super(elementRef, changeDetectorRef, defaultConfig, animationMode);
+    this.fitInkBarToContent =
+      defaultConfig && defaultConfig.fitInkBarToContent != null
+        ? defaultConfig.fitInkBarToContent
+        : false;
+  }
 }

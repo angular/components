@@ -22,7 +22,6 @@ ng_module(
         ":stepper.css",
         ":step-header.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/stepper",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -53,6 +52,7 @@ sass_binary(
     src = "stepper.scss",
     deps = [
         ":stepper_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -62,6 +62,7 @@ sass_binary(
     src = "step-header.scss",
     deps = [
         ":stepper_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -76,6 +77,7 @@ ng_test_library(
         ":stepper",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
+        "//src/cdk/platform",
         "//src/cdk/stepper",
         "//src/cdk/testing/private",
         "//src/material/core",

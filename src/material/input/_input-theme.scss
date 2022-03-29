@@ -1,7 +1,7 @@
 @use 'sass:map';
+@use 'sass:math';
 @use '../core/theming/palette';
 @use '../core/theming/theming';
-@use '../core/style/private';
 @use '../core/style/form-common';
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
@@ -37,12 +37,14 @@
     // Since we can't change background of the dropdown, we need to explicitly
     // reset the color of the options to something dark.
     @if (map.get($config, is-dark)) {
-      option {
-        color: palette.$dark-primary-text;
-      }
+      &:not(.mat-native-select-inline) {
+        option {
+          color: palette.$dark-primary-text;
+        }
 
-      option:disabled {
-        color: palette.$dark-disabled-text;
+        option:disabled {
+          color: palette.$dark-disabled-text;
+        }
       }
     }
   }
@@ -69,12 +71,12 @@
 
   // The amount of space between the top of the line and the top of the actual text
   // (as a fraction of the font-size).
-  $line-spacing: private.private-div($line-height - 1, 2);
+  $line-spacing: math.div($line-height - 1, 2);
 
   // <input> elements seem to have their height set slightly too large on Safari causing the text to
   // be misaligned w.r.t. the placeholder. Adding this margin corrects it.
   input.mat-input-element {
-    margin-top: -$line-spacing * 1em;
+    margin-top: typography-utils.private-coerce-unitless-to-em(-$line-spacing);
   }
 }
 

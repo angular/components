@@ -12,24 +12,27 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessPredicate,
+  TestElement,
 } from '@angular/cdk/testing';
 import {
   MatOptgroupHarness,
   MatOptionHarness,
   OptgroupHarnessFilters,
-  OptionHarnessFilters
+  OptionHarnessFilters,
 } from '@angular/material/core/testing';
 import {AutocompleteHarnessFilters} from './autocomplete-harness-filters';
 
 export abstract class _MatAutocompleteHarnessBase<
-  OptionType extends (ComponentHarnessConstructor<Option> & {
-    with: (options?: OptionFilters) => HarnessPredicate<Option>}),
+  OptionType extends ComponentHarnessConstructor<Option> & {
+    with: (options?: OptionFilters) => HarnessPredicate<Option>;
+  },
   Option extends ComponentHarness & {click(): Promise<void>},
   OptionFilters extends BaseHarnessFilters,
-  OptionGroupType extends (ComponentHarnessConstructor<OptionGroup> & {
-    with: (options?: OptionGroupFilters) => HarnessPredicate<OptionGroup>}),
+  OptionGroupType extends ComponentHarnessConstructor<OptionGroup> & {
+    with: (options?: OptionGroupFilters) => HarnessPredicate<OptionGroup>;
+  },
   OptionGroup extends ComponentHarness,
-  OptionGroupFilters extends BaseHarnessFilters
+  OptionGroupFilters extends BaseHarnessFilters,
 > extends ComponentHarness {
   private _documentRootLocator = this.documentRootLocatorFactory();
   protected abstract _prefix: string;
@@ -38,7 +41,7 @@ export abstract class _MatAutocompleteHarnessBase<
 
   /** Gets the value of the autocomplete input. */
   async getValue(): Promise<string> {
-    return (await this.host()).getProperty('value');
+    return (await this.host()).getProperty<string>('value');
   }
 
   /** Whether the autocomplete input is disabled. */
@@ -69,18 +72,32 @@ export abstract class _MatAutocompleteHarnessBase<
 
   /** Gets the options inside the autocomplete panel. */
   async getOptions(filters?: Omit<OptionFilters, 'ancestor'>): Promise<Option[]> {
-    return this._documentRootLocator.locatorForAll(this._optionClass.with({
-      ...(filters || {}),
-      ancestor: await this._getPanelSelector()
-    } as OptionFilters))();
+    if (!(await this.isOpen())) {
+      throw new Error('Unable to retrieve options for autocomplete. Autocomplete panel is closed.');
+    }
+
+    return this._documentRootLocator.locatorForAll(
+      this._optionClass.with({
+        ...(filters || {}),
+        ancestor: await this._getPanelSelector(),
+      } as OptionFilters),
+    )();
   }
 
   /** Gets the option groups inside the autocomplete panel. */
   async getOptionGroups(filters?: Omit<OptionGroupFilters, 'ancestor'>): Promise<OptionGroup[]> {
-    return this._documentRootLocator.locatorForAll(this._optionGroupClass.with({
-      ...(filters || {}),
-      ancestor: await this._getPanelSelector()
-    } as OptionGroupFilters))();
+    if (!(await this.isOpen())) {
+      throw new Error(
+        'Unable to retrieve option groups for autocomplete. Autocomplete panel is closed.',
+      );
+    }
+
+    return this._documentRootLocator.locatorForAll(
+      this._optionGroupClass.with({
+        ...(filters || {}),
+        ancestor: await this._getPanelSelector(),
+      } as OptionGroupFilters),
+    )();
   }
 
   /** Selects the first option matching the given filters. */
@@ -96,11 +113,11 @@ export abstract class _MatAutocompleteHarnessBase<
   /** Whether the autocomplete is open. */
   async isOpen(): Promise<boolean> {
     const panel = await this._getPanel();
-    return !!panel && await panel.hasClass(`${this._prefix}-autocomplete-visible`);
+    return !!panel && (await panel.hasClass(`${this._prefix}-autocomplete-visible`));
   }
 
   /** Gets the panel associated with this autocomplete trigger. */
-  private async _getPanel() {
+  private async _getPanel(): Promise<TestElement | null> {
     // Technically this is static, but it needs to be in a
     // function, because the autocomplete's panel ID can changed.
     return this._documentRootLocator.locatorForOptional(await this._getPanelSelector())();
@@ -108,14 +125,18 @@ export abstract class _MatAutocompleteHarnessBase<
 
   /** Gets the selector that can be used to find the autocomplete trigger's panel. */
   private async _getPanelSelector(): Promise<string> {
-    return `#${(await (await this.host()).getAttribute('aria-owns'))}`;
+    return `#${await (await this.host()).getAttribute('aria-owns')}`;
   }
 }
 
 /** Harness for interacting with a standard mat-autocomplete in tests. */
 export class MatAutocompleteHarness extends _MatAutocompleteHarnessBase<
-  typeof MatOptionHarness, MatOptionHarness, OptionHarnessFilters,
-  typeof MatOptgroupHarness, MatOptgroupHarness, OptgroupHarnessFilters
+  typeof MatOptionHarness,
+  MatOptionHarness,
+  OptionHarnessFilters,
+  typeof MatOptgroupHarness,
+  MatOptgroupHarness,
+  OptgroupHarnessFilters
 > {
   protected _prefix = 'mat';
   protected _optionClass = MatOptionHarness;
@@ -131,8 +152,10 @@ export class MatAutocompleteHarness extends _MatAutocompleteHarnessBase<
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: AutocompleteHarnessFilters = {}): HarnessPredicate<MatAutocompleteHarness> {
-    return new HarnessPredicate(MatAutocompleteHarness, options)
-        .addOption('value', options.value,
-            (harness, value) => HarnessPredicate.stringMatches(harness.getValue(), value));
+    return new HarnessPredicate(MatAutocompleteHarness, options).addOption(
+      'value',
+      options.value,
+      (harness, value) => HarnessPredicate.stringMatches(harness.getValue(), value),
+    );
   }
 }

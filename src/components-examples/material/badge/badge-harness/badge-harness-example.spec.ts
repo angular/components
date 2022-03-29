@@ -1,11 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatBadgeHarness} from '@angular/material/badge/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {MatBadgeModule} from '@angular/material/badge';
 import {BadgeHarnessExample} from './badge-harness-example';
 
@@ -13,14 +9,10 @@ describe('BadgeHarnessExample', () => {
   let fixture: ComponentFixture<BadgeHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatBadgeModule],
-      declarations: [BadgeHarnessExample]
+      declarations: [BadgeHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(BadgeHarnessExample);
     fixture.detectChanges();

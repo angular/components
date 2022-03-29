@@ -1,3 +1,4 @@
+import {SPACE} from '@angular/cdk/keycodes';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
@@ -5,14 +6,17 @@ import {
   RippleGlobalOptions,
 } from '@angular/material-experimental/mdc-core';
 import {By} from '@angular/platform-browser';
-import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+} from '../../../cdk/testing/private';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {Subject} from 'rxjs';
 import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_TABS_CONFIG} from '../index';
-
 
 describe('MDC-based MatTabNavBar', () => {
   let dir: Direction = 'ltr';
@@ -24,18 +28,11 @@ describe('MDC-based MatTabNavBar', () => {
 
     TestBed.configureTestingModule({
       imports: [MatTabsModule],
-      declarations: [
-        SimpleTabNavBarTestApp,
-        TabLinkWithNgIf,
-        TabLinkWithTabIndexBinding,
-        TabLinkWithNativeTabindexAttr,
-        TabBarWithInactiveTabsOnInit,
-      ],
+      declarations: [SimpleTabNavBarTestApp, TabLinkWithNgIf, TabBarWithInactiveTabsOnInit],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-        {provide: Directionality, useFactory: () =>
-            ({value: dir, change: dirChange})},
-      ]
+        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
+      ],
     });
 
     TestBed.compileComponents();
@@ -64,7 +61,8 @@ describe('MDC-based MatTabNavBar', () => {
     it('should add the active class if active', () => {
       let tabLink1 = fixture.debugElement.queryAll(By.css('a'))[0];
       let tabLink2 = fixture.debugElement.queryAll(By.css('a'))[1];
-      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+      const tabLinkElements = fixture.debugElement
+        .queryAll(By.css('a'))
         .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
 
       tabLink1.nativeElement.click();
@@ -78,65 +76,63 @@ describe('MDC-based MatTabNavBar', () => {
       expect(tabLinkElements[1].classList.contains('mdc-tab--active')).toBeTruthy();
     });
 
-    it('should toggle aria-current based on active state', () => {
-      let tabLink1 = fixture.debugElement.queryAll(By.css('a'))[0];
-      let tabLink2 = fixture.debugElement.queryAll(By.css('a'))[1];
-      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
-        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
-
-      tabLink1.nativeElement.click();
-      fixture.detectChanges();
-      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('page');
-      expect(tabLinkElements[1].hasAttribute('aria-current')).toEqual(false);
-
-      tabLink2.nativeElement.click();
-      fixture.detectChanges();
-      expect(tabLinkElements[0].hasAttribute('aria-current')).toEqual(false);
-      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('page');
-    });
-
     it('should add the disabled class if disabled', () => {
-      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+      const tabLinkElements = fixture.debugElement
+        .queryAll(By.css('a'))
         .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
 
-      expect(tabLinkElements.every(tabLinkEl => {
-        return !tabLinkEl.classList.contains('mat-mdc-tab-disabled');
-      })).toBe(true, 'Expected every tab link to not have the disabled class initially');
+      expect(
+        tabLinkElements.every(tabLinkEl => {
+          return !tabLinkEl.classList.contains('mat-mdc-tab-disabled');
+        }),
+      )
+        .withContext('Expected every tab link to not have the disabled class initially')
+        .toBe(true);
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
 
-      expect(tabLinkElements.every(tabLinkEl => {
-        return tabLinkEl.classList.contains('mat-mdc-tab-disabled');
-      })).toBe(true, 'Expected every tab link to have the disabled class if set through binding');
+      expect(
+        tabLinkElements.every(tabLinkEl => {
+          return tabLinkEl.classList.contains('mat-mdc-tab-disabled');
+        }),
+      )
+        .withContext('Expected every tab link to have the disabled class if set through binding')
+        .toBe(true);
     });
 
     it('should update aria-disabled if disabled', () => {
-      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+      const tabLinkElements = fixture.debugElement
+        .queryAll(By.css('a'))
         .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
 
       expect(tabLinkElements.every(tabLink => tabLink.getAttribute('aria-disabled') === 'false'))
-        .toBe(true, 'Expected aria-disabled to be set to "false" by default.');
+        .withContext('Expected aria-disabled to be set to "false" by default.')
+        .toBe(true);
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
 
       expect(tabLinkElements.every(tabLink => tabLink.getAttribute('aria-disabled') === 'true'))
-        .toBe(true, 'Expected aria-disabled to be set to "true" if link is disabled.');
+        .withContext('Expected aria-disabled to be set to "true" if link is disabled.')
+        .toBe(true);
     });
 
     it('should update the tabindex if links are disabled', () => {
-      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+      const tabLinkElements = fixture.debugElement
+        .queryAll(By.css('a'))
         .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
 
-      expect(tabLinkElements.every(tabLink => tabLink.tabIndex === 0))
-        .toBe(true, 'Expected element to be keyboard focusable by default');
+      expect(tabLinkElements.map(tabLink => tabLink.tabIndex))
+        .withContext('Expected first element to be keyboard focusable by default')
+        .toEqual([0, -1, -1]);
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
 
       expect(tabLinkElements.every(tabLink => tabLink.tabIndex === -1))
-        .toBe(true, 'Expected element to no longer be keyboard focusable if disabled.');
+        .withContext('Expected element to no longer be keyboard focusable if disabled.')
+        .toBe(true);
     });
 
     it('should mark disabled links', () => {
@@ -205,7 +201,7 @@ describe('MDC-based MatTabNavBar', () => {
 
       spyOn(inkBar, 'hide');
 
-      fixture.componentInstance.tabLinks.forEach(link => link.active = false);
+      fixture.componentInstance.tabLinks.forEach(link => (link.active = false));
       fixture.detectChanges();
 
       expect(inkBar.hide).toHaveBeenCalled();
@@ -241,33 +237,8 @@ describe('MDC-based MatTabNavBar', () => {
     dispatchMouseEvent(link, 'mousedown');
 
     expect(link.querySelector('.mat-ripple-element'))
-      .toBeFalsy('Expected no ripple to be created when ripple target is destroyed.');
-  });
-
-  it('should support the native tabindex attribute', () => {
-      const fixture = TestBed.createComponent(TabLinkWithNativeTabindexAttr);
-    fixture.detectChanges();
-
-    const tabLink = fixture.debugElement.query(By.directive(MatTabLink))
-        .injector.get<MatTabLink>(MatTabLink);
-
-    expect(tabLink.tabIndex)
-      .toBe(5, 'Expected the tabIndex to be set from the native tabindex attribute.');
-  });
-
-  it('should support binding to the tabIndex', () => {
-    const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
-    fixture.detectChanges();
-
-    const tabLink = fixture.debugElement.query(By.directive(MatTabLink))
-        .injector.get<MatTabLink>(MatTabLink);
-
-    expect(tabLink.tabIndex).toBe(0, 'Expected the tabIndex to be set to 0 by default.');
-
-    fixture.componentInstance.tabIndex = 3;
-    fixture.detectChanges();
-
-    expect(tabLink.tabIndex).toBe(3, 'Expected the tabIndex to be have been set to 3.');
+      .withContext('Expected no ripple to be created when ripple target is destroyed.')
+      .toBeFalsy();
   });
 
   it('should select the proper tab, if the tabs come in after init', () => {
@@ -286,6 +257,90 @@ describe('MDC-based MatTabNavBar', () => {
     expect(instance.tabNavBar.selectedIndex).toBe(1);
   });
 
+  it('should have the proper roles', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabBar = fixture.nativeElement.querySelector('.mat-mdc-tab-nav-bar')!;
+    expect(tabBar.getAttribute('role')).toBe('tablist');
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+
+    expect(tabLinks[0].getAttribute('role')).toBe('tab');
+    expect(tabLinks[1].getAttribute('role')).toBe('tab');
+    expect(tabLinks[2].getAttribute('role')).toBe('tab');
+
+    const tabPanel = fixture.nativeElement.querySelector('.mat-mdc-tab-nav-panel')!;
+    expect(tabPanel.getAttribute('role')).toBe('tabpanel');
+  });
+
+  it('should manage tabindex properly', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+    expect(tabLinks[0].tabIndex).toBe(0);
+    expect(tabLinks[1].tabIndex).toBe(-1);
+    expect(tabLinks[2].tabIndex).toBe(-1);
+
+    tabLinks[1].click();
+    fixture.detectChanges();
+
+    expect(tabLinks[0].tabIndex).toBe(-1);
+    expect(tabLinks[1].tabIndex).toBe(0);
+    expect(tabLinks[2].tabIndex).toBe(-1);
+  });
+
+  it('should setup aria-controls properly', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+    expect(tabLinks[0].getAttribute('aria-controls')).toBe('tab-panel');
+    expect(tabLinks[1].getAttribute('aria-controls')).toBe('tab-panel');
+    expect(tabLinks[2].getAttribute('aria-controls')).toBe('tab-panel');
+  });
+
+  it('should not manage aria-current', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+    expect(tabLinks[0].getAttribute('aria-current')).toBe(null);
+    expect(tabLinks[1].getAttribute('aria-current')).toBe(null);
+    expect(tabLinks[2].getAttribute('aria-current')).toBe(null);
+  });
+
+  it('should manage aria-selected properly', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+    expect(tabLinks[0].getAttribute('aria-selected')).toBe('true');
+    expect(tabLinks[1].getAttribute('aria-selected')).toBe('false');
+    expect(tabLinks[2].getAttribute('aria-selected')).toBe('false');
+
+    tabLinks[1].click();
+    fixture.detectChanges();
+
+    expect(tabLinks[0].getAttribute('aria-selected')).toBe('false');
+    expect(tabLinks[1].getAttribute('aria-selected')).toBe('true');
+    expect(tabLinks[2].getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('should activate a link when space is pressed', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+    expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(false);
+
+    dispatchKeyboardEvent(tabLinks[1], 'keydown', SPACE);
+    fixture.detectChanges();
+
+    expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(true);
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
 
@@ -296,25 +351,31 @@ describe('MDC-based MatTabNavBar', () => {
 
     it('should be disabled on all tab links when they are disabled on the nav bar', () => {
       expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => !tabLink.rippleDisabled))
-        .toBe(true, 'Expected every tab link to have ripples enabled');
+        .withContext('Expected every tab link to have ripples enabled')
+        .toBe(true);
 
       fixture.componentInstance.disableRippleOnBar = true;
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => tabLink.rippleDisabled))
-        .toBe(true, 'Expected every tab link to have ripples disabled');
+        .withContext('Expected every tab link to have ripples disabled')
+        .toBe(true);
     });
 
     it('should have the `disableRipple` from the tab take precedence over the nav bar', () => {
       const firstTab = fixture.componentInstance.tabLinks.first;
 
-      expect(firstTab.rippleDisabled).toBe(false, 'Expected ripples to be enabled on first tab');
+      expect(firstTab.rippleDisabled)
+        .withContext('Expected ripples to be enabled on first tab')
+        .toBe(false);
 
       firstTab.disableRipple = true;
       fixture.componentInstance.disableRippleOnBar = false;
       fixture.detectChanges();
 
-      expect(firstTab.rippleDisabled).toBe(true, 'Expected ripples to be disabled on first tab');
+      expect(firstTab.rippleDisabled)
+        .withContext('Expected ripples to be disabled on first tab')
+        .toBe(true);
     });
 
     it('should show up for tab link elements on mousedown', () => {
@@ -324,7 +385,8 @@ describe('MDC-based MatTabNavBar', () => {
       dispatchMouseEvent(tabLink, 'mouseup');
 
       expect(tabLink.querySelectorAll('.mat-ripple-element').length)
-        .toBe(1, 'Expected one ripple to show up if user clicks on tab link.');
+        .withContext('Expected one ripple to show up if user clicks on tab link.')
+        .toBe(1);
     });
 
     it('should be able to disable ripples on an individual tab link', () => {
@@ -338,25 +400,32 @@ describe('MDC-based MatTabNavBar', () => {
       dispatchMouseEvent(tabLinkElement, 'mouseup');
 
       expect(tabLinkElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripple to show up if ripples are disabled.');
+        .withContext('Expected no ripple to show up if ripples are disabled.')
+        .toBe(0);
     });
 
     it('should be able to disable ripples through global options at runtime', () => {
       expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => !tabLink.rippleDisabled))
-        .toBe(true, 'Expected every tab link to have ripples enabled');
+        .withContext('Expected every tab link to have ripples enabled')
+        .toBe(true);
 
       globalRippleOptions.disabled = true;
 
       expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => tabLink.rippleDisabled))
-        .toBe(true, 'Expected every tab link to have ripples disabled');
+        .withContext('Expected every tab link to have ripples disabled')
+        .toBe(true);
     });
 
     it('should have a focus indicator', () => {
-      const tabLinkNativeElements =
-          [...fixture.debugElement.nativeElement.querySelectorAll('.mat-mdc-tab-link')];
+      const tabLinkNativeElements = [
+        ...fixture.debugElement.nativeElement.querySelectorAll('.mat-mdc-tab-link'),
+      ];
 
-      expect(tabLinkNativeElements
-          .every(element => element.classList.contains('mat-mdc-focus-indicator'))).toBe(true);
+      expect(
+        tabLinkNativeElements.every(element =>
+          element.classList.contains('mat-mdc-focus-indicator'),
+        ),
+      ).toBe(true);
     });
   });
 
@@ -397,22 +466,20 @@ describe('MDC-based MatTabNavBar', () => {
 });
 
 describe('MatTabNavBar with a default config', () => {
-  let fixture: ComponentFixture<TabLinkWithTabIndexBinding>;
+  let fixture: ComponentFixture<TabLinkWithNgIf>;
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, BrowserAnimationsModule],
-      declarations: [TabLinkWithTabIndexBinding],
-      providers: [
-        {provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}
-      ]
+      declarations: [TabLinkWithNgIf],
+      providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
 
     TestBed.compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+    fixture = TestBed.createComponent(TabLinkWithNgIf);
     fixture.detectChanges();
   });
 
@@ -425,13 +492,13 @@ describe('MatTabNavBar with a default config', () => {
   });
 });
 
-
 @Component({
   selector: 'test-app',
   template: `
     <nav mat-tab-nav-bar
          [disableRipple]="disableRippleOnBar"
-         [fitInkBarToContent]="fitInkBarToContent">
+         [fitInkBarToContent]="fitInkBarToContent"
+         [tabPanel]="tabPanel">
       <a mat-tab-link
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
@@ -441,7 +508,8 @@ describe('MatTabNavBar with a default config', () => {
         Tab link {{label}}
       </a>
     </nav>
-  `
+    <mat-tab-nav-panel #tabPanel id="tab-panel">Tab panel</mat-tab-nav-panel>
+  `,
 })
 class SimpleTabNavBarTestApp {
   @ViewChild(MatTabNav) tabNavBar: MatTabNav;
@@ -459,10 +527,11 @@ class SimpleTabNavBarTestApp {
 
 @Component({
   template: `
-    <nav mat-tab-nav-bar>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngIf="!isDestroyed">Link</a>
     </nav>
-  `
+    <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
+  `,
 })
 class TabLinkWithNgIf {
   isDestroyed = false;
@@ -470,31 +539,11 @@ class TabLinkWithNgIf {
 
 @Component({
   template: `
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link [tabIndex]="tabIndex">TabIndex Link</a>
-    </nav>
-  `
-})
-class TabLinkWithTabIndexBinding {
-  tabIndex = 0;
-}
-
-@Component({
-  template: `
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link tabindex="5">Link</a>
-    </nav>
-  `
-})
-class TabLinkWithNativeTabindexAttr {}
-
-
-@Component({
-  template: `
-    <nav mat-tab-nav-bar>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngFor="let tab of tabs" [active]="false">Tab link {{label}}</a>
     </nav>
-  `
+    <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
+  `,
 })
 class TabBarWithInactiveTabsOnInit {
   tabs = [0, 1, 2];

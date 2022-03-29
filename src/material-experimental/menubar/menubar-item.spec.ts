@@ -66,8 +66,8 @@ describe('MatMenuBarItem', () => {
       <mat-menubar-item [cdkMenuTriggerFor]="sub">File</mat-menubar-item>
     </mat-menubar>
 
-    <ng-template cdkMenuPanel #sub="cdkMenuPanel">
-      <div #menu cdkMenu [cdkMenuPanel]="sub">
+    <ng-template #sub>
+      <div #menu cdkMenu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>

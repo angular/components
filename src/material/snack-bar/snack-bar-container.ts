@@ -66,11 +66,13 @@ export interface _SnackBarContainer {
   host: {
     'class': 'mat-snack-bar-container',
     '[@state]': '_animationState',
-    '(@state.done)': 'onAnimationEnd($event)'
+    '(@state.done)': 'onAnimationEnd($event)',
   },
 })
-export class MatSnackBarContainer extends BasePortalOutlet
-    implements OnDestroy, _SnackBarContainer {
+export class MatSnackBarContainer
+  extends BasePortalOutlet
+  implements OnDestroy, _SnackBarContainer
+{
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
 
@@ -110,8 +112,8 @@ export class MatSnackBarContainer extends BasePortalOutlet
     private _changeDetectorRef: ChangeDetectorRef,
     private _platform: Platform,
     /** The snack bar configuration. */
-    public snackBarConfig: MatSnackBarConfig) {
-
+    public snackBarConfig: MatSnackBarConfig,
+  ) {
     super();
 
     // Use aria-live rather than a live role like 'alert' or 'status'
@@ -159,7 +161,7 @@ export class MatSnackBarContainer extends BasePortalOutlet
     this._assertNotAttached();
     this._applySnackBarClasses();
     return this._portalOutlet.attachDomPortal(portal);
-  }
+  };
 
   /** Handle end of animations, updating the state of the snackbar. */
   onAnimationEnd(event: AnimationEvent) {
@@ -192,19 +194,23 @@ export class MatSnackBarContainer extends BasePortalOutlet
 
   /** Begin animation of the snack bar exiting from view. */
   exit(): Observable<void> {
-    // Note: this one transitions to `hidden`, rather than `void`, in order to handle the case
-    // where multiple snack bars are opened in quick succession (e.g. two consecutive calls to
-    // `MatSnackBar.open`).
-    this._animationState = 'hidden';
+    // It's common for snack bars to be opened by random outside calls like HTTP requests or
+    // errors. Run inside the NgZone to ensure that it functions correctly.
+    this._ngZone.run(() => {
+      // Note: this one transitions to `hidden`, rather than `void`, in order to handle the case
+      // where multiple snack bars are opened in quick succession (e.g. two consecutive calls to
+      // `MatSnackBar.open`).
+      this._animationState = 'hidden';
 
-    // Mark this element with an 'exit' attribute to indicate that the snackbar has
-    // been dismissed and will soon be removed from the DOM. This is used by the snackbar
-    // test harness.
-    this._elementRef.nativeElement.setAttribute('mat-exit', '');
+      // Mark this element with an 'exit' attribute to indicate that the snackbar has
+      // been dismissed and will soon be removed from the DOM. This is used by the snackbar
+      // test harness.
+      this._elementRef.nativeElement.setAttribute('mat-exit', '');
 
-    // If the snack bar hasn't been announced by the time it exits it wouldn't have been open
-    // long enough to visually read it either, so clear the timeout for announcing.
-    clearTimeout(this._announceTimeoutId);
+      // If the snack bar hasn't been announced by the time it exits it wouldn't have been open
+      // long enough to visually read it either, so clear the timeout for announcing.
+      clearTimeout(this._announceTimeoutId);
+    });
 
     return this._onExit;
   }
@@ -221,8 +227,10 @@ export class MatSnackBarContainer extends BasePortalOutlet
    */
   private _completeExit() {
     this._ngZone.onMicrotaskEmpty.pipe(take(1)).subscribe(() => {
-      this._onExit.next();
-      this._onExit.complete();
+      this._ngZone.run(() => {
+        this._onExit.next();
+        this._onExit.complete();
+      });
     });
   }
 
@@ -271,9 +279,11 @@ export class MatSnackBarContainer extends BasePortalOutlet
             // If an element in the snack bar content is focused before being moved
             // track it and restore focus after moving to the live region.
             let focusedElement: HTMLElement | null = null;
-            if (this._platform.isBrowser &&
-                document.activeElement instanceof HTMLElement &&
-                inertElement.contains(document.activeElement)) {
+            if (
+              this._platform.isBrowser &&
+              document.activeElement instanceof HTMLElement &&
+              inertElement.contains(document.activeElement)
+            ) {
               focusedElement = document.activeElement;
             }
 

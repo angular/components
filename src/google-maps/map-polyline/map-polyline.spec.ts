@@ -19,11 +19,15 @@ describe('MapPolyline', () => {
   let polylineOptions: google.maps.PolylineOptions;
 
   beforeEach(waitForAsync(() => {
-    polylinePath = [{ lat: 25, lng: 26 }, { lat: 26, lng: 27 }, { lat: 30, lng: 34 }];
+    polylinePath = [
+      {lat: 25, lng: 26},
+      {lat: 26, lng: 27},
+      {lat: 30, lng: 34},
+    ];
     polylineOptions = {
       path: polylinePath,
       strokeColor: 'grey',
-      strokeOpacity: 0.8
+      strokeOpacity: 0.8,
     };
     TestBed.configureTestingModule({
       imports: [GoogleMapsModule],
@@ -85,8 +89,9 @@ describe('MapPolyline', () => {
     createPolylineConstructorSpy(polylineSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const polylineComponent = fixture.debugElement.query(By.directive(
-        MapPolyline))!.injector.get<MapPolyline>(MapPolyline);
+    const polylineComponent = fixture.debugElement
+      .query(By.directive(MapPolyline))!
+      .injector.get<MapPolyline>(MapPolyline);
     fixture.detectChanges();
 
     polylineSpy.getDraggable.and.returnValue(true);

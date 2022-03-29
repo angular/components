@@ -17,7 +17,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":chips.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/chips",
     deps = [
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -43,7 +42,7 @@ sass_binary(
     name = "chips_scss",
     src = "chips.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

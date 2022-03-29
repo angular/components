@@ -9,19 +9,13 @@
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {
+  dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchPointerEvent,
   dispatchTouchEvent,
-} from '@angular/cdk/testing/private';
+} from '../../cdk/testing/private';
 import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
-import {
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  TestBed,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
@@ -34,33 +28,30 @@ interface Point {
   y: number;
 }
 
-describe('MDC-based MatSlider' , () => {
+describe('MDC-based MatSlider', () => {
   let platform: Platform;
 
-  beforeAll(() => {
-    platform = TestBed.inject(Platform);
-    // Mock #setPointerCapture as it throws errors on pointerdown without a real pointerId.
-    spyOn(Element.prototype, 'setPointerCapture');
-  });
-
-  function createComponent<T>(
-    component: Type<T>,
-    providers: Provider[] = [],
-    ): ComponentFixture<T> {
+  function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
       declarations: [component],
       providers: [...providers],
     }).compileComponents();
+
+    platform = TestBed.inject(Platform);
+    // Mock #setPointerCapture as it throws errors on pointerdown without a real pointerId.
+    spyOn(Element.prototype, 'setPointerCapture');
+
     return TestBed.createComponent<T>(component);
   }
 
   describe('standard slider', () => {
+    let fixture: ComponentFixture<StandardSlider>;
     let sliderInstance: MatSlider;
     let inputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardSlider);
+      fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
@@ -106,11 +97,18 @@ describe('MDC-based MatSlider' , () => {
       expect(inputInstance.value).toBe(10);
       sliderInstance._elementRef.nativeElement.style.marginLeft = 'initial';
     });
+
+    it('should not throw if destroyed before initialization is complete', () => {
+      fixture.destroy();
+      fixture = TestBed.createComponent(StandardSlider);
+      expect(() => fixture.destroy()).not.toThrow();
+    });
   });
 
   describe('standard range slider', () => {
     let sliderInstance: MatSlider;
     let startInputInstance: MatSliderThumb;
+    let sliderElement: HTMLElement;
     let endInputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
@@ -119,6 +117,7 @@ describe('MDC-based MatSlider' , () => {
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
       startInputInstance = sliderInstance._getInput(Thumb.START);
+      sliderElement = sliderDebugElement.nativeElement;
       endInputInstance = sliderInstance._getInput(Thumb.END);
     }));
 
@@ -173,6 +172,13 @@ describe('MDC-based MatSlider' , () => {
       sliderInstance._setValue(50, Thumb.START);
       slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
       expect(startInputInstance.value).toBe(50);
+    });
+
+    it('should have a strong focus indicator in each of the thumbs', () => {
+      const indicators = sliderElement.querySelectorAll(
+        '.mat-mdc-slider-visual-thumb .mat-mdc-focus-indicator',
+      );
+      expect(indicators.length).toBe(2);
     });
   });
 
@@ -277,13 +283,19 @@ describe('MDC-based MatSlider' , () => {
       thumbInstance = sliderInstance._getThumb(Thumb.END);
       thumbElement = thumbInstance._getHostElement();
       const thumbDimensions = thumbElement.getBoundingClientRect();
-      thumbX = thumbDimensions.left - (thumbDimensions.width / 2);
-      thumbY = thumbDimensions.top - (thumbDimensions.height / 2);
+      thumbX = thumbDimensions.left - thumbDimensions.width / 2;
+      thumbY = thumbDimensions.top - thumbDimensions.height / 2;
     }));
 
     function isRippleVisible(selector: string) {
-      tick(500);
-      return !!document.querySelector(`.mat-mdc-slider-${selector}-ripple`);
+      flushRippleTransitions();
+      return thumbElement.querySelector(`.mat-mdc-slider-${selector}-ripple`) !== null;
+    }
+
+    function flushRippleTransitions() {
+      thumbElement.querySelectorAll('.mat-ripple-element').forEach(el => {
+        dispatchFakeEvent(el, 'transitionend');
+      });
     }
 
     function blur() {
@@ -300,13 +312,21 @@ describe('MDC-based MatSlider' , () => {
 
     function pointerdown() {
       dispatchPointerOrTouchEvent(
-        thumbElement, PointerEventType.POINTER_DOWN, thumbX, thumbY, platform.IOS
+        thumbElement,
+        PointerEventType.POINTER_DOWN,
+        thumbX,
+        thumbY,
+        platform.IOS,
       );
     }
 
     function pointerup() {
       dispatchPointerOrTouchEvent(
-        thumbElement, PointerEventType.POINTER_UP, thumbX, thumbY, platform.IOS
+        thumbElement,
+        PointerEventType.POINTER_UP,
+        thumbX,
+        thumbY,
+        platform.IOS,
       );
     }
 
@@ -418,14 +438,16 @@ describe('MDC-based MatSlider' , () => {
       expect(inputInstance.value).toBe(55);
     });
 
-    it('should be able to set the min and max values when they are more precise ' +
-      'than the step', () => {
+    it(
+      'should be able to set the min and max values when they are more precise ' + 'than the step',
+      () => {
         sliderInstance.step = 10;
         slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
         expect(inputInstance.value).toBe(25);
         slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
         expect(inputInstance.value).toBe(75);
-    });
+      },
+    );
   });
 
   describe('range slider with set min and max', () => {
@@ -472,15 +494,17 @@ describe('MDC-based MatSlider' , () => {
       expect(endInputInstance.value).toBe(60);
     });
 
-    it('should be able to set the min and max values when they are more precise ' +
-      'than the step', () => {
+    it(
+      'should be able to set the min and max values when they are more precise ' + 'than the step',
+      () => {
         sliderInstance.step = 10;
         fixture.detectChanges();
         slideToValue(sliderInstance, 25, Thumb.START, platform.IOS);
         expect(startInputInstance.value).toBe(25);
         slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
         expect(endInputInstance.value).toBe(75);
-    });
+      },
+    );
   });
 
   describe('slider with set value', () => {
@@ -669,8 +693,9 @@ describe('MDC-based MatSlider' , () => {
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       const sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
-      valueIndicatorTextElement =
-        sliderNativeElement.querySelector('.mdc-slider__value-indicator-text')!;
+      valueIndicatorTextElement = sliderNativeElement.querySelector(
+        '.mdc-slider__value-indicator-text',
+      )!;
       inputInstance = sliderInstance._getInput(Thumb.END);
     });
 
@@ -711,10 +736,12 @@ describe('MDC-based MatSlider' , () => {
 
       const startThumbElement = sliderInstance._getThumbElement(Thumb.START);
       const endThumbElement = sliderInstance._getThumbElement(Thumb.END);
-      startValueIndicatorTextElement =
-        startThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
-      endValueIndicatorTextElement =
-        endThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
+      startValueIndicatorTextElement = startThumbElement.querySelector(
+        '.mdc-slider__value-indicator-text',
+      )!;
+      endValueIndicatorTextElement = endThumbElement.querySelector(
+        '.mdc-slider__value-indicator-text',
+      )!;
     });
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
@@ -841,8 +868,10 @@ describe('MDC-based MatSlider' , () => {
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
     });
 
-    it('should dispatch events when changing back to previously emitted value after ' +
-      'programmatically setting value', () => {
+    it(
+      'should dispatch events when changing back to previously emitted value after ' +
+        'programmatically setting value',
+      () => {
         const dispatchSliderEvent = (type: PointerEventType, value: number) => {
           const {x, y} = getCoordsForValue(sliderInstance, value);
           dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
@@ -875,7 +904,8 @@ describe('MDC-based MatSlider' , () => {
 
         expect(testComponent.onChange).toHaveBeenCalledTimes(2);
         expect(testComponent.onInput).toHaveBeenCalledTimes(2);
-    });
+      },
+    );
   });
 
   describe('range slider with change handlers', () => {
@@ -955,8 +985,10 @@ describe('MDC-based MatSlider' , () => {
       expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
     });
 
-    it('should dispatch events when changing back to previously emitted value after ' +
-      'programmatically setting the start value', () => {
+    it(
+      'should dispatch events when changing back to previously emitted value after ' +
+        'programmatically setting the start value',
+      () => {
         const dispatchSliderEvent = (type: PointerEventType, value: number) => {
           const {x, y} = getCoordsForValue(sliderInstance, value);
           dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
@@ -999,10 +1031,13 @@ describe('MDC-based MatSlider' , () => {
         expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(2);
         expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
         expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-    });
+      },
+    );
 
-    it('should dispatch events when changing back to previously emitted value after ' +
-      'programmatically setting the end value', () => {
+    it(
+      'should dispatch events when changing back to previously emitted value after ' +
+        'programmatically setting the end value',
+      () => {
         const dispatchSliderEvent = (type: PointerEventType, value: number) => {
           const {x, y} = getCoordsForValue(sliderInstance, value);
           dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
@@ -1045,7 +1080,8 @@ describe('MDC-based MatSlider' , () => {
         expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
         expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(2);
         expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(2);
-    });
+      },
+    );
   });
 
   describe('slider with input event', () => {
@@ -1200,10 +1236,12 @@ describe('MDC-based MatSlider' , () => {
     let inputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardSlider, [{
-        provide: Directionality,
-        useValue: ({value: 'rtl', change: of()})
-      }]);
+      const fixture = createComponent(StandardSlider, [
+        {
+          provide: Directionality,
+          useValue: {value: 'rtl', change: of()},
+        },
+      ]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
@@ -1222,10 +1260,12 @@ describe('MDC-based MatSlider' , () => {
     let endInputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardRangeSlider, [{
-        provide: Directionality,
-        useValue: ({value: 'rtl', change: of()})
-      }]);
+      const fixture = createComponent(StandardRangeSlider, [
+        {
+          provide: Directionality,
+          useValue: {value: 'rtl', change: of()},
+        },
+      ]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
@@ -1329,32 +1369,30 @@ describe('MDC-based MatSlider' , () => {
       expect(testComponent.endVal).toBe(19);
     });
 
-    it('should be able to reset a slider by setting the start thumb model back to undefined',
-      fakeAsync(() => {
-        expect(startInputInstance.value).toBe(0);
-        testComponent.startVal = 5;
-        fixture.detectChanges();
-        flush();
-        expect(startInputInstance.value).toBe(5);
+    it('should be able to reset a slider by setting the start thumb model back to undefined', fakeAsync(() => {
+      expect(startInputInstance.value).toBe(0);
+      testComponent.startVal = 5;
+      fixture.detectChanges();
+      flush();
+      expect(startInputInstance.value).toBe(5);
 
-        testComponent.startVal = undefined;
-        fixture.detectChanges();
-        flush();
-        expect(startInputInstance.value).toBe(0);
+      testComponent.startVal = undefined;
+      fixture.detectChanges();
+      flush();
+      expect(startInputInstance.value).toBe(0);
     }));
 
-    it('should be able to reset a slider by setting the end thumb model back to undefined',
-      fakeAsync(() => {
-        expect(endInputInstance.value).toBe(100);
-        testComponent.endVal = 5;
-        fixture.detectChanges();
-        flush();
-        expect(endInputInstance.value).toBe(5);
+    it('should be able to reset a slider by setting the end thumb model back to undefined', fakeAsync(() => {
+      expect(endInputInstance.value).toBe(100);
+      testComponent.endVal = 5;
+      fixture.detectChanges();
+      flush();
+      expect(endInputInstance.value).toBe(5);
 
-        testComponent.endVal = undefined;
-        fixture.detectChanges();
-        flush();
-        expect(endInputInstance.value).toBe(0);
+      testComponent.endVal = undefined;
+      fixture.detectChanges();
+      flush();
+      expect(endInputInstance.value).toBe(0);
     }));
   });
 
@@ -1760,7 +1798,9 @@ class RangeSliderWithStep {}
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) { return `$${v / 1000}k`; }
+    if (v >= 1000) {
+      return `$${v / 1000}k`;
+    }
     return `$${v}`;
   }
 }
@@ -1776,7 +1816,9 @@ class DiscreteSliderWithDisplayWith {
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) { return `$${v / 1000}k`; }
+    if (v >= 1000) {
+      return `$${v / 1000}k`;
+    }
     return `$${v}`;
   }
 }
@@ -1968,20 +2010,25 @@ function getCoordsForValue(slider: MatSlider, value: number): Point {
   const percent = (value - min) / (max - min);
 
   const {top, left, width, height} = slider._elementRef.nativeElement.getBoundingClientRect();
-  const x = left + (width * percent);
-  const y = top + (height / 2);
+  const x = left + width * percent;
+  const y = top + height / 2;
 
   return {x, y};
 }
 
 /** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
 function dispatchPointerOrTouchEvent(
-  node: Node, type: PointerEventType, x: number, y: number, isIOS: boolean) {
-    if (isIOS) {
-      dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
-    } else {
-      dispatchPointerEvent(node, type, x, y);
-    }
+  node: Node,
+  type: PointerEventType,
+  x: number,
+  y: number,
+  isIOS: boolean,
+) {
+  if (isIOS) {
+    dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
+  } else {
+    dispatchPointerEvent(node, type, x, y);
+  }
 }
 
 /** Returns the touch event equivalent of the given pointer event. */

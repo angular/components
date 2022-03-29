@@ -8,22 +8,24 @@
 
 import {Directive, ElementRef, Inject, InjectionToken, NgZone, Optional} from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-
+import {take} from 'rxjs/operators';
 
 /**
  * Interface for a a MatInkBar positioner method, defining the positioning and width of the ink
  * bar in a set of tabs.
  */
 export interface _MatInkBarPositioner {
-  (element: HTMLElement): { left: string, width: string };
+  (element: HTMLElement): {left: string; width: string};
 }
 
 /** Injection token for the MatInkBar's Positioner. */
-export const _MAT_INK_BAR_POSITIONER =
-  new InjectionToken<_MatInkBarPositioner>('MatInkBarPositioner', {
+export const _MAT_INK_BAR_POSITIONER = new InjectionToken<_MatInkBarPositioner>(
+  'MatInkBarPositioner',
+  {
     providedIn: 'root',
-    factory: _MAT_INK_BAR_POSITIONER_FACTORY
-  });
+    factory: _MAT_INK_BAR_POSITIONER_FACTORY,
+  },
+);
 
 /**
  * The default positioner function for the MatInkBar.
@@ -54,7 +56,8 @@ export class MatInkBar {
     private _elementRef: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
     @Inject(_MAT_INK_BAR_POSITIONER) private _inkBarPositioner: _MatInkBarPositioner,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) { }
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+  ) {}
 
   /**
    * Calculates the styles from the provided element in order to align the ink-bar to that element.
@@ -63,14 +66,12 @@ export class MatInkBar {
    */
   alignToElement(element: HTMLElement) {
     this.show();
-
-    if (typeof requestAnimationFrame !== 'undefined') {
-      this._ngZone.runOutsideAngular(() => {
-        requestAnimationFrame(() => this._setStyles(element));
-      });
-    } else {
-      this._setStyles(element);
-    }
+    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+      const positions = this._inkBarPositioner(element);
+      const inkBar: HTMLElement = this._elementRef.nativeElement;
+      inkBar.style.left = positions.left;
+      inkBar.style.width = positions.width;
+    });
   }
 
   /** Shows the ink bar. */
@@ -81,17 +82,5 @@ export class MatInkBar {
   /** Hides the ink bar. */
   hide(): void {
     this._elementRef.nativeElement.style.visibility = 'hidden';
-  }
-
-  /**
-   * Sets the proper styles to the ink bar element.
-   * @param element
-   */
-  private _setStyles(element: HTMLElement) {
-    const positions = this._inkBarPositioner(element);
-    const inkBar: HTMLElement = this._elementRef.nativeElement;
-
-    inkBar.style.left = positions.left;
-    inkBar.style.width = positions.width;
   }
 }

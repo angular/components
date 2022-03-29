@@ -10,7 +10,7 @@ import {
   createInfoWindowConstructorSpy,
   createInfoWindowSpy,
   createMapConstructorSpy,
-  createMapSpy
+  createMapSpy,
 } from '../testing/fake-google-map-utils';
 import {MapInfoWindow} from './map-info-window';
 
@@ -38,7 +38,7 @@ describe('MapInfoWindow', () => {
   it('initializes a Google Map Info Window', () => {
     const infoWindowSpy = createInfoWindowSpy({});
     const infoWindowConstructorSpy =
-        createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
+      createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
@@ -53,7 +53,7 @@ describe('MapInfoWindow', () => {
     const position: google.maps.LatLngLiteral = {lat: 5, lng: 7};
     const infoWindowSpy = createInfoWindowSpy({position});
     const infoWindowConstructorSpy =
-        createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
+      createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.position = position;
@@ -73,7 +73,7 @@ describe('MapInfoWindow', () => {
     };
     const infoWindowSpy = createInfoWindowSpy(options);
     const infoWindowConstructorSpy =
-        createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
+      createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
@@ -94,7 +94,7 @@ describe('MapInfoWindow', () => {
     };
     const infoWindowSpy = createInfoWindowSpy({...options, position});
     const infoWindowConstructorSpy =
-        createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
+      createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
@@ -112,35 +112,43 @@ describe('MapInfoWindow', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
     const fakeMarkerComponent = {
       marker: fakeMarker,
-      getAnchor: () => fakeMarker
+      getAnchor: () => fakeMarker,
     } as unknown as MapMarker;
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const infoWindowComponent = fixture.debugElement.query(By.directive(
-        MapInfoWindow))!.injector.get<MapInfoWindow>(MapInfoWindow);
+    const infoWindowComponent = fixture.debugElement
+      .query(By.directive(MapInfoWindow))!
+      .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
 
     infoWindowComponent.close();
     expect(infoWindowSpy.close).toHaveBeenCalled();
 
     infoWindowComponent.open(fakeMarkerComponent);
-    expect(infoWindowSpy.open).toHaveBeenCalledWith(mapSpy, fakeMarker);
+    expect(infoWindowSpy.open).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        map: mapSpy,
+        anchor: fakeMarker,
+        shouldFocus: undefined,
+      }),
+    );
   });
 
   it('should not try to reopen info window multiple times for the same marker', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
     const fakeMarkerComponent = {
       marker: fakeMarker,
-      getAnchor: () => fakeMarker
+      getAnchor: () => fakeMarker,
     } as unknown as MapMarker;
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const infoWindowComponent = fixture.debugElement.query(By.directive(
-        MapInfoWindow))!.injector.get<MapInfoWindow>(MapInfoWindow);
+    const infoWindowComponent = fixture.debugElement
+      .query(By.directive(MapInfoWindow))!
+      .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
 
     infoWindowComponent.open(fakeMarkerComponent);
@@ -159,8 +167,9 @@ describe('MapInfoWindow', () => {
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const infoWindowComponent = fixture.debugElement.query(By.directive(
-        MapInfoWindow))!.injector.get<MapInfoWindow>(MapInfoWindow);
+    const infoWindowComponent = fixture.debugElement
+      .query(By.directive(MapInfoWindow))!
+      .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
 
     infoWindowSpy.getContent.and.returnValue('test content');
@@ -211,14 +220,37 @@ describe('MapInfoWindow', () => {
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const infoWindowComponent = fixture.debugElement.query(By.directive(
-        MapInfoWindow))!.injector.get<MapInfoWindow>(MapInfoWindow);
+    const infoWindowComponent = fixture.debugElement
+      .query(By.directive(MapInfoWindow))!
+      .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
 
     infoWindowComponent.open();
     expect(infoWindowSpy.open).toHaveBeenCalledTimes(1);
   });
 
+  it('should allow for the focus behavior to be changed when opening the info window', () => {
+    const fakeMarker = {} as unknown as google.maps.Marker;
+    const fakeMarkerComponent = {
+      marker: fakeMarker,
+      getAnchor: () => fakeMarker,
+    } as unknown as MapMarker;
+    const infoWindowSpy = createInfoWindowSpy({});
+    createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
+
+    const fixture = TestBed.createComponent(TestApp);
+    const infoWindowComponent = fixture.debugElement
+      .query(By.directive(MapInfoWindow))!
+      .injector.get<MapInfoWindow>(MapInfoWindow);
+    fixture.detectChanges();
+
+    infoWindowComponent.open(fakeMarkerComponent, false);
+    expect(infoWindowSpy.open).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        shouldFocus: false,
+      }),
+    );
+  });
 });
 
 @Component({

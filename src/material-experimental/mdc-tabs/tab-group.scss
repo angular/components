@@ -1,18 +1,14 @@
-@use '@material/tab' as mdc-tab;
-@use '../../material/core/style/variables';
-@use '../../material/core/style/private';
-@use '../mdc-helpers/mdc-helpers';
+@use '@angular/material' as mat;
+
 @use './tabs-common';
 
-@include mdc-tab.without-ripple($query: mdc-helpers.$mat-base-styles-query);
-@include tabs-common.tab-ripple;
+@include tabs-common.structural-styles;
 
 .mat-mdc-tab {
   @include tabs-common.tab;
 
-  // Note that we only want to target direct descendant tabs. Also note that
-  // `mat-stretch-tabs` is part of the public API so it should not be changed to `mat-mdc-`.
-  .mat-mdc-tab-group[mat-stretch-tabs] > .mat-mdc-tab-header & {
+  // Note that we only want to target direct descendant tabs.
+  .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs > .mat-mdc-tab-header & {
     flex-grow: 1;
   }
 }
@@ -27,6 +23,9 @@
   display: flex;
   flex-direction: column;
 
+  // Fixes pagination issues inside flex containers (see #23157).
+  max-width: 100%;
+
   &.mat-mdc-tab-group-inverted-header {
     flex-direction: column-reverse;
 
@@ -38,9 +37,10 @@
 
 // The bottom section of the view; contains the tab bodies
 .mat-mdc-tab-body-wrapper {
-  @include private.private-animation-noop();
+  @include mat.private-animation-noop();
   position: relative;
   overflow: hidden;
   display: flex;
-  transition: height tabs-common.$mat-tab-animation-duration variables.$ease-in-out-curve-function;
+  transition: height tabs-common.$mat-tab-animation-duration
+    mat.$private-ease-in-out-curve-function;
 }

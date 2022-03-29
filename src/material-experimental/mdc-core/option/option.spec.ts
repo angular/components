@@ -6,16 +6,15 @@ import {
   dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
-} from '@angular/cdk/testing/private';
+} from '../../../cdk/testing/private';
 import {SPACE, ENTER} from '@angular/cdk/keycodes';
 import {MatOption, MatOptionModule, MAT_OPTION_PARENT_COMPONENT} from './index';
 
 describe('MatOption component', () => {
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatOptionModule],
-      declarations: [BasicOption]
+      declarations: [BasicOption],
     }).compileComponents();
   }));
 
@@ -23,8 +22,9 @@ describe('MatOption component', () => {
     const fixture = TestBed.createComponent(BasicOption);
     fixture.detectChanges();
 
-    const optionInstance: MatOption =
-        fixture.debugElement.query(By.directive(MatOption))!.componentInstance;
+    const optionInstance: MatOption = fixture.debugElement.query(
+      By.directive(MatOption),
+    )!.componentInstance;
     const completeSpy = jasmine.createSpy('complete spy');
     const subscription = optionInstance._stateChanges.subscribe({complete: completeSpy});
 
@@ -37,8 +37,9 @@ describe('MatOption component', () => {
     const fixture = TestBed.createComponent(BasicOption);
     fixture.detectChanges();
 
-    const optionInstance: MatOption =
-        fixture.debugElement.query(By.directive(MatOption))!.componentInstance;
+    const optionInstance: MatOption = fixture.debugElement.query(
+      By.directive(MatOption),
+    )!.componentInstance;
 
     optionInstance.select();
     expect(optionInstance.selected).toBe(true);
@@ -59,8 +60,9 @@ describe('MatOption component', () => {
     const fixture = TestBed.createComponent(BasicOption);
     fixture.detectChanges();
 
-    const optionInstance: MatOption =
-        fixture.debugElement.query(By.directive(MatOption))!.componentInstance;
+    const optionInstance: MatOption = fixture.debugElement.query(
+      By.directive(MatOption),
+    )!.componentInstance;
 
     optionInstance.deselect();
     expect(optionInstance.selected).toBe(false);
@@ -163,20 +165,25 @@ describe('MatOption component', () => {
     });
 
     it('should show ripples by default', () => {
-      expect(optionInstance.disableRipple).toBeFalsy('Expected ripples to be enabled by default');
+      expect(optionInstance.disableRipple)
+        .withContext('Expected ripples to be enabled by default')
+        .toBeFalsy();
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up initially');
+        .withContext('Expected no ripples to show up initially')
+        .toBe(0);
 
       dispatchFakeEvent(optionNativeElement, 'mousedown');
       dispatchFakeEvent(optionNativeElement, 'mouseup');
 
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(1, 'Expected one ripple to show up after a fake click.');
+        .withContext('Expected one ripple to show up after a fake click.')
+        .toBe(1);
     });
 
     it('should not show ripples if the option is disabled', () => {
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up initially');
+        .withContext('Expected no ripples to show up initially')
+        .toBe(0);
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
@@ -185,9 +192,9 @@ describe('MatOption component', () => {
       dispatchFakeEvent(optionNativeElement, 'mouseup');
 
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up after click on a disabled option.');
+        .withContext('Expected no ripples to show up after click on a disabled option.')
+        .toBe(0);
     });
-
   });
 
   it('should have a focus indicator', () => {
@@ -205,10 +212,12 @@ describe('MatOption component', () => {
       TestBed.configureTestingModule({
         imports: [MatOptionModule],
         declarations: [InsideGroup],
-        providers: [{
-          provide: MAT_OPTION_PARENT_COMPONENT,
-          useValue: {inertGroups: true}
-        }]
+        providers: [
+          {
+            provide: MAT_OPTION_PARENT_COMPONENT,
+            useValue: {inertGroups: true},
+          },
+        ],
       }).compileComponents();
 
       fixture = TestBed.createComponent(InsideGroup);
@@ -227,25 +236,21 @@ describe('MatOption component', () => {
       expect(option.textContent?.trim()).toBe('Option(Group)');
     });
   });
-
-
 });
 
 @Component({
-  template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`
+  template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`,
 })
 class BasicOption {
   disabled: boolean;
   id: string;
 }
 
-
 @Component({
   template: `
     <mat-optgroup label="Group">
       <mat-option>Option</mat-option>
     </mat-optgroup>
-  `
+  `,
 })
-class InsideGroup {
-}
+class InsideGroup {}

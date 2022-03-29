@@ -12,9 +12,7 @@ describe('Chip Remove', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
-      declarations: [
-        TestChip
-      ]
+      declarations: [TestChip],
     });
 
     TestBed.compileComponents();
@@ -76,7 +74,6 @@ describe('Chip Remove', () => {
 
       expect(testChip.didRemove).not.toHaveBeenCalled();
     });
-
   });
 });
 
@@ -89,7 +86,7 @@ describe('Chip Remove', () => {
       <button matChipRemove></button>
       <span matChipRemove></span>
     </mat-chip>
-  `
+  `,
 })
 class TestChip {
   removable: boolean;

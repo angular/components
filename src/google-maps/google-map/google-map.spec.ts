@@ -26,9 +26,7 @@ describe('GoogleMap', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        GoogleMapsModule,
-      ],
+      imports: [GoogleMapsModule],
       declarations: [TestApp],
     });
   }));
@@ -46,12 +44,14 @@ describe('GoogleMap', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy, false);
 
-    expect(() => TestBed.createComponent(TestApp))
-        .toThrow(new Error(
-            'Namespace google not found, cannot construct embedded google ' +
-            'map. Please install the Google Maps JavaScript API: ' +
-            'https://developers.google.com/maps/documentation/javascript/' +
-            'tutorial#Loading_the_Maps_API'));
+    expect(() => TestBed.createComponent(TestApp)).toThrow(
+      new Error(
+        'Namespace google not found, cannot construct embedded google ' +
+          'map. Please install the Google Maps JavaScript API: ' +
+          'https://developers.google.com/maps/documentation/javascript/' +
+          'tutorial#Loading_the_Maps_API',
+      ),
+    );
   });
 
   it('initializes a Google map', () => {
@@ -151,7 +151,7 @@ describe('GoogleMap', () => {
       center: {lat: 3, lng: 5},
       zoom: 7,
       draggable: false,
-      mapTypeId: DEFAULT_OPTIONS.mapTypeId
+      mapTypeId: DEFAULT_OPTIONS.mapTypeId,
     };
     mapSpy = createMapSpy(options);
     mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
@@ -211,7 +211,7 @@ describe('GoogleMap', () => {
       center: {lat: 12, lng: 15},
       zoom: 5,
       heading: 170,
-      mapTypeId: DEFAULT_OPTIONS.mapTypeId
+      mapTypeId: DEFAULT_OPTIONS.mapTypeId,
     };
     mapSpy = createMapSpy(correctedOptions);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
@@ -257,7 +257,7 @@ describe('GoogleMap', () => {
 
     const component = fixture.debugElement.query(By.directive(GoogleMap)).componentInstance;
 
-    mapSpy.getBounds.and.returnValue(null);
+    mapSpy.getBounds.and.returnValue(undefined);
     expect(component.getBounds()).toBe(null);
 
     component.getCenter();
@@ -272,7 +272,7 @@ describe('GoogleMap', () => {
     component.getMapTypeId();
     expect(mapSpy.getMapTypeId).toHaveBeenCalled();
 
-    mapSpy.getProjection.and.returnValue(null);
+    mapSpy.getProjection.and.returnValue(undefined);
     expect(component.getProjection()).toBe(null);
 
     component.getStreetView();
@@ -339,8 +339,10 @@ describe('GoogleMap', () => {
     fixture.componentInstance.mapTypeId = 'terrain' as unknown as google.maps.MapTypeId;
     fixture.detectChanges();
 
-    expect(mapConstructorSpy).toHaveBeenCalledWith(jasmine.any(HTMLElement),
-      jasmine.objectContaining({mapTypeId: 'terrain'}));
+    expect(mapConstructorSpy).toHaveBeenCalledWith(
+      jasmine.any(HTMLElement),
+      jasmine.objectContaining({mapTypeId: 'terrain'}),
+    );
 
     fixture.componentInstance.mapTypeId = 'roadmap' as unknown as google.maps.MapTypeId;
     fixture.detectChanges();
@@ -357,6 +359,18 @@ describe('GoogleMap', () => {
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].mapTypeId).toBe('satellite');
+  });
+
+  it('should emit mapInitialized event when the map is initialized', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.mapInitializedSpy).toHaveBeenCalledOnceWith(
+      fixture.componentInstance.map.googleMap,
+    );
   });
 
   it('should emit authFailure event when window.gm_authFailure is called', () => {
@@ -393,7 +407,8 @@ describe('GoogleMap', () => {
                          [mapTypeId]="mapTypeId"
                          (mapClick)="handleClick($event)"
                          (centerChanged)="handleCenterChanged()"
-                         (mapRightclick)="handleRightclick($event)">
+                         (mapRightclick)="handleRightclick($event)"
+                         (mapInitialized)="mapInitializedSpy($event)">
             </google-map>`,
 })
 class TestApp {
@@ -408,4 +423,5 @@ class TestApp {
   handleClick(event: google.maps.MapMouseEvent) {}
   handleCenterChanged() {}
   handleRightclick(event: google.maps.MapMouseEvent) {}
+  mapInitializedSpy = jasmine.createSpy('mapInitialized');
 }

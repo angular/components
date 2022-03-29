@@ -1,26 +1,17 @@
-import {
-  ComponentFixture,
-  waitForAsync,
-  TestBed, tick, fakeAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {
-  CdkOption,
-  CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox
-} from './index';
+import {CdkListbox, CdkListboxModule, CdkOption, ListboxSelectionChangeEvent} from './index';
 import {
   createKeyboardEvent,
   dispatchKeyboardEvent,
-  dispatchMouseEvent
-} from '@angular/cdk/testing/private';
+  dispatchMouseEvent,
+} from '../../cdk/testing/private';
 import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkCombobox, CdkComboboxModule, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
-
+import {CdkCombobox, CdkComboboxModule} from '@angular/cdk-experimental/combobox';
 
 describe('CdkOption and CdkListbox', () => {
-
   describe('selection state change', () => {
     let fixture: ComponentFixture<ListboxWithOptions>;
 
@@ -337,8 +328,7 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
-      const downKeyEvent =
-        createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
+      const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
 
       expect(selectedOptions.length).toBe(0);
       expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
@@ -582,7 +572,6 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(listboxElement.hasAttribute('aria-activedescendant')).toBeFalse();
       expect(document.activeElement).toEqual(optionElements[1]);
-
     });
   });
 
@@ -620,15 +609,18 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should be able to set the disabled state via setDisabledState', () => {
       expect(listboxInstance.disabled)
-          .toBe(false, 'Expected the selection list to be enabled.');
+        .withContext('Expected the selection list to be enabled.')
+        .toBe(false);
       expect(optionInstances.every(option => !option.disabled))
-          .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
 
       listboxInstance.setDisabledState(true);
       fixture.detectChanges();
 
       expect(listboxInstance.disabled)
-          .toBe(true, 'Expected the selection list to be disabled.');
+        .withContext('Expected the selection list to be disabled.')
+        .toBe(true);
       for (const option of optionElements) {
         expect(option.getAttribute('aria-disabled')).toBe('true');
       }
@@ -636,7 +628,8 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should be able to select options via writeValue', () => {
       expect(optionInstances.every(option => !option.disabled))
-          .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
 
       listboxInstance.writeValue('arc');
       fixture.detectChanges();
@@ -651,7 +644,8 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should be select multiple options by their values', () => {
       expect(optionInstances.every(option => !option.disabled))
-          .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
 
       testComponent.isMultiselectable = true;
       fixture.detectChanges();
@@ -676,7 +670,8 @@ describe('CdkOption and CdkListbox', () => {
     it('should be able to disable options from the control', () => {
       expect(testComponent.listbox.disabled).toBeFalse();
       expect(optionInstances.every(option => !option.disabled))
-          .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
 
       testComponent.form.disable();
       fixture.detectChanges();
@@ -687,10 +682,11 @@ describe('CdkOption and CdkListbox', () => {
       }
     });
 
-    it('should be able to toggle disabled state after form control is disabled',  () => {
+    it('should be able to toggle disabled state after form control is disabled', () => {
       expect(testComponent.listbox.disabled).toBeFalse();
       expect(optionInstances.every(option => !option.disabled))
-          .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
 
       testComponent.form.disable();
       fixture.detectChanges();
@@ -705,7 +701,8 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(testComponent.listbox.disabled).toBeFalse();
       expect(optionInstances.every(option => !option.disabled))
-          .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
     });
 
     it('should be able to select options via setting the value in form control', () => {
@@ -802,7 +799,6 @@ describe('CdkOption and CdkListbox', () => {
       combobox = fixture.debugElement.query(By.directive(CdkCombobox));
       comboboxInstance = combobox.injector.get<CdkCombobox<string>>(CdkCombobox);
       comboboxElement = combobox.nativeElement;
-
     });
 
     it('should update combobox value on selection of an option', () => {
@@ -875,7 +871,7 @@ describe('CdkOption and CdkListbox', () => {
 
       listboxInstance.setActiveOption(optionInstances[1]);
       dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
-      testComponent.panel.closePanel(testComponent.listbox.getSelectedValues());
+      testComponent.combobox.updateAndClose(testComponent.listbox.getSelectedValues());
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -899,7 +895,7 @@ describe('CdkOption and CdkListbox', () => {
       </div>
       <div cdkOption>Arc</div>
       <div cdkOption>Stasis</div>
-    </div>`
+    </div>`,
 })
 class ListboxWithOptions {
   changedOption: CdkOption;
@@ -921,7 +917,7 @@ class ListboxWithOptions {
       <div cdkOption>Solar</div>
       <div cdkOption>Arc</div>
       <div cdkOption>Stasis</div>
-    </div>`
+    </div>`,
 })
 class ListboxMultiselect {
   changedOption: CdkOption;
@@ -940,7 +936,7 @@ class ListboxMultiselect {
       <div cdkOption>Solar</div>
       <div cdkOption>Arc</div>
       <div cdkOption>Stasis</div>
-    </div>`
+    </div>`,
 })
 class ListboxActiveDescendant {
   changedOption: CdkOption;
@@ -968,7 +964,7 @@ class ListboxActiveDescendant {
       <option cdkOption [value]="'solar'">Solar</option>
       <option cdkOption [value]="'arc'">Arc</option>
       <option cdkOption [value]="'stasis'">Stasis</option>
-    </select>`
+    </select>`,
 })
 class ListboxControlValueAccessor {
   form = new FormControl();
@@ -991,9 +987,8 @@ class ListboxControlValueAccessor {
       No Value
     </button>
 
-    <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
+    <ng-template #panel>
       <select cdkListbox
-              [parentPanel]="panel"
               [disabled]="isDisabled"
               [multiple]="isMultiselectable"
               (selectionChange)="onSelectionChange($event)">
@@ -1003,14 +998,14 @@ class ListboxControlValueAccessor {
         <option cdkOption [value]="'stasis'">Stasis</option>
       </select>
     </ng-template>
-  `
+  `,
 })
 class ListboxInsideCombobox {
   changedOption: CdkOption<string>;
   isDisabled: boolean = false;
   isMultiselectable: boolean = false;
   @ViewChild(CdkListbox) listbox: CdkListbox<string>;
-  @ViewChild('panel') panel: CdkComboboxPanel<string>;
+  @ViewChild(CdkCombobox) combobox: CdkCombobox;
 
   onSelectionChange(event: ListboxSelectionChangeEvent<string>) {
     this.changedOption = event.option;

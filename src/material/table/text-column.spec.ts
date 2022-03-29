@@ -10,9 +10,7 @@ describe('MatTextColumn', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTableModule],
-      declarations: [
-        BasicTextColumnApp,
-      ],
+      declarations: [BasicTextColumnApp],
     }).compileComponents();
   }));
 
@@ -48,7 +46,7 @@ interface TestData {
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
-  `
+  `,
 })
 class BasicTextColumnApp {
   displayedColumns = ['propertyA', 'propertyB', 'propertyC'];

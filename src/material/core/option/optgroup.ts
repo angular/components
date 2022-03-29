@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
   InjectionToken,
   Input,
   ViewEncapsulation,
-  Directive, Inject, Optional
+  Directive,
+  Inject,
+  Optional,
 } from '@angular/core';
 import {CanDisable, mixinDisabled} from '../common-behaviors/disabled';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
@@ -60,8 +61,6 @@ export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisabl
     super();
     this._inert = parent?.inertGroups ?? false;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**
@@ -91,5 +90,4 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   },
   providers: [{provide: MAT_OPTGROUP, useExisting: MatOptgroup}],
 })
-export class MatOptgroup extends _MatOptgroupBase {
-}
+export class MatOptgroup extends _MatOptgroupBase {}

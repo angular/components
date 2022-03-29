@@ -5,8 +5,6 @@ import {CdkMenuModule} from './menu-module';
 import {CdkMenuGroup} from './menu-group';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItemRadio} from './menu-item-radio';
-import {CdkMenuPanel} from './menu-panel';
-import {MenuStack} from './menu-stack';
 import {CdkMenuItem} from './menu-item';
 
 describe('MenuGroup', () => {
@@ -23,7 +21,6 @@ describe('MenuGroup', () => {
       fixture = TestBed.createComponent(CheckboxMenu);
       fixture.detectChanges();
 
-      fixture.componentInstance.panel._menuStack = new MenuStack();
       fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
       fixture.detectChanges();
 
@@ -52,7 +49,6 @@ describe('MenuGroup', () => {
       fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
       fixture.detectChanges();
 
-      fixture.componentInstance.panel._menuStack = new MenuStack();
       fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
       fixture.detectChanges();
 
@@ -98,7 +94,6 @@ describe('MenuGroup', () => {
       fixture = TestBed.createComponent(MenuWithMenuItemsAndRadioGroups);
       fixture.detectChanges();
 
-      fixture.componentInstance.panel._menuStack = new MenuStack();
       fixture.componentInstance.trigger.getMenuTrigger()?.toggle();
       fixture.detectChanges();
 
@@ -145,8 +140,8 @@ describe('MenuGroup', () => {
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
     </div>
-    <ng-template cdkMenuPanel #panel="cdkMenuPanel">
-      <ul cdkMenu [cdkMenuPanel]="panel">
+    <ng-template #panel>
+      <ul cdkMenu>
         <li role="none">
           <ul cdkMenuGroup>
             <li #first role="none">
@@ -167,7 +162,6 @@ describe('MenuGroup', () => {
 })
 class CheckboxMenu {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
-  @ViewChild(CdkMenuPanel) readonly panel: CdkMenuPanel;
 }
 
 @Component({
@@ -175,8 +169,8 @@ class CheckboxMenu {
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
     </div>
-    <ng-template cdkMenuPanel #panel="cdkMenuPanel">
-      <ul cdkMenu [cdkMenuPanel]="panel">
+    <ng-template #panel>
+      <ul cdkMenu>
         <li role="none">
           <ul cdkMenuGroup>
             <li role="none">
@@ -211,7 +205,6 @@ class CheckboxMenu {
 })
 class MenuWithMultipleRadioGroups {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
-  @ViewChild(CdkMenuPanel) readonly panel: CdkMenuPanel;
 }
 
 @Component({
@@ -219,8 +212,8 @@ class MenuWithMultipleRadioGroups {
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
     </div>
-    <ng-template cdkMenuPanel #panel="cdkMenuPanel">
-      <ul cdkMenu [cdkMenuPanel]="panel">
+    <ng-template #panel>
+      <ul cdkMenu>
         <li role="none">
           <ul cdkMenuGroup>
             <li role="none">
@@ -254,5 +247,4 @@ class MenuWithMultipleRadioGroups {
 })
 class MenuWithMenuItemsAndRadioGroups {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
-  @ViewChild(CdkMenuPanel) readonly panel: CdkMenuPanel;
 }

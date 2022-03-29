@@ -1,11 +1,11 @@
-import {browser, by, element, ExpectedConditions, Key, protractor} from 'protractor';
+import {browser, by, element, ExpectedConditions, Key} from 'protractor';
 import {
   expectAlignedWith,
   expectFocusOn,
   expectLocation,
   expectToExist,
   pressKeys,
-} from '@angular/cdk/testing/private/e2e';
+} from '../../cdk/testing/private/e2e';
 
 const presenceOf = ExpectedConditions.presenceOf;
 const not = ExpectedConditions.not;
@@ -135,7 +135,8 @@ describe('MDC-based menu', () => {
       await pressKeys(Key.TAB, Key.ENTER);
       await expectToExist(menuSelector);
 
-      await pressKeys(protractor.Key.chord(Key.SHIFT, Key.TAB));
+      // Press SHIFT+TAB, but make sure to release SHIFT again.
+      await pressKeys(Key.SHIFT, Key.TAB, Key.SHIFT);
       await expectToExist(menuSelector, false);
     });
 
@@ -149,20 +150,19 @@ describe('MDC-based menu', () => {
     });
 
     it('should focus before and after trigger when tabbing past items', async () => {
-      let shiftTab = protractor.Key.chord(Key.SHIFT, Key.TAB);
+      // Press SHIFT+TAB, but make sure to release SHIFT again.
+      let shiftTab = [Key.SHIFT, Key.TAB, Key.SHIFT];
 
       await pressKeys(Key.ENTER, Key.TAB);
       await expectFocusOn(page.triggerTwo());
 
       // navigate back to trigger
-      await pressKeys(shiftTab, Key.ENTER, shiftTab);
+      await pressKeys(...shiftTab, Key.ENTER, ...shiftTab);
       await expectFocusOn(page.start());
     });
-
   });
 
   describe('position - ', () => {
-
     it('should default menu alignment to "after below" when not set', async () => {
       await page.trigger().click();
 
@@ -203,6 +203,5 @@ describe('MDC-based menu', () => {
       // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y
       await expectLocation(page.combinedMenu(), {x: trigger.x - 52, y: trigger.y - 44});
     });
-
   });
 });

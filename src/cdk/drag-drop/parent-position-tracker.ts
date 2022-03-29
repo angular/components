@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {getMutableClientRect, adjustClientRect} from './client-rect';
 
 /** Object holding the scroll position of something. */
@@ -18,12 +18,15 @@ interface ScrollPosition {
 /** Keeps track of the scroll position and dimensions of the parents of an element. */
 export class ParentPositionTracker {
   /** Cached positions of the scrollable parent elements. */
-  readonly positions = new Map<Document|HTMLElement, {
-    scrollPosition: ScrollPosition,
-    clientRect?: ClientRect
-  }>();
+  readonly positions = new Map<
+    Document | HTMLElement,
+    {
+      scrollPosition: ScrollPosition;
+      clientRect?: ClientRect;
+    }
+  >();
 
-  constructor(private _document: Document, private _viewportRuler: ViewportRuler) {}
+  constructor(private _document: Document) {}
 
   /** Clears the cached positions. */
   clear() {
@@ -34,36 +37,32 @@ export class ParentPositionTracker {
   cache(elements: readonly HTMLElement[]) {
     this.clear();
     this.positions.set(this._document, {
-      scrollPosition: this._viewportRuler.getViewportScrollPosition(),
+      scrollPosition: this.getViewportScrollPosition(),
     });
 
     elements.forEach(element => {
       this.positions.set(element, {
         scrollPosition: {top: element.scrollTop, left: element.scrollLeft},
-        clientRect: getMutableClientRect(element)
+        clientRect: getMutableClientRect(element),
       });
     });
   }
 
   /** Handles scrolling while a drag is taking place. */
   handleScroll(event: Event): ScrollPosition | null {
-    const target = getEventTarget(event);
+    const target = _getEventTarget<HTMLElement | Document>(event)!;
     const cachedPosition = this.positions.get(target);
 
     if (!cachedPosition) {
       return null;
     }
 
-    // Used when figuring out whether an element is inside the scroll parent. If the scrolled
-    // parent is the `document`, we use the `documentElement`, because IE doesn't support
-    // `contains` on the `document`.
-    const scrolledParentNode = target === this._document ? target.documentElement : target;
     const scrollPosition = cachedPosition.scrollPosition;
     let newTop: number;
     let newLeft: number;
 
     if (target === this._document) {
-      const viewportScrollPosition = this._viewportRuler!.getViewportScrollPosition();
+      const viewportScrollPosition = this.getViewportScrollPosition();
       newTop = viewportScrollPosition.top;
       newLeft = viewportScrollPosition.left;
     } else {
@@ -77,7 +76,7 @@ export class ParentPositionTracker {
     // Go through and update the cached positions of the scroll
     // parents that are inside the element that was scrolled.
     this.positions.forEach((position, node) => {
-      if (position.clientRect && target !== node && scrolledParentNode.contains(node)) {
+      if (position.clientRect && target !== node && target.contains(node)) {
         adjustClientRect(position.clientRect, topDifference, leftDifference);
       }
     });
@@ -87,9 +86,14 @@ export class ParentPositionTracker {
 
     return {top: topDifference, left: leftDifference};
   }
-}
 
-/** Gets the target of an event while accounting for shadow dom. */
-export function getEventTarget(event: Event): HTMLElement | Document {
-  return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | Document;
+  /**
+   * Gets the scroll position of the viewport. Note that we use the scrollX and scrollY directly,
+   * instead of going through the `ViewportRuler`, because the first value the ruler looks at is
+   * the top/left offset of the `document.documentElement` which works for most cases, but breaks
+   * if the element is offset by something like the `BlockScrollStrategy`.
+   */
+  getViewportScrollPosition() {
+    return {top: window.scrollY, left: window.scrollX};
+  }
 }

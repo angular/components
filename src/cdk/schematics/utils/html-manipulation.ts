@@ -8,7 +8,7 @@
 
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
 import {getChildElementIndentation} from './parse5-element';
-import {DefaultTreeDocument, DefaultTreeElement, parse as parseHtml} from 'parse5';
+import {Element, parse as parseHtml} from 'parse5';
 
 /** Appends the given element HTML fragment to the `<head>` element of the specified HTML file. */
 export function appendHtmlElementToHead(host: Tree, htmlFilePath: string, elementHtml: string) {
@@ -36,15 +36,13 @@ export function appendHtmlElementToHead(host: Tree, htmlFilePath: string, elemen
   const indentationOffset = getChildElementIndentation(headTag);
   const insertion = `${' '.repeat(indentationOffset)}${elementHtml}`;
 
-  const recordedChange = host
-    .beginUpdate(htmlFilePath)
-    .insertRight(endTagOffset, `${insertion}\n`);
+  const recordedChange = host.beginUpdate(htmlFilePath).insertRight(endTagOffset, `${insertion}\n`);
 
   host.commitUpdate(recordedChange);
 }
 
 /** Parses the given HTML file and returns the head element if available. */
-export function getHtmlHeadTagElement(htmlContent: string): DefaultTreeElement | null {
+export function getHtmlHeadTagElement(htmlContent: string): Element | null {
   return getElementByTagName('head', htmlContent);
 }
 
@@ -66,10 +64,15 @@ export function addBodyClass(host: Tree, htmlFilePath: string, className: string
   const classAttribute = body.attrs.find(attribute => attribute.name === 'class');
 
   if (classAttribute) {
-    const hasClass = classAttribute.value.split(' ').map(part => part.trim()).includes(className);
+    const hasClass = classAttribute.value
+      .split(' ')
+      .map(part => part.trim())
+      .includes(className);
 
     if (!hasClass) {
-      const classAttributeLocation = body.sourceCodeLocation!.attrs.class;
+      // We have source code location info enabled, and we pre-checked that the element
+      // has attributes, specifically the `class` attribute.
+      const classAttributeLocation = body.sourceCodeLocation!.attrs!.class;
       const recordedChange = host
         .beginUpdate(htmlFilePath)
         .insertRight(classAttributeLocation.endOffset - 1, ` ${className}`);
@@ -84,13 +87,12 @@ export function addBodyClass(host: Tree, htmlFilePath: string, className: string
 }
 
 /** Finds an element by its tag name. */
-function getElementByTagName(tagName: string, htmlContent: string):
-  DefaultTreeElement | null {
-  const document = parseHtml(htmlContent, {sourceCodeLocationInfo: true}) as DefaultTreeDocument;
+function getElementByTagName(tagName: string, htmlContent: string): Element | null {
+  const document = parseHtml(htmlContent, {sourceCodeLocationInfo: true});
   const nodeQueue = [...document.childNodes];
 
   while (nodeQueue.length) {
-    const node = nodeQueue.shift() as DefaultTreeElement;
+    const node = nodeQueue.shift() as Element;
 
     if (node.nodeName.toLowerCase() === tagName) {
       return node;

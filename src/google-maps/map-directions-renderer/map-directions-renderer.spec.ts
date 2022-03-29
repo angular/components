@@ -8,7 +8,7 @@ import {
   createDirectionsRendererConstructorSpy,
   createDirectionsRendererSpy,
   createMapConstructorSpy,
-  createMapSpy
+  createMapSpy,
 } from '../testing/fake-google-map-utils';
 
 const DEFAULT_DIRECTIONS: google.maps.DirectionsResult = {
@@ -40,28 +40,32 @@ describe('MapDirectionsRenderer', () => {
   it('initializes a Google Maps DirectionsRenderer', () => {
     const directionsRendererSpy = createDirectionsRendererSpy({directions: DEFAULT_DIRECTIONS});
     const directionsRendererConstructorSpy =
-        createDirectionsRendererConstructorSpy(directionsRendererSpy).and.callThrough();
+      createDirectionsRendererConstructorSpy(directionsRendererSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = {directions: DEFAULT_DIRECTIONS};
     fixture.detectChanges();
 
-    expect(directionsRendererConstructorSpy)
-        .toHaveBeenCalledWith({directions: DEFAULT_DIRECTIONS, map: jasmine.any(Object)});
+    expect(directionsRendererConstructorSpy).toHaveBeenCalledWith({
+      directions: DEFAULT_DIRECTIONS,
+      map: jasmine.any(Object),
+    });
     expect(directionsRendererSpy.setMap).toHaveBeenCalledWith(mapSpy);
   });
 
   it('sets directions from directions input', () => {
     const directionsRendererSpy = createDirectionsRendererSpy({directions: DEFAULT_DIRECTIONS});
     const directionsRendererConstructorSpy =
-        createDirectionsRendererConstructorSpy(directionsRendererSpy).and.callThrough();
+      createDirectionsRendererConstructorSpy(directionsRendererSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.directions = DEFAULT_DIRECTIONS;
     fixture.detectChanges();
 
-    expect(directionsRendererConstructorSpy)
-        .toHaveBeenCalledWith({directions: DEFAULT_DIRECTIONS, map: jasmine.any(Object)});
+    expect(directionsRendererConstructorSpy).toHaveBeenCalledWith({
+      directions: DEFAULT_DIRECTIONS,
+      map: jasmine.any(Object),
+    });
     expect(directionsRendererSpy.setMap).toHaveBeenCalledWith(mapSpy);
   });
 
@@ -72,15 +76,17 @@ describe('MapDirectionsRenderer', () => {
     };
     const directionsRendererSpy = createDirectionsRendererSpy({directions: updatedDirections});
     const directionsRendererConstructorSpy =
-        createDirectionsRendererConstructorSpy(directionsRendererSpy).and.callThrough();
+      createDirectionsRendererConstructorSpy(directionsRendererSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = {directions: DEFAULT_DIRECTIONS};
     fixture.componentInstance.directions = updatedDirections;
     fixture.detectChanges();
 
-    expect(directionsRendererConstructorSpy)
-        .toHaveBeenCalledWith({directions: updatedDirections, map: jasmine.any(Object)});
+    expect(directionsRendererConstructorSpy).toHaveBeenCalledWith({
+      directions: updatedDirections,
+      map: jasmine.any(Object),
+    });
     expect(directionsRendererSpy.setMap).toHaveBeenCalledWith(mapSpy);
   });
 
@@ -90,9 +96,9 @@ describe('MapDirectionsRenderer', () => {
 
     const fixture = TestBed.createComponent(TestApp);
 
-    const directionsRendererComponent =
-        fixture.debugElement.query(By.directive(MapDirectionsRenderer))!
-        .injector.get<MapDirectionsRenderer>(MapDirectionsRenderer);
+    const directionsRendererComponent = fixture.debugElement
+      .query(By.directive(MapDirectionsRenderer))!
+      .injector.get<MapDirectionsRenderer>(MapDirectionsRenderer);
     fixture.detectChanges();
 
     directionsRendererSpy.getDirections.and.returnValue(DEFAULT_DIRECTIONS);
@@ -112,8 +118,10 @@ describe('MapDirectionsRenderer', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
 
-    expect(directionsRendererSpy.addListener)
-        .toHaveBeenCalledWith('directions_changed', jasmine.any(Function));
+    expect(directionsRendererSpy.addListener).toHaveBeenCalledWith(
+      'directions_changed',
+      jasmine.any(Function),
+    );
   });
 });
 

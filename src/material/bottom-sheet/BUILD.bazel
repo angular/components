@@ -19,11 +19,11 @@ ng_module(
     assets = [
         ":bottom-sheet-container.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/bottom-sheet",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
+        "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/layout",
         "//src/cdk/overlay",
@@ -45,7 +45,7 @@ sass_library(
 sass_binary(
     name = "bottom_sheet_container_scss",
     src = "bottom-sheet-container.scss",
-    deps = ["//src/cdk/a11y:a11y_scss_lib"],
+    deps = ["//src/cdk:sass_lib"],
 )
 
 ng_test_library(

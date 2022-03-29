@@ -10,6 +10,8 @@ import {HarnessPredicate} from '@angular/cdk/testing';
 import {ChipRowHarnessFilters} from './chip-harness-filters';
 import {MatChipHarness} from './chip-harness';
 
+// TODO(crisbeto): add harness for the chip edit input inside the row.
+
 /** Harness for interacting with a mat-chip-row in tests. */
 export class MatChipRowHarness extends MatChipHarness {
   static override hostSelector = '.mat-mdc-chip-row';
@@ -20,8 +22,21 @@ export class MatChipRowHarness extends MatChipHarness {
   // Note(mmalerba): generics are used as a workaround for lack of polymorphic `this` in static
   // methods. See https://github.com/microsoft/TypeScript/issues/5863
   static override with<T extends typeof MatChipHarness>(
-      this: T, options: ChipRowHarnessFilters = {}): HarnessPredicate<InstanceType<T>> {
-    return new HarnessPredicate(MatChipRowHarness, options) as
-        unknown as HarnessPredicate<InstanceType<T>>;
+    this: T,
+    options: ChipRowHarnessFilters = {},
+  ): HarnessPredicate<InstanceType<T>> {
+    return new HarnessPredicate(MatChipRowHarness, options) as unknown as HarnessPredicate<
+      InstanceType<T>
+    >;
+  }
+
+  /** Whether the chip is editable. */
+  async isEditable(): Promise<boolean> {
+    return (await this.host()).hasClass('mat-mdc-chip-editable');
+  }
+
+  /** Whether the chip is currently being edited. */
+  async isEditing(): Promise<boolean> {
+    return (await this.host()).hasClass('mat-mdc-chip-editing');
   }
 }

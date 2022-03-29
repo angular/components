@@ -20,7 +20,6 @@ ng_module(
         ],
     ),
     assets = [":progress_bar_scss"] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/mdc-progress-bar",
     deps = [
         "//src/cdk/bidi",
         "//src/material-experimental/mdc-core",
@@ -34,6 +33,7 @@ sass_library(
     name = "mdc_progress_bar_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
@@ -66,12 +66,8 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = [
-        "@npm//:node_modules/@material/linear-progress/dist/mdc.linearProgress.js",
-    ],
     deps = [
         ":progress_bar_tests_lib",
-        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 

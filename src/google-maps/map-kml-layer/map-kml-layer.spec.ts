@@ -83,8 +83,9 @@ describe('MapKmlLayer', () => {
     createKmlLayerConstructorSpy(kmlLayerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const kmlLayerComponent = fixture.debugElement.query(By.directive(
-        MapKmlLayer))!.injector.get<MapKmlLayer>(MapKmlLayer);
+    const kmlLayerComponent = fixture.debugElement
+      .query(By.directive(MapKmlLayer))!
+      .injector.get<MapKmlLayer>(MapKmlLayer);
     fixture.detectChanges();
 
     kmlLayerComponent.getDefaultViewport();

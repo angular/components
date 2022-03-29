@@ -7,13 +7,15 @@ function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, e
   const r1 = el1.nativeElement.getBoundingClientRect();
   const r2 = el2.nativeElement.getBoundingClientRect();
   const actual =
-      r1.left < r2.right && r1.right > r2.left && r1.top < r2.bottom && r1.bottom > r2.top;
+    r1.left < r2.right && r1.right > r2.left && r1.top < r2.bottom && r1.bottom > r2.top;
   if (expected) {
     expect(actual)
-        .toBe(expected, `${JSON.stringify(r1)} should overlap with ${JSON.stringify(r2)}`);
+      .withContext(`${JSON.stringify(r1)} should overlap with ${JSON.stringify(r2)}`)
+      .toBe(expected);
   } else {
     expect(actual)
-        .toBe(expected, `${JSON.stringify(r1)} should not overlap with ${JSON.stringify(r2)}`);
+      .withContext(`${JSON.stringify(r1)} should not overlap with ${JSON.stringify(r2)}`)
+      .toBe(expected);
   }
 }
 
@@ -41,8 +43,9 @@ describe('CdkScrollable', () => {
 
   describe('in LTR context', () => {
     beforeEach(() => {
-      maxOffset = testComponent.scrollContainer.nativeElement.scrollHeight -
-          testComponent.scrollContainer.nativeElement.clientHeight;
+      maxOffset =
+        testComponent.scrollContainer.nativeElement.scrollHeight -
+        testComponent.scrollContainer.nativeElement.clientHeight;
     });
 
     it('should initially be scrolled to top-left', () => {
@@ -128,8 +131,9 @@ describe('CdkScrollable', () => {
     beforeEach(() => {
       testComponent.dir = 'rtl';
       fixture.detectChanges();
-      maxOffset = testComponent.scrollContainer.nativeElement.scrollHeight -
-          testComponent.scrollContainer.nativeElement.clientHeight;
+      maxOffset =
+        testComponent.scrollContainer.nativeElement.scrollHeight -
+        testComponent.scrollContainer.nativeElement.clientHeight;
     });
 
     it('should initially be scrolled to top-right', () => {
@@ -224,7 +228,8 @@ describe('CdkScrollable', () => {
         <div #lastRowEnd class="cell"></div>
       </div>
     </div>`,
-  styles: [`
+  styles: [
+    `
     .scroll-container {
       width: 100px;
       height: 100px;
@@ -241,7 +246,8 @@ describe('CdkScrollable', () => {
       width: 100px;
       height: 100px;
     }
-  `]
+  `,
+  ],
 })
 class ScrollableViewport {
   @Input() dir: Direction;

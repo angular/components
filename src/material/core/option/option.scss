@@ -1,8 +1,9 @@
+@use '@angular/cdk';
+@use 'sass:math';
+
 @use '../style/menu-common';
 @use '../style/vendor-prefixes';
 @use '../style/layout-common';
-@use '../style/private';
-@use '../../../cdk/a11y';
 
 .mat-option {
   @include menu-common.item-base();
@@ -30,7 +31,7 @@
     }
   }
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast(active, off) {
     $high-contrast-border-width: 1px;
 
     // Add a margin to offset the border that we're adding to active option, in order
@@ -78,7 +79,7 @@
 }
 
 .mat-option-pseudo-checkbox {
-  $margin: private.private-div(menu-common.$side-padding, 2);
+  $margin: math.div(menu-common.$side-padding, 2);
   margin-right: $margin;
 
   [dir='rtl'] & {

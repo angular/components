@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BACKSPACE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
+import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Directive,
@@ -18,7 +18,7 @@ import {
   OnChanges,
   OnDestroy,
   Optional,
-  Output
+  Output,
 } from '@angular/core';
 import {MatFormField, MAT_FORM_FIELD} from '@angular/material-experimental/mdc-form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './chip-default-options';
@@ -37,11 +37,8 @@ export interface MatChipInputEvent {
   /** The value of the input. */
   value: string;
 
-  /**
-   * Reference to the chip input that emitted the event.
-   * @breaking-change 13.0.0 This property will be made required.
-   */
-  chipInput?: MatChipInput;
+  /** Reference to the chip input that emitted the event. */
+  chipInput: MatChipInput;
 }
 
 // Increasing integer for generating unique ids.
@@ -68,12 +65,17 @@ let nextUniqueId = 0;
     '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
     '[attr.aria-invalid]': '_chipGrid && _chipGrid.ngControl ? _chipGrid.ngControl.invalid : null',
+    '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
-  }
+    '[attr.required]': '_chipGrid && _chipGrid.required || null',
+  },
 })
 export class MatChipInput implements MatChipTextControl, AfterContentInit, OnChanges, OnDestroy {
   /** Used to prevent focus moving to chips while user is holding backspace */
   private _focusLastChipOnBackspace: boolean;
+
+  /** Value for ariaDescribedby property */
+  _ariaDescribedby?: string;
 
   /** Whether the control is focused. */
   focused: boolean = false;
@@ -92,8 +94,12 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
   @Input('matChipInputAddOnBlur')
-  get addOnBlur(): boolean { return this._addOnBlur; }
-  set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
+  get addOnBlur(): boolean {
+    return this._addOnBlur;
+  }
+  set addOnBlur(value: BooleanInput) {
+    this._addOnBlur = coerceBooleanProperty(value);
+  }
   _addOnBlur: boolean = false;
 
   /**
@@ -103,7 +109,7 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
    */
   @Input('matChipInputSeparatorKeyCodes')
   separatorKeyCodes: readonly number[] | ReadonlySet<number> =
-      this._defaultOptions.separatorKeyCodes;
+    this._defaultOptions.separatorKeyCodes;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
@@ -117,26 +123,33 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
 
   /** Whether the input is disabled. */
   @Input()
-  get disabled(): boolean { return this._disabled || (this._chipGrid && this._chipGrid.disabled); }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return this._disabled || (this._chipGrid && this._chipGrid.disabled);
+  }
+  set disabled(value: BooleanInput) {
+    this._disabled = coerceBooleanProperty(value);
+  }
   private _disabled: boolean = false;
 
   /** Whether the input is empty. */
-  get empty(): boolean { return !this.inputElement.value; }
+  get empty(): boolean {
+    return !this.inputElement.value;
+  }
 
   /** The native input element to which this directive is attached. */
-  readonly inputElement: HTMLInputElement;
+  readonly inputElement!: HTMLInputElement;
 
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement>,
     @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions,
-    @Optional() @Inject(MAT_FORM_FIELD) formField?: MatFormField) {
-      this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
+    @Optional() @Inject(MAT_FORM_FIELD) formField?: MatFormField,
+  ) {
+    this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
 
-      if (formField) {
-        this.inputElement.classList.add('mat-mdc-form-field-control');
-      }
+    if (formField) {
+      this.inputElement.classList.add('mat-mdc-form-field-input-control');
     }
+  }
 
   ngOnChanges() {
     this._chipGrid.stateChanges.next();
@@ -153,19 +166,11 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
   /** Utility method to make host definition/tests more clear. */
   _keydown(event?: KeyboardEvent) {
     if (event) {
-      // Allow the user's focus to escape when they're tabbing forward. Note that we don't
-      // want to do this when going backwards, because focus should go back to the first chip.
-      if (event.keyCode === TAB && !hasModifierKey(event, 'shiftKey')) {
-        this._chipGrid._allowFocusEscape();
-      }
-
       // To prevent the user from accidentally deleting chips when pressing BACKSPACE continuously,
       // We focus the last chip on backspace only after the user has released the backspace button,
       // And the input is empty (see behaviour in _keyup)
       if (event.keyCode === BACKSPACE && this._focusLastChipOnBackspace) {
-        if (this._chipGrid._chips.length) {
-          this._chipGrid._keyManager.setLastCellActive();
-        }
+        this._chipGrid._focusLastChip();
         event.preventDefault();
         return;
       } else {
@@ -202,6 +207,7 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
 
   _focus() {
     this.focused = true;
+    this._focusLastChipOnBackspace = this.empty;
     this._chipGrid.stateChanges.next();
   }
 
@@ -238,11 +244,12 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     this._focusLastChipOnBackspace = true;
   }
 
+  setDescribedByIds(ids: string[]): void {
+    this._ariaDescribedby = ids.join(' ');
+  }
+
   /** Checks whether a keycode is one of the configured separators. */
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
   }
-
-  static ngAcceptInputType_addOnBlur: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

@@ -34,14 +34,15 @@ import {DOCUMENT} from '@angular/common';
  * @docs-private
  */
 @Directive({
-  selector: '[matTabBodyHost]'
+  selector: '[matTabBodyHost]',
 })
 export class MatTabBodyPortal extends BaseMatTabBodyPortal {
   constructor(
     componentFactoryResolver: ComponentFactoryResolver,
     viewContainerRef: ViewContainerRef,
     @Inject(forwardRef(() => MatTabBody)) host: MatTabBody,
-    @Inject(DOCUMENT) _document: any) {
+    @Inject(DOCUMENT) _document: any,
+  ) {
     super(componentFactoryResolver, viewContainerRef, host, _document);
   }
 }
@@ -55,7 +56,8 @@ export class MatTabBodyPortal extends BaseMatTabBodyPortal {
   templateUrl: 'tab-body.html',
   styleUrls: ['tab-body.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   animations: [matTabsAnimations.translateTab],
   host: {
     'class': 'mat-mdc-tab-body',
@@ -64,9 +66,11 @@ export class MatTabBodyPortal extends BaseMatTabBodyPortal {
 export class MatTabBody extends _MatTabBodyBase {
   @ViewChild(CdkPortalOutlet) _portalHost: CdkPortalOutlet;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
     @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef) {
+    changeDetectorRef: ChangeDetectorRef,
+  ) {
     super(elementRef, dir, changeDetectorRef);
   }
 }

@@ -8,7 +8,7 @@ import {
   createMapConstructorSpy,
   createMapSpy,
   createMarkerConstructorSpy,
-  createMarkerSpy
+  createMarkerSpy,
 } from '../testing/fake-google-map-utils';
 import {DEFAULT_MARKER_OPTIONS, MapMarker} from './map-marker';
 
@@ -83,7 +83,7 @@ describe('MapMarker', () => {
       label: 'marker label',
       clickable: false,
       icon: 'icon name',
-      visible: undefined
+      visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -110,7 +110,7 @@ describe('MapMarker', () => {
       clickable: true,
       icon: 'icon name',
       map: mapSpy,
-      visible: undefined
+      visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -238,10 +238,10 @@ describe('MapMarker', () => {
 })
 class TestApp {
   @ViewChild(MapMarker) marker: MapMarker;
-  title?: string;
-  position?: google.maps.LatLng|google.maps.LatLngLiteral;
-  label?: string|google.maps.MarkerLabel;
-  clickable?: boolean;
+  title?: string | null;
+  position?: google.maps.LatLng | google.maps.LatLngLiteral | null;
+  label?: string | google.maps.MarkerLabel | null;
+  clickable?: boolean | null;
   options?: google.maps.MarkerOptions;
   icon?: string;
   visible?: boolean;

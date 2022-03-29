@@ -1,10 +1,8 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {
-  BlockScrollStrategyE2eModule
-} from './block-scroll-strategy/block-scroll-strategy-e2e-module';
+import {BlockScrollStrategyE2eModule} from './block-scroll-strategy/block-scroll-strategy-e2e-module';
 import {ButtonToggleE2eModule} from './button-toggle/button-toggle-e2e-module';
 import {ButtonE2eModule} from './button/button-e2e-module';
 import {CardE2eModule} from './card/card-e2e-module';
@@ -13,7 +11,7 @@ import {ComponentHarnessE2eModule} from './component-harness/component-harness-e
 import {DialogE2eModule} from './dialog/dialog-e2e-module';
 import {E2eApp} from './e2e-app';
 import {E2eAppModule} from './e2e-app/e2e-app-module';
-import {E2E_APP_ROUTES} from './e2e-app/routes';
+import {E2E_APP_ROUTES} from './routes';
 import {ExpansionE2eModule} from './expansion/expansion-e2e-module';
 import {GridListE2eModule} from './grid-list/grid-list-e2e-module';
 import {IconE2eModule} from './icon/icon-e2e-module';
@@ -43,11 +41,14 @@ import {VirtualScrollE2eModule} from './virtual-scroll/virtual-scroll-e2e-module
 import {MdcProgressBarE2eModule} from './mdc-progress-bar/mdc-progress-bar-e2e-module';
 import {MdcProgressSpinnerE2eModule} from './mdc-progress-spinner/mdc-progress-spinner-module';
 
+/** We allow for animations to be explicitly enabled in certain e2e tests. */
+const enableAnimations = window.location.search.includes('animations=true');
+
 @NgModule({
   imports: [
     BrowserModule,
     E2eAppModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule.withConfig({disableAnimations: !enableAnimations}),
     RouterModule.forRoot(E2E_APP_ROUTES),
 
     // E2E demos
@@ -87,10 +88,7 @@ import {MdcProgressSpinnerE2eModule} from './mdc-progress-spinner/mdc-progress-s
     ToolbarE2eModule,
     VirtualScrollE2eModule,
   ],
-  declarations: [
-    E2eApp,
-  ],
+  declarations: [E2eApp],
   bootstrap: [E2eApp],
 })
-export class MainModule {
-}
+export class MainModule {}

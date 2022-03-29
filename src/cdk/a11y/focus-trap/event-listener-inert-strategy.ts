@@ -8,7 +8,6 @@
 
 import {FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
-import {closest} from './polyfill';
 
 /**
  * Lightweight FocusTrapInertStrategy that adds a document focus event
@@ -53,16 +52,16 @@ export class EventListenerFocusTrapInertStrategy implements FocusTrapInertStrate
 
     // Don't refocus if target was in an overlay, because the overlay might be associated
     // with an element inside the FocusTrap, ex. mat-select.
-    if (!focusTrapRoot.contains(target) && closest(target, 'div.cdk-overlay-pane') === null) {
-        // Some legacy FocusTrap usages have logic that focuses some element on the page
-        // just before FocusTrap is destroyed. For backwards compatibility, wait
-        // to be sure FocusTrap is still enabled before refocusing.
-        setTimeout(() => {
-          // Check whether focus wasn't put back into the focus trap while the timeout was pending.
-          if (focusTrap.enabled && !focusTrapRoot.contains(focusTrap._document.activeElement)) {
-            focusTrap.focusFirstTabbableElement();
-          }
-        });
-      }
+    if (target && !focusTrapRoot.contains(target) && !target.closest?.('div.cdk-overlay-pane')) {
+      // Some legacy FocusTrap usages have logic that focuses some element on the page
+      // just before FocusTrap is destroyed. For backwards compatibility, wait
+      // to be sure FocusTrap is still enabled before refocusing.
+      setTimeout(() => {
+        // Check whether focus wasn't put back into the focus trap while the timeout was pending.
+        if (focusTrap.enabled && !focusTrapRoot.contains(focusTrap._document.activeElement)) {
+          focusTrap.focusFirstTabbableElement();
+        }
+      });
+    }
   }
 }

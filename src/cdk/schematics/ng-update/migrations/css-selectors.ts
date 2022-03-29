@@ -25,33 +25,33 @@ export class CssSelectorsMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node): void {
     if (ts.isStringLiteralLike(node)) {
       this._visitStringLiteralLike(node);
     }
   }
 
-  visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource): void {
     this.data.forEach(data => {
       if (data.replaceIn && !data.replaceIn.html) {
         return;
       }
 
       findAllSubstringIndices(template.content, data.replace)
-          .map(offset => template.start + offset)
-          .forEach(start => this._replaceSelector(template.filePath, start, data));
+        .map(offset => template.start + offset)
+        .forEach(start => this._replaceSelector(template.filePath, start, data));
     });
   }
 
-  visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(data => {
       if (data.replaceIn && !data.replaceIn.stylesheet) {
         return;
       }
 
       findAllSubstringIndices(stylesheet.content, data.replace)
-          .map(offset => stylesheet.start + offset)
-          .forEach(start => this._replaceSelector(stylesheet.filePath, start, data));
+        .map(offset => stylesheet.start + offset)
+        .forEach(start => this._replaceSelector(stylesheet.filePath, start, data));
     });
   }
 
@@ -69,13 +69,14 @@ export class CssSelectorsMigration extends Migration<UpgradeData> {
       }
 
       findAllSubstringIndices(textContent, data.replace)
-          .map(offset => node.getStart() + offset)
-          .forEach(start => this._replaceSelector(filePath, start, data));
+        .map(offset => node.getStart() + offset)
+        .forEach(start => this._replaceSelector(filePath, start, data));
     });
   }
 
   private _replaceSelector(filePath: WorkspacePath, start: number, data: CssSelectorUpgradeData) {
-    this.fileSystem.edit(filePath)
+    this.fileSystem
+      .edit(filePath)
       .remove(start, data.replace.length)
       .insertRight(start, data.replaceWith);
   }

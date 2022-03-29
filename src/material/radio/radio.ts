@@ -7,12 +7,7 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -23,6 +18,7 @@ import {
   Component,
   ContentChildren,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   forwardRef,
@@ -47,20 +43,21 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
-
 export interface MatRadioDefaultOptions {
   color: ThemePalette;
 }
 
-export const MAT_RADIO_DEFAULT_OPTIONS =
-  new InjectionToken<MatRadioDefaultOptions>('mat-radio-default-options', {
-  providedIn: 'root',
-  factory: MAT_RADIO_DEFAULT_OPTIONS_FACTORY
-});
+export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptions>(
+  'mat-radio-default-options',
+  {
+    providedIn: 'root',
+    factory: MAT_RADIO_DEFAULT_OPTIONS_FACTORY,
+  },
+);
 
 export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
   return {
-    color: 'accent'
+    color: 'accent',
   };
 }
 
@@ -75,7 +72,7 @@ let nextUniqueId = 0;
 export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatRadioGroup),
-  multi: true
+  multi: true,
 };
 
 /** Change event object emitted by MatRadio and MatRadioGroup. */
@@ -84,7 +81,8 @@ export class MatRadioChange {
     /** The MatRadioButton that emits the change event. */
     public source: _MatRadioButtonBase,
     /** The value of the MatRadioButton. */
-    public value: any) {}
+    public value: any,
+  ) {}
 }
 
 /**
@@ -92,16 +90,18 @@ export class MatRadioChange {
  * alternative token to the actual `MatRadioGroup` class which could cause unnecessary
  * retention of the class and its component metadata.
  */
-export const MAT_RADIO_GROUP =
-    new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>('MatRadioGroup');
+export const MAT_RADIO_GROUP = new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>(
+  'MatRadioGroup',
+);
 
 /**
  * Base class with all of the `MatRadioGroup` functionality.
  * @docs-private
  */
 @Directive()
-export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implements AfterContentInit,
-  ControlValueAccessor {
+export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
+  implements AfterContentInit, ControlValueAccessor
+{
   /** Selected value for the radio group. */
   private _value: any = null;
 
@@ -147,7 +147,9 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
 
   /** Name of the radio button group. All radio buttons inside this group will use this name. */
   @Input()
-  get name(): string { return this._name; }
+  get name(): string {
+    return this._name;
+  }
   set name(value: string) {
     this._name = value;
     this._updateRadioButtonNames();
@@ -170,7 +172,9 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
    * matching value.
    */
   @Input()
-  get value(): any { return this._value; }
+  get value(): any {
+    return this._value;
+  }
   set value(newValue: any) {
     if (this._value !== newValue) {
       // Set this before proceeding to ensure no circular loop occurs with selection.
@@ -192,7 +196,9 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
    * will be updated to match the new selected button.
    */
   @Input()
-  get selected() { return this._selected; }
+  get selected() {
+    return this._selected;
+  }
   set selected(selected: T | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
@@ -201,21 +207,25 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
 
   /** Whether the radio group is disabled */
   @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value) {
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
 
   /** Whether the radio group is required */
   @Input()
-  get required(): boolean { return this._required; }
-  set required(value: boolean) {
+  get required(): boolean {
+    return this._required;
+  }
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
 
-  constructor(private _changeDetector: ChangeDetectorRef) { }
+  constructor(private _changeDetector: ChangeDetectorRef) {}
 
   /**
    * Initialize properties once content children are available.
@@ -311,9 +321,6 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
     this.disabled = isDisabled;
     this._changeDetector.markForCheck();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }
 
 /**
@@ -353,9 +360,10 @@ const _MatRadioButtonMixinBase = mixinDisableRipple(mixinTabIndex(MatRadioButton
  * @docs-private
  */
 @Directive()
-export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase implements OnInit,
-  AfterViewInit, OnDestroy, CanDisableRipple, HasTabIndex {
-
+export abstract class _MatRadioButtonBase
+  extends _MatRadioButtonMixinBase
+  implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex
+{
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
   /** The unique ID for the radio button. */
@@ -375,15 +383,16 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
 
   /** Whether this radio button is checked. */
   @Input()
-  get checked(): boolean { return this._checked; }
-  set checked(value: boolean) {
+  get checked(): boolean {
+    return this._checked;
+  }
+  set checked(value: BooleanInput) {
     const newCheckedState = coerceBooleanProperty(value);
     if (this._checked !== newCheckedState) {
       this._checked = newCheckedState;
       if (newCheckedState && this.radioGroup && this.radioGroup.value !== this.value) {
         this.radioGroup.selected = this;
       } else if (!newCheckedState && this.radioGroup && this.radioGroup.value === this.value) {
-
         // When unchecking the selected radio button, update the selected radio
         // property on the group.
         this.radioGroup.selected = null;
@@ -399,7 +408,9 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
 
   /** The value of this radio button. */
   @Input()
-  get value(): any { return this._value; }
+  get value(): any {
+    return this._value;
+  }
   set value(value: any) {
     if (this._value !== value) {
       this._value = value;
@@ -430,7 +441,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   get disabled(): boolean {
     return this._disabled || (this.radioGroup !== null && this.radioGroup.disabled);
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._setDisabled(coerceBooleanProperty(value));
   }
 
@@ -439,7 +450,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   get required(): boolean {
     return this._required || (this.radioGroup && this.radioGroup.required);
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
 
@@ -448,11 +459,16 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   get color(): ThemePalette {
     // As per Material design specifications the selection control radio should use the accent color
     // palette by default. https://material.io/guidelines/components/selection-controls.html
-    return this._color ||
+    return (
+      this._color ||
       (this.radioGroup && this.radioGroup.color) ||
-      this._providerOverride && this._providerOverride.color || 'accent';
+      (this._providerOverride && this._providerOverride.color) ||
+      'accent'
+    );
   }
-  set color(newValue: ThemePalette) { this._color = newValue; }
+  set color(newValue: ThemePalette) {
+    this._color = newValue;
+  }
   private _color: ThemePalette;
 
   /**
@@ -466,7 +482,9 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>;
 
   /** ID of the native input element inside `<mat-radio-button>` */
-  get inputId(): string { return `${this.id || this._uniqueId}-input`; }
+  get inputId(): string {
+    return `${this.id || this._uniqueId}-input`;
+  }
 
   /** Whether this radio is checked. */
   private _checked: boolean = false;
@@ -483,20 +501,25 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   /** Unregister function for _radioDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
 
+  /** Previous value of the input's tabindex. */
+  private _previousTabIndex: number | undefined;
+
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** Whether animations are disabled. */
   _noopAnimations: boolean;
 
-  constructor(radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>,
-              elementRef: ElementRef,
-              protected _changeDetector: ChangeDetectorRef,
-              private _focusMonitor: FocusMonitor,
-              private _radioDispatcher: UniqueSelectionDispatcher,
-              animationMode?: string,
-              private _providerOverride?: MatRadioDefaultOptions,
-              tabIndex?: string) {
+  constructor(
+    radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>,
+    elementRef: ElementRef,
+    protected _changeDetector: ChangeDetectorRef,
+    private _focusMonitor: FocusMonitor,
+    private _radioDispatcher: UniqueSelectionDispatcher,
+    animationMode?: string,
+    private _providerOverride?: MatRadioDefaultOptions,
+    tabIndex?: string,
+  ) {
     super(elementRef);
 
     // Assertions. Ideally these should be stripped out by the compiler.
@@ -508,12 +531,11 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
       this.tabIndex = coerceNumberProperty(tabIndex, 0);
     }
 
-    this._removeUniqueSelectionListener =
-      _radioDispatcher.listen((id: string, name: string) => {
-        if (id !== this.id && name === this.name) {
-          this.checked = false;
-        }
-      });
+    this._removeUniqueSelectionListener = _radioDispatcher.listen((id: string, name: string) => {
+      if (id !== this.id && name === this.name) {
+        this.checked = false;
+      }
+    });
   }
 
   /** Focuses the radio button. */
@@ -550,14 +572,17 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     }
   }
 
+  ngDoCheck(): void {
+    this._updateTabIndex();
+  }
+
   ngAfterViewInit() {
-    this._focusMonitor
-      .monitor(this._elementRef, true)
-      .subscribe(focusOrigin => {
-        if (!focusOrigin && this.radioGroup) {
-          this.radioGroup._touch();
-        }
-      });
+    this._updateTabIndex();
+    this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
+      if (!focusOrigin && this.radioGroup) {
+        this.radioGroup._touch();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -586,7 +611,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   }
 
   /** Triggered when the radio button receives an interaction from the user. */
-   _onInputInteraction(event: Event) {
+  _onInputInteraction(event: Event) {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
     // emit its event object to the `change` output.
@@ -614,13 +639,33 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     }
   }
 
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
-}
+  /** Gets the tabindex for the underlying input element. */
+  private _updateTabIndex() {
+    const group = this.radioGroup;
+    let value: number;
 
+    // Implement a roving tabindex if the button is inside a group. For most cases this isn't
+    // necessary, because the browser handles the tab order for inputs inside a group automatically,
+    // but we need an explicitly higher tabindex for the selected button in order for things like
+    // the focus trap to pick it up correctly.
+    if (!group || !group.selected || this.disabled) {
+      value = this.tabIndex;
+    } else {
+      value = group.selected === this ? this.tabIndex : -1;
+    }
+
+    if (value !== this._previousTabIndex) {
+      // We have to set the tabindex directly on the DOM node, because it depends on
+      // the selected state which is prone to "changed after checked errors".
+      const input: HTMLInputElement | undefined = this._inputElement?.nativeElement;
+
+      if (input) {
+        input.setAttribute('tabindex', value + '');
+        this._previousTabIndex = value;
+      }
+    }
+  }
+}
 
 /**
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
@@ -654,16 +699,27 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatRadioButton extends _MatRadioButtonBase {
-  constructor(@Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
-              elementRef: ElementRef,
-              changeDetector: ChangeDetectorRef,
-              focusMonitor: FocusMonitor,
-              radioDispatcher: UniqueSelectionDispatcher,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-                @Optional() @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-                  providerOverride?: MatRadioDefaultOptions,
-              @Attribute('tabindex') tabIndex?: string) {
-    super(radioGroup, elementRef, changeDetector, focusMonitor, radioDispatcher,
-          animationMode, providerOverride, tabIndex);
+  constructor(
+    @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
+    elementRef: ElementRef,
+    changeDetector: ChangeDetectorRef,
+    focusMonitor: FocusMonitor,
+    radioDispatcher: UniqueSelectionDispatcher,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+    @Optional()
+    @Inject(MAT_RADIO_DEFAULT_OPTIONS)
+    providerOverride?: MatRadioDefaultOptions,
+    @Attribute('tabindex') tabIndex?: string,
+  ) {
+    super(
+      radioGroup,
+      elementRef,
+      changeDetector,
+      focusMonitor,
+      radioDispatcher,
+      animationMode,
+      providerOverride,
+      tabIndex,
+    );
   }
 }

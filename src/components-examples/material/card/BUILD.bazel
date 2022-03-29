@@ -12,7 +12,6 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/card",
     deps = [
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
@@ -20,6 +19,8 @@ ng_module(
         "//src/material/button/testing",
         "//src/material/card",
         "//src/material/card/testing",
+        "//src/material/divider",
+        "//src/material/progress-bar",
         "@npm//@angular/platform-browser",
         "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
@@ -51,6 +52,5 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    exclude_init_script = True,
     deps = [":unit_tests_lib"],
 )

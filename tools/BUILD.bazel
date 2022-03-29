@@ -2,38 +2,34 @@ load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files([
-    "system-config-tmpl.js",
-    "system-rxjs-operators.js",
-])
-
-config_setting(
-    name = "view_engine_mode",
-    values = {
-        "define": "angular_ivy_enabled=False",
-    },
-)
-
-# Bazel build setting for enabling partial compilation. The partial compilation
-# build setting can be set using `--//tools:partial_compilation=True`.
-bool_flag(
-    name = "partial_compilation",
-    build_setting_default = False,
-)
-
-# Bazel config setting that matches if the partial compilation flag is set to `True`.
+# Bazel config setting that matches if the partial compilation flag
+# for `@angular/bazel` is set to `True`.
 config_setting(
     name = "partial_compilation_enabled",
     flag_values = {
-        ":partial_compilation": "True",
+        "@npm//@angular/bazel/src:partial_compilation": "True",
     },
 )
 
-# This file generates the `angular_ivy_enabled.js` file, which exports a truthy value
-# whether Ivy should be enabled based on the `--defined=angular_ivy_enabled` value
-# so runtime can detect which mode it is running in.
-genrule(
-    name = "angular_ivy_enabled",
-    outs = ["angular_ivy_enabled.js"],
-    cmd = "echo exports.ivyEnabled = \"'True' === '$(angular_ivy_enabled)'\"\\; > $@",
+# Command line flag that can be specified to force the JIT compilation to be used for tests
+# with partial compilation. By default, tests are processed with the linker at build time.
+bool_flag(
+    name = "force_partial_jit_compilation",
+    build_setting_default = False,
+)
+
+# Config setting that matches if the force JIT compilation build setting is enabled.
+# This setting needs to be used in combination of the partial compilation build setting.
+config_setting(
+    name = "force_partial_jit_compilation_enabled",
+    flag_values = {
+        "@npm//@angular/bazel/src:partial_compilation": "True",
+        ":force_partial_jit_compilation": "True",
+    },
+)
+
+# Detect if the build is running with stamping enabled.
+config_setting(
+    name = "stamp",
+    values = {"stamp": "true"},
 )

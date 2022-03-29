@@ -1,3 +1,5 @@
+@use '@angular/cdk';
+
 @use '../core/style/layout-common';
 
 $calendar-padding: 8px !default;
@@ -51,12 +53,8 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 
 .mat-calendar-arrow {
   display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: $calendar-arrow-size solid transparent;
-  border-right: $calendar-arrow-size solid transparent;
-  border-top-width: $calendar-arrow-size;
-  border-top-style: solid;
+  width: $calendar-arrow-size * 2;
+  height: $calendar-arrow-size;
   margin: 0 0 0 $calendar-arrow-size;
   vertical-align: middle;
 
@@ -66,6 +64,11 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 
   [dir='rtl'] & {
     margin: 0 $calendar-arrow-size 0 0;
+  }
+
+  @include cdk.high-contrast(active, off) {
+    // Setting the fill to `currentColor` doesn't work on Chromium browsers.
+    fill: CanvasText;
   }
 }
 
@@ -123,6 +126,3 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   }
 }
 
-.mat-calendar-abbr {
-  text-decoration: none;
-}

@@ -1,28 +1,19 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSnackBarHarness} from '@angular/material/snack-bar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {SnackBarHarnessExample} from './snack-bar-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-
 
 describe('SnackBarHarnessExample', () => {
   let fixture: ComponentFixture<SnackBarHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatSnackBarModule, NoopAnimationsModule],
-      declarations: [SnackBarHarnessExample]
+      declarations: [SnackBarHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(SnackBarHarnessExample);
     fixture.detectChanges();

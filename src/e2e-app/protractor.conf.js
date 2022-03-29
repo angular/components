@@ -24,9 +24,12 @@ exports.config = {
         {id: 'region', enabled: false},
 
         // Don't require at least one `<h1>` since we don't have any content.
-        {id: 'page-has-heading-one', enabled: false}
-      ]
-    }
+        {id: 'page-has-heading-one', enabled: false},
+
+        // Axe incorrectly picks up that `aria-required` is not allowed on the MDC slide toggle.
+        {id: 'aria-allowed-attr', selector: '*:not(.mdc-switch)'},
+      ],
+    },
   ],
 
   // Since we want to use async/await we don't want to mix up with selenium's promise

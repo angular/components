@@ -14,7 +14,7 @@ import {
   Inject,
   NgZone,
   Optional,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -24,7 +24,7 @@ import {
   MAT_BUTTON_HOST,
   MAT_BUTTON_INPUTS,
   MatAnchorBase,
-  MatButtonBase
+  MatButtonBase,
 } from './button-base';
 
 /**
@@ -35,7 +35,7 @@ import {
 @Component({
   selector: `button[mat-icon-button]`,
   templateUrl: 'button.html',
-  styleUrls: ['icon-button.css'],
+  styleUrls: ['icon-button.css', 'button-high-contrast.css'],
   inputs: MAT_BUTTON_INPUTS,
   host: MAT_BUTTON_HOST,
   exportAs: 'matButton',
@@ -43,12 +43,14 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIconButton extends MatButtonBase {
-  // Set the ripple to be centered for icon buttons
-  override _isRippleCentered = true;
+  override _isIconButton = true;
 
   constructor(
-      elementRef: ElementRef, platform: Platform, ngZone: NgZone,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    elementRef: ElementRef,
+    platform: Platform,
+    ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
     super(elementRef, platform, ngZone, animationMode);
   }
 }
@@ -61,7 +63,7 @@ export class MatIconButton extends MatButtonBase {
 @Component({
   selector: `a[mat-icon-button]`,
   templateUrl: 'button.html',
-  styleUrls: ['icon-button.css'],
+  styleUrls: ['icon-button.css', 'button-high-contrast.css'],
   inputs: MAT_ANCHOR_INPUTS,
   host: MAT_ANCHOR_HOST,
   exportAs: 'matButton, matAnchor',
@@ -69,12 +71,14 @@ export class MatIconButton extends MatButtonBase {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIconAnchor extends MatAnchorBase {
-  // Set the ripple to be centered for icon buttons
-  override _isRippleCentered = true;
+  override _isIconButton = true;
 
   constructor(
-      elementRef: ElementRef, platform: Platform, ngZone: NgZone,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    elementRef: ElementRef,
+    platform: Platform,
+    ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
     super(elementRef, platform, ngZone, animationMode);
   }
 }

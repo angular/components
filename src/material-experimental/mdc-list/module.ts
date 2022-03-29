@@ -9,7 +9,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {
-  MatLineModule,
   MatPseudoCheckboxModule,
   MatRippleModule,
   MatCommonModule,
@@ -18,20 +17,23 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatActionList} from './action-list';
 import {MatList, MatListItem} from './list';
 import {MatListOption} from './list-option';
+import {MatListSubheaderCssMatStyler} from './subheader';
 import {
-  MatListAvatarCssMatStyler,
-  MatListGraphicAlignmentStyler,
-  MatListIconCssMatStyler,
-  MatListSubheaderCssMatStyler
-} from './list-styling';
+  MatListItemLine,
+  MatListItemTitle,
+  MatListItemMeta,
+  MatListItemAvatar,
+  MatListItemIcon,
+} from './list-item-sections';
 import {MatNavList} from './nav-list';
 import {MatSelectionList} from './selection-list';
+import {ObserversModule} from '@angular/cdk/observers';
 
 @NgModule({
   imports: [
+    ObserversModule,
     CommonModule,
     MatCommonModule,
-    MatLineModule,
     MatRippleModule,
     MatPseudoCheckboxModule,
   ],
@@ -42,12 +44,13 @@ import {MatSelectionList} from './selection-list';
     MatSelectionList,
     MatListItem,
     MatListOption,
-    MatListAvatarCssMatStyler,
-    MatListIconCssMatStyler,
+    MatListItemAvatar,
+    MatListItemIcon,
     MatListSubheaderCssMatStyler,
-    MatListGraphicAlignmentStyler,
     MatDividerModule,
-    MatLineModule,
+    MatListItemLine,
+    MatListItemTitle,
+    MatListItemMeta,
   ],
   declarations: [
     MatList,
@@ -56,10 +59,12 @@ import {MatSelectionList} from './selection-list';
     MatSelectionList,
     MatListItem,
     MatListOption,
-    MatListAvatarCssMatStyler,
-    MatListIconCssMatStyler,
     MatListSubheaderCssMatStyler,
-    MatListGraphicAlignmentStyler,
-  ]
+    MatListItemAvatar,
+    MatListItemIcon,
+    MatListItemLine,
+    MatListItemTitle,
+    MatListItemMeta,
+  ],
 })
 export class MatListModule {}

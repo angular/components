@@ -3,9 +3,8 @@ import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
-
 describe('CdkVirtualScrollViewport', () => {
-  describe ('with AutoSizeVirtualScrollStrategy', () => {
+  describe('with AutoSizeVirtualScrollStrategy', () => {
     let fixture: ComponentFixture<AutoSizeVirtualScroll>;
     let testComponent: AutoSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
@@ -26,20 +25,26 @@ describe('CdkVirtualScrollViewport', () => {
     it('should render initial state for uniform items', fakeAsync(() => {
       finishInit(fixture);
 
-      const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
+      const contentWrapper = viewport.elementRef.nativeElement.querySelector(
+        '.cdk-virtual-scroll-content-wrapper',
+      )!;
       expect(contentWrapper.children.length)
-          .toBe(4, 'should render 4 50px items to fill 200px space');
+        .withContext('should render 4 50px items to fill 200px space')
+        .toBe(4);
     }));
 
     it('should render extra content if first item is smaller than average', fakeAsync(() => {
       testComponent.items = [50, 200, 200, 200, 200, 200];
       finishInit(fixture);
 
-      const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
-      expect(contentWrapper.children.length).toBe(4,
-          'should render 4 items to fill 200px space based on 50px estimate from first item');
+      const contentWrapper = viewport.elementRef.nativeElement.querySelector(
+        '.cdk-virtual-scroll-content-wrapper',
+      )!;
+      expect(contentWrapper.children.length)
+        .withContext(
+          'should render 4 items to fill 200px space based on 50px ' + 'estimate from first item',
+        )
+        .toBe(4);
     }));
 
     it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
@@ -53,7 +58,6 @@ describe('CdkVirtualScrollViewport', () => {
   });
 });
 
-
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
   // On the first cycle we render and measure the viewport.
@@ -64,7 +68,6 @@ function finishInit(fixture: ComponentFixture<any>) {
   fixture.detectChanges();
   flush();
 }
-
 
 @Component({
   template: `
@@ -78,7 +81,8 @@ function finishInit(fixture: ComponentFixture<any>) {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [`
+  styles: [
+    `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -87,7 +91,8 @@ function finishInit(fixture: ComponentFixture<any>) {
     .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {
       flex-direction: row;
     }
-  `],
+  `,
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 class AutoSizeVirtualScroll {

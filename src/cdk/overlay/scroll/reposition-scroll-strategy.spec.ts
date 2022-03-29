@@ -1,5 +1,5 @@
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {
@@ -11,7 +11,6 @@ import {
   ScrollDispatcher,
 } from '../index';
 
-
 describe('RepositionScrollStrategy', () => {
   let overlayRef: OverlayRef;
   let overlay: Overlay;
@@ -20,12 +19,16 @@ describe('RepositionScrollStrategy', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, OverlayTestModule],
+      imports: [OverlayModule, PortalModule],
+      declarations: [PastaMsg],
       providers: [
-        {provide: ScrollDispatcher, useFactory: () => ({
-          scrolled: () => scrolledSubject
-        })}
-      ]
+        {
+          provide: ScrollDispatcher,
+          useFactory: () => ({
+            scrolled: () => scrolledSubject,
+          }),
+        },
+      ],
     });
 
     TestBed.compileComponents();
@@ -38,12 +41,12 @@ describe('RepositionScrollStrategy', () => {
 
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
     overlayRef.dispose();
-    container.getContainerElement().parentNode!.removeChild(container.getContainerElement());
+    container.getContainerElement().remove();
   }));
 
   it('should update the overlay position when the page is scrolled', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition()
+      scrollStrategy: overlay.scrollStrategies.reposition(),
     });
 
     overlayRef = overlay.create(overlayConfig);
@@ -59,7 +62,7 @@ describe('RepositionScrollStrategy', () => {
 
   it('should not be updating the position after the overlay is detached', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition()
+      scrollStrategy: overlay.scrollStrategies.reposition(),
     });
 
     overlayRef = overlay.create(overlayConfig);
@@ -74,7 +77,7 @@ describe('RepositionScrollStrategy', () => {
 
   it('should not be updating the position after the overlay is destroyed', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition()
+      scrollStrategy: overlay.scrollStrategies.reposition(),
     });
 
     overlayRef = overlay.create(overlayConfig);
@@ -90,8 +93,8 @@ describe('RepositionScrollStrategy', () => {
   it('should be able to close the overlay once it is out of view', () => {
     const overlayConfig = new OverlayConfig({
       scrollStrategy: overlay.scrollStrategies.reposition({
-        autoClose: true
-      })
+        autoClose: true,
+      }),
     });
 
     overlayRef = overlay.create(overlayConfig);
@@ -104,25 +107,14 @@ describe('RepositionScrollStrategy', () => {
       left: 0,
       right: 100,
       width: 100,
-      height: 100
+      height: 100,
     } as DOMRect);
 
     scrolledSubject.next();
     expect(overlayRef.detach).toHaveBeenCalledTimes(1);
   });
-
 });
-
 
 /** Simple component that we can attach to the overlay. */
 @Component({template: '<p>Pasta</p>'})
-class PastaMsg { }
-
-
-/** Test module to hold the component. */
-@NgModule({
-  imports: [OverlayModule, PortalModule],
-  declarations: [PastaMsg],
-  entryComponents: [PastaMsg],
-})
-class OverlayTestModule { }
+class PastaMsg {}

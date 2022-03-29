@@ -1,11 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatProgressBarHarness} from '@angular/material/progress-bar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {ProgressBarHarnessExample} from './progress-bar-harness-example';
 
@@ -13,14 +9,10 @@ describe('ProgressBarHarnessExample', () => {
   let fixture: ComponentFixture<ProgressBarHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatProgressBarModule],
-      declarations: [ProgressBarHarnessExample]
+      declarations: [ProgressBarHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(ProgressBarHarnessExample);
     fixture.detectChanges();

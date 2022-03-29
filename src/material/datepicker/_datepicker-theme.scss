@@ -42,13 +42,14 @@ $calendar-weekday-table-font-size: 11px !default;
                 theming.get-color-from-palette($palette, default-contrast);
   }
 
-  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover,
   .cdk-keyboard-focused .mat-calendar-body-active,
   .cdk-program-focused .mat-calendar-body-active {
-    & > .mat-calendar-body-cell-content {
-      @include _unselected-cell {
-        background-color: theming.get-color-from-palette($palette, 0.3);
-      }
+    @include _highlighted-cell($palette);
+  }
+
+  @media (hover: hover) {
+    .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
+      @include _highlighted-cell($palette);
     }
   }
 }
@@ -60,6 +61,15 @@ $calendar-weekday-table-font-size: 11px !default;
   }
 }
 
+// Styles for a highlighted calendar cell (e.g. hovered or focused).
+@mixin _highlighted-cell($palette) {
+  & > .mat-calendar-body-cell-content {
+    @include _unselected-cell {
+      background-color: theming.get-color-from-palette($palette, 0.3);
+    }
+  }
+}
+
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   $foreground: map.get($config, foreground);
@@ -67,7 +77,7 @@ $calendar-weekday-table-font-size: 11px !default;
   $disabled-color: theming.get-color-from-palette($foreground, disabled-text);
 
   .mat-calendar-arrow {
-    border-top-color: theming.get-color-from-palette($foreground, icon);
+    fill: theming.get-color-from-palette($foreground, icon);
   }
 
   // The prev/next buttons need a bit more specificity to
@@ -78,14 +88,11 @@ $calendar-weekday-table-font-size: 11px !default;
     color: theming.get-color-from-palette($foreground, icon);
   }
 
-  .mat-calendar-table-header {
-    color: theming.get-color-from-palette($foreground, hint-text);
-  }
-
   .mat-calendar-table-header-divider::after {
     background: theming.get-color-from-palette($foreground, divider);
   }
 
+  .mat-calendar-table-header,
   .mat-calendar-body-label {
     color: theming.get-color-from-palette($foreground, secondary-text);
   }

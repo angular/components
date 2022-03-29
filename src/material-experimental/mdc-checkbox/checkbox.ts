@@ -22,15 +22,15 @@ import {
   Optional,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
-  MatCheckboxDefaultOptions, MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY
+  MatCheckboxDefaultOptions,
+  MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
 } from '@angular/material/checkbox';
 import {
-  RippleAnimationConfig,
   mixinColor,
   mixinDisabled,
   CanColor,
@@ -39,7 +39,6 @@ import {
 } from '@angular/material-experimental/mdc-core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
-import {numbers} from '@material/ripple';
 
 let nextUniqueId = 0;
 
@@ -49,7 +48,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatCheckbox),
-  multi: true
+  multi: true,
 };
 
 /** Change event object emitted by MatCheckbox. */
@@ -62,16 +61,13 @@ export class MatCheckboxChange {
 
 // Boilerplate for applying mixins to MatCheckbox.
 /** @docs-private */
-const _MatCheckboxBase = mixinColor(mixinDisabled(class {
-  constructor(public _elementRef: ElementRef) {}
-}));
-
-
-/** Configuration for the ripple animation. */
-const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
-  enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
-  exitDuration: numbers.FG_DEACTIVATION_MS,
-};
+const _MatCheckboxBase = mixinColor(
+  mixinDisabled(
+    class {
+      constructor(public _elementRef: ElementRef) {}
+    },
+  ),
+);
 
 @Component({
   selector: 'mat-checkbox',
@@ -81,17 +77,24 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   host: {
     'class': 'mat-mdc-checkbox',
     '[attr.tabindex]': 'null',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
     '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
     '[class.mdc-checkbox--disabled]': 'disabled',
     '[id]': 'id',
+    // Add classes that users can use to more easily target disabled or checked checkboxes.
+    '[class.mat-mdc-checkbox-disabled]': 'disabled',
+    '[class.mat-mdc-checkbox-checked]': 'checked',
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDestroy,
-  ControlValueAccessor, CanColor, CanDisable {
+export class MatCheckbox
+  extends _MatCheckboxBase
+  implements AfterViewInit, OnDestroy, ControlValueAccessor, CanColor, CanDisable
+{
   /**
    * The `aria-label` attribute to use for the input element. In most cases, `aria-labelledby` will
    * take precedence so this may be omitted.
@@ -99,16 +102,16 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   @Input('aria-label') ariaLabel: string = '';
 
   /** The `aria-labelledby` attribute to use for the input element. */
-  @Input('aria-labelledby') ariaLabelledby: string|null = null;
+  @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
   @Input('aria-describedby') ariaDescribedby: string;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after'. */
-  @Input() labelPosition: 'before'|'after' = 'after';
+  @Input() labelPosition: 'before' | 'after' = 'after';
 
   /** The `name` attribute to use for the input element. */
-  @Input() name: string|null = null;
+  @Input() name: string | null = null;
 
   /** The `tabindex` attribute to use for the input element. */
   @Input() tabIndex: number;
@@ -126,8 +129,9 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   get checked(): boolean {
     return this._checked;
   }
-  set checked(checked) {
+  set checked(checked: BooleanInput) {
     this._checked = coerceBooleanProperty(checked);
+    this._changeDetectorRef.markForCheck();
   }
   private _checked = false;
 
@@ -141,7 +145,7 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   get indeterminate(): boolean {
     return this._indeterminate;
   }
-  set indeterminate(indeterminate) {
+  set indeterminate(indeterminate: BooleanInput) {
     this._indeterminate = coerceBooleanProperty(indeterminate);
     this._syncIndeterminate(this._indeterminate);
   }
@@ -152,7 +156,7 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   get required(): boolean {
     return this._required;
   }
-  set required(required) {
+  set required(required: BooleanInput) {
     this._required = coerceBooleanProperty(required);
   }
   private _required = false;
@@ -162,7 +166,7 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   get disableRipple(): boolean {
     return this._disableRipple;
   }
-  set disableRipple(disableRipple: boolean) {
+  set disableRipple(disableRipple: BooleanInput) {
     this._disableRipple = coerceBooleanProperty(disableRipple);
   }
   private _disableRipple = false;
@@ -194,12 +198,6 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   /** The `MDCCheckboxFoundation` instance for this checkbox. */
   _checkboxFoundation: MDCCheckboxFoundation;
 
-  /** The set of classes that should be applied to the native input. */
-  _classes: {[key: string]: boolean} = {'mdc-checkbox__native-control': true};
-
-  /** Animation config for the ripple. */
-  _rippleAnimation = RIPPLE_ANIMATION_CONFIG;
-
   /** ControlValueAccessor onChange */
   private _cvaOnChange = (_: boolean) => {};
 
@@ -216,35 +214,35 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
 
   /** The `MDCCheckboxAdapter` instance for this checkbox. */
   private _checkboxAdapter: MDCCheckboxAdapter = {
-    addClass: (className) => this._setClass(className, true),
-    removeClass: (className) => this._setClass(className, false),
+    addClass: className => this._nativeCheckbox.nativeElement.classList.add(className),
+    removeClass: className => this._nativeCheckbox.nativeElement.classList.remove(className),
     forceLayout: () => this._checkbox.nativeElement.offsetWidth,
     hasNativeControl: () => !!this._nativeCheckbox,
     isAttachedToDOM: () => !!this._checkbox.nativeElement.parentNode,
     isChecked: () => this.checked,
     isIndeterminate: () => this.indeterminate,
-    removeNativeControlAttr:
-        (attr) => {
-          if (!this._mdcFoundationIgnoredAttrs.has(attr)) {
-            this._nativeCheckbox.nativeElement.removeAttribute(attr);
-          }
-        },
-    setNativeControlAttr:
-        (attr, value) => {
-          if (!this._mdcFoundationIgnoredAttrs.has(attr)) {
-            this._nativeCheckbox.nativeElement.setAttribute(attr, value);
-          }
-        },
-    setNativeControlDisabled: (disabled) => this.disabled = disabled,
+    removeNativeControlAttr: attr => {
+      if (!this._mdcFoundationIgnoredAttrs.has(attr)) {
+        this._nativeCheckbox.nativeElement.removeAttribute(attr);
+      }
+    },
+    setNativeControlAttr: (attr, value) => {
+      if (!this._mdcFoundationIgnoredAttrs.has(attr)) {
+        this._nativeCheckbox.nativeElement.setAttribute(attr, value);
+      }
+    },
+    setNativeControlDisabled: disabled => (this.disabled = disabled),
   };
 
   constructor(
-      private _changeDetectorRef: ChangeDetectorRef,
-      elementRef: ElementRef<HTMLElement>,
-      @Attribute('tabindex') tabIndex: string,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-      @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
-          private _options?: MatCheckboxDefaultOptions) {
+    private _changeDetectorRef: ChangeDetectorRef,
+    elementRef: ElementRef<HTMLElement>,
+    @Attribute('tabindex') tabIndex: string,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+    @Optional()
+    @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
+    private _options?: MatCheckboxDefaultOptions,
+  ) {
     super(elementRef);
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
     // ripple, which we do ourselves instead.
@@ -368,18 +366,12 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   }
 
   /** Gets the value for the `aria-checked` attribute of the native input. */
-  _getAriaChecked(): 'true'|'false'|'mixed' {
+  _getAriaChecked(): 'true' | 'false' | 'mixed' {
     if (this.checked) {
       return 'true';
     }
 
     return this.indeterminate ? 'mixed' : 'false';
-  }
-
-  /** Sets whether the given CSS class should be applied to the native input. */
-  private _setClass(cssClass: string, active: boolean) {
-    this._classes[cssClass] = active;
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -396,10 +388,4 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
       nativeCheckbox.nativeElement.indeterminate = value;
     }
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_indeterminate: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

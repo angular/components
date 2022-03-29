@@ -1,16 +1,65 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
 @use '@material/button/button' as mdc-button;
+@use '@material/button/button-base' as mdc-button-base;
 @use '@material/button/variables' as mdc-button-variables;
+@use '@material/button/button-text-theme' as mdc-button-text-theme;
+@use '@material/button/button-filled-theme' as mdc-button-filled-theme;
+@use '@material/button/button-protected-theme' as mdc-button-protected-theme;
+@use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
+
 @use '../mdc-helpers/mdc-helpers';
-@use '../../cdk/a11y';
-@use 'button-base';
+@use './button-base';
 
+@include mdc-helpers.disable-fallback-declarations {
+  @include mdc-button.static-styles-without-ripple($query: mdc-helpers.$mat-base-styles-query);
 
-@include mdc-button.without-ripple($query: mdc-helpers.$mat-base-styles-query);
+  // Keys to exclude from the MDC theme config, allowing us to drop styles we don't need.
+  $override-keys: button-base.mat-private-button-remove-ripple((
+    label-text-font: null,
+    label-text-size: null,
+    label-text-tracking: null,
+    label-text-transform: null,
+    label-text-weight: null,
+    with-icon-icon-size: null,
+    label-text-color: inherit,
+  ));
 
-.mat-mdc-button, .mat-mdc-unelevated-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
+  // Note that we don't include a feature query, because this mixins declare
+  // all the "slots" for CSS variables that will be defined in the theme.
+  .mat-mdc-button {
+    @include mdc-button-text-theme.theme-styles(
+      map.merge(mdc-button-text-theme.$light-theme, $override-keys));
+  }
+
+  .mat-mdc-unelevated-button {
+    @include mdc-button-filled-theme.theme-styles(
+      map.merge(map.merge(mdc-button-filled-theme.$light-theme, $override-keys), (
+        container-color: transparent,
+      )));
+  }
+
+  .mat-mdc-raised-button {
+    @include mdc-button-protected-theme.theme-styles(
+      map.merge(map.merge(mdc-button-protected-theme.$light-theme, $override-keys), (
+        container-color: transparent,
+      )));
+  }
+
+  .mat-mdc-outlined-button {
+    @include mdc-button-outlined-theme.theme-styles(
+      map.merge(mdc-button-outlined-theme.$light-theme, $override-keys));
+  }
+}
+
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
   @include button-base.mat-private-button-interactive();
   @include button-base.mat-private-button-disabled();
   @include button-base.mat-private-button-touch-target(false);
+  @include mat.private-animation-noop();
 }
 
 // MDC expects button icons to contain this HTML content:
@@ -21,40 +70,24 @@
 // mixins will style the icons appropriately.
 .mat-mdc-button {
   .mat-icon {
-    @include mdc-button.icon();
+    @include mdc-button-base.icon();
   }
- .mdc-button__label + .mat-icon {
-   @include mdc-button.icon-trailing();
- }
+  .mdc-button__label + .mat-icon {
+    @include mdc-button-base.icon-trailing();
+  }
 }
 
-.mat-mdc-unelevated-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
   // Icons inside contained buttons have different styles due to increased button padding
   .mat-icon {
-    @include mdc-button.icon();
-    @include mdc-button.icon-contained();
+    @include mdc-button-base.icon();
+    @include mdc-button-base.icon-contained();
   }
 
   .mdc-button__label + .mat-icon {
-    @include mdc-button.icon-contained-trailing();
-  }
-}
-
-// Add an outline to make buttons more visible in high contrast mode. Stroked buttons and FABs
-// don't need a special look in high-contrast mode, because those already have an outline.
-.mat-mdc-button:not(.mdc-button--outlined),
-.mat-mdc-unelevated-button:not(.mdc-button--outlined),
-.mat-mdc-raised-button:not(.mdc-button--outlined),
-.mat-mdc-outlined-button:not(.mdc-button--outlined),
-.mat-mdc-icon-button {
-  @include a11y.high-contrast(active, off) {
-    outline: solid 1px;
-  }
-}
-
-@include a11y.high-contrast(active, off) {
-  .mat-mdc-button-base:focus {
-    outline: solid 3px;
+    @include mdc-button-base.icon-contained-trailing();
   }
 }
 
@@ -72,5 +105,5 @@
   left: $offset;
   bottom: $offset;
   right: $offset;
-  border: none;
+  border-width: $offset;
 }

@@ -17,25 +17,21 @@ import {RouterModule} from '@angular/router';
 import {DevAppComponent} from './dev-app';
 import {DevAppDirectionality} from './dev-app/dev-app-directionality';
 import {DevAppModule} from './dev-app/dev-app-module';
-import {DEV_APP_ROUTES} from './dev-app/routes';
+import {DEV_APP_ROUTES} from './routes';
 import {DevAppRippleOptions} from './dev-app/ripple-options';
 import {ANIMATIONS_STORAGE_KEY} from './dev-app/dev-app-layout';
 
 @NgModule({
   imports: [
     BrowserAnimationsModule.withConfig({
-      // Note that this doesn't seem to work on ViewEngine, but it's
-      // not a compilation error either so we can live with it.
-      disableAnimations: localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true'
+      disableAnimations: localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true',
     }),
     BrowserModule,
     DevAppModule,
     HttpClientModule,
     RouterModule.forRoot(DEV_APP_ROUTES),
   ],
-  declarations: [
-    DevAppComponent,
-  ],
+  declarations: [DevAppComponent],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
@@ -43,5 +39,4 @@ import {ANIMATIONS_STORAGE_KEY} from './dev-app/dev-app-layout';
   ],
   bootstrap: [DevAppComponent],
 })
-export class MainModule {
-}
+export class MainModule {}

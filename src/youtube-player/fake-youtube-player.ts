@@ -20,7 +20,7 @@ const playerState = {
 // to a plain enum which we can't reference in tests.
 const modestBranding = {
   Full: 0,
-  Modest: 1
+  Modest: 1,
 };
 
 interface FakeYtNamespace {
@@ -32,19 +32,42 @@ interface FakeYtNamespace {
 
 export function createFakeYtNamespace(): FakeYtNamespace {
   const playerSpy: jasmine.SpyObj<YT.Player> = jasmine.createSpyObj('Player', [
-    'getPlayerState', 'destroy', 'cueVideoById', 'loadVideoById', 'pauseVideo', 'stopVideo',
-    'seekTo', 'isMuted', 'mute', 'unMute', 'getVolume', 'getPlaybackRate',
-    'getAvailablePlaybackRates', 'getVideoLoadedFraction', 'getPlayerState', 'getCurrentTime',
-    'getPlaybackQuality', 'getAvailableQualityLevels', 'getDuration', 'getVideoUrl',
-    'getVideoEmbedCode', 'playVideo', 'setSize', 'setVolume', 'setPlaybackQuality',
-    'setPlaybackRate', 'addEventListener', 'removeEventListener',
+    'getPlayerState',
+    'destroy',
+    'cueVideoById',
+    'loadVideoById',
+    'pauseVideo',
+    'stopVideo',
+    'seekTo',
+    'isMuted',
+    'mute',
+    'unMute',
+    'getVolume',
+    'getPlaybackRate',
+    'getAvailablePlaybackRates',
+    'getVideoLoadedFraction',
+    'getPlayerState',
+    'getCurrentTime',
+    'getPlaybackQuality',
+    'getAvailableQualityLevels',
+    'getDuration',
+    'getVideoUrl',
+    'getVideoEmbedCode',
+    'playVideo',
+    'setSize',
+    'setVolume',
+    'setPlaybackQuality',
+    'setPlaybackRate',
+    'addEventListener',
+    'removeEventListener',
   ]);
 
   let playerConfig: YT.PlayerOptions | undefined;
   const boundListeners = new Map<keyof YT.Events, Set<(event: any) => void>>();
   const playerCtorSpy = jasmine.createSpy('Player Constructor');
 
-  playerCtorSpy.and.callFake((_el: Element, config: YT.PlayerOptions) => {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  playerCtorSpy.and.callFake(function (_el: Element, config: YT.PlayerOptions) {
     playerConfig = config;
     return playerSpy;
   });
@@ -90,7 +113,7 @@ export function createFakeYtNamespace(): FakeYtNamespace {
     namespace: {
       'Player': playerCtorSpy as unknown as typeof YT.Player,
       'PlayerState': playerState,
-      'ModestBranding': modestBranding
+      'ModestBranding': modestBranding,
     } as typeof YT,
   };
 }

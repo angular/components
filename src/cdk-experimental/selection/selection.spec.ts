@@ -1,17 +1,6 @@
 import {CdkTableModule} from '@angular/cdk/table';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import {
-  waitForAsync,
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  TestBed,
-} from '@angular/core/testing';
+import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {CdkSelection} from './selection';
 import {CdkSelectionModule} from './selection-module';
@@ -22,14 +11,10 @@ describe('CdkSelection', () => {
   let component: ListWithMultiSelection;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [CdkSelectionModule],
-          declarations: [
-            ListWithMultiSelection,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule],
+      declarations: [ListWithMultiSelection],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -227,15 +212,11 @@ describe('CdkSelection', () => {
       component.clickSelectionToggle(1);
 
       expect(component.selectionChange!.before).toEqual([]);
-      expect(component.selectionChange!.after).toEqual([
-        {value: 'banana', index: 1},
-      ]);
+      expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
 
       component.clickSelectionToggle(2);
 
-      expect(component.selectionChange!.before).toEqual([
-        {value: 'banana', index: 1},
-      ]);
+      expect(component.selectionChange!.before).toEqual([{value: 'banana', index: 1}]);
       expect(component.selectionChange!.after).toEqual([
         {value: 'banana', index: 1},
         {value: 'cherry', index: 2},
@@ -247,9 +228,7 @@ describe('CdkSelection', () => {
         {value: 'banana', index: 1},
         {value: 'cherry', index: 2},
       ]);
-      expect(component.selectionChange!.after).toEqual([
-        {value: 'banana', index: 1},
-      ]);
+      expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
     }));
   });
 });
@@ -259,14 +238,10 @@ describe('CdkSelection with multiple = false', () => {
   let component: ListWithSingleSelection;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [CdkSelectionModule],
-          declarations: [
-            ListWithSingleSelection,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule],
+      declarations: [ListWithSingleSelection],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -310,24 +285,16 @@ describe('CdkSelection with multiple = false', () => {
     component.clickSelectionToggle(1);
 
     expect(component.selectionChange!.before).toEqual([]);
-    expect(component.selectionChange!.after).toEqual([
-      {value: 'banana', index: 1},
-    ]);
+    expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
 
     component.clickSelectionToggle(2);
 
-    expect(component.selectionChange!.before).toEqual([
-      {value: 'banana', index: 1},
-    ]);
-    expect(component.selectionChange!.after).toEqual([
-      {value: 'cherry', index: 2},
-    ]);
+    expect(component.selectionChange!.before).toEqual([{value: 'banana', index: 1}]);
+    expect(component.selectionChange!.after).toEqual([{value: 'cherry', index: 2}]);
 
     component.clickSelectionToggle(2);
 
-    expect(component.selectionChange!.before).toEqual([
-      {value: 'cherry', index: 2},
-    ]);
+    expect(component.selectionChange!.before).toEqual([{value: 'cherry', index: 2}]);
     expect(component.selectionChange!.after).toEqual([]);
   }));
 });
@@ -337,17 +304,10 @@ describe('cdkSelectionColumn', () => {
   let component: MultiSelectTableWithSelectionColumn;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [
-            CdkSelectionModule,
-            CdkTableModule,
-          ],
-          declarations: [
-            MultiSelectTableWithSelectionColumn,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule, CdkTableModule],
+      declarations: [MultiSelectTableWithSelectionColumn],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -358,7 +318,7 @@ describe('cdkSelectionColumn', () => {
 
   it('should show check boxes', () => {
     const checkboxes =
-        component.elementRef.nativeElement.querySelectorAll('input[type="checkbox"]');
+      component.elementRef.nativeElement.querySelectorAll('input[type="checkbox"]');
     // Select-all toggle + each toggle per row.
     expect(checkboxes.length).toBe(5);
   });
@@ -439,17 +399,10 @@ describe('cdkSelectionColumn with multiple = false', () => {
   let component: SingleSelectTableWithSelectionColumn;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [
-            CdkSelectionModule,
-            CdkTableModule,
-          ],
-          declarations: [
-            SingleSelectTableWithSelectionColumn,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule, CdkTableModule],
+      declarations: [SingleSelectTableWithSelectionColumn],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -498,7 +451,7 @@ describe('cdkSelectionColumn with multiple = false', () => {
         </button>
         {{item}}
       </li>
-    </ul>`
+    </ul>`,
 })
 class ListWithMultiSelection {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
@@ -509,7 +462,7 @@ class ListWithMultiSelection {
 
   constructor(private readonly _elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
 
-  selectAllState(indeterminateState: boolean|null, checkedState: boolean|null): string {
+  selectAllState(indeterminateState: boolean | null, checkedState: boolean | null): string {
     if (indeterminateState) {
       return 'indeterminate';
     } else if (checkedState) {
@@ -558,7 +511,7 @@ class ListWithMultiSelection {
         </button>
         {{item}}
       </li>
-    </ul>`
+    </ul>`,
 })
 class ListWithSingleSelection {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
@@ -597,7 +550,7 @@ class ListWithSingleSelection {
       <tr cdk-row *cdkRowDef="let row; columns: columns;"
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
-    `
+    `,
 })
 class MultiSelectTableWithSelectionColumn {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
@@ -605,7 +558,7 @@ class MultiSelectTableWithSelectionColumn {
   columns = ['select', 'name'];
   data = ['apple', 'banana', 'cherry', 'durian'];
 
-  selectAllState(indeterminateState: boolean|null, checkedState: boolean|null): string {
+  selectAllState(indeterminateState: boolean | null, checkedState: boolean | null): string {
     if (indeterminateState) {
       return 'indeterminate';
     } else if (checkedState) {
@@ -660,7 +613,7 @@ class MultiSelectTableWithSelectionColumn {
       <tr cdk-row *cdkRowDef="let row; columns: columns;"
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
-    `
+    `,
 })
 class SingleSelectTableWithSelectionColumn {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;

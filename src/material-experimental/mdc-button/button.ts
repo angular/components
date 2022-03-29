@@ -14,7 +14,7 @@ import {
   Inject,
   NgZone,
   Optional,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -24,7 +24,7 @@ import {
   MAT_BUTTON_HOST,
   MAT_BUTTON_INPUTS,
   MatAnchorBase,
-  MatButtonBase
+  MatButtonBase,
 } from './button-base';
 
 /**
@@ -42,7 +42,7 @@ import {
     button[mat-stroked-button]
   `,
   templateUrl: 'button.html',
-  styleUrls: ['button.css'],
+  styleUrls: ['button.css', 'button-high-contrast.css'],
   inputs: MAT_BUTTON_INPUTS,
   host: MAT_BUTTON_HOST,
   exportAs: 'matButton',
@@ -51,8 +51,11 @@ import {
 })
 export class MatButton extends MatButtonBase {
   constructor(
-      elementRef: ElementRef, platform: Platform, ngZone: NgZone,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    elementRef: ElementRef,
+    platform: Platform,
+    ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
     super(elementRef, platform, ngZone, animationMode);
   }
 }
@@ -73,14 +76,17 @@ export class MatButton extends MatButtonBase {
   host: MAT_ANCHOR_HOST,
   inputs: MAT_ANCHOR_INPUTS,
   templateUrl: 'button.html',
-  styleUrls: ['button.css'],
+  styleUrls: ['button.css', 'button-high-contrast.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatAnchor extends MatAnchorBase {
   constructor(
-      elementRef: ElementRef, platform: Platform, ngZone: NgZone,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    elementRef: ElementRef,
+    platform: Platform,
+    ngZone: NgZone,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
     super(elementRef, platform, ngZone, animationMode);
   }
 }

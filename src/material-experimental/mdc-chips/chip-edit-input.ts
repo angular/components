@@ -6,11 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  ElementRef,
-  Inject,
-} from '@angular/core';
+import {Directive, ElementRef, Inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 
 /**
@@ -20,7 +16,7 @@ import {DOCUMENT} from '@angular/common';
 @Directive({
   selector: 'span[matChipEditInput]',
   host: {
-    'class': 'mdc-chip__primary-action mat-chip-edit-input',
+    'class': 'mat-chip-edit-input',
     'role': 'textbox',
     'tabindex': '-1',
     'contenteditable': 'true',
@@ -29,7 +25,8 @@ import {DOCUMENT} from '@angular/common';
 export class MatChipEditInput {
   constructor(
     private readonly _elementRef: ElementRef,
-    @Inject(DOCUMENT) private readonly _document: any) {}
+    @Inject(DOCUMENT) private readonly _document: any,
+  ) {}
 
   initialize(initialValue: string) {
     this.getNativeElement().focus();
@@ -41,7 +38,7 @@ export class MatChipEditInput {
   }
 
   setValue(value: string) {
-    this.getNativeElement().innerText = value;
+    this.getNativeElement().textContent = value;
     this._moveCursorToEndOfInput();
   }
 

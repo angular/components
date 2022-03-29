@@ -230,7 +230,14 @@ selected range.
 
 Note that comparison and overlap colors aren't derived from the current theme, due
 to limitations in the Material Design theming system. They can be customized using the
-`mat-date-range-colors` mixin.
+`datepicker-date-range-colors` mixin.
+
+```scss
+@use '@angular/material' as mat;
+
+@include mat.datepicker-date-range-colors(
+  hotpink, teal, yellow, purple);
+```
 
 ### Customizing the date selection logic
 
@@ -292,6 +299,11 @@ export class MyApp {}
 
 It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
 
+**Note:** if you're using the `MatDateFnsModule`, you have to provide the data object for your
+locale to `MAT_DATE_LOCALE` instead of the locale code, in addition to providing a configuration
+compatible with `date-fns` to `MAT_DATE_FORMATS`. Locale data for `date-fns` can be imported
+from `date-fns/locale`.
+
 <!-- example(datepicker-locale) -->
 
 #### Choosing a date implementation and date format settings
@@ -306,22 +318,68 @@ The easiest way to ensure this is to import one of the provided date modules:
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Date</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td>en-US</td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td>None</td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material/core</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Date</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td>en-US</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material/core</code></td>
+    </tr>
+  </tbody>
+</table>
+
+`MatDateFnsModule` (installed via `@angular/material-date-fns-adapter`)
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Date</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://github.com/date-fns/date-fns/tree/master/src/locale/">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://date-fns.org/">date-fns</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-date-fns-adapter</code></td>
+    </tr>
+  </tbody>
+</table>
+
+`MatLuxonDateModule` (installed via `@angular/material-luxon-adapter`)
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>DateTime</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://moment.github.io/luxon/">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://moment.github.io/luxon/">Luxon</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-luxon-adapter</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -329,22 +387,22 @@ The easiest way to ensure this is to import one of the provided date modules:
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Moment</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td><a href="https://github.com/moment/moment/tree/develop/src/locale">See project for details</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td><a href="https://momentjs.com/">Moment.js</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material-moment-adapter</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Moment</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://github.com/moment/moment/tree/develop/src/locale">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://momentjs.com/">Moment.js</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-moment-adapter</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -516,72 +574,83 @@ value can be anything that is accepted by `ngClass`.
 
 ### Accessibility
 
-The `MatDatepickerInput` and `MatDatepickerToggle` directives add the `aria-haspopup` attribute to
-the native input and toggle button elements respectively, and they trigger a calendar dialog with
-`role="dialog"`.
+The `MatDatepicker` pop-up uses the `role="dialog"` interaction pattern. This dialog then contains
+multiple controls, the most prominent being the calendar itself. This calendar implements the
+`role="grid"` interaction pattern.
 
-`MatDatepickerIntl` includes strings that are used for `aria-label`s. The datepicker input
-should have a placeholder or be given a meaningful label via `aria-label`, `aria-labelledby` or
+Always enable [_confirmation action buttons_](#confirmation-action-buttons). This allows assistive
+technology users to explicitly confirm their selection before committing a value.
+
+The `MatDatepickerInput` and `MatDatepickerToggle` directives both apply the `aria-haspopup`
+attribute to the native input and button elements, respectively.
+
+`MatDatepickerIntl` includes strings that are used for `aria-label` attributes. Always provide
+the datepicker text input a meaningful label via `<mat-label>`, `aria-label`, `aria-labelledby` or
 `MatDatepickerIntl`.
+
+`MatDatepickerInput` adds <kbd>>Alt</kbd> + <kbd>Down Arrow</kbd> as a keyboard short to open the
+datepicker pop-up. However, ChromeOS intercepts this key combination at the OS level such that the
+browser only receives a `PageDown` key event. Because of this behavior, you should always include an
+additional means of opening the pop-up, such as `MatDatepickerToggle`.
 
 #### Keyboard interaction
 
 The datepicker supports the following keyboard shortcuts:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `ALT` + `DOWN_ARROW` | Open the calendar pop-up                  |
-| `ESCAPE`             | Close the calendar pop-up                 |
+| Keyboard Shortcut                      | Action                     |
+|----------------------------------------|----------------------------|
+| <kbd>Alt</kbd> + <kbd>Down Arrow</kbd> | Open the calendar pop-up   |
+| <kbd>Escape</kbd>                      | Close the calendar pop-up  |
 
 
 In month view:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `LEFT_ARROW`         | Go to previous day                        |
-| `RIGHT_ARROW`        | Go to next day                            |
-| `UP_ARROW`           | Go to same day in the previous week       |
-| `DOWN_ARROW`         | Go to same day in the next week           |
-| `HOME`               | Go to the first day of the month          |
-| `END`                | Go to the last day of the month           |
-| `PAGE_UP`            | Go to the same day in the previous month  |
-| `ALT` + `PAGE_UP`    | Go to the same day in the previous year   |
-| `PAGE_DOWN`          | Go to the same day in the next month      |
-| `ALT` + `PAGE_DOWN`  | Go to the same day in the next year       |
-| `ENTER`              | Select current date                       |
+| Shortcut                              | Action                                   |
+|---------------------------------------|------------------------------------------|
+| <kbd>Left Arrow</kbd>                 | Go to previous day                       |
+| <kbd>Right Arrow</kbd>                | Go to next day                           |
+| <kbd>Up Arrow</kbd>                   | Go to same day in the previous week      |
+| <kbd>Down Arrow</kbd>                 | Go to same day in the next week          |
+| <kbd>Home</kbd>                       | Go to the first day of the month         |
+| <kbd>End</kbd>                        | Go to the last day of the month          |
+| <kbd>Page up</kbd>                    | Go to the same day in the previous month |
+| <kbd>Alt</kbd> + <kbd>Page up</kbd>   | Go to the same day in the previous year  |
+| <kbd>Page Down</kbd>                  | Go to the same day in the next month     |
+| <kbd>Alt</kbd> + <kbd>Page Down</kbd> | Go to the same day in the next year      |
+| <kbd>Enter</kbd>                      | Select current date                      |
 
 
 In year view:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `LEFT_ARROW`         | Go to previous month                      |
-| `RIGHT_ARROW`        | Go to next month                          |
-| `UP_ARROW`           | Go up a row (back 4 months)               |
-| `DOWN_ARROW`         | Go down a row (forward 4 months)          |
-| `HOME`               | Go to the first month of the year         |
-| `END`                | Go to the last month of the year          |
-| `PAGE_UP`            | Go to the same month in the previous year |
-| `ALT` + `PAGE_UP`    | Go to the same month 10 years back        |
-| `PAGE_DOWN`          | Go to the same month in the next year     |
-| `ALT` + `PAGE_DOWN`  | Go to the same month 10 years forward     |
-| `ENTER`              | Select current month                      |
+| Shortcut                              | Action                                    |
+|---------------------------------------|-------------------------------------------|
+| <kbd>Left Arrow</kbd>                 | Go to previous month                      |
+| <kbd>Right Arrow</kbd>                | Go to next month                          |
+| <kbd>Up Arrow</kbd>                   | Go up a row (back 4 months)               |
+| <kbd>Down Arrow</kbd>                 | Go down a row (forward 4 months)          |
+| <kbd>Home</kbd>                       | Go to the first month of the year         |
+| <kbd>End</kbd>                        | Go to the last month of the year          |
+| <kbd>Page Up</kbd>                    | Go to the same month in the previous year |
+| <kbd>Alt</kbd> + <kbd>Page up</kbd>   | Go to the same month 10 years back        |
+| <kbd>Page Down</kbd>                  | Go to the same month in the next year     |
+| <kbd>Alt</kbd> + <kbd>Page Down</kbd> | Go to the same month 10 years forward     |
+| <kbd>Enter</kbd>                      | Select current month                      |
 
 In multi-year view:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `LEFT_ARROW`         | Go to previous year                       |
-| `RIGHT_ARROW`        | Go to next year                           |
-| `UP_ARROW`           | Go up a row (back 4 years)                |
-| `DOWN_ARROW`         | Go down a row (forward 4 years)           |
-| `HOME`               | Go to the first year in the current range |
-| `END`                | Go to the last year in the current range  |
-| `PAGE_UP`            | Go back 24 years                          |
-| `ALT` + `PAGE_UP`    | Go back 240 years                         |
-| `PAGE_DOWN`          | Go forward 24 years                       |
-| `ALT` + `PAGE_DOWN`  | Go forward 240 years                      |
-| `ENTER`              | Select current year                       |
+| Shortcut                              | Action                                    |
+|---------------------------------------|-------------------------------------------|
+| <kbd>Left Arrow</kbd>                 | Go to previous year                       |
+| <kbd>Right Arrow</kbd>                | Go to next year                           |
+| <kbd>Up Arrow</kbd>                   | Go up a row (back 4 years)                |
+| <kbd>Down Arrow</kbd>                 | Go down a row (forward 4 years)           |
+| <kbd>Home</kbd>                       | Go to the first year in the current range |
+| <kbd>End</kbd>                        | Go to the last year in the current range  |
+| <kbd>Page up</kbd>                    | Go back 24 years                          |
+| <kbd>Alt</kbd> + <kbd>Page up</kbd>   | Go back 240 years                         |
+| <kbd>Page Down</kbd>                  | Go forward 24 years                       |
+| <kbd>Alt</kbd> + <kbd>Page Down</kbd> | Go forward 240 years                      |
+| <kbd>Enter</kbd>                      | Select current year                       |
 
 ### Troubleshooting
 

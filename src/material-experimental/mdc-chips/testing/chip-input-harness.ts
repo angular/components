@@ -21,33 +21,33 @@ export class MatChipInputHarness extends ComponentHarness {
    */
   static with(options: ChipInputHarnessFilters = {}): HarnessPredicate<MatChipInputHarness> {
     return new HarnessPredicate(MatChipInputHarness, options)
-        .addOption('value', options.value, async (harness, value) => {
-          return (await harness.getValue()) === value;
-        })
-        .addOption('placeholder', options.placeholder, async (harness, placeholder) => {
-          return (await harness.getPlaceholder()) === placeholder;
-        });
+      .addOption('value', options.value, async (harness, value) => {
+        return (await harness.getValue()) === value;
+      })
+      .addOption('placeholder', options.placeholder, async (harness, placeholder) => {
+        return (await harness.getPlaceholder()) === placeholder;
+      });
   }
 
   /** Whether the input is disabled. */
   async isDisabled(): Promise<boolean> {
-    return (await this.host()).getProperty('disabled')!;
+    return (await this.host()).getProperty<boolean>('disabled');
   }
 
   /** Whether the input is required. */
   async isRequired(): Promise<boolean> {
-    return (await this.host()).getProperty('required')!;
+    return (await this.host()).getProperty<boolean>('required');
   }
 
   /** Gets the value of the input. */
   async getValue(): Promise<string> {
     // The "value" property of the native input is never undefined.
-    return (await (await this.host()).getProperty('value'))!;
+    return await (await this.host()).getProperty<string>('value');
   }
 
   /** Gets the placeholder of the input. */
   async getPlaceholder(): Promise<string> {
-    return (await (await this.host()).getProperty('placeholder'));
+    return await (await this.host()).getProperty<string>('placeholder');
   }
 
   /**

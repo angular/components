@@ -5,7 +5,6 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 
-
 describe('MatSidenav', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -82,9 +81,7 @@ describe('MatSidenav', () => {
     expect(instance.outerSidenav.opened).toBe(true);
     expect(instance.innerSidenav.opened).toBe(true);
   }));
-
 });
-
 
 @Component({
   template: `
@@ -106,7 +103,6 @@ class SidenavWithFixedPosition {
   fixedTop = 20;
   fixedBottom = 30;
 }
-
 
 @Component({
   // Note that we need the `ng-container` with the `ngSwitch` so that

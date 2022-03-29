@@ -10,7 +10,6 @@ import {ScrollingModule, CdkScrollable} from '@angular/cdk/scrolling';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 import {Subject} from 'rxjs';
 
-
 describe('MatTabBody', () => {
   let dir: Direction = 'ltr';
   let dirChange: Subject<Direction> = new Subject<Direction>();
@@ -19,14 +18,8 @@ describe('MatTabBody', () => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [CommonModule, PortalModule, MatRippleModule, NoopAnimationsModule],
-      declarations: [
-        MatTabBody,
-        MatTabBodyPortal,
-        SimpleTabBodyApp,
-      ],
-      providers: [
-        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}
-      ]
+      declarations: [MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
+      providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}],
     });
 
     TestBed.compileComponents();
@@ -57,7 +50,6 @@ describe('MatTabBody', () => {
     });
 
     describe('in LTR direction', () => {
-
       beforeEach(() => {
         dir = 'ltr';
         fixture = TestBed.createComponent(SimpleTabBodyApp);
@@ -182,21 +174,16 @@ describe('MatTabBody', () => {
   });
 
   it('should mark the tab body content as a scrollable container', () => {
-    TestBed
-      .resetTestingModule()
+    TestBed.resetTestingModule()
       .configureTestingModule({
         imports: [
           CommonModule,
           PortalModule,
           MatRippleModule,
           NoopAnimationsModule,
-          ScrollingModule
+          ScrollingModule,
         ],
-        declarations: [
-          MatTabBody,
-          MatTabBodyPortal,
-          SimpleTabBodyApp,
-        ]
+        declarations: [MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
       })
       .compileComponents();
 
@@ -209,12 +196,11 @@ describe('MatTabBody', () => {
   });
 });
 
-
 @Component({
   template: `
     <ng-template>Tab Body Content</ng-template>
     <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>
-  `
+  `,
 })
 class SimpleTabBodyApp implements AfterContentInit {
   content: TemplatePortal;
@@ -224,7 +210,7 @@ class SimpleTabBodyApp implements AfterContentInit {
   @ViewChild(MatTabBody) tabBody: MatTabBody;
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(private _viewContainerRef: ViewContainerRef) { }
+  constructor(private _viewContainerRef: ViewContainerRef) {}
 
   ngAfterContentInit() {
     this.content = new TemplatePortal(this.template, this._viewContainerRef);

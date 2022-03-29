@@ -21,14 +21,14 @@ let nextId = 0;
 export abstract class CdkMenuItemSelectable extends CdkMenuItem {
   /** Event emitted when the selectable item is clicked */
   @Output('cdkMenuItemToggled') readonly toggled: EventEmitter<CdkMenuItemSelectable> =
-      new EventEmitter();
+    new EventEmitter();
 
   /** Whether the element is checked */
   @Input()
-  get checked() {
+  get checked(): boolean {
     return this._checked;
   }
-  set checked(value: boolean) {
+  set checked(value: BooleanInput) {
     this._checked = coerceBooleanProperty(value);
   }
   private _checked = false;
@@ -45,6 +45,4 @@ export abstract class CdkMenuItemSelectable extends CdkMenuItem {
       this.toggled.next(this);
     }
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
 }

@@ -35,19 +35,38 @@ describe('MapMarkerClusterer', () => {
     createMapConstructorSpy(mapSpy).and.callThrough();
 
     const markerSpy = createMarkerSpy({});
-    createMarkerConstructorSpy(markerSpy).and.callFake(() => {
+    // The spy target function cannot be an arrow-function as this breaks when created
+    // through `new`.
+    createMarkerConstructorSpy(markerSpy).and.callFake(function () {
       return createMarkerSpy({});
     });
 
     markerClustererSpy = createMarkerClustererSpy();
-    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy)
-        .and.callThrough();
+    markerClustererConstructorSpy =
+      createMarkerClustererConstructorSpy(markerClustererSpy).and.callThrough();
 
     fixture = TestBed.createComponent(TestApp);
   });
 
   afterEach(() => {
     (window.google as any) = undefined;
+    (window as any).MarkerClusterer = undefined;
+  });
+
+  it('throws an error if the clustering library has not been loaded', () => {
+    (window as any).MarkerClusterer = undefined;
+    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(
+      markerClustererSpy,
+      false,
+    ).and.callThrough();
+
+    expect(() => fixture.detectChanges()).toThrow(
+      new Error(
+        'MarkerClusterer class not found, cannot construct a marker cluster. ' +
+          'Please install the MarkerClustererPlus library: ' +
+          'https://github.com/googlemaps/js-markerclustererplus',
+      ),
+    );
   });
 
   it('initializes a Google Map Marker Clusterer', () => {
@@ -122,7 +141,7 @@ describe('MapMarkerClusterer', () => {
       enableRetinaIcons: true,
       gridSize: 1337,
       ignoreHidden: true,
-      imageExtension: 'png'
+      imageExtension: 'png',
     };
     fixture.componentInstance.options = options;
     fixture.detectChanges();
@@ -135,13 +154,13 @@ describe('MapMarkerClusterer', () => {
       enableRetinaIcons: true,
       gridSize: 1337,
       ignoreHidden: true,
-      imageExtension: 'png'
+      imageExtension: 'png',
     };
     const expectedOptions: MarkerClustererOptions = {
       enableRetinaIcons: false,
       gridSize: 42,
       ignoreHidden: false,
-      imageExtension: 'jpeg'
+      imageExtension: 'jpeg',
     };
     fixture.componentInstance.enableRetinaIcons = expectedOptions.enableRetinaIcons;
     fixture.componentInstance.gridSize = expectedOptions.gridSize;
@@ -150,22 +169,27 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.options = options;
     fixture.detectChanges();
 
-    expect(markerClustererSpy.setOptions)
-        .toHaveBeenCalledWith(jasmine.objectContaining(expectedOptions));
+    expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(
+      jasmine.objectContaining(expectedOptions),
+    );
   });
 
   it('sets Google Maps Markers in the MarkerClusterer', () => {
     fixture.detectChanges();
 
-    expect(markerClustererSpy.addMarkers)
-        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher]);
+    expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
+      anyMarkerMatcher,
+      anyMarkerMatcher,
+    ]);
   });
 
   it('updates Google Maps Markers in the Marker Clusterer', () => {
     fixture.detectChanges();
 
-    expect(markerClustererSpy.addMarkers)
-        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher]);
+    expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
+      anyMarkerMatcher,
+      anyMarkerMatcher,
+    ]);
 
     fixture.componentInstance.state = 'state2';
     fixture.detectChanges();
@@ -178,8 +202,10 @@ describe('MapMarkerClusterer', () => {
     fixture.detectChanges();
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([], true);
-    expect(markerClustererSpy.removeMarkers)
-        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher], true);
+    expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith(
+      [anyMarkerMatcher, anyMarkerMatcher],
+      true,
+    );
     expect(markerClustererSpy.repaint).toHaveBeenCalledTimes(2);
   });
 
@@ -256,12 +282,15 @@ describe('MapMarkerClusterer', () => {
   it('initializes marker clusterer event handlers', () => {
     fixture.detectChanges();
 
-    expect(markerClustererSpy.addListener)
-        .toHaveBeenCalledWith('clusteringbegin', jasmine.any(Function));
-    expect(markerClustererSpy.addListener)
-        .not.toHaveBeenCalledWith('clusteringend', jasmine.any(Function));
-    expect(markerClustererSpy.addListener)
-        .toHaveBeenCalledWith('click', jasmine.any(Function));
+    expect(markerClustererSpy.addListener).toHaveBeenCalledWith(
+      'clusteringbegin',
+      jasmine.any(Function),
+    );
+    expect(markerClustererSpy.addListener).not.toHaveBeenCalledWith(
+      'clusteringend',
+      jasmine.any(Function),
+    );
+    expect(markerClustererSpy.addListener).toHaveBeenCalledWith('click', jasmine.any(Function));
   });
 });
 

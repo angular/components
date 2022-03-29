@@ -27,7 +27,7 @@ export class MyTel {
   host: {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',
-  }
+  },
 })
 export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
   static nextId = 0;
@@ -42,17 +42,23 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   onTouched = () => {};
 
   get empty() {
-    const {value: {area, exchange, subscriber}} = this.parts;
+    const {
+      value: {area, exchange, subscriber},
+    } = this.parts;
 
     return !area && !exchange && !subscriber;
   }
 
-  get shouldLabelFloat() { return this.focused || !this.empty; }
+  get shouldLabelFloat() {
+    return this.focused || !this.empty;
+  }
 
   @Input('aria-describedby') userAriaDescribedBy: string;
 
   @Input()
-  get placeholder(): string { return this._placeholder; }
+  get placeholder(): string {
+    return this._placeholder;
+  }
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
@@ -60,16 +66,20 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   private _placeholder: string;
 
   @Input()
-  get required(): boolean { return this._required; }
-  set required(value: boolean) {
+  get required(): boolean {
+    return this._required;
+  }
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
   private _required = false;
 
   @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._disabled ? this.parts.disable() : this.parts.enable();
     this.stateChanges.next();
@@ -79,7 +89,9 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   @Input()
   get value(): MyTel | null {
     if (this.parts.valid) {
-      const {value: {area, exchange, subscriber}} = this.parts;
+      const {
+        value: {area, exchange, subscriber},
+      } = this.parts;
       return new MyTel(area, exchange, subscriber);
     }
     return null;
@@ -95,8 +107,8 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
     @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
-    @Optional() @Self() public ngControl: NgControl) {
-
+    @Optional() @Self() public ngControl: NgControl,
+  ) {
     this.parts = formBuilder.group({
       area: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
       exchange: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
@@ -122,8 +134,9 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   }
 
   setDescribedByIds(ids: string[]) {
-    const controlElement = this._elementRef.nativeElement
-      .querySelector('.example-tel-input-container')!;
+    const controlElement = this._elementRef.nativeElement.querySelector(
+      '.example-tel-input-container',
+    )!;
     controlElement.setAttribute('aria-describedby', ids.join(' '));
   }
 
@@ -152,7 +165,4 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   _handleInput(): void {
     this.onChange(this.value);
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }

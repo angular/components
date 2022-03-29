@@ -11,9 +11,7 @@ import {PortalModule, CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal
 import {A11yModule, FocusTrap, CdkTrapFocus} from '../index';
 import {By} from '@angular/platform-browser';
 
-
 describe('FocusTrap', () => {
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [A11yModule, PortalModule],
@@ -49,8 +47,11 @@ describe('FocusTrap', () => {
       const result = focusTrapInstance.focusFirstTabbableElement();
 
       expect(getActiveElement().nodeName.toLowerCase())
-          .toBe('input', 'Expected input element to be focused');
-      expect(result).toBe(true, 'Expected return value to be true if focus was shifted.');
+        .withContext('Expected input element to be focused')
+        .toBe('input');
+      expect(result)
+        .withContext('Expected return value to be true if focus was shifted.')
+        .toBe(true);
     });
 
     it('should wrap focus from start to end', () => {
@@ -63,9 +64,12 @@ describe('FocusTrap', () => {
       const lastElement = platform.IOS ? 'input' : 'button';
 
       expect(getActiveElement().nodeName.toLowerCase())
-          .toBe(lastElement, `Expected ${lastElement} element to be focused`);
+        .withContext(`Expected ${lastElement} element to be focused`)
+        .toBe(lastElement);
 
-      expect(result).toBe(true, 'Expected return value to be true if focus was shifted.');
+      expect(result)
+        .withContext('Expected return value to be true if focus was shifted.')
+        .toBe(true);
     });
 
     it('should return false if it did not manage to find a focusable element', () => {
@@ -83,7 +87,6 @@ describe('FocusTrap', () => {
     it('should be enabled by default', () => {
       expect(focusTrapInstance.enabled).toBe(true);
     });
-
   });
 
   describe('with bindings', () => {
@@ -107,7 +110,7 @@ describe('FocusTrap', () => {
 
     it('should set the appropriate tabindex on the anchors, based on the disabled state', () => {
       const anchors = Array.from(
-        fixture.debugElement.nativeElement.querySelectorAll('div.cdk-visually-hidden')
+        fixture.debugElement.nativeElement.querySelectorAll('div.cdk-visually-hidden'),
       ) as HTMLElement[];
 
       expect(anchors.every(current => current.getAttribute('tabindex') === '0')).toBe(true);
@@ -185,7 +188,6 @@ describe('FocusTrap', () => {
 
       expect(console.warn).toHaveBeenCalled();
     });
-
   });
 
   describe('special cases', () => {
@@ -242,58 +244,53 @@ describe('FocusTrap', () => {
       });
     }));
 
-    it('should automatically capture and return focus on init / destroy inside the shadow DOM',
-      waitForAsync(() => {
-        if (!_supportsShadowDom()) {
-          return;
-        }
+    it('should automatically capture and return focus on init / destroy inside the shadow DOM', waitForAsync(() => {
+      if (!_supportsShadowDom()) {
+        return;
+      }
 
-        const fixture = TestBed.createComponent(FocusTrapWithAutoCaptureInShadowDom);
-        fixture.detectChanges();
+      const fixture = TestBed.createComponent(FocusTrapWithAutoCaptureInShadowDom);
+      fixture.detectChanges();
 
-        const buttonOutsideTrappedRegion =
-            fixture.debugElement.query(By.css('button')).nativeElement;
-        buttonOutsideTrappedRegion.focus();
+      const buttonOutsideTrappedRegion = fixture.debugElement.query(By.css('button')).nativeElement;
+      buttonOutsideTrappedRegion.focus();
+      expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
+
+      fixture.componentInstance.showTrappedRegion = true;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(getActiveElement().id).toBe('auto-capture-target');
+
+        fixture.destroy();
         expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
+      });
+    }));
 
-        fixture.componentInstance.showTrappedRegion = true;
-        fixture.detectChanges();
+    it('should capture focus if auto capture is enabled later on inside the shadow DOM', waitForAsync(() => {
+      if (!_supportsShadowDom()) {
+        return;
+      }
 
-        fixture.whenStable().then(() => {
-          expect(getActiveElement().id).toBe('auto-capture-target');
+      const fixture = TestBed.createComponent(FocusTrapWithAutoCaptureInShadowDom);
+      fixture.componentInstance.autoCaptureEnabled = false;
+      fixture.componentInstance.showTrappedRegion = true;
+      fixture.detectChanges();
 
-          fixture.destroy();
-          expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-        });
-      }));
+      const buttonOutsideTrappedRegion = fixture.debugElement.query(By.css('button')).nativeElement;
+      buttonOutsideTrappedRegion.focus();
+      expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
 
-    it('should capture focus if auto capture is enabled later on inside the shadow DOM',
-      waitForAsync(() => {
-        if (!_supportsShadowDom()) {
-          return;
-        }
+      fixture.componentInstance.autoCaptureEnabled = true;
+      fixture.detectChanges();
 
-        const fixture = TestBed.createComponent(FocusTrapWithAutoCaptureInShadowDom);
-        fixture.componentInstance.autoCaptureEnabled = false;
-        fixture.componentInstance.showTrappedRegion = true;
-        fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(getActiveElement().id).toBe('auto-capture-target');
 
-        const buttonOutsideTrappedRegion =
-            fixture.debugElement.query(By.css('button')).nativeElement;
-        buttonOutsideTrappedRegion.focus();
+        fixture.destroy();
         expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-
-        fixture.componentInstance.autoCaptureEnabled = true;
-        fixture.detectChanges();
-
-        fixture.whenStable().then(() => {
-          expect(getActiveElement().id).toBe('auto-capture-target');
-
-          fixture.destroy();
-          expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-        });
-      }));
-
+      });
+    }));
   });
 
   it('should put anchors inside the outlet when set at the root of a template portal', () => {
@@ -303,25 +300,29 @@ describe('FocusTrap', () => {
     const outlet: HTMLElement = fixture.nativeElement.querySelector('.portal-outlet');
 
     expect(outlet.querySelectorAll('button').length)
-      .toBe(0, 'Expected no buttons inside the outlet on init.');
+      .withContext('Expected no buttons inside the outlet on init.')
+      .toBe(0);
     expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
-      .toBe(0, 'Expected no focus trap anchors inside the outlet on init.');
+      .withContext('Expected no focus trap anchors inside the outlet on init.')
+      .toBe(0);
 
     const portal = new TemplatePortal(instance.template, instance.viewContainerRef);
     instance.portalOutlet.attachTemplatePortal(portal);
     fixture.detectChanges();
 
     expect(outlet.querySelectorAll('button').length)
-      .toBe(1, 'Expected one button inside the outlet after attaching.');
+      .withContext('Expected one button inside the outlet after attaching.')
+      .toBe(1);
     expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
-      .toBe(2, 'Expected two focus trap anchors in the outlet after attaching.');
+      .withContext('Expected two focus trap anchors in the outlet after attaching.')
+      .toBe(2);
   });
 });
 
 /** Gets the currently-focused element while accounting for the shadow DOM. */
 function getActiveElement() {
-  const activeElement = document.activeElement as HTMLElement|null;
-  return activeElement?.shadowRoot?.activeElement as HTMLElement || activeElement;
+  const activeElement = document.activeElement as HTMLElement | null;
+  return (activeElement?.shadowRoot?.activeElement as HTMLElement) || activeElement;
 }
 
 @Component({
@@ -330,7 +331,7 @@ function getActiveElement() {
       <input>
       <button>SAVE</button>
     </div>
-    `
+    `,
 })
 class SimpleFocusTrap {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
@@ -353,10 +354,9 @@ class FocusTrapWithAutoCapture {
 
 @Component({
   template: AUTO_FOCUS_TEMPLATE,
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.ShadowDom,
 })
-class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {
-}
+class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {}
 
 @Component({
   template: `
@@ -364,14 +364,13 @@ class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {
       <input>
       <button>SAVE</button>
     </div>
-    `
+    `,
 })
 class FocusTrapWithBindings {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
   renderFocusTrap = true;
   _isFocusTrapEnabled = true;
 }
-
 
 @Component({
   template: `
@@ -384,7 +383,7 @@ class FocusTrapWithBindings {
       <button>after</button>
       <input>
     </div>
-    `
+    `,
 })
 class FocusTrapTargets {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
@@ -395,7 +394,7 @@ class FocusTrapTargets {
     <div cdkTrapFocus>
       <div cdkFocusInitial></div>
     </div>
-    `
+    `,
 })
 class FocusTrapUnfocusableTarget {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
@@ -408,7 +407,7 @@ class FocusTrapUnfocusableTarget {
         <circle cx="100" cy="100" r="100"/>
       </svg>
     </div>
-    `
+    `,
 })
 class FocusTrapWithSvg {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
@@ -419,12 +418,11 @@ class FocusTrapWithSvg {
     <div cdkTrapFocus>
       <p>Hello</p>
     </div>
-    `
+    `,
 })
 class FocusTrapWithoutFocusableElements {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
 }
-
 
 @Component({
   template: `

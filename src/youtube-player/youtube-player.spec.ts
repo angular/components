@@ -46,12 +46,14 @@ describe('YoutubePlayer', () => {
       let containerElement = fixture.nativeElement.querySelector('div');
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
-        containerElement, jasmine.objectContaining({
+        containerElement,
+        jasmine.objectContaining({
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
           height: DEFAULT_PLAYER_HEIGHT,
-          playerVars: undefined
-        }));
+          playerVars: undefined,
+        }),
+      );
     });
 
     it('destroys the iframe when the component is destroyed', () => {
@@ -74,7 +76,8 @@ describe('YoutubePlayer', () => {
       events.onReady({target: playerSpy});
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-        jasmine.objectContaining({videoId: 'otherId'}));
+        jasmine.objectContaining({videoId: 'otherId'}),
+      );
 
       testComponent.videoId = undefined;
       fixture.detectChanges();
@@ -85,7 +88,9 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
-        containerElement, jasmine.objectContaining({videoId: 'otherId2'}));
+        containerElement,
+        jasmine.objectContaining({videoId: 'otherId2'}),
+      );
     });
 
     it('responds to changes in size', () => {
@@ -113,7 +118,9 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
-          jasmine.any(Element), jasmine.objectContaining({width: 5, height: 6}));
+        jasmine.any(Element),
+        jasmine.objectContaining({width: 5, height: 6}),
+      );
       expect(testComponent.youtubePlayer.width).toBe(5);
       expect(testComponent.youtubePlayer.height).toBe(6);
 
@@ -134,7 +141,7 @@ describe('YoutubePlayer', () => {
     });
 
     it('passes the configured playerVars to the player', () => {
-      const playerVars: YT.PlayerVars = { modestbranding: YT.ModestBranding.Modest };
+      const playerVars: YT.PlayerVars = {modestbranding: YT.ModestBranding.Modest};
       fixture.componentInstance.playerVars = playerVars;
       fixture.detectChanges();
 
@@ -159,26 +166,30 @@ describe('YoutubePlayer', () => {
       events.onReady({target: playerSpy});
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-        jasmine.objectContaining({startSeconds: 5, endSeconds: 6}));
+        jasmine.objectContaining({startSeconds: 5, endSeconds: 6}),
+      );
 
       testComponent.endSeconds = 8;
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-        jasmine.objectContaining({startSeconds: 5, endSeconds: 8}));
+        jasmine.objectContaining({startSeconds: 5, endSeconds: 8}),
+      );
 
       testComponent.startSeconds = 7;
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-        jasmine.objectContaining({startSeconds: 7, endSeconds: 8}));
+        jasmine.objectContaining({startSeconds: 7, endSeconds: 8}),
+      );
 
       testComponent.startSeconds = 10;
       testComponent.endSeconds = 11;
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-        jasmine.objectContaining({startSeconds: 10, endSeconds: 11}));
+        jasmine.objectContaining({startSeconds: 10, endSeconds: 11}),
+      );
     });
 
     it('sets the suggested quality', () => {
@@ -200,7 +211,8 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-        jasmine.objectContaining({suggestedQuality: 'large'}));
+        jasmine.objectContaining({suggestedQuality: 'large'}),
+      );
     });
 
     it('proxies events as output', () => {
@@ -211,16 +223,16 @@ describe('YoutubePlayer', () => {
       expect(testComponent.onStateChange).toHaveBeenCalledWith({target: playerSpy, data: 5});
 
       events.onPlaybackQualityChange({target: playerSpy, data: 'large'});
-      expect(testComponent.onPlaybackQualityChange)
-          .toHaveBeenCalledWith({target: playerSpy, data: 'large'});
+      expect(testComponent.onPlaybackQualityChange).toHaveBeenCalledWith({
+        target: playerSpy,
+        data: 'large',
+      });
 
       events.onPlaybackRateChange({target: playerSpy, data: 2});
-      expect(testComponent.onPlaybackRateChange)
-          .toHaveBeenCalledWith({target: playerSpy, data: 2});
+      expect(testComponent.onPlaybackRateChange).toHaveBeenCalledWith({target: playerSpy, data: 2});
 
       events.onError({target: playerSpy, data: 5});
-      expect(testComponent.onError)
-          .toHaveBeenCalledWith({target: playerSpy, data: 5});
+      expect(testComponent.onError).toHaveBeenCalledWith({target: playerSpy, data: 5});
 
       events.onApiChange({target: playerSpy});
       expect(testComponent.onApiChange).toHaveBeenCalledWith({target: playerSpy});
@@ -320,15 +332,18 @@ describe('YoutubePlayer', () => {
       expect(playerSpy.stopVideo).toHaveBeenCalled();
     });
 
-    it('should set the playback rate on init if setPlaybackRate was called before ' +
-      'the API has loaded', () => {
+    it(
+      'should set the playback rate on init if setPlaybackRate was called before ' +
+        'the API has loaded',
+      () => {
         testComponent.youtubePlayer.setPlaybackRate(1337);
         expect(testComponent.youtubePlayer.getPlaybackRate()).toBe(1337);
 
         events.onReady({target: playerSpy});
 
         expect(playerSpy.setPlaybackRate).toHaveBeenCalledWith(1337);
-      });
+      },
+    );
 
     it('should set the volume on init if setVolume was called before the API has loaded', () => {
       testComponent.youtubePlayer.setVolume(37);
@@ -365,7 +380,6 @@ describe('YoutubePlayer', () => {
 
       expect(playerSpy.seekTo).toHaveBeenCalledWith(1337, true);
     });
-
   });
 
   describe('API loaded asynchronously', () => {
@@ -396,11 +410,13 @@ describe('YoutubePlayer', () => {
       let containerElement = fixture.nativeElement.querySelector('div');
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
-        containerElement, jasmine.objectContaining({
+        containerElement,
+        jasmine.objectContaining({
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
           height: DEFAULT_PLAYER_HEIGHT,
-        }));
+        }),
+      );
     });
 
     it('should not override any pre-existing API loaded callbacks', () => {
@@ -428,7 +444,8 @@ describe('YoutubePlayer', () => {
     events.onReady({target: playerSpy});
 
     expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
-      jasmine.objectContaining({startSeconds: 42, endSeconds: 1337}));
+      jasmine.objectContaining({startSeconds: 42, endSeconds: 1337}),
+    );
   });
 
   it('should be able to subscribe to events after initialization', () => {
@@ -472,7 +489,6 @@ describe('YoutubePlayer', () => {
 
     subscriptions.forEach(subscription => subscription.unsubscribe());
   });
-
 });
 
 /** Test component that contains a YouTubePlayer. */
@@ -489,7 +505,7 @@ describe('YoutubePlayer', () => {
       (error)="onError($event)"
       (apiChange)="onApiChange($event)">
     </youtube-player>
-  `
+  `,
 })
 class TestApp {
   videoId: string | undefined = VIDEO_ID;
@@ -509,19 +525,17 @@ class TestApp {
   @ViewChild('player') youtubePlayer: YouTubePlayer;
 }
 
-
 @Component({
   template: `
     <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"></youtube-player>
-  `
+  `,
 })
 class StaticStartEndSecondsApp {
   videoId = VIDEO_ID;
 }
 
-
 @Component({
-  template: `<youtube-player [videoId]="videoId"></youtube-player>`
+  template: `<youtube-player [videoId]="videoId"></youtube-player>`,
 })
 class NoEventsApp {
   @ViewChild(YouTubePlayer) player: YouTubePlayer;

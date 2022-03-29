@@ -1,7 +1,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -12,7 +12,6 @@ import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-
 import {MatChipInput, MatChipInputEvent} from './chip-input';
 import {MatChipList} from './chip-list';
 import {MatChipsModule} from './index';
-
 
 describe('MatChipInput', () => {
   let fixture: ComponentFixture<any>;
@@ -26,14 +25,17 @@ describe('MatChipInput', () => {
     TestBed.configureTestingModule({
       imports: [PlatformModule, MatChipsModule, MatFormFieldModule, NoopAnimationsModule],
       declarations: [TestChipInput],
-      providers: [{
-        provide: Directionality, useFactory: () => {
-          return {
-            value: dir.toLowerCase(),
-            change: new Subject()
-          };
-        }
-      }]
+      providers: [
+        {
+          provide: Directionality,
+          useFactory: () => {
+            return {
+              value: dir.toLowerCase(),
+              change: new Subject(),
+            };
+          },
+        },
+      ],
     });
 
     TestBed.compileComponents();
@@ -79,10 +81,10 @@ describe('MatChipInput', () => {
       expect(label).toBeTruthy();
       expect(label.textContent).toContain('add a chip');
 
-      fixture.componentInstance.placeholder = 'or don\'t';
+      fixture.componentInstance.placeholder = "or don't";
       fixture.detectChanges();
 
-      expect(label.textContent).toContain('or don\'t');
+      expect(label.textContent).toContain("or don't");
     });
 
     it('should become disabled if the list is disabled', () => {
@@ -105,13 +107,15 @@ describe('MatChipInput', () => {
       fixture.detectChanges();
 
       expect(listElement.getAttribute('tabindex'))
-        .toBe('-1', 'Expected tabIndex to be set to -1 temporarily.');
+        .withContext('Expected tabIndex to be set to -1 temporarily.')
+        .toBe('-1');
 
       tick();
       fixture.detectChanges();
 
       expect(listElement.getAttribute('tabindex'))
-        .toBe('0', 'Expected tabIndex to be reset back to 0');
+        .withContext('Expected tabIndex to be reset back to 0')
+        .toBe('0');
     }));
 
     it('should not allow focus to escape when tabbing backwards', fakeAsync(() => {
@@ -122,12 +126,16 @@ describe('MatChipInput', () => {
       dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB, undefined, {shift: true});
       fixture.detectChanges();
 
-      expect(listElement.getAttribute('tabindex')).toBe('0', 'Expected tabindex to remain 0');
+      expect(listElement.getAttribute('tabindex'))
+        .withContext('Expected tabindex to remain 0')
+        .toBe('0');
 
       tick();
       fixture.detectChanges();
 
-      expect(listElement.getAttribute('tabindex')).toBe('0', 'Expected tabindex to remain 0');
+      expect(listElement.getAttribute('tabindex'))
+        .withContext('Expected tabindex to remain 0')
+        .toBe('0');
     }));
 
     it('should be aria-required if the list is required', () => {
@@ -143,7 +151,6 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.classList).toContain('mat-input-element');
       expect(inputNativeElement.classList).toContain('mat-chip-input');
     });
-
   });
 
   describe('[addOnBlur]', () => {
@@ -202,15 +209,16 @@ describe('MatChipInput', () => {
     it('emits (chipEnd) when the separator keys are configured globally', () => {
       fixture.destroy();
 
-      TestBed
-        .resetTestingModule()
+      TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
           declarations: [TestChipInput],
-          providers: [{
-            provide: MAT_CHIPS_DEFAULT_OPTIONS,
-            useValue: ({separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions)
-          }]
+          providers: [
+            {
+              provide: MAT_CHIPS_DEFAULT_OPTIONS,
+              useValue: {separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions,
+            },
+          ],
         })
         .compileComponents();
 
@@ -238,7 +246,6 @@ describe('MatChipInput', () => {
       dispatchKeyboardEvent(inputNativeElement, 'keydown', ENTER, undefined, {shift: true});
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
-
   });
 });
 
@@ -253,7 +260,7 @@ describe('MatChipInput', () => {
                   [placeholder]="placeholder" />
       </mat-chip-list>
     </mat-form-field>
-  `
+  `,
 })
 class TestChipInput {
   @ViewChild(MatChipList) chipListInstance: MatChipList;
@@ -261,6 +268,5 @@ class TestChipInput {
   required = false;
   placeholder = '';
 
-  add(_: MatChipInputEvent) {
-  }
+  add(_: MatChipInputEvent) {}
 }

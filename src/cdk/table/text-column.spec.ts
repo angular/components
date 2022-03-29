@@ -9,23 +9,16 @@ import {CdkTableModule} from './table-module';
 import {expectTableToMatchContent} from './table.spec';
 import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
 
-
 describe('CdkTextColumn', () => {
   let fixture: ComponentFixture<BasicTextColumnApp>;
   let component: BasicTextColumnApp;
   let tableElement: HTMLElement;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [CdkTableModule],
-          declarations: [
-            BasicTextColumnApp,
-            MissingTableApp,
-            TextColumnWithoutNameApp,
-          ],
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkTableModule],
+      declarations: [BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -45,13 +38,15 @@ describe('CdkTextColumn', () => {
   });
 
   it('should throw an error if the text column is not in the content of a table', () => {
-    expect(() => TestBed.createComponent(MissingTableApp).detectChanges())
-        .toThrowError(getTableTextColumnMissingParentTableError().message);
+    expect(() => TestBed.createComponent(MissingTableApp).detectChanges()).toThrowError(
+      getTableTextColumnMissingParentTableError().message,
+    );
   });
 
   it('should throw an error if the text column does not have a name', () => {
-    expect(() => TestBed.createComponent(TextColumnWithoutNameApp).detectChanges())
-        .toThrowError(getTableTextColumnMissingNameError().message);
+    expect(() => TestBed.createComponent(TextColumnWithoutNameApp).detectChanges()).toThrowError(
+      getTableTextColumnMissingNameError().message,
+    );
   });
 
   it('should allow for alternate header text', () => {
@@ -109,7 +104,7 @@ describe('CdkTextColumn', () => {
       TestBed.configureTestingModule({
         imports: [CdkTableModule],
         declarations: [BasicTextColumnApp],
-        providers: [{provide: TEXT_COLUMN_OPTIONS, useValue: options}]
+        providers: [{provide: TEXT_COLUMN_OPTIONS, useValue: options}],
       });
 
       fixture = TestBed.createComponent(BasicTextColumnApp);
@@ -169,7 +164,7 @@ interface TestData {
       <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
-  `
+  `,
 })
 class BasicTextColumnApp {
   displayedColumns = ['propertyA', 'propertyB', 'propertyC'];
@@ -187,11 +182,9 @@ class BasicTextColumnApp {
 @Component({
   template: `
     <cdk-text-column name="column-a"></cdk-text-column>
-  `
+  `,
 })
-class MissingTableApp {
-}
-
+class MissingTableApp {}
 
 @Component({
   template: `
@@ -201,8 +194,6 @@ class MissingTableApp {
       <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
-  `
+  `,
 })
-class TextColumnWithoutNameApp extends BasicTextColumnApp {
-}
-
+class TextColumnWithoutNameApp extends BasicTextColumnApp {}
