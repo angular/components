@@ -65,7 +65,7 @@ $calendar-weekday-table-font-size: 11px !default;
 @mixin _highlighted-cell($palette) {
   & > .mat-calendar-body-cell-content {
     @include _unselected-cell {
-      background-color: theming.get-color-from-palette($palette, 0.3);
+      background-color: theming.get-color-from-palette($palette, lighter);
     }
   }
 }
