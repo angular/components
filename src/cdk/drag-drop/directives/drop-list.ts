@@ -60,11 +60,7 @@ export const CDK_DROP_LIST = new InjectionToken<CdkDropList>('CdkDropList');
 @Directive({
   selector: '[cdkDropList], cdk-drop-list',
   exportAs: 'cdkDropList',
-  providers: [
-    // Prevent child drop lists from picking up the same group as their parent.
-    {provide: CDK_DROP_LIST_GROUP, useValue: undefined},
-    {provide: CDK_DROP_LIST, useExisting: CdkDropList},
-  ],
+  providers: [{provide: CDK_DROP_LIST, useExisting: CdkDropList}],
   host: {
     'class': 'cdk-drop-list',
     '[attr.id]': 'id',
@@ -296,7 +292,7 @@ export class CdkDropList<T = any> implements OnDestroy {
       if (this._group) {
         this._group._items.forEach(drop => {
           if (siblings.indexOf(drop) === -1) {
-            siblings.push(drop);
+            siblings.unshift(drop);
           }
         });
       }
@@ -319,9 +315,7 @@ export class CdkDropList<T = any> implements OnDestroy {
       ref.sortingDisabled = coerceBooleanProperty(this.sortingDisabled);
       ref.autoScrollDisabled = coerceBooleanProperty(this.autoScrollDisabled);
       ref.autoScrollStep = coerceNumberProperty(this.autoScrollStep, 2);
-      ref
-        .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
-        .withOrientation(this.orientation);
+      ref.connectedTo(siblings.map(list => list._dropListRef)).withOrientation(this.orientation);
     });
   }
 
