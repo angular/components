@@ -18,7 +18,7 @@ import {
 import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
-import {MatCalendar} from './calendar';
+import {MatCalendar, MatCalendarView} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
 
@@ -34,6 +34,7 @@ describe('MatCalendar', () => {
         CalendarWithMinMax,
         CalendarWithDateFilter,
         CalendarWithSelectableMinDate,
+        CalendarWithStartView,
       ],
       providers: [
         MatDatepickerIntl,
@@ -651,6 +652,54 @@ describe('MatCalendar', () => {
       });
     });
   });
+
+  describe('calendar with start view multiyear', () => {
+    let fixture: ComponentFixture<CalendarWithStartView>;
+    let calendarElement: HTMLElement;
+    let calendarInstance: MatCalendar<Date>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(CalendarWithStartView);
+      fixture.detectChanges();
+
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
+      calendarElement = calendarDebugElement.nativeElement;
+
+      calendarInstance = calendarDebugElement.componentInstance;
+    });
+
+    it("shouldn't open month view when period changes", () => {
+      let periodButton = calendarElement.querySelector(
+        '.mat-calendar-period-button',
+      ) as HTMLElement;
+      periodButton.click();
+      fixture.detectChanges();
+
+      expect(calendarInstance.currentView).toBe('year');
+
+      periodButton.click();
+      fixture.detectChanges();
+
+      expect(calendarInstance.currentView).toBe('multi-year');
+
+      periodButton.click();
+      fixture.detectChanges();
+
+      expect(calendarInstance.currentView).toBe('year');
+    });
+
+    it("shouldn't open month view when selected date in year view", () => {
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(calendarInstance.currentView).toBe('year');
+
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(calendarInstance.currentView).not.toBe('month');
+    });
+  });
 });
 
 @Component({
@@ -717,4 +766,17 @@ class CalendarWithSelectableMinDate {
   select(value: Date) {
     this.minDate = this.selected = value;
   }
+}
+
+@Component({
+  template: `
+    <mat-calendar
+      [startView]="startView"
+      [startAt]="startDate">
+    </mat-calendar>
+  `,
+})
+class CalendarWithStartView {
+  startView: MatCalendarView = 'multi-year';
+  startDate = new Date(2017, JAN, 1);
 }

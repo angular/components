@@ -130,7 +130,10 @@ export class MatCalendarHeader<D> {
 
   /** Handles user clicks on the period label. */
   currentPeriodClicked(): void {
-    this.calendar.currentView = this.calendar.currentView == 'month' ? 'multi-year' : 'month';
+    this.calendar.currentView = _getNextCalendarView(
+      this.calendar.currentView,
+      this.calendar.startView === 'multi-year',
+    );
   }
 
   /** Handles user clicks on the previous button. */
@@ -461,6 +464,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Handles year/month selection in the multi-year/year views. */
   _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void {
     this.activeDate = date;
+
+    if (this.startView === 'multi-year' && view === 'month') {
+      return;
+    }
+
     this.currentView = view;
   }
 
@@ -471,4 +479,19 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     // only the first component type. See https://github.com/angular/components/issues/22996.
     return this.monthView || this.yearView || this.multiYearView;
   }
+}
+
+/**
+ * Function that provides the next calendar view according to the current view.
+ * @docs-private
+ */
+function _getNextCalendarView(
+  currentView: MatCalendarView,
+  isStartViewMultiYear: boolean,
+): MatCalendarView {
+  return {
+    'month': () => (isStartViewMultiYear ? 'year' : 'multi-year'),
+    'year': () => (isStartViewMultiYear ? 'multi-year' : 'month'),
+    'multi-year': () => (isStartViewMultiYear ? 'year' : 'month'),
+  }[currentView]();
 }
