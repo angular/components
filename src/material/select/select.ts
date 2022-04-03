@@ -60,6 +60,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  AbstractControl,
   ControlValueAccessor,
   FormGroupDirective,
   NgControl,
@@ -192,11 +193,23 @@ const _MatSelectMixinBase = mixinDisableRipple(
     mixinDisabled(
       mixinErrorState(
         class {
+          /**
+           * Emits whenever the component state changes and should cause the parent
+           * form-field to update. Implemented as part of `MatFormFieldControl`.
+           * @docs-private
+           */
+          readonly stateChanges = new Subject<void>();
+
           constructor(
             public _elementRef: ElementRef,
             public _defaultErrorStateMatcher: ErrorStateMatcher,
             public _parentForm: NgForm,
             public _parentFormGroup: FormGroupDirective,
+            /**
+             * Form control bound to the component.
+             * Implemented as part of `MatFormFieldControl`.
+             * @docs-private
+             */
             public ngControl: NgControl,
           ) {}
         },
@@ -281,6 +294,12 @@ export abstract class _MatSelectBase<C>
   /** Current `ariar-labelledby` value for the select trigger. */
   private _triggerAriaLabelledBy: string | null = null;
 
+  /**
+   * Keeps track of the previous form control assigned to the select.
+   * Used to detect if it has changed.
+   */
+  private _previousControl: AbstractControl | null | undefined;
+
   /** Emits whenever the component is destroyed. */
   protected readonly _destroy = new Subject<void>();
 
@@ -348,7 +367,7 @@ export abstract class _MatSelectBase<C>
   get required(): boolean {
     return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -359,7 +378,7 @@ export abstract class _MatSelectBase<C>
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     if (this._selectionModel && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMatSelectDynamicMultipleError();
     }
@@ -373,7 +392,7 @@ export abstract class _MatSelectBase<C>
   get disableOptionCentering(): boolean {
     return this._disableOptionCentering;
   }
-  set disableOptionCentering(value: boolean) {
+  set disableOptionCentering(value: BooleanInput) {
     this._disableOptionCentering = coerceBooleanProperty(value);
   }
   private _disableOptionCentering = this._defaultOptions?.disableOptionCentering ?? false;
@@ -404,13 +423,10 @@ export abstract class _MatSelectBase<C>
     return this._value;
   }
   set value(newValue: any) {
-    // Always re-assign an array, because it might have been mutated.
-    if (newValue !== this._value || (this._multiple && Array.isArray(newValue))) {
-      if (this.options) {
-        this._setSelectionByValue(newValue);
-      }
+    const hasAssigned = this._assignValue(newValue);
 
-      this._value = newValue;
+    if (hasAssigned) {
+      this._onChange(newValue);
     }
   }
   private _value: any;
@@ -429,7 +445,7 @@ export abstract class _MatSelectBase<C>
   get typeaheadDebounceInterval(): number {
     return this._typeaheadDebounceInterval;
   }
-  set typeaheadDebounceInterval(value: number) {
+  set typeaheadDebounceInterval(value: NumberInput) {
     this._typeaheadDebounceInterval = coerceNumberProperty(value);
   }
   private _typeaheadDebounceInterval: number;
@@ -559,6 +575,7 @@ export abstract class _MatSelectBase<C>
 
   ngDoCheck() {
     const newAriaLabelledby = this._getTriggerAriaLabelledby();
+    const ngControl = this.ngControl;
 
     // We have to manage setting the `aria-labelledby` ourselves, because part of its value
     // is computed as a result of a content query which can cause this binding to trigger a
@@ -573,7 +590,20 @@ export abstract class _MatSelectBase<C>
       }
     }
 
-    if (this.ngControl) {
+    if (ngControl) {
+      // The disabled state might go out of sync if the form group is swapped out. See #17860.
+      if (this._previousControl !== ngControl.control) {
+        if (
+          this._previousControl !== undefined &&
+          ngControl.disabled !== null &&
+          ngControl.disabled !== this.disabled
+        ) {
+          this.disabled = ngControl.disabled;
+        }
+
+        this._previousControl = ngControl.control;
+      }
+
       this.updateErrorState();
     }
   }
@@ -628,7 +658,7 @@ export abstract class _MatSelectBase<C>
    * @param value New value to be written to the model.
    */
   writeValue(value: any): void {
-    this.value = value;
+    this._assignValue(value);
   }
 
   /**
@@ -831,7 +861,11 @@ export abstract class _MatSelectBase<C>
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
-      this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
+      if (this.ngControl) {
+        this._value = this.ngControl.value;
+      }
+
+      this._setSelectionByValue(this._value);
       this.stateChanges.next();
     });
   }
@@ -849,10 +883,10 @@ export abstract class _MatSelectBase<C>
         throw getMatSelectNonArrayValueError();
       }
 
-      value.forEach((currentValue: any) => this._selectValue(currentValue));
+      value.forEach((currentValue: any) => this._selectOptionByValue(currentValue));
       this._sortValues();
     } else {
-      const correspondingOption = this._selectValue(value);
+      const correspondingOption = this._selectOptionByValue(value);
 
       // Shift focus to the active item. Note that we shouldn't do this in multiple
       // mode, because we don't know what option the user interacted with last.
@@ -872,7 +906,7 @@ export abstract class _MatSelectBase<C>
    * Finds and selects and option based on its value.
    * @returns Option that has the corresponding value.
    */
-  private _selectValue(value: any): MatOption | undefined {
+  private _selectOptionByValue(value: any): MatOption | undefined {
     const correspondingOption = this.options.find((option: MatOption) => {
       // Skip options that are already in the model. This allows us to handle cases
       // where the same primitive value is selected multiple times.
@@ -897,6 +931,20 @@ export abstract class _MatSelectBase<C>
     }
 
     return correspondingOption;
+  }
+
+  /** Assigns a specific value to the select. Returns whether the value has changed. */
+  private _assignValue(newValue: any | any[]): boolean {
+    // Always re-assign an array, because it might have been mutated.
+    if (newValue !== this._value || (this._multiple && Array.isArray(newValue))) {
+      if (this.options) {
+        this._setSelectionByValue(newValue);
+      }
+
+      this._value = newValue;
+      return true;
+    }
+    return false;
   }
 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
@@ -1117,14 +1165,6 @@ export abstract class _MatSelectBase<C>
   get shouldLabelFloat(): boolean {
     return this._panelOpen || !this.empty || (this._focused && !!this._placeholder);
   }
-
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_disableOptionCentering: BooleanInput;
-  static ngAcceptInputType_typeaheadDebounceInterval: NumberInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 @Component({

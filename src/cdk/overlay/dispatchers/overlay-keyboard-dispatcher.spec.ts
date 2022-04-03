@@ -1,24 +1,30 @@
 import {TestBed, inject} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {Component, NgModule} from '@angular/core';
+import {ApplicationRef, Component} from '@angular/core';
 import {OverlayModule, Overlay} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
 import {ComponentPortal} from '@angular/cdk/portal';
 
 describe('OverlayKeyboardDispatcher', () => {
+  let appRef: ApplicationRef;
   let keyboardDispatcher: OverlayKeyboardDispatcher;
   let overlay: Overlay;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, TestComponentModule],
+      imports: [OverlayModule],
+      declarations: [TestComponent],
     });
 
-    inject([OverlayKeyboardDispatcher, Overlay], (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
-      keyboardDispatcher = kbd;
-      overlay = o;
-    })();
+    inject(
+      [ApplicationRef, OverlayKeyboardDispatcher, Overlay],
+      (ar: ApplicationRef, kbd: OverlayKeyboardDispatcher, o: Overlay) => {
+        appRef = ar;
+        keyboardDispatcher = kbd;
+        overlay = o;
+      },
+    )();
   });
 
   it('should track overlays in order as they are attached and detached', () => {
@@ -178,18 +184,24 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayTwoSpy).not.toHaveBeenCalled();
     expect(overlayOneSpy).toHaveBeenCalled();
   });
+
+  it('should not run change detection if there are no `keydownEvents` observers', () => {
+    spyOn(appRef, 'tick');
+    const overlayRef = overlay.create();
+    keyboardDispatcher.add(overlayRef);
+
+    expect(appRef.tick).toHaveBeenCalledTimes(0);
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    expect(appRef.tick).toHaveBeenCalledTimes(0);
+
+    overlayRef.keydownEvents().subscribe();
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+    expect(appRef.tick).toHaveBeenCalledTimes(1);
+  });
 });
 
 @Component({
   template: 'Hello',
 })
 class TestComponent {}
-
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-@NgModule({
-  exports: [TestComponent],
-  declarations: [TestComponent],
-  entryComponents: [TestComponent],
-})
-class TestComponentModule {}

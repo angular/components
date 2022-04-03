@@ -100,7 +100,15 @@ export class UnitTestElement implements TestElement {
   async click(
     ...args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?]
   ): Promise<void> {
-    await this._dispatchMouseEventSequence('click', args, 0);
+    const isDisabled = (this.element as Partial<{disabled?: boolean}>).disabled === true;
+
+    // If the element is `disabled` and has a `disabled` property, we emit the mouse event
+    // sequence but not dispatch the `click` event. This is necessary to keep the behavior
+    // consistent with an actual user interaction. The click event is not necessarily
+    // automatically prevented by the browser. There is mismatch between Firefox and Chromium:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=329509.
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=1115661.
+    await this._dispatchMouseEventSequence(isDisabled ? null : 'click', args, 0);
     await this._stabilize();
   }
 
@@ -135,6 +143,7 @@ export class UnitTestElement implements TestElement {
   /** Hovers the mouse over the element. */
   async hover(): Promise<void> {
     this._dispatchPointerEventIfSupported('pointerenter');
+    dispatchMouseEvent(this.element, 'mouseover');
     dispatchMouseEvent(this.element, 'mouseenter');
     await this._stabilize();
   }
@@ -142,13 +151,15 @@ export class UnitTestElement implements TestElement {
   /** Moves the mouse away from the element. */
   async mouseAway(): Promise<void> {
     this._dispatchPointerEventIfSupported('pointerleave');
+    dispatchMouseEvent(this.element, 'mouseout');
     dispatchMouseEvent(this.element, 'mouseleave');
     await this._stabilize();
   }
 
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
-   * and attempts to add the string to the Element's value.
+   * and attempts to add the string to the Element's value. Note that this cannot
+   * reproduce native browser behavior for keyboard shortcuts such as Tab, Ctrl + A, etc.
    */
   async sendKeys(...keys: (string | TestKey)[]): Promise<void>;
   /**
@@ -283,9 +294,12 @@ export class UnitTestElement implements TestElement {
     }
   }
 
-  /** Dispatches all the events that are part of a mouse event sequence. */
+  /**
+   * Dispatches all the events that are part of a mouse event sequence
+   * and then emits a given primary event at the end, if speciifed.
+   */
   private async _dispatchMouseEventSequence(
-    name: string,
+    primaryEventName: string | null,
     args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
     button?: number,
   ) {
@@ -312,11 +326,16 @@ export class UnitTestElement implements TestElement {
     dispatchMouseEvent(this.element, 'mousedown', clientX, clientY, button, modifiers);
     this._dispatchPointerEventIfSupported('pointerup', clientX, clientY, button);
     dispatchMouseEvent(this.element, 'mouseup', clientX, clientY, button, modifiers);
-    dispatchMouseEvent(this.element, name, clientX, clientY, button, modifiers);
+
+    // If a primary event name is specified, emit it after the mouse event sequence.
+    if (primaryEventName !== null) {
+      dispatchMouseEvent(this.element, primaryEventName, clientX, clientY, button, modifiers);
+    }
 
     // This call to _stabilize should not be needed since the callers will already do that them-
     // selves. Nevertheless it breaks some tests in g3 without it. It needs to be investigated
     // why removing breaks those tests.
+    // See: https://github.com/angular/components/pull/20758/files#r520886256.
     await this._stabilize();
   }
 }

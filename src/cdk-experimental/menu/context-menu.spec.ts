@@ -3,24 +3,23 @@ import {CdkMenuModule} from './menu-module';
 import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
 import {CdkContextMenuTrigger} from './context-menu';
-import {dispatchMouseEvent} from '../../cdk/testing/private';
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '../../cdk/testing/private';
 import {By} from '@angular/platform-browser';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
 import {CdkMenuBar} from './menu-bar';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 
 describe('CdkContextMenuTrigger', () => {
   describe('with simple context menu trigger', () => {
     let fixture: ComponentFixture<SimpleContextMenu>;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [SimpleContextMenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [SimpleContextMenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleContextMenu);
@@ -39,7 +38,7 @@ describe('CdkContextMenuTrigger', () => {
 
     /** Get the context in which the context menu should trigger. */
     function getMenuContext() {
-      return fixture.componentInstance.trigger.nativeElement;
+      return fixture.componentInstance.triggerElement.nativeElement;
     }
 
     /** Open up the context menu and run change detection. */
@@ -68,6 +67,29 @@ describe('CdkContextMenuTrigger', () => {
       openContextMenu();
 
       fixture.nativeElement.querySelector('#other').click();
+      fixture.detectChanges();
+
+      expect(getContextMenu()).not.toBeDefined();
+    });
+
+    it('should not close the menu on first auxclick after opening via contextmenu event', () => {
+      openContextMenu();
+
+      fixture.nativeElement.querySelector('#other').dispatchEvent(new MouseEvent('auxclick'));
+      fixture.detectChanges();
+
+      expect(getContextMenu()).toBeDefined();
+
+      fixture.nativeElement.querySelector('#other').dispatchEvent(new MouseEvent('auxclick'));
+      fixture.detectChanges();
+
+      expect(getContextMenu()).not.toBeDefined();
+    });
+
+    it('should close the menu on first auxclick after opening programmatically', () => {
+      fixture.componentInstance.trigger.open({x: 0, y: 0});
+
+      fixture.nativeElement.querySelector('#other').dispatchEvent(new MouseEvent('auxclick'));
       fixture.detectChanges();
 
       expect(getContextMenu()).not.toBeDefined();
@@ -103,21 +125,35 @@ describe('CdkContextMenuTrigger', () => {
 
     it('should focus the first menuitem when the context menu is opened', () => {
       openContextMenu();
-      expect(document.querySelector(':focus')!.id).toEqual('first_menu_item');
+      expect(document.activeElement!.id).toEqual('first_menu_item');
+    });
+
+    it('should not close context menu when pressing left arrow', () => {
+      openContextMenu();
+      expect(document.activeElement!.id).toEqual('first_menu_item');
+      dispatchKeyboardEvent(document.activeElement!, 'keydown', LEFT_ARROW, 'ArrowLeft');
+      fixture.detectChanges();
+      expect(getContextMenu()).toBeDefined();
+    });
+
+    it('should not close context menu when pressing right arrow', () => {
+      openContextMenu();
+      expect(document.activeElement!.id).toEqual('first_menu_item');
+      dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW, 'ArrowRight');
+      fixture.detectChanges();
+      expect(getContextMenu()).toBeDefined();
     });
   });
 
   describe('nested context menu triggers', () => {
     let fixture: ComponentFixture<NestedContextMenu>;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [NestedContextMenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [NestedContextMenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(NestedContextMenu);
@@ -226,14 +262,12 @@ describe('CdkContextMenuTrigger', () => {
     let fixture: ComponentFixture<ContextMenuWithSubmenu>;
     let instance: ContextMenuWithSubmenu;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [ContextMenuWithSubmenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [ContextMenuWithSubmenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ContextMenuWithSubmenu);
@@ -259,14 +293,12 @@ describe('CdkContextMenuTrigger', () => {
     let nativeMenuBar: HTMLElement;
     let nativeMenuBarTrigger: HTMLElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [ContextMenuWithMenuBarAndInlineMenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [ContextMenuWithMenuBarAndInlineMenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ContextMenuWithMenuBarAndInlineMenu);
@@ -366,20 +398,28 @@ describe('CdkContextMenuTrigger', () => {
      * @param componentClass the component to create
      */
     function createComponent<T>(componentClass: Type<T>) {
-      return function () {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [componentClass],
-        }).compileComponents();
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [componentClass],
+      }).compileComponents();
 
-        TestBed.createComponent(componentClass).detectChanges();
-      };
+      const fixture = TestBed.createComponent(componentClass);
+      fixture.detectChanges();
+      return fixture;
     }
 
-    it('should throw an error if context and menubar trigger share a menu', () => {
-      expect(createComponent(MenuBarAndContextTriggerShareMenu)).toThrowError(
-        /CdkMenuPanel is already referenced by different CdkMenuTrigger/,
-      );
+    it('should allow a context menu and menubar trigger share a menu', () => {
+      const fixture = createComponent(MenuBarAndContextTriggerShareMenu);
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.menuBarTrigger.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
+      fixture.componentInstance.menuBarTrigger.toggle();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(0);
+      fixture.componentInstance.contextTrigger.open({x: 0, y: 0});
+      fixture.detectChanges();
+      expect(fixture.componentInstance.menus.length).toBe(1);
     });
   });
 });
@@ -389,15 +429,16 @@ describe('CdkContextMenuTrigger', () => {
     <div [cdkContextMenuTriggerFor]="context"></div>
     <div id="other"></div>
 
-    <ng-template cdkMenuPanel #context="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="context">
+    <ng-template #context>
+      <div cdkMenu>
         <button id="first_menu_item" cdkMenuItem></button>
       </div>
     </ng-template>
   `,
 })
 class SimpleContextMenu {
-  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) trigger: ElementRef<HTMLElement>;
+  @ViewChild(CdkContextMenuTrigger) trigger: CdkContextMenuTrigger;
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement: ElementRef<HTMLElement>;
   @ViewChild(CdkMenu) menu?: CdkMenu;
   @ViewChild(CdkMenu, {read: ElementRef}) nativeMenu?: ElementRef<HTMLElement>;
 
@@ -414,12 +455,12 @@ class SimpleContextMenu {
       ></div>
     </div>
 
-    <ng-template cdkMenuPanel #cut="cdkMenuPanel">
-      <div #cut_menu cdkMenu [cdkMenuPanel]="cut"></div>
+    <ng-template #cut>
+      <div #cut_menu cdkMenu></div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #copy="cdkMenuPanel">
-      <div #copy_menu cdkMenu [cdkMenuPanel]="copy"></div>
+    <ng-template #copy>
+      <div #copy_menu cdkMenu></div>
     </ng-template>
   `,
 })
@@ -437,14 +478,14 @@ class NestedContextMenu {
   template: `
     <div [cdkContextMenuTriggerFor]="cut"></div>
 
-    <ng-template cdkMenuPanel #cut="cdkMenuPanel">
-      <div #cut_menu cdkMenu [cdkMenuPanel]="cut">
+    <ng-template #cut>
+      <div #cut_menu cdkMenu>
         <button cdkMenuItem [cdkMenuTriggerFor]="copy"></button>
       </div>
     </ng-template>
 
-    <ng-template cdkMenuPanel #copy="cdkMenuPanel">
-      <div #copy_menu cdkMenu [cdkMenuPanel]="copy"></div>
+    <ng-template #copy>
+      <div #copy_menu cdkMenu></div>
     </ng-template>
   `,
 })
@@ -462,13 +503,13 @@ class ContextMenuWithSubmenu {
       <button #trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
     </div>
 
-    <ng-template cdkMenuPanel #file="cdkMenuPanel">
-      <div cdkMenu #file_menu id="file_menu" [cdkMenuPanel]="file"></div>
+    <ng-template #file>
+      <div cdkMenu #file_menu id="file_menu"></div>
     </ng-template>
 
     <div [cdkContextMenuTriggerFor]="context"></div>
-    <ng-template cdkMenuPanel #context="cdkMenuPanel">
-      <div cdkMenu #context_menu [cdkMenuPanel]="context">
+    <ng-template #context>
+      <div cdkMenu #context_menu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>
@@ -499,11 +540,15 @@ class ContextMenuWithMenuBarAndInlineMenu {
 
     <div [cdkContextMenuTriggerFor]="menu"></div>
 
-    <ng-template cdkMenuPanel #menu="cdkMenuPanel">
-      <div cdkMenu [cdkMenuPanel]="menu">
+    <ng-template #menu>
+      <div cdkMenu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>
   `,
 })
-class MenuBarAndContextTriggerShareMenu {}
+class MenuBarAndContextTriggerShareMenu {
+  @ViewChild(CdkMenuItemTrigger) menuBarTrigger: CdkMenuItemTrigger;
+  @ViewChild(CdkContextMenuTrigger) contextTrigger: CdkContextMenuTrigger;
+  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}

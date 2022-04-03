@@ -1,15 +1,15 @@
-import {ComponentFixture, waitForAsync, TestBed, tick, fakeAsync} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {CdkOption, CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox} from './index';
+import {CdkListbox, CdkListboxModule, CdkOption, ListboxSelectionChangeEvent} from './index';
 import {
   createKeyboardEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../cdk/testing/private';
 import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkCombobox, CdkComboboxModule, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+import {UntypedFormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CdkCombobox, CdkComboboxModule} from '@angular/cdk-experimental/combobox';
 
 describe('CdkOption and CdkListbox', () => {
   describe('selection state change', () => {
@@ -25,31 +25,27 @@ describe('CdkOption and CdkListbox', () => {
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkListboxModule],
-          declarations: [ListboxWithOptions],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule],
+        declarations: [ListboxWithOptions],
+      }).compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(ListboxWithOptions);
-        fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(ListboxWithOptions);
+      fixture.detectChanges();
 
-        testComponent = fixture.debugElement.componentInstance;
+      testComponent = fixture.debugElement.componentInstance;
 
-        listbox = fixture.debugElement.query(By.directive(CdkListbox));
-        listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
-        listboxElement = listbox.nativeElement;
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
+      listboxElement = listbox.nativeElement;
 
-        options = fixture.debugElement.queryAll(By.directive(CdkOption));
-        optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
-        optionElements = options.map(o => o.nativeElement);
-      }),
-    );
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+    }));
 
     it('should generate a unique optionId for each option', () => {
       let optionIds: string[] = [];
@@ -363,29 +359,25 @@ describe('CdkOption and CdkListbox', () => {
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkListboxModule],
-          declarations: [ListboxMultiselect],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule],
+        declarations: [ListboxMultiselect],
+      }).compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(ListboxMultiselect);
-        fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(ListboxMultiselect);
+      fixture.detectChanges();
 
-        testComponent = fixture.debugElement.componentInstance;
-        listbox = fixture.debugElement.query(By.directive(CdkListbox));
-        listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
+      testComponent = fixture.debugElement.componentInstance;
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
 
-        options = fixture.debugElement.queryAll(By.directive(CdkOption));
-        optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
-        optionElements = options.map(o => o.nativeElement);
-      }),
-    );
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+    }));
 
     it('should select all options using the select all method', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
@@ -510,31 +502,27 @@ describe('CdkOption and CdkListbox', () => {
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkListboxModule],
-          declarations: [ListboxActiveDescendant],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule],
+        declarations: [ListboxActiveDescendant],
+      }).compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(ListboxActiveDescendant);
-        fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(ListboxActiveDescendant);
+      fixture.detectChanges();
 
-        testComponent = fixture.debugElement.componentInstance;
+      testComponent = fixture.debugElement.componentInstance;
 
-        listbox = fixture.debugElement.query(By.directive(CdkListbox));
-        listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
-        listboxElement = listbox.nativeElement;
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
+      listboxElement = listbox.nativeElement;
 
-        options = fixture.debugElement.queryAll(By.directive(CdkOption));
-        optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
-        optionElements = options.map(o => o.nativeElement);
-      }),
-    );
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+    }));
 
     it('should update aria active descendant when enabled', () => {
       expect(listboxElement.hasAttribute('aria-activedescendant')).toBeFalse();
@@ -598,14 +586,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkListboxModule, FormsModule, ReactiveFormsModule],
-          declarations: [ListboxControlValueAccessor],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule, FormsModule, ReactiveFormsModule],
+        declarations: [ListboxControlValueAccessor],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ListboxControlValueAccessor);
@@ -797,14 +783,12 @@ describe('CdkOption and CdkListbox', () => {
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkListboxModule, CdkComboboxModule],
-          declarations: [ListboxInsideCombobox],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule, CdkComboboxModule],
+        declarations: [ListboxInsideCombobox],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ListboxInsideCombobox);
@@ -887,7 +871,7 @@ describe('CdkOption and CdkListbox', () => {
 
       listboxInstance.setActiveOption(optionInstances[1]);
       dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
-      testComponent.panel.closePanel(testComponent.listbox.getSelectedValues());
+      testComponent.combobox.updateAndClose(testComponent.listbox.getSelectedValues());
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -983,7 +967,7 @@ class ListboxActiveDescendant {
     </select>`,
 })
 class ListboxControlValueAccessor {
-  form = new FormControl();
+  form = new UntypedFormControl();
   changedOption: CdkOption<string>;
   isDisabled: boolean = false;
   isMultiselectable: boolean = false;
@@ -1003,9 +987,8 @@ class ListboxControlValueAccessor {
       No Value
     </button>
 
-    <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
+    <ng-template #panel>
       <select cdkListbox
-              [parentPanel]="panel"
               [disabled]="isDisabled"
               [multiple]="isMultiselectable"
               (selectionChange)="onSelectionChange($event)">
@@ -1022,7 +1005,7 @@ class ListboxInsideCombobox {
   isDisabled: boolean = false;
   isMultiselectable: boolean = false;
   @ViewChild(CdkListbox) listbox: CdkListbox<string>;
-  @ViewChild('panel') panel: CdkComboboxPanel<string>;
+  @ViewChild(CdkCombobox) combobox: CdkCombobox;
 
   onSelectionChange(event: ListboxSelectionChangeEvent<string>) {
     this.changedOption = event.option;

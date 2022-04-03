@@ -1,8 +1,8 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {A11yModule, AriaLivePoliteness} from '../index';
+import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
@@ -110,6 +110,16 @@ describe('LiveAnnouncer', () => {
       expect(spy).not.toHaveBeenCalled();
       tick(100);
       expect(spy).toHaveBeenCalled();
+    }));
+
+    it('should resolve the returned promise if another announcement is made before the timeout has expired', fakeAsync(() => {
+      const spy = jasmine.createSpy('announce spy');
+      announcer.announce('something').then(spy);
+      tick(10);
+      announcer.announce('something').then(spy);
+      tick(100);
+
+      expect(spy).toHaveBeenCalledTimes(2);
     }));
 
     it('should ensure that there is only one live element at a time', fakeAsync(() => {
@@ -280,7 +290,7 @@ describe('CdkAriaLive', () => {
     invokeMutationCallbacks();
     flush();
 
-    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite');
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite', undefined);
   }));
 
   it('should dynamically update the politeness', fakeAsync(() => {
@@ -289,7 +299,7 @@ describe('CdkAriaLive', () => {
     invokeMutationCallbacks();
     flush();
 
-    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite');
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite', undefined);
 
     announcerSpy.calls.reset();
     fixture.componentInstance.politeness = 'off';
@@ -307,7 +317,7 @@ describe('CdkAriaLive', () => {
     invokeMutationCallbacks();
     flush();
 
-    expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive');
+    expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive', undefined);
   }));
 
   it('should not announce the same text multiple times', fakeAsync(() => {
@@ -324,6 +334,16 @@ describe('CdkAriaLive', () => {
 
     expect(announcer.announce).toHaveBeenCalledTimes(1);
   }));
+
+  it('should be able to pass in a duration', fakeAsync(() => {
+    fixture.componentInstance.content = 'New content';
+    fixture.componentInstance.duration = 1337;
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite', 1337);
+  }));
 });
 
 function getLiveElement(): Element {
@@ -339,8 +359,14 @@ class TestApp {
   }
 }
 
-@Component({template: `<div [cdkAriaLive]="politeness ? politeness : null">{{content}}</div>`})
+@Component({
+  template: `
+    <div
+      [cdkAriaLive]="politeness ? politeness : null"
+      [cdkAriaLiveDuration]="duration">{{content}}</div>`,
+})
 class DivWithCdkAriaLive {
-  @Input() politeness: AriaLivePoliteness;
-  @Input() content = 'Initial content';
+  politeness = 'polite';
+  content = 'Initial content';
+  duration: number;
 }

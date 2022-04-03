@@ -36,14 +36,14 @@ export class CdkAccordion implements OnDestroy, OnChanges {
   readonly _openCloseAllActions: Subject<boolean> = new Subject<boolean>();
 
   /** A readonly id value to use for unique selection coordination. */
-  readonly id = `cdk-accordion-${nextId++}`;
+  readonly id: string = `cdk-accordion-${nextId++}`;
 
   /** Whether the accordion should allow multiple expanded accordion items simultaneously. */
   @Input()
   get multi(): boolean {
     return this._multi;
   }
-  set multi(multi: boolean) {
+  set multi(multi: BooleanInput) {
     this._multi = coerceBooleanProperty(multi);
   }
   private _multi: boolean = false;
@@ -68,6 +68,4 @@ export class CdkAccordion implements OnDestroy, OnChanges {
     this._stateChanges.complete();
     this._openCloseAllActions.complete();
   }
-
-  static ngAcceptInputType_multi: BooleanInput;
 }

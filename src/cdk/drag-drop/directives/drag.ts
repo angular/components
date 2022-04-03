@@ -123,7 +123,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   get disabled(): boolean {
     return this._disabled || (this.dropContainer && this.dropContainer.disabled);
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._dragRef.disabled = this._disabled;
   }
@@ -370,16 +370,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       return this.element.nativeElement.closest<HTMLElement>(boundary);
     }
 
-    const element = coerceElement(boundary);
-
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      !element.contains(this.element.nativeElement)
-    ) {
-      throw Error('Draggable element is not inside of the node passed into cdkDragBoundary.');
-    }
-
-    return element;
+    return coerceElement(boundary);
   }
 
   /** Syncs the inputs of the CdkDrag with the options of the underlying DragRef. */
@@ -451,23 +442,24 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
   /** Handles the events from the underlying `DragRef`. */
   private _handleEvents(ref: DragRef<CdkDrag<T>>) {
-    ref.started.subscribe(() => {
-      this.started.emit({source: this});
+    ref.started.subscribe(startEvent => {
+      this.started.emit({source: this, event: startEvent.event});
 
       // Since all of these events run outside of change detection,
       // we need to ensure that everything is marked correctly.
       this._changeDetectorRef.markForCheck();
     });
 
-    ref.released.subscribe(() => {
-      this.released.emit({source: this});
+    ref.released.subscribe(releaseEvent => {
+      this.released.emit({source: this, event: releaseEvent.event});
     });
 
-    ref.ended.subscribe(event => {
+    ref.ended.subscribe(endEvent => {
       this.ended.emit({
         source: this,
-        distance: event.distance,
-        dropPoint: event.dropPoint,
+        distance: endEvent.distance,
+        dropPoint: endEvent.dropPoint,
+        event: endEvent.event,
       });
 
       // Since all of these events run outside of change detection,
@@ -475,31 +467,32 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       this._changeDetectorRef.markForCheck();
     });
 
-    ref.entered.subscribe(event => {
+    ref.entered.subscribe(enterEvent => {
       this.entered.emit({
-        container: event.container.data,
+        container: enterEvent.container.data,
         item: this,
-        currentIndex: event.currentIndex,
+        currentIndex: enterEvent.currentIndex,
       });
     });
 
-    ref.exited.subscribe(event => {
+    ref.exited.subscribe(exitEvent => {
       this.exited.emit({
-        container: event.container.data,
+        container: exitEvent.container.data,
         item: this,
       });
     });
 
-    ref.dropped.subscribe(event => {
+    ref.dropped.subscribe(dropEvent => {
       this.dropped.emit({
-        previousIndex: event.previousIndex,
-        currentIndex: event.currentIndex,
-        previousContainer: event.previousContainer.data,
-        container: event.container.data,
-        isPointerOverContainer: event.isPointerOverContainer,
+        previousIndex: dropEvent.previousIndex,
+        currentIndex: dropEvent.currentIndex,
+        previousContainer: dropEvent.previousContainer.data,
+        container: dropEvent.container.data,
+        isPointerOverContainer: dropEvent.isPointerOverContainer,
         item: this,
-        distance: event.distance,
-        dropPoint: event.dropPoint,
+        distance: dropEvent.distance,
+        dropPoint: dropEvent.dropPoint,
+        event: dropEvent.event,
       });
     });
   }
@@ -583,6 +576,4 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
         handleInstance.disabled ? dragRef.disableHandle(handle) : dragRef.enableHandle(handle);
       });
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

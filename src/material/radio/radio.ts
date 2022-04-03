@@ -7,12 +7,7 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -23,6 +18,7 @@ import {
   Component,
   ContentChildren,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   forwardRef,
@@ -214,7 +210,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
@@ -224,7 +220,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
   get required(): boolean {
     return this._required;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
@@ -325,9 +321,6 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
     this.disabled = isDisabled;
     this._changeDetector.markForCheck();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }
 
 /**
@@ -369,7 +362,7 @@ const _MatRadioButtonMixinBase = mixinDisableRipple(mixinTabIndex(MatRadioButton
 @Directive()
 export abstract class _MatRadioButtonBase
   extends _MatRadioButtonMixinBase
-  implements OnInit, AfterViewInit, OnDestroy, CanDisableRipple, HasTabIndex
+  implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex
 {
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
@@ -393,7 +386,7 @@ export abstract class _MatRadioButtonBase
   get checked(): boolean {
     return this._checked;
   }
-  set checked(value: boolean) {
+  set checked(value: BooleanInput) {
     const newCheckedState = coerceBooleanProperty(value);
     if (this._checked !== newCheckedState) {
       this._checked = newCheckedState;
@@ -448,7 +441,7 @@ export abstract class _MatRadioButtonBase
   get disabled(): boolean {
     return this._disabled || (this.radioGroup !== null && this.radioGroup.disabled);
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._setDisabled(coerceBooleanProperty(value));
   }
 
@@ -457,7 +450,7 @@ export abstract class _MatRadioButtonBase
   get required(): boolean {
     return this._required || (this.radioGroup && this.radioGroup.required);
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
 
@@ -507,6 +500,9 @@ export abstract class _MatRadioButtonBase
 
   /** Unregister function for _radioDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
+
+  /** Previous value of the input's tabindex. */
+  private _previousTabIndex: number | undefined;
 
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
@@ -576,7 +572,12 @@ export abstract class _MatRadioButtonBase
     }
   }
 
+  ngDoCheck(): void {
+    this._updateTabIndex();
+  }
+
   ngAfterViewInit() {
+    this._updateTabIndex();
     this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
       if (!focusOrigin && this.radioGroup) {
         this.radioGroup._touch();
@@ -638,11 +639,32 @@ export abstract class _MatRadioButtonBase
     }
   }
 
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
+  /** Gets the tabindex for the underlying input element. */
+  private _updateTabIndex() {
+    const group = this.radioGroup;
+    let value: number;
+
+    // Implement a roving tabindex if the button is inside a group. For most cases this isn't
+    // necessary, because the browser handles the tab order for inputs inside a group automatically,
+    // but we need an explicitly higher tabindex for the selected button in order for things like
+    // the focus trap to pick it up correctly.
+    if (!group || !group.selected || this.disabled) {
+      value = this.tabIndex;
+    } else {
+      value = group.selected === this ? this.tabIndex : -1;
+    }
+
+    if (value !== this._previousTabIndex) {
+      // We have to set the tabindex directly on the DOM node, because it depends on
+      // the selected state which is prone to "changed after checked errors".
+      const input: HTMLInputElement | undefined = this._inputElement?.nativeElement;
+
+      if (input) {
+        input.setAttribute('tabindex', value + '');
+        this._previousTabIndex = value;
+      }
+    }
+  }
 }
 
 /**

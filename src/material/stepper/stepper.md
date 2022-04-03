@@ -33,6 +33,13 @@ This behaviour is controlled by `labelPosition` property.
               "file": "stepper-label-position-bottom-example.html",
               "region": "label-position"}) -->
 
+#### Header position
+If you're using a horizontal stepper, you can control where the stepper's content is positioned
+using the `headerPosition` input. By default it's on top of the content, but it can also be placed
+under it.
+
+<!-- example(stepper-header-position) -->
+
 ### Stepper buttons
 There are two button directives to support navigation between different steps:
 `matStepperPrevious` and `matStepperNext`.
@@ -130,6 +137,12 @@ by placing a `matStepperIcon` for each of the icons that you want to override. T
 
 Note that you aren't limited to using the `mat-icon` component when providing custom icons.
 
+### Controlling the stepper animation
+You can control the duration of the stepper's animation using the `animationDuration` input. If you
+want to disable the animation completely, you can do so by setting the properties to `0ms`.
+
+<!-- example(stepper-animations) -->
+
 #### Step States
 You can set the state of a step to whatever you want. The given state by default maps to an icon.
 However, it can be overridden the same way as mentioned above.
@@ -223,7 +236,7 @@ step content is automatically set based on step selection change.
 
 The stepper and each step should be given a meaningful label via `aria-label` or `aria-labelledby`.
 
-Prefer verticl steppers when building for small screen sizes, as horizontal
+Prefer vertical steppers when building for small screen sizes, as horizontal
 steppers typically take up significantly more horizontal space thus introduce
 horizontal scrolling. Applications with multiple scrolling dimensions make
 content harder to consume for some users. See the [Responsive Stepper section](#responsive-stepper)

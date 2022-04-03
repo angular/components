@@ -35,11 +35,8 @@ export interface MatChipInputEvent {
   /** The value of the input. */
   value: string;
 
-  /**
-   * Reference to the chip input that emitted the event.
-   * @breaking-change 13.0.0 This property will be made required.
-   */
-  chipInput?: MatChipInput;
+  /** Reference to the chip input that emitted the event. */
+  chipInput: MatChipInput;
 }
 
 // Increasing integer for generating unique ids.
@@ -90,7 +87,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
   get addOnBlur(): boolean {
     return this._addOnBlur;
   }
-  set addOnBlur(value: boolean) {
+  set addOnBlur(value: BooleanInput) {
     this._addOnBlur = coerceBooleanProperty(value);
   }
   _addOnBlur: boolean = false;
@@ -118,7 +115,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
   get disabled(): boolean {
     return this._disabled || (this._chipList && this._chipList.disabled);
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled: boolean = false;
@@ -129,7 +126,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
   }
 
   /** The native input element to which this directive is attached. */
-  readonly inputElement: HTMLInputElement;
+  readonly inputElement!: HTMLInputElement;
 
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement>,
@@ -241,7 +238,4 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
   }
-
-  static ngAcceptInputType_addOnBlur: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

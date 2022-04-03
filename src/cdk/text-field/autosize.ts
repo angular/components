@@ -20,7 +20,6 @@ import {
   DoCheck,
   OnDestroy,
   NgZone,
-  HostListener,
   Optional,
   Inject,
 } from '@angular/core';
@@ -38,6 +37,7 @@ import {DOCUMENT} from '@angular/common';
     // Textarea elements that have the directive applied should have a single row by default.
     // Browsers normally show two rows by default and therefore this limits the minRows binding.
     'rows': '1',
+    '(input)': '_noopInputHandler()',
   },
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
@@ -64,7 +64,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   get minRows(): number {
     return this._minRows;
   }
-  set minRows(value: number) {
+  set minRows(value: NumberInput) {
     this._minRows = coerceNumberProperty(value);
     this._setMinHeight();
   }
@@ -74,7 +74,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   get maxRows(): number {
     return this._maxRows;
   }
-  set maxRows(value: number) {
+  set maxRows(value: NumberInput) {
     this._maxRows = coerceNumberProperty(value);
     this._setMaxHeight();
   }
@@ -84,7 +84,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   get enabled(): boolean {
     return this._enabled;
   }
-  set enabled(value: boolean) {
+  set enabled(value: BooleanInput) {
     value = coerceBooleanProperty(value);
 
     // Only act if the actual value changed. This specifically helps to not run
@@ -100,7 +100,13 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
   set placeholder(value: string) {
     this._cachedPlaceholderHeight = undefined;
-    this._textareaElement.placeholder = value;
+
+    if (value) {
+      this._textareaElement.setAttribute('placeholder', value);
+    } else {
+      this._textareaElement.removeAttribute('placeholder');
+    }
+
     this._cacheTextareaPlaceholderHeight();
   }
 
@@ -335,11 +341,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('input')
   _noopInputHandler() {
     // no-op handler that ensures we're running change detection on input events.
   }
@@ -373,8 +374,4 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       textarea.setSelectionRange(selectionStart, selectionEnd);
     }
   }
-
-  static ngAcceptInputType_minRows: NumberInput;
-  static ngAcceptInputType_maxRows: NumberInput;
-  static ngAcceptInputType_enabled: BooleanInput;
 }

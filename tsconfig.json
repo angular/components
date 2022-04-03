@@ -11,6 +11,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": false,
     "strictNullChecks": true,
+    "useUnknownInCatchVariables": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
@@ -36,6 +37,9 @@
       "@angular/components-examples": ["./src/components-examples"],
       "@angular/components-examples/*": ["./src/components-examples/*"]
     }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
   },
   "include": [
     "src/**/*.ts",

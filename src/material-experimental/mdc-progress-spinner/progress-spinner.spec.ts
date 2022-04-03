@@ -9,25 +9,24 @@ import {MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/progress-s
 import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
 
 describe('MDC-based MatProgressSpinner', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatProgressSpinnerModule, CommonModule],
-        declarations: [
-          BasicProgressSpinner,
-          IndeterminateProgressSpinner,
-          ProgressSpinnerWithValueAndBoundMode,
-          ProgressSpinnerWithColor,
-          ProgressSpinnerCustomStrokeWidth,
-          ProgressSpinnerCustomDiameter,
-          SpinnerWithColor,
-          ProgressSpinnerWithStringValues,
-          IndeterminateSpinnerInShadowDom,
-          IndeterminateSpinnerInShadowDomWithNgIf,
-        ],
-      }).compileComponents();
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatProgressSpinnerModule, CommonModule],
+      declarations: [
+        BasicProgressSpinner,
+        IndeterminateProgressSpinner,
+        ProgressSpinnerWithValueAndBoundMode,
+        ProgressSpinnerWithColor,
+        ProgressSpinnerCustomStrokeWidth,
+        ProgressSpinnerCustomDiameter,
+        SpinnerWithColor,
+        ProgressSpinnerWithStringValues,
+        IndeterminateSpinnerInShadowDom,
+        IndeterminateSpinnerInShadowDomWithNgIf,
+        SpinnerWithMode,
+      ],
+    }).compileComponents();
+  }));
 
   it('should apply a mode of "determinate" if no mode is provided.', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
@@ -340,6 +339,28 @@ describe('MDC-based MatProgressSpinner', () => {
     expect(progressElement.componentInstance.strokeWidth).toBe(7);
   });
 
+  it('should be able to set a default color', () => {
+    TestBed.resetTestingModule()
+      .configureTestingModule({
+        imports: [MatProgressSpinnerModule],
+        declarations: [BasicProgressSpinner],
+        providers: [
+          {
+            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            useValue: {color: 'warn'},
+          },
+        ],
+      })
+      .compileComponents();
+
+    const fixture = TestBed.createComponent(BasicProgressSpinner);
+    fixture.detectChanges();
+
+    const progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'))!;
+    expect(progressElement.componentInstance.color).toBe('warn');
+    expect(progressElement.nativeElement.classList).toContain('mat-warn');
+  });
+
   it('should set `aria-valuenow` to the current value in determinate mode', () => {
     const fixture = TestBed.createComponent(ProgressSpinnerWithValueAndBoundMode);
     const progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'))!;
@@ -374,6 +395,14 @@ describe('MDC-based MatProgressSpinner', () => {
 
     expect(children.length).toBeGreaterThan(0);
     expect(children.every(child => child.getAttribute('aria-hidden') === 'true')).toBe(true);
+  });
+
+  it('should be able to change the mode on a mat-spinner', () => {
+    const fixture = TestBed.createComponent(SpinnerWithMode);
+    fixture.detectChanges();
+
+    const progressElement = fixture.debugElement.query(By.css('mat-spinner')).nativeElement;
+    expect(progressElement.getAttribute('mode')).toBe('determinate');
   });
 });
 
@@ -448,3 +477,6 @@ class IndeterminateSpinnerInShadowDomWithNgIf {
 
   diameter: number;
 }
+
+@Component({template: '<mat-spinner mode="determinate"></mat-spinner>'})
+class SpinnerWithMode {}

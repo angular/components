@@ -6,6 +6,7 @@
 
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
@@ -21,8 +22,7 @@ import { FocusTrapFactory } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import * as i4 from '@angular/material/core';
-import * as i5 from '@angular/cdk/platform';
-import * as i6 from '@angular/cdk/scrolling';
+import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { InteractivityChecker } from '@angular/cdk/a11y';
 import { NgZone } from '@angular/core';
@@ -48,46 +48,37 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean;
 
 // @public
-export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestroy {
+export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy {
     constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _focusMonitor: FocusMonitor, _platform: Platform, _ngZone: NgZone, _interactivityChecker: InteractivityChecker, _doc: any, _container?: MatDrawerContainer | undefined);
-    // (undocumented)
-    _animationDoneListener(event: AnimationEvent_2): void;
     readonly _animationEnd: Subject<AnimationEvent_2>;
     readonly _animationStarted: Subject<AnimationEvent_2>;
-    // (undocumented)
-    _animationStartListener(event: AnimationEvent_2): void;
     _animationState: 'open-instant' | 'open' | 'void';
     get autoFocus(): AutoFocusTarget | string | boolean;
-    set autoFocus(value: AutoFocusTarget | string | boolean);
+    set autoFocus(value: AutoFocusTarget | string | BooleanInput);
     close(): Promise<MatDrawerToggleResult>;
     readonly closedStart: Observable<void>;
     readonly _closedStream: Observable<void>;
     _closeViaBackdropClick(): Promise<MatDrawerToggleResult>;
     // (undocumented)
     _container?: MatDrawerContainer | undefined;
+    _content: ElementRef<HTMLElement>;
     get disableClose(): boolean;
-    set disableClose(value: boolean);
+    set disableClose(value: BooleanInput);
     // (undocumented)
     _getWidth(): number;
     get mode(): MatDrawerMode;
     set mode(value: MatDrawerMode);
     readonly _modeChanged: Subject<void>;
     // (undocumented)
-    static ngAcceptInputType_autoFocus: AutoFocusTarget | string | BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disableClose: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_opened: BooleanInput;
-    // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
-    ngAfterContentInit(): void;
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly onPositionChanged: EventEmitter<void>;
     open(openedVia?: FocusOrigin): Promise<MatDrawerToggleResult>;
     get opened(): boolean;
-    set opened(value: boolean);
+    set opened(value: BooleanInput);
     readonly openedChange: EventEmitter<boolean>;
     readonly openedStart: Observable<void>;
     readonly _openedStream: Observable<void>;
@@ -110,7 +101,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     constructor(_dir: Directionality, _element: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, defaultAutosize?: boolean, _animationMode?: string | undefined);
     _allDrawers: QueryList<MatDrawer>;
     get autosize(): boolean;
-    set autosize(value: boolean);
+    set autosize(value: BooleanInput);
     readonly backdropClick: EventEmitter<void>;
     // (undocumented)
     _backdropOverride: boolean | null;
@@ -130,14 +121,10 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     };
     _drawers: QueryList<MatDrawer>;
     get end(): MatDrawer | null;
-    get hasBackdrop(): any;
-    set hasBackdrop(value: any);
+    get hasBackdrop(): boolean;
+    set hasBackdrop(value: BooleanInput);
     // (undocumented)
     _isShowingBackdrop(): boolean;
-    // (undocumented)
-    static ngAcceptInputType_autosize: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_hasBackdrop: BooleanInput;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -180,17 +167,11 @@ export type MatDrawerToggleResult = 'open' | 'close';
 // @public (undocumented)
 export class MatSidenav extends MatDrawer {
     get fixedBottomGap(): number;
-    set fixedBottomGap(value: number);
+    set fixedBottomGap(value: NumberInput);
     get fixedInViewport(): boolean;
-    set fixedInViewport(value: boolean);
+    set fixedInViewport(value: BooleanInput);
     get fixedTopGap(): number;
-    set fixedTopGap(value: number);
-    // (undocumented)
-    static ngAcceptInputType_fixedBottomGap: NumberInput;
-    // (undocumented)
-    static ngAcceptInputType_fixedInViewport: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_fixedTopGap: NumberInput;
+    set fixedTopGap(value: NumberInput);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSidenav, "mat-sidenav", ["matSidenav"], { "fixedInViewport": "fixedInViewport"; "fixedTopGap": "fixedTopGap"; "fixedBottomGap": "fixedBottomGap"; }, {}, never, ["*"]>;
     // (undocumented)
@@ -225,7 +206,7 @@ export class MatSidenavModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSidenavModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSidenavModule, [typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent], [typeof i3.CommonModule, typeof i4.MatCommonModule, typeof i5.PlatformModule, typeof i6.CdkScrollableModule], [typeof i6.CdkScrollableModule, typeof i4.MatCommonModule, typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSidenavModule, [typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent], [typeof i3.CommonModule, typeof i4.MatCommonModule, typeof i5.CdkScrollableModule], [typeof i5.CdkScrollableModule, typeof i4.MatCommonModule, typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent]>;
 }
 
 // @public

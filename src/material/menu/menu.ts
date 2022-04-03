@@ -37,6 +37,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, switchMap, take} from 'rxjs/operators';
@@ -109,7 +110,7 @@ export class _MatMenuBase
   @ContentChildren(MatMenuItem, {descendants: true}) _allItems: QueryList<MatMenuItem>;
 
   /** Only the direct descendant menu items. */
-  private _directDescendantItems = new QueryList<MatMenuItem>();
+  _directDescendantItems = new QueryList<MatMenuItem>();
 
   /** Subscription to tab events on the menu panel */
   private _tabSubscription = Subscription.EMPTY;
@@ -198,7 +199,7 @@ export class _MatMenuBase
   get overlapTrigger(): boolean {
     return this._overlapTrigger;
   }
-  set overlapTrigger(value: boolean) {
+  set overlapTrigger(value: BooleanInput) {
     this._overlapTrigger = coerceBooleanProperty(value);
   }
   private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
@@ -208,7 +209,7 @@ export class _MatMenuBase
   get hasBackdrop(): boolean | undefined {
     return this._hasBackdrop;
   }
-  set hasBackdrop(value: boolean | undefined) {
+  set hasBackdrop(value: BooleanInput) {
     this._hasBackdrop = coerceBooleanProperty(value);
   }
   private _hasBackdrop: boolean | undefined = this._defaultOptions.hasBackdrop;
@@ -272,6 +273,8 @@ export class _MatMenuBase
     private _elementRef: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions,
+    // @breaking-change 15.0.0 `_changeDetectorRef` to become a required parameter.
+    private _changeDetectorRef?: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -295,6 +298,24 @@ export class _MatMenuBase
         switchMap(items => merge(...items.map((item: MatMenuItem) => item._focused))),
       )
       .subscribe(focusedItem => this._keyManager.updateActiveItem(focusedItem as MatMenuItem));
+
+    this._directDescendantItems.changes.subscribe((itemsList: QueryList<MatMenuItem>) => {
+      // Move focus to another item, if the active item is removed from the list.
+      // We need to debounce the callback, because multiple items might be removed
+      // in quick succession.
+      const manager = this._keyManager;
+
+      if (this._panelAnimationState === 'enter' && manager.activeItem?._hasFocus()) {
+        const items = itemsList.toArray();
+        const index = Math.max(0, Math.min(items.length - 1, manager.activeItemIndex || 0));
+
+        if (items[index] && !items[index].disabled) {
+          manager.setActiveItem(index);
+        } else {
+          manager.setNextItemActive();
+        }
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -357,7 +378,12 @@ export class _MatMenuBase
         }
 
         manager.onKeydown(event);
+        return;
     }
+
+    // Don't allow the event to propagate if we've already handled it, or it may
+    // end up reaching other overlays that were opened earlier (see #22694).
+    event.stopPropagation();
   }
 
   /**
@@ -386,7 +412,7 @@ export class _MatMenuBase
     // Move focus to the menu panel so keyboard events like Escape still work. Also this will
     // give _some_ feedback to screen readers.
     if (!manager.activeItem && this._directDescendantItems.length) {
-      let element = this._directDescendantItems.first._getHostElement().parentElement;
+      let element = this._directDescendantItems.first!._getHostElement().parentElement;
 
       // Because the `mat-menu` is at the DOM insertion point, not inside the overlay, we don't
       // have a nice way of getting a hold of the menu panel. We can't use a `ViewChild` either
@@ -447,6 +473,9 @@ export class _MatMenuBase
     classes['mat-menu-after'] = posX === 'after';
     classes['mat-menu-above'] = posY === 'above';
     classes['mat-menu-below'] = posY === 'below';
+
+    // @breaking-change 15.0.0 Remove null check for `_changeDetectorRef`.
+    this._changeDetectorRef?.markForCheck();
   }
 
   /** Starts the enter animation. */
@@ -495,9 +524,6 @@ export class _MatMenuBase
         this._directDescendantItems.notifyOnChanges();
       });
   }
-
-  static ngAcceptInputType_overlapTrigger: BooleanInput;
-  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }
 
 /** @docs-public MatMenu */
@@ -520,11 +546,22 @@ export class MatMenu extends _MatMenuBase {
   protected override _elevationPrefix = 'mat-elevation-z';
   protected override _baseElevation = 4;
 
+  /**
+   * @deprecated `changeDetectorRef` parameter will become a required parameter.
+   * @breaking-change 15.0.0
+   */
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
+    ngZone: NgZone,
+    defaultOptions: MatMenuDefaultOptions,
+  );
+
   constructor(
     elementRef: ElementRef<HTMLElement>,
     ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions,
+    changeDetectorRef?: ChangeDetectorRef,
   ) {
-    super(elementRef, ngZone, defaultOptions);
+    super(elementRef, ngZone, defaultOptions, changeDetectorRef);
   }
 }

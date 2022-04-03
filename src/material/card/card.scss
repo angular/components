@@ -1,8 +1,9 @@
 @use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/style/variables';
 @use '../core/style/elevation';
 @use '../core/style/private';
-@use '../../cdk/a11y';
 
 
 $padding: 16px !default;
@@ -17,7 +18,7 @@ $header-size: 40px !default;
   padding: $padding;
   border-radius: $border-radius;
 
-  .mat-divider-horizontal {
+  > .mat-divider-horizontal {
     position: absolute;
     left: 0;
     width: 100%;
@@ -38,7 +39,7 @@ $header-size: 40px !default;
     }
   }
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
 }
@@ -73,6 +74,14 @@ $header-size: 40px !default;
 .mat-card-image {
   width: calc(100% + #{$padding * 2});
   margin: 0 (-$padding) 16px (-$padding);
+
+  // The following properties are to handle `mat-card-image` on a `picture` element.
+  display: block;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+  }
 }
 
 .mat-card-footer {

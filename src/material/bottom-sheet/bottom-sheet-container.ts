@@ -210,8 +210,14 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
       element.tabIndex = -1;
       // The tabindex attribute should be removed to avoid navigating to that element again
       this._ngZone.runOutsideAngular(() => {
-        element.addEventListener('blur', () => element.removeAttribute('tabindex'));
-        element.addEventListener('mousedown', () => element.removeAttribute('tabindex'));
+        const callback = () => {
+          element.removeEventListener('blur', callback);
+          element.removeEventListener('mousedown', callback);
+          element.removeAttribute('tabindex');
+        };
+
+        element.addEventListener('blur', callback);
+        element.addEventListener('mousedown', callback);
       });
     }
     element.focus(options);
@@ -306,7 +312,9 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
 
     // The `focus` method isn't available during server-side rendering.
     if (this._elementRef.nativeElement.focus) {
-      Promise.resolve().then(() => this._elementRef.nativeElement.focus());
+      this._ngZone.runOutsideAngular(() => {
+        Promise.resolve().then(() => this._elementRef.nativeElement.focus());
+      });
     }
   }
 }

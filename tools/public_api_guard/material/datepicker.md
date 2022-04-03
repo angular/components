@@ -197,15 +197,19 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 }
 
 // @public
-export class MatCalendarBody implements OnChanges, OnDestroy {
+export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
     constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
     activeCell: number;
+    // (undocumented)
+    readonly activeDateChange: EventEmitter<MatCalendarUserEvent<number>>;
     cellAspectRatio: number;
     _cellClicked(cell: MatCalendarCell, event: MouseEvent): void;
     _cellPadding: string;
     _cellWidth: string;
     comparisonEnd: number | null;
     comparisonStart: number | null;
+    // (undocumented)
+    _emitActiveDateChange(cell: MatCalendarCell, event: FocusEvent): void;
     endValue: number;
     _firstRowOffset: number;
     _focusActiveCell(movePreview?: boolean): void;
@@ -227,6 +231,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     label: string;
     labelMinRequiredCells: number;
     // (undocumented)
+    ngAfterViewChecked(): void;
+    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -235,11 +241,12 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     previewEnd: number | null;
     previewStart: number | null;
     rows: MatCalendarCell[][];
+    _scheduleFocusActiveCellAfterViewChecked(): void;
     readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>>;
     startValue: number;
     todayValue: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "isRange": "isRange"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; "previewStart": "previewStart"; "previewEnd": "previewEnd"; }, { "selectedValueChange": "selectedValueChange"; "previewChange": "previewChange"; }, never, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "isRange": "isRange"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; "previewStart": "previewStart"; "previewEnd": "previewEnd"; }, { "selectedValueChange": "selectedValueChange"; "previewChange": "previewChange"; "activeDateChange": "activeDateChange"; }, never, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCalendarBody, never>;
 }
@@ -359,7 +366,7 @@ abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S, D = Extra
     dateClass: MatCalendarCellClassFunction<D>;
     datepickerInput: C;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     protected _forwardContentValues(instance: MatDatepickerContent<S, D>): void;
     // (undocumented)
     _getDateFilter(): DateFilterFn<D>;
@@ -368,20 +375,12 @@ abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S, D = Extra
     id: string;
     readonly monthSelected: EventEmitter<D>;
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_opened: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_restoreFocus: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_touchUi: BooleanInput;
-    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;
     get opened(): boolean;
-    set opened(value: boolean);
+    set opened(value: BooleanInput);
     readonly openedStream: EventEmitter<void>;
     get panelClass(): string | string[];
     set panelClass(value: string | string[]);
@@ -389,7 +388,7 @@ abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S, D = Extra
     registerInput(input: C): MatDateSelectionModel<S, D>;
     removeActions(portal: TemplatePortal): void;
     get restoreFocus(): boolean;
-    set restoreFocus(value: boolean);
+    set restoreFocus(value: BooleanInput);
     select(date: D): void;
     _selectMonth(normalizedMonth: D): void;
     _selectYear(normalizedYear: D): void;
@@ -398,7 +397,7 @@ abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S, D = Extra
     startView: 'month' | 'year' | 'multi-year';
     readonly stateChanges: Subject<void>;
     get touchUi(): boolean;
-    set touchUi(value: boolean);
+    set touchUi(value: BooleanInput);
     readonly viewChanged: EventEmitter<MatCalendarView>;
     _viewChanged(view: MatCalendarView): void;
     xPosition: DatepickerDropdownPositionX;
@@ -434,6 +433,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extend
     comparisonEnd: D | null;
     comparisonStart: D | null;
     datepicker: MatDatepickerBase<any, S, D>;
+    _dialogLabelId: string | null;
     // (undocumented)
     _getSelected(): D | DateRange<D> | null;
     // (undocumented)
@@ -573,12 +573,10 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     _customIcon: MatDatepickerToggleIcon;
     datepicker: MatDatepickerPanel<MatDatepickerControl<any>, D>;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     disableRipple: boolean;
     // (undocumented)
     _intl: MatDatepickerIntl;
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -612,7 +610,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     get dateFilter(): DateFilterFn<D>;
     set dateFilter(value: DateFilterFn<D>);
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     get empty(): boolean;
     // (undocumented)
     _endInput: MatEndDate<D>;
@@ -633,10 +631,6 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     get min(): D | null;
     set min(value: D | null);
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_required: BooleanInput;
-    // (undocumented)
     ngAfterContentInit(): void;
     ngControl: NgControl | null;
     // (undocumented)
@@ -649,7 +643,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     get rangePicker(): MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>;
     set rangePicker(rangePicker: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>);
     get required(): boolean;
-    set required(value: boolean);
+    set required(value: BooleanInput);
     separator: string;
     setDescribedByIds(ids: string[]): void;
     _shouldHidePlaceholders(): boolean;
@@ -741,16 +735,12 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
 }
 
 // @public
-export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState, DoCheck, OnInit {
+export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
     // (undocumented)
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
-    // (undocumented)
-    ngDoCheck(): void;
-    // (undocumented)
-    ngOnInit(): void;
     // (undocumented)
     _onKeydown(event: KeyboardEvent): void;
     // (undocumented)
@@ -782,6 +772,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     _dateSelected(event: MatCalendarUserEvent<number>): void;
     _firstWeekOffset: number;
     _focusActiveCell(movePreview?: boolean): void;
+    _focusActiveCellAfterViewChecked(): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _handleCalendarBodyKeyup(event: KeyboardEvent): void;
     _init(): void;
@@ -807,6 +798,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D | null>;
     _todayDate: number | null;
+    _updateActiveDate(event: MatCalendarUserEvent<number>): void;
     readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>>;
     _weekdays: {
         long: string;
@@ -830,6 +822,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     dateClass: MatCalendarCellClassFunction<D>;
     dateFilter: (date: D) => boolean;
     _focusActiveCell(): void;
+    _focusActiveCellAfterViewChecked(): void;
     // (undocumented)
     _getActiveCell(): number;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
@@ -849,6 +842,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     readonly selectedChange: EventEmitter<D>;
     _selectedYear: number | null;
     _todayYear: number;
+    _updateActiveDate(event: MatCalendarUserEvent<number>): void;
     _years: MatCalendarCell[][];
     readonly yearSelected: EventEmitter<D>;
     _yearSelected(event: MatCalendarUserEvent<number>): void;
@@ -885,7 +879,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
 }
 
 // @public
-export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState, DoCheck, OnInit {
+export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
@@ -894,10 +888,6 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
     getMirrorValue(): string;
     // (undocumented)
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
-    // (undocumented)
-    ngDoCheck(): void;
-    // (undocumented)
-    ngOnInit(): void;
     // (undocumented)
     protected _shouldHandleChangeEvent(change: DateSelectionModelChange<DateRange<D>>): boolean;
     // (undocumented)
@@ -921,6 +911,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     dateClass: MatCalendarCellClassFunction<D>;
     dateFilter: (date: D) => boolean;
     _focusActiveCell(): void;
+    _focusActiveCellAfterViewChecked(): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _handleCalendarBodyKeyup(event: KeyboardEvent): void;
     _init(): void;
@@ -941,6 +932,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     readonly selectedChange: EventEmitter<D>;
     _selectedMonth: number | null;
     _todayMonth: number | null;
+    _updateActiveDate(event: MatCalendarUserEvent<number>): void;
     _yearLabel: string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatYearView<any>, "mat-year-view", ["matYearView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; }, { "selectedChange": "selectedChange"; "monthSelected": "monthSelected"; "activeDateChange": "activeDateChange"; }, never, never>;

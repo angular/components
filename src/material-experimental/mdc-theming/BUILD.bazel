@@ -6,7 +6,10 @@ filegroup(
     name = "mdc-theming",
     srcs = [
         ":all_themes",
+        ":deeppurple_amber_prebuilt",
         ":indigo_pink_prebuilt",
+        ":pink_bluegrey_prebuilt",
+        ":purple_green_prebuilt",
     ],
 )
 
@@ -16,6 +19,7 @@ sass_library(
         "_all-theme.scss",
     ],
     deps = [
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-autocomplete:mdc_autocomplete_scss_lib",
         "//src/material-experimental/mdc-button:mdc_button_scss_lib",
         "//src/material-experimental/mdc-card:mdc_card_scss_lib",
@@ -38,8 +42,6 @@ sass_library(
         "//src/material-experimental/mdc-table:mdc_table_scss_lib",
         "//src/material-experimental/mdc-tabs:mdc_tabs_scss_lib",
         "//src/material-experimental/mdc-tooltip:mdc_tooltip_scss_lib",
-        "//src/material/core:core_scss_lib",
-        "//src/material/core:theming_scss_lib",
     ],
 )
 
@@ -51,6 +53,42 @@ sass_binary(
     ],
     deps = [
         ":all_themes",
-        "//src/material-experimental/mdc-typography:all_typography",
+        "//src/material:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "deeppurple_amber_prebuilt",
+    src = "prebuilt/deeppurple-amber.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        ":all_themes",
+        "//src/material:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "pink_bluegrey_prebuilt",
+    src = "prebuilt/pink-bluegrey.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        ":all_themes",
+        "//src/material:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "purple_green_prebuilt",
+    src = "prebuilt/purple-green.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        ":all_themes",
+        "//src/material:sass_lib",
     ],
 )

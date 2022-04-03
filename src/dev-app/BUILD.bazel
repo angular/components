@@ -1,7 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
-load("//tools/dev-server:index.bzl", "dev_server")
-load("//tools/esbuild:index.bzl", "esbuild", "esbuild_config")
+load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "ng_module", "sass_binary")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
@@ -65,7 +63,6 @@ ng_module(
         "//src/dev-app/mdc-progress-spinner",
         "//src/dev-app/mdc-radio",
         "//src/dev-app/mdc-select",
-        "//src/dev-app/mdc-sidenav",
         "//src/dev-app/mdc-slide-toggle",
         "//src/dev-app/mdc-slider",
         "//src/dev-app/mdc-snack-bar",
@@ -111,7 +108,7 @@ esbuild_config(
     config_file = "esbuild.config.mjs",
 )
 
-esbuild(
+devmode_esbuild(
     name = "bundles",
     config = ":esbuild_config",
     entry_points = [":main.ts"] + ["%s:index.ts" % e for e in ALL_EXAMPLES],
@@ -134,8 +131,8 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        "//src/material:theming_bundle",
-        "//src/material-experimental:theming_bundle",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
         "//src/material/core:theming_scss_lib",
     ],
 )
@@ -159,14 +156,13 @@ filegroup(
         ":theme",
         ":variables",
         "//src/dev-app/icon:icon_demo_assets",
-        "@npm//:node_modules/core-js-bundle/index.js",
         "@npm//:node_modules/moment/min/moment-with-locales.min.js",
         "@npm//:node_modules/rxjs/bundles/rxjs.umd.min.js",
         "@npm//:node_modules/zone.js/dist/zone.js",
     ],
 )
 
-dev_server(
+http_server(
     name = "devserver",
     srcs = [":dev_app_static_files"],
     additional_root_paths = [
@@ -174,6 +170,13 @@ dev_server(
         # Needed for compatibility with "pkg_web" which always uses the tree
         # artifact output as workspace root.
         "angular_material",
+    ],
+    enable_dev_ui = True,
+    # List of environment variables that will be made available as `window.<NAME>` in the
+    # served `index.html` throuhg an injected script. Useful for allowing developers to
+    # configure API keys without requiring secrets to be committed.
+    environment_variables = [
+        "GOOGLE_MAPS_KEY",
     ],
     tags = ["manual"],
     deps = [

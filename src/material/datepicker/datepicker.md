@@ -230,7 +230,14 @@ selected range.
 
 Note that comparison and overlap colors aren't derived from the current theme, due
 to limitations in the Material Design theming system. They can be customized using the
-`mat-date-range-colors` mixin.
+`datepicker-date-range-colors` mixin.
+
+```scss
+@use '@angular/material' as mat;
+
+@include mat.datepicker-date-range-colors(
+  hotpink, teal, yellow, purple);
+```
 
 ### Customizing the date selection logic
 
@@ -292,6 +299,11 @@ export class MyApp {}
 
 It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
 
+**Note:** if you're using the `MatDateFnsModule`, you have to provide the data object for your
+locale to `MAT_DATE_LOCALE` instead of the locale code, in addition to providing a configuration
+compatible with `date-fns` to `MAT_DATE_FORMATS`. Locale data for `date-fns` can be imported
+from `date-fns/locale`.
+
 <!-- example(datepicker-locale) -->
 
 #### Choosing a date implementation and date format settings
@@ -306,22 +318,22 @@ The easiest way to ensure this is to import one of the provided date modules:
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Date</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td>en-US</td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td>None</td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material/core</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Date</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td>en-US</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material/core</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -329,22 +341,22 @@ The easiest way to ensure this is to import one of the provided date modules:
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Date</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td><a href="https://github.com/date-fns/date-fns/tree/master/src/locale/">See project for details</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td><a href="https://date-fns.org/">date-fns</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material-date-fns-adapter</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Date</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://github.com/date-fns/date-fns/tree/master/src/locale/">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://date-fns.org/">date-fns</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-date-fns-adapter</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -352,22 +364,22 @@ The easiest way to ensure this is to import one of the provided date modules:
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>DateTime</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td><a href="https://moment.github.io/luxon/">See project for details</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td><a href="https://momentjs.com/">Luxon</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material-luxon-adapter</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>DateTime</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://moment.github.io/luxon/">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://moment.github.io/luxon/">Luxon</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-luxon-adapter</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -375,22 +387,22 @@ The easiest way to ensure this is to import one of the provided date modules:
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Moment</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td><a href="https://github.com/moment/moment/tree/develop/src/locale">See project for details</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td><a href="https://momentjs.com/">Moment.js</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material-moment-adapter</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Moment</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://github.com/moment/moment/tree/develop/src/locale">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://momentjs.com/">Moment.js</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-moment-adapter</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -454,7 +466,7 @@ It is also possible to create your own `DateAdapter` that works with any date fo
 requires. This is accomplished by subclassing `DateAdapter` and providing your subclass as the
 `DateAdapter` implementation. You will also want to make sure that the `MAT_DATE_FORMATS` provided
 in your app are formats that can be understood by your date implementation. See
-[_Customizing the parse and display formats_](#customizing-the-parse-and-display-formats)for more
+[_Customizing the parse and display formats_](#customizing-the-parse-and-display-formats) for more
 information about `MAT_DATE_FORMATS`.
 
 ```ts
@@ -565,6 +577,9 @@ value can be anything that is accepted by `ngClass`.
 The `MatDatepicker` pop-up uses the `role="dialog"` interaction pattern. This dialog then contains
 multiple controls, the most prominent being the calendar itself. This calendar implements the
 `role="grid"` interaction pattern.
+
+Always enable [_confirmation action buttons_](#confirmation-action-buttons). This allows assistive
+technology users to explicitly confirm their selection before committing a value.
 
 The `MatDatepickerInput` and `MatDatepickerToggle` directives both apply the `aria-haspopup`
 attribute to the native input and button elements, respectively.

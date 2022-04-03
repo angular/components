@@ -25,7 +25,6 @@ ng_module(
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
-        "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/material/core",
         "@npm//@angular/animations",
@@ -46,7 +45,7 @@ sass_binary(
     name = "drawer_scss",
     src = "drawer.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

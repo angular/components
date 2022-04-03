@@ -36,6 +36,12 @@ export const config = {
 
       // This test checks something that isn't supported in the MDC form field.
       'should propagate the dynamic `placeholder` value to the form field',
+
+      // Disabled, because the MDC-based chip input doesn't deal with focus escaping anymore.
+      'should not allow focus to escape when tabbing backwards',
+
+      // Disabled, because preventing the default action isn't required.
+      'should prevent the default click action when the chip is disabled',
     ],
     'mdc-dialog': [
       // These tests are verifying implementation details that are not relevant for MDC.
@@ -75,6 +81,7 @@ export const config = {
       'should update the outline gap if the direction changes',
       'should update the outline gap correctly if the direction changes multiple times',
       'should calculate the outline gaps inside the shadow DOM',
+      'should recalculate the outline gap when the label changes to empty after init',
       'should be legacy appearance if no default options provided',
       'should be legacy appearance if empty default options provided',
     ],
@@ -100,13 +107,8 @@ export const config = {
       'should not change focus when pressing HOME with a modifier key',
       'should not change focus when pressing END with a modifier key',
 
-      // MDC does not support the common CTRL + A keyboard shortcut.
-      // Tracked with: https://github.com/material-components/material-components-web/issues/6366
-      'should select all items using ctrl + a',
-      'should not select disabled items when pressing ctrl + a',
-      'should select all items using ctrl + a if some items are selected',
-      'should deselect all with ctrl + a if all options are selected',
-      'should dispatch the selectionChange event when selecting via ctrl + a',
+      // MDC-based list does not support more than three lines.
+      'should apply a particular class to lists with more than 3 lines',
     ],
     'mdc-progress-bar': [
       // These tests are verifying implementation details that are not relevant for MDC.
@@ -182,6 +184,16 @@ export const config = {
       'should set the animation state to complete on exit',
       'should set the old snack bar animation state to complete and the new snack bar ' +
         'animation state to visible on entry of new snack bar',
+    ],
+    'mdc-tabs': [
+      // These tests are excluded because they are verifying behavior that is not supported in MDC.
+      'should have no explicit roles',
+      'should not setup aria-controls',
+      'should not manage aria-selected',
+      'should not activate a link when space is pressed',
+      'should manage aria-current',
+      'should support the native tabindex attribute',
+      'should support binding to the tabIndex',
     ],
   } as {[key: string]: string[]},
 };

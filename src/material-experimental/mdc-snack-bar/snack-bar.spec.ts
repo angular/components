@@ -5,7 +5,6 @@ import {
   Component,
   Directive,
   Inject,
-  NgModule,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -15,7 +14,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_SNACK_BAR_DATA,
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
-  MatSimpleSnackBar,
+  SimpleSnackBar,
   MatSnackBar,
   MatSnackBarConfig,
   MatSnackBarContainer,
@@ -40,7 +39,12 @@ describe('MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
+      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
+      declarations: [
+        ComponentWithChildViewContainer,
+        BurritosNotification,
+        DirectiveWithViewContainer,
+      ],
     }).compileComponents();
   }));
 
@@ -235,7 +239,7 @@ describe('MatSnackBar', () => {
 
     viewContainerFixture.detectChanges();
 
-    expect(snackBarRef.instance instanceof MatSimpleSnackBar)
+    expect(snackBarRef.instance instanceof SimpleSnackBar)
       .withContext('Expected the snack bar content component to be SimpleSnackBar')
       .toBe(true);
     expect(snackBarRef.instance.snackBarRef)
@@ -262,7 +266,7 @@ describe('MatSnackBar', () => {
 
     viewContainerFixture.detectChanges();
 
-    expect(snackBarRef.instance instanceof MatSimpleSnackBar)
+    expect(snackBarRef.instance instanceof SimpleSnackBar)
       .withContext('Expected the snack bar content component to be SimpleSnackBar')
       .toBe(true);
     expect(snackBarRef.instance.snackBarRef)
@@ -686,8 +690,8 @@ describe('MatSnackBar with parent MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
-      declarations: [ComponentThatProvidesMatSnackBar],
+      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
+      declarations: [ComponentThatProvidesMatSnackBar, DirectiveWithViewContainer],
     }).compileComponents();
   }));
 
@@ -760,7 +764,8 @@ describe('MatSnackBar Positioning', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
+      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
+      declarations: [ComponentWithChildViewContainer, DirectiveWithViewContainer],
     }).compileComponents();
   }));
 
@@ -1052,22 +1057,3 @@ class BurritosNotification {
 class ComponentThatProvidesMatSnackBar {
   constructor(public snackBar: MatSnackBar) {}
 }
-
-/**
- * Simple component to open snack bars from.
- * Create a real (non-test) NgModule as a workaround forRoot
- * https://github.com/angular/angular/issues/10760
- */
-const TEST_DIRECTIVES = [
-  ComponentWithChildViewContainer,
-  BurritosNotification,
-  DirectiveWithViewContainer,
-  ComponentWithTemplateRef,
-];
-@NgModule({
-  imports: [CommonModule, MatSnackBarModule],
-  exports: TEST_DIRECTIVES,
-  declarations: TEST_DIRECTIVES,
-  entryComponents: [ComponentWithChildViewContainer, BurritosNotification],
-})
-class SnackBarTestModule {}

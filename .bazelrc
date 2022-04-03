@@ -67,7 +67,6 @@ build --define=angular_ivy_enabled=True
 
 # Use the Angular team internal GCP instance for remote execution.
 build:remote --remote_instance_name=projects/internal-200822/instances/primary_instance
-build:remote --project_id=internal-200822
 
 # Needed due to: https://github.com/bazelbuild/bazel/issues/7254
 build:remote --define=EXECUTOR=remote
@@ -80,15 +79,24 @@ build:remote --host_cpu=k8
 # Setup the remote build execution servers.
 build:remote --remote_cache=remotebuildexecution.googleapis.com
 build:remote --remote_executor=remotebuildexecution.googleapis.com
-build:remote --auth_enabled=true
+build:remote --google_default_credentials=true
 
 # Setup the toolchain and platform for the remote build execution. The platform
 # is provided by the shared dev-infra package and targets k8 remote containers.
 build:remote --crosstool_top=@npm//@angular/dev-infra-private/bazel/remote-execution/cpp:cc_toolchain_suite
 build:remote --extra_toolchains=@npm//@angular/dev-infra-private/bazel/remote-execution/cpp:cc_toolchain
-build:remote --extra_execution_platforms=@npm//@angular/dev-infra-private/bazel/remote-execution:platform
-build:remote --host_platform=@npm//@angular/dev-infra-private/bazel/remote-execution:platform
-build:remote --platforms=@npm//@angular/dev-infra-private/bazel/remote-execution:platform
+build:remote --extra_execution_platforms=@npm//@angular/dev-infra-private/bazel/remote-execution:platform_with_network
+build:remote --host_platform=@npm//@angular/dev-infra-private/bazel/remote-execution:platform_with_network
+build:remote --platforms=@npm//@angular/dev-infra-private/bazel/remote-execution:platform_with_network
+
+################################
+#  Sandbox settings            #
+################################
+
+# By default, network access should be disabled unless explicitly granted for certain targets
+# using the `requires-network` tag. https://docs.bazel.build/versions/main/be/common-definitions.html
+build --sandbox_default_allow_network=false
+test --sandbox_default_allow_network=false
 
 ################################
 # --config=build-results       #
@@ -99,6 +107,7 @@ build:remote --platforms=@npm//@angular/dev-infra-private/bazel/remote-execution
 # that could cause builds to fail unnecessarily. If desired, build result uploading
 # can be manually uploaded, but given that the build event service server has been
 # less stable than the remote executors, we do not want to degrade CI stability.
+build:build-results --bes_instance_name=internal-200822
 build:build-results --bes_backend=buildeventservice.googleapis.com
 build:build-results --bes_timeout=60s
 build:build-results --bes_results_url="https://source.cloud.google.com/results/invocations/"

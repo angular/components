@@ -45,10 +45,10 @@ export abstract class _MatTabHeaderBase
 {
   /** Whether the ripple effect is disabled or not. */
   @Input()
-  get disableRipple() {
+  get disableRipple(): boolean {
     return this._disableRipple;
   }
-  set disableRipple(value: any) {
+  set disableRipple(value: BooleanInput) {
     this._disableRipple = coerceBooleanProperty(value);
   }
   private _disableRipple: boolean = false;
@@ -97,6 +97,7 @@ export class MatTabHeader extends _MatTabHeaderBase {
   @ViewChild(MatInkBar, {static: true}) _inkBar: MatInkBar;
   @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
   @ViewChild('tabList', {static: true}) _tabList: ElementRef;
+  @ViewChild('tabListInner', {static: true}) _tabListInner: ElementRef;
   @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
 
@@ -111,6 +112,4 @@ export class MatTabHeader extends _MatTabHeaderBase {
   ) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

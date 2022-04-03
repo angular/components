@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '../../cdk/testing/private';
@@ -8,27 +8,26 @@ import {MAT_RADIO_DEFAULT_OPTIONS} from './radio';
 import {MatRadioButton, MatRadioChange, MatRadioGroup, MatRadioModule} from './index';
 
 describe('MatRadio', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-        declarations: [
-          DisableableRadioButton,
-          FocusableRadioButton,
-          RadiosInsideRadioGroup,
-          RadioGroupWithNgModel,
-          RadioGroupWithFormControl,
-          StandaloneRadioButtons,
-          InterleavedRadioGroup,
-          TranscludingWrapper,
-          RadioButtonWithPredefinedTabindex,
-          RadioButtonWithPredefinedAriaAttributes,
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
+      declarations: [
+        DisableableRadioButton,
+        FocusableRadioButton,
+        RadiosInsideRadioGroup,
+        RadioGroupWithNgModel,
+        RadioGroupWithFormControl,
+        StandaloneRadioButtons,
+        InterleavedRadioGroup,
+        TranscludingWrapper,
+        RadioButtonWithPredefinedTabindex,
+        RadioButtonWithPredefinedAriaAttributes,
+        RadiosInsidePreCheckedRadioGroup,
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('inside of a group', () => {
     let fixture: ComponentFixture<RadiosInsideRadioGroup>;
@@ -41,28 +40,26 @@ describe('MatRadio', () => {
     let radioInstances: MatRadioButton[];
     let testComponent: RadiosInsideRadioGroup;
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(RadiosInsideRadioGroup);
-        fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(RadiosInsideRadioGroup);
+      fixture.detectChanges();
 
-        testComponent = fixture.debugElement.componentInstance;
+      testComponent = fixture.debugElement.componentInstance;
 
-        groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup))!;
-        groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
+      groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup))!;
+      groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
 
-        radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
-        radioNativeElements = radioDebugElements.map(debugEl => debugEl.nativeElement);
-        radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
+      radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
+      radioNativeElements = radioDebugElements.map(debugEl => debugEl.nativeElement);
+      radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
 
-        radioLabelElements = radioDebugElements.map(
-          debugEl => debugEl.query(By.css('label'))!.nativeElement,
-        );
-        radioInputElements = radioDebugElements.map(
-          debugEl => debugEl.query(By.css('input'))!.nativeElement,
-        );
-      }),
-    );
+      radioLabelElements = radioDebugElements.map(
+        debugEl => debugEl.query(By.css('label'))!.nativeElement,
+      );
+      radioInputElements = radioDebugElements.map(
+        debugEl => debugEl.query(By.css('input'))!.nativeElement,
+      );
+    }));
 
     it('should set individual radio names based on the group name', () => {
       expect(groupInstance.name).toBeTruthy();
@@ -426,6 +423,43 @@ describe('MatRadio', () => {
           element.classList.contains('mat-focus-indicator'),
         ),
       ).toBe(true);
+    });
+
+    it('should set the input tabindex based on the selected radio button', () => {
+      const getTabIndexes = () => {
+        return radioInputElements.map(element => parseInt(element.getAttribute('tabindex') || ''));
+      };
+
+      expect(getTabIndexes()).toEqual([0, 0, 0]);
+
+      radioLabelElements[0].click();
+      fixture.detectChanges();
+
+      expect(getTabIndexes()).toEqual([0, -1, -1]);
+
+      radioLabelElements[1].click();
+      fixture.detectChanges();
+
+      expect(getTabIndexes()).toEqual([-1, 0, -1]);
+
+      radioLabelElements[2].click();
+      fixture.detectChanges();
+
+      expect(getTabIndexes()).toEqual([-1, -1, 0]);
+    });
+
+    it('should set the input tabindex correctly with a pre-checked radio button', () => {
+      const precheckedFixture = TestBed.createComponent(RadiosInsidePreCheckedRadioGroup);
+      precheckedFixture.detectChanges();
+
+      const radios: NodeListOf<HTMLElement> =
+        precheckedFixture.nativeElement.querySelectorAll('mat-radio-button input');
+
+      expect(
+        Array.from(radios).map(radio => {
+          return radio.getAttribute('tabindex');
+        }),
+      ).toEqual(['-1', '-1', '0']);
     });
   });
 
@@ -862,17 +896,15 @@ describe('MatRadio', () => {
     let radioDebugElements: DebugElement[];
     let radioInstances: MatRadioButton[];
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(InterleavedRadioGroup);
-        fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(InterleavedRadioGroup);
+      fixture.detectChanges();
 
-        groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup))!;
-        groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
-        radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
-        radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
-      }),
-    );
+      groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup))!;
+      groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
+      radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
+      radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
+    }));
 
     it('should initialize selection of radios based on model value', () => {
       expect(groupInstance.selected).toBe(radioInstances[2]);
@@ -882,22 +914,20 @@ describe('MatRadio', () => {
 
 describe('MatRadioDefaultOverrides', () => {
   describe('when MAT_RADIO_DEFAULT_OPTIONS overridden', () => {
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatRadioModule, FormsModule],
-          declarations: [DefaultRadioButton, RadioButtonWithColorBinding],
-          providers: [
-            {
-              provide: MAT_RADIO_DEFAULT_OPTIONS,
-              useValue: {color: 'primary'},
-            },
-          ],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatRadioModule, FormsModule],
+        declarations: [DefaultRadioButton, RadioButtonWithColorBinding],
+        providers: [
+          {
+            provide: MAT_RADIO_DEFAULT_OPTIONS,
+            useValue: {color: 'primary'},
+          },
+        ],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
     it('should override default color in Component', () => {
       const fixture: ComponentFixture<DefaultRadioButton> =
         TestBed.createComponent(DefaultRadioButton);
@@ -950,6 +980,17 @@ class RadiosInsideRadioGroup {
   disableRipple: boolean = false;
   color: string | null;
 }
+
+@Component({
+  template: `
+  <mat-radio-group name="test-name">
+    <mat-radio-button value="fire">Charmander</mat-radio-button>
+    <mat-radio-button value="water">Squirtle</mat-radio-button>
+    <mat-radio-button value="leaf" checked>Bulbasaur</mat-radio-button>
+  </mat-radio-group>
+  `,
+})
+class RadiosInsidePreCheckedRadioGroup {}
 
 @Component({
   template: `
@@ -1020,7 +1061,7 @@ class DisableableRadioButton {
 })
 class RadioGroupWithFormControl {
   @ViewChild(MatRadioGroup) group: MatRadioGroup;
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({

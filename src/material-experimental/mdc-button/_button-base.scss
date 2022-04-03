@@ -1,6 +1,8 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
 @use '@material/touch-target' as mdc-touch-target;
+
 @use '../mdc-helpers/mdc-helpers';
-@use '../../material/core/style/layout-common';
 
 // Adds styles necessary to provide stateful interactions with the button. This includes providing
 // content for the state container's ::before and ::after so that they can be given a background
@@ -8,23 +10,11 @@
 // ripple and state container so that they fill the button, match the border radius, and avoid
 // pointer events.
 @mixin mat-private-button-interactive() {
-  .mdc-button__ripple::before, .mdc-button__ripple::after,
-  .mdc-fab__ripple::before, .mdc-fab__ripple::after {
-    content: '';
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 0;
-    border-radius: inherit;
-    @content;
-  }
-
   // The ripple container should match the bounds of the entire button.
-  .mat-mdc-button-ripple, .mdc-button__ripple, .mdc-fab__ripple {
-    @include layout-common.fill;
+  .mat-mdc-button-ripple,
+  .mat-mdc-button-persistent-ripple,
+  .mat-mdc-button-persistent-ripple::before {
+    @include mat.private-fill;
 
     // Disable pointer events for the ripple container and state overlay because the container
     // will overlay the user content and we don't want to disable mouse events on the user content.
@@ -38,6 +28,17 @@
     border-radius: inherit;
   }
 
+  // We use ::before so that we can reuse some of MDC's theming.
+  .mat-mdc-button-persistent-ripple::before {
+    content: '';
+    opacity: 0;
+    background-color: var(--mat-mdc-button-persistent-ripple-color);
+  }
+
+  .mat-ripple-element {
+    background-color: var(--mat-mdc-button-ripple-color);
+  }
+
   // The content should appear over the state and ripple layers, otherwise they may adversely affect
   // the accessibility of the text content.
   .mdc-button__label {
@@ -46,7 +47,7 @@
 
   // The focus indicator should match the bounds of the entire button.
   .mat-mdc-focus-indicator {
-    @include layout-common.fill();
+    @include mat.private-fill();
   }
 }
 
@@ -59,6 +60,7 @@
   &[disabled] {
     cursor: default;
     pointer-events: none;
+    @content;
   }
 }
 
@@ -74,4 +76,16 @@
       $set-width: $is-square,
       $query: mdc-helpers.$mat-base-styles-query);
   }
+}
+
+// Changes a button theme to exclude the ripple styles.
+@function mat-private-button-remove-ripple($theme) {
+  @return map.merge($theme, (
+    focus-state-layer-color: null,
+    focus-state-layer-opacity: null,
+    hover-state-layer-color: null,
+    hover-state-layer-opacity: null,
+    pressed-state-layer-color: null,
+    pressed-state-layer-opacity: null,
+  ));
 }

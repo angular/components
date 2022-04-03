@@ -1,11 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatChipHarness, MatChipListboxHarness} from '@angular/material/chips/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import {ChipsHarnessExample} from './chips-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatChipsModule} from '@angular/material/chips';
@@ -13,12 +9,6 @@ import {MatChipsModule} from '@angular/material/chips';
 describe('ChipsHarnessExample', () => {
   let fixture: ComponentFixture<ChipsHarnessExample>;
   let loader: HarnessLoader;
-
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-      teardown: {destroyAfterEach: true},
-    });
-  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

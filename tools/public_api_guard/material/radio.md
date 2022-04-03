@@ -12,6 +12,7 @@ import { CanDisableRipple } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -20,7 +21,6 @@ import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -49,7 +49,7 @@ export class MatRadioButton extends _MatRadioButtonBase {
 }
 
 // @public
-export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, OnDestroy, CanDisableRipple, HasTabIndex {
+export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex {
     constructor(radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _providerOverride?: MatRadioDefaultOptions | undefined, tabIndex?: string);
     ariaDescribedby: string;
     ariaLabel: string;
@@ -58,11 +58,11 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     // (undocumented)
     protected _changeDetector: ChangeDetectorRef;
     get checked(): boolean;
-    set checked(value: boolean);
+    set checked(value: BooleanInput);
     get color(): ThemePalette;
     set color(newValue: ThemePalette);
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     focus(options?: FocusOptions, origin?: FocusOrigin): void;
     id: string;
     _inputElement: ElementRef<HTMLInputElement>;
@@ -74,17 +74,9 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     _markForCheck(): void;
     name: string;
     // (undocumented)
-    static ngAcceptInputType_checked: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disableRipple: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_required: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: NumberInput;
-    // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -95,7 +87,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     _onInputInteraction(event: Event): void;
     radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>;
     get required(): boolean;
-    set required(value: boolean);
+    set required(value: BooleanInput);
     protected _setDisabled(value: boolean): void;
     get value(): any;
     set value(value: any);
@@ -139,7 +131,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
     color: ThemePalette;
     _controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     _emitChangeEvent(): void;
     get labelPosition(): 'before' | 'after';
     set labelPosition(v: 'before' | 'after');
@@ -147,17 +139,13 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
     _markRadiosForCheck(): void;
     get name(): string;
     set name(value: string);
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_required: BooleanInput;
     ngAfterContentInit(): void;
     onTouched: () => any;
     abstract _radios: QueryList<T>;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: any): void;
     get required(): boolean;
-    set required(value: boolean);
+    set required(value: BooleanInput);
     get selected(): T | null;
     set selected(selected: T | null);
     setDisabledState(isDisabled: boolean): void;

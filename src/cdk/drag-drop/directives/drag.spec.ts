@@ -259,6 +259,31 @@ describe('CdkDrag', () => {
 
         expect(dragElement.style.transform).toBeFalsy();
       }));
+
+      it('should prevent the default dragstart action', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggable);
+        fixture.detectChanges();
+        const event = dispatchFakeEvent(
+          fixture.componentInstance.dragElement.nativeElement,
+          'dragstart',
+        );
+        fixture.detectChanges();
+
+        expect(event.defaultPrevented).toBe(true);
+      }));
+
+      it('should not prevent the default dragstart action when dragging is disabled', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggable);
+        fixture.detectChanges();
+        fixture.componentInstance.dragInstance.disabled = true;
+        const event = dispatchFakeEvent(
+          fixture.componentInstance.dragElement.nativeElement,
+          'dragstart',
+        );
+        fixture.detectChanges();
+
+        expect(event.defaultPrevented).toBe(false);
+      }));
     });
 
     describe('touch dragging', () => {
@@ -409,7 +434,10 @@ describe('CdkDrag', () => {
 
       // Assert the event like this, rather than `toHaveBeenCalledWith`, because Jasmine will
       // go into an infinite loop trying to stringify the event, if the test fails.
-      expect(event).toEqual({source: fixture.componentInstance.dragInstance});
+      expect(event).toEqual({
+        source: fixture.componentInstance.dragInstance,
+        event: jasmine.anything(),
+      });
     }));
 
     it('should dispatch an event when the user has stopped dragging', fakeAsync(() => {
@@ -428,6 +456,7 @@ describe('CdkDrag', () => {
         source: fixture.componentInstance.dragInstance,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -442,6 +471,7 @@ describe('CdkDrag', () => {
         source: jasmine.anything(),
         distance: {x: 25, y: 30},
         dropPoint: {x: 25, y: 30},
+        event: jasmine.anything(),
       });
 
       dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 40, 50);
@@ -451,6 +481,7 @@ describe('CdkDrag', () => {
         source: jasmine.anything(),
         distance: {x: 40, y: 50},
         dropPoint: {x: 40, y: 50},
+        event: jasmine.anything(),
       });
     }));
 
@@ -1581,6 +1612,47 @@ describe('CdkDrag', () => {
         flush();
       }).toThrowError(/^cdkDragHandle must be attached to an element node/);
     }));
+
+    it('should be able to drag an element using a handle with a shadow DOM child', fakeAsync(() => {
+      if (!_supportsShadowDom()) {
+        return;
+      }
+
+      const fixture = createComponent(
+        StandaloneDraggableWithShadowInsideHandle,
+        undefined,
+        undefined,
+        [ShadowWrapper],
+      );
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+      const handleChild = fixture.componentInstance.handleChild.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, handleChild, 50, 100);
+      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+    }));
+
+    it('should prevent default dragStart on handle, not on entire draggable', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.detectChanges();
+
+      const draggableEvent = dispatchFakeEvent(
+        fixture.componentInstance.dragElement.nativeElement,
+        'dragstart',
+      );
+      fixture.detectChanges();
+
+      const handleEvent = dispatchFakeEvent(
+        fixture.componentInstance.handleElement.nativeElement,
+        'dragstart',
+        true,
+      );
+      fixture.detectChanges();
+
+      expect(draggableEvent.defaultPrevented).toBe(false);
+      expect(handleEvent.defaultPrevented).toBe(true);
+    }));
   });
 
   describe('in a drop container', () => {
@@ -1789,6 +1861,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -1963,6 +2036,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: false,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -2039,6 +2113,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -2095,6 +2170,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -2145,6 +2221,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: false,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -2193,6 +2270,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: jasmine.any(Boolean),
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -2245,6 +2323,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: jasmine.any(Boolean),
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -2294,6 +2373,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: jasmine.any(Boolean),
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       scrollTo(0, 0);
@@ -2932,6 +3012,9 @@ describe('CdkDrag', () => {
       expect(placeholder.textContent!.trim())
         .withContext('Expected placeholder content to match element')
         .toContain('One');
+      expect(placeholder.style.pointerEvents)
+        .withContext('Expected pointer events to be disabled on placeholder')
+        .toBe('none');
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
@@ -4062,6 +4145,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -4546,6 +4630,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -4698,17 +4783,6 @@ describe('CdkDrag', () => {
     }));
 
     it('should be able to start dragging again if the dragged item is destroyed', fakeAsync(() => {
-      // We have some behavior where we move the dragged element out to the bottom of the `body`,
-      // in order to work around a browser issue. We restore the element when dragging stops, but
-      // the problem is that if it's destroyed before we've had a chance to return it, ViewEngine
-      // will throw an error since the element isn't in its original parent. Skip this test if the
-      // component hasn't been compiled with Ivy since the assertions depend on the element being
-      // removed while dragging.
-      // TODO(crisbeto): remove this check once ViewEngine has been dropped.
-      if (!DraggableInDropZone.hasOwnProperty('ɵcmp')) {
-        return;
-      }
-
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -4803,6 +4877,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: jasmine.any(Boolean),
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -4879,6 +4954,25 @@ describe('CdkDrag', () => {
         .withContext('Expected placeholder to preserve transform when dragging stops.')
         .toBe(true);
     }));
+
+    it('should sort correctly if the <html> node has been offset', fakeAsync(() => {
+      const documentElement = document.documentElement!;
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+
+      documentElement.style.position = 'absolute';
+      documentElement.style.top = '-100px';
+
+      assertDownwardSorting(
+        fixture,
+        fixture.componentInstance.dragItems.map(item => {
+          return item.element.nativeElement;
+        }),
+      );
+
+      documentElement.style.position = '';
+      documentElement.style.top = '';
+    }));
   });
 
   describe('in a connected drop container', () => {
@@ -4912,6 +5006,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5027,6 +5122,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5058,6 +5154,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: false,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5089,6 +5186,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: false,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5234,6 +5332,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5377,6 +5476,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5405,6 +5505,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5438,6 +5539,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5484,6 +5586,7 @@ describe('CdkDrag', () => {
           isPointerOverContainer: true,
           distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
           dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          event: jasmine.anything(),
         });
 
         expect(dropContainers[0].contains(item.element.nativeElement))
@@ -5590,6 +5693,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: false,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -5779,6 +5883,7 @@ describe('CdkDrag', () => {
             isPointerOverContainer: false,
             distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
             dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+            event: jasmine.anything(),
           }),
         );
       }),
@@ -5963,6 +6068,63 @@ describe('CdkDrag', () => {
       }),
     );
 
+    it('should return the last item to initial position when dragging back into a container with disabled sorting', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const lastIndex = groups[0].length - 1;
+      const lastItem = groups[0][lastIndex];
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+      fixture.componentInstance.dropInstances.first.sortingDisabled = true;
+      startDraggingViaMouse(fixture, lastItem.element.nativeElement);
+
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+      expect(placeholder).toBeTruthy();
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
+      expect(getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at item index.')
+        .toBe(lastIndex);
+
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+
+      expect(dropZones[1].contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
+      expect(getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at the target index.')
+        .toBe(3);
+
+      const firstInitialSiblingRect = groups[0][0].element.nativeElement.getBoundingClientRect();
+
+      // Return the item to an index that is different from the initial one.
+      dispatchMouseEvent(
+        document,
+        'mousemove',
+        firstInitialSiblingRect.left,
+        firstInitialSiblingRect.top,
+      );
+      fixture.detectChanges();
+
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be back inside first container.')
+        .toBe(true);
+      expect(getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be back at the initial index.')
+        .toBe(lastIndex);
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
+
     it(
       'should toggle a class when dragging an item inside a wrapper component component ' +
         'with OnPush change detection',
@@ -6098,6 +6260,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
 
       cleanup();
@@ -6144,6 +6307,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -6182,6 +6346,7 @@ describe('CdkDrag', () => {
         isPointerOverContainer: true,
         distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
       });
     }));
 
@@ -6470,6 +6635,29 @@ class StandaloneDraggableWithDelayedHandle {
 class StandaloneDraggableWithIndirectHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
   @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+}
+
+@Component({
+  selector: 'shadow-wrapper',
+  template: '<ng-content></ng-content>',
+  encapsulation: ViewEncapsulation.ShadowDom,
+})
+class ShadowWrapper {}
+
+@Component({
+  template: `
+    <div #dragElement cdkDrag style="width: 100px; height: 100px; background: red;">
+      <div cdkDragHandle style="width: 10px; height: 10px;">
+        <shadow-wrapper>
+          <div #handleChild style="width: 10px; height: 10px; background: green;"></div>
+        </shadow-wrapper>
+      </div>
+    </div>
+  `,
+})
+class StandaloneDraggableWithShadowInsideHandle {
+  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+  @ViewChild('handleChild') handleChild: ElementRef<HTMLElement>;
 }
 
 @Component({

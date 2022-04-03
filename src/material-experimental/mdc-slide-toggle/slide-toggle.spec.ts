@@ -10,7 +10,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
@@ -274,7 +274,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       testComponent.isRequired = false;
       fixture.detectChanges();
 
-      expect(buttonElement.getAttribute('aria-required')).toBe('false');
+      expect(buttonElement.getAttribute('aria-required')).toBe(null);
     });
 
     it('should focus on underlying element when focus() is called', fakeAsync(() => {
@@ -283,16 +283,6 @@ describe('MDC-based MatSlideToggle without forms', () => {
       slideToggle.focus();
       fixture.detectChanges();
       flush();
-
-      expect(document.activeElement).toBe(buttonElement);
-    }));
-
-    it('should focus on underlying element when the host is focused', fakeAsync(() => {
-      expect(document.activeElement).not.toBe(buttonElement);
-
-      slideToggleElement.focus();
-      fixture.detectChanges();
-      tick();
 
       expect(document.activeElement).toBe(buttonElement);
     }));
@@ -397,13 +387,13 @@ describe('MDC-based MatSlideToggle without forms', () => {
       expect(switchEl.classList).toContain('mdc-switch--checked');
     }));
 
-    it('should set the tabindex of the host element to -1', fakeAsync(() => {
+    it('should remove the tabindex from the host node', fakeAsync(() => {
       const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
 
       fixture.detectChanges();
 
       const slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle))!.nativeElement;
-      expect(slideToggle.getAttribute('tabindex')).toBe('-1');
+      expect(slideToggle.hasAttribute('tabindex')).toBe(false);
     }));
 
     it('should remove the tabindex from the host element when disabled', fakeAsync(() => {
@@ -765,6 +755,12 @@ describe('MDC-based MatSlideToggle with forms', () => {
       expect(slideToggleEl.classList).toContain('ng-invalid');
       expect(slideToggleEl.classList).not.toContain('ng-valid');
     }));
+
+    it('should clear static name attribute from the slide toggle host node', () => {
+      const hostNode = fixture.nativeElement.querySelector('.mat-mdc-slide-toggle');
+      expect(buttonElement.getAttribute('name')).toBeTruthy();
+      expect(hostNode.hasAttribute('name')).toBe(false);
+    });
   });
 
   describe('with model and change event', () => {
@@ -867,7 +863,7 @@ class SlideToggleCheckedAndDisabledAttr {}
     </mat-slide-toggle>`,
 })
 class SlideToggleWithFormControl {
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`})

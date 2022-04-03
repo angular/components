@@ -5,15 +5,13 @@ import {By} from '@angular/platform-browser';
 import {dispatchMouseEvent, dispatchFakeEvent} from '../../cdk/testing/private';
 
 describe('MatCalendarBody', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('standard calendar body', () => {
     let fixture: ComponentFixture<StandardCalendarBody>;
@@ -47,9 +45,43 @@ describe('MatCalendarBody', () => {
     });
 
     it('highlights today', () => {
-      const todayCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-today')!;
+      const todayCells = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-today')!;
+      expect(todayCells.length).toBe(1);
+
+      const todayCell = todayCells[0];
+
       expect(todayCell).not.toBeNull();
-      expect(todayCell.innerHTML.trim()).toBe('3');
+      expect(todayCell.textContent!.trim()).toBe('3');
+    });
+
+    it('sets aria-current="date" on today', () => {
+      const todayCells = calendarBodyNativeElement.querySelectorAll(
+        '[aria-current="date"] .mat-calendar-body-today',
+      )!;
+      expect(todayCells.length).toBe(1);
+
+      const todayCell = todayCells[0];
+
+      expect(todayCell).not.toBeNull();
+      expect(todayCell.textContent!.trim()).toBe('3');
+    });
+
+    it('does not highlight today if today is not within the scope', () => {
+      testComponent.todayValue = 100000;
+      fixture.detectChanges();
+
+      const todayCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-today')!;
+      expect(todayCell).toBeNull();
+    });
+
+    it('does not set aria-current="date" on any cell if today is not ' + 'the scope', () => {
+      testComponent.todayValue = 100000;
+      fixture.detectChanges();
+
+      const todayCell = calendarBodyNativeElement.querySelector(
+        '[aria-current="date"] .mat-calendar-body-today',
+      )!;
+      expect(todayCell).toBeNull();
     });
 
     it('highlights selected', () => {
@@ -58,15 +90,13 @@ describe('MatCalendarBody', () => {
       expect(selectedCell.innerHTML.trim()).toBe('4');
     });
 
-    it('should set aria-selected correctly', () => {
-      const selectedCells = cellEls.filter(c => c.getAttribute('aria-selected') === 'true');
-      const deselectedCells = cellEls.filter(c => c.getAttribute('aria-selected') === 'false');
+    it('should set aria-pressed correctly', () => {
+      const pressedCells = cellEls.filter(c => c.getAttribute('aria-pressed') === 'true');
+      const depressedCells = cellEls.filter(c => c.getAttribute('aria-pressed') === 'false');
 
-      expect(selectedCells.length)
-        .withContext('Expected one cell to be marked as selected.')
-        .toBe(1);
-      expect(deselectedCells.length)
-        .withContext('Expected remaining cells to be marked as deselected.')
+      expect(pressedCells.length).withContext('Expected one cell to be marked as pressed.').toBe(1);
+      expect(depressedCells.length)
+        .withContext('Expected remaining cells to be marked as not pressed.')
         .toBe(cellEls.length - 1);
     });
 

@@ -10,9 +10,9 @@
 -->
 <div class="mat-sort-header-container mat-focus-indicator"
      [class.mat-sort-header-sorted]="_isSorted()"
-     [class.mat-sort-header-position-before]="arrowPosition == 'before'"
+     [class.mat-sort-header-position-before]="arrowPosition === 'before'"
      [attr.tabindex]="_isDisabled() ? null : 0"
-     role="button">
+     [attr.role]="_isDisabled() ? null : 'button'">
 
   <!--
     TODO(crisbeto): this div isn't strictly necessary, but we have to keep it due to a large

@@ -9,6 +9,7 @@
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
+  getNoKeysSpecifiedError,
   HarnessLoader,
   HarnessPredicate,
   parallel,
@@ -58,7 +59,7 @@ export function crossEnvironmentSpecs(
         await loader.getChildLoader('error');
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(HarnessLoader for element matching selector: "error")',
         );
@@ -82,16 +83,34 @@ export function crossEnvironmentSpecs(
         await countersLoader.getHarness(SubComponentHarness);
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(SubComponentHarness with host element matching selector: "test-sub")',
         );
       }
     });
 
+    it('should get first matching component for optional harness', async () => {
+      const harness = await loader.getHarnessOrNull(SubComponentHarness);
+      expect(harness).not.toBeNull();
+      expect(await (await harness!.title()).text()).toBe('List of test tools');
+    });
+
+    it('should get null if no matching component found for optional harness', async () => {
+      const countersLoader = await loader.getChildLoader('.counters');
+      const harness = await countersLoader.getHarnessOrNull(SubComponentHarness);
+      expect(harness).toBeNull();
+    });
+
     it('should get all matching components for all harnesses', async () => {
       const harnesses = await loader.getAllHarnesses(SubComponentHarness);
       expect(harnesses.length).toBe(4);
+    });
+
+    it('should check if harness is found', async () => {
+      const countersLoader = await loader.getChildLoader('.counters');
+      expect(await loader.hasHarness(SubComponentHarness)).toBe(true);
+      expect(await countersLoader.hasHarness(SubComponentHarness)).toBe(false);
     });
   });
 
@@ -112,7 +131,7 @@ export function crossEnvironmentSpecs(
         await harness.errorItem();
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(TestElement for element matching selector: "wrong locator")',
         );
@@ -147,7 +166,7 @@ export function crossEnvironmentSpecs(
         await harness.errorSubComponent();
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(WrongComponentHarness with host element matching selector: "wrong-selector")',
         );
@@ -211,7 +230,7 @@ export function crossEnvironmentSpecs(
         await harness.requiredAncestorRestrictedMissingSubcomponent();
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(SubComponentHarness with host element matching selector: "test-sub"' +
             ' satisfying the constraints: has ancestor matching selector ".not-found")',
@@ -311,7 +330,7 @@ export function crossEnvironmentSpecs(
         await harness.requiredFourIteamToolsLists();
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(SubComponentHarness with host element matching selector: "test-sub" satisfying' +
             ' the constraints: title = "List of test tools", item count = 4)',
@@ -345,6 +364,18 @@ export function crossEnvironmentSpecs(
       harness = await getMainComponentHarnessFromEnvironment();
     });
 
+    async function expectAsyncError(fn: () => Promise<void>, expected: Error) {
+      let error: unknown | null = null;
+      try {
+        await fn();
+      } catch (e: unknown) {
+        error = e;
+      }
+      expect(error).not.toBe(null);
+      expect(error instanceof Error).toBe(true);
+      expect((error as Error).message).toBe(expected.message);
+    }
+
     it('should be able to clear', async () => {
       const input = await harness.input();
       await input.sendKeys('Yi');
@@ -352,6 +383,13 @@ export function crossEnvironmentSpecs(
 
       await input.clear();
       expect(await input.getProperty<string>('value')).toBe('');
+    });
+
+    it('sendKeys method should throw if no keys have been specified', async () => {
+      const input = await harness.input();
+      await expectAsyncError(() => input.sendKeys(), getNoKeysSpecifiedError());
+      await expectAsyncError(() => input.sendKeys(''), getNoKeysSpecifiedError());
+      await expectAsyncError(() => input.sendKeys('', ''), getNoKeysSpecifiedError());
     });
 
     it('should be able to click', async () => {
@@ -445,30 +483,43 @@ export function crossEnvironmentSpecs(
       expect(await value.text()).toBe('Number value: 123.456');
     });
 
+    it('should be able to set a negative input value on a reactive form control', async () => {
+      const input = await harness.numberInput();
+      const value = await harness.numberInputValue();
+      await input.sendKeys('-123');
+
+      expect(await input.getProperty<string>('value')).toBe('-123');
+      expect(await value.text()).toBe('Number value: -123');
+    });
+
     it('should be able to retrieve dimensions', async () => {
       const dimensions = await (await harness.title()).getDimensions();
       expect(dimensions).toEqual(jasmine.objectContaining({height: 100, width: 200}));
     });
 
-    it('should be able to hover', async () => {
+    it('should dispatch `mouseenter` and `mouseover` on hover', async () => {
       const box = await harness.hoverTest();
       let classAttr = await box.getAttribute('class');
       expect(classAttr).not.toContain('hovering');
+      expect(classAttr).not.toContain('pointer-over');
       await box.hover();
       classAttr = await box.getAttribute('class');
       expect(classAttr).toContain('hovering');
+      expect(classAttr).toContain('pointer-over');
     });
 
-    it('should be able to stop hovering', async () => {
+    it('should dispatch `mouseleave` and `mouseout` on mouseAway', async () => {
       const box = await harness.hoverTest();
       let classAttr = await box.getAttribute('class');
       expect(classAttr).not.toContain('hovering');
       await box.hover();
       classAttr = await box.getAttribute('class');
       expect(classAttr).toContain('hovering');
+      expect(classAttr).toContain('pointer-over');
       await box.mouseAway();
       classAttr = await box.getAttribute('class');
       expect(classAttr).not.toContain('hovering');
+      expect(classAttr).not.toContain('pointer-over');
     });
 
     it('should be able to getAttribute', async () => {
@@ -640,7 +691,7 @@ export function crossEnvironmentSpecs(
         await harness.missingElementsAndHarnesses();
         fail('Expected to throw.');
       } catch (e) {
-        expect(e.message).toBe(
+        expect((e as Error).message).toBe(
           'Failed to find element matching one of the following queries:' +
             '\n(TestElement for element matching selector: ".not-found"),' +
             '\n(SubComponentHarness with host element matching selector: "test-sub" satisfying' +

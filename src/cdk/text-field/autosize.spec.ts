@@ -19,21 +19,19 @@ describe('CdkTextareaAutosize', () => {
   let textarea: HTMLTextAreaElement;
   let autosize: CdkTextareaAutosize;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, TextFieldModule, NoopAnimationsModule],
-        declarations: [
-          AutosizeTextAreaWithContent,
-          AutosizeTextAreaWithValue,
-          AutosizeTextareaWithNgModel,
-          AutosizeTextareaWithoutAutosize,
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, TextFieldModule, NoopAnimationsModule],
+      declarations: [
+        AutosizeTextAreaWithContent,
+        AutosizeTextAreaWithValue,
+        AutosizeTextareaWithNgModel,
+        AutosizeTextareaWithoutAutosize,
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AutosizeTextAreaWithContent);
@@ -373,6 +371,13 @@ describe('CdkTextareaAutosize', () => {
       .withContext('Expected textarea to have a scrollbar.')
       .toBeLessThan(textarea.scrollHeight);
   }));
+
+  it('should handle an undefined placeholder', () => {
+    fixture.componentInstance.placeholder = undefined!;
+    fixture.detectChanges();
+
+    expect(textarea.hasAttribute('placeholder')).toBe(false);
+  });
 });
 
 // Styles to reset padding and border to make measurement comparisons easier.

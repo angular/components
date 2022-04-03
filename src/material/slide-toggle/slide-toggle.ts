@@ -7,7 +7,7 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Attribute,
@@ -83,10 +83,11 @@ const _MatSlideToggleBase = mixinTabIndex(
   host: {
     'class': 'mat-slide-toggle',
     '[id]': 'id',
-    // Needs to be `-1` so it can still receive programmatic focus.
-    '[attr.tabindex]': 'disabled ? null : -1',
+    // Needs to be removed since it causes some a11y issues (see #21266).
+    '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
+    '[attr.name]': 'null',
     '[class.mat-checked]': 'checked',
     '[class.mat-disabled]': 'disabled',
     '[class.mat-slide-toggle-label-before]': 'labelPosition == "before"',
@@ -149,7 +150,7 @@ export class MatSlideToggle
   get required(): boolean {
     return this._required;
   }
-  set required(value) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
 
@@ -158,7 +159,7 @@ export class MatSlideToggle
   get checked(): boolean {
     return this._checked;
   }
-  set checked(value) {
+  set checked(value: BooleanInput) {
     this._checked = coerceBooleanProperty(value);
     this._changeDetectorRef.markForCheck();
   }
@@ -198,13 +199,7 @@ export class MatSlideToggle
 
   ngAfterContentInit() {
     this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
-      // Only forward focus manually when it was received programmatically or through the
-      // keyboard. We should not do this for mouse/touch focus for two reasons:
-      // 1. It can prevent clicks from landing in Chrome (see #18269).
-      // 2. They're already handled by the wrapping `label` element.
-      if (focusOrigin === 'keyboard' || focusOrigin === 'program') {
-        this._inputElement.nativeElement.focus();
-      } else if (!focusOrigin) {
+      if (!focusOrigin) {
         // When a focused element becomes disabled, the browser *immediately* fires a blur event.
         // Angular does not expect events to be raised during change detection, so any state
         // change (such as a form control's 'ng-touched') will cause a changed-after-checked
@@ -308,10 +303,4 @@ export class MatSlideToggle
     // we only trigger an explicit change detection for the slide-toggle view and its children.
     this._changeDetectorRef.detectChanges();
   }
-
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }

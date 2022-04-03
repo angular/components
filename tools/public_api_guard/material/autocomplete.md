@@ -92,7 +92,9 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     ariaLabel: string;
     ariaLabelledby: string;
     get autoActiveFirstOption(): boolean;
-    set autoActiveFirstOption(value: boolean);
+    set autoActiveFirstOption(value: BooleanInput);
+    get autoSelectActiveOption(): boolean;
+    set autoSelectActiveOption(value: BooleanInput);
     set classList(value: string | string[]);
     // (undocumented)
     _classList: {
@@ -111,10 +113,6 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     _isOpen: boolean;
     _keyManager: ActiveDescendantKeyManager<_MatOptionBase>;
     // (undocumented)
-    static ngAcceptInputType_autoActiveFirstOption: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disableRipple: BooleanInput;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -131,7 +129,7 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     template: TemplateRef<any>;
     protected abstract _visibleClass: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatAutocompleteBase, never, never, { "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "panelWidth": "panelWidth"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatAutocompleteBase, never, never, { "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "autoSelectActiveOption": "autoSelectActiveOption"; "panelWidth": "panelWidth"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatAutocompleteBase, never>;
 }
@@ -139,6 +137,7 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
 // @public
 export interface MatAutocompleteDefaultOptions {
     autoActiveFirstOption?: boolean;
+    autoSelectActiveOption?: boolean;
     overlayPanelClass?: string | string[];
 }
 
@@ -194,21 +193,21 @@ export class MatAutocompleteTrigger extends _MatAutocompleteTriggerBase {
 export abstract class _MatAutocompleteTriggerBase implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
     constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _viewContainerRef: ViewContainerRef, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality, _formField: MatFormField, _document: any, _viewportRuler: ViewportRuler, _defaults?: MatAutocompleteDefaultOptions | undefined);
     protected abstract _aboveClass: string;
-    get activeOption(): MatOption | null;
+    get activeOption(): _MatOptionBase | null;
     autocomplete: _MatAutocompleteBase;
     autocompleteAttribute: string;
     get autocompleteDisabled(): boolean;
-    set autocompleteDisabled(value: boolean);
+    set autocompleteDisabled(value: BooleanInput);
     closePanel(): void;
     connectedTo: _MatAutocompleteOriginBase;
+    // (undocumented)
+    _handleClick(): void;
     // (undocumented)
     _handleFocus(): void;
     // (undocumented)
     _handleInput(event: KeyboardEvent): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
-    static ngAcceptInputType_autocompleteDisabled: BooleanInput;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

@@ -27,10 +27,10 @@ export class MdcListDemo {
 
   messages: {from: string; subject: string; message: string; image: string}[] = [
     {
-      from: 'Nancy',
+      from: 'John',
       subject: 'Brunch?',
       message: 'Did you want to go on Sunday? I was thinking that might work.',
-      image: 'https://angular.io/generated/images/bios/cindygreenekaplan.jpg',
+      image: 'https://angular.io/generated/images/bios/devversion.jpg',
     },
     {
       from: 'Mary',
@@ -46,9 +46,15 @@ export class MdcListDemo {
     },
   ];
 
-  links: {name: string}[] = [{name: 'Inbox'}, {name: 'Outbox'}, {name: 'Spam'}, {name: 'Trash'}];
+  links: {name: string; href: string}[] = [
+    {name: 'Inbox', href: '/mdc-list#inbox'},
+    {name: 'Outbox', href: '/mdc-list#outbox'},
+    {name: 'Spam', href: '/mdc-list#spam'},
+    {name: 'Trash', href: '/mdc-list#trash'},
+  ];
 
   thirdLine = false;
+  showBoxes = false;
   infoClicked = false;
   selectionListDisabled = false;
   selectionListRippleDisabled = false;
@@ -70,5 +76,9 @@ export class MdcListDemo {
 
   alertItem(msg: string) {
     alert(msg);
+  }
+
+  isActivated(href: string) {
+    return window.location.href === new URL(href, window.location.href).toString();
   }
 }

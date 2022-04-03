@@ -6,7 +6,6 @@ import {
   TestBed,
   discardPeriodicTasks,
   flush,
-  inject,
 } from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -14,34 +13,31 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
 import {MatDrawer, MatSidenavModule, MatDrawerContainer} from './index';
 import {Direction} from '@angular/cdk/bidi';
 import {A11yModule} from '@angular/cdk/a11y';
-import {PlatformModule, Platform} from '@angular/cdk/platform';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 
 describe('MatDrawer', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatSidenavModule, A11yModule, PlatformModule, NoopAnimationsModule, CommonModule],
-        declarations: [
-          BasicTestApp,
-          DrawerContainerNoDrawerTestApp,
-          DrawerSetToOpenedFalse,
-          DrawerSetToOpenedTrue,
-          DrawerDynamicPosition,
-          DrawerWithFocusableElements,
-          DrawerOpenBinding,
-          DrawerWithoutFocusableElements,
-          IndirectDescendantDrawer,
-          NestedDrawerContainers,
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatSidenavModule, A11yModule, NoopAnimationsModule, CommonModule],
+      declarations: [
+        BasicTestApp,
+        DrawerContainerNoDrawerTestApp,
+        DrawerSetToOpenedFalse,
+        DrawerSetToOpenedTrue,
+        DrawerDynamicPosition,
+        DrawerWithFocusableElements,
+        DrawerOpenBinding,
+        DrawerWithoutFocusableElements,
+        IndirectDescendantDrawer,
+        NestedDrawerContainers,
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('methods', () => {
     it('should be able to open', fakeAsync(() => {
@@ -661,27 +657,163 @@ describe('MatDrawer', () => {
     expect(scrollable).toBeTruthy();
     expect(scrollable.getElementRef().nativeElement).toBe(content.nativeElement);
   });
+
+  describe('DOM position', () => {
+    it('should project start drawer before the content', () => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.componentInstance.position = 'start';
+      fixture.detectChanges();
+
+      const allNodes = getDrawerNodesArray(fixture);
+      const drawerIndex = allNodes.indexOf(fixture.nativeElement.querySelector('.mat-drawer'));
+      const contentIndex = allNodes.indexOf(
+        fixture.nativeElement.querySelector('.mat-drawer-content'),
+      );
+
+      expect(drawerIndex)
+        .withContext('Expected drawer to be inside the container')
+        .toBeGreaterThan(-1);
+      expect(contentIndex)
+        .withContext('Expected content to be inside the container')
+        .toBeGreaterThan(-1);
+      expect(drawerIndex)
+        .withContext('Expected drawer to be before the content')
+        .toBeLessThan(contentIndex);
+    });
+
+    it('should project end drawer after the content', () => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.componentInstance.position = 'end';
+      fixture.detectChanges();
+
+      const allNodes = getDrawerNodesArray(fixture);
+      const drawerIndex = allNodes.indexOf(fixture.nativeElement.querySelector('.mat-drawer'));
+      const contentIndex = allNodes.indexOf(
+        fixture.nativeElement.querySelector('.mat-drawer-content'),
+      );
+
+      expect(drawerIndex)
+        .withContext('Expected drawer to be inside the container')
+        .toBeGreaterThan(-1);
+      expect(contentIndex)
+        .withContext('Expected content to be inside the container')
+        .toBeGreaterThan(-1);
+      expect(drawerIndex)
+        .withContext('Expected drawer to be after the content')
+        .toBeGreaterThan(contentIndex);
+    });
+
+    it(
+      'should move the drawer before/after the content when its position changes after being ' +
+        'initialized at `start`',
+      () => {
+        const fixture = TestBed.createComponent(BasicTestApp);
+        fixture.componentInstance.position = 'start';
+        fixture.detectChanges();
+
+        const drawer = fixture.nativeElement.querySelector('.mat-drawer');
+        const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+
+        let allNodes = getDrawerNodesArray(fixture);
+        const startDrawerIndex = allNodes.indexOf(drawer);
+        const startContentIndex = allNodes.indexOf(content);
+
+        expect(startDrawerIndex)
+          .withContext('Expected drawer to be inside the container')
+          .toBeGreaterThan(-1);
+        expect(startContentIndex)
+          .withContext('Expected content to be inside the container')
+          .toBeGreaterThan(-1);
+        expect(startDrawerIndex)
+          .withContext('Expected drawer to be before the content on init')
+          .toBeLessThan(startContentIndex);
+
+        fixture.componentInstance.position = 'end';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer))
+          .withContext('Expected drawer to be after content when position changes to `end`')
+          .toBeGreaterThan(allNodes.indexOf(content));
+
+        fixture.componentInstance.position = 'start';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer))
+          .withContext('Expected drawer to be before content when position changes back to `start`')
+          .toBeLessThan(allNodes.indexOf(content));
+      },
+    );
+
+    it(
+      'should move the drawer before/after the content when its position changes after being ' +
+        'initialized at `end`',
+      () => {
+        const fixture = TestBed.createComponent(BasicTestApp);
+        fixture.componentInstance.position = 'end';
+        fixture.detectChanges();
+
+        const drawer = fixture.nativeElement.querySelector('.mat-drawer');
+        const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+
+        let allNodes = getDrawerNodesArray(fixture);
+        const startDrawerIndex = allNodes.indexOf(drawer);
+        const startContentIndex = allNodes.indexOf(content);
+
+        expect(startDrawerIndex).toBeGreaterThan(-1, 'Expected drawer to be inside the container');
+        expect(startContentIndex).toBeGreaterThan(
+          -1,
+          'Expected content to be inside the container',
+        );
+        expect(startDrawerIndex).toBeGreaterThan(
+          startContentIndex,
+          'Expected drawer to be after the content on init',
+        );
+
+        fixture.componentInstance.position = 'start';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer)).toBeLessThan(
+          allNodes.indexOf(content),
+          'Expected drawer to be before content when position changes to `start`',
+        );
+
+        fixture.componentInstance.position = 'end';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer)).toBeGreaterThan(
+          allNodes.indexOf(content),
+          'Expected drawer to be after content when position changes back to `end`',
+        );
+      },
+    );
+
+    function getDrawerNodesArray(fixture: ComponentFixture<any>): HTMLElement[] {
+      return Array.from(fixture.nativeElement.querySelector('.mat-drawer-container').childNodes);
+    }
+  });
 });
 
 describe('MatDrawerContainer', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatSidenavModule, A11yModule, PlatformModule, NoopAnimationsModule],
-        declarations: [
-          DrawerContainerTwoDrawerTestApp,
-          DrawerDelayed,
-          DrawerSetToOpenedTrue,
-          DrawerContainerStateChangesTestApp,
-          AutosizeDrawer,
-          BasicTestApp,
-          DrawerContainerWithContent,
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatSidenavModule, A11yModule, NoopAnimationsModule],
+      declarations: [
+        DrawerContainerTwoDrawerTestApp,
+        DrawerDelayed,
+        DrawerSetToOpenedTrue,
+        DrawerContainerStateChangesTestApp,
+        AutosizeDrawer,
+        BasicTestApp,
+        DrawerContainerWithContent,
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   it('should be able to open and close all drawers', fakeAsync(() => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
@@ -806,42 +938,28 @@ describe('MatDrawerContainer', () => {
     expect(container.classList).not.toContain('mat-drawer-transition');
   }));
 
-  it('should recalculate the margin if a drawer changes size while open in autosize mode', fakeAsync(
-    inject([Platform], (platform: Platform) => {
-      const fixture = TestBed.createComponent(AutosizeDrawer);
+  it('should recalculate the margin if a drawer changes size while open in autosize mode', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AutosizeDrawer);
 
-      fixture.detectChanges();
-      fixture.componentInstance.drawer.open();
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+    fixture.detectChanges();
+    fixture.componentInstance.drawer.open();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
 
-      // IE and Edge are flaky in when they update the styles.
-      // For them we fall back to checking whether the proper method was called.
-      const isFlaky = platform.EDGE || platform.TRIDENT;
-      const contentEl = fixture.debugElement.nativeElement.querySelector('.mat-drawer-content');
-      const initialMargin = parseInt(contentEl.style.marginLeft);
+    const contentEl = fixture.debugElement.nativeElement.querySelector('.mat-drawer-content');
+    const initialMargin = parseInt(contentEl.style.marginLeft);
 
-      if (isFlaky) {
-        spyOn(fixture.componentInstance.drawerContainer, 'updateContentMargins');
-      } else {
-        expect(initialMargin).toBeGreaterThan(0);
-      }
+    expect(initialMargin).toBeGreaterThan(0);
 
-      fixture.componentInstance.fillerWidth = 200;
-      fixture.detectChanges();
-      tick(10);
-      fixture.detectChanges();
+    fixture.componentInstance.fillerWidth = 200;
+    fixture.detectChanges();
+    tick(10);
+    fixture.detectChanges();
 
-      if (isFlaky) {
-        expect(fixture.componentInstance.drawerContainer.updateContentMargins).toHaveBeenCalled();
-      } else {
-        expect(parseInt(contentEl.style.marginLeft)).toBeGreaterThan(initialMargin);
-      }
-
-      discardPeriodicTasks();
-    }),
-  ));
+    expect(parseInt(contentEl.style.marginLeft)).toBeGreaterThan(initialMargin);
+    discardPeriodicTasks();
+  }));
 
   it('should not set a style property if it would be zero', fakeAsync(() => {
     const fixture = TestBed.createComponent(AutosizeDrawer);
@@ -949,6 +1067,41 @@ describe('MatDrawerContainer', () => {
     expect(spy).toHaveBeenCalled();
     subscription.unsubscribe();
   }));
+
+  it('should position the drawers before/after the content in the DOM based on their position', fakeAsync(() => {
+    const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
+    fixture.detectChanges();
+
+    const drawerDebugElements = fixture.debugElement.queryAll(By.directive(MatDrawer));
+    const [start, end] = drawerDebugElements.map(el => el.componentInstance);
+    const [startNode, endNode] = drawerDebugElements.map(el => el.nativeElement);
+    const contentNode = fixture.nativeElement.querySelector('.mat-drawer-content');
+    const allNodes: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelector('.mat-drawer-container').childNodes,
+    );
+    const startIndex = allNodes.indexOf(startNode);
+    const endIndex = allNodes.indexOf(endNode);
+    const contentIndex = allNodes.indexOf(contentNode);
+
+    expect(start.position).toBe('start');
+    expect(end.position).toBe('end');
+    expect(contentIndex)
+      .withContext('Expected content to be inside the container')
+      .toBeGreaterThan(-1);
+    expect(startIndex)
+      .withContext('Expected start drawer to be inside the container')
+      .toBeGreaterThan(-1);
+    expect(endIndex)
+      .withContext('Expected end drawer to be inside the container')
+      .toBeGreaterThan(-1);
+
+    expect(startIndex)
+      .withContext('Expected start drawer to be before content')
+      .toBeLessThan(contentIndex);
+    expect(endIndex)
+      .withContext('Expected end drawer to be after content')
+      .toBeGreaterThan(contentIndex);
+  }));
 });
 
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */
@@ -971,7 +1124,7 @@ class DrawerContainerTwoDrawerTestApp {
 @Component({
   template: `
     <mat-drawer-container (backdropClick)="backdropClicked()" [hasBackdrop]="hasBackdrop">
-      <mat-drawer #drawer="matDrawer" position="start"
+      <mat-drawer #drawer="matDrawer" [position]="position"
                  (opened)="open()"
                  (openedStart)="openStart()"
                  (closed)="close()"
@@ -997,6 +1150,7 @@ class BasicTestApp {
   closeStartCount = 0;
   backdropClickedCount = 0;
   hasBackdrop: boolean | null = null;
+  position = 'start';
 
   @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild('drawerButton') drawerButton: ElementRef<HTMLButtonElement>;

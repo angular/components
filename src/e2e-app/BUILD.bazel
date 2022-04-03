@@ -1,6 +1,4 @@
-load("//tools/dev-server:index.bzl", "dev_server")
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
-load("//tools/esbuild:index.bzl", "esbuild", "esbuild_config")
+load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "ng_module", "sass_binary")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
@@ -9,9 +7,7 @@ package(default_visibility = ["//visibility:public"])
 # List of dependencies that are referenced in the `index.html` file.
 devserverIndexHtmlDependencies = [
     "@npm//zone.js",
-    "@npm//core-js-bundle",
     "@npm//kagekiri",
-    "@npm//material-components-web",
     "//src/material/prebuilt-themes:indigo-pink",
     ":index.html",
     ":theme",
@@ -73,6 +69,7 @@ ng_module(
         "//src/material/progress-bar",
         "//src/material/progress-spinner",
         "//src/material/radio",
+        "//src/material/select",
         "//src/material/sidenav",
         "//src/material/slide-toggle",
         "//src/material/tabs",
@@ -91,8 +88,8 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        "//src/material:theming_bundle",
-        "//src/material-experimental:theming_bundle",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
         "//src/material/core:theming_scss_lib",
     ],
 )
@@ -103,7 +100,7 @@ esbuild_config(
     config_file = "esbuild.config.mjs",
 )
 
-esbuild(
+devmode_esbuild(
     name = "bundles",
     testonly = True,
     config = ":esbuild_config",
@@ -120,8 +117,8 @@ esbuild(
     ],
 )
 
-dev_server(
-    name = "devserver",
+http_server(
+    name = "server",
     testonly = True,
     srcs = devserverIndexHtmlDependencies,
     additional_root_paths = [

@@ -5,10 +5,11 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
-@use '../../cdk/a11y';
 
 $font-size: 12px;
 $font-weight: 600;
@@ -102,6 +103,14 @@ $_badge-structure-emitted: false !default;
     position: relative;
   }
 
+  // The badge should make sure its host is overflow visible so that the badge content
+  // can be rendered outside of the element. Some components such as <mat-icon> explicitly
+  // style `overflow: hidden` so this requires extra specificity so that it does not
+  // depend on style load order.
+  .mat-badge.mat-badge {
+    overflow: visible;
+  }
+
   .mat-badge-hidden {
     .mat-badge-content {
       display: none;
@@ -158,7 +167,7 @@ $_badge-structure-emitted: false !default;
     color: theming.get-color-from-palette($primary, default-contrast);
     background: theming.get-color-from-palette($primary);
 
-    @include a11y.high-contrast(active, off) {
+    @include cdk.high-contrast(active, off) {
       outline: solid 1px;
       border-radius: 0;
     }

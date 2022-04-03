@@ -141,10 +141,10 @@ export class CdkVirtualForOf<T>
    * Setting the cache size to `0` will disable caching. Defaults to 20 templates.
    */
   @Input()
-  get cdkVirtualForTemplateCacheSize() {
+  get cdkVirtualForTemplateCacheSize(): number {
     return this._viewRepeater.viewCacheSize;
   }
-  set cdkVirtualForTemplateCacheSize(size: number) {
+  set cdkVirtualForTemplateCacheSize(size: NumberInput) {
     this._viewRepeater.viewCacheSize = coerceNumberProperty(size);
   }
 
@@ -199,7 +199,9 @@ export class CdkVirtualForOf<T>
     });
     this._viewport.renderedRangeStream.pipe(takeUntil(this._destroyed)).subscribe(range => {
       this._renderedRange = range;
-      ngZone.run(() => this.viewChange.next(this._renderedRange));
+      if (this.viewChange.observers.length) {
+        ngZone.run(() => this.viewChange.next(this._renderedRange));
+      }
       this._onRenderedDataChange();
     });
     this._viewport.attach(this);
@@ -392,6 +394,4 @@ export class CdkVirtualForOf<T>
       index,
     };
   }
-
-  static ngAcceptInputType_cdkVirtualForTemplateCacheSize: NumberInput;
 }

@@ -5,8 +5,8 @@ import {
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
-import {Component, ErrorHandler, ViewChild} from '@angular/core';
-import {MatIconModule, MAT_ICON_LOCATION} from './index';
+import {Component, ErrorHandler, Provider, Type, ViewChild} from '@angular/core';
+import {MAT_ICON_DEFAULT_OPTIONS, MAT_ICON_LOCATION, MatIconModule} from './index';
 import {MatIconRegistry, getMatIconNoHttpProviderError} from './icon-registry';
 import {FAKE_SVGS} from './fake-svgs';
 import {wrappedErrorMessage} from '../../cdk/testing/private';
@@ -41,46 +41,57 @@ function verifyPathChildElement(element: Element, attributeValue: string): void 
   expect(pathElement.getAttribute('name')).toBe(attributeValue);
 }
 
+/** Creates a test component fixture. */
+function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
+  TestBed.configureTestingModule({
+    imports: [MatIconModule],
+    declarations: [component],
+    providers: [...providers],
+  });
+
+  TestBed.compileComponents();
+
+  return TestBed.createComponent<T>(component);
+}
+
 describe('MatIcon', () => {
   let fakePath: string;
   let errorHandler: jasmine.SpyObj<ErrorHandler>;
 
-  beforeEach(
-    waitForAsync(() => {
-      // The $ prefix tells Karma not to try to process the
-      // request so that we don't get warnings in our logs.
-      fakePath = '/$fake-path';
-      errorHandler = jasmine.createSpyObj('errorHandler', ['handleError']);
+  beforeEach(waitForAsync(() => {
+    // The $ prefix tells Karma not to try to process the
+    // request so that we don't get warnings in our logs.
+    fakePath = '/$fake-path';
+    errorHandler = jasmine.createSpyObj('errorHandler', ['handleError']);
 
-      TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, MatIconModule],
-        declarations: [
-          IconWithColor,
-          IconWithLigature,
-          IconWithCustomFontCss,
-          IconFromSvgName,
-          IconWithAriaHiddenFalse,
-          IconWithBindingAndNgIf,
-          InlineIcon,
-          SvgIconWithUserContent,
-          IconWithLigatureAndSvgBinding,
-          BlankIcon,
-        ],
-        providers: [
-          {
-            provide: MAT_ICON_LOCATION,
-            useValue: {getPathname: () => fakePath},
-          },
-          {
-            provide: ErrorHandler,
-            useValue: errorHandler,
-          },
-        ],
-      });
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, MatIconModule],
+      declarations: [
+        IconWithColor,
+        IconWithLigature,
+        IconWithCustomFontCss,
+        IconFromSvgName,
+        IconWithAriaHiddenFalse,
+        IconWithBindingAndNgIf,
+        InlineIcon,
+        SvgIconWithUserContent,
+        IconWithLigatureAndSvgBinding,
+        BlankIcon,
+      ],
+      providers: [
+        {
+          provide: MAT_ICON_LOCATION,
+          useValue: {getPathname: () => fakePath},
+        },
+        {
+          provide: ErrorHandler,
+          useValue: errorHandler,
+        },
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   let iconRegistry: MatIconRegistry;
   let http: HttpTestingController;
@@ -209,6 +220,24 @@ describe('MatIcon', () => {
       fixture.detectChanges();
 
       expect(matIconElement.textContent.trim()).toBe('house');
+    });
+
+    it('should be able to provide multiple alternate icon set classes', () => {
+      iconRegistry.setDefaultFontSetClass('myfont', 'myfont-48x48');
+
+      let fixture = TestBed.createComponent(IconWithLigature);
+
+      const testComponent = fixture.componentInstance;
+      const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+      testComponent.iconName = 'home';
+      fixture.detectChanges();
+      expect(sortedClassNames(matIconElement)).toEqual([
+        'mat-icon',
+        'mat-icon-no-color',
+        'myfont',
+        'myfont-48x48',
+        'notranslate',
+      ]);
     });
   });
 
@@ -846,29 +875,6 @@ describe('MatIcon', () => {
       expect(svgElement.getAttribute('viewBox')).toBe('0 0 43 43');
     });
 
-    it('should add an extra string to the end of `style` tags inside SVG', fakeAsync(() => {
-      iconRegistry.addSvgIconLiteral(
-        'fido',
-        trustHtml(`
-        <svg>
-          <style>#woof {color: blue;}</style>
-          <path id="woof" name="woof"></path>
-        </svg>
-      `),
-      );
-
-      const fixture = TestBed.createComponent(IconFromSvgName);
-      fixture.componentInstance.iconName = 'fido';
-      fixture.detectChanges();
-      const styleTag = fixture.nativeElement.querySelector('mat-icon svg style');
-
-      // Note the extra whitespace at the end which is what we're testing for. This is a
-      // workaround for IE and Edge ignoring `style` tags in dynamically-created SVGs.
-      expect(styleTag.textContent).toBe('#woof {color: blue;} ');
-
-      tick();
-    }));
-
     it('should prepend the current path to attributes with `url()` references', fakeAsync(() => {
       iconRegistry.addSvgIconLiteral(
         'fido',
@@ -1207,16 +1213,14 @@ describe('MatIcon without HttpClientModule', () => {
   let iconRegistry: MatIconRegistry;
   let sanitizer: DomSanitizer;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatIconModule],
-        declarations: [IconFromSvgName],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatIconModule],
+      declarations: [IconFromSvgName],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   beforeEach(inject([MatIconRegistry, DomSanitizer], (mir: MatIconRegistry, ds: DomSanitizer) => {
     iconRegistry = mir;
@@ -1235,6 +1239,71 @@ describe('MatIcon without HttpClientModule', () => {
       fixture.detectChanges();
     }).toThrowError(expectedError);
   });
+});
+
+describe('MatIcon with default options', () => {
+  it('should be able to configure color globally', fakeAsync(() => {
+    const fixture = createComponent(IconWithLigature, [
+      {provide: MAT_ICON_DEFAULT_OPTIONS, useValue: {color: 'accent'}},
+    ]);
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    fixture.detectChanges();
+    expect(iconElement.classList).not.toContain('mat-icon-no-color');
+    expect(iconElement.classList).toContain('mat-accent');
+  }));
+
+  it('should use passed color rather then color provided', fakeAsync(() => {
+    const fixture = createComponent(IconWithColor, [
+      {provide: MAT_ICON_DEFAULT_OPTIONS, useValue: {color: 'warn'}},
+    ]);
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    fixture.detectChanges();
+    expect(iconElement.classList).not.toContain('mat-warn');
+    expect(iconElement.classList).toContain('mat-primary');
+  }));
+
+  it('should use default color if no color passed', fakeAsync(() => {
+    const fixture = createComponent(IconWithColor, [
+      {provide: MAT_ICON_DEFAULT_OPTIONS, useValue: {color: 'accent'}},
+    ]);
+    const component = fixture.componentInstance;
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    component.iconColor = '';
+    fixture.detectChanges();
+    expect(iconElement.classList).not.toContain('mat-icon-no-color');
+    expect(iconElement.classList).not.toContain('mat-primary');
+    expect(iconElement.classList).toContain('mat-accent');
+  }));
+
+  it('should be able to configure font set globally', fakeAsync(() => {
+    const fixture = createComponent(IconWithLigature, [
+      {provide: MAT_ICON_DEFAULT_OPTIONS, useValue: {fontSet: 'custom-font-set'}},
+    ]);
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    fixture.detectChanges();
+    expect(iconElement.classList).toContain('custom-font-set');
+  }));
+
+  it('should use passed fontSet rather then default one', fakeAsync(() => {
+    const fixture = createComponent(IconWithCustomFontCss, [
+      {provide: MAT_ICON_DEFAULT_OPTIONS, useValue: {fontSet: 'default-font-set'}},
+    ]);
+    const component = fixture.componentInstance;
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    component.fontSet = 'custom-font-set';
+    fixture.detectChanges();
+    expect(iconElement.classList).not.toContain('default-font-set');
+    expect(iconElement.classList).toContain('custom-font-set');
+  }));
+
+  it('should use passed empty fontSet rather then default one', fakeAsync(() => {
+    const fixture = createComponent(IconWithCustomFontCss, [
+      {provide: MAT_ICON_DEFAULT_OPTIONS, useValue: {fontSet: 'default-font-set'}},
+    ]);
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    fixture.detectChanges();
+    expect(iconElement.classList).not.toContain('default-font-set');
+  }));
 });
 
 @Component({template: `<mat-icon>{{iconName}}</mat-icon>`})

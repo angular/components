@@ -1,7 +1,6 @@
-load("//tools:defaults.bzl", "jasmine_node_test")
+load("//tools:defaults.bzl", "jasmine_node_test", "spec_bundle")
 load("@io_bazel_rules_webtesting//web:web.bzl", "web_test")
 load("//tools/server-test:index.bzl", "server_test")
-load("//tools/spec-bundling:index.bzl", "spec_bundle")
 
 def webdriver_test(name, deps, tags = [], **kwargs):
     spec_bundle(
@@ -27,7 +26,7 @@ def webdriver_test(name, deps, tags = [], **kwargs):
 
     server_test(
         name = "%s_chromium" % name,
-        server = "//src/e2e-app:devserver",
+        server = "//src/e2e-app:server",
         test = ":%s_chromium_web_test" % name,
         tags = tags + ["e2e"],
     )

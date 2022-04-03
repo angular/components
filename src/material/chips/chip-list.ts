@@ -46,11 +46,22 @@ import {MatChipTextControl} from './chip-text-control';
 /** @docs-private */
 const _MatChipListBase = mixinErrorState(
   class {
+    /**
+     * Emits whenever the component state changes and should cause the parent
+     * form-field to update. Implemented as part of `MatFormFieldControl`.
+     * @docs-private
+     */
+    readonly stateChanges = new Subject<void>();
+
     constructor(
       public _defaultErrorStateMatcher: ErrorStateMatcher,
       public _parentForm: NgForm,
       public _parentFormGroup: FormGroupDirective,
-      /** @docs-private */
+      /**
+       * Form control bound to the component.
+       * Implemented as part of `MatFormFieldControl`.
+       * @docs-private
+       */
       public ngControl: NgControl,
     ) {}
   },
@@ -78,7 +89,6 @@ export class MatChipListChange {
   exportAs: 'matChipList',
   host: {
     '[attr.tabindex]': 'disabled ? null : _tabIndex',
-    '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-required]': 'role ? required : null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
@@ -144,9 +154,6 @@ export class MatChipList
   /** Uid of the chip list */
   _uid: string = `mat-chip-list-${nextUniqueId++}`;
 
-  /** The aria-describedby attribute on the chip list for improved a11y. */
-  _ariaDescribedby: string;
-
   /** Tab index for the chip list. */
   _tabIndex = 0;
 
@@ -173,9 +180,24 @@ export class MatChipList
   }
 
   /** The ARIA role applied to the chip list. */
+  @Input()
   get role(): string | null {
+    if (this._explicitRole) {
+      return this._explicitRole;
+    }
+
     return this.empty ? null : 'listbox';
   }
+  set role(role: string | null) {
+    this._explicitRole = role;
+  }
+  private _explicitRole?: string | null;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  @Input('aria-describedby') userAriaDescribedBy: string;
 
   /** An object used to control when error messages are shown. */
   @Input() override errorStateMatcher: ErrorStateMatcher;
@@ -185,7 +207,7 @@ export class MatChipList
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
     this._syncChipsState();
   }
@@ -239,7 +261,7 @@ export class MatChipList
   get required(): boolean {
     return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -288,7 +310,7 @@ export class MatChipList
   get disabled(): boolean {
     return this.ngControl ? !!this.ngControl.disabled : this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._syncChipsState();
   }
@@ -305,7 +327,7 @@ export class MatChipList
   get selectable(): boolean {
     return this._selectable;
   }
-  set selectable(value: boolean) {
+  set selectable(value: BooleanInput) {
     this._selectable = coerceBooleanProperty(value);
 
     if (this.chips) {
@@ -455,7 +477,11 @@ export class MatChipList
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
-    this._ariaDescribedby = ids.join(' ');
+    if (ids.length) {
+      this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+    } else {
+      this._elementRef.nativeElement.removeAttribute('aria-describedby');
+    }
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -821,9 +847,4 @@ export class MatChipList
       });
     }
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_selectable: BooleanInput;
 }

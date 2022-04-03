@@ -12,12 +12,12 @@
  *
  * Supported command line flags:
  *
- *   --local    | If specified, no browser will be launched.
- *   --firefox  | Instead of Chrome being used for tests, Firefox will be used.
- *   --no-watch | Watch mode is enabled by default. This flag opts-out to standard Bazel.
+ *   --debug      | If specified, no browser will be launched.
+ *   --firefox    | Instead of Chrome being used for tests, Firefox will be used.
+ *   --no-watch   | Watch mode is enabled by default. This flag opts-out to standard Bazel.
  */
 
-const minimist = require('minimist');
+const yargs = require('yargs');
 const shelljs = require('shelljs');
 const chalk = require('chalk');
 const path = require('path');
@@ -35,26 +35,37 @@ shelljs.set('-e');
 shelljs.cd(projectDir);
 
 // Extracts the supported command line options.
-const {
-  _: components,
-  local,
-  firefox,
-  watch,
-} = minimist(args, {
-  boolean: ['local', 'firefox', 'watch'],
-  default: {watch: true},
-});
+const {components, debug, firefox, watch} = yargs(args)
+  .command('* <components..>', 'Run tests for specified components', args =>
+    args.positional('components', {type: 'array'}),
+  )
+  .option('debug', {
+    alias: 'local',
+    type: 'boolean',
+    description: 'Whether test should run in debug mode. You can manually connect a browser then.',
+  })
+  .option('firefox', {
+    type: 'boolean',
+    description: 'Whether browser tests should run within Firefox.',
+  })
+  .option('watch', {
+    type: 'boolean',
+    default: true,
+    description: 'Whether tests should be re-run automatically upon changes.',
+  })
+  .strict()
+  .parseSync();
 
 // Whether tests for all components should be run.
 const all = components.length === 1 && components[0] === 'all';
 
-// We can only run a single target with "--local". Running multiple targets within the
+// We can only run a single target with "--debug". Running multiple targets within the
 // same Karma server is not possible since each test target runs isolated from the others.
-if (local && (components.length > 1 || all)) {
+if (debug && (components.length > 1 || all)) {
   console.error(
     chalk.red(
-      'Unable to run multiple components tests in local mode. ' +
-        'Only one component at a time can be run with "--local"',
+      'Unable to run multiple components tests in debug mode. ' +
+        'Only one component at a time can be run with "--debug"',
     ),
   );
   process.exit(1);
@@ -95,7 +106,7 @@ if (!components.length) {
   process.exit(1);
 }
 
-const bazelAction = local ? 'run' : 'test';
+const bazelAction = debug ? 'run' : 'test';
 const testLabels = components.map(t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`);
 
 // Runs Bazel for the determined test labels.
@@ -142,10 +153,10 @@ function convertPathToBazelLabel(name) {
 
 /** Gets the name of the target that should be run. */
 function getTargetName(packageName) {
-  // Schematics don't have _local and browser targets.
+  // Schematics don't have _debug and browser targets.
   if (packageName && packageName.endsWith('schematics')) {
     return 'unit_tests';
   }
 
-  return `unit_tests_${local ? 'local' : browserName}`;
+  return `unit_tests_${debug ? 'debug' : browserName}`;
 }

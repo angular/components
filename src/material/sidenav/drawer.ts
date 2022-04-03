@@ -22,6 +22,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
   AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -41,8 +42,6 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  HostListener,
-  HostBinding,
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {
@@ -105,6 +104,12 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    {
+      provide: CdkScrollable,
+      useExisting: MatDrawerContent,
+    },
+  ],
 })
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   constructor(
@@ -142,16 +147,25 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     '[class.mat-drawer-side]': 'mode === "side"',
     '[class.mat-drawer-opened]': 'opened',
     'tabIndex': '-1',
+    '[@transform]': '_animationState',
+    '(@transform.start)': '_animationStarted.next($event)',
+    '(@transform.done)': '_animationEnd.next($event)',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestroy {
+export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy {
   private _focusTrap: FocusTrap;
   private _elementFocusedBeforeDrawerWasOpened: HTMLElement | null = null;
 
   /** Whether the drawer is initialized. Used for disabling the initial animation. */
   private _enableAnimations = false;
+
+  /** Whether the view of the component has been attached. */
+  private _isAttached: boolean;
+
+  /** Anchor node used to restore the drawer to its initial position. */
+  private _anchor: Comment | null;
 
   /** The side that the drawer is attached to. */
   @Input()
@@ -161,7 +175,12 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   set position(value: 'start' | 'end') {
     // Make sure we have a valid value.
     value = value === 'end' ? 'end' : 'start';
-    if (value != this._position) {
+    if (value !== this._position) {
+      // Static inputs in Ivy are set before the element is in the DOM.
+      if (this._isAttached) {
+        this._updatePositionInParent(value);
+      }
+
       this._position = value;
       this.onPositionChanged.emit();
     }
@@ -185,7 +204,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get disableClose(): boolean {
     return this._disableClose;
   }
-  set disableClose(value: boolean) {
+  set disableClose(value: BooleanInput) {
     this._disableClose = coerceBooleanProperty(value);
   }
   private _disableClose: boolean = false;
@@ -213,8 +232,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     }
     return value;
   }
-  set autoFocus(value: AutoFocusTarget | string | boolean) {
-    if (value === 'true' || value === 'false') {
+  set autoFocus(value: AutoFocusTarget | string | BooleanInput) {
+    if (value === 'true' || value === 'false' || value == null) {
       value = coerceBooleanProperty(value);
     }
     this._autoFocus = value;
@@ -229,7 +248,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get opened(): boolean {
     return this._opened;
   }
-  set opened(value: boolean) {
+  set opened(value: BooleanInput) {
     this.toggle(coerceBooleanProperty(value));
   }
   private _opened: boolean = false;
@@ -244,11 +263,6 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   readonly _animationEnd = new Subject<AnimationEvent>();
 
   /** Current state of the sidenav animation. */
-  // @HostBinding is used in the class as it is expected to be extended.  Since @Component decorator
-  // metadata is not inherited by child classes, instead the host binding data is defined in a way
-  // that can be inherited.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostBinding('@transform')
   _animationState: 'open-instant' | 'open' | 'void' = 'void';
 
   /** Event emitted when the drawer open state is changed. */
@@ -290,6 +304,9 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   /** Event emitted when the drawer's position changes. */
   // tslint:disable-next-line:no-output-on-prefix
   @Output('positionChanged') readonly onPositionChanged = new EventEmitter<void>();
+
+  /** Reference to the inner element that contains all the content. */
+  @ViewChild('content') _content: ElementRef<HTMLElement>;
 
   /**
    * An observable that emits when the drawer mode changes. This is used by the drawer container to
@@ -371,8 +388,14 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
       element.tabIndex = -1;
       // The tabindex attribute should be removed to avoid navigating to that element again
       this._ngZone.runOutsideAngular(() => {
-        element.addEventListener('blur', () => element.removeAttribute('tabindex'));
-        element.addEventListener('mousedown', () => element.removeAttribute('tabindex'));
+        const callback = () => {
+          element.removeEventListener('blur', callback);
+          element.removeEventListener('mousedown', callback);
+          element.removeAttribute('tabindex');
+        };
+
+        element.addEventListener('blur', callback);
+        element.addEventListener('mousedown', callback);
       });
     }
     element.focus(options);
@@ -446,13 +469,20 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
   /** Whether focus is currently within the drawer. */
   private _isFocusWithinDrawer(): boolean {
-    const activeEl = this._doc?.activeElement;
+    const activeEl = this._doc.activeElement;
     return !!activeEl && this._elementRef.nativeElement.contains(activeEl);
   }
 
-  ngAfterContentInit() {
+  ngAfterViewInit() {
+    this._isAttached = true;
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
     this._updateFocusTrapState();
+
+    // Only update the DOM position when the sidenav is positioned at
+    // the end since we project the sidenav before the content by default.
+    if (this._position === 'end') {
+      this._updatePositionInParent('end');
+    }
   }
 
   ngAfterContentChecked() {
@@ -470,6 +500,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
       this._focusTrap.destroy();
     }
 
+    this._anchor?.remove();
+    this._anchor = null;
     this._animationStarted.complete();
     this._animationEnd.complete();
     this._modeChanged.complete();
@@ -566,29 +598,27 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     }
   }
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('@transform.start', ['$event'])
-  _animationStartListener(event: AnimationEvent) {
-    this._animationStarted.next(event);
-  }
+  /**
+   * Updates the position of the drawer in the DOM. We need to move the element around ourselves
+   * when it's in the `end` position so that it comes after the content and the visual order
+   * matches the tab order. We also need to be able to move it back to `start` if the sidenav
+   * started off as `end` and was changed to `start`.
+   */
+  private _updatePositionInParent(newPosition: 'start' | 'end') {
+    const element = this._elementRef.nativeElement;
+    const parent = element.parentNode!;
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('@transform.done', ['$event'])
-  _animationDoneListener(event: AnimationEvent) {
-    this._animationEnd.next(event);
-  }
+    if (newPosition === 'end') {
+      if (!this._anchor) {
+        this._anchor = this._doc.createComment('mat-drawer-anchor')!;
+        parent.insertBefore(this._anchor!, element);
+      }
 
-  static ngAcceptInputType_disableClose: BooleanInput;
-  static ngAcceptInputType_autoFocus: AutoFocusTarget | string | BooleanInput;
-  static ngAcceptInputType_opened: BooleanInput;
+      parent.appendChild(element);
+    } else if (this._anchor) {
+      this._anchor.parentNode!.insertBefore(element, this._anchor);
+    }
+  }
 }
 
 /**
@@ -652,7 +682,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   get autosize(): boolean {
     return this._autosize;
   }
-  set autosize(value: boolean) {
+  set autosize(value: BooleanInput) {
     this._autosize = coerceBooleanProperty(value);
   }
   private _autosize: boolean;
@@ -663,14 +693,14 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * mode as well.
    */
   @Input()
-  get hasBackdrop() {
+  get hasBackdrop(): boolean {
     if (this._backdropOverride == null) {
       return !this._start || this._start.mode !== 'side' || !this._end || this._end.mode !== 'side';
     }
 
     return this._backdropOverride;
   }
-  set hasBackdrop(value: any) {
+  set hasBackdrop(value: BooleanInput) {
     this._backdropOverride = value == null ? null : coerceBooleanProperty(value);
   }
   _backdropOverride: boolean | null;
@@ -989,7 +1019,4 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   private _isDrawerOpen(drawer: MatDrawer | null): drawer is MatDrawer {
     return drawer != null && drawer.opened;
   }
-
-  static ngAcceptInputType_autosize: BooleanInput;
-  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

@@ -45,11 +45,16 @@ type ParsedQueries<T extends ComponentHarness> = {
  */
 export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
   // Implemented as part of the `LocatorFactory` interface.
-  rootElement: TestElement;
-
-  protected constructor(protected rawRootElement: E) {
-    this.rootElement = this.createTestElement(rawRootElement);
+  get rootElement(): TestElement {
+    this._rootElement = this._rootElement || this.createTestElement(this.rawRootElement);
+    return this._rootElement;
   }
+  set rootElement(element: TestElement) {
+    this._rootElement = element;
+  }
+  private _rootElement: TestElement | undefined;
+
+  protected constructor(protected rawRootElement: E) {}
 
   // Implemented as part of the `LocatorFactory` interface.
   documentRootLocatorFactory(): LocatorFactory {
@@ -113,8 +118,18 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `HarnessLoader` interface.
+  getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null> {
+    return this.locatorForOptional(query)();
+  }
+
+  // Implemented as part of the `HarnessLoader` interface.
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
     return this.locatorForAll(query)();
+  }
+
+  // Implemented as part of the `HarnessLoader` interface.
+  async hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean> {
+    return (await this.locatorForOptional(query)()) !== null;
   }
 
   // Implemented as part of the `HarnessLoader` interface.
@@ -166,6 +181,10 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   private async _getAllHarnessesAndTestElements<T extends (HarnessQuery<any> | string)[]>(
     queries: T,
   ): Promise<LocatorFnResult<T>[]> {
+    if (!queries.length) {
+      throw Error('CDK Component harness query must contain at least one element.');
+    }
+
     const {allQueries, harnessQueries, elementQueries, harnessTypes} = _parseQueries(queries);
 
     // Combine all of the queries into one large comma-delimited selector and use it to get all raw

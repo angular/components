@@ -24,14 +24,12 @@ describe('GoogleMap', () => {
   let mapConstructorSpy: jasmine.Spy;
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [GoogleMapsModule],
-        declarations: [TestApp],
-      });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [GoogleMapsModule],
+      declarations: [TestApp],
+    });
+  }));
 
   beforeEach(() => {
     TestBed.compileComponents();
@@ -363,6 +361,18 @@ describe('GoogleMap', () => {
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].mapTypeId).toBe('satellite');
   });
 
+  it('should emit mapInitialized event when the map is initialized', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.mapInitializedSpy).toHaveBeenCalledOnceWith(
+      fixture.componentInstance.map.googleMap,
+    );
+  });
+
   it('should emit authFailure event when window.gm_authFailure is called', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
@@ -397,7 +407,8 @@ describe('GoogleMap', () => {
                          [mapTypeId]="mapTypeId"
                          (mapClick)="handleClick($event)"
                          (centerChanged)="handleCenterChanged()"
-                         (mapRightclick)="handleRightclick($event)">
+                         (mapRightclick)="handleRightclick($event)"
+                         (mapInitialized)="mapInitializedSpy($event)">
             </google-map>`,
 })
 class TestApp {
@@ -412,4 +423,5 @@ class TestApp {
   handleClick(event: google.maps.MapMouseEvent) {}
   handleCenterChanged() {}
   handleRightclick(event: google.maps.MapMouseEvent) {}
+  mapInitializedSpy = jasmine.createSpy('mapInitialized');
 }

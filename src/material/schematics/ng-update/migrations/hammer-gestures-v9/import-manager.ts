@@ -207,15 +207,15 @@ export class ImportManager {
       // If no symbol name has been specified, the default import is requested. In that
       // case we search for non-namespace and non-specifier imports.
       if (!symbolName && !importData.namespace && !importData.specifiers) {
-        return ts.createIdentifier(importData.name!.text);
+        return ts.factory.createIdentifier(importData.name!.text);
       }
 
       // In case a "Type" symbol is imported, we can't use namespace imports
       // because these only export symbols available at runtime (no types)
       if (importData.namespace && !typeImport) {
-        return ts.createPropertyAccess(
-          ts.createIdentifier(importData.name!.text),
-          ts.createIdentifier(symbolName || 'default'),
+        return ts.factory.createPropertyAccessExpression(
+          ts.factory.createIdentifier(importData.name!.text),
+          ts.factory.createIdentifier(symbolName || 'default'),
         );
       } else if (importData.specifiers && symbolName) {
         const existingSpecifier = importData.specifiers.find(s =>
@@ -223,7 +223,7 @@ export class ImportManager {
         );
 
         if (existingSpecifier) {
-          return ts.createIdentifier(existingSpecifier.name.text);
+          return ts.factory.createIdentifier(existingSpecifier.name.text);
         }
 
         // In case the symbol could not be found in an existing import, we
@@ -236,7 +236,7 @@ export class ImportManager {
     // If there is an existing import that matches the specified module, we
     // just update the import specifiers to also import the requested symbol.
     if (existingImport) {
-      const propertyIdentifier = ts.createIdentifier(symbolName!);
+      const propertyIdentifier = ts.factory.createIdentifier(symbolName!);
       const generatedUniqueIdentifier = this._getUniqueIdentifier(
         sourceFile,
         symbolName!,
@@ -264,7 +264,7 @@ export class ImportManager {
     let newImport: AnalyzedImport | null = null;
 
     if (symbolName) {
-      const propertyIdentifier = ts.createIdentifier(symbolName);
+      const propertyIdentifier = ts.factory.createIdentifier(symbolName);
       const generatedUniqueIdentifier = this._getUniqueIdentifier(
         sourceFile,
         symbolName,
@@ -273,11 +273,11 @@ export class ImportManager {
       const needsGeneratedUniqueName = generatedUniqueIdentifier.text !== symbolName;
       identifier = needsGeneratedUniqueName ? generatedUniqueIdentifier : propertyIdentifier;
 
-      const newImportDecl = ts.createImportDeclaration(
+      const newImportDecl = ts.factory.createImportDeclaration(
         undefined,
         undefined,
-        ts.createImportClause(undefined, ts.createNamedImports([])),
-        ts.createStringLiteral(moduleName),
+        ts.factory.createImportClause(false, undefined, ts.factory.createNamedImports([])),
+        ts.factory.createStringLiteral(moduleName),
       );
 
       newImport = {
@@ -297,11 +297,11 @@ export class ImportManager {
         'defaultExport',
         ignoreIdentifierCollisions,
       );
-      const newImportDecl = ts.createImportDeclaration(
+      const newImportDecl = ts.factory.createImportDeclaration(
         undefined,
         undefined,
-        ts.createImportClause(identifier, undefined),
-        ts.createStringLiteral(moduleName),
+        ts.factory.createImportClause(false, identifier, undefined),
+        ts.factory.createStringLiteral(moduleName),
       );
       newImport = {
         moduleName,
@@ -346,21 +346,22 @@ export class ImportManager {
         if (importData.specifiers) {
           const namedBindings = importData.node.importClause!.namedBindings as ts.NamedImports;
           const importSpecifiers = importData.specifiers.map(s =>
-            ts.createImportSpecifier(s.propertyName, s.name),
+            ts.factory.createImportSpecifier(false, s.propertyName, s.name),
           );
-          const updatedBindings = ts.updateNamedImports(namedBindings, importSpecifiers);
+          const updatedBindings = ts.factory.updateNamedImports(namedBindings, importSpecifiers);
 
           // In case an import has been added newly, we need to print the whole import
           // declaration and insert it at the import start index. Otherwise, we just
           // update the named bindings to not re-print the whole import (which could
           // cause unnecessary formatting changes)
           if (hasFlag(importData, ImportState.ADDED)) {
-            const updatedImport = ts.updateImportDeclaration(
+            const updatedImport = ts.factory.updateImportDeclaration(
               importData.node,
               undefined,
               undefined,
-              ts.createImportClause(undefined, updatedBindings),
-              ts.createStringLiteral(importData.moduleName),
+              ts.factory.createImportClause(false, undefined, updatedBindings),
+              ts.factory.createStringLiteral(importData.moduleName),
+              undefined,
             );
             const newImportText = this._printer.printNode(
               ts.EmitHint.Unspecified,
@@ -448,7 +449,7 @@ export class ImportManager {
   ): ts.Identifier {
     if (this._isUniqueIdentifierName(sourceFile, symbolName, ignoreIdentifierCollisions)) {
       this._recordUsedIdentifier(sourceFile, symbolName);
-      return ts.createIdentifier(symbolName);
+      return ts.factory.createIdentifier(symbolName);
     }
 
     let name: string | null = null;
@@ -458,7 +459,7 @@ export class ImportManager {
     } while (!this._isUniqueIdentifierName(sourceFile, name, ignoreIdentifierCollisions));
 
     this._recordUsedIdentifier(sourceFile, name!);
-    return ts.createIdentifier(name!);
+    return ts.factory.createIdentifier(name!);
   }
 
   /**

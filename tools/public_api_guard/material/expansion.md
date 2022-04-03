@@ -26,7 +26,6 @@ import * as i6 from '@angular/material/core';
 import * as i7 from '@angular/cdk/accordion';
 import * as i8 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -44,6 +43,9 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = "225ms cubic-bezier(0.4,0.0,0.2,
 export const MAT_ACCORDION: InjectionToken<MatAccordionBase>;
 
 // @public
+export const MAT_EXPANSION_PANEL: InjectionToken<MatExpansionPanelBase>;
+
+// @public
 export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS: InjectionToken<MatExpansionPanelDefaultOptions>;
 
 // @public
@@ -54,9 +56,7 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
     _handleHeaderKeydown(event: KeyboardEvent): void;
     _headers: QueryList<MatExpansionPanelHeader>;
     get hideToggle(): boolean;
-    set hideToggle(show: boolean);
-    // (undocumented)
-    static ngAcceptInputType_hideToggle: BooleanInput;
+    set hideToggle(show: BooleanInput);
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -115,11 +115,9 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     _hasSpacing(): boolean;
     _headerId: string;
     get hideToggle(): boolean;
-    set hideToggle(value: boolean);
+    set hideToggle(value: BooleanInput);
     readonly _inputChanges: Subject<SimpleChanges>;
     _lazyContent: MatExpansionPanelContent;
-    // (undocumented)
-    static ngAcceptInputType_hideToggle: BooleanInput;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -147,13 +145,15 @@ export class MatExpansionPanelActionRow {
 
 // @public
 export class MatExpansionPanelContent {
-    constructor(_template: TemplateRef<any>);
+    constructor(_template: TemplateRef<any>, _expansionPanel?: MatExpansionPanelBase | undefined);
+    // (undocumented)
+    _expansionPanel?: MatExpansionPanelBase | undefined;
     // (undocumented)
     _template: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatExpansionPanelContent, "ng-template[matExpansionPanelContent]", never, {}, {}, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelContent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelContent, [null, { optional: true; }]>;
 }
 
 // @public
@@ -186,8 +186,6 @@ export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase i
     _getTogglePosition(): MatAccordionTogglePosition;
     _isExpanded(): boolean;
     _keydown(event: KeyboardEvent): void;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: NumberInput;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

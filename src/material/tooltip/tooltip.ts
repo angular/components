@@ -5,14 +5,17 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {AnimationEvent} from '@angular/animations';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput,
+} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {
-  ConnectedPosition,
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
   OriginConnectionPosition,
@@ -22,6 +25,7 @@ import {
   ScrollStrategy,
   VerticalConnectionPos,
   ConnectionPositionPair,
+  ConnectedPosition,
 } from '@angular/cdk/overlay';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
@@ -41,12 +45,12 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   AfterViewInit,
+  ViewChild,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Observable, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
-
-import {matTooltipAnimations} from './tooltip-animations';
 
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -108,11 +112,23 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** Default `matTooltip` options that can be overridden. */
 export interface MatTooltipDefaultOptions {
+  /** Default delay when the tooltip is shown. */
   showDelay: number;
+
+  /** Default delay when the tooltip is hidden. */
   hideDelay: number;
+
+  /** Default delay when hiding the tooltip on a touch device. */
   touchendHideDelay: number;
+
+  /** Default touch gesture handling for tooltips. */
   touchGestures?: TooltipTouchGestures;
+
+  /** Default position for tooltips. */
   position?: TooltipPosition;
+
+  /** Disables the ability for the user to interact with the tooltip element. */
+  disableTooltipInteractivity?: boolean;
 }
 
 /** Injection token to be used to override the default options for `matTooltip`. */
@@ -174,7 +190,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
 
     // If tooltip is disabled, hide immediately.
@@ -186,10 +202,28 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   }
 
   /** The default delay in ms before showing the tooltip after show is called */
-  @Input('matTooltipShowDelay') showDelay: number = this._defaultOptions.showDelay;
+  @Input('matTooltipShowDelay')
+  get showDelay(): number {
+    return this._showDelay;
+  }
+  set showDelay(value: NumberInput) {
+    this._showDelay = coerceNumberProperty(value);
+  }
+  private _showDelay = this._defaultOptions.showDelay;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
-  @Input('matTooltipHideDelay') hideDelay: number = this._defaultOptions.hideDelay;
+  @Input('matTooltipHideDelay')
+  get hideDelay(): number {
+    return this._hideDelay;
+  }
+  set hideDelay(value: NumberInput) {
+    this._hideDelay = coerceNumberProperty(value);
+
+    if (this._tooltipInstance) {
+      this._tooltipInstance._mouseLeaveHideDelay = this._hideDelay;
+    }
+  }
+  private _hideDelay = this._defaultOptions.hideDelay;
 
   /**
    * How touch gestures should be handled by the tooltip. On touch devices the tooltip directive
@@ -258,7 +292,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   private _document: Document;
 
   /** Timer started at the last `touchstart` event. */
-  private _touchstartTimeout: any;
+  private _touchstartTimeout: number;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -295,10 +329,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
         this._updatePosition(this._overlayRef);
       }
     });
-
-    _ngZone.runOutsideAngular(() => {
-      _elementRef.nativeElement.addEventListener('keydown', this._handleKeydown);
-    });
   }
 
   ngAfterViewInit() {
@@ -333,7 +363,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     }
 
     // Clean up the event listeners set in the constructor
-    nativeElement.removeEventListener('keydown', this._handleKeydown);
     this._passiveListeners.forEach(([event, listener]) => {
       nativeElement.removeEventListener(event, listener, passiveListenerOptions);
     });
@@ -362,14 +391,16 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     this._detach();
     this._portal =
       this._portal || new ComponentPortal(this._tooltipComponent, this._viewContainerRef);
-    this._tooltipInstance = overlayRef.attach(this._portal).instance;
-    this._tooltipInstance
+    const instance = (this._tooltipInstance = overlayRef.attach(this._portal).instance);
+    instance._triggerElement = this._elementRef.nativeElement;
+    instance._mouseLeaveHideDelay = this._hideDelay;
+    instance
       .afterHidden()
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
-    this._tooltipInstance!.show(delay);
+    instance.show(delay);
   }
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
@@ -388,18 +419,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   _isTooltipVisible(): boolean {
     return !!this._tooltipInstance && this._tooltipInstance.isVisible();
   }
-
-  /**
-   * Handles the keydown events on the host element.
-   * Needs to be an arrow function so that we can use it in addEventListener.
-   */
-  private _handleKeydown = (event: KeyboardEvent) => {
-    if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this._ngZone.run(() => this.hide(0));
-    }
-  };
 
   /** Create the overlay config and position strategy */
   private _createOverlay(): OverlayRef {
@@ -450,6 +469,21 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
       .outsidePointerEvents()
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this._tooltipInstance?._handleBodyInteraction());
+
+    this._overlayRef
+      .keydownEvents()
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(event => {
+        if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
+          event.preventDefault();
+          event.stopPropagation();
+          this._ngZone.run(() => this.hide(0));
+        }
+      });
+
+    if (this._defaultOptions?.disableTooltipInteractivity) {
+      this._overlayRef.addPanelClass(`${this._cssClassPrefix}-tooltip-panel-non-interactive`);
+    }
 
     return this._overlayRef;
   }
@@ -674,7 +708,15 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
     if (this._platformSupportsMouseEvents()) {
       exitListeners.push(
-        ['mouseleave', () => this.hide()],
+        [
+          'mouseleave',
+          event => {
+            const newTarget = (event as MouseEvent).relatedTarget as Node | null;
+            if (!newTarget || !this._overlayRef?.overlayElement.contains(newTarget)) {
+              this.hide();
+            }
+          },
+        ],
         ['wheel', event => this._wheelListener(event as WheelEvent)],
       );
     } else if (this.touchGestures !== 'off') {
@@ -745,10 +787,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
       (style as any).webkitTapHighlightColor = 'transparent';
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_hideDelay: NumberInput;
-  static ngAcceptInputType_showDelay: NumberInput;
 }
 
 /**
@@ -807,21 +845,47 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   tooltipClass: string | string[] | Set<string> | {[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
-  _showTimeoutId: any;
+  _showTimeoutId: number | undefined;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  _hideTimeoutId: any;
+  _hideTimeoutId: number | undefined;
 
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility = 'initial';
 
+  /** Element that caused the tooltip to open. */
+  _triggerElement: HTMLElement;
+
+  /** Amount of milliseconds to delay the closing sequence. */
+  _mouseLeaveHideDelay: number;
+
+  /** Whether animations are currently disabled. */
+  private _animationsDisabled: boolean;
+
+  /** Reference to the internal tooltip element. */
+  abstract _tooltip: ElementRef<HTMLElement>;
+
   /** Whether interactions on the page should close the tooltip */
-  private _closeOnInteraction: boolean = false;
+  private _closeOnInteraction = false;
+
+  /** Whether the tooltip is currently visible. */
+  private _isVisible = false;
 
   /** Subject for notifying that the tooltip has been hidden from the view */
   private readonly _onHide: Subject<void> = new Subject();
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+  /** Name of the show animation and the class that toggles it. */
+  protected abstract readonly _showAnimation: string;
+
+  /** Name of the hide animation and the class that toggles it. */
+  protected abstract readonly _hideAnimation: string;
+
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
+    this._animationsDisabled = animationMode === 'NoopAnimations';
+  }
 
   /**
    * Shows the tooltip with an animation originating from the provided origin
@@ -831,16 +895,9 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     // Cancel the delayed hide if it is scheduled
     clearTimeout(this._hideTimeoutId);
 
-    // Body interactions should cancel the tooltip if there is a delay in showing.
-    this._closeOnInteraction = true;
     this._showTimeoutId = setTimeout(() => {
-      this._visibility = 'visible';
+      this._toggleVisibility(true);
       this._showTimeoutId = undefined;
-      this._onShow();
-
-      // Mark for check so if any parent component has set the
-      // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._markForCheck();
     }, delay);
   }
 
@@ -853,12 +910,8 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     clearTimeout(this._showTimeoutId);
 
     this._hideTimeoutId = setTimeout(() => {
-      this._visibility = 'hidden';
+      this._toggleVisibility(false);
       this._hideTimeoutId = undefined;
-
-      // Mark for check so if any parent component has set the
-      // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._markForCheck();
     }, delay);
   }
 
@@ -869,29 +922,14 @@ export abstract class _TooltipComponentBase implements OnDestroy {
 
   /** Whether the tooltip is being displayed. */
   isVisible(): boolean {
-    return this._visibility === 'visible';
+    return this._isVisible;
   }
 
   ngOnDestroy() {
     clearTimeout(this._showTimeoutId);
     clearTimeout(this._hideTimeoutId);
     this._onHide.complete();
-  }
-
-  _animationStart() {
-    this._closeOnInteraction = false;
-  }
-
-  _animationDone(event: AnimationEvent): void {
-    const toState = event.toState as TooltipVisibility;
-
-    if (toState === 'hidden' && !this.isVisible()) {
-      this._onHide.next();
-    }
-
-    if (toState === 'visible' || toState === 'hidden') {
-      this._closeOnInteraction = true;
-    }
+    this._triggerElement = null!;
   }
 
   /**
@@ -914,12 +952,70 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
+  _handleMouseLeave({relatedTarget}: MouseEvent) {
+    if (!relatedTarget || !this._triggerElement.contains(relatedTarget as Node)) {
+      this.hide(this._mouseLeaveHideDelay);
+    }
+  }
+
   /**
    * Callback for when the timeout in this.show() gets completed.
    * This method is only needed by the mdc-tooltip, and so it is only implemented
    * in the mdc-tooltip, not here.
    */
   protected _onShow(): void {}
+
+  /** Event listener dispatched when an animation on the tooltip finishes. */
+  _handleAnimationEnd({animationName}: AnimationEvent) {
+    if (animationName === this._showAnimation || animationName === this._hideAnimation) {
+      this._finalizeAnimation(animationName === this._showAnimation);
+    }
+  }
+
+  /** Handles the cleanup after an animation has finished. */
+  private _finalizeAnimation(toVisible: boolean) {
+    if (toVisible) {
+      this._closeOnInteraction = true;
+    } else if (!this.isVisible()) {
+      this._onHide.next();
+    }
+  }
+
+  /** Toggles the visibility of the tooltip element. */
+  private _toggleVisibility(isVisible: boolean) {
+    // We set the classes directly here ourselves so that toggling the tooltip state
+    // isn't bound by change detection. This allows us to hide it even if the
+    // view ref has been detached from the CD tree.
+    const tooltip = this._tooltip.nativeElement;
+    const showClass = this._showAnimation;
+    const hideClass = this._hideAnimation;
+    tooltip.classList.remove(isVisible ? hideClass : showClass);
+    tooltip.classList.add(isVisible ? showClass : hideClass);
+    this._isVisible = isVisible;
+
+    // It's common for internal apps to disable animations using `* { animation: none !important }`
+    // which can break the opening sequence. Try to detect such cases and work around them.
+    if (isVisible && !this._animationsDisabled && typeof getComputedStyle === 'function') {
+      const styles = getComputedStyle(tooltip);
+
+      // Use `getPropertyValue` to avoid issues with property renaming.
+      if (
+        styles.getPropertyValue('animation-duration') === '0s' ||
+        styles.getPropertyValue('animation-name') === 'none'
+      ) {
+        this._animationsDisabled = true;
+      }
+    }
+
+    if (isVisible) {
+      this._onShow();
+    }
+
+    if (this._animationsDisabled) {
+      tooltip.classList.add('_mat-animation-noopable');
+      this._finalizeAnimation(isVisible);
+    }
+  }
 }
 
 /**
@@ -932,22 +1028,32 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   styleUrls: ['tooltip.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [matTooltipAnimations.tooltipState],
   host: {
     // Forces the element to have a layout in IE and Edge. This fixes issues where the element
     // won't be rendered if the animations are disabled or there is no web animations polyfill.
-    '[style.zoom]': '_visibility === "visible" ? 1 : null',
+    '[style.zoom]': 'isVisible() ? 1 : null',
+    '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
   },
 })
 export class TooltipComponent extends _TooltipComponentBase {
   /** Stream that emits whether the user has a handset-sized display.  */
   _isHandset: Observable<BreakpointState> = this._breakpointObserver.observe(Breakpoints.Handset);
+  _showAnimation = 'mat-tooltip-show';
+  _hideAnimation = 'mat-tooltip-hide';
+
+  @ViewChild('tooltip', {
+    // Use a static query here since we interact directly with
+    // the DOM which can happen before `ngAfterViewInit`.
+    static: true,
+  })
+  _tooltip: ElementRef<HTMLElement>;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     private _breakpointObserver: BreakpointObserver,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
   ) {
-    super(changeDetectorRef);
+    super(changeDetectorRef, animationMode);
   }
 }

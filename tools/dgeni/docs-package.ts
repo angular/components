@@ -8,6 +8,7 @@ import {AsyncFunctionsProcessor} from './processors/async-functions';
 import {categorizer} from './processors/categorizer';
 import {DocsPrivateFilter} from './processors/docs-private-filter';
 import {EntryPointGrouper} from './processors/entry-point-grouper';
+import {ErrorUnknownJsdocTagsProcessor} from './processors/error-unknown-jsdoc-tags';
 import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {mergeInheritedProperties} from './processors/merge-inherited-properties';
 import {resolveInheritedDocs} from './processors/resolve-inherited-docs';
@@ -51,6 +52,9 @@ apiDocsPackage.processor(mergeInheritedProperties);
 // Processor that filters out symbols that should not be shown in the docs.
 apiDocsPackage.processor(new DocsPrivateFilter());
 
+// Processor that throws an error if API docs with unknown JSDoc tags are discovered.
+apiDocsPackage.processor(new ErrorUnknownJsdocTagsProcessor());
+
 // Processor that appends categorization flags to the docs, e.g. `isDirective`, `isNgModule`, etc.
 apiDocsPackage.processor(categorizer);
 
@@ -63,7 +67,7 @@ apiDocsPackage.processor(new AsyncFunctionsProcessor());
 
 // Configure the log level of the API docs dgeni package.
 apiDocsPackage.config(function (log: any) {
-  return (log.level = 'warning');
+  return (log.level = 'warn');
 });
 
 // Configure the processor for reading files from the file system.
@@ -95,12 +99,26 @@ apiDocsPackage.config(function (parseTagsProcessor: any) {
     {name: 'docs-public'},
     {name: 'docs-primary-export'},
     {name: 'breaking-change'},
+    // Adds support for the `tsdoc` `@template` annotation/tag.
+    // https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#template.
+    {name: 'template', multi: true},
+    //  JSDoc annotations/tags which are not supported by default.
+    {name: 'throws', multi: true},
+
+    // Annotations/tags from external API docs (i.e. from the node modules). These tags are
+    // added so that no errors are reported.
+    // TODO(devversion): remove this once the fix in dgeni-package is available.
+    //   https://github.com/angular/dgeni-packages/commit/19e629c0d156572cbea149af9e0cc7ec02db7cb6.
+    {name: 'usageNotes'},
+    {name: 'publicApi'},
+    {name: 'ngModule', multi: true},
+    {name: 'nodoc'},
   ]);
 });
 
 apiDocsPackage.config(function (checkAnchorLinksProcessor: any) {
   // This ensures that Dgeni will fail if we generate links that don't follow this format.
-  checkAnchorLinksProcessor.ignoredLinks.push(/(components|cdk)\/[\w-]+\/api#\w+/);
+  checkAnchorLinksProcessor.ignoredLinks.push(/(components|cdk)\/[\w-]+(\/testing)?\/api#\w+/);
 });
 
 // Configure the processor for understanding TypeScript.

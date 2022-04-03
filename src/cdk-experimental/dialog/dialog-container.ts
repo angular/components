@@ -6,7 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {
+  animate,
+  animateChild,
+  AnimationEvent,
+  group,
+  query,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import {FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
@@ -24,7 +34,6 @@ import {
   ComponentRef,
   ElementRef,
   EmbeddedViewRef,
-  HostBinding,
   Inject,
   NgZone,
   OnDestroy,
@@ -56,8 +65,20 @@ export function throwDialogContentAlreadyAttachedError() {
     trigger('dialog', [
       state('enter', style({opacity: 1})),
       state('exit, void', style({opacity: 0})),
-      transition('* => enter', animate('{{enterAnimationDuration}}')),
-      transition('* => exit, * => void', animate('{{exitAnimationDuration}}')),
+      transition(
+        '* => enter',
+        group([
+          animate('{{enterAnimationDuration}}'),
+          query('@*', animateChild(), {optional: true}),
+        ]),
+      ),
+      transition(
+        '* => exit, * => void',
+        group([
+          animate('{{exitAnimationDuration}}'),
+          query('@*', animateChild(), {optional: true}),
+        ]),
+      ),
     ]),
   ],
   host: {
@@ -70,6 +91,11 @@ export function throwDialogContentAlreadyAttachedError() {
     }`,
     '(@dialog.start)': '_onAnimationStart($event)',
     '(@dialog.done)': '_animationDone.next($event)',
+    'tabindex': '-1',
+    '[attr.role]': '_config.role',
+    'aria-modal': 'true',
+    '[attr.aria-label]': '_config.ariaLabel || null',
+    '[attr.aria-describedby]': '_config.ariaDescribedBy',
   },
 })
 export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
@@ -83,30 +109,6 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
 
   /** The class that traps and manages focus within the dialog. */
   private _focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
-
-  // @HostBinding is used in the class as it is expected to be extended. Since @Component decorator
-  // metadata is not inherited by child classes, instead the host binding data is defined in a way
-  // that can be inherited.
-  // tslint:disable:no-host-decorator-in-concrete no-private-getters
-  @HostBinding('attr.aria-label') get _ariaLabel() {
-    return this._config.ariaLabel || null;
-  }
-
-  @HostBinding('attr.aria-describedby')
-  get _ariaDescribedBy() {
-    return this._config.ariaDescribedBy;
-  }
-
-  @HostBinding('attr.role') get _role() {
-    return this._config.role;
-  }
-
-  @HostBinding('attr.aria-modal') _ariaModal: boolean = true;
-
-  @HostBinding('attr.tabindex') get _tabindex() {
-    return -1;
-  }
-  // tslint:disable:no-host-decorator-in-concrete no-private-getters
 
   /** The portal host inside of this container into which the dialog content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalHost: CdkPortalOutlet;
@@ -265,8 +267,14 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
       element.tabIndex = -1;
       // The tabindex attribute should be removed to avoid navigating to that element again
       this._ngZone.runOutsideAngular(() => {
-        element.addEventListener('blur', () => element.removeAttribute('tabindex'));
-        element.addEventListener('mousedown', () => element.removeAttribute('tabindex'));
+        const callback = () => {
+          element.removeEventListener('blur', callback);
+          element.removeEventListener('mousedown', callback);
+          element.removeAttribute('tabindex');
+        };
+
+        element.addEventListener('blur', callback);
+        element.addEventListener('mousedown', callback);
       });
     }
     element.focus(options);

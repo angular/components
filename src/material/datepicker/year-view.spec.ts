@@ -21,25 +21,23 @@ import {MatYearView} from './year-view';
 describe('MatYearView', () => {
   let dir: {value: Direction};
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatNativeDateModule],
-        declarations: [
-          MatCalendarBody,
-          MatYearView,
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatNativeDateModule],
+      declarations: [
+        MatCalendarBody,
+        MatYearView,
 
-          // Test components.
-          StandardYearView,
-          YearViewWithDateFilter,
-          YearViewWithDateClass,
-        ],
-        providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
-      });
+        // Test components.
+        StandardYearView,
+        YearViewWithDateFilter,
+        YearViewWithDateClass,
+      ],
+      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('standard year view', () => {
     let fixture: ComponentFixture<StandardYearView>;
@@ -291,6 +289,30 @@ describe('MatYearView', () => {
           fixture.detectChanges();
 
           expect(calendarInstance.date).toEqual(new Date(2018, FEB, 28));
+        });
+
+        it('should go to date that is focused', () => {
+          const juneCell = fixture.debugElement.nativeElement.querySelector(
+            '[data-mat-row="1"][data-mat-col="1"] button',
+          ) as HTMLElement;
+
+          dispatchFakeEvent(juneCell, 'focus');
+          fixture.detectChanges();
+
+          expect(calendarInstance.date).toEqual(new Date(2017, JUN, 5));
+        });
+
+        it('should not call `.focus()` when the active date is focused', () => {
+          const janCell = fixture.debugElement.nativeElement.querySelector(
+            '[data-mat-row="0"][data-mat-col="0"] button',
+          ) as HTMLElement;
+          const focusSpy = (janCell.focus = jasmine.createSpy('cellFocused'));
+
+          dispatchFakeEvent(janCell, 'focus');
+          fixture.detectChanges();
+
+          expect(calendarInstance.date).toEqual(new Date(2017, JAN, 5));
+          expect(focusSpy).not.toHaveBeenCalled();
         });
       });
     });

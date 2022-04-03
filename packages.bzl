@@ -1,10 +1,10 @@
 # Each individual package uses a placeholder for the version of Angular to ensure they're
 # all in-sync. This map is passed to each ng_package rule to stamp out the appropriate
 # version for the placeholders.
-ANGULAR_PACKAGE_VERSION = "^13.0.0-0 || ^14.0.0-0"
-MDC_PACKAGE_VERSION = "14.0.0-canary.c78ff0429.0"
+ANGULAR_PACKAGE_VERSION = "^14.0.0-0 || ^15.0.0"
+MDC_PACKAGE_VERSION = "14.0.0-canary.9736ddce9.0"
 TSLIB_PACKAGE_VERSION = "^2.3.0"
-RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.0.0"
+RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
 
 # Each placeholder is used to stamp versions during the build process, replacing the key with it's
 # value pair. These replacements occur during building of `npm_package` and `ng_package` stamping in
@@ -28,40 +28,57 @@ NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS = dict(NPM_PACKAGE_SUBSTITUTIONS, **{
     "0.0.0-PLACEHOLDER": "0.0.0",
 })
 
-# List of MDC packages.
+# List of MDC packages (used for package externals and for Sass target deps)
+# *Note*: Keep in sync with `/src/material-experimental/package.json` and `/package.json`.
+# TODO: Potentially auto-insert these into the `material-experimental` `package.json`.
 MDC_PACKAGES = [
     "@material/animation",
     "@material/auto-init",
+    "@material/banner",
     "@material/base",
+    "@material/button",
+    "@material/card",
     "@material/checkbox",
     "@material/chips",
     "@material/circular-progress",
     "@material/data-table",
+    "@material/density",
     "@material/dialog",
     "@material/dom",
     "@material/drawer",
+    "@material/elevation",
+    "@material/fab",
+    "@material/feature-targeting",
     "@material/floating-label",
     "@material/form-field",
     "@material/icon-button",
+    "@material/image-list",
+    "@material/layout-grid",
     "@material/line-ripple",
     "@material/linear-progress",
     "@material/list",
-    "@material/menu-surface",
     "@material/menu",
+    "@material/menu-surface",
     "@material/notched-outline",
     "@material/radio",
     "@material/ripple",
+    "@material/rtl",
+    "@material/segmented-button",
     "@material/select",
+    "@material/shape",
     "@material/slider",
     "@material/snackbar",
     "@material/switch",
+    "@material/tab",
     "@material/tab-bar",
     "@material/tab-indicator",
     "@material/tab-scroller",
-    "@material/tab",
     "@material/textfield",
+    "@material/theme",
     "@material/tooltip",
     "@material/top-app-bar",
+    "@material/touch-target",
+    "@material/typography",
 ]
 
 ANGULAR_PACKAGES_CONFIG = [

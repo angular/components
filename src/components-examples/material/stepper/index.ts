@@ -17,6 +17,8 @@ import {StepperHarnessExample} from './stepper-harness/stepper-harness-example';
 import {StepperIntlExample} from './stepper-intl/stepper-intl-example';
 import {StepperLazyContentExample} from './stepper-lazy-content/stepper-lazy-content-example';
 import {StepperResponsiveExample} from './stepper-responsive/stepper-responsive-example';
+import {StepperHeaderPositionExample} from './stepper-header-position/stepper-header-position-example';
+import {StepperAnimationsExample} from './stepper-animations/stepper-animations-example';
 
 export {
   StepperEditableExample,
@@ -30,6 +32,8 @@ export {
   StepperVerticalExample,
   StepperLazyContentExample,
   StepperResponsiveExample,
+  StepperHeaderPositionExample,
+  StepperAnimationsExample,
 };
 
 const EXAMPLES = [
@@ -44,6 +48,8 @@ const EXAMPLES = [
   StepperVerticalExample,
   StepperLazyContentExample,
   StepperResponsiveExample,
+  StepperHeaderPositionExample,
+  StepperAnimationsExample,
 ];
 
 @NgModule({
@@ -59,6 +65,5 @@ const EXAMPLES = [
   ],
   declarations: EXAMPLES,
   exports: EXAMPLES,
-  entryComponents: EXAMPLES,
 })
 export class StepperExamplesModule {}

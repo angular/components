@@ -103,7 +103,7 @@ export class MatSelectionList
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
@@ -183,6 +183,7 @@ export class MatSelectionList
   }
 
   override ngOnDestroy() {
+    super.ngOnDestroy();
     this._destroyed.next();
     this._destroyed.complete();
     this._isDestroyed = true;
@@ -356,8 +357,6 @@ export class MatSelectionList
   get options(): QueryList<MatListOption> {
     return this._items;
   }
-
-  static ngAcceptInputType_multiple: BooleanInput;
 }
 
 // TODO: replace with class using inheritance once material-components-web/pull/6256 is available.
@@ -399,8 +398,8 @@ function getSelectionListAdapter(list: MatSelectionList): MDCListAdapter {
 
       baseAdapter.setAttributeForElementIndex(index, attribute, value);
     },
-    notifyAction(index: number): void {
-      list._emitChangeEvent([list._itemsArr[index]]);
+    notifySelectionChange(changedIndices: number[]): void {
+      list._emitChangeEvent(changedIndices.map(index => list._itemsArr[index]));
     },
   };
 }

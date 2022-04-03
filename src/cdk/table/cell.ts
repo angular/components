@@ -86,7 +86,7 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   get stickyEnd(): boolean {
     return this._stickyEnd;
   }
-  set stickyEnd(v: boolean) {
+  set stickyEnd(v: BooleanInput) {
     const prevValue = this._stickyEnd;
     this._stickyEnd = coerceBooleanProperty(v);
     this._hasStickyChanged = prevValue !== this._stickyEnd;
@@ -145,20 +145,12 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
       this._updateColumnCssClassName();
     }
   }
-
-  static ngAcceptInputType_sticky: BooleanInput;
-  static ngAcceptInputType_stickyEnd: BooleanInput;
 }
 
 /** Base class for the cells. Adds a CSS classname that identifies the column it renders in. */
 export class BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    // If IE 11 is dropped before we switch to setting a single class name, change to multi param
-    // with destructuring.
-    const classList = elementRef.nativeElement.classList;
-    for (const className of columnDef._columnCssClassName) {
-      classList.add(className);
-    }
+    elementRef.nativeElement.classList.add(...columnDef._columnCssClassName);
   }
 }
 

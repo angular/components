@@ -123,7 +123,6 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 {
   private _subscriptions = new Subscription();
   private _model: MatDateSelectionModel<S, D>;
-
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
 
@@ -153,6 +152,9 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   /** Portal with projected action buttons. */
   _actionsPortal: TemplatePortal | null = null;
+
+  /** Id of the label for the `role="dialog"` element. */
+  _dialogLabelId: string | null;
 
   constructor(
     elementRef: ElementRef,
@@ -327,7 +329,7 @@ export abstract class MatDatepickerBase<
   get touchUi(): boolean {
     return this._touchUi;
   }
-  set touchUi(value: boolean) {
+  set touchUi(value: BooleanInput) {
     this._touchUi = coerceBooleanProperty(value);
   }
   private _touchUi = false;
@@ -339,7 +341,7 @@ export abstract class MatDatepickerBase<
       ? this.datepickerInput.disabled
       : !!this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
@@ -366,7 +368,7 @@ export abstract class MatDatepickerBase<
   get restoreFocus(): boolean {
     return this._restoreFocus;
   }
-  set restoreFocus(value: boolean) {
+  set restoreFocus(value: BooleanInput) {
     this._restoreFocus = coerceBooleanProperty(value);
   }
   private _restoreFocus = true;
@@ -417,7 +419,7 @@ export abstract class MatDatepickerBase<
   get opened(): boolean {
     return this._opened;
   }
-  set opened(value: boolean) {
+  set opened(value: BooleanInput) {
     coerceBooleanProperty(value) ? this.open() : this.close();
   }
   private _opened = false;
@@ -622,6 +624,7 @@ export abstract class MatDatepickerBase<
     instance.datepicker = this;
     instance.color = this.color;
     instance._actionsPortal = this._actionsPortal;
+    instance._dialogLabelId = this.datepickerInput.getOverlayLabelId();
   }
 
   /** Opens the overlay with the calendar. */
@@ -629,7 +632,6 @@ export abstract class MatDatepickerBase<
     this._destroyOverlay();
 
     const isDialog = this.touchUi;
-    const labelId = this.datepickerInput.getOverlayLabelId();
     const portal = new ComponentPortal<MatDatepickerContent<S, D>>(
       MatDatepickerContent,
       this._viewContainerRef,
@@ -647,16 +649,6 @@ export abstract class MatDatepickerBase<
         panelClass: `mat-datepicker-${isDialog ? 'dialog' : 'popup'}`,
       }),
     ));
-    const overlayElement = overlayRef.overlayElement;
-    overlayElement.setAttribute('role', 'dialog');
-
-    if (labelId) {
-      overlayElement.setAttribute('aria-labelledby', labelId);
-    }
-
-    if (isDialog) {
-      overlayElement.setAttribute('aria-modal', 'true');
-    }
 
     this._getCloseStream(overlayRef).subscribe(event => {
       if (event) {
@@ -751,9 +743,4 @@ export abstract class MatDatepickerBase<
       ),
     );
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_opened: BooleanInput;
-  static ngAcceptInputType_touchUi: BooleanInput;
-  static ngAcceptInputType_restoreFocus: BooleanInput;
 }

@@ -1,15 +1,19 @@
-@use '@material/checkbox' as mdc-checkbox;
+@use '@angular/cdk';
+@use '@angular/material' as mat;
+@use '@material/checkbox/checkbox' as mdc-checkbox;
+@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
 @use '@material/ripple' as mdc-ripple;
 @use '@material/touch-target' as mdc-touch-target;
 @use 'sass:map';
-@use '../../cdk/a11y';
-@use '../mdc-helpers/mdc-helpers';
-@use '../../material/core/style/layout-common';
-@use '../../material/core/style/vendor-prefixes';
 
-@include mdc-checkbox.without-ripple($query: mdc-helpers.$mat-base-styles-query);
-@include mdc-form-field.core-styles($query: mdc-helpers.$mat-base-styles-query);
+@use '../mdc-helpers/mdc-helpers';
+@use './checkbox-private';
+
+@include mdc-helpers.disable-fallback-declarations {
+  @include mdc-checkbox.static-styles($query: mdc-helpers.$mat-base-styles-query);
+  @include mdc-form-field.core-styles($query: mdc-helpers.$mat-base-styles-query);
+}
 
 // Apply base styles to the MDC ripple to adjust appearance for state changes (hover, focus, press)
 @mixin _ripple-base-styles() {
@@ -23,32 +27,40 @@
   // we have to change it in order for margins to work.
   display: inline-block;
 
-  // The MDC checkbox styles related to the hover state are intertwined with the MDC ripple styles.
-  // We currently don't use the MDC ripple due to size concerns, therefore we need to add some
-  // additional styles to restore the hover state.
-  .mdc-checkbox:hover .mdc-checkbox__native-control:not([disabled]) ~ .mdc-checkbox__ripple {
-    opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
-    transform: scale(1);
-    transition: mdc-checkbox-transition-enter(opacity, 0, 80ms),
-    mdc-checkbox-transition-enter(transform, 0, 80ms);
-  }
+  .mdc-checkbox {
+    // MDC theme styles also include structural styles so we have to include the theme at least
+    // once here. The values will be overwritten by our own theme file afterwards.
+    @include mdc-helpers.disable-fallback-declarations {
+      @include mdc-checkbox-theme.theme-styles(checkbox-private.$private-checkbox-theme-config);
+    }
 
-  // Note that the :not([disabled]) here isn't necessary, but we need it for the
-  // extra specificity so that the hover styles don't override the focus styles.
-  .mdc-checkbox .mdc-checkbox__native-control:not([disabled]):focus ~ .mdc-checkbox__ripple {
-    opacity: map.get(mdc-ripple.$dark-ink-opacities, hover) +
-      map.get(mdc-ripple.$dark-ink-opacities, focus);
+    // The MDC checkbox styles related to the hover state are intertwined with the MDC ripple
+    // styles. We currently don't use the MDC ripple due to size concerns, therefore we need to
+    // add some additional styles to restore the hover state.
+    &:hover .mdc-checkbox__native-control:not([disabled]) ~ .mdc-checkbox__ripple {
+      opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
+      transform: scale(1);
+      transition: mdc-checkbox-transition-enter(opacity, 0, 80ms),
+      mdc-checkbox-transition-enter(transform, 0, 80ms);
+    }
 
-    @include a11y.high-contrast(active, off) {
-      outline: solid 3px;
-      opacity: 1;
+    // Note that the :not([disabled]) here isn't necessary, but we need it for the
+    // extra specificity so that the hover styles don't override the focus styles.
+    .mdc-checkbox__native-control:not([disabled]):focus ~ .mdc-checkbox__ripple {
+      opacity: map.get(mdc-ripple.$dark-ink-opacities, hover) +
+        map.get(mdc-ripple.$dark-ink-opacities, focus);
+
+      @include cdk.high-contrast(active, off) {
+        outline: solid 3px;
+        opacity: 1;
+      }
     }
   }
 
 
   .mdc-checkbox__background {
     // force browser to show background-color when using the print function
-    @include vendor-prefixes.private-color-adjust(exact);
+    @include mat.private-color-adjust(exact);
   }
 
   // Angular Material supports disabling all animations when NoopAnimationsModule is imported.
@@ -72,7 +84,7 @@
 }
 
 .mat-mdc-checkbox-ripple, .mdc-checkbox__ripple {
-  @include layout-common.fill();
+  @include mat.private-fill();
 
   // Usually the ripple radius would be specified through the MatRipple input, but
   // since we dynamically adjust the size of the ripple container, we cannot use a

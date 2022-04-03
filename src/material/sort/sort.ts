@@ -28,6 +28,9 @@ import {
   getSortInvalidDirectionError,
 } from './sort-errors';
 
+/** Position of the arrow that displays when sorted. */
+export type SortHeaderArrowPosition = 'before' | 'after';
+
 /** Interface for a directive that holds sorting state consumed by `MatSortHeader`. */
 export interface MatSortable {
   /** The id of the column being sorted. */
@@ -53,6 +56,8 @@ export interface Sort {
 export interface MatSortDefaultOptions {
   /** Whether to disable clearing the sorting state. */
   disableClear?: boolean;
+  /** Position of the arrow that displays when sorted. */
+  arrowPosition?: SortHeaderArrowPosition;
 }
 
 /** Injection token to be used to override the default options for `mat-sort`. */
@@ -116,7 +121,7 @@ export class MatSort
   get disableClear(): boolean {
     return this._disableClear;
   }
-  set disableClear(v: boolean) {
+  set disableClear(v: BooleanInput) {
     this._disableClear = coerceBooleanProperty(v);
   }
   private _disableClear: boolean;
@@ -200,9 +205,6 @@ export class MatSort
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableClear: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /** Returns the sort direction cycle to use given the provided parameters of order and clear. */

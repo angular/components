@@ -1,7 +1,7 @@
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent, MockNgZone} from '../../testing/private';
-import {Component, ElementRef, NgModule, NgZone} from '@angular/core';
+import {Component, ElementRef, NgZone} from '@angular/core';
 import {fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -28,7 +28,8 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ScrollingModule, OverlayModule, OverlayTestModule],
+      imports: [ScrollingModule, OverlayModule, PortalModule],
+      declarations: [TestOverlay],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}],
     });
 
@@ -159,6 +160,46 @@ describe('FlexibleConnectedPositionStrategy', () => {
     const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
 
     expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
+
+    originElement.remove();
+  });
+
+  it('should calculate position with simulated zoom in Safari', () => {
+    let containerElement = overlayContainer.getContainerElement();
+    spyOn(containerElement, 'getBoundingClientRect').and.returnValue({
+      top: -200,
+      bottom: 900,
+      left: -200,
+      right: 100,
+      width: 100,
+      height: 100,
+    } as DOMRect);
+
+    const originElement = createPositionedBlockElement();
+    document.body.appendChild(originElement);
+
+    // Position the element so it would have enough space to fit.
+    originElement.style.top = '200px';
+    originElement.style.left = '70px';
+
+    attachOverlay({
+      positionStrategy: overlay
+        .position()
+        .flexibleConnectedTo(originElement)
+        .withFlexibleDimensions(false)
+        .withPush(false)
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+        ]),
+    });
+
+    expect(getComputedStyle(overlayRef.overlayElement).left).toBe('270px');
+    expect(getComputedStyle(overlayRef.overlayElement).top).toBe('400px');
 
     originElement.remove();
   });
@@ -2889,11 +2930,3 @@ function createOverflowContainerElement() {
   `,
 })
 class TestOverlay {}
-
-@NgModule({
-  imports: [OverlayModule, PortalModule],
-  exports: [TestOverlay],
-  declarations: [TestOverlay],
-  entryComponents: [TestOverlay],
-})
-class OverlayTestModule {}

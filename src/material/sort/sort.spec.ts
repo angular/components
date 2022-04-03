@@ -33,22 +33,22 @@ describe('MatSort', () => {
     let fixture: ComponentFixture<SimpleMatSortApp>;
     let component: SimpleMatSortApp;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-          declarations: [
-            SimpleMatSortApp,
-            CdkTableMatSortApp,
-            MatTableMatSortApp,
-            MatSortHeaderMissingMatSortApp,
-            MatSortDuplicateMatSortableIdsApp,
-            MatSortableMissingIdApp,
-            MatSortableInvalidDirection,
-          ],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
+        declarations: [
+          SimpleMatSortApp,
+          CdkTableMatSortApp,
+          MatTableMatSortApp,
+          MatSortHeaderMissingMatSortApp,
+          MatSortDuplicateMatSortableIdsApp,
+          MatSortableMissingIdApp,
+          MatSortableInvalidDirection,
+          MatSortableInvalidDirection,
+          MatSortWithArrowPosition,
+        ],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMatSortApp);
@@ -79,7 +79,6 @@ describe('MatSort', () => {
       const cdkTableMatSortAppComponent = cdkTableMatSortAppFixture.componentInstance;
 
       cdkTableMatSortAppFixture.detectChanges();
-      cdkTableMatSortAppFixture.detectChanges();
 
       const sortables = cdkTableMatSortAppComponent.matSort.sortables;
       expect(sortables.size).toBe(3);
@@ -92,7 +91,6 @@ describe('MatSort', () => {
       const matTableMatSortAppFixture = TestBed.createComponent(MatTableMatSortApp);
       const matTableMatSortAppComponent = matTableMatSortAppFixture.componentInstance;
 
-      matTableMatSortAppFixture.detectChanges();
       matTableMatSortAppFixture.detectChanges();
 
       const sortables = matTableMatSortAppComponent.matSort.sortables;
@@ -237,13 +235,15 @@ describe('MatSort', () => {
       component.sort('defaultA');
       expect(component.matSort.direction).toBe('asc');
       expect(container.getAttribute('tabindex')).toBe('0');
+      expect(container.getAttribute('role')).toBe('button');
 
       component.disabledColumnSort = true;
       fixture.detectChanges();
 
       component.sort('defaultA');
       expect(component.matSort.direction).toBe('asc');
-      expect(container.getAttribute('tabindex')).toBeFalsy();
+      expect(container.hasAttribute('tabindex')).toBe(false);
+      expect(container.hasAttribute('role')).toBe(false);
     });
 
     it('should allow for the cycling the sort direction to be disabled for all columns', () => {
@@ -417,7 +417,7 @@ describe('MatSort', () => {
     });
 
     it('should add a default aria description to sort buttons', () => {
-      const sortButton = fixture.nativeElement.querySelector('[role="button"]');
+      const sortButton = fixture.nativeElement.querySelector('.mat-sort-header-container');
       const descriptionId = sortButton.getAttribute('aria-describedby');
       expect(descriptionId).toBeDefined();
 
@@ -426,7 +426,9 @@ describe('MatSort', () => {
     });
 
     it('should add a custom aria description to sort buttons', () => {
-      const sortButton = fixture.nativeElement.querySelector('#defaultB [role="button"]');
+      const sortButton = fixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
       let descriptionId = sortButton.getAttribute('aria-describedby');
       expect(descriptionId).toBeDefined();
 
@@ -439,28 +441,84 @@ describe('MatSort', () => {
       descriptionElement = document.getElementById(descriptionId);
       expect(descriptionElement?.textContent).toBe('Sort 2nd column');
     });
+
+    it('should render arrows after sort header by default', () => {
+      const matSortWithArrowPositionFixture = TestBed.createComponent(MatSortWithArrowPosition);
+
+      matSortWithArrowPositionFixture.detectChanges();
+
+      const containerA = matSortWithArrowPositionFixture.nativeElement.querySelector(
+        '#defaultA .mat-sort-header-container',
+      );
+      const containerB = matSortWithArrowPositionFixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
+
+      expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(false);
+      expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(false);
+    });
+
+    it('should render arrows before if appropriate parameter passed', () => {
+      const matSortWithArrowPositionFixture = TestBed.createComponent(MatSortWithArrowPosition);
+      const matSortWithArrowPositionComponent = matSortWithArrowPositionFixture.componentInstance;
+      matSortWithArrowPositionComponent.arrowPosition = 'before';
+
+      matSortWithArrowPositionFixture.detectChanges();
+
+      const containerA = matSortWithArrowPositionFixture.nativeElement.querySelector(
+        '#defaultA .mat-sort-header-container',
+      );
+      const containerB = matSortWithArrowPositionFixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
+
+      expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(true);
+      expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(true);
+    });
+
+    it('should render arrows in proper position based on arrowPosition parameter', () => {
+      const matSortWithArrowPositionFixture = TestBed.createComponent(MatSortWithArrowPosition);
+      const matSortWithArrowPositionComponent = matSortWithArrowPositionFixture.componentInstance;
+
+      matSortWithArrowPositionFixture.detectChanges();
+
+      const containerA = matSortWithArrowPositionFixture.nativeElement.querySelector(
+        '#defaultA .mat-sort-header-container',
+      );
+      const containerB = matSortWithArrowPositionFixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
+
+      expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(false);
+      expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(false);
+
+      matSortWithArrowPositionComponent.arrowPosition = 'before';
+
+      matSortWithArrowPositionFixture.detectChanges();
+
+      expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(true);
+      expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(true);
+    });
   });
 
   describe('with default options', () => {
     let fixture: ComponentFixture<MatSortWithoutExplicitInputs>;
     let component: MatSortWithoutExplicitInputs;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-          declarations: [MatSortWithoutExplicitInputs],
-          providers: [
-            {
-              provide: MAT_SORT_DEFAULT_OPTIONS,
-              useValue: {
-                disableClear: true,
-              },
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
+        declarations: [MatSortWithoutExplicitInputs],
+        providers: [
+          {
+            provide: MAT_SORT_DEFAULT_OPTIONS,
+            useValue: {
+              disableClear: true,
             },
-          ],
-        }).compileComponents();
-      }),
-    );
+          },
+        ],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MatSortWithoutExplicitInputs);
@@ -475,6 +533,43 @@ describe('MatSort', () => {
       // Reverse directions
       component.start = 'desc';
       testSingleColumnSortDirectionSequence(fixture, ['desc', 'asc']);
+    });
+  });
+
+  describe('with default arrowPosition', () => {
+    let fixture: ComponentFixture<MatSortWithoutInputs>;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
+        declarations: [MatSortWithoutInputs],
+        providers: [
+          {
+            provide: MAT_SORT_DEFAULT_OPTIONS,
+            useValue: {
+              disableClear: true,
+              arrowPosition: 'before',
+            },
+          },
+        ],
+      }).compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MatSortWithoutInputs);
+      fixture.detectChanges();
+    });
+
+    it('should render arrows in proper position', () => {
+      const containerA = fixture.nativeElement.querySelector(
+        '#defaultA .mat-sort-header-container',
+      );
+      const containerB = fixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
+
+      expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(true);
+      expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(true);
     });
   });
 });
@@ -735,4 +830,41 @@ class MatSortWithoutExplicitInputs {
     const sortElement = this.elementRef.nativeElement.querySelector(`#${id}`)!;
     dispatchMouseEvent(sortElement, event);
   }
+}
+
+@Component({
+  template: `
+    <div matSort>
+      <div id="defaultA" #defaultA mat-sort-header="defaultA" [arrowPosition]="arrowPosition">
+        A
+      </div>
+      <div id="defaultB" #defaultB mat-sort-header="defaultB" [arrowPosition]="arrowPosition">
+        B
+      </div>
+    </div>
+  `,
+})
+class MatSortWithArrowPosition {
+  arrowPosition?: 'before' | 'after';
+  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild('defaultA') defaultA: MatSortHeader;
+  @ViewChild('defaultB') defaultB: MatSortHeader;
+}
+
+@Component({
+  template: `
+    <div matSort>
+      <div id="defaultA" #defaultA mat-sort-header="defaultA">
+        A
+      </div>
+      <div id="defaultB" #defaultB mat-sort-header="defaultB">
+        B
+      </div>
+    </div>
+  `,
+})
+class MatSortWithoutInputs {
+  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild('defaultA') defaultA: MatSortHeader;
+  @ViewChild('defaultB') defaultB: MatSortHeader;
 }

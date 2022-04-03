@@ -1,4 +1,4 @@
-@use '../../../material/core/style/variables';
+@use '@angular/material' as mat;
 @use '../tabs-common';
 
 // Wraps each link in the header
@@ -16,14 +16,13 @@
     opacity: 0.4;
   }
 
-  // Note that we only want to target direct descendant tabs. Also note that
-  // `mat-stretch-tabs` is part of the public API so it should not be changed to `mat-mdc-`.
-  .mat-mdc-tab-header[mat-stretch-tabs] & {
+  // Note that we only want to target direct descendant tabs.
+  .mat-mdc-tab-header.mat-mdc-tab-nav-bar-stretch-tabs & {
     flex-grow: 1;
   }
 }
 
-@media (variables.$xsmall) {
+@media (mat.$private-xsmall) {
   .mat-mdc-tab-link {
     min-width: 72px;
   }

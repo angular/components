@@ -13,9 +13,9 @@ import {
 import {
   AbstractControl,
   ControlValueAccessor,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   NgControl,
   Validators,
 } from '@angular/forms';
@@ -28,8 +28,8 @@ import {Subject} from 'rxjs';
   templateUrl: 'form-field-custom-control-example.html',
 })
 export class FormFieldCustomControlExample {
-  form: FormGroup = new FormGroup({
-    tel: new FormControl(new MyTel('', '', '')),
+  form: UntypedFormGroup = new UntypedFormGroup({
+    tel: new UntypedFormControl(new MyTel('', '', '')),
   });
 }
 
@@ -55,7 +55,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   @ViewChild('exchange') exchangeInput: HTMLInputElement;
   @ViewChild('subscriber') subscriberInput: HTMLInputElement;
 
-  parts: FormGroup;
+  parts: UntypedFormGroup;
   stateChanges = new Subject<void>();
   focused = false;
   touched = false;
@@ -92,7 +92,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   get required(): boolean {
     return this._required;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -102,7 +102,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
     this._disabled ? this.parts.disable() : this.parts.enable();
     this.stateChanges.next();
@@ -130,7 +130,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   }
 
   constructor(
-    formBuilder: FormBuilder,
+    formBuilder: UntypedFormBuilder,
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
     @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
@@ -219,7 +219,4 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
     this.autoFocusNext(control, nextElement);
     this.onChange(this.value);
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }

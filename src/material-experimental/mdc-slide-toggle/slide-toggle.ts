@@ -66,9 +66,10 @@ export class MatSlideToggleChange {
   host: {
     'class': 'mat-mdc-slide-toggle',
     '[id]': 'id',
-    // Needs to be `-1` so it can still receive programmatic focus.
-    '[attr.tabindex]': 'disabled ? null : -1',
+    // Needs to be removed since it causes some a11y issues (see #21266).
+    '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
+    '[attr.name]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[class.mat-primary]': 'color === "primary"',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
@@ -123,7 +124,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   get tabIndex(): number {
     return this._tabIndex;
   }
-  set tabIndex(value: number) {
+  set tabIndex(value: NumberInput) {
     this._tabIndex = coerceNumberProperty(value);
   }
   private _tabIndex: number;
@@ -145,7 +146,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   get required(): boolean {
     return this._required;
   }
-  set required(value) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
 
@@ -154,7 +155,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   get checked(): boolean {
     return this._checked;
   }
-  set checked(value) {
+  set checked(value: BooleanInput) {
     this._checked = coerceBooleanProperty(value);
 
     if (this._foundation) {
@@ -167,7 +168,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   get disableRipple(): boolean {
     return this._disableRipple;
   }
-  set disableRipple(disableRipple: boolean) {
+  set disableRipple(disableRipple: BooleanInput) {
     this._disableRipple = coerceBooleanProperty(disableRipple);
   }
   private _disableRipple = false;
@@ -177,7 +178,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(disabled) {
+  set disabled(disabled: BooleanInput) {
     this._disabled = coerceBooleanProperty(disabled);
 
     if (this._foundation) {
@@ -221,12 +222,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     foundation.setChecked(this.checked);
 
     this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
-      // Only forward focus manually when it was received programmatically or through the
-      // keyboard. We should not do this for mouse/touch focus for two reasons:
-      // 1. It can prevent clicks from landing in Chrome (see #18269).
-      // 2. They're already handled by the wrapping `label` element.
       if (focusOrigin === 'keyboard' || focusOrigin === 'program') {
-        this._switchElement.nativeElement.focus();
         this._focused = true;
       } else if (!focusOrigin) {
         // When a focused element becomes disabled, the browser *immediately* fires a blur event.
@@ -302,10 +298,4 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     // `aria-labelledby`, because the button gets flagged as not having a label by tools like axe.
     return this.ariaLabel ? null : this._labelId;
   }
-
-  static ngAcceptInputType_tabIndex: NumberInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

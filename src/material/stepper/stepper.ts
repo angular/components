@@ -22,7 +22,6 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   EventEmitter,
   forwardRef,
@@ -38,8 +37,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
-import {DOCUMENT} from '@angular/common';
+import {UntypedFormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject, Subscription} from 'rxjs';
@@ -47,7 +45,11 @@ import {takeUntil, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/o
 
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
-import {matStepperAnimations} from './stepper-animations';
+import {
+  DEFAULT_HORIZONTAL_ANIMATION_DURATION,
+  DEFAULT_VERTICAL_ANIMATION_DURATION,
+  matStepperAnimations,
+} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 import {MatStepContent} from './step-content';
 
@@ -108,7 +110,10 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(
+    control: UntypedFormControl | null,
+    form: FormGroupDirective | NgForm | null,
+  ): boolean {
     const originalErrorState = this._errorStateMatcher.isErrorState(control, form);
 
     // Custom error state checks for the validity of form that is not submitted or touched
@@ -119,36 +124,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     return originalErrorState || customErrorState;
   }
 }
-
-/**
- * Proxies the public APIs from `MatStepper` to the deprecated `MatHorizontalStepper` and
- * `MatVerticalStepper`.
- * @deprecated Use `MatStepper` instead.
- * @breaking-change 13.0.0
- * @docs-private
- */
-@Directive()
-abstract class _MatProxyStepperBase extends CdkStepper {
-  override readonly steps: QueryList<MatStep>;
-  readonly animationDone: EventEmitter<void>;
-  disableRipple: boolean;
-  color: ThemePalette;
-  labelPosition: 'bottom' | 'end';
-}
-
-/**
- * @deprecated Use `MatStepper` instead.
- * @breaking-change 13.0.0
- */
-@Directive({selector: 'mat-horizontal-stepper'})
-export class MatHorizontalStepper extends _MatProxyStepperBase {}
-
-/**
- * @deprecated Use `MatStepper` instead.
- * @breaking-change 13.0.0
- */
-@Directive({selector: 'mat-vertical-stepper'})
-export class MatVerticalStepper extends _MatProxyStepperBase {}
 
 @Component({
   selector: 'mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]',
@@ -163,6 +138,7 @@ export class MatVerticalStepper extends _MatProxyStepperBase {}
       'orientation === "horizontal" && labelPosition == "end"',
     '[class.mat-stepper-label-position-bottom]':
       'orientation === "horizontal" && labelPosition == "bottom"',
+    '[class.mat-stepper-header-position-bottom]': 'headerPosition === "bottom"',
     '[attr.aria-orientation]': 'orientation',
     'role': 'tablist',
   },
@@ -170,11 +146,7 @@ export class MatVerticalStepper extends _MatProxyStepperBase {}
     matStepperAnimations.horizontalStepTransition,
     matStepperAnimations.verticalStepTransition,
   ],
-  providers: [
-    {provide: CdkStepper, useExisting: MatStepper},
-    {provide: MatHorizontalStepper, useExisting: MatStepper},
-    {provide: MatVerticalStepper, useExisting: MatStepper},
-  ],
+  providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -207,19 +179,35 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   @Input()
   labelPosition: 'bottom' | 'end' = 'end';
 
+  /**
+   * Position of the stepper's header.
+   * Only applies in the `horizontal` orientation.
+   */
+  @Input()
+  headerPosition: 'top' | 'bottom' = 'top';
+
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>> = {};
 
   /** Stream of animation `done` events when the body expands/collapses. */
   readonly _animationDone = new Subject<AnimationEvent>();
 
+  /** Duration for the animation. Will be normalized to milliseconds if no units are set. */
+  @Input()
+  get animationDuration(): string {
+    return this._animationDuration;
+  }
+  set animationDuration(value: string) {
+    this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
+  }
+  private _animationDuration = '';
+
   constructor(
     @Optional() dir: Directionality,
     changeDetectorRef: ChangeDetectorRef,
     elementRef: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) _document: any,
   ) {
-    super(dir, changeDetectorRef, elementRef, _document);
+    super(dir, changeDetectorRef, elementRef);
     const nodeName = elementRef.nativeElement.nodeName.toLowerCase();
     this.orientation = nodeName === 'mat-vertical-stepper' ? 'vertical' : 'horizontal';
   }
@@ -250,5 +238,15 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
 
   _stepIsNavigable(index: number, step: MatStep): boolean {
     return step.completed || this.selectedIndex === index || !this.linear;
+  }
+
+  _getAnimationDuration() {
+    if (this.animationDuration) {
+      return this.animationDuration;
+    }
+
+    return this.orientation === 'horizontal'
+      ? DEFAULT_HORIZONTAL_ANIMATION_DURATION
+      : DEFAULT_VERTICAL_ANIMATION_DURATION;
   }
 }

@@ -95,10 +95,10 @@ export class FocusMonitor implements OnDestroy {
   private _windowFocused = false;
 
   /** The timeout id of the window focus timeout. */
-  private _windowFocusTimeoutId: any;
+  private _windowFocusTimeoutId: number;
 
   /** The timeout id of the origin clearing timeout. */
-  private _originTimeoutId: any;
+  private _originTimeoutId: number;
 
   /**
    * Whether the origin was determined via a touch interaction. Necessary as properly attributing
@@ -134,7 +134,7 @@ export class FocusMonitor implements OnDestroy {
     // Make a note of when the window regains focus, so we can
     // restore the origin info for the focused element.
     this._windowFocused = true;
-    this._windowFocusTimeoutId = setTimeout(() => (this._windowFocused = false));
+    this._windowFocusTimeoutId = window.setTimeout(() => (this._windowFocused = false));
   };
 
   /** Used to reference correct document/window */
@@ -436,11 +436,13 @@ export class FocusMonitor implements OnDestroy {
     }
 
     this._setClasses(element);
-    this._emitOrigin(elementInfo.subject, null);
+    this._emitOrigin(elementInfo, null);
   }
 
-  private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {
-    this._ngZone.run(() => subject.next(origin));
+  private _emitOrigin(info: MonitoredElementInfo, origin: FocusOrigin) {
+    if (info.subject.observers.length) {
+      this._ngZone.run(() => info.subject.next(origin));
+    }
   }
 
   private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {
@@ -530,7 +532,7 @@ export class FocusMonitor implements OnDestroy {
     elementInfo: MonitoredElementInfo,
   ) {
     this._setClasses(element, origin);
-    this._emitOrigin(elementInfo.subject, origin);
+    this._emitOrigin(elementInfo, origin);
     this._lastFocusOrigin = origin;
   }
 

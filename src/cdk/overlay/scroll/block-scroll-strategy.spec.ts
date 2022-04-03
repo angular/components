@@ -1,4 +1,4 @@
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {Platform} from '@angular/cdk/platform';
@@ -13,18 +13,17 @@ describe('BlockScrollStrategy', () => {
   let componentPortal: ComponentPortal<FocacciaMsg>;
   let forceScrollElement: HTMLElement;
 
-  beforeEach(
-    waitForAsync(() => {
-      documentElement = document.documentElement!;
+  beforeEach(waitForAsync(() => {
+    documentElement = document.documentElement!;
 
-      // Ensure a clean state for every test.
-      documentElement.classList.remove('cdk-global-scrollblock');
+    // Ensure a clean state for every test.
+    documentElement.classList.remove('cdk-global-scrollblock');
 
-      TestBed.configureTestingModule({
-        imports: [OverlayModule, PortalModule, OverlayTestModule],
-      }).compileComponents();
-    }),
-  );
+    TestBed.configureTestingModule({
+      imports: [OverlayModule, PortalModule],
+      declarations: [FocacciaMsg],
+    }).compileComponents();
+  }));
 
   beforeEach(inject(
     [Overlay, ViewportRuler, Platform],
@@ -217,11 +216,3 @@ describe('BlockScrollStrategy', () => {
 /** Simple component that we can attach to the overlay. */
 @Component({template: '<p>Focaccia</p>'})
 class FocacciaMsg {}
-
-/** Test module to hold the component. */
-@NgModule({
-  imports: [OverlayModule, PortalModule],
-  declarations: [FocacciaMsg],
-  entryComponents: [FocacciaMsg],
-})
-class OverlayTestModule {}

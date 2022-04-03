@@ -18,7 +18,6 @@ import { CdkTreeNodeToggle } from '@angular/cdk/tree';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { _Constructor } from '@angular/material/core';
 import { DataSource } from '@angular/cdk/collections';
-import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { HasTabIndex } from '@angular/material/core';
@@ -34,16 +33,12 @@ import { TreeControl } from '@angular/cdk/tree';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
-export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, DoCheck, OnDestroy, OnInit {
+export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
     constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, differs: IterableDiffers, tabIndex: string);
-    get disabled(): any;
-    set disabled(value: any);
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
+    get disabled(): boolean;
+    set disabled(value: BooleanInput);
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -120,14 +115,8 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
 }
 
 // @public
-export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K> implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
+export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K> implements CanDisable, HasTabIndex, OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, tabIndex: string);
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: NumberInput;
-    // (undocumented)
-    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -166,7 +155,7 @@ export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
     get indent(): number | string;
     set indent(indent: number | string);
     get level(): number;
-    set level(value: number);
+    set level(value: NumberInput);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodePadding<any, any>, "[matTreeNodePadding]", never, { "level": "matTreeNodePadding"; "indent": "matTreeNodePaddingIndent"; }, {}, never>;
     // (undocumented)
@@ -175,9 +164,6 @@ export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
 
 // @public
 export class MatTreeNodeToggle<T, K = T> extends CdkTreeNodeToggle<T, K> {
-    // (undocumented)
-    get recursive(): boolean;
-    set recursive(value: boolean);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeToggle<any, any>, "[matTreeNodeToggle]", never, { "recursive": "matTreeNodeToggleRecursive"; }, {}, never>;
     // (undocumented)

@@ -1,17 +1,20 @@
+@use '@angular/cdk';
+@use '@angular/material' as mat;
 @use '@material/ripple' as mdc-ripple;
 @use '@material/tab' as mdc-tab;
 @use '@material/tab-indicator' as mdc-tab-indicator;
 @use 'sass:map';
-@use '../../material/core/style/vendor-prefixes';
-@use '../../cdk/a11y';
+
 @use '../mdc-helpers/mdc-helpers';
 
 $mat-tab-animation-duration: 500ms !default;
 
 // Combines the various structural styles we need for the tab group and tab nav bar.
 @mixin structural-styles {
-  @include mdc-tab.without-ripple($query: mdc-helpers.$mat-base-styles-query);
-  @include mdc-tab-indicator.core-styles($query: mdc-helpers.$mat-base-styles-query);
+  @include mdc-helpers.disable-fallback-declarations {
+    @include mdc-tab.static-styles($query: mdc-helpers.$mat-base-styles-query);
+    @include mdc-tab-indicator.core-styles($query: mdc-helpers.$mat-base-styles-query);
+  }
 
   .mat-mdc-tab-ripple {
     position: absolute;
@@ -49,6 +52,13 @@ $mat-tab-animation-duration: 500ms !default;
     pointer-events: none;
   }
 
+  // Required for `fitInkBarToContent` to work. This used to be included with MDC's `without-ripple`
+  // mixin, but that no longer appears to be the case with `static-styles`. Since the latter is
+  // ~10kb smaller, we include this one extra style ourselves.
+  .mdc-tab__content {
+    @include mdc-tab-indicator.surface;
+  }
+
   // We need to handle the hover and focus indication ourselves, because we don't use MDC's ripple.
   &:hover .mdc-tab__ripple::before {
     opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
@@ -62,7 +72,7 @@ $mat-tab-animation-duration: 500ms !default;
 
     // The usual focus indication is color-based so it won't show up in
     // high contrast mode. Add an outline which is a bit more visible.
-    @include a11y.high-contrast {
+    @include cdk.high-contrast {
       $outline-width: 2px;
       outline: dotted $outline-width;
       outline-offset: -$outline-width; // Not supported on IE, but looks better everywhere else.
@@ -85,7 +95,7 @@ $mat-tab-animation-duration: 500ms !default;
   }
 
   .mat-mdc-tab-header-pagination {
-    @include vendor-prefixes.user-select(none);
+    @include mat.private-user-select(none);
     position: relative;
     display: none;
     justify-content: center;
@@ -95,6 +105,15 @@ $mat-tab-animation-duration: 500ms !default;
     z-index: 2;
     -webkit-tap-highlight-color: transparent;
     touch-action: none;
+    box-sizing: content-box;
+    background: none;
+    border: none;
+    outline: 0;
+    padding: 0;
+
+    &::-moz-focus-inner {
+      border: 0;
+    }
 
     .mat-ripple-element {
       opacity: map.get(mdc-ripple.$dark-ink-opacities, press);
@@ -126,7 +145,6 @@ $mat-tab-animation-duration: 500ms !default;
   .mat-mdc-tab-header-pagination-chevron {
     border-style: solid;
     border-width: 2px 2px 0 0;
-    content: '';
     height: 8px;
     width: 8px;
   }

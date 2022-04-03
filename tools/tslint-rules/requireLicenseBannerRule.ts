@@ -1,12 +1,16 @@
 import * as path from 'path';
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import minimatch from 'minimatch';
-
-const buildConfig = require('../../build-config');
+import ts from 'typescript';
 
 /** License banner that is placed at the top of every public TypeScript file. */
-const licenseBanner = buildConfig.licenseBanner;
+const licenseBanner = `/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */`;
 
 /** Failure message that will be shown if a license banner is missing. */
 const ERROR_MESSAGE =
