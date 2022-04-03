@@ -73,16 +73,14 @@ export abstract class CdkMenuBase
     super();
   }
 
-  override ngAfterContentInit() {
-    super.ngAfterContentInit();
+  ngAfterContentInit() {
     this._setKeyManager();
     this._subscribeToHasFocus();
     this._subscribeToMenuOpen();
     this._subscribeToMenuStackClosed();
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
+  ngOnDestroy() {
     this.destroyed.next();
     this.destroyed.complete();
   }
