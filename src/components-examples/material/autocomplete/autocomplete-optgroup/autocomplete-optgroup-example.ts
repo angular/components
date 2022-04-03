@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
 
@@ -19,10 +19,10 @@ export const _filter = (opt: string[], value: string): string[] => {
  */
 @Component({
   selector: 'autocomplete-optgroup-example',
-  templateUrl: './autocomplete-optgroup-example.html',
+  templateUrl: 'autocomplete-optgroup-example.html',
 })
 export class AutocompleteOptgroupExample implements OnInit {
-  stateForm: FormGroup = this._formBuilder.group({
+  stateForm: UntypedFormGroup = this._formBuilder.group({
     stateGroup: '',
   });
 
@@ -125,7 +125,7 @@ export class AutocompleteOptgroupExample implements OnInit {
 
   stateGroupOptions: Observable<StateGroup[]>;
 
-  constructor(private _formBuilder: FormBuilder) {}
+  constructor(private _formBuilder: UntypedFormBuilder) {}
 
   ngOnInit() {
     this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges.pipe(

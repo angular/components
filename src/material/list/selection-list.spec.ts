@@ -1,32 +1,32 @@
-import {DOWN_ARROW, SPACE, ENTER, UP_ARROW, HOME, END, A, D, TAB} from '@angular/cdk/keycodes';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {A, D, DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
-  dispatchFakeEvent,
   dispatchEvent,
+  dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../cdk/testing/private';
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
-  ChangeDetectionStrategy,
   QueryList,
   ViewChildren,
 } from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
   fakeAsync,
-  TestBed,
-  tick,
   flush,
   inject,
+  TestBed,
+  tick,
+  waitForAsync,
 } from '@angular/core/testing';
-import {MatRipple, defaultRippleAnimationConfig, ThemePalette} from '@angular/material/core';
+import {UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {MatListModule, MatListOption, MatSelectionList, MatSelectionListChange} from './index';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {FocusMonitor} from '@angular/cdk/a11y';
 
 describe('MatSelectionList without forms', () => {
   describe('with list option', () => {
@@ -34,34 +34,29 @@ describe('MatSelectionList without forms', () => {
     let listOptions: DebugElement[];
     let selectionList: DebugElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [
-            SelectionListWithListOptions,
-            SelectionListWithCheckboxPositionAfter,
-            SelectionListWithListDisabled,
-            SelectionListWithOnlyOneOption,
-            SelectionListWithIndirectChildOptions,
-            SelectionListWithSelectedOptionAndValue,
-            SelectionListWithIndirectDescendantLines,
-          ],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithListOptions,
+          SelectionListWithCheckboxPositionAfter,
+          SelectionListWithListDisabled,
+          SelectionListWithOnlyOneOption,
+          SelectionListWithIndirectChildOptions,
+          SelectionListWithSelectedOptionAndValue,
+        ],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(SelectionListWithListOptions);
-        fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SelectionListWithListOptions);
+      fixture.detectChanges();
 
-        listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
-        selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
-      }),
-    );
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+    }));
 
     it('should be able to set a value on a list option', () => {
       const optionValues = ['inbox', 'starred', 'sent-mail', 'archive', 'drafts'];
@@ -771,17 +766,20 @@ describe('MatSelectionList without forms', () => {
       const rippleTarget = fixture.nativeElement.querySelector(
         '.mat-list-option:not(.mat-list-item-disabled) .mat-list-item-content',
       );
-      const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      // Flush the ripple enter animation.
+      dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
         .withContext('Expected ripples to be enabled by default.')
         .toBe(1);
 
-      // Wait for the ripples to go away.
-      tick(enterDuration + exitDuration);
+      // Flush the ripple exit animation.
+      dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
+
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
         .withContext('Expected ripples to go away.')
         .toBe(0);
@@ -806,14 +804,6 @@ describe('MatSelectionList without forms', () => {
       expect(listItemEl.componentInstance.value).toBe(componentFixture.componentInstance.itemValue);
     });
 
-    it('should pick up indirect descendant lines', () => {
-      const componentFixture = TestBed.createComponent(SelectionListWithIndirectDescendantLines);
-      componentFixture.detectChanges();
-
-      const option = componentFixture.nativeElement.querySelector('mat-list-option');
-      expect(option.classList).toContain('mat-2-line');
-    });
-
     it('should have a focus indicator', () => {
       const optionNativeElements = listOptions.map(option => option.nativeElement);
 
@@ -828,25 +818,21 @@ describe('MatSelectionList without forms', () => {
     let listItemEl: DebugElement;
     let selectionList: DebugElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [SelectionListWithSelectedOption],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithSelectedOption],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(SelectionListWithSelectedOption);
-        listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
-        selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
-        fixture.detectChanges();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SelectionListWithSelectedOption);
+      listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      fixture.detectChanges();
+    }));
 
     it('should set its initial selected state in the selectedOptions', () => {
       let optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
@@ -860,16 +846,14 @@ describe('MatSelectionList without forms', () => {
     let selectionList: MatSelectionList;
     let listOption: MatListOption;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [SelectionListWithChangingOptionValue],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithChangingOptionValue],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SelectionListWithChangingOptionValue);
@@ -895,29 +879,25 @@ describe('MatSelectionList without forms', () => {
     let listOptionEl: HTMLElement;
     let listOption: MatListOption;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [SelectionListWithDisabledOption],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithDisabledOption],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(SelectionListWithDisabledOption);
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SelectionListWithDisabledOption);
 
-        const listOptionDebug = fixture.debugElement.query(By.directive(MatListOption))!;
+      const listOptionDebug = fixture.debugElement.query(By.directive(MatListOption))!;
 
-        listOption = listOptionDebug.componentInstance;
-        listOptionEl = listOptionDebug.nativeElement;
+      listOption = listOptionDebug.componentInstance;
+      listOptionEl = listOptionDebug.nativeElement;
 
-        fixture.detectChanges();
-      }),
-    );
+      fixture.detectChanges();
+    }));
 
     it('should disable ripples for disabled option', () => {
       expect(listOption._isRippleDisabled())
@@ -947,30 +927,26 @@ describe('MatSelectionList without forms', () => {
     let listOption: DebugElement[];
     let selectionList: DebugElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [
-            SelectionListWithListOptions,
-            SelectionListWithCheckboxPositionAfter,
-            SelectionListWithListDisabled,
-            SelectionListWithOnlyOneOption,
-          ],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithListOptions,
+          SelectionListWithCheckboxPositionAfter,
+          SelectionListWithListDisabled,
+          SelectionListWithOnlyOneOption,
+        ],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(SelectionListWithListDisabled);
-        listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
-        selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
-        fixture.detectChanges();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SelectionListWithListDisabled);
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      fixture.detectChanges();
+    }));
 
     it('should not allow selection on disabled selection-list', () => {
       let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
@@ -1010,28 +986,24 @@ describe('MatSelectionList without forms', () => {
   describe('with checkbox position after', () => {
     let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [
-            SelectionListWithListOptions,
-            SelectionListWithCheckboxPositionAfter,
-            SelectionListWithListDisabled,
-            SelectionListWithOnlyOneOption,
-          ],
-        });
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithListOptions,
+          SelectionListWithCheckboxPositionAfter,
+          SelectionListWithListDisabled,
+          SelectionListWithOnlyOneOption,
+        ],
+      });
 
-        TestBed.compileComponents();
-      }),
-    );
+      TestBed.compileComponents();
+    }));
 
-    beforeEach(
-      waitForAsync(() => {
-        fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
-        fixture.detectChanges();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
+      fixture.detectChanges();
+    }));
 
     it('should be able to customize checkbox position', () => {
       let listItemContent = fixture.debugElement.query(By.css('.mat-list-item-content'))!;
@@ -1040,14 +1012,12 @@ describe('MatSelectionList without forms', () => {
   });
 
   describe('with list item elements', () => {
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [SelectionListWithAvatar, SelectionListWithIcon],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithAvatar, SelectionListWithIcon],
+      }).compileComponents();
+    }));
 
     it('should add a class to reflect that it has an avatar', () => {
       const fixture = TestBed.createComponent(SelectionListWithIcon);
@@ -1071,20 +1041,18 @@ describe('MatSelectionList without forms', () => {
     let listOptions: DebugElement[];
     let selectionList: DebugElement;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [SelectionListWithListOptions],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithListOptions],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(SelectionListWithListOptions);
-        fixture.componentInstance.multiple = false;
-        listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
-        selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
-        fixture.detectChanges();
-      }),
-    );
+      fixture = TestBed.createComponent(SelectionListWithListOptions);
+      fixture.componentInstance.multiple = false;
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      fixture.detectChanges();
+    }));
 
     it('should select one option at a time', () => {
       const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
@@ -1202,20 +1170,18 @@ describe('MatSelectionList without forms', () => {
     let optionElement: HTMLElement;
     let option: MatListOption;
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatListModule],
-          declarations: [ListOptionWithTwoWayBinding],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [ListOptionWithTwoWayBinding],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(ListOptionWithTwoWayBinding);
-        fixture.detectChanges();
-        const optionDebug = fixture.debugElement.query(By.directive(MatListOption));
-        option = optionDebug.componentInstance;
-        optionElement = optionDebug.nativeElement;
-      }),
-    );
+      fixture = TestBed.createComponent(ListOptionWithTwoWayBinding);
+      fixture.detectChanges();
+      const optionDebug = fixture.debugElement.query(By.directive(MatListOption));
+      option = optionDebug.componentInstance;
+      optionElement = optionDebug.nativeElement;
+    }));
 
     it('should sync the value from the view to the option', () => {
       expect(option.selected).toBe(false);
@@ -1238,23 +1204,21 @@ describe('MatSelectionList without forms', () => {
 });
 
 describe('MatSelectionList with forms', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, FormsModule, ReactiveFormsModule],
-        declarations: [
-          SelectionListWithModel,
-          SelectionListWithFormControl,
-          SelectionListWithPreselectedOption,
-          SelectionListWithPreselectedOptionAndModel,
-          SelectionListWithPreselectedFormControlOnPush,
-          SelectionListWithCustomComparator,
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatListModule, FormsModule, ReactiveFormsModule],
+      declarations: [
+        SelectionListWithModel,
+        SelectionListWithFormControl,
+        SelectionListWithPreselectedOption,
+        SelectionListWithPreselectedOptionAndModel,
+        SelectionListWithPreselectedFormControlOnPush,
+        SelectionListWithCustomComparator,
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('and ngModel', () => {
     let fixture: ComponentFixture<SelectionListWithModel>;
@@ -1832,7 +1796,7 @@ class SelectionListWithModel {
   `,
 })
 class SelectionListWithFormControl {
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
   renderList = true;
   renderExtraOption = false;
 }
@@ -1869,7 +1833,7 @@ class SelectionListWithPreselectedOptionAndModel {
 })
 class SelectionListWithPreselectedFormControlOnPush {
   opts = ['opt1', 'opt2', 'opt3'];
-  formControl = new FormControl(['opt2']);
+  formControl = new UntypedFormControl(['opt2']);
 }
 
 @Component({
@@ -1941,20 +1905,6 @@ class SelectionListWithIcon {}
 class SelectionListWithIndirectChildOptions {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
 }
-
-// Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
-@Component({
-  template: `
-  <mat-selection-list>
-    <mat-list-option>
-      <ng-container [ngSwitch]="true">
-        <h3 mat-line>Item</h3>
-        <p mat-line>Item description</p>
-      </ng-container>
-    </mat-list-option>
-  </mat-selection-list>`,
-})
-class SelectionListWithIndirectDescendantLines {}
 
 @Component({
   template: `

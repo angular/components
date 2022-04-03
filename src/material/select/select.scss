@@ -1,9 +1,10 @@
 @use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/style/menu-common';
 @use '../core/style/list-common';
 @use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
-@use '../../cdk/a11y';
 
 $arrow-size: 5px !default;
 $arrow-margin: 4px !default;
@@ -19,10 +20,12 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
 }
 
 .mat-select-trigger {
-  display: inline-table;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
+  width: 100%;
 
   .mat-select-disabled & {
     @include vendor-prefixes.user-select(none);
@@ -31,8 +34,6 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
 }
 
 .mat-select-value {
-  display: table-cell;
-  max-width: 0;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -44,8 +45,10 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
 }
 
 .mat-select-arrow-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+  height: 16px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
 
   // When used in a box appearance form-field the arrow should be shifted up 50%.
   .mat-form-field-appearance-fill & {
@@ -83,6 +86,13 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
   border-right: $arrow-size solid transparent;
   border-top: $arrow-size solid;
   margin: 0 $arrow-margin;
+
+  // On Safari the arrow won't necessarily get redrawn when the form field is focused or blurred,
+  // which means that its highlighted styling will be stuck in an incorrect state. We can get
+  // Safari to redraw it by adding a transform.
+  .mat-form-field.mat-focused & {
+    transform: translateX(0);
+  }
 }
 
 .mat-select-panel-wrap {
@@ -100,7 +110,7 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
   border-radius: 4px;
   outline: 0;
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
 }

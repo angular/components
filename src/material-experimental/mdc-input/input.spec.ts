@@ -1,4 +1,3 @@
-import {Platform, PlatformModule} from '@angular/cdk/platform';
 import {dispatchFakeEvent, wrappedErrorMessage} from '../../cdk/testing/private';
 import {
   ChangeDetectionStrategy,
@@ -11,8 +10,8 @@ import {
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {
-  FormControl,
-  FormGroup,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   FormsModule,
   NgForm,
@@ -32,11 +31,13 @@ import {
   MatFormField,
   MatFormFieldAppearance,
   MatFormFieldModule,
+  SubscriptSizing,
 } from '@angular/material-experimental/mdc-form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
+import {getSupportedInputTypes} from '@angular/cdk/platform';
 
 describe('MatMdcInput without forms', () => {
   it('should default to floating labels', fakeAsync(() => {
@@ -68,10 +69,9 @@ describe('MatMdcInput without forms', () => {
 
   it('should not be treated as empty if type is date', fakeAsync(() => {
     const fixture = createComponent(MatInputDateTestController);
-    const platform = TestBed.inject(Platform);
     fixture.detectChanges();
 
-    if (!(platform.TRIDENT || (platform.SAFARI && !platform.IOS))) {
+    if (getSupportedInputTypes().has('date')) {
       const formField = fixture.debugElement.query(By.directive(MatFormField))!
         .componentInstance as MatFormField;
       expect(formField).toBeTruthy();
@@ -79,13 +79,11 @@ describe('MatMdcInput without forms', () => {
     }
   }));
 
-  // Safari Desktop and IE don't support type="date" and fallback to type="text".
-  it('should be treated as empty if type is date in Safari Desktop or IE', fakeAsync(() => {
+  it('should be treated as empty if type is date on unsupported browser', fakeAsync(() => {
     const fixture = createComponent(MatInputDateTestController);
-    const platform = TestBed.inject(Platform);
     fixture.detectChanges();
 
-    if (platform.TRIDENT || (platform.SAFARI && !platform.IOS)) {
+    if (!getSupportedInputTypes().has('date')) {
       const formField = fixture.debugElement.query(By.directive(MatFormField))!
         .componentInstance as MatFormField;
       expect(formField).toBeTruthy();
@@ -344,7 +342,7 @@ describe('MatMdcInput without forms', () => {
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
     expect(label.nativeElement.textContent).toBe('hello');
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   }));
 
   it('should show the required star when using a FormControl', fakeAsync(() => {
@@ -354,7 +352,7 @@ describe('MatMdcInput without forms', () => {
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
     expect(label.nativeElement.textContent).toBe('Hello');
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   }));
 
   it('should not hide the required star if input is disabled', () => {
@@ -366,7 +364,7 @@ describe('MatMdcInput without forms', () => {
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
     expect(label.nativeElement.textContent).toBe('hello');
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   });
 
   it('hide label required star when set to hide the required marker', fakeAsync(() => {
@@ -375,13 +373,13 @@ describe('MatMdcInput without forms', () => {
 
     const label = fixture.debugElement.query(By.css('label'))!;
     expect(label).not.toBeNull();
-    expect(label.nativeElement.classList).toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
     expect(label.nativeElement.textContent).toBe('hello');
 
     fixture.componentInstance.hideRequiredMarker = true;
     fixture.detectChanges();
 
-    expect(label.nativeElement.classList).not.toContain('mdc-floating-label--required');
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeFalsy();
     expect(label.nativeElement.textContent).toBe('hello');
   }));
 
@@ -883,6 +881,17 @@ describe('MatMdcInput without forms', () => {
 
     expect(formField.classList).not.toContain('mat-mdc-form-field-type-mat-native-select');
   });
+
+  it('should preserve the native placeholder on a non-legacy appearance', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithLabelAndPlaceholder);
+    fixture.componentInstance.floatLabel = 'auto';
+    fixture.componentInstance.appearance = 'outline';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('input').getAttribute('placeholder')).toBe(
+      'Placeholder',
+    );
+  }));
 
   it(
     'should use the native input value when determining whether ' +
@@ -1406,6 +1415,78 @@ describe('MatFormField default options', () => {
     expect(fixture.componentInstance.formField.hideRequiredMarker).toBe(true);
     expect(fixture.componentInstance.formField.appearance).toBe('outline');
   });
+
+  it('should be able to change the default color', () => {
+    const fixture = createComponent(MatInputSimple, [
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {color: 'accent'},
+      },
+    ]);
+    fixture.detectChanges();
+    const formField = fixture.nativeElement.querySelector('.mat-mdc-form-field');
+    expect(formField.classList).toContain('mat-accent');
+  });
+
+  it('defaults subscriptSizing to false', () => {
+    const fixture = createComponent(MatInputWithSubscriptSizing);
+    fixture.detectChanges();
+
+    const subscriptElement = fixture.nativeElement.querySelector(
+      '.mat-mdc-form-field-subscript-wrapper',
+    );
+
+    expect(fixture.componentInstance.formField.subscriptSizing).toBe('fixed');
+    expect(subscriptElement.classList.contains('mat-mdc-form-field-subscript-dynamic-size')).toBe(
+      false,
+    );
+
+    fixture.componentInstance.sizing = 'dynamic';
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.formField.subscriptSizing).toBe('dynamic');
+    expect(subscriptElement.classList.contains('mat-mdc-form-field-subscript-dynamic-size')).toBe(
+      true,
+    );
+  });
+
+  it('changes the default value of subscriptSizing (undefined input)', () => {
+    const fixture = createComponent(MatInputWithSubscriptSizing, [
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {
+          subscriptSizing: 'dynamic',
+        },
+      },
+    ]);
+
+    fixture.detectChanges();
+    expect(fixture.componentInstance.formField.subscriptSizing).toBe('dynamic');
+    expect(
+      fixture.nativeElement
+        .querySelector('.mat-mdc-form-field-subscript-wrapper')
+        .classList.contains('mat-mdc-form-field-subscript-dynamic-size'),
+    ).toBe(true);
+  });
+
+  it('changes the default value of subscriptSizing (no input)', () => {
+    const fixture = createComponent(MatInputWithAppearance, [
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {
+          subscriptSizing: 'dynamic',
+        },
+      },
+    ]);
+
+    fixture.detectChanges();
+    expect(fixture.componentInstance.formField.subscriptSizing).toBe('dynamic');
+    expect(
+      fixture.nativeElement
+        .querySelector('.mat-mdc-form-field-subscript-wrapper')
+        .classList.contains('mat-mdc-form-field-subscript-dynamic-size'),
+    ).toBe(true);
+  });
 });
 
 function configureTestingModule(
@@ -1425,7 +1506,6 @@ function configureTestingModule(
       MatIconModule,
       MatInputModule,
       animations ? BrowserAnimationsModule : NoopAnimationsModule,
-      PlatformModule,
       ReactiveFormsModule,
       ...imports,
     ],
@@ -1509,7 +1589,7 @@ class MatInputLabelRequiredTestComponent {
     </mat-form-field>`,
 })
 class MatInputWithFormControl {
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({
@@ -1540,7 +1620,7 @@ class MatInputWithSubscriptAndAriaDescribedBy {
   label: string = '';
   userDescribedByValue: string = '';
   showError = false;
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`})
@@ -1693,7 +1773,7 @@ class MatInputMissingMatInputTestController {}
 })
 class MatInputWithFormErrorMessages {
   @ViewChild('form') form: NgForm;
-  formControl = new FormControl('incorrect', [
+  formControl = new UntypedFormControl('incorrect', [
     Validators.required,
     Validators.pattern(/valid value/),
   ]);
@@ -1714,8 +1794,8 @@ class MatInputWithFormErrorMessages {
   `,
 })
 class MatInputWithCustomErrorStateMatcher {
-  formGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.pattern(/valid value/)]),
+  formGroup = new UntypedFormGroup({
+    name: new UntypedFormControl('', [Validators.required, Validators.pattern(/valid value/)]),
   });
 
   errorState = false;
@@ -1738,8 +1818,11 @@ class MatInputWithCustomErrorStateMatcher {
 })
 class MatInputWithFormGroupErrorMessages {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
-  formGroup = new FormGroup({
-    name: new FormControl('incorrect', [Validators.required, Validators.pattern(/valid value/)]),
+  formGroup = new UntypedFormGroup({
+    name: new UntypedFormControl('incorrect', [
+      Validators.required,
+      Validators.pattern(/valid value/),
+    ]),
   });
 }
 
@@ -1777,7 +1860,7 @@ class MatInputWithNgIf {
   `,
 })
 class MatInputOnPush {
-  formControl = new FormControl('');
+  formControl = new UntypedFormControl('');
 }
 
 @Component({
@@ -1792,7 +1875,7 @@ class MatInputWithLabel {}
 
 @Component({
   template: `
-    <mat-form-field [floatLabel]="floatLabel">
+    <mat-form-field [floatLabel]="floatLabel" [appearance]="appearance">
       <mat-label>Label</mat-label>
       <input matInput placeholder="Placeholder">
     </mat-form-field>
@@ -1800,6 +1883,7 @@ class MatInputWithLabel {}
 })
 class MatInputWithLabelAndPlaceholder {
   floatLabel: FloatLabelType;
+  appearance: MatFormFieldAppearance;
 }
 
 @Component({
@@ -1813,6 +1897,19 @@ class MatInputWithLabelAndPlaceholder {
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField: MatFormField;
   appearance: MatFormFieldAppearance;
+}
+
+@Component({
+  template: `
+    <mat-form-field [subscriptSizing]="sizing">
+      <mat-label>My Label</mat-label>
+      <input matInput placeholder="Placeholder" required>
+    </mat-form-field>
+  `,
+})
+class MatInputWithSubscriptSizing {
+  @ViewChild(MatFormField) formField: MatFormField;
+  sizing: SubscriptSizing;
 }
 
 @Component({
@@ -1947,5 +2044,14 @@ class MatInputInsideOutsideFormField {}
     </mat-form-field>`,
 })
 class MatInputWithRequiredFormControl {
-  formControl = new FormControl('', [Validators.required]);
+  formControl = new UntypedFormControl('', [Validators.required]);
 }
+
+@Component({
+  template: `
+    <mat-form-field>
+      <input matInput>
+    </mat-form-field>
+  `,
+})
+class MatInputSimple {}

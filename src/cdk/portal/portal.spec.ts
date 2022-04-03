@@ -6,7 +6,6 @@ import {
   ComponentRef,
   ElementRef,
   Injector,
-  NgModule,
   Optional,
   QueryList,
   TemplateRef,
@@ -24,7 +23,16 @@ import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
 
 describe('Portals', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({imports: [PortalModule, PortalTestModule]}).compileComponents();
+    TestBed.configureTestingModule({
+      imports: [PortalModule, CommonModule],
+      declarations: [
+        PortalTestApp,
+        UnboundPortalTestApp,
+        ArbitraryViewContainerRefComponent,
+        PizzaMsg,
+        SaveParentNodeOnInit,
+      ],
+    }).compileComponents();
   });
 
   describe('CdkPortalOutlet', () => {
@@ -58,7 +66,7 @@ describe('Portals', () => {
       );
     });
 
-    it('should load a template into the portal', () => {
+    it('should load a template into the portal outlet', () => {
       let testAppComponent = fixture.componentInstance;
       let hostContainer = fixture.nativeElement.querySelector('.portal-container');
       let templatePortal = new TemplatePortal(testAppComponent.templateRef, null!);
@@ -68,6 +76,36 @@ describe('Portals', () => {
 
       // Expect that the content of the attached portal is present and no context is projected
       expect(hostContainer.textContent).toContain('Banana');
+      expect(hostContainer.textContent).toContain('Pizza');
+      expect(hostContainer.textContent).not.toContain('Chocolate');
+      expect(testAppComponent.portalOutlet.portal).toBe(templatePortal);
+
+      // We can't test whether it's an instance of an `EmbeddedViewRef` so
+      // we verify that it's defined and that it's not a ComponentRef.
+      expect(testAppComponent.portalOutlet.attachedRef instanceof ComponentRef).toBe(false);
+      expect(testAppComponent.portalOutlet.attachedRef).toBeTruthy();
+      expect(testAppComponent.attachedSpy).toHaveBeenCalledWith(
+        testAppComponent.portalOutlet.attachedRef,
+      );
+    });
+
+    it('should load a template with a custom injector into the portal outlet', () => {
+      const testAppComponent = fixture.componentInstance;
+      const hostContainer = fixture.nativeElement.querySelector('.portal-container');
+      const templatePortal = new TemplatePortal(
+        testAppComponent.templateRef,
+        null!,
+        undefined,
+        new ChocolateInjector(fixture.componentInstance.injector),
+      );
+
+      testAppComponent.selectedPortal = templatePortal;
+      fixture.detectChanges();
+
+      // Expect that the content of the attached portal is present and no context is projected
+      expect(hostContainer.textContent).toContain('Banana');
+      expect(hostContainer.textContent).toContain('Pizza');
+      expect(hostContainer.textContent).toContain('Chocolate');
       expect(testAppComponent.portalOutlet.portal).toBe(templatePortal);
 
       // We can't test whether it's an instance of an `EmbeddedViewRef` so
@@ -256,6 +294,8 @@ describe('Portals', () => {
       // Expect that the content of the attached portal is present.
       let hostContainer = fixture.nativeElement.querySelector('.portal-container');
       expect(hostContainer.textContent).toContain('Banana');
+      expect(hostContainer.textContent).toContain('Pizza');
+      expect(hostContainer.textContent).not.toContain('Chocolate');
 
       // When updating the binding value.
       testAppComponent.fruit = 'Mango';
@@ -742,7 +782,7 @@ class ArbitraryViewContainerRefComponent {
   <ng-template cdk-portal>Cake</ng-template>
 
   <div *cdk-portal>Pie</div>
-  <ng-template cdk-portal let-data> {{fruit}} - {{ data?.status }} </ng-template>
+  <ng-template cdk-portal let-data> {{fruit}} - {{ data?.status }}! <pizza-msg></pizza-msg></ng-template>
 
   <ng-template cdk-portal>
     <ul>
@@ -750,7 +790,7 @@ class ArbitraryViewContainerRefComponent {
     </ul>
   </ng-template>
 
-  <ng-template #templateRef let-data> {{fruit}} - {{ data?.status }}!</ng-template>
+  <ng-template #templateRef let-data> {{fruit}} - {{ data?.status }}! <pizza-msg></pizza-msg></ng-template>
 
   <div class="dom-portal-parent">
     <div #domPortalContent>
@@ -802,20 +842,3 @@ class PortalTestApp {
 class UnboundPortalTestApp {
   @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 }
-
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-const TEST_COMPONENTS = [
-  PortalTestApp,
-  UnboundPortalTestApp,
-  ArbitraryViewContainerRefComponent,
-  PizzaMsg,
-];
-
-@NgModule({
-  imports: [CommonModule, PortalModule],
-  exports: TEST_COMPONENTS,
-  declarations: [...TEST_COMPONENTS, SaveParentNodeOnInit],
-  entryComponents: TEST_COMPONENTS,
-})
-class PortalTestModule {}

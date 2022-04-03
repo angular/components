@@ -8,6 +8,7 @@
 
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {Platform, _getShadowRoot} from '@angular/cdk/platform';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -19,9 +20,13 @@ import {
   Optional,
   ViewEncapsulation,
   OnInit,
+  ChangeDetectorRef,
+  OnDestroy,
+  NgZone,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {Subscription} from 'rxjs';
 
 /** Possible mode for a progress spinner. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -49,6 +54,8 @@ const _MatProgressSpinnerBase = mixinColor(
 
 /** Default `mat-progress-spinner` options that can be overridden. */
 export interface MatProgressSpinnerDefaultOptions {
+  /** Default color of the spinner. */
+  color?: ThemePalette;
   /** Diameter of the spinner. */
   diameter?: number;
   /** Width of the spinner's stroke. */
@@ -104,11 +111,12 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
  * `<mat-progress-spinner>` component.
  */
 @Component({
-  selector: 'mat-progress-spinner',
+  selector: 'mat-progress-spinner, mat-spinner',
   exportAs: 'matProgressSpinner',
   host: {
     'role': 'progressbar',
-    'class': 'mat-progress-spinner',
+    // `mat-spinner` is here for backward compatibility.
+    'class': 'mat-progress-spinner mat-spinner',
     // set tab index to -1 so screen readers will read the aria-label
     // Note: there is a known issue with JAWS that does not read progressbar aria labels on FireFox
     'tabindex': '-1',
@@ -126,10 +134,14 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnInit, CanColor {
+export class MatProgressSpinner
+  extends _MatProgressSpinnerBase
+  implements OnInit, OnDestroy, CanColor
+{
   private _diameter = BASE_SIZE;
   private _value = 0;
   private _strokeWidth: number;
+  private _resizeSubscription = Subscription.EMPTY;
 
   /**
    * Element to which we should add the generated style tags for the indeterminate animation.
@@ -157,7 +169,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
   get diameter(): number {
     return this._diameter;
   }
-  set diameter(size: number) {
+  set diameter(size: NumberInput) {
     this._diameter = coerceNumberProperty(size);
     this._spinnerAnimationLabel = this._getSpinnerAnimationLabel();
 
@@ -172,7 +184,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
   get strokeWidth(): number {
     return this._strokeWidth || this.diameter / 10;
   }
-  set strokeWidth(value: number) {
+  set strokeWidth(value: NumberInput) {
     this._strokeWidth = coerceNumberProperty(value);
   }
 
@@ -184,21 +196,25 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
   get value(): number {
     return this.mode === 'determinate' ? this._value : 0;
   }
-  set value(newValue: number) {
+  set value(newValue: NumberInput) {
     this._value = Math.max(0, Math.min(100, coerceNumberProperty(newValue)));
   }
 
   constructor(
     elementRef: ElementRef<HTMLElement>,
-    /**
-     * @deprecated `_platform` parameter no longer being used.
-     * @breaking-change 14.0.0
-     */
     _platform: Platform,
     @Optional() @Inject(DOCUMENT) private _document: any,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
     @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
     defaults?: MatProgressSpinnerDefaultOptions,
+    /**
+     * @deprecated `changeDetectorRef`, `viewportRuler` and `ngZone`
+     * parameters to become required.
+     * @breaking-change 14.0.0
+     */
+    changeDetectorRef?: ChangeDetectorRef,
+    viewportRuler?: ViewportRuler,
+    ngZone?: NgZone,
   ) {
     super(elementRef);
 
@@ -214,7 +230,15 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
     this._noopAnimations =
       animationMode === 'NoopAnimations' && !!defaults && !defaults._forceAnimations;
 
+    if (elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner') {
+      this.mode = 'indeterminate';
+    }
+
     if (defaults) {
+      if (defaults.color) {
+        this.color = this.defaultColor = defaults.color;
+      }
+
       if (defaults.diameter) {
         this.diameter = defaults.diameter;
       }
@@ -222,6 +246,22 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
       if (defaults.strokeWidth) {
         this.strokeWidth = defaults.strokeWidth;
       }
+    }
+
+    // Safari has an issue where the circle isn't positioned correctly when the page has a
+    // different zoom level from the default. This handler triggers a recalculation of the
+    // `transform-origin` when the page zoom level changes.
+    // See `_getCircleTransformOrigin` for more info.
+    // @breaking-change 14.0.0 Remove null checks for `_changeDetectorRef`,
+    // `viewportRuler` and `ngZone`.
+    if (_platform.isBrowser && _platform.SAFARI && viewportRuler && changeDetectorRef && ngZone) {
+      this._resizeSubscription = viewportRuler.change(150).subscribe(() => {
+        // When the window is resize while the spinner is in `indeterminate` mode, we
+        // have to mark for check so the transform origin of the circle can be recomputed.
+        if (this.mode === 'indeterminate') {
+          ngZone.run(() => changeDetectorRef.markForCheck());
+        }
+      });
     }
   }
 
@@ -234,6 +274,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
     this._styleRoot = _getShadowRoot(element) || this._document.head;
     this._attachStyleNode();
     element.classList.add('mat-progress-spinner-indeterminate-animation');
+  }
+
+  ngOnDestroy() {
+    this._resizeSubscription.unsubscribe();
   }
 
   /** The radius of the spinner, adjusted for stroke width. */
@@ -264,6 +308,16 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
   /** Stroke width of the circle in percent. */
   _getCircleStrokeWidth() {
     return (this.strokeWidth / this.diameter) * 100;
+  }
+
+  /** Gets the `transform-origin` for the inner circle element. */
+  _getCircleTransformOrigin(svg: HTMLElement): string {
+    // Safari has an issue where the `transform-origin` doesn't work as expected when the page
+    // has a different zoom level from the default. The problem appears to be that a zoom
+    // is applied on the `svg` node itself. We can work around it by calculating the origin
+    // based on the zoom level. On all other browsers the `currentScale` appears to always be 1.
+    const scale = ((svg as unknown as SVGSVGElement).currentScale ?? 1) * 50;
+    return `${scale}% ${scale}%`;
   }
 
   /** Dynamically generates a style tag containing the correct animation for this diameter. */
@@ -305,45 +359,5 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
     // The string of a float point number will include a period ‘.’ character,
     // which is not valid for a CSS animation-name.
     return this.diameter.toString().replace('.', '_');
-  }
-
-  static ngAcceptInputType_diameter: NumberInput;
-  static ngAcceptInputType_strokeWidth: NumberInput;
-  static ngAcceptInputType_value: NumberInput;
-}
-
-/**
- * `<mat-spinner>` component.
- *
- * This is a component definition to be used as a convenience reference to create an
- * indeterminate `<mat-progress-spinner>` instance.
- */
-@Component({
-  selector: 'mat-spinner',
-  host: {
-    'role': 'progressbar',
-    'mode': 'indeterminate',
-    'class': 'mat-spinner mat-progress-spinner',
-    '[class._mat-animation-noopable]': `_noopAnimations`,
-    '[style.width.px]': 'diameter',
-    '[style.height.px]': 'diameter',
-  },
-  inputs: ['color'],
-  templateUrl: 'progress-spinner.html',
-  styleUrls: ['progress-spinner.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-})
-export class MatSpinner extends MatProgressSpinner {
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    platform: Platform,
-    @Optional() @Inject(DOCUMENT) document: any,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-    @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-    defaults?: MatProgressSpinnerDefaultOptions,
-  ) {
-    super(elementRef, platform, document, animationMode, defaults);
-    this.mode = 'indeterminate';
   }
 }

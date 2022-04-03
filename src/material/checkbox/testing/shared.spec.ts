@@ -1,9 +1,8 @@
-import {Platform} from '@angular/cdk/platform';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {UntypedFormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatCheckboxHarness} from '@angular/material/checkbox/testing/checkbox-harness';
 
@@ -15,7 +14,6 @@ export function runHarnessTests(
   checkboxModule: typeof MatCheckboxModule,
   checkboxHarness: typeof MatCheckboxHarness,
 ) {
-  let platform: Platform;
   let fixture: ComponentFixture<CheckboxHarnessTest>;
   let loader: HarnessLoader;
 
@@ -25,7 +23,6 @@ export function runHarnessTests(
       declarations: [CheckboxHarnessTest],
     }).compileComponents();
 
-    platform = TestBed.inject(Platform);
     fixture = TestBed.createComponent(CheckboxHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -155,11 +152,6 @@ export function runHarnessTests(
   });
 
   it('should not toggle disabled checkbox', async () => {
-    if (platform.FIREFOX) {
-      // do run this test on firefox as click events on the label of a disabled checkbox
-      // cause the value to be changed. https://bugzilla.mozilla.org/show_bug.cgi?id=1540995
-      return;
-    }
     const disabledCheckbox = await loader.getHarness(checkboxHarness.with({label: 'Second'}));
     expect(await disabledCheckbox.isChecked()).toBe(false);
     await disabledCheckbox.toggle();
@@ -184,6 +176,6 @@ export function runHarnessTests(
   `,
 })
 class CheckboxHarnessTest {
-  ctrl = new FormControl(true);
+  ctrl = new UntypedFormControl(true);
   disabled = true;
 }

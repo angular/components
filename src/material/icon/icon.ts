@@ -21,9 +21,10 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {CanColor, ThemePalette, mixinColor} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 
@@ -35,6 +36,19 @@ const _MatIconBase = mixinColor(
   class {
     constructor(public _elementRef: ElementRef) {}
   },
+);
+
+/** Default options for `mat-icon`.  */
+export interface MatIconDefaultOptions {
+  /** Default color of the icon. */
+  color?: ThemePalette;
+  /** Font set that the icon is a part of. */
+  fontSet?: string;
+}
+
+/** Injection token to be used to override the default options for `mat-icon`. */
+export const MAT_ICON_DEFAULT_OPTIONS = new InjectionToken<MatIconDefaultOptions>(
+  'MAT_ICON_DEFAULT_OPTIONS',
 );
 
 /**
@@ -143,7 +157,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   get inline(): boolean {
     return this._inline;
   }
-  set inline(inline: boolean) {
+  set inline(inline: BooleanInput) {
     this._inline = coerceBooleanProperty(inline);
   }
   private _inline: boolean = false;
@@ -195,7 +209,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   }
   private _fontIcon: string;
 
-  private _previousFontSetClass: string;
+  private _previousFontSetClass: string[] = [];
   private _previousFontIconClass: string;
 
   _svgName: string | null;
@@ -216,8 +230,21 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     @Attribute('aria-hidden') ariaHidden: string,
     @Inject(MAT_ICON_LOCATION) private _location: MatIconLocation,
     private readonly _errorHandler: ErrorHandler,
+    @Optional()
+    @Inject(MAT_ICON_DEFAULT_OPTIONS)
+    defaults?: MatIconDefaultOptions,
   ) {
     super(elementRef);
+
+    if (defaults) {
+      if (defaults.color) {
+        this.color = this.defaultColor = defaults.color;
+      }
+
+      if (defaults.fontSet) {
+        this.fontSet = defaults.fontSet;
+      }
+    }
 
     // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
     // the right thing to do for the majority of icon use-cases.
@@ -294,15 +321,6 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _setSvgElement(svg: SVGElement) {
     this._clearSvgElement();
 
-    // Workaround for IE11 and Edge ignoring `style` tags inside dynamically-created SVGs.
-    // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10898469/
-    // Do this before inserting the element into the DOM, in order to avoid a style recalculation.
-    const styleTags = svg.querySelectorAll('style') as NodeListOf<HTMLStyleElement>;
-
-    for (let i = 0; i < styleTags.length; i++) {
-      styleTags[i].textContent += ' ';
-    }
-
     // Note: we do this fix here, rather than the icon registry, because the
     // references have to point to the URL at the time that the icon was created.
     const path = this._location.getPathname();
@@ -339,21 +357,17 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
 
     const elem: HTMLElement = this._elementRef.nativeElement;
-    const fontSetClass = this.fontSet
-      ? this._iconRegistry.classNameForFontAlias(this.fontSet)
-      : this._iconRegistry.getDefaultFontSetClass();
+    const fontSetClasses = (
+      this.fontSet
+        ? [this._iconRegistry.classNameForFontAlias(this.fontSet)]
+        : this._iconRegistry.getDefaultFontSetClass()
+    ).filter(className => className.length > 0);
 
-    if (fontSetClass != this._previousFontSetClass) {
-      if (this._previousFontSetClass) {
-        elem.classList.remove(this._previousFontSetClass);
-      }
-      if (fontSetClass) {
-        elem.classList.add(fontSetClass);
-      }
-      this._previousFontSetClass = fontSetClass;
-    }
+    this._previousFontSetClass.forEach(className => elem.classList.remove(className));
+    fontSetClasses.forEach(className => elem.classList.add(className));
+    this._previousFontSetClass = fontSetClasses;
 
-    if (this.fontIcon != this._previousFontIconClass) {
+    if (this.fontIcon !== this._previousFontIconClass) {
       if (this._previousFontIconClass) {
         elem.classList.remove(this._previousFontIconClass);
       }
@@ -448,6 +462,4 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
         );
     }
   }
-
-  static ngAcceptInputType_inline: BooleanInput;
 }

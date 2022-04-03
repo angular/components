@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ViewContainerRef, ComponentFactoryResolver} from '@angular/core';
+import {ViewContainerRef, ComponentFactoryResolver, Injector} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
+import {defaultParams} from './dialog-animations';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -42,6 +43,12 @@ export class MatDialogConfig<D = any> {
    * content will be rendered.
    */
   viewContainerRef?: ViewContainerRef;
+
+  /**
+   * Injector used for the instantiation of the component to be attached. If provided,
+   * takes precedence over the injector indirectly provided by `ViewContainerRef`.
+   */
+  injector?: Injector;
 
   /** ID for the dialog. If omitted, a unique one will be generated. */
   id?: string;
@@ -110,6 +117,9 @@ export class MatDialogConfig<D = any> {
    */
   restoreFocus?: boolean = true;
 
+  /** Whether to wait for the opening animation to finish before trapping focus. */
+  delayFocusTrap?: boolean = true;
+
   /** Scroll strategy to be used for the dialog. */
   scrollStrategy?: ScrollStrategy;
 
@@ -122,6 +132,12 @@ export class MatDialogConfig<D = any> {
 
   /** Alternate `ComponentFactoryResolver` to use when resolving the associated component. */
   componentFactoryResolver?: ComponentFactoryResolver;
+
+  /** Duration of the enter animation. Has to be a valid CSS value (e.g. 100ms). */
+  enterAnimationDuration?: string = defaultParams.params.enterAnimationDuration;
+
+  /** Duration of the exit animation. Has to be a valid CSS value (e.g. 50ms). */
+  exitAnimationDuration?: string = defaultParams.params.exitAnimationDuration;
 
   // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
 }

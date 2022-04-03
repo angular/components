@@ -36,17 +36,17 @@ import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-pa
 let _uniqueIdCounter = 0;
 
 /** Event object emitted by MatOption when selected or deselected. */
-export class MatOptionSelectionChange {
+export class MatOptionSelectionChange<T = any> {
   constructor(
     /** Reference to the option that emitted the event. */
-    public source: _MatOptionBase,
+    public source: _MatOptionBase<T>,
     /** Whether the change in the option's value was a result of a user action. */
     public isUserInput = false,
   ) {}
 }
 
 @Directive()
-export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDestroy {
+export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
   private _selected = false;
   private _active = false;
   private _disabled = false;
@@ -63,28 +63,28 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   }
 
   /** The form value of the option. */
-  @Input() value: any;
+  @Input() value: T;
 
   /** The unique ID of the option. */
   @Input() id: string = `mat-option-${_uniqueIdCounter++}`;
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() {
+  get disabled(): boolean {
     return (this.group && this.group.disabled) || this._disabled;
   }
-  set disabled(value: any) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
   /** Whether ripples for the option are disabled. */
-  get disableRipple() {
-    return this._parent && this._parent.disableRipple;
+  get disableRipple(): boolean {
+    return !!(this._parent && this._parent.disableRipple);
   }
 
   /** Event emitted when the option is selected or deselected. */
   // tslint:disable-next-line:no-output-on-prefix
-  @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+  @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange<T>>();
 
   /** Emits when the state of the option changes and any parents have to be notified. */
   readonly _stateChanges = new Subject<void>();
@@ -237,10 +237,8 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
 
   /** Emits the selection change event. */
   private _emitSelectionChangeEvent(isUserInput = false): void {
-    this.onSelectionChange.emit(new MatOptionSelectionChange(this, isUserInput));
+    this.onSelectionChange.emit(new MatOptionSelectionChange<T>(this, isUserInput));
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**
@@ -268,7 +266,7 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatOption extends _MatOptionBase {
+export class MatOption<T = any> extends _MatOptionBase<T> {
   constructor(
     element: ElementRef<HTMLElement>,
     changeDetectorRef: ChangeDetectorRef,

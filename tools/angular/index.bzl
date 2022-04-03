@@ -1,5 +1,5 @@
 load("//:packages.bzl", "ANGULAR_PACKAGES")
-load("//tools/esbuild:index.bzl", "esbuild")
+load("@npm//@angular/dev-infra-private/bazel/esbuild:index.bzl", "esbuild")
 load("@build_bazel_rules_nodejs//internal/linker:link_node_modules.bzl", "LinkerPackageMappingInfo")
 load("@build_bazel_rules_nodejs//:providers.bzl", "ExternalNpmPackageInfo", "JSModuleInfo")
 
@@ -23,9 +23,14 @@ def _linker_mapping_impl(ctx):
             sources = depset(ctx.files.srcs),
         ),
         LinkerPackageMappingInfo(
-            mappings = {
-                ctx.attr.module_name: "%s/%s" % (ctx.label.package, ctx.attr.subpath),
-            },
+            mappings = depset([
+                struct(
+                    package_name = ctx.attr.module_name,
+                    package_path = "",
+                    link_path = "%s/%s" % (ctx.label.package, ctx.attr.subpath),
+                ),
+            ]),
+            node_modules_roots = depset([]),
         ),
     ]
 

@@ -11,7 +11,8 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   typeInElement,
-} from '../../cdk/testing/private';
+  dispatchMouseEvent,
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,7 +35,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {UntypedFormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
@@ -163,23 +164,20 @@ describe('MatAutocomplete', () => {
         .toContain('California');
     });
 
-    it(
-      'should show the panel when the first open is after the initial zone stabilization',
-      waitForAsync(() => {
-        // Note that we're running outside the Angular zone, in order to be able
-        // to test properly without the subscription from `_subscribeToClosingActions`
-        // giving us a false positive.
-        fixture.ngZone!.runOutsideAngular(() => {
-          fixture.componentInstance.trigger.openPanel();
+    it('should show the panel when the first open is after the initial zone stabilization', waitForAsync(() => {
+      // Note that we're running outside the Angular zone, in order to be able
+      // to test properly without the subscription from `_subscribeToClosingActions`
+      // giving us a false positive.
+      fixture.ngZone!.runOutsideAngular(() => {
+        fixture.componentInstance.trigger.openPanel();
 
-          Promise.resolve().then(() => {
-            expect(fixture.componentInstance.panel.showPanel)
-              .withContext(`Expected panel to be visible.`)
-              .toBe(true);
-          });
+        Promise.resolve().then(() => {
+          expect(fixture.componentInstance.panel.showPanel)
+            .withContext(`Expected panel to be visible.`)
+            .toBe(true);
         });
-      }),
-    );
+      });
+    }));
 
     it('should close the panel when the user clicks away', fakeAsync(() => {
       dispatchFakeEvent(input, 'focusin');
@@ -558,13 +556,38 @@ describe('MatAutocomplete', () => {
     });
 
     it('should set aria-haspopup depending on whether the autocomplete is disabled', () => {
-      expect(input.getAttribute('aria-haspopup')).toBe('true');
+      expect(input.getAttribute('aria-haspopup')).toBe('listbox');
 
       fixture.componentInstance.autocompleteDisabled = true;
       fixture.detectChanges();
 
-      expect(input.getAttribute('aria-haspopup')).toBe('false');
+      expect(input.hasAttribute('aria-haspopup')).toBe(false);
     });
+
+    it('should close the panel when pressing escape', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+
+      input.focus();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.activeElement).withContext('Expected input to be focused.').toBe(input);
+      expect(trigger.panelOpen).withContext('Expected panel to be open.').toBe(true);
+
+      trigger.closePanel();
+      fixture.detectChanges();
+
+      expect(document.activeElement)
+        .withContext('Expected input to continue to be focused.')
+        .toBe(input);
+      expect(trigger.panelOpen).withContext('Expected panel to be closed.').toBe(false);
+
+      input.click();
+      flush();
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).withContext('Expected panel to reopen on click.').toBe(true);
+    }));
   });
 
   it('should not close the panel when clicking on the input', fakeAsync(() => {
@@ -1081,6 +1104,27 @@ describe('MatAutocomplete', () => {
         .toBe(false);
     });
 
+    it('should not interfere with the ENTER key when pressing a modifier', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+
+      expect(input.value).withContext('Expected input to start off blank.').toBeFalsy();
+      expect(trigger.panelOpen).withContext('Expected panel to start off open.').toBe(true);
+
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      flush();
+      fixture.detectChanges();
+
+      Object.defineProperty(ENTER_EVENT, 'altKey', {get: () => true});
+      fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).withContext('Expected panel to remain open.').toBe(true);
+      expect(input.value).withContext('Expected input to remain blank.').toBeFalsy();
+      expect(ENTER_EVENT.defaultPrevented)
+        .withContext('Expected the default ENTER action not to have been prevented.')
+        .toBe(false);
+    }));
+
     it('should fill the text field, not select an option, when SPACE is entered', () => {
       typeInElement(input, 'New');
       fixture.detectChanges();
@@ -1357,6 +1401,23 @@ describe('MatAutocomplete', () => {
         .toBeFalsy();
     }));
 
+    it('should not close when a click event occurs on the outside while the panel has focus', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+
+      input.focus();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(input, 'Expected input to be focused.');
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+
+      dispatchMouseEvent(document.body, 'click');
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(input, 'Expected input to continue to be focused.');
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to stay open.');
+    }));
+
     it('should reset the active option when closing with the escape key', fakeAsync(() => {
       const trigger = fixture.componentInstance.trigger;
 
@@ -1414,6 +1475,20 @@ describe('MatAutocomplete', () => {
 
       expect(!!trigger.activeOption).withContext('Expected no active options.').toBe(false);
     }));
+
+    it('should not prevent the default action when a modifier key is pressed', () => {
+      ['metaKey', 'ctrlKey', 'altKey', 'shiftKey'].forEach(name => {
+        const event = createKeyboardEvent('keydown', DOWN_ARROW);
+        Object.defineProperty(event, name, {get: () => true});
+
+        fixture.componentInstance.trigger._handleKeydown(event);
+        fixture.detectChanges();
+
+        expect(event.defaultPrevented)
+          .withContext(`Expected autocompete not to block ${name} key`)
+          .toBe(false);
+      });
+    });
   });
 
   describe('option groups', () => {
@@ -2219,6 +2294,22 @@ describe('MatAutocomplete', () => {
         .toBe(false);
     }));
 
+    it('should be able to preselect the first option when the floating label is disabled', fakeAsync(() => {
+      fixture.componentInstance.floatLabel = 'never';
+      fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      // Note: should not have a detectChanges call here
+      // in order for the test to fail when it's supposed to.
+
+      expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
+        .withContext('Expected first option to be highlighted.')
+        .toContain('mat-active');
+    }));
+
     it('should be able to configure preselecting the first option globally', fakeAsync(() => {
       fixture.destroy();
       TestBed.resetTestingModule();
@@ -2262,6 +2353,34 @@ describe('MatAutocomplete', () => {
       zone.simulateZoneExit();
 
       expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+      subscription!.unsubscribe();
+    }));
+
+    it('should emit to `optionSelections` if the list of options changes', fakeAsync(() => {
+      const spy = jasmine.createSpy('option selection spy');
+      const subscription = fixture.componentInstance.trigger.optionSelections.subscribe(spy);
+      const openAndSelectFirstOption = () => {
+        fixture.detectChanges();
+        fixture.componentInstance.trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+      };
+
+      fixture.componentInstance.states = [{code: 'OR', name: 'Oregon'}];
+      fixture.detectChanges();
+
+      openAndSelectFirstOption();
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      fixture.componentInstance.states = [{code: 'WV', name: 'West Virginia'}];
+      fixture.detectChanges();
+
+      openAndSelectFirstOption();
+      expect(spy).toHaveBeenCalledTimes(2);
+
       subscription!.unsubscribe();
     }));
 
@@ -2627,6 +2746,236 @@ describe('MatAutocomplete', () => {
     }));
   });
 
+  describe('automatically selecting the active option', () => {
+    let fixture: ComponentFixture<SimpleAutocomplete>;
+
+    beforeEach(() => {
+      fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.autocomplete.autoSelectActiveOption = true;
+    });
+
+    it(
+      'should update the input value as the user is navigating, without changing the model ' +
+        'value or closing the panel',
+      fakeAsync(() => {
+        const {trigger, stateCtrl, closedSpy} = fixture.componentInstance;
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+        trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        fixture.detectChanges();
+
+        expect(stateCtrl.value).toBeFalsy();
+        expect(input.value).toBeFalsy();
+        expect(trigger.panelOpen).toBe(true);
+        expect(closedSpy).not.toHaveBeenCalled();
+
+        dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+        fixture.detectChanges();
+
+        expect(stateCtrl.value).toBeFalsy();
+        expect(input.value).toBe('Alabama');
+        expect(trigger.panelOpen).toBe(true);
+        expect(closedSpy).not.toHaveBeenCalled();
+
+        dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+        fixture.detectChanges();
+
+        expect(stateCtrl.value).toBeFalsy();
+        expect(input.value).toBe('California');
+        expect(trigger.panelOpen).toBe(true);
+        expect(closedSpy).not.toHaveBeenCalled();
+      }),
+    );
+
+    it('should revert back to the last typed value if the user presses escape', fakeAsync(() => {
+      const {trigger, stateCtrl, closedSpy} = fixture.componentInstance;
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+      typeInElement(input, 'al');
+      fixture.detectChanges();
+      tick();
+
+      expect(stateCtrl.value).toBe('al');
+      expect(input.value).toBe('al');
+      expect(trigger.panelOpen).toBe(true);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBe('al');
+      expect(input.value).toBe('Alabama');
+      expect(trigger.panelOpen).toBe(true);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBe('al');
+      expect(input.value).toBe('al');
+      expect(trigger.panelOpen).toBe(false);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should emit a closed event if no option is displayed', fakeAsync(() => {
+      const {openedSpy, closedSpy} = fixture.componentInstance;
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      typeInElement(input, 'Alabama'); // Valid option
+      fixture.detectChanges();
+      tick();
+
+      expect(openedSpy).toHaveBeenCalledTimes(1);
+      expect(closedSpy).toHaveBeenCalledTimes(0);
+
+      typeInElement(input, '_x'); // Invalidate option to 'Alabama_x'
+      fixture.detectChanges();
+      tick();
+
+      expect(openedSpy).toHaveBeenCalledTimes(1);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it(
+      'should clear the input if the user presses escape while there was a pending ' +
+        'auto selection and there is no previous value',
+      fakeAsync(() => {
+        const {trigger, stateCtrl} = fixture.componentInstance;
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+        trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        fixture.detectChanges();
+
+        expect(stateCtrl.value).toBeFalsy();
+        expect(input.value).toBeFalsy();
+
+        dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+        fixture.detectChanges();
+
+        expect(stateCtrl.value).toBeFalsy();
+        expect(input.value).toBe('Alabama');
+
+        dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+        fixture.detectChanges();
+
+        expect(stateCtrl.value).toBeFalsy();
+        expect(input.value).toBeFalsy();
+      }),
+    );
+
+    it('should propagate the auto-selected value if the user clicks away', fakeAsync(() => {
+      const {trigger, stateCtrl} = fixture.componentInstance;
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBeFalsy();
+
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBe('Alabama');
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+      expect(input.value).toBe('Alabama');
+    }));
+
+    it('should propagate the auto-selected value if the user tabs away', fakeAsync(() => {
+      const {trigger, stateCtrl} = fixture.componentInstance;
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBeFalsy();
+
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBe('Alabama');
+
+      dispatchKeyboardEvent(input, 'keydown', TAB);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+      expect(input.value).toBe('Alabama');
+    }));
+
+    it('should propagate the auto-selected value if the user presses enter on it', fakeAsync(() => {
+      const {trigger, stateCtrl} = fixture.componentInstance;
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBeFalsy();
+
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBe('Alabama');
+
+      dispatchKeyboardEvent(input, 'keydown', ENTER);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+      expect(input.value).toBe('Alabama');
+    }));
+
+    it('should allow the user to click on an option different from the auto-selected one', fakeAsync(() => {
+      const {trigger, stateCtrl} = fixture.componentInstance;
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBeFalsy();
+
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toBeFalsy();
+      expect(input.value).toBe('Alabama');
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+      options[2].click();
+      fixture.detectChanges();
+
+      expect(stateCtrl.value).toEqual({code: 'FL', name: 'Florida'});
+      expect(input.value).toBe('Florida');
+    }));
+  });
+
   it('should have correct width when opened', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
     widthFixture.componentInstance.width = 300;
@@ -2822,6 +3171,29 @@ describe('MatAutocomplete', () => {
 
     expect(event.source).toBe(fixture.componentInstance.autocomplete);
     expect(event.option.value).toBe('Washington');
+  }));
+
+  it('should refocus the input after the selection event is emitted', fakeAsync(() => {
+    const events: string[] = [];
+    const fixture = createComponent(AutocompleteWithSelectEvent);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input');
+
+    fixture.componentInstance.trigger.openPanel();
+    zone.simulateZoneExit();
+    fixture.detectChanges();
+
+    const options = overlayContainerElement.querySelectorAll(
+      'mat-option',
+    ) as NodeListOf<HTMLElement>;
+    spyOn(input, 'focus').and.callFake(() => events.push('focus'));
+    fixture.componentInstance.optionSelected.and.callFake(() => events.push('select'));
+
+    options[1].click();
+    tick();
+    fixture.detectChanges();
+
+    expect(events).toEqual(['select', 'focus']);
   }));
 
   it('should emit an event when a newly-added option is selected', fakeAsync(() => {
@@ -3027,7 +3399,7 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
 
 @Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE})
 class SimpleAutocomplete implements OnDestroy {
-  stateCtrl = new FormControl();
+  stateCtrl = new UntypedFormControl();
   filteredStates: any[];
   valueSub: Subscription;
   floatLabel = 'auto';
@@ -3096,7 +3468,7 @@ class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
   `,
 })
 class NgIfAutocomplete {
-  optionCtrl = new FormControl();
+  optionCtrl = new UntypedFormControl();
   filteredOptions: Observable<any>;
   isVisible = true;
   options = ['One', 'Two', 'Three'];
@@ -3224,7 +3596,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
   `,
 })
 class AutocompleteWithNativeInput {
-  optionCtrl = new FormControl();
+  optionCtrl = new UntypedFormControl();
   filteredOptions: Observable<any>;
   options = ['En', 'To', 'Tre', 'Fire', 'Fem'];
 
@@ -3248,7 +3620,7 @@ class AutocompleteWithNativeInput {
 })
 class AutocompleteWithoutPanel {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  control = new FormControl();
+  control = new UntypedFormControl();
 }
 
 @Component({
@@ -3263,7 +3635,7 @@ class AutocompleteWithoutPanel {
   `,
 })
 class AutocompleteWithFormsAndNonfloatingLabel {
-  formControl = new FormControl('California');
+  formControl = new UntypedFormControl('California');
 }
 
 @Component({
@@ -3348,7 +3720,7 @@ class AutocompleteWithSelectEvent {
   `,
 })
 class PlainAutocompleteInputWithFormControl {
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({

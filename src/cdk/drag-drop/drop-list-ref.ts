@@ -138,6 +138,7 @@ export class DropListRef<T = any> {
     isPointerOverContainer: boolean;
     distance: Point;
     dropPoint: Point;
+    event: MouseEvent | TouchEvent;
   }>();
 
   /** Emits as the user is swapping items while actively dragging. */
@@ -230,7 +231,7 @@ export class DropListRef<T = any> {
     this._document = _document;
     this.withScrollableParents([this.element]);
     _dragDropRegistry.registerDropContainer(this);
-    this._parentPositions = new ParentPositionTracker(_document, _viewportRuler);
+    this._parentPositions = new ParentPositionTracker(_document);
   }
 
   /** Removes the drop list functionality from the DOM element. */
@@ -299,6 +300,16 @@ export class DropListRef<T = any> {
       newPositionReference = activeDraggables[newIndex + 1];
     }
 
+    // If we didn't find a new position reference, it means that either the item didn't start off
+    // in this container, or that the item requested to be inserted at the end of the list.
+    if (
+      !newPositionReference &&
+      (newIndex == null || newIndex === -1 || newIndex < activeDraggables.length - 1) &&
+      this._shouldEnterAsFirstChild(pointerX, pointerY)
+    ) {
+      newPositionReference = activeDraggables[0];
+    }
+
     // Since the item may be in the `activeDraggables` already (e.g. if the user dragged it
     // into another container and back again), we have to ensure that it isn't duplicated.
     if (currentIndex > -1) {
@@ -311,10 +322,6 @@ export class DropListRef<T = any> {
       const element = newPositionReference.getRootElement();
       element.parentElement!.insertBefore(placeholder, element);
       activeDraggables.splice(newIndex, 0, item);
-    } else if (this._shouldEnterAsFirstChild(pointerX, pointerY)) {
-      const reference = activeDraggables[0].getRootElement();
-      reference.parentNode!.insertBefore(placeholder, reference);
-      activeDraggables.unshift(item);
     } else {
       coerceElement(this.element).appendChild(placeholder);
       activeDraggables.push(item);
@@ -351,6 +358,9 @@ export class DropListRef<T = any> {
    * @param isPointerOverContainer Whether the user's pointer was over the
    *    container when the item was dropped.
    * @param distance Distance the user has dragged since the start of the dragging sequence.
+   * @param event Event that triggered the dropping sequence.
+   *
+   * @breaking-change 15.0.0 `previousIndex` and `event` parameters to become required.
    */
   drop(
     item: DragRef,
@@ -360,6 +370,7 @@ export class DropListRef<T = any> {
     isPointerOverContainer: boolean,
     distance: Point,
     dropPoint: Point,
+    event: MouseEvent | TouchEvent = {} as any,
   ): void {
     this._reset();
     this.dropped.next({
@@ -371,6 +382,7 @@ export class DropListRef<T = any> {
       isPointerOverContainer,
       distance,
       dropPoint,
+      event,
     });
   }
 

@@ -1,5 +1,7 @@
 @use 'sass:math';
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+
+@use '../core/style/button-common';
 
 $calendar-body-label-padding-start: 5% !default;
 // We don't want the label to jump around when we switch between month and year views, so we use
@@ -31,13 +33,24 @@ $calendar-range-end-body-cell-size:
   padding-right: $calendar-body-label-side-padding;
 }
 
-.mat-calendar-body-cell {
+.mat-calendar-body-cell-container {
   position: relative;
   height: 0;
   line-height: 0;
+}
+
+.mat-calendar-body-cell {
+  @include button-common.reset();
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
   text-align: center;
   outline: none;
-  cursor: pointer;
+  font-family: inherit;
+  margin: 0;
 }
 
 // We use ::before to apply a background to the body cell, because we need to apply a border
@@ -155,7 +168,7 @@ $calendar-range-end-body-cell-size:
   // Fade out the disabled cells so that they can be distinguished from the enabled ones. Note that
   // ideally we'd use `color: GreyText` here which is what the browser uses for disabled buttons,
   // but we can't because Firefox doesn't recognize it.
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast(active, off) {
     opacity: 0.5;
   }
 }
@@ -188,12 +201,12 @@ $calendar-range-end-body-cell-size:
     position: absolute;
   }
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast(active, off) {
     border: none;
   }
 }
 
-@include a11y.high-contrast(active, off) {
+@include cdk.high-contrast(active, off) {
   $main-range-border: solid 1px;
   $comparison-range-border: dashed 1px;
 
@@ -208,8 +221,12 @@ $calendar-range-end-body-cell-size:
 
   .cdk-keyboard-focused .mat-calendar-body-active,
   .cdk-program-focused .mat-calendar-body-active {
-    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+    & > .mat-calendar-body-cell-content {
       outline: dotted 2px;
+
+      &.mat-calendar-body-selected {
+        outline: solid 3px;
+      }
     }
   }
 
@@ -272,16 +289,5 @@ $calendar-range-end-body-cell-size:
 [dir='rtl'] {
   .mat-calendar-body-label {
     text-align: right;
-  }
-}
-
-// Disable the hover styles on non-hover devices. Since this is more of a progressive
-// enhancement and not all desktop browsers support this kind of media query, we can't
-// use something like `@media (hover)`.
-@media (hover: none) {
-  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
-    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
-      background-color: transparent;
-    }
   }
 }

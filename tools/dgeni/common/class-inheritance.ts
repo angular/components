@@ -4,11 +4,14 @@ import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
 import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
 import {ClassLikeExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassLikeExportDoc';
 import {InterfaceExportDoc} from 'dgeni-packages/typescript/api-doc-types/InterfaceExportDoc';
-import * as ts from 'typescript';
 import {MemberDoc} from 'dgeni-packages/typescript/api-doc-types/MemberDoc';
 
+import ts from 'typescript';
+
 /** Type describing class like documents which have been created through inheritance. */
-export type InheritanceCreatedClassLikeDoc = ClassLikeExportDoc & {_inheritanceCreated?: true};
+export type InheritanceCreatedClassLikeDoc = ClassLikeExportDoc & {
+  _inheritanceCreated?: true;
+};
 
 /** Whether the given API doc has been created through inheritance. */
 export function isInheritanceCreatedDoc(doc: ApiDoc): doc is ClassLikeExportDoc {

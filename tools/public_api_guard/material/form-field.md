@@ -5,6 +5,7 @@
 ```ts
 
 import { _AbstractConstructor } from '@angular/material/core';
+import { AbstractControlDirective } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
@@ -26,6 +27,7 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
 // @public
 export type FloatLabelType = 'always' | 'never' | 'auto';
@@ -103,7 +105,7 @@ export class MatFormField extends _MatFormFieldBase implements AfterContentInit,
     // (undocumented)
     _hideControlPlaceholder(): boolean;
     get hideRequiredMarker(): boolean;
-    set hideRequiredMarker(value: boolean);
+    set hideRequiredMarker(value: BooleanInput);
     // (undocumented)
     _hintChildren: QueryList<MatHint>;
     get hintLabel(): string;
@@ -119,8 +121,6 @@ export class MatFormField extends _MatFormFieldBase implements AfterContentInit,
     // (undocumented)
     readonly _labelId: string;
     // (undocumented)
-    static ngAcceptInputType_hideRequiredMarker: BooleanInput;
-    // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -133,7 +133,7 @@ export class MatFormField extends _MatFormFieldBase implements AfterContentInit,
     // (undocumented)
     _prefixChildren: QueryList<MatPrefix>;
     _shouldAlwaysFloat(): boolean;
-    _shouldForward(prop: keyof NgControl): boolean;
+    _shouldForward(prop: keyof AbstractControlDirective): boolean;
     // (undocumented)
     _shouldLabelFloat(): boolean;
     _subscriptAnimationState: string;
@@ -164,7 +164,7 @@ export abstract class MatFormFieldControl<T> {
     readonly errorState: boolean;
     readonly focused: boolean;
     readonly id: string;
-    readonly ngControl: NgControl | null;
+    readonly ngControl: NgControl | AbstractControlDirective | null;
     abstract onContainerClick(event: MouseEvent): void;
     readonly placeholder: string;
     readonly required: boolean;
@@ -181,10 +181,9 @@ export abstract class MatFormFieldControl<T> {
 
 // @public
 export interface MatFormFieldDefaultOptions {
-    // (undocumented)
     appearance?: MatFormFieldAppearance;
+    color?: ThemePalette;
     floatLabel?: FloatLabelType;
-    // (undocumented)
     hideRequiredMarker?: boolean;
 }
 

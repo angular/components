@@ -71,7 +71,8 @@ const _MatTabGroupMixinBase = mixinColor(
 );
 
 interface MatTabGroupBaseHeader {
-  _alignInkBarToSelectedTab: () => void;
+  _alignInkBarToSelectedTab(): void;
+  updatePagination(): void;
   focusIndex: number;
 }
 
@@ -98,6 +99,9 @@ export abstract class _MatTabGroupBase
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
 
+  /** Index of the tab that was focused last. */
+  private _lastFocusedTabIndex: number | null = null;
+
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
 
@@ -112,17 +116,17 @@ export abstract class _MatTabGroupBase
   get dynamicHeight(): boolean {
     return this._dynamicHeight;
   }
-  set dynamicHeight(value: boolean) {
+  set dynamicHeight(value: BooleanInput) {
     this._dynamicHeight = coerceBooleanProperty(value);
   }
-  private _dynamicHeight: boolean;
+  private _dynamicHeight: boolean = false;
 
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number | null {
     return this._selectedIndex;
   }
-  set selectedIndex(value: number | null) {
+  set selectedIndex(value: NumberInput) {
     this._indexToSelect = coerceNumberProperty(value, null);
   }
   private _selectedIndex: number | null = null;
@@ -135,8 +139,8 @@ export abstract class _MatTabGroupBase
   get animationDuration(): string {
     return this._animationDuration;
   }
-  set animationDuration(value: string) {
-    this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
+  set animationDuration(value: NumberInput) {
+    this._animationDuration = /^\d+$/.test(value + '') ? value + 'ms' : (value as string);
   }
   private _animationDuration: string;
 
@@ -150,7 +154,7 @@ export abstract class _MatTabGroupBase
   get contentTabIndex(): number | null {
     return this._contentTabIndex;
   }
-  set contentTabIndex(value: number | null) {
+  set contentTabIndex(value: NumberInput) {
     this._contentTabIndex = coerceNumberProperty(value, null);
   }
   private _contentTabIndex: number | null;
@@ -160,7 +164,27 @@ export abstract class _MatTabGroupBase
    * layout recalculations if it's known that pagination won't be required.
    */
   @Input()
-  disablePagination: boolean;
+  get disablePagination(): boolean {
+    return this._disablePagination;
+  }
+  set disablePagination(value: BooleanInput) {
+    this._disablePagination = coerceBooleanProperty(value);
+  }
+  private _disablePagination: boolean = false;
+
+  /**
+   * By default tabs remove their content from the DOM while it's off-screen.
+   * Setting this to `true` will keep it in the DOM which will prevent elements
+   * like iframes and videos from reloading next time it comes back into the view.
+   */
+  @Input()
+  get preserveContent(): boolean {
+    return this._preserveContent;
+  }
+  set preserveContent(value: BooleanInput) {
+    this._preserveContent = coerceBooleanProperty(value);
+  }
+  private _preserveContent: boolean = false;
 
   /** Background color of the tab group. */
   @Input()
@@ -213,6 +237,7 @@ export abstract class _MatTabGroupBase
     this.dynamicHeight =
       defaultConfig && defaultConfig.dynamicHeight != null ? defaultConfig.dynamicHeight : false;
     this.contentTabIndex = defaultConfig?.contentTabIndex ?? null;
+    this.preserveContent = !!defaultConfig?.preserveContent;
   }
 
   /**
@@ -266,6 +291,7 @@ export abstract class _MatTabGroupBase
 
     if (this._selectedIndex !== indexToSelect) {
       this._selectedIndex = indexToSelect;
+      this._lastFocusedTabIndex = null;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -283,6 +309,7 @@ export abstract class _MatTabGroupBase
       // explicit change that selects a different tab.
       if (indexToSelect === this._selectedIndex) {
         const tabs = this._tabs.toArray();
+        let selectedTab: MatTab | undefined;
 
         for (let i = 0; i < tabs.length; i++) {
           if (tabs[i].isActive) {
@@ -290,8 +317,20 @@ export abstract class _MatTabGroupBase
             // event, otherwise the consumer may end up in an infinite loop in some edge cases like
             // adding a tab within the `selectedIndexChange` event.
             this._indexToSelect = this._selectedIndex = i;
+            this._lastFocusedTabIndex = null;
+            selectedTab = tabs[i];
             break;
           }
+        }
+
+        // If we haven't found an active tab and a tab exists at the selected index, it means
+        // that the active tab was swapped out. Since this won't be picked up by the rendering
+        // loop in `ngAfterContentChecked`, we need to sync it up manually.
+        if (!selectedTab && tabs[indexToSelect]) {
+          Promise.resolve().then(() => {
+            tabs[indexToSelect].isActive = true;
+            this.selectedTabChange.emit(this._createChangeEvent(indexToSelect));
+          });
         }
       }
 
@@ -328,6 +367,19 @@ export abstract class _MatTabGroupBase
   }
 
   /**
+   * Recalculates the tab group's pagination dimensions.
+   *
+   * WARNING: Calling this method can be very costly in terms of performance. It should be called
+   * as infrequently as possible from outside of the Tabs component as it causes a reflow of the
+   * page.
+   */
+  updatePagination() {
+    if (this._tabHeader) {
+      this._tabHeader.updatePagination();
+    }
+  }
+
+  /**
    * Sets focus to a particular tab.
    * @param index Index of the tab to be focused.
    */
@@ -340,6 +392,7 @@ export abstract class _MatTabGroupBase
   }
 
   _focusChanged(index: number) {
+    this._lastFocusedTabIndex = index;
     this.focusChange.emit(this._createChangeEvent(index));
   }
 
@@ -422,11 +475,12 @@ export abstract class _MatTabGroupBase
   }
 
   /** Retrieves the tabindex for the tab. */
-  _getTabIndex(tab: MatTab, idx: number): number | null {
+  _getTabIndex(tab: MatTab, index: number): number | null {
     if (tab.disabled) {
       return null;
     }
-    return this.selectedIndex === idx ? 0 : -1;
+    const targetIndex = this._lastFocusedTabIndex ?? this.selectedIndex;
+    return index === targetIndex ? 0 : -1;
   }
 
   /** Callback for when the focused state of a tab has changed. */
@@ -439,12 +493,6 @@ export abstract class _MatTabGroupBase
       this._tabHeader.focusIndex = index;
     }
   }
-
-  static ngAcceptInputType_dynamicHeight: BooleanInput;
-  static ngAcceptInputType_animationDuration: NumberInput;
-  static ngAcceptInputType_selectedIndex: NumberInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_contentTabIndex: NumberInput;
 }
 
 /**

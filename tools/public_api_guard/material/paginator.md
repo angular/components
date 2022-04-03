@@ -65,43 +65,32 @@ export abstract class _MatPaginatorBase<O extends {
     hasNextPage(): boolean;
     hasPreviousPage(): boolean;
     get hidePageSize(): boolean;
-    set hidePageSize(value: boolean);
+    set hidePageSize(value: BooleanInput);
     // (undocumented)
     _intl: MatPaginatorIntl;
     lastPage(): void;
     get length(): number;
-    set length(value: number);
+    set length(value: NumberInput);
     _nextButtonsDisabled(): boolean;
     nextPage(): void;
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_hidePageSize: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_length: NumberInput;
-    // (undocumented)
-    static ngAcceptInputType_pageIndex: NumberInput;
-    // (undocumented)
-    static ngAcceptInputType_pageSize: NumberInput;
-    // (undocumented)
-    static ngAcceptInputType_showFirstLastButtons: BooleanInput;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     readonly page: EventEmitter<PageEvent>;
     get pageIndex(): number;
-    set pageIndex(value: number);
+    set pageIndex(value: NumberInput);
     get pageSize(): number;
-    set pageSize(value: number);
+    set pageSize(value: NumberInput);
     get pageSizeOptions(): number[];
-    set pageSizeOptions(value: number[]);
+    set pageSizeOptions(value: number[] | readonly number[]);
     _previousButtonsDisabled(): boolean;
     previousPage(): void;
+    selectConfig: MatPaginatorSelectConfig;
     get showFirstLastButtons(): boolean;
-    set showFirstLastButtons(value: boolean);
+    set showFirstLastButtons(value: BooleanInput);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatPaginatorBase<any>, never, never, { "color": "color"; "pageIndex": "pageIndex"; "length": "length"; "pageSize": "pageSize"; "pageSizeOptions": "pageSizeOptions"; "hidePageSize": "hidePageSize"; "showFirstLastButtons": "showFirstLastButtons"; }, { "page": "page"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatPaginatorBase<any>, never, never, { "color": "color"; "pageIndex": "pageIndex"; "length": "length"; "pageSize": "pageSize"; "pageSizeOptions": "pageSizeOptions"; "hidePageSize": "hidePageSize"; "showFirstLastButtons": "showFirstLastButtons"; "selectConfig": "selectConfig"; }, { "page": "page"; }, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatPaginatorBase<any>, never>;
 }
@@ -138,6 +127,14 @@ export class MatPaginatorModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<MatPaginatorModule>;
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<MatPaginatorModule, [typeof i1.MatPaginator], [typeof i2.CommonModule, typeof i3.MatButtonModule, typeof i4.MatSelectModule, typeof i5.MatTooltipModule, typeof i6.MatCommonModule], [typeof i1.MatPaginator]>;
+}
+
+// @public
+export interface MatPaginatorSelectConfig {
+    disableOptionCentering?: boolean;
+    panelClass?: string | string[] | Set<string> | {
+        [key: string]: any;
+    };
 }
 
 // @public

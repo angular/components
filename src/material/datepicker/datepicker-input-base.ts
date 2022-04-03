@@ -72,7 +72,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   get value(): D | null {
     return this._model ? this._getValueFromModel(this._model.selection) : this._pendingValue;
   }
-  set value(value: D | null) {
+  set value(value: any) {
     this._assignValueProgrammatically(value);
   }
   protected _model: MatDateSelectionModel<S, D> | undefined;
@@ -82,7 +82,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   get disabled(): boolean {
     return !!this._disabled || this._parentDisabled();
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
     const element = this._elementRef.nativeElement;
 
@@ -304,11 +304,12 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._lastValueValid = this._isValidValue(date);
     date = this._dateAdapter.getValidDateOrNull(date);
+    const hasChanged = !this._dateAdapter.sameDate(date, this.value);
 
-    if (!this._dateAdapter.sameDate(date, this.value)) {
-      this._assignValue(date);
+    // We need to fire the CVA change event for all
+    // nulls, otherwise the validators won't run.
+    if (!date || hasChanged) {
       this._cvaOnChange(date);
-      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     } else {
       // Call the CVA change handler for invalid values
       // since this is what marks the control as dirty.
@@ -319,6 +320,11 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
       if (lastValueWasValid !== this._lastValueValid) {
         this._validatorOnChange();
       }
+    }
+
+    if (hasChanged) {
+      this._assignValue(date);
+      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     }
   }
 
@@ -382,11 +388,6 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     const filter = this._getDateFilter();
     return !filter || filter(value);
   }
-
-  // Accept `any` to avoid conflicts with other directives on `<input>` that
-  // may accept different types.
-  static ngAcceptInputType_value: any;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**

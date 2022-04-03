@@ -14,7 +14,6 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
-  InjectionToken,
   Input,
   OnDestroy,
   OnInit,
@@ -23,25 +22,23 @@ import {
   QueryList,
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {DOWN_ARROW, ENTER, SPACE, UP_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
+import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
 import {Directionality} from '@angular/cdk/bidi';
+import {CDK_COMBOBOX, CdkCombobox} from '@angular/cdk-experimental/combobox';
 
 let nextId = 0;
 let listboxId = 0;
 
-export const CDK_LISTBOX_VALUE_ACCESSOR: any = {
+export const CDK_LISTBOX_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => CdkListbox),
   multi: true,
 };
-
-export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
 
 @Directive({
   selector: '[cdkOption]',
@@ -74,7 +71,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   get selected(): boolean {
     return this._selected;
   }
-  set selected(value: boolean) {
+  set selected(value: BooleanInput) {
     if (!this._disabled) {
       this._selected = coerceBooleanProperty(value);
     }
@@ -84,7 +81,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
@@ -99,6 +96,12 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     }
     this._value = value;
   }
+
+  /**
+   * The text used to locate this item during menu typeahead. If not specified,
+   * the `textContent` of the item will be used.
+   */
+  @Input() typeahead: string;
 
   @Output() readonly selectionChange = new EventEmitter<OptionSelectionChangeEvent<T>>();
 
@@ -170,23 +173,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /** Get the label for this element which is required by the FocusableOption interface. */
   getLabel() {
-    // we know that the current node is an element type
-    const clone = this._elementRef.nativeElement.cloneNode(true) as Element;
-    this._removeIcons(clone);
-
-    return clone.textContent?.trim() || '';
-  }
-
-  /** Remove any child from the given element which can be identified as an icon. */
-  private _removeIcons(element: Element) {
-    // TODO: make this a configurable function that can removed any desired type of node.
-    for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
-      icon.remove();
-    }
-  }
-
-  getElementRef() {
-    return this._elementRef;
+    return (this.typeahead ?? this._elementRef.nativeElement.textContent?.trim()) || '';
   }
 
   /** Sets the active property to true to enable the active css class. */
@@ -198,9 +185,6 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   setInactiveStyles() {
     this._active = false;
   }
-
-  static ngAcceptInputType_selected: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Directive({
@@ -261,16 +245,17 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
-    this._updateSelectionOnMultiSelectionChange(value);
-    this._multiple = coerceBooleanProperty(value);
+  set multiple(value: BooleanInput) {
+    const coercedValue = coerceBooleanProperty(value);
+    this._updateSelectionOnMultiSelectionChange(coercedValue);
+    this._multiple = coercedValue;
   }
 
   @Input()
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
 
@@ -279,7 +264,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get useActiveDescendant(): boolean {
     return this._useActiveDescendant;
   }
-  set useActiveDescendant(shouldUseActiveDescendant: boolean) {
+  set useActiveDescendant(shouldUseActiveDescendant: BooleanInput) {
     this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
   }
 
@@ -288,7 +273,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   get autoFocus(): boolean {
     return this._autoFocus;
   }
-  set autoFocus(shouldAutoFocus: boolean) {
+  set autoFocus(shouldAutoFocus: BooleanInput) {
     this._autoFocus = coerceBooleanProperty(shouldAutoFocus);
   }
 
@@ -297,10 +282,8 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   @Input() compareWith: (o1: T, o2: T) => boolean = (a1, a2) => a1 === a2;
 
-  @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
-
   constructor(
-    @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
+    @Optional() @Inject(CDK_COMBOBOX) private readonly _combobox: CdkCombobox,
     @Optional() private readonly _dir?: Directionality,
   ) {}
 
@@ -311,7 +294,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   ngAfterContentInit() {
     this._initKeyManager();
     this._initSelectionModel();
-    this._registerWithPanel();
+    this._combobox?._registerContent(this.id, 'listbox');
 
     this.optionSelectionChanges.subscribe(event => {
       this._emitChangeEvent(event.source);
@@ -325,11 +308,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     this._listKeyManager.change.complete();
     this._destroyed.next();
     this._destroyed.complete();
-  }
-
-  private _registerWithPanel(): void {
-    const panel = this._parentPanel || this._explicitPanel;
-    panel?._registerContent(this.id, 'listbox');
   }
 
   private _initKeyManager() {
@@ -412,11 +390,12 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   }
 
   _updatePanelForSelection(option: CdkOption<T>) {
-    const panel = this._parentPanel || this._explicitPanel;
-    if (!this.multiple) {
-      option.selected ? panel?.closePanel(option.value) : panel?.closePanel();
-    } else {
-      panel?.closePanel(this.getSelectedValues());
+    if (this._combobox) {
+      if (!this.multiple) {
+        this._combobox.updateAndClose(option.selected ? option.value : []);
+      } else {
+        this._combobox.updateAndClose(this.getSelectedValues());
+      }
     }
   }
 
@@ -553,11 +532,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       }
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
-  static ngAcceptInputType_useActiveDescendant: BooleanInput;
-  static ngAcceptInputType_autoFocus: BooleanInput;
 }
 
 /** Change event that is being fired whenever the selected state of an option changes. */

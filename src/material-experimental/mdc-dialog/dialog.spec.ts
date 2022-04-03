@@ -17,8 +17,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
+  createNgModuleRef,
   Directive,
   Inject,
+  Injectable,
   Injector,
   NgModule,
   NgZone,
@@ -61,7 +63,17 @@ describe('MDC-based MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, DialogTestModule],
+      imports: [MatDialogModule, NoopAnimationsModule],
+      declarations: [
+        ComponentWithChildViewContainer,
+        ComponentWithTemplateRef,
+        PizzaMsg,
+        ContentElementDialog,
+        DialogWithInjectedData,
+        DialogWithoutFocusableElements,
+        DirectiveWithViewContainer,
+        ComponentWithContentElementTemplateRef,
+      ],
       providers: [
         {provide: Location, useClass: SpyLocation},
         {
@@ -1661,6 +1673,17 @@ describe('MDC-based MatDialog', () => {
           .withContext('Expected the aria-labelledby to match the title id.')
           .toBe(title.id);
       }));
+
+      it('should add correct css class according to given [align] input in [mat-dialog-actions]', () => {
+        let actions = overlayContainerElement.querySelector('mat-dialog-actions')!;
+
+        expect(actions)
+          .withContext('Expected action buttons to not have class align-center')
+          .not.toHaveClass('mat-mdc-dialog-actions-align-center');
+        expect(actions)
+          .withContext('Expected action buttons to have class align-end')
+          .toHaveClass('mat-mdc-dialog-actions-align-end');
+      });
     }
   });
 
@@ -1762,7 +1785,7 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, DialogTestModule],
+      imports: [MatDialogModule, NoopAnimationsModule],
       declarations: [ComponentThatProvidesMatDialog],
       providers: [
         {
@@ -1876,7 +1899,8 @@ describe('MDC-based MatDialog with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, DialogTestModule],
+      imports: [MatDialogModule, NoopAnimationsModule],
+      declarations: [ComponentWithChildViewContainer, DirectiveWithViewContainer],
       providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
 
@@ -1943,7 +1967,8 @@ describe('MDC-based MatDialog with animations enabled', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, DialogTestModule, BrowserAnimationsModule],
+      imports: [MatDialogModule, BrowserAnimationsModule],
+      declarations: [ComponentWithChildViewContainer, DirectiveWithViewContainer],
     });
 
     TestBed.compileComponents();
@@ -1994,12 +2019,36 @@ describe('MDC-based MatDialog with animations enabled', () => {
     flush();
     expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
   }));
+});
 
-  it("should return the previous dialogRef if the previous dialog hasn't finished animating open", () => {
-    let dialogRef1: MatDialogRef<PizzaMsg>, dialogRef2: MatDialogRef<PizzaMsg>;
-    dialogRef1 = dialog.open(PizzaMsg);
-    dialogRef2 = dialog.open(PizzaMsg);
-    expect(dialogRef1).toEqual(dialogRef2);
+describe('MatDialog with explicit injector provided', () => {
+  let overlayContainerElement: HTMLElement;
+  let fixture: ComponentFixture<ModuleBoundDialogParentComponent>;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatDialogModule, BrowserAnimationsModule],
+      declarations: [ModuleBoundDialogParentComponent],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+    overlayContainerElement = oc.getContainerElement();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ModuleBoundDialogParentComponent);
+  });
+
+  it('should use the standalone injector and render the dialog successfully', () => {
+    fixture.componentInstance.openDialog();
+    fixture.detectChanges();
+
+    expect(
+      overlayContainerElement.querySelector('module-bound-dialog-child-component')!.innerHTML,
+    ).toEqual('<p>Pasta</p>');
   });
 });
 
@@ -2061,7 +2110,7 @@ class PizzaMsg {
   template: `
     <h1 mat-dialog-title>This is the title</h1>
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions align="end">
       <button mat-dialog-close>Close</button>
       <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
       <button
@@ -2080,7 +2129,7 @@ class ContentElementDialog {}
     <ng-template>
       <h1 mat-dialog-title>This is the title</h1>
       <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
-      <mat-dialog-actions>
+      <mat-dialog-actions align="end">
         <button mat-dialog-close>Close</button>
         <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
         <button
@@ -2117,32 +2166,37 @@ class DialogWithoutFocusableElements {}
 })
 class ShadowDomComponent {}
 
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-const TEST_DIRECTIVES = [
-  ComponentWithChildViewContainer,
-  ComponentWithTemplateRef,
-  PizzaMsg,
-  DirectiveWithViewContainer,
-  ComponentWithOnPushViewContainer,
-  ContentElementDialog,
-  DialogWithInjectedData,
-  DialogWithoutFocusableElements,
-  ComponentWithContentElementTemplateRef,
-  ShadowDomComponent,
-];
+@Component({template: ''})
+class ModuleBoundDialogParentComponent {
+  constructor(private _injector: Injector, private _dialog: MatDialog) {}
+
+  openDialog(): void {
+    const ngModuleRef = createNgModuleRef(
+      ModuleBoundDialogModule,
+      /* parentInjector */ this._injector,
+    );
+
+    this._dialog.open(ModuleBoundDialogComponent, {injector: ngModuleRef.injector});
+  }
+}
+
+@Injectable()
+class ModuleBoundDialogService {
+  name = 'Pasta';
+}
+
+@Component({
+  template: '<module-bound-dialog-child-component></module-bound-dialog-child-component>',
+})
+class ModuleBoundDialogComponent {}
+
+@Component({selector: 'module-bound-dialog-child-component', template: '<p>{{service.name}}</p>'})
+class ModuleBoundDialogChildComponent {
+  constructor(public service: ModuleBoundDialogService) {}
+}
 
 @NgModule({
-  imports: [MatDialogModule, NoopAnimationsModule],
-  exports: TEST_DIRECTIVES,
-  declarations: TEST_DIRECTIVES,
-  entryComponents: [
-    ComponentWithChildViewContainer,
-    ComponentWithTemplateRef,
-    PizzaMsg,
-    ContentElementDialog,
-    DialogWithInjectedData,
-    DialogWithoutFocusableElements,
-  ],
+  declarations: [ModuleBoundDialogComponent, ModuleBoundDialogChildComponent],
+  providers: [ModuleBoundDialogService],
 })
-class DialogTestModule {}
+class ModuleBoundDialogModule {}

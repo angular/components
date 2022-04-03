@@ -15,25 +15,23 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material-experimental/m
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MDC-based MatTable', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
-        declarations: [
-          MatTableApp,
-          MatTableWithWhenRowApp,
-          ArrayDataSourceMatTableApp,
-          NativeHtmlTableApp,
-          MatTableWithSortApp,
-          MatTableWithPaginatorApp,
-          StickyTableApp,
-          TableWithNgContainerRow,
-          NestedTableApp,
-          MatFlexTableApp,
-        ],
-      }).compileComponents();
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
+      declarations: [
+        MatTableApp,
+        MatTableWithWhenRowApp,
+        ArrayDataSourceMatTableApp,
+        NativeHtmlTableApp,
+        MatTableWithSortApp,
+        MatTableWithPaginatorApp,
+        StickyTableApp,
+        TableWithNgContainerRow,
+        NestedTableApp,
+        MatFlexTableApp,
+      ],
+    }).compileComponents();
+  }));
 
   describe('with basic data source', () => {
     it('should be able to create a table with the right content and without when row', () => {
@@ -123,17 +121,19 @@ describe('MDC-based MatTable', () => {
       const dataSource = fixture.componentInstance.dataSource!;
       const initialData = dataSource.data;
 
-      expect(tbody.textContent.trim()).not.toContain('No data');
+      expect(tbody.querySelector('.mat-mdc-no-data-row')).toBeFalsy();
 
       dataSource.data = [];
       fixture.detectChanges();
 
-      expect(tbody.textContent.trim()).toContain('No data');
+      const noDataRow: HTMLElement = tbody.querySelector('.mat-mdc-no-data-row');
+      expect(noDataRow).toBeTruthy();
+      expect(noDataRow.getAttribute('role')).toBe('row');
 
       dataSource.data = initialData;
       fixture.detectChanges();
 
-      expect(tbody.textContent.trim()).not.toContain('No data');
+      expect(tbody.querySelector('.mat-mdc-no-data-row')).toBeFalsy();
     });
 
     it('should be able to show a message when no data is being displayed', () => {
@@ -144,17 +144,19 @@ describe('MDC-based MatTable', () => {
       const tbody = fixture.nativeElement.querySelector('tbody')!;
       const initialData = fixture.componentInstance.dataSource!.data;
 
-      expect(tbody.textContent.trim()).not.toContain('No data');
+      expect(tbody.querySelector('.mat-mdc-no-data-row')).toBeFalsy();
 
       fixture.componentInstance.dataSource!.data = [];
       fixture.detectChanges();
 
-      expect(tbody.textContent.trim()).toContain('No data');
+      const noDataRow: HTMLElement = tbody.querySelector('.mat-mdc-no-data-row');
+      expect(noDataRow).toBeTruthy();
+      expect(noDataRow.getAttribute('role')).toBe('row');
 
       fixture.componentInstance.dataSource!.data = initialData;
       fixture.detectChanges();
 
-      expect(tbody.textContent.trim()).not.toContain('No data');
+      expect(tbody.querySelector('.mat-mdc-no-data-row')).toBeFalsy();
     });
 
     it('should show the no data row if there is no data on init', () => {
@@ -163,7 +165,7 @@ describe('MDC-based MatTable', () => {
       fixture.detectChanges();
 
       const tbody = fixture.nativeElement.querySelector('tbody')!;
-      expect(tbody.textContent.trim()).toContain('No data');
+      expect(tbody.querySelector('.mat-mdc-no-data-row')).toBeTruthy();
     });
 
     it('should set the content styling class on the tbody', () => {
@@ -584,6 +586,45 @@ describe('MDC-based MatTable', () => {
         [largest, 'b_1', 'c_1'],
         [larger, 'b_2', 'c_2'],
         [large, 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    });
+
+    it('should fall back to empty table if invalid data is passed in', () => {
+      component.underlyingDataSource.addData();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      dataSource.data = null!;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      component.underlyingDataSource.addData();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['a_5', 'b_5', 'c_5'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      dataSource.data = {} as any;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });

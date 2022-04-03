@@ -15,7 +15,6 @@ import {
   NumberInput,
 } from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
-import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -154,7 +153,7 @@ export class CdkStep implements OnChanges {
   get editable(): boolean {
     return this._editable;
   }
-  set editable(value: boolean) {
+  set editable(value: BooleanInput) {
     this._editable = coerceBooleanProperty(value);
   }
   private _editable = true;
@@ -164,7 +163,7 @@ export class CdkStep implements OnChanges {
   get optional(): boolean {
     return this._optional;
   }
-  set optional(value: boolean) {
+  set optional(value: BooleanInput) {
     this._optional = coerceBooleanProperty(value);
   }
   private _optional = false;
@@ -174,7 +173,7 @@ export class CdkStep implements OnChanges {
   get completed(): boolean {
     return this._completedOverride == null ? this._getDefaultCompleted() : this._completedOverride;
   }
-  set completed(value: boolean) {
+  set completed(value: BooleanInput) {
     this._completedOverride = coerceBooleanProperty(value);
   }
   _completedOverride: boolean | null = null;
@@ -188,7 +187,7 @@ export class CdkStep implements OnChanges {
   get hasError(): boolean {
     return this._customError == null ? this._getDefaultError() : this._customError;
   }
-  set hasError(value: boolean) {
+  set hasError(value: BooleanInput) {
     this._customError = coerceBooleanProperty(value);
   }
   private _customError: boolean | null = null;
@@ -246,11 +245,6 @@ export class CdkStep implements OnChanges {
     // global options, or if they've explicitly set it through the `hasError` input.
     return this._stepperOptions.showError ?? this._customError != null;
   }
-
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
 }
 
 @Directive({
@@ -281,22 +275,22 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   get linear(): boolean {
     return this._linear;
   }
-  set linear(value: boolean) {
+  set linear(value: BooleanInput) {
     this._linear = coerceBooleanProperty(value);
   }
   private _linear = false;
 
   /** The index of the selected step. */
   @Input()
-  get selectedIndex() {
+  get selectedIndex(): number {
     return this._selectedIndex;
   }
-  set selectedIndex(index: number) {
+  set selectedIndex(index: NumberInput) {
     const newIndex = coerceNumberProperty(index);
 
     if (this.steps && this._steps) {
       // Ensure that the index can't be out of bounds.
-      if (!this._isValidIndex(index) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      if (!this._isValidIndex(newIndex) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw Error('cdkStepper: Cannot assign out-of-bounds value to `selectedIndex`.');
       }
 
@@ -307,7 +301,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
         !this._anyControlsInvalidOrPending(newIndex) &&
         (newIndex >= this._selectedIndex || this.steps.toArray()[newIndex].editable)
       ) {
-        this._updateSelectedItemIndex(index);
+        this._updateSelectedItemIndex(newIndex);
       }
     } else {
       this._selectedIndex = newIndex;
@@ -343,22 +337,12 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
       this._keyManager.withVerticalOrientation(value === 'vertical');
     }
   }
-
-  /**
-   * @deprecated To be turned into a private property. Use `orientation` instead.
-   * @breaking-change 13.0.0
-   */
-  protected _orientation: StepperOrientation = 'horizontal';
+  private _orientation: StepperOrientation = 'horizontal';
 
   constructor(
     @Optional() private _dir: Directionality,
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef<HTMLElement>,
-    /**
-     * @deprecated No longer in use, to be removed.
-     * @breaking-change 13.0.0
-     */
-    @Inject(DOCUMENT) _document: any,
   ) {
     this._groupId = nextId++;
   }
@@ -593,13 +577,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _isValidIndex(index: number): boolean {
     return index > -1 && (!this.steps || index < this.steps.length);
   }
-
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
-  static ngAcceptInputType_linear: BooleanInput;
-  static ngAcceptInputType_selectedIndex: NumberInput;
 }
 
 /**

@@ -237,7 +237,7 @@ You can use one of these pre-built themes if you don't want to define a custom t
 |------------------------|----------------|----------------------------------|
 | `deeppurple-amber.css` | Light          | deep-purple, amber, red          |
 | `indigo-pink.css`      | Light          | indigo, pink, red                |
-| `pink-bluegray.css`    | Dark           | pink, bluegray, red              |
+| `pink-bluegrey.css`    | Dark           | pink, bluegrey, red              |
 | `purple-green.css`     | Dark           | purple, green, red               |
 
 These files include the CSS for every component in the library. To include only the CSS for a subset
@@ -286,7 +286,7 @@ $light-theme: mat.define-light-theme((
 
 // Define a dark theme
 $dark-primary: mat.define-palette(mat.$pink-palette);
-$dark-accent: mat.define-palette(mat.$blue-gray-palette);
+$dark-accent: mat.define-palette(mat.$blue-grey-palette);
 $dark-theme: mat.define-dark-theme((
  color: (
    primary: $dark-primary,
@@ -308,12 +308,20 @@ $dark-theme: mat.define-dark-theme((
 
 #### Multiple themes across separate files
 
-You can define multiple themes in seprate files by creating multiple theme files per
+You can define multiple themes in separate files by creating multiple theme files per
 [Defining a theme](#defining-a-theme), adding each of the files to the `styles` of your
 `angular.json`. However, you must additionally set the `inject` option for each of these files to
 `false` in order to prevent all the theme files from being loaded at the same time. When setting
 this property to `false`, your application becomes responsible for manually loading the desired
 file. The approach for this loading depends on your application.
+
+### Application background color
+
+By default, Angular Material does not apply any styles to your DOM outside
+of its own components. If you want to set your application's background color
+to match the components' theme, you can either:
+1. Put your application's main content inside `mat-sidenav-container`, assuming you're using `MatSidenav`, or
+2. Apply the `mat-app-background` CSS class to your main content root element (typically `body`).
 
 ### Scoping style customizations
 

@@ -71,6 +71,7 @@ const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public
 export class MatMenu extends _MatMenuBase {
+    // @deprecated
     constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, defaultOptions: MatMenuDefaultOptions);
     // (undocumented)
     protected _baseElevation: number;
@@ -90,7 +91,7 @@ export const matMenuAnimations: {
 
 // @public
 export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _defaultOptions: MatMenuDefaultOptions);
+    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _defaultOptions: MatMenuDefaultOptions, _changeDetectorRef?: ChangeDetectorRef | undefined);
     // (undocumented)
     addItem(_item: MatMenuItem): void;
     _allItems: QueryList<MatMenuItem>;
@@ -110,22 +111,19 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     // @deprecated
     readonly close: EventEmitter<MenuCloseReason>;
     readonly closed: EventEmitter<MenuCloseReason>;
+    _directDescendantItems: QueryList<MatMenuItem>;
     direction: Direction;
     // (undocumented)
     protected _elevationPrefix: string;
     focusFirstItem(origin?: FocusOrigin): void;
     _handleKeydown(event: KeyboardEvent): void;
     get hasBackdrop(): boolean | undefined;
-    set hasBackdrop(value: boolean | undefined);
+    set hasBackdrop(value: BooleanInput);
     _hovered(): Observable<MatMenuItem>;
     _isAnimating: boolean;
     // @deprecated
     items: QueryList<MatMenuItem>;
     lazyContent: MatMenuContent;
-    // (undocumented)
-    static ngAcceptInputType_hasBackdrop: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_overlapTrigger: BooleanInput;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -136,7 +134,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     // (undocumented)
     _onAnimationStart(event: AnimationEvent_2): void;
     get overlapTrigger(): boolean;
-    set overlapTrigger(value: boolean);
+    set overlapTrigger(value: BooleanInput);
     overlayPanelClass: string | string[];
     _panelAnimationState: 'void' | 'enter';
     set panelClass(classes: string);
@@ -171,7 +169,8 @@ export class MatMenuContent extends _MatMenuContentBase {
 
 // @public (undocumented)
 export abstract class _MatMenuContentBase implements OnDestroy {
-    constructor(_template: TemplateRef<any>, _componentFactoryResolver: ComponentFactoryResolver, _appRef: ApplicationRef, _injector: Injector, _viewContainerRef: ViewContainerRef, _document: any, _changeDetectorRef?: ChangeDetectorRef | undefined);
+    // @deprecated
+    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef, document: any, changeDetectorRef?: ChangeDetectorRef);
     attach(context?: any): void;
     readonly _attached: Subject<void>;
     detach(): void;
@@ -195,9 +194,8 @@ export interface MatMenuDefaultOptions {
 
 // @public
 export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>,
-    _document?: any, _focusMonitor?: FocusMonitor | undefined, _parentMenu?: MatMenuPanel<MatMenuItem> | undefined,
-    _changeDetectorRef?: ChangeDetectorRef | undefined);
+    // @deprecated
+    constructor(elementRef: ElementRef<HTMLElement>, document?: any, focusMonitor?: FocusMonitor, parentMenu?: MatMenuPanel<MatMenuItem>, changeDetectorRef?: ChangeDetectorRef);
     _checkDisabled(event: Event): void;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     readonly _focused: Subject<MatMenuItem>;
@@ -205,12 +203,10 @@ export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, Ca
     getLabel(): string;
     _getTabIndex(): string;
     _handleMouseEnter(): void;
+    // (undocumented)
+    _hasFocus(): boolean;
     _highlighted: boolean;
     readonly _hovered: Subject<MatMenuItem>;
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disableRipple: BooleanInput;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -287,24 +283,21 @@ export class MatMenuTrigger extends _MatMenuTriggerBase {
 
 // @public (undocumented)
 export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy {
-    constructor(_overlay: Overlay, _element: ElementRef<HTMLElement>, _viewContainerRef: ViewContainerRef, scrollStrategy: any, parentMenu: MatMenuPanel, _menuItemInstance: MatMenuItem, _dir: Directionality, _focusMonitor?: FocusMonitor | undefined);
-    // (undocumented)
-    get _ariaControl(): string | null | undefined;
-    // (undocumented)
-    get _ariaExpanded(): true | null;
-    // (undocumented)
-    _ariaHaspopup: boolean;
+    // @deprecated
+    constructor(overlay: Overlay, element: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parentMenu: MatMenuPanel, menuItemInstance: MatMenuItem, dir: Directionality, focusMonitor?: FocusMonitor | null);
+    // @deprecated
+    constructor(overlay: Overlay, element: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parentMenu: MatMenuPanel, menuItemInstance: MatMenuItem, dir: Directionality, focusMonitor: FocusMonitor);
     closeMenu(): void;
     // @deprecated (undocumented)
-    get _deprecatedMatMenuTriggerFor(): MatMenuPanel;
-    set _deprecatedMatMenuTriggerFor(v: MatMenuPanel);
+    get _deprecatedMatMenuTriggerFor(): MatMenuPanel | null;
+    set _deprecatedMatMenuTriggerFor(v: MatMenuPanel | null);
     get dir(): Direction;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     _handleClick(event: MouseEvent): void;
     _handleKeydown(event: KeyboardEvent): void;
     _handleMousedown(event: MouseEvent): void;
-    get menu(): MatMenuPanel;
-    set menu(menu: MatMenuPanel);
+    get menu(): MatMenuPanel | null;
+    set menu(menu: MatMenuPanel | null);
     readonly menuClosed: EventEmitter<void>;
     menuData: any;
     get menuOpen(): boolean;
@@ -327,10 +320,10 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<_MatMenuTriggerBase, never, never, { "_deprecatedMatMenuTriggerFor": "mat-menu-trigger-for"; "menu": "matMenuTriggerFor"; "menuData": "matMenuTriggerData"; "restoreFocus": "matMenuTriggerRestoreFocus"; }, { "menuOpened": "menuOpened"; "onMenuOpen": "onMenuOpen"; "menuClosed": "menuClosed"; "onMenuClose": "onMenuClose"; }, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatMenuTriggerBase, [null, null, null, null, { optional: true; }, { optional: true; self: true; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatMenuTriggerBase, [null, null, null, null, { optional: true; }, { optional: true; self: true; }, { optional: true; }, null, null]>;
 }
 
-// @public
+// @public @deprecated
 const MENU_PANEL_TOP_PADDING = 8;
 
 // @public

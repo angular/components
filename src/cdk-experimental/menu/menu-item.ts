@@ -8,36 +8,27 @@
 
 import {
   Directive,
-  Input,
-  Optional,
-  Self,
   ElementRef,
-  Output,
   EventEmitter,
   Inject,
-  HostListener,
+  Input,
   NgZone,
   OnDestroy,
+  Optional,
+  Output,
+  Self,
 } from '@angular/core';
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusableOption} from '@angular/cdk/a11y';
-import {SPACE, ENTER, RIGHT_ARROW, LEFT_ARROW} from '@angular/cdk/keycodes';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
-import {Subject, fromEvent} from 'rxjs';
-import {takeUntil, filter} from 'rxjs/operators';
+import {fromEvent, Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
-import {Menu, CDK_MENU} from './menu-interface';
-import {FocusNext} from './menu-stack';
+import {CDK_MENU, Menu} from './menu-interface';
+import {FocusNext, MENU_STACK, MenuStack} from './menu-stack';
 import {FocusableElement} from './pointer-focus-tracker';
-import {Toggler, MENU_AIM, MenuAim} from './menu-aim';
-
-// TODO refactor this to be configurable allowing for custom elements to be removed
-/** Removes all icons from within the given element. */
-function removeIcons(element: Element) {
-  for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
-    icon.remove();
-  }
-}
+import {MENU_AIM, MenuAim, Toggler} from './menu-aim';
 
 /**
  * Directive which provides the ability for an element to be focused and navigated to using the
@@ -53,6 +44,10 @@ function removeIcons(element: Element) {
     'role': 'menuitem',
     'class': 'cdk-menu-item',
     '[attr.aria-disabled]': 'disabled || null',
+    '(blur)': '_resetTabIndex()',
+    '(focus)': '_setTabIndex()',
+    '(click)': 'trigger()',
+    '(keydown)': '_onKeydown($event)',
   },
 })
 export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, OnDestroy {
@@ -61,10 +56,16 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
+
+  /**
+   * The text used to locate this item during menu typeahead. If not specified,
+   * the `textContent` of the item will be used.
+   */
+  @Input() typeahead: string;
 
   /**
    * If this MenuItem is a regular MenuItem, outputs when it is triggered by a keyboard or mouse
@@ -84,6 +85,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   constructor(
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _ngZone: NgZone,
+    @Inject(MENU_STACK) private readonly _menuStack: MenuStack,
     @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
     @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality,
@@ -104,12 +106,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     this._elementRef.nativeElement.focus();
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('blur')
-  @HostListener('mouseout')
   /** Reset the _tabindex to -1. */
   _resetTabIndex() {
     if (!this._isStandaloneItem()) {
@@ -117,12 +113,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     }
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('focus')
-  @HostListener('mouseenter', ['$event'])
   /**
    * Set the tab index to 0 if not disabled and it's a focus event, or a mouse enter if this element
    * is not in a menu bar.
@@ -133,7 +123,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     }
 
     // don't set the tabindex if there are no open sibling or parent menus
-    if (!event || !this._getMenuStack()?.isEmpty()) {
+    if (!event || !this._menuStack.isEmpty()) {
       this._tabindex = 0;
     }
   }
@@ -143,11 +133,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     return !this._parentMenu;
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('click')
   /**
    * If the menu item is not disabled and the element does not have a menu trigger attached, emit
    * on the cdkMenuItemTriggered emitter and close all open menus.
@@ -155,18 +140,18 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   trigger() {
     if (!this.disabled && !this.hasMenu()) {
       this.triggered.next();
-      this._getMenuStack()?.closeAll();
+      this._menuStack.closeAll({focusParentTrigger: true});
     }
   }
 
   /** Whether the menu item opens a menu. */
   hasMenu() {
-    return !!this._menuTrigger?.hasMenu();
+    return !!this._menuTrigger;
   }
 
   /** Return true if this MenuItem has an attached menu and it is open. */
   isMenuOpen() {
-    return !!this._menuTrigger?.isMenuOpen();
+    return !!this._menuTrigger?.isOpen();
   }
 
   /**
@@ -184,19 +169,9 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
 
   /** Get the label for this element which is required by the FocusableOption interface. */
   getLabel(): string {
-    // TODO cloning the tree may be expensive; implement a better method
-    // we know that the current node is an element type
-    const clone = this._elementRef.nativeElement.cloneNode(true) as Element;
-    removeIcons(clone);
-
-    return clone.textContent?.trim() || '';
+    return this.typeahead || this._elementRef.nativeElement.textContent?.trim() || '';
   }
 
-  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
-  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
-  // can move this back into `host`.
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostListener('keydown', ['$event'])
   /**
    * Handles keyboard events for the menu item, specifically either triggering the user defined
    * callback or opening/closing the current menu based on whether the left or right arrow key was
@@ -212,22 +187,42 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
         break;
 
       case RIGHT_ARROW:
-        if (this._parentMenu && this._isParentVertical() && !this.hasMenu()) {
-          event.preventDefault();
-          this._dir?.value === 'rtl'
-            ? this._getMenuStack()?.close(this._parentMenu, FocusNext.previousItem)
-            : this._getMenuStack()?.closeAll(FocusNext.nextItem);
+        if (this._parentMenu && this._isParentVertical()) {
+          if (this._dir?.value !== 'rtl') {
+            this._forwardArrowPressed(event);
+          } else {
+            this._backArrowPressed(event);
+          }
         }
         break;
 
       case LEFT_ARROW:
-        if (this._parentMenu && this._isParentVertical() && !this.hasMenu()) {
-          event.preventDefault();
-          this._dir?.value === 'rtl'
-            ? this._getMenuStack()?.closeAll(FocusNext.nextItem)
-            : this._getMenuStack()?.close(this._parentMenu, FocusNext.previousItem);
+        if (this._parentMenu && this._isParentVertical()) {
+          if (this._dir?.value !== 'rtl') {
+            this._backArrowPressed(event);
+          } else {
+            this._forwardArrowPressed(event);
+          }
         }
         break;
+    }
+  }
+
+  private _backArrowPressed(event: KeyboardEvent) {
+    const parentMenu = this._parentMenu!;
+    if (this._menuStack.hasInlineMenu() || this._menuStack.length() > 1) {
+      event.preventDefault();
+      this._menuStack.close(parentMenu, {
+        focusNextOnEmpty: FocusNext.previousItem,
+        focusParentTrigger: true,
+      });
+    }
+  }
+
+  private _forwardArrowPressed(event: KeyboardEvent) {
+    if (!this.hasMenu() && this._menuStack.hasInlineMenu()) {
+      event.preventDefault();
+      this._menuStack.closeAll({focusNextOnEmpty: FocusNext.nextItem, focusParentTrigger: true});
     }
   }
 
@@ -238,12 +233,12 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   private _setupMouseEnter() {
     if (!this._isStandaloneItem()) {
       const closeOpenSiblings = () =>
-        this._ngZone.run(() => this._getMenuStack()?.closeSubMenuOf(this._parentMenu!));
+        this._ngZone.run(() => this._menuStack.closeSubMenuOf(this._parentMenu!));
 
       this._ngZone.runOutsideAngular(() =>
         fromEvent(this._elementRef.nativeElement, 'mouseenter')
           .pipe(
-            filter(() => !this._getMenuStack()?.isEmpty() && !this.hasMenu()),
+            filter(() => !this._menuStack.isEmpty() && !this.hasMenu()),
             takeUntil(this._destroyed),
           )
           .subscribe(() => {
@@ -265,17 +260,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     return this._parentMenu?.orientation === 'vertical';
   }
 
-  /** Get the MenuStack from the parent menu. */
-  private _getMenuStack() {
-    // We use a function since at the construction of the MenuItemTrigger the parent Menu won't have
-    // its menu stack set. Therefore we need to reference the menu stack from the parent each time
-    // we want to use it.
-    return this._parentMenu?._menuStack;
-  }
-
   ngOnDestroy() {
     this._destroyed.next();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

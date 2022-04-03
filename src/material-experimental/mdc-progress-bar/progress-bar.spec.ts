@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {Component, DebugElement, Provider, Type} from '@angular/core';
+import {ApplicationRef, Component, DebugElement, Provider, Type} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '../../cdk/testing/private';
 import {MatProgressBarModule, MAT_PROGRESS_BAR_DEFAULT_OPTIONS} from './index';
@@ -175,6 +175,45 @@ describe('MDC-based MatProgressBar', () => {
         expect(progressElement.componentInstance.mode).toBe('buffer');
         expect(progressElement.componentInstance.color).toBe('warn');
       });
+
+      it('should update the DOM transform when the value has changed', () => {
+        const fixture = createComponent(BasicProgressBar);
+        fixture.detectChanges();
+
+        const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
+        const progressComponent = progressElement.componentInstance;
+        const primaryBar = progressElement.nativeElement.querySelector(
+          '.mdc-linear-progress__primary-bar',
+        );
+
+        expect(primaryBar.style.transform).toBe('scaleX(0)');
+
+        progressComponent.value = 40;
+        fixture.detectChanges();
+
+        expect(primaryBar.style.transform).toBe('scaleX(0.4)');
+      });
+
+      it('should update the DOM transform when the bufferValue has changed', () => {
+        const fixture = createComponent(BasicProgressBar);
+        fixture.detectChanges();
+
+        const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
+        const progressComponent = progressElement.componentInstance;
+        const bufferBar = progressElement.nativeElement.querySelector(
+          '.mdc-linear-progress__buffer-bar',
+        );
+
+        progressComponent.mode = 'buffer';
+        fixture.detectChanges();
+
+        expect(bufferBar.style.flexBasis).toBe('0%');
+
+        progressComponent.bufferValue = 40;
+        fixture.detectChanges();
+
+        expect(bufferBar.style.flexBasis).toBe('40%');
+      });
     });
 
     describe('animation trigger on determinate setting', () => {
@@ -192,14 +231,16 @@ describe('MDC-based MatProgressBar', () => {
 
       it('should trigger output event on primary value bar animation end', () => {
         fixture.detectChanges();
-        spyOn(progressComponent.animationEnd, 'next');
+
+        const animationEndSpy = jasmine.createSpy();
+        progressComponent.animationEnd.subscribe(animationEndSpy);
 
         progressComponent.value = 40;
-        expect(progressComponent.animationEnd.next).not.toHaveBeenCalled();
+        expect(animationEndSpy).not.toHaveBeenCalled();
 
         // On animation end, output should be emitted.
         dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
-        expect(progressComponent.animationEnd.next).toHaveBeenCalledWith({value: 40});
+        expect(animationEndSpy).toHaveBeenCalledWith({value: 40});
       });
     });
 
@@ -228,27 +269,56 @@ describe('MDC-based MatProgressBar', () => {
 
       it('should trigger output event on primary value bar animation end', () => {
         fixture.detectChanges();
-        spyOn(progressComponent.animationEnd, 'next');
+
+        const animationEndSpy = jasmine.createSpy();
+        progressComponent.animationEnd.subscribe(animationEndSpy);
 
         progressComponent.value = 40;
-        expect(progressComponent.animationEnd.next).not.toHaveBeenCalled();
+        expect(animationEndSpy).not.toHaveBeenCalled();
 
         // On animation end, output should be emitted.
         dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
-        expect(progressComponent.animationEnd.next).toHaveBeenCalledWith({value: 40});
+        expect(animationEndSpy).toHaveBeenCalledWith({value: 40});
       });
 
       it('should trigger output event with value not bufferValue', () => {
         fixture.detectChanges();
-        spyOn(progressComponent.animationEnd, 'next');
+
+        const animationEndSpy = jasmine.createSpy();
+        progressComponent.animationEnd.subscribe(animationEndSpy);
 
         progressComponent.value = 40;
         progressComponent.bufferValue = 70;
-        expect(progressComponent.animationEnd.next).not.toHaveBeenCalled();
+        expect(animationEndSpy).not.toHaveBeenCalled();
 
         // On animation end, output should be emitted.
         dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
-        expect(progressComponent.animationEnd.next).toHaveBeenCalledWith({value: 40});
+        expect(animationEndSpy).toHaveBeenCalledWith({value: 40});
+      });
+
+      it('should not run change detection if there are no `animationEnd` observers', () => {
+        fixture.detectChanges();
+
+        const animationEndSpy = jasmine.createSpy();
+        const appRef = TestBed.inject(ApplicationRef);
+        spyOn(appRef, 'tick');
+
+        progressComponent.value = 30;
+        progressComponent.bufferValue = 60;
+        // On animation end, output should be emitted.
+        dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
+
+        expect(appRef.tick).not.toHaveBeenCalled();
+
+        progressComponent.animationEnd.subscribe(animationEndSpy);
+
+        progressComponent.value = 40;
+        progressComponent.bufferValue = 70;
+        // On animation end, output should be emitted.
+        dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
+
+        expect(appRef.tick).toHaveBeenCalled();
+        expect(animationEndSpy).toHaveBeenCalledWith({value: 40});
       });
     });
   });

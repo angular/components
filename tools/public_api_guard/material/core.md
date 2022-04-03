@@ -5,6 +5,7 @@
 ```ts
 
 import { _AbstractConstructor as _AbstractConstructor_2 } from '@angular/material/core';
+import { AbstractControl } from '@angular/forms';
 import { AfterViewChecked } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
@@ -14,12 +15,10 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOptions as FocusOptions_2 } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { FormControl } from '@angular/forms';
 import { FormGroupDirective } from '@angular/forms';
 import { HighContrastModeDetector } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
-import * as i1_2 from '@angular/cdk/platform';
 import * as i4 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -78,7 +77,6 @@ export interface CanDisableRipple {
 export interface CanUpdateErrorState {
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
-    readonly stateChanges: Subject<void>;
     updateErrorState(): void;
 }
 
@@ -133,7 +131,7 @@ export const defaultRippleAnimationConfig: {
 // @public
 export class ErrorStateMatcher {
     // (undocumented)
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ErrorStateMatcher, never>;
     // (undocumented)
@@ -188,8 +186,7 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
 // @public
 export class MatCommonModule {
-    constructor(highContrastModeDetector: HighContrastModeDetector, sanityChecks: any, document: any);
-    protected _document: Document;
+    constructor(highContrastModeDetector: HighContrastModeDetector, _sanityChecks: SanityChecks, _document: Document);
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCommonModule, [null, { optional: true; }, null]>;
     // (undocumented)
@@ -233,7 +230,7 @@ export class MatLineModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatLineModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLineModule, [typeof MatLine], [typeof i1_3.MatCommonModule], [typeof MatLine, typeof i1_3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLineModule, [typeof MatLine], [typeof i1_2.MatCommonModule], [typeof MatLine, typeof i1_2.MatCommonModule]>;
 }
 
 // @public (undocumented)
@@ -261,30 +258,28 @@ export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisabl
     label: string;
     _labelId: string;
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptgroupBase, never, never, { "label": "label"; }, {}, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptgroupBase, [{ optional: true; }]>;
 }
 
 // @public
-export class MatOption extends _MatOptionBase {
+export class MatOption<T = any> extends _MatOptionBase<T> {
     constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatOptionParentComponent, group: MatOptgroup);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption, "mat-option", ["matOption"], {}, {}, never, ["*"]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], {}, {}, never, ["*"]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
-export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDestroy {
+export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
     constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: _MatOptgroupBase);
     get active(): boolean;
     deselect(): void;
-    get disabled(): any;
-    set disabled(value: any);
-    get disableRipple(): boolean | undefined;
+    get disabled(): boolean;
+    set disabled(value: BooleanInput);
+    get disableRipple(): boolean;
     focus(_origin?: FocusOrigin, options?: FocusOptions_2): void;
     _getAriaSelected(): boolean | null;
     _getHostElement(): HTMLElement;
@@ -296,24 +291,22 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     id: string;
     get multiple(): boolean | undefined;
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly onSelectionChange: EventEmitter<MatOptionSelectionChange>;
+    readonly onSelectionChange: EventEmitter<MatOptionSelectionChange<T>>;
     select(): void;
     get selected(): boolean;
     _selectViaInteraction(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
     readonly _stateChanges: Subject<void>;
-    value: any;
+    value: T;
     get viewValue(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptionBase, never, never, { "value": "value"; "id": "id"; "disabled": "disabled"; }, { "onSelectionChange": "onSelectionChange"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptionBase<any>, never, never, { "value": "value"; "id": "id"; "disabled": "disabled"; }, { "onSelectionChange": "onSelectionChange"; }, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptionBase, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptionBase<any>, never>;
 }
 
 // @public (undocumented)
@@ -323,7 +316,7 @@ export class MatOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_4.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i4.CommonModule, typeof i1_3.MatCommonModule, typeof i6.MatPseudoCheckboxModule], [typeof i1_4.MatOption, typeof i2.MatOptgroup]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_3.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i4.CommonModule, typeof i1_2.MatCommonModule, typeof i6.MatPseudoCheckboxModule], [typeof i1_3.MatOption, typeof i2.MatOptgroup]>;
 }
 
 // @public
@@ -337,12 +330,12 @@ export interface MatOptionParentComponent {
 }
 
 // @public
-export class MatOptionSelectionChange {
+export class MatOptionSelectionChange<T = any> {
     constructor(
-    source: _MatOptionBase,
+    source: _MatOptionBase<T>,
     isUserInput?: boolean);
     isUserInput: boolean;
-    source: _MatOptionBase;
+    source: _MatOptionBase<T>;
 }
 
 // @public
@@ -365,7 +358,7 @@ export class MatPseudoCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatPseudoCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckboxModule, [typeof i1_6.MatPseudoCheckbox], [typeof i1_3.MatCommonModule], [typeof i1_6.MatPseudoCheckbox]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckboxModule, [typeof i1_5.MatPseudoCheckbox], [typeof i1_2.MatCommonModule], [typeof i1_5.MatPseudoCheckbox]>;
 }
 
 // @public
@@ -406,7 +399,7 @@ export class MatRippleModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatRippleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, [typeof i1_5.MatRipple], [typeof i1_3.MatCommonModule, typeof i1_2.PlatformModule], [typeof i1_5.MatRipple, typeof i1_3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, [typeof i1_4.MatRipple], [typeof i1_2.MatCommonModule], [typeof i1_4.MatRipple, typeof i1_2.MatCommonModule]>;
 }
 
 // @public
@@ -491,7 +484,7 @@ export class NativeDateModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<NativeDateModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<NativeDateModule, never, [typeof i1_2.PlatformModule], never>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<NativeDateModule, never, never, never>;
 }
 
 // @public
@@ -523,7 +516,9 @@ export class RippleRef {
         fadeOutRipple(ref: RippleRef): void;
     },
     element: HTMLElement,
-    config: RippleConfig);
+    config: RippleConfig, _animationForciblyDisabledThroughCss?: boolean);
+    // (undocumented)
+    _animationForciblyDisabledThroughCss: boolean;
     config: RippleConfig;
     element: HTMLElement;
     fadeOut(): void;
@@ -569,7 +564,7 @@ export function setLines(lines: QueryList<unknown>, element: ElementRef<HTMLElem
 // @public
 export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnDirtyErrorStateMatcher, never>;
     // (undocumented)

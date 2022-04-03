@@ -1,43 +1,90 @@
+@use 'sass:map';
+@use '@angular/cdk';
+@use '@angular/material' as mat;
 @use '@material/radio/radio' as mdc-radio;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/form-field' as mdc-form-field;
 @use '@material/touch-target' as mdc-touch-target;
-@use '../mdc-helpers/mdc-helpers';
-@use '../../cdk/a11y';
-@use '../../material/core/style/layout-common';
+@use '@material/ripple' as mdc-ripple;
 
-@include mdc-radio.without-ripple($query: mdc-helpers.$mat-base-styles-without-animation-query);
-@include mdc-form-field.core-styles($query: mdc-helpers.$mat-base-styles-query);
+@use '../mdc-helpers/mdc-helpers';
+
+@include mdc-helpers.disable-fallback-declarations {
+  @include mdc-radio.static-styles($query: mdc-helpers.$mat-base-styles-query);
+  @include mdc-form-field.core-styles($query: mdc-helpers.$mat-base-styles-query);
+}
 
 .mat-mdc-radio-button {
-  &:not(._mat-animation-noopable) {
-    @include mdc-radio.without-ripple($query: animation);
-  }
-
   .mdc-radio {
     // MDC theme styles also include structural styles so we have to include the theme at least
     // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-radio-theme.theme-styles(mdc-radio-theme.$light-theme);
+    @include mdc-helpers.disable-fallback-declarations {
+      @include mdc-radio-theme.theme-styles(map.merge(mdc-radio-theme.$light-theme, (
+        // Exclude the styles we don't need.
+        selected-focus-state-layer-color: null,
+        selected-focus-state-layer-opacity: null,
+        selected-hover-state-layer-color: null,
+        selected-hover-state-layer-opacity: null,
+        selected-pressed-state-layer-color: null,
+        selected-pressed-state-layer-opacity: null,
+        unselected-focus-icon-color: null,
+        unselected-focus-state-layer-color: null,
+        unselected-focus-state-layer-opacity: null,
+        unselected-hover-state-layer-color: null,
+        unselected-hover-state-layer-opacity: null,
+        unselected-pressed-state-layer-color: null,
+        unselected-pressed-state-layer-opacity: null,
+      )));
+
+      // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
+      @include mdc-radio-theme.focus-indicator-color(
+        var(--mat-mdc-radio-ripple-color, transparent));
+    }
+
+    // MDC's hover indication comes from their ripple which we don't use.
+    &:hover .mdc-radio__native-control:not([disabled]):not(:focus) {
+      & ~ .mdc-radio__background::before {
+        opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
+        transform: scale(1);
+      }
+    }
+  }
+
+  &.mat-mdc-radio-checked {
+    // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
+    @include mdc-radio-theme.focus-indicator-color(
+      var(--mat-mdc-radio-checked-ripple-color, transparent));
   }
 
   // This is necessary because we do not depend on MDC's ripple, but have our own that should be
   // positioned correctly. This can be removed once we start using MDC's ripple implementation.
   .mat-radio-ripple {
-    @include layout-common.fill;
+    @include mat.private-fill;
     pointer-events: none;
     border-radius: 50%;
 
-    .mat-ripple-element:not(.mat-radio-persistent-ripple) {
+    .mat-ripple-element {
       opacity: mdc-radio-theme.$ripple-opacity;
+    }
+  }
+
+  &._mat-animation-noopable {
+    .mdc-radio__background::before,
+    .mdc-radio__outer-circle,
+    .mdc-radio__inner-circle {
+      // Needs to be `!important`, because MDC's selectors are really specific.
+      transition: none !important;
     }
   }
 }
 
 // Element used to provide a larger tap target for users on touch devices.
 .mat-mdc-radio-touch-target {
-  @include mdc-touch-target.touch-target(
-    $set-width: true,
-    $query: mdc-helpers.$mat-base-styles-query);
+  @include mdc-helpers.disable-fallback-declarations {
+    @include mdc-touch-target.touch-target(
+      $set-width: true,
+      $query: mdc-helpers.$mat-base-styles-query);
+  }
 
   [dir='rtl'] & {
     left: 0;
@@ -49,7 +96,7 @@
 // Note that this creates a square box around the circle, however it's consistent with
 // how IE/Edge treat native radio buttons in high contrast mode. We can't turn the border
 // into a dotted one, because it's too thick which causes the circles to look off.
-@include a11y.high-contrast(active, 'off') {
+@include cdk.high-contrast(active, 'off') {
   .mat-mdc-radio-button:not(.mat-radio-disabled) {
     &.cdk-keyboard-focused,
     &.cdk-program-focused {

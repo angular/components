@@ -8,15 +8,11 @@
     "paths": {
       "@angular/*": ["./*"]
     },
-    "types": ["jasmine", "node"],
+    "types": ["jasmine"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": [
-    "**/*.spec.ts",
-    "dev-mode-types.d.ts",
-    "../node_modules/zone.js/zone.d.ts"
-  ],
+  "include": ["**/*.spec.ts", "dev-mode-types.d.ts", "../node_modules/zone.js/zone.d.ts"],
   "exclude": [
     "**/*.e2e.spec.ts",
     "./cdk/schematics/**/*",

@@ -30,7 +30,6 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -71,7 +70,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     deselect(): void;
     readonly destroyed: EventEmitter<MatChipEvent>;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     // (undocumented)
     protected _disabled: boolean;
     focus(): void;
@@ -79,23 +78,11 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     _handleKeydown(event: KeyboardEvent): void;
     _hasFocus: boolean;
     // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disableRipple: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_removable: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_selectable: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_selected: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: NumberInput;
-    // (undocumented)
     ngOnDestroy(): void;
     readonly _onBlur: Subject<MatChipEvent>;
     readonly _onFocus: Subject<MatChipEvent>;
     get removable(): boolean;
-    set removable(value: boolean);
+    set removable(value: BooleanInput);
     // (undocumented)
     protected _removable: boolean;
     remove(): void;
@@ -103,13 +90,14 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     removeIcon: MatChipRemove;
     rippleConfig: RippleConfig & RippleGlobalOptions;
     get rippleDisabled(): boolean;
+    role: string;
     select(): void;
     get selectable(): boolean;
-    set selectable(value: boolean);
+    set selectable(value: BooleanInput);
     // (undocumented)
     protected _selectable: boolean;
     get selected(): boolean;
-    set selected(value: boolean);
+    set selected(value: BooleanInput);
     // (undocumented)
     protected _selected: boolean;
     readonly selectionChange: EventEmitter<MatChipSelectionChange>;
@@ -121,7 +109,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     // (undocumented)
     protected _value: any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "color": "color"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "selected": "selected"; "value": "value"; "selectable": "selectable"; "disabled": "disabled"; "removable": "removable"; }, { "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["avatar", "trailingIcon", "removeIcon"]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "color": "color"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "role": "role"; "selected": "selected"; "value": "value"; "selectable": "selectable"; "disabled": "disabled"; "removable": "removable"; }, { "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["avatar", "trailingIcon", "removeIcon"]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChip, [null, null, null, { optional: true; }, null, null, { optional: true; }, { attribute: "tabindex"; }]>;
 }
@@ -143,7 +131,7 @@ export interface MatChipEvent {
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, AfterContentInit {
     constructor(_elementRef: ElementRef<HTMLInputElement>, _defaultOptions: MatChipsDefaultOptions);
     get addOnBlur(): boolean;
-    set addOnBlur(value: boolean);
+    set addOnBlur(value: BooleanInput);
     // (undocumented)
     _addOnBlur: boolean;
     _blur(): void;
@@ -153,7 +141,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
     _chipList: MatChipList;
     clear(): void;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     // (undocumented)
     protected _elementRef: ElementRef<HTMLInputElement>;
     _emitChipEnd(event?: KeyboardEvent): void;
@@ -166,10 +154,6 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
     readonly inputElement: HTMLInputElement;
     _keydown(event?: KeyboardEvent): void;
     _keyup(event: KeyboardEvent): void;
-    // (undocumented)
-    static ngAcceptInputType_addOnBlur: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -188,7 +172,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
 
 // @public
 export interface MatChipInputEvent {
-    chipInput?: MatChipInput;
+    chipInput: MatChipInput;
     // @deprecated
     input: HTMLInputElement;
     value: string;
@@ -198,7 +182,6 @@ export interface MatChipInputEvent {
 export class MatChipList extends _MatChipListBase implements MatFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher, ngControl: NgControl);
     _allowFocusEscape(): void;
-    _ariaDescribedby: string;
     ariaOrientation: 'horizontal' | 'vertical';
     _blur(): void;
     readonly change: EventEmitter<MatChipListChange>;
@@ -212,7 +195,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     set compareWith(fn: (o1: any, o2: any) => boolean);
     readonly controlType: string;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     // (undocumented)
     protected _disabled: boolean;
     // (undocumented)
@@ -227,15 +210,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     _keyManager: FocusKeyManager<MatChip>;
     _markAsTouched(): void;
     get multiple(): boolean;
-    set multiple(value: boolean);
-    // (undocumented)
-    static ngAcceptInputType_disabled: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_multiple: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_required: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_selectable: BooleanInput;
+    set multiple(value: BooleanInput);
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -257,12 +232,13 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     // (undocumented)
     registerOnTouched(fn: () => void): void;
     get required(): boolean;
-    set required(value: boolean);
+    set required(value: BooleanInput);
     // (undocumented)
     protected _required: boolean | undefined;
     get role(): string | null;
+    set role(role: string | null);
     get selectable(): boolean;
-    set selectable(value: boolean);
+    set selectable(value: BooleanInput);
     // (undocumented)
     protected _selectable: boolean;
     get selected(): MatChip[] | MatChip;
@@ -280,6 +256,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     _uid: string;
     protected _updateFocusForDestroyedChips(): void;
     protected _updateTabIndex(): void;
+    userAriaDescribedBy: string;
     _userTabIndex: number | null;
     get value(): any;
     set value(value: any);
@@ -289,7 +266,7 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipList, "mat-chip-list", ["matChipList"], { "errorStateMatcher": "errorStateMatcher"; "multiple": "multiple"; "compareWith": "compareWith"; "value": "value"; "required": "required"; "placeholder": "placeholder"; "disabled": "disabled"; "ariaOrientation": "aria-orientation"; "selectable": "selectable"; "tabIndex": "tabIndex"; }, { "change": "change"; "valueChange": "valueChange"; }, ["chips"], ["*"]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipList, "mat-chip-list", ["matChipList"], { "role": "role"; "userAriaDescribedBy": "aria-describedby"; "errorStateMatcher": "errorStateMatcher"; "multiple": "multiple"; "compareWith": "compareWith"; "value": "value"; "required": "required"; "placeholder": "placeholder"; "disabled": "disabled"; "ariaOrientation": "aria-orientation"; "selectable": "selectable"; "tabIndex": "tabIndex"; }, { "change": "change"; "valueChange": "valueChange"; }, ["chips"], ["*"]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipList, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
 }

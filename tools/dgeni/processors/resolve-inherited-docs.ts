@@ -1,6 +1,6 @@
 import {DocCollection, Document, Processor} from 'dgeni';
 import {ClassLikeExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassLikeExportDoc';
-import * as ts from 'typescript';
+import ts from 'typescript';
 import {getInheritedDocsOfClass, isInheritanceCreatedDoc} from '../common/class-inheritance';
 import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
 import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
@@ -20,6 +20,9 @@ export function resolveInheritedDocs(exportSymbolsToDocsMap: Map<ts.Symbol, Clas
  * processed by other standard processors in the Dgeni pipeline. This is helpful as
  * API documents for inheritance are created manually if not exported, and we'd want
  * such docs to be processed by the Dgeni JSDoc processor for example.
+ *
+ * Note that we also want to include external API docs (e.g. from the node modules)
+ * since members from those can also be merged with public-facing API docs.
  */
 export class ResolveInheritedDocs implements Processor {
   $runBefore = ['docs-private-filter', 'parsing-tags'];

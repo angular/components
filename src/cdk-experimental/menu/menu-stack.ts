@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Subject, Observable} from 'rxjs';
+import {Inject, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, startWith} from 'rxjs/operators';
 
 /** Events to emit as specified by the caller once the MenuStack is empty. */
 export const enum FocusNext {
@@ -15,12 +17,43 @@ export const enum FocusNext {
   currentItem,
 }
 
-/**
- * Interface for the elements tracked in the MenuStack.
- */
+/** Interface for the elements tracked in the MenuStack. */
 export interface MenuStackItem {
   /** A reference to the previous Menus MenuStack instance. */
-  _menuStack: MenuStack | null;
+  menuStack?: MenuStack;
+}
+
+/** Injection token used for an implementation of MenuStack. */
+export const MENU_STACK = new InjectionToken<MenuStack>('cdk-menu-stack');
+
+/** A provider that provides the parent menu stack, or a new menu stack if there is no parent one. */
+export const PARENT_OR_NEW_MENU_STACK_PROVIDER = {
+  provide: MENU_STACK,
+  deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
+  useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || new MenuStack(),
+};
+
+/** A provider that provides the parent menu stack, or a new menu stack if there is no parent one. */
+export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER = {
+  provide: MENU_STACK,
+  deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
+  useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || MenuStack.inline(),
+};
+
+/** Options that can be provided to the close or closeAll methods. */
+export interface CloseOptions {
+  /** The element to focus next if the close operation causes the menu stack to become empty. */
+  focusNextOnEmpty?: FocusNext;
+  /** Whether to focus the parent trigger after closing the menu. */
+  focusParentTrigger?: boolean;
+}
+
+/** Event dispatched when a menu is closed. */
+export interface MenuStackCloseEvent {
+  /** The menu being closed. */
+  item: MenuStackItem | undefined;
+  /** Whether to focus the parent trigger after closing the menu. */
+  focusParentTrigger?: boolean;
 }
 
 /**
@@ -29,18 +62,27 @@ export interface MenuStackItem {
  * from the `empty` observable specifying the next focus action which the listener should perform
  * as requested by the closer.
  */
+@Injectable()
 export class MenuStack {
   /** All MenuStackItems tracked by this MenuStack. */
   private readonly _elements: MenuStackItem[] = [];
 
   /** Emits the element which was popped off of the stack when requested by a closer. */
-  private readonly _close: Subject<MenuStackItem | undefined> = new Subject();
+  private readonly _close = new Subject<MenuStackCloseEvent>();
 
   /** Emits once the MenuStack has become empty after popping off elements. */
-  private readonly _empty: Subject<FocusNext | undefined> = new Subject();
+  private readonly _empty = new Subject<FocusNext | undefined>();
+
+  private readonly _hasFocus = new Subject<boolean>();
 
   /** Observable which emits the MenuStackItem which has been requested to close. */
-  readonly closed: Observable<MenuStackItem | undefined> = this._close;
+  readonly closed: Observable<MenuStackCloseEvent> = this._close;
+
+  readonly hasFocus: Observable<boolean> = this._hasFocus.pipe(
+    startWith(false),
+    debounceTime(0),
+    distinctUntilChanged(),
+  );
 
   /**
    * Observable which emits when the MenuStack is empty after popping off the last element. It
@@ -48,6 +90,14 @@ export class MenuStack {
    * perform.
    */
   readonly emptied: Observable<FocusNext | undefined> = this._empty;
+
+  private _hasInlineMenu = false;
+
+  static inline() {
+    const stack = new MenuStack();
+    stack._hasInlineMenu = true;
+    return stack;
+  }
 
   /** @param menu the MenuStackItem to put on the stack. */
   push(menu: MenuStackItem) {
@@ -58,20 +108,19 @@ export class MenuStack {
    * Pop items off of the stack up to and including `lastItem` and emit each on the close
    * observable. If the stack is empty or `lastItem` is not on the stack it does nothing.
    * @param lastItem the last item to pop off the stack.
-   * @param focusNext the event to emit on the `empty` observable if the method call resulted in an
-   * empty stack. Does not emit if the stack was initially empty or if `lastItem` was not on the
-   * stack.
+   * @param options Options that configure behavior on close.
    */
-  close(lastItem: MenuStackItem, focusNext?: FocusNext) {
+  close(lastItem: MenuStackItem, options?: CloseOptions) {
+    const {focusNextOnEmpty, focusParentTrigger} = {...options};
     if (this._elements.indexOf(lastItem) >= 0) {
       let poppedElement: MenuStackItem | undefined;
       do {
         poppedElement = this._elements.pop();
-        this._close.next(poppedElement);
+        this._close.next({item: poppedElement, focusParentTrigger});
       } while (poppedElement !== lastItem);
 
       if (this.isEmpty()) {
-        this._empty.next(focusNext);
+        this._empty.next(focusNextOnEmpty);
       }
     }
   }
@@ -87,7 +136,7 @@ export class MenuStack {
     if (this._elements.indexOf(lastItem) >= 0) {
       removed = this.peek() !== lastItem;
       while (this.peek() !== lastItem) {
-        this._close.next(this._elements.pop());
+        this._close.next({item: this._elements.pop()});
       }
     }
     return removed;
@@ -95,19 +144,18 @@ export class MenuStack {
 
   /**
    * Pop off all MenuStackItems and emit each one on the `close` observable one by one.
-   * @param focusNext the event to emit on the `empty` observable once the stack is emptied. Does
-   * not emit if the stack was initially empty.
+   * @param options Options that configure behavior on close.
    */
-  closeAll(focusNext?: FocusNext) {
+  closeAll(options?: CloseOptions) {
+    const {focusNextOnEmpty, focusParentTrigger} = {...options};
     if (!this.isEmpty()) {
       while (!this.isEmpty()) {
         const menuStackItem = this._elements.pop();
         if (menuStackItem) {
-          this._close.next(menuStackItem);
+          this._close.next({item: menuStackItem, focusParentTrigger});
         }
       }
-
-      this._empty.next(focusNext);
+      this._empty.next(focusNextOnEmpty);
     }
   }
 
@@ -125,10 +173,14 @@ export class MenuStack {
   peek(): MenuStackItem | undefined {
     return this._elements[this._elements.length - 1];
   }
-}
 
-/** NoopMenuStack is a placeholder MenuStack used for inline menus. */
-export class NoopMenuStack extends MenuStack {
-  /** Noop push - does not add elements to the MenuStack. */
-  override push(_: MenuStackItem) {}
+  /** Whether the menu stack is associated with an inline menu. */
+  hasInlineMenu() {
+    return this._hasInlineMenu;
+  }
+
+  /** Sets whether the menu stack contains the focused element. */
+  setHasFocus(hasFocus: boolean) {
+    this._hasFocus.next(hasFocus);
+  }
 }

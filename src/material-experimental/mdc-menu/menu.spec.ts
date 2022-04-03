@@ -41,7 +41,7 @@ import {
   MockNgZone,
 } from '../../cdk/testing/private';
 import {Subject} from 'rxjs';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   MAT_MENU_SCROLL_STRATEGY,
@@ -57,6 +57,7 @@ const MENU_PANEL_TOP_PADDING = 8;
 describe('MDC-based MatMenu', () => {
   let overlayContainerElement: HTMLElement;
   let focusMonitor: FocusMonitor;
+  let viewportRuler: ViewportRuler;
 
   function createComponent<T>(
     component: Type<T>,
@@ -71,6 +72,7 @@ describe('MDC-based MatMenu', () => {
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     focusMonitor = TestBed.inject(FocusMonitor);
+    viewportRuler = TestBed.inject(ViewportRuler);
     const fixture = TestBed.createComponent<T>(component);
     window.scroll(0, 0);
     return fixture;
@@ -85,6 +87,19 @@ describe('MDC-based MatMenu', () => {
     expect(fixture.componentInstance.triggerEl.nativeElement.getAttribute('aria-controls')).toBe(
       fixture.componentInstance.menu.panelId,
     );
+  }));
+
+  it('should set aria-haspopup based on whether a menu is assigned', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerElement = fixture.componentInstance.triggerEl.nativeElement;
+
+    expect(triggerElement.getAttribute('aria-haspopup')).toBe('menu');
+
+    fixture.componentInstance.trigger.menu = null;
+    fixture.detectChanges();
+
+    expect(triggerElement.hasAttribute('aria-haspopup')).toBe(false);
   }));
 
   it('should open the menu as an idempotent operation', fakeAsync(() => {
@@ -125,6 +140,14 @@ describe('MDC-based MatMenu', () => {
     tick(500);
 
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+  }));
+
+  it('should set the correct aria-haspopup value on the trigger element', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerElement = fixture.componentInstance.triggerEl.nativeElement;
+
+    expect(triggerElement.getAttribute('aria-haspopup')).toBe('menu');
   }));
 
   it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
@@ -234,6 +257,28 @@ describe('MDC-based MatMenu', () => {
 
     expect(document.activeElement).toBe(triggerEl);
     tick(500);
+  }));
+
+  it('should move focus to another item if the active item is destroyed', fakeAsync(() => {
+    const fixture = createComponent(MenuWithRepeatedItems, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    triggerEl.click();
+    fixture.detectChanges();
+    tick(500);
+
+    const items = overlayContainerElement.querySelectorAll(
+      '.mat-mdc-menu-panel .mat-mdc-menu-item',
+    );
+
+    expect(document.activeElement).toBe(items[0]);
+
+    fixture.componentInstance.items.shift();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(document.activeElement).toBe(items[1]);
   }));
 
   it('should be able to set a custom class on the backdrop', fakeAsync(() => {
@@ -428,6 +473,7 @@ describe('MDC-based MatMenu', () => {
 
     const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel')!;
     const event = createKeyboardEvent('keydown', ESCAPE);
+    spyOn(event, 'stopPropagation').and.callThrough();
 
     dispatchEvent(panel, event);
     fixture.detectChanges();
@@ -435,6 +481,7 @@ describe('MDC-based MatMenu', () => {
 
     expect(overlayContainerElement.textContent).toBe('');
     expect(event.defaultPrevented).toBe(true);
+    expect(event.stopPropagation).toHaveBeenCalled();
   }));
 
   it('should not close the menu when pressing ESCAPE with a modifier', fakeAsync(() => {
@@ -824,20 +871,6 @@ describe('MDC-based MatMenu', () => {
     expect(triggerEl.hasAttribute('aria-expanded')).toBe(false);
   }));
 
-  it('should throw the correct error if the menu is not defined after init', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
-    fixture.detectChanges();
-
-    fixture.componentInstance.trigger.menu = null!;
-    fixture.detectChanges();
-
-    expect(() => {
-      fixture.componentInstance.trigger.openMenu();
-      fixture.detectChanges();
-      tick(500);
-    }).toThrowError(/must pass in an mat-menu instance/);
-  }));
-
   it('should throw if assigning a menu that contains the trigger', fakeAsync(() => {
     expect(() => {
       const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
@@ -1140,6 +1173,28 @@ describe('MDC-based MatMenu', () => {
     expect(panel.classList).toContain('mat-menu-after');
   }));
 
+  it('should keep the panel in the viewport when more items are added while open', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+    triggerEl.style.position = 'absolute';
+    triggerEl.style.left = '200px';
+    triggerEl.style.bottom = '300px';
+    triggerEl.click();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel')!;
+    const viewportHeight = viewportRuler.getViewportSize().height;
+    let panelRect = panel.getBoundingClientRect();
+    expect(Math.floor(panelRect.bottom)).toBeLessThan(viewportHeight);
+
+    fixture.componentInstance.extraItems = new Array(50).fill('Hello there');
+    fixture.detectChanges();
+    panelRect = panel.getBoundingClientRect();
+    expect(Math.floor(panelRect.bottom)).toBe(viewportHeight);
+  });
+
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
       const fixture = createComponent(SimpleLazyMenu);
@@ -1303,6 +1358,29 @@ describe('MDC-based MatMenu', () => {
 
       expect(panel.classList).toContain('mat-menu-below');
       expect(panel.classList).not.toContain('mat-menu-above');
+    }));
+
+    it('should update the position classes if the window is resized', fakeAsync(() => {
+      trigger.style.position = 'fixed';
+      trigger.style.top = '300px';
+      fixture.componentInstance.yPosition = 'above';
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel') as HTMLElement;
+
+      expect(panel.classList).toContain('mat-menu-above');
+      expect(panel.classList).not.toContain('mat-menu-below');
+
+      trigger.style.top = '0';
+      dispatchFakeEvent(window, 'resize');
+      fixture.detectChanges();
+      tick(500);
+      fixture.detectChanges();
+
+      expect(panel.classList).not.toContain('mat-menu-above');
+      expect(panel.classList).toContain('mat-menu-below');
     }));
 
     it('should be able to update the position after the first open', fakeAsync(() => {
@@ -2056,7 +2134,7 @@ describe('MDC-based MatMenu', () => {
         .toBe(true);
     }));
 
-    it('should restore focus to a nested trigger when navgating via the keyboard', fakeAsync(() => {
+    it('should restore focus to a nested trigger when navigating via the keyboard', fakeAsync(() => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -2081,7 +2159,7 @@ describe('MDC-based MatMenu', () => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '50px';
-      instance.rootTriggerEl.nativeElement.style.top = '50px';
+      instance.rootTriggerEl.nativeElement.style.top = '200px';
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2091,7 +2169,7 @@ describe('MDC-based MatMenu', () => {
       tick(500);
 
       const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-      const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
+      const panelRect = overlay.querySelectorAll('.mat-mdc-menu-panel')[1].getBoundingClientRect();
 
       expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left));
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
@@ -2101,7 +2179,7 @@ describe('MDC-based MatMenu', () => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.right = '10px';
-      instance.rootTriggerEl.nativeElement.style.top = '50%';
+      instance.rootTriggerEl.nativeElement.style.top = '200px';
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2111,7 +2189,7 @@ describe('MDC-based MatMenu', () => {
       tick(500);
 
       const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-      const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
+      const panelRect = overlay.querySelectorAll('.mat-mdc-menu-panel')[1].getBoundingClientRect();
 
       expect(Math.round(triggerRect.left)).toBe(Math.round(panelRect.right));
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
@@ -2121,7 +2199,7 @@ describe('MDC-based MatMenu', () => {
       compileTestComponent('rtl');
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '50%';
-      instance.rootTriggerEl.nativeElement.style.top = '50%';
+      instance.rootTriggerEl.nativeElement.style.top = '200px';
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2131,7 +2209,7 @@ describe('MDC-based MatMenu', () => {
       tick(500);
 
       const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-      const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
+      const panelRect = overlay.querySelectorAll('.mat-mdc-menu-panel')[1].getBoundingClientRect();
 
       expect(Math.round(triggerRect.left)).toBe(Math.round(panelRect.right));
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
@@ -2141,7 +2219,7 @@ describe('MDC-based MatMenu', () => {
       compileTestComponent('rtl');
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '10px';
-      instance.rootTriggerEl.nativeElement.style.top = '50%';
+      instance.rootTriggerEl.nativeElement.style.top = '200px';
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2151,11 +2229,31 @@ describe('MDC-based MatMenu', () => {
       tick(500);
 
       const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-      const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
+      const panelRect = overlay.querySelectorAll('.mat-mdc-menu-panel')[1].getBoundingClientRect();
 
       expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left));
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
     }));
+
+    it('should account for custom padding when offsetting the sub-menu', () => {
+      compileTestComponent();
+      instance.rootTriggerEl.nativeElement.style.position = 'fixed';
+      instance.rootTriggerEl.nativeElement.style.left = '10px';
+      instance.rootTriggerEl.nativeElement.style.top = '200px';
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      // Change the padding to something different from the default.
+      (overlay.querySelector('.mat-mdc-menu-content') as HTMLElement).style.padding = '15px 0';
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
+      const panelRect = overlay.querySelectorAll('.mat-mdc-menu-panel')[1].getBoundingClientRect();
+
+      expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + 15);
+    });
 
     it('should close all of the menus when an item is clicked', fakeAsync(() => {
       compileTestComponent();
@@ -3015,3 +3113,18 @@ class StaticAriaLabelledByMenu {}
   template: '<mat-menu aria-describedby="some-element"></mat-menu>',
 })
 class StaticAriaDescribedbyMenu {}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button *ngFor="let item of items" mat-menu-item>{{item}}</button>
+    </mat-menu>
+  `,
+})
+class MenuWithRepeatedItems {
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+  @ViewChild(MatMenu, {static: false}) menu: MatMenu;
+  items = ['One', 'Two', 'Three'];
+}

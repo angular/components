@@ -68,26 +68,16 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     get dir(): Direction;
     disableClose: boolean;
     get flexibleDimensions(): boolean;
-    set flexibleDimensions(value: boolean);
+    set flexibleDimensions(value: BooleanInput);
     get growAfterOpen(): boolean;
-    set growAfterOpen(value: boolean);
-    get hasBackdrop(): any;
-    set hasBackdrop(value: any);
+    set growAfterOpen(value: BooleanInput);
+    get hasBackdrop(): boolean;
+    set hasBackdrop(value: BooleanInput);
     height: number | string;
-    get lockPosition(): any;
-    set lockPosition(value: any);
+    get lockPosition(): boolean;
+    set lockPosition(value: BooleanInput);
     minHeight: number | string;
     minWidth: number | string;
-    // (undocumented)
-    static ngAcceptInputType_flexibleDimensions: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_growAfterOpen: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_hasBackdrop: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_lockPosition: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_push: BooleanInput;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -106,7 +96,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     positions: ConnectedPosition[];
     positionStrategy: FlexibleConnectedPositionStrategy;
     get push(): boolean;
-    set push(value: boolean);
+    set push(value: BooleanInput);
     scrollStrategy: ScrollStrategy;
     transformOriginSelector: string;
     viewportMargin: number;
@@ -240,10 +230,12 @@ export class GlobalPositionStrategy implements PositionStrategy {
     centerHorizontally(offset?: string): this;
     centerVertically(offset?: string): this;
     dispose(): void;
+    end(value?: string): this;
     // @deprecated
     height(value?: string): this;
     left(value?: string): this;
     right(value?: string): this;
+    start(value?: string): this;
     top(value?: string): this;
     // @deprecated
     width(value?: string): this;
@@ -270,12 +262,12 @@ export interface OriginConnectionPosition {
 // @public
 export class Overlay {
     constructor(
-    scrollStrategies: ScrollStrategyOptions, _overlayContainer: OverlayContainer, _componentFactoryResolver: ComponentFactoryResolver, _positionBuilder: OverlayPositionBuilder, _keyboardDispatcher: OverlayKeyboardDispatcher, _injector: Injector, _ngZone: NgZone, _document: any, _directionality: Directionality, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher);
+    scrollStrategies: ScrollStrategyOptions, _overlayContainer: OverlayContainer, _componentFactoryResolver: ComponentFactoryResolver, _positionBuilder: OverlayPositionBuilder, _keyboardDispatcher: OverlayKeyboardDispatcher, _injector: Injector, _ngZone: NgZone, _document: any, _directionality: Directionality, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsModuleType?: string | undefined);
     create(config?: OverlayConfig): OverlayRef;
     position(): OverlayPositionBuilder;
     scrollStrategies: ScrollStrategyOptions;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<Overlay, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Overlay, [null, null, null, null, null, null, null, null, null, null, null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<Overlay>;
 }
@@ -327,11 +319,12 @@ export class OverlayContainer implements OnDestroy {
 
 // @public
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-    constructor(document: any);
+    constructor(document: any,
+    _ngZone?: NgZone | undefined);
     add(overlayRef: OverlayReference): void;
     protected detach(): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayKeyboardDispatcher, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayKeyboardDispatcher, [null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<OverlayKeyboardDispatcher>;
 }
@@ -348,11 +341,12 @@ export class OverlayModule {
 
 // @public
 export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
-    constructor(document: any, _platform: Platform);
+    constructor(document: any, _platform: Platform,
+    _ngZone?: NgZone | undefined);
     add(overlayRef: OverlayReference): void;
     protected detach(): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayOutsideClickDispatcher, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayOutsideClickDispatcher, [null, null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<OverlayOutsideClickDispatcher>;
 }
@@ -370,7 +364,7 @@ export class OverlayPositionBuilder {
 
 // @public
 export class OverlayRef implements PortalOutlet, OverlayReference {
-    constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher);
+    constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsDisabled?: boolean);
     addPanelClass(classes: string | string[]): void;
     // (undocumented)
     attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
@@ -476,6 +470,12 @@ export class ScrollStrategyOptions {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<ScrollStrategyOptions>;
 }
+
+// @public (undocumented)
+export const STANDARD_DROPDOWN_ADJACENT_POSITIONS: ConnectedPosition[];
+
+// @public (undocumented)
+export const STANDARD_DROPDOWN_BELOW_POSITIONS: ConnectedPosition[];
 
 // @public
 export function validateHorizontalPosition(property: string, value: HorizontalConnectionPos): void;

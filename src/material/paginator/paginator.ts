@@ -89,6 +89,15 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
 /** @docs-private */
 const _MatPaginatorMixinBase = mixinDisabled(mixinInitialized(class {}));
 
+/** Object that can used to configure the underlying `MatSelect` inside a `MatPaginator`. */
+export interface MatPaginatorSelectConfig {
+  /** Whether to center the active option over the trigger. */
+  disableOptionCentering?: boolean;
+
+  /** Classes to be passed to the select panel. */
+  panelClass?: string | string[] | Set<string> | {[key: string]: any};
+}
+
 /**
  * Base class with all of the `MatPaginator` functionality.
  * @docs-private
@@ -116,7 +125,7 @@ export abstract class _MatPaginatorBase<
   get pageIndex(): number {
     return this._pageIndex;
   }
-  set pageIndex(value: number) {
+  set pageIndex(value: NumberInput) {
     this._pageIndex = Math.max(coerceNumberProperty(value), 0);
     this._changeDetectorRef.markForCheck();
   }
@@ -127,7 +136,7 @@ export abstract class _MatPaginatorBase<
   get length(): number {
     return this._length;
   }
-  set length(value: number) {
+  set length(value: NumberInput) {
     this._length = coerceNumberProperty(value);
     this._changeDetectorRef.markForCheck();
   }
@@ -138,7 +147,7 @@ export abstract class _MatPaginatorBase<
   get pageSize(): number {
     return this._pageSize;
   }
-  set pageSize(value: number) {
+  set pageSize(value: NumberInput) {
     this._pageSize = Math.max(coerceNumberProperty(value), 0);
     this._updateDisplayedPageSizeOptions();
   }
@@ -149,7 +158,7 @@ export abstract class _MatPaginatorBase<
   get pageSizeOptions(): number[] {
     return this._pageSizeOptions;
   }
-  set pageSizeOptions(value: number[]) {
+  set pageSizeOptions(value: number[] | readonly number[]) {
     this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
     this._updateDisplayedPageSizeOptions();
   }
@@ -160,7 +169,7 @@ export abstract class _MatPaginatorBase<
   get hidePageSize(): boolean {
     return this._hidePageSize;
   }
-  set hidePageSize(value: boolean) {
+  set hidePageSize(value: BooleanInput) {
     this._hidePageSize = coerceBooleanProperty(value);
   }
   private _hidePageSize = false;
@@ -170,10 +179,13 @@ export abstract class _MatPaginatorBase<
   get showFirstLastButtons(): boolean {
     return this._showFirstLastButtons;
   }
-  set showFirstLastButtons(value: boolean) {
+  set showFirstLastButtons(value: BooleanInput) {
     this._showFirstLastButtons = coerceBooleanProperty(value);
   }
   private _showFirstLastButtons = false;
+
+  /** Used to configure the underlying `MatSelect` inside the paginator. */
+  @Input() selectConfig: MatPaginatorSelectConfig = {};
 
   /** Event emitted when the paginator changes the page size or page index. */
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
@@ -227,7 +239,7 @@ export abstract class _MatPaginatorBase<
     }
 
     const previousPageIndex = this.pageIndex;
-    this.pageIndex++;
+    this.pageIndex = this.pageIndex + 1;
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -238,7 +250,7 @@ export abstract class _MatPaginatorBase<
     }
 
     const previousPageIndex = this.pageIndex;
-    this.pageIndex--;
+    this.pageIndex = this.pageIndex - 1;
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -350,13 +362,6 @@ export abstract class _MatPaginatorBase<
       length: this.length,
     });
   }
-
-  static ngAcceptInputType_pageIndex: NumberInput;
-  static ngAcceptInputType_length: NumberInput;
-  static ngAcceptInputType_pageSize: NumberInput;
-  static ngAcceptInputType_hidePageSize: BooleanInput;
-  static ngAcceptInputType_showFirstLastButtons: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**

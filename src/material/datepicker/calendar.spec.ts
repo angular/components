@@ -7,7 +7,14 @@ import {
   MockNgZone,
 } from '../../cdk/testing/private';
 import {Component, NgZone} from '@angular/core';
-import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {
+  fakeAsync,
+  waitForAsync,
+  ComponentFixture,
+  inject,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
@@ -18,27 +25,25 @@ import {MatDatepickerModule} from './datepicker-module';
 describe('MatCalendar', () => {
   let zone: MockNgZone;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatNativeDateModule, MatDatepickerModule],
-        declarations: [
-          // Test components.
-          StandardCalendar,
-          CalendarWithMinMax,
-          CalendarWithDateFilter,
-          CalendarWithSelectableMinDate,
-        ],
-        providers: [
-          MatDatepickerIntl,
-          {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
-          {provide: Directionality, useFactory: () => ({value: 'ltr'})},
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatNativeDateModule, MatDatepickerModule],
+      declarations: [
+        // Test components.
+        StandardCalendar,
+        CalendarWithMinMax,
+        CalendarWithDateFilter,
+        CalendarWithSelectableMinDate,
+      ],
+      providers: [
+        MatDatepickerIntl,
+        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
+        {provide: Directionality, useFactory: () => ({value: 'ltr'})},
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('standard calendar', () => {
     let fixture: ComponentFixture<StandardCalendar>;
@@ -190,7 +195,7 @@ describe('MatCalendar', () => {
           expect(activeCell.focus).not.toHaveBeenCalled();
         });
 
-        it('should move focus to the active cell when the view changes', () => {
+        it('should move focus to the active cell when the view changes', fakeAsync(() => {
           calendarInstance.currentView = 'multi-year';
           fixture.detectChanges();
 
@@ -200,9 +205,10 @@ describe('MatCalendar', () => {
           spyOn(activeCell, 'focus').and.callThrough();
 
           zone.simulateZoneExit();
+          tick();
 
           expect(activeCell.focus).toHaveBeenCalled();
-        });
+        }));
 
         describe('year view', () => {
           beforeEach(() => {
@@ -425,6 +431,16 @@ describe('MatCalendar', () => {
       expect(calendarInstance.monthView._init).toHaveBeenCalled();
     });
 
+    it('should not re-render the month view when the minDate changes to the same day at a different time', () => {
+      fixture.detectChanges();
+      spyOn(calendarInstance.monthView, '_init').and.callThrough();
+
+      testComponent.minDate = new Date(2016, JAN, 1, 0, 0, 0, 1);
+      fixture.detectChanges();
+
+      expect(calendarInstance.monthView._init).not.toHaveBeenCalled();
+    });
+
     it('should re-render the month view when the maxDate changes', () => {
       fixture.detectChanges();
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
@@ -471,6 +487,25 @@ describe('MatCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.yearView._init).toHaveBeenCalled();
+    });
+
+    it('should not re-render the year view when the maxDate changes to the same day at a different time', () => {
+      fixture.detectChanges();
+      const periodButton = calendarElement.querySelector(
+        '.mat-calendar-period-button',
+      ) as HTMLElement;
+      periodButton.click();
+      fixture.detectChanges();
+
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+      fixture.detectChanges();
+
+      spyOn(calendarInstance.yearView, '_init').and.callThrough();
+
+      testComponent.maxDate = new Date(2018, JAN, 1, 0, 0, 1, 0);
+      fixture.detectChanges();
+
+      expect(calendarInstance.yearView._init).not.toHaveBeenCalled();
     });
 
     it('should re-render the multi-year view when the minDate changes', () => {

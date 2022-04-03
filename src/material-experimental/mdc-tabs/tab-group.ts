@@ -41,7 +41,8 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   inputs: ['color', 'disableRipple'],
   providers: [
     {
@@ -53,6 +54,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
     'class': 'mat-mdc-tab-group',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
+    '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {
@@ -65,11 +67,21 @@ export class MatTabGroup extends _MatTabGroupBase {
   get fitInkBarToContent(): boolean {
     return this._fitInkBarToContent;
   }
-  set fitInkBarToContent(v: boolean) {
+  set fitInkBarToContent(v: BooleanInput) {
     this._fitInkBarToContent = coerceBooleanProperty(v);
     this._changeDetectorRef.markForCheck();
   }
   private _fitInkBarToContent = false;
+
+  /** Whether tabs should be stretched to fill the header. */
+  @Input('mat-stretch-tabs')
+  get stretchTabs(): boolean {
+    return this._stretchTabs;
+  }
+  set stretchTabs(v: BooleanInput) {
+    this._stretchTabs = coerceBooleanProperty(v);
+  }
+  private _stretchTabs = true;
 
   constructor(
     elementRef: ElementRef,
@@ -83,6 +95,4 @@ export class MatTabGroup extends _MatTabGroupBase {
         ? defaultConfig.fitInkBarToContent
         : false;
   }
-
-  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
 }

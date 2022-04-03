@@ -13,7 +13,7 @@ import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/privat
 import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
-import {JAN} from '../testing';
+import {JAN, MAR} from '../testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody} from './calendar-body';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
@@ -21,26 +21,24 @@ import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 describe('MatMultiYearView', () => {
   let dir: {value: Direction};
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatNativeDateModule],
-        declarations: [
-          MatCalendarBody,
-          MatMultiYearView,
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatNativeDateModule],
+      declarations: [
+        MatCalendarBody,
+        MatMultiYearView,
 
-          // Test components.
-          StandardMultiYearView,
-          MultiYearViewWithDateFilter,
-          MultiYearViewWithMinMaxDate,
-          MultiYearViewWithDateClass,
-        ],
-        providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
-      });
+        // Test components.
+        StandardMultiYearView,
+        MultiYearViewWithDateFilter,
+        MultiYearViewWithMinMaxDate,
+        MultiYearViewWithDateClass,
+      ],
+      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('standard multi-year view', () => {
     let fixture: ComponentFixture<StandardMultiYearView>;
@@ -116,7 +114,7 @@ describe('MatMultiYearView', () => {
           ) as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
           dir.value = 'ltr';
-          fixture.componentInstance.date = new Date(2017, JAN, 1);
+          fixture.componentInstance.date = new Date(2017, JAN, 3);
           dispatchFakeEvent(calendarBodyEl, 'focus');
           fixture.detectChanges();
         });
@@ -125,96 +123,124 @@ describe('MatMultiYearView', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2016, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2016, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2015, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2015, JAN, 3));
         });
 
         it('should increment year on right arrow press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2018, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2018, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2019, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2019, JAN, 3));
         });
 
         it('should go up a row on up arrow press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', UP_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerRow, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerRow, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', UP_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerRow * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerRow * 2, JAN, 3));
         });
 
         it('should go down a row on down arrow press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', DOWN_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerRow, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerRow, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', DOWN_ARROW);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerRow * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerRow * 2, JAN, 3));
         });
 
         it('should go to first year in current range on home press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', HOME);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2016, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2016, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', HOME);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2016, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2016, JAN, 3));
         });
 
         it('should go to last year in current range on end press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', END);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2039, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2039, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', END);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2039, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2039, JAN, 3));
         });
 
         it('should go to same index in previous year range page up press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_UP);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerPage, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerPage, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_UP);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerPage * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 - yearsPerPage * 2, JAN, 3));
         });
 
         it('should go to same index in next year range on page down press', () => {
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_DOWN);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerPage, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerPage, JAN, 3));
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', PAGE_DOWN);
           fixture.detectChanges();
 
-          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerPage * 2, JAN, 1));
+          expect(calendarInstance.date).toEqual(new Date(2017 + yearsPerPage * 2, JAN, 3));
+        });
+
+        it('should go to the year that is focused', () => {
+          fixture.componentInstance.date = new Date(2017, MAR, 5);
+          fixture.detectChanges();
+          expect(calendarInstance.date).toEqual(new Date(2017, MAR, 5));
+
+          const year2022Cell = fixture.debugElement.nativeElement.querySelector(
+            '[data-mat-row="1"][data-mat-col="2"] button',
+          ) as HTMLElement;
+
+          dispatchFakeEvent(year2022Cell, 'focus');
+          fixture.detectChanges();
+
+          expect(calendarInstance.date).toEqual(new Date(2022, MAR, 5));
+        });
+
+        it('should not call `.focus()` when the active date is focused', () => {
+          const year2017Cell = fixture.debugElement.nativeElement.querySelector(
+            '[data-mat-row="0"][data-mat-col="1"] button',
+          ) as HTMLElement;
+          const focusSpy = (year2017Cell.focus = jasmine.createSpy('cellFocused'));
+
+          dispatchFakeEvent(year2017Cell, 'focus');
+          fixture.detectChanges();
+
+          expect(calendarInstance.date).toEqual(new Date(2017, JAN, 3));
+          expect(focusSpy).not.toHaveBeenCalled();
         });
       });
     });

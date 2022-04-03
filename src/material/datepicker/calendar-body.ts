@@ -18,6 +18,7 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  AfterViewChecked,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 
@@ -67,12 +68,17 @@ export interface MatCalendarUserEvent<D> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendarBody implements OnChanges, OnDestroy {
+export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
   /**
    * Used to skip the next focus event when rendering the preview range.
    * We need a flag like this, because some browsers fire focus events asynchronously.
    */
   private _skipNextFocus: boolean;
+
+  /**
+   * Used to focus the active cell after change detection has run.
+   */
+  private _focusActiveCellAfterViewChecked = false;
 
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
@@ -97,6 +103,13 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** The cell number of the active cell in the table. */
   @Input() activeCell: number = 0;
+
+  ngAfterViewChecked() {
+    if (this._focusActiveCellAfterViewChecked) {
+      this._focusActiveCell();
+      this._focusActiveCellAfterViewChecked = false;
+    }
+  }
 
   /** Whether a range is being selected. */
   @Input() isRange: boolean = false;
@@ -127,6 +140,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     MatCalendarUserEvent<MatCalendarCell | null>
   >();
 
+  @Output() readonly activeDateChange = new EventEmitter<MatCalendarUserEvent<number>>();
+
   /** The number of blank cells to put at the beginning for the first row. */
   _firstRowOffset: number;
 
@@ -150,6 +165,12 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   _cellClicked(cell: MatCalendarCell, event: MouseEvent): void {
     if (cell.enabled) {
       this.selectedValueChange.emit({value: cell.value, event});
+    }
+  }
+
+  _emitActiveDateChange(cell: MatCalendarCell, event: FocusEvent): void {
+    if (cell.enabled) {
+      this.activeDateChange.emit({value: cell.value, event});
     }
   }
 
@@ -195,23 +216,51 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     return cellNumber == this.activeCell;
   }
 
-  /** Focuses the active cell after the microtask queue is empty. */
+  /**
+   * Focuses the active cell after the microtask queue is empty.
+   *
+   * Adding a 0ms setTimeout seems to fix Voiceover losing focus when pressing PageUp/PageDown
+   * (issue #24330).
+   *
+   * Determined a 0ms by gradually increasing duration from 0 and testing two use cases with screen
+   * reader enabled:
+   *
+   * 1. Pressing PageUp/PageDown repeatedly with pausing between each key press.
+   * 2. Pressing and holding the PageDown key with repeated keys enabled.
+   *
+   * Test 1 worked roughly 95-99% of the time with 0ms and got a little bit better as the duration
+   * increased. Test 2 got slightly better until the duration was long enough to interfere with
+   * repeated keys. If the repeated key speed was faster than the timeout duration, then pressing
+   * and holding pagedown caused the entire page to scroll.
+   *
+   * Since repeated key speed can verify across machines, determined that any duration could
+   * potentially interfere with repeated keys. 0ms would be best because it almost entirely
+   * eliminates the focus being lost in Voiceover (#24330) without causing unintended side effects.
+   * Adding delay also complicates writing tests.
+   */
   _focusActiveCell(movePreview = true) {
     this._ngZone.runOutsideAngular(() => {
       this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-        const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
-          '.mat-calendar-body-active',
-        );
+        setTimeout(() => {
+          const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
+            '.mat-calendar-body-active',
+          );
 
-        if (activeCell) {
-          if (!movePreview) {
-            this._skipNextFocus = true;
+          if (activeCell) {
+            if (!movePreview) {
+              this._skipNextFocus = true;
+            }
+
+            activeCell.focus();
           }
-
-          activeCell.focus();
-        }
+        });
       });
     });
+  }
+
+  /** Focuses the active cell after change detection has run and the microtask queue is empty. */
+  _scheduleFocusActiveCellAfterViewChecked() {
+    this._focusActiveCellAfterViewChecked = true;
   }
 
   /** Gets whether a value is the start of the main range. */
@@ -337,7 +386,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
       // Only reset the preview end value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
-      if (event.target && isTableCell(event.target as HTMLElement)) {
+      if (event.target && this._getCellFromElement(event.target as HTMLElement)) {
         this._ngZone.run(() => this.previewChange.emit({value: null, event}));
       }
     }

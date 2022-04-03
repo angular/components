@@ -1,5 +1,5 @@
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {
@@ -17,23 +17,22 @@ describe('RepositionScrollStrategy', () => {
   let componentPortal: ComponentPortal<PastaMsg>;
   let scrolledSubject = new Subject();
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [OverlayModule, PortalModule, OverlayTestModule],
-        providers: [
-          {
-            provide: ScrollDispatcher,
-            useFactory: () => ({
-              scrolled: () => scrolledSubject,
-            }),
-          },
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [OverlayModule, PortalModule],
+      declarations: [PastaMsg],
+      providers: [
+        {
+          provide: ScrollDispatcher,
+          useFactory: () => ({
+            scrolled: () => scrolledSubject,
+          }),
+        },
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   beforeEach(inject([Overlay], (o: Overlay) => {
     overlay = o;
@@ -119,11 +118,3 @@ describe('RepositionScrollStrategy', () => {
 /** Simple component that we can attach to the overlay. */
 @Component({template: '<p>Pasta</p>'})
 class PastaMsg {}
-
-/** Test module to hold the component. */
-@NgModule({
-  imports: [OverlayModule, PortalModule],
-  declarations: [PastaMsg],
-  entryComponents: [PastaMsg],
-})
-class OverlayTestModule {}

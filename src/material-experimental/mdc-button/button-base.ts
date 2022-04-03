@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
-import {Directive, ElementRef, HostListener, NgZone, ViewChild} from '@angular/core';
+import {Directive, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
   CanColor,
   CanDisable,
@@ -86,11 +85,11 @@ export class MatButtonBase
   extends _MatButtonMixin
   implements CanDisable, CanColor, CanDisableRipple
 {
-  /** Whether the ripple is centered on the button. */
-  _isRippleCentered = false;
-
   /** Whether this button is a FAB. Used to apply the correct class on the ripple. */
   _isFab = false;
+
+  /** Whether this button is an icon button. Used to apply the correct class on the ripple. */
+  _isIconButton = false;
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -129,9 +128,6 @@ export class MatButtonBase
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /** Shared inputs by buttons using the `<a>` tag */
@@ -145,7 +141,7 @@ export const MAT_ANCHOR_HOST = {
   // Note that we ignore the user-specified tabindex when it's disabled for
   // consistency with the `mat-button` applied on native buttons where even
   // though they have an index, they're not tabbable.
-  '[attr.tabindex]': 'disabled ? -1 : (tabIndex || 0)',
+  '[attr.tabindex]': 'disabled ? -1 : tabIndex',
   '[attr.aria-disabled]': 'disabled.toString()',
   // MDC automatically applies the primary theme color to the button, but we want to support
   // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
@@ -160,24 +156,28 @@ export const MAT_ANCHOR_HOST = {
  * Anchor button base.
  */
 @Directive()
-export class MatAnchorBase extends MatButtonBase {
+export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
   tabIndex: number;
 
   constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(mmalerba): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click', ['$event'])
-  _haltDisabledEvents(event: Event) {
+  ngOnInit(): void {
+    this._ngZone.runOutsideAngular(() => {
+      this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents);
+  }
+
+  _haltDisabledEvents = (event: Event): void => {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
-  }
+  };
 }

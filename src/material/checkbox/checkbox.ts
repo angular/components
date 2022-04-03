@@ -7,7 +7,7 @@
  */
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewChecked,
   Attribute,
@@ -117,6 +117,8 @@ const _MatCheckboxBase = mixinTabIndex(
     'class': 'mat-checkbox',
     '[id]': 'id',
     '[attr.tabindex]': 'null',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
     '[class.mat-checkbox-indeterminate]': 'indeterminate',
     '[class.mat-checkbox-checked]': 'checked',
     '[class.mat-checkbox-disabled]': 'disabled',
@@ -170,7 +172,7 @@ export class MatCheckbox
   get required(): boolean {
     return this._required;
   }
-  set required(value: boolean) {
+  set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
   private _required: boolean;
@@ -258,9 +260,11 @@ export class MatCheckbox
   get checked(): boolean {
     return this._checked;
   }
-  set checked(value: boolean) {
-    if (value != this.checked) {
-      this._checked = value;
+  set checked(value: BooleanInput) {
+    const checked = coerceBooleanProperty(value);
+
+    if (checked != this.checked) {
+      this._checked = checked;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -271,10 +275,10 @@ export class MatCheckbox
    * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
    */
   @Input()
-  override get disabled() {
+  override get disabled(): boolean {
     return this._disabled;
   }
-  override set disabled(value: any) {
+  override set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this.disabled) {
@@ -294,7 +298,7 @@ export class MatCheckbox
   get indeterminate(): boolean {
     return this._indeterminate;
   }
-  set indeterminate(value: boolean) {
+  set indeterminate(value: BooleanInput) {
     const changed = value != this._indeterminate;
     this._indeterminate = coerceBooleanProperty(value);
 
@@ -404,6 +408,7 @@ export class MatCheckbox
   /** Toggles the `checked` state of the checkbox. */
   toggle(): void {
     this.checked = !this.checked;
+    this._controlValueAccessorChangeFn(this.checked);
   }
 
   /**
@@ -435,7 +440,7 @@ export class MatCheckbox
         });
       }
 
-      this.toggle();
+      this._checked = !this._checked;
       this._transitionCheckState(
         this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked,
       );
@@ -529,10 +534,4 @@ export class MatCheckbox
       nativeCheckbox.nativeElement.indeterminate = value;
     }
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_indeterminate: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }

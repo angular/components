@@ -1,39 +1,32 @@
-import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
+import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {Component, QueryList, ViewChildren} from '@angular/core';
-import {defaultRippleAnimationConfig} from '@angular/material/core';
-import {dispatchMouseEvent} from '../../cdk/testing/private';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
 describe('MatList', () => {
-  // Default ripple durations used for testing.
-  const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatListModule],
+      declarations: [
+        ListWithOneAnchorItem,
+        ListWithOneItem,
+        ListWithTwoLineItem,
+        ListWithThreeLineItem,
+        ListWithAvatar,
+        ListWithItemWithCssClass,
+        ListWithDynamicNumberOfLines,
+        ListWithMultipleItems,
+        ListWithManyLines,
+        NavListWithOneAnchorItem,
+        ActionListWithoutType,
+        ActionListWithType,
+        ListWithDisabledItems,
+      ],
+    });
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
-          ListWithOneAnchorItem,
-          ListWithOneItem,
-          ListWithTwoLineItem,
-          ListWithThreeLineItem,
-          ListWithAvatar,
-          ListWithItemWithCssClass,
-          ListWithDynamicNumberOfLines,
-          ListWithMultipleItems,
-          ListWithManyLines,
-          NavListWithOneAnchorItem,
-          ActionListWithoutType,
-          ActionListWithType,
-          ListWithIndirectDescendantLines,
-          ListWithDisabledItems,
-        ],
-      });
-
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   it('should not apply any additional class to a list without lines', () => {
     const fixture = TestBed.createComponent(ListWithOneItem);
@@ -240,12 +233,16 @@ describe('MatList', () => {
     dispatchMouseEvent(rippleTarget, 'mousedown');
     dispatchMouseEvent(rippleTarget, 'mouseup');
 
+    // Flush the ripple enter animation.
+    dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
+
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected ripples to be enabled by default.')
       .toBe(1);
 
-    // Wait for the ripples to go away.
-    tick(enterDuration + exitDuration);
+    // Flush the ripple exit animation.
+    dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
+
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected ripples to go away.')
       .toBe(0);
@@ -270,12 +267,16 @@ describe('MatList', () => {
     dispatchMouseEvent(rippleTarget, 'mousedown');
     dispatchMouseEvent(rippleTarget, 'mouseup');
 
+    // Flush the ripple enter animation.
+    dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
+
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected ripples to be enabled by default.')
       .toBe(1);
 
-    // Wait for the ripples to go away.
-    tick(enterDuration + exitDuration);
+    // Flush the ripple exit animation.
+    dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
+
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected ripples to go away.')
       .toBe(0);
@@ -290,15 +291,6 @@ describe('MatList', () => {
       .withContext('Expected no ripples after list ripples are disabled.')
       .toBe(0);
   }));
-
-  it('should pick up indirect descendant lines', () => {
-    const fixture = TestBed.createComponent(ListWithIndirectDescendantLines);
-    fixture.detectChanges();
-
-    const listItems = fixture.debugElement.children[0].queryAll(By.css('mat-list-item'));
-    expect(listItems[0].nativeElement.className).toContain('mat-2-line');
-    expect(listItems[1].nativeElement.className).toContain('mat-2-line');
-  });
 
   it('should be able to disable a single list item', () => {
     const fixture = TestBed.createComponent(ListWithDisabledItems);
@@ -495,20 +487,6 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
   </mat-list>`,
 })
 class ListWithMultipleItems extends BaseTestList {}
-
-// Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
-@Component({
-  template: `
-  <mat-list>
-    <mat-list-item *ngFor="let item of items">
-      <ng-container [ngSwitch]="true">
-        <h3 mat-line>{{item.name}}</h3>
-        <p mat-line>{{item.description}}</p>
-      </ng-container>
-    </mat-list-item>
-  </mat-list>`,
-})
-class ListWithIndirectDescendantLines extends BaseTestList {}
 
 @Component({
   template: `

@@ -40,6 +40,7 @@ import {
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
+  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -60,7 +61,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {_CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from './coalesced-style-scheduler';
 import {
@@ -425,7 +426,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   get multiTemplateDataRows(): boolean {
     return this._multiTemplateDataRows;
   }
-  set multiTemplateDataRows(v: boolean) {
+  set multiTemplateDataRows(v: BooleanInput) {
     this._multiTemplateDataRows = coerceBooleanProperty(v);
 
     // In Ivy if this value is set via a static attribute (e.g. <table multiTemplateDataRows>),
@@ -445,7 +446,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   get fixedLayout(): boolean {
     return this._fixedLayout;
   }
-  set fixedLayout(v: boolean) {
+  set fixedLayout(v: BooleanInput) {
     this._fixedLayout = coerceBooleanProperty(v);
 
     // Toggling `fixedLayout` may change column widths. Sticky column styles should be recalculated.
@@ -525,6 +526,12 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     @SkipSelf()
     @Inject(STICKY_POSITIONING_LISTENER)
     protected readonly _stickyPositioningListener: StickyPositioningListener,
+    /**
+     * @deprecated `_ngZone` parameter to become required.
+     * @breaking-change 14.0.0
+     */
+    @Optional()
+    protected readonly _ngZone?: NgZone,
   ) {
     if (!role) {
       this._elementRef.nativeElement.setAttribute('role', 'table');
@@ -604,13 +611,23 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   ngOnDestroy() {
-    this._rowOutlet.viewContainer.clear();
-    this._noDataRowOutlet.viewContainer.clear();
-    this._headerRowOutlet.viewContainer.clear();
-    this._footerRowOutlet.viewContainer.clear();
+    [
+      this._rowOutlet.viewContainer,
+      this._headerRowOutlet.viewContainer,
+      this._footerRowOutlet.viewContainer,
+      this._cachedRenderRowsMap,
+      this._customColumnDefs,
+      this._customRowDefs,
+      this._customHeaderRowDefs,
+      this._customFooterRowDefs,
+      this._columnDefsByName,
+    ].forEach(def => {
+      def.clear();
+    });
 
-    this._cachedRenderRowsMap.clear();
-
+    this._headerRowDefs = [];
+    this._footerRowDefs = [];
+    this._defaultRowDef = null;
     this._onDestroy.next();
     this._onDestroy.complete();
 
@@ -666,7 +683,16 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     });
 
     this._updateNoDataRow();
-    this.updateStickyColumnStyles();
+
+    // Allow the new row data to render before measuring it.
+    // @breaking-change 14.0.0 Remove undefined check once _ngZone is required.
+    if (this._ngZone && NgZone.isInAngularZone()) {
+      this._ngZone.onStable.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
+        this.updateStickyColumnStyles();
+      });
+    } else {
+      this.updateStickyColumnStyles();
+    }
 
     this.contentChanged.next();
   }
@@ -1286,19 +1312,34 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _updateNoDataRow() {
     const noDataRow = this._customNoDataRow || this._noDataRow;
 
-    if (noDataRow) {
-      const shouldShow = this._rowOutlet.viewContainer.length === 0;
-
-      if (shouldShow !== this._isShowingNoDataRow) {
-        const container = this._noDataRowOutlet.viewContainer;
-        shouldShow ? container.createEmbeddedView(noDataRow.templateRef) : container.clear();
-        this._isShowingNoDataRow = shouldShow;
-      }
+    if (!noDataRow) {
+      return;
     }
-  }
 
-  static ngAcceptInputType_multiTemplateDataRows: BooleanInput;
-  static ngAcceptInputType_fixedLayout: BooleanInput;
+    const shouldShow = this._rowOutlet.viewContainer.length === 0;
+
+    if (shouldShow === this._isShowingNoDataRow) {
+      return;
+    }
+
+    const container = this._noDataRowOutlet.viewContainer;
+
+    if (shouldShow) {
+      const view = container.createEmbeddedView(noDataRow.templateRef);
+      const rootNode: HTMLElement | undefined = view.rootNodes[0];
+
+      // Only add the attributes if we have a single root node since it's hard
+      // to figure out which one to add it to when there are multiple.
+      if (view.rootNodes.length === 1 && rootNode?.nodeType === this._document.ELEMENT_NODE) {
+        rootNode.setAttribute('role', 'row');
+        rootNode.classList.add(noDataRow._contentClassName);
+      }
+    } else {
+      container.clear();
+    }
+
+    this._isShowingNoDataRow = shouldShow;
+  }
 }
 
 /** Utility function that gets a merged list of the entries in an array and values of a Set. */

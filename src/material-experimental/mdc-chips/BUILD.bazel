@@ -17,7 +17,10 @@ ng_module(
             "**/*.spec.ts",
         ],
     ),
-    assets = [":chips_scss"] + glob(["**/*.html"]),
+    assets = [
+        ":chip_scss",
+        ":chip_set_scss",
+    ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
         "//src/material-experimental/mdc-core",
@@ -34,14 +37,29 @@ sass_library(
     name = "mdc_chips_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
+        "//src/material:sass_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
 )
 
 sass_binary(
-    name = "chips_scss",
-    src = "chips.scss",
+    name = "chip_scss",
+    src = "chip.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material:sass_lib",
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+    ],
+)
+
+sass_binary(
+    name = "chip_set_scss",
+    src = "chip-set.scss",
     include_paths = [
         "external/npm/node_modules",
     ],
@@ -74,7 +92,6 @@ ng_test_library(
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
         "@npm//@material/chips",
-        "@npm//material-components-web",
         "@npm//rxjs",
     ],
 )

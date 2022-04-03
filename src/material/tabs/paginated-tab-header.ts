@@ -22,12 +22,17 @@ import {
   Input,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput,
+} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
 import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -76,6 +81,7 @@ export abstract class MatPaginatedTabHeader
   abstract _inkBar: {hide: () => void; alignToElement: (element: HTMLElement) => void};
   abstract _tabListContainer: ElementRef<HTMLElement>;
   abstract _tabList: ElementRef<HTMLElement>;
+  abstract _tabListInner: ElementRef<HTMLElement>;
   abstract _nextPaginator: ElementRef<HTMLElement>;
   abstract _previousPaginator: ElementRef<HTMLElement>;
 
@@ -120,13 +126,19 @@ export abstract class MatPaginatedTabHeader
    * layout recalculations if it's known that pagination won't be required.
    */
   @Input()
-  disablePagination: boolean = false;
+  get disablePagination(): boolean {
+    return this._disablePagination;
+  }
+  set disablePagination(value: BooleanInput) {
+    this._disablePagination = coerceBooleanProperty(value);
+  }
+  private _disablePagination: boolean = false;
 
   /** The index of the active tab. */
   get selectedIndex(): number {
     return this._selectedIndex;
   }
-  set selectedIndex(value: number) {
+  set selectedIndex(value: NumberInput) {
     value = coerceNumberProperty(value);
 
     if (this._selectedIndex != value) {
@@ -200,7 +212,9 @@ export abstract class MatPaginatedTabHeader
 
     // Defer the first call in order to allow for slower browsers to lay out the elements.
     // This helps in cases where the user lands directly on a page with paginated tabs.
-    typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
+    // Note that we use `onStable` instead of `requestAnimationFrame`, because the latter
+    // can hold up tests that are in a background tab.
+    this._ngZone.onStable.pipe(take(1)).subscribe(realign);
 
     // On dir change or window resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
@@ -210,7 +224,16 @@ export abstract class MatPaginatedTabHeader
         // We need to defer this to give the browser some time to recalculate
         // the element dimensions. The call has to be wrapped in `NgZone.run`,
         // because the viewport change handler runs outside of Angular.
-        this._ngZone.run(() => Promise.resolve().then(realign));
+        this._ngZone.run(() => {
+          Promise.resolve().then(() => {
+            // Clamp the scroll distance, because it can change with the number of tabs.
+            this._scrollDistance = Math.max(
+              0,
+              Math.min(this._getMaxScrollDistance(), this._scrollDistance),
+            );
+            realign();
+          });
+        });
         this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
       });
 
@@ -452,7 +475,7 @@ export abstract class MatPaginatedTabHeader
       labelBeforePos = offsetLeft;
       labelAfterPos = labelBeforePos + offsetWidth;
     } else {
-      labelAfterPos = this._tabList.nativeElement.offsetWidth - offsetLeft;
+      labelAfterPos = this._tabListInner.nativeElement.offsetWidth - offsetLeft;
       labelBeforePos = labelAfterPos - offsetWidth;
     }
 
@@ -481,7 +504,7 @@ export abstract class MatPaginatedTabHeader
       this._showPaginationControls = false;
     } else {
       const isEnabled =
-        this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
+        this._tabListInner.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
 
       if (!isEnabled) {
         this.scrollDistance = 0;
@@ -523,7 +546,7 @@ export abstract class MatPaginatedTabHeader
    * should be called sparingly.
    */
   _getMaxScrollDistance(): number {
-    const lengthOfTabList = this._tabList.nativeElement.scrollWidth;
+    const lengthOfTabList = this._tabListInner.nativeElement.scrollWidth;
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
     return lengthOfTabList - viewLength || 0;
   }
@@ -595,6 +618,4 @@ export abstract class MatPaginatedTabHeader
 
     return {maxScrollDistance, distance: this._scrollDistance};
   }
-
-  static ngAcceptInputType_selectedIndex: NumberInput;
 }

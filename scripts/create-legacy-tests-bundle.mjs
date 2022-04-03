@@ -1,19 +1,27 @@
 #!/usr/bin/env node
 
-import {ConsoleLogger, LogLevel, NodeJSFileSystem} from '@angular/compiler-cli';
-import {createEs2015LinkerPlugin} from '@angular/compiler-cli/linker/babel';
-import {transformAsync} from '@babel/core';
+import {createLinkerEsbuildPlugin} from '@angular/dev-infra-private/shared-scripts/angular-linker/esbuild-plugin.mjs';
 import child_process from 'child_process';
 import esbuild from 'esbuild';
 import fs from 'fs';
 import glob from 'glob';
+import module from 'module';
 import {dirname, join, relative} from 'path';
 import sass from 'sass';
 import url from 'url';
+import tsNode from 'ts-node';
 
 const containingDir = dirname(url.fileURLToPath(import.meta.url));
 const projectDir = join(containingDir, '../');
+const packagesDir = join(projectDir, 'src/');
 const legacyTsconfigPath = join(projectDir, 'src/tsconfig-legacy.json');
+
+// Some tooling utilities might be written in TS and we do not want to rewrite them
+// in JavaScript just for this legacy script. We can use ts-node for such scripts.
+tsNode.register({project: join(containingDir, 'tsconfig.json')});
+
+const require = module.createRequire(import.meta.url);
+const sassImporterUtil = require('../tools/sass/local-sass-importer.ts');
 
 const distDir = join(projectDir, 'dist/');
 const nodeModulesDir = join(projectDir, 'node_modules/');
@@ -21,6 +29,8 @@ const outFile = join(distDir, 'legacy-test-bundle.spec.js');
 const ngcBinFile = join(nodeModulesDir, '@angular/compiler-cli/bundles/src/bin/ngc.js');
 const legacyOutputDir = join(distDir, 'legacy-test-out');
 
+/** Sass importer used for resolving `@angular/<..>` imports. */
+const localPackageSassImporter = sassImporterUtil.createLocalAngularPackageImporter(packagesDir);
 
 /**
  * This script builds the whole library in `angular/components` together with its
@@ -38,7 +48,7 @@ async function main() {
   await compileProjectWithNgtsc();
 
   const specEntryPointFile = await createEntryPointSpecFile();
-  const esbuildLinkerPlugin = await createLinkerEsbuildPlugin();
+  const esbuildLinkerPlugin = await createLinkerEsbuildPlugin(/fesm2020/, false);
   const esbuildResolvePlugin = await createResolveEsbuildPlugin();
 
   const result = await esbuild.build({
@@ -72,10 +82,10 @@ async function compileSassFiles() {
   for (const file of sassFiles) {
     const outRelativePath = relative(projectDir, file).replace(/\.scss$/, '.css');
     const outPath = join(projectDir, outRelativePath);
-    const task = renderSassFileAsync(file).then(async (content) => {
+    const task = renderSassFileAsync(file).then(async content => {
       console.info('Compiled, now writing:', outRelativePath);
       await fs.promises.mkdir(dirname(outPath), {recursive: true});
-      await fs.promises.writeFile(outPath, content)
+      await fs.promises.writeFile(outPath, content);
     });
 
     sassTasks.push(task);
@@ -93,7 +103,10 @@ async function compileSassFiles() {
 async function compileProjectWithNgtsc() {
   // Build the project with Ngtsc so that external resources are inlined.
   const ngcProcess = child_process.spawnSync(
-      'node', [ngcBinFile, '--project', legacyTsconfigPath], {shell: true, stdio: 'inherit'});
+    'node',
+    [ngcBinFile, '--project', legacyTsconfigPath],
+    {shell: true, stdio: 'inherit'},
+  );
 
   if (ngcProcess.error || ngcProcess.status !== 0) {
     throw Error('Unable to compile tests and library. See error above.');
@@ -136,11 +149,12 @@ async function createEntryPointSpecFile() {
 
 /** Helper function to render a Sass file asynchronously using promises. */
 async function renderSassFileAsync(inputFile) {
-  return new Promise((resolve, reject) => {
-    sass.render(
-        {file: inputFile, includePaths: [nodeModulesDir]},
-        (err, result) => err ? reject(err) : resolve(result.css));
-  });
+  return sass
+    .compileAsync(inputFile, {
+      loadPaths: [nodeModulesDir, projectDir],
+      importers: [localPackageSassImporter],
+    })
+    .then(result => result.css);
 }
 
 /**
@@ -149,10 +163,11 @@ async function renderSassFileAsync(inputFile) {
  */
 async function createResolveEsbuildPlugin() {
   return {
-    name: 'ng-resolve-esbuild', setup: (build) => {
-      build.onResolve({filter: /@angular\//}, async (args) => {
-        const pkgName = args.path.substr('@angular/'.length);
-        let resolvedPath = join(legacyOutputDir, pkgName)
+    name: 'ng-resolve-esbuild',
+    setup: build => {
+      build.onResolve({filter: /@angular\//}, async args => {
+        const pkgName = args.path.slice('@angular/'.length);
+        let resolvedPath = join(legacyOutputDir, pkgName);
         let stats = await statGraceful(resolvedPath);
 
         // If the resolved path points to a directory, resolve the contained `index.js` file
@@ -167,33 +182,6 @@ async function createResolveEsbuildPlugin() {
         }
 
         return stats !== null ? {path: resolvedPath} : undefined;
-      });
-    }
-  }
-}
-
-/** Creates an ESBuild plugin that runs the Angular linker on framework packages. */
-async function createLinkerEsbuildPlugin() {
-  const linkerBabelPlugin = createEs2015LinkerPlugin({
-    fileSystem: new NodeJSFileSystem(),
-    logger: new ConsoleLogger(LogLevel.warn),
-    // We enable JIT mode as unit tests also will rely on the linked ESM files.
-    linkerJitMode: true,
-  });
-
-  return {
-    name: 'ng-linker-esbuild',
-    setup: (build) => {
-      build.onLoad({filter: /fesm2020/}, async (args) => {
-        const filePath = args.path;
-        const content = await fs.promises.readFile(filePath, 'utf8');
-        const {code} = await transformAsync(content, {
-          filename: filePath,
-          filenameRelative: filePath,
-          plugins: [linkerBabelPlugin],
-          sourceMaps: 'inline',
-        });
-        return {contents: code};
       });
     },
   };

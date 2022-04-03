@@ -35,9 +35,9 @@ import {
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormsModule,
   NgForm,
   ReactiveFormsModule,
@@ -190,6 +190,13 @@ describe('MatChipList', () => {
 
         expect(chipListNativeElement.hasAttribute('role')).toBe(false);
         expect(chipListNativeElement.hasAttribute('aria-required')).toBe(false);
+      });
+
+      it('should be able to set a custom role', () => {
+        fixture.componentInstance.chipList.role = 'grid';
+        fixture.detectChanges();
+
+        expect(chipListNativeElement.getAttribute('role')).toBe('grid');
       });
     });
 
@@ -753,7 +760,7 @@ describe('MatChipList', () => {
       });
 
       it('should take an initial view value with reactive forms', () => {
-        fixture.componentInstance.control = new FormControl('pizza-1');
+        fixture.componentInstance.control = new UntypedFormControl('pizza-1');
         fixture.detectChanges();
 
         const array = chips.toArray();
@@ -894,7 +901,9 @@ describe('MatChipList', () => {
       });
 
       it('should mark the component as required if the control has a required validator', () => {
-        fixture.componentInstance.control = new FormControl(undefined, [Validators.required]);
+        fixture.componentInstance.control = new UntypedFormControl(undefined, [
+          Validators.required,
+        ]);
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.mat-form-field-required-marker')).toBeTruthy();
@@ -956,7 +965,7 @@ describe('MatChipList', () => {
       });
 
       it('should take an initial view value with reactive forms', () => {
-        fixture.componentInstance.control = new FormControl(['pizza-1']);
+        fixture.componentInstance.control = new UntypedFormControl(['pizza-1']);
         fixture.detectChanges();
 
         const array = chips.toArray();
@@ -1064,7 +1073,7 @@ describe('MatChipList', () => {
     });
 
     it('should take an initial view value with reactive forms', () => {
-      fixture.componentInstance.control = new FormControl(['pizza-1']);
+      fixture.componentInstance.control = new UntypedFormControl(['pizza-1']);
       fixture.detectChanges();
 
       const array = fixture.componentInstance.chips.toArray();
@@ -1237,7 +1246,7 @@ describe('MatChipList', () => {
     }));
 
     it('should set aria-invalid if the form field is invalid', () => {
-      fixture.componentInstance.control = new FormControl(undefined, [Validators.required]);
+      fixture.componentInstance.control = new UntypedFormControl(undefined, [Validators.required]);
       fixture.detectChanges();
 
       const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
@@ -1598,7 +1607,7 @@ class BasicChipList {
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
-  control = new FormControl();
+  control = new UntypedFormControl();
   tabIndexOverride: number;
   selectable: boolean;
 
@@ -1631,7 +1640,7 @@ class MultiSelectionChipList {
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
-  control = new FormControl();
+  control = new UntypedFormControl();
   isRequired: boolean;
   tabIndexOverride: number;
   selectable: boolean;
@@ -1671,7 +1680,7 @@ class InputChipList {
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
-  control = new FormControl();
+  control = new UntypedFormControl();
 
   separatorKeyCodes = [ENTER, SPACE];
   addOnBlur: boolean = true;
@@ -1718,16 +1727,16 @@ class FalsyValueChipList {
     {value: 0, viewValue: 'Steak'},
     {value: 1, viewValue: 'Pizza'},
   ];
-  control = new FormControl();
+  control = new UntypedFormControl();
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 }
 
 @Component({
   template: `
     <mat-chip-list>
-        <mat-chip *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
-            {{ food.viewValue }}
-        </mat-chip>
+      <mat-chip *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
+        {{ food.viewValue }}
+      </mat-chip>
     </mat-chip-list>
   `,
 })
@@ -1738,6 +1747,7 @@ class SelectedChipList {
     {value: 2, viewValue: 'Pasta', selected: true},
   ];
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChild(MatChipList, {static: false}) chipList: MatChipList;
 }
 
 @Component({
@@ -1764,7 +1774,7 @@ class ChipListWithFormErrorMessages {
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 
   @ViewChild('form') form: NgForm;
-  formControl = new FormControl('', Validators.required);
+  formControl = new UntypedFormControl('', Validators.required);
 }
 
 @Component({
@@ -1824,7 +1834,7 @@ class ChipListWithRemove {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PreselectedChipInsideOnPush {
-  control = new FormControl('Pizza');
+  control = new UntypedFormControl('Pizza');
 }
 
 @Component({
@@ -1841,9 +1851,9 @@ class PreselectedChipInsideOnPush {
 })
 class ChipListInsideDynamicFormGroup {
   @ViewChild(MatChipList) chipList: MatChipList;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: UntypedFormBuilder) {
     this.assignGroup(false);
   }
 

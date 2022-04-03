@@ -8,23 +8,19 @@ import {MatMenuBar} from './menubar';
 
 describe('MatMenuBar', () => {
   let fixture: ComponentFixture<SimpleMatMenuBar>;
-  let matMenubar: MatMenuBar;
   let nativeMatMenubar: HTMLElement;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatMenuBarModule],
-        declarations: [SimpleMatMenuBar],
-      }).compileComponents();
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatMenuBarModule],
+      declarations: [SimpleMatMenuBar],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMatMenuBar);
     fixture.detectChanges();
 
-    matMenubar = fixture.componentInstance.matMenubar;
     nativeMatMenubar = fixture.componentInstance.nativeMatMenubar.nativeElement;
   });
 
@@ -41,24 +37,15 @@ describe('MatMenuBar', () => {
     expect(nativeMatMenubar.getAttribute('tabindex')).toBe('0');
   });
 
-  it('should toggle aria-orientation attribute', () => {
-    expect(nativeMatMenubar.getAttribute('aria-orientation')).toBe('horizontal');
-
-    matMenubar.orientation = 'vertical';
-    fixture.detectChanges();
-
-    expect(nativeMatMenubar.getAttribute('aria-orientation')).toBe('vertical');
-  });
-
   it('should toggle focused items on left/right click', () => {
     nativeMatMenubar.focus();
 
-    expect(document.querySelector(':focus')!.id).toBe('first');
+    expect(document.activeElement!.id).toBe('first');
 
     dispatchKeyboardEvent(nativeMatMenubar, 'keydown', RIGHT_ARROW);
     fixture.detectChanges();
 
-    expect(document.querySelector(':focus')!.id).toBe('second');
+    expect(document.activeElement!.id).toBe('second');
   });
 });
 

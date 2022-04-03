@@ -149,13 +149,9 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     set name(name: string);
     // (undocumented)
     protected _name: string;
-    // (undocumented)
-    static ngAcceptInputType_sticky: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_stickyEnd: BooleanInput;
     protected _setNameInput(value: string): void;
     get stickyEnd(): boolean;
-    set stickyEnd(v: boolean);
+    set stickyEnd(v: BooleanInput);
     // (undocumented)
     _stickyEnd: boolean;
     // (undocumented)
@@ -199,8 +195,6 @@ export class CdkFooterRow {
 export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
     constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any);
     // (undocumented)
-    static ngAcceptInputType_sticky: BooleanInput;
-    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     _table?: any;
@@ -242,8 +236,6 @@ export class CdkHeaderRow {
 export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
     constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any);
     // (undocumented)
-    static ngAcceptInputType_sticky: BooleanInput;
-    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     _table?: any;
@@ -256,6 +248,8 @@ export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, O
 // @public
 export class CdkNoDataRow {
     constructor(templateRef: TemplateRef<any>);
+    // (undocumented)
+    _contentClassName: string;
     // (undocumented)
     templateRef: TemplateRef<any>;
     // (undocumented)
@@ -295,7 +289,8 @@ export class CdkRowDef<T> extends BaseRowDef {
 // @public
 export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality, _document: any, _platform: Platform, _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>, _coalescedStyleScheduler: _CoalescedStyleScheduler, _viewportRuler: ViewportRuler,
-    _stickyPositioningListener: StickyPositioningListener);
+    _stickyPositioningListener: StickyPositioningListener,
+    _ngZone?: NgZone | undefined);
     addColumnDef(columnDef: CdkColumnDef): void;
     addFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     addHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
@@ -319,7 +314,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // (undocumented)
     protected readonly _elementRef: ElementRef;
     get fixedLayout(): boolean;
-    set fixedLayout(v: boolean);
+    set fixedLayout(v: BooleanInput);
     // (undocumented)
     _footerRowOutlet: FooterRowOutlet;
     _getRenderedRows(rowOutlet: RowOutlet): HTMLElement[];
@@ -328,20 +323,18 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     _headerRowOutlet: HeaderRowOutlet;
     protected _isNativeHtmlTable: boolean;
     get multiTemplateDataRows(): boolean;
-    set multiTemplateDataRows(v: boolean);
+    set multiTemplateDataRows(v: BooleanInput);
     // (undocumented)
     _multiTemplateDataRows: boolean;
     protected needsPositionStickyOnElement: boolean;
-    // (undocumented)
-    static ngAcceptInputType_fixedLayout: BooleanInput;
-    // (undocumented)
-    static ngAcceptInputType_multiTemplateDataRows: BooleanInput;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    // @deprecated (undocumented)
+    protected readonly _ngZone?: NgZone | undefined;
     _noDataRow: CdkNoDataRow;
     // (undocumented)
     _noDataRowOutlet: NoDataRowOutlet;
@@ -370,7 +363,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": "trackBy"; "dataSource": "dataSource"; "multiTemplateDataRows": "multiTemplateDataRows"; "fixedLayout": "fixedLayout"; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col"]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, [null, null, null, { attribute: "role"; }, { optional: true; }, null, null, null, null, null, { optional: true; skipSelf: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, [null, null, null, { attribute: "role"; }, { optional: true; }, null, null, null, null, null, { optional: true; skipSelf: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
@@ -392,7 +385,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
     dataAccessor: (data: T, name: string) => string;
     headerCell: CdkHeaderCellDef;
     headerText: string;
-    justify: 'start' | 'end';
+    justify: 'start' | 'end' | 'center';
     get name(): string;
     set name(name: string);
     // (undocumented)

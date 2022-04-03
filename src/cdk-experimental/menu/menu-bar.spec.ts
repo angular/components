@@ -1,33 +1,34 @@
-import {ComponentFixture, TestBed, waitForAsync, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {
   Component,
-  ViewChild,
   ElementRef,
-  ViewChildren,
-  QueryList,
   EventEmitter,
+  QueryList,
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
-  TAB,
-  RIGHT_ARROW,
-  LEFT_ARROW,
-  DOWN_ARROW,
-  UP_ARROW,
-  SPACE,
-  HOME,
-  END,
-  E,
   D,
+  DOWN_ARROW,
+  E,
+  END,
   ESCAPE,
-  S,
   H,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  S,
+  SPACE,
+  TAB,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-  dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
   dispatchMouseEvent,
+  triggerFocus,
 } from '../../cdk/testing/private';
 import {CdkMenuBar} from './menu-bar';
 import {CdkMenuModule} from './menu-module';
@@ -43,21 +44,19 @@ describe('MenuBar', () => {
     let fixture: ComponentFixture<MenuBarRadioGroup>;
     let menuItems: CdkMenuItemRadio[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuBarRadioGroup],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuBarRadioGroup],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuBarRadioGroup);
-        fixture.detectChanges();
+      fixture = TestBed.createComponent(MenuBarRadioGroup);
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemRadio))
-          .map(element => element.injector.get(CdkMenuItemRadio));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemRadio))
+        .map(element => element.injector.get(CdkMenuItemRadio));
+    }));
 
     it('should toggle menuitemradio items', () => {
       expect(menuItems[0].checked).toBeTrue();
@@ -74,22 +73,20 @@ describe('MenuBar', () => {
     let fixture: ComponentFixture<MenuBarRadioGroup>;
     let menuItems: CdkMenuItemRadio[];
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuBarRadioGroup],
-        }).compileComponents();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuBarRadioGroup],
+      }).compileComponents();
 
-        fixture = TestBed.createComponent(MenuBarRadioGroup);
+      fixture = TestBed.createComponent(MenuBarRadioGroup);
 
-        fixture.detectChanges();
+      fixture.detectChanges();
 
-        menuItems = fixture.debugElement
-          .queryAll(By.directive(CdkMenuItemRadio))
-          .map(element => element.injector.get(CdkMenuItemRadio));
-      }),
-    );
+      menuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItemRadio))
+        .map(element => element.injector.get(CdkMenuItemRadio));
+    }));
 
     it('should emit on click', () => {
       const spy = jasmine.createSpy('cdkMenu change spy');
@@ -141,14 +138,12 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(
-        waitForAsync(() => {
-          TestBed.configureTestingModule({
-            imports: [CdkMenuModule],
-            declarations: [MultiMenuWithSubmenu],
-          }).compileComponents();
-        }),
-      );
+      beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [MultiMenuWithSubmenu],
+        }).compileComponents();
+      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(MultiMenuWithSubmenu);
@@ -515,13 +510,13 @@ describe('MenuBar', () => {
             .queryAll(By.directive(CdkMenuItem))[0]
             .injector.get(CdkMenuItem)
             .getMenuTrigger()!
-            .openMenu();
+            .open();
           detectChanges();
           fixture.debugElement
             .queryAll(By.directive(CdkMenuItem))[2]
             .injector.get(CdkMenuItem)
             .getMenuTrigger()!
-            .openMenu();
+            .open();
           detectChanges();
 
           fileMenuNativeItems[0].focus();
@@ -568,14 +563,12 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(
-        waitForAsync(() => {
-          TestBed.configureTestingModule({
-            imports: [CdkMenuModule],
-            declarations: [MultiMenuWithSubmenu],
-          }).compileComponents();
-        }),
-      );
+      beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [MultiMenuWithSubmenu],
+        }).compileComponents();
+      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(MultiMenuWithSubmenu);
@@ -698,14 +691,12 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(
-        waitForAsync(() => {
-          TestBed.configureTestingModule({
-            imports: [CdkMenuModule],
-            declarations: [MenuWithCheckboxes],
-          }).compileComponents();
-        }),
-      );
+      beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [MenuWithCheckboxes],
+        }).compileComponents();
+      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(MenuWithCheckboxes);
@@ -767,14 +758,12 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(
-        waitForAsync(() => {
-          TestBed.configureTestingModule({
-            imports: [CdkMenuModule],
-            declarations: [MenuWithRadioButtons],
-          }).compileComponents();
-        }),
-      );
+      beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [CdkMenuModule],
+          declarations: [MenuWithRadioButtons],
+        }).compileComponents();
+      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(MenuWithRadioButtons);
@@ -814,7 +803,7 @@ describe('MenuBar', () => {
 
     /** set the menus and triggers arrays. */
     function grabElementsForTesting() {
-      popoutMenus = fixture.componentInstance.menus.toArray().filter(el => !el._isInline());
+      popoutMenus = fixture.componentInstance.menus.toArray().filter(el => !el._isInline);
       triggers = fixture.componentInstance.triggers.toArray();
       nativeInlineMenuItem = fixture.componentInstance.nativeInlineMenuItem.nativeElement;
     }
@@ -825,14 +814,12 @@ describe('MenuBar', () => {
       grabElementsForTesting();
     }
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuBarWithMenusAndInlineMenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MenuBarWithMenusAndInlineMenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MenuBarWithMenusAndInlineMenu);
@@ -937,6 +924,7 @@ describe('MenuBar', () => {
       dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
       dispatchMouseEvent(menuBarNativeItems[0], 'click');
       dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+      triggerFocus(menuBarNativeItems[0]);
       detectChanges();
     }
 
@@ -946,14 +934,12 @@ describe('MenuBar', () => {
       detectChanges();
     }
 
-    beforeEach(
-      waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MultiMenuWithSubmenu],
-        }).compileComponents();
-      }),
-    );
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [MultiMenuWithSubmenu],
+      }).compileComponents();
+    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MultiMenuWithSubmenu);
@@ -986,8 +972,8 @@ describe('MenuBar', () => {
         dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
         detectChanges();
 
-        expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[0]);
-        expect(document.querySelector(':focus')).not.toEqual(menuBarNativeItems[1]);
+        expect(document.activeElement).not.toEqual(menuBarNativeItems[0]);
+        expect(document.activeElement).not.toEqual(menuBarNativeItems[1]);
       },
     );
 
@@ -1079,19 +1065,17 @@ describe('MenuBar', () => {
       expect(nativeMenus.length).toBe(0);
     });
 
-    it(
-      'should allow keyboard down arrow to focus next item after mouse sets focus to' +
-        ' initial item',
-      () => {
-        openFileMenu();
-        dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
-        detectChanges();
+    it('should allow keyboard down arrow to focus next item after focusing initial item', () => {
+      openFileMenu();
 
-        dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
+      dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
+      detectChanges();
+      expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
 
-        expect(document.querySelector(':focus')).toEqual(fileMenuNativeItems[1]);
-      },
-    );
+      dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
+      detectChanges();
+      expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
+    });
 
     it(
       'should not re-open a menu when hovering over the trigger in the menubar after clicking to ' +
@@ -1119,49 +1103,41 @@ describe('MenuBar', () => {
       },
     );
 
-    it(
-      'should set the tabindex of the opened trigger to 0 and toggle tabindex' +
-        ' when hovering between items',
-      () => {
-        openFileMenu();
+    it('should not change the tabindex when hovering between items', () => {
+      openFileMenu();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(0);
+      expect(menuBarNativeItems[0].tabIndex).toBe(0);
 
-        dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
-        detectChanges();
+      dispatchMouseEvent(menuBarNativeItems[1], 'mouseenter');
+      detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(-1);
-        expect(menuBarNativeItems[1].tabIndex).toBe(0);
+      expect(menuBarNativeItems[0].tabIndex).toBe(0);
+      expect(menuBarNativeItems[1].tabIndex).toBe(-1);
 
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
-        detectChanges();
+      dispatchMouseEvent(menuBarNativeItems[0], 'mouseenter');
+      detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(0);
-        expect(menuBarNativeItems[1].tabIndex).toBe(-1);
-      },
-    );
+      expect(menuBarNativeItems[0].tabIndex).toBe(0);
+      expect(menuBarNativeItems[1].tabIndex).toBe(-1);
+    });
 
-    it(
-      'should set the tabindex to 0 on the active item and reset the previous active items ' +
-        'to -1 when navigating down to a submenu and within it using a mouse',
-      () => {
-        openFileMenu();
-        expect(menuBarNativeItems[0].tabIndex).toBe(0);
+    it('should not change the tabindex when navigating down to a submenu and within it using a mouse', () => {
+      openFileMenu();
+      expect(menuBarNativeItems[0].tabIndex).toBe(0);
 
-        dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
-        dispatchMouseEvent(menuBarNativeItems[0], 'mouseout');
-        detectChanges();
+      dispatchMouseEvent(fileMenuNativeItems[0], 'mouseenter');
+      dispatchMouseEvent(menuBarNativeItems[0], 'mouseout');
+      detectChanges();
 
-        expect(menuBarNativeItems[0].tabIndex).toBe(-1);
-        expect(fileMenuNativeItems[0].tabIndex).toBe(0);
+      expect(menuBarNativeItems[0].tabIndex).toBe(0);
+      expect(fileMenuNativeItems[0].tabIndex).toBe(-1);
 
-        dispatchMouseEvent(fileMenuNativeItems[1], 'mouseenter');
-        detectChanges();
+      dispatchMouseEvent(fileMenuNativeItems[1], 'mouseenter');
+      detectChanges();
 
-        expect(fileMenuNativeItems[0].tabIndex).toBe(-1);
-        expect(fileMenuNativeItems[1].tabIndex).toBe(0);
-      },
-    );
+      expect(fileMenuNativeItems[0].tabIndex).toBe(-1);
+      expect(fileMenuNativeItems[1].tabIndex).toBe(-1);
+    });
   });
 });
 
@@ -1191,23 +1167,23 @@ class MenuBarRadioGroup {}
         <button cdkMenuItem [cdkMenuTriggerFor]="edit">Edit</button>
       </div>
 
-      <ng-template cdkMenuPanel #file="cdkMenuPanel">
-        <div cdkMenu id="file_menu" [cdkMenuPanel]="file">
+      <ng-template #file>
+        <div cdkMenu id="file_menu">
           <button cdkMenuItem>Save</button>
           <button cdkMenuItem [cdkMenuTriggerFor]="share">Share</button>
           <button cdkMenuItem>Open</button>
         </div>
       </ng-template>
 
-      <ng-template cdkMenuPanel #share="cdkMenuPanel">
-        <div cdkMenu id="share_menu" [cdkMenuPanel]="share">
+      <ng-template #share>
+        <div cdkMenu id="share_menu">
           <button (cdkMenuItemTriggered)="clickEmitter.next()" cdkMenuItem>Email</button>
           <button cdkMenuItem>Chat</button>
         </div>
       </ng-template>
 
-      <ng-template cdkMenuPanel #edit="cdkMenuPanel">
-        <div cdkMenu id="edit_menu" [cdkMenuPanel]="edit">
+      <ng-template #edit>
+        <div cdkMenu id="edit_menu">
           <button cdkMenuItem>Undo</button>
           <button cdkMenuItem>Redo</button>
         </div>
@@ -1231,8 +1207,8 @@ class MultiMenuWithSubmenu {
         <button cdkMenuItem [cdkMenuTriggerFor]="font">Font size</button>
       </div>
 
-      <ng-template cdkMenuPanel #font="cdkMenuPanel">
-        <div cdkMenu id="font_menu" [cdkMenuPanel]="font">
+      <ng-template #font>
+        <div cdkMenu id="font_menu">
           <button cdkMenuItemCheckbox>Small</button>
           <button cdkMenuItemCheckbox>Large</button>
         </div>
@@ -1257,8 +1233,8 @@ class MenuWithCheckboxes {
         <button cdkMenuItem [cdkMenuTriggerFor]="text">Text</button>
       </div>
 
-      <ng-template cdkMenuPanel #text="cdkMenuPanel">
-        <div cdkMenu id="text_menu" [cdkMenuPanel]="text">
+      <ng-template #text>
+        <div cdkMenu id="text_menu">
           <button cdkMenuItemRadio>Bold</button>
           <button cdkMenuItemRadio>Italic</button>
         </div>
@@ -1283,8 +1259,8 @@ class MenuWithRadioButtons {
         <button cdkMenuItem [cdkMenuTriggerFor]="sub1">Trigger</button>
       </div>
 
-      <ng-template cdkMenuPanel #sub1="cdkMenuPanel">
-        <div cdkMenu [cdkMenuPanel]="sub1">
+      <ng-template #sub1>
+        <div cdkMenu>
           <div cdkMenuGroup>
             <button cdkMenuItemCheckbox>Trigger</button>
             <span id="inner-element">A nested non-menuitem element</span>

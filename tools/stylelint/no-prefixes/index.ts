@@ -5,8 +5,8 @@ import {NeedsPrefix} from './needs-prefix';
 const parseSelector = require('stylelint/lib/utils/parseSelector');
 const ruleName = 'material/no-prefixes';
 const messages = utils.ruleMessages(ruleName, {
-  property: (property: string, browsers: string[]) => {
-    return `Unprefixed property "${property}" needs a prefix for browsers ${browsers.join(', ')}.`;
+  property: (property: string, browsers: string) => {
+    return `Unprefixed property "${property}" needs a prefix for browsers ${browsers}.`;
   },
   value: (property, value) => `Unprefixed value in "${property}: ${value}".`,
   atRule: name => `Unprefixed @rule "${name}".`,
@@ -15,7 +15,7 @@ const messages = utils.ruleMessages(ruleName, {
 });
 
 /** Config options for the rule. */
-interface RuleOptions {
+interface Options {
   browsers: string[];
   filePattern: string;
 }
@@ -23,16 +23,9 @@ interface RuleOptions {
 /**
  * Stylelint plugin that warns for unprefixed CSS.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
+const plugin = createPlugin(ruleName, (isEnabled: boolean, {filePattern, browsers}: Options) => {
   return (root, result) => {
-    if (!isEnabled) {
-      return;
-    }
-
-    const options = _options as RuleOptions;
-    const {browsers, filePattern} = options;
-
-    if (filePattern && !minimatch(root.source!.input.file!, filePattern)) {
+    if (!isEnabled || (filePattern && !minimatch(root.source.input.file, filePattern))) {
       return;
     }
 
@@ -46,7 +39,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
         utils.report({
           result,
           ruleName,
-          message: messages.property(decl.prop, propertyPrefixes),
+          message: messages.property(decl.prop, propertyPrefixes.join(', ')),
           node: decl,
           index: (decl.raws.before || '').length,
         });
@@ -101,6 +94,4 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
   };
 });
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
 export default plugin;

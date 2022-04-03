@@ -5,7 +5,12 @@ import {dispatchMouseEvent} from '../../cdk/testing/private';
 import {ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material-experimental/mdc-select';
 import {By} from '@angular/platform-browser';
-import {MatPaginatorModule, MatPaginator, MatPaginatorIntl} from './index';
+import {
+  MatPaginatorModule,
+  MatPaginator,
+  MatPaginatorIntl,
+  MatPaginatorSelectConfig,
+} from './index';
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
 
 describe('MDC-based MatPaginator', () => {
@@ -213,6 +218,24 @@ describe('MDC-based MatPaginator', () => {
     fixture.detectChanges();
     expect(formField.classList).toContain('mat-warn');
     expect(formField.classList).not.toContain('mat-accent');
+  });
+
+  it('should be able to pass options to the underlying mat-select', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    fixture.detectChanges();
+    const select: MatSelect = fixture.debugElement.query(By.directive(MatSelect)).componentInstance;
+
+    expect(select.disableOptionCentering).toBe(false);
+    expect(select.panelClass).toBeFalsy();
+
+    fixture.componentInstance.selectConfig = {
+      disableOptionCentering: true,
+      panelClass: 'custom-class',
+    };
+    fixture.detectChanges();
+
+    expect(select.disableOptionCentering).toBe(true);
+    expect(select.panelClass).toBe('custom-class');
   });
 
   describe('when showing the first and last button', () => {
@@ -511,6 +534,13 @@ describe('MDC-based MatPaginator', () => {
     const hostElement = fixture.nativeElement.querySelector('mat-paginator');
     expect(hostElement.getAttribute('role')).toBe('group');
   });
+
+  it('should handle the page size options input being passed in as readonly array', () => {
+    const fixture = createComponent(MatPaginatorWithReadonlyOptions);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
+  });
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
@@ -535,6 +565,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
                    [pageSize]="pageSize"
                    [pageSizeOptions]="pageSizeOptions"
                    [hidePageSize]="hidePageSize"
+                   [selectConfig]="selectConfig"
                    [showFirstLastButtons]="showFirstLastButtons"
                    [length]="length"
                    [color]="color"
@@ -553,6 +584,7 @@ class MatPaginatorApp {
   disabled: boolean;
   pageEvent = jasmine.createSpy('page event');
   color: ThemePalette;
+  selectConfig: MatPaginatorSelectConfig = {};
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -599,4 +631,15 @@ class MatPaginatorWithoutOptionsApp {
 })
 class MatPaginatorWithStringValues {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+}
+
+@Component({
+  template: `
+    <mat-paginator [pageSizeOptions]="pageSizeOptions">
+    </mat-paginator>
+  `,
+})
+class MatPaginatorWithReadonlyOptions {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  pageSizeOptions: readonly number[] = [5, 10, 25, 100];
 }

@@ -1,20 +1,19 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, DebugElement} from '@angular/core';
+import {ApplicationRef, Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton, MatFabDefaultOptions, MAT_FAB_DEFAULT_OPTIONS} from './index';
 import {MatRipple, ThemePalette} from '@angular/material-experimental/mdc-core';
+import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
 
 describe('MDC-based MatButton', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatButtonModule],
-        declarations: [TestApp],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatButtonModule],
+      declarations: [TestApp],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   // General button tests
   it('should apply class based on color attribute', () => {
@@ -169,11 +168,13 @@ describe('MDC-based MatButton', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
       let buttonDebugElement = fixture.debugElement.query(By.css('a'))!;
-      expect(buttonDebugElement.nativeElement.getAttribute('tabIndex')).toBe(null);
+      fixture.detectChanges();
+
+      expect(buttonDebugElement.nativeElement.hasAttribute('tabindex')).toBe(false);
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
-      expect(buttonDebugElement.nativeElement.getAttribute('tabIndex')).toBe('-1');
+      expect(buttonDebugElement.nativeElement.getAttribute('tabindex')).toBe('-1');
     });
 
     it('should add aria-disabled attribute if disabled', () => {
@@ -218,16 +219,46 @@ describe('MDC-based MatButton', () => {
       fixture.componentInstance.tabIndex = 3;
       fixture.detectChanges();
 
-      expect(buttonElement.getAttribute('tabIndex'))
+      expect(buttonElement.getAttribute('tabindex'))
         .withContext('Expected custom tabindex to be set')
         .toBe('3');
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
 
-      expect(buttonElement.getAttribute('tabIndex'))
+      expect(buttonElement.getAttribute('tabindex'))
         .withContext('Expected custom tabindex to be overwritten when disabled.')
         .toBe('-1');
+    });
+
+    it('should not set a default tabindex on enabled links', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const buttonElement = fixture.debugElement.query(By.css('a'))!.nativeElement;
+      fixture.detectChanges();
+
+      expect(buttonElement.hasAttribute('tabindex')).toBe(false);
+    });
+
+    describe('change detection behavior', () => {
+      it('should not run change detection for disabled anchor but should prevent the default behavior and stop event propagation', () => {
+        const appRef = TestBed.inject(ApplicationRef);
+        const fixture = TestBed.createComponent(TestApp);
+        fixture.componentInstance.isDisabled = true;
+        fixture.detectChanges();
+        const anchorElement = fixture.debugElement.query(By.css('a'))!.nativeElement;
+
+        spyOn(appRef, 'tick');
+
+        const event = createMouseEvent('click');
+        spyOn(event, 'preventDefault').and.callThrough();
+        spyOn(event, 'stopImmediatePropagation').and.callThrough();
+
+        dispatchEvent(anchorElement, event);
+
+        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(event.stopImmediatePropagation).toHaveBeenCalled();
+      });
     });
   });
 

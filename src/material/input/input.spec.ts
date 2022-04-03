@@ -1,4 +1,4 @@
-import {Platform, PlatformModule, _supportsShadowDom} from '@angular/cdk/platform';
+import {getSupportedInputTypes, _supportsShadowDom} from '@angular/cdk/platform';
 import {
   createFakeEvent,
   dispatchFakeEvent,
@@ -18,8 +18,8 @@ import {
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {
-  FormControl,
-  FormGroup,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   FormsModule,
   NgForm,
@@ -77,23 +77,20 @@ describe('MatInput without forms', () => {
 
   it('should not be treated as empty if type is date', fakeAsync(() => {
     const fixture = createComponent(MatInputDateTestController);
-    const platform = TestBed.inject(Platform);
     fixture.detectChanges();
 
-    if (!(platform.TRIDENT || (platform.SAFARI && !platform.IOS))) {
+    if (getSupportedInputTypes().has('date')) {
       const el = fixture.debugElement.query(By.css('label'))!.nativeElement;
       expect(el).not.toBeNull();
       expect(el.classList.contains('mat-form-field-empty')).toBe(false);
     }
   }));
 
-  // Safari Desktop and IE don't support type="date" and fallback to type="text".
-  it('should be treated as empty if type is date in Safari Desktop or IE', fakeAsync(() => {
+  it('should be treated as empty if type is date on unsupported browser', fakeAsync(() => {
     const fixture = createComponent(MatInputDateTestController);
-    const platform = TestBed.inject(Platform);
     fixture.detectChanges();
 
-    if (platform.TRIDENT || (platform.SAFARI && !platform.IOS)) {
+    if (!getSupportedInputTypes().has('date')) {
       const el = fixture.debugElement.query(By.css('label'))!.nativeElement;
       expect(el).not.toBeNull();
       expect(el.classList.contains('mat-form-field-empty')).toBe(true);
@@ -976,7 +973,6 @@ describe('MatInput without forms', () => {
     expect(container.classList).toContain('mat-form-field-hide-placeholder');
     expect(container.classList).not.toContain('mat-form-field-should-float');
     expect(label.textContent.trim()).toBe('Label');
-    expect(input.hasAttribute('placeholder')).toBe(false);
 
     input.value = 'Value';
     fixture.detectChanges();
@@ -1022,6 +1018,17 @@ describe('MatInput without forms', () => {
     expect(container.classList).toContain('mat-form-field-hide-placeholder');
     expect(container.classList).not.toContain('mat-form-field-should-float');
   });
+
+  it('should preserve the native placeholder on a non-legacy appearance', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithLabelAndPlaceholder);
+    fixture.componentInstance.floatLabel = 'auto';
+    fixture.componentInstance.appearance = 'standard';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('input').getAttribute('placeholder')).toBe(
+      'Placeholder',
+    );
+  }));
 
   it('should not add the native select class if the control is not a native select', () => {
     const fixture = createComponent(MatInputWithId);
@@ -1761,6 +1768,34 @@ describe('MatInput with appearance', () => {
     expect(parseInt(outlineStart.style.width || '0')).toBeGreaterThan(0);
     expect(parseInt(outlineGap.style.width || '0')).toBeGreaterThan(0);
   }));
+
+  it('should recalculate the outline gap when the label changes to empty after init', fakeAsync(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+
+    const outlineFixture = createComponent(MatInputWithAppearanceAndLabel);
+
+    outlineFixture.componentInstance.appearance = 'outline';
+    outlineFixture.detectChanges();
+    flush();
+    outlineFixture.detectChanges();
+
+    const wrapperElement = outlineFixture.nativeElement;
+    const outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
+    const outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
+
+    expect(parseInt(outlineStart.style.width)).toBeGreaterThan(0);
+    expect(parseInt(outlineGap.style.width)).toBeGreaterThan(0);
+
+    outlineFixture.componentInstance.labelContent = '';
+    outlineFixture.detectChanges();
+
+    outlineFixture.componentInstance.formField.updateOutlineGap();
+    outlineFixture.detectChanges();
+
+    expect(parseInt(outlineStart.style.width)).toBe(0);
+    expect(parseInt(outlineGap.style.width)).toBe(0);
+  }));
 });
 
 describe('MatFormField default options', () => {
@@ -1820,6 +1855,18 @@ describe('MatFormField default options', () => {
     expect(fixture.componentInstance.formField.hideRequiredMarker).toBe(true);
     expect(fixture.componentInstance.formField.appearance).toBe('outline');
   });
+
+  it('should be able to change the default color', () => {
+    const fixture = createComponent(MatInputWithColor, [
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {color: 'accent'},
+      },
+    ]);
+    fixture.detectChanges();
+    const formField = fixture.nativeElement.querySelector('.mat-form-field');
+    expect(formField.classList).toContain('mat-accent');
+  });
 });
 
 function createComponent<T>(
@@ -1834,7 +1881,6 @@ function createComponent<T>(
       MatFormFieldModule,
       MatInputModule,
       BrowserAnimationsModule,
-      PlatformModule,
       ReactiveFormsModule,
       ...imports,
     ],
@@ -1902,7 +1948,7 @@ class MatInputPlaceholderElementTestComponent {
     </mat-form-field>`,
 })
 class MatInputWithFormControl {
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({
@@ -1940,7 +1986,7 @@ class MatInputWithSubscriptAndAriaDescribedBy {
   label: string = '';
   userDescribedByValue: string = '';
   showError = false;
-  formControl = new FormControl();
+  formControl = new UntypedFormControl();
 }
 
 @Component({template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`})
@@ -2100,7 +2146,7 @@ class MatInputMissingMatInputTestController {}
 })
 class MatInputWithFormErrorMessages {
   @ViewChild('form') form: NgForm;
-  formControl = new FormControl('incorrect', [
+  formControl = new UntypedFormControl('incorrect', [
     Validators.required,
     Validators.pattern(/valid value/),
   ]);
@@ -2121,8 +2167,8 @@ class MatInputWithFormErrorMessages {
   `,
 })
 class MatInputWithCustomErrorStateMatcher {
-  formGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.pattern(/valid value/)]),
+  formGroup = new UntypedFormGroup({
+    name: new UntypedFormControl('', [Validators.required, Validators.pattern(/valid value/)]),
   });
 
   errorState = false;
@@ -2145,8 +2191,11 @@ class MatInputWithCustomErrorStateMatcher {
 })
 class MatInputWithFormGroupErrorMessages {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
-  formGroup = new FormGroup({
-    name: new FormControl('incorrect', [Validators.required, Validators.pattern(/valid value/)]),
+  formGroup = new UntypedFormGroup({
+    name: new UntypedFormControl('incorrect', [
+      Validators.required,
+      Validators.pattern(/valid value/),
+    ]),
   });
 }
 
@@ -2181,7 +2230,7 @@ class MatInputWithNgIf {
   `,
 })
 class MatInputOnPush {
-  formControl = new FormControl('');
+  formControl = new UntypedFormControl('');
 }
 
 @Component({
@@ -2196,7 +2245,7 @@ class MatInputWithLabel {}
 
 @Component({
   template: `
-    <mat-form-field [floatLabel]="floatLabel">
+    <mat-form-field [floatLabel]="floatLabel" [appearance]="appearance">
       <mat-label>Label</mat-label>
       <input matInput placeholder="Placeholder">
     </mat-form-field>
@@ -2204,6 +2253,7 @@ class MatInputWithLabel {}
 })
 class MatInputWithLabelAndPlaceholder {
   floatLabel: FloatLabelType;
+  appearance: MatFormFieldAppearance = 'legacy';
 }
 
 @Component({
@@ -2401,5 +2451,5 @@ class MatInputWithColor {
     </mat-form-field>`,
 })
 class MatInputWithRequiredFormControl {
-  formControl = new FormControl('', [Validators.required]);
+  formControl = new UntypedFormControl('', [Validators.required]);
 }

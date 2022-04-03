@@ -86,9 +86,6 @@ export class MatNavList
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Component({
@@ -140,9 +137,6 @@ export class MatList
   ngOnDestroy() {
     this._stateChanges.complete();
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**
@@ -182,8 +176,6 @@ export class MatListSubheaderCssMatStyler {}
   host: {
     'class': 'mat-list-item mat-focus-indicator',
     '[class.mat-list-item-disabled]': 'disabled',
-    // @breaking-change 8.0.0 Remove `mat-list-item-avatar` in favor of `mat-list-item-with-avatar`.
-    '[class.mat-list-item-avatar]': '_avatar || _icon',
     '[class.mat-list-item-with-avatar]': '_avatar || _icon',
   },
   inputs: ['disableRipple'],
@@ -232,10 +224,10 @@ export class MatListItem
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled || !!(this._list && this._list.disabled);
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
@@ -260,7 +252,4 @@ export class MatListItem
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
 }

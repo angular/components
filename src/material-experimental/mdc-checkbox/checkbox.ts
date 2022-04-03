@@ -77,9 +77,14 @@ const _MatCheckboxBase = mixinColor(
   host: {
     'class': 'mat-mdc-checkbox',
     '[attr.tabindex]': 'null',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
     '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
     '[class.mdc-checkbox--disabled]': 'disabled',
     '[id]': 'id',
+    // Add classes that users can use to more easily target disabled or checked checkboxes.
+    '[class.mat-mdc-checkbox-disabled]': 'disabled',
+    '[class.mat-mdc-checkbox-checked]': 'checked',
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   exportAs: 'matCheckbox',
@@ -124,8 +129,9 @@ export class MatCheckbox
   get checked(): boolean {
     return this._checked;
   }
-  set checked(checked) {
+  set checked(checked: BooleanInput) {
     this._checked = coerceBooleanProperty(checked);
+    this._changeDetectorRef.markForCheck();
   }
   private _checked = false;
 
@@ -139,7 +145,7 @@ export class MatCheckbox
   get indeterminate(): boolean {
     return this._indeterminate;
   }
-  set indeterminate(indeterminate) {
+  set indeterminate(indeterminate: BooleanInput) {
     this._indeterminate = coerceBooleanProperty(indeterminate);
     this._syncIndeterminate(this._indeterminate);
   }
@@ -150,7 +156,7 @@ export class MatCheckbox
   get required(): boolean {
     return this._required;
   }
-  set required(required) {
+  set required(required: BooleanInput) {
     this._required = coerceBooleanProperty(required);
   }
   private _required = false;
@@ -160,7 +166,7 @@ export class MatCheckbox
   get disableRipple(): boolean {
     return this._disableRipple;
   }
-  set disableRipple(disableRipple: boolean) {
+  set disableRipple(disableRipple: BooleanInput) {
     this._disableRipple = coerceBooleanProperty(disableRipple);
   }
   private _disableRipple = false;
@@ -192,9 +198,6 @@ export class MatCheckbox
   /** The `MDCCheckboxFoundation` instance for this checkbox. */
   _checkboxFoundation: MDCCheckboxFoundation;
 
-  /** The set of classes that should be applied to the native input. */
-  _classes: {[key: string]: boolean} = {'mdc-checkbox__native-control': true};
-
   /** ControlValueAccessor onChange */
   private _cvaOnChange = (_: boolean) => {};
 
@@ -211,8 +214,8 @@ export class MatCheckbox
 
   /** The `MDCCheckboxAdapter` instance for this checkbox. */
   private _checkboxAdapter: MDCCheckboxAdapter = {
-    addClass: className => this._setClass(className, true),
-    removeClass: className => this._setClass(className, false),
+    addClass: className => this._nativeCheckbox.nativeElement.classList.add(className),
+    removeClass: className => this._nativeCheckbox.nativeElement.classList.remove(className),
     forceLayout: () => this._checkbox.nativeElement.offsetWidth,
     hasNativeControl: () => !!this._nativeCheckbox,
     isAttachedToDOM: () => !!this._checkbox.nativeElement.parentNode,
@@ -371,12 +374,6 @@ export class MatCheckbox
     return this.indeterminate ? 'mixed' : 'false';
   }
 
-  /** Sets whether the given CSS class should be applied to the native input. */
-  private _setClass(cssClass: string, active: boolean) {
-    this._classes[cssClass] = active;
-    this._changeDetectorRef.markForCheck();
-  }
-
   /**
    * Syncs the indeterminate value with the checkbox DOM node.
    *
@@ -391,10 +388,4 @@ export class MatCheckbox
       nativeCheckbox.nativeElement.indeterminate = value;
     }
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_indeterminate: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

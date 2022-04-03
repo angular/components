@@ -32,7 +32,9 @@ import {cssClasses, numbers} from '@material/dialog';
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // Disabled for consistency with the non-MDC dialog container.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   host: {
     'class': 'mat-mdc-dialog-container mdc-dialog',
     'tabindex': '-1',
@@ -60,7 +62,7 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     ? numbers.DIALOG_ANIMATION_CLOSE_TIME_MS
     : 0;
   /** Current timer for dialog animations. */
-  private _animationTimer: any = null;
+  private _animationTimer: number | null = null;
 
   constructor(
     elementRef: ElementRef,

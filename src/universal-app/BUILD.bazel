@@ -3,8 +3,7 @@ load("//src/cdk:config.bzl", "CDK_TARGETS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "ng_module", "sass_binary", "ts_library")
-load("//tools/esbuild:index.bzl", "esbuild")
+load("//tools:defaults.bzl", "devmode_esbuild", "ng_module", "sass_binary", "ts_library")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
 package(default_visibility = ["//visibility:public"])
@@ -49,14 +48,12 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        "//src/material:theming_bundle",
-        "//src/material-experimental/mdc-theming:all_themes",
-        "//src/material-experimental/mdc-typography:all_typography",
-        "//src/material/core:theming_scss_lib",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
     ],
 )
 
-esbuild(
+devmode_esbuild(
     name = "server_bundle",
     entry_point = ":prerender.ts",
     platform = "node",

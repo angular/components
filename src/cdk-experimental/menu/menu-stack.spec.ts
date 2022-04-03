@@ -17,17 +17,15 @@ describe('MenuStack', () => {
     fixture.detectChanges();
     triggers = fixture.componentInstance.triggers.toArray();
     menus = fixture.componentInstance.menus.toArray();
-    menuStack = fixture.componentInstance.menuBar._menuStack;
+    menuStack = fixture.componentInstance.menuBar.menuStack;
   }
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MultiMenuWithSubmenu],
-      }).compileComponents();
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [CdkMenuModule],
+      declarations: [MultiMenuWithSubmenu],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MultiMenuWithSubmenu);
@@ -38,11 +36,11 @@ describe('MenuStack', () => {
 
   /** Open up all of the menus in the test component. */
   function openAllMenus() {
-    triggers[0].openMenu();
+    triggers[0].open();
     getElementsForTesting();
-    triggers[1].openMenu();
+    triggers[1].open();
     getElementsForTesting();
-    triggers[2].openMenu();
+    triggers[2].open();
     getElementsForTesting();
   }
 
@@ -58,7 +56,7 @@ describe('MenuStack', () => {
       menuStack.closeAll();
 
       expect(spy).toHaveBeenCalledTimes(3);
-      const callArgs = spy.calls.all().map((v: jasmine.CallInfo<jasmine.Func>) => v.args[0]);
+      const callArgs = spy.calls.all().map((v: jasmine.CallInfo<jasmine.Func>) => v.args[0].item);
       expect(callArgs).toEqual(menus.reverse());
       expect(menuStack.isEmpty()).toBeTrue();
     },
@@ -84,20 +82,20 @@ describe('MenuStack', () => {
         <button cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
       </div>
 
-      <ng-template cdkMenuPanel #file="cdkMenuPanel">
-        <div cdkMenu id="file_menu" [cdkMenuPanel]="file">
+      <ng-template #file>
+        <div cdkMenu id="file_menu">
           <button cdkMenuItem [cdkMenuTriggerFor]="share">Share</button>
         </div>
       </ng-template>
 
-      <ng-template cdkMenuPanel #share="cdkMenuPanel">
-        <div cdkMenu id="share_menu" [cdkMenuPanel]="share">
+      <ng-template #share>
+        <div cdkMenu id="share_menu">
           <button cdkMenuItem [cdkMenuTriggerFor]="chat">Chat</button>
         </div>
       </ng-template>
 
-      <ng-template cdkMenuPanel #chat="cdkMenuPanel">
-        <div cdkMenu id="chat_menu" [cdkMenuPanel]="chat">
+      <ng-template #chat>
+        <div cdkMenu id="chat_menu">
           <button cdkMenuItem>GVC</button>
         </div>
       </ng-template>

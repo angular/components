@@ -12,7 +12,6 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {A, DOWN_ARROW, ENTER, hasModifierKey, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -59,12 +58,6 @@ export class MatSelectionListChange {
   constructor(
     /** Reference to the selection list that emitted the event. */
     public source: MatSelectionList,
-    /**
-     * Reference to the option that has been changed.
-     * @deprecated Use `options` instead, because some events may change more than one option.
-     * @breaking-change 12.0.0
-     */
-    public option: MatListOption,
     /** Reference to the options that have been changed. */
     public options: MatListOption[],
   ) {}
@@ -171,10 +164,10 @@ export class MatListOption
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled || (this.selectionList && this.selectionList.disabled);
   }
-  set disabled(value: any) {
+  set disabled(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
@@ -188,7 +181,7 @@ export class MatListOption
   get selected(): boolean {
     return this.selectionList.selectedOptions.isSelected(this);
   }
-  set selected(value: boolean) {
+  set selected(value: BooleanInput) {
     const isSelected = coerceBooleanProperty(value);
 
     if (isSelected !== this._selected) {
@@ -328,10 +321,6 @@ export class MatListOption
   _markForCheck() {
     this._changeDetector.markForCheck();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_selected: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -372,12 +361,6 @@ export class MatSelectionList
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
     new EventEmitter<MatSelectionListChange>();
 
-  /**
-   * Tabindex of the selection list.
-   * @breaking-change 11.0.0 Remove `tabIndex` input.
-   */
-  @Input() tabIndex: number = 0;
-
   /** Theme color of the selection list. This sets the checkbox color for all list options. */
   @Input() color: ThemePalette = 'accent';
 
@@ -393,7 +376,7 @@ export class MatSelectionList
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: boolean) {
+  set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
 
     // The `MatSelectionList` and `MatListOption` are using the `OnPush` change detection
@@ -409,7 +392,7 @@ export class MatSelectionList
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: boolean) {
+  set multiple(value: BooleanInput) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
@@ -447,11 +430,8 @@ export class MatSelectionList
 
   constructor(
     private _element: ElementRef<HTMLElement>,
-    // @breaking-change 11.0.0 Remove `tabIndex` parameter.
-    @Attribute('tabindex') tabIndex: string,
     private _changeDetector: ChangeDetectorRef,
-    // @breaking-change 11.0.0 `_focusMonitor` parameter to become required.
-    private _focusMonitor?: FocusMonitor,
+    private _focusMonitor: FocusMonitor,
   ) {
     super();
   }
@@ -497,9 +477,8 @@ export class MatSelectionList
       }
     });
 
-    // @breaking-change 11.0.0 Remove null assertion once _focusMonitor is required.
     this._focusMonitor
-      ?.monitor(this._element)
+      .monitor(this._element)
       .pipe(takeUntil(this._destroyed))
       .subscribe(origin => {
         if (origin === 'keyboard' || origin === 'program') {
@@ -528,8 +507,7 @@ export class MatSelectionList
   }
 
   ngOnDestroy() {
-    // @breaking-change 11.0.0 Remove null assertion once _focusMonitor is required.
-    this._focusMonitor?.stopMonitoring(this._element);
+    this._focusMonitor.stopMonitoring(this._element);
     this._destroyed.next();
     this._destroyed.complete();
     this._isDestroyed = true;
@@ -630,7 +608,7 @@ export class MatSelectionList
 
   /** Emits a change event if the selected state of an option changed. */
   _emitChangeEvent(options: MatListOption[]) {
-    this.selectionChange.emit(new MatSelectionListChange(this, options[0], options));
+    this.selectionChange.emit(new MatSelectionListChange(this, options));
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -765,8 +743,4 @@ export class MatSelectionList
   private _updateTabIndex(): void {
     this._tabIndex = this.options.length === 0 ? -1 : 0;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
 }

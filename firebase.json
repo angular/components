@@ -14,12 +14,14 @@
           {
             "key": "Cache-Control",
             "value": "no-cache"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
           }
         ]
       }
     ],
-    "ignore": [
-      "firebase.json"
-    ]
+    "ignore": ["firebase.json"]
   }
 }

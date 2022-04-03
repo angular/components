@@ -7,7 +7,6 @@
  */
 
 import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,6 +18,7 @@ import {
   Inject,
   Input,
   AfterViewInit,
+  NgZone,
 } from '@angular/core';
 import {
   CanColor,
@@ -149,9 +149,6 @@ export class MatButton
   _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -165,10 +162,9 @@ export class MatButton
     // Note that we ignore the user-specified tabindex when it's disabled for
     // consistency with the `mat-button` applied on native buttons where even
     // though they have an index, they're not tabbable.
-    '[attr.tabindex]': 'disabled ? -1 : (tabIndex || 0)',
+    '[attr.tabindex]': 'disabled ? -1 : tabIndex',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '(click)': '_haltDisabledEvents($event)',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-button-disabled]': 'disabled',
     'class': 'mat-focus-indicator',
@@ -179,7 +175,7 @@ export class MatButton
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatAnchor extends MatButton {
+export class MatAnchor extends MatButton implements AfterViewInit, OnDestroy {
   /** Tabindex of the button. */
   @Input() tabIndex: number;
 
@@ -187,15 +183,35 @@ export class MatAnchor extends MatButton {
     focusMonitor: FocusMonitor,
     elementRef: ElementRef,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    @Optional() private _ngZone?: NgZone,
   ) {
     super(elementRef, focusMonitor, animationMode);
   }
 
-  _haltDisabledEvents(event: Event) {
+  override ngAfterViewInit(): void {
+    super.ngAfterViewInit();
+
+    /** @breaking-change 14.0.0 _ngZone will be required. */
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() => {
+        this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+      });
+    } else {
+      this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+    }
+  }
+
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents);
+  }
+
+  _haltDisabledEvents = (event: Event): void => {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
-  }
+  };
 }

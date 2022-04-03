@@ -1,0 +1,7 @@
+{
+  "spec_dir": "e2e",
+  "spec_files": ["**/*.spec.ts"],
+  "env": {
+    "random": true
+  }
+}

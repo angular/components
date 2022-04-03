@@ -16,32 +16,30 @@ describe('MatChip', () => {
   let globalRippleOptions: RippleGlobalOptions;
   let dir = 'ltr';
 
-  beforeEach(
-    waitForAsync(() => {
-      globalRippleOptions = {};
-      TestBed.configureTestingModule({
-        imports: [MatChipsModule],
-        declarations: [
-          BasicChip,
-          SingleChip,
-          BasicChipWithStaticTabindex,
-          BasicChipWithBoundTabindex,
-        ],
-        providers: [
-          {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-          {
-            provide: Directionality,
-            useFactory: () => ({
-              value: dir,
-              change: new Subject(),
-            }),
-          },
-        ],
-      });
+  beforeEach(waitForAsync(() => {
+    globalRippleOptions = {};
+    TestBed.configureTestingModule({
+      imports: [MatChipsModule],
+      declarations: [
+        BasicChip,
+        SingleChip,
+        BasicChipWithStaticTabindex,
+        BasicChipWithBoundTabindex,
+      ],
+      providers: [
+        {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
+        {
+          provide: Directionality,
+          useFactory: () => ({
+            value: dir,
+            change: new Subject(),
+          }),
+        },
+      ],
+    });
 
-      TestBed.compileComponents();
-    }),
-  );
+    TestBed.compileComponents();
+  }));
 
   describe('MatBasicChip', () => {
     it('adds a class to indicate that it is a basic chip', () => {
@@ -72,6 +70,28 @@ describe('MatChip', () => {
       fixture.detectChanges();
 
       expect(chip.getAttribute('tabindex')).toBe('15');
+    });
+
+    it('should have the correct role', () => {
+      fixture = TestBed.createComponent(BasicChip);
+      fixture.detectChanges();
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipNativeElement = chipDebugElement.nativeElement;
+
+      expect(chipNativeElement.getAttribute('role')).toBe('option');
+    });
+
+    it('should be able to set a custom role', () => {
+      fixture = TestBed.createComponent(BasicChip);
+      fixture.detectChanges();
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
+      chipNativeElement = chipDebugElement.nativeElement;
+
+      chipInstance.role = 'gridcell';
+      fixture.detectChanges();
+
+      expect(chipNativeElement.getAttribute('role')).toBe('gridcell');
     });
   });
 

@@ -28,7 +28,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {fromEvent, merge, Subject} from 'rxjs';
 import {startWith, take, takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './error';
@@ -45,7 +45,7 @@ import {MatPlaceholder} from './placeholder';
 import {MAT_PREFIX, MatPrefix} from './prefix';
 import {MAT_SUFFIX, MatSuffix} from './suffix';
 import {Platform} from '@angular/cdk/platform';
-import {NgControl} from '@angular/forms';
+import {AbstractControlDirective} from '@angular/forms';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 let nextUniqueId = 0;
@@ -66,7 +66,7 @@ const _MatFormFieldBase = mixinColor(
 /** Possible appearance styles for the form field. */
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
-/** Possible values for the "floatLabel" form-field input. */
+/** Possible values for the "floatLabel" form field input. */
 export type FloatLabelType = 'always' | 'never' | 'auto';
 
 /**
@@ -74,10 +74,14 @@ export type FloatLabelType = 'always' | 'never' | 'auto';
  * using the `MAT_FORM_FIELD_DEFAULT_OPTIONS` injection token.
  */
 export interface MatFormFieldDefaultOptions {
+  /** Default form field appearance style. */
   appearance?: MatFormFieldAppearance;
+  /** Default color of the form field. */
+  color?: ThemePalette;
+  /** Whether the required marker should be hidden by default. */
   hideRequiredMarker?: boolean;
   /**
-   * Whether the label for form-fields should by default float `always`,
+   * Whether the label for form fields should by default float `always`,
    * `never`, or `auto` (only when necessary).
    */
   floatLabel?: FloatLabelType;
@@ -158,7 +162,7 @@ export class MatFormField
 
   private readonly _destroyed = new Subject<void>();
 
-  /** The form-field appearance style. */
+  /** The form field appearance style. */
   @Input()
   get appearance(): MatFormFieldAppearance {
     return this._appearance;
@@ -166,7 +170,7 @@ export class MatFormField
   set appearance(value: MatFormFieldAppearance) {
     const oldValue = this._appearance;
 
-    this._appearance = value || (this._defaults && this._defaults.appearance) || 'legacy';
+    this._appearance = value || this._defaults?.appearance || 'legacy';
 
     if (this._appearance === 'outline' && oldValue !== value) {
       this._outlineGapCalculationNeededOnStable = true;
@@ -179,10 +183,10 @@ export class MatFormField
   get hideRequiredMarker(): boolean {
     return this._hideRequiredMarker;
   }
-  set hideRequiredMarker(value: boolean) {
+  set hideRequiredMarker(value: BooleanInput) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
-  private _hideRequiredMarker: boolean;
+  private _hideRequiredMarker = false;
 
   /** Override for the logic that disables the label animation in certain cases. */
   private _showAlwaysAnimate = false;
@@ -282,9 +286,13 @@ export class MatFormField
     this._animationsEnabled = _animationMode !== 'NoopAnimations';
 
     // Set the default through here so we invoke the setter on the first run.
-    this.appearance = _defaults && _defaults.appearance ? _defaults.appearance : 'legacy';
-    this._hideRequiredMarker =
-      _defaults && _defaults.hideRequiredMarker != null ? _defaults.hideRequiredMarker : false;
+    this.appearance = _defaults?.appearance || 'legacy';
+    if (_defaults) {
+      this._hideRequiredMarker = Boolean(_defaults.hideRequiredMarker);
+      if (_defaults.color) {
+        this.color = this.defaultColor = _defaults.color;
+      }
+    }
   }
 
   /**
@@ -295,7 +303,7 @@ export class MatFormField
   }
 
   /**
-   * Gets an ElementRef for the element that a overlay attached to the form-field should be
+   * Gets an ElementRef for the element that a overlay attached to the form field should be
    * positioned relative to.
    */
   getConnectedOverlayOrigin(): ElementRef {
@@ -385,10 +393,13 @@ export class MatFormField
     this._destroyed.complete();
   }
 
-  /** Determines whether a class from the NgControl should be forwarded to the host element. */
-  _shouldForward(prop: keyof NgControl): boolean {
-    const ngControl = this._control ? this._control.ngControl : null;
-    return ngControl && ngControl[prop];
+  /**
+   * Determines whether a class from the AbstractControlDirective
+   * should be forwarded to the host element.
+   */
+  _shouldForward(prop: keyof AbstractControlDirective): boolean {
+    const control = this._control ? this._control.ngControl : null;
+    return control && control[prop];
   }
 
   _hasPlaceholder() {
@@ -549,20 +560,26 @@ export class MatFormField
    */
   updateOutlineGap() {
     const labelEl = this._label ? this._label.nativeElement : null;
+    const container = this._connectionContainerRef.nativeElement;
+    const outlineStartSelector = '.mat-form-field-outline-start';
+    const outlineGapSelector = '.mat-form-field-outline-gap';
 
-    if (
-      this.appearance !== 'outline' ||
-      !labelEl ||
-      !labelEl.children.length ||
-      !labelEl.textContent!.trim()
-    ) {
+    // getBoundingClientRect isn't available on the server.
+    if (this.appearance !== 'outline' || !this._platform.isBrowser) {
       return;
     }
 
-    if (!this._platform.isBrowser) {
-      // getBoundingClientRect isn't available on the server.
+    // If there is no content, set the gap elements to zero.
+    if (!labelEl || !labelEl.children.length || !labelEl.textContent!.trim()) {
+      const gapElements = container.querySelectorAll(
+        `${outlineStartSelector}, ${outlineGapSelector}`,
+      );
+      for (let i = 0; i < gapElements.length; i++) {
+        gapElements[i].style.width = '0';
+      }
       return;
     }
+
     // If the element is not present in the DOM, the outline gap will need to be calculated
     // the next time it is checked and in the DOM.
     if (!this._isAttachedToDOM()) {
@@ -573,9 +590,8 @@ export class MatFormField
     let startWidth = 0;
     let gapWidth = 0;
 
-    const container = this._connectionContainerRef.nativeElement;
-    const startEls = container.querySelectorAll('.mat-form-field-outline-start');
-    const gapEls = container.querySelectorAll('.mat-form-field-outline-gap');
+    const startEls = container.querySelectorAll(outlineStartSelector);
+    const gapEls = container.querySelectorAll(outlineGapSelector);
 
     if (this._label && this._label.nativeElement.children.length) {
       const containerRect = container.getBoundingClientRect();
@@ -635,6 +651,4 @@ export class MatFormField
     // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
     return document.documentElement!.contains(element);
   }
-
-  static ngAcceptInputType_hideRequiredMarker: BooleanInput;
 }

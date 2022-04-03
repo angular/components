@@ -1,6 +1,6 @@
-import {LEFT_ARROW} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   waitForAsync,
   ComponentFixture,
@@ -40,6 +40,7 @@ describe('MDC-based MatTabGroup', () => {
         TabGroupWithIndirectDescendantTabs,
         TabGroupWithSpaceAbove,
         NestedTabGroupWithLabel,
+        TabsWithClassesTestApp,
       ],
     });
 
@@ -96,27 +97,24 @@ describe('MDC-based MatTabGroup', () => {
     }));
 
     // Note: needs to be `async` in order to fail when we expect it to.
-    it(
-      'should set to correct tab on fast change',
-      waitForAsync(() => {
-        let component = fixture.componentInstance;
-        component.selectedIndex = 0;
+    it('should set to correct tab on fast change', waitForAsync(() => {
+      let component = fixture.componentInstance;
+      component.selectedIndex = 0;
+      fixture.detectChanges();
+
+      setTimeout(() => {
+        component.selectedIndex = 1;
         fixture.detectChanges();
 
         setTimeout(() => {
-          component.selectedIndex = 1;
+          component.selectedIndex = 0;
           fixture.detectChanges();
-
-          setTimeout(() => {
-            component.selectedIndex = 0;
-            fixture.detectChanges();
-            fixture.whenStable().then(() => {
-              expect(component.selectedIndex).toBe(0);
-            });
-          }, 1);
+          fixture.whenStable().then(() => {
+            expect(component.selectedIndex).toBe(0);
+          });
         }, 1);
-      }),
-    );
+      }, 1);
+    }));
 
     it('should change tabs based on selectedIndex', fakeAsync(() => {
       let component = fixture.componentInstance;
@@ -198,7 +196,6 @@ describe('MDC-based MatTabGroup', () => {
         .toBe(0);
 
       dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
-      dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
 
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
         .withContext('Expected one ripple to show up on label mousedown.')
@@ -381,6 +378,23 @@ describe('MDC-based MatTabGroup', () => {
 
       expect(contentElements.map(e => e.getAttribute('tabindex'))).toEqual(['1', null, null]);
     });
+
+    it('should update the tabindex of the labels when navigating via keyboard', () => {
+      fixture.detectChanges();
+
+      const tabLabels = fixture.debugElement
+        .queryAll(By.css('.mat-mdc-tab'))
+        .map(label => label.nativeElement);
+      const tabLabelContainer = fixture.debugElement.query(By.css('.mat-mdc-tab-label-container'))
+        .nativeElement as HTMLElement;
+
+      expect(tabLabels.map(label => label.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
+
+      dispatchKeyboardEvent(tabLabelContainer, 'keydown', RIGHT_ARROW);
+      fixture.detectChanges();
+
+      expect(tabLabels.map(label => label.getAttribute('tabindex'))).toEqual(['-1', '-1', '0']);
+    });
   });
 
   describe('aria labelling', () => {
@@ -420,11 +434,16 @@ describe('MDC-based MatTabGroup', () => {
 
       expect(tab.getAttribute('aria-label')).toBe('Fruit');
       expect(tab.hasAttribute('aria-labelledby')).toBe(false);
+
+      fixture.componentInstance.ariaLabel = 'Veggie';
+      fixture.detectChanges();
+      expect(tab.getAttribute('aria-label')).toBe('Veggie');
     });
   });
 
   describe('disable tabs', () => {
     let fixture: ComponentFixture<DisabledTabsTestApp>;
+
     beforeEach(() => {
       fixture = TestBed.createComponent(DisabledTabsTestApp);
     });
@@ -583,6 +602,26 @@ describe('MDC-based MatTabGroup', () => {
 
       expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
     }));
+
+    it('should update the newly-selected tab if the previously-selected tab is replaced', fakeAsync(() => {
+      const component: MatTabGroup = fixture.debugElement.query(
+        By.css('mat-tab-group'),
+      )!.componentInstance;
+
+      spyOn(fixture.componentInstance, 'handleSelection');
+
+      fixture.componentInstance.tabs[fixture.componentInstance.selectedIndex] = {
+        label: 'New',
+        content: 'New',
+      };
+      fixture.detectChanges();
+      tick();
+
+      expect(component._tabs.get(1)?.isActive).toBe(true);
+      expect(fixture.componentInstance.handleSelection).toHaveBeenCalledWith(
+        jasmine.objectContaining({index: 1}),
+      );
+    }));
   });
 
   describe('async tabs', () => {
@@ -660,6 +699,56 @@ describe('MDC-based MatTabGroup', () => {
 
       expect(tabGroupNode.classList).toContain('mat-mdc-tab-group-inverted-header');
     });
+
+    it('should be able to opt into keeping the inactive tab content in the DOM', fakeAsync(() => {
+      fixture.componentInstance.preserveContent = true;
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
+      expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
+
+      tabGroup.selectedIndex = 3;
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
+      expect(fixture.nativeElement.textContent).toContain('Peanuts');
+    }));
+
+    it('should visibly hide the content of inactive tabs', fakeAsync(() => {
+      const contentElements: HTMLElement[] = Array.from(
+        fixture.nativeElement.querySelectorAll('.mat-mdc-tab-body-content'),
+      );
+
+      expect(contentElements.map(element => element.style.visibility)).toEqual([
+        '',
+        'hidden',
+        'hidden',
+        'hidden',
+      ]);
+
+      tabGroup.selectedIndex = 2;
+      fixture.detectChanges();
+      tick();
+
+      expect(contentElements.map(element => element.style.visibility)).toEqual([
+        'hidden',
+        'hidden',
+        '',
+        'hidden',
+      ]);
+
+      tabGroup.selectedIndex = 1;
+      fixture.detectChanges();
+      tick();
+
+      expect(contentElements.map(element => element.style.visibility)).toEqual([
+        'hidden',
+        '',
+        'hidden',
+        'hidden',
+      ]);
+    }));
   });
 
   describe('lazy loaded tabs', () => {
@@ -778,6 +867,62 @@ describe('MDC-based MatTabGroup', () => {
       expect(window.scrollY).toBe(250);
       tick();
     }));
+  });
+
+  describe('tabs with custom css classes', () => {
+    let fixture: ComponentFixture<TabsWithClassesTestApp>;
+    let labelElements: DebugElement[];
+    let bodyElements: DebugElement[];
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TabsWithClassesTestApp);
+      fixture.detectChanges();
+      labelElements = fixture.debugElement.queryAll(By.css('.mdc-tab'));
+      bodyElements = fixture.debugElement.queryAll(By.css('mat-tab-body'));
+    });
+
+    it('should apply label/body classes', () => {
+      expect(labelElements[1].nativeElement.classList).toContain('hardcoded-label-class');
+      expect(bodyElements[1].nativeElement.classList).toContain('hardcoded-body-class');
+    });
+
+    it('should set classes as strings dynamically', () => {
+      expect(labelElements[0].nativeElement.classList).not.toContain('custom-label-class');
+      expect(bodyElements[0].nativeElement.classList).not.toContain('custom-body-class');
+
+      fixture.componentInstance.labelClassList = 'custom-label-class';
+      fixture.componentInstance.bodyClassList = 'custom-body-class';
+      fixture.detectChanges();
+
+      expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
+      expect(bodyElements[0].nativeElement.classList).toContain('custom-body-class');
+
+      delete fixture.componentInstance.labelClassList;
+      delete fixture.componentInstance.bodyClassList;
+      fixture.detectChanges();
+
+      expect(labelElements[0].nativeElement.classList).not.toContain('custom-label-class');
+      expect(bodyElements[0].nativeElement.classList).not.toContain('custom-body-class');
+    });
+
+    it('should set classes as strings array dynamically', () => {
+      expect(labelElements[0].nativeElement.classList).not.toContain('custom-label-class');
+      expect(bodyElements[0].nativeElement.classList).not.toContain('custom-body-class');
+
+      fixture.componentInstance.labelClassList = ['custom-label-class'];
+      fixture.componentInstance.bodyClassList = ['custom-body-class'];
+      fixture.detectChanges();
+
+      expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
+      expect(bodyElements[0].nativeElement.classList).toContain('custom-body-class');
+
+      delete fixture.componentInstance.labelClassList;
+      delete fixture.componentInstance.bodyClassList;
+      fixture.detectChanges();
+
+      expect(labelElements[0].nativeElement.classList).not.toContain('custom-label-class');
+      expect(bodyElements[0].nativeElement.classList).not.toContain('custom-body-class');
+    });
   });
 
   /**
@@ -1014,7 +1159,6 @@ class BindedTabsTestApp {
 }
 
 @Component({
-  selector: 'test-app',
   template: `
     <mat-tab-group class="tab-group">
       <mat-tab>
@@ -1065,7 +1209,7 @@ class AsyncTabsTestApp implements OnInit {
 
 @Component({
   template: `
-  <mat-tab-group>
+  <mat-tab-group [preserveContent]="preserveContent">
     <mat-tab label="Junk food"> Pizza, fries </mat-tab>
     <mat-tab label="Vegetables"> Broccoli, spinach </mat-tab>
     <mat-tab [label]="otherLabel"> {{otherContent}} </mat-tab>
@@ -1074,13 +1218,13 @@ class AsyncTabsTestApp implements OnInit {
   `,
 })
 class TabGroupWithSimpleApi {
+  preserveContent = false;
   otherLabel = 'Fruit';
   otherContent = 'Apples, grapes';
   @ViewChild('legumes') legumes: any;
 }
 
 @Component({
-  selector: 'nested-tabs',
   template: `
     <mat-tab-group>
       <mat-tab label="One">Tab one content</mat-tab>
@@ -1099,7 +1243,6 @@ class NestedTabs {
 }
 
 @Component({
-  selector: 'template-tabs',
   template: `
     <mat-tab-group>
       <mat-tab label="One">
@@ -1215,3 +1358,21 @@ class TabGroupWithSpaceAbove {
   `,
 })
 class NestedTabGroupWithLabel {}
+
+@Component({
+  template: `
+    <mat-tab-group class="tab-group">
+      <mat-tab label="Tab One" [labelClass]="labelClassList" [bodyClass]="bodyClassList">
+        Tab one content
+      </mat-tab>
+      <mat-tab label="Tab Two" labelClass="hardcoded-label-class"
+               bodyClass="hardcoded-body-class">
+        Tab two content
+      </mat-tab>
+    </mat-tab-group>
+  `,
+})
+class TabsWithClassesTestApp {
+  labelClassList?: string | string[];
+  bodyClassList?: string | string[];
+}

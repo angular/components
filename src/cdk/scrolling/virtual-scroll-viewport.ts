@@ -99,7 +99,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   get appendOnly(): boolean {
     return this._appendOnly;
   }
-  set appendOnly(value: boolean) {
+  set appendOnly(value: BooleanInput) {
     this._appendOnly = coerceBooleanProperty(value);
   }
   private _appendOnly = false;
@@ -321,6 +321,8 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     const axis = isHorizontal ? 'X' : 'Y';
     const axisDirection = isHorizontal && isRtl ? -1 : 1;
     let transform = `translate${axis}(${Number(axisDirection * offset)}px)`;
+    // in appendOnly, we always start from the top
+    offset = this.appendOnly && to === 'to-start' ? 0 : offset;
     this._renderedContentOffset = offset;
     if (to === 'to-end') {
       transform += ` translate${axis}(-100%)`;
@@ -461,6 +463,4 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     this._totalContentWidth =
       this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '';
   }
-
-  static ngAcceptInputType_appendOnly: BooleanInput;
 }

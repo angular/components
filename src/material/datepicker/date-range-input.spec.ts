@@ -3,8 +3,8 @@ import {ComponentFixture, TestBed, inject, fakeAsync, tick, flush} from '@angula
 import {
   FormsModule,
   ReactiveFormsModule,
-  FormGroup,
-  FormControl,
+  UntypedFormGroup,
+  UntypedFormControl,
   NG_VALIDATORS,
   Validator,
   NgModel,
@@ -208,7 +208,7 @@ describe('MatDateRangeInput', () => {
     fixture.detectChanges();
     tick();
 
-    const popup = document.querySelector('.cdk-overlay-pane')!;
+    const popup = document.querySelector('.cdk-overlay-pane .mat-datepicker-content-container')!;
     expect(popup).toBeTruthy();
     expect(popup.getAttribute('aria-labelledby')).toBe(label.getAttribute('id'));
   }));
@@ -675,6 +675,7 @@ describe('MatDateRangeInput', () => {
 
     rangePicker.open();
     fixture.detectChanges();
+    tick();
     flush();
 
     expect(startModel.dirty).toBe(false);
@@ -998,9 +999,9 @@ class StandardRangePicker {
   startAt: Date | null = null;
   dateFilter = () => true;
 
-  range = new FormGroup({
-    start: new FormControl(),
-    end: new FormControl(),
+  range = new UntypedFormGroup({
+    start: new UntypedFormControl(),
+    end: new UntypedFormControl(),
   });
 }
 
