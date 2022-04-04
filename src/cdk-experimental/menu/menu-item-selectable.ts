@@ -16,7 +16,7 @@ import {CdkMenuItem} from './menu-item';
  */
 @Directive({
   host: {
-    '[attr.aria-checked]': 'checked || null',
+    '[attr.aria-checked]': '!!checked',
     '[attr.aria-disabled]': 'disabled || null',
   },
 })
