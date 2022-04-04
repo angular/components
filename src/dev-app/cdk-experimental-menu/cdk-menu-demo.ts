@@ -8,7 +8,6 @@
 
 import {Component} from '@angular/core';
 import {ConnectedPosition} from '@angular/cdk/overlay';
-import {CdkMenuItem} from '@angular/cdk-experimental/menu';
 
 @Component({
   templateUrl: 'cdk-menu-demo.html',

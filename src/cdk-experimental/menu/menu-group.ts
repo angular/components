@@ -6,19 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  AfterContentInit,
-  ContentChildren,
-  Directive,
-  EventEmitter,
-  OnDestroy,
-  Output,
-  QueryList,
-} from '@angular/core';
+import {Directive} from '@angular/core';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {takeUntil} from 'rxjs/operators';
-import {CdkMenuItemSelectable} from './menu-item-selectable';
-import {CdkMenuItem} from './menu-item';
 
 /**
  * Directive which acts as a grouping container for `CdkMenuItem` instances with

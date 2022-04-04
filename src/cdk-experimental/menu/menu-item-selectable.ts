@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
-import {Input, Directive, Output, EventEmitter} from '@angular/core';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Directive, Input} from '@angular/core';
 import {CdkMenuItem} from './menu-item';
 
 /**

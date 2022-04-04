@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {CdkMenuItem} from '@angular/cdk-experimental/menu';
 
 /** @title Stateful Menu with Standalone Trigger. */
 @Component({

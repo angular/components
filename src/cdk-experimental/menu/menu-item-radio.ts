@@ -61,9 +61,9 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
 
   /** Configure the unique selection dispatcher listener in order to toggle the checked state  */
   private _registerDispatcherListener() {
-    this._removeDispatcherListener = this._selectionDispatcher.listen(
-      (id: string) => (this.checked = this._id === id),
-    );
+    this._removeDispatcherListener = this._selectionDispatcher.listen((id: string) => {
+      this.checked = this._id === id;
+    });
   }
 
   /** Toggles the checked state of the radio-button. */
