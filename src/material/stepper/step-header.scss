@@ -82,3 +82,9 @@
   @include layout-common.fill;
   pointer-events: none;
 }
+
+// Stepper headers have the focus indicator as a descendant,
+// because `::before` is used for other styling.
+.mat-step-header:focus .mat-focus-indicator::before {
+  content: '';
+}

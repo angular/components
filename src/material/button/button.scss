@@ -155,6 +155,22 @@
   }
 }
 
+// By default, all focus indicators are flush with the bounding box of their
+// host element. For the button element, default inset/offset
+// values are necessary to ensure that the focus indicator is sufficiently
+// contrastive and renders appropriately.
+.mat-focus-indicator.mat-flat-button::before,
+.mat-focus-indicator.mat-raised-button::before,
+.mat-focus-indicator.mat-fab::before,
+.mat-focus-indicator.mat-mini-fab::before {
+  margin: calc(-(var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
+}
+
+.mat-focus-indicator.mat-stroked-button::before
+{
+  margin: calc(-(var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 3px));
+}
+
 // Add an outline to make buttons more visible in high contrast mode. Stroked buttons
 // don't need a special look in high-contrast mode, because those already have an outline.
 @include cdk.high-contrast(active, off) {

@@ -20,7 +20,6 @@ $calendar-prev-next-icon-margin: 15.5px;
 $calendar-prev-icon-transform: translateX(2px) rotate(-45deg);
 $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 
-
 .mat-calendar {
   display: block;
 }
@@ -126,3 +125,16 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   }
 }
 
+// By default, all focus indicators are flush with the bounding box of their
+// host element. For the calendar element, default inset/offset
+// values are necessary to ensure that the focus indicator is sufficiently
+// contrastive and renders appropriately.
+.mat-focus-indicator.mat-calendar-body-cell-content::before {
+  margin: calc(- (var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 3px));
+}
+
+// For calendar cells, render the focus indicator when the parent cell is
+// focused.
+.mat-calendar-body-cell:focus .mat-focus-indicator::before {
+  content: '';
+}

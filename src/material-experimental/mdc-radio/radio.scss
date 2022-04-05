@@ -106,3 +106,18 @@
     }
   }
 }
+
+// Radio components have to set `border-radius: 50%` in order to support density scaling
+// which will clip a square focus indicator so we have to turn it into a circle.
+.mat-radio-ripple.mat-mdc-focus-indicator::before {
+  border-radius: 50%;
+}
+
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// For radios render the focus indicator when we know
+// the hidden input is focused (slightly different for each control).
+.mat-mdc-radio-button.cdk-focused .mat-mdc-focus-indicator::before {
+  content: '';
+}

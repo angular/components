@@ -221,6 +221,15 @@ $bar-track-width: $bar-width - $thumb-size;
   }
 }
 
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// Slide-toggles render focus indicators when the
+// associated visually-hidden input is focused.
+.mat-slide-toggle-input:focus ~ .mat-slide-toggle-thumb-container .mat-focus-indicator::before {
+  content: '';
+}
+
 // Custom styling to make the slide-toggle usable in high contrast mode.
 @include cdk.high-contrast(active, off) {
   .mat-slide-toggle-thumb,

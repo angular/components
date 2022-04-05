@@ -87,3 +87,9 @@
     margin-right: 0;
   }
 }
+
+// For options, render the focus indicator when the class .mat-active
+// is present.
+.mat-focus-indicator.mat-option.mat-active::before {
+  content: '';
+}

@@ -210,7 +210,16 @@ $ripple-radius: 20px;
   z-index: -1;
 }
 
-@include cdk.high-contrast(active, off) {
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// Radio renders focus indicators when the
+// associated visually-hidden input is focused.
+.mat-radio-input:focus ~ .mat-focus-indicator::before {
+  content: '';
+}
+
+@include a11y.high-contrast(active, off) {
   .mat-radio-button:not(.mat-radio-disabled) {
     &.cdk-keyboard-focused,
     &.cdk-program-focused {

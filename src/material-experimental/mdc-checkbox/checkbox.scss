@@ -105,3 +105,18 @@
     $set-width: true,
     $query: mdc-helpers.$mat-base-styles-query);
 }
+
+// Checkbox components have to set `border-radius: 50%` in order to support density scaling
+// which will clip a square focus indicator so we have to turn it into a circle.
+.mat-mdc-checkbox-ripple.mat-mdc-focus-indicator::before {
+  border-radius: 50%;
+}
+
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// For checkboxes render the focus indicator when we know
+// the hidden input is focused (slightly different for each control).
+.mdc-checkbox__native-control:focus ~ .mat-mdc-focus-indicator::before {
+  content: '';
+}

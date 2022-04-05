@@ -104,3 +104,12 @@ mat-action-list button {
     border: 0;
   }
 }
+
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// For list items, render the focus indicator when the parent
+// listem item is focused.
+.mat-mdc-list-item:focus > .mat-mdc-focus-indicator::before {
+  content: '';
+}

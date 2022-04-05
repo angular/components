@@ -518,3 +518,12 @@ $_mark-stroke-size: math.div(2, 15) * checkbox-common.$size !default;
   bottom: 0;
   left: 50%;
 }
+
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// Checkboxes render focus indicators when the
+// associated visually-hidden input is focused.
+.mat-checkbox-input:focus ~ .mat-focus-indicator::before {
+  content: '';
+}

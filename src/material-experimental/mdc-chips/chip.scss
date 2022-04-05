@@ -215,3 +215,29 @@
     outline-width: 3px;
   }
 }
+
+// By default, all focus indicators are flush with the bounding box of their
+// host element. For the chip element, default inset/offset
+// values are necessary to ensure that the focus indicator is sufficiently
+// contrastive and renders appropriately.
+.mat-mdc-chip-action-label .mat-mdc-focus-indicator::before {
+  margin: calc(-(var(--mat-mdc-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
+}
+
+.mat-mdc-focus-indicator.mat-mdc-chip-remove::before {
+  margin: var(--mat-mdc-focus-indicator-border-width, $default-focus-indicator-width);
+}
+
+// MDC sets a padding a on the chip button which stretches out the focus indicator.
+.mat-mdc-focus-indicator.mat-mdc-chip-remove::before {
+  left: 8px;
+  right: 8px;
+}
+
+// Render the focus indicator on focus. Defining a pseudo element's
+// content will cause it to render.
+
+// In the chips the individual actions have focus so we target a different element.
+.mat-mdc-chip-action:focus .mat-mdc-focus-indicator::before {
+  content: '';
+}
