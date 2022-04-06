@@ -188,7 +188,7 @@ export class MatDialogConfig<D = any> {
 }
 
 // @public
-export class MatDialogContainer extends _MatDialogContainerBase {
+export class MatDialogContainer extends _MatDialogContainerBase implements OnDestroy {
     // (undocumented)
     _getAnimationState(): {
         value: "enter" | "void" | "exit";
@@ -197,6 +197,8 @@ export class MatDialogContainer extends _MatDialogContainerBase {
             exitAnimationDuration: string;
         };
     };
+    // (undocumented)
+    ngOnDestroy(): void;
     _onAnimationDone({ toState, totalTime }: AnimationEvent_2): void;
     _onAnimationStart({ toState, totalTime }: AnimationEvent_2): void;
     _startExitAnimation(): void;
@@ -229,6 +231,9 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     protected _focusTrapFactory: FocusTrapFactory;
     _id: string;
     _initializeWithAttachedContent(): void;
+    // (undocumented)
+    protected readonly _ngZone: NgZone;
+    readonly _onExit: Subject<void>;
     protected _openAnimationDone(totalTime: number): void;
     _portalOutlet: CdkPortalOutlet;
     _recaptureFocus(): void;

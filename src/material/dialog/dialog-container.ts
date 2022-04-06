@@ -34,10 +34,13 @@ import {
   EventEmitter,
   Inject,
   NgZone,
+  OnDestroy,
   Optional,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {Subject} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {matDialogAnimations, defaultParams} from './dialog-animations';
 import {MatDialogConfig} from './dialog-config';
 
@@ -62,6 +65,9 @@ export function throwMatDialogContentAlreadyAttachedError() {
  */
 @Directive()
 export abstract class _MatDialogContainerBase extends BasePortalOutlet {
+  /** Subject for notifying that the dialog container has exited from view. */
+  readonly _onExit: Subject<void> = new Subject();
+
   protected _document: Document;
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
@@ -97,7 +103,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     /** The dialog configuration. */
     public _config: MatDialogConfig,
     private readonly _interactivityChecker: InteractivityChecker,
-    private readonly _ngZone: NgZone,
+    protected readonly _ngZone: NgZone,
     private _focusMonitor?: FocusMonitor,
   ) {
     super();
@@ -339,9 +345,13 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     '(@dialogContainer.done)': '_onAnimationDone($event)',
   },
 })
-export class MatDialogContainer extends _MatDialogContainerBase {
+export class MatDialogContainer extends _MatDialogContainerBase implements OnDestroy {
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'exit' = 'enter';
+
+  ngOnDestroy() {
+    this._completeExit();
+  }
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone({toState, totalTime}: AnimationEvent) {
@@ -350,6 +360,7 @@ export class MatDialogContainer extends _MatDialogContainerBase {
     } else if (toState === 'exit') {
       this._restoreFocus();
       this._animationStateChanged.next({state: 'closed', totalTime});
+      this._completeExit();
     }
   }
 
@@ -381,5 +392,18 @@ export class MatDialogContainer extends _MatDialogContainerBase {
           this._config.exitAnimationDuration || defaultParams.params.exitAnimationDuration,
       },
     };
+  }
+
+  /**
+   * Waits for the zone to settle before removing the element. Helps prevent
+   * errors where we end up removing an element which is in the middle of an animation.
+   */
+  private _completeExit() {
+    this._ngZone.onMicrotaskEmpty.pipe(take(1)).subscribe(() => {
+      this._ngZone.run(() => {
+        this._onExit.next();
+        this._onExit.complete();
+      });
+    });
   }
 }
