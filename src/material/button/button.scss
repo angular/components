@@ -161,7 +161,7 @@
 .mat-raised-button::before,
 .mat-fab::before,
 .mat-mini-fab::before {
-  &.mat-focus-indicator{
+  &.mat-focus-indicator {
     margin: calc(-(var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
   }
 }
