@@ -210,9 +210,6 @@ $ripple-radius: 20px;
   z-index: -1;
 }
 
-// Render the focus indicator on focus. Defining a pseudo element's
-// content will cause it to render.
-
 // Radio renders focus indicators when the
 // associated visually-hidden input is focused.
 .mat-radio-input:focus ~ .mat-focus-indicator::before {

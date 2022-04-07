@@ -155,19 +155,18 @@
   }
 }
 
-// By default, all focus indicators are flush with the bounding box of their
-// host element. For the button element, default inset/offset
-// values are necessary to ensure that the focus indicator is sufficiently
-// contrastive and renders appropriately.
-.mat-focus-indicator.mat-flat-button::before,
-.mat-focus-indicator.mat-raised-button::before,
-.mat-focus-indicator.mat-fab::before,
-.mat-focus-indicator.mat-mini-fab::before {
-  margin: calc(-(var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
+// For the button element, default inset/offset values are necessary to ensure that 
+// the focus indicator is sufficiently contrastive and renders appropriately.
+.mat-flat-button::before,
+.mat-raised-button::before,
+.mat-fab::before,
+.mat-mini-fab::before {
+  &.mat-focus-indicator{
+    margin: calc(-(var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
+  }
 }
 
-.mat-focus-indicator.mat-stroked-button::before
-{
+.mat-focus-indicator.mat-stroked-button::before {
   margin: calc(-(var(--mat-focus-indicator-border-width, $default-focus-indicator-width) + 3px));
 }
 

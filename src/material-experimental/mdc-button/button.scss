@@ -108,22 +108,19 @@
   border-width: $offset;
 }
 
-// By default, all focus indicators are flush with the bounding box of their
-// host element. For the button element, default inset/offset
-// values are necessary to ensure that the focus indicator is sufficiently
-// contrastive and renders appropriately.
-.mat-mdc-unelevated-button .mat-mdc-focus-indicator::before,
-.mat-mdc-raised-button .mat-mdc-focus-indicator::before,
-.mdc-fab .mat-mdc-focus-indicator::before {
-  margin: calc(-(var(--mat-mdc-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
+// For the button element, default inset/offset values are necessary to ensure that 
+// the focus indicator is sufficiently contrastive and renders appropriately.
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mdc-fab {
+  .mat-mdc-focus-indicator::before {
+    margin: calc(-(var(--mat-mdc-focus-indicator-border-width, $default-focus-indicator-width) + 2px));
+  }
 }
 
 .mat-mdc-outlined-button .mat-mdc-focus-indicator::before {
   margin: calc(-(var(--mat-mdc-focus-indicator-border-width, $default-focus-indicator-width) + 3px));
 }
-
-// Render the focus indicator on focus. Defining a pseudo element's
-// content will cause it to render.
 
 // For buttons, render the focus indicator when the parent
 // button is focused.

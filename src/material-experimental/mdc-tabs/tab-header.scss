@@ -10,10 +10,8 @@
   @include tabs-common.paginated-tab-header-item-wrapper('.mat-mdc-tab-header');
 }
 
-// By default, all focus indicators are flush with the bounding box of their
-// host element. For the tab element, default inset/offset
-// values are necessary to ensure that the focus indicator is sufficiently
-// contrastive and renders appropriately.
+// For the tab element, default inset/offset values are necessary to ensure that 
+// the focus indicator is sufficiently contrastive and renders appropriately.
 .mat-mdc-focus-indicator.mat-mdc-tab::before {
   margin: 5px;
 }

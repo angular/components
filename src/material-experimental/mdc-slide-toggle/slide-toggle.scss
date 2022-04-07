@@ -80,9 +80,6 @@
   border-radius: 50%;
 }
 
-// Render the focus indicator on focus. Defining a pseudo element's
-// content will cause it to render.
-
 // For slide-toggles render the focus indicator when we know
 // the hidden input is focused (slightly different for each control).
 .mat-mdc-slide-toggle-focused .mat-mdc-focus-indicator::before {

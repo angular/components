@@ -42,9 +42,6 @@ $mat-slider-horizontal-margin: 8px !default;
   border-radius: 50%;
 }
 
-// Render the focus indicator on focus. Defining a pseudo element's
-// content will cause it to render.
-
 // In the MDC slider the focus indicator is inside the thumb.
 .mdc-slider__thumb--focused .mat-mdc-focus-indicator::before {
   content: '';
