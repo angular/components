@@ -41,7 +41,7 @@ let nextId = 0;
   host: {
     'role': 'menu',
     'class': '', // reset the css class added by the super-class
-    '[tabindex]': '_tabIndex',
+    '[tabindex]': '_getTabIndex()',
     '[id]': 'id',
     '[attr.aria-orientation]': 'orientation',
     '[attr.data-cdk-menu-stack-id]': 'menuStack.id',
@@ -70,9 +70,6 @@ export abstract class CdkMenuBase
   /** The menu's native DOM host element. */
   readonly nativeElement: HTMLElement;
 
-  /** Whether this menu's menu stack has focus. */
-  _tabIndex: number | null;
-
   /** Handles keyboard events for the menu. */
   protected keyManager: FocusKeyManager<CdkMenuItem>;
 
@@ -84,6 +81,9 @@ export abstract class CdkMenuBase
 
   /** Tracks the users mouse movements over the menu. */
   protected pointerTracker?: PointerFocusTracker<CdkMenuItem>;
+
+  /** Whether this menu's menu stack has focus. */
+  private _menuStackHasFocus = false;
 
   protected constructor(
     /** The host element. */
@@ -105,7 +105,6 @@ export abstract class CdkMenuBase
     if (!this.isInline) {
       this.menuStack.push(this);
     }
-    this._calculateTabIndex(false);
     this._setKeyManager();
     this._subscribeToMenuStackHasFocus();
     this._subscribeToMenuOpen();
@@ -135,6 +134,12 @@ export abstract class CdkMenuBase
   focusLastItem(focusOrigin: FocusOrigin = 'program') {
     this.keyManager.setFocusOrigin(focusOrigin);
     this.keyManager.setLastItemActive();
+  }
+
+  /** Gets the tabindex for this menu. */
+  _getTabIndex() {
+    const tabindexIfInline = this._menuStackHasFocus ? -1 : 0;
+    return this.isInline ? tabindexIfInline : null;
   }
 
   /**
@@ -207,15 +212,9 @@ export abstract class CdkMenuBase
   private _subscribeToMenuStackHasFocus() {
     if (this.isInline) {
       this.menuStack.hasFocus.pipe(takeUntil(this.destroyed)).subscribe(hasFocus => {
-        this._calculateTabIndex(hasFocus);
+        this._menuStackHasFocus = hasFocus;
       });
     }
-  }
-
-  /** Calculate the tabindex for the menu host element. */
-  private _calculateTabIndex(menuStackHasFocus: boolean) {
-    const tabindexIfInline = menuStackHasFocus ? -1 : 0;
-    this._tabIndex = this.isInline ? tabindexIfInline : null;
   }
 
   /**

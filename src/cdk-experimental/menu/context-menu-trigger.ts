@@ -212,7 +212,8 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private _open(coordinates: ContextMenuCoordinates, ignoreFirstOutsideAuxClick: boolean) {
     if (this.disabled) {
       return;
-    } else if (this.isOpen()) {
+    }
+    if (this.isOpen()) {
       // since we're moving this menu we need to close any submenus first otherwise they end up
       // disconnected from this one.
       this.menuStack.closeSubMenuOf(this.childMenu!);

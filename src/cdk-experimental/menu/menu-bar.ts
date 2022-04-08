@@ -16,7 +16,15 @@ import {
   Self,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  ESCAPE,
+  hasModifierKey,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  TAB,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';
@@ -82,31 +90,37 @@ export class CdkMenuBar extends CdkMenuBase implements AfterContentInit {
       case DOWN_ARROW:
       case LEFT_ARROW:
       case RIGHT_ARROW:
-        const horizontalArrows = event.keyCode === LEFT_ARROW || event.keyCode === RIGHT_ARROW;
-        // For a horizontal menu if the left/right keys were clicked, or a vertical menu if the
-        // up/down keys were clicked: if the current menu is open, close it then focus and open the
-        // next  menu.
-        if (horizontalArrows) {
-          event.preventDefault();
+        if (!hasModifierKey(event)) {
+          const horizontalArrows = event.keyCode === LEFT_ARROW || event.keyCode === RIGHT_ARROW;
+          // For a horizontal menu if the left/right keys were clicked, or a vertical menu if the
+          // up/down keys were clicked: if the current menu is open, close it then focus and open the
+          // next  menu.
+          if (horizontalArrows) {
+            event.preventDefault();
 
-          const prevIsOpen = keyManager.activeItem?.isMenuOpen();
-          keyManager.activeItem?.getMenuTrigger()?.close();
+            const prevIsOpen = keyManager.activeItem?.isMenuOpen();
+            keyManager.activeItem?.getMenuTrigger()?.close();
 
-          keyManager.setFocusOrigin('keyboard');
-          keyManager.onKeydown(event);
-          if (prevIsOpen) {
-            keyManager.activeItem?.getMenuTrigger()?.open();
+            keyManager.setFocusOrigin('keyboard');
+            keyManager.onKeydown(event);
+            if (prevIsOpen) {
+              keyManager.activeItem?.getMenuTrigger()?.open();
+            }
           }
         }
         break;
 
       case ESCAPE:
-        event.preventDefault();
-        keyManager.activeItem?.getMenuTrigger()?.close();
+        if (!hasModifierKey(event)) {
+          event.preventDefault();
+          keyManager.activeItem?.getMenuTrigger()?.close();
+        }
         break;
 
       case TAB:
-        keyManager.activeItem?.getMenuTrigger()?.close();
+        if (!hasModifierKey(event, 'altKey', 'metaKey', 'ctrlKey')) {
+          keyManager.activeItem?.getMenuTrigger()?.close();
+        }
         break;
 
       default:

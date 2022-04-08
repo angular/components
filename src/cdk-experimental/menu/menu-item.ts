@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusableOption} from '@angular/cdk/a11y';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
 import {fromEvent, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
@@ -64,7 +64,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
    * The text used to locate this item during menu typeahead. If not specified,
    * the `textContent` of the item will be used.
    */
-  @Input('cdkMenuItemTypeahead') typeahead: string;
+  @Input('cdkMenuitemTypeaheadLabel') typeaheadLabel: string | null;
 
   /**
    * If this MenuItem is a regular MenuItem, outputs when it is triggered by a keyboard or mouse
@@ -113,6 +113,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
 
   ngOnDestroy() {
     this.destroyed.next();
+    this.destroyed.complete();
   }
 
   /** Place focus on the element. */
@@ -156,7 +157,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
 
   /** Get the label for this element which is required by the FocusableOption interface. */
   getLabel(): string {
-    return this.typeahead || this._elementRef.nativeElement.textContent?.trim() || '';
+    return this.typeaheadLabel || this._elementRef.nativeElement.textContent?.trim() || '';
   }
 
   /** Reset the tabindex to -1. */
@@ -191,26 +192,32 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     switch (event.keyCode) {
       case SPACE:
       case ENTER:
-        event.preventDefault();
-        this.trigger({keepOpen: event.keyCode === SPACE && !this.closeOnSpacebarTrigger});
+        if (!hasModifierKey(event)) {
+          event.preventDefault();
+          this.trigger({keepOpen: event.keyCode === SPACE && !this.closeOnSpacebarTrigger});
+        }
         break;
 
       case RIGHT_ARROW:
-        if (this._parentMenu && this._isParentVertical()) {
-          if (this._dir?.value !== 'rtl') {
-            this._forwardArrowPressed(event);
-          } else {
-            this._backArrowPressed(event);
+        if (!hasModifierKey(event)) {
+          if (this._parentMenu && this._isParentVertical()) {
+            if (this._dir?.value !== 'rtl') {
+              this._forwardArrowPressed(event);
+            } else {
+              this._backArrowPressed(event);
+            }
           }
         }
         break;
 
       case LEFT_ARROW:
-        if (this._parentMenu && this._isParentVertical()) {
-          if (this._dir?.value !== 'rtl') {
-            this._backArrowPressed(event);
-          } else {
-            this._forwardArrowPressed(event);
+        if (!hasModifierKey(event)) {
+          if (this._parentMenu && this._isParentVertical()) {
+            if (this._dir?.value !== 'rtl') {
+              this._backArrowPressed(event);
+            } else {
+              this._forwardArrowPressed(event);
+            }
           }
         }
         break;

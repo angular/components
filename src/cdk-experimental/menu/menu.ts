@@ -103,9 +103,11 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
     switch (event.keyCode) {
       case LEFT_ARROW:
       case RIGHT_ARROW:
-        event.preventDefault();
-        keyManager.setFocusOrigin('keyboard');
-        keyManager.onKeydown(event);
+        if (!hasModifierKey(event)) {
+          event.preventDefault();
+          keyManager.setFocusOrigin('keyboard');
+          keyManager.onKeydown(event);
+        }
         break;
 
       case ESCAPE:
@@ -119,7 +121,9 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
         break;
 
       case TAB:
-        this.menuStack.closeAll({focusParentTrigger: true});
+        if (!hasModifierKey(event, 'altKey', 'metaKey', 'ctrlKey')) {
+          this.menuStack.closeAll({focusParentTrigger: true});
+        }
         break;
 
       default:

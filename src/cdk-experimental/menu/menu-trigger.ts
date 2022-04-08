@@ -25,7 +25,15 @@ import {
   STANDARD_DROPDOWN_ADJACENT_POSITIONS,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
-import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  ENTER,
+  hasModifierKey,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
 import {fromEvent} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
@@ -130,35 +138,43 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     switch (keyCode) {
       case SPACE:
       case ENTER:
-        event.preventDefault();
-        this.toggle();
-        this.childMenu?.focusFirstItem('keyboard');
-        break;
-
-      case RIGHT_ARROW:
-        if (this._parentMenu && isParentVertical && this._directionality?.value !== 'rtl') {
+        if (!hasModifierKey(event)) {
           event.preventDefault();
-          this.open();
+          this.toggle();
           this.childMenu?.focusFirstItem('keyboard');
         }
         break;
 
+      case RIGHT_ARROW:
+        if (!hasModifierKey(event)) {
+          if (this._parentMenu && isParentVertical && this._directionality?.value !== 'rtl') {
+            event.preventDefault();
+            this.open();
+            this.childMenu?.focusFirstItem('keyboard');
+          }
+        }
+        break;
+
       case LEFT_ARROW:
-        if (this._parentMenu && isParentVertical && this._directionality?.value === 'rtl') {
-          event.preventDefault();
-          this.open();
-          this.childMenu?.focusFirstItem('keyboard');
+        if (!hasModifierKey(event)) {
+          if (this._parentMenu && isParentVertical && this._directionality?.value === 'rtl') {
+            event.preventDefault();
+            this.open();
+            this.childMenu?.focusFirstItem('keyboard');
+          }
         }
         break;
 
       case DOWN_ARROW:
       case UP_ARROW:
-        if (!isParentVertical) {
-          event.preventDefault();
-          this.open();
-          keyCode === DOWN_ARROW
-            ? this.childMenu?.focusFirstItem('keyboard')
-            : this.childMenu?.focusLastItem('keyboard');
+        if (!hasModifierKey(event)) {
+          if (!isParentVertical) {
+            event.preventDefault();
+            this.open();
+            keyCode === DOWN_ARROW
+              ? this.childMenu?.focusFirstItem('keyboard')
+              : this.childMenu?.focusLastItem('keyboard');
+          }
         }
         break;
     }
