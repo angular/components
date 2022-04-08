@@ -116,7 +116,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * Sets the position of a `CdkDrag` that is outside of a drop container.
    * Can be used to restore the element's position for a returning user.
    */
-  @Input('cdkDragFreeDragPosition') freeDragPosition: {x: number; y: number};
+  @Input('cdkDragFreeDragPosition') freeDragPosition: Point;
 
   /** Whether starting to drag this element is disabled. */
   @Input('cdkDragDisabled')
@@ -282,7 +282,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /**
    * Gets the pixel coordinates of the draggable outside of a drop container.
    */
-  getFreeDragPosition(): {readonly x: number; readonly y: number} {
+  getFreeDragPosition(): Readonly<Point> {
     return this._dragRef.getFreeDragPosition();
   }
 
