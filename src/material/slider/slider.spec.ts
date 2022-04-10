@@ -801,6 +801,16 @@ describe('MatSlider', () => {
       expect(sliderInstance.value).toBe(75);
       expect(trackFillElement.style.transform).toContain('scale3d(0.75, 1, 1)');
     });
+
+    it('should not overwrite the value while user is dragging', () => {
+      dispatchMousedownEventSequence(sliderNativeElement, 0.25);
+      fixture.detectChanges();
+      expect(sliderInstance.value).toBe(25);
+
+      fixture.componentInstance.val = 100;
+      fixture.detectChanges();
+      expect(sliderInstance.value).toBe(25);
+    });
   });
 
   describe('slider with set min and max and a value smaller than min', () => {
