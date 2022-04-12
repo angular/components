@@ -125,7 +125,6 @@ async function getSliderValue(slider: ElementFinder, thumbPosition: Thumb): Prom
 
 /** Focuses on the MatSlider at the coordinates corresponding to the given thumb. */
 async function focusSliderThumb(slider: ElementFinder, thumbPosition: Thumb): Promise<void> {
-  const value = await getSliderValue(slider, thumbPosition);
   const webElement = await getElement(slider).getWebElement();
   const coords = await getCoordsForValue(slider, await getSliderValue(slider, thumbPosition));
   return await browser.actions().mouseMove(webElement, coords).mouseDown().perform();
