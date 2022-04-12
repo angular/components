@@ -63,3 +63,12 @@ Label <mat-slider #slidey aria-label="Basic slider"></mat-slider>
     <mat-slider min="1" max="5" value="3" aria-label="Slider in a tab"></mat-slider>
   </mat-tab>
 </mat-tab-group>
+
+<h1>Slider that gets updated every second</h1>
+<button (click)="startInterval()">Start interval</button>
+<button (click)="stopInterval()">Stop interval</button>
+<mat-slider
+  [max]="maxValueForSliderThatGetsUpdatedByInterval"
+  [(ngModel)]="valueThatGetsUpdatedByInterval"
+></mat-slider>
+{{valueThatGetsUpdatedByInterval}}

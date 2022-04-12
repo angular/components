@@ -18,4 +18,35 @@ export class SliderDemo {
   min: number = 0;
   max: number = 100;
   disabledValue = 0;
+
+  valueThatGetsUpdatedByInterval: number = 25;
+  maxValueForSliderThatGetsUpdatedByInterval: number = 100;
+  intervalThatUpdatesValue: number | undefined = undefined;
+
+  startInterval(): void {
+    if (this.intervalThatUpdatesValue != undefined) {
+      return;
+    }
+
+    this.intervalThatUpdatesValue = setInterval(() => {
+      if (this.intervalThatUpdatesValue == undefined) {
+        return;
+      }
+
+      this.valueThatGetsUpdatedByInterval++;
+
+      if (this.valueThatGetsUpdatedByInterval === this.maxValueForSliderThatGetsUpdatedByInterval) {
+        this.valueThatGetsUpdatedByInterval = 0;
+      }
+    }, 1000);
+  }
+
+  stopInterval(): void {
+    if (this.intervalThatUpdatesValue == undefined) {
+      return;
+    }
+
+    clearInterval(this.intervalThatUpdatesValue);
+    this.intervalThatUpdatesValue = undefined;
+  }
 }
