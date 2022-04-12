@@ -1,6 +1,7 @@
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {
   Component,
   ElementRef,
@@ -15,9 +16,14 @@ import {
   Type,
   Provider,
   ChangeDetectionStrategy,
+  destroyPlatform,
+  NgModule,
+  ApplicationRef,
+  ComponentRef,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
+import {NoopNgZoneChecker} from '@angular/cdk/platform';
 import {
   ESCAPE,
   LEFT_ARROW,
@@ -2705,7 +2711,58 @@ describe('MatMenu default overrides', () => {
   }));
 });
 
+describe('MatMenu in zone-less mode', () => {
+  beforeEach(destroyPlatform);
+  afterEach(destroyPlatform);
+
+  const isNoopNgZone = NoopNgZoneChecker.isNoopNgZone;
+
+  beforeAll(() => {
+    NoopNgZoneChecker.isNoopNgZone = () => true;
+  });
+
+  afterAll(() => {
+    NoopNgZoneChecker.isNoopNgZone = isNoopNgZone;
+  });
+
+  it('should show and hide the menu in the zone is nooped', async () => {
+    document.body.innerHTML = '<app-root></app-root>';
+
+    @Component({selector: 'app-root', template: '<simple-menu></simple-menu>'})
+    class AppComponent {
+      @ViewChild(SimpleMenu, {static: true}) simpleMenu!: SimpleMenu;
+    }
+
+    @NgModule({
+      imports: [BrowserAnimationsModule, MatMenuModule],
+      declarations: [AppComponent, SimpleMenu],
+      bootstrap: [AppComponent],
+    })
+    class AppModule {}
+
+    const ngModuleRef = await platformBrowserDynamic().bootstrapModule(AppModule, {ngZone: 'noop'});
+    const appRef = ngModuleRef.injector.get(ApplicationRef);
+    const overlayContainerElement = ngModuleRef.injector
+      .get(OverlayContainer)
+      .getContainerElement();
+
+    const appComponent: ComponentRef<AppComponent> = appRef.components[0];
+    appComponent.instance.simpleMenu.trigger.openMenu();
+
+    expect(overlayContainerElement.textContent).toContain('Item');
+    expect(overlayContainerElement.textContent).toContain('Disabled');
+
+    const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+    backdrop.click();
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    expect(overlayContainerElement.textContent).toBe('');
+  });
+});
+
 @Component({
+  selector: 'simple-menu',
   template: `
     <button
       [matMenuTriggerFor]="menu"

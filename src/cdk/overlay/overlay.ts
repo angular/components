@@ -70,7 +70,10 @@ export class Overlay {
     const host = this._createHostElement();
     const pane = this._createPaneElement(host);
     const portalOutlet = this._createPortalOutlet(pane);
-    const overlayConfig = new OverlayConfig(config);
+    const overlayConfig = new OverlayConfig({
+      ...config,
+      appRef: this._appRef,
+    });
 
     overlayConfig.direction = overlayConfig.direction || this._directionality.value;
 

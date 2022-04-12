@@ -91,7 +91,7 @@ export const matMenuAnimations: {
 
 // @public
 export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _defaultOptions: MatMenuDefaultOptions, _changeDetectorRef?: ChangeDetectorRef | undefined);
+    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _defaultOptions: MatMenuDefaultOptions, _changeDetectorRef?: ChangeDetectorRef | undefined, _appRef?: ApplicationRef | undefined);
     // (undocumented)
     addItem(_item: MatMenuItem): void;
     _allItems: QueryList<MatMenuItem>;

@@ -38,6 +38,7 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
+  ApplicationRef,
 } from '@angular/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, switchMap, take} from 'rxjs/operators';
@@ -48,6 +49,7 @@ import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu
 import {MatMenuItem} from './menu-item';
 import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {AnimationEvent} from '@angular/animations';
+import {NoopNgZoneChecker} from '@angular/cdk/platform';
 
 /** Default `mat-menu` options that can be overridden. */
 export interface MatMenuDefaultOptions {
@@ -275,6 +277,8 @@ export class _MatMenuBase
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions,
     // @breaking-change 15.0.0 `_changeDetectorRef` to become a required parameter.
     private _changeDetectorRef?: ChangeDetectorRef,
+    // @breaking-change 15.0.0 `_appRef` to become a required parameter.
+    private _appRef?: ApplicationRef,
   ) {}
 
   ngOnInit() {
@@ -482,6 +486,9 @@ export class _MatMenuBase
   _startAnimation() {
     // @breaking-change 8.0.0 Combine with _resetAnimation.
     this._panelAnimationState = 'enter';
+    // Note that we don't call `tick()` within the `_onAnimationStart` since the `_onAnimationDone` will be called
+    // within the same change detection cycle and `ApplicationRef.tick()` will throw an error that it is called recursively.
+    this._runTickIfTheZoneIsNooped();
   }
 
   /** Resets the panel animation to its initial state. */
@@ -494,6 +501,10 @@ export class _MatMenuBase
   _onAnimationDone(event: AnimationEvent) {
     this._animationDone.next(event);
     this._isAnimating = false;
+    // If the zone is nooped the `@transformMenu.done` will only mark views dirty and call the `_onAnimationDone`,
+    // but there's nothing that tells Angular to run the `tick()`. We have to trigger an explicit change detection
+    // for the menu to be shown.
+    this._runTickIfTheZoneIsNooped();
   }
 
   _onAnimationStart(event: AnimationEvent) {
@@ -523,6 +534,12 @@ export class _MatMenuBase
         this._directDescendantItems.reset(items.filter(item => item._parentMenu === this));
         this._directDescendantItems.notifyOnChanges();
       });
+  }
+
+  private _runTickIfTheZoneIsNooped(): void {
+    if (NoopNgZoneChecker.isNoopNgZone()) {
+      this._appRef?.tick();
+    }
   }
 }
 
@@ -561,7 +578,8 @@ export class MatMenu extends _MatMenuBase {
     ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions,
     changeDetectorRef?: ChangeDetectorRef,
+    appRef?: ApplicationRef,
   ) {
-    super(elementRef, ngZone, defaultOptions, changeDetectorRef);
+    super(elementRef, ngZone, defaultOptions, changeDetectorRef, appRef);
   }
 }

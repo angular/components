@@ -67,11 +67,13 @@ ng_test_library(
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
+        "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
         "//src/material-experimental/mdc-core",
         "//src/material/menu",
         "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-browser-dynamic",
         "@npm//rxjs",
     ],
 )
