@@ -9,6 +9,7 @@
 import {clickElementAtPoint, getElement, Point} from '../../cdk/testing/private/e2e';
 import {Thumb} from '@material/slider';
 import {$, browser, by, element, ElementFinder} from 'protractor';
+import {logging} from 'selenium-webdriver';
 
 describe('MDC-based MatSlider', () => {
   const getStandardSlider = () => element(by.id('standard-slider'));
@@ -53,6 +54,7 @@ describe('MDC-based MatSlider', () => {
 
       expect(await browser.manage().logs().get('browser')).not.toContain(
         jasmine.objectContaining({
+          level: logging.Level.SEVERE,
           message: jasmine.stringMatching(
             'Unable to preventDefault inside passive event listener invocation.',
           ),
