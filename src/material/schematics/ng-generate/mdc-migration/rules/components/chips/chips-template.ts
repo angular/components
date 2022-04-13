@@ -42,12 +42,16 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
     this.standaloneChips.forEach(chip => {
       updates.push(...this._buildTagUpdates(chip, 'mat-chip-option'));
     });
-    this._clearDomData();
     return updates;
   }
 
   /** Traverses the AST and stores all relevant DOM data needed for building updates. */
   private _gatherDomData(ast: compiler.ParsedTemplate): void {
+    this.chipMap = undefined;
+    this.chipMaps = [];
+    this.standaloneChips = [];
+    this.chipInputs = [];
+
     visitElements(
       ast.nodes,
       (node: compiler.TmplAstElement) => {
@@ -69,14 +73,6 @@ export class ChipsTemplateMigrator extends TemplateMigrator {
         }
       },
     );
-  }
-
-  /** Clears the stored data to allow the same migrator to be used multiple times. */
-  private _clearDomData(): void {
-    this.chipMap = undefined;
-    this.chipMaps = [];
-    this.standaloneChips = [];
-    this.chipInputs = [];
   }
 
   /** Returns the mat-chip-list and mat-chip updates for the given ChipMap. */
