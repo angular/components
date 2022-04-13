@@ -53,12 +53,7 @@ describe('MDC-based MatSlider', () => {
       await setValueByClick(slider, 15);
 
       expect(await browser.manage().logs().get('browser')).not.toContain(
-        jasmine.objectContaining({
-          level: logging.Level.SEVERE,
-          message: jasmine.stringMatching(
-            'Unable to preventDefault inside passive event listener invocation.',
-          ),
-        }),
+        jasmine.objectContaining({level: logging.Level.SEVERE}),
       );
     });
   });
