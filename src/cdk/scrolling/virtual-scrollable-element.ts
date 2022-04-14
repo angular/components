@@ -11,6 +11,9 @@ import {Directive, ElementRef, NgZone, Optional} from '@angular/core';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
+/**
+ * Provides a virtual scrollable for the element it is attached to.
+ */
 @Directive({
   selector: '[cdk-virtual-scrollable-element], [cdkVirtualScrollableElement]',
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableElement}],
@@ -28,7 +31,9 @@ export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
     super(elementRef, scrollDispatcher, ngZone, dir);
   }
 
-  getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+  override measureBoundingClientRectWithScrollOffset(
+    from: 'left' | 'top' | 'right' | 'bottom',
+  ): number {
     return (
       this.getElementRef().nativeElement.getBoundingClientRect()[from] -
       this.measureScrollOffset(from)

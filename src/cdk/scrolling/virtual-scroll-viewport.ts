@@ -294,7 +294,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     return this._renderedRange;
   }
 
-  getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+  measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
     return this.getElementRef().nativeElement.getBoundingClientRect()[from];
   }
 
@@ -416,6 +416,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     );
   }
 
+  /**
+   * Measures the offset of the viewport from the scrolling container
+   * @param from The edge to measure from.
+   */
   measureViewportOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end') {
     let fromRect: 'left' | 'top' | 'right' | 'bottom';
     const LEFT = 'left';
@@ -431,7 +435,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       fromRect = this.orientation === 'horizontal' ? 'left' : 'top';
     }
 
-    const scrollerClientRect = this.scrollable.getBoundingClientRectWithScrollOffset(fromRect);
+    const scrollerClientRect = this.scrollable.measureBoundingClientRectWithScrollOffset(fromRect);
     const viewportClientRect = this.elementRef.nativeElement.getBoundingClientRect()[fromRect];
 
     return viewportClientRect - scrollerClientRect;

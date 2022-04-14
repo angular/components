@@ -13,6 +13,9 @@ import {CdkScrollable} from './scrollable';
 
 export const VIRTUAL_SCROLLABLE = new InjectionToken<CdkVirtualScrollable>('VIRTUAL_SCROLLABLE');
 
+/**
+ * Extending the {@link CdkScrollable} to be used as scrolling container for virtual scrolling.
+ */
 @Directive()
 export abstract class CdkVirtualScrollable extends CdkScrollable {
   constructor(
@@ -24,10 +27,22 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
     super(elementRef, scrollDispatcher, ngZone, dir);
   }
 
+  /**
+   * Measure the viewport size for the provided orientation.
+   *
+   * @param orientation The orientation to measure the size from.
+   */
   measureViewportSize(orientation: 'horizontal' | 'vertical') {
     const viewportEl = this.elementRef.nativeElement;
     return orientation === 'horizontal' ? viewportEl.clientWidth : viewportEl.clientHeight;
   }
 
-  abstract getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
+  /**
+   * Measure the bounding ClientRect size including the scroll offset.
+   *
+   * @param from The edge to measure from.
+   */
+  abstract measureBoundingClientRectWithScrollOffset(
+    from: 'left' | 'top' | 'right' | 'bottom',
+  ): number;
 }

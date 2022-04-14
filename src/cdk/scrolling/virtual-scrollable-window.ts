@@ -13,6 +13,9 @@ import {takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
+/**
+ * Provides as virtual scrollable for the global / window scrollbar.
+ */
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[scrollable-window]',
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableWindow}],
@@ -29,7 +32,9 @@ export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
     super(new ElementRef(document.documentElement), scrollDispatcher, ngZone, dir);
   }
 
-  getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+  override measureBoundingClientRectWithScrollOffset(
+    from: 'left' | 'top' | 'right' | 'bottom',
+  ): number {
     return this.getElementRef().nativeElement.getBoundingClientRect()[from];
   }
 }
