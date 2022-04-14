@@ -140,12 +140,10 @@ export type CdkVirtualForOfContext<T> = {
     odd: boolean;
 };
 
-// @public (undocumented)
+// @public
 export abstract class CdkVirtualScrollable extends CdkScrollable {
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir?: Directionality);
-    // (undocumented)
-    abstract getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
-    // (undocumented)
+    abstract measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     measureViewportSize(orientation: 'horizontal' | 'vertical'): number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollable, never, never, {}, {}, never>;
@@ -153,24 +151,24 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollable, [null, null, null, { optional: true; }]>;
 }
 
-// @public (undocumented)
+// @public
 export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
     constructor(elementRef: ElementRef, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir: Directionality);
     // (undocumented)
-    getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
+    measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableElement, "[cdk-virtual-scrollable-element], [cdkVirtualScrollableElement]", never, {}, {}, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollableElement, [null, null, null, { optional: true; }]>;
 }
 
-// @public (undocumented)
+// @public
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
     constructor(scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir: Directionality);
     // (undocumented)
     protected _elementScrolled: Observable<Event>;
     // (undocumented)
-    getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
+    measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableWindow, "cdk-virtual-scroll-viewport[scrollable-window]", never, {}, {}, never>;
     // (undocumented)
@@ -196,16 +194,15 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     detach(): void;
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    getBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     getDataLength(): number;
     getOffsetToRenderedContentStart(): number | null;
     getRenderedRange(): ListRange;
     getViewportSize(): number;
+    // (undocumented)
+    measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     measureRangeSize(range: ListRange): number;
     measureRenderedContentSize(): number;
     measureScrollOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
-    // (undocumented)
     measureViewportOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
     // (undocumented)
     ngOnDestroy(): void;
