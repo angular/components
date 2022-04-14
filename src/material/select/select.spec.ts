@@ -191,27 +191,23 @@ describe('MatSelect', () => {
           fixture.detectChanges();
 
           const labelId = fixture.nativeElement.querySelector('.mat-form-field-label').id;
-          const valueId = fixture.nativeElement.querySelector('.mat-select-value').id;
 
-          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId} myLabelId`);
+          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} myLabelId`);
         }));
 
-        it('should set aria-labelledby to the value and label IDs', fakeAsync(() => {
+        it('should set aria-labelledby to the label IDs', fakeAsync(() => {
           fixture.detectChanges();
 
           const labelId = fixture.nativeElement.querySelector('.mat-form-field-label').id;
-          const valueId = fixture.nativeElement.querySelector('.mat-select-value').id;
-          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId}`);
+          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId}`);
         }));
 
-        it('should trim the trigger aria-labelledby when there is no label', fakeAsync(() => {
+        it('should remove aria-labelledby when there is no label', fakeAsync(() => {
           // Reset the `placeholder` which also controls the label of the form field.
           fixture.componentInstance.select.placeholder = '';
           fixture.detectChanges();
 
-          // Note that we assert that there are no spaces around the value.
-          const valueId = fixture.nativeElement.querySelector('.mat-select-value').id;
-          expect(select.getAttribute('aria-labelledby')).toBe(`${valueId}`);
+          expect(select.hasAttribute('aria-labelledby')).toBeFalse();
         }));
 
         it('should set the tabindex of the select to 0 by default', fakeAsync(() => {
@@ -285,15 +281,14 @@ describe('MatSelect', () => {
           expect(select.getAttribute('tabindex')).toEqual('0');
         }));
 
-        it('should set `aria-labelledby` to the value ID if there is no form field', () => {
+        it('should remove `aria-labelledby` if there is no form field', () => {
           fixture.destroy();
 
           const labelFixture = TestBed.createComponent(SelectWithChangeEvent);
           labelFixture.detectChanges();
           select = labelFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-          const valueId = labelFixture.nativeElement.querySelector('.mat-select-value').id;
 
-          expect(select.getAttribute('aria-labelledby')?.trim()).toBe(valueId);
+          expect(select.hasAttribute('aria-labelledby')).toBeFalse();
         });
 
         it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {

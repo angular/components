@@ -1127,13 +1127,7 @@ export abstract class _MatSelectBase<C>
     }
 
     const labelId = this._parentFormField?.getLabelId();
-    let value = (labelId ? labelId + ' ' : '') + this._valueId;
-
-    if (this.ariaLabelledby) {
-      value += ' ' + this.ariaLabelledby;
-    }
-
-    return value;
+    return this.ariaLabelledby ? labelId + ' ' + this.ariaLabelledby : labelId;
   }
 
   /** Called when the overlay panel is done animating. */
