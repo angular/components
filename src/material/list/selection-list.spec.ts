@@ -594,6 +594,88 @@ describe('MatSelectionList without forms', () => {
       );
     });
 
+    it('should select all items using command(metaKey) + a', () => {
+      listOptions.forEach(option => (option.componentInstance.disabled = false));
+      const event = createKeyboardEvent('keydown', A, undefined, {meta: true});
+
+      expect(listOptions.some(option => option.componentInstance.selected)).toBe(false);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+    });
+
+    it('should not select disabled items when pressing command(metaKey) + a', () => {
+      const event = createKeyboardEvent('keydown', A, undefined, {meta: true});
+
+      listOptions.slice(0, 2).forEach(option => (option.componentInstance.disabled = true));
+      fixture.detectChanges();
+
+      expect(listOptions.map(option => option.componentInstance.selected)).toEqual([
+        false,
+        false,
+        false,
+        false,
+        false,
+      ]);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(listOptions.map(option => option.componentInstance.selected)).toEqual([
+        false,
+        false,
+        true,
+        true,
+        true,
+      ]);
+    });
+
+    it('should select all items using command(metaKey) + a if some items are selected', () => {
+      const event = createKeyboardEvent('keydown', A, undefined, {meta: true});
+
+      listOptions.slice(0, 2).forEach(option => (option.componentInstance.selected = true));
+      fixture.detectChanges();
+
+      expect(listOptions.some(option => option.componentInstance.selected)).toBe(true);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+    });
+
+    it('should deselect all with command(metaKey) + a if all options are selected', () => {
+      const event = createKeyboardEvent('keydown', A, undefined, {meta: true});
+
+      listOptions.forEach(option => (option.componentInstance.selected = true));
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
+    });
+
+    it('should dispatch the selectionChange event when selecting via command(metaKey) + a', () => {
+      const spy = spyOn(fixture.componentInstance, 'onSelectionChange');
+      listOptions.forEach(option => (option.componentInstance.disabled = false));
+      const event = createKeyboardEvent('keydown', A, undefined, {meta: true});
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          options: listOptions.map(option => option.componentInstance),
+        }),
+      );
+    });
+
     it('should be able to jump focus down to an item by typing', fakeAsync(() => {
       const listEl = selectionList.nativeElement;
       const manager = selectionList.componentInstance._keyManager;

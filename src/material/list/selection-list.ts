@@ -573,7 +573,7 @@ export class MatSelectionList
         if (
           keyCode === A &&
           this.multiple &&
-          hasModifierKey(event, 'ctrlKey') &&
+          hasModifierKey(event, 'ctrlKey', 'metaKey') &&
           !manager.isTyping()
         ) {
           const shouldSelect = this.options.some(option => !option.disabled && !option.selected);
