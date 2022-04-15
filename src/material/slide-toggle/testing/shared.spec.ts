@@ -2,7 +2,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {UntypedFormControl, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing/slide-toggle-harness';
 
@@ -34,6 +34,18 @@ export function runHarnessTests(
     const slideToggles = await loader.getAllHarnesses(slideToggleHarness.with({label: 'First'}));
     expect(slideToggles.length).toBe(1);
     expect(await slideToggles[0].getLabelText()).toBe('First');
+  });
+
+  it('should load slide-toggle with disabled=true predicate', async () => {
+    const slideToggles = await loader.getAllHarnesses(slideToggleHarness.with({disabled: true}));
+    expect(slideToggles.length).toBe(1);
+    expect(await slideToggles[0].isDisabled()).toBe(true);
+  });
+
+  it('should load slide-toggle with disabled=false predicate', async () => {
+    const slideToggles = await loader.getAllHarnesses(slideToggleHarness.with({disabled: false}));
+    expect(slideToggles.length).toBe(1);
+    expect(await slideToggles[0].isDisabled()).toBe(false);
   });
 
   it('should load slide-toggle with regex label match', async () => {
@@ -169,6 +181,6 @@ export function runHarnessTests(
   `,
 })
 class SlideToggleHarnessTest {
-  ctrl = new UntypedFormControl(true);
+  ctrl = new FormControl(true);
   disabled = true;
 }

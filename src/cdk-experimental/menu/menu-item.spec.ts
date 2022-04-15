@@ -57,12 +57,8 @@ describe('MenuItem', () => {
       expect(nativeButton.hasAttribute('aria-disabled')).toBeFalse();
     });
 
-    it('should be a button type', () => {
-      expect(nativeButton.getAttribute('type')).toBe('button');
-    });
-
     it('should not have a menu', () => {
-      expect(menuItem.hasMenu()).toBeFalse();
+      expect(menuItem.hasMenu).toBeFalse();
     });
   });
 
@@ -145,7 +141,7 @@ class SingleMenuItem {}
 
 @Component({
   template: `
-    <button cdkMenuItem [typeahead]="typeahead">
+    <button cdkMenuItem [cdkMenuitemTypeaheadLabel]="typeahead">
       <mat-icon>unicorn</mat-icon>
       Click me!
     </button>
@@ -157,7 +153,7 @@ class MenuItemWithIcon {
 
 @Component({
   template: `
-    <button cdkMenuItem [typeahead]="typeahead">
+    <button cdkMenuItem [cdkMenuitemTypeaheadLabel]="typeahead">
       <div class="material-icons">unicorn</div>
       Click me!
     </button>
@@ -174,7 +170,7 @@ class MenuItemWithBoldElement {}
 
 @Component({
   template: `
-    <button cdkMenuItem [typeahead]="typeahead">
+    <button cdkMenuItem [cdkMenuitemTypeaheadLabel]="typeahead">
       <div>
         <div class="material-icons">unicorn</div>
         <div>

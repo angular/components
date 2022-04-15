@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ContentChildren,
   Directive,
   ElementRef,
   EventEmitter,
@@ -17,20 +16,11 @@ import {
   OnDestroy,
   Optional,
   Output,
-  QueryList,
   Self,
 } from '@angular/core';
-import {
-  DOWN_ARROW,
-  ESCAPE,
-  hasModifierKey,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  TAB,
-  UP_ARROW,
-} from '@angular/cdk/keycodes';
+import {ESCAPE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
-import {take, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';
 import {
@@ -39,9 +29,8 @@ import {
   MenuStack,
   PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER,
 } from './menu-stack';
-import {PointerFocusTracker} from './pointer-focus-tracker';
 import {MENU_AIM, MenuAim} from './menu-aim';
-import {MENU_TRIGGER, MenuTrigger} from './menu-trigger';
+import {MENU_TRIGGER, CdkMenuTriggerBase} from './menu-trigger-base';
 import {CdkMenuBase} from './menu-base';
 
 /**
@@ -57,71 +46,64 @@ import {CdkMenuBase} from './menu-base';
   host: {
     'role': 'menu',
     'class': 'cdk-menu',
-    '[class.cdk-menu-inline]': '_isInline',
+    '[class.cdk-menu-inline]': 'isInline',
     '(keydown)': '_handleKeyEvent($event)',
   },
   providers: [
     {provide: CdkMenuGroup, useExisting: CdkMenu},
     {provide: CDK_MENU, useExisting: CdkMenu},
-    PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER,
+    PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER('vertical'),
   ],
 })
 export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy {
   /** Event emitted when the menu is closed. */
   @Output() readonly closed: EventEmitter<void> = new EventEmitter();
 
-  /** List of nested CdkMenuGroup elements */
-  @ContentChildren(CdkMenuGroup, {descendants: true})
-  private readonly _nestedGroups: QueryList<CdkMenuGroup>;
+  /** The direction items in the menu flow. */
+  override readonly orientation = 'vertical';
 
-  override _isInline = !this._parentTrigger;
+  /** Whether the menu is displayed inline (i.e. always present vs a conditional popup that the user triggers with a trigger element). */
+  override readonly isInline = !this._parentTrigger;
 
   constructor(
-    private readonly _ngZone: NgZone,
+    /** The host element. */
     elementRef: ElementRef<HTMLElement>,
+    /** The Angular zone. */
+    ngZone: NgZone,
+    /** The menu stack this menu is part of. */
     @Inject(MENU_STACK) menuStack: MenuStack,
-    @Optional() @Inject(MENU_TRIGGER) private _parentTrigger?: MenuTrigger,
-    @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
+    /** The trigger that opened this menu. */
+    @Optional() @Inject(MENU_TRIGGER) private _parentTrigger?: CdkMenuTriggerBase,
+    /** The menu aim service used by this menu. */
+    @Self() @Optional() @Inject(MENU_AIM) menuAim?: MenuAim,
+    /** The directionality of the page. */
     @Optional() dir?: Directionality,
   ) {
-    super(elementRef, menuStack, dir);
+    super(elementRef, ngZone, menuStack, menuAim, dir);
     this.destroyed.subscribe(this.closed);
-    if (!this._isInline) {
-      this.menuStack.push(this);
-    }
     this._parentTrigger?.registerChildMenu(this);
   }
 
   override ngAfterContentInit() {
     super.ngAfterContentInit();
-    this._completeChangeEmitter();
     this._subscribeToMenuStackEmptied();
-    this._subscribeToMouseManager();
-    this._menuAim?.initialize(this, this.pointerTracker!);
   }
 
   override ngOnDestroy() {
     super.ngOnDestroy();
     this.closed.complete();
-    this.pointerTracker?.destroy();
   }
 
-  /** Handle keyboard events for the Menu. */
+  /**
+   * Handle keyboard events for the Menu.
+   * @param event The keyboard event to be handled.
+   */
   _handleKeyEvent(event: KeyboardEvent) {
     const keyManager = this.keyManager;
     switch (event.keyCode) {
       case LEFT_ARROW:
       case RIGHT_ARROW:
-        if (this.isHorizontal()) {
-          event.preventDefault();
-          keyManager.setFocusOrigin('keyboard');
-          keyManager.onKeydown(event);
-        }
-        break;
-
-      case UP_ARROW:
-      case DOWN_ARROW:
-        if (!this.isHorizontal()) {
+        if (!hasModifierKey(event)) {
           event.preventDefault();
           keyManager.setFocusOrigin('keyboard');
           keyManager.onKeydown(event);
@@ -139,7 +121,9 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
         break;
 
       case TAB:
-        this.menuStack.closeAll({focusParentTrigger: true});
+        if (!hasModifierKey(event, 'altKey', 'metaKey', 'ctrlKey')) {
+          this.menuStack.closeAll({focusParentTrigger: true});
+        }
         break;
 
       default:
@@ -148,43 +132,12 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
   }
 
   /**
-   * Complete the change emitter if there are any nested MenuGroups or register to complete the
-   * change emitter if a MenuGroup is rendered at some point
+   * Set focus the either the current, previous or next item based on the FocusNext event.
+   * @param focusNext The element to focus.
    */
-  // TODO(mmalerba): This doesnt' quite work. It causes change events to stop
-  //  firing for radio items directly in the menu if a second group of options
-  //  is added in a menu-group.
-  private _completeChangeEmitter() {
-    if (this._hasNestedGroups()) {
-      this.change.complete();
-    } else {
-      this._nestedGroups.changes.pipe(take(1)).subscribe(() => this.change.complete());
-    }
-  }
-
-  /** Return true if there are nested CdkMenuGroup elements within the Menu */
-  private _hasNestedGroups() {
-    // view engine has a bug where @ContentChildren will return the current element
-    // along with children if the selectors match - not just the children.
-    // Here, if there is at least one element, we check to see if the first element is a CdkMenu in
-    // order to ensure that we return true iff there are child CdkMenuGroup elements.
-    return this._nestedGroups.length > 0 && !(this._nestedGroups.first instanceof CdkMenu);
-  }
-
-  /**
-   * Set the PointerFocusTracker and ensure that when mouse focus changes the key manager is updated
-   * with the latest menu item under mouse focus.
-   */
-  private _subscribeToMouseManager() {
-    this._ngZone.runOutsideAngular(() => {
-      this.pointerTracker = new PointerFocusTracker(this.items);
-    });
-  }
-
-  /** Set focus the either the current, previous or next item based on the FocusNext event. */
-  private _toggleMenuFocus(event: FocusNext | undefined) {
+  private _toggleMenuFocus(focusNext: FocusNext | undefined) {
     const keyManager = this.keyManager;
-    switch (event) {
+    switch (focusNext) {
       case FocusNext.nextItem:
         keyManager.setFocusOrigin('keyboard');
         keyManager.setNextItemActive();
@@ -204,6 +157,7 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
     }
   }
 
+  /** Subscribe to the MenuStack emptied events. */
   private _subscribeToMenuStackEmptied() {
     this.menuStack.emptied
       .pipe(takeUntil(this.destroyed))
