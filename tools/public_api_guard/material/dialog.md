@@ -268,7 +268,7 @@ export class MatDialogRef<T, R = any> {
     afterOpened(): Observable<void>;
     backdropClick(): Observable<MouseEvent>;
     beforeClosed(): Observable<R | undefined>;
-    close(dialogResult?: R): void;
+    close<R>(dialogResult?: R): void;
     componentInstance: T;
     // (undocumented)
     _containerInstance: _MatDialogContainerBase;

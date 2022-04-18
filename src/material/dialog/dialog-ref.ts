@@ -119,7 +119,7 @@ export class MatDialogRef<T, R = any> {
    * Close the dialog.
    * @param dialogResult Optional result to return to the dialog opener.
    */
-  close(dialogResult?: R): void {
+  close<R>(dialogResult?: R): void {
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.
