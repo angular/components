@@ -407,6 +407,7 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
     menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
     menu.direction = this.dir;
     this._setMenuElevation(menu);
+
     menu.focusFirstItem(this._openedBy || 'program');
     this._setIsMenuOpen(true);
   }

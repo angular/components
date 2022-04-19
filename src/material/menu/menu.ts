@@ -420,7 +420,9 @@ export class _MatMenuBase
       // the items and walking up the DOM.
       while (element) {
         if (element.getAttribute('role') === 'menu') {
-          element.focus();
+          setTimeout(() => {
+            element?.focus();
+          });
           break;
         } else {
           element = element.parentElement;
