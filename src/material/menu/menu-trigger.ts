@@ -294,38 +294,54 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
     return this._menuOpen ? this.closeMenu() : this.openMenu();
   }
 
+  private _isOpeningMenu = false;
+
   /** Opens the menu. */
   openMenu(): void {
     const menu = this.menu;
 
-    if (this._menuOpen || !menu) {
+    if (this._menuOpen || !menu || this._isOpeningMenu) {
       return;
     }
 
-    const overlayRef = this._createOverlay(menu);
-    const overlayConfig = overlayRef.getConfig();
-    const positionStrategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
+    try {
+      this._isOpeningMenu = true;
+      const overlayRef = this._createOverlay(menu);
+      const overlayConfig = overlayRef.getConfig();
+      const positionStrategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
 
-    this._setPosition(menu, positionStrategy);
-    overlayConfig.hasBackdrop =
-      menu.hasBackdrop == null ? !this.triggersSubmenu() : menu.hasBackdrop;
-    overlayRef.attach(this._getPortal(menu));
+      this._setPosition(menu, positionStrategy);
+      overlayConfig.hasBackdrop =
+        menu.hasBackdrop == null ? !this.triggersSubmenu() : menu.hasBackdrop;
+      overlayRef.attach(this._getPortal(menu));
 
-    if (menu.lazyContent) {
-      menu.lazyContent.attach(this.menuData);
-    }
+      if (menu.lazyContent) {
+        menu.lazyContent.attach(this.menuData);
+      }
 
-    this._closingActionsSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
-    this._initMenu(menu);
+      this._closingActionsSubscription = this._menuClosingActions().subscribe(() =>
+        this.closeMenu(),
+      );
 
-    if (menu instanceof _MatMenuBase) {
-      menu._startAnimation();
-      menu._directDescendantItems.changes.pipe(takeUntil(menu.close)).subscribe(() => {
-        // Re-adjust the position without locking when the amount of items
-        // changes so that the overlay is allowed to pick a new optimal position.
-        positionStrategy.withLockedPosition(false).reapplyLastPosition();
-        positionStrategy.withLockedPosition(true);
-      });
+      if (menu instanceof _MatMenuBase) {
+        menu._startAnimation();
+        menu._directDescendantItems.changes.pipe(takeUntil(menu.close)).subscribe(() => {
+          // Re-adjust the position without locking when the amount of items
+          // changes so that the overlay is allowed to pick a new optimal position.
+          positionStrategy.withLockedPosition(false).reapplyLastPosition();
+          positionStrategy.withLockedPosition(true);
+        });
+
+        menu._animationDone.pipe(take(1)).subscribe(() => {
+          this._initMenu(menu);
+          this._isOpeningMenu = false;
+        });
+      } else {
+        this._initMenu(menu);
+        this._isOpeningMenu = false;
+      }
+    } catch {
+      this._isOpeningMenu = false;
     }
   }
 
@@ -407,6 +423,7 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
     menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
     menu.direction = this.dir;
     this._setMenuElevation(menu);
+
     menu.focusFirstItem(this._openedBy || 'program');
     this._setIsMenuOpen(true);
   }

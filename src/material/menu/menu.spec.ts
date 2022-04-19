@@ -338,6 +338,7 @@ describe('MatMenu', () => {
     dispatchFakeEvent(triggerEl, 'mousedown');
     triggerEl.click();
     fixture.detectChanges();
+    flush();
 
     expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
 
@@ -860,6 +861,7 @@ describe('MatMenu', () => {
 
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
+    flush();
     tick(500);
 
     expect(triggerEl.getAttribute('aria-expanded')).toBe('true');
