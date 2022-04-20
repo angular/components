@@ -216,7 +216,7 @@ $ripple-radius: 20px;
   content: '';
 }
 
-@include a11y.high-contrast(active, off) {
+@include cdk.high-contrast(active, off) {
   .mat-radio-button:not(.mat-radio-disabled) {
     &.cdk-keyboard-focused,
     &.cdk-program-focused {
