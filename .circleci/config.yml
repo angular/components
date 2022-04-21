@@ -82,6 +82,8 @@ var_13: &attach_release_output
 var_14: &publish_branches_filter
   branches:
     only:
+      - main
+      # TODO(BRANCH_RENAME_CLEANUP): remove
       - master
       # 6.0.x, 7.1.x, etc.
       - /\d+\.\d+\.x/
@@ -134,8 +136,10 @@ var_20: &slack_notify_on_failure
 # Branch filter that only matches the main branch.
 var_21: &only_main_branch_filter
   branches:
-      only:
-        - master
+    only:
+      - main
+        # TODO(BRANCH_RENAME_CLEANUP): remove
+      - master
 
 # -----------------------------
 # Container version of CircleCI
@@ -715,7 +719,9 @@ workflows:
           filters:
             branches:
               only:
-                # We only want to run the "master" branch against the snapshot builds because
+                # We only want to run the main branch against the snapshot builds because
                 # it's not guaranteed that older versions of Angular Material always work
                 # with the latest Angular version.
+                - main
+                # TODO(BRANCH_RENAME_CLEANUP): remove
                 - master
