@@ -137,7 +137,7 @@ export class MatSortHeader
   @Input() arrowPosition: 'before' | 'after' = 'after';
 
   /** Overrides the sort start value of the containing MatSort for this MatSortable. */
-  @Input() start: 'asc' | 'desc';
+  @Input() start: SortDirection;
 
   /**
    * Description applied to MatSortHeader's button element with aria-describedby. This text should
