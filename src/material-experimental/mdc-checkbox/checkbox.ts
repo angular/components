@@ -85,6 +85,7 @@ const _MatCheckboxBase = mixinColor(
     // Add classes that users can use to more easily target disabled or checked checkboxes.
     '[class.mat-mdc-checkbox-disabled]': 'disabled',
     '[class.mat-mdc-checkbox-checked]': 'checked',
+    '(focus)': 'focus()',
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   exportAs: 'matCheckbox',
