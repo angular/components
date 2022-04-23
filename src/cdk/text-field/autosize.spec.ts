@@ -26,7 +26,7 @@ describe('CdkTextareaAutosize', () => {
         AutosizeTextAreaWithContent,
         AutosizeTextAreaWithValue,
         AutosizeTextareaWithNgModel,
-        AutosizeTextareaWithoutAutosize,
+        AutosizeTextareaWithEnabledBinding,
       ],
     });
 
@@ -324,17 +324,18 @@ describe('CdkTextareaAutosize', () => {
   }));
 
   it('should not trigger a resize when it is disabled', fakeAsync(() => {
-    const fixtureWithoutAutosize = TestBed.createComponent(AutosizeTextareaWithoutAutosize);
-    textarea = fixtureWithoutAutosize.nativeElement.querySelector('textarea');
-    autosize = fixtureWithoutAutosize.debugElement
+    const disabledFixture = TestBed.createComponent(AutosizeTextareaWithEnabledBinding);
+    textarea = disabledFixture.nativeElement.querySelector('textarea');
+    autosize = disabledFixture.debugElement
       .query(By.css('textarea'))!
       .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
 
-    fixtureWithoutAutosize.detectChanges();
+    disabledFixture.componentInstance.enabled = false;
+    disabledFixture.detectChanges();
 
     const previousHeight = textarea.clientHeight;
 
-    fixtureWithoutAutosize.componentInstance.content = `
+    disabledFixture.componentInstance.content = `
     Line
     Line
     Line
@@ -342,7 +343,7 @@ describe('CdkTextareaAutosize', () => {
     Line`;
 
     // Manually call resizeToFitContent instead of faking an `input` event.
-    fixtureWithoutAutosize.detectChanges();
+    disabledFixture.detectChanges();
 
     expect(textarea.clientHeight)
       .withContext('Expected textarea to still have the same size.')
@@ -352,7 +353,7 @@ describe('CdkTextareaAutosize', () => {
       .toBeLessThan(textarea.scrollHeight);
 
     autosize.enabled = true;
-    fixtureWithoutAutosize.detectChanges();
+    disabledFixture.detectChanges();
 
     expect(textarea.clientHeight)
       .withContext('Expected textarea to have grown after enabling autosize.')
@@ -362,7 +363,7 @@ describe('CdkTextareaAutosize', () => {
       .toBe(textarea.scrollHeight);
 
     autosize.enabled = false;
-    fixtureWithoutAutosize.detectChanges();
+    disabledFixture.detectChanges();
 
     expect(textarea.clientHeight)
       .withContext('Expected textarea to have the original size.')
@@ -377,6 +378,22 @@ describe('CdkTextareaAutosize', () => {
     fixture.detectChanges();
 
     expect(textarea.hasAttribute('placeholder')).toBe(false);
+  });
+
+  it('should toggle the autosize-specific attributes based on whether it is disabled', () => {
+    const disabledFixture = TestBed.createComponent(AutosizeTextareaWithEnabledBinding);
+    disabledFixture.componentInstance.enabled = true;
+    disabledFixture.detectChanges();
+    textarea = disabledFixture.nativeElement.querySelector('textarea');
+
+    expect(textarea.classList).toContain('cdk-textarea-autosize');
+    expect(textarea.getAttribute('rows')).toBe('1');
+
+    disabledFixture.componentInstance.enabled = false;
+    disabledFixture.detectChanges();
+
+    expect(textarea.classList).not.toContain('cdk-textarea-autosize');
+    expect(textarea.hasAttribute('rows')).toBe(false);
   });
 });
 
@@ -419,9 +436,10 @@ class AutosizeTextareaWithNgModel {
 }
 
 @Component({
-  template: `<textarea [cdkTextareaAutosize]="false">{{content}}</textarea>`,
+  template: `<textarea [cdkTextareaAutosize]="enabled">{{content}}</textarea>`,
   styles: [textareaStyleReset],
 })
-class AutosizeTextareaWithoutAutosize {
-  content: string = '';
+class AutosizeTextareaWithEnabledBinding {
+  content = '';
+  enabled = true;
 }
