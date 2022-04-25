@@ -420,7 +420,11 @@ export class _MatMenuBase
       // the items and walking up the DOM.
       while (element) {
         if (element.getAttribute('role') === 'menu') {
-          element.focus();
+          this._ngZone.runOutsideAngular(() => {
+            this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+              element!.focus();
+            });
+          });
           break;
         } else {
           element = element.parentElement;
