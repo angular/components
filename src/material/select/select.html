@@ -13,7 +13,7 @@
      (click)="toggle()"
      #origin="cdkOverlayOrigin"
      #trigger>
-  <div class="mat-select-value" [ngSwitch]="empty" [attr.id]="_valueId">
+  <div class="mat-select-value" [ngSwitch]="empty" [attr.id]="_valueId" aria-hidden="true">
     <span class="mat-select-placeholder mat-select-min-line" *ngSwitchCase="true">{{placeholder}}</span>
     <span class="mat-select-value-text" *ngSwitchCase="false" [ngSwitch]="!!customTrigger">
       <span class="mat-select-min-line" *ngSwitchDefault>{{triggerValue}}</span>
