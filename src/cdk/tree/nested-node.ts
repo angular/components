@@ -71,18 +71,19 @@ export class CdkNestedTreeNode<T, K = T>
     this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
     if (!this._tree.treeControl?.getChildren && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getTreeControlFunctionsMissingError();
-    }
-    const childrenNodes = this._tree.treeControl!.getChildren(this.data);
-    if (Array.isArray(childrenNodes)) {
-      this.updateChildrenNodes(childrenNodes as T[]);
-    } else if (isObservable(childrenNodes)) {
-      childrenNodes
+    } else {
+      const childrenNodes = this._tree.treeControl!.getChildren(this.data);
+      if (Array.isArray(childrenNodes)) {
+        this.updateChildrenNodes(childrenNodes as T[]);
+      } else if (isObservable(childrenNodes)) {
+        childrenNodes
+          .pipe(takeUntil(this._destroyed))
+          .subscribe(result => this.updateChildrenNodes(result));
+      }
+      this.nodeOutlet.changes
         .pipe(takeUntil(this._destroyed))
-        .subscribe(result => this.updateChildrenNodes(result));
+        .subscribe(() => this.updateChildrenNodes());
     }
-    this.nodeOutlet.changes
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this.updateChildrenNodes());
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091
