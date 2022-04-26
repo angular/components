@@ -479,7 +479,7 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   protected _data: T;
 
   get level(): number {
-    // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
+    // If the tree has a levelAccessor, use it to get the level. Otherwise read the
     // aria-level off the parent node and use it as the level for this node (note aria-level is
     // 1-indexed, while this property is 0-indexed, so we don't need to increment).
     return this._tree._getLevelAccessor()?.(this._data) ?? this._parentNodeAriaLevel;
