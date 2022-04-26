@@ -71,8 +71,8 @@ export class CdkNestedTreeNode<T, K = T>
     this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
     if (!this._tree.treeControl?.getChildren && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getTreeControlFunctionsMissingError();
-    } else {
-      const childrenNodes = this._tree.treeControl!.getChildren(this.data);
+    } else if (this._tree.treeControl?.getChildren) {
+      const childrenNodes = this._tree.treeControl.getChildren(this.data);
       if (Array.isArray(childrenNodes)) {
         this.updateChildrenNodes(childrenNodes as T[]);
       } else if (isObservable(childrenNodes)) {
