@@ -37,9 +37,9 @@
       [matRippleDisabled]="disableRipple || disabled"
       [matRippleCentered]="true"></div>
   </div>
-  <label #label
-         [for]="inputId"
-         (click)="$event.stopPropagation()">
-    <ng-content></ng-content>
-  </label>
+  <span (click)="$event.stopPropagation()">
+    <label #label [for]="inputId">
+      <ng-content></ng-content>
+    </label>
+  </span>
 </div>
