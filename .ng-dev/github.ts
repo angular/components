@@ -7,5 +7,5 @@ import {GithubConfig} from '@angular/dev-infra-private/ng-dev/utils/config';
 export const github: GithubConfig = {
   owner: 'angular',
   name: 'components',
-  mainBranchName: 'master',
+  mainBranchName: 'main',
 };
