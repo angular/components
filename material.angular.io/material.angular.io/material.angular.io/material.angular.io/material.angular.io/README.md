@@ -28,9 +28,9 @@ issues with rendering or layout of the documentation pages, etc.
 The guides, examples, and docs content repo
 [angular/material2-docs-content](https://github.com/angular/material2-docs-content) contains the
 documentation content and examples. They are generated from:
-- [Angular Material and CDK Guides](https://github.com/angular/components/tree/master/guides)
-- [Material components, services, and directives](https://github.com/angular/components/tree/master/src/material)
-- [CDK components, services, and directives](https://github.com/angular/components/tree/master/src/cdk)
+- [Angular Material and CDK Guides](https://github.com/angular/components/tree/main/guides)
+- [Material components, services, and directives](https://github.com/angular/components/tree/main/src/material)
+- [CDK components, services, and directives](https://github.com/angular/components/tree/main/src/cdk)
 
 ## Development Setup
 
