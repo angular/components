@@ -65,15 +65,6 @@
   }
 }
 
-@include cdk.high-contrast(active, off) {
-  .mat-mdc-slide-toggle-focused .mdc-switch__track {
-    // Usually 1px would be enough, but MDC reduces the opacity on the
-    // element so we need to make this a bit more prominent.
-    outline: solid 2px;
-    outline-offset: math.div(map.get(mdc-switch-theme.$light-theme, track-height), 2);
-  }
-}
-
 // Slide-toggle components have to set `border-radius: 50%` in order to support density scaling
 // which will clip a square focus indicator so we have to turn it into a circle.
 .mat-mdc-slide-toggle .mat-mdc-focus-indicator::before {

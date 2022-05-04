@@ -124,12 +124,6 @@ mat-menu {
     // We need to move the item 1px down, because Firefox seems to have
     // an issue rendering the top part of the outline (see #21524).
     margin-top: $outline-width;
-
-    &.cdk-program-focused,
-    &.cdk-keyboard-focused,
-    &-highlighted {
-      outline: dotted $outline-width;
-    }
   }
 }
 

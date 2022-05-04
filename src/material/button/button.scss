@@ -183,10 +183,4 @@
   .mat-button, .mat-flat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
     outline: solid 1px;
   }
-
-  .mat-button-base {
-    &.cdk-keyboard-focused, &.cdk-program-focused {
-      outline: solid 3px;
-    }
-  }
 }

@@ -13,9 +13,6 @@
 
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
-    &.cdk-keyboard-focused, &.cdk-program-focused {
-      outline: solid 3px;
-    }
 
     &[aria-selected='true'] {
       .mat-step-label {

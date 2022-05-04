@@ -204,12 +204,6 @@ $_mark-stroke-size: math.div(2, 15) * checkbox-common.$size !default;
     z-index: 1;
     pointer-events: none;
   }
-
-  &.cdk-keyboard-focused .mat-checkbox-ripple {
-    @include cdk.high-contrast(active, off) {
-      outline: solid 3px;
-    }
-  }
 }
 
 .mat-checkbox-layout {

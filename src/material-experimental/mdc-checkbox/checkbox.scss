@@ -49,11 +49,6 @@
     .mdc-checkbox__native-control:not([disabled]):focus ~ .mdc-checkbox__ripple {
       opacity: map.get(mdc-ripple.$dark-ink-opacities, hover) +
         map.get(mdc-ripple.$dark-ink-opacities, focus);
-
-      @include cdk.high-contrast(active, off) {
-        outline: solid 3px;
-        opacity: 1;
-      }
     }
   }
 

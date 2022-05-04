@@ -59,11 +59,6 @@ $legacy-border-radius: 2px !default;
   &.cdk-keyboard-focused {
     .mat-button-toggle-focus-overlay {
       opacity: 1;
-
-      // In high contrast mode `opacity: 1` will show the overlay as solid so we fall back 0.5.
-      @include cdk.high-contrast(active, off) {
-        opacity: 0.5;
-      }
     }
   }
 }
@@ -80,10 +75,6 @@ $legacy-border-radius: 2px !default;
   // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
   &.cdk-keyboard-focused:not(.mat-button-toggle-disabled) .mat-button-toggle-focus-overlay {
     opacity: 0.12;
-
-    @include cdk.high-contrast(active, off) {
-      opacity: 0.5;
-    }
   }
 
   // On touch devices the hover state will linger on the element after the user has tapped.
@@ -137,8 +128,7 @@ $legacy-border-radius: 2px !default;
 }
 
 @include cdk.high-contrast(active, off) {
-  .mat-button-toggle-checked.mat-button-toggle-appearance-standard
-  .mat-button-toggle-focus-overlay {
+  .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
     // In high contrast mode, we use a border for the checked state because backgrounds
     // can either be opaque or transparent. We set the border height to a value that is larger
     // than usual button toggles are. This allows us to keep this high contrast style in the
