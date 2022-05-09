@@ -37,7 +37,10 @@ export interface TestingWindow extends Window {
       Geocoder?: jasmine.Spy;
     };
   };
-  MarkerClusterer?: jasmine.Spy;
+  markerClusterer?: {
+    MarkerClusterer?: jasmine.Spy;
+    defaultOnClusterClickHandler?: jasmine.Spy;
+  };
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Map. */
@@ -504,52 +507,16 @@ export function createBicyclingLayerConstructorSpy(
 
 /** Creates a jasmine.SpyObj for a MarkerClusterer */
 export function createMarkerClustererSpy(): jasmine.SpyObj<MarkerClusterer> {
-  const markerClustererSpy = jasmine.createSpyObj('MarkerClusterer', [
-    'addListener',
+  return jasmine.createSpyObj('MarkerClusterer', [
+    'addMarker',
     'addMarkers',
-    'fitMapToMarkers',
-    'getAverageCenter',
-    'getBatchSizeIE',
-    'getCalculator',
-    'getClusterClass',
-    'getClusters',
-    'getEnableRetinaIcons',
-    'getGridSize',
-    'getIgnoreHidden',
-    'getImageExtension',
-    'getImagePath',
-    'getImageSizes',
-    'getMaxZoom',
-    'getMinimumClusterSize',
-    'getStyles',
-    'getTitle',
-    'getTotalClusters',
-    'getTotalMarkers',
-    'getZIndex',
-    'getZoomOnClick',
+    'removeMarker',
     'removeMarkers',
-    'repaint',
-    'setAverageCenter',
-    'setBatchSizeIE',
-    'setCalculator',
-    'setClusterClass',
-    'setEnableRetinaIcons',
-    'setGridSize',
-    'setIgnoreHidden',
-    'setImageExtension',
-    'setImagePath',
-    'setImageSizes',
-    'setMap',
-    'setMaxZoom',
-    'setMinimumClusterSize',
-    'setStyles',
-    'setTitle',
-    'setZIndex',
-    'setZoomOnClick',
-    'setOptions',
+    'clearMarkers',
+    'render',
+    'onAdd',
+    'onRemove',
   ]);
-  markerClustererSpy.addListener.and.returnValue({remove: () => {}});
-  return markerClustererSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a MarkerClusterer */
@@ -566,7 +533,10 @@ export function createMarkerClustererConstructorSpy(
   );
   if (apiLoaded) {
     const testingWindow: TestingWindow = window;
-    testingWindow['MarkerClusterer'] = markerClustererConstructorSpy;
+    testingWindow.markerClusterer = {
+      MarkerClusterer: markerClustererConstructorSpy,
+      defaultOnClusterClickHandler: jasmine.createSpy('defaultOnClusterClickHandler'),
+    };
   }
   return markerClustererConstructorSpy;
 }

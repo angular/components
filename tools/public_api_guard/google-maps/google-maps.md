@@ -426,82 +426,15 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
 }
 
 // @public
-export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+export class MapMarkerClusterer implements OnInit, OnChanges, AfterContentInit, OnDestroy {
     constructor(_googleMap: GoogleMap, _ngZone: NgZone);
-    // (undocumented)
-    ariaLabelFn: AriaLabelFn;
-    // (undocumented)
-    set averageCenter(averageCenter: boolean);
-    // (undocumented)
-    batchSize?: number;
-    // (undocumented)
-    set batchSizeIE(batchSizeIE: number);
-    // (undocumented)
-    set calculator(calculator: Calculator);
-    // (undocumented)
-    set clusterClass(clusterClass: string);
-    readonly clusterClick: Observable<Cluster>;
+    algorithm: Algorithm;
+    readonly clusterClick: EventEmitter<Cluster>;
     readonly clusteringbegin: Observable<void>;
     readonly clusteringend: Observable<void>;
-    // (undocumented)
-    set enableRetinaIcons(enableRetinaIcons: boolean);
-    // (undocumented)
-    fitMapToMarkers(padding: number | google.maps.Padding): void;
-    // (undocumented)
-    getAverageCenter(): boolean;
-    // (undocumented)
-    getBatchSizeIE(): number;
-    // (undocumented)
-    getCalculator(): Calculator;
-    // (undocumented)
-    getClusterClass(): string;
-    // (undocumented)
-    getClusters(): Cluster[];
-    // (undocumented)
-    getEnableRetinaIcons(): boolean;
-    // (undocumented)
-    getGridSize(): number;
-    // (undocumented)
-    getIgnoreHidden(): boolean;
-    // (undocumented)
-    getImageExtension(): string;
-    // (undocumented)
-    getImagePath(): string;
-    // (undocumented)
-    getImageSizes(): number[];
-    // (undocumented)
-    getMaxZoom(): number;
-    // (undocumented)
-    getMinimumClusterSize(): number;
-    // (undocumented)
-    getStyles(): ClusterIconStyle[];
-    // (undocumented)
-    getTitle(): string;
-    // (undocumented)
-    getTotalClusters(): number;
-    // (undocumented)
-    getTotalMarkers(): number;
-    // (undocumented)
-    getZIndex(): number;
-    // (undocumented)
-    getZoomOnClick(): boolean;
-    // (undocumented)
-    set gridSize(gridSize: number);
-    // (undocumented)
-    set ignoreHidden(ignoreHidden: boolean);
-    // (undocumented)
-    set imageExtension(imageExtension: string);
-    // (undocumented)
-    set imagePath(imagePath: string);
-    // (undocumented)
-    set imageSizes(imageSizes: number[]);
     markerClusterer?: MarkerClusterer;
     // (undocumented)
     _markers: QueryList<MapMarker>;
-    // (undocumented)
-    set maxZoom(maxZoom: number);
-    // (undocumented)
-    set minimumClusterSize(minimumClusterSize: number);
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -510,18 +443,9 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    renderer: Renderer;
     // (undocumented)
-    set options(options: MarkerClustererOptions);
-    // (undocumented)
-    set styles(styles: ClusterIconStyle[]);
-    // (undocumented)
-    set title(title: string);
-    // (undocumented)
-    set zIndex(zIndex: number);
-    // (undocumented)
-    set zoomOnClick(zoomOnClick: boolean);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": "ariaLabelFn"; "averageCenter": "averageCenter"; "batchSize": "batchSize"; "batchSizeIE": "batchSizeIE"; "calculator": "calculator"; "clusterClass": "clusterClass"; "enableRetinaIcons": "enableRetinaIcons"; "gridSize": "gridSize"; "ignoreHidden": "ignoreHidden"; "imageExtension": "imageExtension"; "imagePath": "imagePath"; "imageSizes": "imageSizes"; "maxZoom": "maxZoom"; "minimumClusterSize": "minimumClusterSize"; "styles": "styles"; "title": "title"; "zIndex": "zIndex"; "zoomOnClick": "zoomOnClick"; "options": "options"; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; }, ["_markers"], ["*"], false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "renderer": "renderer"; "algorithm": "algorithm"; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; }, ["_markers"], ["*"], false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapMarkerClusterer, never>;
 }

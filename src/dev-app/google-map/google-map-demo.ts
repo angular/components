@@ -119,9 +119,6 @@ export class GoogleMapDemo {
     google.maps.MapTypeId.TERRAIN,
   ];
 
-  markerClustererImagePath =
-    'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
-
   directionsResult?: google.maps.DirectionsResult;
 
   constructor(private readonly _mapDirectionsService: MapDirectionsService) {}

@@ -8,7 +8,7 @@
               (mapMousemove)="handleMove($event)"
               (mapRightclick)="handleRightclick()"
               [mapTypeId]="mapTypeId">
-    <map-marker-clusterer [imagePath]="markerClustererImagePath">
+    <map-marker-clusterer>
       <map-marker #firstMarker="mapMarker"
                   [position]="center"
                   (mapClick)="clickMarker(firstMarker)"></map-marker>

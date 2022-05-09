@@ -15,6 +15,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  EventEmitter,
   Input,
   NgZone,
   OnChanges,
@@ -25,15 +26,16 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Observable, Subscription} from 'rxjs';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapMarker} from '../map-marker/map-marker';
 
-/** Default options for a clusterer. */
-const DEFAULT_CLUSTERER_OPTIONS: MarkerClustererOptions = {};
+declare const markerClusterer: {
+  MarkerClusterer: typeof MarkerClusterer;
+  defaultOnClusterClickHandler: onClusterClickHandler;
+};
 
 /**
  * Angular component for implementing a Google Maps Marker Clusterer.
@@ -47,149 +49,43 @@ const DEFAULT_CLUSTERER_OPTIONS: MarkerClustererOptions = {};
   template: '<ng-content></ng-content>',
   encapsulation: ViewEncapsulation.None,
 })
-export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+export class MapMarkerClusterer implements OnInit, OnChanges, AfterContentInit, OnDestroy {
   private readonly _currentMarkers = new Set<google.maps.Marker>();
-  private readonly _eventManager = new MapEventManager(this._ngZone);
-  private readonly _destroy = new Subject<void>();
+  private readonly _closestMapEventManager = new MapEventManager(this._ngZone);
+  private _markersSubscription = Subscription.EMPTY;
 
   /** Whether the clusterer is allowed to be initialized. */
   private readonly _canInitialize: boolean;
 
+  /**
+   * Used to customize how the marker cluster is rendered.
+   * See https://googlemaps.github.io/js-markerclusterer/interfaces/Renderer.html.
+   */
   @Input()
-  ariaLabelFn: AriaLabelFn = () => '';
-
-  @Input()
-  set averageCenter(averageCenter: boolean) {
-    this._averageCenter = averageCenter;
-  }
-  private _averageCenter: boolean;
-
-  @Input() batchSize?: number;
-
-  @Input()
-  set batchSizeIE(batchSizeIE: number) {
-    this._batchSizeIE = batchSizeIE;
-  }
-  private _batchSizeIE: number;
-
-  @Input()
-  set calculator(calculator: Calculator) {
-    this._calculator = calculator;
-  }
-  private _calculator: Calculator;
-
-  @Input()
-  set clusterClass(clusterClass: string) {
-    this._clusterClass = clusterClass;
-  }
-  private _clusterClass: string;
-
-  @Input()
-  set enableRetinaIcons(enableRetinaIcons: boolean) {
-    this._enableRetinaIcons = enableRetinaIcons;
-  }
-  private _enableRetinaIcons: boolean;
-
-  @Input()
-  set gridSize(gridSize: number) {
-    this._gridSize = gridSize;
-  }
-  private _gridSize: number;
-
-  @Input()
-  set ignoreHidden(ignoreHidden: boolean) {
-    this._ignoreHidden = ignoreHidden;
-  }
-  private _ignoreHidden: boolean;
-
-  @Input()
-  set imageExtension(imageExtension: string) {
-    this._imageExtension = imageExtension;
-  }
-  private _imageExtension: string;
-
-  @Input()
-  set imagePath(imagePath: string) {
-    this._imagePath = imagePath;
-  }
-  private _imagePath: string;
-
-  @Input()
-  set imageSizes(imageSizes: number[]) {
-    this._imageSizes = imageSizes;
-  }
-  private _imageSizes: number[];
-
-  @Input()
-  set maxZoom(maxZoom: number) {
-    this._maxZoom = maxZoom;
-  }
-  private _maxZoom: number;
-
-  @Input()
-  set minimumClusterSize(minimumClusterSize: number) {
-    this._minimumClusterSize = minimumClusterSize;
-  }
-  private _minimumClusterSize: number;
-
-  @Input()
-  set styles(styles: ClusterIconStyle[]) {
-    this._styles = styles;
-  }
-  private _styles: ClusterIconStyle[];
-
-  @Input()
-  set title(title: string) {
-    this._title = title;
-  }
-  private _title: string;
-
-  @Input()
-  set zIndex(zIndex: number) {
-    this._zIndex = zIndex;
-  }
-  private _zIndex: number;
-
-  @Input()
-  set zoomOnClick(zoomOnClick: boolean) {
-    this._zoomOnClick = zoomOnClick;
-  }
-  private _zoomOnClick: boolean;
-
-  @Input()
-  set options(options: MarkerClustererOptions) {
-    this._options = options;
-  }
-  private _options: MarkerClustererOptions;
+  renderer: Renderer;
 
   /**
-   * See
-   * googlemaps.github.io/v3-utility-library/modules/
-   * _google_markerclustererplus.html#clusteringbegin
+   * Algorithm used to cluster the markers.
+   * See https://googlemaps.github.io/js-markerclusterer/interfaces/Algorithm.html.
    */
+  @Input()
+  algorithm: Algorithm;
+
+  /** Emits when clustering has started. */
   @Output() readonly clusteringbegin: Observable<void> =
-    this._eventManager.getLazyEmitter<void>('clusteringbegin');
+    this._closestMapEventManager.getLazyEmitter<void>('clusteringbegin');
 
-  /**
-   * See
-   * googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#clusteringend
-   */
+  /** Emits when clustering is done. */
   @Output() readonly clusteringend: Observable<void> =
-    this._eventManager.getLazyEmitter<void>('clusteringend');
+    this._closestMapEventManager.getLazyEmitter<void>('clusteringend');
 
   /** Emits when a cluster has been clicked. */
   @Output()
-  readonly clusterClick: Observable<Cluster> = this._eventManager.getLazyEmitter<Cluster>('click');
+  readonly clusterClick: EventEmitter<Cluster> = new EventEmitter<Cluster>();
 
   @ContentChildren(MapMarker, {descendants: true}) _markers: QueryList<MapMarker>;
 
-  /**
-   * The underlying MarkerClusterer object.
-   *
-   * See
-   * googlemaps.github.io/v3-utility-library/classes/
-   * _google_markerclustererplus.markerclusterer.html
-   */
+  /** Underlying MarkerClusterer object used to interact with Google Maps. */
   markerClusterer?: MarkerClusterer;
 
   constructor(private readonly _googleMap: GoogleMap, private readonly _ngZone: NgZone) {
@@ -198,31 +94,21 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
 
   ngOnInit() {
     if (this._canInitialize) {
-      const clustererWindow = window as unknown as typeof globalThis & {
-        MarkerClusterer?: MarkerClusterer;
-      };
+      this._createCluster();
 
-      if (!clustererWindow.MarkerClusterer && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-        throw Error(
-          'MarkerClusterer class not found, cannot construct a marker cluster. ' +
-            'Please install the MarkerClustererPlus library: ' +
-            'https://github.com/googlemaps/js-markerclustererplus',
-        );
-      }
+      // The `clusteringbegin` and `clusteringend` events are
+      // emitted on the map so that's why set it as the target.
+      this._closestMapEventManager.setTarget(this._googleMap.googleMap!);
+    }
+  }
 
-      // Create the object outside the zone so its events don't trigger change detection.
-      // We'll bring it back in inside the `MapEventManager` only for the events that the
-      // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.markerClusterer = new MarkerClusterer(
-          this._googleMap.googleMap!,
-          [],
-          this._combineOptions(),
-        );
-      });
+  ngOnChanges(changes: SimpleChanges) {
+    const change = changes['renderer'] || changes['algorithm'];
 
-      this._assertInitialized();
-      this._eventManager.setTarget(this.markerClusterer);
+    // Since the options are set in the constructor, we have to recreate the cluster if they change.
+    if (this.markerClusterer && change && !change.isFirstChange()) {
+      this._createCluster();
+      this._watchForMarkerChanges();
     }
   }
 
@@ -232,218 +118,10 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const {
-      markerClusterer: clusterer,
-      ariaLabelFn,
-      _averageCenter,
-      _batchSizeIE,
-      _calculator,
-      _styles,
-      _clusterClass,
-      _enableRetinaIcons,
-      _gridSize,
-      _ignoreHidden,
-      _imageExtension,
-      _imagePath,
-      _imageSizes,
-      _maxZoom,
-      _minimumClusterSize,
-      _title,
-      _zIndex,
-      _zoomOnClick,
-    } = this;
-
-    if (clusterer) {
-      if (changes['options']) {
-        clusterer.setOptions(this._combineOptions());
-      }
-      if (changes['ariaLabelFn']) {
-        clusterer.ariaLabelFn = ariaLabelFn;
-      }
-      if (changes['averageCenter'] && _averageCenter !== undefined) {
-        clusterer.setAverageCenter(_averageCenter);
-      }
-      if (changes['batchSizeIE'] && _batchSizeIE !== undefined) {
-        clusterer.setBatchSizeIE(_batchSizeIE);
-      }
-      if (changes['calculator'] && !!_calculator) {
-        clusterer.setCalculator(_calculator);
-      }
-      if (changes['clusterClass'] && _clusterClass !== undefined) {
-        clusterer.setClusterClass(_clusterClass);
-      }
-      if (changes['enableRetinaIcons'] && _enableRetinaIcons !== undefined) {
-        clusterer.setEnableRetinaIcons(_enableRetinaIcons);
-      }
-      if (changes['gridSize'] && _gridSize !== undefined) {
-        clusterer.setGridSize(_gridSize);
-      }
-      if (changes['ignoreHidden'] && _ignoreHidden !== undefined) {
-        clusterer.setIgnoreHidden(_ignoreHidden);
-      }
-      if (changes['imageExtension'] && _imageExtension !== undefined) {
-        clusterer.setImageExtension(_imageExtension);
-      }
-      if (changes['imagePath'] && _imagePath !== undefined) {
-        clusterer.setImagePath(_imagePath);
-      }
-      if (changes['imageSizes'] && _imageSizes) {
-        clusterer.setImageSizes(_imageSizes);
-      }
-      if (changes['maxZoom'] && _maxZoom !== undefined) {
-        clusterer.setMaxZoom(_maxZoom);
-      }
-      if (changes['minimumClusterSize'] && _minimumClusterSize !== undefined) {
-        clusterer.setMinimumClusterSize(_minimumClusterSize);
-      }
-      if (changes['styles'] && _styles) {
-        clusterer.setStyles(_styles);
-      }
-      if (changes['title'] && _title !== undefined) {
-        clusterer.setTitle(_title);
-      }
-      if (changes['zIndex'] && _zIndex !== undefined) {
-        clusterer.setZIndex(_zIndex);
-      }
-      if (changes['zoomOnClick'] && _zoomOnClick !== undefined) {
-        clusterer.setZoomOnClick(_zoomOnClick);
-      }
-    }
-  }
-
   ngOnDestroy() {
-    this._destroy.next();
-    this._destroy.complete();
-    this._eventManager.destroy();
-    if (this.markerClusterer) {
-      this.markerClusterer.setMap(null);
-    }
-  }
-
-  fitMapToMarkers(padding: number | google.maps.Padding) {
-    this._assertInitialized();
-    this.markerClusterer.fitMapToMarkers(padding);
-  }
-
-  getAverageCenter(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getAverageCenter();
-  }
-
-  getBatchSizeIE(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getBatchSizeIE();
-  }
-
-  getCalculator(): Calculator {
-    this._assertInitialized();
-    return this.markerClusterer.getCalculator();
-  }
-
-  getClusterClass(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getClusterClass();
-  }
-
-  getClusters(): Cluster[] {
-    this._assertInitialized();
-    return this.markerClusterer.getClusters();
-  }
-
-  getEnableRetinaIcons(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getEnableRetinaIcons();
-  }
-
-  getGridSize(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getGridSize();
-  }
-
-  getIgnoreHidden(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getIgnoreHidden();
-  }
-
-  getImageExtension(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getImageExtension();
-  }
-
-  getImagePath(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getImagePath();
-  }
-
-  getImageSizes(): number[] {
-    this._assertInitialized();
-    return this.markerClusterer.getImageSizes();
-  }
-
-  getMaxZoom(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getMaxZoom();
-  }
-
-  getMinimumClusterSize(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getMinimumClusterSize();
-  }
-
-  getStyles(): ClusterIconStyle[] {
-    this._assertInitialized();
-    return this.markerClusterer.getStyles();
-  }
-
-  getTitle(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getTitle();
-  }
-
-  getTotalClusters(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getTotalClusters();
-  }
-
-  getTotalMarkers(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getTotalMarkers();
-  }
-
-  getZIndex(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getZIndex();
-  }
-
-  getZoomOnClick(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getZoomOnClick();
-  }
-
-  private _combineOptions(): MarkerClustererOptions {
-    const options = this._options || DEFAULT_CLUSTERER_OPTIONS;
-    return {
-      ...options,
-      ariaLabelFn: this.ariaLabelFn ?? options.ariaLabelFn,
-      averageCenter: this._averageCenter ?? options.averageCenter,
-      batchSize: this.batchSize ?? options.batchSize,
-      batchSizeIE: this._batchSizeIE ?? options.batchSizeIE,
-      calculator: this._calculator ?? options.calculator,
-      clusterClass: this._clusterClass ?? options.clusterClass,
-      enableRetinaIcons: this._enableRetinaIcons ?? options.enableRetinaIcons,
-      gridSize: this._gridSize ?? options.gridSize,
-      ignoreHidden: this._ignoreHidden ?? options.ignoreHidden,
-      imageExtension: this._imageExtension ?? options.imageExtension,
-      imagePath: this._imagePath ?? options.imagePath,
-      imageSizes: this._imageSizes ?? options.imageSizes,
-      maxZoom: this._maxZoom ?? options.maxZoom,
-      minimumClusterSize: this._minimumClusterSize ?? options.minimumClusterSize,
-      styles: this._styles ?? options.styles,
-      title: this._title ?? options.title,
-      zIndex: this._zIndex ?? options.zIndex,
-      zoomOnClick: this._zoomOnClick ?? options.zoomOnClick,
-    };
+    this._markersSubscription.unsubscribe();
+    this._closestMapEventManager.destroy();
+    this._destroyCluster();
   }
 
   private _watchForMarkerChanges() {
@@ -455,31 +133,68 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
     }
     this.markerClusterer.addMarkers(initialMarkers);
 
-    this._markers.changes
-      .pipe(takeUntil(this._destroy))
-      .subscribe((markerComponents: MapMarker[]) => {
-        this._assertInitialized();
-        const newMarkers = new Set<google.maps.Marker>(this._getInternalMarkers(markerComponents));
-        const markersToAdd: google.maps.Marker[] = [];
-        const markersToRemove: google.maps.Marker[] = [];
-        for (const marker of Array.from(newMarkers)) {
-          if (!this._currentMarkers.has(marker)) {
-            this._currentMarkers.add(marker);
-            markersToAdd.push(marker);
+    this._markersSubscription.unsubscribe();
+    this._markersSubscription = this._markers.changes.subscribe((markerComponents: MapMarker[]) => {
+      this._assertInitialized();
+      const newMarkers = new Set<google.maps.Marker>(this._getInternalMarkers(markerComponents));
+      const markersToAdd: google.maps.Marker[] = [];
+      const markersToRemove: google.maps.Marker[] = [];
+      for (const marker of Array.from(newMarkers)) {
+        if (!this._currentMarkers.has(marker)) {
+          this._currentMarkers.add(marker);
+          markersToAdd.push(marker);
+        }
+      }
+      for (const marker of Array.from(this._currentMarkers)) {
+        if (!newMarkers.has(marker)) {
+          markersToRemove.push(marker);
+        }
+      }
+      this.markerClusterer.addMarkers(markersToAdd, true);
+      this.markerClusterer.removeMarkers(markersToRemove, true);
+      this.markerClusterer.render();
+      for (const marker of markersToRemove) {
+        this._currentMarkers.delete(marker);
+      }
+    });
+  }
+
+  private _createCluster() {
+    if (!markerClusterer?.MarkerClusterer && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      throw Error(
+        'MarkerClusterer class not found, cannot construct a marker cluster. ' +
+          'Please install the MarkerClusterer library: ' +
+          'https://github.com/googlemaps/js-markerclusterer',
+      );
+    }
+
+    this._destroyCluster();
+
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.markerClusterer = new markerClusterer.MarkerClusterer({
+        map: this._googleMap.googleMap!,
+        renderer: this.renderer,
+        algorithm: this.algorithm,
+        onClusterClick: (event, cluster, map) => {
+          if (this.clusterClick.observers.length) {
+            this._ngZone.run(() => this.clusterClick.emit(cluster));
+          } else {
+            markerClusterer.defaultOnClusterClickHandler(event, cluster, map);
           }
-        }
-        for (const marker of Array.from(this._currentMarkers)) {
-          if (!newMarkers.has(marker)) {
-            markersToRemove.push(marker);
-          }
-        }
-        this.markerClusterer.addMarkers(markersToAdd, true);
-        this.markerClusterer.removeMarkers(markersToRemove, true);
-        this.markerClusterer.repaint();
-        for (const marker of markersToRemove) {
-          this._currentMarkers.delete(marker);
-        }
+        },
       });
+    });
+  }
+
+  private _destroyCluster() {
+    // TODO(crisbeto): the naming here seems odd, but the `MarkerCluster` method isn't
+    // exposed. All this method seems to do at the time of writing is to call into `reset`.
+    // See: https://github.com/googlemaps/js-markerclusterer/blob/main/src/markerclusterer.ts#L205
+    this.markerClusterer?.onRemove();
+    this.markerClusterer = undefined;
   }
 
   private _getInternalMarkers(markers: MapMarker[]): google.maps.Marker[] {
