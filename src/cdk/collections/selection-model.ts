@@ -71,6 +71,17 @@ export class SelectionModel<T> {
     this._emitChangeEvent();
   }
 
+  setSelection(...values: T[]): void {
+    this._verifyValueAssignment(values);
+    const oldValues = this.selected;
+    const newSelectedSet = new Set(values);
+    values.forEach(value => this._markSelected(value));
+    oldValues
+      .filter(value => !newSelectedSet.has(value))
+      .forEach(value => this._unmarkSelected(value));
+    this._emitChangeEvent();
+  }
+
   /**
    * Toggles a value between selected and deselected.
    */

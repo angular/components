@@ -1,14 +1,42 @@
+<h2>formControl</h2>
 <ul cdkListbox class="demo-listbox"
-    [multiple]="multiSelectable"
-    [useActiveDescendant]="activeDescendant"
-    [formControl]="formControl" ngDefaultControl>
-  <li cdkOption>Apple</li>
-  <li cdkOption>Orange</li>
-  <li cdkOption>Grapefruit</li>
-  <li cdkOption>Peach</li>
+    [cdkListboxMultiple]="multiSelectable"
+    [cdkListboxUseActiveDescendant]="activeDescendant"
+    [formControl]="fruitControl">
+  <li cdkOption cdkOptionValue="apple">Apple</li>
+  <li cdkOption cdkOptionValue="orange">Orange</li>
+  <li cdkOption cdkOptionValue="grapefruit">Grapefruit</li>
+  <li cdkOption cdkOptionValue="peach">Peach</li>
 </ul>
 
-<button (click)="disableForm()">Disable Form</button>
+<h2>ngModel</h2>
+<ul cdkListbox class="demo-listbox"
+    [cdkListboxMultiple]="multiSelectable"
+    [cdkListboxUseActiveDescendant]="activeDescendant"
+    [(ngModel)]="fruit">
+  <li cdkOption cdkOptionValue="apple">Apple</li>
+  <li cdkOption cdkOptionValue="orange">Orange</li>
+  <li cdkOption cdkOptionValue="grapefruit">Grapefruit</li>
+  <li cdkOption cdkOptionValue="peach">Peach</li>
+</ul>
+
+<h2>value binding</h2>
+<ul cdkListbox class="demo-listbox"
+    [cdkListboxMultiple]="multiSelectable"
+    [cdkListboxUseActiveDescendant]="activeDescendant"
+    [cdkListboxValue]="fruit"
+    (cdkListboxValueChange)="fruit = $event.listbox.value">
+  <li cdkOption cdkOptionValue="apple">Apple</li>
+  <li cdkOption cdkOptionValue="orange">Orange</li>
+  <li cdkOption cdkOptionValue="grapefruit">Grapefruit</li>
+  <li cdkOption cdkOptionValue="peach">Peach</li>
+</ul>
+
+<p>
+  Form Control Value: {{fruitControl.value | json}}
+</p>
+
+<button (click)="toggleFormDisabled()">Disable Form</button>
 <br>
 <button (click)="toggleMultiple()">Toggle Multiple</button>
 <br>

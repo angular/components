@@ -1,7 +1,7 @@
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {CdkListbox, CdkListboxModule, CdkOption, ListboxSelectionChangeEvent} from './index';
+import {CdkListbox, CdkListboxModule, CdkOption, ListboxValueChangeEvent} from './index';
 import {
   createKeyboardEvent,
   dispatchKeyboardEvent,
@@ -114,17 +114,17 @@ describe('CdkOption and CdkListbox', () => {
       listboxInstance.setActiveOption(optionInstances[1]);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toBe(optionInstances[1]);
+      expect(listboxInstance.listKeyManager.activeItem).toBe(optionInstances[1]);
 
       dispatchKeyboardEvent(listboxElement, 'keydown', HOME);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toBe(optionInstances[0]);
+      expect(listboxInstance.listKeyManager.activeItem).toBe(optionInstances[0]);
 
       dispatchKeyboardEvent(listboxElement, 'keydown', END);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toBe(optionInstances[3]);
+      expect(listboxInstance.listKeyManager.activeItem).toBe(optionInstances[3]);
     });
 
     it('should be able to toggle listbox disabled state', () => {
@@ -210,15 +210,15 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should change active item using type ahead', fakeAsync(() => {
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+      expect(listboxInstance.listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(-1);
 
       dispatchKeyboardEvent(listboxElement, 'keydown', A);
       fixture.detectChanges();
       tick(200);
 
-      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[2]);
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
+      expect(listboxInstance.listKeyManager.activeItem).toEqual(optionInstances[2]);
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(2);
     }));
 
     it('should not handle space or enter on a disabled listbox', () => {
@@ -240,8 +240,8 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should not handle type ahead on a disabled listbox', fakeAsync(() => {
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+      expect(listboxInstance.listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(-1);
 
       testComponent.isListboxDisabled = true;
       fixture.detectChanges();
@@ -250,8 +250,8 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
       tick(200);
 
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+      expect(listboxInstance.listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(-1);
     }));
 
     it('should not select a disabled option using space or enter', () => {
@@ -273,38 +273,38 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should update active item upon arrow key presses', () => {
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+      expect(listboxInstance.listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(-1);
 
       dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[0]);
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(0);
+      expect(listboxInstance.listKeyManager.activeItem).toEqual(optionInstances[0]);
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(0);
 
       dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[1]);
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(1);
+      expect(listboxInstance.listKeyManager.activeItem).toEqual(optionInstances[1]);
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(1);
     });
 
     it('should skip disabled options when navigating with arrow keys', () => {
-      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+      expect(listboxInstance.listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(-1);
 
       testComponent.isSolarDisabled = true;
       dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[0]);
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(0);
+      expect(listboxInstance.listKeyManager.activeItem).toEqual(optionInstances[0]);
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(0);
 
       dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
-      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[2]);
-      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
+      expect(listboxInstance.listKeyManager.activeItem).toEqual(optionInstances[2]);
+      expect(listboxInstance.listKeyManager.activeItemIndex).toBe(2);
     });
 
     it('should update selected option on click event', () => {
@@ -903,7 +903,7 @@ class ListboxWithOptions {
   isPurpleDisabled: boolean = false;
   isSolarDisabled: boolean = false;
 
-  onSelectionChange(event: ListboxSelectionChangeEvent<unknown>) {
+  onSelectionChange(event: ListboxValueChangeEvent<unknown>) {
     this.changedOption = event.option;
   }
 }
@@ -923,7 +923,7 @@ class ListboxMultiselect {
   changedOption: CdkOption;
   isMultiselectable: boolean = false;
 
-  onSelectionChange(event: ListboxSelectionChangeEvent<unknown>) {
+  onSelectionChange(event: ListboxValueChangeEvent<unknown>) {
     this.changedOption = event.option;
   }
 }
@@ -943,7 +943,7 @@ class ListboxActiveDescendant {
   isActiveDescendant: boolean = true;
   focusedOption: string;
 
-  onSelectionChange(event: ListboxSelectionChangeEvent<unknown>) {
+  onSelectionChange(event: ListboxValueChangeEvent<unknown>) {
     this.changedOption = event.option;
   }
 
@@ -974,7 +974,7 @@ class ListboxControlValueAccessor {
   showListbox: boolean = true;
   @ViewChild(CdkListbox) listbox: CdkListbox<string>;
 
-  onSelectionChange(event: ListboxSelectionChangeEvent<string>) {
+  onSelectionChange(event: ListboxValueChangeEvent<string>) {
     this.changedOption = event.option;
   }
 }
@@ -1007,7 +1007,7 @@ class ListboxInsideCombobox {
   @ViewChild(CdkListbox) listbox: CdkListbox<string>;
   @ViewChild(CdkCombobox) combobox: CdkCombobox;
 
-  onSelectionChange(event: ListboxSelectionChangeEvent<string>) {
+  onSelectionChange(event: ListboxValueChangeEvent<string>) {
     this.changedOption = event.option;
   }
 }

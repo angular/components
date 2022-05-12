@@ -6,24 +6,37 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {CdkListboxModule} from '@angular/cdk-experimental/listbox';
 import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatSelectModule} from '@angular/material/select';
 
 @Component({
   templateUrl: 'cdk-listbox-demo.html',
   styleUrls: ['cdk-listbox-demo.css'],
   standalone: true,
-  imports: [CdkListboxModule, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CdkListboxModule, CommonModule, FormsModule, MatSelectModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkListboxDemo {
   multiSelectable = false;
   activeDescendant = true;
-  formControl = new FormControl('');
+  fruitControl = new FormControl();
 
-  disableForm() {
-    this.formControl.disable();
+  get fruit() {
+    return this.fruitControl.value;
+  }
+  set fruit(value) {
+    this.fruitControl.patchValue(value);
+  }
+
+  toggleFormDisabled() {
+    if (this.fruitControl.disabled) {
+      this.fruitControl.enable();
+    } else {
+      this.fruitControl.disable();
+    }
   }
 
   toggleMultiple() {
