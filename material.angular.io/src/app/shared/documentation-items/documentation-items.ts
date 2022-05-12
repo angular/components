@@ -448,6 +448,14 @@ const DOCS: { [key: string]: DocItem[] } = {
       },
     },
     {
+      id: 'menu',
+      name: 'Menu',
+      summary: 'Directives for building accessible menus.',
+      exampleSpecs: {
+        prefix: 'cdk-menu-',
+      },
+    },
+    {
       id: 'observers',
       name: 'Observers',
       summary: 'Utilities to respond to changes to element properties.',
