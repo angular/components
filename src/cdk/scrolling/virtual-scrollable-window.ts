@@ -17,7 +17,7 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
  * Provides as virtual scrollable for the global / window scrollbar.
  */
 @Directive({
-  selector: 'cdk-virtual-scroll-viewport[scrollable-window]',
+  selector: 'cdk-virtual-scroll-viewport[scrollWindow]',
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableWindow}],
 })
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
