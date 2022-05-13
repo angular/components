@@ -1464,7 +1464,7 @@ class VirtualScrollWithAppendOnly {
 
 @Component({
   template: `
-    <div cdk-virtual-scrollable-element class="scrolling-element">
+    <div cdkVirtualScrollingElement class="scrolling-element">
       <cdk-virtual-scroll-viewport itemSize="50">
         <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
       </cdk-virtual-scroll-viewport>
@@ -1508,7 +1508,7 @@ class VirtualScrollWithCustomScrollingElement {
 @Component({
   template: `
     <div class="before-virtual-viewport"></div>
-    <cdk-virtual-scroll-viewport scrollable-window itemSize="50">
+    <cdk-virtual-scroll-viewport scrollWindow itemSize="50">
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
