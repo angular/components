@@ -78,6 +78,7 @@ export class MatSelectTrigger {}
     '[class.mat-mdc-select-required]': 'required',
     '[class.mat-mdc-select-empty]': 'empty',
     '[class.mat-mdc-select-multiple]': 'multiple',
+    '[shouldUseActiveDescendant]': 'true',
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
