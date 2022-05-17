@@ -72,18 +72,19 @@ export class CdkNestedTreeNode<T, K = T>
     const childrenAccessor = this._tree._getChildrenAccessor();
     if (!childrenAccessor && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getTreeControlFunctionsMissingError();
-    }
-    const childrenNodes = childrenAccessor?.(this.data);
-    if (Array.isArray(childrenNodes)) {
-      this.updateChildrenNodes(childrenNodes as T[]);
-    } else if (isObservable(childrenNodes)) {
-      childrenNodes
+    } else if (childrenAccessor) {
+      const childrenNodes = childrenAccessor(this.data);
+      if (Array.isArray(childrenNodes)) {
+        this.updateChildrenNodes(childrenNodes as T[]);
+      } else if (isObservable(childrenNodes)) {
+        childrenNodes
+          .pipe(takeUntil(this._destroyed))
+          .subscribe(result => this.updateChildrenNodes(result));
+      }
+      this.nodeOutlet.changes
         .pipe(takeUntil(this._destroyed))
-        .subscribe(result => this.updateChildrenNodes(result));
+        .subscribe(() => this.updateChildrenNodes());
     }
-    this.nodeOutlet.changes
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this.updateChildrenNodes());
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091
