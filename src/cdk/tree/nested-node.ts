@@ -79,8 +79,11 @@ export class CdkNestedTreeNode<T, K = T>
     } else if (isObservable(childrenNodes)) {
       childrenNodes
         .pipe(takeUntil(this._destroyed))
-        .subscribe(() => this.updateChildrenNodes());
+        .subscribe(result => this.updateChildrenNodes(result));
     }
+    this.nodeOutlet.changes
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this.updateChildrenNodes());
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091
