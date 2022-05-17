@@ -59,5 +59,8 @@
     (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
     (keydown)="_handleKeydown($event)">
     <ng-content></ng-content>
+    <button class="mat-button" *ngIf="hasCloseButton" (click)="close()" tabindex="-1">
+      Close
+    </button>
   </div>
 </ng-template>

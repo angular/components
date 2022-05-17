@@ -17,6 +17,7 @@ import {
   OnInit,
   QueryList,
   ViewEncapsulation,
+  Input,
 } from '@angular/core';
 import {MAT_SELECT_TRIGGER, _MatSelectBase} from '@angular/material/select';
 import {
@@ -89,6 +90,8 @@ export class MatSelectTrigger {}
   ],
 })
 export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit, AfterViewInit {
+  @Input('hasCloseButton') hasCloseButton: boolean = false;
+
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
   @ContentChild(MAT_SELECT_TRIGGER) customTrigger: MatSelectTrigger;

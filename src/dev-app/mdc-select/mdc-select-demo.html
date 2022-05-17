@@ -11,7 +11,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
                       [class.demo-drinks-width-large]="drinksWidth === '400px'">
         <mat-label>Drink</mat-label>
         <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
-          [disabled]="drinksDisabled" #drinkControl="ngModel">
+          [disabled]="drinksDisabled" #drinkControl="ngModel" [hasCloseButton]="drinksCloseButton">
           <mat-option>None</mat-option>
           <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
             {{ drink.viewValue }}
@@ -45,6 +45,14 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <select [(ngModel)]="drinksTheme" id="drinks-theme">
           <option *ngFor="let theme of availableThemes" [value]="theme.value">
             {{theme.name}}
+          </option>
+        </select>
+      </p>
+      <p>
+        <label for="close-button">Close Button:</label>
+        <select [(ngModel)]="drinksCloseButton" id="close-button">
+          <option *ngFor="let closeButton of availableCloseButtons" [value]="closeButton.value">
+            {{closeButton.name}}
           </option>
         </select>
       </p>

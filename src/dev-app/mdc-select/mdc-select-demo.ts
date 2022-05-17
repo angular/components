@@ -63,6 +63,7 @@ export class MdcSelectDemo {
   foodControl = new FormControl('pizza-1');
   topHeightCtrl = new FormControl(0);
   drinksTheme: ThemePalette = 'primary';
+  drinksCloseButton: boolean = false;
   pokemonTheme: ThemePalette = 'primary';
   compareByValue = true;
   selectFormControl = new FormControl('', Validators.required);
@@ -104,6 +105,11 @@ export class MdcSelectDemo {
     {value: 'primary', name: 'Primary'},
     {value: 'accent', name: 'Accent'},
     {value: 'warn', name: 'Warn'},
+  ];
+
+  availableCloseButtons = [
+    {value: true, name: 'Yes'},
+    {value: false, name: 'No'},
   ];
 
   pokemonGroups = [
