@@ -432,6 +432,14 @@ const DOCS: { [key: string]: DocItem[] } = {
       },
     },
     {
+      id: 'dialog',
+      name: 'Dialog',
+      summary: 'Directives for building accessible dialogs.',
+      exampleSpecs: {
+        prefix: 'cdk-dialog-',
+      },
+    },
+    {
       id: 'drag-drop',
       name: 'Drag and Drop',
       summary: 'Directives enabling drag-and-drop interactions',
