@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, InjectionToken, Directive} from '@angular/core';
+import {Directive, inject, Injectable, InjectionToken, NgZone, OnDestroy} from '@angular/core';
 import {fromEvent, Subject} from 'rxjs';
-import {takeUntil, filter} from 'rxjs/operators';
-import {PointerFocusTracker, FocusableElement} from './pointer-focus-tracker';
+import {filter, takeUntil} from 'rxjs/operators';
+import {FocusableElement, PointerFocusTracker} from './pointer-focus-tracker';
 import {Menu} from './menu-interface';
-import {throwMissingPointerFocusTracker, throwMissingMenuReference} from './menu-errors';
+import {throwMissingMenuReference, throwMissingPointerFocusTracker} from './menu-errors';
 
 /**
  * MenuAim is responsible for determining if a sibling menuitem's menu should be closed when a
@@ -117,10 +117,8 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   /** Emits when this service is destroyed. */
   private readonly _destroyed: Subject<void> = new Subject();
 
-  constructor(
-    /** The Angular zone. */
-    private readonly _ngZone: NgZone,
-  ) {}
+  /** The Angular zone. */
+  private readonly _ngZone = inject(NgZone);
 
   ngOnDestroy() {
     this._destroyed.next();

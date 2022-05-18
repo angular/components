@@ -8,8 +8,10 @@
 
 import {
   Directive,
+  inject,
   Inject,
   Injectable,
+  InjectFlags,
   Injector,
   Input,
   OnDestroy,
@@ -78,6 +80,18 @@ export type ContextMenuCoordinates = {x: number; y: number};
   ],
 })
 export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
+  /** The CDK overlay service. */
+  private readonly _overlay = inject(Overlay);
+
+  /** The directionality of the page. */
+  private readonly _directionality: Directionality | null = inject(
+    Directionality,
+    InjectFlags.Optional,
+  );
+
+  /** The app's context menu tracking registry */
+  private readonly _contextMenuTracker = inject(ContextMenuTracker);
+
   /** Whether the context menu is disabled. */
   @Input('cdkContextMenuDisabled')
   get disabled(): boolean {
@@ -88,21 +102,8 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   }
   private _disabled = false;
 
-  constructor(
-    /** The DI injector for this component */
-    injector: Injector,
-    /** The view container ref for this component */
-    viewContainerRef: ViewContainerRef,
-    /** The CDK overlay service */
-    private readonly _overlay: Overlay,
-    /** The app's context menu tracking registry */
-    private readonly _contextMenuTracker: ContextMenuTracker,
-    /** The menu stack this menu is part of. */
-    @Inject(MENU_STACK) menuStack: MenuStack,
-    /** The directionality of the current page */
-    @Optional() private readonly _directionality?: Directionality,
-  ) {
-    super(injector, viewContainerRef, menuStack);
+  constructor() {
+    super();
     this._setMenuStackCloseListener();
   }
 
@@ -116,7 +117,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
 
   /** Close the currently opened context menu. */
   close() {
-    this.menuStack.closeAll();
+    this.menuStack?.closeAll();
   }
 
   /**
@@ -155,7 +156,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     return new OverlayConfig({
       positionStrategy: this._getOverlayPositionStrategy(coordinates),
       scrollStrategy: this._overlay.scrollStrategies.block(),
-      direction: this._directionality,
+      direction: this._directionality || undefined,
     });
   }
 
@@ -174,7 +175,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
 
   /** Subscribe to the menu stack close events and close this menu when requested. */
   private _setMenuStackCloseListener() {
-    this.menuStack.closed.pipe(takeUntil(this.destroyed)).subscribe(({item}) => {
+    this.menuStack?.closed.pipe(takeUntil(this.destroyed)).subscribe(({item}) => {
       if (item === this.childMenu && this.isOpen()) {
         this.closed.next();
         this.overlayRef!.detach();
@@ -198,7 +199,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       }
       outsideClicks.pipe(takeUntil(this.stopOutsideClicksListener)).subscribe(event => {
         if (!this.isElementInsideMenuStack(event.target as Element)) {
-          this.menuStack.closeAll();
+          this.menuStack?.closeAll();
         }
       });
     }
@@ -216,7 +217,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     if (this.isOpen()) {
       // since we're moving this menu we need to close any submenus first otherwise they end up
       // disconnected from this one.
-      this.menuStack.closeSubMenuOf(this.childMenu!);
+      this.menuStack?.closeSubMenuOf(this.childMenu!);
 
       (
         this.overlayRef!.getConfig().positionStrategy as FlexibleConnectedPositionStrategy

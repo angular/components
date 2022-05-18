@@ -10,13 +10,12 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
+  inject,
+  InjectFlags,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   Output,
-  Self,
 } from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusableOption} from '@angular/cdk/a11y';
@@ -50,6 +49,33 @@ import {MENU_AIM, MenuAim, Toggler} from './menu-aim';
   },
 })
 export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, OnDestroy {
+  /** Emits when the menu item is destroyed. */
+  protected readonly destroyed = new Subject<void>();
+
+  /** The directionality (text direction) of the current page. */
+  protected readonly _dir: Directionality | null = inject(Directionality, InjectFlags.Optional);
+
+  /** The menu's native DOM host element. */
+  readonly _elementRef: ElementRef = inject(ElementRef);
+
+  /** The Angular zone. */
+  protected _ngZone = inject(NgZone);
+
+  /** The menu aim service used by this menu. */
+  private readonly _menuAim: MenuAim | null = inject(MENU_AIM, InjectFlags.Optional);
+
+  /** The stack of menus this menu belongs to. */
+  private readonly _menuStack: MenuStack = inject(MENU_STACK);
+
+  /** The parent menu in which this menuitem resides. */
+  private readonly _parentMenu: Menu | null = inject(CDK_MENU, InjectFlags.Optional);
+
+  /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
+  private readonly _menuTrigger: CdkMenuTrigger | null = inject(
+    CdkMenuTrigger,
+    InjectFlags.Optional | InjectFlags.Self,
+  );
+
   /**  Whether the CdkMenuItem is disabled - defaults to false */
   @Input('cdkMenuItemDisabled')
   get disabled(): boolean {
@@ -84,26 +110,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   /** Whether the item should close the menu if triggered by the spacebar. */
   protected closeOnSpacebarTrigger = true;
 
-  /** Emits when the menu item is destroyed. */
-  protected readonly destroyed = new Subject<void>();
-
-  constructor(
-    /** The host element for this item. */
-    readonly _elementRef: ElementRef<HTMLElement>,
-    /** The Angular zone. */
-    private readonly _ngZone: NgZone,
-    /** The menu stack this item belongs to. */
-    @Inject(MENU_STACK) private readonly _menuStack: MenuStack,
-    /** The parent menu this item belongs to. */
-    @Optional() @Inject(CDK_MENU) private readonly _parentMenu?: Menu,
-    /** The menu aim service used for this item. */
-    @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
-    /** The directionality of the page. */
-    @Optional() private readonly _dir?: Directionality,
-    /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
-    // tslint:disable-next-line: lightweight-tokens
-    @Self() @Optional() private readonly _menuTrigger?: CdkMenuTrigger,
-  ) {
+  constructor() {
     this._setupMouseEnter();
 
     if (this._isStandaloneItem()) {
@@ -151,7 +158,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   }
 
   /** Get the CdkMenuTrigger associated with this element. */
-  getMenuTrigger(): CdkMenuTrigger | undefined {
+  getMenuTrigger(): CdkMenuTrigger | null {
     return this._menuTrigger;
   }
 
