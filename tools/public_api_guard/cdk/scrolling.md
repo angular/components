@@ -146,7 +146,7 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
     abstract measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     measureViewportSize(orientation: 'horizontal' | 'vertical'): number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollable, never, never, {}, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollable, never, never, {}, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollable, [null, null, null, { optional: true; }]>;
 }
@@ -157,7 +157,7 @@ export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
     // (undocumented)
     measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableElement, "[cdkVirtualScrollingElement]", never, {}, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableElement, "[cdkVirtualScrollingElement]", never, {}, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollableElement, [null, null, null, { optional: true; }]>;
 }
@@ -170,7 +170,7 @@ export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
     // (undocumented)
     measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableWindow, "cdk-virtual-scroll-viewport[scrollWindow]", never, {}, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableWindow, "cdk-virtual-scroll-viewport[scrollWindow]", never, {}, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualScrollableWindow, [null, null, { optional: true; }]>;
 }
