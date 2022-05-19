@@ -40,6 +40,7 @@ export class SelectionModel<T> {
     private _multiple = false,
     initiallySelectedValues?: T[],
     private _emitChanges = true,
+    private _compareWith?: (o1: T, o2: T) => boolean,
   ) {
     if (initiallySelectedValues && initiallySelectedValues.length) {
       if (_multiple) {
@@ -101,6 +102,9 @@ export class SelectionModel<T> {
    * Determines whether a value is selected.
    */
   isSelected(value: T): boolean {
+    if (this._compareWith) {
+      return [...this._selection].some(v => this._compareWith!(v, value));
+    }
     return this._selection.has(value);
   }
 
@@ -158,7 +162,9 @@ export class SelectionModel<T> {
         this._unmarkAll();
       }
 
-      this._selection.add(value);
+      if (!this.isSelected(value)) {
+        this._selection.add(value);
+      }
 
       if (this._emitChanges) {
         this._selectedToEmit.push(value);

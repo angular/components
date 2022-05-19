@@ -13,7 +13,8 @@ import {
   Directive,
   ElementRef,
   forwardRef,
-  Inject,
+  inject,
+  InjectFlags,
   Input,
   OnDestroy,
   Optional,
@@ -24,18 +25,16 @@ import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@
 import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BehaviorSubject, defer, merge, Observable, Subject} from 'rxjs';
-import {filter, mapTo, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, defer, merge, Observable, Subject} from 'rxjs';
+import {filter, mapTo, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Directionality} from '@angular/cdk/bidi';
-import {CDK_COMBOBOX, CdkCombobox} from '@angular/cdk-experimental/combobox';
+import {CdkCombobox} from '@angular/cdk-experimental/combobox';
 
-/** The next id to use for the CdkOption directive. */
-let nextOptionId = 0;
+/** The next id to use for creating unique DOM IDs. */
+let nextId = 0;
 
-/** The next id to use for the CdkListbox directive. */
-let nextListboxId = 0;
-
+/** A selectable option in a listbox. */
 @Directive({
   selector: '[cdkOption]',
   exportAs: 'cdkOption',
@@ -44,21 +43,21 @@ let nextListboxId = 0;
     'class': 'cdk-option',
     '[id]': 'id',
     '[attr.aria-selected]': 'isSelected() || null',
-    '[attr.tabindex]': '!listbox.useActiveDescendant && !disabled ? -1 : null',
+    '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-disabled]': 'disabled',
     '[class.cdk-option-disabled]': 'disabled',
     '[class.cdk-option-active]': 'isActive()',
     '[class.cdk-option-selected]': 'isSelected()',
     '(click)': '_clicked.next()',
+    '(focus)': '_handleFocus()',
   },
 })
 export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightable, OnDestroy {
   /** The id of the option's host element. */
-  @Input() id = `cdk-option-${nextOptionId++}`;
+  @Input() id = `cdk-option-${nextId++}`;
 
-  // TODO(mmalerba): What do we do if the user doesn't specify a value?
   /** The value of this option. */
-  @Input('cdkOptionValue') value: T;
+  @Input('cdkOption') value: T;
 
   /**
    * The text used to locate this item during listbox typeahead. If not specified,
@@ -76,6 +75,12 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   }
   private _disabled: boolean = false;
 
+  /** The option's host element */
+  readonly element: HTMLElement = inject(ElementRef).nativeElement;
+
+  /** The parent listbox this option belongs to. */
+  protected readonly listbox: CdkListbox<T> = inject(CdkListbox);
+
   /** Emits when the option is destroyed. */
   protected destroyed = new Subject<void>();
 
@@ -84,19 +89,6 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /** Whether the option is currently active. */
   private _active = false;
-
-  constructor(
-    /** The option's host element */
-    protected readonly elementRef: ElementRef,
-    /** The change detector ref for this option. */
-    protected readonly changeDetectorRef: ChangeDetectorRef,
-    /** The parent listbox this option belongs to. */
-    @Inject(forwardRef(() => CdkListbox)) protected readonly listbox: CdkListbox<T>,
-  ) {
-    this.listbox._internalValueChange.pipe(takeUntil(this.destroyed)).subscribe(() => {
-      this.changeDetectorRef.markForCheck();
-    });
-  }
 
   ngOnDestroy() {
     this.destroyed.next();
@@ -130,24 +122,46 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /** Focus this option. */
   focus() {
-    this.elementRef.nativeElement.focus();
+    this.element.focus();
   }
 
   /** Get the label for this element which is required by the FocusableOption interface. */
   getLabel() {
-    return (this.typeaheadLabel ?? this.elementRef.nativeElement.textContent?.trim()) || '';
+    return (this.typeaheadLabel ?? this.element.textContent?.trim()) || '';
   }
 
-  /** Set the option as active. */
+  /**
+   * Set the option as active.
+   * @docs-private
+   */
   setActiveStyles() {
     this._active = true;
-    this.changeDetectorRef.markForCheck();
   }
 
-  /** Set the option as inactive. */
+  /**
+   * Set the option as inactive.
+   * @docs-private
+   */
   setInactiveStyles() {
     this._active = false;
-    this.changeDetectorRef.markForCheck();
+  }
+
+  /** Handle focus events on the option. */
+  protected _handleFocus() {
+    // Options can wind up getting focused in active descendant mode if the user clicks on them.
+    // In this case, we push focus back to the parent listbox to prevent an extra tab stop when
+    // the user performs a shift+tab.
+    if (this.listbox.useActiveDescendant) {
+      this.listbox.focus();
+    }
+  }
+
+  /** Get the tabindex for this option. */
+  protected _getTabIndex() {
+    if (this.listbox.useActiveDescendant || this.disabled) {
+      return -1;
+    }
+    return this.isActive() ? 0 : -1;
   }
 }
 
@@ -158,7 +172,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     'role': 'listbox',
     'class': 'cdk-listbox',
     '[id]': 'id',
-    '[attr.tabindex]': 'disabled ? null : 0',
+    '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
@@ -177,17 +191,18 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 })
 export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
   /** The id of the option's host element. */
-  @Input() id = `cdk-listbox-${nextListboxId++}`;
+  @Input() id = `cdk-listbox-${nextId++}`;
 
-  // TODO(mmalerba): Should we normalize the order? Do we care about duplicates?
+  // TODO(mmalerba): Add forms validation support.
   /** The value selected in the listbox, represented as an array of option values. */
   @Input('cdkListboxValue')
   get value(): T[] {
-    return this.selectionModel().selected;
+    return this._value;
   }
   set value(value: T[]) {
-    this.selectionModel().setSelection(...coerceArray(value == null ? [] : value));
+    this._setSelection(value);
   }
+  private _value: T[] = [];
 
   /**
    * Whether the listbox allows multiple options to be selected. If the value switches from `true`
@@ -199,7 +214,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
   set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
-    this._updateSelectionMode();
+    this._updateSelectionModel();
   }
   private _multiple: boolean = false;
 
@@ -223,23 +238,19 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
   private _useActiveDescendant: boolean = false;
 
-  // TODO(mmalerba): Why do we have this? Shouldn't it depend on whether we're using active descendant?
-  /** Whether on focus the listbox will focus its active option, default to true. */
-  @Input('cdkListboxAutoFocus')
-  get autoFocus(): boolean {
-    return this._autoFocus;
-  }
-  set autoFocus(shouldAutoFocus: BooleanInput) {
-    this._autoFocus = coerceBooleanProperty(shouldAutoFocus);
-  }
-  private _autoFocus: boolean = true;
-
   /** The orientation of the listbox. Only affects keyboard interaction, not visual layout. */
   @Input('cdkListboxOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
 
-  // TODO(mmalerba): This is currently unused, do we need to do something with it?
   /** The function used to compare option values. */
-  @Input('cdkListboxCompareWith') compareWith: (o1: T, o2: T) => boolean = (a1, a2) => a1 === a2;
+  @Input('cdkListboxCompareWith')
+  get compareWith(): undefined | ((o1: T, o2: T) => boolean) {
+    return this._compareWith;
+  }
+  set compareWith(fn: undefined | ((o1: T, o2: T) => boolean)) {
+    this._compareWith = fn;
+    this._updateSelectionModel();
+  }
+  private _compareWith?: (o1: T, o2: T) => boolean;
 
   /** Emits when the selected value(s) in the listbox change. */
   @Output('cdkListboxValueChange') readonly valueChange = new Subject<ListboxValueChangeEvent<T>>();
@@ -248,7 +259,9 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   @ContentChildren(CdkOption, {descendants: true}) protected options: QueryList<CdkOption<T>>;
 
   /** The selection model used by the listbox. */
-  protected selectionModelSubject = new BehaviorSubject(new SelectionModel<T>(this.multiple));
+  protected selectionModelSubject = new BehaviorSubject(
+    new SelectionModel<T>(this.multiple, [], true, this._compareWith),
+  );
 
   /** The key manager that manages keyboard navigation for this listbox. */
   protected listKeyManager: ActiveDescendantKeyManager<CdkOption<T>>;
@@ -256,11 +269,11 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /** Emits when the listbox is destroyed. */
   protected readonly destroyed = new Subject<void>();
 
-  /** Emits when the internal value of the listbox changes for any reason. */
-  _internalValueChange = this.selectionModelSubject.pipe(
-    switchMap(selectionModel => selectionModel.changed),
-    takeUntil(this.destroyed),
-  );
+  /** The host element of the listbox. */
+  protected readonly element: HTMLElement = inject(ElementRef).nativeElement;
+
+  /** The change detector for this listbox. */
+  protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   /** Callback called when the listbox has been touched */
   private _onTouched: () => void = () => {};
@@ -276,16 +289,27 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     ),
   );
 
-  constructor(
-    /** The host element of the listbox. */
-    protected elementRef: ElementRef,
-    // TODO(mmalerba): Should not depend on combobox
-    @Optional() @Inject(CDK_COMBOBOX) private readonly _combobox: CdkCombobox,
-    /** The directionality of the page. */
-    @Optional() private readonly _dir?: Directionality,
-  ) {}
+  /** The directionality of the page. */
+  private readonly _dir = inject(Directionality, InjectFlags.Optional);
+
+  // TODO(mmalerba): Should not depend on combobox
+  private readonly _combobox = inject(CdkCombobox, InjectFlags.Optional);
+
+  constructor() {
+    this.selectionModelSubject
+      .pipe(
+        switchMap(selectionModel => selectionModel.changed),
+        takeUntil(this.destroyed),
+      )
+      .subscribe(() => {
+        this._updateInternalValue();
+      });
+  }
 
   ngAfterContentInit() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      this._verifyNoOptionValueCollisions();
+    }
     this._initKeyManager();
     this._combobox?._registerContent(this.id, 'listbox');
     this._optionClicked
@@ -293,11 +317,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
         filter(option => !option.disabled),
         takeUntil(this.destroyed),
       )
-      .subscribe(option => {
-        this.listKeyManager.setActiveItem(option);
-        this.triggerOption(option);
-        this._updatePanelForSelection(option);
-      });
+      .subscribe(option => this._handleOptionClicked(option));
   }
 
   ngOnDestroy() {
@@ -374,9 +394,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    * @docs-private
    */
   writeValue(value: T[]): void {
-    if (this.options) {
-      this.selectionModel().setSelection(...(value == null ? [] : coerceArray(value)));
-    }
+    this._setSelection(value);
   }
 
   /**
@@ -386,6 +404,11 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  /** Focus the listbox's host element. */
+  focus() {
+    this.element.focus();
   }
 
   /** The selection model used to track the listbox's value. */
@@ -402,13 +425,14 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   protected triggerOption(option: CdkOption<T> | null) {
     if (option && !option.disabled) {
       let changed = false;
-      const subscription = this.selectionModel().changed.subscribe(() => (changed = true));
+      this.selectionModel()
+        .changed.pipe(take(1), takeUntil(this.destroyed))
+        .subscribe(() => (changed = true));
       if (this.multiple) {
         this.toggle(option);
       } else {
         this.select(option);
       }
-      subscription.unsubscribe();
       if (changed) {
         this._onChange(this.value);
         this.valueChange.next({
@@ -422,7 +446,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   /** Called when the listbox receives focus. */
   protected _handleFocus() {
-    if (this.autoFocus) {
+    if (!this.useActiveDescendant) {
       this.listKeyManager.setActiveItem(this.listKeyManager.activeItem ?? this.options.first);
       this._focusActiveOption();
     }
@@ -460,9 +484,8 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    * @param event The focusout event
    */
   protected _handleFocusOut(event: FocusEvent) {
-    const hostElement = this.elementRef.nativeElement;
     const otherElement = event.relatedTarget as Element;
-    if (hostElement !== otherElement && !hostElement.contains(otherElement)) {
+    if (this.element !== otherElement && !this.element.contains(otherElement)) {
       this._onTouched();
     }
   }
@@ -470,6 +493,14 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /** Get the id of the active option if active descendant is being used. */
   protected _getAriaActiveDescendant(): string | null | undefined {
     return this._useActiveDescendant ? this.listKeyManager?.activeItem?.id : null;
+  }
+
+  /** Get the tabindex for the listbox. */
+  protected _getTabIndex() {
+    if (this.disabled) {
+      return -1;
+    }
+    return this.useActiveDescendant || !this.listKeyManager.activeItem ? 0 : -1;
   }
 
   /** Initialize the key manager. */
@@ -503,19 +534,15 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
 
   /** Update the selection mode when the 'multiple' property changes. */
-  private _updateSelectionMode() {
-    if (this.multiple !== this.selectionModel().isMultipleSelection()) {
-      let newSelection = this.value;
-      // If we're changing to a single selection model and there are multiple items selected,
-      // clear the selection rather than arbitrarily keeping one of the items selected.
-      // TODO(mmalerba): Is this the right behavior?
-      //  Maybe we should just leave an invalid value until the user does something to change it?
-      if (!this.multiple && newSelection.length > 1) {
-        newSelection = [];
-        this._onChange(newSelection);
-      }
-      this.selectionModelSubject.next(new SelectionModel(this.multiple, newSelection));
-    }
+  private _updateSelectionModel() {
+    this.selectionModelSubject.next(
+      new SelectionModel(
+        this.multiple,
+        !this.multiple && this.value.length > 1 ? [] : this.value,
+        true,
+        this._compareWith,
+      ),
+    );
   }
 
   /** Focus the active option. */
@@ -523,6 +550,75 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     if (!this.useActiveDescendant) {
       this.listKeyManager.activeItem?.focus();
     }
+    this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Set the selected values.
+   * @param value The list of new selected values.
+   */
+  private _setSelection(value: T[]) {
+    this.selectionModel().setSelection(...(value == null ? [] : coerceArray(value)));
+  }
+
+  /** Update the internal value of the listbox based on the selection model. */
+  private _updateInternalValue() {
+    const selectionSet = new Set(this.selectionModel().selected);
+    // Reduce the options list to just the selected values, maintaining their order,
+    // but removing any duplicate values.
+    this._value = (this.options ?? []).reduce<T[]>((result, option) => {
+      if (selectionSet.has(option.value)) {
+        result.push(option.value);
+        selectionSet.delete(option.value);
+      }
+      return result;
+    }, []);
+    this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Handle the user clicking an option.
+   * @param option The option that was clicked.
+   */
+  private _handleOptionClicked(option: CdkOption<T>) {
+    this.listKeyManager.setActiveItem(option);
+    this.triggerOption(option);
+    this._updatePanelForSelection(option);
+  }
+
+  /** Verifies that no two options represent the same value under the compareWith function. */
+  private _verifyNoOptionValueCollisions() {
+    combineLatest([
+      this.selectionModelSubject,
+      this.options.changes.pipe(startWith(this.options)),
+    ]).subscribe(() => {
+      const isEqual = this.compareWith ?? Object.is;
+      const options = [...this.options];
+      for (const option of options) {
+        let duplicate = options.find(
+          other => option !== other && isEqual(option.value, other.value),
+        );
+        if (duplicate) {
+          // TODO(mmalerba): Link to docs about this.
+          if (this.compareWith) {
+            console.warn(
+              `Found multiple CdkOption representing the same value under the given compareWith function`,
+              {
+                option1: option.element,
+                option2: duplicate.element,
+                compareWith: this.compareWith,
+              },
+            );
+          } else {
+            console.warn(`Found multiple CdkOption with the same value`, {
+              option1: option.element,
+              option2: duplicate.element,
+            });
+          }
+          return;
+        }
+      }
+    });
   }
 }
 

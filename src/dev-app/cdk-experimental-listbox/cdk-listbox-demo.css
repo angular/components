@@ -1,4 +1,7 @@
 .demo-listbox {
+  display: inline-block;
+  width: 200px;
+  margin-right: 10px;
   list-style-type: none;
   border: 1px solid black;
   cursor: default;
