@@ -50,14 +50,4 @@ $private-checkbox-theme-config: map.merge(mdc-checkbox-theme.$light-theme, (
     unselected-icon-color: $border-color,
     unselected-pressed-icon-color: $border-color,
   ));
-
-  // We don't inherit the border focus style from MDC since we don't use their ripple.
-  // Instead we need to replicate it here.
-  .mdc-checkbox__native-control {
-    &:focus:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) {
-      & ~ .mdc-checkbox__background {
-        border-color: $active-border-color;
-      }
-    }
-  }
 }
