@@ -15,3 +15,7 @@
 .demo-listbox .cdk-option-selected {
   background: cornflowerblue;
 }
+
+.demo-listbox.ng-invalid {
+  box-shadow: 0 0 0 4px red;
+}

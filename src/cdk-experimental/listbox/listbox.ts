@@ -27,7 +27,16 @@ import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coe
 import {SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, combineLatest, defer, merge, Observable, Subject} from 'rxjs';
 import {filter, mapTo, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkCombobox} from '@angular/cdk-experimental/combobox';
 
@@ -187,13 +196,19 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
       useExisting: forwardRef(() => CdkListbox),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => CdkListbox),
+      multi: true,
+    },
   ],
 })
-export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
+export class CdkListbox<T = unknown>
+  implements AfterContentInit, OnDestroy, ControlValueAccessor, Validator
+{
   /** The id of the option's host element. */
   @Input() id = `cdk-listbox-${nextId++}`;
 
-  // TODO(mmalerba): Add forms validation support.
   /** The value selected in the listbox, represented as an array of option values. */
   @Input('cdkListboxValue')
   get value(): T[] {
@@ -215,6 +230,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   set multiple(value: BooleanInput) {
     this._multiple = coerceBooleanProperty(value);
     this._updateSelectionModel();
+    this._onValidatorChange();
   }
   private _multiple: boolean = false;
 
@@ -276,10 +292,13 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   /** Callback called when the listbox has been touched */
-  private _onTouched: () => void = () => {};
+  private _onTouched: () => {};
 
   /** Callback called when the listbox value changes */
   private _onChange: (value: T[]) => void = () => {};
+
+  /** Callback called when the form validator changes. */
+  private _onValidatorChange = () => {};
 
   /** Emits when an option has been clicked. */
   private _optionClicked = defer(() =>
@@ -294,6 +313,44 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   // TODO(mmalerba): Should not depend on combobox
   private readonly _combobox = inject(CdkCombobox, InjectFlags.Optional);
+
+  /**
+   * Validator that produces an error if multiple values are selected in a single selection
+   * listbox.
+   * @param control The control to validate
+   * @return A validation error or null
+   */
+  private _validateMultipleValues: ValidatorFn = (control: AbstractControl) => {
+    const controlValue = this._coerceValue(control.value);
+    if (!this.multiple && controlValue.length > 1) {
+      return {'cdkListboxMultipleValues': true};
+    }
+    return null;
+  };
+
+  /**
+   * Validator that produces an error if any selected values are not valid options for this listbox.
+   * @param control The control to validate
+   * @return A validation error or null
+   */
+  private _validateInvalidValues: ValidatorFn = (control: AbstractControl) => {
+    const validValues = (this.options ?? []).map(option => option.value);
+    const controlValue = this._coerceValue(control.value);
+    const isEqual = this.compareWith ?? Object.is;
+    const invalidValues = controlValue.filter(
+      value => !validValues.some(validValue => isEqual(value, validValue)),
+    );
+    if (invalidValues.length) {
+      return {'cdkListboxInvalidValues': {'values': invalidValues}};
+    }
+    return null;
+  };
+
+  /** The combined set of validators for this listbox. */
+  private _validators = Validators.compose([
+    this._validateMultipleValues,
+    this._validateInvalidValues,
+  ])!;
 
   constructor() {
     this.selectionModelSubject
@@ -312,6 +369,9 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     }
     this._initKeyManager();
     this._combobox?._registerContent(this.id, 'listbox');
+    this.options.changes.pipe(takeUntil(this.destroyed)).subscribe(() => {
+      this._onValidatorChange();
+    });
     this._optionClicked
       .pipe(
         filter(option => !option.disabled),
@@ -404,6 +464,23 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  /**
+   * Validate the given control
+   * @docs-private
+   */
+  validate(control: AbstractControl<any, any>): ValidationErrors | null {
+    return this._validators(control);
+  }
+
+  /**
+   * Registers a callback to be called when the form validator changes.
+   * @param fn The callback to call
+   * @docs-private
+   */
+  registerOnValidatorChange(fn: () => void) {
+    this._onValidatorChange = fn;
   }
 
   /** Focus the listbox's host element. */
@@ -558,7 +635,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    * @param value The list of new selected values.
    */
   private _setSelection(value: T[]) {
-    this.selectionModel().setSelection(...(value == null ? [] : coerceArray(value)));
+    this.selectionModel().setSelection(...this._coerceValue(value));
   }
 
   /** Update the internal value of the listbox based on the selection model. */
@@ -619,6 +696,15 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
         }
       }
     });
+  }
+
+  /**
+   * Coerces a value into an array representing a listbox selection.
+   * @param value The value to coerce
+   * @return An array
+   */
+  private _coerceValue(value: T[]) {
+    return value == null ? [] : coerceArray(value);
   }
 }
 
