@@ -386,24 +386,48 @@ export class CdkListbox<T = unknown>
    * Toggle the selected state of the given option.
    * @param option The option to toggle
    */
-  toggle(option: CdkOption<T> | T) {
-    this.selectionModel().toggle(option instanceof CdkOption ? option.value : option);
+  toggle(option: CdkOption<T>) {
+    this.toggleValue(option.value);
+  }
+
+  /**
+   * Toggle the selected state of the given value.
+   * @param value The value to toggle
+   */
+  toggleValue(value: T) {
+    this.selectionModel().toggle(value);
   }
 
   /**
    * Select the given option.
    * @param option The option to select
    */
-  select(option: CdkOption<T> | T) {
-    this.selectionModel().select(option instanceof CdkOption ? option.value : option);
+  select(option: CdkOption<T>) {
+    this.selectValue(option.value);
+  }
+
+  /**
+   * Select the given value.
+   * @param value The value to select
+   */
+  selectValue(value: T) {
+    this.selectionModel().select(value);
   }
 
   /**
    * Deselect the given option.
    * @param option The option to deselect
    */
-  deselect(option: CdkOption<T> | T) {
-    this.selectionModel().deselect(option instanceof CdkOption ? option.value : option);
+  deselect(option: CdkOption<T>) {
+    this.deselectValue(option.value);
+  }
+
+  /**
+   * Deselect the given value.
+   * @param value The value to deselect
+   */
+  deselectValue(value: T) {
+    this.selectionModel().deselect(value);
   }
 
   /**
