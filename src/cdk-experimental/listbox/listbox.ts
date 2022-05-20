@@ -17,7 +17,6 @@ import {
   InjectFlags,
   Input,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
 } from '@angular/core';
@@ -211,13 +210,12 @@ export class CdkListbox<T = unknown>
 
   /** The value selected in the listbox, represented as an array of option values. */
   @Input('cdkListboxValue')
-  get value(): T[] {
-    return this._value;
+  get value(): readonly T[] {
+    return this.selectionModel().selected;
   }
-  set value(value: T[]) {
+  set value(value: readonly T[]) {
     this._setSelection(value);
   }
-  private _value: T[] = [];
 
   /**
    * Whether the listbox allows multiple options to be selected. If the value switches from `true`
@@ -274,6 +272,7 @@ export class CdkListbox<T = unknown>
   /** The child options in this listbox. */
   @ContentChildren(CdkOption, {descendants: true}) protected options: QueryList<CdkOption<T>>;
 
+  // TODO(mmalerba): Refactor SelectionModel so that its not necessary to create new instances
   /** The selection model used by the listbox. */
   protected selectionModelSubject = new BehaviorSubject(
     new SelectionModel<T>(this.multiple, [], true, this._compareWith),
@@ -292,10 +291,10 @@ export class CdkListbox<T = unknown>
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   /** Callback called when the listbox has been touched */
-  private _onTouched: () => {};
+  private _onTouched = () => {};
 
   /** Callback called when the listbox value changes */
-  private _onChange: (value: T[]) => void = () => {};
+  private _onChange: (value: readonly T[]) => void = () => {};
 
   /** Callback called when the form validator changes. */
   private _onValidatorChange = () => {};
@@ -334,12 +333,8 @@ export class CdkListbox<T = unknown>
    * @return A validation error or null
    */
   private _validateInvalidValues: ValidatorFn = (control: AbstractControl) => {
-    const validValues = (this.options ?? []).map(option => option.value);
     const controlValue = this._coerceValue(control.value);
-    const isEqual = this.compareWith ?? Object.is;
-    const invalidValues = controlValue.filter(
-      value => !validValues.some(validValue => isEqual(value, validValue)),
-    );
+    const invalidValues = this._getValuesWithValidity(controlValue, false);
     if (invalidValues.length) {
       return {'cdkListboxInvalidValues': {'values': invalidValues}};
     }
@@ -370,6 +365,7 @@ export class CdkListbox<T = unknown>
     this._initKeyManager();
     this._combobox?._registerContent(this.id, 'listbox');
     this.options.changes.pipe(takeUntil(this.destroyed)).subscribe(() => {
+      this._updateInternalValue();
       this._onValidatorChange();
     });
     this._optionClicked
@@ -435,7 +431,7 @@ export class CdkListbox<T = unknown>
    * @param fn The callback to register
    * @docs-private
    */
-  registerOnChange(fn: (value: T[]) => void): void {
+  registerOnChange(fn: (value: readonly T[]) => void): void {
     this._onChange = fn;
   }
 
@@ -453,7 +449,7 @@ export class CdkListbox<T = unknown>
    * @param value The new value of the listbox
    * @docs-private
    */
-  writeValue(value: T[]): void {
+  writeValue(value: readonly T[]): void {
     this._setSelection(value);
   }
 
@@ -615,7 +611,7 @@ export class CdkListbox<T = unknown>
     this.selectionModelSubject.next(
       new SelectionModel(
         this.multiple,
-        !this.multiple && this.value.length > 1 ? [] : this.value,
+        !this.multiple && this.value.length > 1 ? [] : this.value.slice(),
         true,
         this._compareWith,
       ),
@@ -634,23 +630,47 @@ export class CdkListbox<T = unknown>
    * Set the selected values.
    * @param value The list of new selected values.
    */
-  private _setSelection(value: T[]) {
-    this.selectionModel().setSelection(...this._coerceValue(value));
+  private _setSelection(value: readonly T[]) {
+    this.selectionModel().setSelection(
+      ...this._getValuesWithValidity(this._coerceValue(value), true),
+    );
   }
 
   /** Update the internal value of the listbox based on the selection model. */
   private _updateInternalValue() {
-    const selectionSet = new Set(this.selectionModel().selected);
-    // Reduce the options list to just the selected values, maintaining their order,
-    // but removing any duplicate values.
-    this._value = (this.options ?? []).reduce<T[]>((result, option) => {
-      if (selectionSet.has(option.value)) {
-        result.push(option.value);
-        selectionSet.delete(option.value);
-      }
-      return result;
-    }, []);
+    const options = [...this.options];
+    const indexCache = new Map<T, number>();
+    // Check if we need to remove any values due to them becoming invalid
+    // (e.g. if the option was removed from the DOM.)
+    const selected = this.selectionModel().selected;
+    const validSelected = this._getValuesWithValidity(selected, true);
+    if (validSelected.length != selected.length) {
+      this.selectionModel().setSelection(...validSelected);
+    }
+    this.selectionModel().sort((a: T, b: T) => {
+      const aIndex = this._getIndexForValue(indexCache, options, a);
+      const bIndex = this._getIndexForValue(indexCache, options, b);
+      return aIndex - bIndex;
+    });
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Gets the index of the given value in the given list of options.
+   * @param cache The cache of indices found so far
+   * @param options The list of options to search in
+   * @param value The value to find
+   * @return The index of the value in the options list
+   */
+  private _getIndexForValue(cache: Map<T, number>, options: CdkOption<T>[], value: T) {
+    const isEqual = this.compareWith || Object.is;
+    if (!cache.has(value)) {
+      cache.set(
+        value,
+        options.findIndex(option => isEqual(value, option.value)),
+      );
+    }
+    return cache.get(value)!;
   }
 
   /**
@@ -703,15 +723,29 @@ export class CdkListbox<T = unknown>
    * @param value The value to coerce
    * @return An array
    */
-  private _coerceValue(value: T[]) {
+  private _coerceValue(value: readonly T[]) {
     return value == null ? [] : coerceArray(value);
+  }
+
+  /**
+   * Get the sublist of values with the given validity.
+   * @param values The list of values
+   * @param valid Whether to get valid values
+   * @return The sublist of values with the requested validity
+   */
+  private _getValuesWithValidity(values: readonly T[], valid: boolean) {
+    const isEqual = this.compareWith || Object.is;
+    const validValues = (this.options || []).map(option => option.value);
+    return values.filter(
+      value => valid === validValues.some(validValue => isEqual(value, validValue)),
+    );
   }
 }
 
 /** Change event that is fired whenever the value of the listbox changes. */
 export interface ListboxValueChangeEvent<T> {
   /** The new value of the listbox. */
-  readonly value: T[];
+  readonly value: readonly T[];
 
   /** Reference to the listbox that emitted the event. */
   readonly listbox: CdkListbox<T>;
