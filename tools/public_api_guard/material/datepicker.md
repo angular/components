@@ -213,6 +213,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
     endValue: number;
     _firstRowOffset: number;
     _focusActiveCell(movePreview?: boolean): void;
+    _getAriaDescription(value: number): string | null;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeStart(value: number, rowIndex: number, colIndex: number): boolean;
@@ -535,6 +536,7 @@ export class MatDatepickerIntl {
     prevMonthLabel: string;
     prevMultiYearLabel: string;
     prevYearLabel: string;
+    startAndEndDateLabel: string;
     startDateLabel: string;
     switchToMonthViewLabel: string;
     switchToMultiYearViewLabel: string;

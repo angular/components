@@ -60,6 +60,7 @@
         [class.mat-calendar-body-preview-end]="_isPreviewEnd(item.compareValue)"
         [class.mat-calendar-body-in-preview]="_isInPreview(item.compareValue)"
         [attr.aria-label]="item.ariaLabel"
+        [attr.aria-description]="_getAriaDescription(item.compareValue)"
         [attr.aria-disabled]="!item.enabled || null"
         [attr.aria-pressed]="_isSelected(item.compareValue)"
         [attr.aria-current]="todayValue === item.compareValue ? 'date' : null"

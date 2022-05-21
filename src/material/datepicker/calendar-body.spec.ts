@@ -142,6 +142,13 @@ describe('MatCalendarBody', () => {
     it('should have a focus indicator', () => {
       expect(cellEls.every(element => !!element.querySelector('.mat-focus-indicator'))).toBe(true);
     });
+
+    it('should not have `aria-description` on cells', () => {
+      expect(
+        calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell[aria-description]')
+          .length,
+      ).toBe(0);
+    });
   });
 
   describe('range calendar body', () => {
@@ -165,6 +172,29 @@ describe('MatCalendarBody', () => {
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       cells = Array.from(fixture.nativeElement.querySelectorAll('.mat-calendar-body-cell'));
+    });
+
+    it('should have aria-description on start and end days of a 3-day range', () => {
+      testComponent.startValue = 2;
+      testComponent.endValue = 4;
+      fixture.detectChanges();
+
+      expect(cells[1].getAttribute('aria-description')).toBe('Start date');
+      expect(cells[3].getAttribute('aria-description')).toBe('End date');
+      expect(
+        fixture.nativeElement.querySelectorAll('.mat-calendar-body-cell[aria-description]').length,
+      ).toBe(2);
+    });
+
+    it('should have aria-description on a cell that is both the first and last day of a date range', () => {
+      testComponent.startValue = 3;
+      testComponent.endValue = 3;
+      fixture.detectChanges();
+
+      expect(cells[2].getAttribute('aria-description')).toBe('Start and end date');
+      expect(
+        fixture.nativeElement.querySelectorAll('.mat-calendar-body-cell[aria-description]').length,
+      ).toBe(1);
     });
 
     it('should render a range', () => {

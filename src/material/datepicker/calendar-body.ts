@@ -19,8 +19,11 @@ import {
   SimpleChanges,
   OnDestroy,
   AfterViewChecked,
+  inject,
+  InjectFlags,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -79,6 +82,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
    * Used to focus the active cell after change detection has run.
    */
   private _focusActiveCellAfterViewChecked = false;
+
+  private _intl = inject(MatDatepickerIntl, InjectFlags.Optional);
 
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
@@ -172,6 +177,28 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
     if (cell.enabled) {
       this.activeDateChange.emit({value: cell.value, event});
     }
+  }
+
+  /**
+   * Provides an aria-description for the cell to communicate if it is the
+   * start or end of the selected date range.
+   */
+  _getAriaDescription(value: number): string | null {
+    if (!this.isRange) {
+      return null;
+    }
+    if (!this._intl) {
+      return null;
+    }
+
+    if (this.startValue === value && this.endValue === value) {
+      return this._intl.startAndEndDateLabel;
+    } else if (this.startValue === value) {
+      return this._intl.startDateLabel;
+    } else if (this.endValue === value) {
+      return this._intl.endDateLabel;
+    }
+    return null;
   }
 
   /** Returns whether a cell should be marked as selected. */
