@@ -160,7 +160,7 @@ describe('MatDateRangeInput', () => {
   it('should point the label aria-owns to the id of the start input', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.detectChanges();
-    const label = fixture.nativeElement.querySelector('label');
+    const label = fixture.nativeElement.querySelector('label.mat-form-field-label');
     const start = fixture.componentInstance.start.nativeElement;
 
     expect(start.id).toBeTruthy();
@@ -170,7 +170,7 @@ describe('MatDateRangeInput', () => {
   it('should point the range input aria-labelledby to the form field label', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.detectChanges();
-    const labelId = fixture.nativeElement.querySelector('label').id;
+    const labelId = fixture.nativeElement.querySelector('label.mat-form-field-label').id;
     const rangeInput = fixture.nativeElement.querySelector('.mat-date-range-input');
 
     expect(labelId).toBeTruthy();

@@ -21,6 +21,8 @@ import {
   Inject,
   OnChanges,
   SimpleChanges,
+  inject,
+  InjectFlags,
 } from '@angular/core';
 import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {ThemePalette, DateAdapter} from '@angular/material/core';
@@ -39,6 +41,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn, dateInputsHaveChanged} from './datepicker-input-base';
 import {MatDateRangePickerInput} from './date-range-picker';
 import {DateRange, MatDateSelectionModel} from './date-selection-model';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 let nextUniqueId = 0;
 
@@ -136,6 +139,8 @@ export class MatDateRangeInput<D>
     this._required = coerceBooleanProperty(value);
   }
   private _required: boolean;
+
+  private readonly _intl = inject(MatDatepickerIntl, InjectFlags.Optional);
 
   /** Function that can be used to filter out dates within the date range picker. */
   @Input()
@@ -380,7 +385,7 @@ export class MatDateRangeInput<D>
     );
   }
 
-  /** Gets the value for the `aria-labelledby` attribute of the inputs. */
+  /** Gets the value for the `aria-labelledby` attribute of the group. */
   _getAriaLabelledby() {
     const formField = this._formField;
     return formField && formField._hasFloatingLabel() ? formField._labelId : null;
@@ -390,6 +395,16 @@ export class MatDateRangeInput<D>
   _updateFocus(origin: FocusOrigin) {
     this.focused = origin !== null;
     this.stateChanges.next();
+  }
+
+  /** Gets the value for the aria label for the start date input. */
+  _getStartDateLabel(): string | null {
+    return this._intl ? this._intl.startDateLabel : null;
+  }
+
+  /** Gets the value for the aria label for the end date input. */
+  _getEndDateLabel(): string | null {
+    return this._intl ? this._intl.endDateLabel : null;
   }
 
   /** Re-runs the validators on the start/end inputs. */

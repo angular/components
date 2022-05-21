@@ -621,8 +621,10 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     focused: boolean;
     _getAriaLabelledby(): string | null;
     getConnectedOverlayOrigin(): ElementRef;
+    _getEndDateLabel(): string | null;
     _getInputMirrorValue(): string;
     getOverlayLabelId(): string | null;
+    _getStartDateLabel(): string | null;
     getStartValue(): D | null;
     getThemePalette(): ThemePalette;
     // (undocumented)
