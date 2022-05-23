@@ -22,7 +22,12 @@ import {
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
 import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
-import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceArray,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, combineLatest, defer, merge, Observable, Subject} from 'rxjs';
 import {filter, mapTo, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
@@ -82,6 +87,18 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled: boolean = false;
+
+  /** The tabindex of the option when it is enabled. */
+  @Input('tabindex')
+  get enabledTabIndex() {
+    return this._enabledTabIndex === undefined
+      ? this.listbox.enabledTabIndex
+      : this._enabledTabIndex;
+  }
+  set enabledTabIndex(value) {
+    this._enabledTabIndex = value;
+  }
+  private _enabledTabIndex?: number | null;
 
   /** The option's host element */
   readonly element: HTMLElement = inject(ElementRef).nativeElement;
@@ -169,7 +186,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     if (this.listbox.useActiveDescendant || this.disabled) {
       return -1;
     }
-    return this.isActive() ? 0 : -1;
+    return this.isActive() ? this.enabledTabIndex : -1;
   }
 }
 
@@ -207,6 +224,16 @@ export class CdkListbox<T = unknown>
 {
   /** The id of the option's host element. */
   @Input() id = `cdk-listbox-${nextId++}`;
+
+  /** The tabindex to use when the listbox is enabled. */
+  @Input('tabindex')
+  get enabledTabIndex() {
+    return this._enabledTabIndex === undefined ? 0 : this._enabledTabIndex;
+  }
+  set enabledTabIndex(value) {
+    this._enabledTabIndex = value;
+  }
+  private _enabledTabIndex?: number | null;
 
   /** The value selected in the listbox, represented as an array of option values. */
   @Input('cdkListboxValue')
@@ -597,7 +624,7 @@ export class CdkListbox<T = unknown>
     if (this.disabled) {
       return -1;
     }
-    return this.useActiveDescendant || !this.listKeyManager.activeItem ? 0 : -1;
+    return this.useActiveDescendant || !this.listKeyManager.activeItem ? this.enabledTabIndex : -1;
   }
 
   /** Initialize the key manager. */
