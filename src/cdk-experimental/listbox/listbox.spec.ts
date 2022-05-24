@@ -356,19 +356,21 @@ describe('CdkOption and CdkListbox', () => {
       expect(fixture.componentInstance.changedOption).toBeUndefined();
     });
 
-    it('should not handle type ahead on a disabled listbox', fakeAsync(async () => {
+    it('should not handle type ahead on a disabled listbox', async (...args: unknown[]) => {
       const {fixture, testComponent, listboxEl, options} = await setupComponent(ListboxWithOptions);
-      testComponent.isListboxDisabled = true;
-      fixture.detectChanges();
+      await fakeAsync(() => {
+        testComponent.isListboxDisabled = true;
+        fixture.detectChanges();
 
-      dispatchKeyboardEvent(listboxEl, 'keydown', B);
-      fixture.detectChanges();
-      tick(200);
+        dispatchKeyboardEvent(listboxEl, 'keydown', B);
+        fixture.detectChanges();
+        tick(200);
 
-      for (let option of options) {
-        expect(option.isActive()).toBeFalse();
-      }
-    }));
+        for (let option of options) {
+          expect(option.isActive()).toBeFalse();
+        }
+      })(args);
+    });
 
     it('should skip disabled options when navigating with arrow keys', async () => {
       const {testComponent, fixture, listbox, listboxEl, options} = await setupComponent(
@@ -438,31 +440,35 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionEls[0].classList).toContain('cdk-option-active');
     });
 
-    it('should change active item using type ahead', fakeAsync(async () => {
+    it('should change active item using type ahead', async (...args: unknown[]) => {
       const {fixture, listbox, listboxEl, options} = await setupComponent(ListboxWithOptions);
-      listbox.focus();
-      fixture.detectChanges();
+      await fakeAsync(() => {
+        listbox.focus();
+        fixture.detectChanges();
 
-      dispatchKeyboardEvent(listboxEl, 'keydown', B);
-      fixture.detectChanges();
-      tick(200);
+        dispatchKeyboardEvent(listboxEl, 'keydown', B);
+        fixture.detectChanges();
+        tick(200);
 
-      expect(options[2].isActive()).toBeTrue();
-    }));
+        expect(options[2].isActive()).toBeTrue();
+      })(args);
+    });
 
-    it('should allow custom type ahead label', fakeAsync(async () => {
+    it('should allow custom type ahead label', async (...args: unknown[]) => {
       const {fixture, listbox, listboxEl, options} = await setupComponent(
         ListboxWithCustomTypeahead,
       );
-      listbox.focus();
-      fixture.detectChanges();
+      await fakeAsync(() => {
+        listbox.focus();
+        fixture.detectChanges();
 
-      dispatchKeyboardEvent(listboxEl, 'keydown', B);
-      fixture.detectChanges();
-      tick(200);
+        dispatchKeyboardEvent(listboxEl, 'keydown', B);
+        fixture.detectChanges();
+        tick(200);
 
-      expect(options[2].isActive()).toBeTrue();
-    }));
+        expect(options[2].isActive()).toBeTrue();
+      })(args);
+    });
 
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', async () => {
       const {fixture, listbox, listboxEl, options} = await setupComponent(ListboxWithOptions);
