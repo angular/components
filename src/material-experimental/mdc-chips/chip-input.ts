@@ -213,10 +213,6 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
   _emitChipEnd(event?: KeyboardEvent) {
-    if (!this.inputElement.value && !!event) {
-      this._chipGrid._keydown(event);
-    }
-
     if (!event || this._isSeparatorKey(event)) {
       this.chipEnd.emit({
         input: this.inputElement,

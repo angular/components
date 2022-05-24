@@ -14,16 +14,8 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  AfterViewInit,
   OnInit,
 } from '@angular/core';
-import {
-  ActionInteractionEvent,
-  MDCChipActionInteractionTrigger,
-  MDCChipActionType,
-  MDCChipCssClasses,
-} from '@material/chips';
-import {take} from 'rxjs/operators';
 import {MatChip} from './chip';
 
 /** Event object emitted by MatChipOption when selected or deselected. */
@@ -55,6 +47,12 @@ export class MatChipSelectionChange {
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
     '[class.mdc-evolution-chip--selectable]': 'selectable',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
+    '[class.mdc-evolution-chip--selected]': 'selected',
+    // This class enables the transition on the checkmark. Usually MDC adds it when selection
+    // starts and removes it once the animation is finished. We don't need to go through all
+    // the trouble, because we only care about the selection animation. MDC needs to do it,
+    // because they also have an exit animation that we don't care about.
+    '[class.mdc-evolution-chip--selecting]': '!_animationsDisabled',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
     '[class.mdc-evolution-chip--with-primary-graphic]': '_hasLeadingGraphic()',
     '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
@@ -70,16 +68,7 @@ export class MatChipSelectionChange {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipOption extends MatChip implements OnInit, AfterViewInit {
-  /** Whether the component is done initializing. */
-  private _isInitialized: boolean;
-
-  /**
-   * Selected state that was assigned before the component was initializing
-   * and which needs to be synced back up with the foundation.
-   */
-  private _pendingSelectedState: boolean | undefined;
-
+export class MatChipOption extends MatChip implements OnInit {
   /** Whether the chip list is selectable. */
   chipListSelectable: boolean = true;
 
@@ -105,21 +94,15 @@ export class MatChipOption extends MatChip implements OnInit, AfterViewInit {
   /** Whether the chip is selected. */
   @Input()
   get selected(): boolean {
-    return (
-      this._pendingSelectedState ?? this._chipFoundation.isActionSelected(MDCChipActionType.PRIMARY)
-    );
+    return this._selected;
   }
   set selected(value: BooleanInput) {
     if (this.selectable) {
       const coercedValue = coerceBooleanProperty(value);
-
-      if (this._isInitialized) {
-        this._setSelectedState(coercedValue, false);
-      } else {
-        this._pendingSelectedState = coercedValue;
-      }
+      this._setSelectedState(coercedValue, false);
     }
   }
+  private _selected = false;
 
   /** The ARIA selected applied to the chip. */
   get ariaSelected(): string | null {
@@ -139,19 +122,6 @@ export class MatChipOption extends MatChip implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.role = 'presentation';
-  }
-
-  override ngAfterViewInit() {
-    super.ngAfterViewInit();
-    this._isInitialized = true;
-
-    if (this._pendingSelectedState != null) {
-      // Note that we want to clear the pending state before calling `_setSelectedState`, because
-      // we want it to read the actual selected state instead falling back to the pending one.
-      const selectedState = this._pendingSelectedState;
-      this._pendingSelectedState = undefined;
-      this._setSelectedState(selectedState, false);
-    }
   }
 
   /** Selects the chip. */
@@ -184,39 +154,9 @@ export class MatChipOption extends MatChip implements OnInit, AfterViewInit {
     return this.selected;
   }
 
-  /** Resets the state of the chip when it loses focus. */
-  _blur(): void {
-    // When animations are enabled, Angular may end up removing the chip from the DOM a little
-    // earlier than usual, causing it to be blurred and throwing off the logic in the chip list
-    // that moves focus not the next item. To work around the issue, we defer marking the chip
-    // as not focused until the next time the zone stabilizes.
-    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-      this._ngZone.run(() => {
-        this._hasFocusInternal = false;
-        this._onBlur.next({chip: this});
-      });
-    });
-  }
-
-  protected override _onChipInteraction(event: ActionInteractionEvent) {
-    const {trigger, source} = event.detail;
-
-    // Non-selection interactions should work the same as other chips.
-    if (
-      source !== MDCChipActionType.PRIMARY ||
-      (trigger !== MDCChipActionInteractionTrigger.CLICK &&
-        trigger !== MDCChipActionInteractionTrigger.ENTER_KEY &&
-        trigger !== MDCChipActionInteractionTrigger.SPACEBAR_KEY)
-    ) {
-      super._onChipInteraction(event);
-    } else if (this.selectable && !this.disabled) {
-      // Otherwise only let the event through if the chip is enabled and selectable.
-      this._chipFoundation.handleActionInteraction(event);
-      this.selectionChange.emit({
-        source: this,
-        isUserInput: true,
-        selected: this.selected,
-      });
+  protected override _handlePrimaryActionInteraction() {
+    if (this.selectable && !this.disabled) {
+      this._setSelectedState(!this.selected, true);
     }
   }
 
@@ -227,18 +167,12 @@ export class MatChipOption extends MatChip implements OnInit, AfterViewInit {
 
   private _setSelectedState(isSelected: boolean, isUserInput: boolean) {
     if (isSelected !== this.selected) {
-      this._chipFoundation.setActionSelected(MDCChipActionType.PRIMARY, isSelected);
+      this._selected = isSelected;
       this.selectionChange.emit({
         source: this,
         isUserInput,
         selected: this.selected,
       });
-    }
-
-    // MDC won't assign the selected class until the animation finishes, but that may not
-    // happen if animations are disabled. If we detect such a case, assign the class manually.
-    if (this._animationsDisabled) {
-      this._elementRef.nativeElement.classList.toggle(MDCChipCssClasses.SELECTED, isSelected);
     }
   }
 }

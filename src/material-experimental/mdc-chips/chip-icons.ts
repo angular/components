@@ -7,7 +7,6 @@
  */
 
 import {Directive, InjectionToken} from '@angular/core';
-import {MDCChipActionAdapter, MDCChipTrailingActionFoundation} from '@material/chips';
 import {MatChipAction} from './chip-action';
 
 /**
@@ -60,9 +59,7 @@ export class MatChipTrailingIcon extends MatChipAction {
    */
   override isInteractive = false;
 
-  protected override _createFoundation(adapter: MDCChipActionAdapter) {
-    return new MDCChipTrailingActionFoundation(adapter);
-  }
+  override _isPrimary = false;
 }
 
 /**
@@ -100,19 +97,5 @@ export const MAT_CHIP_REMOVE = new InjectionToken<MatChipRemove>('MatChipRemove'
   providers: [{provide: MAT_CHIP_REMOVE, useExisting: MatChipRemove}],
 })
 export class MatChipRemove extends MatChipAction {
-  protected override _createFoundation(adapter: MDCChipActionAdapter) {
-    return new MDCChipTrailingActionFoundation(adapter);
-  }
-
-  override _handleClick(event: MouseEvent) {
-    // Some consumers bind `click` events directly on the chip
-    // which will also pick up clicks on the remove button.
-    event.stopPropagation();
-    super._handleClick(event);
-  }
-
-  override _handleKeydown(event: KeyboardEvent) {
-    event.stopPropagation();
-    super._handleKeydown(event);
-  }
+  override _isPrimary = false;
 }
