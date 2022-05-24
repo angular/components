@@ -22,12 +22,7 @@ import {
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
 import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
-import {
-  BooleanInput,
-  coerceArray,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-} from '@angular/cdk/coercion';
+import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, combineLatest, defer, merge, Observable, Subject} from 'rxjs';
 import {filter, mapTo, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
@@ -46,6 +41,10 @@ import {CdkCombobox} from '@angular/cdk-experimental/combobox';
 
 /** The next id to use for creating unique DOM IDs. */
 let nextId = 0;
+
+// TODO(mmalerba):
+//   - should listbox wrap be configurable?
+//   - should skipping disabled options be configurable?
 
 /** A selectable option in a listbox. */
 @Directive({
@@ -67,7 +66,15 @@ let nextId = 0;
 })
 export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightable, OnDestroy {
   /** The id of the option's host element. */
-  @Input() id = `cdk-option-${nextId++}`;
+  @Input()
+  get id() {
+    return this._id || this._generatedId;
+  }
+  set id(value) {
+    this._id = value;
+  }
+  private _id: string;
+  private _generatedId = `cdk-option-${nextId++}`;
 
   /** The value of this option. */
   @Input('cdkOption') value: T;
@@ -177,6 +184,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     // In this case, we push focus back to the parent listbox to prevent an extra tab stop when
     // the user performs a shift+tab.
     if (this.listbox.useActiveDescendant) {
+      this.listbox._setActiveOption(this);
       this.listbox.focus();
     }
   }
@@ -223,7 +231,15 @@ export class CdkListbox<T = unknown>
   implements AfterContentInit, OnDestroy, ControlValueAccessor, Validator
 {
   /** The id of the option's host element. */
-  @Input() id = `cdk-listbox-${nextId++}`;
+  @Input()
+  get id() {
+    return this._id || this._generatedId;
+  }
+  set id(value) {
+    this._id = value;
+  }
+  private _id: string;
+  private _generatedId = `cdk-listbox-${nextId++}`;
 
   /** The tabindex to use when the listbox is enabled. */
   @Input('tabindex')
@@ -568,10 +584,18 @@ export class CdkListbox<T = unknown>
     }
   }
 
+  /**
+   * Sets the given option as active.
+   * @param option The option to make active
+   */
+  _setActiveOption(option: CdkOption<T>) {
+    this.listKeyManager.setActiveItem(option);
+  }
+
   /** Called when the listbox receives focus. */
   protected _handleFocus() {
     if (!this.useActiveDescendant) {
-      this.listKeyManager.setActiveItem(this.listKeyManager.activeItem ?? this.options.first);
+      this.listKeyManager.setNextItemActive();
       this._focusActiveOption();
     }
   }
@@ -682,8 +706,11 @@ export class CdkListbox<T = unknown>
    * @param value The list of new selected values.
    */
   private _setSelection(value: readonly T[]) {
+    const coercedValue = this._coerceValue(value);
     this.selectionModel().setSelection(
-      ...this._getValuesWithValidity(this._coerceValue(value), true),
+      ...(!this.multiple && coercedValue.length > 1
+        ? []
+        : this._getValuesWithValidity(coercedValue, true)),
     );
   }
 
