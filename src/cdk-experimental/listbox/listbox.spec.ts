@@ -342,9 +342,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should not change selection on click of a disabled option', async () => {
-      const {fixture, testComponent, listbox, listboxEl, options} = await setupComponent(
-        ListboxWithOptions,
-      );
+      const {fixture, testComponent, listbox, listboxEl} = await setupComponent(ListboxWithOptions);
       listbox.focus();
       fixture.detectChanges();
 
@@ -751,20 +749,20 @@ class ListboxWithFormControl {
 })
 class ListboxWithCustomTypeahead {}
 
-@Component({
-  template: `
-    <div cdkListbox
-         [cdkListboxValue]="value">
-      <div cdkOption="apple">Apple</div>
-      <div cdkOption="orange">Orange</div>
-      <div cdkOption="banana">Banana</div>
-      <div cdkOption="peach">Peach</div>
-    </div>
-  `,
-})
-class ListboxWithBoundValue {
-  value = ['banana'];
-}
+// @Component({
+//   template: `
+//     <div cdkListbox
+//          [cdkListboxValue]="value">
+//       <div cdkOption="apple">Apple</div>
+//       <div cdkOption="orange">Orange</div>
+//       <div cdkOption="banana">Banana</div>
+//       <div cdkOption="peach">Peach</div>
+//     </div>
+//   `,
+// })
+// class ListboxWithBoundValue {
+//   value = ['banana'];
+// }
 
 @Component({
   template: `

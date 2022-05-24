@@ -6,16 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CdkListboxModule} from '@angular/cdk-experimental/listbox';
 import {CommonModule} from '@angular/common';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 
 function dumbCompare(o1: string, o2: string) {
