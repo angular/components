@@ -6,6 +6,7 @@
 @use '../mdc-helpers/mdc-helpers';
 @use '../../material/core/typography/typography';
 @use '../../material/core/theming/theming';
+@use '../../material' as mat;
 
 @mixin _color-palette($color-palette) {
   @include mdc-radio-theme.theme((
