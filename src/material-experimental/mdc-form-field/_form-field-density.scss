@@ -87,8 +87,8 @@
   // the width of prefix container.
   .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded
   .mdc-floating-label--float-above {
-    --mat-mdc-form-field-label-transform:
-        translateY(-#{mdc-textfield.get-outlined-label-position-y($height)}) scale(0.75);
+    --mat-mdc-form-field-label-transform: translateY(
+            -#{mdc-textfield.get-outlined-label-position-y($height)}) scale(0.75);
   }
 
   // Add vertical spacing to the infix to ensure that outlined form fields have their controls

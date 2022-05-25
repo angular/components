@@ -102,6 +102,13 @@ const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
 const DEFAULT_SUBSCRIPT_SIZING: SubscriptSizing = 'fixed';
 
 /**
+ * Default transform for docked floating labels in a MDC text-field. This value has been
+ * extracted from the MDC text-field styles because we programmatically modify the docked
+ * label transform, but do not want to accidentally discard the default label transform.
+ */
+const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
+
+/**
  * Horizontal padding in pixels used by the MDC for the wrapper containing infix.
  * This value is extracted from MDC's Sass variables. See `$padding-horizontal`.
  */
@@ -669,8 +676,13 @@ export class MatFormField
       ((iconPrefixContainer ? iconPrefixContainerWidth - WRAPPER_HORIZONTAL_PADDING : 0) +
         textPrefixContainerWidth);
 
-    // Update the transform x of the floating label to account for the prefix container.
-    floatingLabel.style.transform = `var(--mat-mdc-form-field-label-transform, translateX(${labelHorizontalOffset}px)`;
+    // Update the translateX of the floating label to account for the prefix container,
+    // but allow the CSS to override this setting via a CSS variable when the label is
+    // docked.
+    floatingLabel.style.transform = `var(
+        --mat-mdc-form-field-label-transform,
+        ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset}px
+    )`;
   }
 
   /** Checks whether the form field is attached to the DOM. */
