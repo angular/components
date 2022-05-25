@@ -716,7 +716,6 @@ export class CdkListbox<T = unknown>
 
   /** Update the internal value of the listbox based on the selection model. */
   private _updateInternalValue() {
-    const options = [...this.options];
     const indexCache = new Map<T, number>();
     // Check if we need to remove any values due to them becoming invalid
     // (e.g. if the option was removed from the DOM.)
@@ -726,8 +725,8 @@ export class CdkListbox<T = unknown>
       this.selectionModel().setSelection(...validSelected);
     }
     this.selectionModel().sort((a: T, b: T) => {
-      const aIndex = this._getIndexForValue(indexCache, options, a);
-      const bIndex = this._getIndexForValue(indexCache, options, b);
+      const aIndex = this._getIndexForValue(indexCache, a);
+      const bIndex = this._getIndexForValue(indexCache, b);
       return aIndex - bIndex;
     });
     this.changeDetectorRef.markForCheck();
@@ -736,17 +735,20 @@ export class CdkListbox<T = unknown>
   /**
    * Gets the index of the given value in the given list of options.
    * @param cache The cache of indices found so far
-   * @param options The list of options to search in
    * @param value The value to find
    * @return The index of the value in the options list
    */
-  private _getIndexForValue(cache: Map<T, number>, options: CdkOption<T>[], value: T) {
+  private _getIndexForValue(cache: Map<T, number>, value: T) {
     const isEqual = this.compareWith || Object.is;
     if (!cache.has(value)) {
-      cache.set(
-        value,
-        options.findIndex(option => isEqual(value, option.value)),
-      );
+      let index = -1;
+      for (let i = 0; i < this.options.length; i++) {
+        if (isEqual(value, this.options.get(i)!.value)) {
+          index = i;
+          break;
+        }
+      }
+      cache.set(value, index);
     }
     return cache.get(value)!;
   }
@@ -768,11 +770,16 @@ export class CdkListbox<T = unknown>
       this.options.changes.pipe(startWith(this.options)),
     ]).subscribe(() => {
       const isEqual = this.compareWith ?? Object.is;
-      const options = [...this.options];
-      for (const option of options) {
-        let duplicate = options.find(
-          other => option !== other && isEqual(option.value, other.value),
-        );
+      for (let i = 0; i < this.options.length; i++) {
+        const option = this.options.get(i)!;
+        let duplicate: CdkOption<T> | null = null;
+        for (let j = i + 1; j < this.options.length; j++) {
+          const other = this.options.get(j)!;
+          if (isEqual(option.value, other.value)) {
+            duplicate = other;
+            break;
+          }
+        }
         if (duplicate) {
           // TODO(mmalerba): Link to docs about this.
           if (this.compareWith) {

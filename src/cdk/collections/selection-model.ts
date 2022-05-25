@@ -103,7 +103,12 @@ export class SelectionModel<T> {
    */
   isSelected(value: T): boolean {
     if (this._compareWith) {
-      return [...this._selection].some(v => this._compareWith!(v, value));
+      for (const otherValue of this._selection) {
+        if (this._compareWith(otherValue, value)) {
+          return true;
+        }
+      }
+      return false;
     }
     return this._selection.has(value);
   }
