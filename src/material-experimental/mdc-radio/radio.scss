@@ -86,6 +86,20 @@
   }
 }
 
+// This is necessary because we do not depend on MDC's ripple, but have our own that should be
+// positioned correctly. This can be removed once we start using MDC's ripple implementation.
+.mat-mdc-radio-checked .mdc-radio {
+  &:hover .mat-ripple-element {
+    background: var(--mdc-radio-selected-hover-icon-color);
+  }
+  &:focus .mat-ripple-element {
+    background: var(--mdc-radio-selected-focus-icon-color);
+  }
+  &:active .mat-ripple-element {
+    background: var(--mdc-radio-selected-pressed-icon-color);
+  }
+}
+
 // Element used to provide a larger tap target for users on touch devices.
 .mat-mdc-radio-touch-target {
   @include mdc-helpers.disable-fallback-declarations {
