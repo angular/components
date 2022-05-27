@@ -37,21 +37,16 @@ import {
   mixinColor,
   mixinDisableRipple,
   mixinTabIndex,
+  mixinDisabled,
   RippleGlobalOptions,
 } from '@angular/material-experimental/mdc-core';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 import {take} from 'rxjs/operators';
-import {
-  MatChipAvatar,
-  MatChipTrailingIcon,
-  MatChipRemove,
-  MAT_CHIP_AVATAR,
-  MAT_CHIP_TRAILING_ICON,
-  MAT_CHIP_REMOVE,
-} from './chip-icons';
+import {MatChipAvatar, MatChipTrailingIcon, MatChipRemove} from './chip-icons';
 import {MatChipAction} from './chip-action';
-import {BACKSPACE, DELETE, ENTER, SPACE} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 
 let uid = 0;
 
@@ -65,12 +60,19 @@ export interface MatChipEvent {
  * Boilerplate for applying mixins to MatChip.
  * @docs-private
  */
-abstract class MatChipBase {
-  abstract disabled: boolean;
-  constructor(public _elementRef: ElementRef<HTMLElement>) {}
-}
-
-const _MatChipMixinBase = mixinTabIndex(mixinColor(mixinDisableRipple(MatChipBase), 'primary'), -1);
+const _MatChipMixinBase = mixinTabIndex(
+  mixinColor(
+    mixinDisableRipple(
+      mixinDisabled(
+        class {
+          constructor(public _elementRef: ElementRef<HTMLElement>) {}
+        },
+      ),
+    ),
+    'primary',
+  ),
+  -1,
+);
 
 /**
  * Material design styled Chip base component. Used inside the MatChipSet component.
@@ -79,7 +81,7 @@ const _MatChipMixinBase = mixinTabIndex(mixinColor(mixinDisableRipple(MatChipBas
  */
 @Component({
   selector: 'mat-basic-chip, mat-chip',
-  inputs: ['color', 'disableRipple', 'tabIndex'],
+  inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   exportAs: 'matChip',
   templateUrl: 'chip.html',
   styleUrls: ['chip.css'],
@@ -102,11 +104,11 @@ const _MatChipMixinBase = mixinTabIndex(mixinColor(mixinDisableRipple(MatChipBas
     '[attr.role]': 'role',
     '[attr.tabindex]': 'role ? tabIndex : null',
     '[attr.aria-label]': 'ariaLabel',
-    '(click)': '_handleClick($event)',
     '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: MAT_CHIP, useExisting: MatChip}],
 })
 export class MatChip
   extends _MatChipMixinBase
@@ -147,16 +149,6 @@ export class MatChip
 
   /** ARIA label for the content of the chip. */
   @Input('aria-label') ariaLabel: string | null = null;
-
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-    this._syncActionDisabledStates();
-  }
-  protected _disabled: boolean = false;
 
   private _textElement!: HTMLElement;
 
@@ -248,7 +240,6 @@ export class MatChip
 
   ngAfterViewInit() {
     this._textElement = this._elementRef.nativeElement.querySelector('.mat-mdc-chip-action-label')!;
-    Promise.resolve().then(() => this._syncActionDisabledStates());
 
     if (this._pendingFocus) {
       this._pendingFocus = false;
@@ -289,23 +280,9 @@ export class MatChip
     return !!(this.trailingIcon || this.removeIcon);
   }
 
-  /** Handles click events on the chip. */
-  _handleClick(event: MouseEvent) {
-    const action = this._getSourceAction(event.target as Node);
-
-    if (action) {
-      this._handleClickLikeInteraction(event, action);
-    }
-  }
-
   /** Handles keyboard events on the chip. */
   _handleKeydown(event: KeyboardEvent) {
-    const action = this._getSourceAction(event.target as Node);
-    const keyCode = event.keyCode;
-
-    if (action && (keyCode === ENTER || keyCode === SPACE)) {
-      this._handleClickLikeInteraction(event, action);
-    } else if (keyCode === BACKSPACE || keyCode === DELETE) {
+    if (event.keyCode === BACKSPACE || event.keyCode === DELETE) {
       event.preventDefault();
       this.remove();
     }
@@ -353,22 +330,8 @@ export class MatChip
   }
 
   /** Handles interactions with the primary action of the chip. */
-  protected _handlePrimaryActionInteraction() {
+  _handlePrimaryActionInteraction() {
     // Empty here, but is overwritten in child classes.
-  }
-
-  /** Handles clicks or enter/space presses on a specific action. */
-  private _handleClickLikeInteraction(event: Event, action: MatChipAction) {
-    if (action.isInteractive && !action.disabled) {
-      if (action === this.removeIcon) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.remove();
-      } else if (action === this.primaryAction) {
-        event.preventDefault();
-        this._handlePrimaryActionInteraction();
-      }
-    }
   }
 
   /** Starts the focus monitoring process on the chip. */
@@ -392,10 +355,5 @@ export class MatChip
         }
       }
     });
-  }
-
-  /** Syncs up the disabled state of the actions with the one of the chip. */
-  private _syncActionDisabledStates() {
-    this._getActions().forEach(action => (action.disabled = this._disabled));
   }
 }

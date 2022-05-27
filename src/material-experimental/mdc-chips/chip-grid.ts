@@ -40,7 +40,7 @@ import {
 } from '@angular/material-experimental/mdc-core';
 import {MatFormFieldControl} from '@angular/material-experimental/mdc-form-field';
 import {MatChipTextControl} from './chip-text-control';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, merge} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
@@ -296,7 +296,7 @@ export class MatChipGrid
       this.stateChanges.next();
     });
 
-    this.chipFocusChanges
+    merge(this.chipFocusChanges, this._chips.changes)
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.stateChanges.next());
   }
@@ -449,10 +449,16 @@ export class MatChipGrid
         !this._chips.last.disabled
       ) {
         event.preventDefault();
-        this._focusLastChip();
+
+        if (this._keyManager.activeItem) {
+          this._keyManager.setActiveItem(this._keyManager.activeItem);
+        } else {
+          this._focusLastChip();
+        }
       } else {
-        // Use the super method here since it doesn't check for the input focused state.
-        // This allows focus to escape if there's only one disabled chip left in the list.
+        // Use the super method here since it doesn't check for the input
+        // focused state. This allows focus to escape if there's only one
+        // disabled chip left in the list.
         super._allowFocusEscape();
       }
     } else if (!this._chipInput.focused) {

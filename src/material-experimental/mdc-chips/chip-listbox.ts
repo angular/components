@@ -195,6 +195,14 @@ export class MatChipListbox
     this.chipBlurChanges.pipe(takeUntil(this._destroyed)).subscribe(() => this._blur());
     this.chipSelectionChanges.pipe(takeUntil(this._destroyed)).subscribe(event => {
       if (event.isUserInput) {
+        if (!this.multiple && event.selected) {
+          this._chips.forEach(chip => {
+            if (chip !== event.source) {
+              chip.deselect();
+            }
+          });
+        }
+
         this._propagateChanges();
       }
     });

@@ -17,6 +17,7 @@ import {
   OnInit,
 } from '@angular/core';
 import {MatChip} from './chip';
+import {MAT_CHIP} from './tokens';
 
 /** Event object emitted by MatChipOption when selected or deselected. */
 export class MatChipSelectionChange {
@@ -38,7 +39,7 @@ export class MatChipSelectionChange {
   selector: 'mat-basic-chip-option, mat-chip-option',
   templateUrl: 'chip-option.html',
   styleUrls: ['chip.css'],
-  inputs: ['color', 'disableRipple', 'tabIndex'],
+  inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   host: {
     'class': 'mat-mdc-chip mat-mdc-chip-option mdc-evolution-chip mdc-evolution-chip--filter',
     '[class.mat-mdc-chip-selected]': 'selected',
@@ -64,7 +65,10 @@ export class MatChipSelectionChange {
     '[attr.role]': 'role',
     '[id]': 'id',
   },
-  providers: [{provide: MatChip, useExisting: MatChipOption}],
+  providers: [
+    {provide: MatChip, useExisting: MatChipOption},
+    {provide: MAT_CHIP, useExisting: MatChipOption},
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -97,10 +101,7 @@ export class MatChipOption extends MatChip implements OnInit {
     return this._selected;
   }
   set selected(value: BooleanInput) {
-    if (this.selectable) {
-      const coercedValue = coerceBooleanProperty(value);
-      this._setSelectedState(coercedValue, false);
-    }
+    this._setSelectedState(coerceBooleanProperty(value), false);
   }
   private _selected = false;
 
@@ -126,37 +127,28 @@ export class MatChipOption extends MatChip implements OnInit {
 
   /** Selects the chip. */
   select(): void {
-    if (this.selectable) {
-      this._setSelectedState(true, false);
-    }
+    this._setSelectedState(true, false);
   }
 
   /** Deselects the chip. */
   deselect(): void {
-    if (this.selectable) {
-      this._setSelectedState(false, false);
-    }
+    this._setSelectedState(false, false);
   }
 
   /** Selects this chip and emits userInputSelection event */
   selectViaInteraction(): void {
-    if (this.selectable) {
-      this._setSelectedState(true, true);
-    }
+    this._setSelectedState(true, true);
   }
 
   /** Toggles the current selected state of this chip. */
   toggleSelected(isUserInput: boolean = false): boolean {
-    if (this.selectable) {
-      this._setSelectedState(!this.selected, isUserInput);
-    }
-
+    this._setSelectedState(!this.selected, isUserInput);
     return this.selected;
   }
 
-  protected override _handlePrimaryActionInteraction() {
+  override _handlePrimaryActionInteraction() {
     if (this.selectable && !this.disabled) {
-      this._setSelectedState(!this.selected, true);
+      this.toggleSelected(true);
     }
   }
 

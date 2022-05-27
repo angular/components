@@ -34,6 +34,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
 import {takeUntil} from 'rxjs/operators';
+import {MAT_CHIP} from './tokens';
 
 /** Represents an event fired on an individual `mat-chip` when it is edited. */
 export interface MatChipEditedEvent extends MatChipEvent {
@@ -49,7 +50,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
   selector: 'mat-chip-row, mat-basic-chip-row',
   templateUrl: 'chip-row.html',
   styleUrls: ['chip.css'],
-  inputs: ['color', 'disableRipple', 'tabIndex'],
+  inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   host: {
     'class': 'mat-mdc-chip mat-mdc-chip-row mdc-evolution-chip',
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
@@ -70,7 +71,10 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '(mousedown)': '_mousedown($event)',
     '(dblclick)': '_doubleclick($event)',
   },
-  providers: [{provide: MatChip, useExisting: MatChipRow}],
+  providers: [
+    {provide: MatChip, useExisting: MatChipRow},
+    {provide: MAT_CHIP, useExisting: MatChipRow},
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -181,21 +185,18 @@ export class MatChipRow extends MatChip implements AfterViewInit {
   }
 
   private _onEditFinish() {
-    if (this.primaryAction) {
-      // If the edit input is still focused or focus was returned to the body after it was destroyed,
-      // return focus to the chip contents.
-      if (
-        this._document.activeElement === this._getEditInput().getNativeElement() ||
-        this._document.activeElement === this._document.body
-      ) {
-        this.primaryAction.focus();
-      }
-
-      this.primaryAction.isInteractive = true;
-    }
-
-    this.edited.emit({chip: this, value: this._getEditInput().getValue()});
     this._isEditing = false;
+    this.primaryAction.isInteractive = true;
+    this.edited.emit({chip: this, value: this._getEditInput().getValue()});
+
+    // If the edit input is still focused or focus was returned to the body after it was destroyed,
+    // return focus to the chip contents.
+    if (
+      this._document.activeElement === this._getEditInput().getNativeElement() ||
+      this._document.activeElement === this._document.body
+    ) {
+      this.primaryAction.focus();
+    }
   }
 
   /**

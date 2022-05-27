@@ -6,15 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, InjectionToken} from '@angular/core';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {Directive} from '@angular/core';
 import {MatChipAction} from './chip-action';
-
-/**
- * Injection token that can be used to reference instances of `MatChipAvatar`. It serves as
- * alternative token to the actual `MatChipAvatar` class which could cause unnecessary
- * retention of the class and its directive metadata.
- */
-export const MAT_CHIP_AVATAR = new InjectionToken<MatChipAvatar>('MatChipAvatar');
+import {MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 
 /**
  * Directive to add CSS classes to chip leading icon.
@@ -29,15 +24,6 @@ export const MAT_CHIP_AVATAR = new InjectionToken<MatChipAvatar>('MatChipAvatar'
   providers: [{provide: MAT_CHIP_AVATAR, useExisting: MatChipAvatar}],
 })
 export class MatChipAvatar {}
-
-/**
- * Injection token that can be used to reference instances of `MatChipTrailingIcon`. It serves as
- * alternative token to the actual `MatChipTrailingIcon` class which could cause unnecessary
- * retention of the class and its directive metadata.
- */
-export const MAT_CHIP_TRAILING_ICON = new InjectionToken<MatChipTrailingIcon>(
-  'MatChipTrailingIcon',
-);
 
 /**
  * Directive to add CSS classes to and configure attributes for chip trailing icon.
@@ -61,13 +47,6 @@ export class MatChipTrailingIcon extends MatChipAction {
 
   override _isPrimary = false;
 }
-
-/**
- * Injection token that can be used to reference instances of `MatChipRemove`. It serves as
- * alternative token to the actual `MatChipRemove` class which could cause unnecessary
- * retention of the class and its directive metadata.
- */
-export const MAT_CHIP_REMOVE = new InjectionToken<MatChipRemove>('MatChipRemove');
 
 /**
  * Directive to remove the parent chip when the trailing icon is clicked or
@@ -98,4 +77,20 @@ export const MAT_CHIP_REMOVE = new InjectionToken<MatChipRemove>('MatChipRemove'
 })
 export class MatChipRemove extends MatChipAction {
   override _isPrimary = false;
+
+  override _handleClick(event: MouseEvent): void {
+    if (!this.disabled) {
+      event.stopPropagation();
+      event.preventDefault();
+      this._parentChip.remove();
+    }
+  }
+
+  override _handleKeydown(event: KeyboardEvent) {
+    if ((event.keyCode === ENTER || event.keyCode === SPACE) && !this.disabled) {
+      event.stopPropagation();
+      event.preventDefault();
+      this._parentChip.remove();
+    }
+  }
 }

@@ -313,16 +313,6 @@ describe('MDC-based Row Chips', () => {
         expect(document.activeElement).toBe(primaryAction);
       }));
 
-      it('should focus the chip content if the body has focus on completion', fakeAsync(() => {
-        const chipValue = 'chip value';
-        editInputInstance.setValue(chipValue);
-        (document.activeElement as HTMLElement).blur();
-        dispatchKeyboardEvent(getEditInput(), 'keydown', ENTER);
-        fixture.detectChanges();
-        flush();
-        expect(document.activeElement).toBe(primaryAction);
-      }));
-
       it('should not change focus if another element has focus on completion', fakeAsync(() => {
         const chipValue = 'chip value';
         editInputInstance.setValue(chipValue);
