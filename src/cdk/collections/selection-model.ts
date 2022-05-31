@@ -40,7 +40,7 @@ export class SelectionModel<T> {
     private _multiple = false,
     initiallySelectedValues?: T[],
     private _emitChanges = true,
-    private _compareWith?: (o1: T, o2: T) => boolean,
+    public compareWith?: (o1: T, o2: T) => boolean,
   ) {
     if (initiallySelectedValues && initiallySelectedValues.length) {
       if (_multiple) {
@@ -92,19 +92,23 @@ export class SelectionModel<T> {
 
   /**
    * Clears all of the selected values.
+   * @param flushEvent Whether to flush the changes in an event.
+   *   If false, the changes to the selection will be flushed along with the next event.
    */
-  clear(): void {
+  clear(flushEvent = true): void {
     this._unmarkAll();
-    this._emitChangeEvent();
+    if (flushEvent) {
+      this._emitChangeEvent();
+    }
   }
 
   /**
    * Determines whether a value is selected.
    */
   isSelected(value: T): boolean {
-    if (this._compareWith) {
+    if (this.compareWith) {
       for (const otherValue of this._selection) {
-        if (this._compareWith(otherValue, value)) {
+        if (this.compareWith(otherValue, value)) {
           return true;
         }
       }
