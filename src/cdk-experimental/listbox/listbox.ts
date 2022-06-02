@@ -36,7 +36,7 @@ import {
 import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
-import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -82,9 +82,9 @@ class ListboxSelectionModel<T> extends SelectionModel<T> {
     // The super class is always in multi-selection mode, so we need to override the behavior if
     // this selection model actually belongs to a single-selection listbox.
     if (this.multiple) {
-      super.select(...values);
+      return super.select(...values);
     } else {
-      super.setSelection(...values);
+      return super.setSelection(...values);
     }
   }
 }
@@ -545,7 +545,7 @@ export class CdkListbox<T = unknown>
       if (this._invalid) {
         this.selectionModel.clear(false);
       }
-      this.selectionModel.select(...this.options.toArray().map(option => option.value));
+      this.selectionModel.select(...this.options.map(option => option.value));
     }
   }
 
@@ -635,15 +635,9 @@ export class CdkListbox<T = unknown>
   protected triggerOption(option: CdkOption<T> | null) {
     if (option && !option.disabled) {
       this._lastTriggered = option;
-      let changed = false;
-      this.selectionModel.changed
-        .pipe(take(1), takeUntil(this.destroyed))
-        .subscribe(() => (changed = true));
-      if (this.multiple) {
-        this.toggle(option);
-      } else {
-        this.select(option);
-      }
+      const changed = this.multiple
+        ? this.selectionModel.toggle(option.value)
+        : this.selectionModel.select(option.value);
       if (changed) {
         this._onChange(this.value);
         this.valueChange.next({
@@ -669,10 +663,12 @@ export class CdkListbox<T = unknown>
     }
     this._lastTriggered = trigger;
     const isEqual = this.compareWith ?? Object.is;
-    const options = this.options.toArray();
-    const updateValues = options
-      .slice(Math.max(0, Math.min(from, to)), Math.min(options.length, Math.max(from, to) + 1))
-      .map(option => option.value);
+    const updateValues = this.options
+      .map(option => option.value)
+      .slice(
+        Math.max(0, Math.min(from, to)),
+        Math.min(this.options.length, Math.max(from, to) + 1),
+      );
     const selected = [...this.value];
     for (const updateValue of updateValues) {
       const selectedIndex = selected.findIndex(selectedValue =>
@@ -684,11 +680,7 @@ export class CdkListbox<T = unknown>
         selected.splice(selectedIndex, 1);
       }
     }
-    let changed = false;
-    this.selectionModel.changed
-      .pipe(take(1), takeUntil(this.destroyed))
-      .subscribe(() => (changed = true));
-    this.selectionModel.setSelection(...selected);
+    let changed = this.selectionModel.setSelection(...selected);
     if (changed) {
       this._onChange(this.value);
       this.valueChange.next({
@@ -989,6 +981,7 @@ export class CdkListbox<T = unknown>
     return values.filter(value => !validValues.some(validValue => isEqual(value, validValue)));
   }
 
+  /** Get the index of the last triggered option. */
   private _getLastTriggeredIndex() {
     const index = this.options.toArray().indexOf(this._lastTriggered!);
     return index === -1 ? null : index;

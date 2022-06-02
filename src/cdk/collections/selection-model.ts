@@ -56,23 +56,36 @@ export class SelectionModel<T> {
 
   /**
    * Selects a value or an array of values.
+   * @param values The values to select
+   * @return Whether the selection changed as a result of this call
    */
-  select(...values: T[]): void {
+  select(...values: T[]) {
     this._verifyValueAssignment(values);
     values.forEach(value => this._markSelected(value));
+    const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
+    return changed;
   }
 
   /**
    * Deselects a value or an array of values.
+   * @param values The values to deselect
+   * @return Whether the selection changed as a result of this call
    */
-  deselect(...values: T[]): void {
+  deselect(...values: T[]) {
     this._verifyValueAssignment(values);
     values.forEach(value => this._unmarkSelected(value));
+    const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
+    return changed;
   }
 
-  setSelection(...values: T[]): void {
+  /**
+   * Sets the selected values
+   * @param values The new selected values
+   * @return Whether the selection changed as a result of this call
+   */
+  setSelection(...values: T[]): boolean {
     this._verifyValueAssignment(values);
     const oldValues = this.selected;
     const newSelectedSet = new Set(values);
@@ -80,26 +93,33 @@ export class SelectionModel<T> {
     oldValues
       .filter(value => !newSelectedSet.has(value))
       .forEach(value => this._unmarkSelected(value));
+    const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
+    return changed;
   }
 
   /**
    * Toggles a value between selected and deselected.
+   * @param value The value to toggle
+   * @return Whether the selection changed as a result of this call
    */
-  toggle(value: T): void {
-    this.isSelected(value) ? this.deselect(value) : this.select(value);
+  toggle(value: T) {
+    return this.isSelected(value) ? this.deselect(value) : this.select(value);
   }
 
   /**
    * Clears all of the selected values.
    * @param flushEvent Whether to flush the changes in an event.
    *   If false, the changes to the selection will be flushed along with the next event.
+   * @return Whether the selection changed as a result of this call
    */
-  clear(flushEvent = true): void {
+  clear(flushEvent = true) {
     this._unmarkAll();
+    const changed = this._hasQueuedChanges();
     if (flushEvent) {
       this._emitChangeEvent();
     }
+    return changed;
   }
 
   /**
@@ -207,6 +227,11 @@ export class SelectionModel<T> {
     if (values.length > 1 && !this._multiple && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMultipleValuesInSingleSelectionError();
     }
+  }
+
+  /** Whether there are queued up change to be emitted. */
+  private _hasQueuedChanges() {
+    return !!(this._deselectedToEmit.length || this._selectedToEmit.length);
   }
 }
 
