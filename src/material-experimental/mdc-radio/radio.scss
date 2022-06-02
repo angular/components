@@ -54,6 +54,10 @@
     // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
     @include mdc-radio-theme.focus-indicator-color(
       var(--mat-mdc-radio-checked-ripple-color, transparent));
+
+    .mat-ripple-element {
+      background-color: var(--mat-mdc-radio-checked-ripple-color, transparent);
+    }
   }
 
   // This is necessary because we do not depend on MDC's ripple, but have our own that should be
@@ -83,20 +87,6 @@
     & ~ .mdc-radio__background .mdc-radio__outer-circle {
       border-color: var(--mdc-radio-unselected-focus-icon-color, black);
     }
-  }
-}
-
-// This is necessary because we do not depend on MDC's ripple, but have our own that should be
-// positioned correctly. This can be removed once we start using MDC's ripple implementation.
-.mat-mdc-radio-checked .mdc-radio {
-  &:hover .mat-ripple-element {
-    background: var(--mdc-radio-selected-hover-icon-color);
-  }
-  &:focus .mat-ripple-element {
-    background: var(--mdc-radio-selected-focus-icon-color);
-  }
-  &:active .mat-ripple-element {
-    background: var(--mdc-radio-selected-pressed-icon-color);
   }
 }
 
