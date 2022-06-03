@@ -23,8 +23,8 @@ export async function assertValidFrameworkPeerDependency(newVersion: SemVer) {
   const isMajorWithPrerelease =
     newVersion.minor === 0 && newVersion.patch === 0 && !!newVersion.prerelease[0];
   const requiredRange = isMajorWithPrerelease
-    ? `@^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0`
-    : `@^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0`;
+    ? `^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0`
+    : `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0`;
 
   if (requiredRange !== currentVersionRange) {
     error(
