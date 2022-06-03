@@ -1,4 +1,5 @@
-import {ReleaseConfig, error, red} from '@angular/dev-infra-private/ng-dev';
+import {SemVer} from 'semver';
+import {ReleaseConfig} from '@angular/dev-infra-private/ng-dev';
 import {assertValidFrameworkPeerDependency} from '../tools/release-checks/check-framework-peer-dependency';
 import {assertValidUpdateMigrationCollections} from '../tools/release-checks/check-migration-collections';
 import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output';
@@ -48,7 +49,9 @@ export const release: ReleaseConfig = {
     const {performNpmReleaseBuild} = await import('../scripts/build-packages-dist');
     return performNpmReleaseBuild();
   },
-  prereleaseCheck: async (newVersion, builtPackagesWithInfo) => {
+  prereleaseCheck: async (newVersionStr, builtPackagesWithInfo) => {
+    const newVersion = new SemVer(newVersionStr);
+
     await assertValidFrameworkPeerDependency(newVersion);
     await assertValidUpdateMigrationCollections(newVersion);
     await assertValidNpmPackageOutput(builtPackagesWithInfo, newVersion);
