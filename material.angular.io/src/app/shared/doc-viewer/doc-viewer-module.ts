@@ -26,7 +26,6 @@ import {CodeSnippet} from '../example-viewer/code-snippet';
     StackBlitzButtonModule
   ],
   declarations: [DocViewer, ExampleViewer, HeaderLink, CodeSnippet],
-  entryComponents: [ExampleViewer, HeaderLink],
-  exports: [DocViewer, ExampleViewer, HeaderLink],
+  exports: [DocViewer, ExampleViewer, HeaderLink]
 })
 export class DocViewerModule { }
