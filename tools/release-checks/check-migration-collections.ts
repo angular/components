@@ -1,8 +1,8 @@
-import {error} from '@angular/dev-infra-private/ng-dev';
-import {dirname, join} from 'path';
-import chalk from 'chalk';
-import {releasePackages} from '../../.ng-dev/release';
+import {error, ReleasePrecheckError} from '@angular/dev-infra-private/ng-dev';
 import {readFileSync} from 'fs';
+import {dirname, join} from 'path';
+import {releasePackages} from '../../.ng-dev/release';
+import chalk from 'chalk';
 import semver from 'semver';
 
 /** Path to the directory containing all package sources. */
@@ -21,7 +21,7 @@ export async function assertValidUpdateMigrationCollections(newVersion: semver.S
   if (failures.length) {
     error(chalk.red(`  ✘   Failures in ng-update migration collection detected:`));
     failures.forEach(f => error(f));
-    process.exit(1);
+    throw new ReleasePrecheckError();
   }
 }
 
