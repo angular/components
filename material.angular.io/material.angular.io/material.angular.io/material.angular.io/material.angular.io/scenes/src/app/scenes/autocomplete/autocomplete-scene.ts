@@ -19,7 +19,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
   templateUrl: './autocomplete-scene.html',
 })
 export class AutocompleteScene implements AfterViewInit {
-  myControl = new FormControl();
+  myControl = new FormControl('');
   options: string[] = ['hello', 'hello world'];
 
   @ViewChild(MatInput) input!: MatInput;
