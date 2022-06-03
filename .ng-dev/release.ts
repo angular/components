@@ -46,9 +46,7 @@ export const release: ReleaseConfig = {
     // The `performNpmReleaseBuild` function is loaded at runtime as loading of the
     // script results in an invocation of Bazel for any `yarn ng-dev` command.
     const {performNpmReleaseBuild} = await import('../scripts/build-packages-dist');
-    error(red('DAMN!!!'));
-    throw new Error('d');
-    //  return performNpmReleaseBuild();
+    return performNpmReleaseBuild();
   },
   prereleaseCheck: async (newVersion, builtPackagesWithInfo) => {
     await assertValidFrameworkPeerDependency(newVersion);
