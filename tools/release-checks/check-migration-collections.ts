@@ -82,6 +82,7 @@ function checkMigrationCollection(
         semver.lte(schematicVersion, targetVersion)
       );
     } catch (e) {
+      console.error(e);
       failures.push(`Could not parse version for migration: ${name}` + JSON.stringify(e));
     }
   });
