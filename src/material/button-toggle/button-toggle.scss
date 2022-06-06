@@ -128,7 +128,8 @@ $legacy-border-radius: 2px !default;
 }
 
 @include cdk.high-contrast(active, off) {
-  .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  .mat-button-toggle-checked.mat-button-toggle-appearance-standard 
+  .mat-button-toggle-focus-overlay {
     // In high contrast mode, we use a border for the checked state because backgrounds
     // can either be opaque or transparent. We set the border height to a value that is larger
     // than usual button toggles are. This allows us to keep this high contrast style in the
