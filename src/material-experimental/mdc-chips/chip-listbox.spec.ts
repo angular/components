@@ -101,6 +101,26 @@ describe('MDC-based MatChipListbox', () => {
         expect(chipListboxNativeElement.getAttribute('role')).toBe('grid');
       });
 
+      it('should be able to remove the role', () => {
+        expect(chipListboxNativeElement.getAttribute('role')).toBe('listbox');
+
+        testComponent.role = null;
+        fixture.detectChanges();
+
+        expect(chipListboxNativeElement.hasAttribute('role')).toBe(false);
+      });
+
+      it('should remove the aria attributes when the role is removed', () => {
+        testComponent.role = null;
+        fixture.detectChanges();
+
+        expect(chipListboxNativeElement.getAttribute('tabindex')).toBe('-1');
+
+        for (let i = 0; i < chipListboxNativeElement.attributes.length; i++) {
+          expect(chipListboxNativeElement.attributes.item(i)?.name).not.toContain('aria-');
+        }
+      });
+
       it('should not set aria-required when it does not have a role', () => {
         testComponent.chips = [];
         fixture.detectChanges();
@@ -775,7 +795,7 @@ class StandardChipListbox {
   chipDeselect: (index?: number) => void = () => {};
   tabIndex: number = 0;
   chips = [0, 1, 2, 3, 4];
-  role: string | null = null;
+  role: string | null | undefined = undefined;
 }
 
 @Component({

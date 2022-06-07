@@ -186,13 +186,15 @@ describe('MDC-based Option Chips', () => {
 
       it('should have the correct role', () => {
         expect(chipNativeElement.getAttribute('role')).toBe('presentation');
+        expect(chipNativeElement.querySelector('button')!.getAttribute('role')).toBe('option');
       });
 
       it('should be able to set a custom role', () => {
-        chipInstance.role = 'button';
+        fixture.componentInstance.role = 'button';
         fixture.detectChanges();
 
-        expect(chipNativeElement.getAttribute('role')).toBe('button');
+        expect(chipNativeElement.getAttribute('role')).toBe('presentation');
+        expect(chipNativeElement.querySelector('button')!.getAttribute('role')).toBe('button');
       });
     });
 
@@ -312,6 +314,7 @@ describe('MDC-based Option Chips', () => {
       <div *ngIf="shouldShow">
         <mat-chip-option [selectable]="selectable"
                  [color]="color" [selected]="selected" [disabled]="disabled"
+                 [role]="role"
                  (destroyed)="chipDestroy($event)"
                  (selectionChange)="chipSelectionChange($event)">
           <span class="avatar" matChipAvatar></span>
@@ -322,12 +325,13 @@ describe('MDC-based Option Chips', () => {
 })
 class SingleChip {
   @ViewChild(MatChipListbox) chipList: MatChipListbox;
-  disabled: boolean = false;
-  name: string = 'Test';
-  color: string = 'primary';
-  selected: boolean = false;
-  selectable: boolean = true;
-  shouldShow: boolean = true;
+  disabled = false;
+  name = 'Test';
+  color = 'primary';
+  selected = false;
+  selectable = true;
+  shouldShow = true;
+  role = 'option';
 
   chipDestroy: (event?: MatChipEvent) => void = () => {};
   chipSelectionChange: (event?: MatChipSelectionChange) => void = () => {};

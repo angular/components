@@ -65,13 +65,13 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   host: {
     'class': 'mdc-evolution-chip-set mat-mdc-chip-listbox',
     '[attr.role]': 'role',
-    '[tabIndex]': 'empty ? -1 : tabIndex',
+    '[tabIndex]': '(empty || !role) ? -1 : tabIndex',
     // TODO: replace this binding with use of AriaDescriber
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-required]': 'role ? required : null',
-    '[attr.aria-disabled]': 'disabled.toString()',
-    '[attr.aria-multiselectable]': 'multiple',
-    '[attr.aria-orientation]': 'ariaOrientation',
+    '[attr.aria-disabled]': 'role ? disabled.toString() : null',
+    '[attr.aria-multiselectable]': 'role ? multiple : null',
+    '[attr.aria-orientation]': 'role ? ariaOrientation : null',
     '[class.mat-mdc-chip-list-disabled]': 'disabled',
     '[class.mat-mdc-chip-list-required]': 'required',
     '(focus)': 'focus()',

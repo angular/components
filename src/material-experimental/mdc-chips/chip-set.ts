@@ -104,7 +104,7 @@ export class MatChipSet
   /** The ARIA role applied to the chip set. */
   @Input()
   get role(): string | null {
-    if (this._explicitRole) {
+    if (this._explicitRole !== undefined) {
       return this._explicitRole;
     }
 
@@ -114,7 +114,7 @@ export class MatChipSet
   set role(value: string | null) {
     this._explicitRole = value;
   }
-  private _explicitRole: string | null = null;
+  private _explicitRole: string | null | undefined;
 
   /** Whether any of the chips inside of this chip-set has focus. */
   get focused(): boolean {

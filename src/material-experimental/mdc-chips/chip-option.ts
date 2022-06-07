@@ -14,7 +14,6 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  OnInit,
 } from '@angular/core';
 import {MatChip} from './chip';
 import {MAT_CHIP} from './tokens';
@@ -62,7 +61,6 @@ export class MatChipSelectionChange {
     '[class.mat-mdc-chip-with-trailing-icon]': '_hasTrailingIcon()',
     '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
-    '[attr.role]': 'role',
     '[id]': 'id',
   },
   providers: [
@@ -72,7 +70,7 @@ export class MatChipSelectionChange {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipOption extends MatChip implements OnInit {
+export class MatChipOption extends MatChip {
   /** Whether the chip list is selectable. */
   chipListSelectable: boolean = true;
 
@@ -105,6 +103,10 @@ export class MatChipOption extends MatChip implements OnInit {
   }
   private _selected = false;
 
+  /** Role for the root of the chip. */
+  @Input()
+  override role: string | null = 'option';
+
   /** The ARIA selected applied to the chip. */
   get ariaSelected(): string | null {
     // Remove the `aria-selected` when the chip is deselected in single-selection mode, because
@@ -120,10 +122,6 @@ export class MatChipOption extends MatChip implements OnInit {
   /** Emitted when the chip is selected or deselected. */
   @Output() readonly selectionChange: EventEmitter<MatChipSelectionChange> =
     new EventEmitter<MatChipSelectionChange>();
-
-  ngOnInit() {
-    this.role = 'presentation';
-  }
 
   /** Selects the chip. */
   select(): void {
@@ -169,5 +167,10 @@ export class MatChipOption extends MatChip implements OnInit {
         });
       }
     }
+  }
+
+  override _getRootElementRole() {
+    // The actual role is on the underlying button.
+    return 'presentation';
   }
 }

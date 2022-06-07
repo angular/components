@@ -101,7 +101,7 @@ const _MatChipMixinBase = mixinTabIndex(
     '[class.mat-mdc-chip-with-trailing-icon]': '_hasTrailingIcon()',
     '[class._mat-animation-noopable]': '_animationsDisabled',
     '[id]': 'id',
-    '[attr.role]': 'role',
+    '[attr.role]': '_getRootElementRole()',
     '[attr.tabindex]': 'role ? tabIndex : null',
     '[attr.aria-label]': 'ariaLabel',
     '(keydown)': '_handleKeydown($event)',
@@ -332,6 +332,14 @@ export class MatChip
   /** Handles interactions with the primary action of the chip. */
   _handlePrimaryActionInteraction() {
     // Empty here, but is overwritten in child classes.
+  }
+
+  /**
+   * Gets the role that should be assigned to the root element of the chip.
+   * Used to allow child classes to override the host binding.
+   */
+  _getRootElementRole() {
+    return this.role;
   }
 
   /** Starts the focus monitoring process on the chip. */
