@@ -13,9 +13,6 @@
 
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
-    &.cdk-keyboard-focused, &.cdk-program-focused {
-      outline: solid 3px;
-    }
 
     &[aria-selected='true'] {
       .mat-step-label {
@@ -81,4 +78,10 @@
 .mat-step-header .mat-step-header-ripple {
   @include layout-common.fill;
   pointer-events: none;
+}
+
+// Stepper headers have the focus indicator as a descendant,
+// because `::before` is used for other styling.
+.mat-step-header:focus .mat-focus-indicator::before {
+  content: '';
 }

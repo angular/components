@@ -104,3 +104,9 @@ mat-action-list button {
     border: 0;
   }
 }
+
+// For list items, render the focus indicator when the parent
+// listem item is focused.
+.mat-mdc-list-item:focus > .mat-mdc-focus-indicator::before {
+  content: '';
+}

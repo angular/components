@@ -1,0 +1,63 @@
+@use 'sass:map';
+@use '../style/layout-common';
+
+// Private sass variables that will be used as reference throughout component stylesheets.
+$default-border-width: 3px;
+$default-border-style: solid;
+$default-border-color: transparent;
+$default-border-radius: 4px;
+
+// Mixin that renders the focus indicator structural styles.
+@mixin private-structural-styling($prefix) {
+  .#{$prefix}-focus-indicator {
+    position: relative;
+
+    &::before {
+      @include layout-common.fill();
+      box-sizing: border-box;
+      pointer-events: none;
+      border: var(
+          --#{$prefix}-focus-indicator-border-width,
+          #{$default-border-width}
+        )
+        var(
+          --#{$prefix}-focus-indicator-border-style,
+          #{$default-border-style}
+        )
+        var(
+          --#{$prefix}-focus-indicator-border-color,
+          #{$default-border-color}
+        );
+      border-radius: var(
+        --#{$prefix}-focus-indicator-border-radius,
+        #{$default-border-radius}
+      );
+    }
+
+    // By default, render the focus indicator when the focus indicator host element takes focus.
+    // Defining a pseudo element's content will cause it to render.
+    &:focus::before {
+      content: '';
+    }
+  }
+}
+
+// Mixin that handles null values and defines CSS variables accordingly.
+@mixin _create-variable($name, $value) {
+  @if ($value) {
+    --#{$name}: #{$value};
+  }
+}
+
+// Mixin that dedups CSS variables for the strong-focus-indicators mixin.
+@mixin private-customize-focus-indicators($config, $prefix) {
+  $border-style: map.get($config, border-style);
+  $border-width: map.get($config, border-width);
+  $border-radius: map.get($config, border-radius);
+  $border-color: map.get($config, border-color);
+
+  @include _create-variable('#{$prefix}-focus-indicator-border-style', $border-style);
+  @include _create-variable('#{$prefix}-focus-indicator-border-width', $border-width);
+  @include _create-variable('#{$prefix}-focus-indicator-border-radius', $border-radius);
+  @include _create-variable('#{$prefix}-focus-indicator-border-color', $border-color);
+}

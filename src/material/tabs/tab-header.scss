@@ -26,6 +26,12 @@
   position: relative;
 }
 
+// For the tab element, default inset/offset values are necessary to ensure that
+// the focus indicator is sufficiently contrastive and renders appropriately.
+.mat-focus-indicator.mat-tab-label::before {
+  margin: 5px;
+}
+
 @media (variables.$xsmall) {
   .mat-tab-label {
     min-width: 72px;

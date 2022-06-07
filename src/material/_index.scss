@@ -32,6 +32,7 @@
 @forward './table/table-flex-styles' show private-table-flex-styles;
 @forward './core/style/menu-common' as private-menu-common-*;
 @forward './core/style/button-common' as private-button-common-*;
+@forward './core/style/focus-indicators' as focus-indicators-private-*;
 
 // Structural
 @forward './core/core' show core;
@@ -53,8 +54,6 @@
   optgroup-theme;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-theme' as pseudo-checkbox-* show
   pseudo-checkbox-color, pseudo-checkbox-typography, pseudo-checkbox-theme;
-@forward './core/focus-indicators/focus-indicators-theme' as strong-focus-indicators-* show
-  strong-focus-indicators-color, strong-focus-indicators-theme;
 @forward './autocomplete/autocomplete-theme' as autocomplete-* show autocomplete-theme,
   autocomplete-color, autocomplete-typography;
 @forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography;

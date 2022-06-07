@@ -27,3 +27,9 @@
     min-width: 72px;
   }
 }
+
+// For the tab-link element, default inset/offset values are necessary to ensure that
+// the focus indicator is sufficiently contrastive and renders appropriately.
+.mat-mdc-focus-indicator.mat-mdc-tab-link::before {
+  margin: 5px;
+}
