@@ -6,11 +6,20 @@
     "cleanUrls": true,
     "rewrites": [
       {
-        "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
+        "source": "**/!(*.*)",
         "destination": "/index.html"
       }
     ],
     "headers": [
+      {
+        "source": "**/!(*.*)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
       {
         "source": "/assets/versions.json",
         "headers": [
