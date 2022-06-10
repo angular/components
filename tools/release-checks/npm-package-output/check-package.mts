@@ -1,5 +1,4 @@
-import {error} from '@angular/dev-infra-private/ng-dev';
-import chalk from 'chalk';
+import {Log, bold, yellow} from '@angular/dev-infra-private/ng-dev';
 import {existsSync} from 'fs';
 import {sync as glob} from 'glob';
 import {basename, dirname, join} from 'path';
@@ -11,7 +10,7 @@ import {
   checkMaterialPackage,
   checkPrimaryPackageJson,
   checkTypeDefinitionFile,
-} from './output-validations';
+} from './output-validations.mjs';
 
 /** Glob that matches all JavaScript files within a release package. */
 const releaseJsFilesGlob = '+(fesm2015|esm2015|bundles)/**/*.js';
@@ -106,17 +105,17 @@ export function checkReleasePackage(
 
 /** Prints the grouped failures for a specified package. */
 function printGroupedFailures(packageName: string, failures: PackageFailures) {
-  error(chalk.red(chalk.bold(`  ⚠   Package: "${packageName}" has failures:`)));
+  Log.error(bold(`  ⚠   Package: "${packageName}" has failures:`));
   failures.forEach((affectedFiles, failureMessage) => {
-    error(chalk.yellow(`  ⮑   ${failureMessage}`));
+    Log.error(yellow(`  ⮑   ${failureMessage}`));
 
     if (affectedFiles.length) {
       affectedFiles.forEach(affectedFile => {
-        error(chalk.yellow(`        ${affectedFile}`));
+        Log.error(yellow(`        ${affectedFile}`));
       });
     }
 
     // Add an extra line so that subsequent failure message groups are clearly separated.
-    error();
+    Log.error();
   });
 }

@@ -3,9 +3,9 @@
  * and runs sanity checks against the NPM package output.
  */
 
-import {performNpmReleaseBuild} from './build-packages-dist';
-import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output';
-import * as semver from 'semver';
+import {performNpmReleaseBuild} from './build-packages-dist.mjs';
+import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output/index.mjs';
+import semver from 'semver';
 
 const {version} = require('../package.json');
 

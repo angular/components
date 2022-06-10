@@ -1,7 +1,7 @@
 import {existsSync, readFileSync} from 'fs';
 import {sync as glob} from 'glob';
 import {basename, dirname, isAbsolute, join} from 'path';
-import * as semver from 'semver';
+import semver from 'semver';
 
 import ts from 'typescript';
 

@@ -1,10 +1,9 @@
-import {error, ReleasePrecheckError} from '@angular/dev-infra-private/ng-dev';
-import chalk from 'chalk';
+import {Log, bold, yellow, ReleasePrecheckError} from '@angular/dev-infra-private/ng-dev';
 import {existsSync, readFileSync} from 'fs';
 import {dirname, join} from 'path';
 import semver from 'semver';
 
-import {releasePackages} from '../../.ng-dev/release';
+import {releasePackages} from '../../.ng-dev/release.mjs';
 
 /** Path to the directory containing all package sources. */
 const packagesDir = join(__dirname, '../../src');
@@ -25,13 +24,13 @@ export async function assertValidUpdateMigrationCollections(newVersion: semver.S
 
     failures.push(
       ...checkPackageJsonMigrations(packageJsonPath, newVersion).map(f =>
-        chalk.yellow(`       ⮑  ${chalk.bold(packageName)}: ${f}`),
+        yellow(`       ⮑  ${bold(packageName)}: ${f}`),
       ),
     );
   });
   if (failures.length) {
-    error(chalk.red(`  ✘   Failures in ng-update migration collection detected:`));
-    failures.forEach(f => error(f));
+    Log.error(`  ✘   Failures in ng-update migration collection detected:`);
+    failures.forEach(f => Log.error(f));
     throw new ReleasePrecheckError();
   }
 }

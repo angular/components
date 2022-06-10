@@ -2,17 +2,17 @@
 
 /**
  * Script that builds the release output of all packages which have the "release-package
- * bazel tag set. The script builds all those packages and copies the release output to the
+ * Bazel tag set. The script builds all those packages and copies the release output to the
  * distribution folder within the project.
  */
 
 import {execSync} from 'child_process';
 import {join} from 'path';
 import {BuiltPackage} from '@angular/dev-infra-private/ng-dev';
-import {chmod, cp, mkdir, rm, set, test} from 'shelljs';
+import sh from 'shelljs';
 
 // ShellJS should exit if a command fails.
-set('-e');
+sh.set('-e');
 
 /** Name of the Bazel tag that will be used to find release package targets. */
 const releaseTargetTag = 'release-package';
@@ -82,9 +82,9 @@ function buildReleasePackages(distPath: string, isSnapshotBuild: boolean): Built
   // do this to ensure that the version placeholders are properly populated.
   packageNames.forEach(pkgName => {
     const outputPath = getBazelOutputPath(pkgName);
-    if (test('-d', outputPath)) {
-      chmod('-R', 'u+w', outputPath);
-      rm('-rf', outputPath);
+    if (sh.test('-d', outputPath)) {
+      sh.chmod('-R', 'u+w', outputPath);
+      sh.rm('-rf', outputPath);
     }
   });
 
@@ -92,16 +92,16 @@ function buildReleasePackages(distPath: string, isSnapshotBuild: boolean): Built
 
   // Delete the distribution directory so that the output is guaranteed to be clean. Re-create
   // the empty directory so that we can copy the release packages into it later.
-  rm('-rf', distPath);
-  mkdir('-p', distPath);
+  sh.rm('-rf', distPath);
+  sh.mkdir('-p', distPath);
 
   // Copy the package output into the specified distribution folder.
   packageNames.forEach(pkgName => {
     const outputPath = getBazelOutputPath(pkgName);
     const targetFolder = getDistPath(pkgName);
     console.log(`> Copying package output to "${targetFolder}"`);
-    cp('-R', outputPath, targetFolder);
-    chmod('-R', 'u+w', targetFolder);
+    sh.cp('-R', outputPath, targetFolder);
+    sh.chmod('-R', 'u+w', targetFolder);
   });
 
   return packageNames.map(pkg => {
