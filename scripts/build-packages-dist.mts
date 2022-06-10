@@ -7,8 +7,9 @@
  */
 
 import {execSync} from 'child_process';
-import {join} from 'path';
+import {join, dirname} from 'path';
 import {BuiltPackage} from '@angular/dev-infra-private/ng-dev';
+import {fileURLToPath} from 'url';
 import sh from 'shelljs';
 
 // ShellJS should exit if a command fails.
@@ -18,7 +19,7 @@ sh.set('-e');
 const releaseTargetTag = 'release-package';
 
 /** Path to the project directory. */
-const projectDir = join(__dirname, '../');
+const projectDir = join(dirname(fileURLToPath(import.meta.url)), '../');
 
 /** Command that runs Bazel. */
 const bazelCmd = process.env.BAZEL || `yarn -s bazel`;

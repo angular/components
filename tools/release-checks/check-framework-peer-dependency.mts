@@ -1,10 +1,14 @@
 import {Log, ReleasePrecheckError} from '@angular/dev-infra-private/ng-dev';
-import {join} from 'path';
+import {join, dirname} from 'path';
+import {fileURLToPath} from 'url';
 import {existsSync, readFileSync} from 'fs';
 import semver from 'semver';
 
+/** Path to the current directory. */
+const currentDir = dirname(fileURLToPath(import.meta.url));
+
 /** Path to the Bazel file that configures the release output. */
-const bzlConfigPath = join(__dirname, '../../packages.bzl');
+const bzlConfigPath = join(currentDir, '../../packages.bzl');
 
 /**
  * Ensures that the Angular version placeholder has been correctly updated to support

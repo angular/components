@@ -7,8 +7,7 @@
   "compilerOptions": {
     "outDir": "../dist/tools",
     "target": "es2020",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "Node16",
     "esModuleInterop": true,
     "lib": ["es2020"],
     "skipLibCheck": true,

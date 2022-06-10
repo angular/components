@@ -1,6 +1,6 @@
 import {Log, bold, yellow} from '@angular/dev-infra-private/ng-dev';
 import {existsSync} from 'fs';
-import {sync as glob} from 'glob';
+import glob from 'glob';
 import {basename, dirname, join} from 'path';
 
 import {
@@ -47,9 +47,9 @@ export function checkReleasePackage(
     failures.set(message, filePaths);
   };
 
-  const jsFiles = glob(releaseJsFilesGlob, {cwd: packagePath, absolute: true});
-  const typeDefinitions = glob(releaseTypeDefinitionsGlob, {cwd: packagePath, absolute: true});
-  const packageJsonFiles = glob(packageJsonFilesGlob, {cwd: packagePath, absolute: true});
+  const jsFiles = glob.sync(releaseJsFilesGlob, {cwd: packagePath, absolute: true});
+  const typeDefinitions = glob.sync(releaseTypeDefinitionsGlob, {cwd: packagePath, absolute: true});
+  const packageJsonFiles = glob.sync(packageJsonFilesGlob, {cwd: packagePath, absolute: true});
 
   // We want to walk through each bundle within the current package and run
   // release validations that ensure that the bundles are not invalid.

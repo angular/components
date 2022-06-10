@@ -5,11 +5,4 @@ import {commitMessage} from './commit-message.mjs';
 import {caretaker} from './caretaker.mjs';
 import {release} from './release.mjs';
 
-module.exports = {
-  commitMessage,
-  format,
-  github,
-  pullRequest,
-  caretaker,
-  release,
-};
+export {commitMessage, format, github, pullRequest, caretaker, release};

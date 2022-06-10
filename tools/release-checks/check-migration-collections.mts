@@ -1,12 +1,16 @@
 import {Log, bold, yellow, ReleasePrecheckError} from '@angular/dev-infra-private/ng-dev';
 import {existsSync, readFileSync} from 'fs';
+import {fileURLToPath} from 'url';
 import {dirname, join} from 'path';
 import semver from 'semver';
 
 import {releasePackages} from '../../.ng-dev/release.mjs';
 
+/** Path to the current directory. */
+const currentDir = dirname(fileURLToPath(import.meta.url));
+
 /** Path to the directory containing all package sources. */
-const packagesDir = join(__dirname, '../../src');
+const packagesDir = join(currentDir, '../../src');
 
 /** Asserts that valid migration collections for `ng-update` are configured. */
 export async function assertValidUpdateMigrationCollections(newVersion: semver.SemVer) {
