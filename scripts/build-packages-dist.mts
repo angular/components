@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * Script that builds the release output of all packages which have the "release-package
  * Bazel tag set. The script builds all those packages and copies the release output to the
@@ -31,18 +29,6 @@ const queryPackagesCmd =
 
 /** Path for the default distribution output directory. */
 const defaultDistPath = join(projectDir, 'dist/releases');
-
-// Export the methods for building the release packages. These
-// can be consumed by the release tool.
-exports.performNpmReleaseBuild = performNpmReleaseBuild;
-exports.performDefaultSnapshotBuild = performDefaultSnapshotBuild;
-
-if (module === require.main) {
-  // We always build as a snapshot bu8ild, unless the script is invoked directly by the
-  // release publish script. The snapshot release configuration ensures that the current
-  // Git `HEAD` sha is included for the version placeholders.
-  performDefaultSnapshotBuild();
-}
 
 /** Builds the release packages for NPM. */
 export function performNpmReleaseBuild(): BuiltPackage[] {
