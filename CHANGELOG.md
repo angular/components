@@ -1,3 +1,22 @@
+<a name="14.1.0-next.1"></a>
+# 14.1.0-next.1 "n" (2022-06-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [176213d70](https://github.com/angular/components/commit/176213d705f25def682644e29824b340ca1637b6) | feat | **scrolling:** make scroller element configurable for virtual scrolling ([#24394](https://github.com/angular/components/pull/24394)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [799cf7cf2](https://github.com/angular/components/commit/799cf7cf27bd882398a42ff65c48a241a3af50d5) | fix | **datepicker:** add i18n strings ([#25024](https://github.com/angular/components/pull/25024)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [503f12f03](https://github.com/angular/components/commit/503f12f039bd82d369b69fd2182a5d4489f25a75) | fix | **mdc-list:** don't access class before initialization ([#25049](https://github.com/angular/components/pull/25049)) |
+## Special Thanks
+Kristiyan Kostadinov, Maxi, Miles Malerba, Paul Gschwendtner and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="14.1.0-next.0"></a>
 # 14.1.0-next.0 "air-binding" (2022-06-07)
 ### cdk-experimental
