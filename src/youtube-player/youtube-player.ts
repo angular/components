@@ -135,10 +135,10 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
 
   /** Width of video player */
   @Input()
-  get width(): number | undefined {
+  get width(): number | string | undefined {
     return this._width.value;
   }
-  set width(width: number | undefined) {
+  set width(width: number | string | undefined) {
     this._width.next(width || DEFAULT_PLAYER_WIDTH);
   }
   private readonly _width = new BehaviorSubject<number>(DEFAULT_PLAYER_WIDTH);
