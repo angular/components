@@ -89,6 +89,7 @@
   .mdc-floating-label--float-above {
     --mat-mdc-form-field-label-transform: translateY(
             -#{mdc-textfield.get-outlined-label-position-y($height)}) scale(0.75);
+    transform: var(--mat-mdc-form-field-label-transform);
   }
 
   // Add vertical spacing to the infix to ensure that outlined form fields have their controls
