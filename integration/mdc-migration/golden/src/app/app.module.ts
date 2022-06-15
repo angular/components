@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material-experimental/mdc-autocomplete';
 import {MatButtonModule} from '@angular/material-experimental/mdc-button';
 import {MatCardModule} from '@angular/material-experimental/mdc-card';
+import {MatCheckboxModule} from '@angular/material-experimental/mdc-checkbox';
 import {MatChipsModule} from '@angular/material-experimental/mdc-chips';
 import {MatFormFieldModule} from '@angular/material-experimental/mdc-form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -18,6 +19,7 @@ import {MatProgressSpinnerModule} from '@angular/material-experimental/mdc-progr
 import {MatSelectModule} from '@angular/material-experimental/mdc-select';
 import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
 import {CardComponent} from './components/card/card.component';
+import {CheckboxComponent} from './components/checkbox/checkbox.component';
 import {ChipsComponent} from './components/chips/chips.component';
 import {FormFieldComponent} from './components/form-field/form-field.component';
 import {InputComponent} from './components/input/input.component';
@@ -34,6 +36,7 @@ import {ButtonComponent} from './components/button/button.component';
     AppComponent,
     ButtonComponent,
     CardComponent,
+    CheckboxComponent,
     ChipsComponent,
     FormFieldComponent,
     InputComponent,
@@ -49,6 +52,7 @@ import {ButtonComponent} from './components/button/button.component';
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatFormFieldModule,
     MatIconModule,
