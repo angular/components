@@ -9,23 +9,23 @@ import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
-export interface CardHarnessFilters extends BaseHarnessFilters {
+export interface LegacyCardHarnessFilters extends BaseHarnessFilters {
     subtitle?: string | RegExp;
     text?: string | RegExp;
     title?: string | RegExp;
 }
 
 // @public
-export class MatCardHarness extends ContentContainerComponentHarness<MatCardSection> {
+export class MatLegacyCardHarness extends ContentContainerComponentHarness<MatLegacyCardSection> {
     getSubtitleText(): Promise<string>;
     getText(): Promise<string>;
     getTitleText(): Promise<string>;
     static hostSelector: string;
-    static with(options?: CardHarnessFilters): HarnessPredicate<MatCardHarness>;
+    static with(options?: LegacyCardHarnessFilters): HarnessPredicate<MatLegacyCardHarness>;
 }
 
 // @public
-export const enum MatCardSection {
+export const enum MatLegacyCardSection {
     // (undocumented)
     ACTIONS = ".mat-card-actions",
     // (undocumented)

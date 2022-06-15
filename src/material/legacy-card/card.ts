@@ -25,7 +25,7 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
   selector: 'mat-card-content, [mat-card-content], [matCardContent]',
   host: {'class': 'mat-card-content'},
 })
-export class MatCardContent {}
+export class MatLegacyCardContent {}
 
 /**
  * Title of a card, needed as it's used as a selector in the API.
@@ -37,7 +37,7 @@ export class MatCardContent {}
     'class': 'mat-card-title',
   },
 })
-export class MatCardTitle {}
+export class MatLegacyCardTitle {}
 
 /**
  * Sub-title of a card, needed as it's used as a selector in the API.
@@ -49,7 +49,7 @@ export class MatCardTitle {}
     'class': 'mat-card-subtitle',
   },
 })
-export class MatCardSubtitle {}
+export class MatLegacyCardSubtitle {}
 
 /**
  * Action section of a card, needed as it's used as a selector in the API.
@@ -63,7 +63,7 @@ export class MatCardSubtitle {}
     '[class.mat-card-actions-align-end]': 'align === "end"',
   },
 })
-export class MatCardActions {
+export class MatLegacyCardActions {
   /** Position of the actions inside the card. */
   @Input() align: 'start' | 'end' = 'start';
 }
@@ -76,7 +76,7 @@ export class MatCardActions {
   selector: 'mat-card-footer',
   host: {'class': 'mat-card-footer'},
 })
-export class MatCardFooter {}
+export class MatLegacyCardFooter {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
@@ -86,7 +86,7 @@ export class MatCardFooter {}
   selector: '[mat-card-image], [matCardImage]',
   host: {'class': 'mat-card-image'},
 })
-export class MatCardImage {}
+export class MatLegacyCardImage {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
@@ -96,7 +96,7 @@ export class MatCardImage {}
   selector: '[mat-card-sm-image], [matCardImageSmall]',
   host: {'class': 'mat-card-sm-image'},
 })
-export class MatCardSmImage {}
+export class MatLegacyCardSmImage {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
@@ -106,7 +106,7 @@ export class MatCardSmImage {}
   selector: '[mat-card-md-image], [matCardImageMedium]',
   host: {'class': 'mat-card-md-image'},
 })
-export class MatCardMdImage {}
+export class MatLegacyCardMdImage {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
@@ -116,7 +116,7 @@ export class MatCardMdImage {}
   selector: '[mat-card-lg-image], [matCardImageLarge]',
   host: {'class': 'mat-card-lg-image'},
 })
-export class MatCardLgImage {}
+export class MatLegacyCardLgImage {}
 
 /**
  * Large image used in a card, needed to add the mat- CSS styling.
@@ -126,7 +126,7 @@ export class MatCardLgImage {}
   selector: '[mat-card-xl-image], [matCardImageXLarge]',
   host: {'class': 'mat-card-xl-image'},
 })
-export class MatCardXlImage {}
+export class MatLegacyCardXlImage {}
 
 /**
  * Avatar image used in a card, needed to add the mat- CSS styling.
@@ -136,7 +136,7 @@ export class MatCardXlImage {}
   selector: '[mat-card-avatar], [matCardAvatar]',
   host: {'class': 'mat-card-avatar'},
 })
-export class MatCardAvatar {}
+export class MatLegacyCardAvatar {}
 
 /**
  * A basic content container component that adds the styles of a Material design card.
@@ -161,7 +161,7 @@ export class MatCardAvatar {}
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
 })
-export class MatCard {
+export class MatLegacyCard {
   // @breaking-change 9.0.0 `_animationMode` parameter to be made required.
   constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {}
 }
@@ -178,7 +178,7 @@ export class MatCard {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card-header'},
 })
-export class MatCardHeader {}
+export class MatLegacyCardHeader {}
 
 /**
  * Component intended to be used within the `<mat-card>` component. It adds styles for a preset
@@ -192,4 +192,4 @@ export class MatCardHeader {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card-title-group'},
 })
-export class MatCardTitleGroup {}
+export class MatLegacyCardTitleGroup {}

@@ -8,129 +8,129 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/material/core';
 
 // @public
-export class MatCard {
+export class MatLegacyCard {
     constructor(_animationMode?: string | undefined);
     // (undocumented)
     _animationMode?: string | undefined;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCard, "mat-card", ["matCard"], {}, {}, never, ["*", "mat-card-footer"], false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyCard, "mat-card", ["matCard"], {}, {}, never, ["*", "mat-card-footer"], false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCard, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCard, [{ optional: true; }]>;
 }
 
 // @public
-export class MatCardActions {
+export class MatLegacyCardActions {
     align: 'start' | 'end';
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardActions, "mat-card-actions", ["matCardActions"], { "align": "align"; }, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardActions, "mat-card-actions", ["matCardActions"], { "align": "align"; }, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardActions, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardActions, never>;
 }
 
 // @public
-export class MatCardAvatar {
+export class MatLegacyCardAvatar {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardAvatar, "[mat-card-avatar], [matCardAvatar]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardAvatar, "[mat-card-avatar], [matCardAvatar]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardAvatar, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardAvatar, never>;
 }
 
 // @public
-export class MatCardContent {
+export class MatLegacyCardContent {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardContent, "mat-card-content, [mat-card-content], [matCardContent]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardContent, "mat-card-content, [mat-card-content], [matCardContent]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardContent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardContent, never>;
 }
 
 // @public
-export class MatCardFooter {
+export class MatLegacyCardFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardFooter, "mat-card-footer", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardFooter, "mat-card-footer", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardFooter, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardFooter, never>;
 }
 
 // @public
-export class MatCardHeader {
+export class MatLegacyCardHeader {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCardHeader, "mat-card-header", never, {}, {}, never, ["[mat-card-avatar], [matCardAvatar]", "mat-card-title, mat-card-subtitle,\n      [mat-card-title], [mat-card-subtitle],\n      [matCardTitle], [matCardSubtitle]", "*"], false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyCardHeader, "mat-card-header", never, {}, {}, never, ["[mat-card-avatar], [matCardAvatar]", "mat-card-title, mat-card-subtitle,\n      [mat-card-title], [mat-card-subtitle],\n      [matCardTitle], [matCardSubtitle]", "*"], false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardHeader, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardHeader, never>;
 }
 
 // @public
-export class MatCardImage {
+export class MatLegacyCardImage {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardImage, "[mat-card-image], [matCardImage]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardImage, "[mat-card-image], [matCardImage]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardImage, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardImage, never>;
 }
 
 // @public
-export class MatCardLgImage {
+export class MatLegacyCardLgImage {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardLgImage, "[mat-card-lg-image], [matCardImageLarge]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardLgImage, "[mat-card-lg-image], [matCardImageLarge]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardLgImage, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardLgImage, never>;
 }
 
 // @public
-export class MatCardMdImage {
+export class MatLegacyCardMdImage {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardMdImage, "[mat-card-md-image], [matCardImageMedium]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardMdImage, "[mat-card-md-image], [matCardImageMedium]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardMdImage, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardMdImage, never>;
 }
 
 // @public (undocumented)
-export class MatCardModule {
+export class MatLegacyCardModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardModule, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<MatCardModule>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<MatLegacyCardModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCardModule, [typeof i1.MatCard, typeof i1.MatCardHeader, typeof i1.MatCardTitleGroup, typeof i1.MatCardContent, typeof i1.MatCardTitle, typeof i1.MatCardSubtitle, typeof i1.MatCardActions, typeof i1.MatCardFooter, typeof i1.MatCardSmImage, typeof i1.MatCardMdImage, typeof i1.MatCardLgImage, typeof i1.MatCardImage, typeof i1.MatCardXlImage, typeof i1.MatCardAvatar], [typeof i2.MatCommonModule], [typeof i1.MatCard, typeof i1.MatCardHeader, typeof i1.MatCardTitleGroup, typeof i1.MatCardContent, typeof i1.MatCardTitle, typeof i1.MatCardSubtitle, typeof i1.MatCardActions, typeof i1.MatCardFooter, typeof i1.MatCardSmImage, typeof i1.MatCardMdImage, typeof i1.MatCardLgImage, typeof i1.MatCardImage, typeof i1.MatCardXlImage, typeof i1.MatCardAvatar, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLegacyCardModule, [typeof i1.MatLegacyCard, typeof i1.MatLegacyCardHeader, typeof i1.MatLegacyCardTitleGroup, typeof i1.MatLegacyCardContent, typeof i1.MatLegacyCardTitle, typeof i1.MatLegacyCardSubtitle, typeof i1.MatLegacyCardActions, typeof i1.MatLegacyCardFooter, typeof i1.MatLegacyCardSmImage, typeof i1.MatLegacyCardMdImage, typeof i1.MatLegacyCardLgImage, typeof i1.MatLegacyCardImage, typeof i1.MatLegacyCardXlImage, typeof i1.MatLegacyCardAvatar], [typeof i2.MatCommonModule], [typeof i1.MatLegacyCard, typeof i1.MatLegacyCardHeader, typeof i1.MatLegacyCardTitleGroup, typeof i1.MatLegacyCardContent, typeof i1.MatLegacyCardTitle, typeof i1.MatLegacyCardSubtitle, typeof i1.MatLegacyCardActions, typeof i1.MatLegacyCardFooter, typeof i1.MatLegacyCardSmImage, typeof i1.MatLegacyCardMdImage, typeof i1.MatLegacyCardLgImage, typeof i1.MatLegacyCardImage, typeof i1.MatLegacyCardXlImage, typeof i1.MatLegacyCardAvatar, typeof i2.MatCommonModule]>;
 }
 
 // @public
-export class MatCardSmImage {
+export class MatLegacyCardSmImage {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardSmImage, "[mat-card-sm-image], [matCardImageSmall]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardSmImage, "[mat-card-sm-image], [matCardImageSmall]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardSmImage, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardSmImage, never>;
 }
 
 // @public
-export class MatCardSubtitle {
+export class MatLegacyCardSubtitle {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardSubtitle, "mat-card-subtitle, [mat-card-subtitle], [matCardSubtitle]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardSubtitle, "mat-card-subtitle, [mat-card-subtitle], [matCardSubtitle]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardSubtitle, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardSubtitle, never>;
 }
 
 // @public
-export class MatCardTitle {
+export class MatLegacyCardTitle {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardTitle, "mat-card-title, [mat-card-title], [matCardTitle]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardTitle, "mat-card-title, [mat-card-title], [matCardTitle]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardTitle, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardTitle, never>;
 }
 
 // @public
-export class MatCardTitleGroup {
+export class MatLegacyCardTitleGroup {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCardTitleGroup, "mat-card-title-group", never, {}, {}, never, ["mat-card-title, mat-card-subtitle,\n      [mat-card-title], [mat-card-subtitle],\n      [matCardTitle], [matCardSubtitle]", "img", "*"], false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyCardTitleGroup, "mat-card-title-group", never, {}, {}, never, ["mat-card-title, mat-card-subtitle,\n      [mat-card-title], [mat-card-subtitle],\n      [matCardTitle], [matCardSubtitle]", "img", "*"], false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardTitleGroup, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardTitleGroup, never>;
 }
 
 // @public
-export class MatCardXlImage {
+export class MatLegacyCardXlImage {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCardXlImage, "[mat-card-xl-image], [matCardImageXLarge]", never, {}, {}, never, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardXlImage, "[mat-card-xl-image], [matCardImageXLarge]", never, {}, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCardXlImage, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardXlImage, never>;
 }
 
 // (No @packageDocumentation comment for this package)

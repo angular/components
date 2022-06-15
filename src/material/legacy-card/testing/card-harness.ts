@@ -7,10 +7,10 @@
  */
 
 import {HarnessPredicate, ContentContainerComponentHarness} from '@angular/cdk/testing';
-import {CardHarnessFilters} from './card-harness-filters';
+import {LegacyCardHarnessFilters} from './card-harness-filters';
 
 /** Selectors for different sections of the mat-card that can container user content. */
-export const enum MatCardSection {
+export const enum MatLegacyCardSection {
   HEADER = '.mat-card-header',
   CONTENT = '.mat-card-content',
   ACTIONS = '.mat-card-actions',
@@ -18,7 +18,7 @@ export const enum MatCardSection {
 }
 
 /** Harness for interacting with a standard mat-card in tests. */
-export class MatCardHarness extends ContentContainerComponentHarness<MatCardSection> {
+export class MatLegacyCardHarness extends ContentContainerComponentHarness<MatLegacyCardSection> {
   /** The selector for the host element of a `MatCard` instance. */
   static hostSelector = '.mat-card';
 
@@ -28,8 +28,8 @@ export class MatCardHarness extends ContentContainerComponentHarness<MatCardSect
    * @param options Options for filtering which card instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: CardHarnessFilters = {}): HarnessPredicate<MatCardHarness> {
-    return new HarnessPredicate(MatCardHarness, options)
+  static with(options: LegacyCardHarnessFilters = {}): HarnessPredicate<MatLegacyCardHarness> {
+    return new HarnessPredicate(MatLegacyCardHarness, options)
       .addOption('text', options.text, (harness, text) =>
         HarnessPredicate.stringMatches(harness.getText(), text),
       )
