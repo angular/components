@@ -73,7 +73,7 @@ export const commitMessage: CommitMessageConfig = {
     'material/bottom-sheet',
     'material/button',
     'material/button-toggle',
-    'material/card',
+    'material/legacy-card',
     'material/checkbox',
     'material/chips',
     'material/core',

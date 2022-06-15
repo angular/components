@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
-import {MatCardHarness} from '@angular/material/card/testing';
+import {MatCardHarness} from '@angular/material/legacy-card/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {MatCardModule} from '@angular/material/card';
+import {MatCardModule} from '@angular/material/legacy-card';
 import {CardHarnessExample} from './card-harness-example';
 
 describe('CardHarnessExample', () => {

@@ -76,5 +76,5 @@ component by following these steps:
 
 ## API differences
 
-The API of the card matches the one from `@angular/material/card`. Simply replace imports to
-`@angular/material/card` with imports to `@angular/material-experimental/mdc-card`.
+The API of the card matches the one from `@angular/material/legacy-card`. Simply replace imports to
+`@angular/material/legacy-card` with imports to `@angular/material-experimental/mdc-card`.

@@ -11,7 +11,7 @@ import {DOCUMENT} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
+import {MatCardModule} from '@angular/material/legacy-card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,

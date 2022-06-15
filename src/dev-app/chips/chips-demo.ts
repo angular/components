@@ -11,7 +11,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
+import {MatCardModule} from '@angular/material/legacy-card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {ThemePalette} from '@angular/material/core';

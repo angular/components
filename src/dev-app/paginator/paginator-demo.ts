@@ -10,7 +10,7 @@ import {Component} from '@angular/core';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
+import {MatCardModule} from '@angular/material/legacy-card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';

@@ -26,7 +26,7 @@ ng_test_library(
         ":testing",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
-        "//src/material/card",
+        "//src/material/legacy-card",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -43,7 +43,7 @@ ng_test_library(
     deps = [
         ":harness_tests_lib",
         ":testing",
-        "//src/material/card",
+        "//src/material/legacy-card",
     ],
 )
 
@@ -59,7 +59,7 @@ ng_e2e_test_library(
         "//src/cdk/testing",
         "//src/cdk/testing/private/e2e",
         "//src/cdk/testing/protractor",
-        "//src/material/card/testing",
+        "//src/material/legacy-card/testing",
     ],
 )
 

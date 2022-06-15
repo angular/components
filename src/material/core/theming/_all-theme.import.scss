@@ -22,7 +22,7 @@
 @forward '../typography/typography.import';
 @forward '../../autocomplete/autocomplete-theme.import';
 @forward '../../bottom-sheet/bottom-sheet-theme.import';
-@forward '../../card/card-theme.import';
+@forward '../../legacy-card/card-theme.import';
 @forward '../../checkbox/checkbox-theme.import';
 @forward '../../divider/divider-theme.import';
 @forward '../../table/table-theme.import';
@@ -54,7 +54,7 @@
 @import '../../bottom-sheet/bottom-sheet-theme';
 @import '../../button/button-theme';
 @import '../../button-toggle/button-toggle-theme';
-@import '../../card/card-theme';
+@import '../../legacy-card/card-theme';
 @import '../../checkbox/checkbox-theme';
 @import '../../chips/chips-theme';
 @import '../../table/table-theme';
