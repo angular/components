@@ -13,14 +13,23 @@ import {Inject, Injectable} from '@angular/core';
 /** Set of possible high-contrast mode backgrounds. */
 export const enum HighContrastMode {
   NONE,
-  BLACK_ON_WHITE,
-  WHITE_ON_BLACK,
+  ACTIVE,
+  BLACK_ON_WHITE /** DEPRECATED */,
+  WHITE_ON_BLACK /** DEPRECATED */,
 }
 
-/** CSS class applied to the document body when in black-on-white high-contrast mode. */
+/**
+ * DEPRECATED
+ *
+ * CSS class applied to the document body when in black-on-white high-contrast mode.
+ */
 export const BLACK_ON_WHITE_CSS_CLASS = 'cdk-high-contrast-black-on-white';
 
-/** CSS class applied to the document body when in white-on-black high-contrast mode. */
+/**
+ * DEPRECATED
+ *
+ * CSS class applied to the document body when in white-on-black high-contrast mode.
+ */
 export const WHITE_ON_BLACK_CSS_CLASS = 'cdk-high-contrast-white-on-black';
 
 /** CSS class applied to the document body when in high-contrast mode. */
@@ -43,67 +52,48 @@ export class HighContrastModeDetector {
    * Figuring out the high contrast mode and adding the body classes can cause
    * some expensive layouts. This flag is used to ensure that we only do it once.
    */
-  private _hasCheckedHighContrastMode: boolean;
   private _document: Document;
+
+  private _isHighContrastQuery: MediaQueryList;
 
   constructor(private _platform: Platform, @Inject(DOCUMENT) document: any) {
     this._document = document;
+
+    const _window: Window = this._document.defaultView || window;
+    this._isHighContrastQuery = _window.matchMedia('(forced-colors: active)');
   }
 
   /** Gets the current high-contrast-mode for the page. */
   getHighContrastMode(): HighContrastMode {
-    if (!this._platform.isBrowser) {
-      return HighContrastMode.NONE;
-    }
-
-    // Create a test element with an arbitrary background-color that is neither black nor
-    // white; high-contrast mode will coerce the color to either black or white. Also ensure that
-    // appending the test element to the DOM does not affect layout by absolutely positioning it
-    const testElement = this._document.createElement('div');
-    testElement.style.backgroundColor = 'rgb(1,2,3)';
-    testElement.style.position = 'absolute';
-    this._document.body.appendChild(testElement);
-
-    // Get the computed style for the background color, collapsing spaces to normalize between
-    // browsers. Once we get this color, we no longer need the test element. Access the `window`
-    // via the document so we can fake it in tests. Note that we have extra null checks, because
-    // this logic will likely run during app bootstrap and throwing can break the entire app.
-    const documentWindow = this._document.defaultView || window;
-    const computedStyle =
-      documentWindow && documentWindow.getComputedStyle
-        ? documentWindow.getComputedStyle(testElement)
-        : null;
-    const computedColor = ((computedStyle && computedStyle.backgroundColor) || '').replace(
-      / /g,
-      '',
-    );
-    testElement.remove();
-
-    switch (computedColor) {
-      case 'rgb(0,0,0)':
-        return HighContrastMode.WHITE_ON_BLACK;
-      case 'rgb(255,255,255)':
-        return HighContrastMode.BLACK_ON_WHITE;
+    if (this._platform.isBrowser && this._isHighContrastQuery.matches) {
+      return HighContrastMode.ACTIVE;
     }
     return HighContrastMode.NONE;
   }
 
-  /** Applies CSS classes indicating high-contrast mode to document body (browser-only). */
+  _unsubscribeFromMediaChanges(): void {
+    this._isHighContrastQuery.removeListener(this._setBodyCssClasses);
+  }
+
+  /** Applies CSS classes indicating high-contrast mode to document listens for changes to
+   * `forced-colors` and updates CSS classes if high contrast mode is enabled or disabled
+   * (browser-only). */
   _applyBodyHighContrastModeCssClasses(): void {
-    if (!this._hasCheckedHighContrastMode && this._platform.isBrowser && this._document.body) {
+    if (this._platform.isBrowser) {
+      this._isHighContrastQuery.addListener(this._setBodyCssClasses.bind(this));
+      this._setBodyCssClasses();
+    }
+  }
+
+  /** Applies CSS classes indicating high-contrast mode to document body (browser-only). */
+  private _setBodyCssClasses(): void {
+    if (this._platform.isBrowser && this._document.body) {
       const bodyClasses = this._document.body.classList;
-      bodyClasses.remove(
-        HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS,
-        BLACK_ON_WHITE_CSS_CLASS,
-        WHITE_ON_BLACK_CSS_CLASS,
-      );
-      this._hasCheckedHighContrastMode = true;
+      bodyClasses.remove(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
 
       const mode = this.getHighContrastMode();
-      if (mode === HighContrastMode.BLACK_ON_WHITE) {
-        bodyClasses.add(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS, BLACK_ON_WHITE_CSS_CLASS);
-      } else if (mode === HighContrastMode.WHITE_ON_BLACK) {
-        bodyClasses.add(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS, WHITE_ON_BLACK_CSS_CLASS);
+      if (mode === HighContrastMode.ACTIVE) {
+        bodyClasses.add(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
       }
     }
   }

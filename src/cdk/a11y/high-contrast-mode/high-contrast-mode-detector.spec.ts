@@ -6,7 +6,7 @@ import {
   WHITE_ON_BLACK_CSS_CLASS,
 } from './high-contrast-mode-detector';
 import {Platform} from '@angular/cdk/platform';
-import {inject} from '@angular/core/testing';
+import {fakeAsync, inject, tick} from '@angular/core/testing';
 
 describe('HighContrastModeDetector', () => {
   let fakePlatform: Platform;
@@ -25,7 +25,7 @@ describe('HighContrastModeDetector', () => {
 
   it('should not apply any css classes for non-browser platforms', () => {
     fakePlatform.isBrowser = false;
-    const fakeDocument = getFakeDocument('');
+    const fakeDocument = getFakeDocument();
     const detector = new HighContrastModeDetector(fakePlatform, fakeDocument);
     detector._applyBodyHighContrastModeCssClasses();
     expect(fakeDocument.body.className)
@@ -33,48 +33,56 @@ describe('HighContrastModeDetector', () => {
       .toBe('');
   });
 
-  it('should detect WHITE_ON_BLACK when backgrounds are coerced to black', () => {
-    const detector = new HighContrastModeDetector(fakePlatform, getFakeDocument('rgb(0,0,0)'));
-    expect(detector.getHighContrastMode())
-      .withContext('Expected high-contrast mode `WHITE_ON_BLACK`')
-      .toBe(HighContrastMode.WHITE_ON_BLACK);
-  });
-
-  it('should detect BLACK_ON_WHITE when backgrounds are coerced to white ', () => {
+  it('should detect ACTIVE when when forced-colors are enabled', () => {
+    const forcedColorsMediaQuery = new FakeMediaQueryList(true, '(forced-colors: active)');
     const detector = new HighContrastModeDetector(
       fakePlatform,
-      getFakeDocument('rgb(255,255,255)'),
+      getFakeDocument([forcedColorsMediaQuery]),
     );
     expect(detector.getHighContrastMode())
-      .withContext('Expected high-contrast mode `BLACK_ON_WHITE`')
-      .toBe(HighContrastMode.BLACK_ON_WHITE);
+      .withContext('Expected high-contrast mode `ACTIVE`')
+      .toBe(HighContrastMode.ACTIVE);
   });
 
-  it('should detect NONE when backgrounds are not coerced ', () => {
-    const detector = new HighContrastModeDetector(fakePlatform, getFakeDocument('rgb(1,2,3)'));
+  it('should detect NONE when forced-colors are not enabled', () => {
+    const forcedColorsMediaQuery = new FakeMediaQueryList(false, '(forced-colors: active)');
+    const detector = new HighContrastModeDetector(
+      fakePlatform,
+      getFakeDocument([forcedColorsMediaQuery]),
+    );
     expect(detector.getHighContrastMode())
       .withContext('Expected high-contrast mode `NONE`')
       .toBe(HighContrastMode.NONE);
   });
 
-  it('should apply css classes for BLACK_ON_WHITE high-contrast mode', () => {
-    const fakeDocument = getFakeDocument('rgb(255,255,255)');
+  it('should apply css classes for ACTIVE high-contrast mode', () => {
+    const forcedColorsMediaQuery = new FakeMediaQueryList(true, '(forced-colors: active)');
+    const fakeDocument = getFakeDocument([forcedColorsMediaQuery]);
     const detector = new HighContrastModeDetector(fakePlatform, fakeDocument);
+
     detector._applyBodyHighContrastModeCssClasses();
-    expect(fakeDocument.body.classList).toContain(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
-    expect(fakeDocument.body.classList).toContain(BLACK_ON_WHITE_CSS_CLASS);
+    expect(fakeDocument.body.className).toBe(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
   });
 
-  it('should apply css classes for WHITE_ON_BLACK high-contrast mode', () => {
-    const fakeDocument = getFakeDocument('rgb(0,0,0)');
+  it('should update css classes when high-contrast mode changes', fakeAsync(() => {
+    const forcedColorsMediaQuery = new FakeMediaQueryList(false, '(forced-colors: active)');
+
+    const fakeDocument = getFakeDocument([forcedColorsMediaQuery]);
     const detector = new HighContrastModeDetector(fakePlatform, fakeDocument);
+
     detector._applyBodyHighContrastModeCssClasses();
-    expect(fakeDocument.body.classList).toContain(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
-    expect(fakeDocument.body.classList).toContain(WHITE_ON_BLACK_CSS_CLASS);
-  });
+    expect(fakeDocument.body.className).toBe('');
+
+    forcedColorsMediaQuery.matches = true;
+    tick();
+
+    expect(fakeDocument.body.className)
+      .withContext('Expected to detect that high-contrast mode now active')
+      .toBe(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
+  }));
 
   it('should not apply any css classes when backgrounds are not coerced', () => {
-    const fakeDocument = getFakeDocument('');
+    const fakeDocument = getFakeDocument();
     const detector = new HighContrastModeDetector(fakePlatform, fakeDocument);
     detector._applyBodyHighContrastModeCssClasses();
     expect(fakeDocument.body.className)
@@ -83,13 +91,50 @@ describe('HighContrastModeDetector', () => {
   });
 });
 
+class FakeMediaQueryList {
+  private cb: null | (() => void) = null;
+
+  constructor(matches: boolean, public readonly media: string) {
+    this._matches = matches;
+  }
+
+  get matches(): boolean {
+    return this._matches;
+  }
+  set matches(value: boolean) {
+    if (value !== this._matches) {
+      this._matches = value;
+
+      this.cb?.();
+    }
+  }
+  private _matches: boolean;
+
+  addListener(cb: () => void) {
+    if (this.cb) {
+      throw new Error('not implemented');
+    }
+    this.cb = cb;
+  }
+
+  removeListener() {
+    this.cb = null;
+  }
+}
+
 /** Gets a fake document that includes a fake `window.getComputedStyle` implementation. */
-function getFakeDocument(fakeComputedBackgroundColor: string) {
+function getFakeDocument(mediaQueries?: FakeMediaQueryList[]) {
+  const mediaQueriesLookup = {} as Record<string, FakeMediaQueryList>;
+  for (const query of mediaQueries || []) {
+    mediaQueriesLookup[query.media] = query;
+  }
+
   return {
     body: document.createElement('body'),
-    createElement: (tag: string) => document.createElement(tag),
     defaultView: {
-      getComputedStyle: () => ({backgroundColor: fakeComputedBackgroundColor}),
+      matchMedia(media: string): Partial<MediaQueryList> {
+        return mediaQueriesLookup[media] || new FakeMediaQueryList(false, media);
+      },
     },
   };
 }

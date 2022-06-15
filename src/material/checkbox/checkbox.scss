@@ -343,9 +343,11 @@ $_mark-stroke-size: math.div(2, 15) * checkbox-common.$size !default;
   }
 
   @include cdk.high-contrast(black-on-white, off) {
-    // In the checkbox theme this `stroke` has !important which ends up overriding the browser's
-    // automatic color inversion so we need to re-invert it ourselves for black-on-white.
-    stroke: #000 !important;
+    // SVG colors won't be changed in high contrast mode and since the checkmark is white
+    // by default, it'll blend in with the background in black-on-white mode. Override the
+    // color to ensure that it's visible. We need !important, because the theme styles are
+    // very specific.
+    stroke: CanvasText !important;
   }
 }
 
