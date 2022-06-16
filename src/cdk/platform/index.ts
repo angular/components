@@ -6,4 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+// noop
+
 export * from './public-api';
