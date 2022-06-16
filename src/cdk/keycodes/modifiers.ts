@@ -7,12 +7,13 @@
  */
 
 type ModifierKey = 'altKey' | 'shiftKey' | 'ctrlKey' | 'metaKey';
+type ModifierEvent = KeyboardEvent | MouseEvent | TouchEvent;
 
 /**
  * Checks whether a modifier key is pressed.
  * @param event Event to be checked.
  */
-export function hasModifierKey(event: KeyboardEvent, ...modifiers: ModifierKey[]): boolean {
+export function hasModifierKey(event: ModifierEvent, ...modifiers: ModifierKey[]): boolean {
   if (modifiers.length) {
     return modifiers.some(modifier => event[modifier]);
   }

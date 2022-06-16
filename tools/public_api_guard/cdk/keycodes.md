@@ -146,7 +146,7 @@ export const G = 71;
 export const H = 72;
 
 // @public
-export function hasModifierKey(event: KeyboardEvent, ...modifiers: ModifierKey[]): boolean;
+export function hasModifierKey(event: ModifierEvent, ...modifiers: ModifierKey[]): boolean;
 
 // @public (undocumented)
 export const HOME = 36;
