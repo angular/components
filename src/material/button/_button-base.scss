@@ -103,6 +103,6 @@ $mini-fab-padding: 8px !default;
   .mat-button-wrapper {
     padding: $padding 0;
     display: inline-block;
-    line-height: $button-line-height;
+    line-height: initial;
   }
 }
