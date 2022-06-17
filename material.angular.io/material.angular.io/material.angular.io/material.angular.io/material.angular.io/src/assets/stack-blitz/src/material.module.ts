@@ -43,12 +43,15 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {CdkMenuModule} from '@angular/cdk/menu';
+import {DialogModule} from '@angular/cdk/dialog';
 
 @NgModule({
   exports: [
     A11yModule,
     CdkAccordionModule,
     ClipboardModule,
+    CdkMenuModule,
     CdkStepperModule,
     CdkTableModule,
     CdkTreeModule,
@@ -91,6 +94,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
     OverlayModule,
     PortalModule,
     ScrollingModule,
+    DialogModule,
   ]
 })
 export class MaterialExampleModule {}
