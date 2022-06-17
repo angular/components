@@ -21,6 +21,7 @@ import {MiscTemplateMigration} from './migrations/misc-checks/misc-template';
 import {RippleSpeedFactorMigration} from './migrations/misc-ripples-v7/ripple-speed-factor-migration';
 import {SecondaryEntryPointsMigration} from './migrations/package-imports-v8/secondary-entry-points-migration';
 import {ThemingApiMigration} from './migrations/theming-api-v12/theming-api-migration';
+import {LegacyComponentsMigration} from './migrations/legacy-components-v15';
 
 import {materialUpgradeData} from './upgrade-data';
 
@@ -34,6 +35,7 @@ const materialMigrations: NullableDevkitMigration[] = [
   SecondaryEntryPointsMigration,
   HammerGesturesMigration,
   ThemingApiMigration,
+  LegacyComponentsMigration,
 ];
 
 /** Entry point for the migration schematics with target of Angular Material v6 */
@@ -120,6 +122,16 @@ export function updateToV13(): Rule {
 export function updateToV14(): Rule {
   return createMigrationSchematicRule(
     TargetVersion.V14,
+    materialMigrations,
+    materialUpgradeData,
+    onMigrationComplete,
+  );
+}
+
+/** Entry point for the migration schematics with target of Angular Material v15 */
+export function updateToV15(): Rule {
+  return createMigrationSchematicRule(
+    TargetVersion.V15,
     materialMigrations,
     materialUpgradeData,
     onMigrationComplete,
