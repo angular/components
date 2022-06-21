@@ -1,6 +1,7 @@
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "markdown_to_html",
     "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
@@ -12,23 +13,22 @@ load(
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
-    name = "mdc-card",
+    name = "card",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":card_scss"] + glob(["**/*.html"]),
     deps = [
-        "//src/material-experimental/mdc-core",
+        "//src/material/core",
     ],
 )
 
 sass_library(
-    name = "mdc_card_scss_lib",
+    name = "card_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
         "//:mdc_sass_lib",
-        "//src/material:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -66,11 +66,21 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":mdc-card",
+        ":card",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
     deps = [":unit_test_sources"],
+)
+
+markdown_to_html(
+    name = "overview",
+    srcs = [":card.md"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
 )

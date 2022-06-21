@@ -107,7 +107,7 @@
 /src/material-experimental/column-resize/**        @andrewseguin
 /src/material-experimental/mdc-autocomplete/**     @crisbeto
 /src/material-experimental/mdc-button/**           @andrewseguin
-/src/material-experimental/mdc-card/**             @mmalerba
+/src/material/card/**             @mmalerba
 /src/material-experimental/mdc-checkbox/**         @mmalerba
 /src/material-experimental/mdc-chips/**            @mmalerba
 /src/material-experimental/mdc-core/**             @crisbeto

@@ -31,7 +31,7 @@ component by following these steps:
 3. Import the experimental `MatCardModule` and add it to the module that declares your component:
 
    ```ts
-   import {MatCardModule} from '@angular/material-experimental/mdc-card';
+   import {MatCardModule} from '@angular/material/card';
 
    @NgModule({
      declarations: [MyComponent],
@@ -77,4 +77,4 @@ component by following these steps:
 ## API differences
 
 The API of the card matches the one from `@angular/material/legacy-card`. Simply replace imports to
-`@angular/material/legacy-card` with imports to `@angular/material-experimental/mdc-card`.
+`@angular/material/legacy-card` with imports to `@angular/material/card`.
