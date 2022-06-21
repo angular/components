@@ -37,13 +37,6 @@ Usage:
 <ng-template cdkPortal>
   <p>The content of this template is captured by the portal.</p>
 </ng-template>
-
-<!-- OR -->
-
-<!-- This result here is identical to the syntax above -->
-<p *cdkPortal>
-  The content of this template is captured by the portal.
-</p>
 ```
 
 A component can use `@ViewChild` or `@ViewChildren` to get a reference to a
