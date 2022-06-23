@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Migration, TargetVersion} from '@angular/cdk/schematics';
+import {Migration, ResolvedResource, TargetVersion, WorkspacePath} from '@angular/cdk/schematics';
+import * as postcss from 'postcss';
+import * as scss from 'postcss-scss';
 import * as ts from 'typescript';
 
 export class LegacyComponentsMigration extends Migration<null> {
@@ -27,6 +29,79 @@ export class LegacyComponentsMigration extends Migration<null> {
     }
   }
 
+  override visitStylesheet(stylesheet: ResolvedResource): void {
+    let namespace: string | undefined = undefined;
+    const filePath = this.fileSystem.resolve(stylesheet.filePath);
+
+    const processor = new postcss.Processor([
+      {
+        postcssPlugin: 'theming-styles-migration-plugin',
+        AtRule: {
+          use: (node: postcss.AtRule) => {
+            if (!namespace) {
+              namespace = this._parseAngularMaterialNamespace(node);
+            }
+          },
+          include: (node: postcss.AtRule) => {
+            if (namespace) {
+              this._atIncludeHandler(node, namespace, filePath);
+            }
+          },
+        },
+      },
+    ]);
+    processor.process(stylesheet.content, {syntax: scss}).toString();
+  }
+
+  // ****************************************** //
+  // ********** Stylesheet Migration ********** //
+  // ****************************************** //
+
+  /** Handles updating @angular/material mixins. */
+  private _parseAngularMaterialNamespace(node: postcss.AtRule): string | undefined {
+    const [url, _, namespace] = node.params.split(/\s/).filter(s => !!s);
+    if (url.substring(1, url.length - 1) === '@angular/material') {
+      if (!namespace) {
+        return 'material';
+      }
+      return namespace;
+    }
+    return;
+  }
+
+  /** Handles updating @angular/material mixins. */
+  private _atIncludeHandler(
+    node: postcss.AtRule,
+    namespace: string,
+    filePath: WorkspacePath,
+  ): void {
+    if (node.params.startsWith(`${namespace}.all-`)) {
+      this._replaceScssNodeAt(node, filePath, {
+        old: `${namespace}.all-`,
+        new: `${namespace}.all-legacy-`,
+      });
+    } else if (node.params.startsWith(`${namespace}.`)) {
+      this._replaceScssNodeAt(node, filePath, {
+        old: `${namespace}.`,
+        new: `${namespace}.legacy-`,
+      });
+    }
+  }
+
+  /** Updates the source file of the given node with the given replacements. */
+  private _replaceScssNodeAt(
+    node: postcss.Node,
+    filePath: WorkspacePath,
+    str: {old: string; new: string},
+  ): void {
+    const index = this.fileSystem.read(filePath)!.indexOf(str.old, node.source?.start?.offset);
+    this.fileSystem.edit(filePath).remove(index, str.old.length).insertRight(index, str.new);
+  }
+
+  // ****************************************** //
+  // ********** TypeScript Migration ********** //
+  // ****************************************** //
+
   /** Handles updating the named bindings of awaited @angular/material import expressions. */
   private _handleDestructuredAsyncImport(
     node: ts.VariableDeclaration & {name: ts.ObjectBindingPattern},
@@ -40,7 +115,7 @@ export class LegacyComponentsMigration extends Migration<null> {
         const newExport = n.propertyName
           ? `MatLegacy${suffix}`
           : `MatLegacy${suffix}: Mat${suffix}`;
-        this._replaceAt(name, {old: oldExport, new: newExport});
+        this._replaceTSNodeAt(name, {old: oldExport, new: newExport});
       }
     }
   }
@@ -49,7 +124,7 @@ export class LegacyComponentsMigration extends Migration<null> {
   private _handleImportDeclaration(node: ts.ImportDeclaration): void {
     const moduleSpecifier = node.moduleSpecifier as ts.StringLiteral;
     if (moduleSpecifier.text.startsWith('@angular/material/')) {
-      this._replaceAt(node, {old: '@angular/material/', new: '@angular/material/legacy-'});
+      this._replaceTSNodeAt(node, {old: '@angular/material/', new: '@angular/material/legacy-'});
 
       if (node.importClause?.namedBindings && ts.isNamedImports(node.importClause.namedBindings)) {
         this._handleNamedImportBindings(node.importClause.namedBindings);
@@ -61,7 +136,7 @@ export class LegacyComponentsMigration extends Migration<null> {
   private _handleImportExpression(node: ts.CallExpression): void {
     const moduleSpecifier = node.arguments[0] as ts.StringLiteral;
     if (moduleSpecifier.text.startsWith('@angular/material/')) {
-      this._replaceAt(node, {old: '@angular/material/', new: '@angular/material/legacy-'});
+      this._replaceTSNodeAt(node, {old: '@angular/material/', new: '@angular/material/legacy-'});
     }
   }
 
@@ -75,7 +150,7 @@ export class LegacyComponentsMigration extends Migration<null> {
       const newExport = n.propertyName
         ? `MatLegacy${suffix}`
         : `MatLegacy${suffix} as Mat${suffix}`;
-      this._replaceAt(name, {old: oldExport, new: newExport});
+      this._replaceTSNodeAt(name, {old: oldExport, new: newExport});
     }
   }
 
@@ -109,7 +184,7 @@ export class LegacyComponentsMigration extends Migration<null> {
   }
 
   /** Updates the source file of the given node with the given replacements. */
-  private _replaceAt(node: ts.Node, str: {old: string; new: string}): void {
+  private _replaceTSNodeAt(node: ts.Node, str: {old: string; new: string}): void {
     const filePath = this.fileSystem.resolve(node.getSourceFile().fileName);
     const index = this.fileSystem.read(filePath)!.indexOf(str.old, node.pos);
     this.fileSystem.edit(filePath).remove(index, str.old.length).insertRight(index, str.new);
