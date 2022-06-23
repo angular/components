@@ -52,6 +52,25 @@ describe('v15 legacy components migration', () => {
         new: `import {MatLegacyButton as MatButton, MatLegacyButtonModule as ButtonModule} from '@angular/material/legacy-button';`,
       });
     });
+
+    it('updates import expressions', async () => {
+      await runTypeScriptMigrationTest('destructured & awaited', {
+        old: `const {MatButton} = await import('@angular/material/button');`,
+        new: `const {MatLegacyButton: MatButton} = await import('@angular/material/legacy-button');`,
+      });
+      await runTypeScriptMigrationTest('destructured & awaited w/ alias', {
+        old: `const {MatButton: Button} = await import('@angular/material/button');`,
+        new: `const {MatLegacyButton: Button} = await import('@angular/material/legacy-button');`,
+      });
+      await runTypeScriptMigrationTest('promise', {
+        old: `const promise = import('@angular/material/button');`,
+        new: `const promise = import('@angular/material/legacy-button');`,
+      });
+      await runTypeScriptMigrationTest('.then', {
+        old: `import('@angular/material/button').then(() => {});`,
+        new: `import('@angular/material/legacy-button').then(() => {});`,
+      });
+    });
   });
 
   describe('style migrations', () => {
