@@ -17,9 +17,11 @@
     "@angular/core": "~14.0.0",
     "@angular/forms": "~14.0.0",
     "@angular/material": "${version}",
+    "@angular/material-moment-adapter": "${version}",
     "@angular/platform-browser": "~14.0.0",
     "@angular/platform-browser-dynamic": "~14.0.0",
     "@angular/router": "~14.0.0",
+    "moment": "^2.18.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.5"
