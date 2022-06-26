@@ -129,4 +129,9 @@
     content: none;
   }
 
+  // Reserve space in the layout for the outline appearance floating label,
+  // which protrudes above the form-field.
+  .mat-form-field-appearance-outline .mat-mdc-text-field-wrapper {
+    margin-top: 0.5em;
+  }
 }
