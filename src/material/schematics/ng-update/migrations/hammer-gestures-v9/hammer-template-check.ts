@@ -87,7 +87,7 @@ export function isHammerJsUsedInTemplate(html: string): {
       }
     });
   };
-  visitNodes(document.childNodes);
+  visitNodes((document as any).childNodes as parse5.ChildNode[]);
   return {customEvents, standardEvents};
 }
 
