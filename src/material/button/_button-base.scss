@@ -93,11 +93,14 @@ $mini-fab-padding: 8px !default;
   // Reset the min-width from the button base.
   min-width: 0;
 
+  // Clip to the border radius so that the button is circular
+  // for things like hovering and mouse listeners.
+  overflow: hidden;
+
   border-radius: $fab-border-radius;
   width: $size;
   height: $size;
   padding: 0;
-
   flex-shrink: 0;
 
   .mat-button-wrapper {
