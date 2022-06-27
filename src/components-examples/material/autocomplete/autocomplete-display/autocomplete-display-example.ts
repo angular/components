@@ -26,7 +26,7 @@ export class AutocompleteDisplayExample implements OnInit {
       map(value => {
         const name = typeof value === 'string' ? value : value?.name;
         return name ? this._filter(name as string) : this.options.slice();
-      })
+      }),
     );
   }
 
