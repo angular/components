@@ -59,10 +59,10 @@ export class MatDialogRef<T, R = any> {
 
   constructor(
     private _ref: DialogRef<R, T>,
-    config: MatDialogConfig,
+    private _config: MatDialogConfig,
     public _containerInstance: _MatDialogContainerBase,
   ) {
-    this.disableClose = config.disableClose;
+    this.disableClose = _config.disableClose;
     this.id = _ref.id;
 
     // Emit when opening animation completes
@@ -111,6 +111,17 @@ export class MatDialogRef<T, R = any> {
    * @param dialogResult Optional result to return to the dialog opener.
    */
   close(dialogResult?: R): void {
+    if (
+      this._config.closePredicate &&
+      !this._config.closePredicate<R, MatDialogConfig, T>(
+        dialogResult,
+        this._config,
+        this.componentInstance,
+      )
+    ) {
+      return;
+    }
+
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.

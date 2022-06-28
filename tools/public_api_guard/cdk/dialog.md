@@ -64,6 +64,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     protected _focusTrapFactory: FocusTrapFactory;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    protected _overlayRef: OverlayRef;
     _portalOutlet: CdkPortalOutlet;
     _recaptureFocus(): void;
     protected _trapFocus(): void;
@@ -127,6 +129,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     backdropClass?: string | string[];
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
+    closePredicate?: <Result = unknown, Component = unknown>(result: Result | undefined, config: this, componentInstance: Component | null) => boolean;
     componentFactoryResolver?: ComponentFactoryResolver;
     container?: Type<C> | {
         type: Type<C>;
@@ -176,6 +179,7 @@ export class DialogRef<R = unknown, C = unknown> {
     readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>;
     readonly containerInstance: BasePortalOutlet & {
         _closeInteractionType?: FocusOrigin;
+        _recaptureFocus?: () => void;
     };
     disableClose: boolean | undefined;
     readonly id: string;

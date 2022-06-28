@@ -10,6 +10,7 @@ import {ViewContainerRef, ComponentFactoryResolver, Injector} from '@angular/cor
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
 import {defaultParams} from './dialog-animations';
+import {DialogConfig} from '@angular/cdk/dialog';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -67,6 +68,17 @@ export class MatDialogConfig<D = any> {
 
   /** Whether the user can use escape or clicking on the backdrop to close the modal. */
   disableClose?: boolean = false;
+
+  /** Function used to determine whether the dialog is allowed to close. */
+  closePredicate?: <
+    Result = unknown,
+    Config extends DialogConfig = MatDialogConfig,
+    Component = unknown,
+  >(
+    result: Result | undefined,
+    config: Config,
+    componentInstance: Component | null,
+  ) => boolean;
 
   /** Width of the dialog. */
   width?: string = '';
