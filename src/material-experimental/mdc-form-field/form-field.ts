@@ -114,9 +114,6 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
  */
 const WRAPPER_HORIZONTAL_PADDING = 16;
 
-/** Amount by which to scale the label when the form field is focused. */
-const LABEL_SCALE = 0.75;
-
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   selector: 'mat-form-field',
@@ -285,6 +282,7 @@ export class MatFormField
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
+  private _labelScale = 0;
 
   constructor(
     private _elementRef: ElementRef,
@@ -558,10 +556,17 @@ export class MatFormField
     if (!this._hasOutline() || !this._floatingLabel) {
       return;
     }
+    if (!this._labelScale) {
+      this._labelScale = Number(
+        getComputedStyle(this._elementRef.nativeElement).getPropertyValue(
+          '--mat-mdc-form-field-floating-label-scale',
+        ),
+      );
+    }
     // The outline notch should be based on the label width, but needs to respect the scaling
     // applied to the label if it actively floats. Since the label always floats when the notch
     // is open, the MDC text-field floating label scaling is respected in notch width calculation.
-    this._outlineNotchWidth = this._floatingLabel.getWidth() * LABEL_SCALE;
+    this._outlineNotchWidth = this._floatingLabel.getWidth() * this._labelScale;
   }
 
   /** Does any extra processing that is required when handling the hints. */
