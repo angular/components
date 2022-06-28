@@ -64,11 +64,6 @@ export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinn
  */
 const BASE_SIZE = 100;
 
-/**
- * Base reference stroke width of the spinner.
- */
-const BASE_STROKE_WIDTH = 10;
-
 @Component({
   selector: 'mat-progress-spinner, mat-spinner',
   exportAs: 'matProgressSpinner',
@@ -169,7 +164,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements CanCo
 
   /** The radius of the spinner, adjusted for stroke width. */
   _circleRadius(): number {
-    return (this.diameter - BASE_STROKE_WIDTH) / 2;
+    return (this.diameter - this.strokeWidth) / 2;
   }
 
   /** The view box of the spinner's svg element. */
