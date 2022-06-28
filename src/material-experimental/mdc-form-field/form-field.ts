@@ -267,7 +267,7 @@ export class MatFormField
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';
 
-  /** Width of the outline notch. */
+  /** Width of the label element (at scale=1). */
   _labelWidth = 0;
 
   /** Gets the current form field control */

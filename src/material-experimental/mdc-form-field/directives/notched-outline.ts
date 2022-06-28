@@ -35,7 +35,7 @@ import {
   encapsulation: ViewEncapsulation.None,
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit {
-  /** Width of the notch. */
+  /** Width of the label (original scale) */
   @Input('matFormFieldNotchedOutlineLabelWidth') labelWidth: number = 0;
 
   /** Whether the notch should be opened. */
