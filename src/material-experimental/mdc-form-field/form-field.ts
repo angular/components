@@ -268,7 +268,7 @@ export class MatFormField
   _subscriptAnimationState = '';
 
   /** Width of the outline notch. */
-  _outlineNotchWidth = 0;
+  _labelWidth = 0;
 
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {
@@ -282,7 +282,6 @@ export class MatFormField
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
-  private _labelScale = 0;
 
   constructor(
     private _elementRef: ElementRef,
@@ -556,17 +555,7 @@ export class MatFormField
     if (!this._hasOutline() || !this._floatingLabel) {
       return;
     }
-    if (!this._labelScale) {
-      this._labelScale = Number(
-        getComputedStyle(this._elementRef.nativeElement).getPropertyValue(
-          '--mat-mdc-form-field-floating-label-scale',
-        ),
-      );
-    }
-    // The outline notch should be based on the label width, but needs to respect the scaling
-    // applied to the label if it actively floats. Since the label always floats when the notch
-    // is open, the MDC text-field floating label scaling is respected in notch width calculation.
-    this._outlineNotchWidth = this._floatingLabel.getWidth() * this._labelScale;
+    this._labelWidth = this._floatingLabel.getWidth();
   }
 
   /** Does any extra processing that is required when handling the hints. */

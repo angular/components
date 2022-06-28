@@ -36,7 +36,7 @@ import {
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit {
   /** Width of the notch. */
-  @Input('matFormFieldNotchedOutlineWidth') width: number = 0;
+  @Input('matFormFieldNotchedOutlineLabelWidth') labelWidth: number = 0;
 
   /** Whether the notch should be opened. */
   @Input('matFormFieldNotchedOutlineOpen') open: boolean = false;
@@ -62,7 +62,9 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
   _getNotchWidth() {
     if (this.open) {
       const NOTCH_ELEMENT_PADDING = 8;
-      return `${this.width > 0 ? this.width + NOTCH_ELEMENT_PADDING : 0}px`;
+      return this.labelWidth > 0
+        ? `calc(${this.labelWidth}px * var(--mat-mdc-form-field-floating-label-scale) + ${NOTCH_ELEMENT_PADDING}px)`
+        : '0px';
     }
 
     return null;
