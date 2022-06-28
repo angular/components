@@ -55,6 +55,7 @@ const _MatChipSetMixinBase = mixinTabIndex(MatChipSetBase);
     'class': 'mat-mdc-chip-set mdc-evolution-chip-set',
     '(keydown)': '_handleKeydown($event)',
     '[attr.role]': 'role',
+    '[attr.aria-describedby]': 'userAriaDescribedBy || null',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,6 +85,17 @@ export class MatChipSet
   get chipDestroyedChanges(): Observable<MatChipEvent> {
     return this._getChipStream(chip => chip.destroyed);
   }
+
+  @Input('aria-describedby')
+  get userAriaDescribedBy(): string {
+    return this._userAriaDescribedBy;
+  }
+
+  set userAriaDescribedBy(userAriaDescribedBy: string) {
+    this._userAriaDescribedBy = userAriaDescribedBy;
+  }
+
+  private _userAriaDescribedBy: string;
 
   /** Whether the chip set is disabled. */
   @Input()

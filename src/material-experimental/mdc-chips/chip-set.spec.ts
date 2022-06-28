@@ -75,6 +75,12 @@ describe('MDC-based MatChipSet', () => {
         fixture.detectChanges();
         expect(chipSetNativeElement.getAttribute('role')).toBe('list');
       });
+
+      it('should support user binding to `aria-describedby`', fakeAsync(() => {
+        chipSetInstance.userAriaDescribedBy = 'test';
+        fixture.detectChanges();
+        expect(chipSetNativeElement.getAttribute('aria-describedby')).toBe('test');
+      }));
     });
   });
 

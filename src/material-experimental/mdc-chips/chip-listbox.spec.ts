@@ -638,6 +638,12 @@ describe('MDC-based MatChipListbox', () => {
 
           expect(chipArray[4].focus).not.toHaveBeenCalled();
         });
+
+        it('should support user binding to `aria-describedby`', fakeAsync(() => {
+          chipListboxInstance.userAriaDescribedBy = 'test';
+          fixture.detectChanges();
+          expect(chipListboxNativeElement.getAttribute('aria-describedby')).toBe('test');
+        }));
       });
 
       describe('multiple selection', () => {
