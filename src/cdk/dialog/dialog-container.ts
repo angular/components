@@ -97,7 +97,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
     @Inject(DialogConfig) readonly _config: C,
     private _interactivityChecker: InteractivityChecker,
     private _ngZone: NgZone,
-    private _overlayRef: OverlayRef,
+    protected _overlayRef: OverlayRef,
     private _focusMonitor?: FocusMonitor,
   ) {
     super();
@@ -107,7 +107,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   protected _contentAttached() {
     this._initializeFocusTrap();
-    this._handleBackdropClicks();
     this._captureInitialFocus();
   }
 
@@ -323,16 +322,5 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
     if (this._document) {
       this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
     }
-  }
-
-  /** Sets up the listener that handles clicks on the dialog backdrop. */
-  private _handleBackdropClicks() {
-    // Clicking on the backdrop will move focus out of dialog.
-    // Recapture it if closing via the backdrop is disabled.
-    this._overlayRef.backdropClick().subscribe(() => {
-      if (this._config.disableClose) {
-        this._recaptureFocus();
-      }
-    });
   }
 }
