@@ -52,14 +52,20 @@ export class MatPaginator extends _MatPaginatorBase<MatPaginatorDefaultOptions> 
 // @public
 export abstract class _MatPaginatorBase<O extends {
     pageSize?: number;
-    pageSizeOptions?: number[];
+    pageSizeOptions?: (number | {
+        value: number;
+        label: string;
+    })[];
     hidePageSize?: boolean;
     showFirstLastButtons?: boolean;
 }> extends _MatPaginatorMixinBase implements OnInit, OnDestroy, CanDisable, HasInitialized {
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: O);
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
-    _displayedPageSizeOptions: number[];
+    _displayedPageSizeOptions: {
+        value: number;
+        label: string;
+    }[];
     firstPage(): void;
     getNumberOfPages(): number;
     hasNextPage(): boolean;
@@ -82,8 +88,11 @@ export abstract class _MatPaginatorBase<O extends {
     set pageIndex(value: NumberInput);
     get pageSize(): number;
     set pageSize(value: NumberInput);
-    get pageSizeOptions(): number[];
-    set pageSizeOptions(value: number[] | readonly number[]);
+    get pageSizeOptions(): (number | {
+        value: number;
+        label: string;
+    })[];
+    set pageSizeOptions(value: PageSizeOptions);
     _previousButtonsDisabled(): boolean;
     previousPage(): void;
     selectConfig: MatPaginatorSelectConfig;
@@ -100,7 +109,10 @@ export interface MatPaginatorDefaultOptions {
     formFieldAppearance?: MatFormFieldAppearance;
     hidePageSize?: boolean;
     pageSize?: number;
-    pageSizeOptions?: number[];
+    pageSizeOptions?: (number | {
+        value: number;
+        label: string;
+    })[];
     showFirstLastButtons?: boolean;
 }
 
@@ -144,6 +156,15 @@ export class PageEvent {
     pageSize: number;
     previousPageIndex?: number;
 }
+
+// @public
+export type PageSizeOptions = readonly (number | {
+    value: number;
+    label: string;
+})[] | (number | {
+    value: number;
+    label: string;
+})[];
 
 // (No @packageDocumentation comment for this package)
 

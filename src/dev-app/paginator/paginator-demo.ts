@@ -34,7 +34,7 @@ export class PaginatorDemo {
   length = 50;
   pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  pageSizeOptions = [5, 10, 25, {label: 'All', value: this.length}];
 
   hidePageSize = false;
   showPageSizeOptions = true;

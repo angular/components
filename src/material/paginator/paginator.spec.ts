@@ -4,6 +4,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '../../cdk/testing/private';
 import {ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
+import {MatSelectHarness} from '@angular/material/select/testing';
 import {By} from '@angular/platform-browser';
 import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from './index';
 import {
@@ -11,6 +12,7 @@ import {
   MatPaginatorDefaultOptions,
   MatPaginatorSelectConfig,
 } from './paginator';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
 describe('MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
@@ -337,7 +339,9 @@ describe('MatPaginator', () => {
     const fixture = createComponent(MatPaginatorWithoutOptionsApp);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.paginator._displayedPageSizeOptions).toEqual([10]);
+    expect(fixture.componentInstance.paginator._displayedPageSizeOptions).toEqual([
+      {value: 10, label: '10'},
+    ]);
   });
 
   it('should default the page size to the first page size option if not provided', () => {
@@ -351,16 +355,35 @@ describe('MatPaginator', () => {
     const fixture = createComponent(MatPaginatorApp);
     const component = fixture.componentInstance;
     const paginator = component.paginator;
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
+
+    expect(paginator._displayedPageSizeOptions).toEqual([
+      {value: 5, label: '5'},
+      {value: 10, label: '10'},
+      {value: 25, label: '25'},
+      {value: 100, label: 'All'},
+    ]);
 
     component.pageSize = 30;
     fixture.detectChanges();
-    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
+    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, {value: 100, label: 'All'}]);
+    expect(paginator._displayedPageSizeOptions).toEqual([
+      {value: 5, label: '5'},
+      {value: 10, label: '10'},
+      {value: 25, label: '25'},
+      {value: 30, label: '30'},
+      {value: 100, label: 'All'},
+    ]);
 
-    component.pageSizeOptions = [100, 25, 10, 5];
+    component.pageSizeOptions = [{value: 100, label: 'All'}, 25, 10, 5];
     fixture.detectChanges();
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
+
+    expect(paginator._displayedPageSizeOptions).toEqual([
+      {value: 5, label: '5'},
+      {value: 10, label: '10'},
+      {value: 25, label: '25'},
+      {value: 30, label: '30'},
+      {value: 100, label: 'All'},
+    ]);
   });
 
   it('should be able to change the page size while keeping the first item present', () => {
@@ -440,7 +463,12 @@ describe('MatPaginator', () => {
     const component = fixture.componentInstance;
     const paginator = component.paginator;
 
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([
+      {value: 5, label: '5'},
+      {value: 10, label: '10'},
+      {value: 25, label: '25'},
+      {value: 100, label: 'All'},
+    ]);
     expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
 
     // Remove options so that the paginator only uses the current page size (10) as an option.
@@ -533,8 +561,41 @@ describe('MatPaginator', () => {
     const fixture = createComponent(MatPaginatorWithReadonlyOptions);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(fixture.componentInstance.paginator._displayedPageSizeOptions).toEqual([
+      {value: 5, label: '5'},
+      {value: 10, label: '10'},
+      {value: 25, label: '25'},
+      {value: 100, label: 'All'},
+    ]);
   });
+
+  it('should accept page size options with custom labels', () => {
+    const fixture = createComponent(MatPaginatorWithCustomLabelOptions);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.paginator._displayedPageSizeOptions).toEqual([
+      {value: -1, label: 'Negative'},
+      {value: 0, label: 'None'},
+      {value: 1, label: 'One-by-one'},
+      {value: 10, label: '10'},
+      {value: 25, label: '25'},
+      {value: 100, label: 'All'},
+    ]);
+  });
+
+  it('should allow selecting page size options with custom labels', fakeAsync(async () => {
+    const fixture = createComponent(MatPaginatorWithCustomLabelOptions);
+    fixture.detectChanges();
+
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const selectHarness = await loader.getHarness(MatSelectHarness);
+
+    expect(fixture.componentInstance.paginator.pageSize).toEqual(10);
+
+    await selectHarness.clickOptions({text: /all/i});
+    fixture.detectChanges();
+    expect(fixture.componentInstance.paginator.pageSize).toEqual(100);
+  }));
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
@@ -571,7 +632,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
 class MatPaginatorApp {
   pageIndex = 0;
   pageSize = 10;
-  pageSizeOptions = [5, 10, 25, 100];
+  pageSizeOptions = [5, 10, 25, {value: 100, label: 'All'}];
   hidePageSize = false;
   showFirstLastButtons = false;
   length = 100;
@@ -635,5 +696,30 @@ class MatPaginatorWithStringValues {
 })
 class MatPaginatorWithReadonlyOptions {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  pageSizeOptions: readonly number[] = [5, 10, 25, 100];
+  pageSizeOptions: readonly (number | {value: 100; label: string})[] = [
+    5,
+    10,
+    25,
+    {value: 100, label: 'All'},
+  ];
+}
+
+@Component({
+  template: `
+    <mat-paginator pageIndex="0"
+                   pageSize="10"
+                   [pageSizeOptions]="[
+                     {label: 'Negative', value: -1},
+                     {label: 'None', value: 0},
+                     {label: 'One-by-one', value: '1'},
+                     10,
+                     '25',
+                     {label: 'All', value: 100}
+                   ]"
+                   length="100">
+    </mat-paginator>
+  `,
+})
+class MatPaginatorWithCustomLabelOptions {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 }

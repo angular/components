@@ -62,13 +62,18 @@ export class PageEvent {
   length: number;
 }
 
+/** The set of provided page size options to display to the user. */
+export type PageSizeOptions =
+  | readonly (number | {value: number; label: string})[]
+  | (number | {value: number; label: string})[];
+
 /** Object that can be used to configure the default options for the paginator module. */
 export interface MatPaginatorDefaultOptions {
   /** Number of items to display on a page. By default set to 50. */
   pageSize?: number;
 
   /** The set of provided page size options to display to the user. */
-  pageSizeOptions?: number[];
+  pageSizeOptions?: (number | {value: number; label: string})[];
 
   /** Whether to hide the page size selection UI from the user. */
   hidePageSize?: boolean;
@@ -106,7 +111,7 @@ export interface MatPaginatorSelectConfig {
 export abstract class _MatPaginatorBase<
     O extends {
       pageSize?: number;
-      pageSizeOptions?: number[];
+      pageSizeOptions?: (number | {value: number; label: string})[];
       hidePageSize?: boolean;
       showFirstLastButtons?: boolean;
     },
@@ -155,14 +160,18 @@ export abstract class _MatPaginatorBase<
 
   /** The set of provided page size options to display to the user. */
   @Input()
-  get pageSizeOptions(): number[] {
+  get pageSizeOptions(): (number | {value: number; label: string})[] {
     return this._pageSizeOptions;
   }
-  set pageSizeOptions(value: number[] | readonly number[]) {
-    this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
+  set pageSizeOptions(value: PageSizeOptions) {
+    this._pageSizeOptions = (value || []).map(p =>
+      typeof p === 'object' && p !== null
+        ? {label: p.label, value: coerceNumberProperty(p.value)}
+        : coerceNumberProperty(p),
+    );
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSizeOptions: number[] = [];
+  private _pageSizeOptions: (number | {value: number; label: string})[] = [];
 
   /** Whether to hide the page size selection UI from the user. */
   @Input()
@@ -191,7 +200,7 @@ export abstract class _MatPaginatorBase<
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
-  _displayedPageSizeOptions: number[];
+  _displayedPageSizeOptions: {value: number; label: string}[];
 
   constructor(
     public _intl: MatPaginatorIntl,
@@ -338,18 +347,24 @@ export abstract class _MatPaginatorBase<
 
     // If no page size is provided, use the first page size option or the default page size.
     if (!this.pageSize) {
-      this._pageSize =
+      const pageSize =
         this.pageSizeOptions.length != 0 ? this.pageSizeOptions[0] : DEFAULT_PAGE_SIZE;
+      this._pageSize = typeof pageSize === 'number' ? pageSize : pageSize.value;
     }
 
-    this._displayedPageSizeOptions = this.pageSizeOptions.slice();
+    this._displayedPageSizeOptions = this.pageSizeOptions.map(pageSize => {
+      if (typeof pageSize === 'number') {
+        return {value: pageSize, label: `${pageSize}`};
+      }
+      return pageSize;
+    });
 
-    if (this._displayedPageSizeOptions.indexOf(this.pageSize) === -1) {
-      this._displayedPageSizeOptions.push(this.pageSize);
+    if (!this._displayedPageSizeOptions.some(x => x.value === this.pageSize)) {
+      this._displayedPageSizeOptions.push({value: this.pageSize, label: `${this.pageSize}`});
     }
 
     // Sort the numbers using a number-specific sort function.
-    this._displayedPageSizeOptions.sort((a, b) => a - b);
+    this._displayedPageSizeOptions.sort((a, b) => a.value - b.value);
     this._changeDetectorRef.markForCheck();
   }
 
