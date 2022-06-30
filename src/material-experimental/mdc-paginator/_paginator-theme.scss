@@ -74,7 +74,8 @@
     @if ((meta.type-of($density-scale) == 'number' and $density-scale >= -4) or
          $density-scale == maximum) {
       @include form-field-theme.density(-4);
-    } @else {
+    }
+    @else {
       @include form-field-theme.density($density-scale);
     }
   }
