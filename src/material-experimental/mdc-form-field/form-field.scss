@@ -122,6 +122,21 @@
   box-sizing: border-box;
 }
 
+// This fixes an issue where the notch appears to be thicker than the rest of the outline when
+// zoomed in on Chrome. The border inconsistency seems to be some kind of rendering artifact that
+// arises from a combination of the fact that the notch contains text, while the leading and
+// trailing outline do not, combined with the fact that the border is semi-transparent.
+// Experimentally, I discovered that adding a transparent left border fixes the inconsistency.
+// In addition some negative left margin is added to compensate for the transparent border and
+// fully fix the issue.
+// TODO(mmalerba): port this fix into MDC
+.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
+  .mdc-notched-outline__notch {
+    border-left: 1px solid transparent;
+    margin-left: -1px;
+  }
+}
+
 // In order to make it possible for developers to disable animations for form-fields,
 // we only activate the animation styles if animations are not explicitly disabled.
 .mat-mdc-form-field:not(.mat-form-field-no-animations) {
