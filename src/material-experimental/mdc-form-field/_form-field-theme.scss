@@ -90,7 +90,7 @@
       // use the correct `body1` typography level.
       .mdc-floating-label--float-above {
         font-size: calc(#{
-            mdc-typography.get-size(body1)} * var(--mat-mdc-form-field-floating-label-scale));
+            mdc-typography.get-size(body1)} * var(--mat-mdc-form-field-floating-label-scale, 0.75));
       }
       .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
         font-size: mdc-typography.get-size(body1);

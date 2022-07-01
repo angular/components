@@ -63,7 +63,7 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
     if (this.open) {
       const NOTCH_ELEMENT_PADDING = 8;
       return this.labelWidth > 0
-        ? `calc(${this.labelWidth}px * var(--mat-mdc-form-field-floating-label-scale) + ${NOTCH_ELEMENT_PADDING}px)`
+        ? `calc(${this.labelWidth}px * var(--mat-mdc-form-field-floating-label-scale, 0.75) + ${NOTCH_ELEMENT_PADDING}px)`
         : '0px';
     }
 
