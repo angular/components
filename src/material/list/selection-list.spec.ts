@@ -1201,6 +1201,72 @@ describe('MatSelectionList without forms', () => {
       expect(fixture.componentInstance.selected).toBe(true);
     });
   });
+
+  describe('with single selection allowing deselect', () => {
+    let fixture: ComponentFixture<SelectionListWithListOptions>;
+    let listOptions: DebugElement[];
+    let selectionList: DebugElement;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithListOptions],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(SelectionListWithListOptions);
+      fixture.componentInstance.multiple = false;
+      fixture.componentInstance.allowDeselect = true;
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      fixture.detectChanges();
+    }));
+
+    it('should select one option at a time', () => {
+      const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
+      const testListItem2 = listOptions[2].injector.get<MatListOption>(MatListOption);
+      const selectList =
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+      expect(
+        listOptions[1].nativeElement.classList.contains('mat-list-single-selected-option'),
+      ).toBe(true);
+
+      dispatchFakeEvent(testListItem2._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem2]);
+      expect(
+        listOptions[1].nativeElement.classList.contains('mat-list-single-selected-option'),
+      ).toBe(false);
+      expect(
+        listOptions[2].nativeElement.classList.contains('mat-list-single-selected-option'),
+      ).toBe(true);
+    });
+
+    it('should deselect the target option on click', () => {
+      const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
+      const selectList =
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected.length).toBe(0);
+    });
+  });
 });
 
 describe('MatSelectionList with forms', () => {
@@ -1660,7 +1726,8 @@ describe('MatSelectionList with forms', () => {
     (selectionChange)="onSelectionChange($event)"
     [disableRipple]="listRippleDisabled"
     [color]="selectionListColor"
-    [multiple]="multiple">
+    [multiple]="multiple"
+    [allowDeselect]="allowDeselect">
     <mat-list-option checkboxPosition="before" disabled="true" value="inbox"
                      [color]="firstOptionColor">
       Inbox (disabled selection-option)
@@ -1684,6 +1751,7 @@ class SelectionListWithListOptions {
   showLastOption = true;
   listRippleDisabled = false;
   multiple = true;
+  allowDeselect = false;
   selectionListColor: ThemePalette;
   firstOptionColor: ThemePalette;
 

@@ -112,6 +112,8 @@ export class MatListOption extends _MatListOptionBase implements AfterContentIni
     selectionList: MatSelectionList);
     // (undocumented)
     _avatar: MatListAvatarCssMatStyler;
+    // (undocumented)
+    _canSelectionChange(): boolean;
     checkboxPosition: MatListOptionCheckboxPosition;
     get color(): ThemePalette;
     set color(newValue: ThemePalette);
@@ -180,6 +182,7 @@ export class MatNavList extends _MatListBase implements CanDisable, CanDisableRi
 // @public
 export class MatSelectionList extends _MatSelectionListBase implements CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
     constructor(_element: ElementRef<HTMLElement>, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor);
+    allowDeselect: boolean;
     color: ThemePalette;
     compareWith: (o1: any, o2: any) => boolean;
     deselectAll(): MatListOption[];
@@ -212,7 +215,7 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
     _value: string[] | null;
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; }, { "selectionChange": "selectionChange"; }, ["options"], ["*"], false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; "allowDeselect": "allowDeselect"; }, { "selectionChange": "selectionChange"; }, ["options"], ["*"], false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelectionList, never>;
 }

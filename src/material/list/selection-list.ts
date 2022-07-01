@@ -187,7 +187,7 @@ export class MatListOption
     if (isSelected !== this._selected) {
       this._setSelected(isSelected);
 
-      if (isSelected || this.selectionList.multiple) {
+      if (isSelected || this.selectionList.multiple || this.selectionList.allowDeselect) {
         this.selectionList._reportValueChange();
       }
     }
@@ -270,8 +270,16 @@ export class MatListOption
     return this.disabled || this.disableRipple || this.selectionList.disableRipple;
   }
 
+  _canSelectionChange() {
+    const canSelectionChange =
+      !this.selected ||
+      (this.selected && this.selectionList.multiple) ||
+      (this.selected && !this.selectionList.multiple && this.selectionList.allowDeselect);
+    return !this.disabled && canSelectionChange;
+  }
+
   _handleClick() {
-    if (!this.disabled && (this.selectionList.multiple || !this.selected)) {
+    if (this._canSelectionChange()) {
       this.toggle();
 
       // Emit a change event if the selected state of the option changed through user interaction.
@@ -406,6 +414,10 @@ export class MatSelectionList
       this.selectedOptions = new SelectionModel(this._multiple, this.selectedOptions.selected);
     }
   }
+
+  /** Whether option can be deselected when multiple=false (default false). */
+  @Input()
+  allowDeselect: boolean = false;
 
   /** The currently selected options. */
   selectedOptions = new SelectionModel<MatListOption>(this._multiple);
@@ -664,7 +676,7 @@ export class MatSelectionList
     if (focusedIndex != null && this._isValidIndex(focusedIndex)) {
       let focusedOption: MatListOption = this.options.toArray()[focusedIndex];
 
-      if (focusedOption && !focusedOption.disabled && (this._multiple || !focusedOption.selected)) {
+      if (focusedOption && focusedOption._canSelectionChange()) {
         focusedOption.toggle();
 
         // Emit a change event because the focused option changed its state through user

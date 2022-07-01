@@ -169,7 +169,8 @@
     <mat-selection-list #favorite
                         [(ngModel)]="favoriteOptions"
                         [multiple]="false"
-                        color="primary">
+                        color="primary"
+                        [allowDeselect]="true">
       <div mat-subheader>Favorite Grocery</div>
 
       <mat-list-option value="bananas">Bananas</mat-list-option>
