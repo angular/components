@@ -10,7 +10,7 @@ import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatLegacyCardModule} from '@angular/material/legacy-card';
 import {MatDividerModule} from '@angular/material/divider';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/legacy-progress-bar';
 
 @Component({
   selector: 'card-demo',

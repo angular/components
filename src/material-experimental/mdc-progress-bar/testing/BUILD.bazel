@@ -11,7 +11,7 @@ ng_module(
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
-        "//src/material/progress-bar/testing",
+        "//src/material/legacy-progress-bar/testing",
     ],
 )
 
@@ -21,7 +21,7 @@ ng_test_library(
     deps = [
         ":testing",
         "//src/material-experimental/mdc-progress-bar",
-        "//src/material/progress-bar/testing:harness_tests_lib",
+        "//src/material/legacy-progress-bar/testing:harness_tests_lib",
     ],
 )
 

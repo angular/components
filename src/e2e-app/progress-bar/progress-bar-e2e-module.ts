@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/legacy-progress-bar';
 import {ProgressBarE2E} from './progress-bar-e2e';
 
 @NgModule({

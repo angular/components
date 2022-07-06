@@ -27,7 +27,7 @@ import {
   MatProgressBarDefaultOptions,
   MAT_PROGRESS_BAR_DEFAULT_OPTIONS,
   ProgressAnimationEnd,
-} from '@angular/material/progress-bar';
+} from '@angular/material/legacy-progress-bar';
 
 // Boilerplate for applying mixins to MatProgressBar.
 /** @docs-private */

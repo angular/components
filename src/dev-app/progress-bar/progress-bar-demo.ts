@@ -11,7 +11,7 @@ import {ThemePalette} from '@angular/material/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/legacy-progress-bar';
 
 // TODO(josephperrott): Add an automatically filling example progress bar.
 

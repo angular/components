@@ -77,8 +77,8 @@ following string replace across your TypeScript files:
 
 ```bash
 grep -lr --include="*.ts" --exclude-dir="node_modules" \
-  --exclude="*.d.ts" "['\"]@angular/material/progress-bar['\"]" | xargs sed -i \
-  "s/['\"]@angular\/material\/progress-bar['\"]/'@angular\/material-experimental\/mdc-progress-bar'/g"
+  --exclude="*.d.ts" "['\"]@angular/material/legacy-progress-bar['\"]" | xargs sed -i \
+  "s/['\"]@angular\/material\/legacy-progress-bar['\"]/'@angular\/material-experimental\/mdc-progress-bar'/g"
 ```
 
 CSS styles and tests that depend on implementation details of mat-progress-bar (such as getting

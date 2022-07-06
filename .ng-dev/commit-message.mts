@@ -91,7 +91,7 @@ export const commitMessage: CommitMessageConfig = {
     'material/paginator',
     'material/prebuilt-themes',
     'material/legacy-prebuilt-themes',
-    'material/progress-bar',
+    'material/legacy-progress-bar',
     'material/progress-spinner',
     'material/radio',
     'material/schematics',

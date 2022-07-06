@@ -1,8 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatProgressBarHarness} from '@angular/material/progress-bar/testing';
+import {MatProgressBarHarness} from '@angular/material/legacy-progress-bar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/legacy-progress-bar';
 import {ProgressBarHarnessExample} from './progress-bar-harness-example';
 
 describe('ProgressBarHarnessExample', () => {
