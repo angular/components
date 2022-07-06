@@ -35,6 +35,7 @@ sass_library(
         "//src/material:sass_lib",
         "//src/material-experimental/mdc-core/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-core/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material-experimental/mdc-form-field:mdc_form_field_scss_lib",
     ],
 )
 
@@ -46,7 +47,6 @@ sass_binary(
     ],
     deps = [
         "//src/cdk:sass_lib",
-        "//src/material-experimental/mdc-form-field:mdc_form_field_scss_lib",
     ],
 )
 
