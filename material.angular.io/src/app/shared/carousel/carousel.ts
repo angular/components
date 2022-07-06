@@ -16,7 +16,6 @@ import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
-
 @Directive({
   selector: '[carousel-item]',
 })
@@ -35,7 +34,7 @@ export class CarouselItem implements FocusableOption {
   selector: 'app-carousel',
   templateUrl: './carousel.html',
   styleUrls: ['./carousel.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class Carousel implements AfterContentInit {
   @Input('aria-label') ariaLabel: string | undefined;
@@ -145,7 +144,9 @@ export class Carousel implements AfterContentInit {
       return true;
     }
 
-    return (!side || side === 'end') &&
-           (offsetWidth + offsetLeft - this.position) > this.list.nativeElement.clientWidth;
+    return (
+      (!side || side === 'end') &&
+      offsetWidth + offsetLeft - this.position > this.list.nativeElement.clientWidth
+    );
   }
 }
