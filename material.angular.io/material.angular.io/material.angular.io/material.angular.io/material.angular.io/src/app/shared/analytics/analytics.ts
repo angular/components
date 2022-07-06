@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import {environment} from '../../../environments/environment';
+import {formatErrorEventForAnalytics} from './format-error';
 
 /** Extension of `Window` with potential Google Analytics fields. */
 declare global {
@@ -28,10 +29,20 @@ export class AnalyticsService {
 
   constructor() {
     this._installGlobalSiteTag();
+    this._installWindowErrorHandler();
 
     // TODO: Remove this when we fully switch to Google Analytics 4+.
     this._legacyGa('create', environment.legacyUniversalAnalyticsMaterialId, 'auto', 'mat');
     this._legacyGa('create', environment.legacyUniversalAnalyticsMainId, 'auto', 'ng');
+  }
+
+  reportError(description: string, fatal = true) {
+    // Limit descriptions to maximum of 150 characters.
+    // See: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#exd.
+    description = description.substring(0, 150);
+
+    this._legacyGa('send', 'exception', {exDescription: description, exFatal: fatal});
+    this._gtag('event', 'exception', {description: description, fatal});
   }
 
   locationChanged(url: string) {
@@ -53,6 +64,12 @@ export class AnalyticsService {
   private _legacyGa(...args: any[]) {
     if (window.ga) {
       window.ga(...args);
+    }
+  }
+
+  private _gtag(...args: any[]) {
+    if (window.gtag) {
+      window.gtag(...args);
     }
   }
 
@@ -84,5 +101,11 @@ export class AnalyticsService {
     el.async = true;
     el.src = url;
     window.document.head.appendChild(el);
+  }
+
+  private _installWindowErrorHandler() {
+    window.addEventListener('error', event =>
+      this.reportError(formatErrorEventForAnalytics(event), true)
+    );
   }
 }
