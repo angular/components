@@ -2,8 +2,8 @@ import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {ApplicationRef, Component, DebugElement, Provider, Type} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '../../cdk/testing/private';
-import {MatProgressBarModule, MAT_PROGRESS_BAR_LOCATION} from './index';
-import {MatProgressBar, MAT_PROGRESS_BAR_DEFAULT_OPTIONS} from './progress-bar';
+import {MatLegacyProgressBarModule, MAT_LEGACY_PROGRESS_BAR_LOCATION} from './index';
+import {MatLegacyProgressBar, MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS} from './progress-bar';
 
 describe('MatProgressBar', () => {
   let fakePath: string;
@@ -15,11 +15,11 @@ describe('MatProgressBar', () => {
     fakePath = '/fake-path';
 
     TestBed.configureTestingModule({
-      imports: [MatProgressBarModule],
+      imports: [MatLegacyProgressBarModule],
       declarations: [componentType],
       providers: [
         {
-          provide: MAT_PROGRESS_BAR_LOCATION,
+          provide: MAT_LEGACY_PROGRESS_BAR_LOCATION,
           useValue: {getPathname: () => fakePath},
         },
         ...providers,
@@ -206,7 +206,7 @@ describe('MatProgressBar', () => {
       it('should be able to configure the default progress bar options via DI', () => {
         const fixture = createComponent(BasicProgressBar, [
           {
-            provide: MAT_PROGRESS_BAR_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS,
             useValue: {
               mode: 'buffer',
               color: 'warn',
@@ -257,7 +257,7 @@ describe('MatProgressBar', () => {
 
     describe('animation trigger on determinate setting', () => {
       let fixture: ComponentFixture<BasicProgressBar>;
-      let progressComponent: MatProgressBar;
+      let progressComponent: MatLegacyProgressBar;
       let primaryValueBar: DebugElement;
 
       beforeEach(() => {
@@ -285,7 +285,7 @@ describe('MatProgressBar', () => {
 
     describe('animation trigger on buffer setting', () => {
       let fixture: ComponentFixture<BufferProgressBar>;
-      let progressComponent: MatProgressBar;
+      let progressComponent: MatLegacyProgressBar;
       let primaryValueBar: DebugElement;
 
       beforeEach(() => {

@@ -9,15 +9,15 @@ import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
-export class MatProgressBarHarness extends ComponentHarness {
-    getMode(): Promise<string | null>;
-    getValue(): Promise<number | null>;
-    static hostSelector: string;
-    static with(options?: ProgressBarHarnessFilters): HarnessPredicate<MatProgressBarHarness>;
+export interface LegacyProgressBarHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export interface ProgressBarHarnessFilters extends BaseHarnessFilters {
+export class MatLegacyProgressBarHarness extends ComponentHarness {
+    getMode(): Promise<string | null>;
+    getValue(): Promise<number | null>;
+    static hostSelector: string;
+    static with(options?: LegacyProgressBarHarnessFilters): HarnessPredicate<MatLegacyProgressBarHarness>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -24,9 +24,9 @@ import {
 import {CanColor, mixinColor} from '@angular/material-experimental/mdc-core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
-  MatProgressBarDefaultOptions,
-  MAT_PROGRESS_BAR_DEFAULT_OPTIONS,
-  ProgressAnimationEnd,
+  MatLegacyProgressBarDefaultOptions,
+  MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS,
+  LegacyProgressAnimationEnd,
 } from '@angular/material/legacy-progress-bar';
 
 // Boilerplate for applying mixins to MatProgressBar.
@@ -73,8 +73,8 @@ export class MatProgressBar
     private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
     @Optional()
-    @Inject(MAT_PROGRESS_BAR_DEFAULT_OPTIONS)
-    defaults?: MatProgressBarDefaultOptions,
+    @Inject(MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS)
+    defaults?: MatLegacyProgressBarDefaultOptions,
   ) {
     super(elementRef);
     this._isNoopAnimation = _animationMode === 'NoopAnimations';
@@ -118,7 +118,7 @@ export class MatProgressBar
    * be emitted when animations are disabled, nor will it be emitted for modes with continuous
    * animations (indeterminate and query).
    */
-  @Output() readonly animationEnd = new EventEmitter<ProgressAnimationEnd>();
+  @Output() readonly animationEnd = new EventEmitter<LegacyProgressAnimationEnd>();
 
   /**
    * Mode of the progress bar.

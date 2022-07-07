@@ -21,20 +21,29 @@ import { OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
-export const MAT_PROGRESS_BAR_DEFAULT_OPTIONS: InjectionToken<MatProgressBarDefaultOptions>;
+export interface LegacyProgressAnimationEnd {
+    // (undocumented)
+    value: number;
+}
+
+// @public (undocumented)
+export type LegacyProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
 
 // @public
-export const MAT_PROGRESS_BAR_LOCATION: InjectionToken<MatProgressBarLocation>;
+export const MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS: InjectionToken<MatLegacyProgressBarDefaultOptions>;
 
 // @public
-export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation;
+export const MAT_LEGACY_PROGRESS_BAR_LOCATION: InjectionToken<MatLegacyProgressBarLocation>;
 
 // @public
-export class MatProgressBar extends _MatProgressBarBase implements CanColor, AfterViewInit, OnDestroy {
+export function MAT_LEGACY_PROGRESS_BAR_LOCATION_FACTORY(): MatLegacyProgressBarLocation;
+
+// @public
+export class MatLegacyProgressBar extends _MatProgressBarBase implements CanColor, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, _ngZone: NgZone, _animationMode?: string | undefined,
-    location?: MatProgressBarLocation, defaults?: MatProgressBarDefaultOptions,
+    location?: MatLegacyProgressBarLocation, defaults?: MatLegacyProgressBarDefaultOptions,
     _changeDetectorRef?: ChangeDetectorRef | undefined);
-    readonly animationEnd: EventEmitter<ProgressAnimationEnd>;
+    readonly animationEnd: EventEmitter<LegacyProgressAnimationEnd>;
     // (undocumented)
     _animationMode?: string | undefined;
     _bufferTransform(): {
@@ -43,7 +52,7 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor, Aft
     get bufferValue(): number;
     set bufferValue(v: number);
     _isNoopAnimation: boolean;
-    mode: ProgressBarMode;
+    mode: LegacyProgressBarMode;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -58,41 +67,32 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor, Aft
     get value(): number;
     set value(v: NumberInput);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressBar, "mat-progress-bar", ["matProgressBar"], { "color": "color"; "value": "value"; "bufferValue": "bufferValue"; "mode": "mode"; }, { "animationEnd": "animationEnd"; }, never, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyProgressBar, "mat-progress-bar", ["matProgressBar"], { "color": "color"; "value": "value"; "bufferValue": "bufferValue"; "mode": "mode"; }, { "animationEnd": "animationEnd"; }, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBar, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyProgressBar, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null]>;
 }
 
 // @public
-export interface MatProgressBarDefaultOptions {
+export interface MatLegacyProgressBarDefaultOptions {
     color?: ThemePalette;
-    mode?: ProgressBarMode;
+    mode?: LegacyProgressBarMode;
 }
 
 // @public
-export interface MatProgressBarLocation {
+export interface MatLegacyProgressBarLocation {
     // (undocumented)
     getPathname: () => string;
 }
 
 // @public (undocumented)
-export class MatProgressBarModule {
+export class MatLegacyProgressBarModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBarModule, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyProgressBarModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressBarModule>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<MatLegacyProgressBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressBarModule, [typeof i1.MatProgressBar], [typeof i2.CommonModule, typeof i3.MatCommonModule], [typeof i1.MatProgressBar, typeof i3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLegacyProgressBarModule, [typeof i1.MatLegacyProgressBar], [typeof i2.CommonModule, typeof i3.MatCommonModule], [typeof i1.MatLegacyProgressBar, typeof i3.MatCommonModule]>;
 }
-
-// @public
-export interface ProgressAnimationEnd {
-    // (undocumented)
-    value: number;
-}
-
-// @public (undocumented)
-export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
 
 // (No @packageDocumentation comment for this package)
 

@@ -34,7 +34,7 @@ import {filter} from 'rxjs/operators';
 // TODO(josephperrott): Add ARIA attributes for progress bar "for".
 
 /** Last animation end data. */
-export interface ProgressAnimationEnd {
+export interface LegacyProgressAnimationEnd {
   value: number;
 }
 
@@ -52,21 +52,21 @@ const _MatProgressBarBase = mixinColor(
  * Used to handle server-side rendering and to stub out during unit tests.
  * @docs-private
  */
-export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocation>(
+export const MAT_LEGACY_PROGRESS_BAR_LOCATION = new InjectionToken<MatLegacyProgressBarLocation>(
   'mat-progress-bar-location',
-  {providedIn: 'root', factory: MAT_PROGRESS_BAR_LOCATION_FACTORY},
+  {providedIn: 'root', factory: MAT_LEGACY_PROGRESS_BAR_LOCATION_FACTORY},
 );
 
 /**
  * Stubbed out location for `MatProgressBar`.
  * @docs-private
  */
-export interface MatProgressBarLocation {
+export interface MatLegacyProgressBarLocation {
   getPathname: () => string;
 }
 
 /** @docs-private */
-export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
+export function MAT_LEGACY_PROGRESS_BAR_LOCATION_FACTORY(): MatLegacyProgressBarLocation {
   const _document = inject(DOCUMENT);
   const _location = _document ? _document.location : null;
 
@@ -77,21 +77,20 @@ export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
   };
 }
 
-export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
+export type LegacyProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
 
 /** Default `mat-progress-bar` options that can be overridden. */
-export interface MatProgressBarDefaultOptions {
+export interface MatLegacyProgressBarDefaultOptions {
   /** Default color of the progress bar. */
   color?: ThemePalette;
 
   /** Default mode of the progress bar. */
-  mode?: ProgressBarMode;
+  mode?: LegacyProgressBarMode;
 }
 
 /** Injection token to be used to override the default options for `mat-progress-bar`. */
-export const MAT_PROGRESS_BAR_DEFAULT_OPTIONS = new InjectionToken<MatProgressBarDefaultOptions>(
-  'MAT_PROGRESS_BAR_DEFAULT_OPTIONS',
-);
+export const MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS =
+  new InjectionToken<MatLegacyProgressBarDefaultOptions>('MAT_PROGRESS_BAR_DEFAULT_OPTIONS');
 
 /** Counter used to generate unique IDs for progress bars. */
 let progressbarId = 0;
@@ -120,7 +119,7 @@ let progressbarId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressBar
+export class MatLegacyProgressBar
   extends _MatProgressBarBase
   implements CanColor, AfterViewInit, OnDestroy
 {
@@ -132,10 +131,10 @@ export class MatProgressBar
      * @deprecated `location` parameter to be made required.
      * @breaking-change 8.0.0
      */
-    @Optional() @Inject(MAT_PROGRESS_BAR_LOCATION) location?: MatProgressBarLocation,
+    @Optional() @Inject(MAT_LEGACY_PROGRESS_BAR_LOCATION) location?: MatLegacyProgressBarLocation,
     @Optional()
-    @Inject(MAT_PROGRESS_BAR_DEFAULT_OPTIONS)
-    defaults?: MatProgressBarDefaultOptions,
+    @Inject(MAT_LEGACY_PROGRESS_BAR_DEFAULT_OPTIONS)
+    defaults?: MatLegacyProgressBarDefaultOptions,
     /**
      * @deprecated `_changeDetectorRef` parameter to be made required.
      * @breaking-change 11.0.0
@@ -199,7 +198,7 @@ export class MatProgressBar
    * be emitted when animations are disabled, nor will it be emitted for modes with continuous
    * animations (indeterminate and query).
    */
-  @Output() readonly animationEnd = new EventEmitter<ProgressAnimationEnd>();
+  @Output() readonly animationEnd = new EventEmitter<LegacyProgressAnimationEnd>();
 
   /** Reference to animation end subscription to be unsubscribed on destroy. */
   private _animationEndSubscription: Subscription = Subscription.EMPTY;
@@ -211,7 +210,7 @@ export class MatProgressBar
    * 'determinate'.
    * Mirrored to mode attribute.
    */
-  @Input() mode: ProgressBarMode = 'determinate';
+  @Input() mode: LegacyProgressBarMode = 'determinate';
 
   /** ID of the progress bar. */
   progressbarId = `mat-progress-bar-${progressbarId++}`;
