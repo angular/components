@@ -20,8 +20,8 @@ ng_test_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
-        "//src/material-experimental/mdc-progress-bar",
         "//src/material/legacy-progress-bar/testing:harness_tests_lib",
+        "//src/material/progress-bar",
     ],
 )
 
@@ -30,4 +30,9 @@ ng_web_test_suite(
     deps = [
         ":unit_tests_lib",
     ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
 )
