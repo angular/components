@@ -66,11 +66,15 @@
       // Note: class name is repeated to achieve sufficient specificity over the various MDC states.
       // (hover, focus, etc.)
       // TODO(mmalerba): port this fix into MDC
-      .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
-        .mdc-notched-outline__notch {
+      .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
+        &.mat-mdc-form-field .mdc-notched-outline__notch {
           border-left: 1px solid transparent;
+        }
+      }
 
-          [dir='rtl'] & {
+      [dir='rtl'] {
+        .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
+          &.mat-mdc-form-field .mdc-notched-outline__notch {
             border-left: none;
             border-right: 1px solid transparent;
           }
