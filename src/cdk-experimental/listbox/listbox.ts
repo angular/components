@@ -52,10 +52,6 @@ import {Directionality} from '@angular/cdk/bidi';
 /** The next id to use for creating unique DOM IDs. */
 let nextId = 0;
 
-// TODO(mmalerba):
-//   - should listbox wrap be configurable?
-//   - should skipping disabled options be configurable?
-
 /**
  * An implementation of SelectionModel that internally always represents the selection as a
  * multi-selection. This is necessary so that we can recover the full selection if the user
@@ -360,6 +356,33 @@ export class CdkListbox<T = unknown>
     this.selectionModel.compareWith = fn;
   }
 
+  /**
+   * Whether the keyboard navigation should wrap when the user presses arrow down on the last item
+   * or arrow up on the first item.
+   */
+  @Input('cdkListboxKeyboardNavigationWraps')
+  get keyboardNavigationWraps() {
+    return this._keyboardNavigationWraps;
+  }
+  set keyboardNavigationWraps(wrap: BooleanInput) {
+    this._keyboardNavigationWraps = coerceBooleanProperty(wrap);
+    this.listKeyManager?.withWrap(this._keyboardNavigationWraps);
+  }
+  private _keyboardNavigationWraps = true;
+
+  /** Whether keyboard navigation should skip over disabled items. */
+  @Input('cdkListboxKeyboardNavigationSkipsDisabled')
+  get keyboardNavigationSkipsDisabled() {
+    return this._keyboardNavigationSkipsDisabled;
+  }
+  set keyboardNavigationSkipsDisabled(skip: BooleanInput) {
+    this._keyboardNavigationSkipsDisabled = coerceBooleanProperty(skip);
+    this.listKeyManager?.skipPredicate(
+      this._keyboardNavigationSkipsDisabled ? this._skipDisabledPredicate : this._skipNonePredicate,
+    );
+  }
+  private _keyboardNavigationSkipsDisabled = true;
+
   /** Emits when the selected value(s) in the listbox change. */
   @Output('cdkListboxValueChange') readonly valueChange = new Subject<ListboxValueChangeEvent<T>>();
 
@@ -408,6 +431,12 @@ export class CdkListbox<T = unknown>
 
   /** The directionality of the page. */
   private readonly _dir = inject(Directionality, InjectFlags.Optional);
+
+  /** A predicate that skips disabled options. */
+  private readonly _skipDisabledPredicate = (option: CdkOption<T>) => option.disabled;
+
+  /** A predicate that does not skip any options. */
+  private readonly _skipNonePredicate = () => false;
 
   /**
    * Validator that produces an error if multiple values are selected in a single selection
@@ -663,12 +692,10 @@ export class CdkListbox<T = unknown>
     }
     this._lastTriggered = trigger;
     const isEqual = this.compareWith ?? Object.is;
-    const updateValues = this.options
-      .map(option => option.value)
-      .slice(
-        Math.max(0, Math.min(from, to)),
-        Math.min(this.options.length, Math.max(from, to) + 1),
-      );
+    const updateValues = [...this.options]
+      .slice(Math.max(0, Math.min(from, to)), Math.min(this.options.length, Math.max(from, to) + 1))
+      .filter(option => !option.disabled)
+      .map(option => option.value);
     const selected = [...this.value];
     for (const updateValue of updateValues) {
       const selectedIndex = selected.findIndex(selectedValue =>
@@ -835,10 +862,15 @@ export class CdkListbox<T = unknown>
   /** Initialize the key manager. */
   private _initKeyManager() {
     this.listKeyManager = new ActiveDescendantKeyManager(this.options)
-      .withWrap()
+      .withWrap(this._keyboardNavigationWraps)
       .withTypeAhead()
       .withHomeAndEnd()
-      .withAllowedModifierKeys(['shiftKey']);
+      .withAllowedModifierKeys(['shiftKey'])
+      .skipPredicate(
+        this._keyboardNavigationSkipsDisabled
+          ? this._skipDisabledPredicate
+          : this._skipNonePredicate,
+      );
 
     if (this.orientation === 'vertical') {
       this.listKeyManager.withVerticalOrientation();

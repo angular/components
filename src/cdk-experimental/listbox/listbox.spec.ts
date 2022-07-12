@@ -147,17 +147,44 @@ describe('CdkOption and CdkListbox', () => {
       testComponent.isMultiselectable = true;
       fixture.detectChanges();
 
-      dispatchMouseEvent(optionEls[1], 'click', undefined, undefined, undefined, {shift: true});
+      dispatchMouseEvent(
+        optionEls[1],
+        'click',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {shift: true},
+      );
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
 
-      dispatchMouseEvent(optionEls[3], 'click', undefined, undefined, undefined, {shift: true});
+      dispatchMouseEvent(
+        optionEls[3],
+        'click',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {shift: true},
+      );
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange', 'banana', 'peach']);
 
-      dispatchMouseEvent(optionEls[2], 'click', undefined, undefined, undefined, {shift: true});
+      dispatchMouseEvent(
+        optionEls[2],
+        'click',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {shift: true},
+      );
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
@@ -417,6 +444,36 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(options[2].isActive()).toBeTrue();
     });
+
+    it('should not skip disabled options when navigating with arrow keys when skipping is turned off', async () => {
+      const {testComponent, fixture, listbox, listboxEl, options} = await setupComponent(
+        ListboxWithOptions,
+      );
+      testComponent.navigationSkipsDisabled = false;
+      testComponent.isOrangeDisabled = true;
+      listbox.focus();
+      fixture.detectChanges();
+
+      expect(options[0].isActive()).toBeTrue();
+
+      dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(options[1].isActive()).toBeTrue();
+    });
+
+    it('should not select disabled options with CONTROL + A', async () => {
+      const {testComponent, fixture, listbox, listboxEl} = await setupComponent(ListboxWithOptions);
+      testComponent.isMultiselectable = true;
+      testComponent.isOrangeDisabled = true;
+      fixture.detectChanges();
+
+      listbox.focus();
+      dispatchKeyboardEvent(listboxEl, 'keydown', A, undefined, {control: true});
+      fixture.detectChanges();
+
+      expect(listbox.value).toEqual(['apple', 'banana', 'peach']);
+    });
   });
 
   describe('compare with', () => {
@@ -610,6 +667,39 @@ describe('CdkOption and CdkListbox', () => {
       dispatchKeyboardEvent(listboxEl, 'keydown', END, undefined, {control: true, shift: true});
 
       expect(listbox.value).toEqual([]);
+    });
+
+    it('should wrap navigation when wrapping is enabled', async () => {
+      const {fixture, listbox, listboxEl, options} = await setupComponent(ListboxWithOptions);
+      listbox.focus();
+      dispatchKeyboardEvent(listboxEl, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(options[options.length - 1].isActive()).toBeTrue();
+
+      dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(options[0].isActive()).toBeTrue();
+    });
+
+    it('should not wrap navigation when wrapping is not enabled', async () => {
+      const {testComponent, fixture, listbox, listboxEl, options} = await setupComponent(
+        ListboxWithOptions,
+      );
+      testComponent.navigationWraps = false;
+      fixture.detectChanges();
+
+      listbox.focus();
+      dispatchKeyboardEvent(listboxEl, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(options[options.length - 1].isActive()).toBeTrue();
+
+      dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(options[options.length - 1].isActive()).toBeTrue();
     });
   });
 
@@ -818,14 +908,17 @@ describe('CdkOption and CdkListbox', () => {
          [cdkListboxDisabled]="isListboxDisabled"
          [cdkListboxUseActiveDescendant]="isActiveDescendant"
          [cdkListboxOrientation]="orientation"
+         [cdkListboxKeyboardNavigationWraps]="navigationWraps"
+         [cdkListboxKeyboardNavigationSkipsDisabled]="navigationSkipsDisabled"
          (cdkListboxValueChange)="onSelectionChange($event)">
       <div cdkOption="apple"
-          [cdkOptionDisabled]="isAppleDisabled"
-          [id]="appleId"
-          [tabindex]="appleTabindex">
+           [cdkOptionDisabled]="isAppleDisabled"
+           [id]="appleId"
+           [tabindex]="appleTabindex">
         Apple
       </div>
-      <div cdkOption="orange" [cdkOptionDisabled]="isOrangeDisabled">Orange</div>
+      <div cdkOption="orange" [cdkOptionDisabled]="isOrangeDisabled">Orange
+      </div>
       <div cdkOption="banana">Banana</div>
       <div cdkOption="peach">Peach</div>
     </div>
@@ -838,6 +931,8 @@ class ListboxWithOptions {
   isOrangeDisabled = false;
   isMultiselectable = false;
   isActiveDescendant = false;
+  navigationWraps = true;
+  navigationSkipsDisabled = true;
   listboxId: string;
   listboxTabindex: number;
   appleId: string;
