@@ -69,11 +69,7 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "src",
-                "src/styles"
-              ]
+              "includePaths": ["node_modules", "src", "src/styles"]
             },
             "scripts": [],
             "vendorChunk": true,
@@ -110,7 +106,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "material-angular-io:build"
+            "browserTarget": "material-angular-io:build",
+            "headers": {
+              // Keep in sync with `firebase.json`
+              "Content-Security-Policy": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google-analytics.com https://www.googletagmanager.com; child-src 'self' blob:; connect-src 'self' https://material.angular.io https://*.google-analytics.com https://stats.g.doubleclick.net https://api.github.com https://www.googletagmanager.com;"
+            }
           },
           "configurations": {
             "production": {
@@ -161,11 +161,7 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "src",
-                "src/styles"
-              ]
+              "includePaths": ["node_modules", "src", "src/styles"]
             },
             "assets": [
               {
@@ -184,10 +180,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "e2e": {
@@ -223,13 +216,8 @@
             "main": "scenes/src/main.ts",
             "polyfills": "scenes/src/polyfills.ts",
             "tsConfig": "scenes/tsconfig.app.json",
-            "assets": [
-              "scenes/src/favicon.ico",
-              "scenes/src/assets"
-            ],
-            "styles": [
-              "scenes/src/styles.scss"
-            ],
+            "assets": ["scenes/src/favicon.ico", "scenes/src/assets"],
+            "styles": ["scenes/src/styles.scss"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -292,23 +280,15 @@
             "polyfills": "scenes/src/polyfills.ts",
             "tsConfig": "scenes/tsconfig.spec.json",
             "karmaConfig": "scenes/karma.conf.js",
-            "assets": [
-              "scenes/src/favicon.ico",
-              "scenes/src/assets"
-            ],
-            "styles": [
-              "scenes/src/styles.scss"
-            ],
+            "assets": ["scenes/src/favicon.ico", "scenes/src/assets"],
+            "styles": ["scenes/src/styles.scss"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "scenes/**/*.ts",
-              "scenes/**/*.html"
-            ]
+            "lintFilePatterns": ["scenes/**/*.ts", "scenes/**/*.html"]
           }
         },
         "e2e": {
