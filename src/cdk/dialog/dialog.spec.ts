@@ -12,6 +12,7 @@ import {
   Directive,
   Inject,
   Injector,
+  Optional,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -123,6 +124,21 @@ describe('Dialog', () => {
     expect(dialogInjector.get<DirectiveWithViewContainer>(DirectiveWithViewContainer)).toBeTruthy(
       'Expected the dialog component to be created with the injector from the viewContainerRef.',
     );
+  });
+
+  it('should use custom test injector', () => {
+    // Create a custom injector for the component.
+    let viewContainerFixtureChocolateInjector = TestBed.createComponent(PizzaSnack);
+    viewContainerFixtureChocolateInjector.detectChanges();
+    let chocolateInjector = new ChocolateInjector(
+      viewContainerFixtureChocolateInjector.componentInstance.injector,
+    );
+
+    let dialogRef = dialog.open(PizzaSnack, {
+      injector: chocolateInjector,
+    });
+
+    expect(dialogRef.componentInstance!.snack.toString()).toBe('Chocolate');
   });
 
   it('should open a dialog with a component and no ViewContainerRef', () => {
@@ -1223,3 +1239,26 @@ class DialogWithoutFocusableElements {}
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class ShadowDomComponent {}
+
+class Chocolate {
+  toString() {
+    return 'Chocolate';
+  }
+}
+
+class ChocolateInjector {
+  constructor(public parentInjector: Injector) {}
+
+  get(token: any) {
+    return token === Chocolate ? new Chocolate() : this.parentInjector.get<any>(token);
+  }
+}
+
+/** Simple component for testing custom injector. */
+@Component({
+  selector: 'pizza-snack',
+  template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
+})
+class PizzaSnack {
+  constructor(@Optional() public snack: Chocolate, public injector: Injector) {}
+}
