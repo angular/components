@@ -308,7 +308,7 @@ export class Dialog implements OnDestroy {
     dialogRef: DialogRef<R, C>,
     dialogContainer: BasePortalOutlet,
   ): Injector {
-    const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
+    const userInjector = config.injector ?? config.viewContainerRef?.injector;
     const providers: StaticProvider[] = [
       {provide: DIALOG_DATA, useValue: config.data},
       {provide: DialogRef, useValue: dialogRef},
