@@ -1,7 +1,10 @@
-import {MatSelectHarness} from '@angular/material/select/testing';
+import {MatRadioGroupHarness} from '@angular/material/radio/testing';
 import {SeleniumWebDriverHarnessEnvironment} from '@angular/cdk/testing/selenium-webdriver';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {configureDriver} from './driver.js';
+
+// Tests are flaky on CI unless we increase the timeout.
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10_000; // 10 seconds
 
 describe('app test', () => {
   let loader: HarnessLoader;
@@ -15,18 +18,14 @@ describe('app test', () => {
   });
 
   it('should work', async () => {
-    const select = await loader.getHarness(MatSelectHarness);
+    const group = await loader.getHarness(MatRadioGroupHarness);
 
-    expect(select).toBeDefined();
-    expect(await select.getValueText()).toBe('');
+    expect(group).toBeDefined();
+    expect(await group.getCheckedValue()).toBe(null);
 
-    await select.open();
+    const buttons = await group.getRadioButtons();
+    await buttons[1].check();
 
-    const options = await select.getOptions();
-
-    await options[0].click();
-    await select.close();
-
-    expect(await select.getValueText()).toBe('First');
+    expect(await group.getCheckedValue()).toBe('second');
   });
 });

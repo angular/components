@@ -19,8 +19,8 @@ ng_module(
     deps = [
         "//src/material-experimental/mdc-button",
         "//src/material-experimental/mdc-select",
-        "//src/material-experimental/mdc-tooltip",
         "//src/material/paginator",
+        "//src/material/tooltip",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",  # TODO(jelbourn): transitive dep via generated code
@@ -34,6 +34,7 @@ sass_library(
     deps = [
         "//:mdc_sass_lib",
         "//src/material:sass_lib",
+        "//src/material-experimental/mdc-form-field:mdc_form_field_scss_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -43,7 +44,6 @@ sass_binary(
     src = "paginator.scss",
     deps = [
         "//src/cdk:sass_lib",
-        "//src/material-experimental/mdc-form-field:mdc_form_field_scss_lib",
     ],
 )
 

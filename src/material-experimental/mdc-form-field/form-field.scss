@@ -36,6 +36,9 @@
 // Host element of the form-field. It contains the mdc-text-field wrapper
 // and the subscript wrapper.
 .mat-mdc-form-field {
+  // The scale to use for the form-field's label when its in the floating position.
+  --mat-mdc-form-field-floating-label-scale: 0.75;
+
   display: inline-flex;
   // This container contains the text-field and the subscript. The subscript
   // should be displayed below the text-field. Hence the column direction.
@@ -117,6 +120,21 @@
   // Needed so that the floating label does not overlap with prefixes or suffixes.
   position: relative;
   box-sizing: border-box;
+}
+
+// In the form-field theme, we add a 1px left margin to the notch to fix a rendering bug in Chrome.
+// Here we apply negative margin to offset the effect on the layout and a clip-path to ensure the
+// left border is completely hidden. (Though the border is transparent, it still creates a triangle
+// shaped artifact where it meets the top and bottom borders.)
+.mat-mdc-form-field .mdc-notched-outline__notch {
+  margin-left: -1px;
+  @include mat.private-clip-path(inset(-9em -9em -9em 1px));
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: -1px;
+    @include mat.private-clip-path(inset(-9em 1px -9em -9em));
+  }
 }
 
 // In order to make it possible for developers to disable animations for form-fields,
