@@ -1090,6 +1090,67 @@ describe('MDC-based MatSelectionList without forms', () => {
     );
   });
 
+  describe('with single selection and [allowDeselect]=true', () => {
+    let fixture: ComponentFixture<SelectionListWithListOptions>;
+    let listOptions: DebugElement[];
+    let selectionList: DebugElement;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithListOptions],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(SelectionListWithListOptions);
+      fixture.componentInstance.multiple = false;
+      fixture.componentInstance.allowDeselect = true;
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      fixture.detectChanges();
+    }));
+
+    function getFocusIndex() {
+      return listOptions.findIndex(o => document.activeElement === o.nativeElement);
+    }
+
+    it('should select one option at a time', () => {
+      const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
+      const testListItem2 = listOptions[2].injector.get<MatListOption>(MatListOption);
+      const selectList =
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+
+      dispatchMouseEvent(testListItem2._hostElement, 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem2]);
+    });
+
+    it('should deselect the target option on click', () => {
+      const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
+      const selectList =
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([]);
+    });
+  });
+
   describe('with single selection', () => {
     let fixture: ComponentFixture<ListOptionWithTwoWayBinding>;
     let optionElement: HTMLElement;
@@ -1578,7 +1639,8 @@ describe('MDC-based MatSelectionList with forms', () => {
     (selectionChange)="onSelectionChange($event)"
     [disableRipple]="listRippleDisabled"
     [color]="selectionListColor"
-    [multiple]="multiple">
+    [multiple]="multiple"
+    [allowDeselect]="allowDeselect">
     <mat-list-option checkboxPosition="before" disabled="true" value="inbox"
                      [color]="firstOptionColor">
       Inbox (disabled selection-option)
@@ -1602,6 +1664,7 @@ class SelectionListWithListOptions {
   showLastOption = true;
   listRippleDisabled = false;
   multiple = true;
+  allowDeselect = false;
   selectionListColor: ThemePalette;
   firstOptionColor: ThemePalette;
 

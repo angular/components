@@ -52,6 +52,7 @@ export const SELECTION_LIST = new InjectionToken<SelectionList>('SelectionList')
  */
 export interface SelectionList extends MatListBase {
   multiple: boolean;
+  allowDeselect: boolean;
   color: ThemePalette;
   selectedOptions: SelectionModel<MatListOption>;
   compareWith: (o1: any, o2: any) => boolean;
@@ -147,7 +148,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     if (isSelected !== this._selected) {
       this._setSelected(isSelected);
 
-      if (isSelected || this._selectionList.multiple) {
+      if (isSelected || this._selectionList.multiple || this._selectionList.allowDeselect) {
         this._selectionList._reportValueChange();
       }
     }
@@ -296,6 +297,9 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
         this._selectionList._emitChangeEvent([this]);
       } else if (!this.selected) {
         this.selected = true;
+        this._selectionList._emitChangeEvent([this]);
+      } else if (this._selectionList.allowDeselect) {
+        this.selected = false;
         this._selectionList._emitChangeEvent([this]);
       }
     }

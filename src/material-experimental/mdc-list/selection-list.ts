@@ -129,6 +129,10 @@ export class MatSelectionList
   }
   private _multiple = true;
 
+  /** Whether option can be deselected when multiple=false (default false). */
+  @Input()
+  allowDeselect: boolean = false;
+
   /** The currently selected options. */
   selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
