@@ -81,10 +81,7 @@ $mat-card-default-padding: 16px !default;
   // and subtitle go first (projected into a single div), followed by the media.
   display: flex;
   justify-content: space-between;
-
-  // Apply default padding for the title-group region. Omit any bottom padding because we assume
-  // this region will be followed by another region that includes top padding.
-  padding: $mat-card-default-padding $mat-card-default-padding 0;
+  width: 100%;
 }
 
 // Avatar image for a card. MDC does not specifically have a card avatar or a "common" avatar.
