@@ -1,0 +1,31 @@
+.example-listbox-container {
+  display: block;
+  width: 250px;
+  border: 1px solid black;
+}
+
+.example-listbox-label {
+  display: block;
+  padding: 5px;
+}
+
+.example-listbox {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.example-option {
+  position: relative;
+  padding: 5px 5px 5px 25px;
+}
+
+.example-option[aria-selected]::before {
+  content: '✓';
+  position: absolute;
+  left: 5px;
+}
+
+.example-option.cdk-option-active {
+  background: rgba(0, 0, 0, 0.2);
+}

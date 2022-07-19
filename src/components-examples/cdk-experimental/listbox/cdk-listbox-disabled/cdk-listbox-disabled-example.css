@@ -1,0 +1,49 @@
+.example-listbox-container {
+  display: block;
+  width: 250px;
+  border: 1px solid black;
+}
+
+.example-disabled {
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+.example-listbox-label {
+  display: block;
+  padding: 5px;
+}
+
+.example-disabled .example-listbox-label {
+  opacity: 0.5;
+}
+
+.example-listbox {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.example-option {
+  position: relative;
+  padding: 5px 5px 5px 25px;
+}
+
+.example-option[aria-selected]::before {
+  content: '✓';
+  position: absolute;
+  left: 5px;
+}
+
+.example-option[aria-disabled] {
+  opacity: 0.5;
+}
+
+.example-option.cdk-option-active {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.example-sold-out {
+  color: red;
+  font-size: 0.75em;
+  vertical-align: super;
+}
