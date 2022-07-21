@@ -22,14 +22,17 @@ import { ThemePalette } from '@angular/material/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
-export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatProgressSpinnerDefaultOptions>;
+export type LegacyProgressSpinnerMode = 'determinate' | 'indeterminate';
 
 // @public
-export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions;
+export const MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatLegacyProgressSpinnerDefaultOptions>;
 
 // @public
-export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnInit, OnDestroy, CanColor {
-    constructor(elementRef: ElementRef<HTMLElement>, _platform: Platform, _document: any, animationMode: string, defaults?: MatProgressSpinnerDefaultOptions,
+export function MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatLegacyProgressSpinnerDefaultOptions;
+
+// @public
+export class MatLegacyProgressSpinner extends _MatProgressSpinnerBase implements OnInit, OnDestroy, CanColor {
+    constructor(elementRef: ElementRef<HTMLElement>, _platform: Platform, _document: any, animationMode: string, defaults?: MatLegacyProgressSpinnerDefaultOptions,
     changeDetectorRef?: ChangeDetectorRef, viewportRuler?: ViewportRuler, ngZone?: NgZone);
     get diameter(): number;
     set diameter(size: NumberInput);
@@ -39,7 +42,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
     _getStrokeCircumference(): number;
     _getStrokeDashOffset(): number | null;
     _getViewBox(): string;
-    mode: ProgressSpinnerMode;
+    mode: LegacyProgressSpinnerMode;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -51,13 +54,13 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
     get value(): number;
     set value(newValue: NumberInput);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressSpinner, "mat-progress-spinner, mat-spinner", ["matProgressSpinner"], { "color": "color"; "diameter": "diameter"; "strokeWidth": "strokeWidth"; "mode": "mode"; "value": "value"; }, {}, never, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyProgressSpinner, "mat-progress-spinner, mat-spinner", ["matProgressSpinner"], { "color": "color"; "diameter": "diameter"; "strokeWidth": "strokeWidth"; "mode": "mode"; "value": "value"; }, {}, never, never, false>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressSpinner, [null, null, { optional: true; }, { optional: true; }, null, null, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyProgressSpinner, [null, null, { optional: true; }, { optional: true; }, null, null, null, null]>;
 }
 
 // @public
-export interface MatProgressSpinnerDefaultOptions {
+export interface MatLegacyProgressSpinnerDefaultOptions {
     color?: ThemePalette;
     diameter?: number;
     _forceAnimations?: boolean;
@@ -65,20 +68,17 @@ export interface MatProgressSpinnerDefaultOptions {
 }
 
 // @public (undocumented)
-export class MatProgressSpinnerModule {
+export class MatLegacyProgressSpinnerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressSpinnerModule, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyProgressSpinnerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressSpinnerModule>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<MatLegacyProgressSpinnerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, [typeof i1.MatProgressSpinner], [typeof i2.MatCommonModule, typeof i3.CommonModule], [typeof i1.MatProgressSpinner, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLegacyProgressSpinnerModule, [typeof i1.MatLegacyProgressSpinner], [typeof i2.MatCommonModule, typeof i3.CommonModule], [typeof i1.MatLegacyProgressSpinner, typeof i2.MatCommonModule]>;
 }
 
 // @public @deprecated (undocumented)
-export const MatSpinner: typeof MatProgressSpinner;
-
-// @public
-export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
+export const MatLegacySpinner: typeof MatLegacyProgressSpinner;
 
 // (No @packageDocumentation comment for this package)
 

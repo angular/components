@@ -4,15 +4,15 @@ import {By} from '@angular/platform-browser';
 import {_getShadowRoot, _supportsShadowDom} from '@angular/cdk/platform';
 import {CommonModule} from '@angular/common';
 import {
-  MatProgressSpinnerModule,
-  MatProgressSpinner,
-  MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+  MatLegacyProgressSpinnerModule,
+  MatLegacyProgressSpinner,
+  MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
 } from './index';
 
-describe('MatProgressSpinner', () => {
+describe('MatLegacyProgressSpinner', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatProgressSpinnerModule, CommonModule],
+      imports: [MatLegacyProgressSpinnerModule, CommonModule],
       declarations: [
         BasicProgressSpinner,
         IndeterminateProgressSpinner,
@@ -130,7 +130,7 @@ describe('MatProgressSpinner', () => {
 
   it('should default to a stroke width that is 10% of the diameter', () => {
     const fixture = TestBed.createComponent(ProgressSpinnerCustomDiameter);
-    const spinner = fixture.debugElement.query(By.directive(MatProgressSpinner))!;
+    const spinner = fixture.debugElement.query(By.directive(MatLegacyProgressSpinner))!;
 
     fixture.componentInstance.diameter = 67;
     fixture.detectChanges();
@@ -339,7 +339,7 @@ describe('MatProgressSpinner', () => {
 
   it('should handle the number inputs being passed in as strings', () => {
     const fixture = TestBed.createComponent(ProgressSpinnerWithStringValues);
-    const spinner = fixture.debugElement.query(By.directive(MatProgressSpinner))!;
+    const spinner = fixture.debugElement.query(By.directive(MatLegacyProgressSpinner))!;
     const svgElement = spinner.nativeElement.querySelector('svg');
 
     fixture.detectChanges();
@@ -357,7 +357,7 @@ describe('MatProgressSpinner', () => {
 
   it('should update the element size when changed dynamically', () => {
     const fixture = TestBed.createComponent(BasicProgressSpinner);
-    const spinner = fixture.debugElement.query(By.directive(MatProgressSpinner))!;
+    const spinner = fixture.debugElement.query(By.directive(MatLegacyProgressSpinner))!;
     spinner.componentInstance.diameter = 32;
     fixture.detectChanges();
     expect(spinner.nativeElement.style.width).toBe('32px');
@@ -367,11 +367,11 @@ describe('MatProgressSpinner', () => {
   it('should be able to set a default diameter', () => {
     TestBed.resetTestingModule()
       .configureTestingModule({
-        imports: [MatProgressSpinnerModule],
+        imports: [MatLegacyProgressSpinnerModule],
         declarations: [BasicProgressSpinner],
         providers: [
           {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
             useValue: {diameter: 23},
           },
         ],
@@ -388,11 +388,11 @@ describe('MatProgressSpinner', () => {
   it('should be able to set a default stroke width', () => {
     TestBed.resetTestingModule()
       .configureTestingModule({
-        imports: [MatProgressSpinnerModule],
+        imports: [MatLegacyProgressSpinnerModule],
         declarations: [BasicProgressSpinner],
         providers: [
           {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
             useValue: {strokeWidth: 7},
           },
         ],
@@ -409,11 +409,11 @@ describe('MatProgressSpinner', () => {
   it('should be able to set a default color', () => {
     TestBed.resetTestingModule()
       .configureTestingModule({
-        imports: [MatProgressSpinnerModule],
+        imports: [MatLegacyProgressSpinnerModule],
         declarations: [BasicProgressSpinner],
         providers: [
           {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
             useValue: {color: 'warn'},
           },
         ],
@@ -618,7 +618,7 @@ class IndeterminateSpinnerInShadowDom {
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class IndeterminateSpinnerInShadowDomWithNgIf {
-  @ViewChild(MatProgressSpinner, {read: ElementRef})
+  @ViewChild(MatLegacyProgressSpinner, {read: ElementRef})
   spinner: ElementRef<HTMLElement>;
 
   diameter: number;

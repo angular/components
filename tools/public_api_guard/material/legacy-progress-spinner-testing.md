@@ -7,18 +7,18 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { ProgressSpinnerMode } from '@angular/material/legacy-progress-spinner';
+import { LegacyProgressSpinnerMode } from '@angular/material/legacy-progress-spinner';
 
 // @public
-export class MatProgressSpinnerHarness extends ComponentHarness {
-    getMode(): Promise<ProgressSpinnerMode>;
-    getValue(): Promise<number | null>;
-    static hostSelector: string;
-    static with(options?: ProgressSpinnerHarnessFilters): HarnessPredicate<MatProgressSpinnerHarness>;
+export interface LegacyProgressSpinnerHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export interface ProgressSpinnerHarnessFilters extends BaseHarnessFilters {
+export class MatLegacyProgressSpinnerHarness extends ComponentHarness {
+    getMode(): Promise<LegacyProgressSpinnerMode>;
+    getValue(): Promise<number | null>;
+    static hostSelector: string;
+    static with(options?: LegacyProgressSpinnerHarnessFilters): HarnessPredicate<MatLegacyProgressSpinnerHarness>;
 }
 
 // (No @packageDocumentation comment for this package)

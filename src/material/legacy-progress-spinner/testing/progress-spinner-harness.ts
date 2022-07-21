@@ -8,12 +8,12 @@
 
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {ProgressSpinnerMode} from '@angular/material/legacy-progress-spinner';
-import {ProgressSpinnerHarnessFilters} from './progress-spinner-harness-filters';
+import {LegacyProgressSpinnerMode} from '@angular/material/legacy-progress-spinner';
+import {LegacyProgressSpinnerHarnessFilters} from './progress-spinner-harness-filters';
 
 /** Harness for interacting with a standard mat-progress-spinner in tests. */
-export class MatProgressSpinnerHarness extends ComponentHarness {
-  /** The selector for the host element of a `MatProgressSpinner` instance. */
+export class MatLegacyProgressSpinnerHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatLegacyProgressSpinner` instance. */
   static hostSelector = '.mat-progress-spinner';
 
   /**
@@ -23,9 +23,9 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(
-    options: ProgressSpinnerHarnessFilters = {},
-  ): HarnessPredicate<MatProgressSpinnerHarness> {
-    return new HarnessPredicate(MatProgressSpinnerHarness, options);
+    options: LegacyProgressSpinnerHarnessFilters = {},
+  ): HarnessPredicate<MatLegacyProgressSpinnerHarness> {
+    return new HarnessPredicate(MatLegacyProgressSpinnerHarness, options);
   }
 
   /** Gets the progress spinner's value. */
@@ -36,8 +36,8 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
   }
 
   /** Gets the progress spinner's mode. */
-  async getMode(): Promise<ProgressSpinnerMode> {
+  async getMode(): Promise<LegacyProgressSpinnerMode> {
     const modeAttr = (await this.host()).getAttribute('mode');
-    return (await modeAttr) as ProgressSpinnerMode;
+    return (await modeAttr) as LegacyProgressSpinnerMode;
   }
 }

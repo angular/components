@@ -5,7 +5,7 @@ import {
 } from '@angular/material-experimental/mdc-progress-spinner';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
-import {MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/legacy-progress-spinner';
+import {MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/legacy-progress-spinner';
 import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
 
 describe('MDC-based MatProgressSpinner', () => {
@@ -304,7 +304,7 @@ describe('MDC-based MatProgressSpinner', () => {
         declarations: [BasicProgressSpinner],
         providers: [
           {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
             useValue: {diameter: 23},
           },
         ],
@@ -325,7 +325,7 @@ describe('MDC-based MatProgressSpinner', () => {
         declarations: [BasicProgressSpinner],
         providers: [
           {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
             useValue: {strokeWidth: 7},
           },
         ],
@@ -346,7 +346,7 @@ describe('MDC-based MatProgressSpinner', () => {
         declarations: [BasicProgressSpinner],
         providers: [
           {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+            provide: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
             useValue: {color: 'warn'},
           },
         ],

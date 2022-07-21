@@ -19,8 +19,8 @@ import {
 import {CanColor, mixinColor} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
-  MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
-  MatProgressSpinnerDefaultOptions,
+  MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+  MatLegacyProgressSpinnerDefaultOptions,
 } from '@angular/material/legacy-progress-spinner';
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 
@@ -79,8 +79,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements CanCo
   constructor(
     elementRef: ElementRef<HTMLElement>,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-    @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-    defaults?: MatProgressSpinnerDefaultOptions,
+    @Inject(MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS)
+    defaults?: MatLegacyProgressSpinnerDefaultOptions,
   ) {
     super(elementRef);
     this._noopAnimations =

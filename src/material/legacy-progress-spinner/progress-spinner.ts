@@ -29,7 +29,7 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
 
 /** Possible mode for a progress spinner. */
-export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
+export type LegacyProgressSpinnerMode = 'determinate' | 'indeterminate';
 
 /**
  * Base reference size of the spinner.
@@ -43,7 +43,7 @@ const BASE_SIZE = 100;
  */
 const BASE_STROKE_WIDTH = 10;
 
-// Boilerplate for applying mixins to MatProgressSpinner.
+// Boilerplate for applying mixins to MatLegacyProgressSpinner.
 /** @docs-private */
 const _MatProgressSpinnerBase = mixinColor(
   class {
@@ -53,7 +53,7 @@ const _MatProgressSpinnerBase = mixinColor(
 );
 
 /** Default `mat-progress-spinner` options that can be overridden. */
-export interface MatProgressSpinnerDefaultOptions {
+export interface MatLegacyProgressSpinnerDefaultOptions {
   /** Default color of the spinner. */
   color?: ThemePalette;
   /** Diameter of the spinner. */
@@ -68,14 +68,17 @@ export interface MatProgressSpinnerDefaultOptions {
 }
 
 /** Injection token to be used to override the default options for `mat-progress-spinner`. */
-export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS =
-  new InjectionToken<MatProgressSpinnerDefaultOptions>('mat-progress-spinner-default-options', {
-    providedIn: 'root',
-    factory: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY,
-  });
+export const MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS =
+  new InjectionToken<MatLegacyProgressSpinnerDefaultOptions>(
+    'mat-progress-spinner-default-options',
+    {
+      providedIn: 'root',
+      factory: MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY,
+    },
+  );
 
 /** @docs-private */
-export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions {
+export function MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatLegacyProgressSpinnerDefaultOptions {
   return {diameter: BASE_SIZE};
 }
 
@@ -134,7 +137,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressSpinner
+export class MatLegacyProgressSpinner
   extends _MatProgressSpinnerBase
   implements OnInit, OnDestroy, CanColor
 {
@@ -189,7 +192,7 @@ export class MatProgressSpinner
   }
 
   /** Mode of the progress circle */
-  @Input() mode: ProgressSpinnerMode = 'determinate';
+  @Input() mode: LegacyProgressSpinnerMode = 'determinate';
 
   /** Value of the progress circle. */
   @Input()
@@ -205,8 +208,8 @@ export class MatProgressSpinner
     _platform: Platform,
     @Optional() @Inject(DOCUMENT) private _document: any,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-    @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-    defaults?: MatProgressSpinnerDefaultOptions,
+    @Inject(MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS)
+    defaults?: MatLegacyProgressSpinnerDefaultOptions,
     /**
      * @deprecated `changeDetectorRef`, `viewportRuler` and `ngZone`
      * parameters to become required.
@@ -218,7 +221,7 @@ export class MatProgressSpinner
   ) {
     super(elementRef);
 
-    const trackedDiameters = MatProgressSpinner._diameters;
+    const trackedDiameters = MatLegacyProgressSpinner._diameters;
     this._spinnerAnimationLabel = this._getSpinnerAnimationLabel();
 
     // The base size is already inserted via the component's structural styles. We still
@@ -324,7 +327,7 @@ export class MatProgressSpinner
   private _attachStyleNode(): void {
     const styleRoot = this._styleRoot;
     const currentDiameter = this._diameter;
-    const diameters = MatProgressSpinner._diameters;
+    const diameters = MatLegacyProgressSpinner._diameters;
     let diametersForElement = diameters.get(styleRoot);
 
     if (!diametersForElement || !diametersForElement.has(currentDiameter)) {
