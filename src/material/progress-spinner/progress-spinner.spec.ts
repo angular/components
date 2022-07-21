@@ -1,8 +1,5 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {
-  MatProgressSpinner,
-  MatProgressSpinnerModule,
-} from '@angular/material-experimental/mdc-progress-spinner';
+import {MatProgressSpinner, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/legacy-progress-spinner';

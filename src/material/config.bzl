@@ -70,6 +70,8 @@ entryPoints = [
     "progress-bar/testing",
     "legacy-progress-spinner",
     "legacy-progress-spinner/testing",
+    "progress-spinner",
+    "progress-spinner/testing",
     "radio",
     "radio/testing",
     "legacy-radio",

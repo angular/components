@@ -139,6 +139,8 @@
   legacy-progress-bar-theme, legacy-progress-bar-color, legacy-progress-bar-typography;
 @forward './progress-bar/progress-bar-theme' as progress-bar-* show
   progress-bar-theme, progress-bar-color, progress-bar-typography, progress-bar-density;
+@forward './progress-spinner/progress-spinner-theme' as progress-spinner-* show
+  progress-spinner-theme, progress-spinner-color, progress-spinner-typography;
 @forward './legacy-progress-spinner/progress-spinner-theme' as legacy-progress-spinner-* show
   legacy-progress-spinner-theme, legacy-progress-spinner-color, legacy-progress-spinner-typography;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,

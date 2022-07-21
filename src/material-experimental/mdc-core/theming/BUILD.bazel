@@ -36,6 +36,7 @@ sass_library(
         "//src/material/snack-bar:snack_bar_scss_lib",
         "//src/material/table:table_scss_lib",
         "//src/material/tabs:tabs_scss_lib",
+        "//src/material/progress-spinner:progress_spinner_scss_lib",
         "//src/material/tooltip:tooltip_scss_lib",
     ],
 )

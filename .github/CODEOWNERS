@@ -123,7 +123,7 @@
 /src/material/menu/**                                  @crisbeto
 /src/material/select/**                                @crisbeto
 /src/material/paginator/**                             @crisbeto
-/src/material-experimental/mdc-progress-spinner/**     @andrewseguin
+/src/material/progress-spinner/**     @andrewseguin
 /src/material/progress-bar/**         @andrewseguin
 /src/material/radio/**                                 @mmalerba
 /src/material/snack-bar/**            @andrewseguin

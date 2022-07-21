@@ -49,7 +49,7 @@ export const commitMessage: CommitMessageConfig = {
     'material/input',
     'material/paginator',
     'material/progress-bar',
-    'material-experimental/mdc-progress-spinner',
+    'material/progress-spinner',
     'material/slide-toggle',
     'material/snack-bar',
     'material/table',
