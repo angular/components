@@ -7,7 +7,7 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { ProgressSpinnerMode } from '@angular/material/legacy-progress-spinner';
 
 // @public
 export class MatProgressSpinnerHarness extends ComponentHarness {

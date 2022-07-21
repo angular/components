@@ -1,6 +1,6 @@
 import { MatDialogContainer as DialogContainer } from '@angular/material/dialog';
 import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
-import { MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS as SPINNER_DEFAULTS } from '@angular/material/progress-spinner';
+import { MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS as SPINNER_DEFAULTS } from '@angular/material/legacy-progress-spinner';
 
 // unsorted
 import { MatTreeNodeToggle, MatTreeNodeDef, MatTree } from '@angular/material/tree';

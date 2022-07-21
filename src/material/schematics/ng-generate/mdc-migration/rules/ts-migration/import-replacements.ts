@@ -60,7 +60,7 @@ export const IMPORT_REPLACEMENTS: {[component: string]: {old: string; new: strin
     new: '@angular/material-experimental/mdc-progress-bar',
   },
   'progress-spinner': {
-    old: '@angular/material/progress-spinner',
+    old: '@angular/material/legacy-progress-spinner',
     new: '@angular/material-experimental/mdc-progress-spinner',
   },
   'radio': {

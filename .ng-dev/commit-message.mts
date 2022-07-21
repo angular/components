@@ -90,7 +90,7 @@ export const commitMessage: CommitMessageConfig = {
     'material/prebuilt-themes',
     'material/legacy-prebuilt-themes',
     'material/legacy-progress-bar',
-    'material/progress-spinner',
+    'material/legacy-progress-spinner',
     'material/radio',
     'material/legacy-radio',
     'material/schematics',

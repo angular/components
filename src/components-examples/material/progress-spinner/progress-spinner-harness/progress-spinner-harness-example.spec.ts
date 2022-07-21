@@ -1,8 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatProgressSpinnerHarness} from '@angular/material/progress-spinner/testing';
+import {MatProgressSpinnerHarness} from '@angular/material/legacy-progress-spinner/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressSpinnerModule} from '@angular/material/legacy-progress-spinner';
 import {ProgressSpinnerHarnessExample} from './progress-spinner-harness-example';
 
 describe('ProgressSpinnerHarnessExample', () => {

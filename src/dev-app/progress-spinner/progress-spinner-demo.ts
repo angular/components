@@ -12,7 +12,7 @@ import {FormsModule} from '@angular/forms';
 import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressSpinnerModule} from '@angular/material/legacy-progress-spinner';
 
 @Component({
   selector: 'progress-spinner-demo',

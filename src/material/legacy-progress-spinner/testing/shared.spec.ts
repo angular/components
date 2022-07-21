@@ -2,7 +2,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressSpinnerModule} from '@angular/material/legacy-progress-spinner';
 import {MatProgressSpinnerHarness} from './progress-spinner-harness';
 
 /** Runs the shared unit tests for the progress spinner test harness. */

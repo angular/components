@@ -8,7 +8,7 @@
 
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
+import {ProgressSpinnerMode} from '@angular/material/legacy-progress-spinner';
 import {ProgressSpinnerHarnessFilters} from './progress-spinner-harness-filters';
 
 /** Harness for interacting with a standard mat-progress-spinner in tests. */

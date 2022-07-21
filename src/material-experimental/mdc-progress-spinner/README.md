@@ -77,7 +77,7 @@ following string replace across your TypeScript files:
 
 ```bash
 grep -lr --include="*.ts" --exclude-dir="node_modules" \
-  --exclude="*.d.ts" "['\"]@angular/material/progress-spinner['\"]" | xargs sed -i \
+  --exclude="*.d.ts" "['\"]@angular/material/legacy-progress-spinner['\"]" | xargs sed -i \
   "s/['\"]@angular\/material\/progress-spinner['\"]/'@angular\/material-experimental\/mdc-progress-spinner'/g"
 ```
 

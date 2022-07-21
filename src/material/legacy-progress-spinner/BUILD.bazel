@@ -13,7 +13,7 @@ load(
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
-    name = "progress-spinner",
+    name = "legacy-progress-spinner",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
@@ -32,7 +32,7 @@ ng_module(
 )
 
 sass_library(
-    name = "progress_spinner_scss_lib",
+    name = "legacy_progress_spinner_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = ["//src/material/core:core_scss_lib"],
 )
@@ -53,7 +53,7 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":progress-spinner",
+        ":legacy-progress-spinner",
         "//src/cdk/platform",
         "@npm//@angular/common",
         "@npm//@angular/platform-browser",

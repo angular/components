@@ -11,7 +11,7 @@ ts_library(
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
-        "//src/material/progress-spinner",
+        "//src/material/legacy-progress-spinner",
     ],
 )
 
@@ -27,7 +27,7 @@ ng_test_library(
         ":testing",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
-        "//src/material/progress-spinner",
+        "//src/material/legacy-progress-spinner",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -41,7 +41,7 @@ ng_test_library(
     deps = [
         ":harness_tests_lib",
         ":testing",
-        "//src/material/progress-spinner",
+        "//src/material/legacy-progress-spinner",
     ],
 )
 

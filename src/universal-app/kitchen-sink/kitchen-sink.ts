@@ -21,7 +21,7 @@ import {MatLegacyListModule} from '@angular/material/legacy-list';
 import {MatLegacyMenuModule} from '@angular/material/legacy-menu';
 import {MatLegacyPaginatorModule} from '@angular/material/legacy-paginator';
 import {MatLegacyProgressBarModule} from '@angular/material/legacy-progress-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressSpinnerModule} from '@angular/material/legacy-progress-spinner';
 import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
 import {MatLegacySelectModule} from '@angular/material/legacy-select';
 import {MatSidenavModule} from '@angular/material/sidenav';

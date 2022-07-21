@@ -5,7 +5,7 @@ import {
 } from '@angular/material-experimental/mdc-progress-spinner';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
-import {MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/progress-spinner';
+import {MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from '@angular/material/legacy-progress-spinner';
 import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
 
 describe('MDC-based MatProgressSpinner', () => {
