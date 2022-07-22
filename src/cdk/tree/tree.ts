@@ -365,7 +365,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   isExpanded(dataNode: T): boolean {
     return (
       this.treeControl?.isExpanded(dataNode) ??
-      this._expansionModel?.isSelected(this._trackExpansionKey(dataNode)) ??
+      this._expansionModel?.isSelected(this._getExpansionKey(dataNode)) ??
       false
     );
   }
@@ -375,7 +375,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     if (this.treeControl) {
       this.treeControl.toggle(dataNode);
     } else if (this._expansionModel) {
-      this._expansionModel.toggle(this._trackExpansionKey(dataNode));
+      this._expansionModel.toggle(this._getExpansionKey(dataNode));
     }
   }
 
@@ -384,7 +384,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     if (this.treeControl) {
       this.treeControl.expand(dataNode);
     } else if (this._expansionModel) {
-      this._expansionModel.select(this._trackExpansionKey(dataNode));
+      this._expansionModel.select(this._getExpansionKey(dataNode));
     }
   }
 
@@ -393,7 +393,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     if (this.treeControl) {
       this.treeControl.collapse(dataNode);
     } else if (this._expansionModel) {
-      this._expansionModel.deselect(this._trackExpansionKey(dataNode));
+      this._expansionModel.deselect(this._getExpansionKey(dataNode));
     }
   }
 
@@ -422,9 +422,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       this._getDescendants(dataNode)
-        .pipe(takeUntil(this._onDestroy))
+        .pipe(take(1), takeUntil(this._onDestroy))
         .subscribe(children => {
-          expansionModel.select(...children.map(child => this._trackExpansionKey(child)));
+          expansionModel.select(...children.map(child => this._getExpansionKey(child)));
         });
     }
   }
@@ -436,9 +436,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       this._getDescendants(dataNode)
-        .pipe(takeUntil(this._onDestroy))
+        .pipe(take(1), takeUntil(this._onDestroy))
         .subscribe(children => {
-          expansionModel.deselect(...children.map(child => this._trackExpansionKey(child)));
+          expansionModel.deselect(...children.map(child => this._getExpansionKey(child)));
         });
     }
   }
@@ -450,9 +450,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       this._getAllDescendants()
-        .pipe(takeUntil(this._onDestroy))
+        .pipe(take(1), takeUntil(this._onDestroy))
         .subscribe(children => {
-          expansionModel.select(...children.map(child => this._trackExpansionKey(child)));
+          expansionModel.select(...children.map(child => this._getExpansionKey(child)));
         });
     }
   }
@@ -464,9 +464,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       this._getAllDescendants()
-        .pipe(takeUntil(this._onDestroy))
+        .pipe(take(1), takeUntil(this._onDestroy))
         .subscribe(children => {
-          expansionModel.deselect(...children.map(child => this._trackExpansionKey(child)));
+          expansionModel.deselect(...children.map(child => this._getExpansionKey(child)));
         });
     }
   }
@@ -516,9 +516,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     if (this.childrenAccessor) {
       return this._getChildrenRecursively(dataNode).pipe(
         reduce(
-          (memo: T[], next) => {
-            memo.push(...next);
-            return memo;
+          (allChildren: T[], nextChildren) => {
+            allChildren.push(...nextChildren);
+            return allChildren;
           },
           [dataNode],
         ),
@@ -527,6 +527,12 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     throw getTreeControlMissingError();
   }
 
+  /**
+   * Gets all children and sub-children of the provided node.
+   *
+   * This will emit multiple times, in the order that the children will appear
+   * in the tree, and can be combined with a `reduce` operator.
+   */
   private _getChildrenRecursively(dataNode: T): Observable<T[]> {
     if (!this.childrenAccessor) {
       return observableOf([]);
@@ -543,7 +549,14 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     );
   }
 
-  private _trackExpansionKey(dataNode: T): K {
+  private _getExpansionKey(dataNode: T): K {
+    // In the case that a key accessor function was not provided by the
+    // tree user, we'll default to using the node object itself as the key.
+    //
+    // This cast is safe since:
+    // - if an expansionKey is provided, TS will infer the type of K to be
+    //   the return type.
+    // - if it's not, then K will be defaulted to T.
     return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
   }
 }
@@ -580,7 +593,7 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
 
   @Input()
   get isExpanded(): boolean {
-    return !!this._tree.isExpanded(this._data);
+    return this._tree.isExpanded(this._data);
   }
   set isExpanded(isExpanded: boolean) {
     if (isExpanded) {
