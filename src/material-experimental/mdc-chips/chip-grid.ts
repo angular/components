@@ -364,17 +364,32 @@ export class MatChipGrid
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
+    // This gets called a lot, so avoid doing unnecessary work.
+    if (this._ariaDescribedbyIds === ids) {
+      return;
+    }
+    if (this._ariaDescribedbyIds.length === ids.length) {
+      if (this._ariaDescribedbyIds.join(' ') === ids.join(' ')) {
+        return;
+      }
+    }
+
     // We must keep this up to date to handle the case where ids are set
     // before the chip input is registered.
     this._ariaDescribedbyIds = ids;
 
     if (this._chipInput) {
-      // Use a setTimeout in case this is being run during change detection
-      // and the chip input has already determined its host binding for
-      // aria-describedBy.
-      setTimeout(() => {
+      // Run in the next change detection cycle in case this is being run during
+      // change detection and the chip input has already determined its host binding
+      // for aria-describedBy.
+      // Using a promise instead of setTimeout() here is much better in terms of
+      // performance since multiple calls to setDescribedByIds() in multiple instances
+      // of the component will result in just one extra change detection after all
+      // microtasks have run, while setTimeout() would result in a separate change
+      // detection per call.
+      Promise.resolve().then(() => {
         this._chipInput.setDescribedByIds(ids);
-      }, 0);
+      });
     }
   }
 
