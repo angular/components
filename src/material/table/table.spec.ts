@@ -352,7 +352,7 @@ describe('MatTable', () => {
             dataStr = '';
         }
 
-        return dataStr.indexOf(filter) != -1;
+        return dataStr.indexOf(filter ?? '') != -1;
       };
       dataSource.filter = 'zebra';
       fixture.detectChanges();

@@ -23,5 +23,6 @@ import {_MatTableDataSource, MatTableDataSourcePaginator} from '@angular/materia
  */
 export class MatTableDataSource<
   T,
+  F,
   P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator,
-> extends _MatTableDataSource<T, P> {}
+> extends _MatTableDataSource<T, F, P> {}

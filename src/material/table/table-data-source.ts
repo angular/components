@@ -52,19 +52,20 @@ export interface MatTableDataSourcePaginator {
 /** Shared base class with MDC-based implementation. */
 export class _MatTableDataSource<
   T,
+  F,
   P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator,
 > extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
-  private readonly _data: BehaviorSubject<T[]>;
+  protected readonly _data: BehaviorSubject<T[]>;
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
-  private readonly _renderData = new BehaviorSubject<T[]>([]);
+  protected readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  private readonly _filter = new BehaviorSubject<string>('');
+  protected readonly _filter = new BehaviorSubject<F | null>(null);
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
-  private readonly _internalPageChanges = new Subject<void>();
+  protected readonly _internalPageChanges = new Subject<void>();
 
   /**
    * Subscription to the changes that should trigger an update to the table's rendered rows, such
@@ -98,10 +99,10 @@ export class _MatTableDataSource<
    * Filter term that should be used to filter out objects from the data array. To override how
    * data objects match to this filter string, provide a custom function for filterPredicate.
    */
-  get filter(): string {
+  get filter(): F | null {
     return this._filter.value;
   }
-  set filter(filter: string) {
+  set filter(filter: F | null) {
     this._filter.next(filter);
     // Normally the `filteredData` is updated by the re-render
     // subscription, but that won't happen if it's inactive.
@@ -235,7 +236,10 @@ export class _MatTableDataSource<
    * @param filter Filter string that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
-  filterPredicate: (data: T, filter: string) => boolean = (data: T, filter: string): boolean => {
+  filterPredicate: (data: T, filter: F | null) => boolean = (
+    data: T,
+    filter: F | null,
+  ): boolean => {
     // Transform the data into a lowercase string of all property values.
     const dataStr = Object.keys(data as unknown as Record<string, any>)
       .reduce((currentTerm: string, key: string) => {
@@ -249,10 +253,16 @@ export class _MatTableDataSource<
       }, '')
       .toLowerCase();
 
-    // Transform the filter by converting it to lowercase and removing whitespace.
-    const transformedFilter = filter.trim().toLowerCase();
+    if (typeof filter === 'string') {
+      // Transform the filter by converting it to lowercase and removing whitespace.
+      const transformedFilter = filter.trim().toLowerCase();
 
-    return dataStr.indexOf(transformedFilter) != -1;
+      return dataStr.indexOf(transformedFilter) != -1;
+    } else {
+      throw new Error(
+        'Base implementation only works with string filters, please assign your own filterPredicate',
+      );
+    }
   };
 
   constructor(initialData: T[] = []) {
@@ -311,7 +321,7 @@ export class _MatTableDataSource<
     // Each data object is converted to a string using the function defined by filterTermAccessor.
     // May be overridden for customization.
     this.filteredData =
-      this.filter == null || this.filter === ''
+      this.filter == null || (typeof this.filter === 'string' && this.filter === '')
         ? data
         : data.filter(obj => this.filterPredicate(obj, this.filter));
 
@@ -415,4 +425,4 @@ export class _MatTableDataSource<
  * interactions. If your app needs to support more advanced use cases, consider implementing your
  * own `DataSource`.
  */
-export class MatTableDataSource<T> extends _MatTableDataSource<T, MatPaginator> {}
+export class MatTableDataSource<T, F = string> extends _MatTableDataSource<T, F, MatPaginator> {}
