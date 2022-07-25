@@ -30,6 +30,6 @@
   right: 3px;
 }
 
-.example-option.cdk-option-active {
+.example-option:focus {
   background: rgba(0, 0, 0, 0.2);
 }
