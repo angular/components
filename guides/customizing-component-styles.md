@@ -22,7 +22,7 @@ in unexpected ways as the internal styles change between releases.
 
 ### Internal component elements
 
-Avoid any custom styles or overrides on internal elements within a Angular Material components.
+Avoid any custom styles or overrides on internal elements within an Angular Material components.
 The DOM structure and CSS classes applied for each component may change at any time, causing custom
 styles to break.
 
