@@ -79,8 +79,9 @@ Listboxes only support a single selected option at a time by default, but adding
 
 ### Listbox value
 
-The listbox's value is an array containing the values of the selected option(s). The listbox's value
-can be bound using `[cdkListboxValue]` and `(cdkListboxValueChange)`.
+The listbox's value is an array containing the values of the selected option(s). This is true even
+for the single selection listbox, whose value is an array containing a single element. The listbox's
+value can be bound using `[cdkListboxValue]` and `(cdkListboxValueChange)`.
 
 <!-- example({
   "example": "cdk-listbox-value-binding",
@@ -101,7 +102,7 @@ objects, you should provide a custom comparison function instead. This can be se
 
 ### Angular Forms support 
 
-The CDK Listbox has out of the box support for both template driven forms and reactive forms.
+The CDK Listbox supports both template driven forms and reactive forms.
 
 <!-- example({
   "example": "cdk-listbox-template-forms",
@@ -134,7 +135,7 @@ validation errors:
 
 ### Disabling options
 
-Individual options can be disabled for selection by setting `cdkOptionDisabled` on them.
+You can disable options for selection by setting `cdkOptionDisabled`.
 In addition, the entire listbox control can be disabled by setting `cdkListboxDisabled` on the
 listbox element.
 
@@ -172,7 +173,7 @@ If you prefer to use the [aria-activedescendant][activedescendant] strategy inst
 #### Orientation
 
 Listboxes assume a vertical orientation by default, but can be customized by setting the
-`cdkListboxOrientation` input oe listbox. Note that this only affects the keyboard navigation. You
+`cdkListboxOrientation` input. Note that this only affects the keyboard navigation. You
 will still need to adjust your CSS styles to change the visual appearance.
 
 <!-- example({
@@ -197,10 +198,10 @@ setting the `cdkOptionTypeaheadLabel` on the option.
 
 When using keyboard navigation to navigate through the options, the navigation wraps when attempting
 to navigate past the start or end of the options. To change this, set
-`cdkListboxNavigationWraps=false` on the listbox.
+`cdkListboxNavigationWrapDisabled` on the listbox.
 
 Keyboard navigation skips disabled options by default. To change this set
-`cdkListboxNavigationSkipsDisabled=false` on the listbox.
+`cdkListboxNavigatesDisabledOptions` on the listbox.
 
 <!-- example({
   "example": "cdk-listbox-custom-navigation",
@@ -211,6 +212,6 @@ Keyboard navigation skips disabled options by default. To change this set
 <!-- links -->
 
 [aria]: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/ 'WAI ARIA Listbox Pattern'
-[keyboard]: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/#keyboard-interaction-11
-[roving-tabindex]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets#technique_1_roving_tabindex
-[activedescendant]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets#technique_2_aria-activedescendant
+[keyboard]: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/#keyboard-interaction-11 'WAI ARIA Listbox Keyboard Interaction'
+[roving-tabindex]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets#technique_1_roving_tabindex 'MDN Roving Tabindex Technique'
+[activedescendant]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets#technique_2_aria-activedescendant 'MDN aria-activedescendant Technique'
