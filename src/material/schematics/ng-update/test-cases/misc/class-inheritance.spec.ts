@@ -5,7 +5,6 @@ import {MIGRATION_PATH} from '../../../paths';
 describe('class inheritance misc checks', () => {
   describe('v6 class which extends MatFormFieldControl', () => {
     it('should report if class does not declare "shouldLabelFloat"', async () => {
-      console.log('MIGRATION PATH: ---> ', MIGRATION_PATH);
       const {runFixers} = await createTestCaseSetup('migration-v6', MIGRATION_PATH, [
         runfiles.resolvePackageRelative('test-cases/misc/class-inheritance_input.ts'),
       ]);
