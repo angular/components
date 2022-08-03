@@ -12,9 +12,9 @@ ts_library(
         "//src/cdk/overlay",
         "//src/cdk/testing",
         "//src/material/dialog",
-        "//src/material/legacy-dialog/testing",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 

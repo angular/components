@@ -7,5 +7,5 @@
  */
 
 export * from './dialog-harness';
-export * from './dialog-harness-filters';
 export * from './dialog-opener';
+export {DialogHarnessFilters as LegacyDialogHarnessFilters} from '@angular/material/dialog/testing';

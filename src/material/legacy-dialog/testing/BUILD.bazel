@@ -12,6 +12,7 @@ ts_library(
         "//src/cdk/coercion",
         "//src/cdk/overlay",
         "//src/cdk/testing",
+        "//src/material/dialog/testing",
         "//src/material/legacy-dialog",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
