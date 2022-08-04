@@ -271,7 +271,7 @@ export function runHarnessTests(
       <input matInput [formControl]="requiredControl">
 
       <mat-error>Error 1</mat-error>
-      <mat-error>Error 2</mat-error>
+      <div matError>Error 2</div>
       <mat-hint align="start">Hint 1</mat-hint>
       <mat-hint align="end">Hint 2</mat-hint>
     </mat-form-field>
