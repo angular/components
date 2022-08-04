@@ -189,7 +189,9 @@ export function runHarnessTests(
 
     fixture.componentInstance.requiredControl.setValue('');
     dispatchFakeEvent(fixture.nativeElement.querySelector('#with-errors input'), 'blur');
-    expect(await formFields[1].getTextErrors()).toEqual(['Error 1', 'Error 2']);
+    expect(await formFields[1].getTextErrors()).toEqual(
+      isMdcImplementation ? ['Error 1', 'Error 2'] : ['Error 1'],
+    );
   });
 
   it('should be able to get hint messages of form-field', async () => {
