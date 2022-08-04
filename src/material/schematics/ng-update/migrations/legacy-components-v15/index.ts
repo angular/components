@@ -36,7 +36,7 @@ export class LegacyComponentsMigration extends Migration<null> {
   /** Returns the namespace of the given at-rule if it is importing from @angular/material. */
   private _parseSassNamespace(node: postcss.AtRule): string | undefined {
     if (node.params.startsWith('@angular/material', 1)) {
-      return node.params.split(/\s/).pop();
+      return node.params.split(/\s+/).pop();
     }
     return;
   }
@@ -50,11 +50,10 @@ export class LegacyComponentsMigration extends Migration<null> {
     if (!namespace || !node.source?.start) {
       return;
     }
-    const startStr = namespace + '.';
     if (this._isLegacyMixin(node, namespace)) {
       this._replaceAt(filePath, node.source.start.offset, {
-        old: startStr,
-        new: namespace + '.legacy-',
+        old: `${namespace}.`,
+        new: `${namespace}.legacy-`,
       });
     }
   }
@@ -62,7 +61,7 @@ export class LegacyComponentsMigration extends Migration<null> {
   /** Returns true if the given at-include rule is a use of a legacy component mixin. */
   private _isLegacyMixin(node: postcss.AtRule, namespace: string): boolean {
     for (let i = 0; i < MIXINS.length; i++) {
-      if (node.params.startsWith(namespace + '.' + MIXINS[i])) {
+      if (node.params.startsWith(`${namespace}.${MIXINS[i]}`)) {
         return true;
       }
     }

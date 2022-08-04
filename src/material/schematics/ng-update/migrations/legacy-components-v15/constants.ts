@@ -16,6 +16,8 @@ export const COMPONENTS = [
   'form-field',
   'input',
   'menu',
+  'option',
+  'optgroup',
   'paginator',
   'progress-bar',
   'progress-spinner',
