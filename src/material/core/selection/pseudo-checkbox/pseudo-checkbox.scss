@@ -6,13 +6,35 @@
 // Padding inside of a pseudo checkbox.
 $_padding: checkbox-common.$border-width * 2;
 
-// Size of the checkmark in a pseudo checkbox.
-$_checkmark-size: checkbox-common.$size - (2 * $_padding);
+/// Applies the styles that set the size of the pseudo checkbox
+@mixin _size($box-size) {
+  $mark-size: $box-size - (2 * $_padding);
 
+  .mat-pseudo-checkbox {
+    width: $box-size;
+    height: $box-size;
+  }
+
+  .mat-pseudo-checkbox-indeterminate::after {
+    top: math.div($box-size - checkbox-common.$border-width, 2) -
+      checkbox-common.$border-width;
+    width: $box-size - 6px;
+  }
+
+  .mat-pseudo-checkbox-checked::after {
+    top: math.div($box-size, 2) - math.div($mark-size, 4) -
+       math.div($box-size, 10) - checkbox-common.$border-width;
+    width: $mark-size;
+    height: math.div($mark-size - checkbox-common.$border-width, 2);
+  }
+}
+
+/// Applies the legacy size styles to the pseudo-checkbox
+@mixin legacy-size() {
+  @include _size(checkbox-common.$legacy-size);
+}
 
 .mat-pseudo-checkbox {
-  width: checkbox-common.$size;
-  height: checkbox-common.$size;
   border: checkbox-common.$border-width solid;
   border-radius: 2px;
   cursor: pointer;
@@ -51,22 +73,17 @@ $_checkmark-size: checkbox-common.$size - (2 * $_padding);
 }
 
 .mat-pseudo-checkbox-indeterminate::after {
-  top: math.div(checkbox-common.$size - checkbox-common.$border-width, 2) -
-      checkbox-common.$border-width;
   left: math.div(checkbox-common.$border-width, 2);
-  width: checkbox-common.$size - 6px;
   opacity: 1;
   border-radius: 2px;
 }
 
 .mat-pseudo-checkbox-checked::after {
-  top: math.div(checkbox-common.$size, 2) - math.div($_checkmark-size, 4) -
-       math.div(checkbox-common.$size, 10) - checkbox-common.$border-width;
   left: $_padding - checkbox-common.$border-width * 1.5;
-  width: $_checkmark-size;
-  height: math.div($_checkmark-size - checkbox-common.$border-width, 2);
   border-left: checkbox-common.$border-width solid currentColor;
   transform: rotate(-45deg);
   opacity: 1;
   box-sizing: content-box;
 }
+
+@include _size(checkbox-common.$size);
