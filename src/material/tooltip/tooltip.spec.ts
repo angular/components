@@ -11,7 +11,6 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-  dispatchTouchEvent,
   patchElementFocus,
 } from '../../cdk/testing/private';
 import {
@@ -236,10 +235,15 @@ describe('MDC-based MatTooltip', () => {
     }));
 
     it('should position on the bottom-left by default', fakeAsync(() => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
       TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule],
-          declarations: [WideTooltipDemo]
+          declarations: [WideTooltipDemo],
         })
         .compileComponents();
 
@@ -256,11 +260,20 @@ describe('MDC-based MatTooltip', () => {
       tick();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBeLessThan(triggerRect.right - 250);
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBeGreaterThanOrEqual(triggerRect.bottom);
+      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBeLessThan(
+        triggerRect.right - 250,
+      );
+      expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBeGreaterThanOrEqual(
+        triggerRect.bottom,
+      );
     }));
 
     it('should be able to override the default positionAtOrigin', fakeAsync(() => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
       TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule],
@@ -287,7 +300,9 @@ describe('MDC-based MatTooltip', () => {
       tick();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBe(triggerRect.right - 100 - 20);
+      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBe(
+        triggerRect.right - 100 - 20,
+      );
       expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBe(triggerRect.top + 100);
     }));
 
@@ -1258,10 +1273,7 @@ describe('MDC-based MatTooltip', () => {
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
-      const triggerRect = button.getBoundingClientRect();
-      const offsetX = triggerRect.right - 10;
-      const offsetY = triggerRect.top + 10;
-      dispatchTouchEvent(button, 'touchstart', offsetX, offsetY, offsetX, offsetY);
+      dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
       tick(250); // Halfway through the delay.
 
@@ -1280,10 +1292,7 @@ describe('MDC-based MatTooltip', () => {
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
-      const triggerRect = button.getBoundingClientRect();
-      const offsetX = triggerRect.right - 10;
-      const offsetY = triggerRect.top + 10;
-      dispatchTouchEvent(button, 'touchstart', offsetX, offsetY, offsetX, offsetY);
+      dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
       tick(500); // Finish the delay.
       fixture.detectChanges();
@@ -1296,10 +1305,7 @@ describe('MDC-based MatTooltip', () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-      const triggerRect = button.getBoundingClientRect();
-      const offsetX = triggerRect.right - 10;
-      const offsetY = triggerRect.top + 10;
-      const event = dispatchTouchEvent(button, 'touchstart', offsetX, offsetY, offsetX, offsetY);
+      const event = dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
 
       expect(event.defaultPrevented).toBe(false);
@@ -1310,10 +1316,7 @@ describe('MDC-based MatTooltip', () => {
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
-      const triggerRect = button.getBoundingClientRect();
-      const offsetX = triggerRect.right - 10;
-      const offsetY = triggerRect.top + 10;
-      dispatchTouchEvent(button, 'touchstart', offsetX, offsetY, offsetX, offsetY);
+      dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
       tick(500); // Finish the open delay.
       fixture.detectChanges();
@@ -1337,10 +1340,7 @@ describe('MDC-based MatTooltip', () => {
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
-      const triggerRect = button.getBoundingClientRect();
-      const offsetX = triggerRect.right - 10;
-      const offsetY = triggerRect.top + 10;
-      dispatchTouchEvent(button, 'touchstart', offsetX, offsetY, offsetX, offsetY);
+      dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
       tick(500); // Finish the open delay.
       fixture.detectChanges();
@@ -1472,9 +1472,8 @@ describe('MDC-based MatTooltip', () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-      const triggerRect = button.getBoundingClientRect();
 
-      dispatchMouseEvent(button, 'mouseenter', triggerRect.right - 10, triggerRect.top + 10);
+      dispatchFakeEvent(button, 'mouseenter');
       fixture.detectChanges();
       tick(500); // Finish the open delay.
       fixture.detectChanges();
@@ -1506,9 +1505,8 @@ describe('MDC-based MatTooltip', () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-      const triggerRect = button.getBoundingClientRect();
 
-      dispatchMouseEvent(button, 'mouseenter', triggerRect.right - 10, triggerRect.top + 10);
+      dispatchFakeEvent(button, 'mouseenter');
       fixture.detectChanges();
       tick(500); // Finish the open delay.
       fixture.detectChanges();
@@ -1516,6 +1514,7 @@ describe('MDC-based MatTooltip', () => {
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
       // Simulate the pointer over the trigger.
+      const triggerRect = button.getBoundingClientRect();
       const wheelEvent = createFakeEvent('wheel');
       Object.defineProperties(wheelEvent, {
         clientX: {get: () => triggerRect.left + 1},

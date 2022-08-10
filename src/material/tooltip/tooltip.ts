@@ -407,7 +407,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
-  show(delay: number = this.showDelay, origin?: { x: number, y: number }): void {
+  show(delay: number = this.showDelay, origin?: {x: number; y: number}): void {
     if (
       this.disabled ||
       !this.message ||
@@ -442,7 +442,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   }
 
   /** Shows/hides the tooltip */
-  toggle(origin?: { x: number; y: number; }): void {
+  toggle(origin?: {x: number; y: number}): void {
     this._isTooltipVisible() ? this.hide() : this.show(undefined, origin);
   }
 
@@ -452,10 +452,10 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   }
 
   /** Create the overlay config and position strategy */
-  private _createOverlay(origin?: { x: number; y: number; }): OverlayRef {
+  private _createOverlay(origin?: {x: number; y: number}): OverlayRef {
     if (this._overlayRef) {
-      const existingStrategy =
-        this._overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
+      const existingStrategy = this._overlayRef.getConfig()
+        .positionStrategy as FlexibleConnectedPositionStrategy;
 
       if ((!this.positionAtOrigin || !origin) && existingStrategy._origin instanceof ElementRef) {
         return this._overlayRef;
@@ -471,7 +471,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay
       .position()
-      .flexibleConnectedTo(this.positionAtOrigin ? (origin || this._elementRef) : this._elementRef)
+      .flexibleConnectedTo(this.positionAtOrigin ? origin || this._elementRef : this._elementRef)
       .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
       .withFlexibleDimensions(false)
       .withViewportMargin(this._viewportMargin)
@@ -716,7 +716,11 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
         'mouseenter',
         event => {
           this._setupPointerExitEventsIfNeeded();
-          this.show(undefined, { x: (event as MouseEvent).x, y: (event as MouseEvent).y });
+          let point = undefined;
+          if ((event as MouseEvent).x !== undefined && (event as MouseEvent).y !== undefined) {
+            point = event as MouseEvent;
+          }
+          this.show(undefined, point);
         },
       ]);
     } else if (this.touchGestures !== 'off') {
@@ -725,8 +729,8 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
       this._passiveListeners.push([
         'touchstart',
         event => {
-          const touch = (event as TouchEvent).targetTouches[0];
-          const origin = touch ? { x: touch.clientX, y: touch.clientY } : undefined;
+          const touch = (event as TouchEvent).targetTouches?.[0];
+          const origin = touch ? {x: touch.clientX, y: touch.clientY} : undefined;
           // Note that it's important that we don't `preventDefault` here,
           // because it can prevent click events from firing on the element.
           this._setupPointerExitEventsIfNeeded();
