@@ -329,10 +329,7 @@ export class MatChipList
   }
   set selectable(value: BooleanInput) {
     this._selectable = coerceBooleanProperty(value);
-
-    if (this.chips) {
-      this.chips.forEach(chip => (chip.chipListSelectable = this._selectable));
-    }
+    this._syncChipsState();
   }
   protected _selectable: boolean = true;
 
@@ -414,7 +411,7 @@ export class MatChipList
 
     // When the list changes, re-subscribe
     this.chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      if (this.disabled) {
+      if (this.disabled || !this.selectable) {
         // Since this happens after the content has been
         // checked, we need to defer it to the next tick.
         Promise.resolve().then(() => {
@@ -844,6 +841,7 @@ export class MatChipList
       this.chips.forEach(chip => {
         chip._chipListDisabled = this._disabled;
         chip._chipListMultiple = this.multiple;
+        chip.chipListSelectable = this._selectable;
       });
     }
   }
