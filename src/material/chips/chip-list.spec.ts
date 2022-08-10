@@ -753,7 +753,7 @@ describe('MatChipList', () => {
       tick();
       falsyFixture.detectChanges();
 
-      const chipListElement = falsyFixture.debugElement.query(By.directive(MatLegacyChipList))!;
+      const chipListElement = falsyFixture.debugElement.query(By.directive(MatChipList))!;
       const currentChips = chipListElement.componentInstance.chips;
       const currentNativeChips = falsyFixture.debugElement
         .queryAll(By.css('mat-chip'))
@@ -1917,6 +1917,6 @@ class FalsyBasicChipList {
   tabIndexOverride: number;
   selectable: boolean = false;
 
-  @ViewChild(MatLegacyChipList) chipList: MatLegacyChipList;
-  @ViewChildren(MatLegacyChip) chips: QueryList<MatLegacyChip>;
+  @ViewChild(MatChipList) chipList: MatChipList;
+  @ViewChildren(MatChip) chips: QueryList<MatChip>;
 }
