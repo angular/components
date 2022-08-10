@@ -28,7 +28,7 @@ export abstract class _MatTooltipHarnessBase extends ComponentHarness {
     // We need to dispatch both `touchstart` and a hover event, because the tooltip binds
     // different events depending on the device. The `changedTouches` is there in case the
     // element has ripples.
-    await host.dispatchEvent('touchstart', {changedTouches: []});
+    await host.dispatchEvent('touchstart', {targetTouches: [{pageX: 0, pageY: 0}]});
     await host.hover();
     const panel = await this._optionalPanel();
     await panel?.dispatchEvent('animationend', {animationName: this._showAnimationName});

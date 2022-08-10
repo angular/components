@@ -236,10 +236,15 @@ describe('MDC-based MatTooltip', () => {
     }));
 
     it('should position on the bottom-left by default', fakeAsync(() => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
       TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule],
-          declarations: [WideTooltipDemo]
+          declarations: [WideTooltipDemo],
         })
         .compileComponents();
 
@@ -256,11 +261,20 @@ describe('MDC-based MatTooltip', () => {
       tick();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBeLessThan(triggerRect.right - 250);
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBeGreaterThanOrEqual(triggerRect.bottom);
+      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBeLessThan(
+        triggerRect.right - 250,
+      );
+      expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBeGreaterThanOrEqual(
+        triggerRect.bottom,
+      );
     }));
 
     it('should be able to override the default positionAtOrigin', fakeAsync(() => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
       TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule],
@@ -287,7 +301,9 @@ describe('MDC-based MatTooltip', () => {
       tick();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBe(triggerRect.right - 100 - 20);
+      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBe(
+        triggerRect.right - 100 - 20,
+      );
       expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBe(triggerRect.top + 100);
     }));
 
