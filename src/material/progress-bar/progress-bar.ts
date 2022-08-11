@@ -79,12 +79,9 @@ export class MatProgressBar
     super(elementRef);
     this._isNoopAnimation = _animationMode === 'NoopAnimations';
 
-    if (defaults) {
-      if (defaults.color) {
+    if (defaults && defaults.color) {
         this.color = this.defaultColor = defaults.color;
-      }
-
-      this.mode = defaults.mode || this.mode;
+        this.mode = defaults.mode || this.mode;
     }
   }
 
