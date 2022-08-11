@@ -53,6 +53,20 @@ describe('MatTableDataSource', () => {
       testSortWithValues([3, 'apples', 'bananas', 'cherries', 'lemons', 'strawberries']);
     });
 
+    it('should be able to correctly sort an array of strings and numbers with left zero', () => {
+      testSortWithValues([
+        3,
+        '001',
+        '2',
+        4,
+        'apples',
+        'bananas',
+        'cherries',
+        'lemons',
+        'strawberries',
+      ]);
+    });
+
     it('should unsubscribe from the re-render stream when disconnected', () => {
       const spy = spyOn(dataSource._renderChangesSubscription!, 'unsubscribe');
       dataSource.disconnect();

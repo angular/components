@@ -190,16 +190,17 @@ export class _MatTableDataSource<
 
       // If there are data in the column that can be converted to a number,
       // it must be ensured that the rest of the data
-      // is of the same type so as not to order incorrectly.
+      // is of the same type so as not to order incorrectly
+      // return default value to not lose leading zeros.
       const valueAType = typeof valueA;
       const valueBType = typeof valueB;
 
       if (valueAType !== valueBType) {
         if (valueAType === 'number') {
-          valueA += '';
+          valueA = (a as unknown as Record<string, any>)[active];
         }
         if (valueBType === 'number') {
-          valueB += '';
+          valueB = (b as unknown as Record<string, any>)[active];
         }
       }
 
