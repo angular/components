@@ -151,7 +151,32 @@ export class _MatTableDataSource<
    * @param data Data object that is being accessed.
    * @param sortHeaderId The name of the column that represents the data.
    */
-  sortingDataAccessor: (data: T, sortHeaderId: string) => string | number = (
+  sortingDataAccessor: (data: T, sortHeaderId: string) => string | number;
+
+  /**
+   * `sortingDataAccessor` is currently a regular property, however we need to know when it is
+   * updated so that we can re-render the data. The problem is that we can't turn it into a
+   * getter/setter, because it'll break existing users that define the accessor by extending the
+   * class and initializing it to a new value. This is a workaround that'll preserve the old
+   * behavior for users who override it and apply the fix for ones who don't. Eventually we should
+   * reconcile these behaviors.
+   * @breaking-change 15.0.0
+   */
+  private _defineSortingDataAccessor() {
+    if (!this.sortingDataAccessor) {
+      Object.defineProperty(this, 'sortingDataAccessor', {
+        get: () => this._sortingDataAccessor,
+        set: accessor => {
+          this._sortingDataAccessor = accessor;
+          if (this._updateChangeSubscription) {
+            this._updateChangeSubscription();
+          }
+        },
+      });
+    }
+  }
+
+  private _sortingDataAccessor: (data: T, sortHeaderId: string) => string | number = (
     data: T,
     sortHeaderId: string,
   ): string | number => {
@@ -258,6 +283,7 @@ export class _MatTableDataSource<
   constructor(initialData: T[] = []) {
     super();
     this._data = new BehaviorSubject<T[]>(initialData);
+    this._defineSortingDataAccessor();
     this._updateChangeSubscription();
   }
 
