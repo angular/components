@@ -18,6 +18,7 @@ interface VersionInfo {
 @Component({
   selector: 'version-picker',
   templateUrl: './version-picker.html',
+  styleUrls: ['./version-picker.scss']
 })
 export class VersionPicker {
   /** The currently running version of Material. */
