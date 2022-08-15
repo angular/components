@@ -23,7 +23,7 @@ describe('progress-spinner styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
-        @include mat.legacy-progress-spinner-theme($theme);
+        @include mat.progress-spinner-theme($theme);
       `,
         `
         @use '@angular/material' as mat;
@@ -56,8 +56,8 @@ describe('progress-spinner styles', () => {
         @use '@angular/material' as mat;
         $light-theme: ();
         $dark-theme: ();
-        @include mat.legacy-progress-spinner-theme($light-theme);
-        @include mat.legacy-progress-spinner-theme($dark-theme);
+        @include mat.progress-spinner-theme($light-theme);
+        @include mat.progress-spinner-theme($dark-theme);
       `,
         `
         @use '@angular/material' as mat;
@@ -78,7 +78,7 @@ describe('progress-spinner styles', () => {
         $theme: ();
 
 
-        @include mat.legacy-progress-spinner-theme($theme);
+        @include mat.progress-spinner-theme($theme);
 
 
       `,
