@@ -11,6 +11,10 @@
   }
 }
 
+.mat-mdc-button-base:not(:disabled) {
+  color: inherit;
+}
+
 .flex-spacer {
   flex-grow: 1;
 }
