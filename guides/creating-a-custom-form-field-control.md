@@ -307,6 +307,18 @@ set required(req) {
 private _required = false;
 ```
 
+You might noticed that now required state should be passed only by `Input()`. To make it reactive, 
+you should bind component's required state with current ngControl required state:
+
+```ts
+@Input()
+get required(): boolean {
+  return Boolean(this._required || this.ngControl?.control?.hasValidator(Validators.required));
+}
+```
+
+Now `required` asterisk (\*) will be in sync with form validators
+
 #### `disabled`
 
 This property tells the form field when it should be in the disabled state. In addition to reporting
