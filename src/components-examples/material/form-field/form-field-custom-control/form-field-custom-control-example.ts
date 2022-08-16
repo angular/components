@@ -94,7 +94,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
 
   @Input()
   get required(): boolean {
-    return this._required;
+    return Boolean(this._required || this.ngControl?.control?.hasValidator(Validators.required));
   }
   set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
