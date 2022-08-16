@@ -845,7 +845,7 @@ export abstract class _MatAutocompleteTriggerBase
   }
 
   /** This stopPropagation is needed to openPanel works from outside through matAutocompleteTrigger. */
-  _preventPropagationClickFromOutside(): void {
+  private _preventPropagationClickFromOutside(): void {
     if (!this.panelOpen) {
       fromEvent(this._document, 'click')
         .pipe(take(1))
