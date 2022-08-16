@@ -254,6 +254,7 @@ export abstract class _MatAutocompleteTriggerBase
 
   /** Opens the autocomplete suggestion panel. */
   openPanel(): void {
+    this._preventPropagationClickFromOutside();
     this._attachOverlay();
     this._floatLabel();
   }
@@ -841,6 +842,19 @@ export abstract class _MatAutocompleteTriggerBase
     // TODO(crisbeto): we should switch `_getOutsideClickStream` eventually to use this stream,
     // but the behvior isn't exactly the same and it ends up breaking some internal tests.
     overlayRef.outsidePointerEvents().subscribe();
+  }
+
+  /** This stopPropagation is needed to openPanel works from outside through matAutocompleteTrigger. */
+  _preventPropagationClickFromOutside(): void {
+    if (!this.panelOpen) {
+      fromEvent(this._document, 'click')
+        .pipe(take(1))
+        .subscribe((event: any) => {
+          if (this._element.nativeElement !== event.srcElement && event.isTrusted) {
+            event.stopImmediatePropagation();
+          }
+        });
+    }
   }
 }
 
