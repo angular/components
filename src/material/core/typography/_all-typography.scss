@@ -33,11 +33,10 @@
 @use '../../toolbar/toolbar-theme';
 @use '../../tooltip/tooltip-theme';
 @use '../../snack-bar/snack-bar-theme';
-@use '../option/option-theme';
-@use '../option/optgroup-theme';
 @use '../../form-field/form-field-theme';
 @use '../../tree/tree-theme';
 @use '../theming/theming';
+@use '../core-theme';
 
 @mixin private-all-unmigrated-component-typographies($config) {
   @include badge-theme.typography($config);
@@ -74,10 +73,9 @@
   // mixin that is transitively loaded by the `all-theme` file, imports `all-typography` which
   // would then load `all-theme` again. This ultimately results a circular dependency.
   @include private-all-unmigrated-component-typographies($config);
+  @include core-theme.typography($config);
   @include card-theme.typography($config);
   @include progress-bar-theme.typography($config);
-  @include option-theme.typography($config);
-  @include optgroup-theme.typography($config);
   @include tooltip-theme.typography($config);
   @include form-field-theme.typography($config);
   @include input-theme.typography($config);
