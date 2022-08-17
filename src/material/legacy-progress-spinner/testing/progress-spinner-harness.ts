@@ -13,7 +13,7 @@ import {LegacyProgressSpinnerHarnessFilters} from './progress-spinner-harness-fi
 
 /** Harness for interacting with a standard mat-progress-spinner in tests. */
 export class MatLegacyProgressSpinnerHarness extends ComponentHarness {
-  /** The selector for the host element of a `MatLegacyProgressSpinner` instance. */
+  /** The selector for the host element of a Progress Spinner instance. */
   static hostSelector = '.mat-progress-spinner';
 
   /**
