@@ -1,0 +1,91 @@
+@use 'sass:map';
+@use '@material/fab/fab' as mdc-fab;
+@use '@material/fab/fab-theme' as mdc-fab-theme;
+@use '@material/theme/theme-color' as mdc-theme-color;
+
+@use './button-theme-private';
+@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+
+@mixin _fab-variant($foreground, $background) {
+  @include mdc-fab-theme.theme((
+    container-color: $background,
+    icon-color: $foreground,
+  ));
+
+  --mat-mdc-fab-color: #{$foreground};
+}
+
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  @include mdc-helpers.using-mdc-theme($config) {
+    $on-surface: mdc-theme-color.prop-value(on-surface);
+    $is-dark: map.get($config, is-dark);
+
+    .mat-mdc-fab, .mat-mdc-mini-fab {
+      @include button-theme-private.ripple-theme-styles($config, true);
+
+      &.mat-unthemed {
+        @include _fab-variant($on-surface, mdc-theme-color.prop-value(surface));
+      }
+
+      &.mat-primary {
+        @include _fab-variant(
+          mdc-theme-color.prop-value(on-primary),
+          mdc-theme-color.prop-value(primary)
+        );
+      }
+
+      &.mat-accent {
+        @include _fab-variant(
+          mdc-theme-color.prop-value(on-secondary),
+          mdc-theme-color.prop-value(secondary)
+        );
+      }
+
+      &.mat-warn {
+        @include _fab-variant(
+          mdc-theme-color.prop-value(on-error),
+          mdc-theme-color.prop-value(error)
+        );
+      }
+
+      @include button-theme-private.apply-disabled-style() {
+        @include _fab-variant(
+          rgba($on-surface, if(map.get($config, is-dark), 0.5, 0.38)),
+          rgba($on-surface, 0.12)
+        );
+      }
+    }
+  }
+}
+
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2018-config(
+    theming.get-typography-config($config-or-theme));
+  @include mdc-helpers.using-mdc-typography($config) {
+    @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
+  }
+}
+
+@mixin density($config-or-theme) {}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-fab') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}

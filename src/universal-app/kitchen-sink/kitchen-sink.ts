@@ -5,30 +5,30 @@ import {CdkTableModule, DataSource} from '@angular/cdk/table';
 import {Component, ElementRef, NgModule, ErrorHandler} from '@angular/core';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
 import {MatLegacyAutocompleteModule} from '@angular/material/legacy-autocomplete';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatLegacyCardModule} from '@angular/material/legacy-card';
 import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
 import {MatLegacyChipsModule} from '@angular/material/legacy-chips';
-import {MatTableModule} from '@angular/material/table';
+import {MatLegacyTableModule} from '@angular/material/legacy-table';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatLegacyDialogModule, MatLegacyDialog} from '@angular/material/legacy-dialog';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatLegacyInputModule} from '@angular/material/legacy-input';
-import {MatListModule} from '@angular/material/list';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatLegacyListModule} from '@angular/material/legacy-list';
+import {MatLegacyMenuModule} from '@angular/material/legacy-menu';
+import {MatLegacyPaginatorModule} from '@angular/material/legacy-paginator';
 import {MatLegacyProgressBarModule} from '@angular/material/legacy-progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatRadioModule} from '@angular/material/radio';
+import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
 import {MatLegacySelectModule} from '@angular/material/legacy-select';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatSnackBarModule, MatSnackBar} from '@angular/material/snack-bar';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatLegacySliderModule} from '@angular/material/legacy-slider';
+import {MatLegacySlideToggleModule} from '@angular/material/legacy-slide-toggle';
+import {MatLegacySnackBarModule, MatLegacySnackBar} from '@angular/material/legacy-snack-bar';
+import {MatLegacyTabsModule} from '@angular/material/legacy-tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatLegacyTooltipModule} from '@angular/material/legacy-tooltip';
 import {MatBottomSheetModule, MatBottomSheet} from '@angular/material/bottom-sheet';
@@ -77,7 +77,7 @@ export class KitchenSink {
   virtualScrollData = Array(10000).fill(50);
 
   constructor(
-    snackBar: MatSnackBar,
+    snackBar: MatLegacySnackBar,
     dialog: MatLegacyDialog,
     viewportRuler: ViewportRuler,
     focusMonitor: FocusMonitor,
@@ -101,7 +101,7 @@ export class KitchenSink {
     MatLegacyAutocompleteModule,
     MatBadgeModule,
     MatBottomSheetModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatButtonToggleModule,
     MatLegacyCardModule,
     MatLegacyCheckboxModule,
@@ -113,25 +113,25 @@ export class KitchenSink {
     MatGridListModule,
     MatIconModule,
     MatLegacyInputModule,
-    MatListModule,
-    MatMenuModule,
+    MatLegacyListModule,
+    MatLegacyMenuModule,
     MatNativeDateModule,
-    MatPaginatorModule,
+    MatLegacyPaginatorModule,
     MatLegacyProgressBarModule,
     MatProgressSpinnerModule,
-    MatRadioModule,
+    MatLegacyRadioModule,
     MatRippleModule,
     MatLegacySelectModule,
     MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatTabsModule,
+    MatLegacySliderModule,
+    MatLegacySlideToggleModule,
+    MatLegacySnackBarModule,
+    MatLegacyTabsModule,
     MatToolbarModule,
     MatLegacyTooltipModule,
     MatExpansionModule,
     MatSortModule,
-    MatTableModule,
+    MatLegacyTableModule,
     MatStepperModule,
     ScrollingModule,
 

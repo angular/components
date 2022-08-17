@@ -8,14 +8,14 @@
 
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatLegacySliderModule} from '@angular/material/legacy-slider';
+import {MatLegacyTabsModule} from '@angular/material/legacy-tabs';
 
 @Component({
   selector: 'slider-demo',
   templateUrl: 'slider-demo.html',
   standalone: true,
-  imports: [FormsModule, MatSliderModule, MatTabsModule],
+  imports: [FormsModule, MatLegacySliderModule, MatLegacyTabsModule],
 })
 export class SliderDemo {
   demo: number;

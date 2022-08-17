@@ -1,11 +1,11 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
 import {MatIconModule} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
-import {MatRadioModule} from '@angular/material/radio';
+import {MatLegacyListModule} from '@angular/material/legacy-list';
+import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
 import {MatLegacySelectModule} from '@angular/material/legacy-select';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -53,11 +53,11 @@ const EXAMPLES = [
   imports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatLegacyCheckboxModule,
     MatIconModule,
-    MatListModule,
-    MatRadioModule,
+    MatLegacyListModule,
+    MatLegacyRadioModule,
     MatSidenavModule,
     MatLegacySelectModule,
     MatToolbarModule,

@@ -9,7 +9,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatLegacyCardModule} from '@angular/material/legacy-card';
 import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
@@ -18,7 +18,7 @@ import {FloatLabelType, MatLegacyFormFieldModule} from '@angular/material/legacy
 import {MatIconModule} from '@angular/material/icon';
 import {MatLegacyInputModule} from '@angular/material/legacy-input';
 import {MatLegacySelectModule} from '@angular/material/legacy-select';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatLegacyTabsModule} from '@angular/material/legacy-tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
 let max = 5;
@@ -34,7 +34,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
   imports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatButtonToggleModule,
     MatLegacyCardModule,
     MatLegacyCheckboxModule,
@@ -42,7 +42,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
     MatIconModule,
     MatLegacyInputModule,
     MatLegacySelectModule,
-    MatTabsModule,
+    MatLegacyTabsModule,
     MatToolbarModule,
     ReactiveFormsModule,
   ],

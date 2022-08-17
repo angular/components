@@ -15,13 +15,13 @@ import {
   MatBottomSheetModule,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatLegacyCardModule} from '@angular/material/legacy-card';
 import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
 import {MatLegacyFormFieldModule} from '@angular/material/legacy-form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatLegacyInputModule} from '@angular/material/legacy-input';
-import {MatListModule} from '@angular/material/list';
+import {MatLegacyListModule} from '@angular/material/legacy-list';
 import {MatLegacySelectModule} from '@angular/material/legacy-select';
 
 const defaultConfig = new MatBottomSheetConfig();
@@ -35,14 +35,14 @@ const defaultConfig = new MatBottomSheetConfig();
     CommonModule,
     FormsModule,
     MatBottomSheetModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatLegacyCardModule,
     MatLegacyCheckboxModule,
     MatLegacyFormFieldModule,
     MatIconModule,
     MatLegacyInputModule,
     MatLegacySelectModule,
-    MatListModule,
+    MatLegacyListModule,
   ],
 })
 export class BottomSheetDemo {
@@ -77,7 +77,7 @@ export class BottomSheetDemo {
     </mat-nav-list>
   `,
   standalone: true,
-  imports: [CommonModule, MatListModule],
+  imports: [CommonModule, MatLegacyListModule],
 })
 export class ExampleBottomSheet {
   constructor(private _bottomSheet: MatBottomSheetRef) {}

@@ -6,10 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {_isNumberValue} from '@angular/cdk/coercion';
-import {DataSource} from '@angular/cdk/table';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort, Sort} from '@angular/material/sort';
 import {
   BehaviorSubject,
   combineLatest,
@@ -19,13 +15,10 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
+import {DataSource} from '@angular/cdk/collections';
+import {MatSort, Sort} from '@angular/material/sort';
+import {_isNumberValue} from '@angular/cdk/coercion';
 import {map} from 'rxjs/operators';
-
-/**
- * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
- * flaky browser support and the value not being defined in Closure's typings.
- */
-const MAX_SAFE_INTEGER = 9007199254740991;
 
 /**
  * Interface that matches the required API parts for the MatPaginator's PageEvent.
@@ -48,6 +41,12 @@ export interface MatTableDataSourcePaginator {
   pageSize: number;
   length: number;
 }
+
+/**
+ * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
+ * flaky browser support and the value not being defined in Closure's typings.
+ */
+const MAX_SAFE_INTEGER = 9007199254740991;
 
 /** Shared base class with MDC-based implementation. */
 export class _MatTableDataSource<
@@ -84,6 +83,7 @@ export class _MatTableDataSource<
   get data() {
     return this._data.value;
   }
+
   set data(data: T[]) {
     data = Array.isArray(data) ? data : [];
     this._data.next(data);
@@ -101,6 +101,7 @@ export class _MatTableDataSource<
   get filter(): string {
     return this._filter.value;
   }
+
   set filter(filter: string) {
     this._filter.next(filter);
     // Normally the `filteredData` is updated by the re-render
@@ -117,15 +118,17 @@ export class _MatTableDataSource<
   get sort(): MatSort | null {
     return this._sort;
   }
+
   set sort(sort: MatSort | null) {
     this._sort = sort;
     this._updateChangeSubscription();
   }
+
   private _sort: MatSort | null;
 
   /**
-   * Instance of the MatPaginator component used by the table to control what page of the data is
-   * displayed. Page changes emitted by the MatPaginator will trigger an update to the
+   * Instance of the paginator component used by the table to control what page of the data is
+   * displayed. Page changes emitted by the paginator will trigger an update to the
    * table's rendered data.
    *
    * Note that the data source uses the paginator's properties to calculate which page of data
@@ -136,10 +139,12 @@ export class _MatTableDataSource<
   get paginator(): P | null {
     return this._paginator;
   }
+
   set paginator(paginator: P | null) {
     this._paginator = paginator;
     this._updateChangeSubscription();
   }
+
   private _paginator: P | null;
 
   /**
@@ -268,7 +273,7 @@ export class _MatTableDataSource<
    * the provided base data and send it to the table for rendering.
    */
   _updateChangeSubscription() {
-    // Sorting and/or pagination should be watched if MatSort and/or MatPaginator are provided.
+    // Sorting and/or pagination should be watched if sort and/or paginator are provided.
     // The events should emit whenever the component emits a change or initializes, or if no
     // component is provided, a stream with just a null event should be provided.
     // The `sortChange` and `pageChange` acts as a signal to the combineLatests below so that the
@@ -338,7 +343,7 @@ export class _MatTableDataSource<
   }
 
   /**
-   * Returns a paged slice of the provided data array according to the provided MatPaginator's page
+   * Returns a paged slice of the provided data array according to the provided paginator's page
    * index and length. If there is no paginator provided, returns the data array as provided.
    */
   _pageData(data: T[]): T[] {
@@ -416,4 +421,7 @@ export class _MatTableDataSource<
  * interactions. If your app needs to support more advanced use cases, consider implementing your
  * own `DataSource`.
  */
-export class MatTableDataSource<T> extends _MatTableDataSource<T, MatPaginator> {}
+export class MatTableDataSource<
+  T,
+  P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator,
+> extends _MatTableDataSource<T, P> {}

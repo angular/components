@@ -12,10 +12,10 @@ import {A11yModule, InputModality, InputModalityDetector} from '@angular/cdk/a11
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CommonModule} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatLegacyFormFieldModule} from '@angular/material/legacy-form-field';
 import {MatLegacyInputModule} from '@angular/material/legacy-input';
-import {MatRadioModule} from '@angular/material/radio';
+import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
 import {MatLegacySelectModule} from '@angular/material/legacy-select';
 
 @Component({
@@ -25,10 +25,10 @@ import {MatLegacySelectModule} from '@angular/material/legacy-select';
   imports: [
     A11yModule,
     CommonModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatLegacyFormFieldModule,
     MatLegacyInputModule,
-    MatRadioModule,
+    MatLegacyRadioModule,
     MatLegacySelectModule,
   ],
 })

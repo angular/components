@@ -41,9 +41,19 @@ function addNavModulesToModule(options: Schema) {
     const modulePath = (await findModuleFromOptions(host, options))!;
     addModuleImportToModule(host, modulePath, 'LayoutModule', '@angular/cdk/layout');
     addModuleImportToModule(host, modulePath, 'MatToolbarModule', '@angular/material/toolbar');
-    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
+    addModuleImportToModule(
+      host,
+      modulePath,
+      'MatLegacyButtonModule',
+      '@angular/material/legacy-button',
+    );
     addModuleImportToModule(host, modulePath, 'MatSidenavModule', '@angular/material/sidenav');
     addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material/icon');
-    addModuleImportToModule(host, modulePath, 'MatListModule', '@angular/material/list');
+    addModuleImportToModule(
+      host,
+      modulePath,
+      'MatLegacyListModule',
+      '@angular/material/legacy-list',
+    );
   };
 }

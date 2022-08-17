@@ -1,44 +1,6 @@
 @forward '../../../material/core/theming/theming.import';
 @forward '../../../material/core/core.import';
-@forward '../../mdc-button/button-theme' hide color, density, theme, typography;
-@forward '../../mdc-button/button-theme' as mat-mdc-* hide $mat-mdc-mat-button-state-target,
-mat-mdc-color, mat-mdc-density, mat-mdc-theme, mat-mdc-typography;
-@forward '../../mdc-button/button-theme' as mat-mdc-button-* hide
-$mat-mdc-button-mat-button-state-target;
-@forward '../../mdc-button/fab-theme' as mat-mdc-fab-*;
-@forward '../../mdc-button/icon-button-theme' as mat-mdc-icon-button-*;
-@forward '../../mdc-radio/radio-theme' hide color, density, theme, typography;
-@forward '../../mdc-radio/radio-theme' as mat-mdc-radio-* hide
-$mat-mdc-radio-mdc-radio-baseline-theme-color, $mat-mdc-radio-mdc-radio-disabled-circle-color,
-$mat-mdc-radio-mdc-radio-unchecked-color;
-@forward '../../mdc-slide-toggle/slide-toggle-theme' hide color, density, theme, typography;
-@forward '../../mdc-slide-toggle/slide-toggle-theme' as mat-mdc-slide-toggle-* hide
-$mat-mdc-slide-toggle-mdc-switch-baseline-theme-color,
-$mat-mdc-slide-toggle-mdc-switch-disabled-thumb-color,
-$mat-mdc-slide-toggle-mdc-switch-disabled-track-color,
-$mat-mdc-slide-toggle-mdc-switch-toggled-off-thumb-color,
-$mat-mdc-slide-toggle-mdc-switch-toggled-off-track-color;
-@forward '../../mdc-snack-bar/snack-bar-theme' hide color, density, theme, typography;
-@forward '../../mdc-snack-bar/snack-bar-theme' as mat-mdc-snack-bar-* hide
-$mat-mdc-snack-bar-mdc-snackbar-dismiss-ink-color, $mat-mdc-snack-bar-mdc-snackbar-fill-color,
-$mat-mdc-snack-bar-mdc-snackbar-label-ink-color;
-@forward '../../mdc-tabs/tabs-theme' hide color, density, theme, typography;
-@forward '../../mdc-tabs/tabs-theme' as mat-mdc-tabs-* hide $mat-mdc-tabs-mdc-tab-icon-color-active,
-$mat-mdc-tabs-mdc-tab-text-label-color-active, $mat-mdc-tabs-mdc-tab-text-label-color-default;
-@forward '../../mdc-table/table-theme' hide color, density, theme, typography;
-@forward '../../mdc-table/table-theme' as mat-mdc-table-* hide
-$mat-mdc-table-mdc-data-table-divider-color, $mat-mdc-table-mdc-data-table-header-row-text-color,
-$mat-mdc-table-mdc-data-table-row-hover-fill-color, $mat-mdc-table-mdc-data-table-row-text-color,
-$mat-mdc-table-mdc-data-table-selected-row-fill-color,
-$mat-mdc-table-mdc-data-table-sort-icon-active-color, $mat-mdc-table-mdc-data-table-sort-icon-color,
-$mat-mdc-table-mdc-data-table-stroke-color, $mat-mdc-table-mdc-data-table-table-divider-color;
-@forward '../../mdc-paginator/paginator-variables' as mat-mdc-paginator-*;
 @forward '../core-theme.import';
-@forward '../../mdc-list/interactive-list-theme' as mat-mdc-*;
-@forward '../../mdc-list/list-option-theme' as mat-mdc-*;
-@forward '../../mdc-list/list-theme' as mat-mdc-list-*;
-@forward '../../mdc-menu/menu-theme' as mat-mdc-menu-*;
-@forward '../../mdc-paginator/paginator-theme' as mat-mdc-paginator-*;
 @forward '../../mdc-progress-spinner/progress-spinner-theme' as mat-mdc-progress-spinner-*;
 @forward '../theming/all-theme';
 @forward 'all-typography' hide define-mdc-typography-config, all-mdc-component-typographies;

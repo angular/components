@@ -4,7 +4,7 @@
 /src/material/badge/**                             @jelbourn
 /src/material/bottom-sheet/**                      @jelbourn @crisbeto
 /src/material/button-toggle/**                     @andrewseguin
-/src/material/button/**                            @andrewseguin
+/src/material/legacy-button/**                            @andrewseguin
 /src/material/legacy-card/**                              @andrewseguin
 /src/material/legacy-checkbox/**                          @andrewseguin @devversion
 /src/material/legacy-chips/**                      @andrewseguin
@@ -16,25 +16,25 @@
 /src/material/grid-list/**                         @andrewseguin
 /src/material/icon/**                              @andrewseguin
 /src/material/legacy-input/**                      @mmalerba
-/src/material/list/**                              @andrewseguin @crisbeto @devversion
-/src/material/menu/**                              @crisbeto
-/src/material/paginator/**                         @andrewseguin
+/src/material/legacy-list/**                       @andrewseguin @crisbeto @devversion
+/src/material/legacy-menu/**                       @crisbeto
+/src/material/legacy-paginator/**                  @andrewseguin
 /src/material/prebuilt-themes/**                   @andrewseguin
 /src/material/legacy-prebuilt-themes/**            @andrewseguin
 /src/material/legacy-progress-bar/**                      @andrewseguin @crisbeto
 /src/material/progress-spinner/**                  @andrewseguin @crisbeto
-/src/material/radio/**                             @andrewseguin @devversion
+/src/material/legacy-radio/**                      @andrewseguin @devversion
 /src/material/schematics/**                        @devversion @andrewseguin
 /src/material/legacy-select/**                     @crisbeto
 /src/material/select/**                            @crisbeto
 /src/material/sidenav/**                           @mmalerba
-/src/material/slide-toggle/**                      @devversion
-/src/material/slider/**                            @mmalerba
-/src/material/snack-bar/**                         @andrewseguin @crisbeto
+/src/material/legacy-slide-toggle/**                      @devversion
+/src/material/legacy-slider/**                     @mmalerba
+/src/material/legacy-snack-bar/**                         @andrewseguin @crisbeto
 /src/material/sort/**                              @andrewseguin
 /src/material/stepper/**                           @mmalerba
-/src/material/table/**                             @andrewseguin
-/src/material/tabs/**                              @andrewseguin
+/src/material/legacy-table/**                             @andrewseguin
+/src/material/legacy-tabs/**                              @andrewseguin
 /src/material/testing/**                           @andrewseguin
 /src/material/toolbar/**                           @devversion
 /src/material/legacy-tooltip/**                    @andrewseguin
@@ -89,6 +89,7 @@
 /src/cdk/drag-drop/**                                  @crisbeto
 /src/cdk/keycodes/**                                   @andrewseguin
 /src/cdk/layout/**                                     @andrewseguin
+/src/cdk/listbox/**                                    @jelbourn
 /src/cdk/menu/**                                       @mmalerba @crisbeto
 /src/cdk/observers/**                                  @andrewseguin @crisbeto
 /src/cdk/overlay/**                                    @jelbourn @crisbeto
@@ -111,26 +112,26 @@
 /src/material-experimental/*                           @andrewseguin
 /src/material-experimental/column-resize/**            @andrewseguin
 /src/material/autocomplete/**                          @crisbeto
-/src/material-experimental/mdc-button/**               @andrewseguin
+/src/material/button/**               @andrewseguin
 /src/material/card/**                                  @mmalerba
 /src/material/checkbox/**             @mmalerba
 /src/material/chips/**                                 @mmalerba @crisbeto
 /src/material-experimental/mdc-core/**                 @crisbeto
 /src/material/dialog/**               @devversion
 /src/material/form-field/**                            @devversion @mmalerba
-/src/material-experimental/mdc-list/**                 @mmalerba @devversion
-/src/material-experimental/mdc-menu/**                 @crisbeto
+/src/material/list/**                                  @mmalerba @devversion
+/src/material/menu/**                                  @crisbeto
 /src/material/select/**                                @crisbeto
-/src/material-experimental/mdc-paginator/**            @crisbeto
+/src/material/paginator/**                             @crisbeto
 /src/material-experimental/mdc-progress-spinner/**     @andrewseguin
 /src/material/progress-bar/**         @andrewseguin
-/src/material-experimental/mdc-radio/**                @mmalerba
-/src/material-experimental/mdc-snack-bar/**            @andrewseguin
-/src/material-experimental/mdc-slide-toggle/**         @crisbeto
-/src/material-experimental/mdc-slider/**               @devversion
-/src/material-experimental/mdc-tabs/**                 @crisbeto
+/src/material/radio/**                                 @mmalerba
+/src/material/snack-bar/**            @andrewseguin
+/src/material/slide-toggle/**                          @crisbeto
+/src/material/slider/**                                @devversion
+/src/material/tabs/**                 @crisbeto
 /src/material-experimental/mdc-tooltip/**              @crisbeto
-/src/material-experimental/mdc-table/**                @andrewseguin
+/src/material/table/**                @andrewseguin
 /src/material-experimental/menubar/**                  @jelbourn
 /src/material-experimental/popover-edit/**             @andrewseguin
 /src/material-experimental/selection/**                @andrewseguin
@@ -142,7 +143,6 @@
 /src/cdk-experimental/popover-edit/**                  @andrewseguin
 /src/cdk-experimental/scrolling/**                     @mmalerba
 /src/cdk-experimental/table-scroll-container/**        @andrewseguin
-/src/cdk-experimental/listbox/**                       @jelbourn
 /src/cdk-experimental/selection/**                     @andrewseguin
 
 # Docs examples & guides
@@ -160,8 +160,8 @@
 /src/dev-app/button/**                                 @andrewseguin
 /src/dev-app/card/**                                   @andrewseguin
 /src/dev-app/cdk-dialog/**                             @crisbeto
+/src/dev-app/cdk-listbox/**                            @jelbourn
 /src/dev-app/cdk-experimental-combobox/**              @jelbourn
-/src/dev-app/cdk-experimental-listbox/**               @jelbourn
 /src/dev-app/checkbox/**                               @jelbourn @devversion
 /src/dev-app/chips/**                                  @andrewseguin
 /src/dev-app/clipboard/**                              @andrewseguin
@@ -319,7 +319,7 @@
 /tools/public_api_guard/material/badge**           @andrewseguin
 /tools/public_api_guard/material/bottom-sheet**    @andrewseguin @crisbeto
 /tools/public_api_guard/material/button-toggle**   @andrewseguin
-/tools/public_api_guard/material/button**          @andrewseguin
+/tools/public_api_guard/material/legacy-button**          @andrewseguin
 /tools/public_api_guard/material/legacy-card**     @andrewseguin
 /tools/public_api_guard/material/legacy-checkbox** @andrewseguin @devversion
 /tools/public_api_guard/material/chips**           @andrewseguin
@@ -335,19 +335,20 @@
 /tools/public_api_guard/material/legacy-input**    @mmalerba
 /tools/public_api_guard/material/list**            @andrewseguin @crisbeto @devversion
 /tools/public_api_guard/material/menu**            @crisbeto
-/tools/public_api_guard/material/paginator**       @andrewseguin
+/tools/public_api_guard/material/legacy-paginator**       @andrewseguin
 /tools/public_api_guard/material/legacy-progress-bar**    @andrewseguin @crisbeto
 /tools/public_api_guard/material/progress-spinner**@andrewseguin @crisbeto
 /tools/public_api_guard/material/radio**           @andrewseguin @devversion
+/tools/public_api_guard/material/legacy-radio**    @andrewseguin @devversion
 /tools/public_api_guard/material/legacy-select**   @crisbeto
 /tools/public_api_guard/material/sidenav**         @mmalerba
-/tools/public_api_guard/material/slide-toggle**    @devversion
+/tools/public_api_guard/material/legacy-slide-toggle**    @devversion
 /tools/public_api_guard/material/slider**          @mmalerba
-/tools/public_api_guard/material/snack-bar**       @andrewseguin @crisbeto
+/tools/public_api_guard/material/legacy-snack-bar**       @andrewseguin @crisbeto
 /tools/public_api_guard/material/sort**            @andrewseguin
 /tools/public_api_guard/material/stepper**         @mmalerba
-/tools/public_api_guard/material/table**           @andrewseguin
-/tools/public_api_guard/material/tabs**            @andrewseguin
+/tools/public_api_guard/material/legacy-table**           @andrewseguin
+/tools/public_api_guard/material/legacy-tabs**            @andrewseguin
 /tools/public_api_guard/material/toolbar**         @devversion
 /tools/public_api_guard/material/legacy-tooltip**  @andrewseguin
 /tools/public_api_guard/material/tree**            @jelbourn @andrewseguin

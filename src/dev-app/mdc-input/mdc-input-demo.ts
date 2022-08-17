@@ -18,12 +18,12 @@ import {CommonModule} from '@angular/common';
 import {MdcFormFieldExamplesModule} from '@angular/components-examples/material-experimental/mdc-form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatButtonModule} from '@angular/material-experimental/mdc-button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
-import {MatTabsModule} from '@angular/material-experimental/mdc-tabs';
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
 let max = 5;

@@ -11,13 +11,13 @@ ng_module(
     ],
     deps = [
         "//src/cdk/accordion",
-        "//src/material/button",
         "//src/material/expansion",
+        "//src/material/legacy-button",
         "//src/material/legacy-checkbox",
         "//src/material/legacy-form-field",
         "//src/material/legacy-input",
-        "//src/material/radio",
-        "//src/material/slide-toggle",
+        "//src/material/legacy-radio",
+        "//src/material/legacy-slide-toggle",
         "@npm//@angular/forms",
     ],
 )

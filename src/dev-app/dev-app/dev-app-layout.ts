@@ -13,8 +13,8 @@ import {DevAppDirectionality} from './dev-app-directionality';
 import {DevAppRippleOptions} from './ripple-options';
 import {CommonModule, DOCUMENT} from '@angular/common';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyListModule} from '@angular/material/legacy-list';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {RouterModule} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -32,9 +32,9 @@ export const ANIMATIONS_STORAGE_KEY = 'ANGULAR_COMPONENTS_ANIMATIONS_DISABLED';
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatIconModule,
-    MatListModule,
+    MatLegacyListModule,
     MatSidenavModule,
     MatToolbarModule,
     RouterModule,
@@ -53,9 +53,9 @@ export class DevAppLayout {
     {name: 'Button', route: '/button'},
     {name: 'Card', route: '/card'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
+    {name: 'CDK Listbox', route: '/cdk-listbox'},
     {name: 'CDK Menu', route: '/cdk-menu'},
     {name: 'CDK Experimental Combobox', route: '/cdk-experimental-combobox'},
-    {name: 'CDK Experimental Listbox', route: '/cdk-experimental-listbox'},
     {name: 'Checkbox', route: '/checkbox'},
     {name: 'Chips', route: '/chips'},
     {name: 'Clipboard', route: '/clipboard'},

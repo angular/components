@@ -3,8 +3,8 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatLegacyCardModule} from '@angular/material/legacy-card';
 import {MatLegacyProgressBarModule} from '@angular/material/legacy-progress-bar';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatSliderModule} from '@angular/material/slider';
+import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
+import {MatLegacySliderModule} from '@angular/material/legacy-slider';
 import {ProgressBarBufferExample} from './progress-bar-buffer/progress-bar-buffer-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
 import {ProgressBarDeterminateExample} from './progress-bar-determinate/progress-bar-determinate-example';
@@ -35,8 +35,8 @@ const EXAMPLES = [
     CommonModule,
     MatLegacyCardModule,
     MatLegacyProgressBarModule,
-    MatRadioModule,
-    MatSliderModule,
+    MatLegacyRadioModule,
+    MatLegacySliderModule,
     FormsModule,
   ],
   declarations: EXAMPLES,

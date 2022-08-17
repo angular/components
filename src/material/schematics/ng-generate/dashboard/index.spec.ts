@@ -36,20 +36,24 @@ describe('material-dashboard-schematic', () => {
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
     expect(moduleContent).toContain('MatGridListModule');
-    expect(moduleContent).toContain('MatCardModule');
-    expect(moduleContent).toContain('MatMenuModule');
+    expect(moduleContent).toContain('MatLegacyCardModule');
+    expect(moduleContent).toContain('MatLegacyMenuModule');
     expect(moduleContent).toContain('MatIconModule');
-    expect(moduleContent).toContain('MatButtonModule');
+    expect(moduleContent).toContain('MatLegacyButtonModule');
 
     expect(moduleContent).toContain(
       `import { MatGridListModule } from '@angular/material/grid-list';`,
     );
     expect(moduleContent).toContain(
-      `import { MatCardModule } from '@angular/material/legacy-card';`,
+      `import { MatLegacyCardModule } from '@angular/material/legacy-card';`,
     );
-    expect(moduleContent).toContain(`import { MatMenuModule } from '@angular/material/menu';`);
+    expect(moduleContent).toContain(
+      `import { MatLegacyMenuModule } from '@angular/material/legacy-menu';`,
+    );
     expect(moduleContent).toContain(`import { MatIconModule } from '@angular/material/icon';`);
-    expect(moduleContent).toContain(`import { MatButtonModule } from '@angular/material/button';`);
+    expect(moduleContent).toContain(
+      `import { MatLegacyButtonModule } from '@angular/material/legacy-button';`,
+    );
   });
 
   it('should throw if no name has been specified', async () => {

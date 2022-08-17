@@ -2,13 +2,13 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatPopoverEditModule} from '@angular/material-experimental/popover-edit';
-import {MatButtonModule} from '@angular/material/button';
+import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {MatLegacyInputModule} from '@angular/material/legacy-input';
-import {MatListModule} from '@angular/material/list';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatTableModule} from '@angular/material/table';
+import {MatLegacyListModule} from '@angular/material/legacy-list';
+import {MatLegacySnackBarModule} from '@angular/material/legacy-snack-bar';
+import {MatLegacyTableModule} from '@angular/material/legacy-table';
 import {PopoverEditCellSpanMatTableExample} from './popover-edit-cell-span-mat-table/popover-edit-cell-span-mat-table-example';
 import {PopoverEditMatTableFlexExample} from './popover-edit-mat-table-flex/popover-edit-mat-table-flex-example';
 import {PopoverEditMatTableExample} from './popover-edit-mat-table/popover-edit-mat-table-example';
@@ -31,14 +31,14 @@ const EXAMPLES = [
 @NgModule({
   imports: [
     CommonModule,
-    MatButtonModule,
+    MatLegacyButtonModule,
     MatLegacyCheckboxModule,
     MatIconModule,
     MatLegacyInputModule,
-    MatListModule,
+    MatLegacyListModule,
     MatPopoverEditModule,
-    MatSnackBarModule,
-    MatTableModule,
+    MatLegacySnackBarModule,
+    MatLegacyTableModule,
     FormsModule,
   ],
   declarations: EXAMPLES,
