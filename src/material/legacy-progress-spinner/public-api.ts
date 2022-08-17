@@ -18,7 +18,7 @@ export {
 } from './progress-spinner';
 
 /**
- * @deprecated Import `MatLegacyProgressSpinner` instead. Note that the
+ * @deprecated Import Progress Spinner instead. Note that the
  *    `mat-spinner` selector isn't deprecated.
  * @breaking-change 8.0.0
  */
