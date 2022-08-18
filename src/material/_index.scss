@@ -59,7 +59,7 @@
 @forward './legacy-core/typography/all-typography' show all-legacy-component-typographies;
 
 // Component themes
-@forward './core/core-theme' as core-* show core-color, core-theme, core-typography, core-density;
+@forward './core/core-theme' as core-* show core-color, core-theme;
 @forward './legacy-core/core-theme' as legacy-core-* show legacy-core-color, legacy-core-theme;
 @forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme;
 @forward './legacy-core/option/option-theme' as legacy-option-* show legacy-option-color,

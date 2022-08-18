@@ -5,14 +5,40 @@
 }
 
 @mixin typography($config-or-theme) {
-  @include mat.core-typography($config-or-theme);
+  $config: mat.private-typography-to-2018-config(
+          mat.get-typography-config($config-or-theme));
+
+  @include mat.option-typography($config-or-theme);
+  @include mat.optgroup-typography($config-or-theme);
 }
 
 @mixin density($config-or-theme) {
-  @include mat.core-density($config-or-theme);
+  $density-scale: mat.get-density-config($config-or-theme);
+
+  @include mat.private-option-density($density-scale);
+  @include mat.private-optgroup-density($density-scale);
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
 @mixin theme($theme-or-color-config) {
-  @include mat.core-theme($theme-or-color-config);
+  $theme: mat.private-legacy-get-theme($theme-or-color-config);
+
+  // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
+  // there won't be multiple warnings. e.g. if `mat-mdc-core-theme` reports a warning, then
+  // the imported themes (such as `mat-ripple-theme`) should not report again.
+  @include mat.private-check-duplicate-theme-styles($theme, 'mat-mdc-core') {
+    $color: mat.get-color-config($theme);
+    $density: mat.get-density-config($theme);
+    $typography: mat.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
 }
