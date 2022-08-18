@@ -38,7 +38,21 @@ $prefix: 'mat-elevation-z';
 // Applies the correct css rules to an element to give it the elevation specified by $zValue.
 // The $zValue must be between 0 and 24.
 @mixin elevation($zValue, $color: $color) {
-  @include mdc-elevation.elevation($zValue, $color);
+  @if meta.type-of($color) == color {
+    @include mdc-elevation.elevation($zValue, $color);
+  } @else {
+    // Copied from @material/elevation/_elevation-theme.scss#_box-shadow
+    // TODO(mmalerba): Add support for graceful handling of CSS var color to MDC.
+    $umbra-z-value: map.get(mdc-elevation.$umbra-map, $zValue);
+    $penumbra-z-value: map.get(mdc-elevation.$penumbra-map, $zValue);
+    $ambient-z-value: map.get(mdc-elevation.$ambient-map, $zValue);
+    $box-shadow: (
+      #{'#{$umbra-z-value} #{$color}'},
+      #{'#{$penumbra-z-value} #{$color}'},
+      #{$ambient-z-value} $color
+    );
+    @include mdc-elevation.shadow($box-shadow);
+  }
 }
 
 // Applies the elevation to an element in a manner that allows
