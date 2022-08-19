@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:math';
 @use 'sass:meta';
 @use 'variables';
 @use '@material/elevation/elevation-theme' as mdc-elevation;
@@ -40,7 +39,8 @@ $prefix: 'mat-elevation-z';
 @mixin elevation($zValue, $color: $color) {
   @if meta.type-of($color) == color {
     @include mdc-elevation.elevation($zValue, $color);
-  } @else {
+  }
+  @else {
     // Copied from @material/elevation/_elevation-theme.scss#_box-shadow
     // TODO(mmalerba): Add support for graceful handling of CSS var color to MDC.
     $umbra-z-value: map.get(mdc-elevation.$umbra-map, $zValue);
