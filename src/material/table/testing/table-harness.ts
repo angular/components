@@ -19,7 +19,7 @@ import {
   MatRowHarness,
   MatRowHarnessColumnsText,
 } from './row-harness';
-import {RowHarnessFilters, TableHarnessFilters} from './table-harness-filters';
+import {CellHarnessFilters, RowHarnessFilters, TableHarnessFilters} from './table-harness-filters';
 
 /** Text extracted from a table organized by columns. */
 export interface MatTableHarnessColumnsText {
@@ -52,6 +52,18 @@ export abstract class _MatTableHarnessBase<
   protected abstract _headerRowHarness: HeaderRowType;
   protected abstract _rowHarness: RowType;
   protected abstract _footerRowHarness: FooterRowType;
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a table with specific attributes.
+   * @param options Options for narrowing the search
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends _MatTableHarnessBase<any, any, any, any, any, any>>(
+    this: ComponentHarnessConstructor<T>,
+    options: CellHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate<T>(this, options);
+  }
 
   /** Gets all of the header rows in a table. */
   async getHeaderRows(filter: RowHarnessFilters = {}): Promise<HeaderRow[]> {
@@ -123,18 +135,6 @@ export class MatTableHarness extends _MatTableHarnessBase<
   protected _headerRowHarness = MatHeaderRowHarness;
   protected _rowHarness = MatRowHarness;
   protected _footerRowHarness = MatFooterRowHarness;
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a table with specific attributes.
-   * @param options Options for narrowing the search
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with<T extends MatTableHarness>(
-    this: ComponentHarnessConstructor<T>,
-    options: TableHarnessFilters = {},
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options);
-  }
 }
 
 /** Extracts the text of cells only under a particular column. */
