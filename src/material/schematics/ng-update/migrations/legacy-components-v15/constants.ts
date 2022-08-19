@@ -40,7 +40,7 @@ export const MDC_IMPORT_CHANGES = COMPONENTS.map(component => ({
   new: `@angular/material/${component}`,
 }));
 
-export const MIXINS = COMPONENTS.concat(['option', 'optgroup']).flatMap(component => [
+export const MIXINS = COMPONENTS.concat(['option', 'optgroup', 'core']).flatMap(component => [
   `${component}-theme`,
   `${component}-color`,
   `${component}-density`,
