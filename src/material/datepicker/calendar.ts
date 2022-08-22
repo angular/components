@@ -342,6 +342,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Output() readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>> =
     new EventEmitter<MatCalendarUserEvent<D | null>>();
 
+  /** Emits a new date range value when the user completes a drag drop operation. */
+  @Output() readonly _userDragDrop = new EventEmitter<MatCalendarUserEvent<DateRange<D>>>();
+
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
 
@@ -379,6 +382,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     }
   }
   private _currentView: MatCalendarView;
+
+  /** Origin of active drag, or null when dragging is not active. */
+  protected _activeDrag: MatCalendarUserEvent<D> | null = null;
 
   /**
    * Emits whenever there is a state change that the header may need to respond to.
@@ -496,6 +502,25 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void {
     this.activeDate = date;
     this.currentView = view;
+  }
+
+  /** Called when the user starts dragging to change a date range. */
+  _dragStarted(event: MatCalendarUserEvent<D>) {
+    this._activeDrag = event;
+  }
+
+  /**
+   * Called when a drag completes. It may end in cancelation or in the selection
+   * of a new range.
+   */
+  _dragEnded(event: MatCalendarUserEvent<DateRange<D> | null>) {
+    if (!this._activeDrag) return;
+
+    if (event.value) {
+      this._userDragDrop.emit(event as MatCalendarUserEvent<DateRange<D>>);
+    }
+
+    this._activeDrag = null;
   }
 
   /** Returns the component instance that corresponds to the current calendar view. */

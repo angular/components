@@ -26,6 +26,8 @@
          (selectedValueChange)="_dateSelected($event)"
          (activeDateChange)="_updateActiveDate($event)"
          (previewChange)="_previewChanged($event)"
+         (dragStarted)="dragStarted.emit($event)"
+         (dragEnded)="_dragEnded($event)"
          (keyup)="_handleCalendarBodyKeyup($event)"
          (keydown)="_handleCalendarBodyKeydown($event)">
   </tbody>
