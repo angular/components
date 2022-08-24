@@ -172,11 +172,11 @@ export class LegacyComponentsMigration extends Migration<null> {
     if (symbol.startsWith('_Mat')) {
       return `_MatLegacy${symbol.slice('_Mat'.length)}`;
     }
-    if (symbol.startsWith('MAT')) {
-      return `MAT_LEGACY${symbol.slice('MAT'.length)}`;
+    if (symbol.startsWith('MAT_')) {
+      return `MAT_LEGACY_${symbol.slice('MAT_'.length)}`;
     }
-    if (symbol.startsWith('_MAT')) {
-      return `_MAT_LEGACY${symbol.slice('_MAT'.length)}`;
+    if (symbol.startsWith('_MAT_')) {
+      return `_MAT_LEGACY_${symbol.slice('_MAT_'.length)}`;
     }
     return;
   }
