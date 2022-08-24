@@ -24,6 +24,7 @@ import {MatDialogConfig} from './dialog-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {cssClasses, numbers} from '@material/dialog';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -85,6 +86,22 @@ export abstract class _MatDialogContainerBase extends CdkDialogContainer<MatDial
   }
 }
 
+const TRANSITION_DURATION_PROPERTY = '--mat-dialog-transition-duration';
+
+function parseCssTime(time: string | undefined): number | null {
+  if (time == null) {
+    return null;
+  }
+  if (time.endsWith('ms')) {
+    return coerceNumberProperty(time.substring(0, time.length - 2));
+  } else if (time.endsWith('s')) {
+    return coerceNumberProperty(time.substring(0, time.length - 1)) * 1000;
+  } else if (time === '0') {
+    return 0;
+  }
+  return null; // anything else is invalid.
+}
+
 /**
  * Internal component that wraps user-provided dialog content in a MDC dialog.
  * @docs-private
@@ -117,11 +134,11 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
   /** Duration of the dialog open animation. */
   private _openAnimationDuration = this._animationsEnabled
-    ? numbers.DIALOG_ANIMATION_OPEN_TIME_MS
+    ? parseCssTime(this._config.enterAnimationDuration) ?? numbers.DIALOG_ANIMATION_OPEN_TIME_MS
     : 0;
   /** Duration of the dialog close animation. */
   private _closeAnimationDuration = this._animationsEnabled
-    ? numbers.DIALOG_ANIMATION_CLOSE_TIME_MS
+    ? parseCssTime(this._config.exitAnimationDuration) ?? numbers.DIALOG_ANIMATION_CLOSE_TIME_MS
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: number | null = null;
@@ -181,6 +198,10 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     if (this._animationsEnabled) {
       // One would expect that the open class is added once the animation finished, but MDC
       // uses the open class in combination with the opening class to start the animation.
+      this._hostElement.style.setProperty(
+        TRANSITION_DURATION_PROPERTY,
+        `${this._openAnimationDuration}ms`,
+      );
       this._hostElement.classList.add(cssClasses.OPENING);
       this._hostElement.classList.add(cssClasses.OPEN);
       this._waitForAnimationToComplete(this._openAnimationDuration, this._finishDialogOpen);
@@ -203,6 +224,10 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     this._hostElement.classList.remove(cssClasses.OPEN);
 
     if (this._animationsEnabled) {
+      this._hostElement.style.setProperty(
+        TRANSITION_DURATION_PROPERTY,
+        `${this._openAnimationDuration}ms`,
+      );
       this._hostElement.classList.add(cssClasses.CLOSING);
       this._waitForAnimationToComplete(this._closeAnimationDuration, this._finishDialogClose);
     } else {
