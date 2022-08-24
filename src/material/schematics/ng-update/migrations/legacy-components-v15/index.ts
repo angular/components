@@ -153,7 +153,7 @@ export class LegacyComponentsMigration extends Migration<null> {
     const oldExport = name.escapedText.toString();
 
     // Handle TS Symbols that have standard renamings.
-    const newExport = this.parseMatSymbol(oldExport);
+    const newExport = this._parseMatSymbol(oldExport);
     if (newExport) {
       const replacement = node.propertyName ? newExport : `${newExport}${separator}${oldExport}`;
       this._tsReplaceAt(name, {old: oldExport, new: replacement});
@@ -162,7 +162,7 @@ export class LegacyComponentsMigration extends Migration<null> {
   }
 
   /** Returns the new symbol to be used for a given standard mat symbol.   */
-  private parseMatSymbol(symbol: string): string | undefined {
+  private _parseMatSymbol(symbol: string): string | undefined {
     if (symbol.startsWith('Mat')) {
       return `MatLegacy${symbol.slice('Mat'.length)}`;
     }
