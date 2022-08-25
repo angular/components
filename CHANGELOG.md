@@ -2,48 +2,34 @@
 # 15.0.0-next.0 "felt-feather" (2022-08-25)
 ## Breaking Changes
 ### material
-- * DOM and CSS classes for `mat-autocomplete` have changes.
-  * TypeScript API is largely the same but may have minor differences.
-- DOM and CSS classes for mat-button, mat-fab, and mat-icon-button have changed.
-  Typescript API is largely the same but may have minor differences.
-- - DOM and CSS classes for mat-card have changes
-  - Typescript API is largely the same but may have minor differences
-  - See the MDC migration guide for more information about the changes and
-    how to migrate your app (TODO: link when available)
-- * `mat-chip-list` has been split up into three different components: `mat-chip-set`, `mat-chip-listbox` and `mat-chip-grid` to better represent the different interaction patterns.
-- * DOM and CSS classes for `mat-option` and `mat-optgroup` have changed.
-  * Typescript API is largely the same but may have minor differences
-- - DOM and CSS classes for mat-dialog have changes
-  - Typescript API is largely the same but may have minor differences
-  - See the MDC migration guide for more information about the changes and
-    how to migrate your app (TODO: link when available)
 
-  * fixup! feat(material/dialog): Switch dialog implementation to use MDC
-- - DOM and CSS classes for the various list components have changed.
-  - Typescript API is largely the same but may have minor differences.
-- - DOM and CSS classes for `mat-menu` have changes.
-  - Typescript API is largely the same but may have minor differences.
-- - DOM and CSS classes for `mat-radio-group` and `mat-radio-button` have changes.
-  - Typescript API is largely the same but may have minor differences.
-- * DOM and CSS classes for `mat-select` have changes.
-  * TypeScript API is largely the same but may have minor differences.
-- - DOM and CSS classes for mat-slide-toggle have changes
-  - Typescript API is largely the same but may have minor differences
-  - See the MDC migration guide for more information about the changes and
-  how to migrate your app (TODO: link when available)
-- * `mat-slider` has a new API that requires a `<input matSliderThumb>` element.
-- - DOM and CSS classes for mat-snack-bar have changes
-  - Typescript API is largely the same but may have minor differences
-  - See the MDC migration guide for more information about the changes and
-    how to migrate your app (TODO: link when available)
-- - DOM and CSS classes for mat-table have changes
-  - Typescript API is largely the same but may have minor differences
-  - See the MDC migration guide for more information about the changes and
-    how to migrate your app (TODO: link when available)
-- - DOM and CSS classes for mat-tabs have changes
-  - Typescript API is largely the same but may have minor differences
-  - See the MDC migration guide for more information about the changes and
-    how to migrate your app (TODO: link when available)
+- The following components have been re-implemented based on MDC:
+  - `mat-autocomplete`
+  - `mat-button`
+  - `mat-fab`
+  - `mat-icon-button`
+  - `mat-card`
+  - `mat-chip-list` (now split into the following three components: `mat-chip-set`, `mat-chip-listbox`, and `mat-chip-grid` to better represent the different interaction patterns)
+  - `mat-option`
+  - `mat-optgroup`
+  - `mat-dialog`
+  - `mat-action-list`
+  - `mat-list`
+  - `mat-list-item`
+  - `mat-list-option`
+  - `mat-nav-list`
+  - `mat-selection-list`
+  - `mat-menu`
+  - `mat-radio-group`
+  - `mat-radio-button`
+  - `mat-select`
+  - `mat-slide-toggle`
+  - `mat-slider` (has a new API that requires a `<input matSliderThumb>` element)
+  - `mat-snack-bar`
+  - `mat-table`
+  - `mat-tabs`
+- The TypeScript API should remain largely unchanged, but the DOM and CSS classes for these components have changed.
+
 ### youtube-player
 | Commit | Type | Description |
 | -- | -- | -- |
