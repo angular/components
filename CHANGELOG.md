@@ -1,3 +1,160 @@
+<a name="15.0.0-next.0"></a>
+# 15.0.0-next.0 "felt-feather" (2022-08-25)
+## Breaking Changes
+### material
+- * DOM and CSS classes for `mat-autocomplete` have changes.
+  * TypeScript API is largely the same but may have minor differences.
+- DOM and CSS classes for mat-button, mat-fab, and mat-icon-button have changed.
+  Typescript API is largely the same but may have minor differences.
+- - DOM and CSS classes for mat-card have changes
+  - Typescript API is largely the same but may have minor differences
+  - See the MDC migration guide for more information about the changes and
+    how to migrate your app (TODO: link when available)
+- * `mat-chip-list` has been split up into three different components: `mat-chip-set`, `mat-chip-listbox` and `mat-chip-grid` to better represent the different interaction patterns.
+- * DOM and CSS classes for `mat-option` and `mat-optgroup` have changed.
+  * Typescript API is largely the same but may have minor differences
+- - DOM and CSS classes for mat-dialog have changes
+  - Typescript API is largely the same but may have minor differences
+  - See the MDC migration guide for more information about the changes and
+    how to migrate your app (TODO: link when available)
+
+  * fixup! feat(material/dialog): Switch dialog implementation to use MDC
+- - DOM and CSS classes for the various list components have changed.
+  - Typescript API is largely the same but may have minor differences.
+- - DOM and CSS classes for `mat-menu` have changes.
+  - Typescript API is largely the same but may have minor differences.
+- - DOM and CSS classes for `mat-radio-group` and `mat-radio-button` have changes.
+  - Typescript API is largely the same but may have minor differences.
+- * DOM and CSS classes for `mat-select` have changes.
+  * TypeScript API is largely the same but may have minor differences.
+- - DOM and CSS classes for mat-slide-toggle have changes
+  - Typescript API is largely the same but may have minor differences
+  - See the MDC migration guide for more information about the changes and
+  how to migrate your app (TODO: link when available)
+- * `mat-slider` has a new API that requires a `<input matSliderThumb>` element.
+- - DOM and CSS classes for mat-snack-bar have changes
+  - Typescript API is largely the same but may have minor differences
+  - See the MDC migration guide for more information about the changes and
+    how to migrate your app (TODO: link when available)
+- - DOM and CSS classes for mat-table have changes
+  - Typescript API is largely the same but may have minor differences
+  - See the MDC migration guide for more information about the changes and
+    how to migrate your app (TODO: link when available)
+- - DOM and CSS classes for mat-tabs have changes
+  - Typescript API is largely the same but may have minor differences
+  - See the MDC migration guide for more information about the changes and
+    how to migrate your app (TODO: link when available)
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f000b2f25b](https://github.com/angular/components/commit/f000b2f25bee6231e7bf393f413d6105d1c27b28) | feat | support no cookie mode ([#25165](https://github.com/angular/components/pull/25165)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [532454b17a](https://github.com/angular/components/commit/532454b17a35d7ffef6522af0837ad0fb7dc421b) | feat | **autocomplete:** switch implementation to use MDC ([#25386](https://github.com/angular/components/pull/25386)) |
+| [00f4abe859](https://github.com/angular/components/commit/00f4abe8593fe2462137497f1b123e27bb320e5f) | feat | **button:** Switch button implementation to use MDC ([#25381](https://github.com/angular/components/pull/25381)) |
+| [a928639e94](https://github.com/angular/components/commit/a928639e940900254fa05ab42826e0669c8be6b1) | feat | **card:** Switch card implementation to use MDC ([#25082](https://github.com/angular/components/pull/25082)) |
+| [e8e7199744](https://github.com/angular/components/commit/e8e719974475ecdbd57afae17beae764d9ab1912) | feat | **checkbox:** refactor pseudo-checkbox size styles ([#25419](https://github.com/angular/components/pull/25419)) |
+| [9ac264f10d](https://github.com/angular/components/commit/9ac264f10d2933a754a82c37f699c8a30004d3cc) | feat | **checkbox:** switch implementation to use MDC ([#25369](https://github.com/angular/components/pull/25369)) |
+| [3b87655f9e](https://github.com/angular/components/commit/3b87655f9e0a2ceb83d6f1ff9d8fcc9f31f703e1) | feat | **checkbox:** update pseudo-checkbox size ([#25425](https://github.com/angular/components/pull/25425)) |
+| [dc74aa382c](https://github.com/angular/components/commit/dc74aa382c8a43ba851c396df2ed6a9918fded00) | feat | **checkbox:** use -size for legacy checkbox ([#25424](https://github.com/angular/components/pull/25424)) |
+| [d496ebec00](https://github.com/angular/components/commit/d496ebec00a325f430ee7c612ab393f45b40a118) | feat | **chips:** switch implementation to use MDC ([#25400](https://github.com/angular/components/pull/25400)) |
+| [3463c5a38c](https://github.com/angular/components/commit/3463c5a38cbbe187d022e3bfca075c93dcad2919) | feat | **core:** delete deprecated legacy theming API tests ([#25265](https://github.com/angular/components/pull/25265)) |
+| [7e94186fd5](https://github.com/angular/components/commit/7e94186fd5f7f6a94d56c1b55a9c125f51bf9804) | feat | **core:** move MDC-based elevation styles out of experimental ([#25486](https://github.com/angular/components/pull/25486)) |
+| [3fd20a7c53](https://github.com/angular/components/commit/3fd20a7c53cbf24ce6e5b7be387774cc7b6ba2f4) | feat | **core:** move mdc-helpers to material/core |
+| [5b8d5214fe](https://github.com/angular/components/commit/5b8d5214fe79d6d3bd1afd022a8d7b68627bf51e) | feat | **core:** switch option implementation to use MDC ([#25343](https://github.com/angular/components/pull/25343)) |
+| [439852ba8a](https://github.com/angular/components/commit/439852ba8a44fdbd7695e9f99d1153ca27bc62e6) | feat | **dialog:** Switch dialog implementation to use MDC ([#25352](https://github.com/angular/components/pull/25352)) |
+| [119dd4bcfa](https://github.com/angular/components/commit/119dd4bcfad6afc23e302480079f78dba7cecb65) | feat | **form-field:** Ability to support custom error message components inside a form field ([#25399](https://github.com/angular/components/pull/25399)) |
+| [3db6b1d1ba](https://github.com/angular/components/commit/3db6b1d1bad70a180a9c9740887dbe9f504c2b9e) | feat | **form-field:** switch implementation to use MDC |
+| [6883100b4c](https://github.com/angular/components/commit/6883100b4cfea4c822a5173535d7e710cfcac580) | feat | **input:** switch implementation to use MDC |
+| [750dad699f](https://github.com/angular/components/commit/750dad699f06cee2d8197fdeded20853f2c1711d) | feat | **legacy-core:** create legacy-core entry point |
+| [5f0f071ac5](https://github.com/angular/components/commit/5f0f071ac5bece0ecb7a5b2a196615d420841b3c) | feat | **list:** switch implementation to use MDC list ([#25445](https://github.com/angular/components/pull/25445)) |
+| [20db76d3e9](https://github.com/angular/components/commit/20db76d3e991496a9cf6d36510391d09ffbf4d71) | feat | **menu:** switch implementation to use MDC ([#25431](https://github.com/angular/components/pull/25431)) |
+| [f7385ffc8a](https://github.com/angular/components/commit/f7385ffc8a82213490e99afa4658d1b814c56651) | feat | **paginator:** migrate MDC examples ([#25497](https://github.com/angular/components/pull/25497)) |
+| [8f11370e5e](https://github.com/angular/components/commit/8f11370e5e886f0eb30614409d9cac29ab754a3e) | feat | **paginator:** Switch paginator implementation to use MDC ([#25456](https://github.com/angular/components/pull/25456)) |
+| [f384c24b94](https://github.com/angular/components/commit/f384c24b943d7eb36fc73cfe81abb8b08a90e1b7) | feat | **progress-bar:** Switch progress-bar implementation to use MDC ([#25234](https://github.com/angular/components/pull/25234)) |
+| [4a6a0f18bb](https://github.com/angular/components/commit/4a6a0f18bbd174be2ed809ce3c580956aad1fd57) | feat | **radio:** switch implementation to use MDC ([#25409](https://github.com/angular/components/pull/25409)) |
+| [7b5bb76d32](https://github.com/angular/components/commit/7b5bb76d329d1ead59009d7c3be13fb19544f318) | feat | **schematics:** add autocomplete styles migrator and tests |
+| [8f8f06f229](https://github.com/angular/components/commit/8f8f06f22913cc2b233280ef40f8bdc232af7d45) | feat | **schematics:** add card styles migrator and tests |
+| [ee5a8362ad](https://github.com/angular/components/commit/ee5a8362ad4f0d0e6f741e5aab9977d6abfcc59e) | feat | **schematics:** add checkbox styles migrator and tests |
+| [0108de5aff](https://github.com/angular/components/commit/0108de5afff1dc3ec5b8f7a8b5cba2f2b4dd1436) | feat | **schematics:** add chips styles migrator and tests |
+| [825688f82e](https://github.com/angular/components/commit/825688f82e8be652acb26f6dbb19fe9e282596f1) | feat | **schematics:** add chips template migrator ([#24601](https://github.com/angular/components/pull/24601)) |
+| [98d09ffc18](https://github.com/angular/components/commit/98d09ffc186285e4d97de12742efe9274b6a088a) | feat | **schematics:** add dialog styles migrator and tests |
+| [801c23cc00](https://github.com/angular/components/commit/801c23cc00e8462f4eff140e9e74e8557a8997e2) | feat | **schematics:** add fn for adding attrs to templates ([#24550](https://github.com/angular/components/pull/24550)) |
+| [dcc98295b4](https://github.com/angular/components/commit/dcc98295b4dfc47df3696778940fa362c768bbea) | feat | **schematics:** add form-field styles migrator and tests |
+| [226696d1d2](https://github.com/angular/components/commit/226696d1d2d4812d483ab81287e4211123349478) | feat | **schematics:** add handling for all-component-themes ([#25528](https://github.com/angular/components/pull/25528)) |
+| [6eac002704](https://github.com/angular/components/commit/6eac00270426ea12dc2fcd7dd2cc377842f7a0fe) | feat | **schematics:** add input styles migrator and tests |
+| [bcacdde9ff](https://github.com/angular/components/commit/bcacdde9ff77556c1b196a9ce714d63695bdd714) | feat | **schematics:** add list styles migrator and tests |
+| [6b24f9614d](https://github.com/angular/components/commit/6b24f9614d2b92dcbdfe755ae70ba468790963f2) | feat | **schematics:** add menu styles migrator and tests |
+| [d1bbcd64da](https://github.com/angular/components/commit/d1bbcd64dae89bf7070f5d144b8994944bd1ba7f) | feat | **schematics:** add paginator styles migrator and tests |
+| [e856da1a63](https://github.com/angular/components/commit/e856da1a638f6d2ce512df6aad453ab2d4dc30be) | feat | **schematics:** add progress bar styles migrator and tests |
+| [a12f268aaf](https://github.com/angular/components/commit/a12f268aaff19424c1a1e29ecdb89a02b17abda0) | feat | **schematics:** add progress spinner styles migrator and tests |
+| [da07c36e7e](https://github.com/angular/components/commit/da07c36e7e633f592fcbb7972eb0c132c2737633) | feat | **schematics:** add radio styles migrator and tests |
+| [479267207e](https://github.com/angular/components/commit/479267207e66ee1a67f8f68a421cffc6396b2310) | feat | **schematics:** add select styles migrator and tests |
+| [7646c73c32](https://github.com/angular/components/commit/7646c73c32690ebd09667b4df48d86386ba64adf) | feat | **schematics:** add slide toggle styles migrator and tests |
+| [d8f1cce07f](https://github.com/angular/components/commit/d8f1cce07fef9c4a083762045545142270b983a6) | feat | **schematics:** add slider styles migrator and tests |
+| [7460ccdd12](https://github.com/angular/components/commit/7460ccdd124dbf8e31e5c43f3c6debffe160fd37) | feat | **schematics:** add snack-bar styles migrator and tests |
+| [0554f1823e](https://github.com/angular/components/commit/0554f1823ed9fbc9d1f43ea6113f25c9cc94b300) | feat | **schematics:** add style migration support within typescript files ([#25339](https://github.com/angular/components/pull/25339)) |
+| [84398f4b3b](https://github.com/angular/components/commit/84398f4b3b206f5a2a180d7ac205df46144e11b0) | feat | **schematics:** add table styles migrator and tests |
+| [688443a93d](https://github.com/angular/components/commit/688443a93de6354605c430fea7629fc005a8fe63) | feat | **schematics:** add tabs styles migrator and tests |
+| [983f66460e](https://github.com/angular/components/commit/983f66460e70c086df508da230b628386c1a60d6) | feat | **schematics:** add template migration support within typescript files ([#25496](https://github.com/angular/components/pull/25496)) |
+| [6feaaea067](https://github.com/angular/components/commit/6feaaea0671f5e64451ef7c6a7bd9abb8accb91f) | feat | **schematics:** add template migration to schematic ([#24563](https://github.com/angular/components/pull/24563)) |
+| [2159f2e5e9](https://github.com/angular/components/commit/2159f2e5e995fc80f762cca0ab12d94a47509ce5) | feat | **schematics:** add the scaffolding for an mdc-migration schematic ([#23804](https://github.com/angular/components/pull/23804)) |
+| [331b53c272](https://github.com/angular/components/commit/331b53c272debee401b1837e61d32c372a0ff403) | feat | **schematics:** add tooltip styles migrator and tests |
+| [c682965262](https://github.com/angular/components/commit/c6829652626da03bbddf6578f2dcca7bc7e68878) | feat | **schematics:** create updateModuleSpecifier ts migration fn ([#25128](https://github.com/angular/components/pull/25128)) |
+| [d388adfe1c](https://github.com/angular/components/commit/d388adfe1ccab448fb98a197a3c439a664f01d59) | feat | **schematics:** create updateNamedImport ts migration fn ([#25132](https://github.com/angular/components/pull/25132)) |
+| [15906c7084](https://github.com/angular/components/commit/15906c7084da9cde3b5d356f08fbdb20aa872bcd) | feat | **schematics:** impl card template migration ([#24566](https://github.com/angular/components/pull/24566)) |
+| [938802f7e4](https://github.com/angular/components/commit/938802f7e491f7d27b5fcfd032e60b3a27503e57) | feat | **schematics:** impl mat-mdc ts v15 ng-update ([#25447](https://github.com/angular/components/pull/25447)) |
+| [1e5dc8a7f2](https://github.com/angular/components/commit/1e5dc8a7f26cb3df6f522b00c84ac67fcb3474ea) | feat | **schematics:** implement basic ts import migrations ([#24797](https://github.com/angular/components/pull/24797)) |
+| [1a99002343](https://github.com/angular/components/commit/1a99002343045bc12f11edb3e6fce3dbff6afa04) | feat | **schematics:** initial foundation for TS code migrators |
+| [f24a49f9b8](https://github.com/angular/components/commit/f24a49f9b88be31e6f1c19319cb99204699103fb) | feat | **schematics:** initial setup for template migrations ([#24515](https://github.com/angular/components/pull/24515)) |
+| [8b147716c5](https://github.com/angular/components/commit/8b147716c507e55f430b1ba461ba5225937194d4) | feat | **schematics:** initial setup for v15 ng-update ([#25102](https://github.com/angular/components/pull/25102)) |
+| [cb7212397a](https://github.com/angular/components/commit/cb7212397a9c970c6bc7f2b2b4c3efa54f73a916) | feat | **schematics:** set up a system for migrating scss ([#24326](https://github.com/angular/components/pull/24326)) |
+| [33c3277207](https://github.com/angular/components/commit/33c32772070e760be40f0bdcfaf4288a47e567f7) | feat | **schematics:** tree operation helper functions ([#24539](https://github.com/angular/components/pull/24539)) |
+| [fad4f9bfb9](https://github.com/angular/components/commit/fad4f9bfb98f88b73b8b015543d3c49d7afedba8) | feat | **schematics:** v15 migrate imports ([#25133](https://github.com/angular/components/pull/25133)) |
+| [00d5f27e6f](https://github.com/angular/components/commit/00d5f27e6f6cdeeab10cc6174c93af748558215e) | feat | **schematics:** v15 ng-update scss migration ([#25395](https://github.com/angular/components/pull/25395)) |
+| [bf6f38abd7](https://github.com/angular/components/commit/bf6f38abd7b8f115413aa9de08b632b017827ba9) | feat | **select:** switch implementation to use MDC ([#25360](https://github.com/angular/components/pull/25360)) |
+| [a1bb436f01](https://github.com/angular/components/commit/a1bb436f01943267c4d9757535a0f44fc84a6736) | feat | **slide-toggle:** Switch slide-toggle implementation to use MDC ([#25404](https://github.com/angular/components/pull/25404)) |
+| [b863b14d20](https://github.com/angular/components/commit/b863b14d2019506a7611e72036040648ab961cde) | feat | **slider:** switch implementation to use MDC ([#25420](https://github.com/angular/components/pull/25420)) |
+| [950d4377f4](https://github.com/angular/components/commit/950d4377f4afd6105b19d5d0573da3e8e8413496) | feat | **snack-bar:** Switch snack-bar implementation to use MDC ([#25458](https://github.com/angular/components/pull/25458)) |
+| [a8f847cbbb](https://github.com/angular/components/commit/a8f847cbbbd2c3ce2260f5f5ef1c227f1dbd8f10) | feat | **table:** migrate MDC examples ([#25492](https://github.com/angular/components/pull/25492)) |
+| [31a754c904](https://github.com/angular/components/commit/31a754c90405ac3a21858cdd038d56aa7375fabc) | feat | **table:** pass `this` rather than concrete classes in the harnesses ([#25482](https://github.com/angular/components/pull/25482)) |
+| [e3b80324c3](https://github.com/angular/components/commit/e3b80324c34455dac8dcf768a9944ad11f9b37bc) | feat | **table:** Switch table implementation to use MDC ([#25453](https://github.com/angular/components/pull/25453)) |
+| [1fcdc27f46](https://github.com/angular/components/commit/1fcdc27f4660b5295aedbbff355d7ae6e844c737) | feat | **tabs:** Switch tabs implementation to use MDC ([#25411](https://github.com/angular/components/pull/25411)) |
+| [1337f36f24](https://github.com/angular/components/commit/1337f36f24da43b5c79d0284a10e4480c7ad6e54) | feat | **tooltip:** add option to open tooltip at mouse position ([#25202](https://github.com/angular/components/pull/25202)) |
+| [2fc05f584c](https://github.com/angular/components/commit/2fc05f584c033ca3c13a4dd21f24015b23e1047a) | feat | **tooltip:** migrate MDC examples ([#25495](https://github.com/angular/components/pull/25495)) |
+| [fd2811b54d](https://github.com/angular/components/commit/fd2811b54da2d5b35ed5a8afa6e9db3234aa64e7) | feat | **tooltip:** switch to MDC implementation ([#25209](https://github.com/angular/components/pull/25209)) |
+| [c440f844ec](https://github.com/angular/components/commit/c440f844ec02cbf943473c1b91a9b9a239fee97b) | fix | **card:** don't add extra padding around mat-card-title-group ([#25292](https://github.com/angular/components/pull/25292)) |
+| [fd5afe7038](https://github.com/angular/components/commit/fd5afe7038ad8d69648eaae80c7f07ac71f3a4c8) | fix | **core:** Move remaining MDC core functionality out of experimental ([#25503](https://github.com/angular/components/pull/25503)) |
+| [f9a4b97376](https://github.com/angular/components/commit/f9a4b97376059e1f1329b2d39827e1ada2edc727) | fix | **dialog:** using incorrect mixin for structural styles ([#25356](https://github.com/angular/components/pull/25356)) |
+| [fdb30adabe](https://github.com/angular/components/commit/fdb30adabe87a92bccec8dbc9122ec85418200c9) | fix | **form-field:** remove hardcoded 16px label padding ([#25383](https://github.com/angular/components/pull/25383)) |
+| [e3b679da00](https://github.com/angular/components/commit/e3b679da00e95f85f87c87f265ca506a563274c6) | fix | **input:** fix input prefix & suffix disabled color ([#25398](https://github.com/angular/components/pull/25398)) |
+| [5caa44efcf](https://github.com/angular/components/commit/5caa44efcfb17837949b1c175ac96c3135b01786) | fix | **legacy-button:** rename classnames in comments ([#25459](https://github.com/angular/components/pull/25459)) |
+| [3c60fe903c](https://github.com/angular/components/commit/3c60fe903c6f74f535639440c6c6c4032e2c1b39) | fix | **legacy-button:** rename classnames in comments ([#25460](https://github.com/angular/components/pull/25460)) |
+| [aaf6a66a6b](https://github.com/angular/components/commit/aaf6a66a6b3b367638347058667acf866db8a9d3) | fix | **legacy-checkbox:** fix scss mixin names ([#25442](https://github.com/angular/components/pull/25442)) |
+| [8ec486452b](https://github.com/angular/components/commit/8ec486452b5c118b1493bac70576443e516122ef) | fix | **schematics:** add attr for multi-line start tags ([#24586](https://github.com/angular/components/pull/24586)) |
+| [3d3656a00d](https://github.com/angular/components/commit/3d3656a00dd4ddfe5f1dacf7d8673738c7c638f4) | fix | **schematics:** add comment for potentially deprecated styles after a migration |
+| [d3c0a25256](https://github.com/angular/components/commit/d3c0a252566692a6d45005dde45cc237e93b1599) | fix | **schematics:** add missing component to migration list ([#25443](https://github.com/angular/components/pull/25443)) |
+| [4a3ae58027](https://github.com/angular/components/commit/4a3ae5802777c1cfae67cdeca1067e9db3bfaa3e) | fix | **schematics:** add renaming of non standard symbols ([#25523](https://github.com/angular/components/pull/25523)) |
+| [425fd7dc32](https://github.com/angular/components/commit/425fd7dc32a9a0b1188e3adf2ead7a91f0f02277) | fix | **schematics:** add support for all-components-theme mixin |
+| [8e2a666c72](https://github.com/angular/components/commit/8e2a666c723a5abf34a53759e66dc0872633e20a) | fix | **schematics:** fix icon button selector and move button migrator to its own folder |
+| [14958dfbdc](https://github.com/angular/components/commit/14958dfbdcd88f42374a118c1781a3eecfb1ca01) | fix | **schematics:** fix mdc migration schematics after rebasing ([#25285](https://github.com/angular/components/pull/25285)) |
+| [5ab25d0232](https://github.com/angular/components/commit/5ab25d0232bd5207e9a9f6bf16fc58ad9a05c92f) | fix | **schematics:** make ts import replacements more specific ([#25504](https://github.com/angular/components/pull/25504)) |
+| [9acb7b282f](https://github.com/angular/components/commit/9acb7b282fca10d90ef0426707ea9e6283f98f66) | fix | **schematics:** make ts symbol renamings more specific ([#25522](https://github.com/angular/components/pull/25522)) |
+| [b9ee368e2a](https://github.com/angular/components/commit/b9ee368e2a430731eaf04dc2f02b37df6c955160) | fix | **schematics:** replace all-component-themes mixin with MDC equivalent instead of adding each component's theme |
+| [19008ef73e](https://github.com/angular/components/commit/19008ef73e377eb1483ef4cfc53283b00959fbc9) | fix | **schematics:** update deprecated prefix field to take multiple prefixes |
+| [53b6b52510](https://github.com/angular/components/commit/53b6b525104eeddef4f9cb5fd9b008c21b8ba5c3) | fix | **schematics:** update test setup function name in template migration test |
+| [eafea5200c](https://github.com/angular/components/commit/eafea5200c8f5305d9abfa46a0b9346593b9dca9) | fix | **table:** cleanup legacy usage ([#25525](https://github.com/angular/components/pull/25525)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0734564c71](https://github.com/angular/components/commit/0734564c71386cb395b34b76be5c359b3361adce) | feat | **listbox:** add listbox to cdk ([#25380](https://github.com/angular/components/pull/25380)) |
+| [7a24e95baf](https://github.com/angular/components/commit/7a24e95bafbdeb697f74a48e275c2442bcbefc74) | feat | **portal:** support projectableNodes in component portal ([#25185](https://github.com/angular/components/pull/25185)) |
+## Special Thanks
+Amy Sorto, Andrew Kamarouski, Andrew Seguin, Kristiyan Kostadinov, Mike Jerred, Miles Malerba, Paul Gschwendtner, Wagner Maciel and angular-robot[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="14.2.0"></a>
 # 14.2.0 "rayon-river" (2022-08-25)
 ### cdk
@@ -143,7 +300,7 @@ Alka Vats, John Vandenberg, Kristiyan Kostadinov and Oliver Kierepka
 | [84a4e9a742](https://github.com/angular/components/commit/84a4e9a7422b62f11f7e8919a493d809c4527290) | fix | **mdc-form-field:** fix notch visual artifact ([#25201](https://github.com/angular/components/pull/25201)) |
 | [ce7f42b912](https://github.com/angular/components/commit/ce7f42b912ff5d3fec96570a85680ba5ad5c4d75) | fix | **mdc-form-field:** use a CSS var for the floating label scale ([#25178](https://github.com/angular/components/pull/25178)) |
 | [c0716784b2](https://github.com/angular/components/commit/c0716784b24daa94fd6f11f8dd020125bcbef467) | fix | **mdc-paginator:** allow form-field density to go lower than -4 ([#25192](https://github.com/angular/components/pull/25192)) |
-### 
+###
 | Commit | Type | Description |
 | -- | -- | -- |
 | [89bc64a329](https://github.com/angular/components/commit/89bc64a329c0d01029939e735b1c79b5161d4731) | fix | making the parse format available for native date adapter extension ([#25226](https://github.com/angular/components/pull/25226)) |
