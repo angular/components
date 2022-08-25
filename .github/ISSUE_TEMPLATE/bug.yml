@@ -63,3 +63,7 @@ body:
         - Operating System (e.g. Windows, macOS, Ubuntu):
     validations:
       required: true
+      
+### Technical details
+
+- Browser version, screen recording, console logs, network requests: You can make a recording with [Bird Eats Bug](https://birdeatsbug.com/).
