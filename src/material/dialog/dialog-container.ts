@@ -88,15 +88,26 @@ export abstract class _MatDialogContainerBase extends CdkDialogContainer<MatDial
 
 const TRANSITION_DURATION_PROPERTY = '--mat-dialog-transition-duration';
 
-function parseCssTime(time: string | undefined): number | null {
+// TODO(mmalerba): Remove this function after animation durations are required
+//  to be numbers.
+/**
+ * Converts a CSS time string to a number in ms. If the given time is already a
+ * number, it is assumed to be in ms.
+ */
+function parseCssTime(time: string | number | undefined): number | null {
   if (time == null) {
     return null;
   }
+  if (typeof time === 'number') {
+    return time;
+  }
   if (time.endsWith('ms')) {
     return coerceNumberProperty(time.substring(0, time.length - 2));
-  } else if (time.endsWith('s')) {
+  }
+  if (time.endsWith('s')) {
     return coerceNumberProperty(time.substring(0, time.length - 1)) * 1000;
-  } else if (time === '0') {
+  }
+  if (time === '0') {
     return 0;
   }
   return null; // anything else is invalid.
