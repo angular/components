@@ -38,7 +38,7 @@ export function crossEnvironmentSpecs(
   // Maybe we should introduce HarnessLoader.getActiveElement(): TestElement
   // then this 3rd parameter could get removed.
   getActiveElementId: () => Promise<string | null>,
-  includeAsyncTests: boolean = true,
+  skipAsyncTests: boolean = false,
 ) {
   describe('HarnessLoader', () => {
     let loader: HarnessLoader;
@@ -283,7 +283,7 @@ export function crossEnvironmentSpecs(
       expect(await element.getText()).toBe('Has comma inside attribute');
     });
 
-    if (includeAsyncTests) {
+    if (!skipAsyncTests) {
       it('should wait for async operation to complete', async () => {
         const asyncCounter = await harness.asyncCounter();
         expect(await asyncCounter.text()).toBe('5');
