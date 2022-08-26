@@ -28,7 +28,7 @@ import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-c
  * @param getHarnessLoaderFromEnvironment env specific closure to get HarnessLoader
  * @param getMainComponentHarnessFromEnvironment env specific closure to get MainComponentHarness
  * @param getActiveElementId env specific closure to get active element
- * @param includeAsyncTests include tests that rely on Angular framework stabilization
+ * @param skipAsyncTests skip tests that rely on Angular framework stabilization
  *
  * @docs-private
  */
