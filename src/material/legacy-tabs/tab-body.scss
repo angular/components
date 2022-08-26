@@ -3,7 +3,7 @@
   overflow: auto;
 
   .mat-tab-group-dynamic-height & {
-    overflow: hidden;
+    overflow-y: hidden;
   }
 
   // Usually the `visibility: hidden` added by the animation is enough to prevent focus from
