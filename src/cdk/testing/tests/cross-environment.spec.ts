@@ -282,7 +282,7 @@ export function crossEnvironmentSpecs(
       expect(element).toBeTruthy();
       expect(await element.getText()).toBe('Has comma inside attribute');
     });
-    
+
     if (includeAsyncTests) {
       it('should wait for async operation to complete', async () => {
         const asyncCounter = await harness.asyncCounter();
