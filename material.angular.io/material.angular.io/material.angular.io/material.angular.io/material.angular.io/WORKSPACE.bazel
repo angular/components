@@ -1,0 +1,76 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "aspect_bazel_lib",
+    sha256 = "3534a27621725fbbf1d3e53daa0c1dda055a2732d9031b8c579f917d7347b6c4",
+    strip_prefix = "bazel-lib-1.16.1",
+    url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.16.1.tar.gz",
+)
+
+load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
+
+aspect_bazel_lib_dependencies()
+
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "dda5fee3926e62c483660b35b25d1577d23f88f11a2775e3555b57289f4edb12",
+    strip_prefix = "rules_js-1.6.9",
+    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.6.9.tar.gz",
+)
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+
+rules_js_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = "16.17.1",
+)
+
+# Add a patch fix for rules_webtesting v0.3.5 required for enabling runfiles on Windows.
+# TODO: Remove the http_archive for this transitive dependency when a release is cut
+# for https://github.com/bazelbuild/rules_webtesting/commit/581b1557e382f93419da6a03b91a45c2ac9a9ec8
+# and the version is updated in rules_nodejs.
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    patch_args = ["-p1"],
+    patches = [
+        "//:tools/patches/rules_webtesting__windows_runfiles_fix.patch",
+    ],
+    sha256 = "e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a",
+    urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
+)
+
+http_archive(
+  name = "dev-infra",
+  strip_prefix = "dev-infra-9bc16c6fd4297c5220eb7627e42f8117ca6d1967",
+  sha256 = "3208595ba1b237d71a1b1542a6241210a5a543074d42adb0f0378b7408b5369d",
+  url = "https://github.com/angular/dev-infra/archive/9bc16c6fd4297c5220eb7627e42f8117ca6d1967/9bc16c6fd4297c5220eb7627e42f8117ca6d1967.tar.gz",
+)
+
+load("@dev-infra//bazel/browsers:browser_repositories.bzl", "browser_repositories")
+
+browser_repositories()
+
+load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
+
+web_test_repositories()
+
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+
+npm_translate_lock(
+    name = "npm",
+    package_json = "//:package.json",
+    yarn_lock = "//:yarn.lock",
+    npmrc = "//:.npmrc",
+    verify_node_modules_ignored = "//:.bazelignore",
+    patches = {
+      "@angular-devkit/architect-cli": ["//:tools/patches/bazel-architect-cli.patch"],
+    },
+)
+
+load("@npm//:repositories.bzl", "npm_repositories")
+
+npm_repositories()

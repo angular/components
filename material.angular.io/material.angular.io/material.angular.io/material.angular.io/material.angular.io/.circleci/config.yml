@@ -12,10 +12,11 @@ version: 2.1
 
 orbs:
   browser-tools: circleci/browser-tools@1.4.0
+  devinfra: angular/dev-infra@1.0.7
 
 # Cache key for CircleCI. We want to invalidate the cache whenever the Yarn lock file changes.
 var_1: &cache_key material-angular-io-{{ .Branch }}-{{ checksum "yarn.lock" }}
-var_2: &default_docker_image cimg/node:16.14.0-browsers
+var_2: &default_docker_image cimg/node:16.17.1-browsers
 
 # Settings common to each job
 var_3: &job_defaults
@@ -83,6 +84,7 @@ jobs:
     <<: *job_defaults
     steps:
     - checkout
+    - browser-tools/install-chrome
     - restore_cache:
         key: *cache_key
     - *yarn_install
@@ -100,6 +102,62 @@ jobs:
       - *yarn_install
       - run: yarn test:audit:ci
 
+  bazel-build:
+    <<: *job_defaults
+    resource_class: large
+    steps:
+    - checkout
+    - restore_cache:
+        key: *cache_key
+    - *yarn_install
+    - run: yarn bazel build //...
+    - *save_cache
+
+  bazel-test:
+    <<: *job_defaults
+    resource_class: large
+    steps:
+    - checkout
+    - restore_cache:
+        key: *cache_key
+    - *yarn_install
+    - run: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
+    - *save_cache
+    - store_artifacts:
+        path: bazel-testlogs/
+    - store_artifacts:
+        path: bazel-testlogs/scenes/
+
+  bazel-lint:
+    <<: *job_defaults
+    resource_class: large
+    steps:
+    - checkout
+    - restore_cache:
+        key: *cache_key
+    - *yarn_install
+    - run: yarn bazel test --test_tag_filters=+lint //...
+    - *save_cache
+    - store_artifacts:
+        path: bazel-testlogs/
+    - store_artifacts:
+        path: bazel-testlogs/scenes/
+
+  bazel-lighthouse_audits:
+    <<: *job_defaults
+    resource_class: xlarge
+    steps:
+    - checkout
+    - restore_cache:
+        key: *cache_key
+    - *yarn_install
+    - run: yarn bazel test --test_tag_filters=+audit //...
+    - *save_cache
+    - store_artifacts:
+        path: bazel-testlogs/
+    - store_artifacts:
+        path: bazel-testlogs/scenes/
+
 workflows:
   version: 2
   default_workflow:
@@ -110,3 +168,7 @@ workflows:
     - lighthouse_audits:
         requires:
           - build
+    - bazel-build
+    - bazel-test
+    - bazel-lighthouse_audits
+    - bazel-lint

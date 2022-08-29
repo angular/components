@@ -25,6 +25,7 @@
     "scenes:generate": "ng e2e --port 4201 scenes && yarn scenes:optimize",
     "scenes:optimize": "node tools/optimize-scene-screenshots",
     "test:audit:localhost": "node tools/audit-docs dist/material-angular-io",
+    "test:audit:bazel": "node tools/audit-docs $(bazel cquery --output=files //:build.production)",
     "test:audit:ci": "node tools/audit-docs ../dist/material-angular-io"
   },
   "private": true,
@@ -54,6 +55,8 @@
     "zone.js": "~0.12.0"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "^0.1500.1",
+    "@angular-devkit/architect-cli": "^0.1500.1",
     "@angular-devkit/build-angular": "^15.0.0",
     "@angular-eslint/builder": "^14.0.0",
     "@angular-eslint/eslint-plugin": "^14.0.0",
@@ -61,6 +64,7 @@
     "@angular-eslint/template-parser": "^14.0.0",
     "@angular/cli": "^15.0.0",
     "@angular/compiler-cli": "^15.0.0",
+    "@bazel/bazelisk": "^1.12.1",
     "@types/imagemin": "^7.0.0",
     "@types/jasmine": "^3.7.7",
     "@types/node": "^14.14.22",
