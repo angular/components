@@ -6,7 +6,7 @@
 /out-tsc
 /src/assets/*.css
 # Only exists if Bazel was run
-/bazel-out
+/bazel-*
 
 .angular/
 

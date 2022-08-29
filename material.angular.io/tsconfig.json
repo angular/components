@@ -24,7 +24,7 @@
     "strictPropertyInitialization": true,
     "useDefineForClassFields": false
   },
-  "exclude": ["src/assets", "dist"],
+  "exclude": ["src/assets", "dist", "bazel-*"],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
