@@ -11,12 +11,12 @@
 @use '../../../button-toggle/button-toggle-theme';
 @use '../../../card/card-theme';
 @use '../../../progress-bar/progress-bar-theme';
+@use '../../../progress-spinner/progress-spinner-theme';
 @use '../../../tooltip/tooltip-theme';
 @use '../../../input/input-theme';
 @use '../../../autocomplete/autocomplete-theme';
 @use '../../../checkbox/checkbox-theme';
-@use '../../../core/option/option-theme';
-@use '../../../core/option/optgroup-theme';
+@use '../../../core/core-theme';
 @use '../../../select/select-theme';
 @use '../../../dialog/dialog-theme';
 @use '../../../chips/chips-theme';
@@ -56,10 +56,10 @@
   @include form-field-theme.density($config);
   @include card-theme.density($config);
   @include progress-bar-theme.density($config);
+  @include progress-spinner-theme.density($config);
   @include tooltip-theme.density($config);
   @include input-theme.density($config);
-  @include option-theme.density($config);
-  @include optgroup-theme.density($config);
+  @include core-theme.density($config);
   @include select-theme.density($config);
   @include checkbox-theme.density($config);
   @include autocomplete-theme.density($config);

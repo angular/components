@@ -7,6 +7,7 @@
 @use '../../legacy-card/card-theme';
 @use '../../legacy-checkbox/checkbox-theme';
 @use '../../legacy-progress-bar/progress-bar-theme';
+@use '../../legacy-progress-spinner/progress-spinner-theme';
 @use '../../legacy-tooltip/tooltip-theme';
 @use '../../legacy-input/input-theme';
 @use '../../legacy-form-field/form-field-theme';
@@ -31,7 +32,7 @@
 
   // If no actual color configuration has been specified, create a default one.
   @if not $config {
-    $config: typography.define-typography-config();
+    $config: typography.define-legacy-typography-config();
   }
 
   // TODO: COMP-309: Do not use individual mixins. Instead, use the all-theme mixin and only
@@ -46,6 +47,7 @@
   @include button-theme.typography($config);
   @include card-theme.typography($config);
   @include progress-bar-theme.typography($config);
+  @include progress-spinner-theme.typography($config);
   @include tooltip-theme.typography($config);
   @include input-theme.typography($config);
   @include form-field-theme.typography($config);

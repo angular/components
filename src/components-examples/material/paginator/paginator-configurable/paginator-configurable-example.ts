@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {PageEvent} from '@angular/material/legacy-paginator';
+import {PageEvent} from '@angular/material/paginator';
 
 /**
  * @title Configurable paginator
@@ -10,13 +10,24 @@ import {PageEvent} from '@angular/material/legacy-paginator';
   styleUrls: ['paginator-configurable-example.css'],
 })
 export class PaginatorConfigurableExample {
-  // MatPaginator Inputs
-  length = 100;
+  length = 50;
   pageSize = 10;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
 
-  // MatPaginator Output
+  hidePageSize = false;
+  showPageSizeOptions = true;
+  showFirstLastButtons = true;
+  disabled = false;
+
   pageEvent: PageEvent;
+
+  handlePageEvent(e: PageEvent) {
+    this.pageEvent = e;
+    this.length = e.length;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
+  }
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {

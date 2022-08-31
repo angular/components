@@ -4,22 +4,21 @@
 
 ```ts
 
-import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
+import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { LegacyProgressSpinnerMode } from '@angular/material/legacy-progress-spinner';
+import { LegacyProgressSpinnerHarnessFilters as ProgressSpinnerHarnessFilters } from '@angular/material/legacy-progress-spinner/testing';
 
 // @public
 export class MatProgressSpinnerHarness extends ComponentHarness {
-    getMode(): Promise<ProgressSpinnerMode>;
+    getMode(): Promise<LegacyProgressSpinnerMode>;
     getValue(): Promise<number | null>;
     static hostSelector: string;
-    static with(options?: ProgressSpinnerHarnessFilters): HarnessPredicate<MatProgressSpinnerHarness>;
+    static with<T extends MatProgressSpinnerHarness>(this: ComponentHarnessConstructor<T>, options?: ProgressSpinnerHarnessFilters): HarnessPredicate<T>;
 }
 
-// @public
-export interface ProgressSpinnerHarnessFilters extends BaseHarnessFilters {
-}
+export { ProgressSpinnerHarnessFilters }
 
 // (No @packageDocumentation comment for this package)
 

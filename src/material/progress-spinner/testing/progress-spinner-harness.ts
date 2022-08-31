@@ -7,25 +7,30 @@
  */
 
 import {coerceNumberProperty} from '@angular/cdk/coercion';
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
-import {ProgressSpinnerHarnessFilters} from './progress-spinner-harness-filters';
+import {
+  ComponentHarness,
+  ComponentHarnessConstructor,
+  HarnessPredicate,
+} from '@angular/cdk/testing';
+import {LegacyProgressSpinnerMode} from '@angular/material/legacy-progress-spinner';
+import {LegacyProgressSpinnerHarnessFilters} from '@angular/material/legacy-progress-spinner/testing';
 
-/** Harness for interacting with a standard mat-progress-spinner in tests. */
+/** Harness for interacting with a MDC based mat-progress-spinner in tests. */
 export class MatProgressSpinnerHarness extends ComponentHarness {
   /** The selector for the host element of a `MatProgressSpinner` instance. */
-  static hostSelector = '.mat-progress-spinner';
+  static hostSelector = '.mat-mdc-progress-spinner';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatProgressSpinnerHarness` that
-   * meets certain criteria.
+   * Gets a `HarnessPredicate` that can be used to search for a progress spinnner with specific
+   * attributes.
    * @param options Options for filtering which progress spinner instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(
-    options: ProgressSpinnerHarnessFilters = {},
-  ): HarnessPredicate<MatProgressSpinnerHarness> {
-    return new HarnessPredicate(MatProgressSpinnerHarness, options);
+  static with<T extends MatProgressSpinnerHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: LegacyProgressSpinnerHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options);
   }
 
   /** Gets the progress spinner's value. */
@@ -36,8 +41,8 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
   }
 
   /** Gets the progress spinner's mode. */
-  async getMode(): Promise<ProgressSpinnerMode> {
+  async getMode(): Promise<LegacyProgressSpinnerMode> {
     const modeAttr = (await this.host()).getAttribute('mode');
-    return (await modeAttr) as ProgressSpinnerMode;
+    return (await modeAttr) as LegacyProgressSpinnerMode;
   }
 }

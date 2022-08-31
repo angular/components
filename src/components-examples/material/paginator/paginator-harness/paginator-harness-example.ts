@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {PageEvent} from '@angular/material/legacy-paginator';
+import {PageEvent} from '@angular/material/paginator';
 
 /**
  * @title Testing with MatPaginatorHarness

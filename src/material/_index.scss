@@ -9,8 +9,8 @@
   $amber-palette, $orange-palette, $deep-orange-palette, $brown-palette, $grey-palette,
   $gray-palette, $blue-grey-palette, $blue-gray-palette, $light-theme-background-palette,
   $dark-theme-background-palette, $light-theme-foreground-palette, $dark-theme-foreground-palette;
-@forward './core/typography/typography' show define-typography-level, define-typography-config,
-  typography-hierarchy;
+@forward './core/typography/typography' show define-typography-level,
+  define-legacy-typography-config, typography-hierarchy;
 @forward './core/typography/typography-utils' show typography-level,
   font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
 
@@ -38,9 +38,6 @@
 @forward './core/style/button-common' as private-button-common-*;
 // The form field density mixin needs to be exposed, because the paginator depends on it.
 @forward './form-field/form-field-theme' as private-form-field-* show private-form-field-density;
-// These mixins are exposed privately, because `mdc-core` uses them.
-@forward './core/option/option-theme' as private-option-* show private-option-density;
-@forward './core/option/optgroup-theme' as private-optgroup-* show private-optgroup-density;
 
 // Structural
 @forward './core/core' show core;
@@ -53,13 +50,14 @@
 // Theme bundles
 @forward './core/theming/all-theme' show all-component-themes;
 @forward './core/color/all-color' show all-component-colors;
-@forward './core/typography/all-typography' show all-component-typographies;
+@forward './core/typography/all-typography' show all-component-typographies,
+  define-rem-typography-config, define-typography-config;
 @forward './legacy-core/theming/all-theme' show all-legacy-component-themes;
 @forward './legacy-core/color/all-color' show all-legacy-component-colors;
 @forward './legacy-core/typography/all-typography' show all-legacy-component-typographies;
 
 // Component themes
-@forward './core/core-theme' as core-* show core-color, core-theme;
+@forward './core/core-theme' as core-* show core-color, core-theme, core-typography, core-density;
 @forward './legacy-core/core-theme' as legacy-core-* show legacy-core-color, legacy-core-theme;
 @forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme;
 @forward './legacy-core/option/option-theme' as legacy-option-* show legacy-option-color,
@@ -141,6 +139,8 @@
   progress-bar-theme, progress-bar-color, progress-bar-typography, progress-bar-density;
 @forward './progress-spinner/progress-spinner-theme' as progress-spinner-* show
   progress-spinner-theme, progress-spinner-color, progress-spinner-typography;
+@forward './legacy-progress-spinner/progress-spinner-theme' as legacy-progress-spinner-* show
+  legacy-progress-spinner-theme, legacy-progress-spinner-color, legacy-progress-spinner-typography;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
   radio-density;
 @forward './legacy-radio/radio-theme' as legacy-radio-* show legacy-radio-theme, legacy-radio-color,

@@ -1,8 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatLegacyPaginatorHarness} from '@angular/material/legacy-paginator/testing';
+import {MatPaginatorHarness} from '@angular/material/paginator/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatLegacyPaginatorModule} from '@angular/material/legacy-paginator';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import {PaginatorHarnessExample} from './paginator-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -13,7 +13,7 @@ describe('PaginatorHarnessExample', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatLegacyPaginatorModule, NoopAnimationsModule],
+      imports: [MatPaginatorModule, NoopAnimationsModule],
       declarations: [PaginatorHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(PaginatorHarnessExample);
@@ -23,12 +23,12 @@ describe('PaginatorHarnessExample', () => {
   });
 
   it('should load all paginator harnesses', async () => {
-    const paginators = await loader.getAllHarnesses(MatLegacyPaginatorHarness);
+    const paginators = await loader.getAllHarnesses(MatPaginatorHarness);
     expect(paginators.length).toBe(1);
   });
 
   it('should be able to navigate between pages', async () => {
-    const paginator = await loader.getHarness(MatLegacyPaginatorHarness);
+    const paginator = await loader.getHarness(MatPaginatorHarness);
 
     expect(instance.pageIndex).toBe(0);
     await paginator.goToNextPage();
@@ -38,7 +38,7 @@ describe('PaginatorHarnessExample', () => {
   });
 
   it('should be able to go to the last page', async () => {
-    const paginator = await loader.getHarness(MatLegacyPaginatorHarness);
+    const paginator = await loader.getHarness(MatPaginatorHarness);
 
     expect(instance.pageIndex).toBe(0);
     await paginator.goToLastPage();
@@ -46,7 +46,7 @@ describe('PaginatorHarnessExample', () => {
   });
 
   it('should be able to set the page size', async () => {
-    const paginator = await loader.getHarness(MatLegacyPaginatorHarness);
+    const paginator = await loader.getHarness(MatPaginatorHarness);
 
     expect(instance.pageSize).toBe(10);
     await paginator.setPageSize(25);
