@@ -188,6 +188,7 @@
 /src/dev-app/legacy-dialog/**                               @devversion
 /src/dev-app/legacy-input/**                                @mmalerba
 /src/dev-app/legacy-list/**                                 @mmalerba
+/src/dev-app/legacy-menu/**                                 @crisbeto
 /src/dev-app/legacy-paginator/**                            @crisbeto
 /src/dev-app/legacy-select/**                               @crisbeto
 /src/dev-app/legacy-snack-bar/**                            @andrewseguin
@@ -198,7 +199,6 @@
 /src/dev-app/mdc-autocomplete/**                            @crisbeto
 /src/dev-app/mdc-button/**                                  @andrewseguin
 /src/dev-app/mdc-chips/**                                   @mmalerba
-/src/dev-app/mdc-menu/**                                    @crisbeto
 /src/dev-app/mdc-progress-bar/**                            @crisbeto
 /src/dev-app/mdc-progress-spinner/**                        @mmalerba
 /src/dev-app/mdc-radio/**                                   @mmalerba
