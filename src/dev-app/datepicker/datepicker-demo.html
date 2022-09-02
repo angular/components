@@ -19,7 +19,7 @@
     <mat-label>Min date</mat-label>
     <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate"
         [disabled]="inputDisabled" [max]="maxDate">
-    <mat-datepicker-toggle matSuffix [for]="minDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="minDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled">
       <mat-datepicker-actions *ngIf="showActions">
         <button mat-button matDatepickerCancel>Cancel</button>
@@ -31,7 +31,7 @@
     <mat-label>Max date</mat-label>
     <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
         [disabled]="inputDisabled" [min]="minDate">
-    <mat-datepicker-toggle matSuffix [for]="maxDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="maxDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled">
       <mat-datepicker-actions *ngIf="showActions">
         <button mat-button matDatepickerCancel>Cancel</button>
@@ -45,7 +45,7 @@
     <mat-label>Start at date</mat-label>
     <input matInput [matDatepicker]="startAtPicker" [(ngModel)]="startAt"
         [disabled]="inputDisabled">
-    <mat-datepicker-toggle matSuffix [for]="startAtPicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="startAtPicker"></mat-datepicker-toggle>
     <mat-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled">
       <mat-datepicker-actions *ngIf="showActions">
         <button mat-button matDatepickerCancel>Cancel</button>
@@ -179,7 +179,7 @@
   <mat-form-field>
     <mat-label>Custom calendar header</mat-label>
     <input matInput [matDatepicker]="customHeaderPicker">
-    <mat-datepicker-toggle matSuffix [for]="customHeaderPicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="customHeaderPicker"></mat-datepicker-toggle>
     <mat-datepicker #customHeaderPicker [calendarHeaderComponent]="customHeader"></mat-datepicker>
   </mat-form-field>
 </p>
@@ -187,9 +187,9 @@
 <h2>Datepicker with custom header extending the default header</h2>
 <p>
   <mat-form-field>
-    <mat-label>Custom calendar header extending default</mat-label>
+    <mat-label>Select a date</mat-label>
     <input matInput [matDatepicker]="customHeaderNgContentPicker">
-    <mat-datepicker-toggle matSuffix [for]="customHeaderNgContentPicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="customHeaderNgContentPicker"></mat-datepicker-toggle>
     <mat-datepicker #customHeaderNgContentPicker [calendarHeaderComponent]="customHeaderNgContent"></mat-datepicker>
   </mat-form-field>
 </p>
@@ -211,7 +211,7 @@
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
     </mat-date-range-input>
-    <mat-datepicker-toggle [for]="range1Picker" matSuffix></mat-datepicker-toggle>
+    <mat-datepicker-toggle [for]="range1Picker" matIconSuffix></mat-datepicker-toggle>
     <mat-date-range-picker
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
@@ -240,7 +240,7 @@
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
     </mat-date-range-input>
-    <mat-datepicker-toggle [for]="range2Picker" matSuffix></mat-datepicker-toggle>
+    <mat-datepicker-toggle [for]="range2Picker" matIconSuffix></mat-datepicker-toggle>
     <mat-date-range-picker
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
@@ -270,7 +270,7 @@
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
     </mat-date-range-input>
-    <mat-datepicker-toggle [for]="range3Picker" matSuffix></mat-datepicker-toggle>
+    <mat-datepicker-toggle [for]="range3Picker" matIconSuffix></mat-datepicker-toggle>
     <mat-date-range-picker
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
@@ -293,7 +293,7 @@
       <input matStartDate placeholder="Start date"/>
       <input matEndDate placeholder="End date"/>
     </mat-date-range-input>
-    <mat-datepicker-toggle [for]="range4Picker" matSuffix></mat-datepicker-toggle>
+    <mat-datepicker-toggle [for]="range4Picker" matIconSuffix></mat-datepicker-toggle>
     <mat-date-range-picker customRangeStrategy #range4Picker>
       <mat-date-range-picker-actions *ngIf="showActions">
         <button mat-button matDateRangePickerCancel>Cancel</button>

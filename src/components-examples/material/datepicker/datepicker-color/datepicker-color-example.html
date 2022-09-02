@@ -2,7 +2,7 @@
   <mat-label>Inherited calendar color</mat-label>
   <input matInput [matDatepicker]="picker1">
   <mat-hint>MM/DD/YYYY</mat-hint>
-  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
   <mat-datepicker #picker1></mat-datepicker>
 </mat-form-field>
 
@@ -10,6 +10,6 @@
   <mat-label>Custom calendar color</mat-label>
   <input matInput [matDatepicker]="picker2">
   <mat-hint>MM/DD/YYYY</mat-hint>
-  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+  <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
   <mat-datepicker #picker2 color="primary"></mat-datepicker>
 </mat-form-field>

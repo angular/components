@@ -20,8 +20,8 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatLegacyButtonModule} from '@angular/material/legacy-button';
-import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -38,10 +38,10 @@ import {
   DateRange,
   MatDatepickerModule,
 } from '@angular/material/datepicker';
-import {MatLegacyFormFieldModule} from '@angular/material/legacy-form-field';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyInputModule} from '@angular/material/legacy-input';
-import {MatLegacySelectModule} from '@angular/material/legacy-select';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -111,7 +111,7 @@ export class CustomRangeStrategy {}
   styleUrls: ['custom-header.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatButtonModule, MatIconModule],
 })
 export class CustomHeader<D> implements OnDestroy {
   private readonly _destroyed = new Subject<void>();
@@ -159,7 +159,7 @@ export class CustomHeader<D> implements OnDestroy {
       </mat-calendar-header>
     `,
   standalone: true,
-  imports: [MatDatepickerModule],
+  imports: [MatButtonModule, MatDatepickerModule],
 })
 export class CustomHeaderNgContent<D> {
   @ViewChild(MatCalendarHeader)
@@ -185,14 +185,14 @@ export class CustomHeaderNgContent<D> {
   imports: [
     CommonModule,
     FormsModule,
-    MatLegacyButtonModule,
-    MatLegacyCheckboxModule,
+    MatButtonModule,
+    MatCheckboxModule,
     MatDatepickerModule,
-    MatLegacyFormFieldModule,
+    MatFormFieldModule,
     MatIconModule,
-    MatLegacyInputModule,
+    MatInputModule,
     MatNativeDateModule,
-    MatLegacySelectModule,
+    MatSelectModule,
     ReactiveFormsModule,
     CustomHeader,
     CustomHeaderNgContent,
