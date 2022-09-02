@@ -37,10 +37,6 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 .mat-calendar-controls {
   display: flex;
   margin: $calendar-controls-vertical-padding $calendar-controls-side-margin;
-
-  .mat-icon-button:hover .mat-button-focus-overlay {
-    opacity: 0.04;
-  }
 }
 
 .mat-calendar-spacer {
@@ -75,6 +71,11 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 .mat-calendar-previous-button,
 .mat-calendar-next-button {
   position: relative;
+
+  &.mat-mdc-button-base {
+    width: 40px;
+    height: 40px;
+  }
 
   &::after {
     @include layout-common.fill;
