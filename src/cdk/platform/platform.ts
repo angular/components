@@ -48,7 +48,7 @@ export class Platform {
   /** Whether the current rendering engine is Blink. */
   BLINK: boolean =
     this.isBrowser &&
-    !!((window as any).chrome || hasV8BreakIterator) &&
+    //   !!((window as any).chrome || hasV8BreakIterator) &&
     typeof CSS !== 'undefined' &&
     !this.EDGE &&
     !this.TRIDENT;
