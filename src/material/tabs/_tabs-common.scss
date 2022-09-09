@@ -85,6 +85,10 @@ $mat-tab-animation-duration: 500ms !default;
     flex-shrink: 0;
   }
 
+  .mdc-tab-indicator .mdc-tab-indicator__content {
+    transition-duration: var(--mat-tab-animation-duration, 250ms);
+  }
+
   .mat-mdc-tab-header-pagination {
     @include vendor-prefixes.user-select(none);
     position: relative;
@@ -163,7 +167,7 @@ $mat-tab-animation-duration: 500ms !default;
   // The `span` is in the selector in order to increase the specificity, ensuring
   // that it's always higher than the selector that declares the transition.
   ._mat-animation-noopable {
-    span.mdc-tab-indicator__content,
+    --mat-tab-animation-duration: 0;
     span.mdc-tab__text-label {
       transition: none;
     }
