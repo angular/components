@@ -15,9 +15,10 @@ $_duplicate-warning: 'Read more about how style duplication can be avoided in a 
   'guide. https://github.com/angular/components/blob/main/guides/duplicate-theming-styles.md';
 
 // Warning that will be printed if the legacy theming API is used.
-$_legacy-theme-warning: 'Angular Material themes should be created from a map containing the keys "color", ' +
-  '"typography", and "density". The color value should be a map containing the palette values for ' +
-  '"primary", "accent", and "warn". See https://material.angular.io/guide/theming for more information.';
+$_legacy-theme-warning: 'Angular Material themes should be created from a map containing the ' +
+  'keys "color", "typography", and "density". The color value should be a map containing the ' +
+  'palette values for "primary", "accent", and "warn". ' +
+  'See https://material.angular.io/guide/theming for more information.';
 
 // These variable are not intended to be overridden externally. They use `!default` to
 // avoid being reset every time this file is imported.
@@ -56,20 +57,20 @@ $_emitted-density: () !default;
 @function define-palette($base-palette, $default: 500, $lighter: 100, $darker: 700,
   $text: $default) {
   $result: map.merge($base-palette, (
-    default: _get-color-from-palette($base-palette, $default),
-    lighter: _get-color-from-palette($base-palette, $lighter),
-    darker: _get-color-from-palette($base-palette, $darker),
-    text: _get-color-from-palette($base-palette, $text),
+      default: _get-color-from-palette($base-palette, $default),
+      lighter: _get-color-from-palette($base-palette, $lighter),
+      darker: _get-color-from-palette($base-palette, $darker),
+      text: _get-color-from-palette($base-palette, $text),
 
-    default-contrast: get-contrast-color-from-palette($base-palette, $default),
-    lighter-contrast: get-contrast-color-from-palette($base-palette, $lighter),
-    darker-contrast: get-contrast-color-from-palette($base-palette, $darker)
+      default-contrast: get-contrast-color-from-palette($base-palette, $default),
+      lighter-contrast: get-contrast-color-from-palette($base-palette, $lighter),
+      darker-contrast: get-contrast-color-from-palette($base-palette, $darker)
   ));
 
   // For each hue in the palette, add a "-contrast" color to the map.
   @each $hue, $color in $base-palette {
     $result: map.merge($result, (
-      '#{$hue}-contrast': get-contrast-color-from-palette($base-palette, $hue)
+        '#{$hue}-contrast': get-contrast-color-from-palette($base-palette, $hue)
     ));
   }
 
@@ -129,12 +130,12 @@ $_emitted-density: () !default;
 // primary, accent and warn palettes.
 @function _mat-create-light-color-config($primary, $accent, $warn: null) {
   @return (
-    primary: $primary,
-    accent: $accent,
-    warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
-    is-dark: false,
-    foreground: palette.$light-theme-foreground-palette,
-    background: palette.$light-theme-background-palette,
+      primary: $primary,
+      accent: $accent,
+      warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
+      is-dark: false,
+      foreground: palette.$light-theme-foreground-palette,
+      background: palette.$light-theme-background-palette,
   );
 }
 
@@ -142,12 +143,12 @@ $_emitted-density: () !default;
 // primary, accent and warn palettes.
 @function _mat-create-dark-color-config($primary, $accent, $warn: null) {
   @return (
-    primary: $primary,
-    accent: $accent,
-    warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
-    is-dark: true,
-    foreground: palette.$dark-theme-foreground-palette,
-    background: palette.$dark-theme-background-palette,
+      primary: $primary,
+      accent: $accent,
+      warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
+      is-dark: true,
+      foreground: palette.$dark-theme-foreground-palette,
+      background: palette.$dark-theme-background-palette,
   );
 }
 
@@ -174,8 +175,8 @@ $_emitted-density: () !default;
   @if $accent != null {
     @warn $_legacy-theme-warning;
     @return private-create-backwards-compatibility-theme(_mat-validate-theme((
-      _is-legacy-theme: true,
-      color: _mat-create-light-color-config($primary, $accent, $warn),
+        _is-legacy-theme: true,
+        color: _mat-create-light-color-config($primary, $accent, $warn),
     )));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
@@ -215,8 +216,8 @@ $_emitted-density: () !default;
   @if $accent != null {
     @warn $_legacy-theme-warning;
     @return private-create-backwards-compatibility-theme(_mat-validate-theme((
-      _is-legacy-theme: true,
-      color: _mat-create-dark-color-config($primary, $accent, $warn),
+        _is-legacy-theme: true,
+        color: _mat-create-dark-color-config($primary, $accent, $warn),
     )));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
@@ -442,8 +443,8 @@ $_emitted-density: () !default;
 
   @warn $_legacy-theme-warning;
   @return private-create-backwards-compatibility-theme((
-    _is-legacy-theme: true,
-    color: $theme-or-color-config
+      _is-legacy-theme: true,
+      color: $theme-or-color-config
   ));
 }
 
