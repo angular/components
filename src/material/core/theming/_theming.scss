@@ -15,8 +15,9 @@ $_duplicate-warning: 'Read more about how style duplication can be avoided in a 
   'guide. https://github.com/angular/components/blob/main/guides/duplicate-theming-styles.md';
 
 // Warning that will be printed if the legacy theming API is used.
-$_legacy-theme-warning: 'Themes should be defined by providing a map configuration. ' +
- 'See https://material.angular.io/guide/theming.';
+$_legacy-theme-warning: 'Themes should be created with a map parameter containing the keys "color", ' +
+  '"typography", and "density". The color value should be a map containing the palette values for ' +
+  '"primary", "accent", and "warn". See https://material.angular.io/guide/theming for more information.';
 
 // These variable are not intended to be overridden externally. They use `!default` to
 // avoid being reset every time this file is imported.
