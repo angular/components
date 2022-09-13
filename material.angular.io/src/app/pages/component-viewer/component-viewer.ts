@@ -12,7 +12,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatLegacyTabsModule} from '@angular/material/legacy-tabs';
 import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, skip, takeUntil} from 'rxjs/operators';
@@ -193,7 +193,7 @@ export class ComponentExamples extends ComponentBaseView {
 
 @NgModule({
   imports: [
-    MatTabsModule,
+    MatLegacyTabsModule,
     RouterModule,
     DocViewerModule,
     CommonModule,
