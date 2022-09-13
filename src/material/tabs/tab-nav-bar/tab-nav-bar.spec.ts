@@ -577,19 +577,11 @@ class TabBarWithInactiveTabsOnInit {
 @Component({
   template: `
     <nav [animationDuration]="500" mat-tab-nav-bar [tabPanel]="tabPanel">
-    <a
-      mat-tab-link
-      *ngFor="let link of links"
-      (click)="activeLink = link"
-      [active]="activeLink == link"
-      >{{link}}</a
-    >
-    <a mat-tab-link disabled>Disabled Link</a>
+    <a mat-tab-link *ngFor="let link of links">{{link}}</a>
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
   `,
 })
 class TabsWithCustomAnimationDuration {
   links = ['First', 'Second', 'Third'];
-  activeLink = this.links[0];
 }
