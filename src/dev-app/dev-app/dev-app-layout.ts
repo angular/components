@@ -118,6 +118,7 @@ export class DevAppLayout {
     {name: 'Legacy List', route: '/legacy-list'},
     {name: 'Legacy Menu', route: '/legacy-menu'},
     {name: 'Legacy Paginator', route: '/legacy-paginator'},
+    {name: 'Legacy Progress Bar', route: '/legacy-progress-bar'},
     {name: 'Legacy Radio', route: '/legacy-radio'},
     {name: 'Legacy Select', route: '/legacy-select'},
     {name: 'Legacy Snack Bar', route: '/legacy-snack-bar'},
