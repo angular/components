@@ -160,9 +160,8 @@ export const DEV_APP_ROUTES: Routes = [
       import('./legacy-checkbox/legacy-checkbox-demo').then(m => m.LegacyCheckboxDemo),
   },
   {
-    path: 'mdc-progress-bar',
-    loadComponent: () =>
-      import('./mdc-progress-bar/mdc-progress-bar-demo').then(m => m.MdcProgressBarDemo),
+    path: 'progress-bar',
+    loadComponent: () => import('./progress-bar/progress-bar-demo').then(m => m.ProgressBarDemo),
   },
   {
     path: 'mdc-chips',
@@ -190,10 +189,10 @@ export const DEV_APP_ROUTES: Routes = [
       import('./legacy-paginator/legacy-paginator-demo').then(m => m.LegacyPaginatorDemo),
   },
   {
-    path: 'mdc-progress-spinner',
+    path: 'legacy-progress-spinner',
     loadComponent: () =>
-      import('./mdc-progress-spinner/mdc-progress-spinner-demo').then(
-        m => m.MdcProgressSpinnerDemo,
+      import('./legacy-progress-spinner/legacy-progress-spinner-demo').then(
+        m => m.LegacyProgressSpinnerDemo,
       ),
   },
   {
@@ -214,16 +213,16 @@ export const DEV_APP_ROUTES: Routes = [
       import('./mdc-slide-toggle/mdc-slide-toggle-demo').then(m => m.MdcSlideToggleDemo),
   },
   {
-    path: 'mdc-slider',
-    loadComponent: () => import('./mdc-slider/mdc-slider-demo').then(m => m.MdcSliderDemo),
+    path: 'slider',
+    loadComponent: () => import('./slider/slider-demo').then(m => m.SliderDemo),
   },
   {
     path: 'legacy-table',
     loadComponent: () => import('./legacy-table/legacy-table-demo').then(m => m.LegacyTableDemo),
   },
   {
-    path: 'mdc-tabs',
-    loadComponent: () => import('./mdc-tabs/mdc-tabs-demo').then(m => m.MdcTabsDemo),
+    path: 'legacy-tabs',
+    loadComponent: () => import('./legacy-tabs/legacy-tabs-demo').then(m => m.LegacyTabsDemo),
   },
   {
     path: 'legacy-tooltip',
@@ -251,8 +250,9 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./portal/portal-demo').then(m => m.PortalDemo),
   },
   {
-    path: 'progress-bar',
-    loadComponent: () => import('./progress-bar/progress-bar-demo').then(m => m.ProgressBarDemo),
+    path: 'legacy-progress-bar',
+    loadComponent: () =>
+      import('./legacy-progress-bar/legacy-progress-bar-demo').then(m => m.LegacyProgressBarDemo),
   },
   {
     path: 'progress-spinner',
@@ -280,8 +280,8 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./slide-toggle/slide-toggle-demo').then(m => m.SlideToggleDemo),
   },
   {
-    path: 'slider',
-    loadComponent: () => import('./slider/slider-demo').then(m => m.SliderDemo),
+    path: 'legacy-slider',
+    loadComponent: () => import('./legacy-slider/legacy-slider-demo').then(m => m.LegacySliderDemo),
   },
   {
     path: 'legacy-snack-bar',

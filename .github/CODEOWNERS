@@ -193,6 +193,7 @@
 /src/dev-app/legacy-radio/**                                @andrewseguin @devversion
 /src/dev-app/legacy-select/**                               @crisbeto
 /src/dev-app/legacy-snack-bar/**                            @andrewseguin
+/src/dev-app/legacy-tabs/**                                 @andrewseguin
 /src/dev-app/legacy-table/**                                @andrewseguin
 /src/dev-app/legacy-tooltip/**                              @crisbeto
 /src/dev-app/list/**                                        @andrewseguin @crisbeto @devversion
@@ -201,10 +202,10 @@
 /src/dev-app/mdc-button/**                                  @andrewseguin
 /src/dev-app/legacy-button/**                               @andrewseguin
 /src/dev-app/mdc-chips/**                                   @mmalerba
-/src/dev-app/mdc-progress-bar/**                            @crisbeto
-/src/dev-app/mdc-progress-spinner/**                        @mmalerba
+/src/dev-app/legacy-progress-bar/**                         @crisbeto
+/src/dev-app/legacy-progress-spinner/**                     @mmalerba
 /src/dev-app/mdc-slide-toggle/**                            @crisbeto
-/src/dev-app/mdc-slider/**                                  @devversion
+/src/dev-app/legacy-slider/**                               @devversion
 /src/dev-app/mdc-snack-bar/**                               @andrewseguin
 /src/dev-app/mdc-tabs/**                                    @crisbeto
 /src/dev-app/menu/**                                        @crisbeto
