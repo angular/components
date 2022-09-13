@@ -153,6 +153,7 @@ class DocViewerTestComponent {
 }
 
 const FAKE_DOCS: {[key: string]: string} = {
+  /* eslint-disable @typescript-eslint/naming-convention */
   'http://material.angular.io/simple-doc.html': '<div>my docs page</div>',
   'http://material.angular.io/doc-with-example.html': `
       <div>Check out this example:</div>
@@ -166,4 +167,5 @@ const FAKE_DOCS: {[key: string]: string} = {
     '<div material-docs-example="demo-example"></div>',
   'http://material.angular.io/whole-snippet-example.html':
     '<div material-docs-example="whole-snippet-example" file="whole-snippet-example.ts"></div>',
+  /* eslint-enable @typescript-eslint/naming-convention */
 };

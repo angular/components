@@ -8,9 +8,11 @@ const testExampleId = 'my-test-example-id';
 const testExampleBasePath = `/docs-content/examples-source/cdk/my-comp/${testExampleId}`;
 
 const FAKE_DOCS: {[key: string]: string} = {
+  /* eslint-disable @typescript-eslint/naming-convention */
   '/assets/stack-blitz/src/index.html': '<material-docs-example></material-docs-example>',
   '/assets/stack-blitz/src/app/app.module.ts':
       `import {MaterialDocsExample} from './material-docs-example';`,
+  /* eslint-enable @typescript-eslint/naming-convention */
   [`${testExampleBasePath}/test.ts`]: 'ExampleComponent',
   [`${testExampleBasePath}/test.html`]: `<example></example>`,
   [`${testExampleBasePath}/src/detail.ts`]: 'DetailComponent',
@@ -108,6 +110,7 @@ describe('StackBlitzWriter', () => {
     flushMicrotasks();
 
     const expectedFiles = jasmine.objectContaining({
+      /* eslint-disable @typescript-eslint/naming-convention */
       'angular.json': 'fake',
       'src/main.ts': 'fake',
       'src/test.ts': 'fake',
@@ -118,6 +121,7 @@ describe('StackBlitzWriter', () => {
 /**  Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at https://angular.io/license */`,
+      /* eslint-enable @typescript-eslint/naming-convention */
     });
 
     expect(openProjectSpy).toHaveBeenCalledTimes(1);
