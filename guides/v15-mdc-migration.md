@@ -1,8 +1,8 @@
 # Migrating to MDC-based Angular Material Components
 
-In Angular Material v15, many of the components have been rewritten to be based on the official 
+In Angular Material v15, many of the components have been refactored to be based on the official 
 [Material Design Components for Web (MDC)](https://github.com/material-components/material-components-web).
-The components in the following packages have been rewritten:
+The components from the following imports have been refactored:
 * @angular/material/autocomplete
 * @angular/material/button
 * @angular/material/card
@@ -26,7 +26,7 @@ The components in the following packages have been rewritten:
 * @angular/material/tabs
 * @angular/material/tooltip
 
-The rewritten components offer several benefits over the old implementations, including:
+The refactored components offer several benefits over the old implementations, including:
 * Improved accessibility
 * Better adherence to the Material Design spec
 * Faster adoption of future versions of the Material Design spec, due to being based on common 
@@ -34,13 +34,13 @@ The rewritten components offer several benefits over the old implementations, in
 
 ## What has changed?
 
-The new components have different internal DOM and CSS styles. However, the TypeScript APIs and
-component/directive selectors for the new components have been kept as close as possible to the old
-implementation. This makes it straightforward to migrate your app and get it running with the new
-components.
+The new components have different internal DOM and CSS styles. However, most of the TypeScript APIs
+and component/directive selectors for the new components have been kept as close as possible to the
+old implementation. This makes it straightforward to migrate your application and get it running
+with the new components.
 
-Due to the new DOM and CSS, you will likely find that some styles in your app need to be adjusted,
-particularly if your CSS is overriding styles on internal elements on any of the migrated
+Due to the new DOM and CSS, you will likely find that some styles in your application need to be
+adjusted, particularly if your CSS is overriding styles on internal elements on any of the migrated
 components.
 
 There are a few components with larger changes to their APIs that were necessary in order to
@@ -50,11 +50,11 @@ integrate with MDC. These components include:
 * slider
 * list
 
-See below for a [detailed list of changes](#Detailed List of Changes) to be aware of for these and
-other components.
+See below for a [comprehensive list of changes](#comprehensive-list-of-changes) for all components.
 
-The old implementation of each new component is now deprecated, but still available under a "legacy"
-package. e.g. The old `mat-button` implementation can be used by importing the legacy button module.
+The old implementation of each new component is now deprecated, but still available from a "legacy"
+import. For example, you can import the old `mat-button` implementation can be used by importing the
+legacy button module.
 
 ```ts
 import {MatLegacyButtonModule} from '@angular/material/legacy-button';
@@ -62,87 +62,83 @@ import {MatLegacyButtonModule} from '@angular/material/legacy-button';
 
 ## How to Migrate
 
-Migrating an existing app to use MDC based components is a tool-assisted migration. The Angular
-Material team has built [schematics](https://angular.io/guide/schematics) to handle as much of the
-work as possible. However, some manual effort will be needed.
+You can start your migration by running Angular Material's automated refactoring tool. This tool,
+implemented as an [Angular Schematic](https://angular.io/guide/schematics), updates the majority
+your code to the new component versions. While some follow-up is necessary, you can reduce the
+manual effort by following these best practices:
 
-You can reduce the amount of manual effort needed by ensuring that your app follows good practices
-before migrating.
+You can reduce the amount of manual effort needed by ensuring that your application follows good
+practices before migrating.
 * Avoid overriding styles on internal Angular Material elements in your CSS as much as possible. If
   you find yourself frequently overriding styles on internal elements, consider using a component
   that is designed for more style customization, such as the ones available in the
   [Angular CDK](/cdk).
 * Use [component harnesses](/guide/using-component-harnesses) to interact with Angular Material
-  components in tests rather than probing internal elements, properties, or methods of the
+  components in tests rather than inspecting internal elements, properties, or methods of the
   component. Using component harnesses makes your tests easier to understand and more robust to
   changes in Angular Material
 
 ### 1. Update to Angular Material v15
 
-Angular Material now includes a schematic to help migrate pre-existing apps to use the new
-MDC-based components. To get started, upgrade your app to Angular Material 15.
+Angular Material includes a schematic to help migrate applications to use the new MDC-based
+components. To get started, upgrade your application to Angular Material 15.
 
 ```shell
-ng update @angular/components^15
+ng update @angular/material^15
 ```
 
-As part of this update, a schematic will run to automatically move your app to use the "legacy"
-packages containing the old component implementations. This provides a quick path to getting your
-app running on v15 with minimal manual changes.
+As part of this update, a schematic will run to automatically move your application to use the
+"legacy" imports containing the old component implementations. This provides a quick path to getting
+your application running on v15 with minimal manual changes.
 
-### 2. Run the MDC Migration Script
+### 2. Run the migration tool
 
-After upgrading to v15, you can run the MDC Migration Script to switch from the legacy component
+After upgrading to v15, you can run the migration tool to switch from the legacy component
 implementations to the new MDC-based ones.
 
 ```shell
 ng generate # TODO(wagnermaciel): Insert command here.
 ```
 
-This command will update your app's TypeScript, CSS, and templates to the new implementations,
-updating as much as it can automatically.
+This command updates your TypeScript, styles, and templates to the new implementations, updating as
+much as it can automatically.
 
 #### Running a Partial Migration
 
-Depending on the size and complexity of your app, you may want to migrate a single component (or
-small group of components) at a time, rather than all at once. 
+Depending on the size and complexity of your application, you may want to migrate a single component
+(or small group of components) at a time, rather than all at once. 
 TODO(wagnermaciel): Add details on this: script params, which components need to move together
 
-You may also want to migrate your app one module at a time instead of all together. It is possible
-to use both the old implementation and new implementation in the same app, as long as they aren't
-used in the same module. TODO(wagnermaciel): Add detail on this: script params.
+You may also want to migrate your app one module at a time instead of all together. You can use both
+the old implementation and new implementation in the same application, as long as they aren't used
+in the same `NgModule`. TODO(wagnermaciel): Add detail on this: script params.
 
-### 3. Check for TODOs left by the migration script.
+### 3. Check for TODOs left by the migration tool.
 
-In situations where the script is not able to automatically update your code, it will attempt to add
-comments for a human to follow up. These TODO comments follow a common format, so they can be easily
-identified.
+In situations where the migration tool is not able to automatically update your code, it will
+attempt to add comments for a human to follow up. These TODO comments follow a common format, so
+they can be easily identified.
 
 ```ts
 // TODO(wagnermaciel): Do we have a common format for all TODOs the script adds?
 ```
 
-To search for all comments left by the script, search for `TODO(...):` in your IDE, or use the
-following grep command.
+To search for all comments left by the migration tool, search for `TODO(...):` in your IDE.
 
-```shell
-grep -lr --exclude-dir=node_modules "TODO(...):"
-```
-
-### 4. Verify Your App
+### 4. Verify Your Application
 
 After running the migration and addressing the TODOs, manually verify that everything is working
 correctly. 
 
 Run your tests and confirm that they pass. It's possible that your tests depended on internal DOM or
 async timing details of the old component implementations and may need to be updated. If you find
-you need to update some tests, consider using [Component Harnesses](./using-component-harnesses) to
+you need to update some tests, consider using [component harnesses](./using-component-harnesses) to
 make the tests more robust.
 
-Run your app and verify that the new components look right. Due to the changes in internal DOM and
-CSS of the components, you may need to tweak some of your app's styles.
+Run your application and verify that the new components look right. Due to the changes in internal
+DOM and CSS of the components, you may need to tweak some of your application's styles.
 
-## Detailed List of Changes
+## Comprehensive List of Changes
 
 ### Library-wide Changes
 
@@ -155,10 +151,10 @@ CSS of the components, you may need to tweak some of your app's styles.
   instead of `mat-button`. However, not all elements in the previous implementation have an
   equivalent element in the new implementation.
 
-### Core CSS & Theming
+### Core Styles & Theming
 
-* `mat.core()` no longer includes component typography styles. If your app was relying on this, you
-  may need to add typography styles explicitly now. This can be done all at once:
+* `mat.core()` no longer includes component typography styles. If your application was relying on
+  this, you may need to add typography styles explicitly now. This can be done all at once:
 
   ```scss
   @import '@angular/material' as mat;
@@ -166,7 +162,7 @@ CSS of the components, you may need to tweak some of your app's styles.
   @include mat.all-component-typographies();
   ```
   
-  or individually for components your app uses:
+  or individually for components your application uses:
 
   ```scss
   @import '@angular/material' as mat;
@@ -202,6 +198,8 @@ CSS of the components, you may need to tweak some of your app's styles.
   ));
   ```
 
+TODO(mmalerba): link to density docs once they exist.
+
 ### Autocomplete
 
 * Long options now wrap by default instead of truncating.
@@ -235,7 +233,7 @@ CSS of the components, you may need to tweak some of your app's styles.
   (`mat.mdc-button-theme`), icon buttons (`mat.mdc-icon-button-theme`), and FABs
   (`mat.mdc-fab-theme`).
 
-* Icons next button text now match font-size. Buttons with only icons and no text will not align
+* Icons next to button text now match font-size. Buttons with only icons and no text will not align
   properly (this does not apply to the icon-button).
 
 ### Card
@@ -244,8 +242,8 @@ CSS of the components, you may need to tweak some of your app's styles.
   card content areas: `<mat-card-content>`, `<mat-card-header>`, and `<mat-card-actions>`.
 
 * `<mat-card-content>` no longer sets any typography styles, users are free to add whatever
-  typography styles make sense for their app, either to `<mat-card-content>` itself or any child
-  elements as appropriate.
+  typography styles make sense for their application, either to `<mat-card-content>` itself or any
+  child elements as appropriate.
 
 ### Checkbox
 
@@ -256,9 +254,10 @@ CSS of the components, you may need to tweak some of your app's styles.
 * Accessibility: Checkbox touch targets are larger, now 40px instead of 16px, which is more
   accessible.
 
-* Checkbox color may be changed to white or black due to a change in heuristics based on the app’s
-  theme. Previously, the check’s color would be set to the theme’s background color. With MDC, it is
-  determined by whether white or black has the most contrast against the primary color.
+* Checkbox color may be changed to white or black due to a change in heuristics based on the
+  application’s theme. Previously, the check’s color would be set to the theme’s background color.
+  With MDC, it is determined by whether white or black has the most contrast against the primary
+  color.
 
 * Accessibility: Focus state is slightly darker, improving contrast ratio
 
@@ -276,7 +275,7 @@ CSS of the components, you may need to tweak some of your app's styles.
 
   * `<mat-chip-listbox>` with `<mat-chip-option>` - this is the closest to the previous interaction
     pattern. This is the only variant that supports selection state for chips. This pattern aligns
-    with the filter chips pattern specified in the material design spec. This pattern should be used
+    with the filter chips pattern specified in the Material Design spec. This pattern should be used
     when you want the user to select one or more values from a list of options.
   
   * `<mat-chip-grid>` with `<mat-chip-row>` - this pattern should be used for any text input + chips
@@ -286,9 +285,9 @@ CSS of the components, you may need to tweak some of your app's styles.
     will be applied at the application level. This allows the application to implement a custom
     accessibility pattern with the chips visuals.
 
-* The `mdc_migration` tool always changes the legacy `<mat-chip-list>` to `<mat-chip-listbox>` to
-  minimize differences before and after. You should separately consider changing to
-  `<mat-chip-grid>` on a case-by-case basis.
+* The migration tool always changes the legacy `<mat-chip-list>` to `<mat-chip-listbox>` to minimize
+  differences before and after. You should separately consider changing to `<mat-chip-grid>` on a
+  case-by-case basis.
 
 ### Dialog
 
@@ -302,7 +301,7 @@ CSS of the components, you may need to tweak some of your app's styles.
   or use custom typography settings that can be applied with the `mat.mdc-dialog-typography` mixin.
 
 * The old dialog triggered an extra change detection, which may have masked change detection issues
-  in your app that need to be fixed when migrating.
+  in your application that need to be fixed when migrating.
 
 ### Form Field
 
@@ -315,9 +314,10 @@ CSS of the components, you may need to tweak some of your app's styles.
   and placeholders interchangeably.
 
 * By default, MatFormField still reserves exactly one line of space below the field for hint or
-  error text. The new subscriptSizing setting (available as an Input and via the
-  MAT_FORM_FIELD_DEFAUlT_OPTIONS injectable) allows changing this behavior to always match the size
-  of the text.
+  error text. However, there is a new option `@Input() subscriptSizing: 'fixed'|'dynamic'`. When
+  this setting is set to `fixed` (default), the form-field reserves enough space in the layout to
+  show one line of hint or error text. When set to `dynamic`, the form-field expands and contracts
+  the amount of space it takes in the layout to fit the error / hint that is currently shown.
 
 * The text inside `<mat-hint>` is larger and darker in order to meet W3C text guidelines.
 
@@ -328,10 +328,10 @@ CSS of the components, you may need to tweak some of your app's styles.
   prefix/suffix, and `matIconPrefix` or `matIconSuffix` to indicate an icon prefix/suffix. The old
   `matSuffix` and `matPrefix` APIs will behave like icons, though they are now deprecated.
 
-* The MDC-based form-field has a new `@Input() subscriptSizing: 'fixed'|'dynamic'`. When this
-  setting is set to `fixed` (default), the form-field reserves enough space in the layout to show
-  one line of hint or error text. When set to `dynamic`, the form-field expands and contracts the 
-  amount of space it takes in the layout to fit the error / hint that is currently shown.
+* The `floatLabel` input no longer accepts `'never'`. `floatLabel="never"` was only supported by the
+  legacy form-field appearance which has been dropped. It was used to achieve a floating label that
+  behaved like a placeholder. If you need this behavior, use the `placeholder` property on `<input>`
+  instead.
 
 ### Input
 
@@ -340,7 +340,7 @@ CSS of the components, you may need to tweak some of your app's styles.
 
 * The MDC-based MatInput hides the native calendar picker indicator associated with
   `<input matInput type="date">`, if you want this indicator to appear for your inputs, use the
-  following CSS:
+  following styles:
 
     ```scss
     .mat-mdc-input-element::-webkit-calendar-picker-indicator {
@@ -355,7 +355,7 @@ CSS of the components, you may need to tweak some of your app's styles.
 
 * Previously, list items were commonly created using multiple `span` elements with the `matLine`
   directive applied. Each `span` resulting in a line, and the first one becoming the primary line.
-  With the new API, the `matLine` directive has been split into two more granular and obvious
+  With the new API, the `matLine` directive has been split into two more granular and meaningful
   directives:
   * `matListItemTitle`
   * `matListItemLine`
@@ -447,8 +447,8 @@ CSS of the components, you may need to tweak some of your app's styles.
 
 ### Progress Spinner
 
-* Host element is no longer `display: block` which may affect layout. To fix layout issues, simply
-  add `display: block` back to the element.
+* Host element is no longer `display: block` which may affect layout. To fix layout issues add
+  `display: block` back to the element.
 
 ### Radio
 
@@ -496,7 +496,7 @@ CSS of the components, you may need to tweak some of your app's styles.
   "thumbs") that act as the form control(s). The value, associated events (`input`, `change`), and
   labels (`aria-label`) now live on the `<input>` elements instead.
 
-* Vertical sliders and inverted sliders are no longer supported, as they are not part of the
+* Vertical sliders and inverted sliders are no longer supported, as they are no longer part of the
   Material Design spec.
 
 * Range sliders are now supported. TODO(mmalerba): add more about this.
@@ -505,11 +505,11 @@ CSS of the components, you may need to tweak some of your app's styles.
 
 * For simple, text-based snack-bars, there are no significant changes.
 
-* For simple snack-bars with an action button, they use the MDC-based mat-button, so your app will
-  need to include the theme sass for the MDC-based button
+* For simple snack-bars with an action button, they use the MDC-based mat-button, so your
+  application will need to include the Sass theming mixin for the MDC-based button
 
 * For snack-bars that use custom structured content (i.e. calls to `MatSnackBar.openFromComponent`
-  and `MatSnackBar.openFromTemplate`), you  should use the following new directives to annotate your
+  and `MatSnackBar.openFromTemplate`), you should use the following new directives to annotate your
   content:
   * `matSnackBarLabel` to mark the text displayed to users
   * `matSnackBarActions` to mark the element containing the action buttons
@@ -518,7 +518,8 @@ CSS of the components, you may need to tweak some of your app's styles.
     template as text.
 
 * Tests that open a snack-bar now require calling `flush()` before attempting to access the content
-  of the snackbar.
+  of the snackbar. Updating your tests to use [component harnesses](./using-component-harnesses)
+  before running the migration tool should make this transition seamless.
 
 ### Table
 
@@ -528,17 +529,17 @@ CSS of the components, you may need to tweak some of your app's styles.
 * Header text size and color matches the data rows.
 
 * Text will not wrap by default; to enable text wrapping, apply the `white-space: normal` style to
-  the `<mat-cell>`.
+  the table cell.
 
 * Row height is `52px` instead of `48px`.
 
-* Cells have box-sizing `border-box` instead of `content-box`. This may affect  custom width styles.
+* Cells have box-sizing `border-box` instead of `content-box`. This may affect custom width styles.
 
 * The paginator property of the `MatTableDataSource` has a generic interface that matches most of
   the paginator API. You may need to explicitly type the paginator to access the full API, e.g.
   `new MatTableDataSource<MyData, MatPaginator>();`
 
-* MDC-based flex tables (`<mat-table>`) display borders on their cells instead  of the rows.
+* MDC-based flex tables (`<mat-table>`) display borders on their cells instead of the rows.
 
 * The last row of the table no longer has a bottom border since the table is assumed to be
   surrounded by a border.
@@ -549,6 +550,7 @@ CSS of the components, you may need to tweak some of your app's styles.
 
 * Accessibility: `MatTabNav` now throws an error if the `[tabPanel]` input is not provided. The
   `[tabPanel]` input and associated `mat-tab-nav-panel` component improve accessibility.
+  TODO: This point needs further elaboration.
 
 * The selected tab label now uses a text color from the theme, matching the selection indicator.
 
