@@ -22,6 +22,7 @@
 @use '../../legacy-tabs/tabs-theme';
 @use '../../legacy-snack-bar/snack-bar-theme';
 @use '../../legacy-table/table-theme';
+@use '../../legacy-datepicker/datepicker-theme';
 
 // Create a theme.
 /// @deprecated Use `mat.all-component-themes` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
@@ -51,6 +52,7 @@
     @include tabs-theme.theme($theme-or-color-config);
     @include snack-bar-theme.theme($theme-or-color-config);
     @include table-theme.theme($theme-or-color-config);
+    @include datepicker-theme.theme($theme-or-color-config);
     @include all-theme.private-all-unmigrated-component-themes($theme-or-color-config);
   }
 }

@@ -14,7 +14,7 @@ import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatCommonModule} from '@angular/material/core';
-import {MatCalendar, MatCalendarHeader} from './calendar';
+import {MatCalendar, _MAT_CALENDAR_DYNAMIC_COMPONENTS} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {MatDatepicker} from './datepicker';
 import {
@@ -31,16 +31,12 @@ import {MatDateRangeInput} from './date-range-input';
 import {MatStartDate, MatEndDate} from './date-range-input-parts';
 import {MatDateRangePicker} from './date-range-picker';
 import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './datepicker-actions';
+import {MatDatepickerCloseButton} from './datepicker-close-button';
+import {MatCalendarHeader} from './calendar-header';
 
+/** @docs-private */
 @NgModule({
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    OverlayModule,
-    A11yModule,
-    PortalModule,
-    MatCommonModule,
-  ],
+  imports: [CommonModule, OverlayModule, A11yModule, PortalModule],
   exports: [
     CdkScrollableModule,
     MatCalendar,
@@ -48,12 +44,10 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepicker,
     MatDatepickerContent,
     MatDatepickerInput,
-    MatDatepickerToggle,
     MatDatepickerToggleIcon,
     MatMonthView,
     MatYearView,
     MatMultiYearView,
-    MatCalendarHeader,
     MatDateRangeInput,
     MatStartDate,
     MatEndDate,
@@ -68,12 +62,10 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepicker,
     MatDatepickerContent,
     MatDatepickerInput,
-    MatDatepickerToggle,
     MatDatepickerToggleIcon,
     MatMonthView,
     MatYearView,
     MatMultiYearView,
-    MatCalendarHeader,
     MatDateRangeInput,
     MatStartDate,
     MatEndDate,
@@ -83,5 +75,21 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepickerApply,
   ],
   providers: [MatDatepickerIntl, MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
+})
+export class _MatDatepickerBaseModule {}
+
+@NgModule({
+  imports: [CommonModule, MatCommonModule, MatButtonModule, _MatDatepickerBaseModule],
+  exports: [_MatDatepickerBaseModule, MatCalendarHeader, MatDatepickerToggle],
+  declarations: [MatDatepickerCloseButton, MatCalendarHeader, MatDatepickerToggle],
+  providers: [
+    {
+      provide: _MAT_CALENDAR_DYNAMIC_COMPONENTS,
+      useValue: {
+        calendarHeader: MatCalendarHeader,
+        closeButton: MatDatepickerCloseButton,
+      },
+    },
+  ],
 })
 export class MatDatepickerModule {}

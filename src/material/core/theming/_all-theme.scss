@@ -42,7 +42,6 @@
   @include badge-theme.theme($theme-or-color-config);
   @include bottom-sheet-theme.theme($theme-or-color-config);
   @include button-toggle-theme.theme($theme-or-color-config);
-  @include datepicker-theme.theme($theme-or-color-config);
   @include divider-theme.theme($theme-or-color-config);
   @include expansion-theme.theme($theme-or-color-config);
   @include grid-list-theme.theme($theme-or-color-config);
@@ -82,6 +81,7 @@
     @include fab-theme.theme($theme-or-color-config);
     @include snack-bar-theme.theme($theme-or-color-config);
     @include table-theme.theme($theme-or-color-config);
+    @include datepicker-theme.theme($theme-or-color-config);
     @include private-all-unmigrated-component-themes($theme-or-color-config);
   }
 }

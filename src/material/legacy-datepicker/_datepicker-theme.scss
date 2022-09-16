@@ -1,0 +1,52 @@
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+@use '../datepicker/datepicker-theme';
+
+/// @deprecated Use `mat.datepicker-color` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @breaking-change 17.0.0
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  @include datepicker-theme.color($config-or-theme);
+}
+
+/// @deprecated Use `mat.datepicker-typography` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @breaking-change 17.0.0
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2014-config(
+      theming.get-typography-config($config-or-theme));
+  @include datepicker-theme.typography($config-or-theme);
+}
+
+@mixin _density($config-or-theme) {}
+
+/// @deprecated Use `mat.datepicker-date-range-colors` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @breaking-change 17.0.0
+@mixin date-range-colors(
+  $range-color,
+  $comparison-color,
+  $overlap-color,
+  $overlap-selected-color) {
+  @include datepicker-theme.date-range-colors($range-color, $comparison-color, $overlap-color,
+    $overlap-selected-color);
+}
+
+/// @deprecated Use `mat.datepicker-theme` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @breaking-change 17.0.0
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-legacy-datepicker') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include _density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}

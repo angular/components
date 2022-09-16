@@ -209,7 +209,6 @@
   @include bottom-sheet-theme.typography($config);
   @include button-toggle-theme.typography($config);
   @include divider-theme.typography($config);
-  @include datepicker-theme.typography($config);
   @include expansion-theme.typography($config);
   @include grid-list-theme.typography($config);
   @include icon-theme.typography($config);
@@ -260,6 +259,7 @@
   @include fab-theme.typography($config);
   @include snack-bar-theme.typography($config);
   @include table-theme.typography($config);
+  @include datepicker-theme.typography($config);
 }
 
 // @deprecated Use `all-component-typographies`.

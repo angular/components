@@ -54,7 +54,7 @@ import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material
 import {merge, Subject, Observable, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
-import {MatCalendar, MatCalendarView} from './calendar';
+import {MatCalendar, MatCalendarView, _MAT_CALENDAR_DYNAMIC_COMPONENTS} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatCalendarUserEvent, MatCalendarCellClassFunction} from './calendar-body';
@@ -172,6 +172,9 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   /** Id of the label for the `role="dialog"` element. */
   _dialogLabelId: string | null;
+
+  /** Component used for the close button. */
+  _closeButtonComponent = inject(_MAT_CALENDAR_DYNAMIC_COMPONENTS).closeButton;
 
   constructor(
     elementRef: ElementRef,

@@ -73,6 +73,7 @@ export const commitMessage: CommitMessageConfig = {
     'material/core',
     'material/legacy-core',
     'material/datepicker',
+    'material/legacy-datepicker',
     'material/legacy-dialog',
     'material/divider',
     'material/expansion',

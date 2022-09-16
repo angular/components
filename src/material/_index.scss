@@ -103,6 +103,9 @@
   chips-density;
 @forward './datepicker/datepicker-theme' as datepicker-* show datepicker-theme, datepicker-color,
   datepicker-typography, datepicker-date-range-colors;
+@forward './legacy-datepicker/datepicker-theme' as legacy-datepicker-* show
+  legacy-datepicker-theme, legacy-datepicker-color, legacy-datepicker-typography,
+  legacy-datepicker-date-range-colors;
 @forward './legacy-dialog/dialog-theme' as legacy-dialog-* show legacy-dialog-theme,
   legacy-dialog-color, legacy-dialog-typography;
 @forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography,

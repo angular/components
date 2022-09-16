@@ -20,9 +20,7 @@ import {
   OnDestroy,
   SimpleChanges,
   ViewEncapsulation,
-  ViewChild,
 } from '@angular/core';
-import {MatButton} from '@angular/material/button';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
@@ -85,9 +83,6 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
 
   /** Custom icon set by the consumer. */
   @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
-
-  /** Underlying button element. */
-  @ViewChild('button') _button: MatButton;
 
   constructor(
     public _intl: MatDatepickerIntl,

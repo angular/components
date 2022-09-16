@@ -5,6 +5,8 @@
   align-items: center;
   padding: 0 $spacing $spacing $spacing;
 
+  // TODO(crisbeto): top selector is only used for the legacy datepicker.
+  .mat-button-base + .mat-button-base,
   .mat-mdc-button-base + .mat-mdc-button-base {
     margin-left: $spacing;
 

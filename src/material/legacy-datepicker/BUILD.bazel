@@ -1,0 +1,38 @@
+load("//tools:defaults.bzl", "ng_module", "sass_binary", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "legacy-datepicker",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [
+        ":datepicker-toggle.css",
+    ] + glob(["**/*.html"]),
+    deps = [
+        "//src/material/datepicker",
+        "//src/material/legacy-button",
+        "//src/material/legacy-core",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+    ],
+)
+
+sass_library(
+    name = "legacy_datepicker_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = ["//src/material/core:core_scss_lib"],
+)
+
+sass_binary(
+    name = "datepicker_toggle_scss",
+    src = "datepicker-toggle.scss",
+    deps = ["//src/cdk:sass_lib"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

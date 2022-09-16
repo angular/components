@@ -9,6 +9,7 @@
 export * from './datepicker-module';
 export * from './calendar';
 export * from './calendar-body';
+export * from './calendar-header';
 export * from './datepicker';
 export {
   MAT_DATE_RANGE_SELECTION_STRATEGY,
@@ -42,3 +43,4 @@ export * from './date-selection-model';
 export {MatStartDate, MatEndDate} from './date-range-input-parts';
 export {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 export * from './datepicker-actions';
+export * from './datepicker-close-button';

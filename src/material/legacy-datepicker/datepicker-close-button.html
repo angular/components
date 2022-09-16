@@ -1,0 +1,9 @@
+<button
+  type="button"
+  mat-raised-button
+  [color]="_getColor()"
+  class="mat-datepicker-close-button"
+  [class.cdk-visually-hidden]="!_hasFocus"
+  (focus)="_hasFocus = true"
+  (blur)="_hasFocus = false"
+  (click)="_handleClick()">{{ _getText() }}</button>

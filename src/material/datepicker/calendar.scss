@@ -37,6 +37,11 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 .mat-calendar-controls {
   display: flex;
   margin: $calendar-controls-vertical-padding $calendar-controls-side-margin;
+
+  // TODO(crisbeto): only used for the legacy datepicker.
+  .mat-icon-button:hover .mat-button-focus-overlay {
+    opacity: 0.04;
+  }
 }
 
 .mat-calendar-spacer {

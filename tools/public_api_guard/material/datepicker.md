@@ -29,15 +29,14 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i14 from '@angular/common';
-import * as i15 from '@angular/material/button';
-import * as i16 from '@angular/cdk/overlay';
-import * as i17 from '@angular/cdk/a11y';
-import * as i18 from '@angular/cdk/portal';
-import * as i19 from '@angular/material/core';
-import * as i20 from '@angular/cdk/scrolling';
+import * as i15 from '@angular/cdk/overlay';
+import * as i16 from '@angular/cdk/a11y';
+import * as i17 from '@angular/cdk/portal';
+import * as i18 from '@angular/cdk/scrolling';
+import * as i21 from '@angular/material/core';
+import * as i22 from '@angular/material/button';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import { MatDateFormats } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -56,6 +55,7 @@ import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { Type } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms';
@@ -107,6 +107,12 @@ function getActiveOffset<D>(dateAdapter: DateAdapter<D>, activeDate: D, minDate:
 
 // @public (undocumented)
 function isSameMultiYearView<D>(dateAdapter: DateAdapter<D>, date1: D, date2: D, minDate: D | null, maxDate: D | null): boolean;
+
+// @public (undocumented)
+export const _MAT_CALENDAR_DYNAMIC_COMPONENTS: InjectionToken<{
+    closeButton: Type<unknown>;
+    calendarHeader: Type<unknown>;
+}>;
 
 // @public
 const MAT_DATE_RANGE_INPUT_PARENT: InjectionToken<MatDateRangeInputParent<unknown>>;
@@ -419,6 +425,16 @@ abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S, D = Extra
 }
 
 // @public
+export class _MatDatepickerBaseModule {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatDatepickerBaseModule, never>;
+    // (undocumented)
+    static ɵinj: i0.ɵɵInjectorDeclaration<_MatDatepickerBaseModule>;
+    // (undocumented)
+    static ɵmod: i0.ɵɵNgModuleDeclaration<_MatDatepickerBaseModule, [typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker, typeof i13.MatDatepickerActions, typeof i13.MatDatepickerCancel, typeof i13.MatDatepickerApply], [typeof i14.CommonModule, typeof i15.OverlayModule, typeof i16.A11yModule, typeof i17.PortalModule], [typeof i18.CdkScrollableModule, typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker, typeof i13.MatDatepickerActions, typeof i13.MatDatepickerCancel, typeof i13.MatDatepickerApply]>;
+}
+
+// @public
 export class MatDatepickerCancel {
     constructor(_datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown>);
     // (undocumented)
@@ -430,6 +446,22 @@ export class MatDatepickerCancel {
 }
 
 // @public
+export class MatDatepickerCloseButton {
+    // (undocumented)
+    _getColor(): "primary" | "accent" | "warn";
+    // (undocumented)
+    _getText(): string;
+    // (undocumented)
+    _handleClick(): void;
+    // (undocumented)
+    _hasFocus: boolean;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatDatepickerCloseButton, "mat-datepicker-close-button", never, {}, {}, never, never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatDatepickerCloseButton, never>;
+}
+
+// @public
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extends _MatDatepickerContentBase implements OnInit, AfterViewInit, OnDestroy, CanColor {
     constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>, intl: MatDatepickerIntl);
     _actionsPortal: TemplatePortal | null;
@@ -438,6 +470,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extend
     _applyPendingSelection(): void;
     _assignActions(portal: TemplatePortal<any> | null, forceRerender: boolean): void;
     _calendar: MatCalendar<D>;
+    _closeButtonComponent: Type<unknown>;
     _closeButtonFocused: boolean;
     _closeButtonText: string;
     comparisonEnd: D | null;
@@ -563,7 +596,7 @@ export class MatDatepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatDatepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDatepickerModule, [typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggle, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i1.MatCalendarHeader, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker, typeof i13.MatDatepickerActions, typeof i13.MatDatepickerCancel, typeof i13.MatDatepickerApply], [typeof i14.CommonModule, typeof i15.MatButtonModule, typeof i16.OverlayModule, typeof i17.A11yModule, typeof i18.PortalModule, typeof i19.MatCommonModule], [typeof i20.CdkScrollableModule, typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggle, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i1.MatCalendarHeader, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker, typeof i13.MatDatepickerActions, typeof i13.MatDatepickerCancel, typeof i13.MatDatepickerApply]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDatepickerModule, [typeof i19.MatDatepickerCloseButton, typeof i20.MatCalendarHeader, typeof i6.MatDatepickerToggle], [typeof i14.CommonModule, typeof i21.MatCommonModule, typeof i22.MatButtonModule, typeof _MatDatepickerBaseModule], [typeof _MatDatepickerBaseModule, typeof i20.MatCalendarHeader, typeof i6.MatDatepickerToggle]>;
 }
 
 // @public
@@ -584,7 +617,6 @@ export interface MatDatepickerPanel<C extends MatDatepickerControl<D>, S, D = Ex
 export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     constructor(_intl: MatDatepickerIntl, _changeDetectorRef: ChangeDetectorRef, defaultTabIndex: string);
     ariaLabel: string;
-    _button: MatButton;
     _customIcon: MatDatepickerToggleIcon;
     datepicker: MatDatepickerPanel<MatDatepickerControl<any>, D>;
     get disabled(): boolean;

@@ -24,6 +24,7 @@
 @use '../../legacy-tabs/tabs-theme';
 @use '../../legacy-snack-bar/snack-bar-theme';
 @use '../../legacy-table/table-theme';
+@use '../../legacy-datepicker/datepicker-theme';
 
 // Includes all of the typographic styles.
 /// @deprecated Use `mat.all-component-typographies` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
@@ -67,6 +68,7 @@
   @include paginator-theme.typography($config);
   @include snack-bar-theme.typography($config);
   @include table-theme.typography($config);
+  @include datepicker-theme.typography($config);
 }
 
 /// @deprecated Use `mat.all-component-typographies` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
