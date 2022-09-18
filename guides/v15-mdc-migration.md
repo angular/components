@@ -3,28 +3,31 @@
 In Angular Material v15, many of the components have been refactored to be based on the official 
 [Material Design Components for Web (MDC)](https://github.com/material-components/material-components-web).
 The components from the following imports have been refactored:
-* @angular/material/autocomplete
-* @angular/material/button
-* @angular/material/card
-* @angular/material/checkbox
-* @angular/material/chips
-* @angular/material/core
-* @angular/material/dialog
-* @angular/material/form-field
-* @angular/material/input
-* @angular/material/list
-* @angular/material/menu
-* @angular/material/paginator
-* @angular/material/progress-bar
-* @angular/material/progress-spinner
-* @angular/material/radio
-* @angular/material/select
-* @angular/material/slide-toggle
-* @angular/material/slider
-* @angular/material/snack-bar
-* @angular/material/table
-* @angular/material/tabs
-* @angular/material/tooltip
+
+| Import path                        | Summary of changes                                   |
+|------------------------------------|------------------------------------------------------|
+| @angular/material/autocomplete     | Style changes only                                   |
+| @angular/material/button           | Style changes, API changes                           |
+| @angular/material/card             | Style changes only                                   |
+| @angular/material/checkbox         | Style changes, changes to event behavior             |
+| @angular/material/chips            | Complete rewrite                                     |
+| @angular/material/core             | Style changes only                                   |
+| @angular/material/dialog           | Style changes, changes to change detection behavior  |
+| @angular/material/form-field       | Style changes, some appearances removed, API changes |
+| @angular/material/input            | Style changes only                                   |
+| @angular/material/list             | Style changes, API changes                           |
+| @angular/material/menu             | Style changes, API changes                           |
+| @angular/material/paginator        | Style changes only                                   |
+| @angular/material/progress-bar     | Style changes only                                   |
+| @angular/material/progress-spinner | Style changes only                                   |
+| @angular/material/radio            | Style changes only                                   |
+| @angular/material/select           | Style changes only                                   |
+| @angular/material/slide-toggle     | Style changes only                                   |
+| @angular/material/slider           | Complete rewrite                                     |
+| @angular/material/snack-bar        | Style changes, API changes                           |
+| @angular/material/table            | Style changes only                                   |
+| @angular/material/tabs             | Style changes, API changes                           |
+| @angular/material/tooltip          | Style changes only                                   |
 
 The refactored components offer several benefits over the old implementations, including:
 * Improved accessibility
@@ -124,6 +127,8 @@ they can be easily identified.
 ```
 
 To search for all comments left by the migration tool, search for `TODO(...):` in your IDE.
+
+TODO(amysorto): Can we have the schematic generate a CSV of TODOs that can be imported into Jira
 
 ### 4. Verify Your Application
 
@@ -359,14 +364,6 @@ TODO(mmalerba): link to density docs once they exist.
   directives:
   * `matListItemTitle`
   * `matListItemLine`
-
-* Every list item is supposed to have a title for accessibility. If no explicit title and lines are
-  provided, the direct content of the `<mat-list-item>` will become the title. You cannot have
-  multiple line directives without a title.
-
-  ```html
-  <mat-list-item>This is the title</mat-list-item>
-  ```
   
 * Text outside of a `matListItemLine` (so-called "unscoped content") will result in an additional
   line being acquired (as if the content was put into a line).
@@ -480,11 +477,6 @@ TODO(mmalerba): link to density docs once they exist.
   );
   ```
 
-  Without the density mixin, the touch targets collide (see blue outlined targets below) collide:
-
-  TODO(mmalerba): replace this with a working image or embedded example:
-  ![alt_text](../images/slide-toggle-diff.png "Diagram showing overlapping slide-toggle touch targets")
-
 * The label is closer to the enabled toggle
 
 ### Slider
@@ -497,9 +489,10 @@ TODO(mmalerba): link to density docs once they exist.
   labels (`aria-label`) now live on the `<input>` elements instead.
 
 * Vertical sliders and inverted sliders are no longer supported, as they are no longer part of the
-  Material Design spec.
+  Material Design spec. TODO(jelbourn): should we add a note that vertical sliders are likely to
+  return in a future version?
 
-* Range sliders are now supported. TODO(mmalerba): add more about this.
+* Range sliders are now supported. TODO(wagnermaciel): add more about this.
 
 ### Snack Bar
 
@@ -550,7 +543,7 @@ TODO(mmalerba): link to density docs once they exist.
 
 * Accessibility: `MatTabNav` now throws an error if the `[tabPanel]` input is not provided. The
   `[tabPanel]` input and associated `mat-tab-nav-panel` component improve accessibility.
-  TODO: This point needs further elaboration.
+  TODO(crisbeto): This point needs further elaboration.
 
 * The selected tab label now uses a text color from the theme, matching the selection indicator.
 
