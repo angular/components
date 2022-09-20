@@ -2,9 +2,14 @@ $calendar-padding: 8px;
 $non-touch-calendar-cell-size: 40px;
 $non-touch-calendar-width:
     $non-touch-calendar-cell-size * 7 + $calendar-padding * 2;
+
 // Based on the natural height of the calendar in a month with 6 rows of dates
 // (largest the calendar will get).
 $non-touch-calendar-height: 354px;
+
+// The maximum height of the calendar in a month with 6 rows of dates with WCAG 1.4.12 text spacing
+// enabled.
+$non-touch-calendar-wcag-text-spacing-height: 365px;
 
 // Ideally the calendar would have a constant aspect ratio, no matter its size, and we would base
 // these measurements off the aspect ratio. Unfortunately, the aspect ratio does change a little as
@@ -28,7 +33,10 @@ $touch-max-height: 788px;
 
   .mat-calendar {
     width: $non-touch-calendar-width;
-    height: $non-touch-calendar-height;
+    min-height: $non-touch-calendar-height;
+
+    // Allow calendar to grow to a slightly larger height to accomodate WCAG 1.4.12 text spacing.
+    max-height: $non-touch-calendar-wcag-text-spacing-height;
   }
 
   // Override mat-calendar's height when custom header is provided
