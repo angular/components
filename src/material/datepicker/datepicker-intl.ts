@@ -57,6 +57,12 @@ export class MatDatepickerIntl {
   /** A label for the last date of a range of dates (used by screen readers). */
   endDateLabel = 'End date';
 
+  /** A label for the first date of a comparison range (used by screen readers). */
+  comparisonRangeStartLabel = 'Start of comparison range';
+
+  /** A label for the last date of a comparison range (used by screen readers). */
+  comparisonRangeEndLabel = 'End of comparison range';
+
   /** Formats a range of years (used for visuals). */
   formatYearRange(start: string, end: string): string {
     return `${start} \u2013 ${end}`;

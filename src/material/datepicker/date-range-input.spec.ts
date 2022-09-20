@@ -570,7 +570,7 @@ describe('MatDateRangeInput', () => {
           .getAttribute('aria-describedby')!
           .split(/\s+/g)
           .map(x => `#${x}`)
-          .join(' '),
+          .join(','),
       ),
     );
     const rangeEndDescriptions = Array.from(
@@ -579,7 +579,7 @@ describe('MatDateRangeInput', () => {
           .getAttribute('aria-describedby')!
           .split(/\s+/g)
           .map(x => `#${x}`)
-          .join(' '),
+          .join(','),
       ),
     );
 
@@ -592,13 +592,13 @@ describe('MatDateRangeInput', () => {
     expect(
       rangeStartDescriptions
         .map(x => x.textContent)
-        .join(' ')
+        .join(',')
         .trim(),
     ).toEqual('Start date');
     expect(
       rangeEndDescriptions
         .map(x => x.textContent)
-        .join(' ')
+        .join(',')
         .trim(),
     ).toEqual('End date');
   }));
@@ -634,6 +634,145 @@ describe('MatDateRangeInput', () => {
     ).map(cell => cell.textContent!.trim());
 
     expect(rangeTexts).toEqual(['2', '3', '4', '5']);
+  }));
+
+  it('should provide aria descriptions for start and end of comparison range', fakeAsync(() => {
+    const fixture = createComponent(StandardRangePicker);
+    let overlayContainerElement: HTMLElement;
+
+    // Set startAt to guarantee that the calendar opens on the proper month.
+    fixture.componentInstance.comparisonStart = fixture.componentInstance.startAt = new Date(
+      2020,
+      1,
+      2,
+    );
+    fixture.componentInstance.comparisonEnd = new Date(2020, 1, 5);
+    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+      overlayContainerElement = overlayContainer.getContainerElement();
+    })();
+    fixture.detectChanges();
+
+    fixture.componentInstance.rangePicker.open();
+    fixture.detectChanges();
+    tick();
+
+    const comparisonStartDescribedBy = overlayContainerElement!
+      .querySelector('.mat-calendar-body-comparison-start')
+      ?.getAttribute('aria-describedby');
+    const comparisonEndDescribedBy = overlayContainerElement!
+      .querySelector('.mat-calendar-body-comparison-end')
+      ?.getAttribute('aria-describedby');
+
+    expect(comparisonStartDescribedBy)
+      .withContext(
+        'epxected to find comparison start element with non-empty aria-describedby attribute',
+      )
+      .toBeTruthy();
+    expect(comparisonEndDescribedBy)
+      .withContext(
+        'epxected to find comparison end element with non-empty aria-describedby attribute',
+      )
+      .toBeTruthy();
+
+    // query for targets of `aria-describedby`. Query from document instead of fixture.nativeElement as calendar UI is rendered in an overlay.
+    const comparisonStartDescriptions = Array.from(
+      document.querySelectorAll(
+        comparisonStartDescribedBy!
+          .split(/\s+/g)
+          .map(x => `#${x}`)
+          .join(','),
+      ),
+    );
+    const comparisonEndDescriptions = Array.from(
+      document.querySelectorAll(
+        comparisonEndDescribedBy!
+          .split(/\s+/g)
+          .map(x => `#${x}`)
+          .join(','),
+      ),
+    );
+
+    expect(comparisonStartDescriptions)
+      .withContext('target of aria-descriedby should exist')
+      .not.toBeNull();
+    expect(comparisonEndDescriptions)
+      .withContext('target of aria-descriedby should exist')
+      .not.toBeNull();
+    expect(
+      comparisonStartDescriptions
+        .map(x => x.textContent?.trim())
+        .join(' ')
+        .trim(),
+    ).toMatch(/start of comparison range/i);
+    expect(
+      comparisonEndDescriptions
+        .map(x => x.textContent?.trim())
+        .join(' ')
+        .trim(),
+    ).toMatch(/end of comparison range/i);
+  }));
+
+  // Validate that the correct aria description is applied when the start date, end date,
+  // comparison start date, comparison end date all fall on the same date.
+  it('should apply aria description to date cell that is the start date, end date, comparison start date and comparison end date', fakeAsync(() => {
+    const fixture = createComponent(StandardRangePicker);
+    let overlayContainerElement: HTMLElement;
+
+    const {start, end} = fixture.componentInstance.range.controls;
+    start.setValue(new Date(2020, 0, 15));
+    end.setValue(new Date(2020, 0, 15));
+
+    // Set startAt to guarantee that the calendar opens on the proper month.
+    fixture.componentInstance.comparisonStart = fixture.componentInstance.startAt = new Date(
+      2020,
+      0,
+      15,
+    );
+    fixture.componentInstance.comparisonEnd = new Date(2020, 0, 15);
+    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+      overlayContainerElement = overlayContainer.getContainerElement();
+    })();
+    fixture.detectChanges();
+
+    fixture.componentInstance.rangePicker.open();
+    fixture.detectChanges();
+    tick();
+
+    const activeCells = Array.from(
+      overlayContainerElement!.querySelectorAll(
+        '.mat-calendar-body-cell-container[data-mat-row="2"][data-mat-col="3"] .mat-calendar-body-cell',
+      ),
+    );
+
+    expect(activeCells.length).withContext('expected to find a single active date cell').toBe(1);
+
+    console.log('found it?', activeCells[0].outerHTML);
+
+    const dateCellDescribedby = activeCells[0].getAttribute('aria-describedby');
+
+    expect(dateCellDescribedby)
+      .withContext('expected active cell to have a non-empty aria-descriebedby attribute')
+      .toBeTruthy();
+
+    // query for targets of `aria-describedby`. Query from document instead of fixture.nativeElement as calendar UI is rendered in an overlay.
+    const dateCellDescriptions = Array.from(
+      document.querySelectorAll(
+        dateCellDescribedby!
+          .split(/\s+/g)
+          .map(x => `#${x}`)
+          .join(','),
+      ),
+    );
+
+    const dateCellDescription = dateCellDescriptions
+      .map(x => x.textContent?.trim())
+      .join(' ')
+      .trim();
+
+    expect(dateCellDescription).toMatch(/start of comparison range/i);
+    expect(dateCellDescription).toMatch(/end of comparison range/i);
+    expect(dateCellDescription).toMatch(/start date/i);
+    expect(dateCellDescription).toMatch(/end date/i);
   }));
 
   it('should preserve the preselected values when assigning through ngModel', fakeAsync(() => {

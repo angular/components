@@ -19,8 +19,10 @@ import {
   SimpleChanges,
   OnDestroy,
   AfterViewChecked,
+  inject,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -158,6 +160,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
 
   /** Width of an individual cell. */
   _cellWidth: string;
+
+  private _intl = inject(MatDatepickerIntl);
 
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {
     _ngZone.runOutsideAngular(() => {
@@ -370,14 +374,36 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
       return null;
     }
 
-    if (this.startValue === value && this.endValue === value) {
-      return `${this._startDateLabelId} ${this._endDateLabelId}`;
-    } else if (this.startValue === value) {
-      return this._startDateLabelId;
-    } else if (this.endValue === value) {
-      return this._endDateLabelId;
+    let describedby = '';
+
+    // Add ids of relevant labels.
+    if (this.startValue === value) {
+      describedby += ` ${this._startDateLabelId}`;
     }
-    return null;
+    if (this.endValue === value) {
+      describedby += ` ${this._endDateLabelId}`;
+    }
+
+    if (this.comparisonStart === value) {
+      describedby += ` ${this._comparisonStartLabelId}`;
+    }
+    if (this.comparisonEnd === value) {
+      describedby += ` ${this._comparisonEndLabelId}`;
+    }
+
+    // Remove leading space character. Prefer passing null over empty string to avoid adding
+    // aria-describedby attribute with an empty value.
+    return describedby.trim() || null;
+  }
+
+  /** Gets the label for the start of comparison range (used by screen readers). */
+  _getComparisonStartLabel(): string | null {
+    return this._intl.comparisonRangeStartLabel;
+  }
+
+  /** Gets the label for the end of comparison range (used by screen readers). */
+  _getComparisonEndLabel(): string | null {
+    return this._intl.comparisonRangeEndLabel;
   }
 
   /**
@@ -441,8 +467,10 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
   private _id = `mat-calendar-body-${calendarBodyId++}`;
 
   _startDateLabelId = `${this._id}-start-date`;
-
   _endDateLabelId = `${this._id}-end-date`;
+
+  _comparisonStartLabelId = `${this._id}-comparison-start`;
+  _comparisonEndLabelId = `${this._id}-comparison-end`;
 }
 
 /** Checks whether a node is a table cell element. */

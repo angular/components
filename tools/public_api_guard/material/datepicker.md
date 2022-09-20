@@ -209,7 +209,11 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
     _cellPadding: string;
     _cellWidth: string;
     comparisonEnd: number | null;
+    // (undocumented)
+    _comparisonEndLabelId: string;
     comparisonStart: number | null;
+    // (undocumented)
+    _comparisonStartLabelId: string;
     // (undocumented)
     _emitActiveDateChange(cell: MatCalendarCell, event: FocusEvent): void;
     endDateAccessibleName: string | null;
@@ -218,6 +222,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy, AfterViewChecked {
     endValue: number;
     _firstRowOffset: number;
     _focusActiveCell(movePreview?: boolean): void;
+    _getComparisonEndLabel(): string | null;
+    _getComparisonStartLabel(): string | null;
     _getDescribedby(value: number): string | null;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
@@ -537,6 +543,8 @@ export class MatDatepickerIntl {
     calendarLabel: string;
     readonly changes: Subject<void>;
     closeCalendarLabel: string;
+    comparisonRangeEndLabel: string;
+    comparisonRangeStartLabel: string;
     endDateLabel: string;
     formatYearRange(start: string, end: string): string;
     formatYearRangeLabel(start: string, end: string): string;
