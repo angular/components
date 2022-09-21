@@ -9,6 +9,7 @@ import {VERSION} from '@angular/material/core';
 export class Footer {
   isNextVersion = location.hostname.startsWith('next.material.angular.io');
   version = VERSION.full;
+  year = new Date().getFullYear();
 }
 
 
