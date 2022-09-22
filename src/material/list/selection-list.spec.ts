@@ -335,14 +335,14 @@ describe('MDC-based MatSelectionList without forms', () => {
       expect(getFocusIndex()).toEqual(3);
     });
 
-    it('should be able to focus the first item when pressing HOME', () => {
+    it('should be able to focus the first non-disabled item when pressing HOME', () => {
       listOptions[2].nativeElement.focus();
       expect(getFocusIndex()).toBe(2);
 
       const event = dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
-      expect(getFocusIndex()).toBe(0);
+      expect(getFocusIndex()).toBe(1);
       expect(event.defaultPrevented).toBe(true);
     });
 

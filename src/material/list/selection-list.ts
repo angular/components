@@ -366,12 +366,7 @@ export class MatSelectionList
 
   /** Sets up the logic for maintaining the roving tabindex. */
   private _setupRovingTabindex() {
-    this._keyManager = new FocusKeyManager(this._items)
-      .withHomeAndEnd()
-      .withTypeAhead()
-      .withWrap()
-      // Allow navigation to disabled items.
-      .skipPredicate(() => false);
+    this._keyManager = new FocusKeyManager(this._items).withHomeAndEnd().withTypeAhead().withWrap();
 
     // Set the initial focus.
     this._resetActiveOption();

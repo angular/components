@@ -469,14 +469,14 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions[2].componentInstance.selected).toBe(true);
     });
 
-    it('should be able to focus the first item when pressing HOME', () => {
+    it('should be able to focus the first non-disabled item when pressing HOME', () => {
       const manager = selectionList.componentInstance._keyManager;
       expect(manager.activeItemIndex).toBe(-1);
 
       const event = dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toBe(0);
+      expect(manager.activeItemIndex).toBe(1);
       expect(event.defaultPrevented).toBe(true);
     });
 
