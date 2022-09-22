@@ -126,6 +126,43 @@ describe('multiple component styles', () => {
       );
     });
 
+    it('should migrate legacy-core to mat.core and add typographies', async () => {
+      await runMigrationTest(
+        ['all'],
+        `
+        @use '@angular/material' as mat;
+        $theme: ();
+        @include mat.legacy-core();
+      `,
+        `
+        @use '@angular/material' as mat;
+        $theme: ();
+        @include mat.core();
+        @include mat.all-component-typographies();
+      `,
+      );
+    });
+
+    it('should keep legacy-core mixin when partially migrating', async () => {
+      await runMigrationTest(
+        ['button'],
+        `
+        @use '@angular/material' as mat;
+        $theme: ();
+        @include mat.legacy-core();
+      `,
+        `
+        @use '@angular/material' as mat;
+        $theme: ();
+        /* TODO: Remove the legacy-core mixin once all legacy components are migrated */
+
+        @include mat.legacy-core();
+        @include mat.core();
+        @include mat.all-component-typographies();
+      `,
+      );
+    });
+
     it('should add migrate all component mixins', async () => {
       await runMigrationTest(
         ['checkbox', 'radio'],
