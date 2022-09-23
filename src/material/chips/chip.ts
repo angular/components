@@ -46,7 +46,14 @@ import {take} from 'rxjs/operators';
 import {MatChipAvatar, MatChipTrailingIcon, MatChipRemove} from './chip-icons';
 import {MatChipAction} from './chip-action';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
-import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
+import {
+  MAT_CHIP,
+  MAT_CHIP_AVATAR,
+  MAT_CHIP_REMOVE,
+  MAT_CHIP_TRAILING_ICON,
+  MAT_CHIPS_DEFAULT_OPTIONS,
+  MatChipsDefaultOptions,
+} from './tokens';
 
 let uid = 0;
 
@@ -69,7 +76,6 @@ const _MatChipMixinBase = mixinTabIndex(
         },
       ),
     ),
-    'primary',
   ),
   -1,
 );
@@ -210,9 +216,6 @@ export class MatChip
   /** Reference to the MatRipple instance of the chip. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
-  /** Action receiving the primary set of user interactions. */
-  @ViewChild(MatChipAction) primaryAction: MatChipAction;
-
   constructor(
     public _changeDetectorRef: ChangeDetectorRef,
     elementRef: ElementRef<HTMLElement>,
@@ -224,6 +227,7 @@ export class MatChip
     @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
     private _globalRippleOptions?: RippleGlobalOptions,
     @Attribute('tabindex') tabIndex?: string,
+    @Optional() @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions?: MatChipsDefaultOptions,
   ) {
     super(elementRef);
     const element = elementRef.nativeElement;
@@ -236,7 +240,11 @@ export class MatChip
       this.tabIndex = parseInt(tabIndex) ?? this.defaultTabIndex;
     }
     this._monitorFocus();
+    this.defaultColor = _defaultOptions?.color;
   }
+
+  /** Action receiving the primary set of user interactions. */
+  @ViewChild(MatChipAction) primaryAction: MatChipAction;
 
   ngAfterViewInit() {
     this._textElement = this._elementRef.nativeElement.querySelector('.mat-mdc-chip-action-label')!;

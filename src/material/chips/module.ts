@@ -46,6 +46,7 @@ const CHIP_DECLARATIONS = [
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
       useValue: {
         separatorKeyCodes: [ENTER],
+        color: 'primary',
       } as MatChipsDefaultOptions,
     },
   ],

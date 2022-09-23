@@ -1,10 +1,21 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
-import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
+import {
+  MAT_CHIPS_DEFAULT_OPTIONS,
+  MatChip,
+  MatChipEvent,
+  MatChipsDefaultOptions,
+  MatChipSet,
+  MatChipsModule,
+} from './index';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {PlatformModule} from '@angular/cdk/platform';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {COMMA} from '@angular/cdk/keycodes';
 
 describe('MDC-based MatChip', () => {
   let fixture: ComponentFixture<any>;
@@ -127,6 +138,32 @@ describe('MDC-based MatChip', () => {
       expect(chipNativeElement.classList).toContain('mat-warn');
     });
 
+    it('can default the color to undefined', () => {
+      fixture.destroy();
+      TestBed.resetTestingModule()
+        .configureTestingModule({
+          imports: [MatChipsModule],
+          declarations: [
+            BasicChip,
+            SingleChip,
+            BasicChipWithStaticTabindex,
+            BasicChipWithBoundTabindex,
+          ],
+          providers: [
+            {
+              provide: MAT_CHIPS_DEFAULT_OPTIONS,
+              useValue: {color: undefined} as MatChipsDefaultOptions,
+            },
+          ],
+        })
+        .compileComponents();
+      fixture = TestBed.createComponent(SingleChip);
+      fixture.detectChanges();
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipNativeElement = chipDebugElement.nativeElement;
+      expect(chipNativeElement.classList).not.toContain('mat-primary');
+    });
+
     it('allows removal', () => {
       spyOn(testComponent, 'chipRemove');
 
@@ -205,7 +242,7 @@ class SingleChip {
   @ViewChild(MatChipSet) chipList: MatChipSet;
   disabled: boolean = false;
   name: string = 'Test';
-  color: string = 'primary';
+  color: ThemePalette = undefined;
   removable: boolean = true;
   shouldShow: boolean = true;
   value: any;
