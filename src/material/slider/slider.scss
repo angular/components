@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use '../core/mdc-helpers/mdc-helpers';
 @use '@material/slider/slider' as mdc-slider;
 @use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '../core/mdc-helpers/mdc-helpers';
@@ -25,14 +25,6 @@ $mat-slider-horizontal-margin: 8px !default;
   vertical-align: middle;
   margin: 0;
   min-width: $mat-slider-min-size;
-
-  input {
-    opacity: 1;
-  }
-
-  .mat-mdc-slider-visual-thumb {
-    opacity: 0.5
-  }
 
   .mdc-slider__track {
     pointer-events: none;
