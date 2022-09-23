@@ -227,7 +227,7 @@ export class MatChip
     @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
     private _globalRippleOptions?: RippleGlobalOptions,
     @Attribute('tabindex') tabIndex?: string,
-    @Optional() @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions?: MatChipsDefaultOptions,
+    @Optional() @Inject(MAT_CHIPS_DEFAULT_OPTIONS) _defaultOptions?: MatChipsDefaultOptions,
   ) {
     super(elementRef);
     const element = elementRef.nativeElement;

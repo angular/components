@@ -12,10 +12,6 @@ import {
   MatChipSet,
   MatChipsModule,
 } from './index';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {PlatformModule} from '@angular/cdk/platform';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {COMMA} from '@angular/cdk/keycodes';
 
 describe('MDC-based MatChip', () => {
   let fixture: ComponentFixture<any>;
