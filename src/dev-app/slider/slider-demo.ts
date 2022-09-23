@@ -44,10 +44,6 @@ export class SliderDemo {
 
   control = new FormControl('0');
 
-  print(...things: any[]) {
-    console.log(...things);
-  }
-
   updateTwoWayValue(input: EventTarget | null): void {
     if (!input) {
       return;

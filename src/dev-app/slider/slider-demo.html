@@ -1,12 +1,228 @@
-<mat-slider id="standard-slider" discrete [style.width]="'132px'">
-  <input aria-label="Standard slider" matSliderThumb>
-</mat-slider>
+<h1>Color Picker</h1>
+<mat-button-toggle-group [(ngModel)]="colorModel" aria-label="Slider color options">
+  <mat-button-toggle value="primary">Primary</mat-button-toggle>
+  <mat-button-toggle value="accent">Accent</mat-button-toggle>
+  <mat-button-toggle value="warn">Warn</mat-button-toggle>
+</mat-button-toggle-group>
 
-<mat-slider id="disabled-slider" disabled>
-  <input aria-label="Disabled slider" matSliderThumb>
-</mat-slider>
+<h1>Reactive form controls</h1>
 
-<mat-slider id="range-slider">
-  <input aria-label="Range slider start thumb" matSliderStartThumb>
-  <input aria-label="Range slider end thumb" matSliderEndThumb>
-</mat-slider>
+<table>
+  <tr>
+    <th>Inputs</th>
+    <th>Controls</th>
+    <th>Native Slider</th>
+    <th>Single Slider</th>
+    <th>Double Slider</th>
+  </tr>
+  <tr>
+    <th>Value</th>
+    <td><input type="number" (input)="updateControlValue($event.target)" /></td>
+    <td class="value-cell">{{nativeSlider1.value}}</td>
+    <td class="value-cell">{{ngThumb1.value}}</td>
+    <td class="value-cell">{{ngStartThumb1.value}} : {{ngEndThumb1.value}}</td>
+  </tr>
+  <tr>
+    <th>Disabled</th>
+    <td><input type="checkbox" (input)="updateControlDisabledState($event.target)" /></td>
+    <td class="value-cell">{{nativeSlider1.disabled}}</td>
+    <td class="value-cell">{{ngThumb1.disabled}}</td>
+    <td class="value-cell">{{ngStartThumb1.disabled}} : {{ngEndThumb1.disabled}}</td>
+  </tr>
+</table>
+
+<div class="resizable-container">
+  <input class="native-slider" type="range" [formControl]="control" #nativeSlider1 />
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}">
+    <input matSliderThumb [formControl]="control" #ngThumb1 />
+  </mat-slider>
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}">
+    <input matSliderStartThumb [formControl]="control" #ngStartThumb1 />
+    <input matSliderEndThumb #ngEndThumb1 />
+  </mat-slider>
+</div>
+
+<h1>Template-driven form controls</h1>
+
+<table>
+  <tr>
+    <th>Inputs</th>
+    <th>Controls</th>
+    <th>Native Slider</th>
+    <th>Slider</th>
+    <th>Range Slider</th>
+  </tr>
+  <tr>
+    <th>Value</th>
+    <td><input type="number" [(ngModel)]="valueModel" /></td>
+    <td class="value-cell">{{nativeSlider2.value}}</td>
+    <td class="value-cell">{{ngThumb2.value}}</td>
+    <td class="value-cell">{{ngStartThumb2.value}} : {{ngEndThumb2.value}}</td>
+  </tr>
+  <tr>
+    <th>Min</th>
+    <td><input type="number" [(ngModel)]="minModel" /></td>
+    <td class="value-cell">{{nativeSlider2.min}}</td>
+    <td class="value-cell">{{ngThumb2.min}}</td>
+    <td class="value-cell">{{ngStartThumb2.min}} : {{ngEndThumb2.min}}</td>
+  </tr>
+  <tr>
+    <th>Max</th>
+    <td><input type="number" [(ngModel)]="maxModel" /></td>
+    <td class="value-cell">{{nativeSlider2.max}}</td>
+    <td class="value-cell">{{ngThumb2.max}}</td>
+    <td class="value-cell">{{ngStartThumb2.max}} : {{ngEndThumb2.max}}</td>
+  </tr>
+  <tr>
+    <th>Step</th>
+    <td><input type="number" [(ngModel)]="stepModel" /></td>
+    <td class="value-cell">{{nativeSlider2.step}}</td>
+    <td class="value-cell">{{ngThumb2.step}}</td>
+    <td class="value-cell">{{ngStartThumb2.step}} : {{ngEndThumb2.step}}</td>
+  </tr>
+  <tr>
+    <th>Disabled</th>
+    <td><input type="checkbox" [(ngModel)]="disabledModel" /></td>
+    <td class="value-cell">{{nativeSlider2.disabled}}</td>
+    <td class="value-cell">{{ngThumb2.disabled}}</td>
+    <td class="value-cell">{{ngStartThumb2.disabled}} : {{ngEndThumb2.disabled}}</td>
+  </tr>
+</table>
+
+<div class="resizable-container">
+  <input class="native-slider" type="range" #nativeSlider2 [(ngModel)]="valueModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel" />
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+    <input matSliderThumb #ngThumb2 [(ngModel)]="valueModel" />
+  </mat-slider>
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+    <input matSliderStartThumb #ngStartThumb2 [(ngModel)]="valueModel" />
+    <input matSliderEndThumb #ngEndThumb2 />
+  </mat-slider>
+</div>
+
+<h1>One-way property bindings</h1>
+
+<table>
+  <tr>
+    <th>Inputs</th>
+    <th>Controls</th>
+    <th>Native Slider</th>
+    <th>Slider</th>
+    <th>Range Slider</th>
+  </tr>
+  <tr>
+    <th>Value</th>
+    <td><input type="number" (input)="updateValue($event.target)" [value]="value" /></td>
+    <td class="value-cell">{{nativeSlider3.value}}</td>
+    <td class="value-cell">{{ngThumb3.value}}</td>
+    <td class="value-cell">{{ngStartThumb3.value}} : {{ngEndThumb3.value}}</td>
+  </tr>
+  <tr>
+    <th>Min</th>
+    <td><input type="number" (input)="updateMin($event.target)" [value]="min" /></td>
+    <td class="value-cell">{{nativeSlider3.min}}</td>
+    <td class="value-cell">{{ngThumb3.min}}</td>
+    <td class="value-cell">{{ngStartThumb3.min}} : {{ngEndThumb3.min}}</td>
+  </tr>
+  <tr>
+    <th>Max</th>
+    <td><input type="number" (input)="updateMax($event.target)" [value]="max" /></td>
+    <td class="value-cell">{{nativeSlider3.max}}</td>
+    <td class="value-cell">{{ngThumb3.max}}</td>
+    <td class="value-cell">{{ngStartThumb3.max}} : {{ngEndThumb3.max}}</td>
+  </tr>
+  <tr>
+    <th>Step</th>
+    <td><input type="number" (input)="updateStep($event.target)" [value]="step" /></td>
+    <td class="value-cell">{{nativeSlider3.step}}</td>
+    <td class="value-cell">{{ngThumb3.step}}</td>
+    <td class="value-cell">{{ngStartThumb3.step}} : {{ngEndThumb3.step}}</td>
+  </tr>
+  <tr>
+    <th>Disabled</th>
+    <td><input type="checkbox" (input)="updateDisabledState($event.target)" [value]="disabled" /></td>
+    <td class="value-cell">{{nativeSlider3.disabled}}</td>
+    <td class="value-cell">{{ngThumb3.disabled}}</td>
+    <td class="value-cell">{{ngStartThumb3.disabled}} : {{ngEndThumb3.disabled}}</td>
+  </tr>
+</table>
+
+<div class="resizable-container">
+  <input class="native-slider" type="range" #nativeSlider3 [value]="value" [min]="min" [max]="max" [step]="step" [disabled]="disabled" />
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
+    <input matSliderThumb #ngThumb3 [value]="value" />
+  </mat-slider>
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
+    <input matSliderStartThumb #ngStartThumb3 [value]="value" />
+    <input matSliderEndThumb #ngEndThumb3 />
+  </mat-slider>
+</div>
+
+<h1>Two-way property bindings</h1>
+
+<table>
+  <tr>
+    <th>Inputs</th>
+    <th>Controls</th>
+    <th>Slider</th>
+    <th>Range Slider</th>
+  </tr>
+  <tr>
+    <th>Value</th>
+    <td><input type="number" (input)="updateTwoWayValue($event.target)" [value]="twoWayValue" /></td>
+    <td class="value-cell">{{ngThumb4.value}}</td>
+    <td class="value-cell">{{ngStartThumb4.value}} : {{ngEndThumb4.value}}</td>
+  </tr>
+</table>
+
+<div class="resizable-container">
+  <mat-slider discrete showTickMarks color="{{colorModel}}">
+    <input matSliderThumb #ngThumb4 [(value)]="twoWayValue" />
+  </mat-slider>
+  <br>
+  <mat-slider discrete showTickMarks color="{{colorModel}}">
+    <input matSliderStartThumb #ngStartThumb4 [(value)]="twoWayValue" />
+    <input matSliderEndThumb #ngEndThumb4 />
+  </mat-slider>
+</div>
+
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #aaa;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #ddd;
+}
+.value-cell {
+  width: 130px;
+}
+.mat-mdc-slider {
+  width: 100%;
+}
+.native-slider {
+  margin: 0;
+  padding: 16px;
+  width: calc(100% - 32px);
+}
+.resizable-container {
+  resize: horizontal;
+  border: 2px solid #222;
+  padding: 24px 0;
+  overflow: hidden;
+}
+</style>
