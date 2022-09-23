@@ -171,7 +171,7 @@ describe('list styles', () => {
         }
       `,
         `
-        /* TODO: The following rule targets internal classes of list that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
         .mat-list-item-content {
           padding: 16px;
         }
@@ -203,7 +203,7 @@ describe('list styles', () => {
         }
       `,
         `
-        /* TODO: The following rule targets internal classes of list that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
         .some-class
         .mat-list-item-content {
           padding: 16px;
@@ -220,7 +220,7 @@ describe('list styles', () => {
         }
       `,
         `
-        /* TODO: The following rule targets internal classes of list that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
         .mat-mdc-list.some-class, .mat-list-item-content {
           padding: 16px;
         }

@@ -12,6 +12,8 @@ import * as postcss from 'postcss';
 import * as scss from 'postcss-scss';
 import {ComponentMigrator, MIGRATORS} from '.';
 
+const ALL_LEGACY_COMPONENTS_MIXIN_NAME = '(?:\\.)(.*)(?:\\()';
+
 export class ThemingStylesMigration extends Migration<ComponentMigrator[], SchematicContext> {
   enabled = true;
   namespace: string;
@@ -50,36 +52,36 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
       if (mixinChange) {
         replaceAtRuleWithMultiple(atRule, mixinChange.old, mixinChange.new);
       }
-    } else if (atRule.params.includes('all-legacy-component-') && atRule.parent) {
+    } else if (atRule.params.includes('all-legacy-component') && atRule.parent) {
+      if (this.isPartialMigration()) {
+        // the second element of the result from match is the matching text
+        const mixinName = atRule.params.match(ALL_LEGACY_COMPONENTS_MIXIN_NAME)![1];
+        const comment =
+          'TODO(mdc-migration): Remove ' + mixinName + ' once all legacy components are migrated';
+        if (!addLegacyCommentForPartialMigrations(atRule, comment)) {
+          // same all-legacy-component mixin already replaced, nothing to do here
+          return;
+        }
+      }
       replaceAllComponentsMixin(atRule);
     } else if (atRule.params.includes('legacy-core') && atRule.parent) {
       // When migrating some components, add mat.core but also leave
       // mat.legacy-core mixin for the non MDC components. Leave a comment to
       // tell users to delete the legacy mixin once all components are migrated.
-      if (this.upgradeData.length !== MIGRATORS.length) {
-        const legacyCoreComment =
-          'TODO: Remove the legacy-core mixin once all legacy components are migrated';
-        let hasAddedLegacyCoreComment = false;
-        // Check if comment has been added before, we don't want to add multiple
-        // comments. We need to check since replacing the original node causes
-        // this function to be called again.
-        atRule.parent.walkComments(comment => {
-          if (comment.text.includes(legacyCoreComment)) {
-            hasAddedLegacyCoreComment = true;
-          }
-        });
-
-        if (hasAddedLegacyCoreComment) {
-          // If comment has been added, we have already replaced legacy-core.
-          // No action to do anymore.
+      if (this.isPartialMigration()) {
+        const comment =
+          'TODO(mdc-migration): Remove the legacy-core mixin once all legacy components are migrated';
+        if (!addLegacyCommentForPartialMigrations(atRule, comment)) {
+          // legacy-core is alredy replaced, nothing to do here
           return;
-        } else {
-          addCommentBeforeNode(atRule.cloneBefore(), legacyCoreComment);
         }
       }
-
       replaceAtRuleWithMultiple(atRule, 'legacy-core', ['core', 'all-component-typographies']);
     }
+  }
+
+  isPartialMigration() {
+    return this.upgradeData.length !== MIGRATORS.length;
   }
 
   ruleHandler(rule: postcss.Rule) {
@@ -97,7 +99,7 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
     } else if (isDeprecatedSelector) {
       addCommentBeforeNode(
         rule,
-        'TODO: The following rule targets internal classes of ' +
+        'TODO(mdc-migration): The following rule targets internal classes of ' +
           migrator?.component +
           ' that may no longer apply for the MDC version.',
       );
@@ -125,6 +127,35 @@ function isAngularMaterialImport(atRule: postcss.AtRule): boolean {
 function parseNamespace(atRule: postcss.AtRule): string {
   const params = postcss.list.space(atRule.params);
   return params[params.length - 1];
+}
+
+/**
+ *
+ * @param atRule a postcss @use AtRule.
+ * @param legacyComment comment that will be added to legacy mixin
+ * @returns true if comment added, false if comment already exists
+ */
+function addLegacyCommentForPartialMigrations(
+  atRule: postcss.AtRule,
+  legacyComment: string,
+): boolean {
+  let hasAddedComment = false;
+  // Check if comment has been added before, we don't want to add multiple
+  // comments. We need to check since replacing the original node causes
+  // this function to be called again.
+  atRule.parent?.walkComments(comment => {
+    if (comment.text.includes(legacyComment)) {
+      hasAddedComment = true;
+    }
+  });
+
+  if (hasAddedComment) {
+    // If comment has been added, no action to do anymore.
+    return false;
+  }
+
+  addCommentBeforeNode(atRule.cloneBefore(), legacyComment);
+  return true;
 }
 
 /**
