@@ -151,7 +151,6 @@ describe('input styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of input that may no longer apply for the MDC version. */
-
         .mat-input-server {
           color: red;
         }
@@ -169,7 +168,6 @@ describe('input styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of input that may no longer apply for the MDC version. */
-
         .some-class
         .mat-input-server {
           color: red;
@@ -187,7 +185,6 @@ describe('input styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of input that may no longer apply for the MDC version. */
-
         .mat-mdc-input-element.some-class, .mat-input-server {
           color: red;
         }

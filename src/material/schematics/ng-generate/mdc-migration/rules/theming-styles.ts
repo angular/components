@@ -143,7 +143,7 @@ function addCommentBeforeNode(node: postcss.Rule | postcss.AtRule, comment: stri
   commentNode.raws.before = '\n' + indentation;
   // Since node is parsed and not a copy, will always have a parent node
   node.parent!.insertBefore(node, commentNode);
-  node.raws.before = '\n\n' + indentation;
+  node.raws.before = '\n' + indentation;
 }
 
 /**

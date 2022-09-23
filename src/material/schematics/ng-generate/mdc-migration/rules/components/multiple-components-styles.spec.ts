@@ -155,7 +155,6 @@ describe('multiple component styles', () => {
         @use '@angular/material' as mat;
         $theme: ();
         /* TODO: Remove the legacy-core mixin once all legacy components are migrated */
-
         @include mat.legacy-core();
         @include mat.core();
         @include mat.all-component-typographies();

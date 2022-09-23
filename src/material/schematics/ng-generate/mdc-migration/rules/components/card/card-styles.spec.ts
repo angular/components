@@ -172,7 +172,6 @@ describe('card styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of card that may no longer apply for the MDC version. */
-
         .mat-card-flat {
           margin: 4px;
         }
@@ -190,7 +189,6 @@ describe('card styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of card that may no longer apply for the MDC version. */
-
         .some-class
         .mat-card-flat {
           margin: 4px;
@@ -208,7 +206,6 @@ describe('card styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of card that may no longer apply for the MDC version. */
-
         .mat-mdc-card.some-class, .mat-card-flat {
           margin: 4px;
         }

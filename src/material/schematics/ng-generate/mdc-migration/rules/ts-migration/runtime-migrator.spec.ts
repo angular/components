@@ -282,7 +282,7 @@ describe('button runtime code', () => {
             ".mat-mdc-button { padding: 12px; }",
             \`
             /* TODO: The following rule targets internal classes of button that may no longer apply for the MDC version. */
-            \n            ::ng-deep .mat-button-wrapper{ color: darkblue; }\`
+            ::ng-deep .mat-button-wrapper{ color: darkblue; }\`
           ],
         })
         class ButtonExample {}

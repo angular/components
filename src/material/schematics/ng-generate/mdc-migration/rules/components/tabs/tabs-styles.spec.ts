@@ -172,7 +172,6 @@ describe('tabs styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-
         .mat-tab-label-content {
           color: red;
         }
@@ -190,7 +189,6 @@ describe('tabs styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-
         .some-class
         .mat-tab-label-content {
           color: red;
@@ -208,7 +206,6 @@ describe('tabs styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-
         .mat-mdc-tab.some-class, .mat-tab-label-content {
           padding: 25px;
         }

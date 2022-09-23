@@ -122,7 +122,6 @@ describe('slider styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of slider that may no longer apply for the MDC version. */
-
         .some-class
         .mat-slider-thumb {
           height: 16px;
@@ -140,7 +139,6 @@ describe('slider styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of slider that may no longer apply for the MDC version. */
-
         .mat-mdc-slider.some-class, .mat-slider-thumb {
           background-color: transparent;
         }

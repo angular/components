@@ -172,7 +172,6 @@ describe('tooltip styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of tooltip that may no longer apply for the MDC version. */
-
         .mat-tooltip-handset {
           font-size: 24px;
         }
@@ -190,7 +189,6 @@ describe('tooltip styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of tooltip that may no longer apply for the MDC version. */
-
         .some-class
         .mat-tooltip-handset {
           font-size: 24px;
@@ -208,7 +206,6 @@ describe('tooltip styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of tooltip that may no longer apply for the MDC version. */
-
         .mat-mdc-tooltip.some-class, .mat-tooltip-handset {
           font-size: 24px;
         }

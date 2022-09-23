@@ -172,7 +172,6 @@ describe('paginator styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
-
         .mat-paginator-increment {
           padding: 4px;
         }
@@ -190,7 +189,6 @@ describe('paginator styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
-
         .some-class
         .mat-paginator-increment {
           padding: 4px;
@@ -208,7 +206,6 @@ describe('paginator styles', () => {
       `,
         `
         /* TODO: The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
-
         .mat-mdc-paginator.some-class, .mat-paginator-increment {
           padding: 4px;
         }
