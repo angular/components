@@ -9,6 +9,7 @@
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchPointerEvent,
@@ -19,9 +20,9 @@ import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angula
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
-import {of} from 'rxjs';
 import {MatSliderModule} from './module';
-import {MatSlider, MatSliderThumb, MatSliderVisualThumb} from './slider';
+import {MatSlider, MatSliderRangeThumb, MatSliderThumb, MatSliderVisualThumb} from './slider';
+import {of} from 'rxjs';
 
 interface Point {
   x: number;
@@ -37,238 +38,499 @@ describe('MDC-based MatSlider', () => {
       declarations: [component],
       providers: [...providers],
     }).compileComponents();
-
     platform = TestBed.inject(Platform);
-    // Mock #setPointerCapture as it throws errors on pointerdown without a real pointerId.
-    spyOn(Element.prototype, 'setPointerCapture');
-
     return TestBed.createComponent<T>(component);
+  }
+
+  function checkInput(
+    input: MatSliderThumb,
+    {
+      min,
+      max,
+      value,
+      translateX,
+      width,
+      step,
+    }: {min: number; max: number; value: number; translateX: number; width?: number; step?: number},
+  ): void {
+    expect(input.min).withContext('min').toBe(min);
+    expect(input.max).withContext('max').toBe(max);
+    expect(input.value).withContext('value').toBe(value);
+    expect(input.translateX)
+      .withContext('translateX')
+      .toBeCloseTo(translateX + 24, 0);
+    if (step !== undefined) {
+      expect(input.step).withContext('step').toBe(step);
+    }
+    if (width !== undefined) {
+      const realWidth = parseInt((input as MatSliderRangeThumb)._styleWidth.match(/\d+/)![0], 10);
+      expect(realWidth)
+        .withContext('width')
+        .toBeCloseTo((300 * width) / 100 + 16, 0);
+    }
   }
 
   describe('standard slider', () => {
     let fixture: ComponentFixture<StandardSlider>;
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
     it('should set the default values', () => {
-      expect(inputInstance.value).toBe(0);
-      expect(sliderInstance.min).toBe(0);
-      expect(sliderInstance.max).toBe(100);
-      expect(inputInstance._hostElement.getAttribute('aria-valuetext')).toBe('0');
+      expect(slider.min).toBe(0);
+      expect(slider.max).toBe(100);
+      expect(slider.step).toBe(0);
+      checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
     });
 
-    it('should update the value on mousedown', () => {
-      setValueByClick(sliderInstance, 19, platform.IOS);
-      expect(inputInstance.value).toBe(19);
+    it('should update by click', () => {
+      setValueByClick(slider, input, 25, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
+
+      setValueByClick(slider, input, 50, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 50, step: 0, translateX: 150});
+
+      setValueByClick(slider, input, 75, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 75, step: 0, translateX: 225});
+
+      setValueByClick(slider, input, 100, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     });
 
-    it('should update the value on a slide', () => {
-      slideToValue(sliderInstance, 77, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(77);
+    it('should update by slide', () => {
+      slideToValue(slider, input, 25, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
+
+      slideToValue(slider, input, 50, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 50, step: 0, translateX: 150});
+
+      slideToValue(slider, input, 75, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 75, step: 0, translateX: 225});
+
+      slideToValue(slider, input, 100, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     });
 
-    it('should set the value as min when sliding before the track', () => {
-      slideToValue(sliderInstance, -1, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(0);
+    it('should not slide before the track', () => {
+      slideToValue(slider, input, -10, platform.IOS);
+      expect(input.value).toBe(0);
+      checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
     });
 
-    it('should set the value as max when sliding past the track', () => {
-      slideToValue(sliderInstance, 101, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(100);
+    it('should not slide past the track', () => {
+      slideToValue(slider, input, 110, platform.IOS);
+      expect(input.value).toBe(100);
+      checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     });
 
-    it('should focus the slider input when clicking on the slider', () => {
-      expect(document.activeElement).not.toBe(inputInstance._hostElement);
-      setValueByClick(sliderInstance, 0, platform.IOS);
-      expect(document.activeElement).toBe(inputInstance._hostElement);
-    });
-
-    it('should not break on when the page layout changes', () => {
-      sliderInstance._elementRef.nativeElement.style.marginLeft = '100px';
-      setValueByClick(sliderInstance, 10, platform.IOS);
-      expect(inputInstance.value).toBe(10);
-      sliderInstance._elementRef.nativeElement.style.marginLeft = 'initial';
-    });
-
-    it('should not throw if destroyed before initialization is complete', () => {
-      fixture.destroy();
-      fixture = TestBed.createComponent(StandardSlider);
-      expect(() => fixture.destroy()).not.toThrow();
+    it('should not break when the page layout changes', () => {
+      slider._elementRef.nativeElement.style.marginLeft = '100px';
+      setValueByClick(slider, input, 25, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
+      slider._elementRef.nativeElement.style.marginLeft = 'initial';
     });
   });
 
   describe('standard range slider', () => {
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let sliderElement: HTMLElement;
-    let endInputInstance: MatSliderThumb;
+    let fixture: ComponentFixture<StandardRangeSlider>;
+    let slider: MatSlider;
+    let endInput: MatSliderRangeThumb;
+    let startInput: MatSliderRangeThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardRangeSlider);
+      fixture = createComponent(StandardRangeSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      sliderElement = sliderDebugElement.nativeElement;
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
     }));
 
     it('should set the default values', () => {
-      expect(startInputInstance.value).toBe(0);
-      expect(endInputInstance.value).toBe(100);
-      expect(sliderInstance.min).toBe(0);
-      expect(sliderInstance.max).toBe(100);
-      expect(startInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('0');
-      expect(endInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('100');
+      checkInput(startInput, {min: 0, max: 100, value: 0, step: 0, translateX: 0, width: 100});
+      checkInput(endInput, {min: 0, max: 100, value: 100, step: 0, translateX: 300, width: 100});
+
+      expect(slider.min).toBe(0);
+      expect(slider.max).toBe(100);
+      expect(slider.step).toBe(0);
     });
 
-    it('should update the start value on a slide', () => {
-      slideToValue(sliderInstance, 19, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(19);
+    it('should update by start input click', () => {
+      setValueByClick(slider, startInput, 25, platform.IOS);
+      checkInput(startInput, {min: 0, max: 100, value: 25, translateX: 75, width: 100});
+      checkInput(endInput, {min: 25, max: 100, value: 100, translateX: 300, width: 75});
     });
 
-    it('should update the end value on a slide', () => {
-      slideToValue(sliderInstance, 27, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(27);
+    it('should update by end input click', () => {
+      setValueByClick(slider, endInput, 75, platform.IOS);
+      checkInput(startInput, {min: 0, max: 75, value: 0, translateX: 0, width: 75});
+      checkInput(endInput, {min: 0, max: 100, value: 75, translateX: 225, width: 100});
     });
 
-    it('should update the start value on mousedown behind the start thumb', () => {
-      sliderInstance._setValue(19, Thumb.START);
-      setValueByClick(sliderInstance, 12, platform.IOS);
-      expect(startInputInstance.value).toBe(12);
+    it('should update by start thumb slide', () => {
+      slideToValue(slider, startInput, 75, platform.IOS);
+      checkInput(startInput, {min: 0, max: 100, value: 75, translateX: 225, width: 100});
+      checkInput(endInput, {min: 75, max: 100, value: 100, translateX: 300, width: 25});
     });
 
-    it('should update the end value on mousedown in front of the end thumb', () => {
-      sliderInstance._setValue(27, Thumb.END);
-      setValueByClick(sliderInstance, 55, platform.IOS);
-      expect(endInputInstance.value).toBe(55);
+    it('should update by end thumb slide', () => {
+      slideToValue(slider, endInput, 25, platform.IOS);
+      checkInput(startInput, {min: 0, max: 25, value: 0, translateX: 0, width: 25});
+      checkInput(endInput, {min: 0, max: 100, value: 25, translateX: 75, width: 100});
     });
 
-    it('should set the start value as min when sliding before the track', () => {
-      slideToValue(sliderInstance, -1, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(0);
+    it('should not allow start thumb to slide before the track', () => {
+      slideToValue(slider, startInput, -10, platform.IOS);
+      checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0, width: 100});
+      checkInput(endInput, {min: 0, max: 100, value: 100, translateX: 300, width: 100});
     });
 
-    it('should set the end value as max when sliding past the track', () => {
-      slideToValue(sliderInstance, 101, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(100);
+    it('should not allow end thumb to slide past the track', () => {
+      slideToValue(slider, endInput, 110, platform.IOS);
+      checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0, width: 100});
+      checkInput(endInput, {min: 0, max: 100, value: 100, translateX: 300, width: 100});
     });
 
-    it('should not let the start thumb slide past the end thumb', () => {
-      sliderInstance._setValue(50, Thumb.END);
-      slideToValue(sliderInstance, 75, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(50);
+    it('should not allow start thumb to slide past the end thumb', () => {
+      slideToValue(slider, endInput, 50, platform.IOS);
+      slideToValue(slider, startInput, 55, platform.IOS);
+      checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150, width: 50});
+      checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150, width: 50});
     });
 
-    it('should not let the end thumb slide before the start thumb', () => {
-      sliderInstance._setValue(50, Thumb.START);
-      slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
-      expect(startInputInstance.value).toBe(50);
+    it('should not allow end thumb to slide past the start thumb', () => {
+      slideToValue(slider, startInput, 50, platform.IOS);
+      slideToValue(slider, endInput, 45, platform.IOS);
+      checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150, width: 50});
+      checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150, width: 50});
     });
 
-    it('should have a strong focus indicator in each of the thumbs', () => {
-      const indicators = sliderElement.querySelectorAll(
-        '.mat-mdc-slider-visual-thumb .mat-mdc-focus-indicator',
-      );
-      expect(indicators.length).toBe(2);
+    it('should not break when the page layout changes', () => {
+      slider._elementRef.nativeElement.style.marginLeft = '100px';
+      setValueByClick(slider, startInput, 25, platform.IOS);
+      checkInput(startInput, {min: 0, max: 100, value: 25, translateX: 75, width: 100});
+      checkInput(endInput, {min: 25, max: 100, value: 100, translateX: 300, width: 75});
+
+      setValueByClick(slider, endInput, 75, platform.IOS);
+      checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75, width: 75});
+      checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225, width: 75});
+      slider._elementRef.nativeElement.style.marginLeft = 'initial';
+    });
+  });
+
+  describe('slider with min/max bindings', () => {
+    let fixture: ComponentFixture<SliderWithMinAndMax>;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithMinAndMax);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
+    }));
+
+    it('should have the correct initial values', () => {
+      checkInput(input, {min: 25, max: 75, value: 25, translateX: 0});
+    });
+
+    it('should update the min when the bound value changes', () => {
+      fixture.componentInstance.min = 0;
+      fixture.detectChanges();
+      checkInput(input, {min: 0, max: 75, value: 25, translateX: 100});
+    });
+
+    it('should update the max when the bound value changes', () => {
+      fixture.componentInstance.max = 90;
+      fixture.detectChanges();
+      checkInput(input, {min: 25, max: 90, value: 25, translateX: 0});
+    });
+
+    it('should update the value if the min increases past it', () => {
+      fixture.componentInstance.min = 50;
+      fixture.detectChanges();
+      checkInput(input, {min: 50, max: 75, value: 50, translateX: 0});
+    });
+
+    it('should update the value if the max decreases below it', () => {
+      input.value = 75;
+      fixture.componentInstance.max = 50;
+      fixture.detectChanges();
+      checkInput(input, {min: 25, max: 50, value: 50, translateX: 300});
+    });
+
+    it('should allow the min increase above the max', () => {
+      fixture.componentInstance.min = 80;
+      fixture.detectChanges();
+      checkInput(input, {min: 80, max: 75, value: 80, translateX: 0});
+    });
+
+    it('should allow the max to decrease below the min', () => {
+      fixture.componentInstance.max = -10;
+      fixture.detectChanges();
+      checkInput(input, {min: 25, max: -10, value: 25, translateX: 0});
+    });
+
+    it('should update the thumb translateX when the min changes', () => {
+      checkInput(input, {min: 25, max: 75, value: 25, translateX: 0});
+      fixture.componentInstance.min = -25;
+      fixture.detectChanges();
+      checkInput(input, {min: -25, max: 75, value: 25, translateX: 150});
+    });
+
+    it('should update the thumb translateX when the max changes', () => {
+      setValueByClick(slider, input, 50, platform.IOS);
+      checkInput(input, {min: 25, max: 75, value: 50, translateX: 150});
+      fixture.componentInstance.max = 125;
+      fixture.detectChanges();
+      checkInput(input, {min: 25, max: 125, value: 50, translateX: 75});
+    });
+  });
+
+  describe('range slider with min/max bindings', () => {
+    let fixture: ComponentFixture<RangeSliderWithMinAndMax>;
+    let slider: MatSlider;
+    let endInput: MatSliderRangeThumb;
+    let startInput: MatSliderRangeThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithMinAndMax);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      slider = sliderDebugElement.componentInstance;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+    }));
+
+    it('should have the correct initial values', () => {
+      checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0, width: 100});
+      checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300, width: 100});
+    });
+
+    describe('should handle min changes', () => {
+      it('that do not affect values', () => {
+        checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0, width: 100});
+        checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300, width: 100});
+
+        fixture.componentInstance.min = -25;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: -25, max: 75, value: 25, translateX: 150, width: 100});
+        checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300, width: 50});
+      });
+
+      it('that affect the start value', () => {
+        fixture.componentInstance.min = 50;
+        fixture.detectChanges();
+        checkInput(startInput, {min: 50, max: 75, value: 50, translateX: 0, width: 100});
+        checkInput(endInput, {min: 50, max: 75, value: 75, translateX: 300, width: 100});
+      });
+
+      it('that affect both values', () => {
+        endInput.value = 50;
+        fixture.componentInstance.min = 60;
+        fixture.detectChanges();
+        checkInput(startInput, {min: 60, max: 60, value: 60, translateX: 0, width: 0});
+        checkInput(endInput, {min: 60, max: 75, value: 60, translateX: 0, width: 100});
+      });
+
+      it('where the new start tx is greater than the old end tx', () => {
+        fixture.componentInstance.min = 0;
+        fixture.componentInstance.max = 100;
+        fixture.detectChanges();
+
+        slideToValue(slider, startInput, 10, platform.IOS);
+        slideToValue(slider, endInput, 20, platform.IOS);
+
+        checkInput(startInput, {min: 0, max: 20, value: 10, translateX: 30, width: 20});
+        checkInput(endInput, {min: 10, max: 100, value: 20, translateX: 60, width: 90});
+
+        fixture.componentInstance.min = -1000;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: -1000, max: 20, value: 10, translateX: 275, width: 92.72});
+        checkInput(endInput, {min: 10, max: 100, value: 20, translateX: 278, width: 8});
+      });
+
+      it('where the new end tx is less than the old start tx', () => {
+        fixture.componentInstance.min = 0;
+        fixture.componentInstance.max = 100;
+        fixture.detectChanges();
+
+        slideToValue(slider, endInput, 92, platform.IOS);
+        slideToValue(slider, startInput, 91, platform.IOS);
+
+        checkInput(startInput, {min: 0, max: 92, value: 91, translateX: 273, width: 92});
+        checkInput(endInput, {min: 91, max: 100, value: 92, translateX: 276, width: 9});
+
+        fixture.componentInstance.min = 90;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 90, max: 92, value: 91, translateX: 30, width: 20});
+        checkInput(endInput, {min: 91, max: 100, value: 92, translateX: 60, width: 90});
+      });
+
+      it('that make min and max equal', () => {
+        fixture.componentInstance.min = 75;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 75, max: 75, value: 75, translateX: 0, width: 100});
+        checkInput(endInput, {min: 75, max: 75, value: 75, translateX: 0, width: 100});
+      });
+
+      it('that increase above the max', () => {
+        fixture.componentInstance.min = 80;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 80, max: 75, value: 80, translateX: 0, width: 100});
+        checkInput(endInput, {min: 80, max: 75, value: 80, translateX: 0, width: 100});
+      });
+    });
+
+    describe('should handle max changes', () => {
+      it('that do not affect values', () => {
+        checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0, width: 100});
+        checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300, width: 100});
+
+        fixture.componentInstance.max = 125;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0, width: 50});
+        checkInput(endInput, {min: 25, max: 125, value: 75, translateX: 150, width: 100});
+      });
+
+      it('that affect the end value', () => {
+        fixture.componentInstance.max = 50;
+        fixture.detectChanges();
+        checkInput(endInput, {min: 25, max: 50, value: 50, translateX: 300, width: 100});
+        checkInput(startInput, {min: 25, max: 50, value: 25, translateX: 0, width: 100});
+      });
+
+      it('that affect both values', () => {
+        startInput.value = 60;
+        fixture.componentInstance.max = 50;
+        fixture.detectChanges();
+        checkInput(endInput, {min: 50, max: 50, value: 50, translateX: 300, width: 0});
+        checkInput(startInput, {min: 25, max: 50, value: 50, translateX: 300, width: 100});
+      });
+
+      it('where the new start tx is greater than the old end tx', () => {
+        fixture.componentInstance.min = 0;
+        fixture.componentInstance.max = 100;
+        fixture.detectChanges();
+
+        slideToValue(slider, startInput, 1, platform.IOS);
+        slideToValue(slider, endInput, 2, platform.IOS);
+
+        checkInput(startInput, {min: 0, max: 2, value: 1, translateX: 3, width: 2});
+        checkInput(endInput, {min: 1, max: 100, value: 2, translateX: 6, width: 99});
+
+        fixture.componentInstance.max = 10;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 0, max: 2, value: 1, translateX: 30, width: 20});
+        checkInput(endInput, {min: 1, max: 10, value: 2, translateX: 60, width: 90});
+      });
+
+      it('where the new end tx is less than the old start tx', () => {
+        fixture.componentInstance.min = 0;
+        fixture.componentInstance.max = 100;
+        fixture.detectChanges();
+
+        slideToValue(slider, endInput, 95, platform.IOS);
+        slideToValue(slider, startInput, 90, platform.IOS);
+
+        checkInput(startInput, {min: 0, max: 95, value: 90, translateX: 270, width: 95});
+        checkInput(endInput, {min: 90, max: 100, value: 95, translateX: 285, width: 10});
+
+        fixture.componentInstance.max = 1000;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 0, max: 95, value: 90, translateX: 27, width: 9.5});
+        checkInput(endInput, {min: 90, max: 1000, value: 95, translateX: 28, width: 91});
+      });
+
+      it('that make min and max equal', () => {
+        fixture.componentInstance.max = 25;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 25, max: 25, value: 25, translateX: 0, width: 100});
+        checkInput(endInput, {min: 25, max: 25, value: 25, translateX: 0, width: 100});
+      });
+
+      it('that decrease below the min', () => {
+        fixture.componentInstance.max = 0;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 25, max: 0, value: 25, translateX: 0, width: 100});
+        checkInput(endInput, {min: 25, max: 0, value: 25, translateX: 0, width: 100});
+      });
     });
   });
 
   describe('disabled slider', () => {
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       const fixture = createComponent(DisabledSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
     it('should be disabled', () => {
-      expect(sliderInstance.disabled).toBeTrue();
+      expect(slider.disabled).toBeTrue();
     });
 
     it('should have the disabled class on the root element', () => {
-      expect(sliderInstance._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
+      expect(slider._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
     });
 
     it('should set the disabled attribute on the input element', () => {
-      expect(inputInstance._hostElement.disabled).toBeTrue();
-    });
-
-    it('should not update the value on mousedown', () => {
-      setValueByClick(sliderInstance, 19, platform.IOS);
-      expect(inputInstance.value).toBe(0);
-    });
-
-    it('should not update the value on a slide', () => {
-      slideToValue(sliderInstance, 77, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(0);
+      expect(input._hostElement.disabled).toBeTrue();
     });
   });
 
   describe('disabled range slider', () => {
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       const fixture = createComponent(DisabledRangeSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
     it('should be disabled', () => {
-      expect(sliderInstance.disabled).toBeTrue();
+      expect(slider.disabled).toBeTrue();
     });
 
     it('should have the disabled class on the root element', () => {
-      expect(sliderInstance._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
+      expect(slider._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
     });
 
     it('should set the disabled attribute on the input elements', () => {
-      expect(startInputInstance._hostElement.disabled).toBeTrue();
-      expect(endInputInstance._hostElement.disabled).toBeTrue();
-    });
-
-    it('should not update the start value on a slide', () => {
-      slideToValue(sliderInstance, 19, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(0);
-    });
-
-    it('should not update the end value on a slide', () => {
-      slideToValue(sliderInstance, 27, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(100);
-    });
-
-    it('should not update the start value on mousedown behind the start thumb', () => {
-      sliderInstance._setValue(19, Thumb.START);
-      setValueByClick(sliderInstance, 12, platform.IOS);
-      expect(startInputInstance.value).toBe(19);
-    });
-
-    it('should update the end value on mousedown in front of the end thumb', () => {
-      sliderInstance._setValue(27, Thumb.END);
-      setValueByClick(sliderInstance, 55, platform.IOS);
-      expect(endInputInstance.value).toBe(27);
+      expect(startInput._hostElement.disabled).toBeTrue();
+      expect(endInput._hostElement.disabled).toBeTrue();
     });
   });
 
   describe('ripple states', () => {
-    let inputInstance: MatSliderThumb;
+    let input: MatSliderThumb;
     let thumbInstance: MatSliderVisualThumb;
     let thumbElement: HTMLElement;
     let thumbX: number;
@@ -278,13 +540,13 @@ describe('MDC-based MatSlider', () => {
       const fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      const sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
-      thumbInstance = sliderInstance._getThumb(Thumb.END);
+      const slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
+      thumbInstance = slider._getThumb(Thumb.END);
       thumbElement = thumbInstance._getHostElement();
       const thumbDimensions = thumbElement.getBoundingClientRect();
-      thumbX = thumbDimensions.left - thumbDimensions.width / 2;
-      thumbY = thumbDimensions.top - thumbDimensions.height / 2;
+      thumbX = thumbDimensions.left + thumbDimensions.width / 2;
+      thumbY = thumbDimensions.top + thumbDimensions.height / 2;
     }));
 
     function isRippleVisible(selector: string) {
@@ -299,30 +561,31 @@ describe('MDC-based MatSlider', () => {
     }
 
     function blur() {
-      inputInstance._hostElement.blur();
+      input._hostElement.blur();
     }
 
     function mouseenter() {
-      dispatchMouseEvent(thumbElement, 'mouseenter', thumbX, thumbY);
+      dispatchMouseEvent(input._hostElement, 'mousemove', thumbX, thumbY);
     }
 
     function mouseleave() {
-      dispatchMouseEvent(thumbElement, 'mouseleave', thumbX, thumbY);
+      dispatchMouseEvent(input._hostElement, 'mousemove', thumbX + 100, thumbY);
     }
 
     function pointerdown() {
       dispatchPointerOrTouchEvent(
-        thumbElement,
+        input._hostElement,
         PointerEventType.POINTER_DOWN,
         thumbX,
         thumbY,
         platform.IOS,
       );
+      input.focus();
     }
 
     function pointerup() {
       dispatchPointerOrTouchEvent(
-        thumbElement,
+        input._hostElement,
         PointerEventType.POINTER_UP,
         thumbX,
         thumbY,
@@ -409,282 +672,194 @@ describe('MDC-based MatSlider', () => {
     }));
   });
 
-  describe('slider with set min and max', () => {
-    let fixture: ComponentFixture<SliderWithMinAndMax>;
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
-
-    beforeEach(waitForAsync(() => {
-      fixture = createComponent(SliderWithMinAndMax);
-      fixture.detectChanges();
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
-    }));
-
-    it('should set the default values from the attributes', () => {
-      expect(inputInstance.value).toBe(25);
-      expect(sliderInstance.min).toBe(25);
-      expect(sliderInstance.max).toBe(75);
-    });
-
-    it('should set the correct value on mousedown', () => {
-      setValueByClick(sliderInstance, 33, platform.IOS);
-      expect(inputInstance.value).toBe(33);
-    });
-
-    it('should set the correct value on slide', () => {
-      slideToValue(sliderInstance, 55, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(55);
-    });
-
-    it(
-      'should be able to set the min and max values when they are more precise ' + 'than the step',
-      () => {
-        sliderInstance.step = 10;
-        slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
-        expect(inputInstance.value).toBe(25);
-        slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
-        expect(inputInstance.value).toBe(75);
-      },
-    );
-  });
-
-  describe('range slider with set min and max', () => {
-    let fixture: ComponentFixture<RangeSliderWithMinAndMax>;
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
-
-    beforeEach(waitForAsync(() => {
-      fixture = createComponent(RangeSliderWithMinAndMax);
-      fixture.detectChanges();
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
-    }));
-
-    it('should set the default values from the attributes', () => {
-      expect(startInputInstance.value).toBe(25);
-      expect(endInputInstance.value).toBe(75);
-      expect(sliderInstance.min).toBe(25);
-      expect(sliderInstance.max).toBe(75);
-    });
-
-    it('should set the correct start value on mousedown behind the start thumb', () => {
-      sliderInstance._setValue(50, Thumb.START);
-      setValueByClick(sliderInstance, 33, platform.IOS);
-      expect(startInputInstance.value).toBe(33);
-    });
-
-    it('should set the correct end value on mousedown behind the end thumb', () => {
-      sliderInstance._setValue(50, Thumb.END);
-      setValueByClick(sliderInstance, 66, platform.IOS);
-      expect(endInputInstance.value).toBe(66);
-    });
-
-    it('should set the correct start value on slide', () => {
-      slideToValue(sliderInstance, 40, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(40);
-    });
-
-    it('should set the correct end value on slide', () => {
-      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(60);
-    });
-
-    it(
-      'should be able to set the min and max values when they are more precise ' + 'than the step',
-      () => {
-        sliderInstance.step = 10;
-        fixture.detectChanges();
-        slideToValue(sliderInstance, 25, Thumb.START, platform.IOS);
-        expect(startInputInstance.value).toBe(25);
-        slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
-        expect(endInputInstance.value).toBe(75);
-      },
-    );
-  });
-
   describe('slider with set value', () => {
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       const fixture = createComponent(SliderWithValue);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
     it('should set the default value from the attribute', () => {
-      expect(inputInstance.value).toBe(50);
+      checkInput(input, {min: 0, max: 100, value: 50, translateX: 150});
     });
 
-    it('should set the correct value on mousedown', () => {
-      setValueByClick(sliderInstance, 19, platform.IOS);
-      expect(inputInstance.value).toBe(19);
-    });
-
-    it('should set the correct value on slide', () => {
-      slideToValue(sliderInstance, 77, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(77);
+    it('should update the value', () => {
+      slideToValue(slider, input, 75, platform.IOS);
+      checkInput(input, {min: 0, max: 100, value: 75, translateX: 225});
     });
   });
 
   describe('range slider with set value', () => {
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       const fixture = createComponent(RangeSliderWithValue);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should set the default value from the attribute', () => {
-      expect(startInputInstance.value).toBe(25);
-      expect(endInputInstance.value).toBe(75);
+    it('should set the correct initial values', () => {
+      checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75});
+      checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
     });
 
-    it('should set the correct start value on mousedown behind the start thumb', () => {
-      setValueByClick(sliderInstance, 19, platform.IOS);
-      expect(startInputInstance.value).toBe(19);
+    it('should update the start value', () => {
+      slideToValue(slider, startInput, 30, platform.IOS);
+      checkInput(startInput, {min: 0, max: 75, value: 30, translateX: 90});
+      checkInput(endInput, {min: 30, max: 100, value: 75, translateX: 225});
     });
 
-    it('should set the correct start value on mousedown in front of the end thumb', () => {
-      setValueByClick(sliderInstance, 77, platform.IOS);
-      expect(endInputInstance.value).toBe(77);
-    });
-
-    it('should set the correct start value on slide', () => {
-      slideToValue(sliderInstance, 73, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(73);
-    });
-
-    it('should set the correct end value on slide', () => {
-      slideToValue(sliderInstance, 99, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(99);
+    it('should update the end value', () => {
+      slideToValue(slider, endInput, 77, platform.IOS);
+      checkInput(startInput, {min: 0, max: 77, value: 25, translateX: 75});
+      checkInput(endInput, {min: 25, max: 100, value: 77, translateX: 231});
     });
   });
 
   describe('slider with set step', () => {
     let fixture: ComponentFixture<SliderWithStep>;
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(SliderWithStep);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
-    it('should set the correct step value on mousedown', () => {
-      expect(inputInstance.value).toBe(0);
-      setValueByClick(sliderInstance, 13, platform.IOS);
-      expect(inputInstance.value).toBe(25);
-    });
-
-    it('should set the correct step value on slide', () => {
-      slideToValue(sliderInstance, 12, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(0);
+    it('should update to the value based on the step', () => {
+      slideToValue(slider, input, 30, platform.IOS);
+      expect(input.value).toBe(25);
     });
 
     it('should not add decimals to the value if it is a whole number', () => {
-      sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 100, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(100);
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+      slideToValue(slider, input, 11, platform.IOS);
+      expect(input.value).toBe(11);
     });
 
     it('should truncate long decimal values when using a decimal step', () => {
-      sliderInstance.step = 0.5;
-      slideToValue(sliderInstance, 55.555, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(55.5);
+      fixture.componentInstance.step = 0.5;
+      fixture.detectChanges();
+      slideToValue(slider, input, 55.555, platform.IOS);
+      expect(input.value).toBe(55.5);
+    });
+
+    it('should update the value on step change', () => {
+      slideToValue(slider, input, 30, platform.IOS);
+      fixture.componentInstance.step = 50;
+      fixture.detectChanges();
+      expect(input.value).toBe(50);
     });
   });
 
   describe('range slider with set step', () => {
     let fixture: ComponentFixture<RangeSliderWithStep>;
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(RangeSliderWithStep);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should set the correct step value on mousedown behind the start thumb', () => {
-      sliderInstance._setValue(50, Thumb.START);
-      setValueByClick(sliderInstance, 13, platform.IOS);
-      expect(startInputInstance.value).toBe(25);
+    it('should set the correct start value on slide', () => {
+      slideToValue(slider, startInput, 30, platform.IOS);
+      expect(startInput.value).toBe(25);
     });
 
-    it('should set the correct step value on mousedown in front of the end thumb', () => {
-      sliderInstance._setValue(50, Thumb.END);
-      setValueByClick(sliderInstance, 63, platform.IOS);
-      expect(endInputInstance.value).toBe(75);
-    });
-
-    it('should set the correct start thumb step value on slide', () => {
-      slideToValue(sliderInstance, 26, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(25);
-    });
-
-    it('should set the correct end thumb step value on slide', () => {
-      slideToValue(sliderInstance, 45, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(50);
+    it('should set the correct end value on slide', () => {
+      slideToValue(slider, endInput, 45, platform.IOS);
+      expect(endInput.value).toBe(50);
     });
 
     it('should not add decimals to the end value if it is a whole number', () => {
-      sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 100, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(100);
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+      slideToValue(slider, endInput, 11, platform.IOS);
+      expect(endInput.value).toBe(11);
     });
 
     it('should not add decimals to the start value if it is a whole number', () => {
-      sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 100, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(100);
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+      slideToValue(slider, startInput, 11, platform.IOS);
+      expect(startInput.value).toBe(11);
     });
 
     it('should truncate long decimal start values when using a decimal step', () => {
-      sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 33.7, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(33.7);
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+      slideToValue(slider, startInput, 33.666, platform.IOS);
+      expect(startInput.value).toBe(33.7);
     });
 
     it('should truncate long decimal end values when using a decimal step', () => {
-      sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 33.7, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(33.7);
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+      slideToValue(slider, endInput, 33.6666, platform.IOS);
+      expect(endInput.value).toBe(33.7);
+    });
 
-      // NOTE(wagnermaciel): Different browsers treat the clientX dispatched by us differently.
-      // Below is an example of a case that should work but because Firefox rounds the clientX
-      // down, the clientX that gets dispatched (1695.998...) is not the same clientX that the MDC
-      // Foundation receives (1695). This means the test will pass on chromium but fail on Firefox.
-      //
-      // slideToValue(sliderInstance, 66.66, Thumb.END, platform.IOS);
-      // expect(endInputInstance.value).toBe(66.7);
+    describe('should handle step changes', () => {
+      it('where the new start tx is greater than the old end tx', () => {
+        fixture.componentInstance.step = 0;
+        fixture.detectChanges();
+
+        slideToValue(slider, startInput, 45, platform.IOS);
+        slideToValue(slider, endInput, 46, platform.IOS);
+
+        checkInput(startInput, {min: 0, max: 46, value: 45, translateX: 135, width: 46});
+        checkInput(endInput, {min: 45, max: 100, value: 46, translateX: 138, width: 55});
+
+        fixture.componentInstance.step = 50;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150, width: 50});
+        checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150, width: 50});
+      });
+
+      it('where the new end tx is less than the old start tx', () => {
+        fixture.componentInstance.step = 0;
+        fixture.detectChanges();
+
+        slideToValue(slider, startInput, 21, platform.IOS);
+        slideToValue(slider, endInput, 22, platform.IOS);
+
+        checkInput(startInput, {min: 0, max: 22, value: 21, translateX: 63, width: 22});
+        checkInput(endInput, {min: 21, max: 100, value: 22, translateX: 66, width: 79});
+
+        fixture.componentInstance.step = 50;
+        fixture.detectChanges();
+
+        checkInput(startInput, {min: 0, max: 0, value: 0, translateX: 0, width: 0});
+        checkInput(endInput, {min: 0, max: 100, value: 0, translateX: 0, width: 100});
+      });
     });
   });
 
   describe('slider with custom thumb label formatting', () => {
     let fixture: ComponentFixture<DiscreteSliderWithDisplayWith>;
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
     let valueIndicatorTextElement: Element;
 
     beforeEach(() => {
@@ -692,27 +867,27 @@ describe('MDC-based MatSlider', () => {
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       const sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.componentInstance;
+      slider = sliderDebugElement.componentInstance;
       valueIndicatorTextElement = sliderNativeElement.querySelector(
         '.mdc-slider__value-indicator-text',
       )!;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     });
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
-      expect(inputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$1');
-      sliderInstance._setValue(10000, Thumb.END);
-      expect(inputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$10k');
+      expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$1');
+      slider._setValue(10000, Thumb.END);
+      expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$10k');
     });
 
     it('should invoke the passed-in `displayWith` function with the value', () => {
-      spyOn(sliderInstance, 'displayWith').and.callThrough();
-      sliderInstance._setValue(1337, Thumb.END);
-      expect(sliderInstance.displayWith).toHaveBeenCalledWith(1337);
+      spyOn(slider, 'displayWith').and.callThrough();
+      slider._setValue(1337, Thumb.END);
+      expect(slider.displayWith).toHaveBeenCalledWith(1337);
     });
 
     it('should format the thumb label based on the passed-in `displayWith` function', () => {
-      sliderInstance._setValue(200000, Thumb.END);
+      slider._setValue(200000, Thumb.END);
       fixture.detectChanges();
       expect(valueIndicatorTextElement.textContent).toBe('$200k');
     });
@@ -720,22 +895,22 @@ describe('MDC-based MatSlider', () => {
 
   describe('range slider with custom thumb label formatting', () => {
     let fixture: ComponentFixture<DiscreteRangeSliderWithDisplayWith>;
-    let sliderInstance: MatSlider;
+    let slider: MatSlider;
     let startValueIndicatorTextElement: Element;
     let endValueIndicatorTextElement: Element;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(() => {
       fixture = createComponent(DiscreteRangeSliderWithDisplayWith);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
 
-      const startThumbElement = sliderInstance._getThumbElement(Thumb.START);
-      const endThumbElement = sliderInstance._getThumbElement(Thumb.END);
+      const startThumbElement = slider._getThumb(Thumb.START)._getHostElement();
+      const endThumbElement = slider._getThumb(Thumb.END)._getHostElement();
       startValueIndicatorTextElement = startThumbElement.querySelector(
         '.mdc-slider__value-indicator-text',
       )!;
@@ -745,34 +920,34 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
-      expect(startInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$1');
-      expect(endInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$1000k');
-      sliderInstance._setValue(250000, Thumb.START);
-      sliderInstance._setValue(810000, Thumb.END);
-      expect(startInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$250k');
-      expect(endInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$810k');
+      expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$1');
+      expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$1000k');
+      slider._setValue(250000, Thumb.START);
+      slider._setValue(810000, Thumb.END);
+      expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$250k');
+      expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$810k');
     });
 
     it('should invoke the passed-in `displayWith` function with the start value', () => {
-      spyOn(sliderInstance, 'displayWith').and.callThrough();
-      sliderInstance._setValue(1337, Thumb.START);
-      expect(sliderInstance.displayWith).toHaveBeenCalledWith(1337);
+      spyOn(slider, 'displayWith').and.callThrough();
+      slider._setValue(1337, Thumb.START);
+      expect(slider.displayWith).toHaveBeenCalledWith(1337);
     });
 
     it('should invoke the passed-in `displayWith` function with the end value', () => {
-      spyOn(sliderInstance, 'displayWith').and.callThrough();
-      sliderInstance._setValue(5996, Thumb.END);
-      expect(sliderInstance.displayWith).toHaveBeenCalledWith(5996);
+      spyOn(slider, 'displayWith').and.callThrough();
+      slider._setValue(5996, Thumb.END);
+      expect(slider.displayWith).toHaveBeenCalledWith(5996);
     });
 
     it('should format the start thumb label based on the passed-in `displayWith` function', () => {
-      sliderInstance._setValue(200000, Thumb.START);
+      slider._setValue(200000, Thumb.START);
       fixture.detectChanges();
       expect(startValueIndicatorTextElement.textContent).toBe('$200k');
     });
 
     it('should format the end thumb label based on the passed-in `displayWith` function', () => {
-      sliderInstance._setValue(700000, Thumb.END);
+      slider._setValue(700000, Thumb.END);
       fixture.detectChanges();
       expect(endValueIndicatorTextElement.textContent).toBe('$700k');
     });
@@ -780,460 +955,53 @@ describe('MDC-based MatSlider', () => {
 
   describe('slider with value property binding', () => {
     let fixture: ComponentFixture<SliderWithOneWayBinding>;
-    let testComponent: SliderWithOneWayBinding;
-    let inputInstance: MatSliderThumb;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(SliderWithOneWayBinding);
       fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      const sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      const slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
     it('should update when bound value changes', () => {
-      testComponent.value = 75;
+      fixture.componentInstance.value = 75;
       fixture.detectChanges();
-      expect(inputInstance.value).toBe(75);
+      expect(input.value).toBe(75);
     });
   });
 
   describe('range slider with value property binding', () => {
     let fixture: ComponentFixture<RangeSliderWithOneWayBinding>;
-    let testComponent: RangeSliderWithOneWayBinding;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(RangeSliderWithOneWayBinding);
       fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      const sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      const slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
     it('should update when bound start value changes', () => {
-      testComponent.startValue = 30;
+      fixture.componentInstance.startValue = 30;
       fixture.detectChanges();
-      expect(startInputInstance.value).toBe(30);
+      expect(startInput.value).toBe(30);
     });
 
     it('should update when bound end value changes', () => {
-      testComponent.endValue = 70;
+      fixture.componentInstance.endValue = 70;
       fixture.detectChanges();
-      expect(endInputInstance.value).toBe(70);
-    });
-  });
-
-  describe('slider with change handler', () => {
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
-    let sliderElement: HTMLElement;
-    let fixture: ComponentFixture<SliderWithChangeHandler>;
-    let testComponent: SliderWithChangeHandler;
-
-    beforeEach(waitForAsync(() => {
-      fixture = createComponent(SliderWithChangeHandler);
-      fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
-    }));
-
-    it('should emit change on mouseup', () => {
-      expect(testComponent.onChange).not.toHaveBeenCalled();
-      setValueByClick(sliderInstance, 20, platform.IOS);
-      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-    });
-
-    it('should emit change on slide', () => {
-      expect(testComponent.onChange).not.toHaveBeenCalled();
-      slideToValue(sliderInstance, 40, Thumb.END, platform.IOS);
-      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not emit multiple changes for the same value', () => {
-      expect(testComponent.onChange).not.toHaveBeenCalled();
-
-      setValueByClick(sliderInstance, 60, platform.IOS);
-      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
-      setValueByClick(sliderInstance, 60, platform.IOS);
-      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
-
-      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-    });
-
-    it(
-      'should dispatch events when changing back to previously emitted value after ' +
-        'programmatically setting value',
-      () => {
-        const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-          const {x, y} = getCoordsForValue(sliderInstance, value);
-          dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-        };
-
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).toHaveBeenCalledTimes(1);
-
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onInput).toHaveBeenCalledTimes(1);
-
-        inputInstance.value = 0;
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onInput).toHaveBeenCalledTimes(1);
-
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
-
-        expect(testComponent.onChange).toHaveBeenCalledTimes(2);
-        expect(testComponent.onInput).toHaveBeenCalledTimes(2);
-      },
-    );
-  });
-
-  describe('range slider with change handlers', () => {
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
-    let sliderElement: HTMLElement;
-    let fixture: ComponentFixture<RangeSliderWithChangeHandler>;
-    let testComponent: RangeSliderWithChangeHandler;
-
-    beforeEach(waitForAsync(() => {
-      fixture = createComponent(RangeSliderWithChangeHandler);
-      fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
-    }));
-
-    it('should emit change on mouseup on the start thumb', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      setValueByClick(sliderInstance, 20, platform.IOS);
-      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-    });
-
-    it('should emit change on mouseup on the end thumb', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      setValueByClick(sliderInstance, 80, platform.IOS);
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-    });
-
-    it('should emit change on start thumb slide', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      slideToValue(sliderInstance, 40, Thumb.START, platform.IOS);
-      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-    });
-
-    it('should emit change on end thumb slide', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not emit multiple changes for the same start thumb value', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-
-      setValueByClick(sliderInstance, 30, platform.IOS);
-      slideToValue(sliderInstance, 30, Thumb.START, platform.IOS);
-      setValueByClick(sliderInstance, 30, platform.IOS);
-      slideToValue(sliderInstance, 30, Thumb.START, platform.IOS);
-
-      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-    });
-
-    it('should not emit multiple changes for the same end thumb value', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-
-      setValueByClick(sliderInstance, 60, platform.IOS);
-      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
-      setValueByClick(sliderInstance, 60, platform.IOS);
-      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
-
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-    });
-
-    it(
-      'should dispatch events when changing back to previously emitted value after ' +
-        'programmatically setting the start value',
-      () => {
-        const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-          const {x, y} = getCoordsForValue(sliderInstance, value);
-          dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-        };
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
-        fixture.detectChanges();
-
-        expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-        startInputInstance.value = 0;
-        fixture.detectChanges();
-
-        expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 20);
-        fixture.detectChanges();
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 20);
-
-        expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(2);
-        expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(2);
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-      },
-    );
-
-    it(
-      'should dispatch events when changing back to previously emitted value after ' +
-        'programmatically setting the end value',
-      () => {
-        const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-          const {x, y} = getCoordsForValue(sliderInstance, value);
-          dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-        };
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 80);
-        fixture.detectChanges();
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
-
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 80);
-        fixture.detectChanges();
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
-
-        endInputInstance.value = 100;
-        fixture.detectChanges();
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
-
-        dispatchSliderEvent(PointerEventType.POINTER_DOWN, 80);
-        fixture.detectChanges();
-        dispatchSliderEvent(PointerEventType.POINTER_UP, 80);
-
-        expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-        expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-        expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(2);
-        expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(2);
-      },
-    );
-  });
-
-  describe('slider with input event', () => {
-    let sliderInstance: MatSlider;
-    let sliderElement: HTMLElement;
-    let testComponent: SliderWithChangeHandler;
-
-    beforeEach(waitForAsync(() => {
-      const fixture = createComponent(SliderWithChangeHandler);
-      fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
-
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      sliderElement = sliderInstance._elementRef.nativeElement;
-    }));
-
-    it('should emit an input event while sliding', () => {
-      const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-        const {x, y} = getCoordsForValue(sliderInstance, value);
-        dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-      };
-
-      expect(testComponent.onChange).not.toHaveBeenCalled();
-      expect(testComponent.onInput).not.toHaveBeenCalled();
-
-      // pointer down on current value (should not trigger input event)
-      dispatchSliderEvent(PointerEventType.POINTER_DOWN, 0);
-
-      // value changes (should trigger input)
-      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 10);
-      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 25);
-
-      // a new value has been committed (should trigger change event)
-      dispatchSliderEvent(PointerEventType.POINTER_UP, 25);
-
-      expect(testComponent.onInput).toHaveBeenCalledTimes(2);
-      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-    });
-
-    it('should emit an input event when clicking', () => {
-      expect(testComponent.onChange).not.toHaveBeenCalled();
-      expect(testComponent.onInput).not.toHaveBeenCalled();
-      setValueByClick(sliderInstance, 75, platform.IOS);
-      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
-      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('range slider with input event', () => {
-    let sliderInstance: MatSlider;
-    let sliderElement: HTMLElement;
-    let testComponent: RangeSliderWithChangeHandler;
-
-    beforeEach(waitForAsync(() => {
-      const fixture = createComponent(RangeSliderWithChangeHandler);
-      fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
-
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      sliderElement = sliderInstance._elementRef.nativeElement;
-    }));
-
-    it('should emit an input event while sliding the start thumb', () => {
-      const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-        const {x, y} = getCoordsForValue(sliderInstance, value);
-        dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-      };
-
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-      // pointer down on current start thumb value (should not trigger input event)
-      dispatchSliderEvent(PointerEventType.POINTER_DOWN, 0);
-
-      // value changes (should trigger input)
-      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 10);
-      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 25);
-
-      // a new value has been committed (should trigger change event)
-      dispatchSliderEvent(PointerEventType.POINTER_UP, 25);
-
-      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(2);
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-    });
-
-    it('should emit an input event while sliding the end thumb', () => {
-      const dispatchSliderEvent = (type: PointerEventType, value: number) => {
-        const {x, y} = getCoordsForValue(sliderInstance, value);
-        dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
-      };
-
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-      // pointer down on current end thumb value (should not trigger input event)
-      dispatchSliderEvent(PointerEventType.POINTER_DOWN, 100);
-
-      // value changes (should trigger input)
-      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 90);
-      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 55);
-
-      // a new value has been committed (should trigger change event)
-      dispatchSliderEvent(PointerEventType.POINTER_UP, 55);
-
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(2);
-    });
-
-    it('should emit an input event on the start thumb when clicking near it', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-      setValueByClick(sliderInstance, 30, platform.IOS);
-
-      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-    });
-
-    it('should emit an input event on the end thumb when clicking near it', () => {
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
-
-      setValueByClick(sliderInstance, 55, platform.IOS);
-
-      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
-      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
-      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
-      expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
+      expect(endInput.value).toBe(70);
     });
   });
 
   describe('slider with direction', () => {
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       const fixture = createComponent(StandardSlider, [
@@ -1244,20 +1012,20 @@ describe('MDC-based MatSlider', () => {
       ]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
     it('works in RTL languages', () => {
-      setValueByClick(sliderInstance, 30, platform.IOS);
-      expect(inputInstance.value).toBe(70);
+      setValueByClick(slider, input, 25, platform.IOS, true);
+      checkInput(input, {min: 0, max: 100, value: 75, translateX: 75});
     });
   });
 
   describe('range slider with direction', () => {
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       const fixture = createComponent(StandardRangeSlider, [
@@ -1268,188 +1036,163 @@ describe('MDC-based MatSlider', () => {
       ]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
     it('works in RTL languages', () => {
-      setValueByClick(sliderInstance, 90, platform.IOS);
-      expect(startInputInstance.value).toBe(10);
+      setValueByClick(slider, startInput, 90, platform.IOS, true);
+      checkInput(startInput, {min: 0, max: 100, value: 10, translateX: 270});
 
-      setValueByClick(sliderInstance, 10, platform.IOS);
-      expect(endInputInstance.value).toBe(90);
+      setValueByClick(slider, endInput, 10, platform.IOS, true);
+      checkInput(endInput, {min: 10, max: 100, value: 90, translateX: 30});
     });
   });
 
   describe('slider with ngModel', () => {
     let fixture: ComponentFixture<SliderWithNgModel>;
-    let testComponent: SliderWithNgModel;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(SliderWithNgModel);
       fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      const sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
-    it('should update the model on mouseup', () => {
-      expect(testComponent.val).toBe(0);
-      setValueByClick(testComponent.slider, 76, platform.IOS);
+    it('should update the model', () => {
+      slideToValue(slider, input, 19, platform.IOS);
       fixture.detectChanges();
-      expect(testComponent.val).toBe(76);
+      expect(fixture.componentInstance.val).toBe('19');
+      checkInput(input, {min: 0, max: 100, value: 19, translateX: 57});
     });
 
-    it('should update the model on slide', () => {
-      expect(testComponent.val).toBe(0);
-      slideToValue(testComponent.slider, 19, Thumb.END, platform.IOS);
+    it('should update the slider', fakeAsync(() => {
+      fixture.componentInstance.val = '20';
       fixture.detectChanges();
-      expect(testComponent.val).toBe(19);
-    });
+      flush();
+      checkInput(input, {min: 0, max: 100, value: 20, translateX: 60});
+    }));
 
     it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
-      expect(inputInstance.value).toBe(0);
-      testComponent.val = 5;
+      fixture.componentInstance.val = '5';
       fixture.detectChanges();
       flush();
-      expect(inputInstance.value).toBe(5);
+      checkInput(input, {min: 0, max: 100, value: 5, translateX: 15});
 
-      testComponent.val = undefined;
+      fixture.componentInstance.val = undefined;
       fixture.detectChanges();
       flush();
-      expect(inputInstance.value).toBe(0);
+      checkInput(input, {min: 0, max: 100, value: 50, translateX: 150});
     }));
   });
 
-  describe('slider with ngModel', () => {
+  describe('range slider with ngModel', () => {
+    let slider: MatSlider;
     let fixture: ComponentFixture<RangeSliderWithNgModel>;
-    let testComponent: RangeSliderWithNgModel;
-
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(RangeSliderWithNgModel);
       fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      const sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should update the start thumb model on mouseup', () => {
-      expect(testComponent.startVal).toBe(0);
-      setValueByClick(testComponent.slider, 25, platform.IOS);
-      fixture.detectChanges();
-      expect(testComponent.startVal).toBe(25);
-    });
-
-    it('should update the end thumb model on mouseup', () => {
-      expect(testComponent.endVal).toBe(100);
-      setValueByClick(testComponent.slider, 75, platform.IOS);
-      fixture.detectChanges();
-      expect(testComponent.endVal).toBe(75);
-    });
-
-    it('should update the start thumb model on slide', () => {
-      expect(testComponent.startVal).toBe(0);
-      slideToValue(testComponent.slider, 19, Thumb.START, platform.IOS);
-      fixture.detectChanges();
-      expect(testComponent.startVal).toBe(19);
-    });
-
-    it('should update the end thumb model on slide', () => {
-      expect(testComponent.endVal).toBe(100);
-      slideToValue(testComponent.slider, 19, Thumb.END, platform.IOS);
-      fixture.detectChanges();
-      expect(testComponent.endVal).toBe(19);
-    });
-
-    it('should be able to reset a slider by setting the start thumb model back to undefined', fakeAsync(() => {
-      expect(startInputInstance.value).toBe(0);
-      testComponent.startVal = 5;
+    it('should update the models on input value changes', fakeAsync(() => {
+      slideToValue(slider, startInput, 25, platform.IOS);
       fixture.detectChanges();
       flush();
-      expect(startInputInstance.value).toBe(5);
+      checkInput(startInput, {min: 0, max: 100, value: 25, translateX: 75});
 
-      testComponent.startVal = undefined;
+      slideToValue(slider, endInput, 75, platform.IOS);
       fixture.detectChanges();
       flush();
-      expect(startInputInstance.value).toBe(0);
+      checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
     }));
 
-    it('should be able to reset a slider by setting the end thumb model back to undefined', fakeAsync(() => {
-      expect(endInputInstance.value).toBe(100);
-      testComponent.endVal = 5;
+    it('should update the thumbs on ngModel value change', fakeAsync(() => {
+      fixture.componentInstance.startVal = '50';
       fixture.detectChanges();
       flush();
-      expect(endInputInstance.value).toBe(5);
+      checkInput(startInput, {min: 0, max: 100, value: 50, translateX: 150});
 
-      testComponent.endVal = undefined;
+      fixture.componentInstance.endVal = '75';
       fixture.detectChanges();
       flush();
-      expect(endInputInstance.value).toBe(0);
+      checkInput(endInput, {min: 50, max: 100, value: 75, translateX: 225});
+    }));
+
+    it('should be able to reset a start input', fakeAsync(() => {
+      fixture.componentInstance.startVal = '5';
+      fixture.detectChanges();
+      flush();
+      checkInput(startInput, {min: 0, max: 100, value: 5, translateX: 15});
+
+      fixture.componentInstance.startVal = undefined;
+      fixture.detectChanges();
+      flush();
+      checkInput(startInput, {min: 0, max: 100, value: 50, translateX: 150});
+    }));
+
+    it('should be able to reset an end input', fakeAsync(() => {
+      fixture.componentInstance.endVal = '99';
+      fixture.detectChanges();
+      flush();
+      checkInput(endInput, {min: 0, max: 100, value: 99, translateX: 297});
+
+      fixture.componentInstance.endVal = undefined;
+      fixture.detectChanges();
+      flush();
+      checkInput(endInput, {min: 0, max: 100, value: 50, translateX: 150});
     }));
   });
 
   describe('slider as a custom form control', () => {
     let fixture: ComponentFixture<SliderWithFormControl>;
-    let testComponent: SliderWithFormControl;
-    let sliderInstance: MatSlider;
-    let inputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let input: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(SliderWithFormControl);
       fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      inputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
-    it('should not update the control when the value is updated', () => {
-      expect(testComponent.control.value).toBe(0);
-      inputInstance.value = 11;
-      fixture.detectChanges();
-      expect(testComponent.control.value).toBe(0);
-    });
-
-    it('should update the control on mouseup', () => {
-      expect(testComponent.control.value).toBe(0);
-      setValueByClick(sliderInstance, 76, platform.IOS);
-      expect(testComponent.control.value).toBe(76);
-    });
-
     it('should update the control on slide', () => {
-      expect(testComponent.control.value).toBe(0);
-      slideToValue(sliderInstance, 19, Thumb.END, platform.IOS);
-      expect(testComponent.control.value).toBe(19);
+      expect(fixture.componentInstance.control.value).toBe('0');
+      slideToValue(slider, input, 19, platform.IOS);
+      expect(fixture.componentInstance.control.value).toBe('19');
     });
 
     it('should update the value when the control is set', () => {
-      expect(inputInstance.value).toBe(0);
-      testComponent.control.setValue(7);
-      expect(inputInstance.value).toBe(7);
+      expect(input.value).toBe(0);
+      fixture.componentInstance.control.setValue('7');
+      checkInput(input, {min: 0, max: 100, value: 7, translateX: 21});
     });
 
-    it('should update the disabled state when control is disabled', () => {
-      expect(sliderInstance.disabled).toBe(false);
-      testComponent.control.disable();
-      expect(sliderInstance.disabled).toBe(true);
-    });
+    it('should update the disabled state when control is disabled', fakeAsync(() => {
+      expect(slider.disabled).toBe(false);
+      fixture.componentInstance.control.disable();
+      expect(slider.disabled).toBe(true);
+    }));
 
     it('should update the disabled state when the control is enabled', () => {
-      sliderInstance.disabled = true;
-      testComponent.control.enable();
-      expect(sliderInstance.disabled).toBe(false);
+      slider.disabled = true;
+      fixture.componentInstance.control.enable();
+      expect(slider.disabled).toBe(false);
     });
 
     it('should have the correct control state initially and after interaction', () => {
-      let sliderControl = testComponent.control;
+      let sliderControl = fixture.componentInstance.control;
 
       // The control should start off valid, pristine, and untouched.
       expect(sliderControl.valid).toBe(true);
@@ -1458,7 +1201,7 @@ describe('MDC-based MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      setValueByClick(sliderInstance, 50, platform.IOS);
+      setValueByClick(slider, input, 50, platform.IOS);
 
       expect(sliderControl.valid).toBe(true);
       expect(sliderControl.pristine).toBe(false);
@@ -1466,7 +1209,7 @@ describe('MDC-based MatSlider', () => {
 
       // If the control has been visited due to interaction, the control should remain
       // dirty and now also be touched.
-      inputInstance.blur();
+      input.blur();
       fixture.detectChanges();
 
       expect(sliderControl.valid).toBe(true);
@@ -1477,93 +1220,65 @@ describe('MDC-based MatSlider', () => {
 
   describe('slider as a custom form control', () => {
     let fixture: ComponentFixture<RangeSliderWithFormControl>;
-    let testComponent: RangeSliderWithFormControl;
-    let sliderInstance: MatSlider;
-    let startInputInstance: MatSliderThumb;
-    let endInputInstance: MatSliderThumb;
+    let slider: MatSlider;
+    let startInput: MatSliderThumb;
+    let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(RangeSliderWithFormControl);
       fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      sliderInstance = sliderDebugElement.componentInstance;
-      startInputInstance = sliderInstance._getInput(Thumb.START);
-      endInputInstance = sliderInstance._getInput(Thumb.END);
+      slider = sliderDebugElement.componentInstance;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should not update the start input control when the value is updated', () => {
-      expect(testComponent.startInputControl.value).toBe(0);
-      startInputInstance.value = 11;
-      fixture.detectChanges();
-      expect(testComponent.startInputControl.value).toBe(0);
-    });
-
-    it('should not update the end input control when the value is updated', () => {
-      expect(testComponent.endInputControl.value).toBe(100);
-      endInputInstance.value = 11;
-      fixture.detectChanges();
-      expect(testComponent.endInputControl.value).toBe(100);
-    });
-
-    it('should update the start input control on mouseup', () => {
-      expect(testComponent.startInputControl.value).toBe(0);
-      setValueByClick(sliderInstance, 20, platform.IOS);
-      expect(testComponent.startInputControl.value).toBe(20);
-    });
-
-    it('should update the end input control on mouseup', () => {
-      expect(testComponent.endInputControl.value).toBe(100);
-      setValueByClick(sliderInstance, 80, platform.IOS);
-      expect(testComponent.endInputControl.value).toBe(80);
-    });
-
     it('should update the start input control on slide', () => {
-      expect(testComponent.startInputControl.value).toBe(0);
-      slideToValue(sliderInstance, 20, Thumb.START, platform.IOS);
-      expect(testComponent.startInputControl.value).toBe(20);
+      expect(fixture.componentInstance.startInputControl.value).toBe('0');
+      slideToValue(slider, startInput, 20, platform.IOS);
+      expect(fixture.componentInstance.startInputControl.value).toBe('20');
     });
 
     it('should update the end input control on slide', () => {
-      expect(testComponent.endInputControl.value).toBe(100);
-      slideToValue(sliderInstance, 80, Thumb.END, platform.IOS);
-      expect(testComponent.endInputControl.value).toBe(80);
+      expect(fixture.componentInstance.endInputControl.value).toBe('100');
+      slideToValue(slider, endInput, 80, platform.IOS);
+      expect(fixture.componentInstance.endInputControl.value).toBe('80');
     });
 
     it('should update the start input value when the start input control is set', () => {
-      expect(startInputInstance.value).toBe(0);
-      testComponent.startInputControl.setValue(10);
-      expect(startInputInstance.value).toBe(10);
+      expect(startInput.value).toBe(0);
+      fixture.componentInstance.startInputControl.setValue('10');
+      checkInput(startInput, {min: 0, max: 100, value: 10, translateX: 30});
     });
 
     it('should update the end input value when the end input control is set', () => {
-      expect(endInputInstance.value).toBe(100);
-      testComponent.endInputControl.setValue(90);
-      expect(endInputInstance.value).toBe(90);
+      expect(endInput.value).toBe(100);
+      fixture.componentInstance.endInputControl.setValue('90');
+      checkInput(endInput, {min: 0, max: 100, value: 90, translateX: 270});
     });
 
     it('should update the disabled state if the start input control is disabled', () => {
-      expect(sliderInstance.disabled).toBe(false);
-      testComponent.startInputControl.disable();
-      expect(sliderInstance.disabled).toBe(true);
+      expect(slider.disabled).toBe(false);
+      fixture.componentInstance.startInputControl.disable();
+      expect(slider.disabled).toBe(true);
     });
 
     it('should update the disabled state if the end input control is disabled', () => {
-      expect(sliderInstance.disabled).toBe(false);
-      testComponent.endInputControl.disable();
-      expect(sliderInstance.disabled).toBe(true);
+      expect(slider.disabled).toBe(false);
+      fixture.componentInstance.endInputControl.disable();
+      expect(slider.disabled).toBe(true);
     });
 
     it('should update the disabled state when both input controls are enabled', () => {
-      sliderInstance.disabled = true;
-      testComponent.startInputControl.enable();
-      expect(sliderInstance.disabled).toBe(true);
-      testComponent.endInputControl.enable();
-      expect(sliderInstance.disabled).toBe(false);
+      slider.disabled = true;
+      fixture.componentInstance.startInputControl.enable();
+      expect(slider.disabled).toBe(false);
+      fixture.componentInstance.endInputControl.enable();
+      expect(slider.disabled).toBe(false);
     });
 
     it('should have the correct start input control state initially and after interaction', () => {
-      let sliderControl = testComponent.startInputControl;
+      let sliderControl = fixture.componentInstance.startInputControl;
 
       // The control should start off valid, pristine, and untouched.
       expect(sliderControl.valid).toBe(true);
@@ -1572,7 +1287,7 @@ describe('MDC-based MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      setValueByClick(sliderInstance, 25, platform.IOS);
+      setValueByClick(slider, startInput, 25, platform.IOS);
 
       expect(sliderControl.valid).toBe(true);
       expect(sliderControl.pristine).toBe(false);
@@ -1580,7 +1295,7 @@ describe('MDC-based MatSlider', () => {
 
       // If the control has been visited due to interaction, the control should remain
       // dirty and now also be touched.
-      startInputInstance.blur();
+      startInput.blur();
       fixture.detectChanges();
 
       expect(sliderControl.valid).toBe(true);
@@ -1589,7 +1304,7 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should have the correct start input control state initially and after interaction', () => {
-      let sliderControl = testComponent.endInputControl;
+      let sliderControl = fixture.componentInstance.endInputControl;
 
       // The control should start off valid, pristine, and untouched.
       expect(sliderControl.valid).toBe(true);
@@ -1598,7 +1313,7 @@ describe('MDC-based MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      setValueByClick(sliderInstance, 75, platform.IOS);
+      setValueByClick(slider, endInput, 75, platform.IOS);
 
       expect(sliderControl.valid).toBe(true);
       expect(sliderControl.pristine).toBe(false);
@@ -1606,7 +1321,7 @@ describe('MDC-based MatSlider', () => {
 
       // If the control has been visited due to interaction, the control should remain
       // dirty and now also be touched.
-      endInputInstance.blur();
+      endInput.blur();
       fixture.detectChanges();
 
       expect(sliderControl.valid).toBe(true);
@@ -1616,72 +1331,79 @@ describe('MDC-based MatSlider', () => {
   });
 
   describe('slider with a two-way binding', () => {
+    let input: MatSliderThumb;
+    let slider: MatSlider;
     let fixture: ComponentFixture<SliderWithTwoWayBinding>;
-    let testComponent: SliderWithTwoWayBinding;
 
     beforeEach(() => {
       fixture = createComponent(SliderWithTwoWayBinding);
       fixture.detectChanges();
-      testComponent = fixture.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      slider = sliderDebugElement.componentInstance;
+      input = slider._getInput(Thumb.END) as MatSliderThumb;
     });
 
     it('should sync the value binding in both directions', () => {
-      expect(testComponent.value).toBe(0);
-      expect(testComponent.sliderInput.value).toBe(0);
+      checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
 
-      slideToValue(testComponent.slider, 10, Thumb.END, platform.IOS);
-      expect(testComponent.value).toBe(10);
-      expect(testComponent.sliderInput.value).toBe(10);
+      slideToValue(slider, input, 10, platform.IOS);
+      expect(fixture.componentInstance.value).toBe('10');
+      checkInput(input, {min: 0, max: 100, value: 10, step: 0, translateX: 30});
 
-      testComponent.value = 20;
+      fixture.componentInstance.value = '20';
       fixture.detectChanges();
-      expect(testComponent.value).toBe(20);
-      expect(testComponent.sliderInput.value).toBe(20);
+      expect(fixture.componentInstance.value).toBe('20');
+      checkInput(input, {min: 0, max: 100, value: 20, step: 0, translateX: 60});
     });
   });
 
   describe('range slider with a two-way binding', () => {
+    let slider: MatSlider;
+    let startInput: MatSliderRangeThumb;
+    let endInput: MatSliderRangeThumb;
     let fixture: ComponentFixture<RangeSliderWithTwoWayBinding>;
-    let testComponent: RangeSliderWithTwoWayBinding;
 
     beforeEach(waitForAsync(() => {
       fixture = createComponent(RangeSliderWithTwoWayBinding);
       fixture.detectChanges();
-      testComponent = fixture.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      slider = sliderDebugElement.componentInstance;
+      endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
+      startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
     }));
 
     it('should sync the start value binding in both directions', () => {
-      expect(testComponent.startValue).toBe(0);
-      expect(testComponent.sliderInputs.get(0)!.value).toBe(0);
+      expect(fixture.componentInstance.startValue).toBe('0');
+      expect(startInput.value).toBe(0);
 
-      slideToValue(testComponent.slider, 10, Thumb.START, platform.IOS);
+      slideToValue(slider, startInput, 10, platform.IOS);
 
-      expect(testComponent.startValue).toBe(10);
-      expect(testComponent.sliderInputs.get(0)!.value).toBe(10);
+      expect(fixture.componentInstance.startValue).toBe('10');
+      expect(startInput.value).toBe(10);
 
-      testComponent.startValue = 20;
+      fixture.componentInstance.startValue = '20';
       fixture.detectChanges();
-      expect(testComponent.startValue).toBe(20);
-      expect(testComponent.sliderInputs.get(0)!.value).toBe(20);
+      expect(fixture.componentInstance.startValue).toBe('20');
+      expect(startInput.value).toBe(20);
     });
 
     it('should sync the end value binding in both directions', () => {
-      expect(testComponent.endValue).toBe(100);
-      expect(testComponent.sliderInputs.get(1)!.value).toBe(100);
+      expect(fixture.componentInstance.endValue).toBe('100');
+      expect(endInput.value).toBe(100);
 
-      slideToValue(testComponent.slider, 90, Thumb.END, platform.IOS);
-      expect(testComponent.endValue).toBe(90);
-      expect(testComponent.sliderInputs.get(1)!.value).toBe(90);
+      slideToValue(slider, endInput, 90, platform.IOS);
+      expect(fixture.componentInstance.endValue).toBe('90');
+      expect(endInput.value).toBe(90);
 
-      testComponent.endValue = 80;
+      fixture.componentInstance.endValue = '80';
       fixture.detectChanges();
-      expect(testComponent.endValue).toBe(80);
-      expect(testComponent.sliderInputs.get(1)!.value).toBe(80);
+      expect(fixture.componentInstance.endValue).toBe('80');
+      expect(endInput.value).toBe(80);
     });
   });
 });
 
-const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
+const SLIDER_STYLES = ['.mat-mdc-slider { width: 348px; }'];
 
 @Component({
   template: `
@@ -1727,24 +1449,30 @@ class DisabledRangeSlider {}
 
 @Component({
   template: `
-  <mat-slider min="25" max="75">
+  <mat-slider [min]="min" [max]="max">
     <input matSliderThumb>
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
 })
-class SliderWithMinAndMax {}
+class SliderWithMinAndMax {
+  min = 25;
+  max = 75;
+}
 
 @Component({
   template: `
-  <mat-slider min="25" max="75">
+  <mat-slider [min]="min" [max]="max">
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
 })
-class RangeSliderWithMinAndMax {}
+class RangeSliderWithMinAndMax {
+  min = 25;
+  max = 75;
+}
 
 @Component({
   template: `
@@ -1769,24 +1497,28 @@ class RangeSliderWithValue {}
 
 @Component({
   template: `
-  <mat-slider step="25">
+  <mat-slider [step]="step">
     <input matSliderThumb>
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
 })
-class SliderWithStep {}
+class SliderWithStep {
+  step = 25;
+}
 
 @Component({
   template: `
-  <mat-slider step="25">
+  <mat-slider [step]="step">
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
 })
-class RangeSliderWithStep {}
+class RangeSliderWithStep {
+  step = 25;
+}
 
 @Component({
   template: `
@@ -1852,43 +1584,6 @@ class RangeSliderWithOneWayBinding {
 @Component({
   template: `
   <mat-slider>
-    <input (change)="onChange($event)" (input)="onInput($event)" matSliderThumb>
-  </mat-slider>
-  `,
-  styles: SLIDER_STYLES,
-})
-class SliderWithChangeHandler {
-  onChange = jasmine.createSpy('onChange');
-  onInput = jasmine.createSpy('onChange');
-  @ViewChild(MatSlider) slider: MatSlider;
-}
-
-@Component({
-  template: `
-  <mat-slider>
-    <input
-      (change)="onStartThumbChange($event)"
-      (input)="onStartThumbInput($event)"
-      matSliderStartThumb>
-    <input
-      (change)="onEndThumbChange($event)"
-      (input)="onEndThumbInput($event)"
-      matSliderEndThumb>
-  </mat-slider>
-  `,
-  styles: SLIDER_STYLES,
-})
-class RangeSliderWithChangeHandler {
-  onStartThumbChange = jasmine.createSpy('onStartThumbChange');
-  onStartThumbInput = jasmine.createSpy('onStartThumbInput');
-  onEndThumbChange = jasmine.createSpy('onEndThumbChange');
-  onEndThumbInput = jasmine.createSpy('onEndThumbInput');
-  @ViewChild(MatSlider) slider: MatSlider;
-}
-
-@Component({
-  template: `
-  <mat-slider>
     <input [(ngModel)]="val" matSliderThumb>
   </mat-slider>
   `,
@@ -1896,7 +1591,7 @@ class RangeSliderWithChangeHandler {
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
-  val: number | undefined = 0;
+  val: string | undefined = '0';
 }
 
 @Component({
@@ -1910,8 +1605,8 @@ class SliderWithNgModel {
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
-  startVal: number | undefined = 0;
-  endVal: number | undefined = 100;
+  startVal: string | undefined = '0';
+  endVal: string | undefined = '100';
 }
 
 @Component({
@@ -1922,7 +1617,7 @@ class RangeSliderWithNgModel {
   styles: SLIDER_STYLES,
 })
 class SliderWithFormControl {
-  control = new FormControl(0);
+  control = new FormControl('0');
 }
 
 @Component({
@@ -1934,8 +1629,8 @@ class SliderWithFormControl {
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithFormControl {
-  startInputControl = new FormControl(0);
-  endInputControl = new FormControl(100);
+  startInputControl = new FormControl('0');
+  endInputControl = new FormControl('100');
 }
 
 @Component({
@@ -1947,9 +1642,7 @@ class RangeSliderWithFormControl {
   styles: SLIDER_STYLES,
 })
 class SliderWithTwoWayBinding {
-  @ViewChild(MatSlider) slider: MatSlider;
-  @ViewChild(MatSliderThumb) sliderInput: MatSliderThumb;
-  value = 0;
+  value = '0';
 }
 
 @Component({
@@ -1964,15 +1657,15 @@ class SliderWithTwoWayBinding {
 class RangeSliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider: MatSlider;
   @ViewChildren(MatSliderThumb) sliderInputs: QueryList<MatSliderThumb>;
-  startValue = 0;
-  endValue = 100;
+  startValue = '0';
+  endValue = '100';
 }
 
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
-  POINTER_DOWN = 'pointerdown',
-  POINTER_UP = 'pointerup',
-  POINTER_MOVE = 'pointermove',
+  POINTER_DOWN = 'mousedown',
+  POINTER_UP = 'mouseup',
+  POINTER_MOVE = 'mousemove',
 }
 
 /** The touch event types used by the MDC Slider. */
@@ -1983,25 +1676,38 @@ const enum TouchEventType {
 }
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
-function setValueByClick(slider: MatSlider, value: number, isIOS: boolean) {
-  const sliderElement = slider._elementRef.nativeElement;
-  const {x, y} = getCoordsForValue(slider, value);
+function setValueByClick(
+  slider: MatSlider,
+  input: MatSliderThumb,
+  value: number,
+  isIOS: boolean,
+  isRtl: boolean = false,
+) {
+  const inputElement = input._elementRef.nativeElement;
+  const val = isRtl ? slider.max - value : value;
+  const {x, y} = getCoordsForValue(slider, val);
 
-  dispatchPointerEvent(sliderElement, 'mouseenter', x, y);
-  dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, x, y, isIOS);
-  dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, x, y, isIOS);
+  dispatchPointerOrTouchEvent(inputElement, PointerEventType.POINTER_DOWN, x, y, isIOS);
+  input.value = val;
+  dispatchEvent(input._hostElement, new Event('input'));
+  input.focus();
+  dispatchPointerOrTouchEvent(inputElement, PointerEventType.POINTER_UP, x, y, isIOS);
+  dispatchEvent(input._hostElement, new Event('change'));
 }
 
 /** Slides the MatSlider's thumb to the given value. */
-function slideToValue(slider: MatSlider, value: number, thumbPosition: Thumb, isIOS: boolean) {
+function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number, isIOS: boolean) {
   const sliderElement = slider._elementRef.nativeElement;
-  const {x: startX, y: startY} = getCoordsForValue(slider, slider._getInput(thumbPosition).value);
+  const {x: startX, y: startY} = getCoordsForValue(slider, input.value);
   const {x: endX, y: endY} = getCoordsForValue(slider, value);
 
-  dispatchPointerEvent(sliderElement, 'mouseenter', startX, startY);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, startX, startY, isIOS);
+  input.focus();
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_MOVE, endX, endY, isIOS);
+  input.value = value;
+  dispatchEvent(input._hostElement, new Event('input'));
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, endX, endY, isIOS);
+  dispatchEvent(input._hostElement, new Event('change'));
 }
 
 /** Returns the x and y coordinates for the given slider value. */

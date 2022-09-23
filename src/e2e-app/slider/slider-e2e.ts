@@ -24,5 +24,6 @@ import {Component} from '@angular/core';
       <input aria-label="Range slider end thumb" matSliderEndThumb>
     </mat-slider>
     `,
+  styles: ['.mat-mdc-slider { width: 148px; }'],
 })
 export class SliderE2e {}

@@ -164,7 +164,7 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
   // floating point number with lots of decimals. This allows us to avoid the headache but it may
   // cause some innaccuracies in places where these decimals mean the difference between values.
 
-  const x = Math.round(width * percent);
+  const x = Math.round((width - 48) * percent + 24);
   const y = Math.round(height / 2);
 
   return {x, y};

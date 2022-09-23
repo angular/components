@@ -82,7 +82,7 @@ describe('MDC-based MatSliderHarness', () => {
       await parallel(() => {
         return sliders.map(slider => slider.getStep());
       }),
-    ).toEqual([1, fixture.componentInstance.rangeSliderStep]);
+    ).toEqual([0, fixture.componentInstance.rangeSliderStep]);
   });
 
   it('should get the position of a slider thumb in a range slider', async () => {

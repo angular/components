@@ -1,3 +1,4 @@
+@use '@angular/material' as mat;
 @use '@material/slider/slider' as mdc-slider;
 @use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '../core/mdc-helpers/mdc-helpers';
@@ -22,15 +23,20 @@ $mat-slider-horizontal-margin: 8px !default;
   box-sizing: border-box;
   outline: none;
   vertical-align: middle;
-  margin: {
-    left: $mat-slider-horizontal-margin;
-    right: $mat-slider-horizontal-margin;
+  margin: 0;
+  min-width: $mat-slider-min-size;
+
+  input {
+    opacity: 1;
   }
 
-  // Unset the default "width" property from the MDC slider class. We don't want
-  // the slider to automatically expand horizontally for backwards compatibility.
-  width: auto;
-  min-width: $mat-slider-min-size - (2 * $mat-slider-horizontal-margin);
+  .mat-mdc-slider-visual-thumb {
+    opacity: 0.5
+  }
+
+  .mdc-slider__track {
+    pointer-events: none;
+  }
 
   .mdc-slider__value-indicator {
     // There's no token to control this opacity so we have to do it ourselves.

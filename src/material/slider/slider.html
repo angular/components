@@ -2,21 +2,47 @@
 <ng-content></ng-content>
 
 <!-- Track -->
-<div class="mdc-slider__track">
+<div class="mdc-slider__track" [style.width]="_trackWidthStyle" [style.left]="_trackLeftStyle">
   <div class="mdc-slider__track--inactive"></div>
   <div class="mdc-slider__track--active">
-    <div class="mdc-slider__track--active_fill" #trackActive></div>
+    <div
+      #trackActive
+      class="mdc-slider__track--active_fill"
+      [style.left]="_trackActiveLeft"
+      [style.right]="_trackActiveRight"
+      [style.transform]="_trackActiveTransform"
+      [style.transform-origin]="_trackActiveTransformOrigin"
+      [style.transition]="_transition"></div>
   </div>
   <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
-    <div *ngFor="let tickMark of _tickMarks" [class]="_getTickMarkClass(tickMark)"></div>
+    <ng-container *ngIf="_cachedTrackWidth">
+      <ng-container *ngFor="let tickMark of _tickMarks; let i = index">
+        <div [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'" [style.transform]="'translateX(' + (i * ((_tickMarkTrackWidth) / (_tickMarks.length - 1))) + 'px'"></div>
+      </ng-container>
+    </ng-container>
   </div>
 </div>
 
 <!-- Thumbs -->
 <mat-slider-visual-thumb
-  *ngFor="let thumb of _inputs"
+  *ngIf="_isRange"
   [discrete]="discrete"
-  [disableRipple]="_isRippleDisabled()"
-  [thumbPosition]="thumb._thumbPosition"
-  [valueIndicatorText]="_getValueIndicatorText(thumb._thumbPosition)">
+  [disableRipple]="false"
+  [thumbPosition]="1"
+  [valueIndicatorText]="startValueIndicatorText"
+  [style.pointer-events]="'none'"
+  [style.transform]="_startThumbTransform"
+  [style.transition]="_transition"
+  >
+</mat-slider-visual-thumb>
+
+<mat-slider-visual-thumb
+  [discrete]="discrete"
+  [disableRipple]="false"
+  [thumbPosition]="2"
+  [valueIndicatorText]="endValueIndicatorText"
+  [style.pointer-events]="'none'"
+  [style.transform]="_endThumbTransform"
+  [style.transition]="_transition"
+  >
 </mat-slider-visual-thumb>
