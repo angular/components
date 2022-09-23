@@ -158,7 +158,7 @@ commands:
       - checkout
       # After checkout, rebase on top of target branch.
       - devinfra/rebase-pr-on-target-branch:
-          base_revision: << pipeline.git.base_revisiond >>
+          base_revision:
           head_revision: << pipeline.git.revision >>
 
 # -----------------------------------------------------------------------------------------
