@@ -13,6 +13,7 @@ import {
   coerceNumberProperty,
   NumberInput,
 } from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -822,9 +823,8 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     if (!sibling) {
       return;
     }
-    const rect = this._slider._elementRef.nativeElement.getBoundingClientRect();
-    const dx1 = Math.abs(event.clientX - rect.left - this.translateX);
-    const dx2 = Math.abs(event.clientX - rect.left - sibling.translateX);
+    const dx1 = Math.abs(event.clientX - this._slider._cachedLeft - this.translateX);
+    const dx2 = Math.abs(event.clientX - this._slider._cachedLeft - sibling.translateX);
     if (dx1 < dx2) {
       this._zIndex = '1';
       sibling._zIndex = 'auto';
@@ -1186,6 +1186,7 @@ export class MatSlider
   constructor(
     readonly _ngZone: NgZone,
     readonly _cdr: ChangeDetectorRef,
+    private readonly _platform: Platform,
     elementRef: ElementRef<HTMLElement>,
     @Optional() readonly _dir: Directionality,
     @Optional()
@@ -1221,7 +1222,9 @@ export class MatSlider
   _inputOffset: number;
 
   ngAfterViewInit(): void {
-    this._setDimensions();
+    if (this._platform.isBrowser) {
+      this._setDimensions();
+    }
     const eInput = this._getInput(Thumb.END);
     const sInput = this._getInput(Thumb.START);
     this._isRange = !!eInput && !!sInput;
