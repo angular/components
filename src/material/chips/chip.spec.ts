@@ -19,6 +19,7 @@ import {COMMA} from '@angular/cdk/keycodes';
 
 describe('MDC-based MatChip', () => {
   let fixture: ComponentFixture<any>;
+  let fixtureDefaultChip: ComponentFixture<DefaultChip>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChip;
@@ -31,6 +32,7 @@ describe('MDC-based MatChip', () => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
       declarations: [
+        DefaultChip,
         BasicChip,
         SingleChip,
         BasicChipWithStaticTabindex,
@@ -101,6 +103,9 @@ describe('MDC-based MatChip', () => {
       fixture = TestBed.createComponent(SingleChip);
       fixture.detectChanges();
 
+      fixtureDefaultChip = TestBed.createComponent(DefaultChip);
+      fixtureDefaultChip.detectChanges();
+
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
@@ -138,17 +143,17 @@ describe('MDC-based MatChip', () => {
       expect(chipNativeElement.classList).toContain('mat-warn');
     });
 
-    it('can default the color to undefined', () => {
-      fixture.destroy();
+    it('can default the color via MAT_CHIPS_DEFAULT_OPTIONS provider', () => {
+      let chipDefaultDebugElement = fixtureDefaultChip.debugElement.query(By.directive(MatChip))!;
+      let chipDefaultNativeElement = chipDefaultDebugElement.nativeElement;
+      expect(chipDefaultNativeElement.classList).toContain('mat-primary');
+
+      fixtureDefaultChip.destroy();
+
       TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatChipsModule],
-          declarations: [
-            BasicChip,
-            SingleChip,
-            BasicChipWithStaticTabindex,
-            BasicChipWithBoundTabindex,
-          ],
+          declarations: [DefaultChip],
           providers: [
             {
               provide: MAT_CHIPS_DEFAULT_OPTIONS,
@@ -157,11 +162,11 @@ describe('MDC-based MatChip', () => {
           ],
         })
         .compileComponents();
-      fixture = TestBed.createComponent(SingleChip);
-      fixture.detectChanges();
-      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
-      chipNativeElement = chipDebugElement.nativeElement;
-      expect(chipNativeElement.classList).not.toContain('mat-primary');
+      fixtureDefaultChip = TestBed.createComponent(DefaultChip);
+      fixtureDefaultChip.detectChanges();
+      chipDefaultDebugElement = fixtureDefaultChip.debugElement.query(By.directive(MatChip))!;
+      chipDefaultNativeElement = chipDefaultDebugElement.nativeElement;
+      expect(chipDefaultNativeElement.classList).not.toContain('mat-primary');
     });
 
     it('allows removal', () => {
@@ -242,7 +247,7 @@ class SingleChip {
   @ViewChild(MatChipSet) chipList: MatChipSet;
   disabled: boolean = false;
   name: string = 'Test';
-  color: ThemePalette = undefined;
+  color: ThemePalette = 'primary';
   removable: boolean = true;
   shouldShow: boolean = true;
   value: any;
@@ -250,6 +255,15 @@ class SingleChip {
 
   chipDestroy: (event?: MatChipEvent) => void = () => {};
   chipRemove: (event?: MatChipEvent) => void = () => {};
+}
+
+@Component({
+  template: `
+    <mat-chip>{{ name }}</mat-chip>
+  `,
+})
+class DefaultChip {
+  name = 'test';
 }
 
 @Component({

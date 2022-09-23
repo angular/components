@@ -240,7 +240,7 @@ export class MatChip
       this.tabIndex = parseInt(tabIndex) ?? this.defaultTabIndex;
     }
     this._monitorFocus();
-    this.defaultColor = _defaultOptions?.color;
+    this.color = _defaultOptions?.color;
   }
 
   /** Action receiving the primary set of user interactions. */
