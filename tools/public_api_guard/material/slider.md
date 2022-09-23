@@ -23,6 +23,7 @@ import { NgZone } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { RippleGlobalOptions } from '@angular/material/core';
 import { Subject } from 'rxjs';
@@ -31,7 +32,7 @@ import { TickMark } from '@material/slider';
 
 // @public
 export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, CanDisableRipple, OnDestroy {
-    constructor(_ngZone: NgZone, _cdr: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _dir: Directionality, _globalRippleOptions?: RippleGlobalOptions | undefined, animationMode?: string);
+    constructor(_ngZone: NgZone, _cdr: ChangeDetectorRef, _platform: Platform, elementRef: ElementRef<HTMLElement>, _dir: Directionality, _globalRippleOptions?: RippleGlobalOptions | undefined, animationMode?: string);
     // (undocumented)
     _cachedLeft: number;
     // (undocumented)
@@ -124,7 +125,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSlider, "mat-slider", ["matSlider"], { "color": "color"; "disableRipple": "disableRipple"; "disabled": "disabled"; "discrete": "discrete"; "showTickMarks": "showTickMarks"; "min": "min"; "max": "max"; "step": "step"; "displayWith": "displayWith"; }, {}, ["_input", "_inputs"], ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSlider, [null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSlider, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
 
 // @public
