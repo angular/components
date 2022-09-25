@@ -5,10 +5,13 @@
 ```ts
 
 import { AsyncFactoryFn } from '@angular/cdk/testing';
+import { ComponentHarnessConstructor } from '@angular/cdk/testing';
+import { ErrorHarnessFilters } from '@angular/material/form-field/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 import { FormFieldHarnessFilters as LegacyFormFieldHarnessFilters } from '@angular/material/form-field/testing';
 import { MatDatepickerInputHarness } from '@angular/material/datepicker/testing';
 import { MatDateRangeInputHarness } from '@angular/material/datepicker/testing';
+import { _MatErrorHarnessBase } from '@angular/material/form-field/testing';
 import { _MatFormFieldHarnessBase } from '@angular/material/form-field/testing';
 import { MatFormFieldControlHarness as MatLegacyFormFieldControlHarness } from '@angular/material/form-field/testing/control';
 import { MatLegacyInputHarness } from '@angular/material/legacy-input/testing';
@@ -23,11 +26,13 @@ export { LegacyFormFieldHarnessFilters }
 export { MatLegacyFormFieldControlHarness }
 
 // @public @deprecated
-export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<LegacyFormFieldControlHarness> {
+export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<LegacyFormFieldControlHarness, typeof MatErrorHarness> {
     // (undocumented)
     protected _datepickerInputControl: AsyncFactoryFn<MatDatepickerInputHarness | null>;
     // (undocumented)
     protected _dateRangeInputControl: AsyncFactoryFn<MatDateRangeInputHarness | null>;
+    // (undocumented)
+    protected _errorHarness: typeof MatErrorHarness;
     // (undocumented)
     protected _errors: AsyncFactoryFn<TestElement[]>;
     getAppearance(): Promise<'legacy' | 'standard' | 'fill' | 'outline'>;
