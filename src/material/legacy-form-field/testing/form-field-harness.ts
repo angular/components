@@ -17,7 +17,7 @@ import {
 } from '@angular/material/form-field/testing';
 import {MatLegacyInputHarness} from '@angular/material/legacy-input/testing';
 import {MatLegacySelectHarness} from '@angular/material/legacy-select/testing';
-import {MatErrorHarness} from './error-harness';
+import {MatLegacyErrorHarness} from './error-harness';
 
 // TODO(devversion): support support chip list harness
 /**
@@ -38,7 +38,7 @@ export type LegacyFormFieldControlHarness =
  */
 export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<
   LegacyFormFieldControlHarness,
-  typeof MatErrorHarness
+  typeof MatLegacyErrorHarness
 > {
   static hostSelector = '.mat-form-field';
 
@@ -69,7 +69,7 @@ export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<
   protected _selectControl = this.locatorForOptional(MatLegacySelectHarness);
   protected _datepickerInputControl = this.locatorForOptional(MatDatepickerInputHarness);
   protected _dateRangeInputControl = this.locatorForOptional(MatDateRangeInputHarness);
-  protected _errorHarness = MatErrorHarness;
+  protected _errorHarness = MatLegacyErrorHarness;
 
   /** Gets the appearance of the form-field. */
   async getAppearance(): Promise<'legacy' | 'standard' | 'fill' | 'outline'> {

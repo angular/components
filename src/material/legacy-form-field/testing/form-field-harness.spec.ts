@@ -1,4 +1,4 @@
-import {MatErrorHarness} from './error-harness';
+import {MatLegacyErrorHarness} from './error-harness';
 import {MatLegacyAutocompleteModule} from '@angular/material/legacy-autocomplete';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -32,7 +32,7 @@ describe('Non-MDC-based MatFormFieldHarness', () => {
       datepickerInputHarness: MatDatepickerInputHarness,
       dateRangeInputHarness: MatDateRangeInputHarness,
       isMdcImplementation: false,
-      errorHarness: MatErrorHarness,
+      errorHarness: MatLegacyErrorHarness,
     },
   );
 });

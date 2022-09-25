@@ -6,8 +6,8 @@
 
 import { AsyncFactoryFn } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
-import { ErrorHarnessFilters } from '@angular/material/form-field/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { ErrorHarnessFilters as LegacyErrorHarnessFilters } from '@angular/material/form-field/testing';
 import { FormFieldHarnessFilters as LegacyFormFieldHarnessFilters } from '@angular/material/form-field/testing';
 import { MatDatepickerInputHarness } from '@angular/material/datepicker/testing';
 import { MatDateRangeInputHarness } from '@angular/material/datepicker/testing';
@@ -18,21 +18,30 @@ import { MatLegacyInputHarness } from '@angular/material/legacy-input/testing';
 import { MatLegacySelectHarness } from '@angular/material/legacy-select/testing';
 import { TestElement } from '@angular/cdk/testing';
 
+export { LegacyErrorHarnessFilters }
+
 // @public @deprecated
 export type LegacyFormFieldControlHarness = MatLegacyInputHarness | MatLegacySelectHarness | MatDatepickerInputHarness | MatDateRangeInputHarness;
 
 export { LegacyFormFieldHarnessFilters }
 
+// @public @deprecated
+export class MatLegacyErrorHarness extends _MatErrorHarnessBase {
+    // (undocumented)
+    static hostSelector: string;
+    static with<T extends MatLegacyErrorHarness>(this: ComponentHarnessConstructor<T>, options?: LegacyErrorHarnessFilters): HarnessPredicate<T>;
+}
+
 export { MatLegacyFormFieldControlHarness }
 
 // @public @deprecated
-export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<LegacyFormFieldControlHarness, typeof MatErrorHarness> {
+export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<LegacyFormFieldControlHarness, typeof MatLegacyErrorHarness> {
     // (undocumented)
     protected _datepickerInputControl: AsyncFactoryFn<MatDatepickerInputHarness | null>;
     // (undocumented)
     protected _dateRangeInputControl: AsyncFactoryFn<MatDateRangeInputHarness | null>;
     // (undocumented)
-    protected _errorHarness: typeof MatErrorHarness;
+    protected _errorHarness: typeof MatLegacyErrorHarness;
     // (undocumented)
     protected _errors: AsyncFactoryFn<TestElement[]>;
     getAppearance(): Promise<'legacy' | 'standard' | 'fill' | 'outline'>;
