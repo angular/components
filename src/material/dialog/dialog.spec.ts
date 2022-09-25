@@ -119,6 +119,7 @@ describe('MatDialog', () => {
     viewContainerFixture.detectChanges();
     const dialogContainerElement = overlayContainerElement.querySelector('mat-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+    expect(dialogContainerElement.getAttribute('aria-modal')).toBe('true');
   });
 
   it('should open a dialog with a template', () => {
@@ -139,6 +140,7 @@ describe('MatDialog', () => {
 
     const dialogContainerElement = overlayContainerElement.querySelector('mat-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+    expect(dialogContainerElement.getAttribute('aria-modal')).toBe('true');
 
     dialogRef.close();
   });
