@@ -258,6 +258,8 @@ export class MatFormField
   _hasIconSuffix = false;
   _hasTextSuffix = false;
 
+  // empty
+
   // Unique id for the internal form field label.
   readonly _labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
 
