@@ -216,6 +216,9 @@ export class MatChip
   /** Reference to the MatRipple instance of the chip. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
+  /** Action receiving the primary set of user interactions. */
+  @ViewChild(MatChipAction) primaryAction: MatChipAction;
+
   constructor(
     public _changeDetectorRef: ChangeDetectorRef,
     elementRef: ElementRef<HTMLElement>,
@@ -242,9 +245,6 @@ export class MatChip
     this._monitorFocus();
     this.color = _defaultOptions?.color;
   }
-
-  /** Action receiving the primary set of user interactions. */
-  @ViewChild(MatChipAction) primaryAction: MatChipAction;
 
   ngAfterViewInit() {
     this._textElement = this._elementRef.nativeElement.querySelector('.mat-mdc-chip-action-label')!;
