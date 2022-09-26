@@ -15,7 +15,6 @@ import {
 
 describe('MDC-based MatChip', () => {
   let fixture: ComponentFixture<any>;
-  let fixtureBasicChip: ComponentFixture<BasicChip>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChip;
@@ -88,6 +87,34 @@ describe('MDC-based MatChip', () => {
         .withContext('Expected basic chip ripples to be disabled.')
         .toBe(true);
     });
+
+    it('can default the color via MAT_CHIPS_DEFAULT_OPTIONS provider', () => {
+      fixture = TestBed.createComponent(BasicChip);
+      fixture.detectChanges();
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipNativeElement = chipDebugElement.nativeElement;
+      expect(chipNativeElement.classList).toContain('mat-primary');
+
+      fixture.destroy();
+
+      TestBed.resetTestingModule()
+        .configureTestingModule({
+          imports: [MatChipsModule],
+          declarations: [BasicChip],
+          providers: [
+            {
+              provide: MAT_CHIPS_DEFAULT_OPTIONS,
+              useValue: {color: undefined} as MatChipsDefaultOptions,
+            },
+          ],
+        })
+        .compileComponents();
+      fixture = TestBed.createComponent(BasicChip);
+      fixture.detectChanges();
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipNativeElement = chipDebugElement.nativeElement;
+      expect(chipNativeElement.classList).not.toContain('mat-primary');
+    });
   });
 
   describe('MatChip', () => {
@@ -97,9 +124,6 @@ describe('MDC-based MatChip', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(SingleChip);
       fixture.detectChanges();
-
-      fixtureBasicChip = TestBed.createComponent(BasicChip);
-      fixtureBasicChip.detectChanges();
 
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
@@ -136,32 +160,6 @@ describe('MDC-based MatChip', () => {
 
       expect(chipNativeElement.classList).not.toContain('mat-primary');
       expect(chipNativeElement.classList).toContain('mat-warn');
-    });
-
-    it('can default the color via MAT_CHIPS_DEFAULT_OPTIONS provider', () => {
-      let basicChipDebugElement = fixtureBasicChip.debugElement.query(By.directive(MatChip))!;
-      let basicChipNativeElement = basicChipDebugElement.nativeElement;
-      expect(basicChipNativeElement.classList).toContain('mat-primary');
-
-      fixtureBasicChip.destroy();
-
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatChipsModule],
-          declarations: [BasicChip],
-          providers: [
-            {
-              provide: MAT_CHIPS_DEFAULT_OPTIONS,
-              useValue: {color: undefined} as MatChipsDefaultOptions,
-            },
-          ],
-        })
-        .compileComponents();
-      fixtureBasicChip = TestBed.createComponent(BasicChip);
-      fixtureBasicChip.detectChanges();
-      basicChipDebugElement = fixtureBasicChip.debugElement.query(By.directive(MatChip))!;
-      basicChipNativeElement = basicChipDebugElement.nativeElement;
-      expect(basicChipNativeElement.classList).not.toContain('mat-primary');
     });
 
     it('allows removal', () => {
