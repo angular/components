@@ -54,8 +54,6 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<FormFieldContr
     protected _dateRangeInputControl: AsyncFactoryFn<MatDateRangeInputHarness | null>;
     // (undocumented)
     protected _errorHarness: typeof MatErrorHarness;
-    // (undocumented)
-    protected _errors: AsyncFactoryFn<TestElement[]>;
     getAppearance(): Promise<'fill' | 'outline'>;
     hasLabel(): Promise<boolean>;
     // (undocumented)
@@ -86,8 +84,6 @@ export abstract class _MatFormFieldHarnessBase<ControlHarness extends MatFormFie
     protected abstract _dateRangeInputControl: AsyncFactoryFn<ControlHarness | null>;
     // (undocumented)
     protected abstract _errorHarness: ErrorType;
-    // (undocumented)
-    protected abstract _errors: AsyncFactoryFn<TestElement[]>;
     abstract getAppearance(): Promise<string>;
     getControl(): Promise<ControlHarness | null>;
     getControl<X extends MatFormFieldControlHarness>(type: ComponentHarnessConstructor<X>): Promise<X | null>;

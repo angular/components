@@ -38,7 +38,6 @@ export abstract class _MatFormFieldHarnessBase<
   protected abstract _prefixContainer: AsyncFactoryFn<TestElement | null>;
   protected abstract _suffixContainer: AsyncFactoryFn<TestElement | null>;
   protected abstract _label: AsyncFactoryFn<TestElement | null>;
-  protected abstract _errors: AsyncFactoryFn<TestElement[]>;
   protected abstract _hints: AsyncFactoryFn<TestElement[]>;
   protected abstract _inputControl: AsyncFactoryFn<ControlHarness | null>;
   protected abstract _selectControl: AsyncFactoryFn<ControlHarness | null>;
@@ -131,8 +130,8 @@ export abstract class _MatFormFieldHarnessBase<
 
   /** Gets error messages which are currently displayed in the form-field. */
   async getTextErrors(): Promise<string[]> {
-    const errors = await this._errors();
-    return parallel(() => errors.map(e => e.text()));
+    const errors = await this.getErrors();
+    return parallel(() => errors.map(e => e.getText()));
   }
 
   /** Gets all of the error harnesses in the form field. */
@@ -255,7 +254,6 @@ export class MatFormFieldHarness extends _MatFormFieldHarnessBase<
   protected _prefixContainer = this.locatorForOptional('.mat-mdc-form-field-text-prefix');
   protected _suffixContainer = this.locatorForOptional('.mat-mdc-form-field-text-suffix');
   protected _label = this.locatorForOptional('.mdc-floating-label');
-  protected _errors = this.locatorForAll('.mat-mdc-form-field-error');
   protected _hints = this.locatorForAll('.mat-mdc-form-field-hint');
   protected _inputControl = this.locatorForOptional(MatInputHarness);
   protected _selectControl = this.locatorForOptional(MatSelectHarness);
