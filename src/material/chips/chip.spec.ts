@@ -251,15 +251,6 @@ class SingleChip {
 }
 
 @Component({
-  template: `
-    <mat-chip>{{ name }}</mat-chip>
-  `,
-})
-class DefaultChip {
-  name = 'test';
-}
-
-@Component({
   template: `<mat-basic-chip>Hello</mat-basic-chip>`,
 })
 class BasicChip {}
