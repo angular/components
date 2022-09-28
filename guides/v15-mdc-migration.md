@@ -593,8 +593,6 @@ TODO(mmalerba): link to density docs once they exist.
 
 * Background color is opaque instead of slightly transparent. This improves accessibility.
 
-* Default font-size is `10px` instead of `12px`.
-
 * Line height is `normal` instead of `16px`.
 
 * Text overflow has changed from `ellipsis` to `clip`.
