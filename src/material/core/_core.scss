@@ -3,7 +3,6 @@
 // Core styles that can be used to apply material design treatments to any element.
 @use './ripple/ripple';
 @use './focus-indicators/private';
-@use './typography/all-typography';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 // TODO: Remove the `$exclude-typography` parameter after all internal clients migrated
