@@ -56,7 +56,10 @@ export abstract class MatListBase {
   }
   private _disableRipple: boolean = false;
 
-  /** Whether all list items are disabled. */
+  /**
+   * Whether the entire list is disabled. When disabled, the list itself and each of its list items
+   * are disabled.
+   */
   @Input()
   get disabled(): boolean {
     return this._disabled;
