@@ -597,7 +597,7 @@ TODO(mmalerba): link to density docs once they exist.
 
 * Line height is `normal` instead of `16px`.
 
-* Text overflow has changed from `ellipsis` to `clip`.
+* Text overflow is `ellipsis` instead of `clip`.
 
 * There is a new minimum width of `40px`.
 
