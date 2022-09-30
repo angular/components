@@ -446,9 +446,9 @@ TODO(mmalerba): link to density docs once they exist.
 
 ### Progress Bar
 
-* Hiding the bar with `visibility: hidden` will not hide all internal elements because they apply
-  a `visibility: visible` style. Instead, style it with `opacity: 0` or `display: none`, or remove
-  it completely with `ngIf`.
+* Visibility on internal elements is now set to `visible`. Setting `visibility: hidden` will no
+  longer hide all internal elements. Instead, style it with `opacity: 0`, `display: none`, or
+  remove it completely with `ngIf`.
 
 * Height is always set to 4px and does not get shorter or taller using `height` styles.
 
