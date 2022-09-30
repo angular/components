@@ -89,17 +89,6 @@ jobs:
     - browser-tools/install-browser-tools
     - run: yarn test --watch false --progress=false
 
-  audit_pages_for_a11y:
-    <<: *job_defaults
-    steps:
-      - attach_workspace:
-          at: *workspace_location
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run: yarn test:audit:a11y:ci
-
   lighthouse_audits:
     <<: *job_defaults
     steps:
@@ -118,9 +107,6 @@ workflows:
     - lint
     - build
     - test
-    - audit_pages_for_a11y:
-        requires:
-          - build
     - lighthouse_audits:
         requires:
           - build

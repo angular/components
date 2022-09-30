@@ -23,7 +23,27 @@
 const sh = require('shelljs');
 sh.set('-e');
 
+const lightServer = require('light-server');
+
 // Constants
+
+// Individual page a11y scores
+const MIN_A11Y_SCORES_PER_PAGE = {
+  '' : 100,
+  'components/categories' : 91,
+  'cdk/categories' : 91,
+  'guides' : 100,
+  'guide/creating-a-custom-form-field-control' : 97,
+  'guide/getting-started' : 96,
+  'cdk/a11y/overview' : 85,
+  'cdk/a11y/api' : 89,
+  'cdk/a11y/examples' : 85,
+  'components/button/overview' : 92,
+  'components/button/api' : 89,
+  'components/button/examples' : 90,
+};
+
+
 /**
  * @type {{minScores: {performance: number, accessibility: number, 'best-practices': number, pwa: number, seo: number}, url: string}[]}
  */
@@ -37,7 +57,11 @@ const MIN_SCORES_PER_PAGE = [
       'best-practices': 100,
       'accessibility': 100
     }
-  }
+  },
+  ...Object.entries(MIN_A11Y_SCORES_PER_PAGE).map(([url, accessibility]) => ({
+    url,
+    minScores: {accessibility}
+  }))
 ];
 
 /**
@@ -55,18 +79,52 @@ function formatScores(scores) {
   return formattedScores;
 }
 
+
+// Launch the light-server to run tests again
+const bundle = process.argv[2];
+const delay = process.argv[3];
+
+const bind = 'localhost';
+const port = 4200;
+const origin = `http://${bind}:${port}`;
+
+console.log('Launch audit HTTP server...');
+
+lightServer({
+  port,
+  bind,
+  serve: bundle,
+  quiet: true,
+  noReload: true,
+  historyindex: '/index.html',
+
+  // Defaults from .bin/light-server
+  interval: 500,
+  delay: 0,
+  proxypaths: ['/'],
+  watchexps: []
+})
+.start()
+
 // Run the a11y audit against the above pages
 const lighthouseAuditCmd = `"${process.execPath}" "${__dirname}/lighthouse-audit"`;
-const origin = process.argv[2];
-const delay = process.argv[3];
-if (delay) {
-  setTimeout(_main, delay);
-} else {
-  _main();
-}
 
-function _main() {
-  MIN_SCORES_PER_PAGE.map((urlsAndScores) => {
-    sh.exec(`${lighthouseAuditCmd} ${origin}/${urlsAndScores.url} ${formatScores(urlsAndScores.minScores)}`);
-  });
-}
+setTimeout(async function() {
+  console.log('Run audit tests...');
+
+  try {
+    for (const {url, minScores} of MIN_SCORES_PER_PAGE) {
+      await new Promise((resolve, reject) => {
+        const cp = sh.exec(`${lighthouseAuditCmd} ${origin}/${url} ${formatScores(minScores)}`, {async: true});
+
+        cp.on('error', reject);
+        cp.on('exit', err => (err ? reject : resolve)(err));
+      });
+    }
+
+    process.exit(0);
+  } catch(e) {
+    console.log('Audit failure: ', e);
+    process.exit(1);
+  }
+}, delay);
