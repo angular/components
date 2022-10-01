@@ -150,24 +150,31 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     // These listeners don't update any data bindings so we bind them outside
     // of the NgZone to prevent Angular from needlessly running change detection.
     this._ngZone.runOutsideAngular(() => {
-      this._sliderInput._hostElement.addEventListener('mousemove', this._onMouseMove);
-      this._sliderInput._hostElement.addEventListener('mousedown', this._onDragStart);
-      this._sliderInput._hostElement.addEventListener('mouseup', this._onDragEnd);
-      this._sliderInput._hostElement.addEventListener('mouseleave', this._onMouseLeave);
+      this._sliderInput._hostElement.addEventListener('pointermove', this._onPointerMove);
+      this._sliderInput._hostElement.addEventListener('pointerdown', this._onDragStart);
+      this._sliderInput._hostElement.addEventListener('pointerup', this._onDragEnd);
+      this._sliderInput._hostElement.addEventListener('pointerleave', this._onMouseLeave);
       this._sliderInput._hostElement.addEventListener('focus', this._onFocus);
       this._sliderInput._hostElement.addEventListener('blur', this._onBlur);
     });
   }
 
   ngOnDestroy() {
-    this._elementRef.nativeElement.removeEventListener('mouseleave', this._onMouseLeave);
+    this._ngZone.runOutsideAngular(() => {
+      this._sliderInput._hostElement.removeEventListener('pointermove', this._onPointerMove);
+      this._sliderInput._hostElement.removeEventListener('pointerdown', this._onDragStart);
+      this._sliderInput._hostElement.removeEventListener('pointerup', this._onDragEnd);
+      this._sliderInput._hostElement.removeEventListener('pointerleave', this._onMouseLeave);
+      this._sliderInput._hostElement.removeEventListener('focus', this._onFocus);
+      this._sliderInput._hostElement.removeEventListener('blur', this._onBlur);
+    });
   }
 
   /********************/
   /** Event listeners */
   /********************/
 
-  private _onMouseMove = (event: MouseEvent): void => {
+  private _onPointerMove = (event: MouseEvent): void => {
     if (this._sliderInput._isFocused) {
       return;
     }
@@ -351,11 +358,11 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     '[attr.aria-valuetext]': '_valuetext',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
-    '(mousedown)': '_onMouseDown($event)',
-    '(mousemove)': '_onMouseMove($event)',
+    '(pointerdown)': '_onPointerDown($event)',
+    '(pointermove)': '_onPointerMove($event)',
     // TODO: Consider using a global event listener instead.
     // Reason: I have found a semi-consistent way to mouse up without triggering this event.
-    '(mouseup)': '_onMouseUp()',
+    '(pointerup)': '_onPointerUp()',
     '(blur)': '_onBlur()',
   },
 })
@@ -581,7 +588,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._slider.disabled = this._formControl!.disabled;
   }
 
-  _onMouseDown(event: MouseEvent): void {
+  _onPointerDown(event: MouseEvent): void {
     if (event.button !== 0) {
       return;
     }
@@ -596,7 +603,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
   }
 
-  _onMouseMove(event: MouseEvent): void {
+  _onPointerMove(event: MouseEvent): void {
     // again, does nothing if a step is defined because
     // we want the value to snap to the values on input.
     if (!this._slider.step && this._isActive) {
@@ -604,7 +611,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
   }
 
-  _onMouseUp(): void {
+  _onPointerUp(): void {
     this._isActive = false;
   }
 
@@ -616,9 +623,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   _calcTranslateXByValue(): number {
-    if (!this._slider._inputOffset) {
-      console.trace();
-    }
     if (this._slider._isRtl) {
       return (1 - this.percentage) * this._slider._cachedTrackWidth + this._slider._inputOffset;
     }
@@ -754,9 +758,9 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     this._updateSibling();
   }
 
-  override _onMouseMove(event: MouseEvent): void {
-    this._updateZIndex(event);
-    super._onMouseMove(event);
+  override _onPointerMove(event: MouseEvent): void {
+    this._updateZIndex(event.clientX);
+    super._onPointerMove(event);
     if (!this._slider.step && this._isActive) {
       this._updateSibling();
     }
@@ -818,13 +822,13 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     sibling._updateWidth();
   }
 
-  private _updateZIndex(event: MouseEvent): void {
+  _updateZIndex(clientX: number): void {
     const sibling = this.getSibling();
     if (!sibling) {
       return;
     }
-    const dx1 = Math.abs(event.clientX - this._slider._cachedLeft - this.translateX);
-    const dx2 = Math.abs(event.clientX - this._slider._cachedLeft - sibling.translateX);
+    const dx1 = Math.abs(clientX - this._slider._cachedLeft - this.translateX);
+    const dx2 = Math.abs(clientX - this._slider._cachedLeft - sibling.translateX);
     if (dx1 < dx2) {
       this._zIndex = '1';
       sibling._zIndex = 'auto';

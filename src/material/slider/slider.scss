@@ -26,7 +26,8 @@ $mat-slider-horizontal-margin: 8px !default;
   margin: 0;
   min-width: $mat-slider-min-size;
 
-  .mdc-slider__track {
+  .mdc-slider__track,
+  .mdc-slider__thumb {
     pointer-events: none;
   }
 
