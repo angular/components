@@ -1,7 +1,6 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '@material/slider/slider' as mdc-slider;
 @use '@material/slider/slider-theme' as mdc-slider-theme;
-@use '../core/mdc-helpers/mdc-helpers';
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
   @include mdc-slider.static-styles($query: mdc-helpers.$mdc-base-styles-query);

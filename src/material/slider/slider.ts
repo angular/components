@@ -174,7 +174,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Event listeners */
   /********************/
 
-  private _onPointerMove = (event: MouseEvent): void => {
+  private _onPointerMove = (event: PointerEvent): void => {
     if (this._sliderInput._isFocused) {
       return;
     }
@@ -327,7 +327,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Helper functions */
   /*********************/
 
-  private _isSliderThumbHovered(event: MouseEvent, rect: DOMRect) {
+  private _isSliderThumbHovered(event: PointerEvent, rect: DOMRect) {
     const radius = rect.width / 2;
     const centerX = rect.x + radius;
     const centerY = rect.y + radius;
@@ -588,7 +588,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._slider.disabled = this._formControl!.disabled;
   }
 
-  _onPointerDown(event: MouseEvent): void {
+  _onPointerDown(event: PointerEvent): void {
     if (event.button !== 0) {
       return;
     }
@@ -599,15 +599,15 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // does nothing if a step is defined because we
     // want the value to snap to the values on input.
     if (!this._slider.step) {
-      this._updateThumbUIByMouseEvent(event, {withAnimation: true});
+      this._updateThumbUIByPointerEvent(event, {withAnimation: true});
     }
   }
 
-  _onPointerMove(event: MouseEvent): void {
+  _onPointerMove(event: PointerEvent): void {
     // again, does nothing if a step is defined because
     // we want the value to snap to the values on input.
     if (!this._slider.step && this._isActive) {
-      this._updateThumbUIByMouseEvent(event);
+      this._updateThumbUIByPointerEvent(event);
     }
   }
 
@@ -629,7 +629,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     return this.percentage * this._slider._cachedTrackWidth + this._slider._inputOffset;
   }
 
-  _calcTranslateXByMouseEvent(event: MouseEvent): number {
+  _calcTranslateXByPointerEvent(event: PointerEvent): number {
     return event.pageX - this._slider._cachedLeft;
   }
 
@@ -642,8 +642,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._updateThumbUI(options);
   }
 
-  _updateThumbUIByMouseEvent(event: MouseEvent, options?: {withAnimation: boolean}): void {
-    this.translateX = this._clamp(this._calcTranslateXByMouseEvent(event));
+  _updateThumbUIByPointerEvent(event: PointerEvent, options?: {withAnimation: boolean}): void {
+    this.translateX = this._clamp(this._calcTranslateXByPointerEvent(event));
     this._updateThumbUI(options);
   }
 
@@ -758,7 +758,45 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     this._updateSibling();
   }
 
-  override _onPointerMove(event: MouseEvent): void {
+  override _onPointerDown(event: PointerEvent): void {
+    this._updateWidthActive();
+    this.__sibling?._updateWidthActive();
+    super._onPointerDown(event);
+    if (event.pointerType !== 'touch') {
+      return;
+    }
+
+    const xPos = event.pageX - this._slider._cachedLeft - this._slider._rippleRadius;
+    const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
+    const percentage = xPos / width;
+
+    // To ensure the percentage is rounded to two decimals.
+    const fixedPercentage = Math.round(percentage * 100) / 100;
+
+    const value = this._slider._isRtl
+      ? (1 - fixedPercentage) * (this._slider.max - this._slider.min)
+      : fixedPercentage * (this._slider.max - this._slider.min);
+
+    // Note that this function gets triggered before the actual value of the
+    // slider is updated. This means if we were to set the value here, it
+    // would immediately be overwritten. Using setTimeout ensures the setting
+    // of the value happens after the value has been updated by the
+    // pointerdown event.
+    setTimeout(() => (this.value = value), 0);
+  }
+
+  override _onPointerUp(): void {
+    super._onPointerUp();
+
+    // Similar to in _onPointerDown, except this
+    // setTimeout is only necessary for Firefox.
+    setTimeout(() => {
+      this._updateWidthInactive();
+      this.__sibling?._updateWidthInactive();
+    }, 0);
+  }
+
+  override _onPointerMove(event: PointerEvent): void {
     this._updateZIndex(event.clientX);
     super._onPointerMove(event);
     if (!this._slider.step && this._isActive) {
@@ -774,7 +812,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     this._updateStaticStyles();
     this._updateThumbUIByValue();
     this._updateMinMax();
-    this._updateWidth();
+    this._updateWidthInactive();
     this._updateSibling();
   }
 
@@ -792,7 +830,8 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     }
   }
 
-  _updateWidth(): void {
+  /** TODO(wagnermaciel): describe the difference between inactive and active width and why we need it. */
+  _updateWidthActive(): void {
     const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
     const maxWidth = this._slider._cachedWidth - this._slider._inputPadding * 2 - minWidth;
     const percentage =
@@ -801,6 +840,30 @@ export class MatSliderRangeThumb extends MatSliderThumb {
         : 1;
     const width = maxWidth * percentage + minWidth;
     this._styleWidth = `${width}px`;
+    this._paddingStyle = `0 ${this._slider._inputPadding}px`;
+  }
+
+  /** TODO(wagnermaciel): describe the difference between inactive and active width and why we need it. */
+  _updateWidthInactive(): void {
+    const sibling = this.getSibling();
+    if (!sibling) {
+      return;
+    }
+    const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
+    const maxWidth = this._slider._cachedWidth - minWidth;
+    const midValue = this._isEndThumb
+      ? this.value - (this.value - sibling.value) / 2
+      : this.value + (sibling.value - this.value) / 2;
+
+    const _percentage = this._isEndThumb
+      ? (this.max - midValue) / (this._slider.max - this._slider.min)
+      : (midValue - this.min) / (this._slider.max - this._slider.min);
+
+    const percentage = this._slider.min < this._slider.max ? _percentage : 1;
+
+    const width = maxWidth * percentage;
+    this._styleWidth = `${width}px`;
+    this._paddingStyle = '0px';
   }
 
   _updateStaticStyles(): void {
@@ -819,7 +882,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
       return;
     }
     sibling._updateMinMax();
-    sibling._updateWidth();
+    sibling._updateWidthActive();
   }
 
   _updateZIndex(clientX: number): void {
@@ -957,8 +1020,8 @@ export class MatSlider
     endInput.min = Math.max(min.new, startInput.value);
     startInput.max = Math.min(endInput.max, endInput.value);
 
-    startInput._updateWidth();
-    endInput._updateWidth();
+    startInput._updateWidthInactive();
+    endInput._updateWidthInactive();
 
     min.new < min.old
       ? this._onTranslateXChangeBySideEffect(endInput, startInput)
@@ -1019,8 +1082,8 @@ export class MatSlider
     startInput.max = Math.min(max.new, endInput.value);
     endInput.min = startInput.value;
 
-    endInput._updateWidth();
-    startInput._updateWidth();
+    endInput._updateWidthInactive();
+    startInput._updateWidthInactive();
 
     max.new > max.old
       ? this._onTranslateXChangeBySideEffect(startInput, endInput)
@@ -1087,8 +1150,8 @@ export class MatSlider
     endInput.min = Math.max(this._min, startInput.value);
     startInput.max = Math.min(this._max, endInput.value);
 
-    startInput._updateWidth();
-    endInput._updateWidth();
+    startInput._updateWidthInactive();
+    endInput._updateWidthInactive();
 
     endInput.value < prevStartValue
       ? this._onTranslateXChangeBySideEffect(startInput, endInput)
@@ -1287,8 +1350,8 @@ export class MatSlider
     endInput._updateStaticStyles();
     startInput._updateStaticStyles();
 
-    endInput._updateWidth();
-    startInput._updateWidth();
+    endInput._updateWidthInactive();
+    startInput._updateWidthInactive();
 
     endInput._updateThumbUIByValue();
     startInput._updateThumbUIByValue();
@@ -1394,14 +1457,25 @@ export class MatSlider
   }
 
   _onResize(): void {
-    const eInput = this._getInput(Thumb.END);
-    const sInput = this._getInput(Thumb.START);
+    if (this._isRange) {
+      const eInput = this._getInput(Thumb.END) as MatSliderRangeThumb;
+      const sInput = this._getInput(Thumb.START) as MatSliderRangeThumb;
 
-    eInput?._updateThumbUIByValue();
-    sInput?._updateThumbUIByValue();
+      eInput._updateThumbUIByValue();
+      sInput._updateThumbUIByValue();
 
-    eInput?._updateHiddenUI();
-    sInput?._updateHiddenUI();
+      eInput._updateHiddenUI();
+      sInput._updateHiddenUI();
+
+      eInput._updateWidthInactive();
+      sInput._updateWidthInactive();
+    } else {
+      const eInput = this._getInput(Thumb.END);
+      if (eInput) {
+        eInput._updateThumbUIByValue();
+        eInput._updateHiddenUI();
+      }
+    }
 
     this._updateTickMarkUI();
     this._updateTickMarkTrackUI();
