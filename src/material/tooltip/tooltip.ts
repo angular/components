@@ -378,7 +378,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
   show(delay: number = this.showDelay): void {
     if (this.disabled || !this.message || this._isTooltipVisible()) {
-      this._tooltipInstance?._cancelPendingHide();
+      this._tooltipInstance?._cancelPendingAnimations();
       return;
     }
 
@@ -406,6 +406,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
       if (instance.isVisible()) {
         instance.hide(delay);
       } else {
+        instance._cancelPendingAnimations();
         this._detach();
       }
     }
@@ -924,8 +925,7 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   }
 
   ngOnDestroy() {
-    clearTimeout(this._showTimeoutId);
-    clearTimeout(this._hideTimeoutId);
+    this._cancelPendingAnimations();
     this._onHide.complete();
     this._triggerElement = null!;
   }
@@ -952,7 +952,11 @@ export abstract class _TooltipComponentBase implements OnDestroy {
 
   _handleMouseLeave({relatedTarget}: MouseEvent) {
     if (!relatedTarget || !this._triggerElement.contains(relatedTarget as Node)) {
-      this.hide(this._mouseLeaveHideDelay);
+      if (this.isVisible()) {
+        this.hide(this._mouseLeaveHideDelay);
+      } else {
+        this._finalizeAnimation(false);
+      }
     }
   }
 
@@ -970,10 +974,11 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     }
   }
 
-  /** Cancels any pending hiding sequences. */
-  _cancelPendingHide() {
+  /** Cancels any pending animation sequences. */
+  _cancelPendingAnimations() {
+    clearTimeout(this._showTimeoutId);
     clearTimeout(this._hideTimeoutId);
-    this._hideTimeoutId = undefined;
+    this._showTimeoutId = this._hideTimeoutId = undefined;
   }
 
   /** Handles the cleanup after an animation has finished. */
