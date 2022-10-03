@@ -172,28 +172,23 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
   ) {
     const sourceFile = specifierLiteral.getSourceFile();
 
-    // Iterate through all activated migrators and check if the import can be migrated.
-    for (const migrator of this.upgradeData) {
-      if (importClause && importClause.namedBindings) {
-        const importSpecifiers = (importClause.namedBindings as ts.NamedImports).elements;
-        importSpecifiers.forEach(importSpecifer => {
-          const newImportSpecifier =
-            migrator.runtime?.updateImportSpecifierWithPossibleAlias(importSpecifer);
+    // Find the migrator for this import path and check if the import can be migrated.
+    const migrator = this.upgradeData.find(
+      m => m.runtime?.oldImportModule === specifierLiteral.text,
+    );
+    if (migrator && importClause && importClause.namedBindings) {
+      const importSpecifiers = (importClause.namedBindings as ts.NamedImports).elements;
+      importSpecifiers.forEach(importSpecifer => {
+        const newImportSpecifier =
+          migrator.runtime?.updateImportSpecifierWithPossibleAlias(importSpecifer);
 
-          if (newImportSpecifier) {
-            this._printAndUpdateNode(sourceFile, importSpecifer, newImportSpecifier);
-          }
-        });
-      }
+        if (newImportSpecifier) {
+          this._printAndUpdateNode(sourceFile, importSpecifer, newImportSpecifier);
+        }
+      });
 
-      const newModuleSpecifier = migrator.runtime?.updateModuleSpecifier(specifierLiteral) ?? null;
-
-      if (newModuleSpecifier !== null) {
-        this._printAndUpdateNode(sourceFile, specifierLiteral, newModuleSpecifier);
-
-        // If the import has been replaced, break the loop as no others can match.
-        break;
-      }
+      const newModuleSpecifier = migrator.runtime!.updateModuleSpecifier(specifierLiteral)!;
+      this._printAndUpdateNode(sourceFile, specifierLiteral, newModuleSpecifier);
     }
   }
 

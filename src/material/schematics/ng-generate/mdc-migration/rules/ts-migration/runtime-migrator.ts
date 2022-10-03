@@ -12,53 +12,11 @@ import {ImportReplacement, REPLACEMENTS} from './import-replacements';
 export class RuntimeMigrator {
   oldImportModule: string;
   newImportModule: string;
-  importSpecifierReplacements: {old: string; new: string}[];
 
   constructor(component: string) {
     const replacements = REPLACEMENTS[component];
     this.oldImportModule = replacements.old;
     this.newImportModule = replacements.new;
-
-    this.importSpecifierReplacements = this.getReplacementsFromComponentName(component);
-
-    replacements.additionalMatModuleNamePrefixes?.forEach(prefix => {
-      this.importSpecifierReplacements = this.importSpecifierReplacements.concat(
-        this.getReplacementsFromComponentName(prefix),
-      );
-    });
-
-    replacements.customReplacements?.forEach(replacement => {
-      this.importSpecifierReplacements = this.importSpecifierReplacements.concat(replacement);
-    });
-
-    console.log(this.importSpecifierReplacements);
-  }
-
-  getReplacementsFromComponentName(componentName: string): ImportReplacement[] {
-    const words = componentName.split('-');
-
-    let firstLetterCapitalizedComponent = '';
-    let capitalizedComponent = '';
-    words.forEach(word => {
-      firstLetterCapitalizedComponent += word[0].toUpperCase() + word.slice(1);
-      capitalizedComponent += word.toUpperCase() + '_';
-    });
-
-    // Remove trailing underscore at the end
-    capitalizedComponent = capitalizedComponent.slice(0, -1);
-
-    const specifierReplacements = [
-      {
-        old: 'MatLegacy' + firstLetterCapitalizedComponent,
-        new: 'Mat' + firstLetterCapitalizedComponent,
-      },
-      {
-        old: 'MAT_LEGACY_' + capitalizedComponent,
-        new: 'MAT_' + capitalizedComponent,
-      },
-    ];
-
-    return specifierReplacements;
   }
 
   updateImportOrExportSpecifier(specifier: ts.Identifier): ts.Identifier | null {
@@ -117,15 +75,8 @@ export class RuntimeMigrator {
   }
 
   private _getNewSpecifier(node: ts.Identifier): string | null {
-    let newImport = null;
-
-    this.importSpecifierReplacements.forEach(replacement => {
-      if (node.text?.match(replacement.old)) {
-        newImport = node.text.replace(replacement.old, replacement.new);
-      }
-    });
-
-    return newImport;
+    const legacyRegex = /legacy_?/i;
+    return legacyRegex.test(node.text) ? node.text.replace(legacyRegex, '') : null;
   }
 
   private _isSingleQuoteLiteral(literal: ts.StringLiteralLike): boolean {
