@@ -23,6 +23,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatTabsModule,
     ReactiveFormsModule,
   ],
+  styleUrls: ['slider-demo.css'],
 })
 export class SliderDemo {
   colorModel: string = 'primary';
