@@ -1,7 +1,7 @@
 import {Component, NgModule, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
+import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatLegacyMenuModule as MatMenuModule} from '@angular/material/legacy-menu';
 import {RouterModule} from '@angular/router';
 import {ThemePickerModule} from '../theme-picker';
 import {VersionPickerModule} from '../version-picker';

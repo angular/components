@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {MatBottomSheet, MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatIconModule} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
+import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
 
 
 @Component({
