@@ -6,9 +6,9 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInput, MatInputModule} from '@angular/material/input';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
+import {MatLegacyInput as MatInput, MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
+import {MatLegacyAutocompleteModule as MatAutocompleteModule} from '@angular/material/legacy-autocomplete';
 import {CommonModule, } from '@angular/common';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 

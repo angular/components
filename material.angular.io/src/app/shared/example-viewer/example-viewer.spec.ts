@@ -3,10 +3,10 @@ import {HttpTestingController} from '@angular/common/http/testing';
 import {NgModule} from '@angular/core';
 import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatInputModule} from '@angular/material/input';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatLegacyAutocompleteModule as MatAutocompleteModule} from '@angular/material/legacy-autocomplete';
+import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
+import {MatLegacySlideToggleModule as MatSlideToggleModule} from '@angular/material/legacy-slide-toggle';
+import {MatLegacySnackBar as MatSnackBar} from '@angular/material/legacy-snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
 
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
@@ -16,7 +16,7 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
 import {ExampleViewer} from './example-viewer';
 import {AutocompleteExamplesModule} from '@angular/components-examples/material/autocomplete';
-import {MatTabGroupHarness} from '@angular/material/tabs/testing';
+import {MatLegacyTabGroupHarness as MatTabGroupHarness} from '@angular/material/legacy-tabs/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 

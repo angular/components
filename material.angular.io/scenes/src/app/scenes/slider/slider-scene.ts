@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, NgModule, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSlider, MatSliderModule} from '@angular/material/slider';
+import {MatLegacySlider as MatSlider, MatLegacySliderModule as MatSliderModule} from '@angular/material/legacy-slider';
 
 
 @Component({

@@ -1,10 +1,19 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 @use '../../app-theme';
 
 // Define the light theme.
-$_primary: mat.define-palette(mat.$deep-purple-palette);
-$_accent:  mat.define-palette(mat.$amber-palette, A200, A100, A400);
-$_theme: mat.define-light-theme($_primary, $_accent);
+$primary: mat.define-palette(mat.$deep-purple-palette);
+$accent:  mat.define-palette(mat.$amber-palette, A200, A100, A400);
+$theme: mat.define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent
+  ),
+  typography: mat.define-typography-config(),
+));
 
-@include mat.all-component-themes($_theme);
-@include app-theme.theme($_theme);
+@include mat.all-legacy-component-themes(map.merge($theme, (
+  typography: mat.define-legacy-typography-config()
+)));
+@include app-theme.theme($theme);

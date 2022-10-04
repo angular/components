@@ -3,9 +3,15 @@
 @use '../../highlightjs/material-dark';
 
 // Define the dark theme.
-$_primary: mat.define-palette(mat.$purple-palette);
-$_accent:  mat.define-palette(mat.$green-palette, A200, A100, A400);
-$_theme: mat.define-dark-theme($_primary, $_accent);
+$primary: mat.define-palette(mat.$purple-palette);
+$accent:  mat.define-palette(mat.$green-palette, A200, A100, A400);
+$theme: mat.define-dark-theme((
+  color: (
+    primary: $primary,
+    accent: $accent
+  ),
+  typography: mat.define-typography-config(),
+));
 
-@include mat.all-component-themes($_theme);
-@include app-theme.theme($_theme);
+@include mat.all-legacy-component-themes($theme);
+@include app-theme.theme($theme);

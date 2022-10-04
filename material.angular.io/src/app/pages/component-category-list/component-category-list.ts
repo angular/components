@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
+import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
 import {ActivatedRoute, Params, RouterModule} from '@angular/router';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 

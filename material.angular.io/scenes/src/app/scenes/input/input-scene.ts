@@ -1,7 +1,7 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
 import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
+import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
