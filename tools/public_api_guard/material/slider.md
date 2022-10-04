@@ -176,9 +176,13 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     // (undocumented)
     _onInput(): void;
     // (undocumented)
-    _onMouseMove(event: MouseEvent): void;
-    // (undocumented)
     _onNgControlValueChange(): void;
+    // (undocumented)
+    _onPointerDown(event: PointerEvent): void;
+    // (undocumented)
+    _onPointerMove(event: PointerEvent): void;
+    // (undocumented)
+    _onPointerUp(): void;
     // (undocumented)
     _right: string;
     // (undocumented)
@@ -189,8 +193,10 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     _updateHiddenUI(): void;
     // (undocumented)
     _updateStaticStyles(): void;
+    _updateWidthActive(): void;
+    _updateWidthInactive(): void;
     // (undocumented)
-    _updateWidth(): void;
+    _updateZIndex(clientX: number): void;
     _zIndex: string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderRangeThumb, "input[matSliderStartThumb], input[matSliderEndThumb]", ["matSliderRangeThumb"], {}, {}, never, never, false, never>;
@@ -204,7 +210,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     blur(): void;
     // (undocumented)
-    _calcTranslateXByMouseEvent(event: MouseEvent): number;
+    _calcTranslateXByPointerEvent(event: PointerEvent): number;
     // (undocumented)
     _calcTranslateXByValue(): number;
     // (undocumented)
@@ -254,13 +260,13 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     _onInput(): void;
     // (undocumented)
-    _onMouseDown(event: MouseEvent): void;
-    // (undocumented)
-    _onMouseMove(event: MouseEvent): void;
-    // (undocumented)
-    _onMouseUp(): void;
-    // (undocumented)
     _onNgControlValueChange(): void;
+    // (undocumented)
+    _onPointerDown(event: PointerEvent): void;
+    // (undocumented)
+    _onPointerMove(event: PointerEvent): void;
+    // (undocumented)
+    _onPointerUp(): void;
     _paddingStyle: string;
     // (undocumented)
     get percentage(): number;
@@ -279,7 +285,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
         withAnimation: boolean;
     }): void;
     // (undocumented)
-    _updateThumbUIByMouseEvent(event: MouseEvent, options?: {
+    _updateThumbUIByPointerEvent(event: PointerEvent, options?: {
         withAnimation: boolean;
     }): void;
     // (undocumented)
