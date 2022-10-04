@@ -605,7 +605,6 @@ describe('MDC-based MatSlider', () => {
     }
 
     it('should show the hover ripple on pointerenter', fakeAsync(() => {
-      console.log(thumbElement);
       expect(isRippleVisible('hover')).toBeFalse();
       pointerenter();
       expect(isRippleVisible('hover')).toBeTrue();

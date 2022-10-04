@@ -849,8 +849,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     if (!sibling) {
       return;
     }
-    const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
-    const maxWidth = this._slider._cachedWidth - minWidth;
+    const maxWidth = this._slider._cachedWidth;
     const midValue = this._isEndThumb
       ? this.value - (this.value - sibling.value) / 2
       : this.value + (sibling.value - this.value) / 2;
