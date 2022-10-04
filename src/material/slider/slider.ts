@@ -1146,6 +1146,11 @@ export class MatSlider
     endInput.step = this._step;
     startInput.step = this._step;
 
+    if (this._platform.SAFARI) {
+      endInput.value = endInput.value;
+      startInput.value = startInput.value;
+    }
+
     endInput.min = Math.max(this._min, startInput.value);
     startInput.max = Math.min(this._max, endInput.value);
 
