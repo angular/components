@@ -88,6 +88,7 @@ export class MatSliderEvent {
   styleUrls: ['slider-thumb.css'],
   host: {
     'class': 'mdc-slider__thumb mat-mdc-slider-visual-thumb',
+    '[class.mdc-slider__thumb--focused]': '_sliderInput?._isFocused',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -134,7 +135,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   _isValueIndicatorVisible: boolean = false;
 
   constructor(
-    private readonly _cdr: ChangeDetectorRef,
+    readonly _cdr: ChangeDetectorRef,
     private readonly _ngZone: NgZone,
     @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
     private readonly _elementRef: ElementRef<HTMLElement>,
@@ -361,6 +362,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     // Reason: I have found a semi-consistent way to mouse up without triggering this event.
     '(pointerup)': '_onPointerUp()',
     '(blur)': '_onBlur()',
+    '(focus)': '_onFocus()',
   },
 })
 export class MatSliderThumb implements OnInit, OnDestroy {
@@ -474,6 +476,12 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   /** Whether the input is currently focused (either by tab or after clicking). */
   _isFocused: boolean = false;
 
+  /** Used to relay updates to _isFocused to the slider visual thumbs. */
+  private _setIsFocused(v: boolean): void {
+    this._isFocused = v;
+    this._slider._getThumb(this.thumbPosition)?._cdr.markForCheck();
+  }
+
   /**
    * Whether the initial value has been set.
    * This exists because the initial value cannot be immediately set because the min and max
@@ -554,7 +562,11 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   _onBlur(): void {
     this._isActive = false;
-    this._isFocused = false;
+    this._setIsFocused(false);
+  }
+
+  _onFocus(): void {
+    this._setIsFocused(true);
   }
 
   _onChange(): void {
@@ -591,7 +603,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
 
     this._isActive = true;
-    this._isFocused = true;
+    this._setIsFocused(true);
 
     // does nothing if a step is defined because we
     // want the value to snap to the values on input.
