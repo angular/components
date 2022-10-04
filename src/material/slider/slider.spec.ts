@@ -8,12 +8,7 @@
 
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {
-  dispatchEvent,
-  dispatchFakeEvent,
-  dispatchPointerEvent,
-  dispatchTouchEvent,
-} from '../../cdk/testing/private';
+import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '../../cdk/testing/private';
 import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -90,48 +85,48 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should update by click', () => {
-      setValueByClick(slider, input, 25, platform.IOS);
+      setValueByClick(slider, input, 25);
       checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
 
-      setValueByClick(slider, input, 50, platform.IOS);
+      setValueByClick(slider, input, 50);
       checkInput(input, {min: 0, max: 100, value: 50, step: 0, translateX: 150});
 
-      setValueByClick(slider, input, 75, platform.IOS);
+      setValueByClick(slider, input, 75);
       checkInput(input, {min: 0, max: 100, value: 75, step: 0, translateX: 225});
 
-      setValueByClick(slider, input, 100, platform.IOS);
+      setValueByClick(slider, input, 100);
       checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     });
 
     it('should update by slide', () => {
-      slideToValue(slider, input, 25, platform.IOS);
+      slideToValue(slider, input, 25);
       checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
 
-      slideToValue(slider, input, 50, platform.IOS);
+      slideToValue(slider, input, 50);
       checkInput(input, {min: 0, max: 100, value: 50, step: 0, translateX: 150});
 
-      slideToValue(slider, input, 75, platform.IOS);
+      slideToValue(slider, input, 75);
       checkInput(input, {min: 0, max: 100, value: 75, step: 0, translateX: 225});
 
-      slideToValue(slider, input, 100, platform.IOS);
+      slideToValue(slider, input, 100);
       checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     });
 
     it('should not slide before the track', () => {
-      slideToValue(slider, input, -10, platform.IOS);
+      slideToValue(slider, input, -10);
       expect(input.value).toBe(0);
       checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
     });
 
     it('should not slide past the track', () => {
-      slideToValue(slider, input, 110, platform.IOS);
+      slideToValue(slider, input, 110);
       expect(input.value).toBe(100);
       checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     });
 
     it('should not break when the page layout changes', () => {
       slider._elementRef.nativeElement.style.marginLeft = '100px';
-      setValueByClick(slider, input, 25, platform.IOS);
+      setValueByClick(slider, input, 25);
       checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
       slider._elementRef.nativeElement.style.marginLeft = 'initial';
     });
@@ -162,62 +157,62 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should update by start input click', () => {
-      setValueByClick(slider, startInput, 25, platform.IOS);
+      setValueByClick(slider, startInput, 25);
       checkInput(startInput, {min: 0, max: 100, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 100, translateX: 300});
     });
 
     it('should update by end input click', () => {
-      setValueByClick(slider, endInput, 75, platform.IOS);
+      setValueByClick(slider, endInput, 75);
       checkInput(startInput, {min: 0, max: 75, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 75, translateX: 225});
     });
 
     it('should update by start thumb slide', () => {
-      slideToValue(slider, startInput, 75, platform.IOS);
+      slideToValue(slider, startInput, 75);
       checkInput(startInput, {min: 0, max: 100, value: 75, translateX: 225});
       checkInput(endInput, {min: 75, max: 100, value: 100, translateX: 300});
     });
 
     it('should update by end thumb slide', () => {
-      slideToValue(slider, endInput, 25, platform.IOS);
+      slideToValue(slider, endInput, 25);
       checkInput(startInput, {min: 0, max: 25, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 25, translateX: 75});
     });
 
     it('should not allow start thumb to slide before the track', () => {
-      slideToValue(slider, startInput, -10, platform.IOS);
+      slideToValue(slider, startInput, -10);
       checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 100, translateX: 300});
     });
 
     it('should not allow end thumb to slide past the track', () => {
-      slideToValue(slider, endInput, 110, platform.IOS);
+      slideToValue(slider, endInput, 110);
       checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 100, translateX: 300});
     });
 
     it('should not allow start thumb to slide past the end thumb', () => {
-      slideToValue(slider, endInput, 50, platform.IOS);
-      slideToValue(slider, startInput, 55, platform.IOS);
+      slideToValue(slider, endInput, 50);
+      slideToValue(slider, startInput, 55);
       checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150});
       checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150});
     });
 
     it('should not allow end thumb to slide past the start thumb', () => {
-      slideToValue(slider, startInput, 50, platform.IOS);
-      slideToValue(slider, endInput, 45, platform.IOS);
+      slideToValue(slider, startInput, 50);
+      slideToValue(slider, endInput, 45);
       checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150});
       checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150});
     });
 
     it('should not break when the page layout changes', () => {
       slider._elementRef.nativeElement.style.marginLeft = '100px';
-      setValueByClick(slider, startInput, 25, platform.IOS);
+      setValueByClick(slider, startInput, 25);
       checkInput(startInput, {min: 0, max: 100, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 100, translateX: 300});
 
-      setValueByClick(slider, endInput, 75, platform.IOS);
+      setValueByClick(slider, endInput, 75);
       checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
       slider._elementRef.nativeElement.style.marginLeft = 'initial';
@@ -286,7 +281,7 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should update the thumb translateX when the max changes', () => {
-      setValueByClick(slider, input, 50, platform.IOS);
+      setValueByClick(slider, input, 50);
       checkInput(input, {min: 25, max: 75, value: 50, translateX: 150});
       fixture.componentInstance.max = 125;
       fixture.detectChanges();
@@ -346,8 +341,8 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
 
-        slideToValue(slider, startInput, 10, platform.IOS);
-        slideToValue(slider, endInput, 20, platform.IOS);
+        slideToValue(slider, startInput, 10);
+        slideToValue(slider, endInput, 20);
 
         checkInput(startInput, {min: 0, max: 20, value: 10, translateX: 30});
         checkInput(endInput, {min: 10, max: 100, value: 20, translateX: 60});
@@ -364,8 +359,8 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
 
-        slideToValue(slider, endInput, 92, platform.IOS);
-        slideToValue(slider, startInput, 91, platform.IOS);
+        slideToValue(slider, endInput, 92);
+        slideToValue(slider, startInput, 91);
 
         checkInput(startInput, {min: 0, max: 92, value: 91, translateX: 273});
         checkInput(endInput, {min: 91, max: 100, value: 92, translateX: 276});
@@ -426,8 +421,8 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
 
-        slideToValue(slider, startInput, 1, platform.IOS);
-        slideToValue(slider, endInput, 2, platform.IOS);
+        slideToValue(slider, startInput, 1);
+        slideToValue(slider, endInput, 2);
 
         checkInput(startInput, {min: 0, max: 2, value: 1, translateX: 3});
         checkInput(endInput, {min: 1, max: 100, value: 2, translateX: 6});
@@ -444,8 +439,8 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
 
-        slideToValue(slider, endInput, 95, platform.IOS);
-        slideToValue(slider, startInput, 90, platform.IOS);
+        slideToValue(slider, endInput, 95);
+        slideToValue(slider, startInput, 90);
 
         checkInput(startInput, {min: 0, max: 95, value: 90, translateX: 270});
         checkInput(endInput, {min: 90, max: 100, value: 95, translateX: 285});
@@ -568,62 +563,39 @@ describe('MDC-based MatSlider', () => {
     }
 
     function pointerenter() {
-      dispatchPointerOrTouchEvent(
-        input._hostElement,
-        PointerEventType.POINTER_MOVE,
-        thumbX,
-        thumbY,
-        platform.IOS,
-      );
+      dispatchPointerEvent(input._hostElement, PointerEventType.POINTER_MOVE, thumbX, thumbY);
     }
 
     function pointerleave() {
-      dispatchPointerOrTouchEvent(
+      dispatchPointerEvent(
         input._hostElement,
         PointerEventType.POINTER_MOVE,
         thumbX + 1000,
         thumbY,
-        platform.IOS,
       );
     }
 
     function pointerdown() {
-      dispatchPointerOrTouchEvent(
-        input._hostElement,
-        PointerEventType.POINTER_DOWN,
-        thumbX,
-        thumbY,
-        platform.IOS,
-      );
+      dispatchPointerEvent(input._hostElement, PointerEventType.POINTER_DOWN, thumbX, thumbY);
       input.focus();
     }
 
     function pointerup() {
-      dispatchPointerOrTouchEvent(
-        input._hostElement,
-        PointerEventType.POINTER_UP,
-        thumbX,
-        thumbY,
-        platform.IOS,
-      );
+      dispatchPointerEvent(input._hostElement, PointerEventType.POINTER_UP, thumbX, thumbY);
     }
 
     it('should show the hover ripple on pointerenter', fakeAsync(() => {
       // Doesn't make sense to test for pointerenter events on touch devices.
-      if (!platform.IOS) {
-        expect(isRippleVisible('hover')).toBeFalse();
-        pointerenter();
-        expect(isRippleVisible('hover')).toBeTrue();
-      }
+      expect(isRippleVisible('hover')).toBeFalse();
+      pointerenter();
+      expect(isRippleVisible('hover')).toBeTrue();
     }));
 
     it('should hide the hover ripple on pointerleave', fakeAsync(() => {
       // Doesn't make sense to test for pointerleave events on touch devices.
-      if (!platform.IOS) {
-        pointerenter();
-        pointerleave();
-        expect(isRippleVisible('hover')).toBeFalse();
-      }
+      pointerenter();
+      pointerleave();
+      expect(isRippleVisible('hover')).toBeFalse();
     }));
 
     it('should show the focus ripple on pointerdown', fakeAsync(() => {
@@ -678,13 +650,11 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should not hide the hover ripple on blur if the thumb is hovered', fakeAsync(() => {
-      if (!platform.IOS) {
-        pointerenter();
-        pointerdown();
-        pointerup();
-        blur();
-        expect(isRippleVisible('hover')).toBeTrue();
-      }
+      pointerenter();
+      pointerdown();
+      pointerup();
+      blur();
+      expect(isRippleVisible('hover')).toBeTrue();
     }));
 
     it('should hide the focus ripple on drag end if the thumb already lost focus', fakeAsync(() => {
@@ -712,7 +682,7 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should update the value', () => {
-      slideToValue(slider, input, 75, platform.IOS);
+      slideToValue(slider, input, 75);
       checkInput(input, {min: 0, max: 100, value: 75, translateX: 225});
     });
   });
@@ -737,13 +707,13 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should update the start value', () => {
-      slideToValue(slider, startInput, 30, platform.IOS);
+      slideToValue(slider, startInput, 30);
       checkInput(startInput, {min: 0, max: 75, value: 30, translateX: 90});
       checkInput(endInput, {min: 30, max: 100, value: 75, translateX: 225});
     });
 
     it('should update the end value', () => {
-      slideToValue(slider, endInput, 77, platform.IOS);
+      slideToValue(slider, endInput, 77);
       checkInput(startInput, {min: 0, max: 77, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 77, translateX: 231});
     });
@@ -763,26 +733,26 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update to the value based on the step', () => {
-      slideToValue(slider, input, 30, platform.IOS);
+      slideToValue(slider, input, 30);
       expect(input.value).toBe(25);
     });
 
     it('should not add decimals to the value if it is a whole number', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
-      slideToValue(slider, input, 11, platform.IOS);
+      slideToValue(slider, input, 11);
       expect(input.value).toBe(11);
     });
 
     it('should truncate long decimal values when using a decimal step', () => {
       fixture.componentInstance.step = 0.5;
       fixture.detectChanges();
-      slideToValue(slider, input, 55.555, platform.IOS);
+      slideToValue(slider, input, 55.555);
       expect(input.value).toBe(55.5);
     });
 
     it('should update the value on step change', () => {
-      slideToValue(slider, input, 30, platform.IOS);
+      slideToValue(slider, input, 30);
       fixture.componentInstance.step = 50;
       fixture.detectChanges();
       expect(input.value).toBe(50);
@@ -805,40 +775,40 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should set the correct start value on slide', () => {
-      slideToValue(slider, startInput, 30, platform.IOS);
+      slideToValue(slider, startInput, 30);
       expect(startInput.value).toBe(25);
     });
 
     it('should set the correct end value on slide', () => {
-      slideToValue(slider, endInput, 45, platform.IOS);
+      slideToValue(slider, endInput, 45);
       expect(endInput.value).toBe(50);
     });
 
     it('should not add decimals to the end value if it is a whole number', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
-      slideToValue(slider, endInput, 11, platform.IOS);
+      slideToValue(slider, endInput, 11);
       expect(endInput.value).toBe(11);
     });
 
     it('should not add decimals to the start value if it is a whole number', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
-      slideToValue(slider, startInput, 11, platform.IOS);
+      slideToValue(slider, startInput, 11);
       expect(startInput.value).toBe(11);
     });
 
     it('should truncate long decimal start values when using a decimal step', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
-      slideToValue(slider, startInput, 33.666, platform.IOS);
+      slideToValue(slider, startInput, 33.666);
       expect(startInput.value).toBe(33.7);
     });
 
     it('should truncate long decimal end values when using a decimal step', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
-      slideToValue(slider, endInput, 33.6666, platform.IOS);
+      slideToValue(slider, endInput, 33.6666);
       expect(endInput.value).toBe(33.7);
     });
 
@@ -847,8 +817,8 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.step = 0;
         fixture.detectChanges();
 
-        slideToValue(slider, startInput, 45, platform.IOS);
-        slideToValue(slider, endInput, 46, platform.IOS);
+        slideToValue(slider, startInput, 45);
+        slideToValue(slider, endInput, 46);
 
         checkInput(startInput, {min: 0, max: 46, value: 45, translateX: 135});
         checkInput(endInput, {min: 45, max: 100, value: 46, translateX: 138});
@@ -864,8 +834,8 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.step = 0;
         fixture.detectChanges();
 
-        slideToValue(slider, startInput, 21, platform.IOS);
-        slideToValue(slider, endInput, 22, platform.IOS);
+        slideToValue(slider, startInput, 21);
+        slideToValue(slider, endInput, 22);
 
         checkInput(startInput, {min: 0, max: 22, value: 21, translateX: 63});
         checkInput(endInput, {min: 21, max: 100, value: 22, translateX: 66});
@@ -1040,7 +1010,7 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('works in RTL languages', () => {
-      setValueByClick(slider, input, 25, platform.IOS, true);
+      setValueByClick(slider, input, 25, true);
       checkInput(input, {min: 0, max: 100, value: 75, translateX: 75});
     });
   });
@@ -1065,10 +1035,10 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('works in RTL languages', () => {
-      setValueByClick(slider, startInput, 90, platform.IOS, true);
+      setValueByClick(slider, startInput, 90, true);
       checkInput(startInput, {min: 0, max: 100, value: 10, translateX: 270});
 
-      setValueByClick(slider, endInput, 10, platform.IOS, true);
+      setValueByClick(slider, endInput, 10, true);
       checkInput(endInput, {min: 10, max: 100, value: 90, translateX: 30});
     });
   });
@@ -1087,7 +1057,7 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update the model', () => {
-      slideToValue(slider, input, 19, platform.IOS);
+      slideToValue(slider, input, 19);
       fixture.detectChanges();
       expect(fixture.componentInstance.val).toBe('19');
       checkInput(input, {min: 0, max: 100, value: 19, translateX: 57});
@@ -1129,12 +1099,12 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update the models on input value changes', fakeAsync(() => {
-      slideToValue(slider, startInput, 25, platform.IOS);
+      slideToValue(slider, startInput, 25);
       fixture.detectChanges();
       flush();
       checkInput(startInput, {min: 0, max: 100, value: 25, translateX: 75});
 
-      slideToValue(slider, endInput, 75, platform.IOS);
+      slideToValue(slider, endInput, 75);
       fixture.detectChanges();
       flush();
       checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
@@ -1192,7 +1162,7 @@ describe('MDC-based MatSlider', () => {
 
     it('should update the control on slide', () => {
       expect(fixture.componentInstance.control.value).toBe('0');
-      slideToValue(slider, input, 19, platform.IOS);
+      slideToValue(slider, input, 19);
       expect(fixture.componentInstance.control.value).toBe('19');
     });
 
@@ -1224,7 +1194,7 @@ describe('MDC-based MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      setValueByClick(slider, input, 50, platform.IOS);
+      setValueByClick(slider, input, 50);
 
       expect(sliderControl.valid).toBe(true);
       expect(sliderControl.pristine).toBe(false);
@@ -1258,13 +1228,13 @@ describe('MDC-based MatSlider', () => {
 
     it('should update the start input control on slide', () => {
       expect(fixture.componentInstance.startInputControl.value).toBe('0');
-      slideToValue(slider, startInput, 20, platform.IOS);
+      slideToValue(slider, startInput, 20);
       expect(fixture.componentInstance.startInputControl.value).toBe('20');
     });
 
     it('should update the end input control on slide', () => {
       expect(fixture.componentInstance.endInputControl.value).toBe('100');
-      slideToValue(slider, endInput, 80, platform.IOS);
+      slideToValue(slider, endInput, 80);
       expect(fixture.componentInstance.endInputControl.value).toBe('80');
     });
 
@@ -1310,7 +1280,7 @@ describe('MDC-based MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      setValueByClick(slider, startInput, 25, platform.IOS);
+      setValueByClick(slider, startInput, 25);
 
       expect(sliderControl.valid).toBe(true);
       expect(sliderControl.pristine).toBe(false);
@@ -1336,7 +1306,7 @@ describe('MDC-based MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      setValueByClick(slider, endInput, 75, platform.IOS);
+      setValueByClick(slider, endInput, 75);
 
       expect(sliderControl.valid).toBe(true);
       expect(sliderControl.pristine).toBe(false);
@@ -1369,7 +1339,7 @@ describe('MDC-based MatSlider', () => {
     it('should sync the value binding in both directions', () => {
       checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
 
-      slideToValue(slider, input, 10, platform.IOS);
+      slideToValue(slider, input, 10);
       expect(fixture.componentInstance.value).toBe('10');
       checkInput(input, {min: 0, max: 100, value: 10, step: 0, translateX: 30});
 
@@ -1399,7 +1369,7 @@ describe('MDC-based MatSlider', () => {
       expect(fixture.componentInstance.startValue).toBe('0');
       expect(startInput.value).toBe(0);
 
-      slideToValue(slider, startInput, 10, platform.IOS);
+      slideToValue(slider, startInput, 10);
 
       expect(fixture.componentInstance.startValue).toBe('10');
       expect(startInput.value).toBe(10);
@@ -1414,7 +1384,7 @@ describe('MDC-based MatSlider', () => {
       expect(fixture.componentInstance.endValue).toBe('100');
       expect(endInput.value).toBe(100);
 
-      slideToValue(slider, endInput, 90, platform.IOS);
+      slideToValue(slider, endInput, 90);
       expect(fixture.componentInstance.endValue).toBe('90');
       expect(endInput.value).toBe(90);
 
@@ -1703,33 +1673,32 @@ function setValueByClick(
   slider: MatSlider,
   input: MatSliderThumb,
   value: number,
-  isIOS: boolean,
   isRtl: boolean = false,
 ) {
   const inputElement = input._elementRef.nativeElement;
   const val = isRtl ? slider.max - value : value;
   const {x, y} = getCoordsForValue(slider, val);
 
-  dispatchPointerOrTouchEvent(inputElement, PointerEventType.POINTER_DOWN, x, y, isIOS);
+  dispatchPointerEvent(inputElement, PointerEventType.POINTER_DOWN, x, y);
   input.value = val;
   dispatchEvent(input._hostElement, new Event('input'));
   input.focus();
-  dispatchPointerOrTouchEvent(inputElement, PointerEventType.POINTER_UP, x, y, isIOS);
+  dispatchPointerEvent(inputElement, PointerEventType.POINTER_UP, x, y);
   dispatchEvent(input._hostElement, new Event('change'));
 }
 
 /** Slides the MatSlider's thumb to the given value. */
-function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number, isIOS: boolean) {
+function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number) {
   const sliderElement = slider._elementRef.nativeElement;
   const {x: startX, y: startY} = getCoordsForValue(slider, input.value);
   const {x: endX, y: endY} = getCoordsForValue(slider, value);
 
-  dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, startX, startY, isIOS);
+  dispatchPointerEvent(sliderElement, 'pointerdown', startX, startY);
   input.focus();
-  dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_MOVE, endX, endY, isIOS);
+  dispatchPointerEvent(sliderElement, 'pointermove', endX, endY);
   input.value = value;
   dispatchEvent(input._hostElement, new Event('input'));
-  dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, endX, endY, isIOS);
+  dispatchPointerEvent(sliderElement, 'pointerup', endX, endY);
   dispatchEvent(input._hostElement, new Event('change'));
 }
 
@@ -1743,31 +1712,4 @@ function getCoordsForValue(slider: MatSlider, value: number): Point {
   const y = top + height / 2;
 
   return {x, y};
-}
-
-/** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
-function dispatchPointerOrTouchEvent(
-  node: Node,
-  type: PointerEventType,
-  x: number,
-  y: number,
-  isIOS: boolean,
-) {
-  // if (isIOS) {
-  //   dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
-  // } else {
-  dispatchPointerEvent(node, type, x, y);
-  // }
-}
-
-/** Returns the touch event equivalent of the given pointer event. */
-function pointerEventTypeToTouchEventType(pointerEventType: PointerEventType) {
-  switch (pointerEventType) {
-    case PointerEventType.POINTER_DOWN:
-      return TouchEventType.TOUCH_START;
-    case PointerEventType.POINTER_UP:
-      return TouchEventType.TOUCH_END;
-    case PointerEventType.POINTER_MOVE:
-      return TouchEventType.TOUCH_MOVE;
-  }
 }
