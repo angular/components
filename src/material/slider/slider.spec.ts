@@ -609,15 +609,21 @@ describe('MDC-based MatSlider', () => {
     }
 
     it('should show the hover ripple on pointerenter', fakeAsync(() => {
-      expect(isRippleVisible('hover')).toBeFalse();
-      pointerenter();
-      expect(isRippleVisible('hover')).toBeTrue();
+      // Doesn't make sense to test for pointerenter events on touch devices.
+      if (!platform.IOS) {
+        expect(isRippleVisible('hover')).toBeFalse();
+        pointerenter();
+        expect(isRippleVisible('hover')).toBeTrue();
+      }
     }));
 
     it('should hide the hover ripple on pointerleave', fakeAsync(() => {
-      pointerenter();
-      pointerleave();
-      expect(isRippleVisible('hover')).toBeFalse();
+      // Doesn't make sense to test for pointerleave events on touch devices.
+      if (!platform.IOS) {
+        pointerenter();
+        pointerleave();
+        expect(isRippleVisible('hover')).toBeFalse();
+      }
     }));
 
     it('should show the focus ripple on pointerdown', fakeAsync(() => {
@@ -672,11 +678,13 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should not hide the hover ripple on blur if the thumb is hovered', fakeAsync(() => {
-      pointerenter();
-      pointerdown();
-      pointerup();
-      blur();
-      expect(isRippleVisible('hover')).toBeTrue();
+      if (!platform.IOS) {
+        pointerenter();
+        pointerdown();
+        pointerup();
+        blur();
+        expect(isRippleVisible('hover')).toBeTrue();
+      }
     }));
 
     it('should hide the focus ripple on drag end if the thumb already lost focus', fakeAsync(() => {
@@ -1745,11 +1753,11 @@ function dispatchPointerOrTouchEvent(
   y: number,
   isIOS: boolean,
 ) {
-  if (isIOS) {
-    dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
-  } else {
-    dispatchPointerEvent(node, type, x, y);
-  }
+  // if (isIOS) {
+  //   dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
+  // } else {
+  dispatchPointerEvent(node, type, x, y);
+  // }
 }
 
 /** Returns the touch event equivalent of the given pointer event. */
