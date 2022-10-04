@@ -134,12 +134,17 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Whether the value indicator tooltip is visible. */
   _isValueIndicatorVisible: boolean = false;
 
+  /** The host native HTML input element. */
+  _hostElement: HTMLElement;
+
   constructor(
     readonly _cdr: ChangeDetectorRef,
     private readonly _ngZone: NgZone,
     @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
     private readonly _elementRef: ElementRef<HTMLElement>,
-  ) {}
+  ) {
+    this._hostElement = _elementRef.nativeElement;
+  }
 
   ngAfterViewInit() {
     this._ripple.radius = 24;
@@ -177,7 +182,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const rect = this._getHostElement().getBoundingClientRect();
+    const rect = this._hostElement.getBoundingClientRect();
     const isHovered = this._isSliderThumbHovered(event, rect);
     if (isHovered) {
       if (!this._isHovered) {
@@ -306,11 +311,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Getters Functions */
   /**********************/
 
-  /** Gets the hosts native HTML element. */
-  _getHostElement(): HTMLElement {
-    return this._elementRef.nativeElement;
-  }
-
   /** Gets the value indicator container's native HTML element. */
   _getValueIndicatorContainer(): HTMLElement {
     return this._valueIndicatorContainer.nativeElement;
@@ -397,7 +397,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   set translateX(v: number) {
     this._translateX = v;
   }
-  private _translateX: number | undefined;
+  _translateX: number | undefined;
 
   /** Indicates whether this thumb is the start or end thumb. */
   thumbPosition: Thumb = Thumb.END;
@@ -896,22 +896,6 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     sibling._updateMinMax();
     sibling._updateWidthActive();
   }
-
-  // _updateZIndex(clientX: number): void {
-  //   const sibling = this.getSibling();
-  //   if (!sibling) {
-  //     return;
-  //   }
-  //   const dx1 = Math.abs(clientX - this._slider._cachedLeft - this.translateX);
-  //   const dx2 = Math.abs(clientX - this._slider._cachedLeft - sibling.translateX);
-  //   if (dx1 < dx2) {
-  //     this._zIndex = '1';
-  //     sibling._zIndex = 'auto';
-  //   } else if (dx1 > dx2) {
-  //     this._zIndex = 'auto';
-  //     sibling._zIndex = '1';
-  //   }
-  // }
 }
 
 // Boilerplate for applying mixins to MatSlider.
@@ -1457,6 +1441,7 @@ export class MatSlider
   _onTranslateXChange(source: MatSliderThumb): void {
     this._updateThumbUI(source);
     this._updateTrackUI(source);
+    this._updateOverlappingThumbUI(source as MatSliderRangeThumb);
     this._cdr.detectChanges();
   }
 
@@ -1500,6 +1485,43 @@ export class MatSlider
 
     this._updateTickMarkUI();
     this._updateTickMarkTrackUI();
+  }
+
+  /** Whether or not the slider thumbs overlap. */
+  private _thumbsOverlap: boolean = false;
+
+  /** Returns true if the slider knobs are overlapping one another. */
+  private _areThumbsOverlapping(): boolean {
+    const startInput = this._getInput(Thumb.START);
+    const endInput = this._getInput(Thumb.END);
+    if (!startInput?._translateX || !endInput?._translateX) {
+      return false;
+    }
+    return endInput._translateX - startInput._translateX < 20;
+  }
+
+  /**
+   * Updates the class names of overlapping slider thumbs so
+   * that the current active thumb is styled to be on "top".
+   */
+  private _updateOverlappingThumbClassNames(source: MatSliderRangeThumb): void {
+    const sibling = source.getSibling()!;
+    const sourceThumb = this._getThumb(source.thumbPosition);
+    const siblingThumb = this._getThumb(sibling.thumbPosition);
+    siblingThumb._hostElement.classList.remove('mdc-slider__thumb--top');
+    this._thumbsOverlap
+      ? sourceThumb._hostElement.classList.add('mdc-slider__thumb--top')
+      : sourceThumb._hostElement.classList.remove('mdc-slider__thumb--top');
+  }
+
+  /** Updates the UI of slider thumbs when they begin or stop overlapping. */
+  private _updateOverlappingThumbUI(source: MatSliderRangeThumb): void {
+    if (this._isRange) {
+      if (this._thumbsOverlap !== this._areThumbsOverlapping()) {
+        this._thumbsOverlap = !this._thumbsOverlap;
+        this._updateOverlappingThumbClassNames(source);
+      }
+    }
   }
 
   // Thumb styles update conditions
