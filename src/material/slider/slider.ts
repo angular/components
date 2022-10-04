@@ -102,9 +102,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** The display value of the slider thumb. */
   @Input() valueIndicatorText: string;
 
-  /** Whether ripples on the slider thumb should be disabled. */
-  @Input() disableRipple: boolean = false;
-
   /** The MatRipple for this slider thumb. */
   @ViewChild(MatRipple) readonly _ripple: MatRipple;
 
@@ -263,7 +260,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   /** Manually launches the slider thumb ripple using the specified ripple animation config. */
   private _showRipple(animation: RippleAnimationConfig): RippleRef | undefined {
-    if (this.disableRipple) {
+    if (this._slider.disabled || this._slider._globalRippleOptions?.disabled) {
       return;
     }
     this._showValueIndicator();
@@ -360,7 +357,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     '(input)': '_onInput()',
     '(pointerdown)': '_onPointerDown($event)',
     '(pointermove)': '_onPointerMove($event)',
-    // TODO: Consider using a global event listener instead.
+    // TODO(wagnermaciel): Consider using a global event listener instead.
     // Reason: I have found a semi-consistent way to mouse up without triggering this event.
     '(pointerup)': '_onPointerUp()',
     '(blur)': '_onBlur()',
@@ -589,7 +586,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   _onPointerDown(event: PointerEvent): void {
-    if (event.button !== 0) {
+    if (this.disabled || event.button !== 0) {
       return;
     }
 
@@ -648,7 +645,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   _updateThumbUI(options?: {withAnimation: boolean}) {
-    this._slider._transition = options?.withAnimation ? 'transform 80ms' : 'transform 0ms';
+    this._slider._transition =
+      options?.withAnimation && !this._slider._noopAnimations ? 'transform 80ms' : 'transform 0ms';
     this._slider._onTranslateXChange(this);
     this._slider._cdr.markForCheck();
   }
@@ -755,13 +753,17 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
   override _onNgControlValueChange(): void {
     super._onNgControlValueChange();
-    this._updateSibling();
+    this.getSibling()?._updateMinMax();
   }
 
   override _onPointerDown(event: PointerEvent): void {
+    if (this.disabled) {
+      return;
+    }
     this._updateWidthActive();
     this.__sibling?._updateWidthActive();
     super._onPointerDown(event);
+
     if (event.pointerType !== 'touch') {
       return;
     }
@@ -797,7 +799,6 @@ export class MatSliderRangeThumb extends MatSliderThumb {
   }
 
   override _onPointerMove(event: PointerEvent): void {
-    this._updateZIndex(event.clientX);
     super._onPointerMove(event);
     if (!this._slider.step && this._isActive) {
       this._updateSibling();
@@ -884,21 +885,21 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     sibling._updateWidthActive();
   }
 
-  _updateZIndex(clientX: number): void {
-    const sibling = this.getSibling();
-    if (!sibling) {
-      return;
-    }
-    const dx1 = Math.abs(clientX - this._slider._cachedLeft - this.translateX);
-    const dx2 = Math.abs(clientX - this._slider._cachedLeft - sibling.translateX);
-    if (dx1 < dx2) {
-      this._zIndex = '1';
-      sibling._zIndex = 'auto';
-    } else if (dx1 > dx2) {
-      this._zIndex = 'auto';
-      sibling._zIndex = '1';
-    }
-  }
+  // _updateZIndex(clientX: number): void {
+  //   const sibling = this.getSibling();
+  //   if (!sibling) {
+  //     return;
+  //   }
+  //   const dx1 = Math.abs(clientX - this._slider._cachedLeft - this.translateX);
+  //   const dx2 = Math.abs(clientX - this._slider._cachedLeft - sibling.translateX);
+  //   if (dx1 < dx2) {
+  //     this._zIndex = '1';
+  //     sibling._zIndex = 'auto';
+  //   } else if (dx1 > dx2) {
+  //     this._zIndex = 'auto';
+  //     sibling._zIndex = '1';
+  //   }
+  // }
 }
 
 // Boilerplate for applying mixins to MatSlider.
