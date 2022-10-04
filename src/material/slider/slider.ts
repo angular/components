@@ -1176,6 +1176,10 @@ export class MatSlider
       const oldValue = input.value;
 
       input.step = this._step;
+      if (this._platform.SAFARI) {
+        input.value = input.value;
+      }
+
       input._updateThumbUIByValue();
 
       if (oldValue !== input.value) {
