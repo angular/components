@@ -563,25 +563,20 @@ describe('MDC-based MatSlider', () => {
     }
 
     function pointerenter() {
-      dispatchPointerEvent(input._hostElement, PointerEventType.POINTER_MOVE, thumbX, thumbY);
+      dispatchPointerEvent(input._hostElement, 'pointermove', thumbX, thumbY);
     }
 
     function pointerleave() {
-      dispatchPointerEvent(
-        input._hostElement,
-        PointerEventType.POINTER_MOVE,
-        thumbX + 1000,
-        thumbY,
-      );
+      dispatchPointerEvent(input._hostElement, 'pointermove', thumbX + 1000, thumbY);
     }
 
     function pointerdown() {
-      dispatchPointerEvent(input._hostElement, PointerEventType.POINTER_DOWN, thumbX, thumbY);
+      dispatchPointerEvent(input._hostElement, 'pointerdown', thumbX, thumbY);
       input.focus();
     }
 
     function pointerup() {
-      dispatchPointerEvent(input._hostElement, PointerEventType.POINTER_UP, thumbX, thumbY);
+      dispatchPointerEvent(input._hostElement, 'pointerup', thumbX, thumbY);
     }
 
     it('should show the hover ripple on pointerenter', fakeAsync(() => {
@@ -1654,20 +1649,6 @@ class RangeSliderWithTwoWayBinding {
   endValue = '100';
 }
 
-/** The pointer event types used by the MDC Slider. */
-const enum PointerEventType {
-  POINTER_DOWN = 'pointerdown',
-  POINTER_UP = 'pointerup',
-  POINTER_MOVE = 'pointermove',
-}
-
-/** The touch event types used by the MDC Slider. */
-const enum TouchEventType {
-  TOUCH_START = 'touchstart',
-  TOUCH_END = 'touchend',
-  TOUCH_MOVE = 'touchmove',
-}
-
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
 function setValueByClick(
   slider: MatSlider,
@@ -1679,11 +1660,11 @@ function setValueByClick(
   const val = isRtl ? slider.max - value : value;
   const {x, y} = getCoordsForValue(slider, val);
 
-  dispatchPointerEvent(inputElement, PointerEventType.POINTER_DOWN, x, y);
+  dispatchPointerEvent(inputElement, 'pointerdown', x, y);
   input.value = val;
   dispatchEvent(input._hostElement, new Event('input'));
   input.focus();
-  dispatchPointerEvent(inputElement, PointerEventType.POINTER_UP, x, y);
+  dispatchPointerEvent(inputElement, 'pointerup', x, y);
   dispatchEvent(input._hostElement, new Event('change'));
 }
 
