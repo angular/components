@@ -499,6 +499,14 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   /** Emits when the component is destroyed. */
   protected readonly _destroyed = new Subject<void>();
 
+  /**
+   * Indicates whether UI updates should be skipped.
+   *
+   * This flag is used to avoid flickering when correcting
+   * values on pointer up/down on Firefox and touch devices.
+   */
+  _skipUIUpdate: boolean = false;
+
   constructor(
     @Inject(forwardRef(() => MatSlider)) readonly _slider: MatSlider,
     @Optional() @Self() readonly ngControl: NgControl,
@@ -621,12 +629,21 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    */
   private _handleValueCorrection(event: PointerEvent): void {
     if (event.pointerType === 'touch' || this._slider._platform.FIREFOX) {
+      // Don't update the UI with the current value! On touch devices and
+      // Firefox, the value on pointerdown and pointerup is calculated in the
+      // split second before the input(s) resize. See _updateWidthInactive()
+      // and _updateWidthActive() for more details.
+      this._skipUIUpdate = true;
+
       // Note that this function gets triggered before the actual value of the
       // slider is updated. This means if we were to set the value here, it
       // would immediately be overwritten. Using setTimeout ensures the setting
       // of the value happens after the value has been updated by the
       // pointerdown event.
-      setTimeout(() => this._fixValue(event), 0);
+      setTimeout(() => {
+        this._skipUIUpdate = false;
+        this._fixValue(event);
+      }, 0);
     }
   }
 
@@ -687,11 +704,13 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._updateWidthInactive();
   }
 
+  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
   _updateWidthActive(): void {
     this._paddingStyle = `0 ${this._slider._inputPadding}px`;
     this._widthStyle = `calc(100% - ${this._slider._inputPadding * 2}px)`;
   }
 
+  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
   _updateWidthInactive(): void {
     this._paddingStyle = '0px';
     this._widthStyle = '100%';
@@ -884,8 +903,6 @@ export class MatSliderRangeThumb extends MatSliderThumb {
   }
 
   // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
-  // TODO(wagnermaciel): also implement this for single sliders because otherwise
-  // touch devices break sometimes when clicking on the outskirts of the slider padding.
   override _updateWidthInactive(): void {
     const sibling = this.getSibling();
     if (!sibling) {
@@ -1447,6 +1464,12 @@ export class MatSlider
     return input.value;
   }
 
+  private _skipUpdate(): boolean {
+    return !!(
+      this._getInput(Thumb.START)?._skipUIUpdate || this._getInput(Thumb.END)?._skipUIUpdate
+    );
+  }
+
   /** Stores the slider dimensions. */
   private _setDimensions(): void {
     const rect = this._elementRef.nativeElement.getBoundingClientRect();
@@ -1550,11 +1573,12 @@ export class MatSlider
 
   /** Updates the UI of slider thumbs when they begin or stop overlapping. */
   private _updateOverlappingThumbUI(source: MatSliderRangeThumb): void {
-    if (this._isRange) {
-      if (this._thumbsOverlap !== this._areThumbsOverlapping()) {
-        this._thumbsOverlap = !this._thumbsOverlap;
-        this._updateOverlappingThumbClassNames(source);
-      }
+    if (!this._isRange || this._skipUpdate()) {
+      return;
+    }
+    if (this._thumbsOverlap !== this._areThumbsOverlapping()) {
+      this._thumbsOverlap = !this._thumbsOverlap;
+      this._updateOverlappingThumbClassNames(source);
     }
   }
 
@@ -1567,6 +1591,10 @@ export class MatSlider
 
   /** Updates the translateX of the given thumb. */
   _updateThumbUI(source: MatSliderThumb) {
+    if (this._skipUpdate()) {
+      return;
+    }
+
     const transform = `translateX(${source.translateX}px)`;
     source.thumbPosition === Thumb.END
       ? (this._endThumbTransform = transform)
@@ -1582,6 +1610,10 @@ export class MatSlider
 
   /** Updates the value indicator tooltip ui for the given thumb. */
   _updateValueIndicatorUI(source: MatSliderThumb): void {
+    if (this._skipUpdate()) {
+      return;
+    }
+
     const valuetext = this.displayWith(source.value);
     source._valuetext = valuetext;
     if (this.discrete) {
@@ -1603,6 +1635,10 @@ export class MatSlider
 
   /** Updates the width of the tick mark track. */
   private _updateTickMarkTrackUI(): void {
+    if (this._skipUpdate()) {
+      return;
+    }
+
     const step = this._step && this._step > 0 ? this._step : 1;
     const maxValue = Math.floor(this.max / step) * step;
     const percentage = (maxValue - this.min) / (this.max - this.min);
@@ -1625,6 +1661,10 @@ export class MatSlider
 
   /** Updates the scale on the active portion of the track. */
   _updateTrackUI(source: MatSliderThumb): void {
+    if (this._skipUpdate()) {
+      return;
+    }
+
     this._isRange
       ? this._updateTrackUIRange(source as MatSliderRangeThumb)
       : this._updateTrackUINonRange(source as MatSliderThumb);
@@ -1682,6 +1722,10 @@ export class MatSlider
 
   /** Updates the dots along the slider track. */
   _updateTickMarkUI(): void {
+    if (this._skipUpdate()) {
+      return;
+    }
+
     if (this.step === undefined || this.min === undefined || this.max === undefined) {
       return;
     }
