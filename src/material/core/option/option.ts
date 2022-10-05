@@ -195,16 +195,6 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     }
   }
 
-  /**
-   * Gets the `aria-selected` value for the option. We explicitly omit the `aria-selected`
-   * attribute from single-selection, unselected options. Including the `aria-selected="false"`
-   * attributes adds a significant amount of noise to screen-reader users without providing useful
-   * information.
-   */
-  _getAriaSelected(): boolean | null {
-    return this.selected || (this.multiple ? false : null);
-  }
-
   /** Returns the correct tabindex for the option depending on disabled state. */
   _getTabIndex(): string {
     return this.disabled ? '-1' : '0';
@@ -255,7 +245,18 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     '[class.mat-mdc-option-active]': 'active',
     '[class.mdc-list-item--disabled]': 'disabled',
     '[id]': 'id',
-    '[attr.aria-selected]': '_getAriaSelected()',
+    // The aria-selected attribute applied to the option conforms to WAI ARIA best practices for
+    // listbox interaction pattern.
+    //
+    // From [WAI ARIA Listbox authoring practices guide](
+    // https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
+    //  "If any options are selected, each selected option has either aria-selected or aria-checked
+    //  set to true. All options that are selectable but not selected have either aria-selected or
+    //  aria-checked set to false."
+    //
+    // Set `aria-selected="false"` on not-selected listbox options that are selectable to fix
+    // VoiceOver reading every option as "selected" (#21491).
+    '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',

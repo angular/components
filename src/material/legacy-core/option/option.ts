@@ -27,6 +27,19 @@ import {MatLegacyOptgroup} from './optgroup';
  * Single option inside of a `<mat-select>` element.
  * @deprecated Use `MatOption` from `@angular/material/core` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
  * @breaking-change 17.0.0
+ *
+ * The aria-selected attribute applied to the option conforms to WAI ARIA best practices for listbox
+ * interaction patterns.
+ *
+ * From [WAI ARIA Listbox authoring practices guide](
+ * https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
+ *  "If any options are selected, each selected option has either aria-selected or aria-checked
+ *  set to true. All options that are selectable but not selected have either aria-selected or
+ *  aria-checked set to false."
+ *
+ * Set `aria-selected="false"` on not-selected listbox options that are selectable to fix
+ * VoiceOver reading every option as "selected" (#25736). Also fixes chromevox not announcing
+ * options as selectable.
  */
 @Component({
   selector: 'mat-option',
@@ -38,7 +51,7 @@ import {MatLegacyOptgroup} from './optgroup';
     '[class.mat-option-multiple]': 'multiple',
     '[class.mat-active]': 'active',
     '[id]': 'id',
-    '[attr.aria-selected]': '_getAriaSelected()',
+    '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-option-disabled]': 'disabled',
     '(click)': '_selectViaInteraction()',

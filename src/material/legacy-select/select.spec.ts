@@ -1135,9 +1135,9 @@ describe('MatSelect', () => {
         }));
 
         it('should set aria-selected on each option for single select', fakeAsync(() => {
-          expect(options.every(option => !option.hasAttribute('aria-selected')))
+          expect(options.every(option => option.getAttribute('aria-selected') === 'false'))
             .withContext(
-              'Expected all unselected single-select options not to have ' + 'aria-selected set.',
+              'Expected all unselected single-select options to have aria-selected="false" set.',
             )
             .toBe(true);
 
@@ -1152,9 +1152,9 @@ describe('MatSelect', () => {
             .withContext('Expected selected single-select option to have aria-selected="true".')
             .toEqual('true');
           options.splice(1, 1);
-          expect(options.every(option => !option.hasAttribute('aria-selected')))
+          expect(options.every(option => option.getAttribute('aria-selected') === 'false'))
             .withContext(
-              'Expected all unselected single-select options not to have ' + 'aria-selected set.',
+              'Expected all unselected single-select options to have aria-selected="false" set.',
             )
             .toBe(true);
         }));
