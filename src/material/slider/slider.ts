@@ -1253,7 +1253,7 @@ export class MatSlider
    */
   _tickMarkTrackWidth: number = 0;
 
-  private _resizeTimer: number;
+  private _resizeTimer: null | ReturnType<typeof setTimeout> = null;
 
   constructor(
     readonly _ngZone: NgZone,
@@ -1374,32 +1374,35 @@ export class MatSlider
     }
 
     this._ngZone.runOutsideAngular(() => {
-      this._resizeObserver = new ResizeObserver(entries => {
-        // Triggering a layout while the user is dragging can throw off the alignment.
+      this._resizeObserver = new ResizeObserver(() => {
         if (this._isActive()) {
           return;
         }
-
         if (this._resizeTimer) {
           clearTimeout(this._resizeTimer);
         }
-
-        if (!this._isActive()) {
-          if (entries[0]?.contentRect.width !== this._cachedTrackWidth) {
-            this._setDimensions();
-            this._onResize();
-            this._cdr.detectChanges();
-          }
-        }
-
-        // The `layout` call is going to call `getBoundingClientRect` to update the dimensions
-        // of the host. Since the `ResizeObserver` already calculated them, we can save some
-        // work by returning them instead of having to check the DOM again.
-        //
-        // this._resizeTimer = setTimeout(() => { }, 10);
+        this._pollForAdditionalSizeChanges();
       });
       this._resizeObserver.observe(this._elementRef.nativeElement);
     });
+  }
+
+  /**
+   * Polls for changes to the width or left of the slider's
+   * bounding client rect until no changes are observed.
+   */
+  private _pollForAdditionalSizeChanges(): void {
+    this._resizeTimer = setTimeout(() => {
+      const prevWidth = this._cachedWidth;
+      const prevLeft = this._cachedLeft;
+      this._setDimensions();
+
+      if (prevWidth !== this._cachedWidth || prevLeft !== this._cachedLeft) {
+        this._pollForAdditionalSizeChanges();
+      } else {
+        this._onResize();
+      }
+    }, 100);
   }
 
   /** Whether any of the thumbs are currently active. */
@@ -1463,6 +1466,7 @@ export class MatSlider
   }
 
   _onResize(): void {
+    this._setDimensions();
     if (this._isRange) {
       const eInput = this._getInput(Thumb.END) as MatSliderRangeThumb;
       const sInput = this._getInput(Thumb.START) as MatSliderRangeThumb;
@@ -1485,6 +1489,7 @@ export class MatSlider
 
     this._updateTickMarkUI();
     this._updateTickMarkTrackUI();
+    this._cdr.detectChanges();
   }
 
   /** Whether or not the slider thumbs overlap. */

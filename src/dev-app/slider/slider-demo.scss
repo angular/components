@@ -1,6 +1,7 @@
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
+  margin: 24px;
 }
 
 td, th {
@@ -20,9 +21,9 @@ td, th {
   padding: 16px;
   width: calc(100% - 32px);
 }
-.resizable-container {
+.mat-mdc-tab-group {
   resize: horizontal;
-  border: 2px solid #222;
-  padding: 24px 0;
   overflow: hidden;
+  border: 1px solid;
+  border-radius: 5px;
 }
