@@ -360,7 +360,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     '(pointermove)': '_onPointerMove($event)',
     // TODO(wagnermaciel): Consider using a global event listener instead.
     // Reason: I have found a semi-consistent way to mouse up without triggering this event.
-    '(pointerup)': '_onPointerUp()',
+    '(pointerup)': '_onPointerUp($event)',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
   },
@@ -533,9 +533,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   initProps(): void {
-    this._paddingStyle = `0 ${this._slider._inputPadding}px`;
-    this._widthStyle = `calc(100% - ${this._slider._inputPadding * 2}px)`;
-
+    this._updateWidthInactive();
     this.disabled = this._slider.disabled;
     this.step = this._slider.step;
     this.min = this._slider.min;
@@ -604,12 +602,40 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
     this._isActive = true;
     this._setIsFocused(true);
+    this._updateWidthActive();
 
     // does nothing if a step is defined because we
     // want the value to snap to the values on input.
     if (!this._slider.step) {
       this._updateThumbUIByPointerEvent(event, {withAnimation: true});
     }
+
+    this._fixValue(event);
+  }
+
+  /** Corrects the value on pointer down on touch devices. */
+  private _fixValue(event: PointerEvent): void {
+    if (event.pointerType !== 'touch' && !this._slider._platform.FIREFOX) {
+      return;
+    }
+
+    const xPos = event.pageX - this._slider._cachedLeft - this._slider._rippleRadius;
+    const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
+    const percentage = xPos / width;
+
+    // To ensure the percentage is rounded to two decimals.
+    const fixedPercentage = Math.round(percentage * 100) / 100;
+
+    const value = this._slider._isRtl
+      ? (1 - fixedPercentage) * (this._slider.max - this._slider.min)
+      : fixedPercentage * (this._slider.max - this._slider.min);
+
+    // Note that this function gets triggered before the actual value of the
+    // slider is updated. This means if we were to set the value here, it
+    // would immediately be overwritten. Using setTimeout ensures the setting
+    // of the value happens after the value has been updated by the
+    // pointerdown event.
+    setTimeout(() => (this.value = value), 0);
   }
 
   _onPointerMove(event: PointerEvent): void {
@@ -620,8 +646,10 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
   }
 
-  _onPointerUp(): void {
+  _onPointerUp(event: PointerEvent): void {
     this._isActive = false;
+    this._updateWidthInactive();
+    this._fixValue(event);
   }
 
   _clamp(v: number): number {
@@ -644,6 +672,17 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   _updateHiddenUI(): void {
     this._updateThumbUIByValue();
+    this._updateWidthInactive();
+  }
+
+  _updateWidthActive(): void {
+    this._paddingStyle = `0 ${this._slider._inputPadding}px`;
+    this._widthStyle = `calc(100% - ${this._slider._inputPadding * 2}px)`;
+  }
+
+  _updateWidthInactive(): void {
+    this._paddingStyle = '0px';
+    this._widthStyle = '100%';
   }
 
   _updateThumbUIByValue(options?: {withAnimation: boolean}): void {
@@ -772,42 +811,13 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     if (this.disabled) {
       return;
     }
-    this._updateWidthActive();
     this.__sibling?._updateWidthActive();
     super._onPointerDown(event);
-
-    if (event.pointerType !== 'touch') {
-      return;
-    }
-
-    const xPos = event.pageX - this._slider._cachedLeft - this._slider._rippleRadius;
-    const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
-    const percentage = xPos / width;
-
-    // To ensure the percentage is rounded to two decimals.
-    const fixedPercentage = Math.round(percentage * 100) / 100;
-
-    const value = this._slider._isRtl
-      ? (1 - fixedPercentage) * (this._slider.max - this._slider.min)
-      : fixedPercentage * (this._slider.max - this._slider.min);
-
-    // Note that this function gets triggered before the actual value of the
-    // slider is updated. This means if we were to set the value here, it
-    // would immediately be overwritten. Using setTimeout ensures the setting
-    // of the value happens after the value has been updated by the
-    // pointerdown event.
-    setTimeout(() => (this.value = value), 0);
   }
 
-  override _onPointerUp(): void {
-    super._onPointerUp();
-
-    // Similar to in _onPointerDown, except this
-    // setTimeout is only necessary for Firefox.
-    setTimeout(() => {
-      this._updateWidthInactive();
-      this.__sibling?._updateWidthInactive();
-    }, 0);
+  override _onPointerUp(event: PointerEvent): void {
+    super._onPointerUp(event);
+    this.__sibling?._updateWidthInactive();
   }
 
   override _onPointerMove(event: PointerEvent): void {
@@ -843,8 +853,8 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     }
   }
 
-  /** TODO(wagnermaciel): describe the difference between inactive and active width and why we need it. */
-  _updateWidthActive(): void {
+  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
+  override _updateWidthActive(): void {
     const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
     const maxWidth = this._slider._cachedWidth - this._slider._inputPadding * 2 - minWidth;
     const percentage =
@@ -856,8 +866,10 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     this._paddingStyle = `0 ${this._slider._inputPadding}px`;
   }
 
-  /** TODO(wagnermaciel): describe the difference between inactive and active width and why we need it. */
-  _updateWidthInactive(): void {
+  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
+  // TODO(wagnermaciel): also implement this for single sliders because otherwise
+  // touch devices break sometimes when clicking on the outskirts of the slider padding.
+  override _updateWidthInactive(): void {
     const sibling = this.getSibling();
     if (!sibling) {
       return;
@@ -1258,7 +1270,7 @@ export class MatSlider
   constructor(
     readonly _ngZone: NgZone,
     readonly _cdr: ChangeDetectorRef,
-    private readonly _platform: Platform,
+    readonly _platform: Platform,
     elementRef: ElementRef<HTMLElement>,
     @Optional() readonly _dir: Directionality,
     @Optional()

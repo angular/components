@@ -14,27 +14,27 @@
         <th>Inputs</th>
         <th>Controls</th>
         <th>Native Slider</th>
-        <!-- <th>Single Slider</th>
-        <th>Double Slider</th> -->
+        <th>Single Slider</th>
+        <th>Double Slider</th>
       </tr>
       <tr>
         <th>Value</th>
         <td><input type="number" (input)="updateControlValue($event.target)" /></td>
         <td class="value-cell">{{nativeSlider1.value}}</td>
-        <!-- <td class="value-cell">{{ngThumb1.value}}</td>
-        <td class="value-cell">{{ngStartThumb1.value}} : {{ngEndThumb1.value}}</td> -->
+        <td class="value-cell">{{ngThumb1.value}}</td>
+        <td class="value-cell">{{ngStartThumb1.value}} : {{ngEndThumb1.value}}</td>
       </tr>
       <tr>
         <th>Disabled</th>
         <td><input type="checkbox" (input)="updateControlDisabledState($event.target)" /></td>
         <td class="value-cell">{{nativeSlider1.disabled}}</td>
-        <!-- <td class="value-cell">{{ngThumb1.disabled}}</td>
-        <td class="value-cell">{{ngStartThumb1.disabled}} : {{ngEndThumb1.disabled}}</td> -->
+        <td class="value-cell">{{ngThumb1.disabled}}</td>
+        <td class="value-cell">{{ngStartThumb1.disabled}} : {{ngEndThumb1.disabled}}</td>
       </tr>
     </table>
     
     <input class="native-slider" type="range" [formControl]="control" #nativeSlider1 />
-    <!-- <br>
+    <br>
     <mat-slider discrete showTickMarks color="{{colorModel}}">
       <input matSliderThumb [formControl]="control" #ngThumb1 />
     </mat-slider>
@@ -42,7 +42,7 @@
     <mat-slider discrete showTickMarks color="{{colorModel}}">
       <input matSliderStartThumb [formControl]="control" #ngStartThumb1 />
       <input matSliderEndThumb #ngEndThumb1 />
-    </mat-slider> -->
+    </mat-slider>
   </mat-tab>
 
   <mat-tab label="Template-driven form controls">
@@ -52,42 +52,42 @@
         <th>Controls</th>
         <th>Native Slider</th>
         <th>Slider</th>
-        <!-- <th>Range Slider</th> -->
+        <th>Range Slider</th>
       </tr>
       <tr>
         <th>Value</th>
         <td><input type="number" [(ngModel)]="valueModel" /></td>
         <td class="value-cell">{{nativeSlider2.value}}</td>
         <td class="value-cell">{{ngThumb2.value}}</td>
-        <!-- <td class="value-cell">{{ngStartThumb2.value}} : {{ngEndThumb2.value}}</td> -->
+        <td class="value-cell">{{ngStartThumb2.value}} : {{ngEndThumb2.value}}</td>
       </tr>
       <tr>
         <th>Min</th>
         <td><input type="number" [(ngModel)]="minModel" /></td>
         <td class="value-cell">{{nativeSlider2.min}}</td>
         <td class="value-cell">{{ngThumb2.min}}</td>
-        <!-- <td class="value-cell">{{ngStartThumb2.min}} : {{ngEndThumb2.min}}</td> -->
+        <td class="value-cell">{{ngStartThumb2.min}} : {{ngEndThumb2.min}}</td>
       </tr>
       <tr>
         <th>Max</th>
         <td><input type="number" [(ngModel)]="maxModel" /></td>
         <td class="value-cell">{{nativeSlider2.max}}</td>
         <td class="value-cell">{{ngThumb2.max}}</td>
-        <!-- <td class="value-cell">{{ngStartThumb2.max}} : {{ngEndThumb2.max}}</td> -->
+        <td class="value-cell">{{ngStartThumb2.max}} : {{ngEndThumb2.max}}</td>
       </tr>
       <tr>
         <th>Step</th>
         <td><input type="number" [(ngModel)]="stepModel" /></td>
         <td class="value-cell">{{nativeSlider2.step}}</td>
         <td class="value-cell">{{ngThumb2.step}}</td>
-        <!-- <td class="value-cell">{{ngStartThumb2.step}} : {{ngEndThumb2.step}}</td> -->
+        <td class="value-cell">{{ngStartThumb2.step}} : {{ngEndThumb2.step}}</td>
       </tr>
       <tr>
         <th>Disabled</th>
         <td><input type="checkbox" [(ngModel)]="disabledModel" /></td>
         <td class="value-cell">{{nativeSlider2.disabled}}</td>
         <td class="value-cell">{{ngThumb2.disabled}}</td>
-        <!-- <td class="value-cell">{{ngStartThumb2.disabled}} : {{ngEndThumb2.disabled}}</td> -->
+        <td class="value-cell">{{ngStartThumb2.disabled}} : {{ngEndThumb2.disabled}}</td>
       </tr>
     </table>
     
@@ -99,10 +99,10 @@
       <input matSliderThumb #ngThumb2 [(ngModel)]="valueModel" />
     </mat-slider>
     <br>
-    <!-- <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+    <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
       <input matSliderStartThumb #ngStartThumb2 [(ngModel)]="valueModel" />
       <input matSliderEndThumb #ngEndThumb2 />
-    </mat-slider> -->
+    </mat-slider>
   </mat-tab>
 
   <mat-tab label="One-way property bindings">
