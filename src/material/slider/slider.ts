@@ -635,7 +635,11 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // would immediately be overwritten. Using setTimeout ensures the setting
     // of the value happens after the value has been updated by the
     // pointerdown event.
-    setTimeout(() => (this.value = value), 0);
+    setTimeout(() => {
+      this.value = value;
+      this.ngControl?.control?.setValue(this.value);
+      this.valueChange.emit(this._hostElement.value);
+    }, 0);
   }
 
   _onPointerMove(event: PointerEvent): void {
