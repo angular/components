@@ -10,6 +10,22 @@ td, th {
   padding: 8px;
 }
 
+@media (max-width: 600px) {
+  table {
+    font-size: 12px;
+    margin: 24px 0;
+  }
+  th {
+    text-align: center;
+  }
+  .control-cell {
+    max-width: 130px;
+    input {
+      width: calc(100% - 8px);
+    }
+  }
+}
+
 .value-cell {
   width: 130px;
 }
@@ -22,8 +38,7 @@ td, th {
   width: calc(100% - 32px);
 }
 .mat-mdc-tab-group {
-  resize: horizontal;
-  overflow: hidden;
   border: 1px solid;
   border-radius: 5px;
+  min-width: 390px;
 }
