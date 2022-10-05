@@ -604,21 +604,34 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._setIsFocused(true);
     this._updateWidthActive();
 
-    // does nothing if a step is defined because we
+    // Does nothing if a step is defined because we
     // want the value to snap to the values on input.
     if (!this._slider.step) {
       this._updateThumbUIByPointerEvent(event, {withAnimation: true});
     }
 
-    this._fixValue(event);
+    this._handleValueCorrection(event);
   }
 
-  /** Corrects the value on pointer down on touch devices. */
-  private _fixValue(event: PointerEvent): void {
-    if (event.pointerType !== 'touch' && !this._slider._platform.FIREFOX) {
-      return;
+  /**
+   * Corrects the value of the slider for Firefox and touch devices.
+   *
+   * Called on pointer down and up because the value is set based
+   * on the inactive width instead of the active width.
+   */
+  private _handleValueCorrection(event: PointerEvent): void {
+    if (event.pointerType === 'touch' || this._slider._platform.FIREFOX) {
+      // Note that this function gets triggered before the actual value of the
+      // slider is updated. This means if we were to set the value here, it
+      // would immediately be overwritten. Using setTimeout ensures the setting
+      // of the value happens after the value has been updated by the
+      // pointerdown event.
+      setTimeout(() => this._fixValue(event), 0);
     }
+  }
 
+  /** Corrects the value of the slider based on the pointer event's position. */
+  _fixValue(event: PointerEvent): void {
     const xPos = event.pageX - this._slider._cachedLeft - this._slider._rippleRadius;
     const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
     const percentage = xPos / width;
@@ -630,20 +643,15 @@ export class MatSliderThumb implements OnInit, OnDestroy {
       ? (1 - fixedPercentage) * (this._slider.max - this._slider.min)
       : fixedPercentage * (this._slider.max - this._slider.min);
 
-    // Note that this function gets triggered before the actual value of the
-    // slider is updated. This means if we were to set the value here, it
-    // would immediately be overwritten. Using setTimeout ensures the setting
-    // of the value happens after the value has been updated by the
-    // pointerdown event.
-    setTimeout(() => {
-      this.value = value;
+    this.value = value;
+    if (this.ngControl instanceof NgModel) {
       this.ngControl?.control?.setValue(this.value);
-      this.valueChange.emit(this._hostElement.value);
-    }, 0);
+    }
+    this.valueChange.emit(this._hostElement.value);
   }
 
   _onPointerMove(event: PointerEvent): void {
-    // again, does nothing if a step is defined because
+    // Again, does nothing if a step is defined because
     // we want the value to snap to the values on input.
     if (!this._slider.step && this._isActive) {
       this._updateThumbUIByPointerEvent(event);
@@ -653,7 +661,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   _onPointerUp(event: PointerEvent): void {
     this._isActive = false;
     this._updateWidthInactive();
-    this._fixValue(event);
+    this._handleValueCorrection(event);
   }
 
   _clamp(v: number): number {
@@ -829,6 +837,11 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     if (!this._slider.step && this._isActive) {
       this._updateSibling();
     }
+  }
+
+  override _fixValue(event: PointerEvent): void {
+    super._fixValue(event);
+    this.__sibling?._updateMinMax();
   }
 
   override _clamp(v: number): number {
