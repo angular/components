@@ -217,35 +217,23 @@ TODO(mmalerba): link to density docs once they exist.
 
 ### Button
 
-* Accessibility: Icon buttons are now 48px instead of 40px.
+* Icon button height and width are `48px` instead of `40px`.
 
-* Accessibility: Buttons have a slightly different hover/focus/active colors, improving contrast
-  ratios.
+* State colors (hover, focus, active) are slightly different to improve text contrast ratios.
 
-* Flat buttons have a different padding than raised buttons (this is apparent if you manually apply
-  a background color to flat buttons).
+* Letter-spacing is `1.25px` instead of `normal`.
 
-* Unthemed icon buttons may not show correctly on components such as snack-bars, since the container
-  does not match the expected application theme background.
+* FAB supports text with the `extended` input attribute.
 
-* Overriding button colors may require additional selectors. Application authors should always
-  prefer changing component colors via the supported theme API.
+* Theming mixins are split into three separate mixins:
+  - Normal button (default, raised, stroked, flat): `mat.mdc-button-theme`
+  - Icon button: `mat.mdc-icon-button-theme`
+  - FAB: `mat.mdc-fab-theme`
 
-* Outline buttons use a colored border instead of grey.
+* Icons in the button content are placed before the button text. Add the `iconPositionEnd` attribute to place them after the button text.
 
-* Icons in the button content will automatically be placed before the button text, unless the icon
-  has the `iconPositionEnd` attribute.
-
-* FABs have extra attributes: `appearance` and `lowered`.
-
-* FABs default to an outline appearance instead of fill.
-
-* The button's theming mixins have been split into separate mixins for buttons
-  (`mat.mdc-button-theme`), icon buttons (`mat.mdc-icon-button-theme`), and FABs
-  (`mat.mdc-fab-theme`).
-
-* Icons next to button text now match font-size. Buttons with only icons and no text will not align
-  properly (this does not apply to the icon-button).
+* Icons in the button content inherit the text `font-size`. Buttons with only icons and no text do
+  not align properly (this does not apply to the icon-button).
 
 ### Card
 
