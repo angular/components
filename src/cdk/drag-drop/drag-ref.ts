@@ -971,7 +971,7 @@ export class DragRef<T = any> {
         isPointerOverContainer,
         distance,
         pointerPosition,
-        event
+        event,
       );
       this._dropContainer = this._initialContainer;
     });
