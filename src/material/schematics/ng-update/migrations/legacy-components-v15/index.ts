@@ -40,7 +40,8 @@ export class LegacyComponentsMigration extends Migration<null> {
     try {
       processor.process(stylesheet.content, {syntax: scss}).sync();
     } catch (e) {
-      console.warn(`Failed to process stylesheet: `, stylesheet.filePath);
+      console.error(e);
+      console.warn(`Failed to process stylesheet: ${stylesheet.filePath} (see error above).`);
     }
   }
 

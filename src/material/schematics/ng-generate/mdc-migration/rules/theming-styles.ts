@@ -40,7 +40,8 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
     try {
       return processor.process(styles, {syntax: scss}).toString();
     } catch (e) {
-      console.warn(`Failed to process stylesheet: `, filename);
+      console.error(e);
+      console.warn(`Failed to process stylesheet: ${filename} (see error above).`);
       return styles;
     }
   }
