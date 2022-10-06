@@ -1,5 +1,5 @@
 import {
-  addAttribute,
+  updateAttribute,
   visitElements,
   parseTemplate,
   replaceStartTag,
@@ -21,7 +21,28 @@ function runTagNameDuplicationTest(html: string, result: string): void {
 
 function runAddAttributeTest(html: string, result: string): void {
   visitElements(parseTemplate(html).nodes, undefined, node => {
-    html = addAttribute(html, node, 'attr', 'val');
+    html = updateAttribute(html, node, 'add', () => 'val');
+  });
+  expect(html).toBe(result);
+}
+
+function runRemoveAttributeTest(html: string, result: string): void {
+  visitElements(parseTemplate(html).nodes, undefined, node => {
+    html = updateAttribute(html, node, 'rm', () => null);
+  });
+  expect(html).toBe(result);
+}
+
+function runChangeAttributeTest(html: string, result: string): void {
+  visitElements(parseTemplate(html).nodes, undefined, node => {
+    html = updateAttribute(html, node, 'change', old => (old == ':(' ? ':)' : old));
+  });
+  expect(html).toBe(result);
+}
+
+function runClearAttributeTest(html: string, result: string): void {
+  visitElements(parseTemplate(html).nodes, undefined, node => {
+    html = updateAttribute(html, node, 'clear', () => '');
   });
   expect(html).toBe(result);
 }
@@ -92,39 +113,103 @@ describe('#visitElements', () => {
 
   describe('add attribute tests', () => {
     it('should handle single element', async () => {
-      runAddAttributeTest('<a></a>', '<a attr="val"></a>');
+      runAddAttributeTest('<a></a>', '<a add="val"></a>');
     });
 
     it('should handle multiple unnested', async () => {
-      runAddAttributeTest('<a></a><b></b>', '<a attr="val"></a><b attr="val"></b>');
+      runAddAttributeTest('<a></a><b></b>', '<a add="val"></a><b add="val"></b>');
     });
 
     it('should handle multiple nested', async () => {
-      runAddAttributeTest('<a><b></b></a>', '<a attr="val"><b attr="val"></b></a>');
+      runAddAttributeTest('<a><b></b></a>', '<a add="val"><b add="val"></b></a>');
     });
 
     it('should handle multiple nested and unnested', async () => {
       runAddAttributeTest(
         '<a><b></b><c></c></a>',
-        '<a attr="val"><b attr="val"></b><c attr="val"></c></a>',
+        '<a add="val"><b add="val"></b><c add="val"></c></a>',
       );
     });
 
     it('should handle adding multiple attrs to a single element', async () => {
       let html = '<a></a>';
       visitElements(parseTemplate(html).nodes, undefined, node => {
-        html = addAttribute(html, node, 'attr1', 'val1');
-        html = addAttribute(html, node, 'attr2', 'val2');
+        html = updateAttribute(html, node, 'attr1', () => 'val1');
+        html = updateAttribute(html, node, 'attr2', () => 'val2');
       });
       expect(html).toBe('<a attr2="val2" attr1="val1"></a>');
     });
 
     it('should replace value of existing attribute', async () => {
-      runAddAttributeTest('<a attr="default"></a>', '<a attr="val"></a>');
+      runAddAttributeTest('<a add="default"></a>', '<a add="val"></a>');
     });
 
     it('should add value to existing attribute that does not have a value', async () => {
-      runAddAttributeTest('<a attr></a>', '<a attr="val"></a>');
+      runAddAttributeTest('<a add></a>', '<a add="val"></a>');
+    });
+  });
+
+  describe('remove attribute tests', () => {
+    it('should remove attribute', () => {
+      runRemoveAttributeTest('<a rm="something"></a>', '<a></a>');
+    });
+
+    it('should remove empty attribute', () => {
+      runRemoveAttributeTest('<a rm></a>', '<a></a>');
+    });
+
+    it('should remove unquoted attribute', () => {
+      runRemoveAttributeTest('<a rm=3></a>', '<a></a>');
+    });
+
+    it('should remove value-less attribute', () => {
+      runRemoveAttributeTest('<a rm></a>', '<a></a>');
+    });
+
+    it('should not change element without attribute', () => {
+      runRemoveAttributeTest('<a></a>', '<a></a>');
+    });
+
+    it('should not remove other attributes', () => {
+      runRemoveAttributeTest(
+        `
+          <a
+             first="1"
+             rm="2"
+             last="3">
+          </a>
+          `,
+        `
+          <a
+             first="1"
+             last="3">
+          </a>
+          `,
+      );
+    });
+  });
+
+  describe('change attribute tests', () => {
+    it('should change attribute with matching value', () => {
+      runChangeAttributeTest('<a change=":("></a>', '<a change=":)"></a>');
+    });
+
+    it('should not change attribute with non-matching value', () => {
+      runChangeAttributeTest('<a change="x"></a>', '<a change="x"></a>');
+    });
+  });
+
+  describe('clear attribute tests', () => {
+    it('should clear attribute with value', () => {
+      runClearAttributeTest('<a clear="something"></a>', '<a clear></a>');
+    });
+
+    it('should preserve value-less attribute', () => {
+      runClearAttributeTest('<a clear></a>', '<a clear></a>');
+    });
+
+    it('should add attribute to element without it', () => {
+      runClearAttributeTest('<a></a>', '<a clear></a>');
     });
   });
 
@@ -139,7 +224,7 @@ describe('#visitElements', () => {
       `,
       `
         <a
-          attr="val"
+          add="val"
           class="a"
           aria-label="a"
           aria-describedby="a"
@@ -157,8 +242,8 @@ describe('#visitElements', () => {
       ></a>
     `;
     visitElements(parseTemplate(html).nodes, undefined, node => {
-      html = addAttribute(html, node, 'attr1', 'val1');
-      html = addAttribute(html, node, 'attr2', 'val2');
+      html = updateAttribute(html, node, 'attr1', () => 'val1');
+      html = updateAttribute(html, node, 'attr2', () => 'val2');
     });
     expect(html).toBe(`
       <a

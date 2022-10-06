@@ -11,18 +11,21 @@ import {TemplateMigrator} from '../../template-migrator';
 import {updateAttribute, visitElements} from '../../tree-traversal';
 import {Update} from '../../../../../migration-utilities';
 
-export class CardTemplateMigrator extends TemplateMigrator {
+export class FormFieldTemplateMigrator extends TemplateMigrator {
   getUpdates(ast: compiler.ParsedTemplate): Update[] {
     const updates: Update[] = [];
 
     visitElements(ast.nodes, (node: compiler.TmplAstElement) => {
-      if (node.name !== 'mat-card') {
+      if (node.name !== 'mat-form-field') {
         return;
       }
 
       updates.push({
         offset: node.startSourceSpan.start.offset,
-        updateFn: html => updateAttribute(html, node, 'appearance', () => 'outlined'),
+        updateFn: html =>
+          updateAttribute(html, node, 'appearance', old =>
+            ['legacy', 'standard'].includes(old || '') ? null : old,
+          ),
       });
     });
 
