@@ -64,8 +64,8 @@ async function compareFiles(
   const [testContent, goldenContent] = await Promise.allSettled(contentPromises);
   const diff = {
     filename,
-    actual: getDiffValue(goldenStats, goldenContent),
-    expected: getDiffValue(testStats, testContent),
+    actual: getDiffValue(testStats, testContent),
+    expected: getDiffValue(goldenStats, goldenContent),
   };
   if (testStats.status === 'rejected' && goldenStats.status === 'rejected') {
     return null; // Neither file exists.
@@ -92,9 +92,9 @@ function showDiffs(diffs: FileDiff[]) {
     console.error(
       [
         ''.padEnd(80, '='),
-        `----- ${diff.filename} (actual) `.padEnd(80, '-'),
+        `----- ${diff.filename} (this run) `.padEnd(80, '-'),
         diff.actual,
-        `----- ${diff.filename} (expected) `.padEnd(80, '-'),
+        `----- ${diff.filename} (golden) `.padEnd(80, '-'),
         diff.expected,
         '',
       ].join('\n'),
