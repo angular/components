@@ -40,6 +40,16 @@ migration_test(
         "sample-project/**/*",
     ]),
     approve = False,
+    verify = [
+        "! grep" +
+        "  --include=*.{ts,css,scss,html}" +
+        "  --exclude-dir={node_modules,.angular,.yarn_cache_folder}" +
+        "  -ir legacy" +
+        "  || { echo \"Error: golden project contains 'legacy'.\" >&2; exit 1; }",
+        "yarn build",
+        # TODO(mmalerba): add back once slider tests pass.
+        # "yarn test",
+    ],
 )
 
 migration_test(
