@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatSnackBarModule} from '@angular/material/legacy-snack-bar';
+import {MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/legacy-snack-bar';
 import {SnackBarComponent} from './snack-bar.component';
 
 describe('SnackBarComponent', () => {
