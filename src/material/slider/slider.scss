@@ -24,9 +24,16 @@ $mat-slider-horizontal-margin: 8px !default;
   vertical-align: middle;
   margin: 0;
   min-width: $mat-slider-min-size;
+  -webkit-tap-highlight-color: transparent;
+
+  .mdc-slider__input {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   .mdc-slider__track,
   .mdc-slider__thumb {
+    opacity: 0.5;
     pointer-events: none;
   }
 

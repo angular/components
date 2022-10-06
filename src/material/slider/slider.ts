@@ -352,7 +352,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     'type': 'range',
     '[style.padding]': '_paddingStyle',
     '[style.width]': '_widthStyle',
-    '[style.pointer-events]': '"auto"',
     '[attr.aria-valuetext]': '_valuetext',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
@@ -747,21 +746,14 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   exportAs: 'matSliderRangeThumb',
   providers: [],
   host: {
-    '[style.width]': '_styleWidth',
+    '[style.pointer-events]': '_pointerEvents',
     '[style.left]': '_left',
     '[style.right]': '_right',
     '[style.z-index]': '_zIndex',
   },
 })
 export class MatSliderRangeThumb extends MatSliderThumb {
-  /**
-   * Decides which native slider receives click events.
-   * This is needed to handle clicks on the overlapping section between native sliders.
-   */
-  _zIndex: string = 'auto';
-
-  _styleWidth: string;
-
+  _pointerEvents: string = 'auto';
   _left: string;
   _right: string;
   _marginLeft: string;
@@ -842,13 +834,18 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     if (this.disabled) {
       return;
     }
-    this.__sibling?._updateWidthActive();
+    if (this.__sibling) {
+      this.__sibling._pointerEvents = 'none';
+    }
     super._onPointerDown(event);
   }
 
   override _onPointerUp(event: PointerEvent): void {
     super._onPointerUp(event);
-    this.__sibling?._updateWidthInactive();
+    if (this.__sibling) {
+      this.__sibling._updateWidthInactive();
+      this.__sibling._pointerEvents = 'auto';
+    }
   }
 
   override _onPointerMove(event: PointerEvent): void {
@@ -898,7 +895,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
         : 1;
     const width = maxWidth * percentage + minWidth;
-    this._styleWidth = `${width}px`;
+    this._widthStyle = `${width}px`;
     this._paddingStyle = `0 ${this._slider._inputPadding}px`;
   }
 
@@ -920,7 +917,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
 
     const width = maxWidth * percentage;
-    this._styleWidth = `${width}px`;
+    this._widthStyle = `${width}px`;
     this._paddingStyle = '0px';
   }
 
