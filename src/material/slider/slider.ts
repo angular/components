@@ -371,7 +371,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
   set value(v: NumberInput) {
     const val = coerceNumberProperty(v).toString();
-    if (this._hasSetInitialValue) {
+    if (this._hasSetInitialValue && !this._isActive) {
       this._hostElement.value = val;
       this._updateThumbUIByValue();
       this._slider._onValueChange(this);
@@ -501,8 +501,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   /**
    * Indicates whether UI updates should be skipped.
    *
-   * This flag is used to avoid flickering when correcting
-   * values on pointer up/down on Firefox and touch devices.
+   * This flag is used to avoid flickering
+   * when correcting values on pointer up/down.
    */
   _skipUIUpdate: boolean = false;
 
@@ -621,29 +621,27 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   /**
-   * Corrects the value of the slider for Firefox and touch devices.
+   * Corrects the value of the slider on pointer up/down.
    *
    * Called on pointer down and up because the value is set based
    * on the inactive width instead of the active width.
    */
   private _handleValueCorrection(event: PointerEvent): void {
-    if (event.pointerType === 'touch' || this._slider._platform.FIREFOX) {
-      // Don't update the UI with the current value! On touch devices and
-      // Firefox, the value on pointerdown and pointerup is calculated in the
-      // split second before the input(s) resize. See _updateWidthInactive()
-      // and _updateWidthActive() for more details.
-      this._skipUIUpdate = true;
+    // Don't update the UI with the current value! The value on pointerdown
+    // and pointerup is calculated in the split second before the input(s)
+    // resize. See _updateWidthInactive() and _updateWidthActive() for more
+    // details.
+    this._skipUIUpdate = true;
 
-      // Note that this function gets triggered before the actual value of the
-      // slider is updated. This means if we were to set the value here, it
-      // would immediately be overwritten. Using setTimeout ensures the setting
-      // of the value happens after the value has been updated by the
-      // pointerdown event.
-      setTimeout(() => {
-        this._skipUIUpdate = false;
-        this._fixValue(event);
-      }, 0);
-    }
+    // Note that this function gets triggered before the actual value of the
+    // slider is updated. This means if we were to set the value here, it
+    // would immediately be overwritten. Using setTimeout ensures the setting
+    // of the value happens after the value has been updated by the
+    // pointerdown event.
+    setTimeout(() => {
+      this._skipUIUpdate = false;
+      this._fixValue(event);
+    }, 0);
   }
 
   /** Corrects the value of the slider based on the pointer event's position. */
@@ -656,14 +654,17 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     const fixedPercentage = Math.round(percentage * 100) / 100;
 
     const value = this._slider._isRtl
-      ? (1 - fixedPercentage) * (this._slider.max - this._slider.min)
-      : fixedPercentage * (this._slider.max - this._slider.min);
+      ? (1 - fixedPercentage) * (this._slider.max - this._slider.min) + this._slider.min
+      : fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
 
+    console.log(this._slider.min, this._slider.max, fixedPercentage);
+    console.log('fixing value to:', value);
     this.value = value;
     if (this.ngControl instanceof NgModel) {
       this.ngControl?.control?.setValue(this.value);
     }
     this.valueChange.emit(this._hostElement.value);
+    this._slider._onValueChange(this);
   }
 
   _onPointerMove(event: PointerEvent): void {
@@ -822,7 +823,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
   override _onInput(): void {
     super._onInput();
-    this._updateSibling();
+    this.__sibling?._updateMinMax();
   }
 
   override _onNgControlValueChange(): void {
@@ -1720,10 +1721,6 @@ export class MatSlider
 
   /** Updates the dots along the slider track. */
   _updateTickMarkUI(): void {
-    if (this._skipUpdate()) {
-      return;
-    }
-
     if (this.step === undefined || this.min === undefined || this.max === undefined) {
       return;
     }
