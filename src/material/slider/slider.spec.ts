@@ -84,7 +84,7 @@ describe('MDC-based MatSlider', () => {
       checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
     });
 
-    it('should update by click', () => {
+    fit('should update by click', () => {
       setValueByClick(slider, input, 25);
       checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
 
@@ -1676,6 +1676,7 @@ function setValueByClick(
   input.focus();
   dispatchPointerEvent(inputElement, 'pointerup', x, y);
   dispatchEvent(input._hostElement, new Event('change'));
+  flush();
 }
 
 /** Slides the MatSlider's thumb to the given value. */

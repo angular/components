@@ -617,7 +617,9 @@ export class MatSliderThumb implements OnInit, OnDestroy {
       this._updateThumbUIByPointerEvent(event, {withAnimation: true});
     }
 
-    this._handleValueCorrection(event);
+    if (!this.disabled) {
+      this._handleValueCorrection(event);
+    }
   }
 
   /**
@@ -657,8 +659,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
       ? (1 - fixedPercentage) * (this._slider.max - this._slider.min) + this._slider.min
       : fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
 
-    console.log(this._slider.min, this._slider.max, fixedPercentage);
-    console.log('fixing value to:', value);
+    const prevValue = this.value;
     this.value = value;
     if (this.ngControl instanceof NgModel) {
       this.ngControl?.control?.setValue(this.value);
@@ -678,7 +679,9 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   _onPointerUp(event: PointerEvent): void {
     this._isActive = false;
     this._updateWidthInactive();
-    this._handleValueCorrection(event);
+    if (!this.disabled) {
+      this._handleValueCorrection(event);
+    }
   }
 
   _clamp(v: number): number {
