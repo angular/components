@@ -57,7 +57,7 @@ describe('MDC-based MatSlider', () => {
       expect(input.step).withContext('step').toBe(step);
     }
     if (width !== undefined) {
-      const realWidth = parseInt((input as MatSliderRangeThumb)._styleWidth.match(/\d+/)![0], 10);
+      const realWidth = parseInt((input as MatSliderRangeThumb)._widthStyle.match(/\d+/)![0], 10);
       expect(realWidth)
         .withContext('width')
         .toBeCloseTo((300 * width) / 100 + 16, 0);
@@ -541,7 +541,7 @@ describe('MDC-based MatSlider', () => {
       const slider = sliderDebugElement.componentInstance;
       input = slider._getInput(Thumb.END) as MatSliderThumb;
       thumbInstance = slider._getThumb(Thumb.END);
-      thumbElement = thumbInstance._getHostElement();
+      thumbElement = thumbInstance._hostElement;
       const thumbDimensions = thumbElement.getBoundingClientRect();
       thumbX = thumbDimensions.left + thumbDimensions.width / 2;
       thumbY = thumbDimensions.top + thumbDimensions.height / 2;
@@ -596,12 +596,14 @@ describe('MDC-based MatSlider', () => {
     it('should show the focus ripple on pointerdown', fakeAsync(() => {
       expect(isRippleVisible('focus')).toBeFalse();
       pointerdown();
+      flush();
       expect(isRippleVisible('focus')).toBeTrue();
     }));
 
     it('should continue to show the focus ripple on pointerup', fakeAsync(() => {
       pointerdown();
       pointerup();
+      flush();
       expect(isRippleVisible('focus')).toBeTrue();
     }));
 
@@ -609,18 +611,21 @@ describe('MDC-based MatSlider', () => {
       pointerdown();
       pointerup();
       blur();
+      flush();
       expect(isRippleVisible('focus')).toBeFalse();
     }));
 
     it('should show the active ripple on pointerdown', fakeAsync(() => {
       expect(isRippleVisible('active')).toBeFalse();
       pointerdown();
+      flush();
       expect(isRippleVisible('active')).toBeTrue();
     }));
 
     it('should hide the active ripple on pointerup', fakeAsync(() => {
       pointerdown();
       pointerup();
+      flush();
       expect(isRippleVisible('active')).toBeFalse();
     }));
 
@@ -629,18 +634,21 @@ describe('MDC-based MatSlider', () => {
     it('should not show the hover ripple if the thumb is already focused', fakeAsync(() => {
       pointerdown();
       pointerenter();
+      flush();
       expect(isRippleVisible('hover')).toBeFalse();
     }));
 
     it('should hide the hover ripple if the thumb is focused', fakeAsync(() => {
       pointerenter();
       pointerdown();
+      flush();
       expect(isRippleVisible('hover')).toBeFalse();
     }));
 
     it('should not hide the focus ripple if the thumb is pressed', fakeAsync(() => {
       pointerdown();
       blur();
+      flush();
       expect(isRippleVisible('focus')).toBeTrue();
     }));
 
@@ -649,6 +657,7 @@ describe('MDC-based MatSlider', () => {
       pointerdown();
       pointerup();
       blur();
+      flush();
       expect(isRippleVisible('hover')).toBeTrue();
     }));
 
@@ -656,6 +665,7 @@ describe('MDC-based MatSlider', () => {
       pointerdown();
       blur();
       pointerup();
+      flush();
       expect(isRippleVisible('focus')).toBeFalse();
     }));
   });
@@ -897,8 +907,8 @@ describe('MDC-based MatSlider', () => {
       startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
 
-      const startThumbElement = slider._getThumb(Thumb.START)._getHostElement();
-      const endThumbElement = slider._getThumb(Thumb.END)._getHostElement();
+      const startThumbElement = slider._getThumb(Thumb.START)._hostElement;
+      const endThumbElement = slider._getThumb(Thumb.END)._hostElement;
       startValueIndicatorTextElement = startThumbElement.querySelector(
         '.mdc-slider__value-indicator-text',
       )!;

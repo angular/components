@@ -25,8 +25,8 @@ describe('MatSlider', () => {
     });
 
     it('should update the value on click', async () => {
-      await setValueByClick(slider, 15);
-      expect(await getSliderValue(slider, Thumb.END)).toBe(15);
+      await setValueByClick(slider, 49);
+      expect(await getSliderValue(slider, Thumb.END)).toBe(49);
     });
 
     it('should update the value on slide', async () => {
