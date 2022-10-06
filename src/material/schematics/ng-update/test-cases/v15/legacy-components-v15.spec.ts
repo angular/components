@@ -286,6 +286,7 @@ describe('v15 legacy components migration', () => {
           `@use '@angular/material' as mat;`,
           `@include mat.core();`,
           `@include mat.core(mat.define-typography-config());`,
+          `@include mat.core-theme(())`,
         ],
         new: [
           `@use '@angular/material' as mat;`,
@@ -299,6 +300,7 @@ describe('v15 legacy components migration', () => {
           `//  If you add typography styles elsewhere, you may want to remove this.`,
           `@include mat.all-legacy-component-typographies(mat.define-legacy-typography-config());`,
           `@include mat.legacy-core();`,
+          `@include mat.legacy-core-theme(())`,
         ],
       });
     });

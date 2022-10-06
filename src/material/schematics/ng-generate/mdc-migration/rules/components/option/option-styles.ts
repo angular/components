@@ -26,6 +26,18 @@ export class OptionStylesMigrator extends StyleMigrator {
       old: 'legacy-option-typography',
       new: ['option-typography'],
     },
+    {
+      old: 'legacy-core-theme',
+      new: ['core-theme'],
+    },
+    {
+      old: 'legacy-core-color',
+      new: ['core-color'],
+    },
+    {
+      old: 'legacy-core-typography',
+      new: ['core-typography'],
+    },
   ];
 
   classChanges: ClassNameChange[] = [

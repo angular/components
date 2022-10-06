@@ -66,6 +66,7 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        @include mat.legacy-core();
         @include mat.all-legacy-component-themes($sample-project-themes);
         @include mat.all-legacy-component-colors($sample-colors);
         @include mat.all-legacy-component-typographies($sample-typographies);
@@ -73,6 +74,7 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        @include mat.core();
         @include mat.all-component-themes($sample-project-themes);
         @include mat.all-component-colors($sample-colors);
         @include mat.all-component-typographies($sample-typographies);
@@ -86,6 +88,7 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        @include mat.legacy-core();
         @include mat.all-legacy-component-themes($sample-project-themes);
         @include mat.all-legacy-component-colors($sample-colors);
         @include mat.all-legacy-component-typographies($sample-typographies);
@@ -93,6 +96,9 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        /* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated */
+        @include mat.legacy-core();
+        @include mat.core();
         /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
         @include mat.all-legacy-component-themes($sample-project-themes);
         @include mat.all-component-themes($sample-project-themes);
