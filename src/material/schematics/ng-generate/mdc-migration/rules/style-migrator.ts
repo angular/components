@@ -26,7 +26,7 @@ export interface MixinChange {
   old: string;
 
   /** The name(s) of the new scss mixin(s). */
-  new: string[];
+  new: string[] | null;
 
   /** Optional check to see if new scss mixin(s) already exist in the styles */
   checkForDuplicates?: boolean;
@@ -75,7 +75,7 @@ export abstract class StyleMigrator {
     }
 
     // Check if mixin replacements already exist in the stylesheet
-    const replacements = [...change.new];
+    const replacements = [...(change.new ?? [])];
     if (change.checkForDuplicates) {
       const mixinArgumentMatches = atRule.params?.match(MIXIN_ARGUMENTS_REGEX);
       atRule.root().walkAtRules(rule => {
@@ -94,12 +94,7 @@ export abstract class StyleMigrator {
       });
     }
 
-    // Don't do anything if all the new changes already exist in the stylesheet
-    if (replacements.length < 1) {
-      return null;
-    }
-
-    return {old: change.old, new: replacements};
+    return {old: change.old, new: replacements.length ? replacements : null};
   }
 
   /**

@@ -63,7 +63,11 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
     if (migrator) {
       const mixinChange = migrator.styles.getMixinChange(this.namespace, atRule);
       if (mixinChange) {
-        replaceAtRuleWithMultiple(atRule, mixinChange.old, mixinChange.new);
+        if (mixinChange.new) {
+          replaceAtRuleWithMultiple(atRule, mixinChange.old, mixinChange.new);
+        } else {
+          atRule.remove();
+        }
       }
     } else if (atRule.parent && this.isCrossCuttingMixin(atRule.params)) {
       if (this.isPartialMigration()) {

@@ -60,6 +60,26 @@ describe('multiple component styles', () => {
       );
     });
 
+    it('should remove legacy mixin if all replacements are already accounted for', async () => {
+      await runMigrationTest(
+        ['paginator', 'select'],
+        `
+          @use '@angular/material' as mat;
+          $theme: ();
+          @include mat.legacy-paginator-theme($theme);
+          @include mat.legacy-select-theme($theme);
+          `,
+        `
+          @use '@angular/material' as mat;
+          $theme: ();
+          @include mat.paginator-theme($theme);
+          @include mat.icon-button-theme($theme);
+          @include mat.form-field-theme($theme);
+          @include mat.select-theme($theme);
+          `,
+      );
+    });
+
     it('should migrate all component mixins for a full migration', async () => {
       await runMigrationTest(
         ['all'],
