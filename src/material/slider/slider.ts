@@ -141,7 +141,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     readonly _cdr: ChangeDetectorRef,
     private readonly _ngZone: NgZone,
     @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
-    private readonly _elementRef: ElementRef<HTMLElement>,
+    _elementRef: ElementRef<HTMLElement>,
   ) {
     this._hostElement = _elementRef.nativeElement;
   }
@@ -835,6 +835,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
       return;
     }
     if (this.__sibling) {
+      this.__sibling._updateWidthActive();
       this.__sibling._pointerEvents = 'none';
     }
     super._onPointerDown(event);

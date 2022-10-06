@@ -18,7 +18,7 @@ td, th {
   th {
     text-align: center;
   }
-  .control-cell {
+  .demo-control-cell {
     max-width: 130px;
     input {
       width: calc(100% - 8px);
@@ -26,13 +26,13 @@ td, th {
   }
 }
 
-.value-cell {
+.demo-value-cell {
   width: 130px;
 }
 .mat-mdc-slider {
   width: 100%;
 }
-.native-slider {
+.demo-native-slider {
   margin: 0;
   padding: 16px;
   width: calc(100% - 32px);

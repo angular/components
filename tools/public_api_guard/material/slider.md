@@ -84,6 +84,8 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     _onTranslateXChangeBySideEffect(input1: MatSliderRangeThumb, input2: MatSliderRangeThumb): void;
     // (undocumented)
     _onValueChange(source: MatSliderThumb): void;
+    // (undocumented)
+    readonly _platform: Platform;
     _rippleRadius: number;
     _setTrackActiveStyles(styles: {
         left: string;
@@ -154,6 +156,8 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     // (undocumented)
     _clamp(v: number): number;
     // (undocumented)
+    _fixValue(event: PointerEvent): void;
+    // (undocumented)
     _getDefaultValue(): number;
     getMaxPos(): number;
     getMinPos(): number;
@@ -182,22 +186,21 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     // (undocumented)
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
-    _onPointerUp(): void;
+    _onPointerUp(event: PointerEvent): void;
+    // (undocumented)
+    _pointerEvents: string;
     // (undocumented)
     _right: string;
     // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
-    _styleWidth: string;
-    // (undocumented)
     _updateHiddenUI(): void;
     // (undocumented)
     _updateStaticStyles(): void;
-    _updateWidthActive(): void;
-    _updateWidthInactive(): void;
     // (undocumented)
-    _updateZIndex(clientX: number): void;
-    _zIndex: string;
+    _updateWidthActive(): void;
+    // (undocumented)
+    _updateWidthInactive(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderRangeThumb, "input[matSliderStartThumb], input[matSliderEndThumb]", ["matSliderRangeThumb"], {}, {}, never, never, false, never>;
     // (undocumented)
@@ -225,6 +228,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     readonly _elementRef: ElementRef<HTMLInputElement>;
     // (undocumented)
     get fillPercentage(): number;
+    _fixValue(event: PointerEvent): void;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -258,6 +262,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     _onChange(): void;
     // (undocumented)
+    _onFocus(): void;
+    // (undocumented)
     _onInput(): void;
     // (undocumented)
     _onNgControlValueChange(): void;
@@ -266,10 +272,11 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
-    _onPointerUp(): void;
+    _onPointerUp(event: PointerEvent): void;
     _paddingStyle: string;
     // (undocumented)
     get percentage(): number;
+    _skipUIUpdate: boolean;
     // (undocumented)
     readonly _slider: MatSlider;
     // (undocumented)
@@ -278,6 +285,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     thumbPosition: Thumb;
     get translateX(): number;
     set translateX(v: number);
+    // (undocumented)
+    _translateX: number | undefined;
     // (undocumented)
     _updateHiddenUI(): void;
     // (undocumented)
@@ -292,6 +301,10 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     _updateThumbUIByValue(options?: {
         withAnimation: boolean;
     }): void;
+    // (undocumented)
+    _updateWidthActive(): void;
+    // (undocumented)
+    _updateWidthInactive(): void;
     // (undocumented)
     get value(): number;
     set value(v: NumberInput);
@@ -308,11 +321,12 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 // @public
 class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     constructor(_cdr: ChangeDetectorRef, _ngZone: NgZone, _slider: MatSlider, _elementRef: ElementRef<HTMLElement>);
-    disableRipple: boolean;
+    // (undocumented)
+    readonly _cdr: ChangeDetectorRef;
     discrete: boolean;
-    _getHostElement(): HTMLElement;
     _getKnob(): HTMLElement;
     _getValueIndicatorContainer(): HTMLElement;
+    _hostElement: HTMLElement;
     readonly _isActive = false;
     _isValueIndicatorVisible: boolean;
     _knob: ElementRef<HTMLElement>;
@@ -325,7 +339,7 @@ class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     _valueIndicatorContainer: ElementRef<HTMLElement>;
     valueIndicatorText: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSliderVisualThumb, "mat-slider-visual-thumb", never, { "discrete": "discrete"; "thumbPosition": "thumbPosition"; "valueIndicatorText": "valueIndicatorText"; "disableRipple": "disableRipple"; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSliderVisualThumb, "mat-slider-visual-thumb", never, { "discrete": "discrete"; "thumbPosition": "thumbPosition"; "valueIndicatorText": "valueIndicatorText"; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderVisualThumb, never>;
 }
