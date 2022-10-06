@@ -249,8 +249,7 @@ export class MatChipSet
       .withVerticalOrientation()
       .withHorizontalOrientation(this._dir ? this._dir.value : 'ltr')
       .withHomeAndEnd()
-      // Skip non-interactive and disabled actions since the user can't do anything with them.
-      .skipPredicate(action => !action.isInteractive || action.disabled);
+      .skipPredicate(action => this._skipPredicate(action));
 
     // Keep the manager active index in sync so that navigation picks
     // up from the current chip if the user clicks into the list directly.
@@ -265,6 +264,16 @@ export class MatChipSet
     this._dir?.change
       .pipe(takeUntil(this._destroyed))
       .subscribe(direction => this._keyManager.withHorizontalOrientation(direction));
+  }
+
+  /**
+   * Determines if key manager should avoid putting a given chip action in the tab index. Skip
+   * non-interactive and disabled actions since the user can't do anything with them.
+   */
+  protected _skipPredicate(action: MatChipAction): boolean {
+    // Skip chips that the user cannot interact with. `mat-chip-set` does not permit focusing disabled
+    // chips.
+    return !action.isInteractive || action.disabled;
   }
 
   /** Listens to changes in the chip set and syncs up the state of the individual chips. */
