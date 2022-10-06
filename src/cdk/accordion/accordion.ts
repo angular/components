@@ -55,7 +55,7 @@ export class CdkAccordion implements OnDestroy, OnChanges {
     }
   }
 
-  /** Closes all enabled accordion items in an accordion where multi is enabled. */
+  /** Closes all enabled accordion items. */
   closeAll(): void {
     this._openCloseAllActions.next(false);
   }
