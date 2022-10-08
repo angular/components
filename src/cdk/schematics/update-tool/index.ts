@@ -96,7 +96,7 @@ export class UpdateProject<Context> {
     resourceCollector.resolvedTemplates.forEach(template => {
       // Do not visit the template if it has been checked before. Inline
       // templates cannot be referenced multiple times.
-      if (template.inline || !this._analyzedFiles.has(template.filePath)) {
+      if (!template.inline && !this._analyzedFiles.has(template.filePath)) {
         migrations.forEach(m => m.visitTemplate(template));
         this._analyzedFiles.add(template.filePath);
       }
@@ -108,7 +108,7 @@ export class UpdateProject<Context> {
     resourceCollector.resolvedStylesheets.forEach(stylesheet => {
       // Do not visit the stylesheet if it has been checked before. Inline
       // stylesheets cannot be referenced multiple times.
-      if (stylesheet.inline || !this._analyzedFiles.has(stylesheet.filePath)) {
+      if (!stylesheet.inline && !this._analyzedFiles.has(stylesheet.filePath)) {
         migrations.forEach(r => r.visitStylesheet(stylesheet));
         this._analyzedFiles.add(stylesheet.filePath);
       }
