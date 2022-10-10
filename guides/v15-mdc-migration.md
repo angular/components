@@ -316,7 +316,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   in your application that need to be fixed when migrating.
 
 ### Form Field
-<!-- TODO(devversion): review -->
 
 * The "legacy" and "standard" form-field appearance settings no longer exist, as these have been
   dropped from the Material Design spec.
@@ -346,8 +345,10 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   behaved like a placeholder. If you need this behavior, use the `placeholder` property on `<input>`
   instead.
 
+* Custom form field controls may need their styles adjusted to account for the fact that the
+  surrounding form field DOM and styles have changed.
+
 ### Input
-<!-- TODO(devversion): review -->
 
 * MatInput must be inside `<mat-form-field>`. Previously it was (unintentionally) possible to use an
   `<input matInput>` without the form field if the page loaded form field styles elsewhere.
