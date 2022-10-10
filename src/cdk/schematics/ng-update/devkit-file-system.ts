@@ -7,9 +7,49 @@
  */
 
 import {normalize, Path} from '@angular-devkit/core';
-import {Tree, UpdateRecorder} from '@angular-devkit/schematics';
+import {Tree, UpdateRecorder, FileDoesNotExistException} from '@angular-devkit/schematics';
 import {DirectoryEntry, FileSystem} from '../update-tool/file-system';
 import * as path from 'path';
+
+class LegacyStringRecorder implements UpdateRecorder {
+  private readonly _original: string;
+
+  constructor(private _string: string) {
+    this._original = _string;
+  }
+
+  insertLeft(index: number, content: string | Buffer): UpdateRecorder {
+    return this.insertRight(index, content);
+  }
+
+  insertRight(index: number, content: string | Buffer): UpdateRecorder {
+    content = content.toString();
+
+    if (this._original.includes('mat-card')) {
+      debugger;
+    }
+
+    this._string = this._string.slice(0, index) + content + this._string.slice(index);
+    return this;
+  }
+
+  remove(index: number, length: number): UpdateRecorder {
+    if (this._original.includes('mat-card')) {
+      debugger;
+    }
+
+    this._string = this._string.slice(0, index) + this._string.slice(index + length);
+    return this;
+  }
+
+  hasChanged(): boolean {
+    return this._string !== this._original;
+  }
+
+  toString(): string {
+    return this._string;
+  }
+}
 
 /**
  * File system that leverages the virtual tree from the CLI devkit. This file

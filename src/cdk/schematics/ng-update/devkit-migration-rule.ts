@@ -171,7 +171,6 @@ export function createMigrationSchematicRule(
       // Commit all recorded edits in the update recorder. We apply the edits after all
       // migrations ran because otherwise offsets in the TypeScript program would be
       // shifted and individual migrations could no longer update the same source file.
-      fileSystem.commitEdits();
 
       hasFailures = hasFailures || result.hasFailures;
     }

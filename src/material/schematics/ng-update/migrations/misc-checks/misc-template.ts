@@ -23,7 +23,7 @@ export class MiscTemplateMigration extends Migration<null> {
   // currently only includes migrations for V6 deprecations.
   enabled = this.targetVersion === TargetVersion.V6;
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
     // Migration for: https://github.com/angular/components/pull/10398 (v6)
     findOutputsOnElementWithTag(template.content, 'selectionChange', ['mat-list-option']).forEach(
       offset => {
@@ -62,5 +62,7 @@ export class MiscTemplateMigration extends Migration<null> {
         });
       },
     );
+
+    return null;
   }
 }

@@ -18,10 +18,12 @@ export class MiscClassNamesMigration extends Migration<null> {
   // currently only includes migrations for V6 deprecations.
   enabled = this.targetVersion === TargetVersion.V6;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isIdentifier(node)) {
       this._visitIdentifier(node);
     }
+
+    return null;
   }
 
   private _visitIdentifier(identifier: ts.Identifier) {

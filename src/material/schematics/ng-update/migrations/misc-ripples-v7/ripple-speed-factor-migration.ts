@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Migration, ResolvedResource, TargetVersion, WorkspacePath} from '@angular/cdk/schematics';
+import {Migration, Replacement, ResolvedResource, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 import {
   convertSpeedFactorToDuration,
@@ -36,43 +36,45 @@ export class RippleSpeedFactorMigration extends Migration<null> {
   // speed factor has been removed in that version.
   enabled = this.targetVersion === TargetVersion.V7;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isBinaryExpression(node)) {
-      this._visitBinaryExpression(node);
+      return this._visitBinaryExpression(node);
     } else if (ts.isPropertyAssignment(node)) {
-      this._visitPropertyAssignment(node);
+      return this._visitPropertyAssignment(node);
     }
+
+    return null;
   }
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
     let match: RegExpMatchArray | null;
+    const replacements: Replacement[] = [];
 
     while ((match = speedFactorNumberRegex.exec(template.content)) !== null) {
       const newEnterDuration = convertSpeedFactorToDuration(parseFloat(match[1]));
-
-      this._replaceText(
-        template.filePath,
-        template.start + match.index!,
-        match[0].length,
-        `[matRippleAnimation]="{enterDuration: ${newEnterDuration}}"`,
-      );
+      replacements.push({
+        start: template.start + match.index!,
+        length: match[0].length,
+        content: `[matRippleAnimation]="{enterDuration: ${newEnterDuration}}"`,
+      });
     }
 
     while ((match = speedFactorNotParseable.exec(template.content)) !== null) {
       const newDurationExpression = createSpeedFactorConvertExpression(match[1]);
-      this._replaceText(
-        template.filePath,
-        template.start + match.index!,
-        match[0].length,
-        `[matRippleAnimation]="{enterDuration: (${newDurationExpression})}"`,
-      );
+      replacements.push({
+        start: template.start + match.index!,
+        length: match[0].length,
+        content: `[matRippleAnimation]="{enterDuration: (${newDurationExpression})}"`,
+      });
     }
+
+    return replacements;
   }
 
   /** Switches binary expressions (e.g. myRipple.speedFactor = 0.5) to the new animation config. */
   private _visitBinaryExpression(expression: ts.BinaryExpression) {
     if (!ts.isPropertyAccessExpression(expression.left)) {
-      return;
+      return null;
     }
 
     // Left side expression consists of target object and property name (e.g. myInstance.val)
@@ -80,12 +82,13 @@ export class RippleSpeedFactorMigration extends Migration<null> {
     const targetTypeNode = this.typeChecker.getTypeAtLocation(leftExpression.expression);
 
     if (!targetTypeNode.symbol) {
-      return;
+      return null;
     }
 
     const targetTypeName = targetTypeNode.symbol.getName();
     const propertyName = leftExpression.name.getText();
     const filePath = this.fileSystem.resolve(leftExpression.getSourceFile().fileName);
+    const replacements: Replacement[] = [];
 
     if (targetTypeName === 'MatRipple' && propertyName === 'speedFactor') {
       if (ts.isNumericLiteral(expression.right)) {
@@ -93,20 +96,18 @@ export class RippleSpeedFactorMigration extends Migration<null> {
         const newEnterDurationValue = convertSpeedFactorToDuration(numericValue);
 
         // Replace the `speedFactor` property name with `animation`.
-        this._replaceText(
-          filePath,
-          leftExpression.name.getStart(),
-          leftExpression.name.getWidth(),
-          'animation',
-        );
+        replacements.push({
+          start: leftExpression.name.getStart(),
+          length: leftExpression.name.getWidth(),
+          content: 'animation',
+        });
 
         // Replace the value assignment with the new animation config.
-        this._replaceText(
-          filePath,
-          expression.right.getStart(),
-          expression.right.getWidth(),
-          `{enterDuration: ${newEnterDurationValue}}`,
-        );
+        replacements.push({
+          start: expression.right.getStart(),
+          length: expression.right.getWidth(),
+          content: `{enterDuration: ${newEnterDurationValue}}`,
+        });
       } else {
         // Handle the right expression differently if the previous speed factor value can't
         // be resolved statically. In that case, we just create a TypeScript expression that
@@ -114,22 +115,22 @@ export class RippleSpeedFactorMigration extends Migration<null> {
         const newExpression = createSpeedFactorConvertExpression(expression.right.getText());
 
         // Replace the `speedFactor` property name with `animation`.
-        this._replaceText(
-          filePath,
-          leftExpression.name.getStart(),
-          leftExpression.name.getWidth(),
-          'animation',
-        );
+        replacements.push({
+          start: leftExpression.name.getStart(),
+          length: leftExpression.name.getWidth(),
+          content: 'animation',
+        });
 
         // Replace the value assignment with the new animation config and remove TODO.
-        this._replaceText(
-          filePath,
-          expression.right.getStart(),
-          expression.right.getWidth(),
-          `/** ${removeNote} */ {enterDuration: ${newExpression}}`,
-        );
+        replacements.push({
+          start: expression.right.getStart(),
+          length: expression.right.getWidth(),
+          content: `/** ${removeNote} */ {enterDuration: ${newExpression}}`,
+        });
       }
     }
+
+    return replacements;
   }
 
   /**
@@ -142,12 +143,12 @@ export class RippleSpeedFactorMigration extends Migration<null> {
     // to be inside of a normal object literal. Custom ripple global options cannot be
     // witched automatically.
     if (!ts.isObjectLiteralExpression(assignment.parent)) {
-      return;
+      return null;
     }
 
     // The assignment consists of a name (key) and initializer (value).
     if (assignment.name.getText() !== 'baseSpeedFactor') {
-      return;
+      return null;
     }
 
     // We could technically lazily check for the MAT_RIPPLE_GLOBAL_OPTIONS injection token to
@@ -157,20 +158,21 @@ export class RippleSpeedFactorMigration extends Migration<null> {
 
     const {initializer, name} = assignment;
     const filePath = this.fileSystem.resolve(assignment.getSourceFile().fileName);
+    const replacements: Replacement[] = [];
 
     if (ts.isNumericLiteral(initializer)) {
       const numericValue = parseFloat(initializer.text);
       const newEnterDurationValue = convertSpeedFactorToDuration(numericValue);
 
       // Replace the `baseSpeedFactor` property name with `animation`.
-      this._replaceText(filePath, name.getStart(), name.getWidth(), 'animation');
+      replacements.push({start: name.getStart(), length: name.getWidth(), content: 'animation'});
+
       // Replace the value assignment initializer with the new animation config.
-      this._replaceText(
-        filePath,
-        initializer.getStart(),
-        initializer.getWidth(),
-        `{enterDuration: ${newEnterDurationValue}}`,
-      );
+      replacements.push({
+        start: initializer.getStart(),
+        length: initializer.getWidth(),
+        content: `{enterDuration: ${newEnterDurationValue}}`,
+      });
     } else {
       // Handle the right expression differently if the previous speed factor value can't
       // be resolved statically. In that case, we just create a TypeScript expression that
@@ -178,21 +180,20 @@ export class RippleSpeedFactorMigration extends Migration<null> {
       const newExpression = createSpeedFactorConvertExpression(initializer.getText());
 
       // Replace the `baseSpeedFactor` property name with `animation`.
-      this._replaceText(filePath, name.getStart(), name.getWidth(), 'animation');
+      replacements.push({
+        start: name.getStart(),
+        length: name.getWidth(),
+        content: 'animation',
+      });
 
       // Replace the value assignment with the new animation config and remove TODO.
-      this._replaceText(
-        filePath,
-        initializer.getStart(),
-        initializer.getWidth(),
-        `/** ${removeNote} */ {enterDuration: ${newExpression}}`,
-      );
+      replacements.push({
+        start: initializer.getStart(),
+        length: initializer.getWidth(),
+        content: `/** ${removeNote} */ {enterDuration: ${newExpression}}`,
+      });
     }
-  }
 
-  private _replaceText(filePath: WorkspacePath, start: number, width: number, newText: string) {
-    const recorder = this.fileSystem.edit(filePath);
-    recorder.remove(start, width);
-    recorder.insertRight(start, newText);
+    return replacements;
   }
 }

@@ -32,10 +32,12 @@ export class ClassInheritanceMigration extends Migration<UpgradeData> {
       .forEach(data => data.limitedTo.classes.forEach(name => this.propertyNames.set(name, data)));
   }
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isClassDeclaration(node)) {
       this._visitClassDeclaration(node);
     }
+
+    return null;
   }
 
   private _visitClassDeclaration(node: ts.ClassDeclaration) {

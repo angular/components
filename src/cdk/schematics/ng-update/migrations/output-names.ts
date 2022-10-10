@@ -8,7 +8,7 @@
 
 import {WorkspacePath} from '../../update-tool/file-system';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
-import {Migration} from '../../update-tool/migration';
+import {Migration, Replacement} from '../../update-tool/migration';
 
 import {OutputNameUpgradeData} from '../data';
 import {findOutputsOnElementWithAttr, findOutputsOnElementWithTag} from '../html-parsing/angular';
@@ -25,7 +25,9 @@ export class OutputNamesMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(name => {
       const limitedTo = name.limitedTo;
       const relativeOffsets: number[] = [];
@@ -45,17 +47,10 @@ export class OutputNamesMigration extends Migration<UpgradeData> {
       relativeOffsets
         .map(offset => template.start + offset)
         .forEach(start =>
-          this._replaceOutputName(template.filePath, start, name.replace.length, name.replaceWith),
+          replacements.push({start, length: name.replace.length, content: name.replaceWith}),
         );
     });
-  }
 
-  private _replaceOutputName(
-    filePath: WorkspacePath,
-    start: number,
-    width: number,
-    newName: string,
-  ) {
-    this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newName);
+    return replacements;
   }
 }

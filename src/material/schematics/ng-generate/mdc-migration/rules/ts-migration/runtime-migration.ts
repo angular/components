@@ -6,14 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Migration, getPropertyNameText} from '@angular/cdk/schematics';
+import {Migration, getPropertyNameText, Replacement} from '@angular/cdk/schematics';
 import {SchematicContext} from '@angular-devkit/schematics';
 import {ComponentMigrator, LEGACY_MODULES} from '../index';
 import * as ts from 'typescript';
 import {ThemingStylesMigration} from '../theming-styles';
 import {TemplateMigration} from '../template-migration';
-
-type Replacement = [node: ts.Node, newText: string];
 
 export class RuntimeCodeMigration extends Migration<ComponentMigrator[], SchematicContext> {
   enabled = true;
@@ -23,16 +21,18 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
   private _templateMigration: TemplateMigration;
   private _hasPossibleTemplateMigrations = true;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isSourceFile(node)) {
-      this._migrateSourceFileReferences(node);
+      return this._migrateSourceFileReferences(node);
     } else if (this._isComponentDecorator(node)) {
-      this._migrateComponentDecorator(node as ts.Decorator);
+      return this._migrateComponentDecorator(node as ts.Decorator);
     } else if (this._isImportExpression(node)) {
-      this._migrateModuleSpecifier(node.arguments[0]);
+      return this._migrateModuleSpecifier(node.arguments[0]);
     } else if (this._isTypeImportExpression(node)) {
-      this._migrateModuleSpecifier(node.argument.literal);
+      return this._migrateModuleSpecifier(node.argument.literal);
     }
+
+    return null;
   }
 
   /** Runs the SourceFile-level migrations, including renaming imports and references. */
@@ -40,18 +40,14 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
     const {importSpecifiersToNewNames, identifiersToImportSpecifiers, moduleSpecifiers} =
       this._findImportsToMigrate(sourceFile);
 
-    [
+    return [
       ...this._renameModuleSpecifiers(moduleSpecifiers),
       ...this._renameReferences(
         sourceFile,
         identifiersToImportSpecifiers,
         importSpecifiersToNewNames,
       ),
-    ]
-      .sort(([a], [b]) => b.getStart() - a.getStart())
-      .forEach(([currentNode, newName]) => {
-        this._printAndUpdateNode(sourceFile, currentNode, newName);
-      });
+    ];
   }
 
   /** Finds the imported symbols in a file that need to be migrated. */
@@ -114,7 +110,11 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
         const specifier = identifiersToImportSpecifiers.get(node.text);
 
         if (specifier && this._isReferenceToImport(node, specifier)) {
-          replacements.push([node, importSpecifiersToNewNames.get(specifier)!]);
+          replacements.push({
+            start: node.getStart(),
+            length: node.getWidth(),
+            content: importSpecifiersToNewNames.get(specifier)!,
+          });
         }
       }
 
@@ -125,14 +125,21 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
 
     importSpecifiersToNewNames.forEach((newName, specifier) => {
       if (specifier.propertyName) {
-        replacements.push([
-          // If the import looks like `import {OldName as NewName} from ...;`,
-          // we drop the alias and simplify the import to `import {NewName} from ...`.
-          specifier.name.text === newName ? specifier : specifier.propertyName,
-          newName,
-        ]);
+        // If the import looks like `import {OldName as NewName} from ...;`,
+        // we drop the alias and simplify the import to `import {NewName} from ...`.
+        const toReplace = specifier.name.text === newName ? specifier : specifier.propertyName;
+
+        replacements.push({
+          start: toReplace.getStart(),
+          length: toReplace.getWidth(),
+          content: newName,
+        });
       } else {
-        replacements.push([specifier.name, newName]);
+        replacements.push({
+          start: specifier.name.getStart(),
+          length: specifier.name.getWidth(),
+          content: newName,
+        });
       }
     });
 
@@ -145,37 +152,49 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
 
     for (const [specifier, newName] of moduleSpecifiers.entries()) {
       const quoteStyle = specifier.getText()[0];
-      replacements.push([specifier, quoteStyle + newName + quoteStyle]);
+      replacements.push({
+        start: specifier.getStart(),
+        length: specifier.getWidth(),
+        content: quoteStyle + newName + quoteStyle,
+      });
     }
 
     return replacements;
   }
 
   /** Migrates the `@Component` metadata. */
-  private _migrateComponentDecorator(node: ts.Decorator) {
+  private _migrateComponentDecorator(node: ts.Decorator): Replacement[] | null {
     if (!ts.isCallExpression(node.expression)) {
-      return;
+      return null;
     }
     const metadata = node.expression.arguments[0];
 
     if (!ts.isObjectLiteralExpression(metadata)) {
-      return;
+      return null;
     }
+
+    const replacements: Replacement[] = [];
 
     for (const prop of metadata.properties) {
       if (prop.name) {
         switch (getPropertyNameText(prop.name)) {
           case 'styles':
-            this._migrateStyles(prop as ts.PropertyAssignment);
+            replacements.push(...this._migrateStyles(prop as ts.PropertyAssignment));
             break;
           case 'template':
             if (this._hasPossibleTemplateMigrations) {
-              this._migrateTemplate(prop as ts.PropertyAssignment);
+              const result = this._migrateTemplate(prop as ts.PropertyAssignment);
+
+              if (result) {
+                replacements.push(result);
+              }
             }
             break;
         }
       }
     }
+
+    return replacements;
   }
 
   private _migrateStyles(node: ts.PropertyAssignment) {
@@ -193,9 +212,18 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       );
     }
 
+    const replacements: Replacement[] = [];
+
     node.initializer.forEachChild(stringLiteralNode => {
-      this._migratePropertyAssignment(stringLiteralNode as ts.StringLiteral, this._stylesMigration);
+      replacements.push(
+        this._migratePropertyAssignment(
+          stringLiteralNode as ts.StringLiteral,
+          this._stylesMigration,
+        ),
+      );
     });
+
+    return replacements;
   }
 
   private _migrateTemplate(node: ts.PropertyAssignment) {
@@ -207,7 +235,7 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       // trying to migrate any templates from now on
       if (templateUpgradeData.length === 0) {
         this._hasPossibleTemplateMigrations = false;
-        return;
+        return null;
       } else {
         this._templateMigration = new TemplateMigration(
           this.program,
@@ -221,13 +249,16 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       }
     }
 
-    this._migratePropertyAssignment(node.initializer as ts.StringLiteral, this._templateMigration);
+    return this._migratePropertyAssignment(
+      node.initializer as ts.StringLiteral,
+      this._templateMigration,
+    );
   }
 
   private _migratePropertyAssignment(
     node: ts.StringLiteralLike | ts.Identifier,
     migration: TemplateMigration | ThemingStylesMigration,
-  ) {
+  ): Replacement {
     let migratedText = migration.migrate(node.text, node.getSourceFile().fileName);
     let migratedTextLines = migratedText.split('\n');
 
@@ -253,24 +284,28 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       migratedText = quotation + migratedText + quotation;
     }
 
-    this._printAndUpdateNode(
+    return this._printAndUpdateNode(
       node.getSourceFile(),
       node,
       ts.factory.createRegularExpressionLiteral(migratedText),
     );
   }
 
-  private _migrateModuleSpecifier(specifier: ts.StringLiteralLike) {
+  private _migrateModuleSpecifier(specifier: ts.StringLiteralLike): Replacement[] | null {
     const newName = this._removeLegacy(specifier.text);
 
     if (newName) {
       const quoteStyle = specifier.getText()[0];
-      this._printAndUpdateNode(
-        specifier.getSourceFile(),
-        specifier,
-        quoteStyle + newName + quoteStyle,
-      );
+      return [
+        this._printAndUpdateNode(
+          specifier.getSourceFile(),
+          specifier,
+          quoteStyle + newName + quoteStyle,
+        ),
+      ];
     }
+
+    return null;
   }
 
   /** Gets whether the specified decorator node is for a Component declaration */
@@ -314,16 +349,13 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
     sourceFile: ts.SourceFile,
     oldNode: ts.Node,
     newNode: ts.Node | string,
-  ) {
-    const filePath = this.fileSystem.resolve(sourceFile.fileName);
+  ): Replacement {
     const newNodeText =
       typeof newNode === 'string'
         ? newNode
         : this._printer.printNode(ts.EmitHint.Unspecified, newNode, sourceFile);
-    const start = oldNode.getStart();
-    const width = oldNode.getWidth();
 
-    this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newNodeText);
+    return {start: oldNode.getStart(), length: oldNode.getWidth(), content: newNodeText};
   }
 
   /** Checks whether a specifier identifier is referring to an imported symbol. */

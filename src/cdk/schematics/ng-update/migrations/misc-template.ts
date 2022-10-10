@@ -21,7 +21,7 @@ export class MiscTemplateMigration extends Migration<UpgradeData> {
   // currently only includes migrations for V6 deprecations.
   enabled = this.targetVersion === TargetVersion.V6;
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
     // Migration for https://github.com/angular/components/pull/10325 (v6)
     findAllSubstringIndices(template.content, 'cdk-focus-trap').forEach(offset => {
       this.failures.push({
@@ -32,5 +32,7 @@ export class MiscTemplateMigration extends Migration<UpgradeData> {
           `changed to an attribute selector "[cdkTrapFocus]".`,
       });
     });
+
+    return null;
   }
 }

@@ -36,40 +36,40 @@ export class SecondaryEntryPointsMigration extends Migration<null> {
   // entry-point of Material has been marked as deprecated in version 8.
   enabled = this.targetVersion === TargetVersion.V8 || this.targetVersion === TargetVersion.V9;
 
-  override visitNode(declaration: ts.Node): void {
+  override visitNode(declaration: ts.Node) {
     // Only look at import declarations.
     if (
       !ts.isImportDeclaration(declaration) ||
       !ts.isStringLiteralLike(declaration.moduleSpecifier)
     ) {
-      return;
+      return null;
     }
 
     const importLocation = declaration.moduleSpecifier.text;
     // If the import module is not @angular/material, skip the check.
     if (importLocation !== materialModuleSpecifier) {
-      return;
+      return null;
     }
 
     // If no import clause is found, or nothing is named as a binding in the
     // import, add failure saying to import symbols in clause.
     if (!declaration.importClause || !declaration.importClause.namedBindings) {
       this.createFailureAtNode(declaration, NO_IMPORT_NAMED_SYMBOLS_FAILURE_STR);
-      return;
+      return null;
     }
 
     // All named bindings in import clauses must be named symbols, otherwise add
     // failure saying to import symbols in clause.
     if (!ts.isNamedImports(declaration.importClause.namedBindings)) {
       this.createFailureAtNode(declaration, NO_IMPORT_NAMED_SYMBOLS_FAILURE_STR);
-      return;
+      return null;
     }
 
     // If no symbols are in the named bindings then add failure saying to
     // import symbols in clause.
     if (!declaration.importClause.namedBindings.elements.length) {
       this.createFailureAtNode(declaration, NO_IMPORT_NAMED_SYMBOLS_FAILURE_STR);
-      return;
+      return null;
     }
 
     // Whether the existing import declaration is using a single quote module specifier.
@@ -97,7 +97,7 @@ export class SecondaryEntryPointsMigration extends Migration<null> {
           element,
           `"${element.getText()}" was not found in the Material library.`,
         );
-        return;
+        return null;
       }
 
       // The module name where the symbol is defined e.g. card, dialog. The
@@ -135,16 +135,14 @@ export class SecondaryEntryPointsMigration extends Migration<null> {
     // importing from "@angular/material" is deprecated.
     if (!newImportStatements) {
       this.createFailureAtNode(declaration.moduleSpecifier, ONLY_SUBPACKAGE_FAILURE_STR);
-      return;
+      return null;
     }
-
-    const filePath = this.fileSystem.resolve(declaration.moduleSpecifier.getSourceFile().fileName);
-    const recorder = this.fileSystem.edit(filePath);
 
     // Perform the replacement that switches the primary entry-point import to
     // the individual secondary entry-point imports.
-    recorder.remove(declaration.getStart(), declaration.getWidth());
-    recorder.insertRight(declaration.getStart(), newImportStatements);
+    return [
+      {start: declaration.getStart(), length: declaration.getWidth(), content: newImportStatements},
+    ];
   }
 }
 

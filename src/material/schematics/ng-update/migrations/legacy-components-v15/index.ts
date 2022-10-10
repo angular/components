@@ -18,13 +18,20 @@ import {
   CUSTOM_SASS_FUNCTION_RENAMINGS,
   MIGRATED_CORE_SYMBOLS,
 } from './constants';
-import {Migration, ResolvedResource, TargetVersion, WorkspacePath} from '@angular/cdk/schematics';
+import {
+  Migration,
+  Replacement,
+  ResolvedResource,
+  TargetVersion,
+  WorkspacePath,
+} from '@angular/cdk/schematics';
 
 export class LegacyComponentsMigration extends Migration<null> {
   enabled = this.targetVersion === TargetVersion.V15;
 
-  override visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource) {
     let namespace: string | undefined = undefined;
+    const replacements: Replacement[] = [];
     const processor = new postcss.Processor([
       {
         postcssPlugin: 'legacy-components-v15-plugin',
@@ -32,9 +39,21 @@ export class LegacyComponentsMigration extends Migration<null> {
           use: node => {
             namespace = namespace ?? this._parseSassNamespace(node);
           },
-          include: node => this._handleAtInclude(node, stylesheet.filePath, namespace),
+          include: node => {
+            const result = this._handleAtInclude(node, stylesheet.filePath, namespace);
+
+            if (result) {
+              replacements.push(result);
+            }
+          },
         },
-        RootExit: root => this._handleRootNode(root, stylesheet.filePath, namespace),
+        RootExit: root => {
+          const rootNodeReplacements = this._handleRootNode(root, stylesheet.filePath, namespace);
+
+          if (rootNodeReplacements) {
+            replacements.push(...rootNodeReplacements);
+          }
+        },
       },
     ]);
     try {
@@ -42,6 +61,8 @@ export class LegacyComponentsMigration extends Migration<null> {
     } catch (e) {
       this.logger.error(`${e}`);
       this.logger.warn(`Failed to process stylesheet: ${stylesheet.filePath} (see error above).`);
+    } finally {
+      return replacements;
     }
   }
 
@@ -54,13 +75,9 @@ export class LegacyComponentsMigration extends Migration<null> {
   }
 
   /** Handles updating the at-include rules of legacy component mixins. */
-  private _handleAtInclude(
-    node: postcss.AtRule,
-    filePath: WorkspacePath,
-    namespace?: string,
-  ): void {
+  private _handleAtInclude(node: postcss.AtRule, filePath: WorkspacePath, namespace?: string) {
     if (!namespace || !node.source?.start) {
-      return;
+      return null;
     }
     const original = node.toString();
     const [atInclude, delim, mixinName, ...rest] = original.split(/([.(;])/);
@@ -76,7 +93,7 @@ export class LegacyComponentsMigration extends Migration<null> {
         .replace(`${namespace}.core`, `${namespace}.all-legacy-component-typographies`);
       const indent = original.match(/^\s*/)?.[0] || '';
       // Replace the whole original with a comment, typography include, and legacy-core include.
-      this._replaceAt(filePath, node.source.start.offset, {
+      return this._replaceAt(filePath, node.source.start.offset, {
         old: original,
         new: [
           `${indent}// TODO(v15): As of v15 ${namespace}.legacy-core no longer includes default typography styles.`,
@@ -87,23 +104,28 @@ export class LegacyComponentsMigration extends Migration<null> {
         ].join('\n'),
       });
     } else if (CUSTOM_SASS_MIXIN_RENAMINGS[mixinName]) {
-      this._replaceAt(filePath, node.source.start.offset, {
+      return this._replaceAt(filePath, node.source.start.offset, {
         old: `${namespace}.${mixinName}`,
         new: `${namespace}.${CUSTOM_SASS_MIXIN_RENAMINGS[mixinName]}`,
       });
     } else if (this._isLegacyMixin(node, namespace)) {
-      this._replaceAt(filePath, node.source.start.offset, {
+      return this._replaceAt(filePath, node.source.start.offset, {
         old: `${namespace}.`,
         new: `${namespace}.legacy-`,
       });
     }
+
+    return null;
   }
 
   /** Handles updating the root node. */
   private _handleRootNode(root: postcss.Root, file: any, namespace?: string) {
     if (!namespace) {
-      return;
+      return null;
     }
+
+    const results: Replacement[] = [];
+
     // @functions could be referenced anywhere, so we need to just walk everything from the root
     // and replace all instances that are not in comments.
     root.walk(node => {
@@ -111,14 +133,18 @@ export class LegacyComponentsMigration extends Migration<null> {
         const srcString = node.toString();
         for (const old in CUSTOM_SASS_FUNCTION_RENAMINGS) {
           if (srcString.includes(`${namespace}.${old}`)) {
-            this._replaceAt(file, node.source.start.offset, {
-              old: `${namespace}.${old}`,
-              new: `${namespace}.${CUSTOM_SASS_FUNCTION_RENAMINGS[old]}`,
-            });
+            results.push(
+              this._replaceAt(file, node.source.start.offset, {
+                old: `${namespace}.${old}`,
+                new: `${namespace}.${CUSTOM_SASS_FUNCTION_RENAMINGS[old]}`,
+              }),
+            );
           }
         }
       }
     });
+
+    return results;
   }
 
   /** Returns true if the given at-include rule is a use of a legacy component mixin. */
@@ -134,19 +160,18 @@ export class LegacyComponentsMigration extends Migration<null> {
     return false;
   }
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isImportDeclaration(node)) {
-      this._handleImportDeclaration(node);
-      return;
+      return this._handleImportDeclaration(node);
     }
     if (this._isDestructuredAsyncLegacyImport(node)) {
-      this._handleDestructuredAsyncImport(node);
-      return;
+      return this._handleDestructuredAsyncImport(node);
     }
     if (this._isImportCallExpression(node)) {
-      this._handleImportExpression(node);
-      return;
+      return this._handleImportExpression(node);
     }
+
+    return null;
   }
 
   /**
@@ -155,22 +180,32 @@ export class LegacyComponentsMigration extends Migration<null> {
    *
    * Also updates the named import bindings of @angular/material imports.
    */
-  private _handleImportDeclaration(node: ts.ImportDeclaration): void {
+  private _handleImportDeclaration(node: ts.ImportDeclaration) {
     const moduleSpecifier = node.moduleSpecifier as ts.StringLiteral;
     const matImportChange = this._findMatImportChange(moduleSpecifier);
     const mdcImportChange = this._findMdcImportChange(moduleSpecifier);
 
     if (this._isCoreImport(moduleSpecifier.text)) {
-      this._handleCoreImportDeclaration(node);
+      return [this._handleCoreImportDeclaration(node)];
     } else if (matImportChange) {
-      this._tsReplaceAt(node, matImportChange);
+      const replacements = [this._tsReplaceAt(node, matImportChange)];
 
       if (node.importClause?.namedBindings && ts.isNamedImports(node.importClause.namedBindings)) {
-        this._handleNamedImportBindings(node.importClause.namedBindings);
+        node.importClause.namedBindings.elements.forEach(element => {
+          const replacement = this._handleNamedBindings(element);
+
+          if (replacement) {
+            replacements.push(replacement);
+          }
+        });
       }
+
+      return replacements;
     } else if (mdcImportChange) {
-      this._tsReplaceAt(node, mdcImportChange);
+      return [this._tsReplaceAt(node, mdcImportChange)];
     }
+
+    return null;
   }
 
   private _isCoreImport(importPath: string) {
@@ -181,9 +216,9 @@ export class LegacyComponentsMigration extends Migration<null> {
     const moduleSpecifier = node.moduleSpecifier as ts.StringLiteral;
 
     if (node.importClause?.namedBindings && ts.isNamedImports(node.importClause.namedBindings)) {
-      this._splitCoreImport(node, node.importClause.namedBindings);
+      return this._splitCoreImport(node, node.importClause.namedBindings);
     } else {
-      this._tsReplaceAt(node, {
+      return this._tsReplaceAt(node, {
         old: moduleSpecifier.text,
         new: moduleSpecifier.text.replace(
           '@angular/material/core',
@@ -220,7 +255,7 @@ export class LegacyComponentsMigration extends Migration<null> {
           ),
         ]
       : [];
-    this._tsReplaceAt(node, {
+    return this._tsReplaceAt(node, {
       old: node.getText(),
       new: [...unmigratedImportDeclaration, ...migratedImportDeclaration].join('\n'),
     });
@@ -262,47 +297,48 @@ export class LegacyComponentsMigration extends Migration<null> {
    * Handles updating the module specifier of
    * @angular/material and @angular/material-experimental import expressions.
    */
-  private _handleImportExpression(node: ts.CallExpression): void {
+  private _handleImportExpression(node: ts.CallExpression) {
     const moduleSpecifier = node.arguments[0] as ts.StringLiteral;
 
     const matImportChange = this._findMatImportChange(moduleSpecifier);
     if (matImportChange) {
-      this._tsReplaceAt(node, matImportChange);
-      return;
+      return [this._tsReplaceAt(node, matImportChange)];
     }
 
     const mdcImportChange = this._findMdcImportChange(moduleSpecifier);
     if (mdcImportChange) {
-      this._tsReplaceAt(node, mdcImportChange);
+      return [this._tsReplaceAt(node, mdcImportChange)];
     }
+
+    return null;
   }
 
   /** Handles updating the named bindings of awaited @angular/material import expressions. */
   private _handleDestructuredAsyncImport(
     node: ts.VariableDeclaration & {name: ts.ObjectBindingPattern},
-  ): void {
+  ) {
     const importPath = (node!.initializer as any).expression.arguments[0].text;
+    const replacements: Replacement[] = [];
     if (ts.isVariableStatement(node.parent.parent) && this._isCoreImport(importPath)) {
-      this._splitCoreImport(node.parent.parent, node.name);
+      replacements.push(this._splitCoreImport(node.parent.parent, node.name));
     } else {
       for (let i = 0; i < node.name.elements.length; i++) {
-        this._handleNamedBindings(node.name.elements[i]);
+        const result = this._handleNamedBindings(node.name.elements[i]);
+
+        if (result) {
+          replacements.push(result);
+        }
       }
     }
-  }
 
-  /** Handles updating the named bindings of @angular/material imports. */
-  private _handleNamedImportBindings(node: ts.NamedImports): void {
-    for (let i = 0; i < node.elements.length; i++) {
-      this._handleNamedBindings(node.elements[i]);
-    }
+    return replacements;
   }
 
   /** Handles updating the named bindings of @angular/material imports and import expressions. */
-  private _handleNamedBindings(node: ts.ImportSpecifier | ts.BindingElement): void {
+  private _handleNamedBindings(node: ts.ImportSpecifier | ts.BindingElement) {
     const name = node.propertyName ? node.propertyName : node.name;
     if (!ts.isIdentifier(name)) {
-      return;
+      return null;
     }
 
     const separator = ts.isImportSpecifier(node) ? ' as ' : ': ';
@@ -314,17 +350,17 @@ export class LegacyComponentsMigration extends Migration<null> {
       const replacement = node.propertyName
         ? customMapping.new
         : `${customMapping.new}${separator}${customMapping.old}`;
-      this._tsReplaceAt(name, {old: oldExport, new: replacement});
-      return;
+      return this._tsReplaceAt(name, {old: oldExport, new: replacement});
     }
 
     // Handle TS Symbols that have standard renamings.
     const newExport = this._parseMatSymbol(oldExport);
     if (newExport) {
       const replacement = node.propertyName ? newExport : `${newExport}${separator}${oldExport}`;
-      this._tsReplaceAt(name, {old: oldExport, new: replacement});
-      return;
+      return this._tsReplaceAt(name, {old: oldExport, new: replacement});
     }
+
+    return null;
   }
 
   /** Returns the new symbol to be used for a given standard mat symbol.   */
@@ -397,18 +433,15 @@ export class LegacyComponentsMigration extends Migration<null> {
   }
 
   /** Updates the source file of the given ts node with the given replacements. */
-  private _tsReplaceAt(node: ts.Node, str: {old: string; new: string}): void {
+  private _tsReplaceAt(node: ts.Node, str: {old: string; new: string}) {
     const filePath = this.fileSystem.resolve(node.getSourceFile().fileName);
-    this._replaceAt(filePath, node.pos, str);
+    return this._replaceAt(filePath, node.pos, str);
   }
 
   /** Updates the source file with the given replacements. */
-  private _replaceAt(
-    filePath: WorkspacePath,
-    offset: number,
-    str: {old: string; new: string},
-  ): void {
+  private _replaceAt(filePath: WorkspacePath, offset: number, str: {old: string; new: string}) {
+    // TODO: we should be able to get rid of this indexOf.
     const index = this.fileSystem.read(filePath)!.indexOf(str.old, offset);
-    this.fileSystem.edit(filePath).remove(index, str.old.length).insertRight(index, str.new);
+    return {start: index, length: str.old.length, content: str.new};
   }
 }

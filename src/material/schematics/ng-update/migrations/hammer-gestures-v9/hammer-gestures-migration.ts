@@ -109,20 +109,22 @@ export class HammerGesturesMigration extends DevkitMigration<null> {
    */
   private _deletedIdentifiers: ts.Identifier[] = [];
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
     if (!this._customEventsUsedInTemplate || !this._standardEventsUsedInTemplate) {
       const {standardEvents, customEvents} = isHammerJsUsedInTemplate(template.content);
       this._customEventsUsedInTemplate = this._customEventsUsedInTemplate || customEvents;
       this._standardEventsUsedInTemplate = this._standardEventsUsedInTemplate || standardEvents;
     }
+    return null;
   }
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     this._checkHammerImports(node);
     this._checkForRuntimeHammerUsage(node);
     this._checkForMaterialGestureConfig(node);
     this._checkForHammerGestureConfigToken(node);
     this._checkForHammerModuleReference(node);
+    return null;
   }
 
   override postAnalysis(): void {

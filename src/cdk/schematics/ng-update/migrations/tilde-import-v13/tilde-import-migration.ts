@@ -15,7 +15,7 @@ import {DevkitMigration} from '../../devkit-migration';
 export class TildeImportMigration extends DevkitMigration<null> {
   enabled = this.targetVersion === TargetVersion.V13;
 
-  override visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource) {
     const extension = extname(stylesheet.filePath);
 
     if (extension === '.scss' || extension === '.css') {
@@ -30,11 +30,10 @@ export class TildeImportMigration extends DevkitMigration<null> {
       );
 
       if (migratedContent && migratedContent !== content) {
-        this.fileSystem
-          .edit(stylesheet.filePath)
-          .remove(0, stylesheet.content.length)
-          .insertLeft(0, migratedContent);
+        return [{start: 0, length: stylesheet.content.length, content: migratedContent}];
       }
     }
+
+    return null;
   }
 }

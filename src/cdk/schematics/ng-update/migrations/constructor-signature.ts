@@ -37,10 +37,11 @@ export class ConstructorSignatureMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isSourceFile(node)) {
       this._visitSourceFile(node);
     }
+    return null;
   }
 
   /**

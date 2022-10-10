@@ -43,10 +43,12 @@ export class ClassNamesMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isIdentifier(node)) {
-      this._visitIdentifier(node);
+      return this._visitIdentifier(node);
     }
+
+    return null;
   }
 
   /** Method that is called for every identifier inside of the specified project. */
@@ -54,7 +56,7 @@ export class ClassNamesMigration extends Migration<UpgradeData> {
     // For identifiers that aren't listed in the className data, the whole check can be
     // skipped safely.
     if (!this.data.some(data => data.replace === identifier.text)) {
-      return;
+      return [];
     }
 
     // For namespace imports that are referring to Angular Material or the CDK, we store the
@@ -92,16 +94,20 @@ export class ClassNamesMigration extends Migration<UpgradeData> {
     } else if (this.trustedIdentifiers.has(identifier.text)) {
       return this._createFailureWithReplacement(identifier);
     }
+
+    return null;
   }
 
   /** Creates a failure and replacement for the specified identifier. */
   private _createFailureWithReplacement(identifier: ts.Identifier) {
     const classData = this.data.find(data => data.replace === identifier.text)!;
-    const filePath = this.fileSystem.resolve(identifier.getSourceFile().fileName);
 
-    this.fileSystem
-      .edit(filePath)
-      .remove(identifier.getStart(), identifier.getWidth())
-      .insertRight(identifier.getStart(), classData.replaceWith);
+    return [
+      {
+        start: identifier.getStart(),
+        length: identifier.getWidth(),
+        content: classData.replaceWith,
+      },
+    ];
   }
 }

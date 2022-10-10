@@ -16,10 +16,15 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
   enabled = true;
 
   override visitTemplate(template: ResolvedResource) {
-    this.fileSystem
-      .edit(template.filePath)
-      .remove(template.start, template.content.length)
-      .insertRight(template.start, this.migrate(template.content, template.filePath));
+    return template.inline
+      ? null
+      : [
+          {
+            start: template.start,
+            length: template.content.length,
+            content: this.migrate(template.content, template.filePath),
+          },
+        ];
   }
 
   migrate(template: string, templateUrl?: string): string {

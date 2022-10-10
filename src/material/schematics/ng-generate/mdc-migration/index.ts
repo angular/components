@@ -135,7 +135,6 @@ export default function (options: Schema): Rule {
     // Commit all recorded edits in the update recorder. We apply the edits after all
     // migrations ran because otherwise offsets in the TypeScript program would be
     // shifted and individual migrations could no longer update the same source file.
-    fileSystem.commitEdits();
 
     if (!success) {
       logger.error('Unable to migrate project. See errors above.');

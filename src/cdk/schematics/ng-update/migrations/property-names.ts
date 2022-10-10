@@ -7,7 +7,7 @@
  */
 
 import * as ts from 'typescript';
-import {Migration} from '../../update-tool/migration';
+import {Migration, Replacement} from '../../update-tool/migration';
 
 import {PropertyNameUpgradeData} from '../data';
 import {getVersionUpgradeData, UpgradeData} from '../upgrade-data';
@@ -23,15 +23,18 @@ export class PropertyNamesMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isPropertyAccessExpression(node)) {
-      this._visitPropertyAccessExpression(node);
+      return this._visitPropertyAccessExpression(node);
     }
+
+    return null;
   }
 
   private _visitPropertyAccessExpression(node: ts.PropertyAccessExpression) {
     const hostType = this.typeChecker.getTypeAtLocation(node.expression);
     const typeNames: string[] = [];
+    const replacements: Replacement[] = [];
 
     if (hostType) {
       if (hostType.isIntersection()) {
@@ -51,11 +54,14 @@ export class PropertyNamesMigration extends Migration<UpgradeData> {
       }
 
       if (!data.limitedTo || typeNames.some(type => data.limitedTo.classes.includes(type))) {
-        this.fileSystem
-          .edit(this.fileSystem.resolve(node.getSourceFile().fileName))
-          .remove(node.name.getStart(), node.name.getWidth())
-          .insertRight(node.name.getStart(), data.replaceWith);
+        replacements.push({
+          start: node.name.getStart(),
+          length: node.name.getWidth(),
+          content: data.replaceWith,
+        });
       }
     });
+
+    return replacements;
   }
 }

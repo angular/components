@@ -19,15 +19,15 @@ export class SymbolRemovalMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (!ts.isImportDeclaration(node) || !ts.isStringLiteral(node.moduleSpecifier)) {
-      return;
+      return null;
     }
 
     const namedBindings = node.importClause && node.importClause.namedBindings;
 
     if (!namedBindings || !ts.isNamedImports(namedBindings)) {
-      return;
+      return null;
     }
 
     const moduleNameMatches = this.data.filter(
@@ -35,7 +35,7 @@ export class SymbolRemovalMigration extends Migration<UpgradeData> {
     );
 
     if (!moduleNameMatches.length) {
-      return;
+      return null;
     }
 
     namedBindings.elements.forEach(element => {
@@ -47,5 +47,7 @@ export class SymbolRemovalMigration extends Migration<UpgradeData> {
         }
       });
     });
+
+    return null;
   }
 }

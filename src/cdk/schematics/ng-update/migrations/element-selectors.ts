@@ -9,7 +9,7 @@
 import * as ts from 'typescript';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
 import {WorkspacePath} from '../../update-tool/file-system';
-import {Migration} from '../../update-tool/migration';
+import {Migration, Replacement} from '../../update-tool/migration';
 import {ElementSelectorUpgradeData} from '../data/element-selectors';
 import {findAllSubstringIndices} from '../typescript/literal';
 import {getVersionUpgradeData, UpgradeData} from '../upgrade-data';
@@ -25,51 +25,56 @@ export class ElementSelectorsMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled: boolean = this.data.length !== 0;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isStringLiteralLike(node)) {
-      this._visitStringLiteralLike(node);
+      return this._visitStringLiteralLike(node);
     }
+
+    return null;
   }
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(selector => {
       findAllSubstringIndices(template.content, selector.replace)
         .map(offset => template.start + offset)
-        .forEach(start => this._replaceSelector(template.filePath, start, selector));
+        .forEach(start => replacements.push(this._replaceSelector(start, selector)));
     });
+
+    return replacements;
   }
 
-  override visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(selector => {
       findAllSubstringIndices(stylesheet.content, selector.replace)
         .map(offset => stylesheet.start + offset)
-        .forEach(start => this._replaceSelector(stylesheet.filePath, start, selector));
+        .forEach(start => replacements.push(this._replaceSelector(start, selector)));
     });
+
+    return replacements;
   }
 
   private _visitStringLiteralLike(node: ts.StringLiteralLike) {
     if (node.parent && node.parent.kind !== ts.SyntaxKind.CallExpression) {
-      return;
+      return null;
     }
 
     const textContent = node.getText();
-    const filePath = this.fileSystem.resolve(node.getSourceFile().fileName);
+    const replacements: Replacement[] = [];
 
     this.data.forEach(selector => {
       findAllSubstringIndices(textContent, selector.replace)
         .map(offset => node.getStart() + offset)
-        .forEach(start => this._replaceSelector(filePath, start, selector));
+        .forEach(start => replacements.push(this._replaceSelector(start, selector)));
     });
+
+    return replacements;
   }
 
-  private _replaceSelector(
-    filePath: WorkspacePath,
-    start: number,
-    data: ElementSelectorUpgradeData,
-  ) {
-    this.fileSystem
-      .edit(filePath)
-      .remove(start, data.replace.length)
-      .insertRight(start, data.replaceWith);
+  private _replaceSelector(start: number, data: ElementSelectorUpgradeData) {
+    return {start, length: data.replace.length, content: data.replaceWith};
   }
 }

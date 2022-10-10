@@ -11,7 +11,7 @@ import * as ts from 'typescript';
 import {ComponentResourceCollector} from './component-resource-collector';
 import {FileSystem, WorkspacePath} from './file-system';
 import {defaultLogger, UpdateLogger} from './logger';
-import {Migration, MigrationCtor, MigrationFailure} from './migration';
+import {Migration, MigrationCtor, MigrationFailure, Replacement} from './migration';
 import {TargetVersion} from './target-version';
 import {parseTsconfigFile} from './utils/parse-tsconfig';
 import {createFileSystemCompilerHost} from './utils/virtual-host';
@@ -69,11 +69,15 @@ export class UpdateProject<Context> {
       .getSourceFiles()
       .filter(f => !f.isDeclarationFile && !this._program.isSourceFileFromExternalLibrary(f));
 
+    const replacements: Map<WorkspacePath, []> = new Map();
+
     // Helper function that visits a given TypeScript node and collects all referenced
     // component resources (i.e. stylesheets or templates). Additionally, the helper
     // visits the node in each instantiated migration.
     const visitNodeAndCollectResources = (node: ts.Node) => {
-      migrations.forEach(r => r.visitNode(node));
+      migrations.forEach(r => {
+        this._addReplacement(replacements, node.getSourceFile().fileName, r.visitNode(node));
+      });
       ts.forEachChild(node, visitNodeAndCollectResources);
       resourceCollector.visitNode(node);
     };
@@ -97,7 +101,9 @@ export class UpdateProject<Context> {
       // Do not visit the template if it has been checked before. Inline
       // templates cannot be referenced multiple times.
       if (template.inline || !this._analyzedFiles.has(template.filePath)) {
-        migrations.forEach(m => m.visitTemplate(template));
+        migrations.forEach(m =>
+          this._addReplacement(replacements, template.filePath, m.visitTemplate(template)),
+        );
         this._analyzedFiles.add(template.filePath);
       }
     });
@@ -109,7 +115,9 @@ export class UpdateProject<Context> {
       // Do not visit the stylesheet if it has been checked before. Inline
       // stylesheets cannot be referenced multiple times.
       if (stylesheet.inline || !this._analyzedFiles.has(stylesheet.filePath)) {
-        migrations.forEach(r => r.visitStylesheet(stylesheet));
+        migrations.forEach(r =>
+          this._addReplacement(replacements, stylesheet.filePath, r.visitStylesheet(stylesheet)),
+        );
         this._analyzedFiles.add(stylesheet.filePath);
       }
     });
@@ -124,11 +132,17 @@ export class UpdateProject<Context> {
         const stylesheet = resourceCollector.resolveExternalStylesheet(resolvedPath, null);
         // Do not visit stylesheets which have been referenced from a component.
         if (!this._analyzedFiles.has(resolvedPath) && stylesheet) {
-          migrations.forEach(r => r.visitStylesheet(stylesheet));
+          migrations.forEach(r =>
+            this._addReplacement(replacements, stylesheet.filePath, r.visitStylesheet(stylesheet)),
+          );
           this._analyzedFiles.add(resolvedPath);
         }
       });
     }
+
+    replacements.forEach((fileReplacements, filePath) =>
+      this._replaceInFile(filePath, fileReplacements),
+    );
 
     // Call the "postAnalysis" method for each migration.
     migrations.forEach(r => r.postAnalysis());
@@ -150,6 +164,29 @@ export class UpdateProject<Context> {
     return {
       hasFailures: !!failures.length,
     };
+  }
+
+  private _addReplacement(
+    replacements: Map<string, Replacement[]>,
+    filePath: string,
+    result: Replacement[] | null,
+  ) {
+    if (result) {
+      if (replacements.has(filePath)) {
+        replacements.get(filePath)!.push(...result);
+      } else {
+        replacements.set(filePath, [...result]);
+      }
+    }
+  }
+
+  private _replaceInFile(filePath: WorkspacePath, replacements: Replacement[]) {
+    replacements
+      .sort((a, b) => b.start - a.start)
+      .forEach(({start, length, content}) => {
+        this._fileSystem.edit(filePath).remove(start, length).insertRight(start, content);
+        this._fileSystem.commitEdits();
+      });
   }
 
   /**

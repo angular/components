@@ -18,7 +18,7 @@ export class ThemingApiMigration extends DevkitMigration<null> {
 
   enabled = this.targetVersion === TargetVersion.V12;
 
-  override visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource) {
     if (extname(stylesheet.filePath) === '.scss') {
       const content = stylesheet.content;
       const migratedContent = content
@@ -34,13 +34,12 @@ export class ThemingApiMigration extends DevkitMigration<null> {
         : content;
 
       if (migratedContent && migratedContent !== content) {
-        this.fileSystem
-          .edit(stylesheet.filePath)
-          .remove(0, stylesheet.content.length)
-          .insertLeft(0, migratedContent);
         ThemingApiMigration.migratedFileCount++;
+        return [{start: 0, length: stylesheet.content.length, content: migratedContent}];
       }
     }
+
+    return null;
   }
 
   /** Logs out the number of migrated files at the end of the migration. */

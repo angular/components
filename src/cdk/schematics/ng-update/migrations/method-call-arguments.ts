@@ -23,10 +23,12 @@ export class MethodCallArgumentsMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitNode(node: ts.Node): void {
+  override visitNode(node: ts.Node) {
     if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
       this._checkPropertyAccessMethodCall(node);
     }
+
+    return null;
   }
 
   private _checkPropertyAccessMethodCall(node: ts.CallExpression) {

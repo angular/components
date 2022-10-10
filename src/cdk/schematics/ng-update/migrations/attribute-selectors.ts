@@ -9,7 +9,7 @@
 import * as ts from 'typescript';
 import {WorkspacePath} from '../../update-tool/file-system';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
-import {Migration} from '../../update-tool/migration';
+import {Migration, Replacement} from '../../update-tool/migration';
 import {AttributeSelectorUpgradeData} from '../data/attribute-selectors';
 import {findAllSubstringIndices} from '../typescript/literal';
 import {getVersionUpgradeData, UpgradeData} from '../upgrade-data';
@@ -27,19 +27,27 @@ export class AttributeSelectorsMigration extends Migration<UpgradeData> {
 
   override visitNode(node: ts.Node) {
     if (ts.isStringLiteralLike(node)) {
-      this._visitStringLiteralLike(node);
+      return this._visitStringLiteralLike(node);
     }
+
+    return null;
   }
 
   override visitTemplate(template: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(selector => {
       findAllSubstringIndices(template.content, selector.replace)
         .map(offset => template.start + offset)
-        .forEach(start => this._replaceSelector(template.filePath, start, selector));
+        .forEach(start => replacements.push(this._replaceSelector(start, selector)));
     });
+
+    return replacements;
   }
 
-  override visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(selector => {
       const currentSelector = `[${selector.replace}]`;
       const updatedSelector = `[${selector.replaceWith}]`;
@@ -47,37 +55,36 @@ export class AttributeSelectorsMigration extends Migration<UpgradeData> {
       findAllSubstringIndices(stylesheet.content, currentSelector)
         .map(offset => stylesheet.start + offset)
         .forEach(start =>
-          this._replaceSelector(stylesheet.filePath, start, {
-            replace: currentSelector,
-            replaceWith: updatedSelector,
-          }),
+          replacements.push(
+            this._replaceSelector(start, {
+              replace: currentSelector,
+              replaceWith: updatedSelector,
+            }),
+          ),
         );
     });
+
+    return replacements;
   }
 
-  private _visitStringLiteralLike(literal: ts.StringLiteralLike) {
+  private _visitStringLiteralLike(literal: ts.StringLiteralLike): Replacement[] | null {
     if (literal.parent && literal.parent.kind !== ts.SyntaxKind.CallExpression) {
-      return;
+      return null;
     }
 
     const literalText = literal.getText();
-    const filePath = this.fileSystem.resolve(literal.getSourceFile().fileName);
+    const replacements: Replacement[] = [];
 
     this.data.forEach(selector => {
       findAllSubstringIndices(literalText, selector.replace)
         .map(offset => literal.getStart() + offset)
-        .forEach(start => this._replaceSelector(filePath, start, selector));
+        .forEach(start => replacements.push(this._replaceSelector(start, selector)));
     });
+
+    return replacements;
   }
 
-  private _replaceSelector(
-    filePath: WorkspacePath,
-    start: number,
-    data: AttributeSelectorUpgradeData,
-  ) {
-    this.fileSystem
-      .edit(filePath)
-      .remove(start, data.replace.length)
-      .insertRight(start, data.replaceWith);
+  private _replaceSelector(start: number, data: AttributeSelectorUpgradeData): Replacement {
+    return {start, length: data.replace.length, content: data.replaceWith};
   }
 }

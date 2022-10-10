@@ -29,6 +29,12 @@ export type Constructor<T> = new (...args: any[]) => T;
 /** Gets a constructor type for the passed migration data. */
 export type MigrationCtor<Data, Context = any> = Constructor<Migration<Data, Context>>;
 
+export interface Replacement {
+  start: number;
+  length: number;
+  content: string;
+}
+
 export abstract class Migration<Data, Context = any> {
   /** List of migration failures that need to be reported. */
   failures: MigrationFailure[] = [];
@@ -71,13 +77,19 @@ export abstract class Migration<Data, Context = any> {
    * allows us to only walk the program source files once per program and not per
    * migration rule (significant performance boost).
    */
-  visitNode(node: ts.Node): void {}
+  visitNode(node: ts.Node): Replacement[] | null {
+    return null;
+  }
 
   /** Method that will be called for each Angular template in the program. */
-  visitTemplate(template: ResolvedResource): void {}
+  visitTemplate(template: ResolvedResource): Replacement[] | null {
+    return null;
+  }
 
   /** Method that will be called for each stylesheet in the program. */
-  visitStylesheet(stylesheet: ResolvedResource): void {}
+  visitStylesheet(stylesheet: ResolvedResource): Replacement[] | null {
+    return null;
+  }
 
   /** Creates a failure with a specified message at the given node location. */
   protected createFailureAtNode(node: ts.Node, message: string) {

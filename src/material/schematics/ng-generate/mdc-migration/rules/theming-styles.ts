@@ -19,10 +19,15 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
   namespace: string;
 
   override visitStylesheet(stylesheet: ResolvedResource) {
-    this.fileSystem
-      .edit(stylesheet.filePath)
-      .remove(stylesheet.start, stylesheet.content.length)
-      .insertRight(stylesheet.start, this.migrate(stylesheet.content, stylesheet.filePath));
+    return stylesheet.inline
+      ? null
+      : [
+          {
+            start: stylesheet.start,
+            length: stylesheet.content.length,
+            content: this.migrate(stylesheet.content, stylesheet.filePath),
+          },
+        ];
   }
 
   migrate(styles: string, filename: string): string {

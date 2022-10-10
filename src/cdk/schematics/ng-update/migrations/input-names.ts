@@ -9,7 +9,7 @@
 import {WorkspacePath} from '../../update-tool/file-system';
 import {findInputsOnElementWithAttr, findInputsOnElementWithTag} from '../html-parsing/angular';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
-import {Migration} from '../../update-tool/migration';
+import {Migration, Replacement} from '../../update-tool/migration';
 
 import {InputNameUpgradeData} from '../data';
 import {findAllSubstringIndices} from '../typescript/literal';
@@ -29,7 +29,9 @@ export class InputNamesMigration extends Migration<UpgradeData> {
   // Only enable the migration rule if there is upgrade data.
   enabled = this.data.length !== 0;
 
-  override visitStylesheet(stylesheet: ResolvedResource): void {
+  override visitStylesheet(stylesheet: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(name => {
       const currentSelector = `[${name.replace}]`;
       const updatedSelector = `[${name.replaceWith}]`;
@@ -37,17 +39,20 @@ export class InputNamesMigration extends Migration<UpgradeData> {
       findAllSubstringIndices(stylesheet.content, currentSelector)
         .map(offset => stylesheet.start + offset)
         .forEach(start =>
-          this._replaceInputName(
-            stylesheet.filePath,
+          replacements.push({
             start,
-            currentSelector.length,
-            updatedSelector,
-          ),
+            length: currentSelector.length,
+            content: updatedSelector,
+          }),
         );
     });
+
+    return replacements;
   }
 
-  override visitTemplate(template: ResolvedResource): void {
+  override visitTemplate(template: ResolvedResource) {
+    const replacements: Replacement[] = [];
+
     this.data.forEach(name => {
       const limitedTo = name.limitedTo;
       const relativeOffsets: number[] = [];
@@ -67,17 +72,10 @@ export class InputNamesMigration extends Migration<UpgradeData> {
       relativeOffsets
         .map(offset => template.start + offset)
         .forEach(start =>
-          this._replaceInputName(template.filePath, start, name.replace.length, name.replaceWith),
+          replacements.push({start, length: name.replace.length, content: name.replaceWith}),
         );
     });
-  }
 
-  private _replaceInputName(
-    filePath: WorkspacePath,
-    start: number,
-    width: number,
-    newName: string,
-  ) {
-    this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newName);
+    return replacements;
   }
 }
