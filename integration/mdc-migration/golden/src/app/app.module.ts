@@ -25,6 +25,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatOptionModule, VERSION} from '@angular/material/core';
 import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
 import {ButtonComponent} from './components/button/button.component';
 import {CardComponent} from './components/card/card.component';
@@ -94,9 +95,12 @@ import {TooltipComponent} from './components/tooltip/tooltip.component';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
+    MatOptionModule,
     ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  version = VERSION;
+}

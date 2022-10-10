@@ -91,50 +91,74 @@ export function replaceEndTag(html: string, node: TmplAstElement, tag: string): 
  * @param html The template html to be updated.
  * @param node The node to be updated.
  * @param name The name of the attribute.
- * @param value The value of the attribute.
+ * @param update The function that determines how to update the value.
  * @returns The updated template html.
  */
-export function addAttribute(
+export function updateAttribute(
   html: string,
   node: TmplAstElement,
   name: string,
-  value: string,
+  update: (old: string | null) => string | null,
 ): string {
   const existingAttr = node.attributes.find(currentAttr => currentAttr.name === name);
 
-  if (existingAttr) {
-    // If the attribute has a value already, replace it.
-    if (existingAttr.valueSpan) {
+  // If the attribute has a value already, replace it.
+  if (existingAttr && existingAttr.keySpan) {
+    const updatedValue = update(existingAttr.valueSpan?.toString() || '');
+    if (updatedValue == null) {
+      // Delete attribute
       return (
-        html.slice(0, existingAttr.valueSpan.start.offset) +
-        value +
-        html.slice(existingAttr.valueSpan.end.offset)
+        html.slice(0, existingAttr.sourceSpan.start.offset).trimEnd() +
+        html.slice(existingAttr.sourceSpan.end.offset)
       );
-    } else if (existingAttr.keySpan) {
-      // Otherwise add a value to a value-less attribute. Note that the `keySpan` null check is
-      // only necessary for the compiler. Technically an attribute should always have a key.
+    } else if (updatedValue == '') {
+      // Delete value from attribute
       return (
         html.slice(0, existingAttr.keySpan.end.offset) +
-        `="${value}"` +
-        html.slice(existingAttr.keySpan.end.offset)
+        html.slice(existingAttr.sourceSpan.end.offset)
       );
+    } else {
+      // Set attribute value
+      if (existingAttr.valueSpan) {
+        // Replace attribute value
+        return (
+          html.slice(0, existingAttr.valueSpan.start.offset) +
+          updatedValue +
+          html.slice(existingAttr.valueSpan.end.offset)
+        );
+      } else {
+        // Add value to attribute
+        return (
+          html.slice(0, existingAttr.keySpan.end.offset) +
+          `="${updatedValue}"` +
+          html.slice(existingAttr.keySpan.end.offset)
+        );
+      }
     }
+  }
+
+  const newValue = update(null);
+
+  // No change needed if attribute should be deleted and is already not present.
+  if (newValue == null) {
+    return html;
   }
 
   // Otherwise insert a new attribute.
   const index = node.startSourceSpan.start.offset + node.name.length + 1;
   const prefix = html.slice(0, index);
   const suffix = html.slice(index);
+  const attrText = newValue ? `${name}="${newValue}"` : `${name}`;
 
   if (node.startSourceSpan.start.line === node.startSourceSpan.end.line) {
-    return prefix + ` ${name}="${value}"` + suffix;
+    return `${prefix} ${attrText}${suffix}`;
   }
 
   const attr = node.attributes[0];
   const ctx = attr.sourceSpan.start.getContext(attr.sourceSpan.start.col + 1, 1)!;
   const indentation = ctx.before;
 
-  return prefix + indentation + `${name}="${value}"` + suffix;
+  return prefix + indentation + attrText + suffix;
 }
 
 /**

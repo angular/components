@@ -60,12 +60,33 @@ describe('multiple component styles', () => {
       );
     });
 
+    it('should remove legacy mixin if all replacements are already accounted for', async () => {
+      await runMigrationTest(
+        ['paginator', 'select'],
+        `
+          @use '@angular/material' as mat;
+          $theme: ();
+          @include mat.legacy-paginator-theme($theme);
+          @include mat.legacy-select-theme($theme);
+          `,
+        `
+          @use '@angular/material' as mat;
+          $theme: ();
+          @include mat.paginator-theme($theme);
+          @include mat.icon-button-theme($theme);
+          @include mat.form-field-theme($theme);
+          @include mat.select-theme($theme);
+          `,
+      );
+    });
+
     it('should migrate all component mixins for a full migration', async () => {
       await runMigrationTest(
         ['all'],
         `
         @use '@angular/material' as mat;
         $theme: ();
+        @include mat.legacy-core();
         @include mat.all-legacy-component-themes($sample-project-themes);
         @include mat.all-legacy-component-colors($sample-colors);
         @include mat.all-legacy-component-typographies($sample-typographies);
@@ -73,6 +94,7 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        @include mat.core();
         @include mat.all-component-themes($sample-project-themes);
         @include mat.all-component-colors($sample-colors);
         @include mat.all-component-typographies($sample-typographies);
@@ -86,6 +108,7 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        @include mat.legacy-core();
         @include mat.all-legacy-component-themes($sample-project-themes);
         @include mat.all-legacy-component-colors($sample-colors);
         @include mat.all-legacy-component-typographies($sample-typographies);
@@ -93,6 +116,9 @@ describe('multiple component styles', () => {
         `
         @use '@angular/material' as mat;
         $theme: ();
+        /* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated */
+        @include mat.legacy-core();
+        @include mat.core();
         /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
         @include mat.all-legacy-component-themes($sample-project-themes);
         @include mat.all-component-themes($sample-project-themes);

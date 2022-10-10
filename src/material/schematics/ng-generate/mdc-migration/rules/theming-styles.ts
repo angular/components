@@ -12,17 +12,21 @@ import * as postcss from 'postcss';
 import * as scss from 'postcss-scss';
 import {ComponentMigrator, MIGRATORS} from '.';
 
-const ALL_LEGACY_COMPONENTS_MIXIN_NAME = '(?:\\.)(.*)(?:\\()';
+const COMPONENTS_MIXIN_NAME = /\.([^(;]*)/;
 
 export class ThemingStylesMigration extends Migration<ComponentMigrator[], SchematicContext> {
   enabled = true;
   namespace: string;
 
   override visitStylesheet(stylesheet: ResolvedResource) {
+    const migratedContent = this.migrate(stylesheet.content, stylesheet.filePath).replace(
+      new RegExp(`${this.namespace}.define-legacy-typography-config\\(`, 'g'),
+      `${this.namespace}.define-typography-config(`,
+    );
     this.fileSystem
       .edit(stylesheet.filePath)
       .remove(stylesheet.start, stylesheet.content.length)
-      .insertRight(stylesheet.start, this.migrate(stylesheet.content, stylesheet.filePath));
+      .insertRight(stylesheet.start, migratedContent);
   }
 
   migrate(styles: string, filename: string): string {
@@ -59,21 +63,31 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
     if (migrator) {
       const mixinChange = migrator.styles.getMixinChange(this.namespace, atRule);
       if (mixinChange) {
-        replaceAtRuleWithMultiple(atRule, mixinChange.old, mixinChange.new);
+        if (mixinChange.new) {
+          replaceAtRuleWithMultiple(atRule, mixinChange.old, mixinChange.new);
+        } else {
+          atRule.remove();
+        }
       }
-    } else if (atRule.params.includes('all-legacy-component') && atRule.parent) {
+    } else if (atRule.parent && this.isCrossCuttingMixin(atRule.params)) {
       if (this.isPartialMigration()) {
         // the second element of the result from match is the matching text
-        const mixinName = atRule.params.match(ALL_LEGACY_COMPONENTS_MIXIN_NAME)![1];
-        const comment =
-          'TODO(mdc-migration): Remove ' + mixinName + ' once all legacy components are migrated';
+        const mixinName = atRule.params.match(COMPONENTS_MIXIN_NAME)![1];
+        const comment = `TODO(mdc-migration): Remove ${mixinName} once all legacy components are migrated`;
         if (!addLegacyCommentForPartialMigrations(atRule, comment)) {
-          // same all-legacy-component mixin already replaced, nothing to do here
+          // same mixin already replaced, nothing to do here
           return;
         }
       }
-      replaceAllComponentsMixin(atRule);
+      replaceCrossCuttingMixin(atRule, this.namespace);
     }
+  }
+
+  isCrossCuttingMixin(mixinText: string) {
+    return [
+      `${this.namespace}\\.all-legacy-component-`,
+      `${this.namespace}\\.legacy-core([^-]|$)`,
+    ].some(r => new RegExp(r).test(mixinText));
   }
 
   isPartialMigration() {
@@ -157,7 +171,7 @@ function addLegacyCommentForPartialMigrations(
 /**
  * Adds comment before postcss rule or at rule node
  *
- * @param rule a postcss rule.
+ * @param node a postcss rule.
  * @param comment the text content for the comment
  */
 function addCommentBeforeNode(node: postcss.Rule | postcss.AtRule, comment: string): void {
@@ -174,15 +188,18 @@ function addCommentBeforeNode(node: postcss.Rule | postcss.AtRule, comment: stri
 }
 
 /**
- * Replaces mixin prefixed with `all-legacy-component` to the MDC equivalent.
+ * Replaces a cross-cutting mixin that affects multiple components with the MDC equivalent.
  *
- * @param allComponentThemesNode a all-components-theme mixin node
+ * @param atRule A mixin inclusion node
+ * @param namespace The @angular/material namespace
  */
-function replaceAllComponentsMixin(allComponentNode: postcss.AtRule) {
-  allComponentNode.cloneBefore({
-    params: allComponentNode.params.replace('all-legacy-component', 'all-component'),
+function replaceCrossCuttingMixin(atRule: postcss.AtRule, namespace: string) {
+  atRule.cloneBefore({
+    params: atRule.params
+      .replace(`${namespace}.all-legacy-component`, `${namespace}.all-component`)
+      .replace(`${namespace}.legacy-core`, `${namespace}.core`),
   });
-  allComponentNode.remove();
+  atRule.remove();
 }
 
 /**

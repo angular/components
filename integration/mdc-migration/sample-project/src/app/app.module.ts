@@ -25,6 +25,7 @@ import {MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/le
 import {MatLegacyTableModule as MatTableModule} from '@angular/material/legacy-table';
 import {MatLegacyTabsModule as MatTabsModule} from '@angular/material/legacy-tabs';
 import {MatLegacyTooltipModule as MatTooltipModule} from '@angular/material/legacy-tooltip';
+import {MatLegacyOptionModule, LEGACY_VERSION} from '@angular/material/legacy-core';
 import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
 import {ButtonComponent} from './components/button/button.component';
 import {CardComponent} from './components/card/card.component';
@@ -94,9 +95,12 @@ import {TooltipComponent} from './components/tooltip/tooltip.component';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
+    MatLegacyOptionModule,
     ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  version = LEGACY_VERSION;
+}

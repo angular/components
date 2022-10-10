@@ -34,6 +34,7 @@ import {TabsStylesMigrator} from './components/tabs/tabs-styles';
 import {TooltipStylesMigrator} from './components/tooltip/tooltip-styles';
 import {OptgroupStylesMigrator} from './components/optgroup/optgroup-styles';
 import {OptionStylesMigrator} from './components/option/option-styles';
+import {FormFieldTemplateMigrator} from './components/form-field/form-field-template';
 
 /** Contains the migrators to migrate a single component. */
 export interface ComponentMigrator {
@@ -121,6 +122,7 @@ export const MIGRATORS: ComponentMigrator[] = [
   {
     component: 'form-field',
     styles: new FormFieldStylesMigrator(),
+    template: new FormFieldTemplateMigrator(),
   },
   {
     component: 'input',
