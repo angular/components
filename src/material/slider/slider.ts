@@ -116,6 +116,9 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** The slider input corresponding to this slider thumb. */
   private _sliderInput: MatSliderThumb;
 
+  /** The native html element of the slider input corresponding to this thumb. */
+  private _sliderInputEl: HTMLInputElement;
+
   /** The RippleRef for the slider thumbs hover state. */
   private _hoverRippleRef: RippleRef | undefined;
 
@@ -153,23 +156,23 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     // These listeners don't update any data bindings so we bind them outside
     // of the NgZone to prevent Angular from needlessly running change detection.
     this._ngZone.runOutsideAngular(() => {
-      this._sliderInput._hostElement.addEventListener('pointermove', this._onPointerMove);
-      this._sliderInput._hostElement.addEventListener('pointerdown', this._onDragStart);
-      this._sliderInput._hostElement.addEventListener('pointerup', this._onDragEnd);
-      this._sliderInput._hostElement.addEventListener('pointerleave', this._onMouseLeave);
-      this._sliderInput._hostElement.addEventListener('focus', this._onFocus);
-      this._sliderInput._hostElement.addEventListener('blur', this._onBlur);
+      this._sliderInputEl.addEventListener('pointermove', this._onPointerMove);
+      this._sliderInputEl.addEventListener('pointerdown', this._onDragStart);
+      this._sliderInputEl.addEventListener('pointerup', this._onDragEnd);
+      this._sliderInputEl.addEventListener('pointerleave', this._onMouseLeave);
+      this._sliderInputEl.addEventListener('focus', this._onFocus);
+      this._sliderInputEl.addEventListener('blur', this._onBlur);
     });
   }
 
   ngOnDestroy() {
     this._ngZone.runOutsideAngular(() => {
-      this._sliderInput._hostElement.removeEventListener('pointermove', this._onPointerMove);
-      this._sliderInput._hostElement.removeEventListener('pointerdown', this._onDragStart);
-      this._sliderInput._hostElement.removeEventListener('pointerup', this._onDragEnd);
-      this._sliderInput._hostElement.removeEventListener('pointerleave', this._onMouseLeave);
-      this._sliderInput._hostElement.removeEventListener('focus', this._onFocus);
-      this._sliderInput._hostElement.removeEventListener('blur', this._onBlur);
+      this._sliderInputEl.removeEventListener('pointermove', this._onPointerMove);
+      this._sliderInputEl.removeEventListener('pointerdown', this._onDragStart);
+      this._sliderInputEl.removeEventListener('pointerup', this._onDragEnd);
+      this._sliderInputEl.removeEventListener('pointerleave', this._onMouseLeave);
+      this._sliderInputEl.removeEventListener('focus', this._onFocus);
+      this._sliderInputEl.removeEventListener('blur', this._onBlur);
     });
   }
 
