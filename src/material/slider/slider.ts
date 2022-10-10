@@ -764,14 +764,14 @@ export class MatSliderRangeThumb extends MatSliderThumb {
   _marginRight: string;
 
   getSibling(): MatSliderRangeThumb | undefined {
-    if (!this.__sibling) {
-      this.__sibling = this._slider._getInput(this._isEndThumb ? Thumb.START : Thumb.END) as
+    if (!this._sibling) {
+      this._sibling = this._slider._getInput(this._isEndThumb ? Thumb.START : Thumb.END) as
         | MatSliderRangeThumb
         | undefined;
     }
-    return this.__sibling;
+    return this._sibling;
   }
-  private __sibling: MatSliderRangeThumb | undefined;
+  private _sibling: MatSliderRangeThumb | undefined;
 
   /** Returns the minimum translateX position allowed for this slider input's visual thumb. */
   getMinPos(): number {
@@ -826,7 +826,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
   override _onInput(): void {
     super._onInput();
-    this.__sibling?._updateMinMax();
+    this._sibling?._updateMinMax();
   }
 
   override _onNgControlValueChange(): void {
@@ -838,18 +838,18 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     if (this.disabled) {
       return;
     }
-    if (this.__sibling) {
-      this.__sibling._updateWidthActive();
-      this.__sibling._pointerEvents = 'none';
+    if (this._sibling) {
+      this._sibling._updateWidthActive();
+      this._sibling._pointerEvents = 'none';
     }
     super._onPointerDown(event);
   }
 
   override _onPointerUp(event: PointerEvent): void {
     super._onPointerUp(event);
-    if (this.__sibling) {
-      this.__sibling._updateWidthInactive();
-      this.__sibling._pointerEvents = 'auto';
+    if (this._sibling) {
+      this._sibling._updateWidthInactive();
+      this._sibling._pointerEvents = 'auto';
     }
   }
 
@@ -862,7 +862,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
   override _fixValue(event: PointerEvent): void {
     super._fixValue(event);
-    this.__sibling?._updateMinMax();
+    this._sibling?._updateMinMax();
   }
 
   override _clamp(v: number): number {
