@@ -9,24 +9,24 @@
 
 <mat-tab-group color="{{colorModel}}">
   <mat-tab label="Reactive form controls">
-    <table>
+    <table class="demo-data-table">
       <tr>
-        <th>Inputs</th>
-        <th>Controls</th>
-        <th>Native Slider</th>
-        <th>Single Slider</th>
-        <th>Double Slider</th>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Native Slider</th>
+        <th class="demo-table-header">Single Slider</th>
+        <th class="demo-table-header">Double Slider</th>
       </tr>
       <tr>
-        <th>Value</th>
-        <td class="demo-control-cell"><input type="number" (input)="updateControlValue($event.target)" /></td>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateControlValue($event.target)" /></td>
         <td class="demo-value-cell">{{nativeSlider1.value}}</td>
         <td class="demo-value-cell">{{ngThumb1.value}}</td>
         <td class="demo-value-cell">{{ngStartThumb1.value}} : {{ngEndThumb1.value}}</td>
       </tr>
       <tr>
-        <th>Disabled</th>
-        <td class="demo-control-cell"><input type="checkbox" (input)="updateControlDisabledState($event.target)" /></td>
+        <th class="demo-table-header">Disabled</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="checkbox" (input)="updateControlDisabledState($event.target)" /></td>
         <td class="demo-value-cell">{{nativeSlider1.disabled}}</td>
         <td class="demo-value-cell">{{ngThumb1.disabled}}</td>
         <td class="demo-value-cell">{{ngStartThumb1.disabled}} : {{ngEndThumb1.disabled}}</td>
@@ -46,45 +46,45 @@
   </mat-tab>
 
   <mat-tab label="Template-driven form controls">
-    <table>
+    <table class="demo-data-table">
       <tr>
-        <th>Inputs</th>
-        <th>Controls</th>
-        <th>Native Slider</th>
-        <th>Slider</th>
-        <th>Range Slider</th>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Native Slider</th>
+        <th class="demo-table-header">Slider</th>
+        <th class="demo-table-header">Range Slider</th>
       </tr>
       <tr>
-        <th>Value</th>
-        <td class="demo-control-cell"><input type="number" [(ngModel)]="valueModel" /></td>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="valueModel" /></td>
         <td class="demo-value-cell">{{nativeSlider2.value}}</td>
         <td class="demo-value-cell">{{ngThumb2.value}}</td>
         <td class="demo-value-cell">{{ngStartThumb2.value}} : {{ngEndThumb2.value}}</td>
       </tr>
       <tr>
-        <th>Min</th>
-        <td class="demo-control-cell"><input type="number" [(ngModel)]="minModel" /></td>
+        <th class="demo-table-header">Min</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="minModel" /></td>
         <td class="demo-value-cell">{{nativeSlider2.min}}</td>
         <td class="demo-value-cell">{{ngThumb2.min}}</td>
         <td class="demo-value-cell">{{ngStartThumb2.min}} : {{ngEndThumb2.min}}</td>
       </tr>
       <tr>
-        <th>Max</th>
-        <td class="demo-control-cell"><input type="number" [(ngModel)]="maxModel" /></td>
+        <th class="demo-table-header">Max</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="maxModel" /></td>
         <td class="demo-value-cell">{{nativeSlider2.max}}</td>
         <td class="demo-value-cell">{{ngThumb2.max}}</td>
         <td class="demo-value-cell">{{ngStartThumb2.max}} : {{ngEndThumb2.max}}</td>
       </tr>
       <tr>
-        <th>Step</th>
-        <td class="demo-control-cell"><input type="number" [(ngModel)]="stepModel" /></td>
+        <th class="demo-table-header">Step</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="stepModel" /></td>
         <td class="demo-value-cell">{{nativeSlider2.step}}</td>
         <td class="demo-value-cell">{{ngThumb2.step}}</td>
         <td class="demo-value-cell">{{ngStartThumb2.step}} : {{ngEndThumb2.step}}</td>
       </tr>
       <tr>
-        <th>Disabled</th>
-        <td class="demo-control-cell"><input type="checkbox" [(ngModel)]="disabledModel" /></td>
+        <th class="demo-table-header">Disabled</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="checkbox" [(ngModel)]="disabledModel" /></td>
         <td class="demo-value-cell">{{nativeSlider2.disabled}}</td>
         <td class="demo-value-cell">{{ngThumb2.disabled}}</td>
         <td class="demo-value-cell">{{ngStartThumb2.disabled}} : {{ngEndThumb2.disabled}}</td>
@@ -106,45 +106,45 @@
   </mat-tab>
 
   <mat-tab label="One-way property bindings">
-    <table>
+    <table class="demo-data-table">
       <tr>
-        <th>Inputs</th>
-        <th>Controls</th>
-        <th>Native Slider</th>
-        <th>Slider</th>
-        <th>Range Slider</th>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Native Slider</th>
+        <th class="demo-table-header">Slider</th>
+        <th class="demo-table-header">Range Slider</th>
       </tr>
       <tr>
-        <th>Value</th>
-        <td class="demo-control-cell"><input type="number" (input)="updateValue($event.target)" [value]="value" /></td>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateValue($event.target)" [value]="value" /></td>
         <td class="demo-value-cell">{{nativeSlider3.value}}</td>
         <td class="demo-value-cell">{{ngThumb3.value}}</td>
         <td class="demo-value-cell">{{ngStartThumb3.value}} : {{ngEndThumb3.value}}</td>
       </tr>
       <tr>
-        <th>Min</th>
-        <td class="demo-control-cell"><input type="number" (input)="updateMin($event.target)" [value]="min" /></td>
+        <th class="demo-table-header">Min</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateMin($event.target)" [value]="min" /></td>
         <td class="demo-value-cell">{{nativeSlider3.min}}</td>
         <td class="demo-value-cell">{{ngThumb3.min}}</td>
         <td class="demo-value-cell">{{ngStartThumb3.min}} : {{ngEndThumb3.min}}</td>
       </tr>
       <tr>
-        <th>Max</th>
-        <td class="demo-control-cell"><input type="number" (input)="updateMax($event.target)" [value]="max" /></td>
+        <th class="demo-table-header">Max</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateMax($event.target)" [value]="max" /></td>
         <td class="demo-value-cell">{{nativeSlider3.max}}</td>
         <td class="demo-value-cell">{{ngThumb3.max}}</td>
         <td class="demo-value-cell">{{ngStartThumb3.max}} : {{ngEndThumb3.max}}</td>
       </tr>
       <tr>
-        <th>Step</th>
-        <td class="demo-control-cell"><input type="number" (input)="updateStep($event.target)" [value]="step" /></td>
+        <th class="demo-table-header">Step</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateStep($event.target)" [value]="step" /></td>
         <td class="demo-value-cell">{{nativeSlider3.step}}</td>
         <td class="demo-value-cell">{{ngThumb3.step}}</td>
         <td class="demo-value-cell">{{ngStartThumb3.step}} : {{ngEndThumb3.step}}</td>
       </tr>
       <tr>
-        <th>Disabled</th>
-        <td class="demo-control-cell"><input type="checkbox" (input)="updateDisabledState($event.target)" [value]="disabled" /></td>
+        <th class="demo-table-header">Disabled</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="checkbox" (input)="updateDisabledState($event.target)" [value]="disabled" /></td>
         <td class="demo-value-cell">{{nativeSlider3.disabled}}</td>
         <td class="demo-value-cell">{{ngThumb3.disabled}}</td>
         <td class="demo-value-cell">{{ngStartThumb3.disabled}} : {{ngEndThumb3.disabled}}</td>
@@ -164,16 +164,16 @@
   </mat-tab>
 
   <mat-tab label="Two-way property bindings">
-    <table>
+    <table class="demo-data-table">
       <tr>
-        <th>Inputs</th>
-        <th>Controls</th>
-        <th>Slider</th>
-        <th>Range Slider</th>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Slider</th>
+        <th class="demo-table-header">Range Slider</th>
       </tr>
       <tr>
-        <th>Value</th>
-        <td class="demo-control-cell"><input type="number" (input)="updateTwoWayValue($event.target)" [value]="twoWayValue" /></td>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateTwoWayValue($event.target)" [value]="twoWayValue" /></td>
         <td class="demo-value-cell">{{ngThumb4.value}}</td>
         <td class="demo-value-cell">{{ngStartThumb4.value}} : {{ngEndThumb4.value}}</td>
       </tr>

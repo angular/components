@@ -1,26 +1,28 @@
-table {
+.demo-data-table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   margin: 24px;
 }
 
-td, th {
+.demo-value-cell,
+.demo-control-cell,
+.demo-table-header {
   border: 1px solid #aaa;
   text-align: left;
   padding: 8px;
 }
 
 @media (max-width: 600px) {
-  table {
+  .demo-data-table {
     font-size: 12px;
     margin: 24px 0;
   }
-  th {
+  .demo-table-header {
     text-align: center;
   }
   .demo-control-cell {
     max-width: 130px;
-    input {
+    .demo-slider-control {
       width: calc(100% - 8px);
     }
   }
