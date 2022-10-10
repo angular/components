@@ -152,6 +152,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this._ripple.radius = 24;
     this._sliderInput = this._slider._getInput(this.thumbPosition)!;
+    this._sliderInputEl = this._sliderInput._hostElement;
 
     // These listeners don't update any data bindings so we bind them outside
     // of the NgZone to prevent Angular from needlessly running change detection.
@@ -185,16 +186,12 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
     const rect = this._hostElement.getBoundingClientRect();
     const isHovered = this._isSliderThumbHovered(event, rect);
+    this._isHovered = isHovered;
+
     if (isHovered) {
-      if (!this._isHovered) {
-        this._isHovered = true;
-        this._showHoverRipple();
-      }
+      this._showHoverRipple();
     } else {
-      if (this._isHovered) {
-        this._isHovered = false;
-        this._hideRipple(this._hoverRippleRef);
-      }
+      this._hideRipple(this._hoverRippleRef);
     }
   };
 
