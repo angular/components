@@ -166,14 +166,12 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._ngZone.runOutsideAngular(() => {
-      this._sliderInputEl.removeEventListener('pointermove', this._onPointerMove);
-      this._sliderInputEl.removeEventListener('pointerdown', this._onDragStart);
-      this._sliderInputEl.removeEventListener('pointerup', this._onDragEnd);
-      this._sliderInputEl.removeEventListener('pointerleave', this._onMouseLeave);
-      this._sliderInputEl.removeEventListener('focus', this._onFocus);
-      this._sliderInputEl.removeEventListener('blur', this._onBlur);
-    });
+    this._sliderInputEl.removeEventListener('pointermove', this._onPointerMove);
+    this._sliderInputEl.removeEventListener('pointerdown', this._onDragStart);
+    this._sliderInputEl.removeEventListener('pointerup', this._onDragEnd);
+    this._sliderInputEl.removeEventListener('pointerleave', this._onMouseLeave);
+    this._sliderInputEl.removeEventListener('focus', this._onFocus);
+    this._sliderInputEl.removeEventListener('blur', this._onBlur);
   }
 
   /********************/
