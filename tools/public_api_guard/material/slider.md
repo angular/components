@@ -39,6 +39,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     _cachedTrackWidth: number;
     // (undocumented)
     _cachedWidth: number;
+    _calcTickMarkTransform(index: number): string;
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     // (undocumented)
@@ -315,32 +316,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderThumb, "input[matSliderThumb]", ["matSliderThumb"], { "value": "value"; }, { "valueChange": "valueChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderThumb, [null, { optional: true; self: true; }, null, null]>;
-}
-
-// @public
-class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
-    constructor(_cdr: ChangeDetectorRef, _ngZone: NgZone, _slider: MatSlider, _elementRef: ElementRef<HTMLElement>);
-    // (undocumented)
-    readonly _cdr: ChangeDetectorRef;
-    discrete: boolean;
-    _getKnob(): HTMLElement;
-    _getValueIndicatorContainer(): HTMLElement;
-    _hostElement: HTMLElement;
-    readonly _isActive = false;
-    _isValueIndicatorVisible: boolean;
-    _knob: ElementRef<HTMLElement>;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    readonly _ripple: MatRipple;
-    thumbPosition: Thumb;
-    _valueIndicatorContainer: ElementRef<HTMLElement>;
-    valueIndicatorText: string;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSliderVisualThumb, "mat-slider-visual-thumb", never, { "discrete": "discrete"; "thumbPosition": "thumbPosition"; "valueIndicatorText": "valueIndicatorText"; }, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderVisualThumb, never>;
 }
 
 // (No @packageDocumentation comment for this package)
