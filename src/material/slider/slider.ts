@@ -80,7 +80,7 @@ export class MatSliderEvent {
  *
  * Handles the slider thumb ripple states (hover, focus, and active),
  * and displaying the value tooltip on discrete sliders.
- * INTERNAL USE ONLY.
+ * @docs-private.
  */
 @Component({
   selector: 'mat-slider-visual-thumb',
