@@ -1,4 +1,4 @@
-<div class="mdc-slider__value-indicator-container" [ngClass]="{'mdc-slider__thumb--with-indicator': _isValueIndicatorVisible}" *ngIf="discrete" #valueIndicatorContainer>
+<div class="mdc-slider__value-indicator-container" [class.mdc-slider__thumb--with-indicator]="_isValueIndicatorVisible" *ngIf="discrete" #valueIndicatorContainer>
   <div class="mdc-slider__value-indicator">
     <span class="mdc-slider__value-indicator-text">{{valueIndicatorText}}</span>
   </div>
