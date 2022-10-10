@@ -16,10 +16,21 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
   enabled = true;
 
   override visitTemplate(template: ResolvedResource) {
+    this.fileSystem.commitEdits();
+    const start = this.fileSystem.read(template.filePath).indexOf(template.content);
+
+    if (start === -1) {
+      return;
+    }
+
+    const newContent = this.migrate(template.content, template.filePath);
     this.fileSystem
       .edit(template.filePath)
-      .remove(template.start, template.content.length)
-      .insertRight(template.start, this.migrate(template.content, template.filePath));
+      .remove(start, template.content.length)
+      .insertLeft(start, newContent);
+
+    template.content = newContent;
+    this.fileSystem.commitEdits();
   }
 
   migrate(template: string, templateUrl?: string): string {

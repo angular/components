@@ -48,7 +48,7 @@ export abstract class FileSystem {
   /** Checks whether the given directory exists. */
   abstract directoryExists(path: WorkspacePath): boolean;
   /** Gets the contents of the given file. */
-  abstract read(filePath: WorkspacePath): string | null;
+  abstract read(filePath: WorkspacePath): string;
   /** Reads the given directory to retrieve children. */
   abstract readDirectory(dirPath: WorkspacePath): DirectoryEntry;
   /**

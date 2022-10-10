@@ -180,12 +180,7 @@ export class ComponentResourceCollector {
   ): ResolvedResource | null {
     // Strip the BOM to avoid issues with the Sass compiler. See:
     // https://github.com/angular/components/issues/24227#issuecomment-1200934258
-    const fileContent = stripBom(this._fileSystem.read(filePath) || '');
-
-    if (!fileContent) {
-      return null;
-    }
-
+    const fileContent = stripBom(this._fileSystem.read(filePath));
     const lineStartsMap = computeLineStartsMap(fileContent);
 
     return {

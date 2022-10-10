@@ -79,8 +79,11 @@ export class DevkitFileSystem extends FileSystem {
   }
 
   read(filePath: Path) {
-    const buffer = this._tree.read(filePath);
-    return buffer !== null ? buffer.toString() : null;
+    if (this._updateRecorderCache.has(filePath)) {
+      throw new Error(`File ${filePath} is being re-read but there are uncommited changes.`);
+    }
+
+    return this._tree.readText(filePath);
   }
 
   readDirectory(dirPath: Path): DirectoryEntry {
