@@ -351,7 +351,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     'class': 'mdc-slider__input',
     'type': 'range',
     '[style.padding]': '_paddingStyle',
-    '[style.width]': '_widthStyle',
     '[attr.aria-valuetext]': '_valuetext',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
@@ -462,9 +461,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   /** The css padding of the native input element. */
   _paddingStyle: string;
-
-  /** The css width of the native input element. */
-  _widthStyle: string;
 
   /** The radius of a native html slider's knob. */
   _knobRadius: number = 8;
@@ -717,13 +713,13 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
   _updateWidthActive(): void {
     this._paddingStyle = `0 ${this._slider._inputPadding}px`;
-    this._widthStyle = `calc(100% - ${this._slider._inputPadding * 2}px)`;
+    this._hostElement.style.width = `calc(100% - ${this._slider._inputPadding * 2}px)`;
   }
 
   // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
   _updateWidthInactive(): void {
     this._paddingStyle = '0px';
-    this._widthStyle = '100%';
+    this._hostElement.style.width = '100%';
   }
 
   _updateThumbUIByValue(options?: {withAnimation: boolean}): void {
@@ -907,7 +903,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
         : 1;
     const width = maxWidth * percentage + minWidth;
-    this._widthStyle = `${width}px`;
+    this._hostElement.style.width = `${width}px`;
     this._paddingStyle = `0 ${this._slider._inputPadding}px`;
   }
 
@@ -929,7 +925,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
 
     const width = maxWidth * percentage;
-    this._widthStyle = `${width}px`;
+    this._hostElement.style.width = `${width}px`;
     this._paddingStyle = '0px';
   }
 
