@@ -344,7 +344,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 @Directive({
   selector: 'input[matSliderThumb]',
   exportAs: 'matSliderThumb',
-  providers: [],
   host: {
     'class': 'mdc-slider__input',
     'type': 'range',
