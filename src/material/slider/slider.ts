@@ -650,16 +650,23 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   _fixValue(event: PointerEvent): void {
     const xPos = event.pageX - this._slider._cachedLeft - this._slider._rippleRadius;
     const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
-    const percentage = xPos / width;
+
+    const percentage = this._slider._isRtl ? 1 - xPos / width : xPos / width;
 
     // To ensure the percentage is rounded to two decimals.
     const fixedPercentage = Math.round(percentage * 100) / 100;
 
-    const value = this._slider._isRtl
-      ? (1 - fixedPercentage) * (this._slider.max - this._slider.min) + this._slider.min
-      : fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
+    const value = fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
 
     const prevValue = this.value;
+    if (value === prevValue) {
+      // Because we prevented UI updates, if it turns out that the race
+      // condition didn't happen and the value is already correct, we
+      // have to apply the ui updates now.
+      this._slider._onValueChange(this);
+      return;
+    }
+
     this.value = value;
     if (this.ngControl instanceof NgModel) {
       this.ngControl?.control?.setValue(this.value);
