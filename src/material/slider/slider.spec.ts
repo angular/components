@@ -64,7 +64,10 @@ describe('MDC-based MatSlider', () => {
       expect(input.step).withContext('step').toBe(step);
     }
     if (width !== undefined) {
-      const realWidth = parseInt((input as MatSliderRangeThumb)._widthStyle.match(/\d+/)![0], 10);
+      const realWidth = parseInt(
+        (input as MatSliderRangeThumb)._hostElement.style.width.match(/\d+/)![0],
+        10,
+      );
       expect(realWidth)
         .withContext('width')
         .toBeCloseTo((300 * width) / 100 + 16, 0);

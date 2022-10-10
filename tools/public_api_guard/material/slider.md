@@ -311,7 +311,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     readonly valueChange: EventEmitter<string>;
     _valuetext: string;
-    _widthStyle: string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderThumb, "input[matSliderThumb]", ["matSliderThumb"], { "value": "value"; }, { "valueChange": "valueChange"; }, never, never, false, never>;
     // (undocumented)
