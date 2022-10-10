@@ -45,12 +45,6 @@ export class SliderDemo {
 
   control = new FormControl('0');
 
-  updateTwoWayValue(input: EventTarget | null): void {
-    if (!input) {
-      return;
-    }
-    this.twoWayValue = (input as HTMLInputElement).value;
-  }
   updateValue(input: EventTarget | null): void {
     if (!input) {
       return;

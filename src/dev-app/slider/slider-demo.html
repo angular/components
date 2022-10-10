@@ -173,7 +173,7 @@
       </tr>
       <tr>
         <th class="demo-table-header">Value</th>
-        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateTwoWayValue($event.target)" [value]="twoWayValue" /></td>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="twoWayValue" /></td>
         <td class="demo-value-cell">{{ngThumb4.value}}</td>
         <td class="demo-value-cell">{{ngStartThumb4.value}} : {{ngEndThumb4.value}}</td>
       </tr>
