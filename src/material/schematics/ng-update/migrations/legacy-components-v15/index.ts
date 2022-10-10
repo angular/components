@@ -409,6 +409,6 @@ export class LegacyComponentsMigration extends Migration<null> {
     str: {old: string; new: string},
   ): void {
     const index = this.fileSystem.read(filePath)!.indexOf(str.old, offset);
-    this.fileSystem.edit(filePath).remove(index, str.old.length).insertRight(index, str.new);
+    this.fileSystem.edit(filePath).remove(index, str.old.length).insertLeft(index, str.new);
   }
 }
