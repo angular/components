@@ -1496,6 +1496,13 @@ export class MatSlider
     this._trackActiveTransformOrigin = styles.transformOrigin;
   }
 
+  /** Returns the translateX positioning for a tick mark based on it's index. */
+  _calcTickMarkTransform(index: number): string {
+    // TODO(wagnermaciel): See if we can avoid doing this and just using flex to position these.
+    const translateX = index * (this._tickMarkTrackWidth / (this._tickMarks.length - 1));
+    return `translateX(${translateX}px`;
+  }
+
   // Handlers for updating the slider ui.
 
   _onTranslateXChange(source: MatSliderThumb): void {
