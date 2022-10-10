@@ -16,9 +16,10 @@
   </div>
   <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
     <ng-container *ngIf="_cachedTrackWidth">
-      <ng-container *ngFor="let tickMark of _tickMarks; let i = index">
-        <div [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'" [style.transform]="_calcTickMarkTransform(i)"></div>
-      </ng-container>
+        <div
+          *ngFor="let tickMark of _tickMarks; let i = index"
+          [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
+          [style.transform]="_calcTickMarkTransform(i)"></div>
     </ng-container>
   </div>
 </div>
