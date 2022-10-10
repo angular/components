@@ -480,7 +480,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    * must first be relayed from the parent MatSlider component, which can only happen later
    * in the component lifecycle.
    */
-  _hasSetInitialValue: boolean = false;
+  private _hasSetInitialValue: boolean = false;
 
   /** The stored initial value. */
   _initialValue: string | undefined;
