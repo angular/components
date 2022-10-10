@@ -45,7 +45,7 @@ import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
   standalone: true,
   host: {
     'class': 'cdk-menu-trigger',
-    'aria-haspopup': 'menu',
+    '[attr.aria-haspopup]': 'menuTemplateRef ? "menu" : null',
     '[attr.aria-expanded]': 'isOpen()',
     '(focusin)': '_setHasFocus(true)',
     '(focusout)': '_setHasFocus(false)',
@@ -99,7 +99,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
 
   /** Open the attached menu. */
   open() {
-    if (!this.isOpen()) {
+    if (!this.isOpen() && this.menuTemplateRef != null) {
       this.opened.next();
 
       this.overlayRef = this.overlayRef || this._overlay.create(this._getOverlayConfig());
