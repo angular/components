@@ -1,3 +1,4 @@
+import {CdkContextMenuTrigger} from './context-menu-trigger';
 import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -469,6 +470,59 @@ describe('MenuTrigger', () => {
 
     expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
   });
+
+  describe('null triggerFor', () => {
+    let fixture: ComponentFixture<TriggerWithNullValue>;
+
+    let nativeTrigger: HTMLElement;
+    let contextNativeTrigger: HTMLElement;
+
+    const grabElementsForTesting = () => {
+      nativeTrigger = fixture.componentInstance.nativeTrigger.nativeElement;
+    };
+
+    /** run change detection and, extract and set the rendered elements */
+    const detectChanges = () => {
+      fixture.detectChanges();
+      grabElementsForTesting();
+    };
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule],
+        declarations: [TriggerWithNullValue],
+      }).compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TriggerWithNullValue);
+      detectChanges();
+    });
+
+    it('should not set aria-haspopup', () => {
+      expect(nativeTrigger.hasAttribute('aria-haspopup')).toBeFalse();
+    });
+
+    it('should not set aria-controls', () => {
+      expect(nativeTrigger.hasAttribute('aria-controls')).toBeFalse();
+    });
+
+    it('should not toggle the menu on trigger', () => {
+      expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
+
+      nativeTrigger.click();
+      detectChanges();
+      expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
+    });
+
+    it('should not toggle the menu on keyboard events', () => {
+      expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
+
+      dispatchKeyboardEvent(nativeTrigger, 'keydown', SPACE);
+      detectChanges();
+      expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
+    });
+  });
 });
 
 @Component({
@@ -601,4 +655,21 @@ class StandaloneTriggerWithInlineMenu {
 })
 class TriggerWithData {
   menuData: unknown;
+}
+
+@Component({
+  template: `
+    <button [cdkMenuTriggerFor]="null">First</button>
+    <button [cdkContextMenuTriggerFor]="null">First</button>
+  `,
+})
+class TriggerWithNullValue {
+  @ViewChild(CdkMenuTrigger)
+  trigger: CdkMenuTrigger;
+
+  @ViewChild(CdkMenuTrigger, {read: ElementRef})
+  nativeTrigger: ElementRef<HTMLElement>;
+
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef})
+  contextMenuNativeTrigger: ElementRef<HTMLElement>;
 }
