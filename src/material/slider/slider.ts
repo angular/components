@@ -556,7 +556,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   _onBlur(): void {
-    this._isActive = false;
     this._setIsFocused(false);
   }
 
@@ -747,19 +746,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   selector: 'input[matSliderStartThumb], input[matSliderEndThumb]',
   exportAs: 'matSliderRangeThumb',
   providers: [],
-  host: {
-    '[style.pointer-events]': '_pointerEvents',
-    '[style.left]': '_left',
-    '[style.right]': '_right',
-  },
 })
 export class MatSliderRangeThumb extends MatSliderThumb {
-  _pointerEvents: string = 'auto';
-  _left: string;
-  _right: string;
-  _marginLeft: string;
-  _marginRight: string;
-
   getSibling(): MatSliderRangeThumb | undefined {
     if (!this._sibling) {
       this._sibling = this._slider._getInput(this._isEndThumb ? Thumb.START : Thumb.END) as
@@ -836,7 +824,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     }
     if (this._sibling) {
       this._sibling._updateWidthActive();
-      this._sibling._pointerEvents = 'none';
+      this._sibling._hostElement.classList.add('mat-slider__input--no-pointer-events');
     }
     super._onPointerDown(event);
   }
@@ -845,7 +833,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     super._onPointerUp(event);
     if (this._sibling) {
       this._sibling._updateWidthInactive();
-      this._sibling._pointerEvents = 'auto';
+      this._sibling._hostElement.classList.remove('mat-slider__input--no-pointer-events');
     }
   }
 

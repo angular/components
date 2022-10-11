@@ -29,6 +29,10 @@ $mat-slider-horizontal-margin: 8px !default;
   .mdc-slider__input {
     pointer-events: auto;
 
+    &.mat-slider__input--no-pointer-events {
+      pointer-events: none;
+    }
+
     &.mat-slider__right-input {
       left: auto;
       right: 0;
