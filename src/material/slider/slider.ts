@@ -55,7 +55,7 @@ import {Thumb, TickMark} from '@material/slider';
 import {Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
-// todo: maybe handle the following edge case:
+// TODO(wagnermaciel): maybe handle the following edge case:
 // 1. start dragging discrete slider
 // 2. tab to disable checkbox
 // 3. without ending drag, disable the slider
@@ -132,7 +132,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _isHovered: boolean = false;
 
   /** Whether the slider thumb is currently being pressed. */
-  readonly _isActive = false;
+  _isActive = false;
 
   /** Whether the value indicator tooltip is visible. */
   _isValueIndicatorVisible: boolean = false;
@@ -175,10 +175,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     this._sliderInputEl.removeEventListener('blur', this._onBlur);
   }
 
-  /********************/
-  /** Event listeners */
-  /********************/
-
   private _onPointerMove = (event: PointerEvent): void => {
     if (this._sliderInput._isFocused) {
       return;
@@ -219,12 +215,12 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   };
 
   private _onDragStart = (): void => {
-    (this as {_isActive: boolean})._isActive = true;
+    this._isActive = true;
     this._showActiveRipple();
   };
 
   private _onDragEnd = (): void => {
-    (this as {_isActive: boolean})._isActive = false;
+    this._isActive = false;
     this._hideRipple(this._activeRippleRef);
     // Happens when the user starts dragging a thumb, tabs away, and then stops dragging.
     if (!this._sliderInput._isFocused) {
@@ -291,24 +287,18 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     }
   }
 
-  /** Value Indicator functions */
-
   /** Shows the value indicator ui. */
   private _showValueIndicator(): void {
-    this._getValueIndicatorContainer().classList.add('mdc-slider__thumb--with-indicator');
+    this._getValueIndicatorContainer()?.classList.add('mdc-slider__thumb--with-indicator');
   }
 
   /** Hides the value indicator ui. */
   private _hideValueIndicator(): void {
-    this._getValueIndicatorContainer().classList.remove('mdc-slider__thumb--with-indicator');
+    this._getValueIndicatorContainer()?.classList.remove('mdc-slider__thumb--with-indicator');
   }
 
-  /**********************/
-  /** Getters Functions */
-  /**********************/
-
   /** Gets the value indicator container's native HTML element. */
-  _getValueIndicatorContainer(): HTMLElement {
+  _getValueIndicatorContainer(): HTMLElement | undefined {
     return this._valueIndicatorContainer.nativeElement;
   }
 
@@ -316,10 +306,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   _getKnob(): HTMLElement {
     return this._knob.nativeElement;
   }
-
-  /*********************/
-  /** Helper functions */
-  /*********************/
 
   private _isSliderThumbHovered(event: PointerEvent, rect: DOMRect) {
     const radius = rect.width / 2;
@@ -706,13 +692,19 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._updateWidthInactive();
   }
 
-  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
+  /**
+   * Used to set the slider width to the correct
+   * dimensions while the user is dragging.
+   */
   _updateWidthActive(): void {
     this._paddingStyle = `0 ${this._slider._inputPadding}px`;
     this._hostElement.style.width = `calc(100% - ${this._slider._inputPadding * 2}px)`;
   }
 
-  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
+  /**
+   * Sets the slider input to disproportionate dimensions to allow for touch
+   * events to be captured on touch devices.
+   */
   _updateWidthInactive(): void {
     this._paddingStyle = '0px';
     this._hostElement.style.width = '100%';
