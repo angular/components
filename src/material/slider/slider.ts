@@ -296,13 +296,11 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Shows the value indicator ui. */
   private _showValueIndicator(): void {
     this._isValueIndicatorVisible = true;
-    this._cdr.detectChanges();
   }
 
   /** Hides the value indicator ui. */
   private _hideValueIndicator(): void {
     this._isValueIndicatorVisible = false;
-    this._cdr.detectChanges();
   }
 
   /**********************/
@@ -471,7 +469,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   /** Used to relay updates to _isFocused to the slider visual thumbs. */
   private _setIsFocused(v: boolean): void {
     this._isFocused = v;
-    this._slider._getThumb(this.thumbPosition)?._cdr.markForCheck();
   }
 
   /**
@@ -734,7 +731,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   _updateThumbUI(options?: {withAnimation: boolean}) {
     this._slider._setTransition(!!options?.withAnimation);
     this._slider._onTranslateXChange(this);
-    this._slider._cdr.markForCheck();
   }
 
   focus(): void {
@@ -821,7 +817,6 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
   override initUI(): void {
     this._updateHiddenUI();
-    this._cdr.detectChanges();
   }
 
   override _onInput(): void {
