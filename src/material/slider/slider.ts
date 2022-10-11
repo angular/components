@@ -334,11 +334,8 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     '[attr.aria-valuetext]': '_valuetext',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
-    '(pointerdown)': '_onPointerDown($event)',
-    '(pointermove)': '_onPointerMove($event)',
     // TODO(wagnermaciel): Consider using a global event listener instead.
     // Reason: I have found a semi-consistent way to mouse up without triggering this event.
-    '(pointerup)': '_onPointerUp($event)',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
   },
@@ -486,6 +483,11 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   ) {
     this._hostElement = _elementRef.nativeElement;
     this._onNgControlValueChange = this._onNgControlValueChange.bind(this);
+    this._slider._ngZone.runOutsideAngular(() => {
+      this._hostElement.addEventListener('pointerdown', this._onPointerDown);
+      this._hostElement.addEventListener('pointermove', this._onPointerMove);
+      this._hostElement.addEventListener('pointerup', this._onPointerUp);
+    });
   }
 
   ngOnInit(): void {
@@ -507,6 +509,9 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._hostElement.removeEventListener('pointerdown', this._onPointerDown);
+    this._hostElement.removeEventListener('pointermove', this._onPointerMove);
+    this._hostElement.removeEventListener('pointerup', this._onPointerUp);
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -573,7 +578,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._slider.disabled = this._formControl!.disabled;
   }
 
-  _onPointerDown(event: PointerEvent): void {
+  _onPointerDown = (event: PointerEvent): void => {
     if (this.disabled || event.button !== 0) {
       return;
     }
@@ -592,7 +597,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     if (!this.disabled) {
       this._handleValueCorrection(event);
     }
-  }
+  };
 
   /**
    * Corrects the value of the slider on pointer up/down.
@@ -649,21 +654,21 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
   }
 
-  _onPointerMove(event: PointerEvent): void {
+  _onPointerMove = (event: PointerEvent): void => {
     // Again, does nothing if a step is defined because
     // we want the value to snap to the values on input.
     if (!this._slider.step && this._isActive) {
       this._updateThumbUIByPointerEvent(event);
     }
-  }
+  };
 
-  _onPointerUp(event: PointerEvent): void {
+  _onPointerUp = (event: PointerEvent): void => {
     this._isActive = false;
     this._updateWidthInactive();
     if (!this.disabled) {
       this._handleValueCorrection(event);
     }
-  }
+  };
 
   _clamp(v: number): number {
     return Math.max(
@@ -806,7 +811,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     this.getSibling()?._updateMinMax();
   }
 
-  override _onPointerDown(event: PointerEvent): void {
+  override _onPointerDown = (event: PointerEvent): void => {
     if (this.disabled) {
       return;
     }
@@ -815,22 +820,22 @@ export class MatSliderRangeThumb extends MatSliderThumb {
       this._sibling._hostElement.classList.add('mat-slider__input--no-pointer-events');
     }
     super._onPointerDown(event);
-  }
+  };
 
-  override _onPointerUp(event: PointerEvent): void {
+  override _onPointerUp = (event: PointerEvent): void => {
     super._onPointerUp(event);
     if (this._sibling) {
       this._sibling._updateWidthInactive();
       this._sibling._hostElement.classList.remove('mat-slider__input--no-pointer-events');
     }
-  }
+  };
 
-  override _onPointerMove(event: PointerEvent): void {
+  override _onPointerMove = (event: PointerEvent): void => {
     super._onPointerMove(event);
     if (!this._slider.step && this._isActive) {
       this._updateSibling();
     }
-  }
+  };
 
   override _fixValue(event: PointerEvent): void {
     super._fixValue(event);
