@@ -588,6 +588,10 @@ export class MatSliderThumb implements OnDestroy, ControlValueAccessor {
   }
 
   _onPointerDown = (event: PointerEvent): void => {
+    this._pointerDownHandler(event);
+  };
+
+  _pointerDownHandler(event: PointerEvent): void {
     if (this.disabled || event.button !== 0) {
       return;
     }
@@ -606,7 +610,7 @@ export class MatSliderThumb implements OnDestroy, ControlValueAccessor {
     if (!this.disabled) {
       this._handleValueCorrection(event);
     }
-  };
+  }
 
   /**
    * Corrects the value of the slider on pointer up/down.
@@ -662,20 +666,28 @@ export class MatSliderThumb implements OnDestroy, ControlValueAccessor {
   }
 
   _onPointerMove = (event: PointerEvent): void => {
+    this._pointerMoveHandler(event);
+  };
+
+  _pointerMoveHandler(event: PointerEvent): void {
     // Again, does nothing if a step is defined because
     // we want the value to snap to the values on input.
     if (!this._slider.step && this._isActive) {
       this._updateThumbUIByPointerEvent(event);
     }
-  };
+  }
 
   _onPointerUp = (event: PointerEvent): void => {
+    this._pointerUpHandler(event);
+  };
+
+  _pointerUpHandler(event: PointerEvent): void {
     this._isActive = false;
     this._updateWidthInactive();
     if (!this.disabled) {
       this._handleValueCorrection(event);
     }
-  };
+  }
 
   _clamp(v: number): number {
     return Math.max(
@@ -845,7 +857,10 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
   override _onInput(): void {
     super._onInput();
-    this._sibling?._updateMinMax();
+    this._updateSibling();
+    if (!this._isActive) {
+      this._updateWidthInactive();
+    }
   }
 
   override _onNgControlValueChange(): void {
@@ -853,7 +868,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     this.getSibling()?._updateMinMax();
   }
 
-  override _onPointerDown = (event: PointerEvent): void => {
+  override _pointerDownHandler(event: PointerEvent): void {
     if (this.disabled) {
       return;
     }
@@ -861,23 +876,23 @@ export class MatSliderRangeThumb extends MatSliderThumb {
       this._sibling._updateWidthActive();
       this._sibling._hostElement.classList.add('mat-slider__input--no-pointer-events');
     }
-    super._onPointerDown(event);
-  };
+    super._pointerDownHandler(event);
+  }
 
-  override _onPointerUp = (event: PointerEvent): void => {
-    super._onPointerUp(event);
+  override _pointerUpHandler(event: PointerEvent): void {
+    super._pointerUpHandler(event);
     if (this._sibling) {
       this._sibling._updateWidthInactive();
       this._sibling._hostElement.classList.remove('mat-slider__input--no-pointer-events');
     }
-  };
+  }
 
-  override _onPointerMove = (event: PointerEvent): void => {
-    super._onPointerMove(event);
+  override _pointerMoveHandler(event: PointerEvent): void {
+    super._pointerMoveHandler(event);
     if (!this._slider.step && this._isActive) {
       this._updateSibling();
     }
-  };
+  }
 
   override _fixValue(event: PointerEvent): void {
     super._fixValue(event);
@@ -955,7 +970,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
       return;
     }
     sibling._updateMinMax();
-    if (this._isFocused) {
+    if (this._isActive) {
       sibling._updateWidthActive();
     } else {
       sibling._updateWidthInactive();
@@ -969,7 +984,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
    */
   override writeValue(value: any): void {
     this.value = value;
-
+    this._updateWidthInactive();
     this._updateSibling();
   }
 }
