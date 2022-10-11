@@ -600,6 +600,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._isActive = true;
     this._setIsFocused(true);
     this._updateWidthActive();
+    this._slider._updateDimensions();
 
     // Does nothing if a step is defined because we
     // want the value to snap to the values on input.
@@ -638,7 +639,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   /** Corrects the value of the slider based on the pointer event's position. */
   _fixValue(event: PointerEvent): void {
-    const xPos = event.pageX - this._slider._cachedLeft - this._slider._rippleRadius;
+    const xPos = event.clientX - this._slider._cachedLeft - this._slider._rippleRadius;
     const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
 
     const percentage = this._slider._isRtl ? 1 - xPos / width : xPos / width;
@@ -698,7 +699,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   _calcTranslateXByPointerEvent(event: PointerEvent): number {
-    return event.pageX - this._slider._cachedLeft;
+    return event.clientX - this._slider._cachedLeft;
   }
 
   _updateHiddenUI(): void {
@@ -1317,7 +1318,7 @@ export class MatSlider
 
   ngAfterViewInit(): void {
     if (this._platform.isBrowser) {
-      this._setDimensions();
+      this._updateDimensions();
     }
     const eInput = this._getInput(Thumb.END);
     const sInput = this._getInput(Thumb.START);
@@ -1415,7 +1416,7 @@ export class MatSlider
     this._resizeTimer = setTimeout(() => {
       const prevWidth = this._cachedWidth;
       const prevLeft = this._cachedLeft;
-      this._setDimensions();
+      this._updateDimensions();
 
       if (prevWidth !== this._cachedWidth || prevLeft !== this._cachedLeft) {
         this._pollForAdditionalSizeChanges();
@@ -1445,7 +1446,7 @@ export class MatSlider
   }
 
   /** Stores the slider dimensions. */
-  private _setDimensions(): void {
+  _updateDimensions(): void {
     const rect = this._elementRef.nativeElement.getBoundingClientRect();
     this._cachedWidth = rect.width;
     this._cachedLeft = rect.left;
@@ -1498,7 +1499,7 @@ export class MatSlider
   }
 
   _onResize(): void {
-    this._setDimensions();
+    this._updateDimensions();
     if (this._isRange) {
       const eInput = this._getInput(Thumb.END) as MatSliderRangeThumb;
       const sInput = this._getInput(Thumb.START) as MatSliderRangeThumb;
