@@ -955,7 +955,22 @@ export class MatSliderRangeThumb extends MatSliderThumb {
       return;
     }
     sibling._updateMinMax();
-    sibling._updateWidthActive();
+    if (this._isFocused) {
+      sibling._updateWidthActive();
+    } else {
+      sibling._updateWidthInactive();
+    }
+  }
+
+  /**
+   * Sets the input's value.
+   * @param value The new value of the input
+   * @docs-private
+   */
+  override writeValue(value: any): void {
+    this.value = value;
+
+    this._updateSibling();
   }
 }
 

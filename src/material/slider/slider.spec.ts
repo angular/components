@@ -1078,19 +1078,19 @@ describe('MDC-based MatSlider', () => {
     it('should update the model', () => {
       slideToValue(slider, input, 19);
       fixture.detectChanges();
-      expect(fixture.componentInstance.val).toBe('19');
+      expect(fixture.componentInstance.val).toBe(19);
       checkInput(input, {min: 0, max: 100, value: 19, translateX: 57});
     });
 
     it('should update the slider', fakeAsync(() => {
-      fixture.componentInstance.val = '20';
+      fixture.componentInstance.val = 20;
       fixture.detectChanges();
       flush();
       checkInput(input, {min: 0, max: 100, value: 20, translateX: 60});
     }));
 
     it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
-      fixture.componentInstance.val = '5';
+      fixture.componentInstance.val = 5;
       fixture.detectChanges();
       flush();
       checkInput(input, {min: 0, max: 100, value: 5, translateX: 15});
@@ -1098,7 +1098,7 @@ describe('MDC-based MatSlider', () => {
       fixture.componentInstance.val = undefined;
       fixture.detectChanges();
       flush();
-      checkInput(input, {min: 0, max: 100, value: 50, translateX: 150});
+      checkInput(input, {min: 0, max: 100, value: 0, translateX: 0});
     }));
   });
 
@@ -1130,19 +1130,19 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update the thumbs on ngModel value change', fakeAsync(() => {
-      fixture.componentInstance.startVal = '50';
+      fixture.componentInstance.startVal = 50;
       fixture.detectChanges();
       flush();
       checkInput(startInput, {min: 0, max: 100, value: 50, translateX: 150});
 
-      fixture.componentInstance.endVal = '75';
+      fixture.componentInstance.endVal = 75;
       fixture.detectChanges();
       flush();
       checkInput(endInput, {min: 50, max: 100, value: 75, translateX: 225});
     }));
 
     it('should be able to reset a start input', fakeAsync(() => {
-      fixture.componentInstance.startVal = '5';
+      fixture.componentInstance.startVal = 5;
       fixture.detectChanges();
       flush();
       checkInput(startInput, {min: 0, max: 100, value: 5, translateX: 15});
@@ -1150,11 +1150,11 @@ describe('MDC-based MatSlider', () => {
       fixture.componentInstance.startVal = undefined;
       fixture.detectChanges();
       flush();
-      checkInput(startInput, {min: 0, max: 100, value: 50, translateX: 150});
+      checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0});
     }));
 
     it('should be able to reset an end input', fakeAsync(() => {
-      fixture.componentInstance.endVal = '99';
+      fixture.componentInstance.endVal = 99;
       fixture.detectChanges();
       flush();
       checkInput(endInput, {min: 0, max: 100, value: 99, translateX: 297});
@@ -1162,7 +1162,7 @@ describe('MDC-based MatSlider', () => {
       fixture.componentInstance.endVal = undefined;
       fixture.detectChanges();
       flush();
-      checkInput(endInput, {min: 0, max: 100, value: 50, translateX: 150});
+      checkInput(endInput, {min: 0, max: 100, value: 0, translateX: 0});
     }));
   });
 
@@ -1180,14 +1180,14 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update the control on slide', () => {
-      expect(fixture.componentInstance.control.value).toBe('0');
+      expect(fixture.componentInstance.control.value).toBe(0);
       slideToValue(slider, input, 19);
-      expect(fixture.componentInstance.control.value).toBe('19');
+      expect(fixture.componentInstance.control.value).toBe(19);
     });
 
     it('should update the value when the control is set', () => {
       expect(input.value).toBe(0);
-      fixture.componentInstance.control.setValue('7');
+      fixture.componentInstance.control.setValue(7);
       checkInput(input, {min: 0, max: 100, value: 7, translateX: 21});
     });
 
@@ -1246,26 +1246,26 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update the start input control on slide', () => {
-      expect(fixture.componentInstance.startInputControl.value).toBe('0');
+      expect(fixture.componentInstance.startInputControl.value).toBe(0);
       slideToValue(slider, startInput, 20);
-      expect(fixture.componentInstance.startInputControl.value).toBe('20');
+      expect(fixture.componentInstance.startInputControl.value).toBe(20);
     });
 
     it('should update the end input control on slide', () => {
-      expect(fixture.componentInstance.endInputControl.value).toBe('100');
+      expect(fixture.componentInstance.endInputControl.value).toBe(100);
       slideToValue(slider, endInput, 80);
-      expect(fixture.componentInstance.endInputControl.value).toBe('80');
+      expect(fixture.componentInstance.endInputControl.value).toBe(80);
     });
 
     it('should update the start input value when the start input control is set', () => {
       expect(startInput.value).toBe(0);
-      fixture.componentInstance.startInputControl.setValue('10');
+      fixture.componentInstance.startInputControl.setValue(10);
       checkInput(startInput, {min: 0, max: 100, value: 10, translateX: 30});
     });
 
     it('should update the end input value when the end input control is set', () => {
       expect(endInput.value).toBe(100);
-      fixture.componentInstance.endInputControl.setValue('90');
+      fixture.componentInstance.endInputControl.setValue(90);
       checkInput(endInput, {min: 0, max: 100, value: 90, translateX: 270});
     });
 
@@ -1603,7 +1603,7 @@ class RangeSliderWithOneWayBinding {
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
-  val: string | undefined = '0';
+  val: number | undefined = 0;
 }
 
 @Component({
@@ -1617,8 +1617,8 @@ class SliderWithNgModel {
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
-  startVal: string | undefined = '0';
-  endVal: string | undefined = '100';
+  startVal: number | undefined = 0;
+  endVal: number | undefined = 100;
 }
 
 @Component({
@@ -1629,7 +1629,7 @@ class RangeSliderWithNgModel {
   styles: SLIDER_STYLES,
 })
 class SliderWithFormControl {
-  control = new FormControl('0');
+  control = new FormControl(0);
 }
 
 @Component({
@@ -1641,8 +1641,8 @@ class SliderWithFormControl {
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithFormControl {
-  startInputControl = new FormControl('0');
-  endInputControl = new FormControl('100');
+  startInputControl = new FormControl(0);
+  endInputControl = new FormControl(100);
 }
 
 @Component({
