@@ -179,7 +179,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   ```
 
   If you prefer a different default density level, you can set it in your theme config:
-  <!-- TODO(mmalerba): link to density docs once they exist. -->
+  <!-- TODO(wagnermaciel): link to density docs for more info once they exist. -->
 
   ```scss
   $theme: mat.define-light-theme((
