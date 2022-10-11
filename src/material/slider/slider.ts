@@ -657,6 +657,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
       // condition didn't happen and the value is already correct, we
       // have to apply the ui updates now.
       this._slider._onValueChange(this);
+      this._updateThumbUIByValue();
       return;
     }
 
@@ -666,6 +667,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
     this.valueChange.emit(this._hostElement.value);
     this._slider._onValueChange(this);
+    this._updateThumbUIByValue();
   }
 
   _onPointerMove(event: PointerEvent): void {
