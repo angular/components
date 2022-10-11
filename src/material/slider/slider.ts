@@ -1255,11 +1255,6 @@ export class MatSlider
   protected startValueIndicatorText: string = '';
   protected endValueIndicatorText: string = '';
 
-  // Styles for the full slider track.
-
-  _trackLeftStyle: string;
-  _trackWidthStyle: string;
-
   // Used to control the translateX of the visual slider thumb(s).
 
   _endThumbTransform: string;
@@ -1334,8 +1329,6 @@ export class MatSlider
 
     const thumb = this._getThumb(Thumb.END);
     this._rippleRadius = thumb._ripple.radius;
-    this._trackLeftStyle = `${this._rippleRadius}px`;
-    this._trackWidthStyle = `calc(100% - ${this._rippleRadius * 2}px)`;
 
     this._inputPadding = this._rippleRadius - this._knobRadius;
     this._inputOffset = this._inputPadding + this._knobRadius;
