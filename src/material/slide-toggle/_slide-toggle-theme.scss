@@ -11,12 +11,11 @@
 // Generates all color mapping for the properties that only change based on the theme.
 @function _get-theme-base-map($is-dark) {
   $on-surface: if($is-dark, mdc-color-palette.$grey-100, mdc-color-palette.$grey-800);
-  $hairline: if($is-dark, mdc-color-palette.$grey-500, mdc-color-palette.$grey-300);
-  $on-surface-variant: if($is-dark, mdc-color-palette.$grey-200, mdc-color-palette.$grey-700);
+  $hairline: if($is-dark, mdc-color-palette.$grey-700, mdc-color-palette.$grey-300);
+  $on-surface-variant: if($is-dark, mdc-color-palette.$grey-500, mdc-color-palette.$grey-700);
   $on-surface-state-content: if($is-dark, mdc-color-palette.$grey-50, mdc-color-palette.$grey-900);
-  $disabled-handle-color: mdc-color-palette.$grey-800;
-  $selected-icon-color: mdc-color-palette.$grey-100;
-  $icon-color: if($is-dark, mdc-color-palette.$grey-800, mdc-color-palette.$grey-100);
+  $disabled-handle-color: if($is-dark, #000, mdc-color-palette.$grey-800);
+  $icon-color: if($is-dark, mdc-color-palette.$grey-900, #fff);
 
   @return (
     disabled-selected-handle-color: $disabled-handle-color,
@@ -40,7 +39,7 @@
     handle-surface-color: surface,
     unselected-handle-color: $on-surface-variant,
 
-    selected-icon-color: $selected-icon-color,
+    selected-icon-color: $icon-color,
     disabled-selected-icon-color: $icon-color,
     disabled-unselected-icon-color: $icon-color,
     unselected-icon-color: $icon-color,
@@ -48,15 +47,22 @@
 }
 
 // Generates the mapping for the properties that change based on the slide toggle color.
-@function _get-theme-color-map($color-palette) {
-  $state-content: color.scale($color-palette, $blackness: 50%);
-  $inverse: color.scale($color-palette, $lightness: 75%);
+@function _get-theme-color-map($color-palette, $is-dark) {
+  $primary: theming.get-color-from-palette($color-palette, 600);
+  $state-content: theming.get-color-from-palette($color-palette, 900);
+  $inverse: theming.get-color-from-palette($color-palette, 300);
+
+  @if $is-dark {
+    $primary: theming.get-color-from-palette($color-palette, 300);
+    $state-content: theming.get-color-from-palette($color-palette, 200);
+    $inverse: theming.get-color-from-palette($color-palette, 600);
+  }
 
   @return (
-    selected-focus-state-layer-color: $color-palette,
-    selected-handle-color: $color-palette,
-    selected-hover-state-layer-color: $color-palette,
-    selected-pressed-state-layer-color: $color-palette,
+    selected-focus-state-layer-color: $primary,
+    selected-handle-color: $primary,
+    selected-hover-state-layer-color: $primary,
+    selected-pressed-state-layer-color: $primary,
 
     selected-focus-handle-color: $state-content,
     selected-hover-handle-color: $state-content,
@@ -71,9 +77,9 @@
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
+  $primary: map.get($config, primary);
+  $accent: map.get($config, accent);
+  $warn: map.get($config, warn);
   $is-dark: map.get($config, is-dark);
   $foreground: map.get($config, foreground);
 
@@ -90,15 +96,15 @@
       }
 
       &.mat-primary {
-        @include mdc-switch-theme.theme(_get-theme-color-map($primary));
+        @include mdc-switch-theme.theme(_get-theme-color-map($primary, $is-dark));
       }
 
       &.mat-accent {
-        @include mdc-switch-theme.theme(_get-theme-color-map($accent));
+        @include mdc-switch-theme.theme(_get-theme-color-map($accent, $is-dark));
       }
 
       &.mat-warn {
-        @include mdc-switch-theme.theme(_get-theme-color-map($warn));
+        @include mdc-switch-theme.theme(_get-theme-color-map($warn, $is-dark));
       }
     }
   }
