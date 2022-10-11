@@ -375,7 +375,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   set translateX(v: number) {
     this._translateX = v;
   }
-  _translateX: number | undefined;
+  private _translateX: number | undefined;
 
   /** Indicates whether this thumb is the start or end thumb. */
   thumbPosition: Thumb = Thumb.END;
@@ -1508,10 +1508,10 @@ export class MatSlider
   private _areThumbsOverlapping(): boolean {
     const startInput = this._getInput(Thumb.START);
     const endInput = this._getInput(Thumb.END);
-    if (!startInput?._translateX || !endInput?._translateX) {
+    if (!startInput || !endInput) {
       return false;
     }
-    return endInput._translateX - startInput._translateX < 20;
+    return endInput.translateX - startInput.translateX < 20;
   }
 
   /**
