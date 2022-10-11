@@ -499,6 +499,9 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    */
   _skipUIUpdate: boolean = false;
 
+  /** Whether or not the slider should use animations. */
+  _hasAnimation: boolean = false;
+
   constructor(
     @Inject(forwardRef(() => MatSlider)) readonly _slider: MatSlider,
     @Optional() @Self() readonly ngControl: NgControl,
@@ -657,7 +660,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
       // condition didn't happen and the value is already correct, we
       // have to apply the ui updates now.
       this._slider._onValueChange(this);
-      this._updateThumbUIByValue();
+      this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
       return;
     }
 
@@ -667,7 +670,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
     this.valueChange.emit(this._hostElement.value);
     this._slider._onValueChange(this);
-    this._updateThumbUIByValue();
+    this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
   }
 
   _onPointerMove(event: PointerEvent): void {
@@ -1272,13 +1275,6 @@ export class MatSlider
   _trackLeftStyle: string;
   _trackWidthStyle: string;
 
-  // Used to control the animation of the active portion of the slider track.
-
-  _trackActiveLeft: string = 'auto';
-  _trackActiveRight: string = '450px';
-  _trackActiveTransform: string = 'scaleX(0)';
-  _trackActiveTransformOrigin: string = 'right';
-
   // Used to control the translateX of the visual slider thumb(s).
 
   _endThumbTransform: string;
@@ -1482,10 +1478,10 @@ export class MatSlider
     transform: string;
     transformOrigin: string;
   }): void {
-    this._trackActiveLeft = styles.left;
-    this._trackActiveRight = styles.right;
-    this._trackActiveTransform = styles.transform;
-    this._trackActiveTransformOrigin = styles.transformOrigin;
+    this._trackActive.nativeElement.style.left = styles.left;
+    this._trackActive.nativeElement.style.right = styles.right;
+    this._trackActive.nativeElement.style.transform = styles.transform;
+    this._trackActive.nativeElement.style.transformOrigin = styles.transformOrigin;
   }
 
   /** Returns the translateX positioning for a tick mark based on it's index. */
@@ -1735,7 +1731,6 @@ export class MatSlider
     if (this._isRtl) {
       this._tickMarks.reverse();
     }
-    this._cdr.markForCheck();
   }
 
   private _updateTickMarkUINonRange(step: number): void {
@@ -1761,7 +1756,6 @@ export class MatSlider
         Array.from({length: numActive}).map(() => TickMark.ACTIVE),
         Array.from({length: numInactiveAfterEndThumb}).map(() => TickMark.INACTIVE),
       );
-    this._cdr.detectChanges();
   }
 
   /** Gets the slider thumb input of the given thumb position. */
@@ -1782,16 +1776,11 @@ export class MatSlider
 
   /** Used to set the transition duration for thumb and track animations. */
   _setTransition(withAnimation: boolean): void {
-    const transition = withAnimation && !this._noopAnimations ? 'transform 80ms' : 'transform 0ms';
-    this._trackActive.nativeElement.style.transition = transition;
-    const endThumb = this._getThumb(Thumb.END);
-    const startThumb = this._getThumb(Thumb.END);
-    if (endThumb) {
-      endThumb._hostElement.style.transition = transition;
-    }
-    if (startThumb) {
-      startThumb._hostElement.style.transition = transition;
-    }
+    this._hasAnimation = withAnimation && !this._noopAnimations;
+    this._elementRef.nativeElement.classList.toggle(
+      'mat-slider--with-animation',
+      this._hasAnimation,
+    );
   }
 
   // todo: remove this function.

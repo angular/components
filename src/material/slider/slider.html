@@ -7,11 +7,7 @@
   <div class="mdc-slider__track--active">
     <div
       #trackActive
-      class="mdc-slider__track--active_fill"
-      [style.left]="_trackActiveLeft"
-      [style.right]="_trackActiveRight"
-      [style.transform]="_trackActiveTransform"
-      [style.transform-origin]="_trackActiveTransformOrigin"></div>
+      class="mdc-slider__track--active_fill"></div>
   </div>
   <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
     <ng-container *ngIf="_cachedTrackWidth">
