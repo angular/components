@@ -1,3 +1,4 @@
+@use '@angular/cdk';
 @use '@material/checkbox/checkbox' as mdc-checkbox;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
@@ -95,6 +96,17 @@
       & ~ .mdc-checkbox__background {
         border-color: var(--mdc-checkbox-unselected-focus-icon-color, black);
       }
+    }
+  }
+
+  @include cdk.high-contrast(active, off) {
+    &.mat-mdc-checkbox-disabled {
+      opacity: 0.5;
+    }
+
+    .mdc-checkbox__checkmark {
+      --mdc-checkbox-selected-checkmark-color: CanvasText;
+      --mdc-checkbox-disabled-selected-checkmark-color: CanvasText;
     }
   }
 
