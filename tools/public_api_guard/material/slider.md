@@ -253,7 +253,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
     _onPointerUp(event: PointerEvent): void;
-    _paddingStyle: string;
     // (undocumented)
     get percentage(): number;
     _skipUIUpdate: boolean;
@@ -281,9 +280,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     _updateThumbUIByValue(options?: {
         withAnimation: boolean;
     }): void;
-    // (undocumented)
     _updateWidthActive(): void;
-    // (undocumented)
     _updateWidthInactive(): void;
     // (undocumented)
     get value(): number;
