@@ -150,8 +150,8 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * Component size, color, spacing, shadows, and animations all change slightly across the board.
   These changes generally improve spec-compliance and accessibility.
 
-* The DOM structure of components has changed to allow for improved accessibility and compliance 
-  with the Material Design spec.
+* The DOM structure for all components has changed to improve accessibility and better follow the
+  Material Design spec.
 
 * CSS classes applied to components use the `mat-mdc-` prefix, whereas before it was simply a `mat-`
   prefix. Elements that roughly correspond to element in the old implementation have been given the
@@ -273,7 +273,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 * Focus state is slightly darker, improving contrast ratio.
 
-* Text styles will not be inherited; you will need to specifically target the checkbox’s `label` to
+* Text styles are not inherited; you will need to specifically target the checkbox’s `label` to
   override typography properties.
 
 * After toggling a checkbox with the mouse, the ripple will remain visible instead of animating out.
@@ -385,9 +385,9 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   </mat-list-item>
   ```
 
-* The amount of lines is automatically inferred. For example, in the snippet above the list item
-  will acquire space for two lines. With the new API you can now set an explicit number of lines on
-  the `<mat-list-item>` to activate wrapping.
+* The list automatically infers the number of lines of text content. For example, in the snippet
+  above, the list item renders space for two lines. With the new API, you can set an explicit number
+  of lines on the `<mat-list-item>` to manually control wrapping.
 
   ```html
   <mat-list-item lines="3">
