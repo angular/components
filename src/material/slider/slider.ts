@@ -38,7 +38,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import {FormControl, FormControlDirective, NgControl, NgModel} from '@angular/forms';
+import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanDisableRipple,
   MatRipple,
@@ -318,6 +318,26 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 }
 
 /**
+ * Provider that allows the slider thumb to register as a ControlValueAccessor.
+ * @docs-private
+ */
+export const MAT_SLIDER_THUMB_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => MatSliderThumb),
+  multi: true,
+};
+
+/**
+ * Provider that allows the range slider thumb to register as a ControlValueAccessor.
+ * @docs-private
+ */
+export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => MatSliderRangeThumb),
+  multi: true,
+};
+
+/**
  * Directive that adds slider-specific behaviors to an input element inside `<mat-slider>`.
  * Up to two may be placed inside of a `<mat-slider>`.
  *
@@ -339,8 +359,9 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
   },
+  providers: [MAT_SLIDER_THUMB_VALUE_ACCESSOR],
 })
-export class MatSliderThumb implements OnInit, OnDestroy {
+export class MatSliderThumb implements OnDestroy, ControlValueAccessor {
   @Input()
   get value(): number {
     return coerceNumberProperty(this._hostElement.value);
@@ -475,37 +496,23 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    */
   _skipUIUpdate: boolean = false;
 
+  /** Callback called when the slider input value changes. */
+  private _onChangeFn: (value: any) => void = () => {};
+
+  /** Callback called when the slider input has been touched. */
+  private _onTouchedFn: () => void = () => {};
+
   constructor(
     @Inject(forwardRef(() => MatSlider)) readonly _slider: MatSlider,
-    @Optional() @Self() readonly ngControl: NgControl,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
   ) {
     this._hostElement = _elementRef.nativeElement;
-    this._onNgControlValueChange = this._onNgControlValueChange.bind(this);
     this._slider._ngZone.runOutsideAngular(() => {
       this._hostElement.addEventListener('pointerdown', this._onPointerDown);
       this._hostElement.addEventListener('pointermove', this._onPointerMove);
       this._hostElement.addEventListener('pointerup', this._onPointerUp);
     });
-  }
-
-  ngOnInit(): void {
-    if (!this.ngControl) {
-      return;
-    }
-
-    if (this.ngControl instanceof FormControlDirective) {
-      this._formControl = this.ngControl.form;
-    } else if (this.ngControl instanceof NgModel) {
-      this._formControl = this.ngControl.control;
-    }
-
-    if (this._formControl) {
-      this._formControl.valueChanges
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(this._onNgControlValueChange);
-    }
   }
 
   ngOnDestroy(): void {
@@ -544,6 +551,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   _onBlur(): void {
     this._setIsFocused(false);
+    this._onTouchedFn();
   }
 
   _onFocus(): void {
@@ -560,6 +568,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   _onInput(): void {
     this.valueChange.emit(this._hostElement.value);
+    this._onChangeFn(this.value);
     // handles arrowing and updating the value when
     // a step is defined.
     if (this._slider.step || !this._isActive) {
@@ -646,10 +655,8 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     }
 
     this.value = value;
-    if (this.ngControl instanceof NgModel) {
-      this.ngControl?.control?.setValue(this.value);
-    }
     this.valueChange.emit(this._hostElement.value);
+    this._onChangeFn(this.value);
     this._slider._onValueChange(this);
     this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
   }
@@ -726,6 +733,42 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     this._slider._onTranslateXChange(this);
   }
 
+  /**
+   * Sets the input's value.
+   * @param value The new value of the input
+   * @docs-private
+   */
+  writeValue(value: any): void {
+    this.value = value;
+  }
+
+  /**
+   * Registers a callback to be invoked when the input's value changes from user input.
+   * @param fn The callback to register
+   * @docs-private
+   */
+  registerOnChange(fn: any): void {
+    this._onChangeFn = fn;
+  }
+
+  /**
+   * Registers a callback to be invoked when the input is blurred by the user.
+   * @param fn The callback to register
+   * @docs-private
+   */
+  registerOnTouched(fn: any): void {
+    this._onTouchedFn = fn;
+  }
+
+  /**
+   * Sets the disabled state of the slider.
+   * @param isDisabled The new disabled state
+   * @docs-private
+   */
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
   focus(): void {
     this._hostElement.focus();
   }
@@ -738,7 +781,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 @Directive({
   selector: 'input[matSliderStartThumb], input[matSliderEndThumb]',
   exportAs: 'matSliderRangeThumb',
-  providers: [],
+  providers: [MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR],
 })
 export class MatSliderRangeThumb extends MatSliderThumb {
   getSibling(): MatSliderRangeThumb | undefined {
@@ -783,11 +826,10 @@ export class MatSliderRangeThumb extends MatSliderThumb {
   constructor(
     readonly _ngZone: NgZone,
     @Inject(forwardRef(() => MatSlider)) _slider: MatSlider,
-    @Optional() @Self() override readonly ngControl: NgControl,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
   ) {
-    super(_slider, ngControl, _elementRef, _cdr);
+    super(_slider, _elementRef, _cdr);
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
     this.thumbPosition = this._isEndThumb ? Thumb.END : Thumb.START;
