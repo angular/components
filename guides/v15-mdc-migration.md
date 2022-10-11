@@ -527,7 +527,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 * Vertical sliders and inverted sliders are no longer supported, as they are no longer part of the
   Material Design spec.
-  <!-- TODO(jelbourn): should we add a note that vertical sliders are likely to return in a future version? -->
 
 * Range sliders are now supported. <!-- TODO(wagnermaciel): add more about this. -->
 
