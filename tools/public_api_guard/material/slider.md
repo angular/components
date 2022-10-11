@@ -57,6 +57,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     _getThumb(thumbPosition: Thumb): MatSliderVisualThumb;
     // (undocumented)
     readonly _globalRippleOptions?: RippleGlobalOptions | undefined;
+    _hasAnimation: boolean;
     _input: MatSliderThumb;
     _inputOffset: number;
     _inputPadding: number;
@@ -94,6 +95,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
         transform: string;
         transformOrigin: string;
     }): void;
+    _setTransition(withAnimation: boolean): void;
     // (undocumented)
     _setValue(v: number, thumbPosition: Thumb): void;
     get showTickMarks(): boolean;
@@ -102,25 +104,13 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     _startThumbTransform: string;
     // (undocumented)
     protected startValueIndicatorText: string;
-    get step(): number | undefined;
+    get step(): number;
     set step(v: NumberInput);
     _thumbs: QueryList<MatSliderVisualThumb>;
     _tickMarks: TickMark[];
     _tickMarkTrackWidth: number;
     _trackActive: ElementRef<HTMLElement>;
-    // (undocumented)
-    _trackActiveLeft: string;
-    // (undocumented)
-    _trackActiveRight: string;
-    // (undocumented)
-    _trackActiveTransform: string;
-    // (undocumented)
-    _trackActiveTransformOrigin: string;
-    // (undocumented)
-    _trackLeftStyle: string;
-    // (undocumented)
-    _trackWidthStyle: string;
-    _transition: string;
+    _updateDimensions(): void;
     _updateThumbUI(source: MatSliderThumb): void;
     _updateTickMarkUI(): void;
     _updateTrackUI(source: MatSliderThumb): void;
@@ -234,7 +224,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     focus(): void;
     // (undocumented)
     _getDefaultValue(): number;
-    _hasSetInitialValue: boolean;
     _hostElement: HTMLInputElement;
     _initialValue: string | undefined;
     // (undocumented)
