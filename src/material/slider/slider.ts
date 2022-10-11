@@ -299,7 +299,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   /** Gets the value indicator container's native HTML element. */
   _getValueIndicatorContainer(): HTMLElement | undefined {
-    return this._valueIndicatorContainer.nativeElement;
+    return this._valueIndicatorContainer?.nativeElement;
   }
 
   /** Gets the native HTML element of the slider thumb knob. */
@@ -1692,8 +1692,8 @@ export class MatSlider
 
   private _updateTickMarkUINonRange(step: number): void {
     const value = this._getValue();
-    let numActive = Math.floor((value - this.min) / step);
-    let numInactive = Math.floor((this.max - value) / step);
+    let numActive = Math.max(Math.floor((value - this.min) / step), 0);
+    let numInactive = Math.max(Math.floor((this.max - value) / step), 0);
     this._isRtl ? numActive++ : numInactive++;
 
     this._tickMarks = Array(numActive)
@@ -1704,14 +1704,14 @@ export class MatSlider
   private _updateTickMarkUIRange(step: number): void {
     const endValue = this._getValue();
     const startValue = this._getValue(Thumb.START);
-    const numInactiveBeforeStartThumb = Math.floor((startValue - this.min) / step);
-    const numActive = Math.floor((endValue - startValue) / step) + 1;
-    const numInactiveAfterEndThumb = Math.floor((this.max - endValue) / step);
-    this._tickMarks = Array.from({length: numInactiveBeforeStartThumb})
-      .map(() => TickMark.INACTIVE)
+    const numInactiveBeforeStartThumb = Math.max(Math.floor((startValue - this.min) / step), 0);
+    const numActive = Math.max(Math.floor((endValue - startValue) / step) + 1, 0);
+    const numInactiveAfterEndThumb = Math.max(Math.floor((this.max - endValue) / step), 0);
+    this._tickMarks = Array(numInactiveBeforeStartThumb)
+      .fill(TickMark.INACTIVE)
       .concat(
-        Array.from({length: numActive}).map(() => TickMark.ACTIVE),
-        Array.from({length: numInactiveAfterEndThumb}).map(() => TickMark.INACTIVE),
+        Array(numActive).fill(TickMark.ACTIVE),
+        Array(numInactiveAfterEndThumb).fill(TickMark.INACTIVE),
       );
   }
 
