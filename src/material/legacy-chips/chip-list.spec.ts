@@ -792,6 +792,7 @@ describe('MatChipList', () => {
       });
 
       it('should take an initial view value with reactive forms', () => {
+        fixture.componentInstance.selectable = true;
         fixture.componentInstance.control = new FormControl('pizza-1');
         fixture.detectChanges();
 
@@ -995,6 +996,7 @@ describe('MatChipList', () => {
       });
 
       it('should take an initial view value with reactive forms', () => {
+        fixture.componentInstance.selectable = true;
         fixture.componentInstance.control = new FormControl(['pizza-1']);
         fixture.detectChanges();
 
