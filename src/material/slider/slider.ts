@@ -331,7 +331,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   host: {
     'class': 'mdc-slider__input',
     'type': 'range',
-    '[style.padding]': '_paddingStyle',
     '[attr.aria-valuetext]': '_valuetext',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
@@ -439,9 +438,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
 
   /** The aria-valuetext string representation of the input's value. */
   _valuetext: string;
-
-  /** The css padding of the native input element. */
-  _paddingStyle: string;
 
   /** The radius of a native html slider's knob. */
   _knobRadius: number = 8;
@@ -697,7 +693,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    * dimensions while the user is dragging.
    */
   _updateWidthActive(): void {
-    this._paddingStyle = `0 ${this._slider._inputPadding}px`;
+    this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
     this._hostElement.style.width = `calc(100% - ${this._slider._inputPadding * 2}px)`;
   }
 
@@ -706,7 +702,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    * events to be captured on touch devices.
    */
   _updateWidthInactive(): void {
-    this._paddingStyle = '0px';
+    this._hostElement.style.padding = '0px';
     this._hostElement.style.width = '100%';
   }
 
@@ -877,7 +873,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
         : 1;
     const width = maxWidth * percentage + minWidth;
     this._hostElement.style.width = `${width}px`;
-    this._paddingStyle = `0 ${this._slider._inputPadding}px`;
+    this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
   }
 
   // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
@@ -899,7 +895,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
 
     const width = maxWidth * percentage;
     this._hostElement.style.width = `${width}px`;
-    this._paddingStyle = '0px';
+    this._hostElement.style.padding = '0px';
   }
 
   _updateStaticStyles(): void {
