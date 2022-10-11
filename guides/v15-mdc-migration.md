@@ -364,7 +364,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   ```
 
 ### List
-<!-- TODO(devversion): review -->
 
 * The API has been reworked to support text wrapping and better integration with the Material Design
   specification.
@@ -452,7 +451,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   form-field (`fill` and `outline`).
 
 ### Progress Bar
-<!-- TODO(wagnermaciel): review -->
 
 * Hiding the bar with `visibility: hidden` will not hide all internal elements because they apply
   a `visibility: visible` style. Instead, style it with `opacity: 0` or `display: none`, or remove
@@ -461,7 +459,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * Height is always set to 4px and does not get shorter or taller using `height` styles.
 
 ### Progress Spinner
-<!-- TODO(wagnermaciel): review -->
 
 * Host element is no longer `display: block` which may affect layout. To fix layout issues add
   `display: block` back to the element.
