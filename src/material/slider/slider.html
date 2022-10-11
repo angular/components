@@ -11,8 +11,7 @@
       [style.left]="_trackActiveLeft"
       [style.right]="_trackActiveRight"
       [style.transform]="_trackActiveTransform"
-      [style.transform-origin]="_trackActiveTransformOrigin"
-      [style.transition]="_transition"></div>
+      [style.transform-origin]="_trackActiveTransformOrigin"></div>
   </div>
   <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
     <ng-container *ngIf="_cachedTrackWidth">
@@ -30,16 +29,12 @@
   [discrete]="discrete"
   [thumbPosition]="1"
   [valueIndicatorText]="startValueIndicatorText"
-  [style.transform]="_startThumbTransform"
-  [style.transition]="_transition"
-  >
+  [style.transform]="_startThumbTransform">
 </mat-slider-visual-thumb>
 
 <mat-slider-visual-thumb
   [discrete]="discrete"
   [thumbPosition]="2"
   [valueIndicatorText]="endValueIndicatorText"
-  [style.transform]="_endThumbTransform"
-  [style.transition]="_transition"
-  >
+  [style.transform]="_endThumbTransform">
 </mat-slider-visual-thumb>

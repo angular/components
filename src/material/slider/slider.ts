@@ -730,8 +730,7 @@ export class MatSliderThumb implements OnInit, OnDestroy {
   }
 
   _updateThumbUI(options?: {withAnimation: boolean}) {
-    this._slider._transition =
-      options?.withAnimation && !this._slider._noopAnimations ? 'transform 80ms' : 'transform 0ms';
+    this._slider._setTransition(!!options?.withAnimation);
     this._slider._onTranslateXChange(this);
     this._slider._cdr.markForCheck();
   }
@@ -1266,12 +1265,6 @@ export class MatSlider
   protected startValueIndicatorText: string = '';
   protected endValueIndicatorText: string = '';
 
-  /**
-   * Controls the timing of the slider thumb animations.
-   * Slider thumb animations are immediate unless being manipulated by mouse movements.
-   */
-  _transition: string = 'transform 0ms';
-
   // Styles for the full slider track.
 
   _trackLeftStyle: string;
@@ -1783,6 +1776,20 @@ export class MatSlider
   /** Gets the slider thumb HTML input element of the given thumb position. */
   _getThumb(thumbPosition: Thumb): MatSliderVisualThumb {
     return thumbPosition === Thumb.END ? this._thumbs?.last! : this._thumbs?.first!;
+  }
+
+  /** Used to set the transition duration for thumb and track animations. */
+  _setTransition(withAnimation: boolean): void {
+    const transition = withAnimation && !this._noopAnimations ? 'transform 80ms' : 'transform 0ms';
+    this._trackActive.nativeElement.style.transition = transition;
+    const endThumb = this._getThumb(Thumb.END);
+    const startThumb = this._getThumb(Thumb.END);
+    if (endThumb) {
+      endThumb._hostElement.style.transition = transition;
+    }
+    if (startThumb) {
+      startThumb._hostElement.style.transition = transition;
+    }
   }
 
   // todo: remove this function.
