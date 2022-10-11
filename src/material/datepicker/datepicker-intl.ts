@@ -51,10 +51,18 @@ export class MatDatepickerIntl {
   /** A label for the 'switch to year view' button (used by screen readers). */
   switchToMultiYearViewLabel = 'Choose month and year';
 
-  /** A label for the first date of a range of dates (used by screen readers). */
+  /**
+   * A label for the first date of a range of dates (used by screen readers).
+   * @deprecated Provide your own internationalization string.
+   * @breaking-change 17.0.0
+   */
   startDateLabel = 'Start date';
 
-  /** A label for the last date of a range of dates (used by screen readers). */
+  /**
+   * A label for the last date of a range of dates (used by screen readers).
+   * @deprecated Provide your own internationalization string.
+   * @breaking-change 17.0.0
+   */
   endDateLabel = 'End date';
 
   /** Formats a range of years (used for visuals). */
