@@ -1584,8 +1584,8 @@ export class MatSlider
 
     const transform = `translateX(${source.translateX}px)`;
     source.thumbPosition === Thumb.END
-      ? (this._endThumbTransform = transform)
-      : (this._startThumbTransform = transform);
+      ? (this._getThumb(Thumb.END)!._hostElement.style.transform = transform)
+      : (this._getThumb(Thumb.START)!._hostElement.style.transform = transform);
   }
 
   // Value indicator text update conditions
