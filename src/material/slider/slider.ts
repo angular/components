@@ -1742,9 +1742,9 @@ export class MatSlider
     let numInactive = Math.floor((this.max - value) / step);
     this._isRtl ? numActive++ : numInactive++;
 
-    this._tickMarks = Array.from({length: numActive})
-      .map(() => TickMark.ACTIVE)
-      .concat(Array.from({length: numInactive}).map(() => TickMark.INACTIVE));
+    this._tickMarks = Array(numActive)
+      .fill(TickMark.ACTIVE)
+      .concat(Array(numInactive).fill(TickMark.INACTIVE));
   }
 
   private _updateTickMarkUIRange(step: number): void {
