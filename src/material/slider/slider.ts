@@ -1490,7 +1490,6 @@ export class MatSlider
     this._updateThumbUI(source);
     this._updateTrackUI(source);
     this._updateOverlappingThumbUI(source as MatSliderRangeThumb);
-    this._cdr.detectChanges();
   }
 
   _onTranslateXChangeBySideEffect(input1: MatSliderRangeThumb, input2: MatSliderRangeThumb): void {
