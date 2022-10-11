@@ -927,13 +927,7 @@ export class MatSliderRangeThumb extends MatSliderThumb {
   }
 
   _updateStaticStyles(): void {
-    if (this._isLeftThumb) {
-      this._left = '0';
-      this._right = 'auto';
-    } else {
-      this._left = 'auto';
-      this._right = '0';
-    }
+    this._hostElement.classList.toggle('mat-slider__right-input', !this._isLeftThumb);
   }
 
   private _updateSibling(): void {
