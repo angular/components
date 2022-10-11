@@ -39,9 +39,11 @@ $mat-slider-horizontal-margin: 8px !default;
   .mdc-slider__track--active_fill {
     transition-duration: 0ms;
   }
-  .mdc-slider__thumb,
-  .mdc-slider__track--active_fill {
-    transition-duration: 80ms;
+  &.mat-slider--with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
   }
 
   // We need to repeat these styles to override discrete slider styling.
