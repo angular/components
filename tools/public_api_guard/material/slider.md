@@ -159,12 +159,6 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     _isEndThumb: boolean;
     _isLeftThumb: boolean;
     // (undocumented)
-    _left: string;
-    // (undocumented)
-    _marginLeft: string;
-    // (undocumented)
-    _marginRight: string;
-    // (undocumented)
     readonly ngControl: NgControl;
     // (undocumented)
     readonly _ngZone: NgZone;
@@ -178,10 +172,6 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
     _onPointerUp(event: PointerEvent): void;
-    // (undocumented)
-    _pointerEvents: string;
-    // (undocumented)
-    _right: string;
     // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
