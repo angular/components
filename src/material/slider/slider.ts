@@ -757,7 +757,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     '[style.pointer-events]': '_pointerEvents',
     '[style.left]': '_left',
     '[style.right]': '_right',
-    '[style.z-index]': '_zIndex',
   },
 })
 export class MatSliderRangeThumb extends MatSliderThumb {
