@@ -84,15 +84,17 @@ $mat-typography-mdc-level-mappings: (
 }
 
 // Converts an MDC typography level config to an Angular Material one.
-@function typography-config-level-from-mdc($mdc-level) {
+@function typography-config-level-from-mdc($mdc-level, $overrides: ()) {
   $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
 
   @return typography.define-typography-level(
-      map.get($mdc-level-config, font-size),
-      map.get($mdc-level-config, line-height),
-      map.get($mdc-level-config, font-weight),
-      map.get($mdc-level-config, font-family),
-      map.get($mdc-level-config, letter-spacing));
+    $font-size: map.get($overrides, font-size) or map.get($mdc-level-config, font-size),
+    $font-family: map.get($overrides, font-family) or map.get($mdc-level-config, font-family),
+    $line-height: map.get($overrides, line-height) or map.get($mdc-level-config, line-height),
+    $font-weight: map.get($overrides, font-weight) or map.get($mdc-level-config, font-weight),
+    $letter-spacing:
+      map.get($overrides, letter-spacing) or map.get($mdc-level-config, letter-spacing)
+  );
 }
 
 // Configures MDC's global variables to reflect the given theme, applies the given styles,

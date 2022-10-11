@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use 'sass:math';
 @use 'sass:meta';
-@use '@material/typography' as mdc-typography;
 @use './typography';
 @use '../../autocomplete/autocomplete-theme';
 @use '../../badge/badge-theme';
@@ -88,49 +87,52 @@
 @function define-typography-config(
   // TODO(mmalerba): rename this function to define-typography-config,
   //  and create a predefined px based config for people that need it.
-  $font-family: mdc-typography.$font-family,
-  $headline-1:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(headline1)),
-  $headline-2:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(headline2)),
-  $headline-3:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(headline3)),
-  $headline-4:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(headline4)),
-  $headline-5:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(headline5)),
-  $headline-6:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(headline6)),
-  $subtitle-1:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(subtitle1)),
-  $subtitle-2:  _rem-to-px(mdc-helpers.typography-config-level-from-mdc(subtitle2)),
-  $body-1:      _rem-to-px(mdc-helpers.typography-config-level-from-mdc(body1)),
-  $body-2:      _rem-to-px(mdc-helpers.typography-config-level-from-mdc(body2)),
-  $caption:     _rem-to-px(mdc-helpers.typography-config-level-from-mdc(caption)),
-  $button:      _rem-to-px(mdc-helpers.typography-config-level-from-mdc(button)),
-  $overline:    _rem-to-px(mdc-helpers.typography-config-level-from-mdc(overline)),
+  $font-family: null,
+  $headline-1: null,
+  $headline-2: null,
+  $headline-3: null,
+  $headline-4: null,
+  $headline-5: null,
+  $headline-6: null,
+  $subtitle-1: null,
+  $subtitle-2: null,
+  $body-1: null,
+  $body-2: null,
+  $caption: null,
+  $button: null,
+  $overline: null,
 ) {
   // Declare an initial map with all of the levels.
-  $config: (
-      headline-1: $headline-1,
-      headline-2: $headline-2,
-      headline-3: $headline-3,
-      headline-4: $headline-4,
-      headline-5: $headline-5,
-      headline-6: $headline-6,
-      subtitle-1: $subtitle-1,
-      subtitle-2: $subtitle-2,
-      body-1:     $body-1,
-      body-2:     $body-2,
-      caption:    $caption,
-      button:     $button,
-      overline:   $overline,
+  $overrides: if($font-family, (font-family: $font-family), ());
+
+  @return (
+    headline-1: $headline-1 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(headline1, $overrides)),
+    headline-2: $headline-2 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(headline2, $overrides)),
+    headline-3: $headline-3 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(headline3, $overrides)),
+    headline-4: $headline-4 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(headline4, $overrides)),
+    headline-5: $headline-5 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(headline5, $overrides)),
+    headline-6: $headline-6 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(headline6, $overrides)),
+    subtitle-1: $subtitle-1 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(subtitle1, $overrides)),
+    subtitle-2: $subtitle-2 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(subtitle2, $overrides)),
+    body-1: $body-1 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(body1, $overrides)),
+    body-2: $body-2 or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(body2, $overrides)),
+    caption: $caption or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(caption, $overrides)),
+    button: $button or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(button, $overrides)),
+    overline: $overline or _rem-to-px(
+      mdc-helpers.typography-config-level-from-mdc(overline, $overrides)),
   );
-
-  // Loop through the levels and set the `font-family` of the ones that don't have one to the base.
-  // Note that Sass can't modify maps in place, which means that we need to merge and re-assign.
-  @each $key, $level in $config {
-    @if map.get($level, font-family) == null {
-      $new-level: map.merge($level, (font-family: $font-family));
-      $config: map.merge($config, ($key: $new-level));
-    }
-  }
-
-  // Add the base font family to the config.
-  @return map.merge($config, (font-family: $font-family));
 }
 
 /// Generates an Angular Material typography config based on values from the official Material
@@ -158,49 +160,39 @@
 @function define-rem-typography-config(
   // TODO(mmalerba): rename this function to define-typography-config,
   //  and create a predefined px based config for people that need it.
-  $font-family: mdc-typography.$font-family,
-  $headline-1:  mdc-helpers.typography-config-level-from-mdc(headline1),
-  $headline-2:  mdc-helpers.typography-config-level-from-mdc(headline2),
-  $headline-3:  mdc-helpers.typography-config-level-from-mdc(headline3),
-  $headline-4:  mdc-helpers.typography-config-level-from-mdc(headline4),
-  $headline-5:  mdc-helpers.typography-config-level-from-mdc(headline5),
-  $headline-6:  mdc-helpers.typography-config-level-from-mdc(headline6),
-  $subtitle-1:  mdc-helpers.typography-config-level-from-mdc(subtitle1),
-  $subtitle-2:  mdc-helpers.typography-config-level-from-mdc(subtitle2),
-  $body-1:      mdc-helpers.typography-config-level-from-mdc(body1),
-  $body-2:      mdc-helpers.typography-config-level-from-mdc(body2),
-  $caption:     mdc-helpers.typography-config-level-from-mdc(caption),
-  $button:      mdc-helpers.typography-config-level-from-mdc(button),
-  $overline:    mdc-helpers.typography-config-level-from-mdc(overline),
+  $font-family: null,
+  $headline-1: null,
+  $headline-2: null,
+  $headline-3: null,
+  $headline-4: null,
+  $headline-5: null,
+  $headline-6: null,
+  $subtitle-1: null,
+  $subtitle-2: null,
+  $body-1: null,
+  $body-2: null,
+  $caption: null,
+  $button: null,
+  $overline: null,
 ) {
   // Declare an initial map with all of the levels.
-  $config: (
-      headline-1: $headline-1,
-      headline-2: $headline-2,
-      headline-3: $headline-3,
-      headline-4: $headline-4,
-      headline-5: $headline-5,
-      headline-6: $headline-6,
-      subtitle-1: $subtitle-1,
-      subtitle-2: $subtitle-2,
-      body-1:     $body-1,
-      body-2:     $body-2,
-      caption:    $caption,
-      button:     $button,
-      overline:   $overline,
+  $overrides: if($font-family, (font-family: $font-family), ());
+
+  @return (
+    headline-1: $headline-1 or mdc-helpers.typography-config-level-from-mdc(headline1, $overrides),
+    headline-2: $headline-2 or mdc-helpers.typography-config-level-from-mdc(headline2, $overrides),
+    headline-3: $headline-3 or mdc-helpers.typography-config-level-from-mdc(headline3, $overrides),
+    headline-4: $headline-4 or mdc-helpers.typography-config-level-from-mdc(headline4, $overrides),
+    headline-5: $headline-5 or mdc-helpers.typography-config-level-from-mdc(headline5, $overrides),
+    headline-6: $headline-6 or mdc-helpers.typography-config-level-from-mdc(headline6, $overrides),
+    subtitle-1: $subtitle-1 or mdc-helpers.typography-config-level-from-mdc(subtitle1, $overrides),
+    subtitle-2: $subtitle-2 or mdc-helpers.typography-config-level-from-mdc(subtitle2, $overrides),
+    body-1: $body-1 or mdc-helpers.typography-config-level-from-mdc(body1, $overrides),
+    body-2: $body-2 or mdc-helpers.typography-config-level-from-mdc(body2, $overrides),
+    caption: $caption or mdc-helpers.typography-config-level-from-mdc(caption, $overrides),
+    button: $button or mdc-helpers.typography-config-level-from-mdc(button, $overrides),
+    overline: $overline or mdc-helpers.typography-config-level-from-mdc(overline, $overrides),
   );
-
-  // Loop through the levels and set the `font-family` of the ones that don't have one to the base.
-  // Note that Sass can't modify maps in place, which means that we need to merge and re-assign.
-  @each $key, $level in $config {
-    @if map.get($level, font-family) == null {
-      $new-level: map.merge($level, (font-family: $font-family));
-      $config: map.merge($config, ($key: $new-level));
-    }
-  }
-
-  // Add the base font family to the config.
-  @return map.merge($config, (font-family: $font-family));
 }
 
 @mixin private-all-unmigrated-component-typographies($config) {
