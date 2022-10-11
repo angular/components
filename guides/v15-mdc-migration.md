@@ -386,9 +386,9 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   </mat-list-item>
   ```
 
-* The amount of lines is automatically inferred. e.g. in the snippet above the list item will
-  acquire space for two lines. With the new API you can now set an explicit number of lines on the
-  `<mat-list-item>` to activate wrapping.
+* The amount of lines is automatically inferred. For example, in the snippet above the list item
+  will acquire space for two lines. With the new API you can now set an explicit number of lines on
+  the `<mat-list-item>` to activate wrapping.
 
   ```html
   <mat-list-item lines="3">
@@ -425,7 +425,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
     `<mat-icon>` use `ngProjectAs="mat-icon"` to project it into the icon slot.
 
   * If you need your icon to appear at the end of the item (not officially supported by the spec)
-    you can wrap both the text and your icon in a span, e.g.
+    you can wrap both the text and your icon in a span, for example:
 
     ```html
     <span>
@@ -447,7 +447,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * Option heights are no longer capped at `48px`.
 
 ### Paginator
-<!-- TODO(amysorto): review -->
 
 * The form-field inside of `mat-paginator` only supports the `appearance` options offered by the new
   form-field (`fill` and `outline`).
@@ -568,9 +567,9 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * The table's last row does not include a bottom border row because the table is expected to have a
   border.
 
-* The paginator property of the `MatTableDataSource` has a generic interface that matches most of
-  the paginator API. You may need to explicitly type the paginator to access the full API, e.g.
-  `new MatTableDataSource<MyData, MatPaginator>();`
+* The paginator property of the `MatTableDataSource` has a generic interface that matches most, but
+  not all of the paginator API. You may need to explicitly type the paginator to access the full
+  API, for example: `new MatTableDataSource<MyData, MatPaginator>();`
 
 * Flex tables (`<mat-table>`) display a border on the cells instead of rows.
 
