@@ -1425,28 +1425,10 @@ export class MatSlider
         if (this._resizeTimer) {
           clearTimeout(this._resizeTimer);
         }
-        this._pollForAdditionalSizeChanges();
+        this._onResize();
       });
       this._resizeObserver.observe(this._elementRef.nativeElement);
     });
-  }
-
-  /**
-   * Polls for changes to the width or left of the slider's
-   * bounding client rect until no changes are observed.
-   */
-  private _pollForAdditionalSizeChanges(): void {
-    this._resizeTimer = setTimeout(() => {
-      const prevWidth = this._cachedWidth;
-      const prevLeft = this._cachedLeft;
-      this._updateDimensions();
-
-      if (prevWidth !== this._cachedWidth || prevLeft !== this._cachedLeft) {
-        this._pollForAdditionalSizeChanges();
-      } else {
-        this._onResize();
-      }
-    }, 100);
   }
 
   /** Whether any of the thumbs are currently active. */
