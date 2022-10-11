@@ -295,12 +295,12 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   /** Shows the value indicator ui. */
   private _showValueIndicator(): void {
-    this._isValueIndicatorVisible = true;
+    this._getValueIndicatorContainer().classList.add('mdc-slider__thumb--with-indicator');
   }
 
   /** Hides the value indicator ui. */
   private _hideValueIndicator(): void {
-    this._isValueIndicatorVisible = false;
+    this._getValueIndicatorContainer().classList.remove('mdc-slider__thumb--with-indicator');
   }
 
   /**********************/
