@@ -499,9 +499,6 @@ export class MatSliderThumb implements OnInit, OnDestroy {
    */
   _skipUIUpdate: boolean = false;
 
-  /** Whether or not the slider should use animations. */
-  _hasAnimation: boolean = false;
-
   constructor(
     @Inject(forwardRef(() => MatSlider)) readonly _slider: MatSlider,
     @Optional() @Self() readonly ngControl: NgControl,
@@ -1290,6 +1287,9 @@ export class MatSlider
    * The tick mark track width is different from full track width
    */
   _tickMarkTrackWidth: number = 0;
+
+  /** Whether or not the slider should use animations. */
+  _hasAnimation: boolean = false;
 
   private _resizeTimer: null | ReturnType<typeof setTimeout> = null;
 
