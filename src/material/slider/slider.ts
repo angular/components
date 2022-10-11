@@ -1158,7 +1158,7 @@ export class MatSlider
 
   /** The values at which the thumb will snap. */
   @Input()
-  get step(): number | undefined {
+  get step(): number {
     return this._step;
   }
   set step(v: NumberInput) {
