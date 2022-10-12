@@ -63,6 +63,7 @@ export interface TabGroupHarnessFilters extends BaseHarnessFilters {
 // @public
 export interface TabHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
+    selected?: boolean;
 }
 
 // @public
