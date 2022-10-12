@@ -1,3 +1,33 @@
+<a name="15.0.0-next.5"></a>
+# 15.0.0-next.5 "snow-swan" (2022-10-12)
+## Deprecations
+### material
+-  * startDateLabel is deprecated because it is not used
+   * endDateLabel is deprecated because it is not used
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [87e17aac0b](https://github.com/angular/components/commit/87e17aac0b24f26558cb7346449005e44e83e648) | feat | **button:** add variant to button harness ([#25770](https://github.com/angular/components/pull/25770)) |
+| [8a1cf8cdd3](https://github.com/angular/components/commit/8a1cf8cdd3f96c0687355df38d07042abcaa23dc) | fix | **checkbox:** disabled state not distinguishable in high contrast mode ([#25788](https://github.com/angular/components/pull/25788)) |
+| [147a354ec7](https://github.com/angular/components/commit/147a354ec77a68326e88ae0e9d145c2a4716359d) | fix | **chips:** don't remove aria-selected from deselected options ([#25748](https://github.com/angular/components/pull/25748)) |
+| [a310fefb90](https://github.com/angular/components/commit/a310fefb907cf88f38f46e0614289a4b057e8af0) | fix | **core:** default font family not picked up in define-typography-config ([#25789](https://github.com/angular/components/pull/25789)) |
+| [d53e53bf98](https://github.com/angular/components/commit/d53e53bf98e2fdac1841f4099213f9ccba3fb50a) | fix | **icon:** forward fontIcon attribute to element ([#25779](https://github.com/angular/components/pull/25779)) |
+| [6ed06a7dd3](https://github.com/angular/components/commit/6ed06a7dd3783693d1e4b33386ce2d16a0831c8e) | fix | **list:** fix selection-list staying in tab order when disabled ([#25735](https://github.com/angular/components/pull/25735)) |
+| [a0ec4becac](https://github.com/angular/components/commit/a0ec4becacf840fe553099699121d2bde0d6e585) | fix | **schematics:** fix various issues with mdc-migration ([#25772](https://github.com/angular/components/pull/25772)) |
+| [0b423d4c63](https://github.com/angular/components/commit/0b423d4c63a0aa798c9a0aa7e06523baeedcf2d0) | fix | **schematics:** gracefully skip broken css files ([#25767](https://github.com/angular/components/pull/25767)) |
+| [65086c19a0](https://github.com/angular/components/commit/65086c19a02a2e6710e96b453b8dbc9c183024c3) | fix | **schematics:** rename references in MDC generate schematic ([#25773](https://github.com/angular/components/pull/25773)) |
+| [19c45c5efb](https://github.com/angular/components/commit/19c45c5efb5e090a59c353abefe5e5380960babf) | fix | **slide-toggle:** align colors with spec ([#25792](https://github.com/angular/components/pull/25792)) |
+| [2b2cd6e3e8](https://github.com/angular/components/commit/2b2cd6e3e839d4454c98366212fae735372b0cc1) | refactor | **datepicker:** deprecate unused i18n strings ([#25791](https://github.com/angular/components/pull/25791)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a2cf3f6cc8](https://github.com/angular/components/commit/a2cf3f6cc88ec3c4ad5596090a3b4c8de8b8f5d4) | feat | **menu:** add support for passing in data to the menu template ([#25778](https://github.com/angular/components/pull/25778)) |
+| [72547a41d4](https://github.com/angular/components/commit/72547a41d4230cea0c6a5448e85bd60cfc26bd35) | fix | **drag-drop:** native event not passed as parameter to drop container ([#25763](https://github.com/angular/components/pull/25763)) |
+## Special Thanks
+Joe K, Joey Perrott, Kristiyan Kostadinov, Miles Malerba, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="14.2.5"></a>
 # 14.2.5 "hail-heron" (2022-10-12)
 ### cdk
