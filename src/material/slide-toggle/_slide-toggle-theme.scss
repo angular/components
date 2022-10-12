@@ -48,15 +48,9 @@
 
 // Generates the mapping for the properties that change based on the slide toggle color.
 @function _get-theme-color-map($color-palette, $is-dark) {
-  $primary: theming.get-color-from-palette($color-palette, 600);
-  $state-content: theming.get-color-from-palette($color-palette, 900);
-  $inverse: theming.get-color-from-palette($color-palette, 300);
-
-  @if $is-dark {
-    $primary: theming.get-color-from-palette($color-palette, 300);
-    $state-content: theming.get-color-from-palette($color-palette, 200);
-    $inverse: theming.get-color-from-palette($color-palette, 600);
-  }
+  $primary: theming.get-color-from-palette($color-palette, if($is-dark, 300, 600));
+  $state-content: theming.get-color-from-palette($color-palette, if($is-dark, 200, 900));
+  $inverse: theming.get-color-from-palette($color-palette, if($is-dark, 600, 300));
 
   @return (
     selected-focus-state-layer-color: $primary,
