@@ -51,7 +51,11 @@ import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
     '(keydown)': '_toggleOnKeydown($event)',
     '(click)': 'toggle()',
   },
-  inputs: ['menuTemplateRef: cdkMenuTriggerFor', 'menuPosition: cdkMenuPosition'],
+  inputs: [
+    'menuTemplateRef: cdkMenuTriggerFor',
+    'menuPosition: cdkMenuPosition',
+    'menuData: cdkMenuTriggerData',
+  ],
   outputs: ['opened: cdkMenuOpened', 'closed: cdkMenuClosed'],
   providers: [
     {provide: MENU_TRIGGER, useExisting: CdkMenuTrigger},
