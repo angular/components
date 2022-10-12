@@ -6,15 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  AfterContentInit,
-  Directive,
-  EventEmitter,
-  inject,
-  InjectFlags,
-  OnDestroy,
-  Output,
-} from '@angular/core';
+import {AfterContentInit, Directive, EventEmitter, inject, OnDestroy, Output} from '@angular/core';
 import {ESCAPE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
@@ -46,7 +38,7 @@ import {CdkMenuBase} from './menu-base';
   ],
 })
 export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy {
-  private _parentTrigger = inject(MENU_TRIGGER, InjectFlags.Optional);
+  private _parentTrigger = inject(MENU_TRIGGER, {optional: true});
 
   /** Event emitted when the menu is closed. */
   @Output() readonly closed: EventEmitter<void> = new EventEmitter();

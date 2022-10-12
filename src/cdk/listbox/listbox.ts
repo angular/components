@@ -14,7 +14,6 @@ import {
   ElementRef,
   forwardRef,
   inject,
-  InjectFlags,
   Input,
   OnDestroy,
   Output,
@@ -431,7 +430,7 @@ export class CdkListbox<T = unknown>
   );
 
   /** The directionality of the page. */
-  private readonly _dir = inject(Directionality, InjectFlags.Optional);
+  private readonly _dir = inject(Directionality, {optional: true});
 
   /** A predicate that skips disabled options. */
   private readonly _skipDisabledPredicate = (option: CdkOption<T>) => option.disabled;
