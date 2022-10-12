@@ -501,9 +501,43 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * The label is closer to the enabled toggle
 
 ### Slider
-<!-- TODO(wagnermaciel): review -->
 
 * Sliders now work with mobile device screen readers.
+
+* The slider template API has changed from a single `<mat-slider>` element to a `<mat-slider>`
+  element which contains one or two `<input>` elements (depending on whether the slider should)
+  be a standard or range slider. E.g.
+  ```html
+    <!-- Single slider -->
+    <mat-slider>
+      <input matSliderThumb>
+    </mat-slider>
+
+    <!-- Range slider -->
+    <mat-slider>
+      <input matSliderStartThumb>
+      <input matSliderEndThumb>
+    </mat-slider>
+  ```
+
+* Range sliders are now supported. A range slider uses two native slider inputs to control two
+  multiple values.
+
+* The new `discrete` property on the `<mat-slider>` now controls whether the slider has tick marks
+  and a value indicator tooltip. It replaces `thumbLabel` and `tickInterval`.
+
+* The `displayValue` property has been replaced by `displayWith`.
+
+* The `<input>` elements now control the following properties:
+    - `value`
+    - `percent`
+    - `defaultTabIndex` is now replaced by the native inputs tab index
+    - `valueText` is now replaced by the native inputs aria-valuetext
+
+
+* The slider API has also changed such that there is a new Component: `MatSliderThumb`.
+  The MatSliderThumb is the new interface for the following properties:
+  The following 
 
 * To accommodate range sliders, the implementation has changed from the `<mat-slider>` element being
   the form control to the `<mat-slider>` element containing 1-2 `<input>` elements (the slider
@@ -512,8 +546,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 * Vertical sliders and inverted sliders are no longer supported, as they are no longer part of the
   Material Design spec.
-
-* Range sliders are now supported. <!-- TODO(wagnermaciel): add more about this. -->
 
 ### Snack Bar
 
