@@ -22,7 +22,9 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {MatSliderModule} from './module';
-import {MatSlider, MatSliderRangeThumb, MatSliderThumb, MatSliderVisualThumb} from './slider';
+import {MatSlider} from './slider';
+import {MatSliderVisualThumb} from './slider-thumb';
+import {MatSliderThumb, MatSliderRangeThumb} from './slider-input';
 import {of} from 'rxjs';
 
 interface Point {
