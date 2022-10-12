@@ -11,10 +11,10 @@ section {
 
 .example-button-row {
   display: table-cell;
-  width: 490px;
+  max-width: 600px;
 }
 
-.example-button-row .mat-button-base {
+.example-button-row .mat-mdc-button-base {
   margin: 8px 8px 8px 0;
 }
 
