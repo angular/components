@@ -524,7 +524,9 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   multiple values.
 
 * The new `discrete` property on the `<mat-slider>` now controls whether the slider has tick marks
-  and a value indicator tooltip. It replaces `thumbLabel` and `tickInterval`.
+  and a value indicator tooltip. It replaces `thumbLabel`.
+  
+* The `tickInterval` property has been replaced with the boolean `showTickMarks` and `step`.
 
 * The `displayValue` property has been replaced by `displayWith`.
 
