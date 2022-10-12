@@ -230,6 +230,25 @@ export class MatSelectionList
     this.disabled = isDisabled;
   }
 
+  /**
+   * Whether the *entire* selection list is disabled. When true, each list item is also disabled
+   * and each list item is removed from the tab order (has tabindex="-1").
+   */
+  @Input()
+  override get disabled(): boolean {
+    return this._selectionListDisabled;
+  }
+  override set disabled(value: BooleanInput) {
+    // Update the disabled state of this list. Write to `this._selectionListDisabled` instead of
+    // `super.disabled`. That is to avoid closure compiler compatibility issues with assigning to
+    // a super property.
+    this._selectionListDisabled = coerceBooleanProperty(value);
+    if (this._selectionListDisabled) {
+      this._keyManager?.setActiveItem(-1);
+    }
+  }
+  private _selectionListDisabled = false;
+
   /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void): void {
     this._onChange = fn;
@@ -365,13 +384,24 @@ export class MatSelectionList
     }
   };
 
-  /** Sets up the logic for maintaining the roving tabindex. */
+  /**
+   * Sets up the logic for maintaining the roving tabindex.
+   *
+   * `skipPredicate` determines if key manager should avoid putting a given list item in the tab
+   * index. Allow disabled list items to receive focus to align with WAI ARIA recommendation.
+   * Normally WAI ARIA's instructions are to exclude disabled items from the tab order, but it
+   * makes a few exceptions for compound widgets.
+   *
+   * From [Developing a Keyboard Interface](
+   * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/):
+   *   "For the following composite widget elements, keep them focusable when disabled: Options in a
+   *   Listbox..."
+   */
   private _setupRovingTabindex() {
     this._keyManager = new FocusKeyManager(this._items)
       .withHomeAndEnd()
       .withTypeAhead()
       .withWrap()
-      // Allow navigation to disabled items.
       .skipPredicate(() => false);
 
     // Set the initial focus.
