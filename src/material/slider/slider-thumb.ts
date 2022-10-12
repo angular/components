@@ -197,7 +197,7 @@ export class MatSliderVisualThumb
   private _showFocusRipple(): void {
     // Show the focus ripple event if noop animations are enabled.
     if (!this._isShowingRipple(this._focusRippleRef)) {
-      this._focusRippleRef = this._showRipple({enterDuration: 0, exitDuration: 0});
+      this._focusRippleRef = this._showRipple({enterDuration: 0, exitDuration: 0}, true);
       this._focusRippleRef?.element.classList.add('mat-mdc-slider-focus-ripple');
     }
   }
@@ -216,11 +216,17 @@ export class MatSliderVisualThumb
   }
 
   /** Manually launches the slider thumb ripple using the specified ripple animation config. */
-  private _showRipple(animation: RippleAnimationConfig): RippleRef | undefined {
-    if (this._slider.disabled || this._slider._globalRippleOptions?.disabled) {
+  private _showRipple(
+    animation: RippleAnimationConfig,
+    ignoreGlobalRippleConfig?: boolean,
+  ): RippleRef | undefined {
+    if (this._slider.disabled) {
       return;
     }
     this._showValueIndicator();
+    if (this._slider._globalRippleOptions?.disabled && !ignoreGlobalRippleConfig) {
+      return;
+    }
     return this._ripple.launch({
       animation: this._slider._noopAnimations ? {enterDuration: 0, exitDuration: 0} : animation,
       centered: true,
