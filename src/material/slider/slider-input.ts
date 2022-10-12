@@ -447,12 +447,6 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     return event.clientX - this._slider._cachedLeft;
   }
 
-  // TODO(wagnermaciel): See if you can remove this function.
-  _updateHiddenUI(): void {
-    this._updateThumbUIByValue();
-    this._updateWidthInactive();
-  }
-
   /**
    * Used to set the slider width to the correct
    * dimensions while the user is dragging.
@@ -595,10 +589,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     return this._isEndThumb && this._slider._isRange ? this.max : this.min;
   }
 
-  override initUI(): void {
-    this._updateHiddenUI();
-  }
-
   override _onInput(): void {
     super._onInput();
     this._updateSibling();
@@ -647,23 +637,33 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     return Math.max(Math.min(v, this.getMaxPos()), this.getMinPos());
   }
 
-  override _updateHiddenUI(): void {
-    this._updateStaticStyles();
-    this._updateThumbUIByValue();
-    this._updateMinMax();
-    this._updateWidthInactive();
-    this._updateSibling();
-  }
-
   _updateMinMax(): void {
     const sibling = this.getSibling();
     if (!sibling) {
       return;
     }
     if (this._isEndThumb) {
+      // console.log(
+      //   'is end thumb',
+      //   'min:',
+      //   this._slider.min,
+      //   'sib val:',
+      //   sibling.value,
+      //   'max:',
+      //   this._slider.max,
+      // );
       this.min = Math.max(this._slider.min, sibling.value);
       this.max = this._slider.max;
     } else {
+      // console.log(
+      //   'not end thumb:',
+      //   'min:',
+      //   this._slider.min,
+      //   'max:',
+      //   this._slider.max,
+      //   'sib val:',
+      //   sibling.value,
+      // );
       this.min = this._slider.min;
       this.max = Math.min(this._slider.max, sibling.value);
     }

@@ -170,9 +170,6 @@ export interface MatSliderThumbInterface {
   /** Updates the visual thumb based on the slider input's current value. */
   _updateThumbUIByValue: () => void;
 
-  /** Updates the ui of the hidden native slider input. */
-  _updateHiddenUI: () => void;
-
   /**
    * Sets the slider input to disproportionate dimensions to allow for touch
    * events to be captured on touch devices.

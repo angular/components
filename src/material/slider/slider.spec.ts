@@ -110,7 +110,7 @@ describe('MDC-based MatSlider', () => {
       checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
     }));
 
-    it('should update by slide', () => {
+    it('should update by slide', fakeAsync(() => {
       slideToValue(slider, input, 25);
       checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
 
@@ -122,19 +122,19 @@ describe('MDC-based MatSlider', () => {
 
       slideToValue(slider, input, 100);
       checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
-    });
+    }));
 
-    it('should not slide before the track', () => {
+    it('should not slide before the track', fakeAsync(() => {
       slideToValue(slider, input, -10);
       expect(input.value).toBe(0);
       checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
-    });
+    }));
 
-    it('should not slide past the track', () => {
+    it('should not slide past the track', fakeAsync(() => {
       slideToValue(slider, input, 110);
       expect(input.value).toBe(100);
       checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
-    });
+    }));
 
     // TODO(wagnermaciel): Fix this test case (behavior works as intended in browser).
     // it('should not break when the page layout changes', fakeAsync(async () => {
@@ -183,43 +183,43 @@ describe('MDC-based MatSlider', () => {
       checkInput(endInput, {min: 0, max: 100, value: 75, translateX: 225});
     }));
 
-    it('should update by start thumb slide', () => {
+    it('should update by start thumb slide', fakeAsync(() => {
       slideToValue(slider, startInput, 75);
       checkInput(startInput, {min: 0, max: 100, value: 75, translateX: 225});
       checkInput(endInput, {min: 75, max: 100, value: 100, translateX: 300});
-    });
+    }));
 
-    it('should update by end thumb slide', () => {
+    it('should update by end thumb slide', fakeAsync(() => {
       slideToValue(slider, endInput, 25);
       checkInput(startInput, {min: 0, max: 25, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 25, translateX: 75});
-    });
+    }));
 
-    it('should not allow start thumb to slide before the track', () => {
+    it('should not allow start thumb to slide before the track', fakeAsync(() => {
       slideToValue(slider, startInput, -10);
       checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 100, translateX: 300});
-    });
+    }));
 
-    it('should not allow end thumb to slide past the track', () => {
+    it('should not allow end thumb to slide past the track', fakeAsync(() => {
       slideToValue(slider, endInput, 110);
       checkInput(startInput, {min: 0, max: 100, value: 0, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 100, translateX: 300});
-    });
+    }));
 
-    it('should not allow start thumb to slide past the end thumb', () => {
+    it('should not allow start thumb to slide past the end thumb', fakeAsync(() => {
       slideToValue(slider, endInput, 50);
       slideToValue(slider, startInput, 55);
       checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150});
       checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150});
-    });
+    }));
 
-    it('should not allow end thumb to slide past the start thumb', () => {
+    it('should not allow end thumb to slide past the start thumb', fakeAsync(() => {
       slideToValue(slider, startInput, 50);
       slideToValue(slider, endInput, 45);
       checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150});
       checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150});
-    });
+    }));
 
     // TODO(wagnermaciel): Fix this test case (behavior works as intended in browser).
     // it('should not break when the page layout changes', fakeAsync(() => {
@@ -352,7 +352,7 @@ describe('MDC-based MatSlider', () => {
         checkInput(endInput, {min: 60, max: 75, value: 60, translateX: 0});
       });
 
-      it('where the new start tx is greater than the old end tx', () => {
+      it('where the new start tx is greater than the old end tx', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
@@ -368,9 +368,9 @@ describe('MDC-based MatSlider', () => {
 
         checkInput(startInput, {min: -1000, max: 20, value: 10, translateX: 275});
         checkInput(endInput, {min: 10, max: 100, value: 20, translateX: 278});
-      });
+      }));
 
-      it('where the new end tx is less than the old start tx', () => {
+      it('where the new end tx is less than the old start tx', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
@@ -386,7 +386,7 @@ describe('MDC-based MatSlider', () => {
 
         checkInput(startInput, {min: 90, max: 92, value: 91, translateX: 30});
         checkInput(endInput, {min: 91, max: 100, value: 92, translateX: 60});
-      });
+      }));
 
       it('that make min and max equal', () => {
         fixture.componentInstance.min = 75;
@@ -432,7 +432,7 @@ describe('MDC-based MatSlider', () => {
         checkInput(startInput, {min: 25, max: 50, value: 50, translateX: 300});
       });
 
-      it('where the new start tx is greater than the old end tx', () => {
+      it('where the new start tx is greater than the old end tx', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
@@ -448,9 +448,9 @@ describe('MDC-based MatSlider', () => {
 
         checkInput(startInput, {min: 0, max: 2, value: 1, translateX: 30});
         checkInput(endInput, {min: 1, max: 10, value: 2, translateX: 60});
-      });
+      }));
 
-      it('where the new end tx is less than the old start tx', () => {
+      it('where the new end tx is less than the old start tx', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.detectChanges();
@@ -466,7 +466,7 @@ describe('MDC-based MatSlider', () => {
 
         checkInput(startInput, {min: 0, max: 95, value: 90, translateX: 27});
         checkInput(endInput, {min: 90, max: 1000, value: 95, translateX: 28});
-      });
+      }));
 
       it('that make min and max equal', () => {
         fixture.componentInstance.max = 25;
@@ -702,10 +702,10 @@ describe('MDC-based MatSlider', () => {
       checkInput(input, {min: 0, max: 100, value: 50, translateX: 150});
     });
 
-    it('should update the value', () => {
+    it('should update the value', fakeAsync(() => {
       slideToValue(slider, input, 75);
       checkInput(input, {min: 0, max: 100, value: 75, translateX: 225});
-    });
+    }));
   });
 
   describe('range slider with set value', () => {
@@ -722,22 +722,25 @@ describe('MDC-based MatSlider', () => {
       endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should set the correct initial values', () => {
+    it('should set the correct initial values', fakeAsync(() => {
       checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
-    });
+    }));
 
-    it('should update the start value', () => {
+    it('should update the start value', fakeAsync(() => {
+      console.log('should update the start value');
+      checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75});
+      checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
       slideToValue(slider, startInput, 30);
       checkInput(startInput, {min: 0, max: 75, value: 30, translateX: 90});
       checkInput(endInput, {min: 30, max: 100, value: 75, translateX: 225});
-    });
+    }));
 
-    it('should update the end value', () => {
+    it('should update the end value', fakeAsync(() => {
       slideToValue(slider, endInput, 77);
       checkInput(startInput, {min: 0, max: 77, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 77, translateX: 231});
-    });
+    }));
   });
 
   describe('slider with set step', () => {
@@ -753,31 +756,31 @@ describe('MDC-based MatSlider', () => {
       input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
-    it('should update to the value based on the step', () => {
+    it('should update to the value based on the step', fakeAsync(() => {
       slideToValue(slider, input, 30);
       expect(input.value).toBe(25);
-    });
+    }));
 
-    it('should not add decimals to the value if it is a whole number', () => {
+    it('should not add decimals to the value if it is a whole number', fakeAsync(() => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
       slideToValue(slider, input, 11);
       expect(input.value).toBe(11);
-    });
+    }));
 
-    it('should truncate long decimal values when using a decimal step', () => {
+    it('should truncate long decimal values when using a decimal step', fakeAsync(() => {
       fixture.componentInstance.step = 0.5;
       fixture.detectChanges();
       slideToValue(slider, input, 55.555);
       expect(input.value).toBe(55.5);
-    });
+    }));
 
-    it('should update the value on step change', () => {
+    it('should update the value on step change', fakeAsync(() => {
       slideToValue(slider, input, 30);
       fixture.componentInstance.step = 50;
       fixture.detectChanges();
       expect(input.value).toBe(50);
-    });
+    }));
   });
 
   describe('range slider with set step', () => {
@@ -795,46 +798,46 @@ describe('MDC-based MatSlider', () => {
       endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should set the correct start value on slide', () => {
+    it('should set the correct start value on slide', fakeAsync(() => {
       slideToValue(slider, startInput, 30);
       expect(startInput.value).toBe(25);
-    });
+    }));
 
-    it('should set the correct end value on slide', () => {
+    it('should set the correct end value on slide', fakeAsync(() => {
       slideToValue(slider, endInput, 45);
       expect(endInput.value).toBe(50);
-    });
+    }));
 
-    it('should not add decimals to the end value if it is a whole number', () => {
+    it('should not add decimals to the end value if it is a whole number', fakeAsync(() => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
       slideToValue(slider, endInput, 11);
       expect(endInput.value).toBe(11);
-    });
+    }));
 
-    it('should not add decimals to the start value if it is a whole number', () => {
+    it('should not add decimals to the start value if it is a whole number', fakeAsync(() => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
       slideToValue(slider, startInput, 11);
       expect(startInput.value).toBe(11);
-    });
+    }));
 
-    it('should truncate long decimal start values when using a decimal step', () => {
+    it('should truncate long decimal start values when using a decimal step', fakeAsync(() => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
       slideToValue(slider, startInput, 33.666);
       expect(startInput.value).toBe(33.7);
-    });
+    }));
 
-    it('should truncate long decimal end values when using a decimal step', () => {
+    it('should truncate long decimal end values when using a decimal step', fakeAsync(() => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
       slideToValue(slider, endInput, 33.6666);
       expect(endInput.value).toBe(33.7);
-    });
+    }));
 
     describe('should handle step changes', () => {
-      it('where the new start tx is greater than the old end tx', () => {
+      it('where the new start tx is greater than the old end tx', fakeAsync(() => {
         fixture.componentInstance.step = 0;
         fixture.detectChanges();
 
@@ -849,9 +852,9 @@ describe('MDC-based MatSlider', () => {
 
         checkInput(startInput, {min: 0, max: 50, value: 50, translateX: 150});
         checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150});
-      });
+      }));
 
-      it('where the new end tx is less than the old start tx', () => {
+      it('where the new end tx is less than the old start tx', fakeAsync(() => {
         fixture.componentInstance.step = 0;
         fixture.detectChanges();
 
@@ -866,7 +869,7 @@ describe('MDC-based MatSlider', () => {
 
         checkInput(startInput, {min: 0, max: 0, value: 0, translateX: 0});
         checkInput(endInput, {min: 0, max: 100, value: 0, translateX: 0});
-      });
+      }));
     });
   });
 
@@ -1077,12 +1080,12 @@ describe('MDC-based MatSlider', () => {
       input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
-    it('should update the model', () => {
+    it('should update the model', fakeAsync(() => {
       slideToValue(slider, input, 19);
       fixture.detectChanges();
       expect(fixture.componentInstance.val).toBe(19);
       checkInput(input, {min: 0, max: 100, value: 19, translateX: 57});
-    });
+    }));
 
     it('should update the slider', fakeAsync(() => {
       fixture.componentInstance.val = 20;
@@ -1181,11 +1184,11 @@ describe('MDC-based MatSlider', () => {
       input = slider._getInput(Thumb.END) as MatSliderThumb;
     }));
 
-    it('should update the control on slide', () => {
+    it('should update the control on slide', fakeAsync(() => {
       expect(fixture.componentInstance.control.value).toBe(0);
       slideToValue(slider, input, 19);
       expect(fixture.componentInstance.control.value).toBe(19);
-    });
+    }));
 
     it('should update the value when the control is set', () => {
       expect(input.value).toBe(0);
@@ -1247,17 +1250,17 @@ describe('MDC-based MatSlider', () => {
       endInput = slider._getInput(Thumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should update the start input control on slide', () => {
+    it('should update the start input control on slide', fakeAsync(() => {
       expect(fixture.componentInstance.startInputControl.value).toBe(0);
       slideToValue(slider, startInput, 20);
       expect(fixture.componentInstance.startInputControl.value).toBe(20);
-    });
+    }));
 
-    it('should update the end input control on slide', () => {
+    it('should update the end input control on slide', fakeAsync(() => {
       expect(fixture.componentInstance.endInputControl.value).toBe(100);
       slideToValue(slider, endInput, 80);
       expect(fixture.componentInstance.endInputControl.value).toBe(80);
-    });
+    }));
 
     it('should update the start input value when the start input control is set', () => {
       expect(startInput.value).toBe(0);
@@ -1357,7 +1360,7 @@ describe('MDC-based MatSlider', () => {
       input = slider._getInput(Thumb.END) as MatSliderThumb;
     });
 
-    it('should sync the value binding in both directions', () => {
+    it('should sync the value binding in both directions', fakeAsync(() => {
       checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
 
       slideToValue(slider, input, 10);
@@ -1368,7 +1371,7 @@ describe('MDC-based MatSlider', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.value).toBe('20');
       checkInput(input, {min: 0, max: 100, value: 20, step: 0, translateX: 60});
-    });
+    }));
   });
 
   describe('range slider with a two-way binding', () => {
@@ -1386,7 +1389,7 @@ describe('MDC-based MatSlider', () => {
       startInput = slider._getInput(Thumb.START) as MatSliderRangeThumb;
     }));
 
-    it('should sync the start value binding in both directions', () => {
+    it('should sync the start value binding in both directions', fakeAsync(() => {
       expect(fixture.componentInstance.startValue).toBe('0');
       expect(startInput.value).toBe(0);
 
@@ -1399,9 +1402,9 @@ describe('MDC-based MatSlider', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.startValue).toBe('20');
       expect(startInput.value).toBe(20);
-    });
+    }));
 
-    it('should sync the end value binding in both directions', () => {
+    it('should sync the end value binding in both directions', fakeAsync(() => {
       expect(fixture.componentInstance.endValue).toBe('100');
       expect(endInput.value).toBe(100);
 
@@ -1413,7 +1416,7 @@ describe('MDC-based MatSlider', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.endValue).toBe('80');
       expect(endInput.value).toBe(80);
-    });
+    }));
   });
 });
 
@@ -1708,6 +1711,7 @@ function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number) {
   dispatchEvent(input._hostElement, new Event('input'));
   dispatchPointerEvent(sliderElement, 'pointerup', endX, endY);
   dispatchEvent(input._hostElement, new Event('change'));
+  tick();
 }
 
 /** Returns the x and y coordinates for the given slider value. */

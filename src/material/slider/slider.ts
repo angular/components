@@ -597,8 +597,11 @@ export class MatSlider
       eInput._updateThumbUIByValue();
       sInput._updateThumbUIByValue();
 
-      eInput._updateHiddenUI();
-      sInput._updateHiddenUI();
+      eInput._updateStaticStyles();
+      sInput._updateStaticStyles();
+
+      eInput._updateMinMax();
+      sInput._updateMinMax();
 
       eInput._updateWidthInactive();
       sInput._updateWidthInactive();
@@ -606,7 +609,6 @@ export class MatSlider
       const eInput = this._getInput(Thumb.END);
       if (eInput) {
         eInput._updateThumbUIByValue();
-        eInput._updateHiddenUI();
       }
     }
 
