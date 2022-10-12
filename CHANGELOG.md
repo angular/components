@@ -1,3 +1,18 @@
+<a name="14.2.5"></a>
+# 14.2.5 "hail-heron" (2022-10-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b116f57d16](https://github.com/angular/components/commit/b116f57d1626b2cd793a0ce5ba00fc50cdcf98b5) | fix | **drag-drop:** native event not passed as parameter to drop container ([#25763](https://github.com/angular/components/pull/25763)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [79eab3838d](https://github.com/angular/components/commit/79eab3838decdf7fe6b67e8dafa45a34ab429aeb) | fix | **icon:** forward fontIcon attribute to element ([#25779](https://github.com/angular/components/pull/25779)) |
+## Special Thanks
+Joe K, Joey Perrott and Kristiyan Kostadinov
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0-next.4"></a>
 # 15.0.0-next.4 "quartz-quill" (2022-10-05)
 ### material
