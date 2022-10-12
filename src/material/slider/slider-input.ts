@@ -384,20 +384,20 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     // To ensure the percentage is rounded to two decimals.
     const fixedPercentage = Math.round(percentage * 100) / 100;
 
-    const value = fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
+    const step = this._slider.step === 0 ? 1 : this._slider.step;
+    const impreciseValue =
+      fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
+    const value = Math.round(impreciseValue / step) * step;
 
     const prevValue = this.value;
     if (value === prevValue) {
-      console.log('no fix', value);
       // Because we prevented UI updates, if it turns out that the race
       // condition didn't happen and the value is already correct, we
       // have to apply the ui updates now.
       this._slider._onValueChange(this);
-      this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
       return;
     }
 
-    console.log('fix value', value);
     this.value = value;
     this.valueChange.emit(this._hostElement.value);
     this._onChangeFn(this.value);
