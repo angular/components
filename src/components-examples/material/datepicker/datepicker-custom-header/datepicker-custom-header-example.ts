@@ -37,17 +37,12 @@ export class DatepickerCustomHeaderExample {
       font-weight: 500;
       text-align: center;
     }
-
-    .example-double-arrow .mat-icon {
-      margin: -22%;
-    }
   `,
   ],
   template: `
     <div class="example-header">
-      <button mat-icon-button class="example-double-arrow" (click)="previousClicked('year')">
-        <mat-icon>keyboard_arrow_left</mat-icon>
-        <mat-icon>keyboard_arrow_left</mat-icon>
+      <button mat-icon-button (click)="previousClicked('year')">
+        <mat-icon>keyboard_double_arrow_left</mat-icon>
       </button>
       <button mat-icon-button (click)="previousClicked('month')">
         <mat-icon>keyboard_arrow_left</mat-icon>
@@ -56,9 +51,8 @@ export class DatepickerCustomHeaderExample {
       <button mat-icon-button (click)="nextClicked('month')">
         <mat-icon>keyboard_arrow_right</mat-icon>
       </button>
-      <button mat-icon-button class="example-double-arrow" (click)="nextClicked('year')">
-        <mat-icon>keyboard_arrow_right</mat-icon>
-        <mat-icon>keyboard_arrow_right</mat-icon>
+      <button mat-icon-button (click)="nextClicked('year')">
+        <mat-icon>keyboard_double_arrow_right</mat-icon>
       </button>
     </div>
   `,

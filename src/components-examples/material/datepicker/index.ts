@@ -1,12 +1,12 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatLegacyButtonModule} from '@angular/material/legacy-button';
-import {MatLegacyCardModule} from '@angular/material/legacy-card';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 import {MatNativeDateModule, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyInputModule} from '@angular/material/legacy-input';
+import {MatInputModule} from '@angular/material/input';
 import {DateRangePickerComparisonExample} from './date-range-picker-comparison/date-range-picker-comparison-example';
 import {DateRangePickerFormsExample} from './date-range-picker-forms/date-range-picker-forms-example';
 import {DateRangePickerOverviewExample} from './date-range-picker-overview/date-range-picker-overview-example';
@@ -95,10 +95,10 @@ const EXAMPLES = [
 @NgModule({
   imports: [
     CommonModule,
-    MatLegacyButtonModule,
-    MatLegacyCardModule,
+    MatButtonModule,
+    MatCardModule,
     MatDatepickerModule,
-    MatLegacyInputModule,
+    MatInputModule,
     MatIconModule,
     MatNativeDateModule,
     ReactiveFormsModule,
