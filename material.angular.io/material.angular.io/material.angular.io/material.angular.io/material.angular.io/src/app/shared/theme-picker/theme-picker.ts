@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import {StyleManager} from '../style-manager';
 import {DocsSiteTheme, ThemeStorage} from './theme-storage/theme-storage';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
-import {MatLegacyMenuModule as MatMenuModule} from '@angular/material/legacy-menu';
-import {MatLegacyTooltipModule as MatTooltipModule} from '@angular/material/legacy-tooltip';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs';

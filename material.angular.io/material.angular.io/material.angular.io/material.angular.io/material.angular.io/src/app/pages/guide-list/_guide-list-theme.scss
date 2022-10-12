@@ -10,7 +10,7 @@
   $is-dark-theme: map.get($theme, is-dark);
 
   .docs-guide-list .docs-guide-item {
-    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
+    color: mat.get-color-from-palette($foreground, text);
   }
 
   .docs-guide-card-divider {

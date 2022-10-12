@@ -5,7 +5,7 @@
 
 <mat-menu #themeMenu="matMenu" xPosition="before" class="docs-theme-picker-menu">
   <button mat-menu-item *ngFor="let theme of themes" (click)="selectTheme(theme.name)">
-    <mat-icon [ngClass]="{'docs-theme-selected-icon': currentTheme === theme}"
+    <mat-icon [class.docs-theme-selected-icon]="currentTheme === theme"
               [color]="currentTheme === theme ? 'accent' : undefined">
       {{currentTheme === theme ? 'radio_button_checked' : 'radio_button_unchecked'}}
     </mat-icon>

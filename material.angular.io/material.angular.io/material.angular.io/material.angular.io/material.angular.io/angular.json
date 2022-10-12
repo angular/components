@@ -5,6 +5,7 @@
   "projects": {
     "material-angular-io": {
       "root": "",
+      "sourceRoot": "./src",
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -282,7 +283,10 @@
             "karmaConfig": "scenes/karma.conf.js",
             "assets": ["scenes/src/favicon.ico", "scenes/src/assets"],
             "styles": ["scenes/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules"]
+            }
           }
         },
         "lint": {

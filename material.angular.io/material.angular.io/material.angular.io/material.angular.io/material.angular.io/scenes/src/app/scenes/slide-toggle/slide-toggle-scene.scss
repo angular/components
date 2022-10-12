@@ -4,6 +4,7 @@
   display: flex;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
 mat-slide-toggle {
   margin-left: auto;
 }

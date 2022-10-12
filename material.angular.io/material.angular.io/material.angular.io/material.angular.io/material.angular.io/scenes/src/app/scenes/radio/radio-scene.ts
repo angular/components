@@ -1,5 +1,5 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatLegacyRadioModule as MatRadioModule} from '@angular/material/legacy-radio';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

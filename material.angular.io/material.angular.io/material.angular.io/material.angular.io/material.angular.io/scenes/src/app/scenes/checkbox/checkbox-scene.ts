@@ -1,5 +1,5 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatLegacyCheckboxModule as MatCheckboxModule} from '@angular/material/legacy-checkbox';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

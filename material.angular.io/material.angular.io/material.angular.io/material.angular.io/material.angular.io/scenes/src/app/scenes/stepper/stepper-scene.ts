@@ -1,7 +1,7 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatStepperModule} from '@angular/material/stepper';
-import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

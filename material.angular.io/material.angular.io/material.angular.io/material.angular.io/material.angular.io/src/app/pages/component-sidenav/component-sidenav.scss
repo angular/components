@@ -54,11 +54,6 @@ app-component-sidenav {
       margin: 0;
       padding: 5px 15px 5px 20px;
     }
-
-    a {
-      display: block;
-      text-decoration: none;
-    }
   }
 }
 
@@ -79,11 +74,12 @@ app-component-sidenav {
   flex: 1 1 auto;
 }
 
-div .mat-list-base {
+div .mat-mdc-list-base {
   padding-top: 0;
 }
 
-div.docs-component-viewer-nav-content .mat-nav-list .mat-list-item .mat-list-item-content {
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+div.docs-component-viewer-nav-content .mat-nav-list .mat-mdc-list-item .mat-list-item-content {
   padding-left: 25px;
 }
 

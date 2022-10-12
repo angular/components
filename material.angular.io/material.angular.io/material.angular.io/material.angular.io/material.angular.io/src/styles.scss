@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 @use './app-theme';
 @use './styles/api';
@@ -18,11 +17,7 @@ $theme: mat.define-light-theme((
 ));
 
 // Include material core styles.
-@include mat.legacy-core();
 @include mat.core();
 
-@include mat.all-legacy-component-themes(map.merge($theme, (
-  typography: mat.define-legacy-typography-config()
-)));
 @include mat.all-component-themes($theme);
 @include app-theme.theme($theme);

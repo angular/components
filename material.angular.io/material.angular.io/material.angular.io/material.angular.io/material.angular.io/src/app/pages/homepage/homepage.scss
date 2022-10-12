@@ -146,18 +146,18 @@ $margin-promotion-sections-small: 15px;
     // We need a slight padding so the box shadow doesn't get cut off by the carousel.
     padding: 3px;
 
-    .mat-card {
+    .mat-mdc-card {
       // Ensures that the cards stretch to the full width of the item.
       width: 100%;
       min-height: 140px;
     }
   }
 
-  .docs-homepage-guides-card.mat-card {
+  .docs-homepage-guides-card.mat-mdc-card {
     text-align: center;
   }
 
-  .docs-homepage-guides-card .mat-card-title {
+  .docs-homepage-guides-card .mat-mdc-card-title {
     height: 35%;
     display: flex;
     align-items: center;
@@ -209,7 +209,7 @@ $margin-promotion-sections-small: 15px;
   text-align: center;
   margin: $margin-promotion-sections 0 0 0;
 
-  .mat-raised-button {
+  .mat-mdc-raised-button {
     font-size: 15px;
   }
 }

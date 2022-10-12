@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
+import {MatCardModule} from '@angular/material/card';
 import {InputSceneModule} from '../placeholder/placeholder-scene';
 
 @Component({

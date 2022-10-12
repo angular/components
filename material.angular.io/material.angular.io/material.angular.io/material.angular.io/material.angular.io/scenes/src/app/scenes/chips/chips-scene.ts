@@ -1,5 +1,5 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatLegacyChipsModule as MatChipsModule} from '@angular/material/legacy-chips';
+import {MatChipsModule} from '@angular/material/chips';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

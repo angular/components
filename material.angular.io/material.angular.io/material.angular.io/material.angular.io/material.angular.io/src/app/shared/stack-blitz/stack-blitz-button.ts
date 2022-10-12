@@ -1,10 +1,10 @@
 import {Component, Input, NgModule, NgZone} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyTooltipModule as MatTooltipModule} from '@angular/material/legacy-tooltip';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {StackBlitzWriter} from './stack-blitz-writer';
-import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/legacy-snack-bar';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'stack-blitz-button',
