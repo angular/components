@@ -11,18 +11,17 @@ import { CanColor } from '@angular/material/core';
 import { CanDisableRipple } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { _Constructor } from '@angular/material/core';
+import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/material/core';
-import * as i3 from '@angular/common';
+import * as i4 from '@angular/material/core';
+import * as i5 from '@angular/common';
 import { MatRipple } from '@angular/material/core';
-import { NgControl } from '@angular/forms';
 import { NgZone } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { RippleGlobalOptions } from '@angular/material/core';
@@ -31,7 +30,7 @@ import { Thumb } from '@material/slider';
 import { TickMark } from '@material/slider';
 
 // @public
-export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, CanDisableRipple, OnDestroy {
+export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, CanDisableRipple, OnDestroy, MatSliderInterface {
     constructor(_ngZone: NgZone, _cdr: ChangeDetectorRef, _platform: Platform, elementRef: ElementRef<HTMLElement>, _dir: Directionality, _globalRippleOptions?: RippleGlobalOptions | undefined, animationMode?: string);
     // (undocumented)
     _cachedLeft: number;
@@ -53,15 +52,19 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     _endThumbTransform: string;
     // (undocumented)
     protected endValueIndicatorText: string;
-    _getInput(thumbPosition: Thumb): MatSliderThumb | MatSliderRangeThumb | undefined;
-    _getThumb(thumbPosition: Thumb): MatSliderVisualThumb;
+    _getInput(thumbPosition: Thumb): MatSliderThumbInterface | MatSliderRangeThumbInterface | undefined;
+    _getThumb(thumbPosition: Thumb): MatSliderVisualThumbInterface;
     // (undocumented)
     readonly _globalRippleOptions?: RippleGlobalOptions | undefined;
+    // (undocumented)
     _hasAnimation: boolean;
-    _input: MatSliderThumb;
+    _input: MatSliderThumbInterface;
+    // (undocumented)
     _inputOffset: number;
+    // (undocumented)
     _inputPadding: number;
-    _inputs: QueryList<MatSliderRangeThumb>;
+    _inputs: QueryList<MatSliderRangeThumbInterface>;
+    // (undocumented)
     _isRange: boolean;
     _isRtl: boolean;
     _knobRadius: number;
@@ -81,13 +84,14 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     // (undocumented)
     _onResize(): void;
     // (undocumented)
-    _onTranslateXChange(source: MatSliderThumb): void;
+    _onTranslateXChange(source: MatSliderThumbInterface): void;
     // (undocumented)
-    _onTranslateXChangeBySideEffect(input1: MatSliderRangeThumb, input2: MatSliderRangeThumb): void;
+    _onTranslateXChangeBySideEffect(input1: MatSliderRangeThumbInterface, input2: MatSliderRangeThumbInterface): void;
     // (undocumented)
-    _onValueChange(source: MatSliderThumb): void;
+    _onValueChange(source: MatSliderThumbInterface): void;
     // (undocumented)
     readonly _platform: Platform;
+    // (undocumented)
     _rippleRadius: number;
     _setTrackActiveStyles(styles: {
         left: string;
@@ -95,6 +99,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
         transform: string;
         transformOrigin: string;
     }): void;
+    // (undocumented)
     _setTransition(withAnimation: boolean): void;
     // (undocumented)
     _setValue(v: number, thumbPosition: Thumb): void;
@@ -106,15 +111,15 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     protected startValueIndicatorText: string;
     get step(): number;
     set step(v: NumberInput);
-    _thumbs: QueryList<MatSliderVisualThumb>;
+    _thumbs: QueryList<MatSliderVisualThumbInterface>;
     _tickMarks: TickMark[];
     _tickMarkTrackWidth: number;
     _trackActive: ElementRef<HTMLElement>;
     _updateDimensions(): void;
-    _updateThumbUI(source: MatSliderThumb): void;
+    _updateThumbUI(source: MatSliderThumbInterface): void;
     _updateTickMarkUI(): void;
-    _updateTrackUI(source: MatSliderThumb): void;
-    _updateValueIndicatorUI(source: MatSliderThumb): void;
+    _updateTrackUI(source: MatSliderThumbInterface): void;
+    _updateValueIndicatorUI(source: MatSliderThumbInterface): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSlider, "mat-slider", ["matSlider"], { "color": "color"; "disableRipple": "disableRipple"; "disabled": "disabled"; "discrete": "discrete"; "showTickMarks": "showTickMarks"; "min": "min"; "max": "max"; "step": "step"; "displayWith": "displayWith"; }, {}, ["_input", "_inputs"], ["*"], false, never>;
     // (undocumented)
@@ -123,8 +128,8 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
 
 // @public
 export class MatSliderEvent {
-    parent: MatSlider;
-    source: MatSliderThumb;
+    parent: MatSliderInterface;
+    source: MatSliderThumbInterface;
     target: HTMLInputElement;
     value: number;
 }
@@ -136,12 +141,12 @@ export class MatSliderModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSliderModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, [typeof i1.MatSlider, typeof i1.MatSliderThumb, typeof i1.MatSliderRangeThumb, typeof i1.MatSliderVisualThumb], [typeof i2.MatCommonModule, typeof i3.CommonModule, typeof i2.MatRippleModule], [typeof i1.MatSlider, typeof i1.MatSliderThumb, typeof i1.MatSliderRangeThumb]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, [typeof i1.MatSlider, typeof i2.MatSliderThumb, typeof i2.MatSliderRangeThumb, typeof i3.MatSliderVisualThumb], [typeof i4.MatCommonModule, typeof i5.CommonModule, typeof i4.MatRippleModule], [typeof i1.MatSlider, typeof i2.MatSliderThumb, typeof i2.MatSliderRangeThumb]>;
 }
 
 // @public (undocumented)
-export class MatSliderRangeThumb extends MatSliderThumb {
-    constructor(_ngZone: NgZone, _slider: MatSlider, ngControl: NgControl, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef);
+export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRangeThumbInterface {
+    constructor(_ngZone: NgZone, _slider: MatSliderInterface, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef);
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     // (undocumented)
@@ -153,44 +158,43 @@ export class MatSliderRangeThumb extends MatSliderThumb {
     getMaxPos(): number;
     getMinPos(): number;
     // (undocumented)
-    getSibling(): MatSliderRangeThumb | undefined;
+    getSibling(): MatSliderRangeThumbInterface | undefined;
     // (undocumented)
     initUI(): void;
     _isEndThumb: boolean;
     _isLeftThumb: boolean;
     // (undocumented)
-    readonly ngControl: NgControl;
-    // (undocumented)
-    readonly _ngZone: NgZone;
-    // (undocumented)
     _onInput(): void;
     // (undocumented)
     _onNgControlValueChange(): void;
     // (undocumented)
-    _onPointerDown(event: PointerEvent): void;
+    _pointerDownHandler(event: PointerEvent): void;
     // (undocumented)
-    _onPointerMove(event: PointerEvent): void;
+    _pointerMoveHandler(event: PointerEvent): void;
     // (undocumented)
-    _onPointerUp(event: PointerEvent): void;
+    _pointerUpHandler(event: PointerEvent): void;
     // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
     _updateHiddenUI(): void;
+    // (undocumented)
+    _updateMinMax(): void;
     // (undocumented)
     _updateStaticStyles(): void;
     // (undocumented)
     _updateWidthActive(): void;
     // (undocumented)
     _updateWidthInactive(): void;
+    writeValue(value: any): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderRangeThumb, "input[matSliderStartThumb], input[matSliderEndThumb]", ["matSliderRangeThumb"], {}, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderRangeThumb, [null, null, { optional: true; self: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderRangeThumb, never>;
 }
 
 // @public
-export class MatSliderThumb implements OnInit, OnDestroy {
-    constructor(_slider: MatSlider, ngControl: NgControl, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef);
+export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, ControlValueAccessor {
+    constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef, _slider: MatSliderInterface);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -232,11 +236,9 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     get min(): number;
     set min(v: NumberInput);
     // (undocumented)
-    readonly ngControl: NgControl;
-    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    ngOnInit(): void;
+    readonly _ngZone: NgZone;
     // (undocumented)
     _onBlur(): void;
     // (undocumented)
@@ -248,24 +250,31 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     _onNgControlValueChange(): void;
     // (undocumented)
-    _onPointerDown(event: PointerEvent): void;
+    _onPointerDown: (event: PointerEvent) => void;
     // (undocumented)
-    _onPointerMove(event: PointerEvent): void;
+    _onPointerMove: (event: PointerEvent) => void;
     // (undocumented)
-    _onPointerUp(event: PointerEvent): void;
+    _onPointerUp: (event: PointerEvent) => void;
     // (undocumented)
     get percentage(): number;
+    // (undocumented)
+    _pointerDownHandler(event: PointerEvent): void;
+    // (undocumented)
+    _pointerMoveHandler(event: PointerEvent): void;
+    // (undocumented)
+    _pointerUpHandler(event: PointerEvent): void;
+    registerOnChange(fn: any): void;
+    registerOnTouched(fn: any): void;
+    setDisabledState(isDisabled: boolean): void;
     _skipUIUpdate: boolean;
     // (undocumented)
-    readonly _slider: MatSlider;
+    protected _slider: MatSliderInterface;
     // (undocumented)
     get step(): number;
     set step(v: NumberInput);
     thumbPosition: Thumb;
     get translateX(): number;
     set translateX(v: number);
-    // (undocumented)
-    _translateX: number | undefined;
     // (undocumented)
     _updateHiddenUI(): void;
     // (undocumented)
@@ -288,10 +297,37 @@ export class MatSliderThumb implements OnInit, OnDestroy {
     // (undocumented)
     readonly valueChange: EventEmitter<string>;
     _valuetext: string;
+    writeValue(value: any): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderThumb, "input[matSliderThumb]", ["matSliderThumb"], { "value": "value"; }, { "valueChange": "valueChange"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderThumb, [null, { optional: true; self: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderThumb, never>;
+}
+
+// @public
+export class MatSliderVisualThumb implements MatSliderVisualThumbInterface, AfterViewInit, OnDestroy {
+    constructor(_cdr: ChangeDetectorRef, _ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _slider: MatSliderInterface);
+    // (undocumented)
+    readonly _cdr: ChangeDetectorRef;
+    discrete: boolean;
+    _getKnob(): HTMLElement;
+    _getValueIndicatorContainer(): HTMLElement | undefined;
+    _hostElement: HTMLElement;
+    _isActive: boolean;
+    _isValueIndicatorVisible: boolean;
+    _knob: ElementRef<HTMLElement>;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    readonly _ripple: MatRipple;
+    thumbPosition: Thumb;
+    _valueIndicatorContainer: ElementRef<HTMLElement>;
+    valueIndicatorText: string;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSliderVisualThumb, "mat-slider-visual-thumb", never, { "discrete": "discrete"; "thumbPosition": "thumbPosition"; "valueIndicatorText": "valueIndicatorText"; }, {}, never, never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderVisualThumb, never>;
 }
 
 // (No @packageDocumentation comment for this package)
