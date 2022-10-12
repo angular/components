@@ -111,7 +111,7 @@ export class CustomRangeStrategy {}
   styleUrls: ['custom-header.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, MatButtonModule],
 })
 export class CustomHeader<D> implements OnDestroy {
   private readonly _destroyed = new Subject<void>();
