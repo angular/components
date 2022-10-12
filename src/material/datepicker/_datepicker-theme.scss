@@ -252,7 +252,9 @@ $calendar-weekday-table-font-size: 11px !default;
   }
 }
 
-@mixin _density($config-or-theme) {
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+
   // Regardless of the user-passed density, we want the calendar previous/next buttons to remain at
   // density -2
   .mat-calendar-controls {
@@ -271,7 +273,7 @@ $calendar-weekday-table-font-size: 11px !default;
       @include color($color);
     }
     @if $density != null {
-      @include _density($density);
+      @include density($density);
     }
     @if $typography != null {
       @include typography($typography);

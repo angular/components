@@ -46,7 +46,7 @@ sass_binary(
 )
 
 build_test(
-    name = "sass_compile_tetss",
+    name = "sass_compile_tests",
     targets = [
         ":test-css-variables-theme",
         ":test-theming-api",
