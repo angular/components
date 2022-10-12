@@ -1,6 +1,6 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
+import {MatListModule} from '@angular/material/list';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

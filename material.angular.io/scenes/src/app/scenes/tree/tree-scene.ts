@@ -2,7 +2,7 @@ import {Component, NgModule} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTreeModule, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatButtonModule} from '@angular/material/button';
 
 type IconType = 'folder' | 'text_snippet';
 

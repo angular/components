@@ -21,13 +21,14 @@
   margin: 15px;
 }
 
-.docs-guide-card.mat-card {
+.docs-guide-card.mat-mdc-card {
   text-align: center;
-  width: 210px;
-  height: 210px;
+  width: 240px;
+  height: 240px;
+  padding: 16px 0;
 }
 
-.docs-guide-card .mat-card-title {
+.docs-guide-card .mat-mdc-card-title {
   height: 33%;
   display: flex;
   align-items: center;

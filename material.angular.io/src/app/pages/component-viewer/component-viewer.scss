@@ -16,10 +16,11 @@ app-component-viewer {
     padding-left: constants.$content-padding-side-xs;
     padding-right: constants.$content-padding-side-xs;
   }
-}
 
-.docs-component-viewer-section-tab {
-  text-transform: uppercase;
+  .docs-component-viewer-section-tab {
+    min-width: 160px;
+    text-transform: uppercase;
+  }
 }
 
 .docs-component-viewer-tabbed-content {

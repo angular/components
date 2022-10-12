@@ -21,7 +21,7 @@ $_inner-spacing: 16px;
   justify-content: flex-end;
   margin: $_inner-spacing math.div($_inner-spacing, -2) 0 0;
 
-  .mat-button {
+  .mat-mdc-button {
     text-transform: uppercase;
   }
 }

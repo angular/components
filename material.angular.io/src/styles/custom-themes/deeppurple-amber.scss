@@ -13,7 +13,7 @@ $theme: mat.define-light-theme((
   typography: mat.define-typography-config(),
 ));
 
-@include mat.all-legacy-component-themes(map.merge($theme, (
-  typography: mat.define-legacy-typography-config()
+@include mat.all-component-themes(map.merge($theme, (
+  typography: mat.define-typography-config()
 )));
 @include app-theme.theme($theme);

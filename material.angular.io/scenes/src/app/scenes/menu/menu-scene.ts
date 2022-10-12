@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, NgModule, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyMenuModule as MatMenuModule, MatLegacyMenuTrigger as MatMenuTrigger} from '@angular/material/legacy-menu';
+import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

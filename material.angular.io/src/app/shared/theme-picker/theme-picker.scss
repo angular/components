@@ -1,9 +1,10 @@
 .docs-theme-picker-menu {
-  .mat-menu-item {
+  .mat-mdc-menu-item {
     .mat-icon.theme-example-icon {
       margin-right: 0;
-      margin-left: 8px;
-      float: right;
+      margin-left: auto;
+      padding-left: 8px;
+      order: 1;
 
       svg {
         vertical-align: middle;

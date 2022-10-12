@@ -1,5 +1,5 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatLegacyProgressBarModule as MatProgressBarModule} from '@angular/material/legacy-progress-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @Component({

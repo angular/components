@@ -8,7 +8,7 @@
   $background: map.get($theme, background);
   $foreground: map.get($theme, foreground);
 
-  .docs-carousel-nav.mat-mini-fab {
+  .docs-carousel-nav.mat-mdc-mini-fab {
     background: mat.get-color-from-palette($background, background);
     color: mat.get-color-from-palette($foreground, secondary-text)
   }

@@ -17,6 +17,7 @@
   background: pink;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
 :host ::ng-deep .mat-tab-label {
   font-size: 18px;
   min-width: 132px;

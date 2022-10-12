@@ -1,12 +1,12 @@
 import {Component, HostBinding, NgModule, OnInit} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
-import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
+import {MatListModule} from '@angular/material/list';
 import {RouterModule, Routes} from '@angular/router';
 import {FooterModule} from '../../shared/footer/footer';
 import {CommonModule} from '@angular/common';
 import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 import {ComponentPageTitle} from '../page-title/page-title';
-import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-guides',

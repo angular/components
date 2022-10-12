@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyTabsModule as MatTabsModule} from '@angular/material/legacy-tabs';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-tabs-scene',

@@ -1,6 +1,6 @@
 import {Component, NgModule, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
-import {MatLegacyTooltipModule as MatTooltipModule, MatLegacyTooltip as MatTooltip} from '@angular/material/legacy-tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule, MatTooltip} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
 
 @Component({

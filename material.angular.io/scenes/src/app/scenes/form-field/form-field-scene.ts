@@ -1,6 +1,6 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
