@@ -40,7 +40,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": "cdkContextMenuTriggerFor"; "menuPosition": "cdkContextMenuPosition"; "disabled": "cdkContextMenuDisabled"; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": "cdkContextMenuTriggerFor"; "menuPosition": "cdkContextMenuPosition"; "menuData": "cdkContextMenuTriggerData"; "disabled": "cdkContextMenuDisabled"; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkContextMenuTrigger, never>;
 }
@@ -203,7 +203,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     toggle(): void;
     _toggleOnKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": "cdkMenuTriggerFor"; "menuPosition": "cdkMenuPosition"; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": "cdkMenuTriggerFor"; "menuPosition": "cdkMenuPosition"; "menuData": "cdkMenuTriggerData"; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuTrigger, never>;
 }
@@ -217,6 +217,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     readonly injector: Injector;
     protected isElementInsideMenuStack(element: Element): boolean;
     isOpen(): boolean;
+    menuData: unknown;
     menuPosition: ConnectedPosition[];
     protected readonly menuStack: MenuStack;
     menuTemplateRef: TemplateRef<unknown>;

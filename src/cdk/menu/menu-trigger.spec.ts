@@ -454,6 +454,21 @@ describe('MenuTrigger', () => {
       expect(nativeMenus.length).toBe(1);
     });
   });
+
+  it('should be able to pass data to the menu via the template context', () => {
+    TestBed.configureTestingModule({
+      imports: [CdkMenuModule],
+      declarations: [TriggerWithData],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TriggerWithData);
+    fixture.componentInstance.menuData = {message: 'Hello!'};
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('button').click();
+    fixture.detectChanges();
+
+    expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
+  });
 });
 
 @Component({
@@ -571,4 +586,19 @@ class StandaloneTriggerWithInlineMenu {
   @ViewChild('submenu_item', {read: ElementRef}) submenuItem?: ElementRef<HTMLElement>;
   @ViewChild('inline_item', {read: ElementRef}) nativeInlineItem: ElementRef<HTMLElement>;
   @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+}
+
+@Component({
+  template: `
+    <button
+      [cdkMenuTriggerFor]="menu"
+      [cdkMenuTriggerData]="menuData">Click me!</button>
+
+    <ng-template #menu let-message="message">
+      <div cdkMenu class="test-menu">{{message}}</div>
+    </ng-template>
+  `,
+})
+class TriggerWithData {
+  menuData: unknown;
 }

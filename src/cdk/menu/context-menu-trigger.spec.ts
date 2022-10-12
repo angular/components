@@ -422,6 +422,21 @@ describe('CdkContextMenuTrigger', () => {
       expect(fixture.componentInstance.menus.length).toBe(1);
     });
   });
+
+  it('should be able to pass data to the menu via the template context', () => {
+    TestBed.configureTestingModule({
+      imports: [CdkMenuModule],
+      declarations: [ContextTriggerWithData],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(ContextTriggerWithData);
+    fixture.componentInstance.menuData = {message: 'Hello!'};
+    fixture.detectChanges();
+    dispatchMouseEvent(fixture.componentInstance.triggerElement.nativeElement, 'contextmenu');
+    fixture.detectChanges();
+
+    expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
+  });
 });
 
 @Component({
@@ -551,4 +566,18 @@ class MenuBarAndContextTriggerShareMenu {
   @ViewChild(CdkMenuTrigger) menuBarTrigger: CdkMenuTrigger;
   @ViewChild(CdkContextMenuTrigger) contextTrigger: CdkContextMenuTrigger;
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
+
+@Component({
+  template: `
+    <div [cdkContextMenuTriggerFor]="context" [cdkContextMenuTriggerData]="menuData"></div>
+
+    <ng-template #context let-message="message">
+      <div cdkMenu class="test-menu">{{message}}</div>
+    </ng-template>
+  `,
+})
+class ContextTriggerWithData {
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement: ElementRef<HTMLElement>;
+  menuData: unknown;
 }
