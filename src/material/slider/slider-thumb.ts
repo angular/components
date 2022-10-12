@@ -34,7 +34,7 @@ import {
  *
  * Handles the slider thumb ripple states (hover, focus, and active),
  * and displaying the value tooltip on discrete sliders.
- * @docs-private.
+ * @docs-private
  */
 @Component({
   selector: 'mat-slider-visual-thumb',
