@@ -447,6 +447,7 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     return event.clientX - this._slider._cachedLeft;
   }
 
+  // TODO(wagnermaciel): See if you can remove this function.
   _updateHiddenUI(): void {
     this._updateThumbUIByValue();
     this._updateWidthInactive();
@@ -668,7 +669,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     }
   }
 
-  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
   override _updateWidthActive(): void {
     const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
     const maxWidth = this._slider._cachedWidth - this._slider._inputPadding * 2 - minWidth;
@@ -681,7 +681,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
   }
 
-  // TODO(wagnermaciel): describe the difference between inactive and active width and why we need it.
   override _updateWidthInactive(): void {
     const sibling = this.getSibling();
     if (!sibling) {

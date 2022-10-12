@@ -117,18 +117,28 @@ export interface MatSliderInterface {
 }
 
 export interface MatSliderThumbInterface {
+  /** The minimum value that the slider can have. */
   min: number;
+
+  /** The maximum value that the slider can have. */
   max: number;
+
+  /** The amount that slider values can increment or decrement by. */
   step: number;
+
   /** The current value of this slider input. */
   value: number;
 
+  /** The current translateX in px of the slider visual thumb. */
   translateX: number;
 
+  /** Indicates whether this thumb is the start or end thumb. */
   thumbPosition: Thumb;
 
+  /** Similar to percentage but calcualted using translateX relative to the total track width. */
   fillPercentage: number;
 
+  /** Whether the slider is disabled. */
   disabled: boolean;
 
   /** The host native HTML input element. */
@@ -140,33 +150,69 @@ export interface MatSliderThumbInterface {
   /** The aria-valuetext string representation of the input's value. */
   _valuetext: string;
 
+  /**
+   * Indicates whether UI updates should be skipped.
+   *
+   * This flag is used to avoid flickering
+   * when correcting values on pointer up/down.
+   */
   _skipUIUpdate: boolean;
 
+  /** Handles the initialization of properties for the slider input. */
   initProps: () => void;
 
+  /** Handles UI initialization controlled by this slider input. */
   initUI: () => void;
 
+  /** Calculates the visual thumb's translateX based on the slider input's current value. */
   _calcTranslateXByValue: () => number;
 
+  /** Updates the visual thumb based on the slider input's current value. */
   _updateThumbUIByValue: () => void;
 
+  /** Updates the ui of the hidden native slider input. */
   _updateHiddenUI: () => void;
 
+  /**
+   * Sets the slider input to disproportionate dimensions to allow for touch
+   * events to be captured on touch devices.
+   */
   _updateWidthInactive: () => void;
 
+  /**
+   * Used to set the slider width to the correct
+   * dimensions while the user is dragging.
+   */
   _updateWidthActive: () => void;
 }
 
 export interface MatSliderRangeThumbInterface extends MatSliderThumbInterface {
+  /** Whether this slider corresponds to the input on the left hand side. */
   _isLeftThumb: boolean;
+
+  /**
+   * Gets the sibling MatSliderRangeThumb.
+   * Returns undefined if it is too early in Angular's life cycle.
+   */
   getSibling: () => MatSliderRangeThumbInterface | undefined;
+
+  /** Used to cache whether this slider input corresponds to the visual left thumb. */
   _setIsLeftThumb: () => void;
+
+  /** Updates the input styles to control whether it is pinned to the start or end of the mat-slider. */
   _updateStaticStyles: () => void;
+
+  /** Updates the min and max properties of this slider input according to it's sibling. */
   _updateMinMax: () => void;
 }
 
 export interface MatSliderVisualThumbInterface {
+  /** The MatRipple for this slider thumb. */
   _ripple: MatRipple;
+
+  /** Whether the slider thumb is currently being pressed. */
   _isActive: boolean;
+
+  /** The host native HTML input element. */
   _hostElement: HTMLElement;
 }
