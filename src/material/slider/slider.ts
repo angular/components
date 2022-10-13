@@ -643,9 +643,7 @@ export class MatSlider
     const sourceThumb = this._getThumb(source.thumbPosition);
     const siblingThumb = this._getThumb(sibling.thumbPosition);
     siblingThumb._hostElement.classList.remove('mdc-slider__thumb--top');
-    this._thumbsOverlap
-      ? sourceThumb._hostElement.classList.add('mdc-slider__thumb--top')
-      : sourceThumb._hostElement.classList.remove('mdc-slider__thumb--top');
+    sourceThumb._hostElement.classList.toggle('mdc-slider__thumb--top', this._thumbsOverlap);
   }
 
   /** Updates the UI of slider thumbs when they begin or stop overlapping. */
