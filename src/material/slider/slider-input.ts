@@ -244,9 +244,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   ) {
     this._hostElement = _elementRef.nativeElement;
     this._ngZone.runOutsideAngular(() => {
-      this._hostElement.addEventListener('pointerdown', this._onPointerDown);
-      this._hostElement.addEventListener('pointermove', this._onPointerMove);
-      this._hostElement.addEventListener('pointerup', this._onPointerUp);
+      this._hostElement.addEventListener('pointerdown', this._onPointerDown.bind(this));
+      this._hostElement.addEventListener('pointermove', this._onPointerMove.bind(this));
+      this._hostElement.addEventListener('pointerup', this._onPointerUp.bind(this));
     });
   }
 
@@ -327,11 +327,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._slider.disabled = this._formControl!.disabled;
   }
 
-  _onPointerDown = (event: PointerEvent): void => {
-    this._pointerDownHandler(event);
-  };
-
-  _pointerDownHandler(event: PointerEvent): void {
+  _onPointerDown(event: PointerEvent): void {
     if (this.disabled || event.button !== 0) {
       return;
     }
@@ -410,11 +406,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
   }
 
-  _onPointerMove = (event: PointerEvent): void => {
-    this._pointerMoveHandler(event);
-  };
-
-  _pointerMoveHandler(event: PointerEvent): void {
+  _onPointerMove(event: PointerEvent): void {
     // Again, does nothing if a step is defined because
     // we want the value to snap to the values on input.
     if (!this._slider.step && this._isActive) {
@@ -422,11 +414,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     }
   }
 
-  _onPointerUp = (event: PointerEvent): void => {
-    this._pointerUpHandler(event);
-  };
-
-  _pointerUpHandler(event: PointerEvent): void {
+  _onPointerUp(event: PointerEvent): void {
     this._isActive = false;
     this._updateWidthInactive();
     if (!this.disabled) {
@@ -607,7 +595,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     this.getSibling()?._updateMinMax();
   }
 
-  override _pointerDownHandler(event: PointerEvent): void {
+  override _onPointerDown(event: PointerEvent): void {
     if (this.disabled) {
       return;
     }
@@ -615,19 +603,19 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       this._sibling._updateWidthActive();
       this._sibling._hostElement.classList.add('mat-mdc-slider-input-no-pointer-events');
     }
-    super._pointerDownHandler(event);
+    super._onPointerDown(event);
   }
 
-  override _pointerUpHandler(event: PointerEvent): void {
-    super._pointerUpHandler(event);
+  override _onPointerUp(event: PointerEvent): void {
+    super._onPointerUp(event);
     if (this._sibling) {
       this._sibling._updateWidthInactive();
       this._sibling._hostElement.classList.remove('mat-mdc-slider-input-no-pointer-events');
     }
   }
 
-  override _pointerMoveHandler(event: PointerEvent): void {
-    super._pointerMoveHandler(event);
+  override _onPointerMove(event: PointerEvent): void {
+    super._onPointerMove(event);
     if (!this._slider.step && this._isActive) {
       this._updateSibling();
     }
