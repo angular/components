@@ -16,30 +16,28 @@ import {MatRipple, RippleGlobalOptions} from '@angular/material/core';
  * Used primarily to avoid circular imports.
  * @docs-private
  */
-export const MAT_SLIDER_TOKEN = new InjectionToken<{}>('MAT_SLIDER_TOKEN');
+export const MAT_SLIDER = new InjectionToken<{}>('_MatSlider');
 
 /**
  * Injection token that can be used to query for a `MatSliderThumb`.
  * Used primarily to avoid circular imports.
  * @docs-private
  */
-export const MAT_SLIDER_THUMB_TOKEN = new InjectionToken<{}>('MAT_SLIDER_THUMB_TOKEN');
+export const MAT_SLIDER_THUMB = new InjectionToken<{}>('_MatSliderThumb');
 
 /**
  * Injection token that can be used to query for a `MatSliderRangeThumb`.
  * Used primarily to avoid circular imports.
  * @docs-private
  */
-export const MAT_SLIDER_RANGE_THUMB_TOKEN = new InjectionToken<{}>('MAT_SLIDER_RANGE_THUMB_TOKEN');
+export const MAT_SLIDER_RANGE_THUMB = new InjectionToken<{}>('_MatSliderRangeThumb');
 
 /**
  * Injection token that can be used to query for a `MatSliderVisualThumb`.
  * Used primarily to avoid circular imports.
  * @docs-private
  */
-export const MAT_SLIDER_VISUAL_THUMB_TOKEN = new InjectionToken<{}>(
-  'MAT_SLIDER_VISUAL_THUMB_TOKEN',
-);
+export const MAT_SLIDER_VISUAL_THUMB = new InjectionToken<{}>('_MatSliderVisualThumb');
 
 /** Represents a drag event emitted by the MatSlider component. */
 export interface MatSliderDragEvent {

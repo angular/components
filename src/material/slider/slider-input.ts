@@ -32,9 +32,9 @@ import {
   _MatSlider,
   _MatSliderRangeThumb,
   _MatSliderThumb,
-  MAT_SLIDER_RANGE_THUMB_TOKEN,
-  MAT_SLIDER_THUMB_TOKEN,
-  MAT_SLIDER_TOKEN,
+  MAT_SLIDER_RANGE_THUMB,
+  MAT_SLIDER_THUMB,
+  MAT_SLIDER,
 } from './slider-interface';
 
 /**
@@ -81,7 +81,7 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
   },
   providers: [
     MAT_SLIDER_THUMB_VALUE_ACCESSOR,
-    {provide: MAT_SLIDER_THUMB_TOKEN, useExisting: MatSliderThumb},
+    {provide: MAT_SLIDER_THUMB, useExisting: MatSliderThumb},
   ],
 })
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
@@ -240,7 +240,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
-    @Inject(MAT_SLIDER_TOKEN) protected _slider: _MatSlider,
+    @Inject(MAT_SLIDER) protected _slider: _MatSlider,
   ) {
     this._hostElement = _elementRef.nativeElement;
     this._ngZone.runOutsideAngular(() => {
@@ -535,7 +535,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   exportAs: 'matSliderRangeThumb',
   providers: [
     MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR,
-    {provide: MAT_SLIDER_RANGE_THUMB_TOKEN, useExisting: MatSliderRangeThumb},
+    {provide: MAT_SLIDER_RANGE_THUMB, useExisting: MatSliderRangeThumb},
   ],
 })
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
@@ -580,7 +580,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   constructor(
     _ngZone: NgZone,
-    @Inject(MAT_SLIDER_TOKEN) _slider: _MatSlider,
+    @Inject(MAT_SLIDER) _slider: _MatSlider,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
   ) {

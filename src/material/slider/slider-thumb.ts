@@ -25,8 +25,8 @@ import {
   _MatSlider,
   _MatSliderThumb,
   _MatSliderVisualThumb,
-  MAT_SLIDER_TOKEN,
-  MAT_SLIDER_VISUAL_THUMB_TOKEN,
+  MAT_SLIDER,
+  MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
 
 /**
@@ -46,7 +46,7 @@ import {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  providers: [{provide: MAT_SLIDER_VISUAL_THUMB_TOKEN, useExisting: MatSliderVisualThumb}],
+  providers: [{provide: MAT_SLIDER_VISUAL_THUMB, useExisting: MatSliderVisualThumb}],
 })
 export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
@@ -99,7 +99,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     readonly _cdr: ChangeDetectorRef,
     private readonly _ngZone: NgZone,
     _elementRef: ElementRef<HTMLElement>,
-    @Inject(MAT_SLIDER_TOKEN) private _slider: _MatSlider,
+    @Inject(MAT_SLIDER) private _slider: _MatSlider,
   ) {
     this._hostElement = _elementRef.nativeElement;
   }

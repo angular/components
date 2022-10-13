@@ -47,10 +47,10 @@ import {
   _MatSliderRangeThumb,
   _MatSliderThumb,
   _MatSliderVisualThumb,
-  MAT_SLIDER_RANGE_THUMB_TOKEN,
-  MAT_SLIDER_THUMB_TOKEN,
-  MAT_SLIDER_TOKEN,
-  MAT_SLIDER_VISUAL_THUMB_TOKEN,
+  MAT_SLIDER_RANGE_THUMB,
+  MAT_SLIDER_THUMB,
+  MAT_SLIDER,
+  MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
 
 // TODO(wagnermaciel): maybe handle the following edge case:
@@ -88,7 +88,7 @@ const _MatSliderMixinBase = mixinColor(
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   inputs: ['color', 'disableRipple'],
-  providers: [{provide: MAT_SLIDER_TOKEN, useExisting: MatSlider}],
+  providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
 })
 export class MatSlider
   extends _MatSliderMixinBase
@@ -98,13 +98,13 @@ export class MatSlider
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
   /** The slider thumb(s). */
-  @ViewChildren(MAT_SLIDER_VISUAL_THUMB_TOKEN) _thumbs: QueryList<_MatSliderVisualThumb>;
+  @ViewChildren(MAT_SLIDER_VISUAL_THUMB) _thumbs: QueryList<_MatSliderVisualThumb>;
 
   /** The sliders hidden range input(s). */
-  @ContentChild(MAT_SLIDER_THUMB_TOKEN) _input: _MatSliderThumb;
+  @ContentChild(MAT_SLIDER_THUMB) _input: _MatSliderThumb;
 
   /** The sliders hidden range input(s). */
-  @ContentChildren(MAT_SLIDER_RANGE_THUMB_TOKEN, {descendants: false})
+  @ContentChildren(MAT_SLIDER_RANGE_THUMB, {descendants: false})
   _inputs: QueryList<_MatSliderRangeThumb>;
 
   /** Whether the slider is disabled. */
