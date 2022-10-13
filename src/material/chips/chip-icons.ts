@@ -11,10 +11,7 @@ import {Directive} from '@angular/core';
 import {MatChipAction} from './chip-action';
 import {MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 
-/**
- * Directive to add CSS classes to chip leading icon.
- * @docs-private
- */
+/** Avatar image within a chip. */
 @Directive({
   selector: 'mat-chip-avatar, [matChipAvatar]',
   host: {
@@ -25,10 +22,7 @@ import {MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens
 })
 export class MatChipAvatar {}
 
-/**
- * Directive to add CSS classes to and configure attributes for chip trailing icon.
- * @docs-private
- */
+/** Non-interactive trailing icon in a chip. */
 @Directive({
   selector: 'mat-chip-trailing-icon, [matChipTrailingIcon]',
   host: {
