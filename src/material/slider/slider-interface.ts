@@ -44,23 +44,21 @@ export const MAT_SLIDER_VISUAL_THUMB_TOKEN = new InjectionToken<{}>(
 /** Represents a drag event emitted by the MatSlider component. */
 export interface MatSliderDragEvent {
   /** The MatSliderThumb that was interacted with. */
-  source: MatSliderThumbInterface;
+  source: _MatSliderThumb;
 
   /** The MatSlider that was interacted with. */
-  parent: MatSliderInterface;
+  parent: _MatSlider;
 
   /** The current value of the slider. */
   value: number;
 }
 
-export interface MatSliderInterface {
+export interface _MatSlider {
   /** Gets the slider thumb input of the given thumb position. */
-  _getInput(
-    thumbPosition: Thumb,
-  ): MatSliderThumbInterface | MatSliderRangeThumbInterface | undefined;
+  _getInput(thumbPosition: Thumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
-  _getThumb(thumbPosition: Thumb): MatSliderVisualThumbInterface;
+  _getThumb(thumbPosition: Thumb): _MatSliderVisualThumb;
 
   /** The minimum value that the slider can have. */
   min: number;
@@ -120,10 +118,10 @@ export interface MatSliderInterface {
   _hasAnimation: boolean;
 
   /** Triggers UI updates that are needed after a slider input value has changed. */
-  _onValueChange: (source: MatSliderThumbInterface) => void;
+  _onValueChange: (source: _MatSliderThumb) => void;
 
   /** Triggers UI updates that are needed after the slider thumb position has changed. */
-  _onTranslateXChange: (source: MatSliderThumbInterface) => void;
+  _onTranslateXChange: (source: _MatSliderThumb) => void;
 
   /** Updates the stored slider dimensions using the current bounding client rect. */
   _updateDimensions: () => void;
@@ -132,7 +130,7 @@ export interface MatSliderInterface {
   _setTransition: (withAnimation: boolean) => void;
 }
 
-export interface MatSliderThumbInterface {
+export interface _MatSliderThumb {
   /** The minimum value that the slider can have. */
   min: number;
 
@@ -199,7 +197,7 @@ export interface MatSliderThumbInterface {
   _updateWidthActive: () => void;
 }
 
-export interface MatSliderRangeThumbInterface extends MatSliderThumbInterface {
+export interface _MatSliderRangeThumb extends _MatSliderThumb {
   /** Whether this slider corresponds to the input on the left hand side. */
   _isLeftThumb: boolean;
 
@@ -207,7 +205,7 @@ export interface MatSliderRangeThumbInterface extends MatSliderThumbInterface {
    * Gets the sibling MatSliderRangeThumb.
    * Returns undefined if it is too early in Angular's life cycle.
    */
-  getSibling: () => MatSliderRangeThumbInterface | undefined;
+  getSibling: () => _MatSliderRangeThumb | undefined;
 
   /** Used to cache whether this slider input corresponds to the visual left thumb. */
   _setIsLeftThumb: () => void;
@@ -219,7 +217,7 @@ export interface MatSliderRangeThumbInterface extends MatSliderThumbInterface {
   _updateMinMax: () => void;
 }
 
-export interface MatSliderVisualThumbInterface {
+export interface _MatSliderVisualThumb {
   /** The MatRipple for this slider thumb. */
   _ripple: MatRipple;
 

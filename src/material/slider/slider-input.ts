@@ -29,9 +29,9 @@ import {Thumb} from '@material/slider';
 import {Subject} from 'rxjs';
 import {
   MatSliderDragEvent,
-  MatSliderInterface,
-  MatSliderRangeThumbInterface,
-  MatSliderThumbInterface,
+  _MatSlider,
+  _MatSliderRangeThumb,
+  _MatSliderThumb,
   MAT_SLIDER_RANGE_THUMB_TOKEN,
   MAT_SLIDER_THUMB_TOKEN,
   MAT_SLIDER_TOKEN,
@@ -84,7 +84,7 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
     {provide: MAT_SLIDER_THUMB_TOKEN, useExisting: MatSliderThumb},
   ],
 })
-export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, ControlValueAccessor {
+export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
   @Input()
   get value(): number {
     return coerceNumberProperty(this._hostElement.value);
@@ -240,7 +240,7 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
-    @Inject(MAT_SLIDER_TOKEN) protected _slider: MatSliderInterface,
+    @Inject(MAT_SLIDER_TOKEN) protected _slider: _MatSlider,
   ) {
     this._hostElement = _elementRef.nativeElement;
     this._ngZone.runOutsideAngular(() => {
@@ -538,8 +538,8 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     {provide: MAT_SLIDER_RANGE_THUMB_TOKEN, useExisting: MatSliderRangeThumb},
   ],
 })
-export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRangeThumbInterface {
-  getSibling(): MatSliderRangeThumbInterface | undefined {
+export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
+  getSibling(): _MatSliderRangeThumb | undefined {
     if (!this._sibling) {
       this._sibling = this._slider._getInput(this._isEndThumb ? Thumb.START : Thumb.END) as
         | MatSliderRangeThumb
@@ -580,7 +580,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
 
   constructor(
     _ngZone: NgZone,
-    @Inject(MAT_SLIDER_TOKEN) _slider: MatSliderInterface,
+    @Inject(MAT_SLIDER_TOKEN) _slider: _MatSlider,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
   ) {

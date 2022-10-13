@@ -43,10 +43,10 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Thumb, TickMark} from '@material/slider';
 import {Subscription} from 'rxjs';
 import {
-  MatSliderInterface,
-  MatSliderRangeThumbInterface,
-  MatSliderThumbInterface,
-  MatSliderVisualThumbInterface,
+  _MatSlider,
+  _MatSliderRangeThumb,
+  _MatSliderThumb,
+  _MatSliderVisualThumb,
   MAT_SLIDER_RANGE_THUMB_TOKEN,
   MAT_SLIDER_THUMB_TOKEN,
   MAT_SLIDER_TOKEN,
@@ -92,20 +92,20 @@ const _MatSliderMixinBase = mixinColor(
 })
 export class MatSlider
   extends _MatSliderMixinBase
-  implements AfterViewInit, CanDisableRipple, OnDestroy, MatSliderInterface
+  implements AfterViewInit, CanDisableRipple, OnDestroy, _MatSlider
 {
   /** The active portion of the slider track. */
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
   /** The slider thumb(s). */
-  @ViewChildren(MAT_SLIDER_VISUAL_THUMB_TOKEN) _thumbs: QueryList<MatSliderVisualThumbInterface>;
+  @ViewChildren(MAT_SLIDER_VISUAL_THUMB_TOKEN) _thumbs: QueryList<_MatSliderVisualThumb>;
 
   /** The sliders hidden range input(s). */
-  @ContentChild(MAT_SLIDER_THUMB_TOKEN) _input: MatSliderThumbInterface;
+  @ContentChild(MAT_SLIDER_THUMB_TOKEN) _input: _MatSliderThumb;
 
   /** The sliders hidden range input(s). */
   @ContentChildren(MAT_SLIDER_RANGE_THUMB_TOKEN, {descendants: false})
-  _inputs: QueryList<MatSliderRangeThumbInterface>;
+  _inputs: QueryList<_MatSliderRangeThumb>;
 
   /** Whether the slider is disabled. */
   @Input()
@@ -167,8 +167,8 @@ export class MatSlider
   }
 
   private _updateMinRange(min: {old: number; new: number}): void {
-    const endInput = this._getInput(Thumb.END) as MatSliderRangeThumbInterface;
-    const startInput = this._getInput(Thumb.START) as MatSliderRangeThumbInterface;
+    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
 
     const oldEndValue = endInput.value;
     const oldStartValue = startInput.value;
@@ -229,8 +229,8 @@ export class MatSlider
   }
 
   private _updateMaxRange(max: {old: number; new: number}): void {
-    const endInput = this._getInput(Thumb.END) as MatSliderRangeThumbInterface;
-    const startInput = this._getInput(Thumb.START) as MatSliderRangeThumbInterface;
+    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
 
     const oldEndValue = endInput.value;
     const oldStartValue = startInput.value;
@@ -290,8 +290,8 @@ export class MatSlider
   }
 
   private _updateStepRange(): void {
-    const endInput = this._getInput(Thumb.END) as MatSliderRangeThumbInterface;
-    const startInput = this._getInput(Thumb.START) as MatSliderRangeThumbInterface;
+    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
 
     const oldEndValue = endInput.value;
     const oldStartValue = startInput.value;
@@ -448,8 +448,8 @@ export class MatSlider
       sInput.initUI();
     }
     if (this._isRange) {
-      (eInput as MatSliderRangeThumbInterface)._updateMinMax();
-      (sInput as MatSliderRangeThumbInterface)._updateMinMax();
+      (eInput as _MatSliderRangeThumb)._updateMinMax();
+      (sInput as _MatSliderRangeThumb)._updateMinMax();
     }
     this._updateTrackUI(eInput!);
     this._updateTickMarkUI();
@@ -473,8 +473,8 @@ export class MatSlider
   }
 
   private _onDirChangeRange(): void {
-    const endInput = this._getInput(Thumb.END) as MatSliderRangeThumbInterface;
-    const startInput = this._getInput(Thumb.START) as MatSliderRangeThumbInterface;
+    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
 
     endInput._setIsLeftThumb();
     startInput._setIsLeftThumb();
@@ -567,21 +567,21 @@ export class MatSlider
 
   // Handlers for updating the slider ui.
 
-  _onTranslateXChange(source: MatSliderThumbInterface): void {
+  _onTranslateXChange(source: _MatSliderThumb): void {
     this._updateThumbUI(source);
     this._updateTrackUI(source);
-    this._updateOverlappingThumbUI(source as MatSliderRangeThumbInterface);
+    this._updateOverlappingThumbUI(source as _MatSliderRangeThumb);
   }
 
   _onTranslateXChangeBySideEffect(
-    input1: MatSliderRangeThumbInterface,
-    input2: MatSliderRangeThumbInterface,
+    input1: _MatSliderRangeThumb,
+    input2: _MatSliderRangeThumb,
   ): void {
     input1._updateThumbUIByValue();
     input2._updateThumbUIByValue();
   }
 
-  _onValueChange(source: MatSliderThumbInterface): void {
+  _onValueChange(source: _MatSliderThumb): void {
     this._updateValueIndicatorUI(source);
     this._updateTickMarkUI();
     this._cdr.detectChanges();
@@ -596,8 +596,8 @@ export class MatSlider
   _onResize(): void {
     this._updateDimensions();
     if (this._isRange) {
-      const eInput = this._getInput(Thumb.END) as MatSliderRangeThumbInterface;
-      const sInput = this._getInput(Thumb.START) as MatSliderRangeThumbInterface;
+      const eInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
+      const sInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
 
       eInput._updateThumbUIByValue();
       sInput._updateThumbUIByValue();
@@ -639,7 +639,7 @@ export class MatSlider
    * Updates the class names of overlapping slider thumbs so
    * that the current active thumb is styled to be on "top".
    */
-  private _updateOverlappingThumbClassNames(source: MatSliderRangeThumbInterface): void {
+  private _updateOverlappingThumbClassNames(source: _MatSliderRangeThumb): void {
     const sibling = source.getSibling()!;
     const sourceThumb = this._getThumb(source.thumbPosition);
     const siblingThumb = this._getThumb(sibling.thumbPosition);
@@ -648,7 +648,7 @@ export class MatSlider
   }
 
   /** Updates the UI of slider thumbs when they begin or stop overlapping. */
-  private _updateOverlappingThumbUI(source: MatSliderRangeThumbInterface): void {
+  private _updateOverlappingThumbUI(source: _MatSliderRangeThumb): void {
     if (!this._isRange || this._skipUpdate()) {
       return;
     }
@@ -666,7 +666,7 @@ export class MatSlider
   //    - Reason: The value may have silently changed.
 
   /** Updates the translateX of the given thumb. */
-  _updateThumbUI(source: MatSliderThumbInterface) {
+  _updateThumbUI(source: _MatSliderThumb) {
     if (this._skipUpdate()) {
       return;
     }
@@ -682,7 +682,7 @@ export class MatSlider
   //    - Reason: The value may have silently changed.
 
   /** Updates the value indicator tooltip ui for the given thumb. */
-  _updateValueIndicatorUI(source: MatSliderThumbInterface): void {
+  _updateValueIndicatorUI(source: _MatSliderThumb): void {
     if (this._skipUpdate()) {
       return;
     }
@@ -733,17 +733,17 @@ export class MatSlider
   //    - Reason: The total width the 'active' tracks translateX is based on has changed.
 
   /** Updates the scale on the active portion of the track. */
-  _updateTrackUI(source: MatSliderThumbInterface): void {
+  _updateTrackUI(source: _MatSliderThumb): void {
     if (this._skipUpdate()) {
       return;
     }
 
     this._isRange
-      ? this._updateTrackUIRange(source as MatSliderRangeThumbInterface)
-      : this._updateTrackUINonRange(source as MatSliderThumbInterface);
+      ? this._updateTrackUIRange(source as _MatSliderRangeThumb)
+      : this._updateTrackUINonRange(source as _MatSliderThumb);
   }
 
-  private _updateTrackUIRange(source: MatSliderRangeThumbInterface): void {
+  private _updateTrackUIRange(source: _MatSliderRangeThumb): void {
     const sibling = source.getSibling();
     if (!sibling || !this._cachedTrackWidth) {
       return;
@@ -769,7 +769,7 @@ export class MatSlider
     }
   }
 
-  private _updateTrackUINonRange(source: MatSliderThumbInterface): void {
+  private _updateTrackUINonRange(source: _MatSliderThumb): void {
     this._isRtl
       ? this._setTrackActiveStyles({
           left: 'auto',
@@ -832,9 +832,7 @@ export class MatSlider
   }
 
   /** Gets the slider thumb input of the given thumb position. */
-  _getInput(
-    thumbPosition: Thumb,
-  ): MatSliderThumbInterface | MatSliderRangeThumbInterface | undefined {
+  _getInput(thumbPosition: Thumb): _MatSliderThumb | _MatSliderRangeThumb | undefined {
     if (thumbPosition === Thumb.END && this._input) {
       return this._input;
     }
@@ -845,7 +843,7 @@ export class MatSlider
   }
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
-  _getThumb(thumbPosition: Thumb): MatSliderVisualThumbInterface {
+  _getThumb(thumbPosition: Thumb): _MatSliderVisualThumb {
     return thumbPosition === Thumb.END ? this._thumbs?.last! : this._thumbs?.first!;
   }
 
@@ -861,8 +859,8 @@ export class MatSlider
 /** Ensures that there is not an invalid configuration for the slider thumb inputs. */
 function _validateInputs(
   isRange: boolean,
-  endInputElement: MatSliderThumbInterface | MatSliderRangeThumbInterface,
-  startInputElement?: MatSliderThumbInterface,
+  endInputElement: _MatSliderThumb | _MatSliderRangeThumb,
+  startInputElement?: _MatSliderThumb,
 ): void {
   const startValid =
     !isRange || startInputElement?._hostElement.hasAttribute('matSliderStartThumb');

@@ -22,9 +22,9 @@ import {
 import {Thumb} from '@material/slider';
 import {MatRipple, RippleAnimationConfig, RippleRef, RippleState} from '@angular/material/core';
 import {
-  MatSliderInterface,
-  MatSliderThumbInterface,
-  MatSliderVisualThumbInterface,
+  _MatSlider,
+  _MatSliderThumb,
+  _MatSliderVisualThumb,
   MAT_SLIDER_TOKEN,
   MAT_SLIDER_VISUAL_THUMB_TOKEN,
 } from './slider-interface';
@@ -48,9 +48,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER_VISUAL_THUMB_TOKEN, useExisting: MatSliderVisualThumb}],
 })
-export class MatSliderVisualThumb
-  implements MatSliderVisualThumbInterface, AfterViewInit, OnDestroy
-{
+export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
   @Input() discrete: boolean;
 
@@ -71,7 +69,7 @@ export class MatSliderVisualThumb
   _valueIndicatorContainer: ElementRef<HTMLElement>;
 
   /** The slider input corresponding to this slider thumb. */
-  private _sliderInput: MatSliderThumbInterface;
+  private _sliderInput: _MatSliderThumb;
 
   /** The native html element of the slider input corresponding to this thumb. */
   private _sliderInputEl: HTMLInputElement;
@@ -101,7 +99,7 @@ export class MatSliderVisualThumb
     readonly _cdr: ChangeDetectorRef,
     private readonly _ngZone: NgZone,
     _elementRef: ElementRef<HTMLElement>,
-    @Inject(MAT_SLIDER_TOKEN) private _slider: MatSliderInterface,
+    @Inject(MAT_SLIDER_TOKEN) private _slider: _MatSlider,
   ) {
     this._hostElement = _elementRef.nativeElement;
   }
@@ -274,7 +272,7 @@ export class MatSliderVisualThumb
     this._getValueIndicatorContainer()?.classList.remove('mdc-slider__thumb--with-indicator');
   }
 
-  _getSibling(): MatSliderVisualThumbInterface {
+  _getSibling(): _MatSliderVisualThumb {
     return this._slider._getThumb(this.thumbPosition === Thumb.START ? Thumb.END : Thumb.START);
   }
 
