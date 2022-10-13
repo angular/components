@@ -103,7 +103,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._slider._onValueChange(this);
     this._cdr.detectChanges();
   }
-  @Output() readonly valueChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() readonly valueChange: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when the slider thumb starts being dragged. */
   @Output() readonly dragStart: EventEmitter<MatSliderDragEvent> =
@@ -307,7 +307,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _onInput(): void {
-    this.valueChange.emit(this._hostElement.value);
+    this.valueChange.emit(this.value);
     this._onChangeFn(this.value);
     // handles arrowing and updating the value when
     // a step is defined.
@@ -400,7 +400,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     }
 
     this.value = value;
-    this.valueChange.emit(this._hostElement.value);
+    this.valueChange.emit(this.value);
     this._onChangeFn(this.value);
     this._slider._onValueChange(this);
     this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});

@@ -1363,12 +1363,12 @@ describe('MDC-based MatSlider', () => {
       checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
 
       slideToValue(slider, input, 10);
-      expect(fixture.componentInstance.value).toBe('10');
+      expect(fixture.componentInstance.value).toBe(10);
       checkInput(input, {min: 0, max: 100, value: 10, step: 0, translateX: 30});
 
-      fixture.componentInstance.value = '20';
+      fixture.componentInstance.value = 20;
       fixture.detectChanges();
-      expect(fixture.componentInstance.value).toBe('20');
+      expect(fixture.componentInstance.value).toBe(20);
       checkInput(input, {min: 0, max: 100, value: 20, step: 0, translateX: 60});
     }));
   });
@@ -1389,31 +1389,31 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should sync the start value binding in both directions', fakeAsync(() => {
-      expect(fixture.componentInstance.startValue).toBe('0');
+      expect(fixture.componentInstance.startValue).toBe(0);
       expect(startInput.value).toBe(0);
 
       slideToValue(slider, startInput, 10);
 
-      expect(fixture.componentInstance.startValue).toBe('10');
+      expect(fixture.componentInstance.startValue).toBe(10);
       expect(startInput.value).toBe(10);
 
-      fixture.componentInstance.startValue = '20';
+      fixture.componentInstance.startValue = 20;
       fixture.detectChanges();
-      expect(fixture.componentInstance.startValue).toBe('20');
+      expect(fixture.componentInstance.startValue).toBe(20);
       expect(startInput.value).toBe(20);
     }));
 
     it('should sync the end value binding in both directions', fakeAsync(() => {
-      expect(fixture.componentInstance.endValue).toBe('100');
+      expect(fixture.componentInstance.endValue).toBe(100);
       expect(endInput.value).toBe(100);
 
       slideToValue(slider, endInput, 90);
-      expect(fixture.componentInstance.endValue).toBe('90');
+      expect(fixture.componentInstance.endValue).toBe(90);
       expect(endInput.value).toBe(90);
 
-      fixture.componentInstance.endValue = '80';
+      fixture.componentInstance.endValue = 80;
       fixture.detectChanges();
-      expect(fixture.componentInstance.endValue).toBe('80');
+      expect(fixture.componentInstance.endValue).toBe(80);
       expect(endInput.value).toBe(80);
     }));
   });
@@ -1652,7 +1652,7 @@ class RangeSliderWithFormControl {
   styles: SLIDER_STYLES,
 })
 class SliderWithTwoWayBinding {
-  value = '0';
+  value = 0;
 }
 
 @Component({
@@ -1667,8 +1667,8 @@ class SliderWithTwoWayBinding {
 class RangeSliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider: MatSlider;
   @ViewChildren(MatSliderThumb) sliderInputs: QueryList<MatSliderThumb>;
-  startValue = '0';
-  endValue = '100';
+  startValue = 0;
+  endValue = 100;
 }
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */

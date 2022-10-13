@@ -35,7 +35,7 @@ export class SliderDemo {
   value: string = '0';
   disabled: boolean = false;
 
-  twoWayValue: string = '0';
+  twoWayValue: number = 0;
 
   minModel: number = 0;
   maxModel: number = 100;
