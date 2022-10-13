@@ -28,6 +28,7 @@ import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/for
 import {Thumb} from '@material/slider';
 import {Subject} from 'rxjs';
 import {
+  MatSliderDragEvent,
   MatSliderInterface,
   MatSliderRangeThumbInterface,
   MatSliderThumbInterface,
@@ -55,21 +56,6 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => MatSliderRangeThumb),
   multi: true,
 };
-
-/** Represents an event emitted by the MatSlider component. */
-export class MatSliderEvent {
-  /** The html element that was the target of the event. */
-  target: HTMLInputElement;
-
-  /** The MatSliderThumb that was interacted with. */
-  source: MatSliderThumbInterface;
-
-  /** The MatSlider that was interacted with. */
-  parent: MatSliderInterface;
-
-  /** The current value of the slider. */
-  value: number;
-}
 
 /**
  * Directive that adds slider-specific behaviors to an input element inside `<mat-slider>`.
@@ -115,6 +101,14 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     }
   }
   @Output() readonly valueChange: EventEmitter<string> = new EventEmitter<string>();
+
+  /** Event emitted when the slider thumb starts being dragged. */
+  @Output() readonly dragStart: EventEmitter<MatSliderDragEvent> =
+    new EventEmitter<MatSliderDragEvent>();
+
+  /** Event emitted when the slider thumb stops being dragged. */
+  @Output() readonly dragEnd: EventEmitter<MatSliderDragEvent> =
+    new EventEmitter<MatSliderDragEvent>();
 
   /** The current translateX in px of the slider visual thumb. */
   get translateX(): number {
@@ -259,6 +253,8 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     this._hostElement.removeEventListener('pointerup', this._onPointerUp);
     this._destroyed.next();
     this._destroyed.complete();
+    this.dragStart.complete();
+    this.dragEnd.complete();
   }
 
   initProps(): void {
@@ -390,6 +386,9 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     const value = Math.round(impreciseValue / step) * step;
 
     const prevValue = this.value;
+    const dragEvent = {source: this, parent: this._slider, value: value};
+    this._isActive ? this.dragStart.emit(dragEvent) : this.dragEnd.emit(dragEvent);
+
     if (value === prevValue) {
       // Because we prevented UI updates, if it turns out that the race
       // condition didn't happen and the value is already correct, we

@@ -728,7 +728,6 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should update the start value', fakeAsync(() => {
-      console.log('should update the start value');
       checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75});
       checkInput(endInput, {min: 25, max: 100, value: 75, translateX: 225});
       slideToValue(slider, startInput, 30);

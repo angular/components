@@ -127,10 +127,9 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
 }
 
 // @public
-export class MatSliderEvent {
+export interface MatSliderDragEvent {
     parent: MatSliderInterface;
     source: MatSliderThumbInterface;
-    target: HTMLInputElement;
     value: number;
 }
 
@@ -205,6 +204,8 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     // (undocumented)
     get disabled(): boolean;
     set disabled(v: BooleanInput);
+    readonly dragEnd: EventEmitter<MatSliderDragEvent>;
+    readonly dragStart: EventEmitter<MatSliderDragEvent>;
     // (undocumented)
     readonly _elementRef: ElementRef<HTMLInputElement>;
     // (undocumented)
@@ -293,7 +294,7 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     _valuetext: string;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderThumb, "input[matSliderThumb]", ["matSliderThumb"], { "value": "value"; }, { "valueChange": "valueChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderThumb, "input[matSliderThumb]", ["matSliderThumb"], { "value": "value"; }, { "valueChange": "valueChange"; "dragStart": "dragStart"; "dragEnd": "dragEnd"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSliderThumb, never>;
 }
@@ -305,9 +306,14 @@ export class MatSliderVisualThumb implements MatSliderVisualThumbInterface, Afte
     readonly _cdr: ChangeDetectorRef;
     discrete: boolean;
     _getKnob(): HTMLElement;
+    // (undocumented)
+    _getSibling(): MatSliderVisualThumbInterface;
     _getValueIndicatorContainer(): HTMLElement | undefined;
+    _hideValueIndicator(): void;
     _hostElement: HTMLElement;
     _isActive: boolean;
+    // (undocumented)
+    _isShowingAnyRipple(): boolean;
     _isValueIndicatorVisible: boolean;
     _knob: ElementRef<HTMLElement>;
     // (undocumented)
@@ -315,6 +321,7 @@ export class MatSliderVisualThumb implements MatSliderVisualThumbInterface, Afte
     // (undocumented)
     ngOnDestroy(): void;
     readonly _ripple: MatRipple;
+    _showValueIndicator(): void;
     thumbPosition: Thumb;
     _valueIndicatorContainer: ElementRef<HTMLElement>;
     valueIndicatorText: string;

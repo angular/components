@@ -41,10 +41,26 @@ export const MAT_SLIDER_VISUAL_THUMB_TOKEN = new InjectionToken<{}>(
   'MAT_SLIDER_VISUAL_THUMB_TOKEN',
 );
 
+/** Represents a drag event emitted by the MatSlider component. */
+export interface MatSliderDragEvent {
+  /** The MatSliderThumb that was interacted with. */
+  source: MatSliderThumbInterface;
+
+  /** The MatSlider that was interacted with. */
+  parent: MatSliderInterface;
+
+  /** The current value of the slider. */
+  value: number;
+}
+
 export interface MatSliderInterface {
+  /** Gets the slider thumb input of the given thumb position. */
   _getInput(
     thumbPosition: Thumb,
   ): MatSliderThumbInterface | MatSliderRangeThumbInterface | undefined;
+
+  /** Gets the slider thumb HTML input element of the given thumb position. */
+  _getThumb(thumbPosition: Thumb): MatSliderVisualThumbInterface;
 
   /** The minimum value that the slider can have. */
   min: number;
@@ -212,4 +228,13 @@ export interface MatSliderVisualThumbInterface {
 
   /** The host native HTML input element. */
   _hostElement: HTMLElement;
+
+  /** Shows the value indicator ui. */
+  _showValueIndicator: () => void;
+
+  /** Hides the value indicator ui. */
+  _hideValueIndicator: () => void;
+
+  /** Whether the slider visual thumb is currently showing any ripple. */
+  _isShowingAnyRipple: () => boolean;
 }

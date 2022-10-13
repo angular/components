@@ -224,6 +224,12 @@ export class MatSliderVisualThumb
       return;
     }
     this._showValueIndicator();
+    if (this._slider._isRange) {
+      const sibling = this._slider._getThumb(
+        this.thumbPosition === Thumb.START ? Thumb.END : Thumb.START,
+      );
+      sibling._showValueIndicator();
+    }
     if (this._slider._globalRippleOptions?.disabled && !ignoreGlobalRippleConfig) {
       return;
     }
@@ -241,23 +247,33 @@ export class MatSliderVisualThumb
   private _hideRipple(rippleRef?: RippleRef): void {
     rippleRef?.fadeOut();
 
-    const isShowingAnyRipple =
-      this._isShowingRipple(this._hoverRippleRef) ||
-      this._isShowingRipple(this._focusRippleRef) ||
-      this._isShowingRipple(this._activeRippleRef);
-    if (!isShowingAnyRipple) {
+    if (this._isShowingAnyRipple()) {
+      return;
+    }
+
+    if (!this._slider._isRange) {
       this._hideValueIndicator();
+    }
+
+    const sibling = this._getSibling();
+    if (!sibling._isShowingAnyRipple()) {
+      this._hideValueIndicator();
+      sibling._hideValueIndicator();
     }
   }
 
   /** Shows the value indicator ui. */
-  private _showValueIndicator(): void {
+  _showValueIndicator(): void {
     this._getValueIndicatorContainer()?.classList.add('mdc-slider__thumb--with-indicator');
   }
 
   /** Hides the value indicator ui. */
-  private _hideValueIndicator(): void {
+  _hideValueIndicator(): void {
     this._getValueIndicatorContainer()?.classList.remove('mdc-slider__thumb--with-indicator');
+  }
+
+  _getSibling(): MatSliderVisualThumbInterface {
+    return this._slider._getThumb(this.thumbPosition === Thumb.START ? Thumb.END : Thumb.START);
   }
 
   /** Gets the value indicator container's native HTML element. */
@@ -268,6 +284,14 @@ export class MatSliderVisualThumb
   /** Gets the native HTML element of the slider thumb knob. */
   _getKnob(): HTMLElement {
     return this._knob.nativeElement;
+  }
+
+  _isShowingAnyRipple(): boolean {
+    return (
+      this._isShowingRipple(this._hoverRippleRef) ||
+      this._isShowingRipple(this._focusRippleRef) ||
+      this._isShowingRipple(this._activeRippleRef)
+    );
   }
 
   private _isSliderThumbHovered(event: PointerEvent, rect: DOMRect) {

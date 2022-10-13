@@ -607,8 +607,6 @@ export class MatSlider
       eInput._updateMinMax();
       sInput._updateMinMax();
 
-      console.log('updated min and max');
-
       eInput._updateWidthInactive();
       sInput._updateWidthInactive();
     } else {

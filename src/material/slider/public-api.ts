@@ -8,5 +8,6 @@
 
 export {MatSlider} from './slider';
 export {MatSliderVisualThumb} from './slider-thumb';
-export {MatSliderThumb, MatSliderRangeThumb, MatSliderEvent} from './slider-input';
+export {MatSliderThumb, MatSliderRangeThumb} from './slider-input';
+export {MatSliderDragEvent} from './slider-interface';
 export {MatSliderModule} from './module';
