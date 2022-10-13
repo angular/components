@@ -7,7 +7,6 @@
  */
 
 import {clickElementAtPoint, getElement, Point} from '../../cdk/testing/private/e2e';
-import {Thumb} from '@material/slider';
 import {$, browser, by, element, ElementFinder} from 'protractor';
 import {logging} from 'selenium-webdriver';
 
@@ -168,4 +167,9 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
   const y = Math.round(height / 2);
 
   return {x, y};
+}
+
+const enum Thumb {
+  START = 1,
+  END = 2,
 }

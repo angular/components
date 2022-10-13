@@ -40,9 +40,10 @@ import {
   RippleGlobalOptions,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {Thumb, TickMark} from '@material/slider';
 import {Subscription} from 'rxjs';
 import {
+  _MatThumb,
+  _MatTickMark,
   _MatSlider,
   _MatSliderRangeThumb,
   _MatSliderThumb,
@@ -114,8 +115,8 @@ export class MatSlider
   }
   set disabled(v: BooleanInput) {
     this._disabled = coerceBooleanProperty(v);
-    const endInput = this._getInput(Thumb.END);
-    const startInput = this._getInput(Thumb.START);
+    const endInput = this._getInput(_MatThumb.END);
+    const startInput = this._getInput(_MatThumb.START);
 
     if (endInput) {
       endInput.disabled = this._disabled;
@@ -167,8 +168,8 @@ export class MatSlider
   }
 
   private _updateMinRange(min: {old: number; new: number}): void {
-    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
-    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
 
     const oldEndValue = endInput.value;
     const oldStartValue = startInput.value;
@@ -194,7 +195,7 @@ export class MatSlider
   }
 
   private _updateMinNonRange(min: number): void {
-    const input = this._getInput(Thumb.END);
+    const input = this._getInput(_MatThumb.END);
     if (input) {
       const oldValue = input.value;
 
@@ -229,8 +230,8 @@ export class MatSlider
   }
 
   private _updateMaxRange(max: {old: number; new: number}): void {
-    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
-    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
 
     const oldEndValue = endInput.value;
     const oldStartValue = startInput.value;
@@ -256,7 +257,7 @@ export class MatSlider
   }
 
   private _updateMaxNonRange(max: number): void {
-    const input = this._getInput(Thumb.END);
+    const input = this._getInput(_MatThumb.END);
     if (input) {
       const oldValue = input.value;
 
@@ -290,8 +291,8 @@ export class MatSlider
   }
 
   private _updateStepRange(): void {
-    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
-    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
 
     const oldEndValue = endInput.value;
     const oldStartValue = startInput.value;
@@ -329,7 +330,7 @@ export class MatSlider
   }
 
   private _updateStepNonRange(): void {
-    const input = this._getInput(Thumb.END);
+    const input = this._getInput(_MatThumb.END);
     if (input) {
       const oldValue = input.value;
 
@@ -354,7 +355,7 @@ export class MatSlider
   @Input() displayWith: (value: number) => string = (value: number) => `${value}`;
 
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
-  _tickMarks: TickMark[];
+  _tickMarks: _MatTickMark[];
 
   /** Whether animations have been disabled. */
   _noopAnimations: boolean;
@@ -425,15 +426,19 @@ export class MatSlider
     if (this._platform.isBrowser) {
       this._updateDimensions();
     }
-    const eInput = this._getInput(Thumb.END);
-    const sInput = this._getInput(Thumb.START);
+    const eInput = this._getInput(_MatThumb.END);
+    const sInput = this._getInput(_MatThumb.START);
     this._isRange = !!eInput && !!sInput;
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      _validateInputs(this._isRange, this._getInput(Thumb.END)!, this._getInput(Thumb.START));
+      _validateInputs(
+        this._isRange,
+        this._getInput(_MatThumb.END)!,
+        this._getInput(_MatThumb.START),
+      );
     }
 
-    const thumb = this._getThumb(Thumb.END);
+    const thumb = this._getThumb(_MatThumb.END);
     this._rippleRadius = thumb._ripple.radius;
 
     this._inputPadding = this._rippleRadius - this._knobRadius;
@@ -473,8 +478,8 @@ export class MatSlider
   }
 
   private _onDirChangeRange(): void {
-    const endInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
-    const startInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
 
     endInput._setIsLeftThumb();
     startInput._setIsLeftThumb();
@@ -493,7 +498,7 @@ export class MatSlider
   }
 
   private _onDirChangeNonRange(): void {
-    const input = this._getInput(Thumb.END)!;
+    const input = this._getInput(_MatThumb.END)!;
     input._updateThumbUIByValue();
   }
 
@@ -519,10 +524,10 @@ export class MatSlider
 
   /** Whether any of the thumbs are currently active. */
   private _isActive(): boolean {
-    return this._getThumb(Thumb.START)._isActive || this._getThumb(Thumb.END)._isActive;
+    return this._getThumb(_MatThumb.START)._isActive || this._getThumb(_MatThumb.END)._isActive;
   }
 
-  private _getValue(thumbPosition: Thumb = Thumb.END): number {
+  private _getValue(thumbPosition: _MatThumb = _MatThumb.END): number {
     const input = this._getInput(thumbPosition);
     if (!input) {
       return this.min;
@@ -532,7 +537,7 @@ export class MatSlider
 
   private _skipUpdate(): boolean {
     return !!(
-      this._getInput(Thumb.START)?._skipUIUpdate || this._getInput(Thumb.END)?._skipUIUpdate
+      this._getInput(_MatThumb.START)?._skipUIUpdate || this._getInput(_MatThumb.END)?._skipUIUpdate
     );
   }
 
@@ -596,8 +601,8 @@ export class MatSlider
   _onResize(): void {
     this._updateDimensions();
     if (this._isRange) {
-      const eInput = this._getInput(Thumb.END) as _MatSliderRangeThumb;
-      const sInput = this._getInput(Thumb.START) as _MatSliderRangeThumb;
+      const eInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+      const sInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
 
       eInput._updateThumbUIByValue();
       sInput._updateThumbUIByValue();
@@ -611,7 +616,7 @@ export class MatSlider
       eInput._updateWidthInactive();
       sInput._updateWidthInactive();
     } else {
-      const eInput = this._getInput(Thumb.END);
+      const eInput = this._getInput(_MatThumb.END);
       if (eInput) {
         eInput._updateThumbUIByValue();
       }
@@ -627,8 +632,8 @@ export class MatSlider
 
   /** Returns true if the slider knobs are overlapping one another. */
   private _areThumbsOverlapping(): boolean {
-    const startInput = this._getInput(Thumb.START);
-    const endInput = this._getInput(Thumb.END);
+    const startInput = this._getInput(_MatThumb.START);
+    const endInput = this._getInput(_MatThumb.END);
     if (!startInput || !endInput) {
       return false;
     }
@@ -658,7 +663,7 @@ export class MatSlider
     }
   }
 
-  // Thumb styles update conditions
+  // _MatThumb styles update conditions
   //
   // 1. TranslateX, resize, or dir change
   //    - Reason: The thumb styles need to be updated according to the new translateX.
@@ -670,7 +675,9 @@ export class MatSlider
     if (this._skipUpdate()) {
       return;
     }
-    const thumb = this._getThumb(source.thumbPosition === Thumb.END ? Thumb.END : Thumb.START)!;
+    const thumb = this._getThumb(
+      source.thumbPosition === _MatThumb.END ? _MatThumb.END : _MatThumb.START,
+    )!;
     thumb._hostElement.style.transform = `translateX(${source.translateX}px)`;
   }
 
@@ -690,7 +697,7 @@ export class MatSlider
     const valuetext = this.displayWith(source.value);
     source._valuetext = valuetext;
     if (this.discrete) {
-      source.thumbPosition === Thumb.START
+      source.thumbPosition === _MatThumb.START
         ? (this.startValueIndicatorText = valuetext)
         : (this.endValueIndicatorText = valuetext);
     }
@@ -813,38 +820,38 @@ export class MatSlider
     this._isRtl ? numActive++ : numInactive++;
 
     this._tickMarks = Array(numActive)
-      .fill(TickMark.ACTIVE)
-      .concat(Array(numInactive).fill(TickMark.INACTIVE));
+      .fill(_MatTickMark.ACTIVE)
+      .concat(Array(numInactive).fill(_MatTickMark.INACTIVE));
   }
 
   private _updateTickMarkUIRange(step: number): void {
     const endValue = this._getValue();
-    const startValue = this._getValue(Thumb.START);
+    const startValue = this._getValue(_MatThumb.START);
     const numInactiveBeforeStartThumb = Math.max(Math.floor((startValue - this.min) / step), 0);
     const numActive = Math.max(Math.floor((endValue - startValue) / step) + 1, 0);
     const numInactiveAfterEndThumb = Math.max(Math.floor((this.max - endValue) / step), 0);
     this._tickMarks = Array(numInactiveBeforeStartThumb)
-      .fill(TickMark.INACTIVE)
+      .fill(_MatTickMark.INACTIVE)
       .concat(
-        Array(numActive).fill(TickMark.ACTIVE),
-        Array(numInactiveAfterEndThumb).fill(TickMark.INACTIVE),
+        Array(numActive).fill(_MatTickMark.ACTIVE),
+        Array(numInactiveAfterEndThumb).fill(_MatTickMark.INACTIVE),
       );
   }
 
   /** Gets the slider thumb input of the given thumb position. */
-  _getInput(thumbPosition: Thumb): _MatSliderThumb | _MatSliderRangeThumb | undefined {
-    if (thumbPosition === Thumb.END && this._input) {
+  _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined {
+    if (thumbPosition === _MatThumb.END && this._input) {
       return this._input;
     }
     if (this._inputs?.length) {
-      return thumbPosition === Thumb.START ? this._inputs.first : this._inputs.last;
+      return thumbPosition === _MatThumb.START ? this._inputs.first : this._inputs.last;
     }
     return;
   }
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
-  _getThumb(thumbPosition: Thumb): _MatSliderVisualThumb {
-    return thumbPosition === Thumb.END ? this._thumbs?.last! : this._thumbs?.first!;
+  _getThumb(thumbPosition: _MatThumb): _MatSliderVisualThumb {
+    return thumbPosition === _MatThumb.END ? this._thumbs?.last! : this._thumbs?.first!;
   }
 
   _setTransition(withAnimation: boolean): void {

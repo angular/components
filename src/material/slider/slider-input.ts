@@ -25,9 +25,9 @@ import {
   Output,
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {Thumb} from '@material/slider';
 import {Subject} from 'rxjs';
 import {
+  _MatThumb,
   MatSliderDragEvent,
   _MatSlider,
   _MatSliderRangeThumb,
@@ -130,7 +130,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   private _translateX: number | undefined;
 
   /** Indicates whether this thumb is the start or end thumb. */
-  thumbPosition: Thumb = Thumb.END;
+  thumbPosition: _MatThumb = _MatThumb.END;
 
   get min(): number {
     return coerceNumberProperty(this._hostElement.min);
@@ -541,7 +541,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
   getSibling(): _MatSliderRangeThumb | undefined {
     if (!this._sibling) {
-      this._sibling = this._slider._getInput(this._isEndThumb ? Thumb.START : Thumb.END) as
+      this._sibling = this._slider._getInput(this._isEndThumb ? _MatThumb.START : _MatThumb.END) as
         | MatSliderRangeThumb
         | undefined;
     }
@@ -587,7 +587,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     super(_ngZone, _elementRef, _cdr, _slider);
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
-    this.thumbPosition = this._isEndThumb ? Thumb.END : Thumb.START;
+    this.thumbPosition = this._isEndThumb ? _MatThumb.END : _MatThumb.START;
   }
 
   override _getDefaultValue(): number {

@@ -7,8 +7,22 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {Thumb} from '@material/slider';
 import {MatRipple, RippleGlobalOptions} from '@angular/material/core';
+
+/**
+ * Thumb types: range slider has two thumbs (START, END) whereas single point
+ * slider only has one thumb (END).
+ */
+export const enum _MatThumb {
+  START = 1,
+  END = 2,
+}
+
+/** Tick mark enum, for discrete sliders. */
+export const enum _MatTickMark {
+  ACTIVE = 0,
+  INACTIVE = 1,
+}
 
 /**
  * Injection token that can be used for a `MatSlider` to provide itself as a
@@ -53,10 +67,10 @@ export interface MatSliderDragEvent {
 
 export interface _MatSlider {
   /** Gets the slider thumb input of the given thumb position. */
-  _getInput(thumbPosition: Thumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
+  _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
-  _getThumb(thumbPosition: Thumb): _MatSliderVisualThumb;
+  _getThumb(thumbPosition: _MatThumb): _MatSliderVisualThumb;
 
   /** The minimum value that the slider can have. */
   min: number;
@@ -145,7 +159,7 @@ export interface _MatSliderThumb {
   translateX: number;
 
   /** Indicates whether this thumb is the start or end thumb. */
-  thumbPosition: Thumb;
+  thumbPosition: _MatThumb;
 
   /** Similar to percentage but calcualted using translateX relative to the total track width. */
   fillPercentage: number;

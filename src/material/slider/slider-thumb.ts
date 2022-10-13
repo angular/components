@@ -19,9 +19,9 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {Thumb} from '@material/slider';
 import {MatRipple, RippleAnimationConfig, RippleRef, RippleState} from '@angular/material/core';
 import {
+  _MatThumb,
   _MatSlider,
   _MatSliderThumb,
   _MatSliderVisualThumb,
@@ -53,7 +53,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   @Input() discrete: boolean;
 
   /** Indicates which slider thumb this input corresponds to. */
-  @Input() thumbPosition: Thumb;
+  @Input() thumbPosition: _MatThumb;
 
   /** The display value of the slider thumb. */
   @Input() valueIndicatorText: string;
@@ -226,7 +226,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     this._showValueIndicator();
     if (this._slider._isRange) {
       const sibling = this._slider._getThumb(
-        this.thumbPosition === Thumb.START ? Thumb.END : Thumb.START,
+        this.thumbPosition === _MatThumb.START ? _MatThumb.END : _MatThumb.START,
       );
       sibling._showValueIndicator();
     }
@@ -273,7 +273,9 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   }
 
   _getSibling(): _MatSliderVisualThumb {
-    return this._slider._getThumb(this.thumbPosition === Thumb.START ? Thumb.END : Thumb.START);
+    return this._slider._getThumb(
+      this.thumbPosition === _MatThumb.START ? _MatThumb.END : _MatThumb.START,
+    );
   }
 
   /** Gets the value indicator container's native HTML element. */
