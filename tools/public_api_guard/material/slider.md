@@ -280,7 +280,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     get value(): number;
     set value(v: NumberInput);
     // (undocumented)
-    readonly valueChange: EventEmitter<string>;
+    readonly valueChange: EventEmitter<number>;
     _valuetext: string;
     writeValue(value: any): void;
     // (undocumented)
