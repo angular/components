@@ -32,8 +32,8 @@ const _MatChipActionMixinBase = mixinTabIndex(_MatChipActionBase, -1);
     // in order to avoid some super-specific `:hover` styles from MDC.
     '[class.mdc-evolution-chip__action--presentational]': '_isPrimary',
     '[class.mdc-evolution-chip__action--trailing]': '!_isPrimary',
-    '[attr.tabindex]': '(disabled || !isInteractive) ? null : tabIndex',
-    '[attr.disabled]': "disabled ? '' : null",
+    '[attr.tabindex]': '_getTabindex()',
+    '[attr.disabled]': '_getDisabledAttribute()',
     '[attr.aria-disabled]': 'disabled',
     '(click)': '_handleClick($event)',
     '(keydown)': '_handleKeydown($event)',
@@ -55,6 +55,30 @@ export class MatChipAction extends _MatChipActionMixinBase implements HasTabInde
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
+
+  /**
+   * Private API to allow focusing this chip when it is disabled.
+   */
+  @Input()
+  private _allowFocusWhenDisabled = false;
+
+  /**
+   * Determine the value of the disabled attribute for this chip action.
+   */
+  protected _getDisabledAttribute(): string | null {
+    // When this chip action is disabled and focusing disabled chips is not permitted, return empty
+    // string to indicate that disabled attribute should be included.
+    return this.disabled && !this._allowFocusWhenDisabled ? '' : null;
+  }
+
+  /**
+   * Determine the value of the tabindex attribute for this chip action.
+   */
+  protected _getTabindex(): string | null {
+    return (this.disabled && !this._allowFocusWhenDisabled) || !this.isInteractive
+      ? null
+      : this.tabIndex.toString();
+  }
 
   constructor(
     public _elementRef: ElementRef<HTMLElement>,

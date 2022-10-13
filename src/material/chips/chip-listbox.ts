@@ -7,6 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {MatChipAction} from './chip-action';
 import {TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -363,5 +364,22 @@ export class MatChipListbox
     } else {
       return this.selected;
     }
+  }
+
+  /**
+   * Determines if key manager should avoid putting a given chip action in the tab index. Skip
+   * non-interactive actions since the user can't do anything with them.
+   */
+  protected override _skipPredicate(action: MatChipAction): boolean {
+    // Override the skip predicate in the base class to avoid skipping disabled chips. Allow
+    // disabled chip options to receive focus to align with WAI ARIA recommendation. Normally WAI
+    // ARIA's instructions are to exclude disabled items from the tab order, but it makes a few
+    // exceptions for compound widgets.
+    //
+    // From [Developing a Keyboard Interface](
+    // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/):
+    //   "For the following composite widget elements, keep them focusable when disabled: Options in a
+    //   Listbox..."
+    return !action.isInteractive;
   }
 }

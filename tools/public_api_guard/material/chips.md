@@ -310,6 +310,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     get selected(): MatChipOption[] | MatChipOption;
     setDisabledState(isDisabled: boolean): void;
     _setSelectionByValue(value: any, isUserInput?: boolean): void;
+    protected _skipPredicate(action: MatChipAction): boolean;
     get value(): any;
     set value(value: any);
     // (undocumented)
@@ -449,6 +450,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterViewInit, H
     protected _originatesFromChip(event: Event): boolean;
     get role(): string | null;
     set role(value: string | null);
+    protected _skipPredicate(action: MatChipAction): boolean;
     protected _syncChipsState(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipSet, "mat-chip-set", never, { "disabled": "disabled"; "role": "role"; }, {}, ["_chips"], ["*"], false, never>;
