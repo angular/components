@@ -29,7 +29,7 @@ $mat-slider-horizontal-margin: 8px !default;
   .mdc-slider__input {
     pointer-events: auto;
 
-    &.mat-slider__input--no-pointer-events {
+    &.mat-mdc-slider-input-no-pointer-events {
       pointer-events: none;
     }
 
@@ -48,7 +48,7 @@ $mat-slider-horizontal-margin: 8px !default;
   .mdc-slider__track--active_fill {
     transition-duration: 0ms;
   }
-  &.mat-slider--with-animation {
+  &.mat-mdc-slider-with-animation {
     .mdc-slider__thumb,
     .mdc-slider__track--active_fill {
       transition-duration: 80ms;
@@ -62,7 +62,7 @@ $mat-slider-horizontal-margin: 8px !default;
       transition-duration: 0ms;
     }
   }
-  &.mat-slider--with-animation {
+  &.mat-mdc-slider-with-animation {
     .mdc-slider__thumb,
     .mdc-slider__track--active_fill {
       transition-duration: 80ms;

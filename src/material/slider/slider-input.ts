@@ -613,7 +613,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     }
     if (this._sibling) {
       this._sibling._updateWidthActive();
-      this._sibling._hostElement.classList.add('mat-slider__input--no-pointer-events');
+      this._sibling._hostElement.classList.add('mat-mdc-slider-input-no-pointer-events');
     }
     super._pointerDownHandler(event);
   }
@@ -622,7 +622,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     super._pointerUpHandler(event);
     if (this._sibling) {
       this._sibling._updateWidthInactive();
-      this._sibling._hostElement.classList.remove('mat-slider__input--no-pointer-events');
+      this._sibling._hostElement.classList.remove('mat-mdc-slider-input-no-pointer-events');
     }
   }
 
