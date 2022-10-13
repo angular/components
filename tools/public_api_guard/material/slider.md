@@ -159,8 +159,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     getMinPos(): number;
     // (undocumented)
     getSibling(): MatSliderRangeThumbInterface | undefined;
-    // (undocumented)
-    initUI(): void;
     _isEndThumb: boolean;
     _isLeftThumb: boolean;
     // (undocumented)
@@ -175,8 +173,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
     _pointerUpHandler(event: PointerEvent): void;
     // (undocumented)
     _setIsLeftThumb(): void;
-    // (undocumented)
-    _updateHiddenUI(): void;
     // (undocumented)
     _updateMinMax(): void;
     // (undocumented)
@@ -275,8 +271,6 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     thumbPosition: Thumb;
     get translateX(): number;
     set translateX(v: number);
-    // (undocumented)
-    _updateHiddenUI(): void;
     // (undocumented)
     _updateThumbUI(options?: {
         withAnimation: boolean;
