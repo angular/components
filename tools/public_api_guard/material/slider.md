@@ -161,11 +161,11 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     // (undocumented)
     _onNgControlValueChange(): void;
     // (undocumented)
-    _pointerDownHandler(event: PointerEvent): void;
+    _onPointerDown(event: PointerEvent): void;
     // (undocumented)
-    _pointerMoveHandler(event: PointerEvent): void;
+    _onPointerMove(event: PointerEvent): void;
     // (undocumented)
-    _pointerUpHandler(event: PointerEvent): void;
+    _onPointerUp(event: PointerEvent): void;
     // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
@@ -243,19 +243,13 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     _onNgControlValueChange(): void;
     // (undocumented)
-    _onPointerDown: (event: PointerEvent) => void;
+    _onPointerDown(event: PointerEvent): void;
     // (undocumented)
-    _onPointerMove: (event: PointerEvent) => void;
+    _onPointerMove(event: PointerEvent): void;
     // (undocumented)
-    _onPointerUp: (event: PointerEvent) => void;
+    _onPointerUp(event: PointerEvent): void;
     // (undocumented)
     get percentage(): number;
-    // (undocumented)
-    _pointerDownHandler(event: PointerEvent): void;
-    // (undocumented)
-    _pointerMoveHandler(event: PointerEvent): void;
-    // (undocumented)
-    _pointerUpHandler(event: PointerEvent): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
     setDisabledState(isDisabled: boolean): void;
