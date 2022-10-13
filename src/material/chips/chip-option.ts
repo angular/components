@@ -32,8 +32,10 @@ export class MatChipSelectionChange {
 }
 
 /**
- * An extension of the MatChip component that supports chip selection.
- * Used with MatChipListbox.
+ * An extension of the MatChip component that supports chip selection. Used with MatChipListbox.
+ *
+ * Unlike other chips, the user can focus on disabled chip options inside a MatChipListbox. The
+ * user cannot click disabled chips.
  */
 @Component({
   selector: 'mat-basic-chip-option, mat-chip-option',
