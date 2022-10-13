@@ -551,10 +551,11 @@ export class MatSlider
     transform: string;
     transformOrigin: string;
   }): void {
-    this._trackActive.nativeElement.style.left = styles.left;
-    this._trackActive.nativeElement.style.right = styles.right;
-    this._trackActive.nativeElement.style.transform = styles.transform;
-    this._trackActive.nativeElement.style.transformOrigin = styles.transformOrigin;
+    const trackStyle = this._trackActive.nativeElement.style;
+    trackStyle.left = styles.left;
+    trackStyle.right = styles.right;
+    trackStyle.transform = styles.transform;
+    trackStyle.transformOrigin = styles.transformOrigin;
   }
 
   /** Returns the translateX positioning for a tick mark based on it's index. */
