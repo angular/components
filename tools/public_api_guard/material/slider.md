@@ -101,8 +101,6 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     }): void;
     // (undocumented)
     _setTransition(withAnimation: boolean): void;
-    // (undocumented)
-    _setValue(v: number, thumbPosition: Thumb): void;
     get showTickMarks(): boolean;
     set showTickMarks(v: BooleanInput);
     // (undocumented)

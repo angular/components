@@ -91,14 +91,17 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
   }
   set value(v: NumberInput) {
     const val = coerceNumberProperty(v).toString();
-    if (this._hasSetInitialValue && !this._isActive) {
-      this._hostElement.value = val;
-      this._updateThumbUIByValue();
-      this._slider._onValueChange(this);
-      this._cdr.detectChanges();
-    } else {
+    if (!this._hasSetInitialValue) {
       this._initialValue = val;
+      return;
     }
+    if (this._isActive) {
+      return;
+    }
+    this._hostElement.value = val;
+    this._updateThumbUIByValue();
+    this._slider._onValueChange(this);
+    this._cdr.detectChanges();
   }
   @Output() readonly valueChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -275,7 +278,10 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
     if (this._initialValue === undefined) {
       this.value = this._getDefaultValue();
     } else {
-      this.value = this._initialValue;
+      this._hostElement.value = this._initialValue;
+      this._updateThumbUIByValue();
+      this._slider._onValueChange(this);
+      this._cdr.detectChanges();
     }
   }
 
@@ -374,13 +380,13 @@ export class MatSliderThumb implements MatSliderThumbInterface, OnDestroy, Contr
   _fixValue(event: PointerEvent): void {
     const xPos = event.clientX - this._slider._cachedLeft - this._slider._rippleRadius;
     const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
-
+    const step = this._slider.step === 0 ? 1 : this._slider.step;
+    const numSteps = Math.floor((this._slider.max - this._slider.min) / step);
     const percentage = this._slider._isRtl ? 1 - xPos / width : xPos / width;
 
-    // To ensure the percentage is rounded to two decimals.
-    const fixedPercentage = Math.round(percentage * 100) / 100;
+    // To ensure the percentage is rounded to the necessary number of decimals.
+    const fixedPercentage = Math.round(percentage * numSteps) / numSteps;
 
-    const step = this._slider.step === 0 ? 1 : this._slider.step;
     const impreciseValue =
       fixedPercentage * (this._slider.max - this._slider.min) + this._slider.min;
     const value = Math.round(impreciseValue / step) * step;

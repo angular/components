@@ -860,14 +860,6 @@ export class MatSlider
       this._hasAnimation,
     );
   }
-
-  // todo: remove this function.
-  _setValue(v: number, thumbPosition: Thumb) {
-    const input = this._getInput(thumbPosition);
-    if (input) {
-      input.value = v;
-    }
-  }
 }
 
 /** Ensures that there is not an invalid configuration for the slider thumb inputs. */

@@ -890,23 +890,23 @@ describe('MDC-based MatSlider', () => {
       input = slider._getInput(Thumb.END) as MatSliderThumb;
     });
 
-    it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
+    it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$1');
-      slider._setValue(10000, Thumb.END);
+      setValueByClick(slider, input, 10000);
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$10k');
-    });
+    }));
 
-    it('should invoke the passed-in `displayWith` function with the value', () => {
+    it('should invoke the passed-in `displayWith` function with the value', fakeAsync(() => {
       spyOn(slider, 'displayWith').and.callThrough();
-      slider._setValue(1337, Thumb.END);
+      setValueByClick(slider, input, 1337);
       expect(slider.displayWith).toHaveBeenCalledWith(1337);
-    });
+    }));
 
-    it('should format the thumb label based on the passed-in `displayWith` function', () => {
-      slider._setValue(200000, Thumb.END);
+    it('should format the thumb label based on the passed-in `displayWith` function', fakeAsync(() => {
+      setValueByClick(slider, input, 200000);
       fixture.detectChanges();
       expect(valueIndicatorTextElement.textContent).toBe('$200k');
-    });
+    }));
   });
 
   describe('range slider with custom thumb label formatting', () => {
@@ -935,38 +935,38 @@ describe('MDC-based MatSlider', () => {
       )!;
     });
 
-    it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
+    it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
       expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$1');
       expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$1000k');
-      slider._setValue(250000, Thumb.START);
-      slider._setValue(810000, Thumb.END);
+      setValueByClick(slider, startInput, 250000);
+      setValueByClick(slider, endInput, 810000);
       expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$250k');
       expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$810k');
-    });
+    }));
 
-    it('should invoke the passed-in `displayWith` function with the start value', () => {
+    it('should invoke the passed-in `displayWith` function with the start value', fakeAsync(() => {
       spyOn(slider, 'displayWith').and.callThrough();
-      slider._setValue(1337, Thumb.START);
+      setValueByClick(slider, startInput, 1337);
       expect(slider.displayWith).toHaveBeenCalledWith(1337);
-    });
+    }));
 
-    it('should invoke the passed-in `displayWith` function with the end value', () => {
+    it('should invoke the passed-in `displayWith` function with the end value', fakeAsync(() => {
       spyOn(slider, 'displayWith').and.callThrough();
-      slider._setValue(5996, Thumb.END);
+      setValueByClick(slider, endInput, 5996);
       expect(slider.displayWith).toHaveBeenCalledWith(5996);
-    });
+    }));
 
-    it('should format the start thumb label based on the passed-in `displayWith` function', () => {
-      slider._setValue(200000, Thumb.START);
+    it('should format the start thumb label based on the passed-in `displayWith` function', fakeAsync(() => {
+      setValueByClick(slider, startInput, 200000);
       fixture.detectChanges();
       expect(startValueIndicatorTextElement.textContent).toBe('$200k');
-    });
+    }));
 
-    it('should format the end thumb label based on the passed-in `displayWith` function', () => {
-      slider._setValue(700000, Thumb.END);
+    it('should format the end thumb label based on the passed-in `displayWith` function', fakeAsync(() => {
+      setValueByClick(slider, endInput, 700000);
       fixture.detectChanges();
       expect(endValueIndicatorTextElement.textContent).toBe('$700k');
-    });
+    }));
   });
 
   describe('slider with value property binding', () => {
