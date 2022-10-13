@@ -892,20 +892,20 @@ describe('MDC-based MatSlider', () => {
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$1');
-      setValueByClick(slider, input, 10000);
-      expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$10k');
+      setValueByClick(slider, input, 199);
+      expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$199');
     }));
 
     it('should invoke the passed-in `displayWith` function with the value', fakeAsync(() => {
       spyOn(slider, 'displayWith').and.callThrough();
-      setValueByClick(slider, input, 1337);
-      expect(slider.displayWith).toHaveBeenCalledWith(1337);
+      setValueByClick(slider, input, 199);
+      expect(slider.displayWith).toHaveBeenCalledWith(199);
     }));
 
     it('should format the thumb label based on the passed-in `displayWith` function', fakeAsync(() => {
-      setValueByClick(slider, input, 200000);
+      setValueByClick(slider, input, 149);
       fixture.detectChanges();
-      expect(valueIndicatorTextElement.textContent).toBe('$200k');
+      expect(valueIndicatorTextElement.textContent).toBe('$149');
     }));
   });
 
@@ -937,35 +937,35 @@ describe('MDC-based MatSlider', () => {
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
       expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$1');
-      expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$1000k');
-      setValueByClick(slider, startInput, 250000);
-      setValueByClick(slider, endInput, 810000);
-      expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$250k');
-      expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$810k');
+      expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$200');
+      setValueByClick(slider, startInput, 25);
+      setValueByClick(slider, endInput, 81);
+      expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$25');
+      expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$81');
     }));
 
     it('should invoke the passed-in `displayWith` function with the start value', fakeAsync(() => {
       spyOn(slider, 'displayWith').and.callThrough();
-      setValueByClick(slider, startInput, 1337);
-      expect(slider.displayWith).toHaveBeenCalledWith(1337);
+      setValueByClick(slider, startInput, 197);
+      expect(slider.displayWith).toHaveBeenCalledWith(197);
     }));
 
     it('should invoke the passed-in `displayWith` function with the end value', fakeAsync(() => {
       spyOn(slider, 'displayWith').and.callThrough();
-      setValueByClick(slider, endInput, 5996);
-      expect(slider.displayWith).toHaveBeenCalledWith(5996);
+      setValueByClick(slider, endInput, 72);
+      expect(slider.displayWith).toHaveBeenCalledWith(72);
     }));
 
     it('should format the start thumb label based on the passed-in `displayWith` function', fakeAsync(() => {
-      setValueByClick(slider, startInput, 200000);
+      setValueByClick(slider, startInput, 120);
       fixture.detectChanges();
-      expect(startValueIndicatorTextElement.textContent).toBe('$200k');
+      expect(startValueIndicatorTextElement.textContent).toBe('$120');
     }));
 
     it('should format the end thumb label based on the passed-in `displayWith` function', fakeAsync(() => {
-      setValueByClick(slider, endInput, 700000);
+      setValueByClick(slider, endInput, 70);
       fixture.detectChanges();
-      expect(endValueIndicatorTextElement.textContent).toBe('$700k');
+      expect(endValueIndicatorTextElement.textContent).toBe('$70');
     }));
   });
 
@@ -1538,7 +1538,7 @@ class RangeSliderWithStep {
 
 @Component({
   template: `
-  <mat-slider [displayWith]="displayWith" min="1" max="1000000" discrete>
+  <mat-slider [displayWith]="displayWith" min="1" max="200" discrete>
     <input matSliderThumb>
   </mat-slider>
   `,
@@ -1546,16 +1546,13 @@ class RangeSliderWithStep {
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) {
-      return `$${v / 1000}k`;
-    }
     return `$${v}`;
   }
 }
 
 @Component({
   template: `
-  <mat-slider [displayWith]="displayWith" min="1" max="1000000" discrete>
+  <mat-slider [displayWith]="displayWith" min="1" max="200" discrete>
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
@@ -1564,9 +1561,6 @@ class DiscreteSliderWithDisplayWith {
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) {
-      return `$${v / 1000}k`;
-    }
     return `$${v}`;
   }
 }
@@ -1706,7 +1700,7 @@ function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number) {
   dispatchPointerEvent(sliderElement, 'pointerdown', startX, startY);
   input.focus();
   dispatchPointerEvent(sliderElement, 'pointermove', endX, endY);
-  input.value = value;
+  input._hostElement.value = `${value}`;
   dispatchEvent(input._hostElement, new Event('input'));
   dispatchPointerEvent(sliderElement, 'pointerup', endX, endY);
   dispatchEvent(input._hostElement, new Event('change'));
