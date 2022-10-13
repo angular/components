@@ -7,7 +7,7 @@
  */
 
 import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSliderModule} from '@angular/material/slider';
@@ -131,7 +131,7 @@ describe('MDC-based MatSliderHarness', () => {
     expect(await thumb.getDisplayValue()).toBe('#73');
   });
 
-  it('should get the min/max values of a slider thumb', async () => {
+  it('should get the min/max values of a slider thumb', fakeAsync(async () => {
     const instance = fixture.componentInstance;
     const slider = await loader.getHarness(MatSliderHarness.with({selector: '#range'}));
     const [start, end] = await parallel(() => [slider.getStartThumb(), slider.getEndThumb()]);
@@ -140,7 +140,7 @@ describe('MDC-based MatSliderHarness', () => {
     expect(await start.getMaxValue()).toBe(instance.rangeSliderEndValue);
     expect(await end.getMinValue()).toBe(instance.rangeSliderStartValue);
     expect(await end.getMaxValue()).toBe(instance.rangeSliderMax);
-  });
+  }));
 
   it('should get the disabled state of a slider thumb', async () => {
     const slider = await loader.getHarness(MatSliderHarness);

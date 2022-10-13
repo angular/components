@@ -447,6 +447,10 @@ export class MatSlider
       sInput.initProps();
       sInput.initUI();
     }
+    if (this._isRange) {
+      (eInput as MatSliderRangeThumbInterface)._updateMinMax();
+      (sInput as MatSliderRangeThumbInterface)._updateMinMax();
+    }
     this._updateTrackUI(eInput!);
     this._updateTickMarkUI();
     this._updateTickMarkTrackUI();
@@ -602,6 +606,8 @@ export class MatSlider
 
       eInput._updateMinMax();
       sInput._updateMinMax();
+
+      console.log('updated min and max');
 
       eInput._updateWidthInactive();
       sInput._updateWidthInactive();

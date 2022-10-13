@@ -643,27 +643,9 @@ export class MatSliderRangeThumb extends MatSliderThumb implements MatSliderRang
       return;
     }
     if (this._isEndThumb) {
-      // console.log(
-      //   'is end thumb',
-      //   'min:',
-      //   this._slider.min,
-      //   'sib val:',
-      //   sibling.value,
-      //   'max:',
-      //   this._slider.max,
-      // );
       this.min = Math.max(this._slider.min, sibling.value);
       this.max = this._slider.max;
     } else {
-      // console.log(
-      //   'not end thumb:',
-      //   'min:',
-      //   this._slider.min,
-      //   'max:',
-      //   this._slider.max,
-      //   'sib val:',
-      //   sibling.value,
-      // );
       this.min = this._slider.min;
       this.max = Math.min(this._slider.max, sibling.value);
     }
