@@ -19,6 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
-      - uses: angular/dev-infra/github-actions/post-approval-changes@db59d4951f9ec1ea6736a55fc99228340083ad19
+      - uses: angular/dev-infra/github-actions/post-approval-changes@604d67220ea3a92d23e603873b2a9d3d217973f5
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
