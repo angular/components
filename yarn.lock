@@ -157,7 +157,6 @@
 
 "@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#a96fc0c88c55faf5314dd373ebe86b0f3a95c776":
   version "0.0.0-db59d4951f9ec1ea6736a55fc99228340083ad19"
-  uid a96fc0c88c55faf5314dd373ebe86b0f3a95c776
   resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#a96fc0c88c55faf5314dd373ebe86b0f3a95c776"
   dependencies:
     "@angular-devkit/build-angular" "15.0.0-next.0"
@@ -291,7 +290,6 @@
 
 "@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#73935ddb0fc3ede9b10db7a0780173fa1f82cd22":
   version "0.0.0-db59d4951f9ec1ea6736a55fc99228340083ad19"
-  uid "73935ddb0fc3ede9b10db7a0780173fa1f82cd22"
   resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#73935ddb0fc3ede9b10db7a0780173fa1f82cd22"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
@@ -13578,10 +13576,10 @@ sass@1.54.9:
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
 
-sass@^1.50.1:
-  version "1.50.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.50.1.tgz#e9b078a1748863013c4712d2466ce8ca4e4ed292"
-  integrity sha512-noTnY41KnlW2A9P8sdwESpDmo+KBNkukI1i8+hOK3footBUcohNHtdOJbckp46XO95nuvcHDDZ+4tmOnpK3hjw==
+sass@^1.55.0:
+  version "1.55.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.55.0.tgz#0c4d3c293cfe8f8a2e8d3b666e1cf1bff8065d1c"
+  integrity sha512-Pk+PMy7OGLs9WaxZGJMn7S96dvlyVBwwtToX895WmCpAOr5YiJYEUJfiJidMuKb613z2xNWcXCHEuOvjZbqC6A==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
