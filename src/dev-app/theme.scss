@@ -75,7 +75,7 @@ $candy-app-theme: mat.define-light-theme((
 $density-scales: (-1, -2, minimum, maximum);
 @each $density in $density-scales {
   .demo-density-#{$density} {
-    @include mat.private-all-component-densities($density);
+    @include mat.all-component-densities($density);
     @include mat.private-all-legacy-component-densities($density);
   }
 }

@@ -15,7 +15,7 @@
   font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
 
 // Private/Internal
-@forward './core/density/private/all-density' as private-* show private-all-component-densities;
+@forward './core/density/private/all-density' show all-component-densities;
 @forward './legacy-core/density/private/all-density' as private-* show
   private-all-legacy-component-densities;
 @forward './core/theming/theming' show private-check-duplicate-theme-styles,
@@ -78,18 +78,20 @@
   autocomplete-color, autocomplete-typography, autocomplete-density;
 @forward './legacy-autocomplete/autocomplete-theme' as legacy-autocomplete-* show
   legacy-autocomplete-theme, legacy-autocomplete-color, legacy-autocomplete-typography;
-@forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography;
+@forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography,
+  badge-density;
 @forward './bottom-sheet/bottom-sheet-theme' as bottom-sheet-* show bottom-sheet-theme,
-  bottom-sheet-color, bottom-sheet-typography;
+  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density;
 @forward './legacy-button/button-theme' as legacy-button-* show legacy-button-theme,
   legacy-button-color, legacy-button-typography;
-@forward './button/button-theme' as button-* show button-theme, button-color, button-typography;
+@forward './button/button-theme' as button-* show button-theme, button-color, button-typography,
+  button-density;
 @forward './button/fab-theme' as fab-* show fab-color, fab-typography,
   fab-density, fab-theme;
 @forward './button/icon-button-theme' as icon-button-* show icon-button-color,
   icon-button-typography, icon-button-density, icon-button-theme;
 @forward './button-toggle/button-toggle-theme' as button-toggle-* show button-toggle-theme,
-  button-toggle-color, button-toggle-typography;
+  button-toggle-color, button-toggle-typography, button-toggle-density;
 @forward './card/card-theme' as card-* show card-theme, card-color, card-typography, card-density;
 @forward './legacy-card/card-theme' as legacy-card-* show legacy-card-theme, legacy-card-color,
   legacy-card-typography;
@@ -102,35 +104,35 @@
 @forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography,
   chips-density;
 @forward './datepicker/datepicker-theme' as datepicker-* show datepicker-theme, datepicker-color,
-  datepicker-typography, datepicker-date-range-colors;
+  datepicker-typography, datepicker-date-range-colors, datepicker-density;
 @forward './legacy-dialog/dialog-theme' as legacy-dialog-* show legacy-dialog-theme,
   legacy-dialog-color, legacy-dialog-typography;
 @forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography,
   dialog-density;
 @forward './dialog/dialog-legacy-padding' as dialog-* show dialog-legacy-padding;
 @forward './divider/divider-theme' as divider-* show divider-theme, divider-color,
-  divider-typography;
+  divider-typography, divider-density;
 @forward './expansion/expansion-theme' as expansion-* show expansion-theme, expansion-color,
-  expansion-typography;
+  expansion-typography, expansion-density;
 @forward './form-field/form-field-theme' as form-field-* show form-field-theme,
   form-field-color, form-field-typography, form-field-density;
 @forward './legacy-form-field/form-field-theme' as legacy-form-field-* show legacy-form-field-theme,
   legacy-form-field-color, legacy-form-field-typography;
 @forward './grid-list/grid-list-theme' as grid-list-* show grid-list-theme, grid-list-color,
-  grid-list-typography;
-@forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography;
+  grid-list-typography, grid-list-density;
+@forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography, icon-density;
 @forward './legacy-input/input-theme' as legacy-input-* show legacy-input-theme, legacy-input-color,
   legacy-input-typography;
 @forward './input/input-theme' as input-* show input-theme, input-color, input-typography,
   input-density;
-@forward './list/list-theme' as list-* show list-theme, list-color, list-typography;
+@forward './list/list-theme' as list-* show list-theme, list-color, list-typography, list-density;
 @forward './legacy-list/list-theme' as legacy-list-* show legacy-list-theme, legacy-list-color,
   legacy-list-typography;
-@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography;
+@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography, menu-density;
 @forward './legacy-menu/menu-theme' as legacy-menu-* show legacy-menu-theme, legacy-menu-color,
   legacy-menu-typography;
 @forward './paginator/paginator-theme' as paginator-* show paginator-theme, paginator-color,
-  paginator-typography;
+  paginator-typography, paginator-density;
 @forward './legacy-paginator/paginator-theme' as legacy-paginator-* show legacy-paginator-theme,
   legacy-paginator-color, legacy-paginator-typography;
 @forward './legacy-progress-bar/progress-bar-theme' as legacy-progress-bar-* show
@@ -138,7 +140,8 @@
 @forward './progress-bar/progress-bar-theme' as progress-bar-* show
   progress-bar-theme, progress-bar-color, progress-bar-typography, progress-bar-density;
 @forward './progress-spinner/progress-spinner-theme' as progress-spinner-* show
-  progress-spinner-theme, progress-spinner-color, progress-spinner-typography;
+  progress-spinner-theme, progress-spinner-color, progress-spinner-typography,
+  progress-spinner-density;
 @forward './legacy-progress-spinner/progress-spinner-theme' as legacy-progress-spinner-* show
   legacy-progress-spinner-theme, legacy-progress-spinner-color, legacy-progress-spinner-typography;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
@@ -150,21 +153,22 @@
 @forward './legacy-select/select-theme' as legacy-select-* show legacy-select-theme,
   legacy-select-color, legacy-select-typography;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,
-  sidenav-typography;
+  sidenav-typography, sidenav-density;
 @forward './legacy-slide-toggle/slide-toggle-theme' as legacy-slide-toggle-* show
   legacy-slide-toggle-theme, legacy-slide-toggle-color, legacy-slide-toggle-typography;
 @forward './slide-toggle/slide-toggle-theme' as slide-toggle-* show
   slide-toggle-theme, slide-toggle-color, slide-toggle-typography, slide-toggle-density;
 @forward './legacy-slider/slider-theme' as legacy-slider-* show legacy-slider-theme,
   legacy-slider-color, legacy-slider-typography;
-@forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography;
+@forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
+  slider-density;
 @forward './snack-bar/snack-bar-theme' as snack-bar-* show snack-bar-theme, snack-bar-color,
   snack-bar-typography, snack-bar-density;
 @forward './legacy-snack-bar/snack-bar-theme' as legacy-snack-bar-* show legacy-snack-bar-theme,
   legacy-snack-bar-color, legacy-snack-bar-typography;
-@forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography;
+@forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography, sort-density;
 @forward './stepper/stepper-theme' as stepper-* show stepper-theme, stepper-color,
-  stepper-typography;
+  stepper-typography, stepper-density;
 @forward './table/table-theme' as table-* show table-theme, table-color, table-typography,
   table-density;
 @forward './legacy-table/table-theme' as legacy-table-* show legacy-table-theme, legacy-table-color,
@@ -173,12 +177,12 @@
 @forward './legacy-tabs/tabs-theme' as legacy-tabs-* show legacy-tabs-theme, legacy-tabs-color,
 legacy-tabs-typography;
 @forward './toolbar/toolbar-theme' as toolbar-* show toolbar-theme, toolbar-color,
-  toolbar-typography;
+  toolbar-typography, toolbar-density;
 @forward './legacy-tooltip/tooltip-theme' as legacy-tooltip-* show legacy-tooltip-theme,
   legacy-tooltip-color, legacy-tooltip-typography;
 @forward './tooltip/tooltip-theme' as tooltip-* show tooltip-theme, tooltip-color,
   tooltip-typography, tooltip-density;
-@forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography;
+@forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density;
 
 // MDC Helpers
 @forward './core/mdc-helpers/mdc-helpers' as private-* show private-using-mdc-theme,
