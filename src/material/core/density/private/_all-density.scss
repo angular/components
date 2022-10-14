@@ -29,14 +29,6 @@
 @use '../../../snack-bar/snack-bar-theme';
 @use '../../../table/table-theme';
 
-@mixin private-all-unmigrated-component-densities($config) {
-  @include expansion-theme.density($config);
-  @include stepper-theme.density($config);
-  @include toolbar-theme.density($config);
-  @include tree-theme.density($config);
-  @include button-toggle-theme.density($config);
-}
-
 // Includes all of the density styles.
 @mixin all-component-densities($config-or-theme) {
   // In case a theme object has been passed instead of a configuration for
@@ -77,7 +69,11 @@
   @include icon-button-theme.density($config);
   @include fab-theme.density($config);
   @include table-theme.density($config);
-  @include private-all-unmigrated-component-densities($config);
+  @include expansion-theme.density($config);
+  @include stepper-theme.density($config);
+  @include toolbar-theme.density($config);
+  @include tree-theme.density($config);
+  @include button-toggle-theme.density($config);
 }
 
 

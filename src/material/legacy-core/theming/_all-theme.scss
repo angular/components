@@ -1,5 +1,4 @@
 @use '../../core/theming/theming';
-@use '../../core/theming/all-theme';
 @use '../core-theme';
 @use '../../legacy-button/button-theme';
 @use '../../legacy-card/card-theme';
@@ -22,6 +21,19 @@
 @use '../../legacy-tabs/tabs-theme';
 @use '../../legacy-snack-bar/snack-bar-theme';
 @use '../../legacy-table/table-theme';
+@use '../../badge/badge-theme';
+@use '../../bottom-sheet/bottom-sheet-theme';
+@use '../../button-toggle/button-toggle-theme';
+@use '../../datepicker/datepicker-theme';
+@use '../../divider/divider-theme';
+@use '../../expansion/expansion-theme';
+@use '../../grid-list/grid-list-theme';
+@use '../../icon/icon-theme';
+@use '../../sidenav/sidenav-theme';
+@use '../../stepper/stepper-theme';
+@use '../../sort/sort-theme';
+@use '../../toolbar/toolbar-theme';
+@use '../../tree/tree-theme';
 
 // Create a theme.
 /// @deprecated Use `mat.all-component-themes` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
@@ -29,6 +41,7 @@
 @mixin all-legacy-component-themes($theme-or-color-config) {
   $dedupe-key: 'angular-material-legacy-theme';
   @include theming.private-check-duplicate-theme-styles($theme-or-color-config, $dedupe-key) {
+    // Legacy components.
     @include button-theme.theme($theme-or-color-config);
     @include core-theme.theme($theme-or-color-config);
     @include card-theme.theme($theme-or-color-config);
@@ -51,7 +64,21 @@
     @include tabs-theme.theme($theme-or-color-config);
     @include snack-bar-theme.theme($theme-or-color-config);
     @include table-theme.theme($theme-or-color-config);
-    @include all-theme.private-all-unmigrated-component-themes($theme-or-color-config);
+
+    // Components without MDC versions.
+    @include badge-theme.theme($theme-or-color-config);
+    @include bottom-sheet-theme.theme($theme-or-color-config);
+    @include button-toggle-theme.theme($theme-or-color-config);
+    @include datepicker-theme.theme($theme-or-color-config);
+    @include divider-theme.theme($theme-or-color-config);
+    @include expansion-theme.theme($theme-or-color-config);
+    @include grid-list-theme.theme($theme-or-color-config);
+    @include icon-theme.theme($theme-or-color-config);
+    @include sidenav-theme.theme($theme-or-color-config);
+    @include stepper-theme.theme($theme-or-color-config);
+    @include sort-theme.theme($theme-or-color-config);
+    @include toolbar-theme.theme($theme-or-color-config);
+    @include tree-theme.theme($theme-or-color-config);
   }
 }
 

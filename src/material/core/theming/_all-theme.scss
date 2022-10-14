@@ -38,23 +38,6 @@
 @use '../../form-field/form-field-theme';
 @use './theming';
 
-@mixin private-all-unmigrated-component-themes($theme-or-color-config) {
-  @include badge-theme.theme($theme-or-color-config);
-  @include bottom-sheet-theme.theme($theme-or-color-config);
-  @include button-toggle-theme.theme($theme-or-color-config);
-  @include datepicker-theme.theme($theme-or-color-config);
-  @include divider-theme.theme($theme-or-color-config);
-  @include expansion-theme.theme($theme-or-color-config);
-  @include grid-list-theme.theme($theme-or-color-config);
-  @include icon-theme.theme($theme-or-color-config);
-  @include progress-spinner-theme.theme($theme-or-color-config);
-  @include sidenav-theme.theme($theme-or-color-config);
-  @include stepper-theme.theme($theme-or-color-config);
-  @include sort-theme.theme($theme-or-color-config);
-  @include toolbar-theme.theme($theme-or-color-config);
-  @include tree-theme.theme($theme-or-color-config);
-}
-
 // Create a theme.
 @mixin all-component-themes($theme-or-color-config) {
   $dedupe-key: 'angular-material-theme';
@@ -82,7 +65,20 @@
     @include fab-theme.theme($theme-or-color-config);
     @include snack-bar-theme.theme($theme-or-color-config);
     @include table-theme.theme($theme-or-color-config);
-    @include private-all-unmigrated-component-themes($theme-or-color-config);
+    @include progress-spinner-theme.theme($theme-or-color-config);
+    @include badge-theme.theme($theme-or-color-config);
+    @include bottom-sheet-theme.theme($theme-or-color-config);
+    @include button-toggle-theme.theme($theme-or-color-config);
+    @include datepicker-theme.theme($theme-or-color-config);
+    @include divider-theme.theme($theme-or-color-config);
+    @include expansion-theme.theme($theme-or-color-config);
+    @include grid-list-theme.theme($theme-or-color-config);
+    @include icon-theme.theme($theme-or-color-config);
+    @include sidenav-theme.theme($theme-or-color-config);
+    @include stepper-theme.theme($theme-or-color-config);
+    @include sort-theme.theme($theme-or-color-config);
+    @include toolbar-theme.theme($theme-or-color-config);
+    @include tree-theme.theme($theme-or-color-config);
   }
 }
 

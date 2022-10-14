@@ -1,6 +1,10 @@
 @use '../../../core/theming/theming';
-@use '../../../core/density/private/all-density';
 @use '../../../legacy-form-field/form-field-theme';
+@use '../../../expansion/expansion-theme';
+@use '../../../stepper/stepper-theme';
+@use '../../../toolbar/toolbar-theme';
+@use '../../../tree/tree-theme';
+@use '../../../button-toggle/button-toggle-theme';
 
 // Add legacy theme imports here, e.g.:
 // @use '../../../<legacy-component>/<legacy-component>-theme';
@@ -27,7 +31,11 @@
   // Add legacy density includes here, e.g.:
   // @include <legacy-component>-theme.density($config);
   @include form-field-theme.density($config);
-  @include all-density.private-all-unmigrated-component-densities($config);
+  @include expansion-theme.density($config);
+  @include stepper-theme.density($config);
+  @include toolbar-theme.density($config);
+  @include tree-theme.density($config);
+  @include button-toggle-theme.density($config);
 }
 
 
