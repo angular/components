@@ -109,10 +109,7 @@ describe('ng-add schematic', () => {
     const workspace = await getWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-    expectProjectStyleFile(
-      project,
-      './node_modules/@angular/material/prebuilt-themes/indigo-pink.css',
-    );
+    expectProjectStyleFile(project, '@angular/material/prebuilt-themes/indigo-pink.css');
   });
 
   it('should support adding a custom theme', async () => {
@@ -393,8 +390,7 @@ describe('ng-add schematic', () => {
 
   describe('theme files', () => {
     /** Path to the default prebuilt theme file that will be added when running ng-add. */
-    const defaultPrebuiltThemePath =
-      './node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+    const defaultPrebuiltThemePath = '@angular/material/prebuilt-themes/indigo-pink.css';
 
     /** Writes a specific style file to the workspace in the given tree */
     function writeStyleFileToWorkspace(tree: Tree, stylePath: string) {
@@ -430,7 +426,7 @@ describe('ng-add schematic', () => {
     }
 
     it('should replace existing prebuilt theme files', async () => {
-      const existingThemePath = './node_modules/@angular/material/prebuilt-themes/purple-green.css';
+      const existingThemePath = '@angular/material/prebuilt-themes/purple-green.css';
       writeStyleFileToWorkspace(appTree, existingThemePath);
 
       const tree = await runner

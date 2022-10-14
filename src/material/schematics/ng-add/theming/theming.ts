@@ -109,8 +109,7 @@ async function insertCustomTheme(
 
 /** Insert a pre-built theme into the angular.json file. */
 function insertPrebuiltTheme(project: string, theme: string, logger: logging.LoggerApi): Rule {
-  // Path needs to be always relative to the `package.json` or workspace root.
-  const themePath = `./node_modules/@angular/material/prebuilt-themes/${theme}.css`;
+  const themePath = `@angular/material/prebuilt-themes/${theme}.css`;
 
   return chain([
     addThemeStyleToTarget(project, 'build', themePath, logger),
