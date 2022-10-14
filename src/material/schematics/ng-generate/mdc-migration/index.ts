@@ -68,6 +68,7 @@ function runMigrations(
   migrators: ComponentMigrator[],
   analyzedFiles: Set<WorkspacePath>,
   additionalStylesheetPaths: string[],
+  limitToDirectory?: string,
 ): boolean {
   const program = UpdateProject.createProgramFromTsconfig(tsconfigPath, fileSystem);
   const project = new UpdateProject(context, program, fileSystem, analyzedFiles, context.logger);
@@ -76,6 +77,7 @@ function runMigrations(
     null,
     migrators,
     additionalStylesheetPaths,
+    limitToDirectory,
   ).hasFailures;
 }
 
@@ -93,11 +95,11 @@ export default function (options: Schema): Rule {
     const analyzedFiles = new Set<WorkspacePath>();
     const componentsToMigrate = getComponentsToMigrate(options.components);
     const migrators = MIGRATORS.filter(m => componentsToMigrate.has(m.component));
-    let additionalStylesheetPaths = options.directory
-      ? findStylesheetFiles(tree, options.directory)
-      : [];
     let success = true;
 
+    if (options.directory) {
+      logger.info(`Limiting migration to: ${options.directory}`);
+    }
     logger.info(`Migrating components:\n${[...componentsToMigrate].join('\n')}`);
 
     for (const projectName of projectNames) {
@@ -114,9 +116,7 @@ export default function (options: Schema): Rule {
         continue;
       }
 
-      if (!options.directory) {
-        additionalStylesheetPaths = findStylesheetFiles(tree, project.root);
-      }
+      const additionalStylesheetPaths = findStylesheetFiles(tree, project.root);
 
       logger.info(`Migrating project: ${projectName}`);
 
@@ -128,6 +128,7 @@ export default function (options: Schema): Rule {
           migrators,
           analyzedFiles,
           additionalStylesheetPaths,
+          options.directory || undefined,
         );
       }
     }
