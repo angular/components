@@ -18,6 +18,7 @@ export interface LegacyTabGroupHarnessFilters extends BaseHarnessFilters {
 // @public @deprecated
 export interface LegacyTabHarnessFilters extends BaseHarnessFilters {
     label?: string | RegExp;
+    selected?: boolean;
 }
 
 // @public @deprecated

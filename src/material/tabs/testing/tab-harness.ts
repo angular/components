@@ -28,9 +28,15 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
     this: ComponentHarnessConstructor<T>,
     options: TabHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption('label', options.label, (harness, label) =>
-      HarnessPredicate.stringMatches(harness.getLabel(), label),
-    );
+    return new HarnessPredicate(this, options)
+      .addOption('label', options.label, (harness, label) =>
+        HarnessPredicate.stringMatches(harness.getLabel(), label),
+      )
+      .addOption(
+        'selected',
+        options.selected,
+        async (harness, selected) => (await harness.isSelected()) == selected,
+      );
   }
 
   /** Gets the label of the tab. */

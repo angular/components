@@ -29,11 +29,15 @@ export class MatLegacyTabHarness extends ContentContainerComponentHarness<string
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: LegacyTabHarnessFilters = {}): HarnessPredicate<MatLegacyTabHarness> {
-    return new HarnessPredicate(MatLegacyTabHarness, options).addOption(
-      'label',
-      options.label,
-      (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label),
-    );
+    return new HarnessPredicate(MatLegacyTabHarness, options)
+      .addOption('label', options.label, (harness, label) =>
+        HarnessPredicate.stringMatches(harness.getLabel(), label),
+      )
+      .addOption(
+        'selected',
+        options.selected,
+        async (harness, selected) => (await harness.isSelected()) == selected,
+      );
   }
 
   /** Gets the label of the tab. */

@@ -1,15 +1,17 @@
-import {ComponentHarness, HarnessLoader} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTabsModule} from '@angular/material/tabs';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabGroupHarness} from './tab-group-harness';
+import {MatTabHarness} from './tab-harness';
 
 /** Shared tests to run on both the original and MDC-based tab-group's. */
 export function runTabGroupHarnessTests(
   tabsModule: typeof MatTabsModule,
   tabGroupHarness: typeof MatTabGroupHarness,
+  tabHarness: typeof MatTabHarness,
 ) {
   let fixture: ComponentFixture<TabGroupHarnessTest>;
   let loader: HarnessLoader;
@@ -150,6 +152,16 @@ export function runTabGroupHarnessTests(
     expect(await tabs[0].isSelected()).toBe(false);
     expect(await tabs[1].isSelected()).toBe(false);
     expect(await tabs[2].isSelected()).toBe(true);
+  });
+
+  it('should be able to get tabs by selected state', async () => {
+    const selectedTabs = await loader.getAllHarnesses(tabHarness.with({selected: true}));
+    const unselectedTabs = await loader.getAllHarnesses(tabHarness.with({selected: false}));
+    expect(await parallel(() => selectedTabs.map(t => t.getLabel()))).toEqual(['First']);
+    expect(await parallel(() => unselectedTabs.map(t => t.getLabel()))).toEqual([
+      'Second',
+      'Third',
+    ]);
   });
 }
 
