@@ -50,13 +50,17 @@ export class UpdateProject<Context> {
    * @param data Upgrade data that is passed to all migration rules.
    * @param additionalStylesheetPaths Additional stylesheets that should be migrated, if not
    *   referenced in an Angular component. This is helpful for global stylesheets in a project.
+   * @param limitToDirectory If specified, changes will be limited to the given directory.
    */
   migrate<Data>(
     migrationTypes: MigrationCtor<Data, Context>[],
     target: TargetVersion | null,
     data: Data,
     additionalStylesheetPaths?: string[],
+    limitToDirectory?: string,
   ): {hasFailures: boolean} {
+    limitToDirectory &&= this._fileSystem.resolve(limitToDirectory);
+
     // Create instances of the specified migrations.
     const migrations = this._createMigrations(migrationTypes, target, data);
     // Creates the component resource collector. The collector can visit arbitrary
@@ -65,9 +69,14 @@ export class UpdateProject<Context> {
     const resourceCollector = new ComponentResourceCollector(this._typeChecker, this._fileSystem);
     // Collect all of the TypeScript source files we want to migrate. We don't
     // migrate type definition files, or source files from external libraries.
-    const sourceFiles = this._program
-      .getSourceFiles()
-      .filter(f => !f.isDeclarationFile && !this._program.isSourceFileFromExternalLibrary(f));
+    const sourceFiles = this._program.getSourceFiles().filter(f => {
+      return (
+        !f.isDeclarationFile &&
+        (limitToDirectory == null ||
+          this._fileSystem.resolve(f.fileName).startsWith(limitToDirectory)) &&
+        !this._program.isSourceFileFromExternalLibrary(f)
+      );
+    });
 
     // Helper function that visits a given TypeScript node and collects all referenced
     // component resources (i.e. stylesheets or templates). Additionally, the helper
@@ -121,11 +130,13 @@ export class UpdateProject<Context> {
     if (additionalStylesheetPaths) {
       additionalStylesheetPaths.forEach(filePath => {
         const resolvedPath = this._fileSystem.resolve(filePath);
-        const stylesheet = resourceCollector.resolveExternalStylesheet(resolvedPath, null);
-        // Do not visit stylesheets which have been referenced from a component.
-        if (!this._analyzedFiles.has(resolvedPath) && stylesheet) {
-          migrations.forEach(r => r.visitStylesheet(stylesheet));
-          this._analyzedFiles.add(resolvedPath);
+        if (limitToDirectory == null || resolvedPath.startsWith(limitToDirectory)) {
+          const stylesheet = resourceCollector.resolveExternalStylesheet(resolvedPath, null);
+          // Do not visit stylesheets which have been referenced from a component.
+          if (!this._analyzedFiles.has(resolvedPath) && stylesheet) {
+            migrations.forEach(r => r.visitStylesheet(stylesheet));
+            this._analyzedFiles.add(resolvedPath);
+          }
         }
       });
     }

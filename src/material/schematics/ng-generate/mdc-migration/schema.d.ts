@@ -13,7 +13,7 @@ export interface Schema {
    * Source files determined outside of this directory will be ignored,
    * allowing for an incremental migration.
    *
-   * If not set, the directory is determined based on the specified tsconfig.
+   * If not set, the directory is determined based on the workspace.
    */
   directory?: string;
 
