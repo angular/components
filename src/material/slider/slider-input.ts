@@ -396,6 +396,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
       // condition didn't happen and the value is already correct, we
       // have to apply the ui updates now.
       this._slider._onValueChange(this);
+      this._slider.step > 0
+        ? this._updateThumbUIByValue()
+        : this._updateThumbUIByPointerEvent(event, {withAnimation: this._slider._hasAnimation});
       return;
     }
 
@@ -403,7 +406,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this.valueChange.emit(this.value);
     this._onChangeFn(this.value);
     this._slider._onValueChange(this);
-    this._updateThumbUIByValue({withAnimation: this._slider._hasAnimation});
+    this._slider.step > 0
+      ? this._updateThumbUIByValue()
+      : this._updateThumbUIByPointerEvent(event, {withAnimation: this._slider._hasAnimation});
   }
 
   _onPointerMove(event: PointerEvent): void {
