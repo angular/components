@@ -958,6 +958,17 @@ describe('Key managers', () => {
         keyManager.destroy();
         expect(keyManager.isTyping()).toBe(false);
       }));
+
+      it('should be able to cancel the typeahead sequence', fakeAsync(() => {
+        expect(keyManager.activeItem).toBeFalsy();
+
+        keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o')); // types "o"
+        expect(keyManager.activeItem).toBeFalsy();
+        keyManager.cancelTypeahead();
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBeFalsy();
+      }));
     });
   });
 

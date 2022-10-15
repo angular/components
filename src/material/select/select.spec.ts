@@ -689,6 +689,22 @@ describe('MDC-based MatSelect', () => {
             .toBe(options[1].value);
         }));
 
+        it('should cancel the typeahead selection on blur', fakeAsync(() => {
+          const formControl = fixture.componentInstance.control;
+          const options = fixture.componentInstance.options.toArray();
+
+          expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
+
+          dispatchEvent(select, createKeyboardEvent('keydown', 80, 'p'));
+          dispatchFakeEvent(select, 'blur');
+          tick(DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL);
+
+          expect(options.some(o => o.selected))
+            .withContext('Expected no options to be selected.')
+            .toBe(false);
+          expect(formControl.value).withContext('Expected no value to be assigned.').toBeFalsy();
+        }));
+
         it('should open the panel when pressing a vertical arrow key on a closed multiple select', fakeAsync(() => {
           fixture.destroy();
 
