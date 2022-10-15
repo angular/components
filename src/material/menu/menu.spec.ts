@@ -771,6 +771,32 @@ describe('MDC-based MatMenu', () => {
     expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledWith('touch');
   }));
 
+  it('should set the proper origin when calling focusFirstItem after the opening sequence has started', () => {
+    let zone: MockNgZone;
+    const fixture = createComponent(
+      SimpleMenu,
+      [
+        {
+          provide: NgZone,
+          useFactory: () => (zone = new MockNgZone()),
+        },
+      ],
+      [FakeIcon],
+    );
+    fixture.detectChanges();
+    spyOn(fixture.componentInstance.items.first, 'focus').and.callThrough();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    dispatchMouseEvent(triggerEl, 'mousedown');
+    triggerEl.click();
+    fixture.detectChanges();
+    fixture.componentInstance.menu.focusFirstItem('touch');
+    zone!.onStable.next();
+
+    expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledOnceWith('touch');
+  });
+
   it('should close the menu when using the CloseScrollStrategy', fakeAsync(() => {
     const scrolledSubject = new Subject();
     const fixture = createComponent(

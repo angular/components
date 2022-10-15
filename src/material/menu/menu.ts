@@ -40,7 +40,7 @@ import {
   UP_ARROW,
   hasModifierKey,
 } from '@angular/cdk/keycodes';
-import {merge, Observable, Subject} from 'rxjs';
+import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, switchMap, take} from 'rxjs/operators';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
@@ -102,6 +102,7 @@ export class _MatMenuBase
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
+  private _firstItemFocusSubscription?: Subscription;
   private _previousElevation: string;
   protected _elevationPrefix: string;
   protected _baseElevation: number;
@@ -337,6 +338,7 @@ export class _MatMenuBase
     this._keyManager?.destroy();
     this._directDescendantItems.destroy();
     this.closed.complete();
+    this._firstItemFocusSubscription?.unsubscribe();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
@@ -407,7 +409,8 @@ export class _MatMenuBase
    */
   focusFirstItem(origin: FocusOrigin = 'program'): void {
     // Wait for `onStable` to ensure iOS VoiceOver screen reader focuses the first item (#24735).
-    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+    this._firstItemFocusSubscription?.unsubscribe();
+    this._firstItemFocusSubscription = this._ngZone.onStable.pipe(take(1)).subscribe(() => {
       let menuPanel: HTMLElement | null = null;
 
       if (this._directDescendantItems.length) {
