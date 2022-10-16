@@ -13,7 +13,6 @@ import {
   Directive,
   ElementRef,
   inject,
-  InjectFlags,
   Input,
   NgZone,
   OnDestroy,
@@ -63,10 +62,10 @@ export abstract class CdkMenuBase
   readonly menuStack: MenuStack = inject(MENU_STACK);
 
   /** The menu aim service used by this menu. */
-  protected readonly menuAim = inject(MENU_AIM, InjectFlags.Optional | InjectFlags.Self);
+  protected readonly menuAim = inject(MENU_AIM, {optional: true, self: true});
 
   /** The directionality (text direction) of the current page. */
-  protected readonly dir = inject(Directionality, InjectFlags.Optional);
+  protected readonly dir = inject(Directionality, {optional: true});
 
   /** The id of the menu's host element. */
   @Input() id = `cdk-menu-${nextId++}`;

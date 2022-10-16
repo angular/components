@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, inject, InjectFlags, NgZone, OnDestroy} from '@angular/core';
+import {Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   ConnectedPosition,
@@ -73,13 +73,13 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
   private readonly _ngZone = inject(NgZone);
 
   /** The parent menu this trigger belongs to. */
-  private readonly _parentMenu = inject(CDK_MENU, InjectFlags.Optional);
+  private readonly _parentMenu = inject(CDK_MENU, {optional: true});
 
   /** The menu aim service used by this menu. */
-  private readonly _menuAim = inject(MENU_AIM, InjectFlags.Optional);
+  private readonly _menuAim = inject(MENU_AIM, {optional: true});
 
   /** The directionality of the page. */
-  private readonly _directionality = inject(Directionality, InjectFlags.Optional);
+  private readonly _directionality = inject(Directionality, {optional: true});
 
   constructor() {
     super();
