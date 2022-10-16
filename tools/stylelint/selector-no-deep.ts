@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 
 const isStandardSyntaxRule = require('stylelint/lib/utils/isStandardSyntaxRule');
 const isStandardSyntaxSelector = require('stylelint/lib/utils/isStandardSyntaxSelector');
@@ -11,7 +11,7 @@ const messages = utils.ruleMessages(ruleName, {
 /**
  * Stylelint plugin that prevents uses of /deep/ in selectors.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
+const ruleFn: Rule<boolean, unknown> = isEnabled => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -33,6 +33,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
       }
     });
   };
-});
+};
 
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

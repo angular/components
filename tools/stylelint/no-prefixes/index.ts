@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import minimatch from 'minimatch';
 import {NeedsPrefix} from './needs-prefix';
 
@@ -14,17 +14,14 @@ const messages = utils.ruleMessages(ruleName, {
   selector: selector => `Unprefixed selector "${selector}".`,
 });
 
-/** Config options for the rule. */
-interface Options {
-  browsers?: string[];
-  filePattern?: string;
-}
-
 /**
  * Stylelint plugin that warns for unprefixed CSS.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, {filePattern, browsers}: Options) => {
+const ruleFn: Rule<boolean, string[] | string> = (isEnabled, options) => {
   return (root, result) => {
+    const browsers = options.browsers as string[] | undefined;
+    const filePattern = options.filePattern as string | undefined;
+
     if (
       !isEnabled ||
       !browsers ||
@@ -96,6 +93,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, {filePattern, browser
       });
     });
   };
-});
+};
 
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

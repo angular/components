@@ -1,4 +1,4 @@
-import {createPlugin, utils, PostcssResult} from 'stylelint';
+import {createPlugin, utils, PostcssResult, Rule} from 'stylelint';
 import {basename} from 'path';
 import {AtRule, Declaration, Node} from 'postcss';
 
@@ -21,7 +21,7 @@ const themeMixinRegex = /^(density|color|typography|theme)\((.*)\)$/;
  *      consistently check for duplicative theme styles so that we can warn consumers. The
  *      plugin ensures that style-generating statements are nested inside the duplication check.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options, context) => {
+const ruleFn: Rule<boolean, unknown> = (isEnabled, _options, context) => {
   return (root, result) => {
     const componentName = getComponentNameFromPath(root.source!.input.file!);
 
@@ -55,7 +55,10 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options, context) =>
       }
     });
   };
-});
+};
+
+ruleFn.ruleName = ruleName;
+ruleFn.messages = utils.ruleMessages(ruleName, {});
 
 /** Validates a `theme` mixin. */
 function validateThemeMixin(
@@ -274,4 +277,4 @@ function sanitizeForRegularExpression(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export default plugin;
+export default createPlugin(ruleName, ruleFn);
