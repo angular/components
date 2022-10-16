@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, inject, InjectFlags} from '@angular/core';
+import {Directive, inject} from '@angular/core';
 import {MatInput as BaseMatInput} from '@angular/material/input';
 import {
   MatLegacyFormFieldControl,
@@ -44,10 +44,7 @@ import {
   providers: [{provide: MatLegacyFormFieldControl, useExisting: MatLegacyInput}],
 })
 export class MatLegacyInput extends BaseMatInput {
-  private _legacyFormField = inject<MatLegacyFormField>(
-    MAT_LEGACY_FORM_FIELD,
-    InjectFlags.Optional,
-  );
+  private _legacyFormField = inject<MatLegacyFormField>(MAT_LEGACY_FORM_FIELD, {optional: true});
 
   protected override _getPlaceholder() {
     // If we're hiding the native placeholder, it should also be cleared from the DOM, otherwise

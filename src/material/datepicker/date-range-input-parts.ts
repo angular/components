@@ -89,7 +89,7 @@ abstract class MatDateRangeInputPartBase<D>
   protected abstract override _assignValueToModel(value: D | null): void;
   protected abstract override _getValueFromModel(modelValue: DateRange<D>): D | null;
 
-  protected readonly _dir = inject(Directionality, InjectFlags.Optional);
+  protected readonly _dir = inject(Directionality, {optional: true});
 
   constructor(
     @Inject(MAT_DATE_RANGE_INPUT_PARENT) public _rangeInput: MatDateRangeInputParent<D>,
