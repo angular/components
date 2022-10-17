@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {basename} from 'path';
 
 const ruleName = 'material/single-line-comment-only';
@@ -11,7 +11,7 @@ const messages = utils.ruleMessages(ruleName, {
  * Stylelint plugin that doesn't allow multi-line comments to
  * be used, because they'll show up in the user's output.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {filePattern?: string}) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -35,6 +35,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {filePatter
       }
     });
   };
-});
+};
 
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

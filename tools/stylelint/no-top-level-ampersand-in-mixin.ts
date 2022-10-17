@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {basename} from 'path';
 
 const ruleName = 'material/no-top-level-ampersand-in-mixin';
@@ -7,22 +7,16 @@ const messages = utils.ruleMessages(ruleName, {
     `Selectors starting with an ampersand ` + `are not allowed inside top-level mixin rules`,
 });
 
-/** Config options for the rule. */
-interface RuleOptions {
-  filePattern: string;
-}
-
 /**
  * Stylelint rule that doesn't allow for the top-level rules inside a
  * mixin to start with an ampersand. Does not apply to internal mixins.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
     }
 
-    const options = _options as RuleOptions;
     const filePattern = new RegExp(options.filePattern);
     const fileName = basename(root.source!.input.file!);
 
@@ -53,6 +47,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
       });
     });
   };
-});
+};
 
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {dirname, relative, join} from 'path';
 
 const ruleName = 'material/cross-package-import-validation';
@@ -15,7 +15,7 @@ const packageNameRegex = /^src\/([^/]+)/;
 const projectDir = join(__dirname, '../../');
 
 /** Stylelint plugin that flags forbidden cross-package relative imports. */
-const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
+const ruleFn: Rule<boolean, unknown> = isEnabled => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -71,11 +71,14 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
       }
     });
   };
-});
+};
+
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
 
 /** Converts the specified absolute path to a project relative POSIX path. */
 function convertToProjectRelativePosixPath(fileName: string): string {
   return relative(projectDir, fileName).replace(/[/\\]/g, '/');
 }
 
-export default plugin;
+export default createPlugin(ruleName, ruleFn);

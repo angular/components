@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {basename} from 'path';
 
 const isStandardSyntaxRule = require('stylelint/lib/utils/isStandardSyntaxRule');
@@ -9,11 +9,6 @@ const messages = utils.ruleMessages(ruleName, {
   expected: () => 'Ampersand is only allowed at the beginning of a selector',
 });
 
-/** Config options for the rule. */
-interface RuleOptions {
-  filePattern?: string;
-}
-
 /**
  * Stylelint rule that doesn't allow for an ampersand to be used anywhere
  * except at the start of a selector. Skips private mixins.
@@ -21,7 +16,7 @@ interface RuleOptions {
  * Based off the `selector-nested-pattern` Stylelint rule.
  * Source: https://github.com/stylelint/stylelint/blob/master/lib/rules/selector-nested-pattern/
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, options: RuleOptions) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -50,10 +45,13 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options: RuleOptions)
       }
     });
   };
-});
+};
+
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
 
 function hasInvalidAmpersandUsage(selector: string): boolean {
   return selector.split(',').some(part => part.trim().indexOf('&', 1) > -1);
 }
 
-export default plugin;
+export default createPlugin(ruleName, ruleFn);

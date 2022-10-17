@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {basename, join} from 'path';
 
 const ruleName = 'material/no-unused-import';
@@ -10,7 +10,7 @@ const messages = utils.ruleMessages(ruleName, {
 });
 
 /** Stylelint plugin that flags unused `@use` statements. */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options, context) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, _options, context) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -45,7 +45,10 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options, context) =>
       }
     });
   };
-});
+};
+
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
 
 /** Extracts the namespace of an `@use` rule from its parameters.  */
 function extractNamespaceFromUseStatement(params: string): string | null {
@@ -85,4 +88,4 @@ function extractNamespaceFromUseStatement(params: string): string | null {
   return null;
 }
 
-export default plugin;
+export default createPlugin(ruleName, ruleFn);

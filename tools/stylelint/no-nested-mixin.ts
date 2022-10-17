@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 
 const ruleName = 'material/no-nested-mixin';
 const messages = utils.ruleMessages(ruleName, {
@@ -8,7 +8,7 @@ const messages = utils.ruleMessages(ruleName, {
 /**
  * Stylelint plugin that prevents nesting Sass mixins.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
+const ruleFn: Rule<boolean, unknown> = isEnabled => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -33,6 +33,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
       });
     });
   };
-});
+};
 
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);
