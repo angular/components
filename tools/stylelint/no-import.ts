@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {basename} from 'path';
 
 const ruleName = 'material/no-import';
@@ -7,7 +7,7 @@ const messages = utils.ruleMessages(ruleName, {
 });
 
 /** Stylelint plugin that doesn't allow `@import` to be used. */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {exclude?: string}) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -30,6 +30,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {exclude?: 
       }
     });
   };
-});
+};
 
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);
