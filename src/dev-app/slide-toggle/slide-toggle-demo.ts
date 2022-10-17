@@ -19,9 +19,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   imports: [FormsModule, MatButtonModule, MatSlideToggleModule],
 })
 export class SlideToggleDemo {
-  firstToggle: boolean;
+  firstToggle: boolean = false;
+  formToggle: boolean = false;
 
   onFormSubmit() {
-    alert(`You submitted the form.`);
+    alert(`You submitted the form. Value: ${this.formToggle}.`);
   }
 }

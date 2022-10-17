@@ -483,10 +483,10 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   is the same width as the form-field
 
 ### Slide Toggle
-<!-- TODO(zarend): review -->
 
 * To improve accessibility, the MDC-based version uses `<button role="switch">` to represent the
-  toggle rather than `<input type="checkbox">`.
+  toggle rather than `<input type="checkbox">`. Slide toggle will no longer respond to native form
+  validation. Consider alternative approaches to form validation.
 
 * The touch target is much larger and more accessible. Be sure to allow enough space in your
   layout so that the touch target does not overlap other components. If you are not concerned with
