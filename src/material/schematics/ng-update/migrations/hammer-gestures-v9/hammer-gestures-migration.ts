@@ -1001,7 +1001,7 @@ function unwrapExpression(node: ts.Node): ts.Node {
     return unwrapExpression(node.expression);
   } else if (ts.isAsExpression(node)) {
     return unwrapExpression(node.expression);
-  } else if (ts.isTypeAssertion(node)) {
+  } else if (ts.isTypeAssertionExpression(node)) {
     return unwrapExpression(node.expression);
   }
   return node;
