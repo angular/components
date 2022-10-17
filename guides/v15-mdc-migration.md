@@ -267,7 +267,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * After toggling a checkbox with the mouse, the ripple will remain visible instead of animating out.
 
 ### Chips
-<!-- TODO(zarend): review -->
 
 * The chips component has been split into multiple variants corresponding with more appropriate
   interaction patterns for accessibility. The original `mat-chip-list` used `role="listbox"`, but
@@ -286,8 +285,10 @@ DOM and CSS of the components, you may need to tweak some of your application's 
     accessibility pattern with the chips visuals.
 
 * The migration tool always changes the legacy `<mat-chip-list>` to `<mat-chip-listbox>` to minimize
-  differences before and after. You should separately consider changing to `<mat-chip-grid>` on a
-  case-by-case basis.
+  differences before and after. You should separately consider changing to `<mat-chip-grid>` or
+  `<mat-chip-set>` on a case-by-case basis. See [Chips Interaction Patterns](
+ /components/chips/overview#interaction-patterns) for more guidence on
+  choosing the appropriate component for your use case.
 
 ### Dialog
 
