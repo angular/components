@@ -76,4 +76,16 @@
   .mat-mdc-focus-indicator::before {
     border-radius: 50%;
   }
+
+  &._mat-animation-noopable {
+    .mdc-switch__handle-track,
+    .mdc-elevation-overlay,
+    .mdc-switch__icon,
+    .mdc-switch__handle::before,
+    .mdc-switch__handle::after,
+    .mdc-switch__track::before,
+    .mdc-switch__track::after {
+      transition: none;
+    }
+  }
 }
