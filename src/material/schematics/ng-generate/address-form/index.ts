@@ -39,36 +39,11 @@ export default function (options: Schema): Rule {
 function addFormModulesToModule(options: Schema) {
   return async (host: Tree) => {
     const modulePath = (await findModuleFromOptions(host, options))!;
-    addModuleImportToModule(
-      host,
-      modulePath,
-      'MatLegacyInputModule',
-      '@angular/material/legacy-input',
-    );
-    addModuleImportToModule(
-      host,
-      modulePath,
-      'MatLegacyButtonModule',
-      '@angular/material/legacy-button',
-    );
-    addModuleImportToModule(
-      host,
-      modulePath,
-      'MatLegacySelectModule',
-      '@angular/material/legacy-select',
-    );
-    addModuleImportToModule(
-      host,
-      modulePath,
-      'MatLegacyRadioModule',
-      '@angular/material/legacy-radio',
-    );
-    addModuleImportToModule(
-      host,
-      modulePath,
-      'MatLegacyCardModule',
-      '@angular/material/legacy-card',
-    );
+    addModuleImportToModule(host, modulePath, 'MatInputModule', '@angular/material/input');
+    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
+    addModuleImportToModule(host, modulePath, 'MatSelectModule', '@angular/material/select');
+    addModuleImportToModule(host, modulePath, 'MatRadioModule', '@angular/material/radio');
+    addModuleImportToModule(host, modulePath, 'MatCardModule', '@angular/material/card');
     addModuleImportToModule(host, modulePath, 'ReactiveFormsModule', '@angular/forms');
   };
 }
