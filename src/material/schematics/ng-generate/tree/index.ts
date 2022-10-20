@@ -41,11 +41,6 @@ function addTreeModulesToModule(options: Schema) {
     const modulePath = (await findModuleFromOptions(host, options))!;
     addModuleImportToModule(host, modulePath, 'MatTreeModule', '@angular/material/tree');
     addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material/icon');
-    addModuleImportToModule(
-      host,
-      modulePath,
-      'MatLegacyButtonModule',
-      '@angular/material/legacy-button',
-    );
+    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
   };
 }
