@@ -1,6 +1,6 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyFormFieldModule} from '@angular/material/legacy-form-field';
-import {MatLegacyInputModule} from '@angular/material/legacy-input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 /**
  * Advanced component using `MatFormField` and `MatInput` in combination with content
@@ -20,7 +20,7 @@ import {MatLegacyInputModule} from '@angular/material/legacy-input';
 export class TestComponent {}
 
 @NgModule({
-  imports: [MatLegacyInputModule, MatLegacyFormFieldModule],
+  imports: [MatInputModule, MatFormFieldModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
