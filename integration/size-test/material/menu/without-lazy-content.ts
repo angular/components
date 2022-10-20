@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyMenuModule} from '@angular/material/legacy-menu';
+import {MatMenuModule} from '@angular/material/menu';
 
 /**
  * Basic component using `MatMenu` and `MatMenuTrigger`. No lazy `MatMenuContent` is
@@ -14,7 +14,7 @@ import {MatLegacyMenuModule} from '@angular/material/legacy-menu';
 export class TestComponent {}
 
 @NgModule({
-  imports: [MatLegacyMenuModule],
+  imports: [MatMenuModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })

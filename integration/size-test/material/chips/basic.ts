@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyChipsModule} from '@angular/material/legacy-chips';
+import {MatChipsModule} from '@angular/material/chips';
 
 /**
  * Basic component using `MatChipList` and `MatChip`. Other supported parts of the
@@ -7,15 +7,15 @@ import {MatLegacyChipsModule} from '@angular/material/legacy-chips';
  */
 @Component({
   template: `
-    <mat-chip-list>
-      <mat-chip>First</mat-chip>
-    </mat-chip-list>
+    <mat-chip-listbox>
+      <mat-chip-option>First</mat-chip-option>
+    </mat-chip-listbox>
   `,
 })
 export class TestComponent {}
 
 @NgModule({
-  imports: [MatLegacyChipsModule],
+  imports: [MatChipsModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })

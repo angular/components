@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
+import {MatRadioModule} from '@angular/material/radio';
 
 /**
  * Basic component using `MatRadioButton`. Doesn't use a `MatRadioGroup`, so the class
@@ -13,7 +13,7 @@ import {MatLegacyRadioModule} from '@angular/material/legacy-radio';
 export class TestComponent {}
 
 @NgModule({
-  imports: [MatLegacyRadioModule],
+  imports: [MatRadioModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
