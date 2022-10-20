@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MatLegacyAutocompleteModule} from '@angular/material/legacy-autocomplete';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 /**
  * Basic component using `MatAutocomplete` and `MatOption`. Other supported parts of the
@@ -16,7 +16,7 @@ import {MatLegacyAutocompleteModule} from '@angular/material/legacy-autocomplete
 export class TestComponent {}
 
 @NgModule({
-  imports: [MatLegacyAutocompleteModule],
+  imports: [MatAutocompleteModule],
   declarations: [TestComponent],
   bootstrap: [TestComponent],
 })
