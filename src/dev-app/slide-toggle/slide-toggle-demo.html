@@ -14,9 +14,9 @@
 
   <p>Example where the slide toggle is required inside of a form.</p>
 
-  <form #form="ngForm" (ngSubmit)="onFormSubmit()" ngNativeValidate>
+  <form #form="ngForm" (ngSubmit)="onFormSubmit()">
 
-    <mat-slide-toggle name="slideToggle" required ngModel>
+    <mat-slide-toggle name="slideToggle" [(ngModel)]="formToggle">
       Slide Toggle
     </mat-slide-toggle>
 

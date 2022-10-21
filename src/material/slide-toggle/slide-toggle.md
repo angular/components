@@ -23,10 +23,10 @@ slide-toggles use the theme's accent color. This can be changed to `'primary'` o
 
 ### Accessibility
 
-`MatSlideToggle` uses an internal `<input type="checkbox">` with `role="switch"` to provide an
-accessible experience. This internal checkbox receives focus and is automatically labelled by the
-text content of the `<mat-slide-toggle>` element. Avoid adding other interactive controls into the
-content of `<mat-slide-toggle>`, as this degrades the experience for users of assistive technology.
+`MatSlideToggle` uses an internal `<button role="switch">` to provide an accessible experience. This
+internal button receives focus and is automatically labelled by the text content of the
+`<mat-slide-toggle>` element. Avoid adding other interactive controls into the content of
+`<mat-slide-toggle>`, as this degrades the experience for users of assistive technology.
 
 Always provide an accessible label via `aria-label` or `aria-labelledby` for toggles without
 descriptive text content. For dynamic labels, `MatSlideToggle` provides input properties for binding
