@@ -76,7 +76,7 @@ export interface ElementDimensions {
 }
 
 // @public
-export type EventData = string | number | boolean | undefined | null | EventData[] | {
+export type EventData = string | number | boolean | Function | undefined | null | EventData[] | {
     [key: string]: EventData;
 };
 

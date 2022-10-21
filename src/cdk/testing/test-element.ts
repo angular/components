@@ -21,6 +21,7 @@ export type EventData =
   | string
   | number
   | boolean
+  | Function
   | undefined
   | null
   | EventData[]
