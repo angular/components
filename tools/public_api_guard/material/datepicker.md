@@ -9,6 +9,7 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CanColor } from '@angular/material/core';
@@ -382,8 +383,11 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extend
     // (undocumented)
     _getSelected(): D | DateRange<D> | null;
     // (undocumented)
+    _handleAnimationEvent(event: AnimationEvent_2): void;
+    // (undocumented)
     _handleUserSelection(event: MatCalendarUserEvent<D | null>): void;
     _isAbove: boolean;
+    _isAnimating: boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
