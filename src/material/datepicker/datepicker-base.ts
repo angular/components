@@ -51,6 +51,7 @@ import {
   inject,
 } from '@angular/core';
 import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
+import {AnimationEvent} from '@angular/animations';
 import {merge, Subject, Observable, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
@@ -119,7 +120,8 @@ const _MatDatepickerContentBase = mixinColor(
   host: {
     'class': 'mat-datepicker-content',
     '[@transformPanel]': '_animationState',
-    '(@transformPanel.done)': '_animationDone.next()',
+    '(@transformPanel.start)': '_handleAnimationEvent($event)',
+    '(@transformPanel.done)': '_handleAnimationEvent($event)',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
   },
   animations: [matDatepickerAnimations.transformPanel, matDatepickerAnimations.fadeInCalendar],
@@ -160,6 +162,9 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   /** Emits when an animation has finished. */
   readonly _animationDone = new Subject<void>();
+
+  /** Whether there is an in-progress animation. */
+  _isAnimating = false;
 
   /** Text for the close button. */
   _closeButtonText: string;
@@ -238,6 +243,14 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   _startExitAnimation() {
     this._animationState = 'void';
     this._changeDetectorRef.markForCheck();
+  }
+
+  _handleAnimationEvent(event: AnimationEvent) {
+    this._isAnimating = event.phaseName === 'start';
+
+    if (!this._isAnimating) {
+      this._animationDone.next();
+    }
   }
 
   _getSelected() {
@@ -596,7 +609,9 @@ export abstract class MatDatepickerBase<
 
   /** Open the calendar. */
   open(): void {
-    if (this._opened || this.disabled) {
+    // Skip reopening if there's an in-progress animation to avoid overlapping
+    // sequences which can cause "changed after checked" errors. See #25837.
+    if (this._opened || this.disabled || this._componentRef?.instance._isAnimating) {
       return;
     }
 
@@ -612,7 +627,9 @@ export abstract class MatDatepickerBase<
 
   /** Close the calendar. */
   close(): void {
-    if (!this._opened) {
+    // Skip reopening if there's an in-progress animation to avoid overlapping
+    // sequences which can cause "changed after checked" errors. See #25837.
+    if (!this._opened || this._componentRef?.instance._isAnimating) {
       return;
     }
 
