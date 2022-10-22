@@ -9,8 +9,8 @@ describe('TableHarnessExample', () => {
   let fixture: ComponentFixture<TableHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTableModule],
       declarations: [TableHarnessExample],
     }).compileComponents();

@@ -10,8 +10,8 @@ describe('IconHarnessExample', () => {
   let fixture: ComponentFixture<IconHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatIconModule],
       declarations: [IconHarnessExample],
     }).compileComponents();

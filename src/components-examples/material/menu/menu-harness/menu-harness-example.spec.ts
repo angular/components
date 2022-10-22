@@ -10,8 +10,8 @@ describe('MenuHarnessExample', () => {
   let fixture: ComponentFixture<MenuHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [MenuHarnessExample],
     }).compileComponents();

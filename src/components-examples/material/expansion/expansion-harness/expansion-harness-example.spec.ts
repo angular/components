@@ -10,8 +10,8 @@ describe('ExpansionHarnessExample', () => {
   let fixture: ComponentFixture<ExpansionHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatExpansionModule, NoopAnimationsModule],
       declarations: [ExpansionHarnessExample],
     }).compileComponents();

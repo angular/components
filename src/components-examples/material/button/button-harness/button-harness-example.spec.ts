@@ -9,8 +9,8 @@ describe('ButtonHarnessExample', () => {
   let fixture: ComponentFixture<ButtonHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatButtonModule],
       declarations: [ButtonHarnessExample],
     }).compileComponents();

@@ -11,8 +11,8 @@ describe('InputHarnessExample', () => {
   let fixture: ComponentFixture<InputHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatInputModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [InputHarnessExample],
     }).compileComponents();

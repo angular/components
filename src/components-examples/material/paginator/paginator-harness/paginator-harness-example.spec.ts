@@ -11,8 +11,8 @@ describe('PaginatorHarnessExample', () => {
   let loader: HarnessLoader;
   let instance: PaginatorHarnessExample;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
       declarations: [PaginatorHarnessExample],
     }).compileComponents();

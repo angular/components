@@ -10,8 +10,8 @@ describe('SortHarnessExample', () => {
   let fixture: ComponentFixture<SortHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatSortModule, NoopAnimationsModule],
       declarations: [SortHarnessExample],
     }).compileComponents();
