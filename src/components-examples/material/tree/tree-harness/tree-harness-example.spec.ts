@@ -10,8 +10,8 @@ describe('TreeHarnessExample', () => {
   let fixture: ComponentFixture<TreeHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTreeModule, MatIconModule],
       declarations: [TreeHarnessExample],
     }).compileComponents();

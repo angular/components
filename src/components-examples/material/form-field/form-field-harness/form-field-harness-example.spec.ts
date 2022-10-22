@@ -13,8 +13,8 @@ describe('FormFieldHarnessExample', () => {
   let fixture: ComponentFixture<FormFieldHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, NoopAnimationsModule],
       declarations: [FormFieldHarnessExample],
     }).compileComponents();

@@ -9,8 +9,8 @@ describe('DividerHarnessExample', () => {
   let fixture: ComponentFixture<DividerHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatDividerModule],
       declarations: [DividerHarnessExample],
     }).compileComponents();

@@ -9,8 +9,8 @@ describe('ListHarnessExample', () => {
   let fixture: ComponentFixture<ListHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatListModule],
       declarations: [ListHarnessExample],
     }).compileComponents();

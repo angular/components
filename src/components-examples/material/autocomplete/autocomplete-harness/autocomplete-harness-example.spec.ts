@@ -10,8 +10,8 @@ describe('AutocompleteHarnessExample', () => {
   let fixture: ComponentFixture<AutocompleteHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatAutocompleteModule, NoopAnimationsModule],
       declarations: [AutocompleteHarnessExample],
     }).compileComponents();

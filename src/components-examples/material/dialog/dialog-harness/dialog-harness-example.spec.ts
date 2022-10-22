@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatDialogHarness} from '@angular/material/dialog/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
@@ -10,15 +10,15 @@ describe('DialogHarnessExample', () => {
   let fixture: ComponentFixture<DialogHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(waitForAsync(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatDialogModule, NoopAnimationsModule],
       declarations: [DialogHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(DialogHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
-  }));
+  });
 
   it('should load harness for dialog', async () => {
     fixture.componentInstance.open();

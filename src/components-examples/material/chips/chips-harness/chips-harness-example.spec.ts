@@ -10,8 +10,8 @@ describe('ChipsHarnessExample', () => {
   let fixture: ComponentFixture<ChipsHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatChipsModule, NoopAnimationsModule],
       declarations: [ChipsHarnessExample],
     }).compileComponents();

@@ -10,8 +10,8 @@ describe('TooltipHarnessExample', () => {
   let fixture: ComponentFixture<TooltipHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTooltipModule, NoopAnimationsModule],
       declarations: [TooltipHarnessExample],
     }).compileComponents();

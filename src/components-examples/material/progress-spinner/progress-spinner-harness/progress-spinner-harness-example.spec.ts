@@ -9,8 +9,8 @@ describe('ProgressSpinnerHarnessExample', () => {
   let fixture: ComponentFixture<ProgressSpinnerHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatProgressSpinnerModule],
       declarations: [ProgressSpinnerHarnessExample],
     }).compileComponents();

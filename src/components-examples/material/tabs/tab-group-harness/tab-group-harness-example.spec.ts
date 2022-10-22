@@ -10,8 +10,8 @@ describe('TabGroupHarnessExample', () => {
   let fixture: ComponentFixture<TabGroupHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTabsModule, NoopAnimationsModule],
       declarations: [TabGroupHarnessExample],
     }).compileComponents();

@@ -12,8 +12,8 @@ describe('DatepickerHarnessExample', () => {
   let fixture: ComponentFixture<DatepickerHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatDatepickerModule, NoopAnimationsModule, MatNativeDateModule, FormsModule],
       declarations: [DatepickerHarnessExample],
     }).compileComponents();
