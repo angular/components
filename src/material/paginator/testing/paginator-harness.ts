@@ -110,7 +110,7 @@ export abstract class _MatPaginatorHarnessBase extends ComponentHarness {
     return coerceNumberProperty(await value);
   }
 
-  /** Gets the text of the range labe of the paginator. */
+  /** Gets the text of the range label of the paginator. */
   async getRangeLabel(): Promise<string> {
     return (await this._rangeLabel()).text();
   }
