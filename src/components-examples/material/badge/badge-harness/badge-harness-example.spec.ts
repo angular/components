@@ -9,8 +9,8 @@ describe('BadgeHarnessExample', () => {
   let fixture: ComponentFixture<BadgeHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatBadgeModule],
       declarations: [BadgeHarnessExample],
     }).compileComponents();

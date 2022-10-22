@@ -10,8 +10,8 @@ describe('RadioHarnessExample', () => {
   let fixture: ComponentFixture<RadioHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatRadioModule, ReactiveFormsModule],
       declarations: [RadioHarnessExample],
     }).compileComponents();

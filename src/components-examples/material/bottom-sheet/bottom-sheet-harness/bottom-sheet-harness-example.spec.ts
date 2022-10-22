@@ -10,8 +10,8 @@ describe('BottomSheetHarnessExample', () => {
   let fixture: ComponentFixture<BottomSheetHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatBottomSheetModule, NoopAnimationsModule],
       declarations: [BottomSheetHarnessExample],
     }).compileComponents();
