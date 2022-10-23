@@ -931,6 +931,7 @@ export class CdkListbox<T = unknown>
    * @param option The option that was clicked.
    */
   private _handleOptionClicked(option: CdkOption<T>, event: MouseEvent) {
+    event.preventDefault();
     this.listKeyManager.setActiveItem(option);
     if (event.shiftKey && this.multiple) {
       this.triggerRange(
