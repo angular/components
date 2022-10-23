@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AbstractControl } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
@@ -17,11 +16,9 @@ import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
-import { ValidationErrors } from '@angular/forms';
-import { Validator } from '@angular/forms';
 
 // @public (undocumented)
-export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor, Validator {
+export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get compareWith(): undefined | ((o1: T, o2: T) => boolean);
     set compareWith(fn: undefined | ((o1: T, o2: T) => boolean));
@@ -59,7 +56,6 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     set orientation(value: 'horizontal' | 'vertical');
     registerOnChange(fn: (value: readonly T[]) => void): void;
     registerOnTouched(fn: () => {}): void;
-    registerOnValidatorChange(fn: () => void): void;
     select(option: CdkOption<T>): void;
     protected selectionModel: ListboxSelectionModel<T>;
     selectValue(value: T): void;
@@ -72,7 +68,6 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     protected triggerRange(trigger: CdkOption<T> | null, from: number, to: number, on: boolean): void;
     get useActiveDescendant(): boolean;
     set useActiveDescendant(shouldUseActiveDescendant: BooleanInput);
-    validate(control: AbstractControl<any, any>): ValidationErrors | null;
     get value(): readonly T[];
     set value(value: readonly T[]);
     readonly valueChange: Subject<ListboxValueChangeEvent<T>>;

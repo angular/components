@@ -852,44 +852,28 @@ describe('CdkOption and CdkListbox', () => {
       subscription.unsubscribe();
     });
 
-    it('should have FormControl error when multiple values selected in single-select listbox', () => {
+    it('should throw when multiple values selected in single-select listbox', () => {
       const {testComponent, fixture} = setupComponent(ListboxWithFormControl, [
         ReactiveFormsModule,
       ]);
-      testComponent.formControl.setValue(['orange', 'banana']);
-      fixture.detectChanges();
 
-      expect(testComponent.formControl.hasError('cdkListboxUnexpectedMultipleValues')).toBeTrue();
-      expect(testComponent.formControl.hasError('cdkListboxUnexpectedOptionValues')).toBeFalse();
+      expect(() => {
+        testComponent.formControl.setValue(['orange', 'banana']);
+        fixture.detectChanges();
+      }).toThrowError('Listbox cannot have more than one selected value in multi-selection mode.');
     });
 
-    it('should have FormControl error when non-option value selected', () => {
+    it('should throw when an invalid value is selected', () => {
       const {testComponent, fixture} = setupComponent(ListboxWithFormControl, [
         ReactiveFormsModule,
       ]);
       testComponent.isMultiselectable = true;
-      testComponent.formControl.setValue(['orange', 'dragonfruit', 'mango']);
       fixture.detectChanges();
 
-      expect(testComponent.formControl.hasError('cdkListboxUnexpectedOptionValues')).toBeTrue();
-      expect(testComponent.formControl.hasError('cdkListboxUnexpectedMultipleValues')).toBeFalse();
-      expect(testComponent.formControl.errors?.['cdkListboxUnexpectedOptionValues']).toEqual({
-        'values': ['dragonfruit', 'mango'],
-      });
-    });
-
-    it('should have multiple FormControl errors when multiple non-option values selected in single-select listbox', () => {
-      const {testComponent, fixture} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
-      testComponent.formControl.setValue(['dragonfruit', 'mango']);
-      fixture.detectChanges();
-
-      expect(testComponent.formControl.hasError('cdkListboxUnexpectedOptionValues')).toBeTrue();
-      expect(testComponent.formControl.hasError('cdkListboxUnexpectedMultipleValues')).toBeTrue();
-      expect(testComponent.formControl.errors?.['cdkListboxUnexpectedOptionValues']).toEqual({
-        'values': ['dragonfruit', 'mango'],
-      });
+      expect(() => {
+        testComponent.formControl.setValue(['orange', 'dragonfruit', 'mango']);
+        fixture.detectChanges();
+      }).toThrowError('Listbox has selected values that do not match any of its options.');
     });
   });
 });
