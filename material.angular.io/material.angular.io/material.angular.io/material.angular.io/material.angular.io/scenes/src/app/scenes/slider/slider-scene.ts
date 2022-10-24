@@ -13,7 +13,8 @@ export class SliderScene implements AfterViewInit {
   @ViewChild('volume') volume!: MatSlider;
 
   ngAfterViewInit() {
-    this.volume.focus();
+    // TODO: update to new API in Angular v15
+    (this.volume as any).focus();
   }
 }
 
