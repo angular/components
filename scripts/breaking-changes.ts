@@ -2,7 +2,6 @@ import {join, relative} from 'path';
 import {readFileSync} from 'fs';
 import chalk from 'chalk';
 import ts from 'typescript';
-import * as tsutils from 'tsutils';
 
 const projectRoot = process.cwd();
 
@@ -25,25 +24,39 @@ parsedConfig.fileNames.forEach((fileName: string) => {
     readFileSync(fileName, 'utf8'),
     configFile.languageVersion,
   );
-  const lineRanges = tsutils.getLineRanges(sourceFile);
+  const lineStarts = sourceFile.getLineStarts();
+  const fileText = sourceFile.getFullText();
+  const seenRanges = new Set<string>();
 
   // Go through each of the comments of the file.
-  tsutils.forEachComment(sourceFile, (file, range) => {
-    const comment = file.substring(range.pos, range.end);
-    const versionMatch = comment.match(versionRegex);
+  sourceFile.forEachChild(function walk(node) {
+    ts.getLeadingCommentRanges(fileText, node.getFullStart())?.forEach(range => {
+      const rangeKey = `${range.pos}-${range.end}`;
 
-    // Don't do any extra work if the comment doesn't indicate a breaking change.
-    if (!versionMatch || comment.indexOf('@breaking-change') === -1) {
-      return;
-    }
+      // Ranges can apply to more than one node.
+      if (seenRanges.has(rangeKey)) {
+        return;
+      }
 
-    // Use a path relative to the project root, in order to make the summary more tidy.
-    // Also replace escaped Windows slashes with regular forward slashes.
-    const pathInProject = relative(projectRoot, sourceFile.fileName).replace(/\\/g, '/');
-    const [version] = versionMatch;
+      seenRanges.add(rangeKey);
+      const comment = fileText.slice(range.pos, range.end);
+      const versionMatch = comment.match(versionRegex);
 
-    summary[version] = summary[version] || [];
-    summary[version].push(`  ${pathInProject}: ${formatMessage(comment, range, lineRanges)}`);
+      // Don't do any extra work if the comment doesn't indicate a breaking change.
+      if (!versionMatch || comment.indexOf('@breaking-change') === -1) {
+        return;
+      }
+
+      // Use a path relative to the project root, in order to make the summary more tidy.
+      // Also replace escaped Windows slashes with regular forward slashes.
+      const pathInProject = relative(projectRoot, sourceFile.fileName).replace(/\\/g, '/');
+      const [version] = versionMatch;
+
+      summary[version] = summary[version] || [];
+      summary[version].push(`  ${pathInProject}: ${formatMessage(comment, range.pos, lineStarts)}`);
+    });
+
+    node.forEachChild(walk);
   });
 });
 
@@ -61,11 +74,13 @@ Object.keys(summary).forEach(version => {
 /**
  * Formats a message to be logged out in the breaking changes summary.
  * @param comment Contents of the comment that contains the breaking change.
- * @param commentRange Object containing info on the position of the comment in the file.
- * @param lines Ranges of the lines of code in the file.
+ * @param position Position of the comment within the file.
+ * @param lineStarts Indexes at which the individual lines start.
  */
-function formatMessage(comment: string, commentRange: ts.CommentRange, lines: tsutils.LineRange[]) {
-  const lineNumber = lines.findIndex(line => line.pos > commentRange.pos);
+function formatMessage(comment: string, position: number, lineStarts: readonly number[]) {
+  // `lineStarts` is sorted so we could use binary search, but this isn't
+  // particularly performance-sensitive so we search linearly instead.
+  const lineNumber = lineStarts.findIndex(line => line > position);
   const messageMatch = comment.match(/@deprecated(.*)|@breaking-change(.*)/);
   const message = messageMatch ? messageMatch[0] : '';
   const cleanMessage = message
