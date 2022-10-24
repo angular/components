@@ -116,8 +116,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** The current translateX in px of the slider visual thumb. */
   get translateX(): number {
     if (this._slider.min >= this._slider.max) {
-      this._translateX = this._slider._inputOffset;
-      return this._translateX as number;
+      this._translateX = 0;
+      return this._translateX;
     }
     if (this._translateX === undefined) {
       this._translateX = this._calcTranslateXByValue();
@@ -176,13 +176,13 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   get fillPercentage(): number {
-    if (!this._slider._cachedTrackWidth) {
+    if (!this._slider._cachedWidth) {
       return this._slider._isRtl ? 1 : 0;
     }
-    if (this.translateX === this._slider._inputOffset) {
+    if (this._translateX === 0) {
       return 0;
     }
-    return (this.translateX - this._slider._inputOffset) / this._slider._cachedTrackWidth;
+    return this.translateX / this._slider._cachedWidth;
   }
 
   /** The host native HTML input element. */
@@ -374,8 +374,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   /** Corrects the value of the slider based on the pointer event's position. */
   _fixValue(event: PointerEvent): void {
-    const xPos = event.clientX - this._slider._cachedLeft - this._slider._rippleRadius;
-    const width = this._slider._cachedWidth - this._slider._inputOffset * 2;
+    const xPos = event.clientX - this._slider._cachedLeft;
+    const width = this._slider._cachedWidth;
     const step = this._slider.step === 0 ? 1 : this._slider.step;
     const numSteps = Math.floor((this._slider.max - this._slider.min) / step);
     const percentage = this._slider._isRtl ? 1 - xPos / width : xPos / width;
@@ -428,17 +428,14 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _clamp(v: number): number {
-    return Math.max(
-      Math.min(v, this._slider._cachedWidth - this._slider._inputOffset),
-      this._slider._inputOffset,
-    );
+    return Math.max(Math.min(v, this._slider._cachedWidth), 0);
   }
 
   _calcTranslateXByValue(): number {
     if (this._slider._isRtl) {
-      return (1 - this.percentage) * this._slider._cachedTrackWidth + this._slider._inputOffset;
+      return (1 - this.percentage) * this._slider._cachedWidth;
     }
-    return this.percentage * this._slider._cachedTrackWidth + this._slider._inputOffset;
+    return this.percentage * this._slider._cachedWidth;
   }
 
   _calcTranslateXByPointerEvent(event: PointerEvent): number {
@@ -451,7 +448,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   _updateWidthActive(): void {
     this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
-    this._hostElement.style.width = `calc(100% - ${this._slider._inputPadding * 2}px)`;
+    this._hostElement.style.width = `calc(100% + ${this._slider._inputPadding}px)`;
   }
 
   /**
@@ -460,7 +457,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   _updateWidthInactive(): void {
     this._hostElement.style.padding = '0px';
-    this._hostElement.style.width = '100%';
+    this._hostElement.style.width = 'calc(100% + 48px)';
+    this._hostElement.style.left = '-24px';
   }
 
   _updateThumbUIByValue(options?: {withAnimation: boolean}): void {
@@ -548,7 +546,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     if (!this._isLeftThumb && sibling) {
       return sibling.translateX;
     }
-    return this._slider._inputOffset;
+    return 0;
   }
 
   /** Returns the maximum translateX position allowed for this slider input's visual thumb. */
@@ -557,7 +555,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     if (this._isLeftThumb && sibling) {
       return sibling.translateX;
     }
-    return this._slider._cachedWidth - this._slider._inputOffset;
+    return this._slider._cachedWidth;
   }
 
   _setIsLeftThumb(): void {
@@ -651,7 +649,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   override _updateWidthActive(): void {
     const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
-    const maxWidth = this._slider._cachedWidth - this._slider._inputPadding * 2 - minWidth;
+    const maxWidth = this._slider._cachedWidth + this._slider._inputPadding - minWidth;
     const percentage =
       this._slider.min < this._slider.max
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
@@ -677,9 +675,17 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
 
-    const width = maxWidth * percentage;
+    const width = maxWidth * percentage + 24;
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = '0px';
+
+    if (this._isLeftThumb) {
+      this._hostElement.style.left = '-24px';
+      this._hostElement.style.right = 'auto';
+    } else {
+      this._hostElement.style.left = 'auto';
+      this._hostElement.style.right = '-24px';
+    }
   }
 
   _updateStaticStyles(): void {

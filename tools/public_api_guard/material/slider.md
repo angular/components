@@ -33,8 +33,6 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     // (undocumented)
     _cachedLeft: number;
     // (undocumented)
-    _cachedTrackWidth: number;
-    // (undocumented)
     _cachedWidth: number;
     _calcTickMarkTransform(index: number): string;
     // (undocumented)

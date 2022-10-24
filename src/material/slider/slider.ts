@@ -370,7 +370,6 @@ export class MatSlider
 
   _cachedWidth: number;
   _cachedLeft: number;
-  _cachedTrackWidth: number;
 
   _rippleRadius: number = 24;
 
@@ -442,7 +441,7 @@ export class MatSlider
     this._rippleRadius = thumb._ripple.radius;
 
     this._inputPadding = this._rippleRadius - this._knobRadius;
-    this._inputOffset = this._inputPadding + this._knobRadius;
+    this._inputOffset = this._knobRadius;
 
     if (eInput) {
       eInput.initProps();
@@ -546,7 +545,6 @@ export class MatSlider
     const rect = this._elementRef.nativeElement.getBoundingClientRect();
     this._cachedWidth = rect.width;
     this._cachedLeft = rect.left;
-    this._cachedTrackWidth = this._cachedWidth - this._rippleRadius * 2;
   }
 
   /** Sets the styles for the active portion of the track. */
@@ -722,7 +720,7 @@ export class MatSlider
     const step = this._step && this._step > 0 ? this._step : 1;
     const maxValue = Math.floor(this.max / step) * step;
     const percentage = (maxValue - this.min) / (this.max - this.min);
-    this._tickMarkTrackWidth = this._cachedTrackWidth * percentage - 6;
+    this._tickMarkTrackWidth = this._cachedWidth * percentage - 6;
   }
 
   // Track active update conditions
@@ -752,23 +750,22 @@ export class MatSlider
 
   private _updateTrackUIRange(source: _MatSliderRangeThumb): void {
     const sibling = source.getSibling();
-    if (!sibling || !this._cachedTrackWidth) {
+    if (!sibling || !this._cachedWidth) {
       return;
     }
 
-    const activePercentage =
-      Math.abs(sibling.translateX - source.translateX) / this._cachedTrackWidth;
+    const activePercentage = Math.abs(sibling.translateX - source.translateX) / this._cachedWidth;
 
-    if (source._isLeftThumb && this._cachedTrackWidth) {
+    if (source._isLeftThumb && this._cachedWidth) {
       this._setTrackActiveStyles({
         left: 'auto',
-        right: `${this._cachedWidth - sibling.translateX - this._rippleRadius}px`,
+        right: `${this._cachedWidth - sibling.translateX}px`,
         transformOrigin: 'right',
         transform: `scaleX(${activePercentage})`,
       });
     } else {
       this._setTrackActiveStyles({
-        left: `${sibling.translateX - this._rippleRadius}px`,
+        left: `${sibling.translateX}px`,
         right: 'auto',
         transformOrigin: 'left',
         transform: `scaleX(${activePercentage})`,

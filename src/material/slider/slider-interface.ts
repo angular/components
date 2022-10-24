@@ -96,9 +96,6 @@ export interface _MatSlider {
   /** The stored width of the host element's bounding client rect. */
   _cachedLeft: number;
 
-  /** The stored precomputed width of the slider track. */
-  _cachedTrackWidth: number;
-
   /**
    * The padding of the native slider input. This is added in order to make the region where the
    * thumb ripple extends past the end of the slider track clickable.

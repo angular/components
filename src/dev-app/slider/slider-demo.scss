@@ -32,7 +32,8 @@
   width: 130px;
 }
 .mat-mdc-slider {
-  width: 100%;
+  width: calc(100% - 48px);
+  margin: 0 24px;
 }
 .demo-native-slider {
   margin: 0;

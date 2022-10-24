@@ -39,11 +39,6 @@ $mat-slider-horizontal-margin: 8px !default;
     }
   }
 
-  .mdc-slider__track {
-    width: calc(100% - 48px);
-    left: 24px;
-  }
-
   .mdc-slider__thumb,
   .mdc-slider__track--active_fill {
     transition-duration: 0ms;

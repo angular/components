@@ -59,9 +59,7 @@ describe('MDC-based MatSlider', () => {
     expect(input.min).withContext('min').toBe(min);
     expect(input.max).withContext('max').toBe(max);
     expect(input.value).withContext('value').toBe(value);
-    expect(input.translateX)
-      .withContext('translateX')
-      .toBeCloseTo(translateX + 24, 0);
+    expect(input.translateX).withContext('translateX').toBeCloseTo(translateX, 0.1);
     if (step !== undefined) {
       expect(input.step).withContext('step').toBe(step);
     }
@@ -366,7 +364,7 @@ describe('MDC-based MatSlider', () => {
         fixture.componentInstance.min = -1000;
         fixture.detectChanges();
 
-        checkInput(startInput, {min: -1000, max: 20, value: 10, translateX: 275});
+        checkInput(startInput, {min: -1000, max: 20, value: 10, translateX: 275.5});
         checkInput(endInput, {min: 10, max: 100, value: 20, translateX: 278});
       }));
 
@@ -465,7 +463,7 @@ describe('MDC-based MatSlider', () => {
         fixture.detectChanges();
 
         checkInput(startInput, {min: 0, max: 95, value: 90, translateX: 27});
-        checkInput(endInput, {min: 90, max: 1000, value: 95, translateX: 28});
+        checkInput(endInput, {min: 90, max: 1000, value: 95, translateX: 28.5});
       }));
 
       it('that make min and max equal', () => {
@@ -1419,7 +1417,7 @@ describe('MDC-based MatSlider', () => {
   });
 });
 
-const SLIDER_STYLES = ['.mat-mdc-slider { width: 348px; }'];
+const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
 
 @Component({
   template: `
@@ -1712,9 +1710,8 @@ function getCoordsForValue(slider: MatSlider, value: number): Point {
   const {min, max} = slider;
   const percent = (value - min) / (max - min);
 
-  const rippleRadius = 24;
   const {top, left, width, height} = slider._elementRef.nativeElement.getBoundingClientRect();
-  const x = (width - rippleRadius * 2) * percent + left + rippleRadius;
+  const x = width * percent + left;
   const y = top + height / 2;
 
   return {x, y};
