@@ -806,8 +806,9 @@ describe('MDC-based MatSelectionList without forms', () => {
     });
 
     // when the entire list is disabled, its listitems should always have tabindex="-1"
-    it('should not put listitems in the tab order', () => {
+    it('should remove all listitems from the tab order when disabled state is enabled', () => {
       fixture.componentInstance.disabled = false;
+      fixture.detectChanges();
       let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
       testListItem.focus();
       fixture.detectChanges();
@@ -819,6 +820,26 @@ describe('MDC-based MatSelectionList without forms', () => {
         .toBeGreaterThanOrEqual(1);
 
       fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(
+        listOption.filter(option => option.nativeElement.getAttribute('tabindex') !== '-1').length,
+      )
+        .withContext('Expected all list options to be excluded from the tab order')
+        .toBe(0);
+    });
+
+    it('should not allow focusin event to change the tabindex', () => {
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(
+        listOption.filter(option => option.nativeElement.getAttribute('tabindex') !== '-1').length,
+      )
+        .withContext('Expected all list options to be excluded from the tab order')
+        .toBe(0);
+
+      listOption[1].triggerEventHandler('focusin', {target: listOption[1].nativeElement});
       fixture.detectChanges();
 
       expect(
