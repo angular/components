@@ -41,7 +41,7 @@ import {
   timer,
   fromEvent,
 } from 'rxjs';
-import {take, switchMap, startWith, skip, takeUntil} from 'rxjs/operators';
+import {take, switchMap, startWith, skip, takeUntil, filter} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -256,7 +256,7 @@ export abstract class MatPaginatedTabHeader
   }
 
   /** Sends any changes that could affect the layout of the items. */
-  private _itemsResized(): Observable<void> {
+  private _itemsResized(): Observable<ResizeObserverEntry[]> {
     if (typeof ResizeObserver !== 'function') {
       return EMPTY;
     }
@@ -265,14 +265,10 @@ export abstract class MatPaginatedTabHeader
       startWith(this._items),
       switchMap(
         (tabItems: QueryList<MatPaginatedTabHeaderItem>) =>
-          new Observable((observer: Observer<void>) =>
+          new Observable((observer: Observer<ResizeObserverEntry[]>) =>
             this._ngZone.runOutsideAngular(() => {
-              const resizeObserver = new ResizeObserver(() => {
-                observer.next();
-              });
-              tabItems.forEach(item => {
-                resizeObserver.observe(item.elementRef.nativeElement);
-              });
+              const resizeObserver = new ResizeObserver(entries => observer.next(entries));
+              tabItems.forEach(item => resizeObserver.observe(item.elementRef.nativeElement));
               return () => {
                 resizeObserver.disconnect();
               };
@@ -282,6 +278,9 @@ export abstract class MatPaginatedTabHeader
       // Skip the first emit since the resize observer emits when an item
       // is observed for new items when the tab is already inserted
       skip(1),
+      // Skip emissions where all the elements are invisible since we don't want
+      // the header to try and re-render with invalid measurements. See #25574.
+      filter(entries => entries.some(e => e.contentRect.width > 0 && e.contentRect.height > 0)),
     );
   }
 
