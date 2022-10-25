@@ -30,6 +30,11 @@
       *ngIf="_hasCheckboxAt('before')">
   <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
 </span>
+<!-- Container for the checkmark at start. -->
+<span class="mdc-list-item__start mat-mdc-list-option-checkbox-before"
+      *ngIf="_hasCheckmarkAt('before')">
+      <mat-icon>check</mat-icon>
+</span>
 <!-- Conditionally renders icons/avatars before the list item text. -->
 <ng-template [ngIf]="_hasIconsOrAvatarsAt('before')">
   <ng-template [ngTemplateOutlet]="icons"></ng-template>
@@ -48,6 +53,11 @@
 <!-- Container for the checkbox at the end. -->
 <span class="mdc-list-item__end" *ngIf="_hasCheckboxAt('after')">
   <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
+</span>
+<!-- Container for the checkmark at end. -->
+<span class="mdc-list-item__start mat-mdc-list-option-checkbox-before"
+      *ngIf="_hasCheckmarkAt('after')">
+      <mat-icon>check</mat-icon>
 </span>
 <!-- Conditionally renders icons/avatars after the list item text. -->
 <ng-template [ngIf]="_hasIconsOrAvatarsAt('after')">

@@ -24,6 +24,7 @@ import {
 import {MatNavList} from './nav-list';
 import {MatSelectionList} from './selection-list';
 import {ObserversModule} from '@angular/cdk/observers';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import {ObserversModule} from '@angular/cdk/observers';
     MatCommonModule,
     MatRippleModule,
     MatPseudoCheckboxModule,
+    MatIconModule,
   ],
   exports: [
     MatList,

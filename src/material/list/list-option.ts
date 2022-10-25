@@ -229,6 +229,16 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     return this._selectionList.multiple && this._getCheckboxPosition() === position;
   }
 
+  /** Whether a checkmark is show at the given position. */
+  _hasCheckmarkAt(position: MatListOptionCheckboxPosition): boolean {
+    return (
+      this.selected &&
+      !this._selectionList.multiple &&
+      !this._hasIconsOrAvatarsAt(position) &&
+      this._getCheckboxPosition() === position
+    );
+  }
+
   /** Whether icons or avatars are shown at the given position. */
   _hasIconsOrAvatarsAt(position: 'before' | 'after'): boolean {
     return this._hasProjected('icons', position) || this._hasProjected('avatars', position);
