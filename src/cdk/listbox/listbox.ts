@@ -36,16 +36,7 @@ import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coe
 import {SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {
-  AbstractControl,
-  ControlValueAccessor,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Directionality} from '@angular/cdk/bidi';
 
 /** The next id to use for creating unique DOM IDs. */
@@ -256,16 +247,9 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
       useExisting: forwardRef(() => CdkListbox),
       multi: true,
     },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => CdkListbox),
-      multi: true,
-    },
   ],
 })
-export class CdkListbox<T = unknown>
-  implements AfterContentInit, OnDestroy, ControlValueAccessor, Validator
-{
+export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
   /** The id of the option's host element. */
   @Input()
   get id() {
@@ -416,9 +400,6 @@ export class CdkListbox<T = unknown>
   /** Callback called when the listbox value changes */
   private _onChange: (value: readonly T[]) => void = () => {};
 
-  /** Callback called when the form validator changes. */
-  private _onValidatorChange = () => {};
-
   /** Emits when an option has been clicked. */
   private _optionClicked = defer(() =>
     (this.options.changes as Observable<CdkOption<T>[]>).pipe(
@@ -437,40 +418,6 @@ export class CdkListbox<T = unknown>
 
   /** A predicate that does not skip any options. */
   private readonly _skipNonePredicate = () => false;
-
-  /**
-   * Validator that produces an error if multiple values are selected in a single selection
-   * listbox.
-   * @param control The control to validate
-   * @return A validation error or null
-   */
-  private _validateUnexpectedMultipleValues: ValidatorFn = (control: AbstractControl) => {
-    const controlValue = this._coerceValue(control.value);
-    if (!this.multiple && controlValue.length > 1) {
-      return {'cdkListboxUnexpectedMultipleValues': true};
-    }
-    return null;
-  };
-
-  /**
-   * Validator that produces an error if any selected values are not valid options for this listbox.
-   * @param control The control to validate
-   * @return A validation error or null
-   */
-  private _validateUnexpectedOptionValues: ValidatorFn = (control: AbstractControl) => {
-    const controlValue = this._coerceValue(control.value);
-    const invalidValues = this._getInvalidOptionValues(controlValue);
-    if (invalidValues.length) {
-      return {'cdkListboxUnexpectedOptionValues': {'values': invalidValues}};
-    }
-    return null;
-  };
-
-  /** The combined set of validators for this listbox. */
-  private _validators = Validators.compose([
-    this._validateUnexpectedMultipleValues,
-    this._validateUnexpectedOptionValues,
-  ])!;
 
   ngAfterContentInit() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
@@ -614,6 +561,19 @@ export class CdkListbox<T = unknown>
    */
   writeValue(value: readonly T[]): void {
     this._setSelection(value);
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      const selected = this.selectionModel.selected;
+      const invalidValues = this._getInvalidOptionValues(selected);
+
+      if (!this.multiple && selected.length > 1) {
+        throw Error('Listbox cannot have more than one selected value in multi-selection mode.');
+      }
+
+      if (invalidValues.length) {
+        throw Error('Listbox has selected values that do not match any of its options.');
+      }
+    }
   }
 
   /**
@@ -623,23 +583,6 @@ export class CdkListbox<T = unknown>
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-  }
-
-  /**
-   * Validate the given control
-   * @docs-private
-   */
-  validate(control: AbstractControl<any, any>): ValidationErrors | null {
-    return this._validators(control);
-  }
-
-  /**
-   * Registers a callback to be called when the form validator changes.
-   * @param fn The callback to call
-   * @docs-private
-   */
-  registerOnValidatorChange(fn: () => void) {
-    this._onValidatorChange = fn;
   }
 
   /** Focus the listbox's host element. */
@@ -901,7 +844,6 @@ export class CdkListbox<T = unknown>
     const selected = this.selectionModel.selected;
     this._invalid =
       (!this.multiple && selected.length > 1) || !!this._getInvalidOptionValues(selected).length;
-    this._onValidatorChange();
     this.changeDetectorRef.markForCheck();
   }
 
