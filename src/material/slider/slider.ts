@@ -698,6 +698,10 @@ export class MatSlider
       source.thumbPosition === _MatThumb.START
         ? (this.startValueIndicatorText = valuetext)
         : (this.endValueIndicatorText = valuetext);
+
+      valuetext.length < 3
+        ? source._hostElement.classList.add('mdc-slider__thumb--short-value')
+        : source._hostElement.classList.remove('mdc-slider__thumb--short-value');
     }
   }
 

@@ -42,7 +42,6 @@ import {
   styleUrls: ['slider-thumb.css'],
   host: {
     'class': 'mdc-slider__thumb mat-mdc-slider-visual-thumb',
-    '[class.mdc-slider__thumb--focused]': '_sliderInput?._isFocused',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -174,6 +173,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   private _onDragStart = (): void => {
     this._isActive = true;
     this._showActiveRipple();
+    this._hostElement.classList.add('mdc-slider__thumb--focused');
   };
 
   private _onDragEnd = (): void => {
@@ -183,6 +183,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     if (!this._sliderInput._isFocused) {
       this._hideRipple(this._focusRippleRef);
     }
+    this._hostElement.classList.remove('mdc-slider__thumb--focused');
   };
 
   /** Handles displaying the hover ripple. */
@@ -264,12 +265,12 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
 
   /** Shows the value indicator ui. */
   _showValueIndicator(): void {
-    this._getValueIndicatorContainer()?.classList.add('mdc-slider__thumb--with-indicator');
+    this._hostElement.classList.add('mdc-slider__thumb--with-indicator');
   }
 
   /** Hides the value indicator ui. */
   _hideValueIndicator(): void {
-    this._getValueIndicatorContainer()?.classList.remove('mdc-slider__thumb--with-indicator');
+    this._hostElement.classList.remove('mdc-slider__thumb--with-indicator');
   }
 
   _getSibling(): _MatSliderVisualThumb {
