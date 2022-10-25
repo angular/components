@@ -6,13 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ElementSelectorUpgradeData, TargetVersion, VersionChanges} from '@angular/cdk/schematics';
+import {ElementSelectorUpgradeData, VersionChanges} from '@angular/cdk/schematics';
 
-export const elementSelectors: VersionChanges<ElementSelectorUpgradeData> = {
-  [TargetVersion.V6]: [
-    {
-      pr: 'https://github.com/angular/components/pull/10297',
-      changes: [{replace: 'mat-input-container', replaceWith: 'mat-form-field'}],
-    },
-  ],
-};
+export const elementSelectors: VersionChanges<ElementSelectorUpgradeData> = {};

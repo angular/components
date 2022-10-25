@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {VersionChanges} from '../../update-tool/version-changes';
 
 export interface ElementSelectorUpgradeData {
@@ -16,6 +15,4 @@ export interface ElementSelectorUpgradeData {
   replaceWith: string;
 }
 
-export const elementSelectors: VersionChanges<ElementSelectorUpgradeData> = {
-  [TargetVersion.V6]: [],
-};
+export const elementSelectors: VersionChanges<ElementSelectorUpgradeData> = {};

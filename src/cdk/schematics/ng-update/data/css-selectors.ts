@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {VersionChanges} from '../../update-tool/version-changes';
 
 export interface CssSelectorUpgradeData {
@@ -28,6 +27,4 @@ export interface CssSelectorUpgradeData {
   };
 }
 
-export const cssSelectors: VersionChanges<CssSelectorUpgradeData> = {
-  [TargetVersion.V6]: [],
-};
+export const cssSelectors: VersionChanges<CssSelectorUpgradeData> = {};

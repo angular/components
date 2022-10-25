@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {VersionChanges} from '../../update-tool/version-changes';
 
 export interface AttributeSelectorUpgradeData {
@@ -16,14 +15,4 @@ export interface AttributeSelectorUpgradeData {
   replaceWith: string;
 }
 
-export const attributeSelectors: VersionChanges<AttributeSelectorUpgradeData> = {
-  [TargetVersion.V6]: [
-    {
-      pr: 'https://github.com/angular/components/pull/10257',
-      changes: [
-        {replace: 'cdkPortalHost', replaceWith: 'cdkPortalOutlet'},
-        {replace: 'portalHost', replaceWith: 'cdkPortalOutlet'},
-      ],
-    },
-  ],
-};
+export const attributeSelectors: VersionChanges<AttributeSelectorUpgradeData> = {};
