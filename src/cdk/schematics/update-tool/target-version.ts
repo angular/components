@@ -10,15 +10,6 @@
 // Used in an `Object.keys` call below so it can't be `const enum`.
 // tslint:disable-next-line:prefer-const-enum
 export enum TargetVersion {
-  V6 = 'version 6',
-  V7 = 'version 7',
-  V8 = 'version 8',
-  V9 = 'version 9',
-  V10 = 'version 10',
-  V11 = 'version 11',
-  V12 = 'version 12',
-  V13 = 'version 13',
-  V14 = 'version 14',
   V15 = 'version 15',
 }
 

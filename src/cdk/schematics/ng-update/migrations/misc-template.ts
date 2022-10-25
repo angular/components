@@ -19,7 +19,7 @@ import {UpgradeData} from '../upgrade-data';
 export class MiscTemplateMigration extends Migration<UpgradeData> {
   // Only enable this rule if the migration targets version 6. The rule
   // currently only includes migrations for V6 deprecations.
-  enabled = this.targetVersion === TargetVersion.V6;
+  enabled = this.targetVersion !== TargetVersion.V15;
 
   override visitTemplate(template: ResolvedResource): void {
     // Migration for https://github.com/angular/components/pull/10325 (v6)
