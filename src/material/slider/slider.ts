@@ -699,9 +699,10 @@ export class MatSlider
         ? (this.startValueIndicatorText = valuetext)
         : (this.endValueIndicatorText = valuetext);
 
+      const visualThumb = this._getThumb(source.thumbPosition);
       valuetext.length < 3
-        ? source._hostElement.classList.add('mdc-slider__thumb--short-value')
-        : source._hostElement.classList.remove('mdc-slider__thumb--short-value');
+        ? visualThumb._hostElement.classList.add('mdc-slider__thumb--short-value')
+        : visualThumb._hostElement.classList.remove('mdc-slider__thumb--short-value');
     }
   }
 

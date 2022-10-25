@@ -157,6 +157,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     // Happen when the users cursor is over a thumb and then the user tabs to it.
     this._hideRipple(this._hoverRippleRef);
     this._showFocusRipple();
+    this._hostElement.classList.add('mdc-slider__thumb--focused');
   };
 
   private _onBlur = (): void => {
@@ -168,12 +169,12 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     if (this._isHovered) {
       this._showHoverRipple();
     }
+    this._hostElement.classList.remove('mdc-slider__thumb--focused');
   };
 
   private _onDragStart = (): void => {
     this._isActive = true;
     this._showActiveRipple();
-    this._hostElement.classList.add('mdc-slider__thumb--focused');
   };
 
   private _onDragEnd = (): void => {
@@ -183,7 +184,6 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     if (!this._sliderInput._isFocused) {
       this._hideRipple(this._focusRippleRef);
     }
-    this._hostElement.classList.remove('mdc-slider__thumb--focused');
   };
 
   /** Handles displaying the hover ripple. */
