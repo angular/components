@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {VersionChanges} from '../../update-tool/version-changes';
 
 export interface OutputNameUpgradeData {
@@ -23,20 +22,4 @@ export interface OutputNameUpgradeData {
   };
 }
 
-export const outputNames: VersionChanges<OutputNameUpgradeData> = {
-  [TargetVersion.V10]: [
-    {
-      pr: 'https://github.com/angular/components/pull/19362',
-      changes: [
-        {
-          replace: 'copied',
-          replaceWith: 'cdkCopyToClipboardCopied',
-          limitedTo: {
-            attributes: ['cdkCopyToClipboard'],
-          },
-        },
-      ],
-    },
-  ],
-  [TargetVersion.V6]: [],
-};
+export const outputNames: VersionChanges<OutputNameUpgradeData> = {};
