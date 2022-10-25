@@ -70,6 +70,7 @@ ng_test_library(
     deps = [
         ":radio",
         "//src/cdk/testing/private",
+        "@npm//@angular/common",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
         "@npm//@material/radio",

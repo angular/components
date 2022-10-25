@@ -1,6 +1,7 @@
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '../../cdk/testing/private';
 import {
@@ -14,7 +15,7 @@ import {
 describe('MDC-based MatRadio', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
+      imports: [MatRadioModule, FormsModule, ReactiveFormsModule, CommonModule],
       declarations: [
         DisableableRadioButton,
         FocusableRadioButton,
@@ -27,6 +28,7 @@ describe('MDC-based MatRadio', () => {
         RadioButtonWithPredefinedTabindex,
         RadioButtonWithPredefinedAriaAttributes,
         RadiosInsidePreCheckedRadioGroup,
+        PreselectedRadioWithStaticValueAndNgIf,
       ],
     });
 
@@ -927,6 +929,14 @@ describe('MDC-based MatRadio', () => {
       expect(groupInstance.selected).toBe(radioInstances[2]);
     });
   });
+
+  it('should preselect a radio button with a static value and an ngIf', () => {
+    const fixture = TestBed.createComponent(PreselectedRadioWithStaticValueAndNgIf);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.preselectedGroup.value).toBe('b');
+    expect(fixture.componentInstance.preselectedRadio.checked).toBe(true);
+  });
 });
 
 describe('MatRadioDefaultOverrides', () => {
@@ -1138,3 +1148,29 @@ class RadioButtonWithColorBinding {}
       aria-labelledby="something-else"></mat-radio-button>`,
 })
 class RadioButtonWithPredefinedAriaAttributes {}
+
+@Component({
+  // Note that this is somewhat of a contrived template, but it is required to
+  // reproduce the issue. It was taken for a specific user report at #25831.
+  template: `
+    <ng-container *ngIf="true">
+      <mat-radio-group [formControl]="controls.predecessor">
+        <mat-radio-button value="predecessor"></mat-radio-button>
+      </mat-radio-group>
+    </ng-container>
+
+    <mat-radio-group [formControl]="controls.target" #preselectedGroup>
+      <mat-radio-button value="a"></mat-radio-button>
+      <mat-radio-button *ngIf="true" value="b" #preselectedRadio></mat-radio-button>
+    </mat-radio-group>
+  `,
+})
+class PreselectedRadioWithStaticValueAndNgIf {
+  @ViewChild('preselectedGroup', {read: MatRadioGroup}) preselectedGroup: MatRadioGroup;
+  @ViewChild('preselectedRadio', {read: MatRadioButton}) preselectedRadio: MatRadioButton;
+
+  controls = {
+    predecessor: new FormControl('predecessor'),
+    target: new FormControl('b'),
+  };
+}
