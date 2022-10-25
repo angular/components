@@ -22,8 +22,15 @@ $mat-slider-horizontal-margin: 8px !default;
   box-sizing: border-box;
   outline: none;
   vertical-align: middle;
-  margin: 0;
-  min-width: $mat-slider-min-size;
+  margin: {
+    left: $mat-slider-horizontal-margin;
+    right: $mat-slider-horizontal-margin;
+  }
+
+  // Unset the default "width" property from the MDC slider class. We don't want
+  // the slider to automatically expand horizontally for backwards compatibility.
+  width: auto;
+  min-width: $mat-slider-min-size - (2 * $mat-slider-horizontal-margin);
   -webkit-tap-highlight-color: transparent;
 
   .mdc-slider__input {
