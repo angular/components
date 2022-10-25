@@ -2,7 +2,7 @@ import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, Type} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkListbox, CdkListboxModule, CdkOption, ListboxValueChangeEvent} from './index';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
 import {
   A,
   B,
@@ -137,6 +137,14 @@ describe('CdkOption and CdkListbox', () => {
       expect(options[0].isSelected()).toBeTrue();
       expect(optionEls[0].getAttribute('aria-selected')).toBe('true');
       expect(fixture.componentInstance.changedOption?.id).toBe(options[0].id);
+    });
+
+    it('should prevent the default click action', () => {
+      const {fixture, optionEls} = setupComponent(ListboxWithOptions);
+      const event = dispatchFakeEvent(optionEls[1], 'click');
+      fixture.detectChanges();
+
+      expect(event.defaultPrevented).toBe(true);
     });
 
     it('should select and deselect range on option SHIFT + click', () => {
