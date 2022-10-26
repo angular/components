@@ -1,3 +1,14 @@
+<a name="14.2.6"></a>
+# 14.2.6 "quilt-seagull" (2022-10-26)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [89771dcc4](https://github.com/angular/components/commit/89771dcc438e8ceed21d8c75284b4defacbf93b6) | fix | **tabs:** scroll position lost when tab header is hidden ([#25855](https://github.com/angular/components/pull/25855)) |
+## Special Thanks
+Kristiyan Kostadinov
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0-rc.0"></a>
 # 15.0.0-rc.0 "plastic-platypus" (2022-10-26)
 ### cdk
