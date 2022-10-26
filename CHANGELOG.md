@@ -1,3 +1,34 @@
+<a name="15.0.0-rc.0"></a>
+# 15.0.0-rc.0 "plastic-platypus" (2022-10-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9e4d57cd2](https://github.com/angular/components/commit/9e4d57cd21b6408a36fba2fcfa2245adcdeb8289) | fix | **listbox:** prevent form submission on click ([#25858](https://github.com/angular/components/pull/25858)) |
+| [48d666b11](https://github.com/angular/components/commit/48d666b111563539cb827393f40f034362082d5f) | fix | **listbox:** remove incorrect usage of validator ([#25856](https://github.com/angular/components/pull/25856)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4926cc57e](https://github.com/angular/components/commit/4926cc57eeb74f26c658d97ff0e7078f32535bca) | fix | **chips:** allow focusing disabled listbox options ([#25771](https://github.com/angular/components/pull/25771)) |
+| [59b5d5ef4](https://github.com/angular/components/commit/59b5d5ef44f749a959a9fec1fa2c941a0c5074a5) | fix | **datepicker:** changed after checked error during overlapping open/close sequence ([#25843](https://github.com/angular/components/pull/25843)) |
+| [0971e3948](https://github.com/angular/components/commit/0971e39485e416a33b5f8e6f3797cc7f003cc600) | fix | **datepicker:** unable to click datepicker toggle when form field is disabled ([#25863](https://github.com/angular/components/pull/25863)) |
+| [3b7c93930](https://github.com/angular/components/commit/3b7c939308c3b49db66e649746782891630dbd0f) | fix | **menu:** custom origin in focusFirstItem not respected on open ([#25812](https://github.com/angular/components/pull/25812)) |
+| [1655a6902](https://github.com/angular/components/commit/1655a69021593ed92140eb23a0cdfb19d6c2e90c) | fix | **radio:** radio not preselected with static value and an ngIf ([#25852](https://github.com/angular/components/pull/25852)) |
+| [b85bb6eed](https://github.com/angular/components/commit/b85bb6eed3e25f16cae20b0979a7868dec6b1869) | fix | **schematics:** remove `node_modules` prefix from prebuilt theme |
+| [de301a876](https://github.com/angular/components/commit/de301a8768978defea0e502ed8379d511ed99c86) | fix | **schematics:** respect specified directory in mdc migration ([#25810](https://github.com/angular/components/pull/25810)) |
+| [9a5f931aa](https://github.com/angular/components/commit/9a5f931aa189accddef0736dbe09249f9acfcb15) | fix | **schematics:** switch away from legacy components ([#25839](https://github.com/angular/components/pull/25839)) |
+| [03f19cb6d](https://github.com/angular/components/commit/03f19cb6dfc9932e8212303d8e7eac4cc9ef2416) | fix | **select:** don't assign typeahead value after blur ([#25811](https://github.com/angular/components/pull/25811)) |
+| [3c01ef310](https://github.com/angular/components/commit/3c01ef3101ce4a59766306fbe204bc3de6e78f0c) | fix | **slide-toggle:** animations not disabled with NoopAnimationsModule ([#25821](https://github.com/angular/components/pull/25821)) |
+| [169a03b30](https://github.com/angular/components/commit/169a03b30e9785c13ff9e5c40a847d022acf78b7) | fix | **tabs:** scroll position lost when tab header is hidden ([#25855](https://github.com/angular/components/pull/25855)) |
+| [4fbe16816](https://github.com/angular/components/commit/4fbe168167fe1bb86b44b0a5a7faff7072e437ce) | fix | **tabs:** wrong disabled class on tab pagination button ([#25832](https://github.com/angular/components/pull/25832)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fa599b703](https://github.com/angular/components/commit/fa599b70334ea3feccf324a11fb7fc7462fb1e06) | fix | ensure all public theming mixins are exposed at top-level ([#25805](https://github.com/angular/components/pull/25805)) |
+## Special Thanks
+Alan Agius, Alvaro Junqueira, Andrew Seguin, Kristiyan Kostadinov, Miles Malerba, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0-next.5"></a>
 # 15.0.0-next.5 "snow-swan" (2022-10-12)
 ## Deprecations
