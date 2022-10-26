@@ -339,10 +339,11 @@ export class MatPseudoCheckbox {
     constructor(_animationMode?: string | undefined);
     // (undocumented)
     _animationMode?: string | undefined;
+    appearance: 'checkmark' | 'checkbox';
     disabled: boolean;
     state: MatPseudoCheckboxState;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatPseudoCheckbox, "mat-pseudo-checkbox", never, { "state": "state"; "disabled": "disabled"; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatPseudoCheckbox, "mat-pseudo-checkbox", never, { "state": "state"; "disabled": "disabled"; "appearance": "appearance"; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPseudoCheckbox, [{ optional: true; }]>;
 }

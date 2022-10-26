@@ -46,6 +46,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
     '[class.mat-pseudo-checkbox-indeterminate]': 'state === "indeterminate"',
     '[class.mat-pseudo-checkbox-checked]': 'state === "checked"',
     '[class.mat-pseudo-checkbox-disabled]': 'disabled',
+    '[class.mat-psuedo-checkbox-checkmark-appearance]': 'appearance === "checkmark"',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
 })
@@ -55,6 +56,13 @@ export class MatPseudoCheckbox {
 
   /** Whether the checkbox is disabled. */
   @Input() disabled: boolean = false;
+
+  /**
+   * Whether to display a checkbox or a check mark. Use 'checkbox' for multi-select and 'checkmark'
+   * for single-select.
+   */
+  // Use 'checkbox' as default for backwards compatibility
+  @Input() appearance: 'checkmark' | 'checkbox' = 'checkbox';
 
   constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {}
 }
