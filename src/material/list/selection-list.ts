@@ -363,9 +363,11 @@ export class MatSelectionList
 
   /** Handles focusout events within the list. */
   private _handleFocusout = () => {
+    console.log('selection-list.ts', '_handleFocusous');
     // Focus takes a while to update so we have to wrap our call in a timeout.
     setTimeout(() => {
       if (!this._containsFocus()) {
+        console.log('selection-list.ts', '_handleFocusous', 'calling _resetActionOption...');
         this._resetActiveOption();
       }
     });
@@ -373,9 +375,13 @@ export class MatSelectionList
 
   /** Handles focusin events within the list. */
   private _handleFocusin = (event: FocusEvent) => {
+    console.log('selection-list.ts', '_handleFocusin', event.target);
+
     const activeIndex = this._items
       .toArray()
       .findIndex(item => item._elementRef.nativeElement.contains(event.target as HTMLElement));
+
+    console.log('selection-list.ts', '_handleFocusin', 'activeIndex', activeIndex);
 
     if (activeIndex > -1) {
       this._setActiveOption(activeIndex);
@@ -431,6 +437,11 @@ export class MatSelectionList
 
   /** Resets the active option to the first selected option. */
   private _resetActiveOption() {
+    if (this.disabled) {
+      this._setActiveOption(-1);
+      return;
+    }
+
     const activeItem =
       this._items.find(item => item.selected && !item.disabled) || this._items.first;
     this._setActiveOption(activeItem ? this._items.toArray().indexOf(activeItem) : -1);
