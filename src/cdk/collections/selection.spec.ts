@@ -279,4 +279,32 @@ describe('SelectionModel', () => {
     let singleSelectionModel = new SelectionModel();
     expect(singleSelectionModel.isMultipleSelection()).toBe(false);
   });
+
+  it('should respect the compareWith function while setting a selection of values', () => {
+    let compareById = (value1: {id: number}, value2: {id: number}) => value1.id === value2.id;
+    let multipleSelectionModel = new SelectionModel<{id: number}>(
+      true,
+      [{id: 1}, {id: 2}],
+      true,
+      compareById,
+    );
+
+    multipleSelectionModel.setSelection({id: 1}, {id: 3});
+
+    expect(multipleSelectionModel.selected).toEqual([{id: 1}, {id: 3}]);
+  });
+
+  it('should respect the compareWith function while deselecting a value', () => {
+    let compareById = (value1: {id: number}, value2: {id: number}) => value1.id === value2.id;
+    let multipleSelectionModel = new SelectionModel<{id: number}>(
+      true,
+      [{id: 1}, {id: 2}],
+      true,
+      compareById,
+    );
+
+    multipleSelectionModel.deselect({id: 1});
+
+    expect(multipleSelectionModel.selected).toEqual([{id: 2}]);
+  });
 });

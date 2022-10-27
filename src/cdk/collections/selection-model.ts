@@ -94,7 +94,7 @@ export class SelectionModel<T> {
     const newSelectedSet = new Set(values);
     values.forEach(value => this._markSelected(value));
     oldValues
-      .filter(value => !newSelectedSet.has(value))
+      .filter(value => !isSelected(newSelectedSet, value, this.compareWith))
       .forEach(value => this._unmarkSelected(value));
     const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
@@ -131,15 +131,7 @@ export class SelectionModel<T> {
    * Determines whether a value is selected.
    */
   isSelected(value: T): boolean {
-    if (this.compareWith) {
-      for (const otherValue of this._selection) {
-        if (this.compareWith(otherValue, value)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    return this._selection.has(value);
+    return isSelected(this._selection, value, this.compareWith);
   }
 
   /**
@@ -209,7 +201,16 @@ export class SelectionModel<T> {
   /** Deselects a value. */
   private _unmarkSelected(value: T) {
     if (this.isSelected(value)) {
-      this._selection.delete(value);
+      if (this.compareWith) {
+        for (const otherValue of this._selection) {
+          if (this.compareWith(otherValue, value)) {
+            this._selection.delete(otherValue);
+            break;
+          }
+        }
+      } else {
+        this._selection.delete(value);
+      }
 
       if (this._emitChanges) {
         this._deselectedToEmit.push(value);
@@ -260,4 +261,23 @@ export interface SelectionChange<T> {
  */
 export function getMultipleValuesInSingleSelectionError() {
   return Error('Cannot pass multiple values into SelectionModel with single-value mode.');
+}
+
+/**
+ * Determines whether a value is selected in the given selection.
+ */
+function isSelected<T>(
+  selection: Set<T>,
+  value: T,
+  compareWith?: (o1: T, o2: T) => boolean,
+): boolean {
+  if (compareWith) {
+    for (const otherValue of selection) {
+      if (compareWith(otherValue, value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  return selection.has(value);
 }
