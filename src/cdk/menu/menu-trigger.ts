@@ -46,7 +46,7 @@ import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
   host: {
     'class': 'cdk-menu-trigger',
     '[attr.aria-haspopup]': 'menuTemplateRef ? "menu" : null',
-    '[attr.aria-expanded]': 'isOpen()',
+    '[attr.aria-expanded]': 'menuTemplateRef == null ? null : isOpen()',
     '(focusin)': '_setHasFocus(true)',
     '(focusout)': '_setHasFocus(false)',
     '(keydown)': '_toggleOnKeydown($event)',

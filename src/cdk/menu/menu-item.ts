@@ -93,7 +93,13 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   @Output('cdkMenuItemTriggered') readonly triggered: EventEmitter<void> = new EventEmitter();
 
   /** Whether the menu item opens a menu. */
-  readonly hasMenu = !!this._menuTrigger;
+  get hasMenu() {
+    if (this._menuTrigger?.menuTemplateRef == null) {
+      return false;
+    }
+
+    return true;
+  }
 
   /**
    * The tabindex for this menu item managed internally and used for implementing roving a

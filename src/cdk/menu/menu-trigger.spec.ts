@@ -48,12 +48,36 @@ describe('MenuTrigger', () => {
       expect(menuItemElement.getAttribute('aria-disabled')).toBe('true');
     });
 
-    it('should set aria-haspopup to menu', () => {
+    it('should set aria-haspopup based on whether a menu is assigned', () => {
       expect(menuItemElement.getAttribute('aria-haspopup')).toEqual('menu');
+
+      fixture.componentInstance.trigger.menuTemplateRef = null;
+      fixture.detectChanges();
+
+      expect(menuItemElement.hasAttribute('aria-haspopup')).toBe(false);
     });
 
-    it('should  have a menu', () => {
+    it('should have a menu based on whether a menu is assigned', () => {
       expect(menuItem.hasMenu).toBeTrue();
+
+      fixture.componentInstance.trigger.menuTemplateRef = null;
+      fixture.detectChanges();
+
+      expect(menuItem.hasMenu).toBeFalse();
+    });
+
+    it('should set aria-controls based on whether a menu is assigned', () => {
+      expect(menuItemElement.hasAttribute('aria-controls')).toBeFalse();
+    });
+
+    it('should set aria-expanded based on whether a menu is assigned', () => {
+        expect(menuItemElement.hasAttribute('aria-expanded')).toBeTrue();
+        expect(menuItemElement.getAttribute('aria-expanded')).toBe('false');
+
+        fixture.componentInstance.trigger.menuTemplateRef = null;
+        fixture.detectChanges();
+
+        expect(menuItemElement.hasAttribute('aria-expanded')).toBeFalse();
     });
   });
 
@@ -471,21 +495,10 @@ describe('MenuTrigger', () => {
     expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
   });
 
-  describe('null triggerFor', () => {
+  xdescribe('null triggerFor', () => {
     let fixture: ComponentFixture<TriggerWithNullValue>;
 
     let nativeTrigger: HTMLElement;
-    let contextNativeTrigger: HTMLElement;
-
-    const grabElementsForTesting = () => {
-      nativeTrigger = fixture.componentInstance.nativeTrigger.nativeElement;
-    };
-
-    /** run change detection and, extract and set the rendered elements */
-    const detectChanges = () => {
-      fixture.detectChanges();
-      grabElementsForTesting();
-    };
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
@@ -496,7 +509,7 @@ describe('MenuTrigger', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TriggerWithNullValue);
-      detectChanges();
+      nativeTrigger = fixture.componentInstance.nativeTrigger.nativeElement
     });
 
     it('should not set aria-haspopup', () => {
@@ -511,7 +524,8 @@ describe('MenuTrigger', () => {
       expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
 
       nativeTrigger.click();
-      detectChanges();
+      fixture.detectChanges();
+
       expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
     });
 
@@ -519,7 +533,8 @@ describe('MenuTrigger', () => {
       expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
 
       dispatchKeyboardEvent(nativeTrigger, 'keydown', SPACE);
-      detectChanges();
+      fixture.detectChanges();
+
       expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
     });
   });
@@ -531,7 +546,10 @@ describe('MenuTrigger', () => {
     <ng-template #noop><div cdkMenu></div></ng-template>
   `,
 })
-class TriggerForEmptyMenu {}
+class TriggerForEmptyMenu {
+    @ViewChild(CdkMenuTrigger) trigger: CdkMenuTrigger;
+    @ViewChild(CdkMenuTrigger, { read: ElementRef }) nativeTrigger: ElementRef;
+}
 
 @Component({
   template: `
