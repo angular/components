@@ -422,6 +422,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   ngAfterContentInit() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       this._verifyNoOptionValueCollisions();
+      this._verifyOptionValues();
     }
 
     this._initKeyManager();
@@ -561,19 +562,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    */
   writeValue(value: readonly T[]): void {
     this._setSelection(value);
-
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      const selected = this.selectionModel.selected;
-      const invalidValues = this._getInvalidOptionValues(selected);
-
-      if (!this.multiple && selected.length > 1) {
-        throw Error('Listbox cannot have more than one selected value in multi-selection mode.');
-      }
-
-      if (invalidValues.length) {
-        throw Error('Listbox has selected values that do not match any of its options.');
-      }
-    }
+    this._verifyOptionValues();
   }
 
   /**
@@ -922,6 +911,22 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
         }
       }
     });
+  }
+
+  /** Verifies that the option values are valid. */
+  private _verifyOptionValues() {
+    if (this.options && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      const selected = this.selectionModel.selected;
+      const invalidValues = this._getInvalidOptionValues(selected);
+
+      if (!this.multiple && selected.length > 1) {
+        throw Error('Listbox cannot have more than one selected value in multi-selection mode.');
+      }
+
+      if (invalidValues.length) {
+        throw Error('Listbox has selected values that do not match any of its options.');
+      }
+    }
   }
 
   /**
