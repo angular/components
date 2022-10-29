@@ -883,6 +883,18 @@ describe('CdkOption and CdkListbox', () => {
         fixture.detectChanges();
       }).toThrowError('Listbox has selected values that do not match any of its options.');
     });
+
+    it('should not throw on init with a preselected form control and a dynamic set of options', () => {
+      expect(() => {
+        setupComponent(ListboxWithPreselectedFormControl, [ReactiveFormsModule]);
+      }).not.toThrow();
+    });
+
+    it('should throw on init if the preselected value is invalid', () => {
+      expect(() => {
+        setupComponent(ListboxWithInvalidPreselectedFormControl, [ReactiveFormsModule]);
+      }).toThrowError('Listbox has selected values that do not match any of its options.');
+    });
   });
 });
 
@@ -953,6 +965,30 @@ class ListboxWithFormControl {
   formControl = new FormControl();
   isMultiselectable = false;
   isActiveDescendant = false;
+}
+
+@Component({
+  template: `
+    <div cdkListbox [formControl]="formControl">
+      <div *ngFor="let option of options" [cdkOption]="option">{{option}}</div>
+    </div>
+  `,
+})
+class ListboxWithPreselectedFormControl {
+  options = ['a', 'b', 'c'];
+  formControl = new FormControl('c');
+}
+
+@Component({
+  template: `
+    <div cdkListbox [formControl]="formControl">
+      <div *ngFor="let option of options" [cdkOption]="option">{{option}}</div>
+    </div>
+  `,
+})
+class ListboxWithInvalidPreselectedFormControl {
+  options = ['a', 'b', 'c'];
+  formControl = new FormControl('d');
 }
 
 @Component({
