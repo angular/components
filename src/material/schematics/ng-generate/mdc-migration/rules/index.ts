@@ -35,6 +35,7 @@ import {TooltipStylesMigrator} from './components/tooltip/tooltip-styles';
 import {OptgroupStylesMigrator} from './components/optgroup/optgroup-styles';
 import {OptionStylesMigrator} from './components/option/option-styles';
 import {FormFieldTemplateMigrator} from './components/form-field/form-field-template';
+import {SliderTemplateMigrator} from './components/slider/slider-template';
 
 /** Contains the migrators to migrate a single component. */
 export interface ComponentMigrator {
@@ -171,6 +172,7 @@ export const MIGRATORS: ComponentMigrator[] = [
   {
     component: 'slider',
     styles: new SliderStylesMigrator(),
+    template: new SliderTemplateMigrator(),
   },
   {
     component: 'snack-bar',
