@@ -56,4 +56,11 @@
   // Improve accessibility for Window High Contrast Mode (HCM) by adding an idicator on the selected
   // option.
   @include list-item-hcm-indicator.private-high-contrast-list-item-indicator();
+
+  // Add a 4px border radius so that selected state is communicated with both color and shape. Fix
+  // accessibility issue where selected state is visually communicated only with color (issue
+  // #25900, WCAG 1.4.1).
+  &::before {
+    border-radius: 4px; // 4dp is a common Material Design value.
+  }
 }
