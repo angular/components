@@ -13,7 +13,6 @@ import {
   OnDestroy,
   Type,
   StaticProvider,
-  InjectFlags,
   Inject,
   Optional,
   SkipSelf,
@@ -328,7 +327,7 @@ export class Dialog implements OnDestroy {
     if (
       config.direction &&
       (!userInjector ||
-        !userInjector.get<Directionality | null>(Directionality, null, InjectFlags.Optional))
+        !userInjector.get<Directionality | null>(Directionality, null, {optional: true}))
     ) {
       providers.push({
         provide: Directionality,
