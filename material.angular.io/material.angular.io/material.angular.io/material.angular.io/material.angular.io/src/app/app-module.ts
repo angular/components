@@ -19,8 +19,7 @@ const prefersReducedMotion =
     BrowserAnimationsModule.withConfig({disableAnimations: prefersReducedMotion}),
     RouterModule.forRoot(MATERIAL_DOCS_ROUTES, {
       scrollPositionRestoration: 'enabled',
-      anchorScrolling: 'enabled',
-      relativeLinkResolution: 'corrected',
+      anchorScrolling: 'enabled'
     }),
     NavBarModule,
     CookiePopupModule,

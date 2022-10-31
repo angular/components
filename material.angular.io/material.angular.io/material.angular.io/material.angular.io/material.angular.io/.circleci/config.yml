@@ -10,9 +10,12 @@
 # https://circleci.com/docs/2.0/reusing-config/#getting-started-with-config-reuse
 version: 2.1
 
+orbs:
+  browser-tools: circleci/browser-tools@1.4.0
+
 # Cache key for CircleCI. We want to invalidate the cache whenever the Yarn lock file changes.
 var_1: &cache_key material-angular-io-{{ .Branch }}-{{ checksum "yarn.lock" }}
-var_2: &default_docker_image circleci/node:16.10.0-browsers
+var_2: &default_docker_image cimg/node:16.14.0-browsers
 
 # Settings common to each job
 var_3: &job_defaults
@@ -83,6 +86,7 @@ jobs:
     - restore_cache:
         key: *cache_key
     - *yarn_install
+    - browser-tools/install-browser-tools
     - run: yarn test --watch false --progress=false
 
   audit_pages_for_a11y:
