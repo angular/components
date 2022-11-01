@@ -28,8 +28,6 @@ ng_module(
         "//src/cdk/platform",
         "//src/material/core",
         "@npm//@angular/forms",
-        "@npm//@material/base",
-        "@npm//@material/slider",
     ],
 )
 
@@ -85,7 +83,6 @@ ng_test_library(
         "//src/material/core",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@material/slider",
         "@npm//rxjs",
     ],
 )
@@ -103,7 +100,6 @@ ng_e2e_test_library(
     deps = [
         ":slider",
         "//src/cdk/testing/private/e2e",
-        "@npm//@material/slider",
     ],
 )
 

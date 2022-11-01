@@ -7,7 +7,6 @@
  */
 
 import {clickElementAtPoint, getElement, Point} from '../../cdk/testing/private/e2e';
-import {Thumb} from '@material/slider';
 import {$, browser, by, element, ElementFinder} from 'protractor';
 import {logging} from 'selenium-webdriver';
 
@@ -25,8 +24,8 @@ describe('MatSlider', () => {
     });
 
     it('should update the value on click', async () => {
-      await setValueByClick(slider, 15);
-      expect(await getSliderValue(slider, Thumb.END)).toBe(15);
+      await setValueByClick(slider, 49);
+      expect(await getSliderValue(slider, Thumb.END)).toBe(49);
     });
 
     it('should update the value on slide', async () => {
@@ -168,4 +167,9 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
   const y = Math.round(height / 2);
 
   return {x, y};
+}
+
+const enum Thumb {
+  START = 1,
+  END = 2,
 }

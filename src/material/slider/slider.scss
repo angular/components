@@ -1,6 +1,6 @@
+@use '../core/mdc-helpers/mdc-helpers';
 @use '@material/slider/slider' as mdc-slider;
 @use '@material/slider/slider-theme' as mdc-slider-theme;
-@use '../core/mdc-helpers/mdc-helpers';
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
   @include mdc-slider.static-styles($query: mdc-helpers.$mdc-base-styles-query);
@@ -31,6 +31,50 @@ $mat-slider-horizontal-margin: 8px !default;
   // the slider to automatically expand horizontally for backwards compatibility.
   width: auto;
   min-width: $mat-slider-min-size - (2 * $mat-slider-horizontal-margin);
+  -webkit-tap-highlight-color: transparent;
+
+  .mdc-slider__input {
+    pointer-events: auto;
+
+    &.mat-mdc-slider-input-no-pointer-events {
+      pointer-events: none;
+    }
+
+    &.mat-slider__right-input {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  .mdc-slider__thumb,
+  .mdc-slider__track--active_fill {
+    transition-duration: 0ms;
+  }
+  &.mat-mdc-slider-with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
+  }
+
+  // We need to repeat these styles to override discrete slider styling.
+  &.mdc-slider--discrete {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 0ms;
+    }
+  }
+  &.mat-mdc-slider-with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
+  }
+
+  .mdc-slider__track,
+  .mdc-slider__thumb {
+    pointer-events: none;
+  }
 
   .mdc-slider__value-indicator {
     // There's no token to control this opacity so we have to do it ourselves.
