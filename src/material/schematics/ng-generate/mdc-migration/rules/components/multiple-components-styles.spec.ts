@@ -201,5 +201,38 @@ describe('multiple component styles', () => {
       `,
       );
     });
+
+    it('should add TODO comment for instance of define-legacy-typography-config sass function', async () => {
+      await runMigrationTest(
+        ['checkbox', 'radio'],
+        `
+        $sample-project-theme: mat.define-light-theme((
+          color: (
+            primary: $sample-project-primary,
+            accent: $sample-project-accent,
+            warn: $sample-project-warn,
+          ),
+          typography: mat.define-legacy-typography-config(
+            $display-1: mat.define-typography-level(34px, 40px, 400),
+            $headline:  mat.define-typography-level(24px, 32px, 400),
+          ),
+        ));
+      `,
+        `
+        /* TODO(mdc-migration): Use define-typography-config with updated typography levels instead of legacy function */
+        $sample-project-theme: mat.define-light-theme((
+          color: (
+            primary: $sample-project-primary,
+            accent: $sample-project-accent,
+            warn: $sample-project-warn,
+          ),
+          typography: mat.define-legacy-typography-config(
+            $display-1: mat.define-typography-level(34px, 40px, 400),
+            $headline:  mat.define-typography-level(24px, 32px, 400),
+          ),
+        ));
+      `,
+      );
+    });
   });
 });

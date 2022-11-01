@@ -19,10 +19,7 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
   namespace: string;
 
   override visitStylesheet(stylesheet: ResolvedResource) {
-    const migratedContent = this.migrate(stylesheet.content, stylesheet.filePath).replace(
-      new RegExp(`${this.namespace}.define-legacy-typography-config\\(`, 'g'),
-      `${this.namespace}.define-typography-config(`,
-    );
+    const migratedContent = this.migrate(stylesheet.content, stylesheet.filePath);
     this.fileSystem
       .edit(stylesheet.filePath)
       .remove(stylesheet.start, stylesheet.content.length)
@@ -38,6 +35,7 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
           include: this.atIncludeHandler.bind(this),
         },
         Rule: this.ruleHandler.bind(this),
+        Declaration: this.declarationHandler.bind(this),
       },
     ]);
 
@@ -80,6 +78,8 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
         }
       }
       replaceCrossCuttingMixin(atRule, this.namespace);
+    } else if (isOverriddenTypographyConfig(atRule.params)) {
+      addCommentToLegacyTypographyConfig(atRule);
     }
   }
 
@@ -115,6 +115,46 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
       );
     }
   }
+
+  declarationHandler(declaration: postcss.Declaration) {
+    if (isOverriddenTypographyConfig(declaration.value)) {
+      addCommentToLegacyTypographyConfig(declaration);
+    }
+  }
+}
+
+/**
+ * Returns whether the given text is an instance of
+ * define-legacy-typography-config sass function and values are being overriden
+ *
+ * @param text text to be checked
+ * @returns true if is an instance of define-legacy-typography-config function
+ * and is being overriden
+ */
+function isOverriddenTypographyConfig(text: string) {
+  return (
+    text.includes('define-legacy-typography-config') &&
+    !text.includes('define-legacy-typography-config()')
+  );
+}
+
+/**
+ * Adds a todo comment to update for instances of
+ * define-legacy-typography-config sass function calls
+ *
+ * @param declaration a postcss AtRule or Declaration node
+ */
+function addCommentToLegacyTypographyConfig(node: postcss.AtRule | postcss.Declaration) {
+  const comment =
+    'TODO(mdc-migration): Use define-typography-config with updated typography levels instead of legacy function';
+  // Make sure the TODO comment was not already added in the previous pass
+  let previousNode = node.prev();
+  if (previousNode?.type === 'comment') {
+    if ((previousNode as postcss.Comment).text === comment) {
+      return;
+    }
+  }
+  addCommentBeforeNode(node, comment);
 }
 
 /**
@@ -174,7 +214,10 @@ function addLegacyCommentForPartialMigrations(
  * @param node a postcss rule.
  * @param comment the text content for the comment
  */
-function addCommentBeforeNode(node: postcss.Rule | postcss.AtRule, comment: string): void {
+function addCommentBeforeNode(
+  node: postcss.Rule | postcss.AtRule | postcss.Declaration,
+  comment: string,
+): void {
   let commentNode = postcss.comment({
     text: comment,
   });
