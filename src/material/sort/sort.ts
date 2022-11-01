@@ -19,8 +19,8 @@ import {
   Optional,
   Output,
 } from '@angular/core';
-import {CanDisable, HasInitialized, mixinDisabled, mixinInitialized} from '@angular/material/core';
-import {Subject} from 'rxjs';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {ReplaySubject, Subject} from 'rxjs';
 import {SortDirection} from './sort-direction';
 import {
   getSortDuplicateSortableIdError,
@@ -67,7 +67,7 @@ export const MAT_SORT_DEFAULT_OPTIONS = new InjectionToken<MatSortDefaultOptions
 
 // Boilerplate for applying mixins to MatSort.
 /** @docs-private */
-const _MatSortBase = mixinInitialized(mixinDisabled(class {}));
+const _MatSortBase = mixinDisabled(class {});
 
 /** Container for MatSortables to manage the sort state and provide default sort parameters. */
 @Directive({
@@ -76,12 +76,12 @@ const _MatSortBase = mixinInitialized(mixinDisabled(class {}));
   host: {'class': 'mat-sort'},
   inputs: ['disabled: matSortDisabled'],
 })
-export class MatSort
-  extends _MatSortBase
-  implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit
-{
+export class MatSort extends _MatSortBase implements CanDisable, OnChanges, OnInit, OnDestroy {
   /** Collection of all registered sortables that this directive manages. */
   sortables = new Map<string, MatSortable>();
+
+  /** Emits when the directive has been initialized. */
+  initialized = new ReplaySubject<void>(1);
 
   /** Used to notify any child components listening to state changes. */
   readonly _stateChanges = new Subject<void>();
@@ -194,8 +194,8 @@ export class MatSort
     return sortDirectionCycle[nextDirectionIndex];
   }
 
-  ngOnInit() {
-    this._markInitialized();
+  ngOnInit(): void {
+    this.initialized.next();
   }
 
   ngOnChanges() {
@@ -203,6 +203,7 @@ export class MatSort
   }
 
   ngOnDestroy() {
+    this.initialized.complete();
     this._stateChanges.complete();
   }
 }

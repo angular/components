@@ -15,7 +15,6 @@ import { _Constructor } from '@angular/material/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasInitialized } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import * as i4 from '@angular/material/core';
@@ -24,6 +23,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 
 // @public
@@ -51,7 +51,7 @@ export const MAT_SORT_HEADER_INTL_PROVIDER: {
 export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl): MatSortHeaderIntl;
 
 // @public
-export class MatSort extends _MatSortBase implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit {
+export class MatSort extends _MatSortBase implements CanDisable, OnChanges, OnInit, OnDestroy {
     constructor(_defaultOptions?: MatSortDefaultOptions | undefined);
     active: string;
     deregister(sortable: MatSortable): void;
@@ -60,6 +60,7 @@ export class MatSort extends _MatSortBase implements CanDisable, HasInitialized,
     get disableClear(): boolean;
     set disableClear(v: BooleanInput);
     getNextSortDirection(sortable: MatSortable): SortDirection;
+    initialized: ReplaySubject<void>;
     // (undocumented)
     ngOnChanges(): void;
     // (undocumented)

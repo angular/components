@@ -15,6 +15,8 @@ import {Constructor} from './constructor';
  * If the subscription is made after it has already been marked as initialized, then it will trigger
  * an emit immediately.
  * @docs-private
+ * @deprecated No longer in use. To be removed.
+ * @breaking-change 17.0.0
  */
 export interface HasInitialized {
   /** Stream that emits once during the directive/component's ngOnInit. */
@@ -30,7 +32,11 @@ export interface HasInitialized {
 
 type HasInitializedCtor = Constructor<HasInitialized>;
 
-/** Mixin to augment a directive with an initialized property that will emits when ngOnInit ends. */
+/**
+ * Mixin to augment a directive with an initialized property that will emits when ngOnInit ends.
+ * @deprecated No longer in use. To be removed.
+ * @breaking-change 17.0.0
+ */
 export function mixinInitialized<T extends Constructor<{}>>(base: T): HasInitializedCtor & T {
   return class extends base {
     /** Whether this directive has been marked as initialized. */

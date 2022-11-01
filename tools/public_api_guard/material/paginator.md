@@ -10,7 +10,6 @@ import { CanDisable } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { _Constructor } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
-import { HasInitialized } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import * as i3 from '@angular/material/button';
@@ -22,6 +21,7 @@ import { NumberInput } from '@angular/cdk/coercion';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { ThemePalette } from '@angular/material/core';
 
@@ -55,7 +55,7 @@ export abstract class _MatPaginatorBase<O extends {
     pageSizeOptions?: number[];
     hidePageSize?: boolean;
     showFirstLastButtons?: boolean;
-}> extends _MatPaginatorMixinBase implements OnInit, OnDestroy, CanDisable, HasInitialized {
+}> extends _MatPaginatorMixinBase implements OnInit, OnDestroy, CanDisable {
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: O);
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
@@ -66,6 +66,7 @@ export abstract class _MatPaginatorBase<O extends {
     hasPreviousPage(): boolean;
     get hidePageSize(): boolean;
     set hidePageSize(value: BooleanInput);
+    initialized: ReplaySubject<void>;
     // (undocumented)
     _intl: MatPaginatorIntl;
     lastPage(): void;

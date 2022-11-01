@@ -150,7 +150,7 @@ export interface GranularSanityChecks {
     version: boolean;
 }
 
-// @public
+// @public @deprecated
 export interface HasInitialized {
     initialized: Observable<void>;
     _markInitialized: () => void;
@@ -410,7 +410,7 @@ export function mixinDisableRipple<T extends _AbstractConstructor<{}>>(base: T):
 // @public
 export function mixinErrorState<T extends _AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
 
-// @public
+// @public @deprecated
 export function mixinInitialized<T extends _Constructor<{}>>(base: T): HasInitializedCtor & T;
 
 // @public

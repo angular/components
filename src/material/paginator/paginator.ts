@@ -22,14 +22,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
-import {
-  CanDisable,
-  HasInitialized,
-  mixinDisabled,
-  mixinInitialized,
-  ThemePalette,
-} from '@angular/material/core';
-import {Subscription} from 'rxjs';
+import {CanDisable, mixinDisabled, ThemePalette} from '@angular/material/core';
+import {Subscription, ReplaySubject} from 'rxjs';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -100,7 +94,7 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
 
 // Boilerplate for applying mixins to _MatPaginatorBase.
 /** @docs-private */
-const _MatPaginatorMixinBase = mixinDisabled(mixinInitialized(class {}));
+const _MatPaginatorMixinBase = mixinDisabled(class {});
 
 /**
  * Base class with all of the `MatPaginator` functionality.
@@ -116,7 +110,7 @@ export abstract class _MatPaginatorBase<
     },
   >
   extends _MatPaginatorMixinBase
-  implements OnInit, OnDestroy, CanDisable, HasInitialized
+  implements OnInit, OnDestroy, CanDisable
 {
   private _initialized: boolean;
   private _intlChanges: Subscription;
@@ -197,6 +191,9 @@ export abstract class _MatPaginatorBase<
   /** Displayed set of page size options. Will be sorted and include current page size. */
   _displayedPageSizeOptions: number[];
 
+  /** Emits when the paginator has been initialized. */
+  initialized = new ReplaySubject<void>(1);
+
   constructor(
     public _intl: MatPaginatorIntl,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -228,11 +225,12 @@ export abstract class _MatPaginatorBase<
 
   ngOnInit() {
     this._initialized = true;
+    this.initialized.next();
     this._updateDisplayedPageSizeOptions();
-    this._markInitialized();
   }
 
   ngOnDestroy() {
+    this.initialized.complete();
     this._intlChanges.unsubscribe();
   }
 
