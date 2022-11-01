@@ -15,6 +15,7 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 @Directive({
   selector: '[cdkMenuGroup]',
   exportAs: 'cdkMenuGroup',
+  standalone: true,
   host: {
     'role': 'group',
     'class': 'cdk-menu-group',

@@ -254,6 +254,7 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
 @Directive({
   selector: '[cdkTargetMenuAim]',
   exportAs: 'cdkTargetMenuAim',
+  standalone: true,
   providers: [{provide: MENU_AIM, useClass: TargetMenuAim}],
 })
 export class CdkTargetMenuAim {}

@@ -57,6 +57,7 @@ export type ContextMenuCoordinates = {x: number; y: number};
 @Directive({
   selector: '[cdkContextMenuTriggerFor]',
   exportAs: 'cdkContextMenuTriggerFor',
+  standalone: true,
   host: {
     '[attr.data-cdk-menu-stack-id]': 'null',
     '(contextmenu)': '_openOnContextMenu($event)',
