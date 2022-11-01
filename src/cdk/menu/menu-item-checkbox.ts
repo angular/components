@@ -17,6 +17,7 @@ import {CdkMenuItem} from './menu-item';
 @Directive({
   selector: '[cdkMenuItemCheckbox]',
   exportAs: 'cdkMenuItemCheckbox',
+  standalone: true,
   host: {
     'role': 'menuitemcheckbox',
     '[class.cdk-menu-item-checkbox]': 'true',

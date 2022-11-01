@@ -42,6 +42,7 @@ import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
 @Directive({
   selector: '[cdkMenuTriggerFor]',
   exportAs: 'cdkMenuTriggerFor',
+  standalone: true,
   host: {
     'class': 'cdk-menu-trigger',
     'aria-haspopup': 'menu',

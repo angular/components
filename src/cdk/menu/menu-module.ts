@@ -18,8 +18,7 @@ import {CdkMenuTrigger} from './menu-trigger';
 import {CdkContextMenuTrigger} from './context-menu-trigger';
 import {CdkTargetMenuAim} from './menu-aim';
 
-/** The list of components and directives that should be declared and exported from this module. */
-const EXPORTED_DECLARATIONS = [
+const MENU_DIRECTIVES = [
   CdkMenuBar,
   CdkMenu,
   CdkMenuItem,
@@ -33,8 +32,7 @@ const EXPORTED_DECLARATIONS = [
 
 /** Module that declares components and directives for the CDK menu. */
 @NgModule({
-  imports: [OverlayModule],
-  exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
+  imports: [OverlayModule, ...MENU_DIRECTIVES],
+  exports: MENU_DIRECTIVES,
 })
 export class CdkMenuModule {}

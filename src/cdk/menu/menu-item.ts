@@ -36,6 +36,7 @@ import {MENU_AIM, Toggler} from './menu-aim';
 @Directive({
   selector: '[cdkMenuItem]',
   exportAs: 'cdkMenuItem',
+  standalone: true,
   host: {
     'role': 'menuitem',
     'class': 'cdk-menu-item',
