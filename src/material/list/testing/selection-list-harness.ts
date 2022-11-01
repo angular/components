@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarnessConstructor, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatListOptionCheckboxPosition} from '@angular/material/list';
+import {MatListOptionTogglePosition} from '@angular/material/list';
 import {MatListHarnessBase} from './list-harness-base';
 import {
   ListItemHarnessFilters,
@@ -98,10 +98,16 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
   }
 
   private _beforeCheckbox = this.locatorForOptional('.mdc-list-item__start .mdc-checkbox');
+  private _beforeRadio = this.locatorForOptional('.mdc-list-item__start .mdc-radio');
 
   /** Gets the position of the checkbox relative to the list option content. */
-  async getCheckboxPosition(): Promise<MatListOptionCheckboxPosition> {
+  async getCheckboxPosition(): Promise<MatListOptionTogglePosition> {
     return (await this._beforeCheckbox()) !== null ? 'before' : 'after';
+  }
+
+  /** Gets the position of the radio relative to the list option content. */
+  async getRadioPosition(): Promise<MatListOptionTogglePosition> {
+    return (await this._beforeRadio()) !== null ? 'before' : 'after';
   }
 
   /** Whether the list option is selected. */

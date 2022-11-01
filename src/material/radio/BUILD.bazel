@@ -42,6 +42,7 @@ sass_binary(
     name = "radio_scss",
     src = "radio.scss",
     deps = [
+        ":radio_scss_lib",
         "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
     ],

@@ -126,21 +126,21 @@
                         color="primary">
       <div mat-subheader>Groceries</div>
 
-      <mat-list-option value="bananas" checkboxPosition="before">Bananas</mat-list-option>
-      <mat-list-option selected value="oranges">Oranges</mat-list-option>
-      <mat-list-option value="apples" color="accent">Apples</mat-list-option>
-      <mat-list-option value="strawberries" color="warn">Strawberries</mat-list-option>
+      <mat-list-option value="bananas" togglePosition="before">Bananas</mat-list-option>
+      <mat-list-option selected value="oranges" color="accent">Oranges</mat-list-option>
+      <mat-list-option value="apples" color="warn">Apples</mat-list-option>
+      <mat-list-option value="strawberries" disabled>Strawberries</mat-list-option>
     </mat-selection-list>
 
     <mat-selection-list [disableRipple]="selectionListRippleDisabled">
       <div mat-subheader>Dogs</div>
 
-      <mat-list-option checkboxPosition="before">
+      <mat-list-option togglePosition="before">
         <img matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg">
         <span matListItemTitle>Shiba Inu</span>
       </mat-list-option>
 
-      <mat-list-option checkboxPosition="after">
+      <mat-list-option togglePosition="after">
         <img matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba2.jpg">
         <span matListItemTitle>Other Shiba Inu</span>
       </mat-list-option>
@@ -177,9 +177,9 @@
       <div mat-subheader>Favorite Grocery</div>
 
       <mat-list-option value="bananas">Bananas</mat-list-option>
-      <mat-list-option selected value="oranges">Oranges</mat-list-option>
-      <mat-list-option value="apples">Apples</mat-list-option>
-      <mat-list-option value="strawberries" color="warn">Strawberries</mat-list-option>
+      <mat-list-option selected value="oranges" color="accent">Oranges</mat-list-option>
+      <mat-list-option value="apples" color="warn">Apples</mat-list-option>
+      <mat-list-option value="strawberries" disabled>Strawberries</mat-list-option>
     </mat-selection-list>
 
     <p>Selected: {{favoriteOptions | json}}</p>
@@ -239,19 +239,19 @@
     <h2>Icon alignment in selection list</h2>
 
     <mat-selection-list>
-      <mat-list-option value="bananas" [checkboxPosition]="checkboxPosition">
+      <mat-list-option value="bananas" [togglePosition]="togglePosition">
         <mat-icon matListItemIcon>info</mat-icon>
         Bananas
       </mat-list-option>
-      <mat-list-option value="oranges" [checkboxPosition]="checkboxPosition">
+      <mat-list-option value="oranges" [togglePosition]="togglePosition">
         <mat-icon matListItemIcon #ok>info</mat-icon>
         Oranges
       </mat-list-option>
-      <mat-list-option value="cake" [checkboxPosition]="checkboxPosition">
+      <mat-list-option value="cake" [togglePosition]="togglePosition">
         <mat-icon matListItemIcon>info</mat-icon>
         Cake
       </mat-list-option>
-      <mat-list-option value="fries" [checkboxPosition]="checkboxPosition">
+      <mat-list-option value="fries" [togglePosition]="togglePosition">
         <mat-icon matListItemIcon>info</mat-icon>
         Fries
       </mat-list-option>

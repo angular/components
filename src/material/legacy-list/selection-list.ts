@@ -74,7 +74,7 @@ export class MatLegacySelectionListChange {
 /**
  * Type describing possible positions of a checkbox in a list option
  * with respect to the list item's text.
- * @deprecated Use `MatListOptionCheckboxPosition` from `@angular/material/list` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+ * @deprecated Use `MatListOptionTogglePosition` from `@angular/material/list` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
  * @breaking-change 17.0.0
  */
 export type MatLegacyListOptionCheckboxPosition = 'before' | 'after';

@@ -6,6 +6,7 @@
 @use '@material/ripple' as mdc-ripple;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
+@use './radio-private';
 
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
@@ -18,22 +19,7 @@
     // MDC theme styles also include structural styles so we have to include the theme at least
     // once here. The values will be overwritten by our own theme file afterwards.
     @include mdc-helpers.disable-mdc-fallback-declarations {
-      @include mdc-radio-theme.theme-styles(map.merge(mdc-radio-theme.$light-theme, (
-        // Exclude the styles we don't need.
-        selected-focus-state-layer-color: null,
-        selected-focus-state-layer-opacity: null,
-        selected-hover-state-layer-color: null,
-        selected-hover-state-layer-opacity: null,
-        selected-pressed-state-layer-color: null,
-        selected-pressed-state-layer-opacity: null,
-        unselected-focus-icon-color: null,
-        unselected-focus-state-layer-color: null,
-        unselected-focus-state-layer-opacity: null,
-        unselected-hover-state-layer-color: null,
-        unselected-hover-state-layer-opacity: null,
-        unselected-pressed-state-layer-color: null,
-        unselected-pressed-state-layer-opacity: null,
-      )));
+      @include mdc-radio-theme.theme-styles(radio-private.$private-radio-theme-config);
 
       // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
       @include mdc-radio-theme.focus-indicator-color(

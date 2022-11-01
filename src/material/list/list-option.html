@@ -1,5 +1,5 @@
 <!--
-  Save icons and the pseudo checkbox so that they can be re-used in the template without
+  Save icons and the pseudo checkbox/radio so that they can be re-used in the template without
   duplication. Also content can only be injected once so we need to extract icons/avatars
   into a template since we use it in multiple places.
 -->
@@ -25,10 +25,26 @@
   </div>
 </ng-template>
 
+<ng-template #radio>
+  <div class="mdc-radio" [class.mdc-radio--disabled]="disabled">
+    <input type="radio" class="mdc-radio__native-control"
+           [checked]="selected" [disabled]="disabled"/>
+    <div class="mdc-radio__background">
+      <div class="mdc-radio__outer-circle"></div>
+      <div class="mdc-radio__inner-circle"></div>
+    </div>
+  </div>
+</ng-template>
+
 <!-- Container for the checkbox at start. -->
 <span class="mdc-list-item__start mat-mdc-list-option-checkbox-before"
       *ngIf="_hasCheckboxAt('before')">
   <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
+</span>
+<!-- Container for the radio at the start. -->
+<span class="mdc-list-item__start mat-mdc-list-option-radio-before"
+      *ngIf="_hasRadioAt('before')">
+  <ng-template [ngTemplateOutlet]="radio"></ng-template>
 </span>
 <!-- Conditionally renders icons/avatars before the list item text. -->
 <ng-template [ngIf]="_hasIconsOrAvatarsAt('before')">
@@ -48,6 +64,10 @@
 <!-- Container for the checkbox at the end. -->
 <span class="mdc-list-item__end" *ngIf="_hasCheckboxAt('after')">
   <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
+</span>
+<!-- Container for the radio at the end. -->
+<span class="mdc-list-item__end" *ngIf="_hasRadioAt('after')">
+  <ng-template [ngTemplateOutlet]="radio"></ng-template>
 </span>
 <!-- Conditionally renders icons/avatars after the list item text. -->
 <ng-template [ngIf]="_hasIconsOrAvatarsAt('after')">

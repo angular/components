@@ -639,7 +639,7 @@ class NavListHarnessTest {
 @Component({
   template: `
     <mat-selection-list class="test-base-list-functionality">
-      <mat-list-option checkboxPosition="before">
+      <mat-list-option togglePosition="before">
         <div matListItemTitle>Item </div>
         <div matListItemLine>1</div>
         <div matListItemIcon>icon</div>

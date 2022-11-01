@@ -52,17 +52,17 @@ export class MatListItemMeta {}
 /**
  * @docs-private
  *
- * MDC uses the very intuitively named classes `.mdc-list-item__start` and `.mat-list-item__end`
- * to position content such as icons or checkboxes that comes either before or after the text
- * content respectively. This directive detects the placement of the checkbox and applies the
+ * MDC uses the very intuitively named classes `.mdc-list-item__start` and `.mat-list-item__end` to
+ * position content such as icons or checkboxes/radios that comes either before or after the text
+ * content respectively. This directive detects the placement of the checkbox/radio and applies the
  * correct MDC class to position the icon/avatar on the opposite side.
  */
 @Directive({
   host: {
-    // MDC uses intuitively named classes `.mdc-list-item__start` and `.mat-list-item__end`
-    // to position content such as icons or checkboxes that comes either before or after the text
-    // content respectively. This directive detects the placement of the checkbox and applies the
-    // correct MDC class to position the icon/avatar on the opposite side.
+    // MDC uses intuitively named classes `.mdc-list-item__start` and `.mat-list-item__end` to
+    // position content such as icons or checkboxes/radios that comes either before or after the
+    // text content respectively. This directive detects the placement of the checkbox/radio and
+    // applies the correct MDC class to position the icon/avatar on the opposite side.
     '[class.mdc-list-item__start]': '_isAlignedAtStart()',
     '[class.mdc-list-item__end]': '!_isAlignedAtStart()',
   },
@@ -72,8 +72,8 @@ export class _MatListItemGraphicBase {
 
   _isAlignedAtStart() {
     // By default, in all list items the graphic is aligned at start. In list options,
-    // the graphic is only aligned at start if the checkbox is at the end.
-    return !this._listOption || this._listOption?._getCheckboxPosition() === 'after';
+    // the graphic is only aligned at start if the checkbox/radio is at the end.
+    return !this._listOption || this._listOption?._getTogglePosition() === 'after';
   }
 }
 
