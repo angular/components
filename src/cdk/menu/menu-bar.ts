@@ -31,6 +31,7 @@ import {CdkMenuBase} from './menu-base';
 @Directive({
   selector: '[cdkMenuBar]',
   exportAs: 'cdkMenuBar',
+  standalone: true,
   host: {
     'role': 'menubar',
     'class': 'cdk-menu-bar',
