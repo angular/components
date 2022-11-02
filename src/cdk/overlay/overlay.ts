@@ -41,7 +41,7 @@ let nextUniqueId = 0;
  *
  * An overlay *is* a PortalOutlet, so any kind of Portal can be loaded into one.
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class Overlay {
   private _appRef: ApplicationRef;
 
