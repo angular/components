@@ -1,3 +1,21 @@
+<a name="15.0.0-rc.1"></a>
+# 15.0.0-rc.1 "feldspar-fence" (2022-11-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [992cafc39](https://github.com/angular/components/commit/992cafc3955722e0b8ed59adcef2cd5fb0badf50) | fix | **listbox:** incorrectly validating preselected value ([#25893](https://github.com/angular/components/pull/25893)) |
+| [4b757e6eb](https://github.com/angular/components/commit/4b757e6eba15a2cf96eb28e9c71e2d086e11292a) | fix | **overlay:** provide Overlay in root ([#25909](https://github.com/angular/components/pull/25909)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8baae7342](https://github.com/angular/components/commit/8baae7342ef63558aa00f202c12a78f76fa7e817) | fix | **list:** fix tabindex="-1" not being maintained when disabled ([#25860](https://github.com/angular/components/pull/25860)) |
+| [cd2f13c27](https://github.com/angular/components/commit/cd2f13c27e7d70ab1306565d2f205d3a4497fbd8) | fix | **schematics:** initialize slider template migrator ([#25898](https://github.com/angular/components/pull/25898)) |
+| [6cee17e7c](https://github.com/angular/components/commit/6cee17e7cef2a2261e68191a3bfb4cba44abb86a) | fix | **schematics:** migrate named arguments in define-typography-config ([#25907](https://github.com/angular/components/pull/25907)) |
+## Special Thanks
+Kristiyan Kostadinov, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0-rc.0"></a>
 # 15.0.0-rc.0 "plastic-platypus" (2022-10-26)
 ### cdk
