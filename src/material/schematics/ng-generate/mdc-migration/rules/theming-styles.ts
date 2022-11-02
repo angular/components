@@ -14,15 +14,35 @@ import {ComponentMigrator, MIGRATORS} from '.';
 
 const COMPONENTS_MIXIN_NAME = /\.([^(;]*)/;
 
+/**
+ * Mapping between the renamed legacy typography levels and their new non-legacy names. Based on
+ * the mappings in `private-typography-to-2018-config` from `core/typography/_typography.scss`.
+ */
+const RENAMED_TYPOGRAPHY_LEVELS = new Map([
+  ['display-4', 'headline-1'],
+  ['display-3', 'headline-2'],
+  ['display-2', 'headline-3'],
+  ['display-1', 'headline-4'],
+  ['headline', 'headline-5'],
+  ['title', 'headline-6'],
+  ['subheading-2', 'subtitle-1'],
+  ['body-2', 'subtitle-2'],
+  ['subheading-1', 'body-1'],
+  ['body-1', 'body-2'],
+]);
+
 export class ThemingStylesMigration extends Migration<ComponentMigrator[], SchematicContext> {
   enabled = true;
-  namespace: string;
+  private _namespace: string;
 
   override visitStylesheet(stylesheet: ResolvedResource) {
-    const migratedContent = this.migrate(stylesheet.content, stylesheet.filePath).replace(
-      new RegExp(`${this.namespace}.define-legacy-typography-config\\(`, 'g'),
-      `${this.namespace}.define-typography-config(`,
-    );
+    let migratedContent = this.migrate(stylesheet.content, stylesheet.filePath);
+
+    // Note: needs to run after `migrate` so that the `namespace` has been resolved.
+    if (this._namespace) {
+      migratedContent = migrateTypographyConfigs(migratedContent, this._namespace);
+    }
+
     this.fileSystem
       .edit(stylesheet.filePath)
       .remove(stylesheet.start, stylesheet.content.length)
@@ -52,16 +72,16 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
 
   atUseHandler(atRule: postcss.AtRule) {
     if (isAngularMaterialImport(atRule)) {
-      this.namespace = parseNamespace(atRule);
+      this._namespace = parseNamespace(atRule);
     }
   }
 
   atIncludeHandler(atRule: postcss.AtRule) {
     const migrator = this.upgradeData.find(m => {
-      return m.styles.isLegacyMixin(this.namespace, atRule);
+      return m.styles.isLegacyMixin(this._namespace, atRule);
     });
     if (migrator) {
-      const mixinChange = migrator.styles.getMixinChange(this.namespace, atRule);
+      const mixinChange = migrator.styles.getMixinChange(this._namespace, atRule);
       if (mixinChange) {
         if (mixinChange.new) {
           replaceAtRuleWithMultiple(atRule, mixinChange.old, mixinChange.new);
@@ -79,14 +99,14 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
           return;
         }
       }
-      replaceCrossCuttingMixin(atRule, this.namespace);
+      replaceCrossCuttingMixin(atRule, this._namespace);
     }
   }
 
   isCrossCuttingMixin(mixinText: string) {
     return [
-      `${this.namespace}\\.all-legacy-component-`,
-      `${this.namespace}\\.legacy-core([^-]|$)`,
+      `${this._namespace}\\.all-legacy-component-`,
+      `${this._namespace}\\.legacy-core([^-]|$)`,
     ].some(r => new RegExp(r).test(mixinText));
   }
 
@@ -234,4 +254,87 @@ function replaceAtRuleWithMultiple(
     });
   }
   atRule.remove();
+}
+
+/**
+ * Migrates all of the `define-legacy-typography-config` calls within a file.
+ * @param content Content of the file to be migrated.
+ * @param namespace Namespace under which `define-legacy-typography-config` is being used.
+ */
+function migrateTypographyConfigs(content: string, namespace: string): string {
+  const calls = extractFunctionCalls(`${namespace}.define-legacy-typography-config`, content);
+  const newFunctionName = `${namespace}.define-typography-config`;
+  const replacements: {start: number; end: number; text: string}[] = [];
+
+  calls.forEach(({name, args}) => {
+    const argContent = content.slice(args.start, args.end);
+    replacements.push({start: name.start, end: name.end, text: newFunctionName});
+
+    RENAMED_TYPOGRAPHY_LEVELS.forEach((newName, oldName) => {
+      const pattern = new RegExp(`\\$(${oldName}) *:`, 'g');
+      let match: RegExpExecArray | null;
+
+      // Technically each argument can only match once, but keep going just in case.
+      while ((match = pattern.exec(argContent))) {
+        const start = args.start + match.index + 1;
+        replacements.push({
+          start,
+          end: start + match[1].length,
+          text: newName,
+        });
+      }
+    });
+  });
+
+  replacements
+    .sort((a, b) => b.start - a.start)
+    .forEach(
+      ({start, end, text}) => (content = content.slice(0, start) + text + content.slice(end)),
+    );
+
+  return content;
+}
+
+/**
+ * Extracts the spans of all calls of a specific Sass function within a file.
+ * @param name Name of the function to look for.
+ * @param content Content of the file being searched.
+ */
+function extractFunctionCalls(name: string, content: string) {
+  const results: {name: {start: number; end: number}; args: {start: number; end: number}}[] = [];
+  const callString = name + '(';
+  let index = content.indexOf(callString);
+
+  // This would be much simpler with a regex, but it can be fragile when it comes to nested
+  // parentheses. We use this manual parsing which should be more reliable.
+  while (index > -1) {
+    let openParens = 0;
+    let endIndex = -1;
+    let nameEnd = index + callString.length - 1; // -1 to exclude the opening paren.
+
+    for (let i = nameEnd; i < content.length; i++) {
+      const char = content[i];
+
+      if (char === '(') {
+        openParens++;
+      } else if (char === ')') {
+        openParens--;
+
+        if (openParens === 0) {
+          endIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Invalid call, skip over it.
+    if (endIndex === -1) {
+      index = content.indexOf(callString, nameEnd + 1);
+    } else {
+      results.push({name: {start: index, end: nameEnd}, args: {start: nameEnd + 1, end: endIndex}});
+      index = content.indexOf(callString, endIndex);
+    }
+  }
+
+  return results;
 }
