@@ -55,6 +55,12 @@ $mat-slider-horizontal-margin: 8px !default;
     .mdc-slider__track--active_fill {
       transition-duration: 80ms;
     }
+
+    &.mat-mdc-slider-disable-track-animation {
+      .mdc-slider__track--active_fill {
+        transition-duration: 0ms;
+      }
+    }
   }
 
   // We need to repeat these styles to override discrete slider styling.
@@ -68,6 +74,12 @@ $mat-slider-horizontal-margin: 8px !default;
     .mdc-slider__thumb,
     .mdc-slider__track--active_fill {
       transition-duration: 80ms;
+    }
+    
+    &.mat-mdc-slider-disable-track-animation {
+      .mdc-slider__track--active_fill {
+        transition-duration: 0ms;
+      }
     }
   }
 

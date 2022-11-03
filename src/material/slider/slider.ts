@@ -41,6 +41,7 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {
   _MatThumb,
   _MatTickMark,
@@ -557,8 +558,17 @@ export class MatSlider
     const trackStyle = this._trackActive.nativeElement.style;
     trackStyle.left = styles.left;
     trackStyle.right = styles.right;
-    trackStyle.transform = styles.transform;
     trackStyle.transformOrigin = styles.transformOrigin;
+
+    if (styles.transformOrigin !== trackStyle.transformOrigin) {
+      this._elementRef.nativeElement.classList.add('mat-mdc-slider-disable-track-animation');
+      this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+        this._elementRef.nativeElement.classList.remove('mat-mdc-slider-disable-track-animation');
+        trackStyle.transform = styles.transform;
+      });
+    } else {
+      trackStyle.transformOrigin = styles.transformOrigin;
+    }
   }
 
   /** Returns the translateX positioning for a tick mark based on it's index. */
