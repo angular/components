@@ -48,7 +48,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             // Move the binding to the <input>.
             const sourceSpan = binding.node.sourceSpan;
             inputBindings.push(originalHtml.slice(sourceSpan.start.offset, sourceSpan.end.offset));
-            updates.push(this._removeBinding(originalHtml, node, binding.node));
+            updates.push(this._removeBinding(originalHtml, binding.node));
           }
         }
 
@@ -69,22 +69,18 @@ export class SliderTemplateMigrator extends TemplateMigrator {
   }
 
   /** Returns an update that removes the given binding from the given template ast element. */
-  private _removeBinding(
-    originalHtml: string,
-    element: compiler.TmplAstElement,
-    binding: compiler.TmplAstNode,
-  ): Update {
-    let startOffset = binding.sourceSpan.start.offset;
+  private _removeBinding(originalHtml: string, binding: compiler.TmplAstNode): Update {
+    let charIndex = binding.sourceSpan.start.offset - 1;
 
-    // Iterate backwards until we reach a non-whitespace char.
-    for (let i = binding.sourceSpan.start.offset - 1; /\s/.test(originalHtml.charAt(i)); i--) {
-      startOffset--;
+    // Find the first char before the binding that is not whitespace.
+    while (/\s/.test(originalHtml.charAt(charIndex))) {
+      charIndex--;
     }
 
     return {
-      offset: startOffset,
+      offset: charIndex + 1,
       updateFn: (html: string) =>
-        html.slice(0, startOffset) + html.slice(binding.sourceSpan.end.offset),
+        html.slice(0, charIndex + 1) + html.slice(binding.sourceSpan.end.offset),
     };
   }
 
