@@ -20,4 +20,63 @@ describe('slider template migrator', () => {
   it('should not update other elements', async () => {
     await runMigrationTest('<mat-button></mat-button>', '<mat-button></mat-button>');
   });
+
+  it('should update a basic slider', async () => {
+    await runMigrationTest(
+      '<mat-slider></mat-slider>',
+      '<mat-slider><input matSliderThumb /></mat-slider>',
+    );
+  });
+
+  describe('should move a value binding to the slider thumb', () => {
+    it('with non-indented bindings', async () => {
+      await runMigrationTest(
+        '<mat-slider [(value)]="myValue"></mat-slider>',
+        '<mat-slider><input matSliderThumb [(value)]="myValue" /></mat-slider>',
+      );
+      await runMigrationTest(
+        '<mat-slider min="50" [(value)]="myValue"></mat-slider>',
+        '<mat-slider min="50"><input matSliderThumb [(value)]="myValue" /></mat-slider>',
+      );
+      await runMigrationTest(
+        '<mat-slider [(value)]="myValue" max="200"></mat-slider>',
+        '<mat-slider max="200"><input matSliderThumb [(value)]="myValue" /></mat-slider>',
+      );
+      await runMigrationTest(
+        '<mat-slider min="50" [(value)]="myValue" max="200"></mat-slider>',
+        '<mat-slider min="50" max="200"><input matSliderThumb [(value)]="myValue" /></mat-slider>',
+      );
+    });
+
+    it('with indented bindings', async () => {
+      await runMigrationTest(
+        `<mat-slider
+          [(value)]="myValue"></mat-slider>`,
+        `<mat-slider><input matSliderThumb [(value)]="myValue" /></mat-slider>`,
+      );
+      await runMigrationTest(
+        `<mat-slider
+          min="50"
+          [(value)]="myValue"></mat-slider>`,
+        `<mat-slider
+          min="50"><input matSliderThumb [(value)]="myValue" /></mat-slider>`,
+      );
+      await runMigrationTest(
+        `<mat-slider
+          [(value)]="myValue"
+          max="200"></mat-slider>`,
+        `<mat-slider
+          max="200"><input matSliderThumb [(value)]="myValue" /></mat-slider>`,
+      );
+      await runMigrationTest(
+        `<mat-slider
+          min="50"
+          [(value)]="myValue"
+          max="200"></mat-slider>`,
+        `<mat-slider
+          min="50"
+          max="200"><input matSliderThumb [(value)]="myValue" /></mat-slider>`,
+      );
+    });
+  });
 });
