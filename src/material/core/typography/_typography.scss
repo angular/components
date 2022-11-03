@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use 'typography-utils';
 @use '../theming/theming';
 
@@ -82,12 +83,13 @@
     caption:        $caption,
     button:         $button,
     input:          $input,
+    version:        '2014',
   );
 
   // Loop through the levels and set the `font-family` of the ones that don't have one to the base.
   // Note that Sass can't modify maps in place, which means that we need to merge and re-assign.
   @each $key, $level in $config {
-    @if map.get($level, font-family) == null {
+    @if meta.type-of($level) == 'map' and map.get($level, font-family) == null {
       $new-level: map.merge($level, (font-family: $font-family));
       $config: map.merge($config, ($key: $new-level));
     }
@@ -99,11 +101,19 @@
 
 // Whether a config is for the Material Design 2018 typography system.
 @function private-typography-is-2018-config($config) {
+  @if map.has-key($config, 'version') {
+    @return map.get($config, 'version') == '2018';
+  }
+
   @return map.get($config, headline-1) != null;
 }
 
 // Whether a config is for the Material Design 2014 typography system.
 @function private-typography-is-2014-config($config) {
+  @if map.has-key($config, 'version') {
+    @return map.get($config, 'version') == '2014';
+  }
+
   @return map.get($config, headline) != null;
 }
 
@@ -173,7 +183,8 @@
         caption: map.get($config, caption),
         overline: if(map.get($config, overline), map.get($config, overline),
             define-typography-level(12px, 32px, 500)
-        )
+        ),
+        version: '2018',
     );
   }
   @return $config;
@@ -184,45 +195,70 @@
 /// @param {String} $selector Ancestor selector under which native elements, such as h1, will
 ///     be styled.
 @mixin typography-hierarchy($config-or-theme, $selector: '.mat-typography') {
-  $config: private-typography-to-2014-config(theming.get-typography-config($config-or-theme));
+  $raw-config: theming.get-typography-config($config-or-theme);
+  $is-2014-config: private-typography-is-2018-config($raw-config);
+  $config: private-typography-to-2014-config($raw-config);
 
   // Note that it seems redundant to prefix the class rules with the `$selector`, however it's
   // necessary if we want to allow people to overwrite the tag selectors. This is due to
   // selectors like `#{$selector} h1` being more specific than ones like `.mat-title`.
   .mat-h1,
-  .mat-headline,
   #{$selector} .mat-h1,
-  #{$selector} .mat-headline,
-  #{$selector} h1 {
+  #{$selector} h1,
+  .mat-headline-5,
+  #{$selector} .mat-headline-5,
+  // Backwards-compat with the 2014 terminology.
+  .mat-headline,
+  #{$selector} .mat-headline {
     @include typography-utils.typography-level($config, headline);
     margin: 0 0 16px;
   }
 
   .mat-h2,
-  .mat-title,
   #{$selector} .mat-h2,
-  #{$selector} .mat-title,
-  #{$selector} h2 {
+  #{$selector} h2,
+  .mat-headline-6,
+  #{$selector} .mat-headline-6,
+  // Backwards-compat with the 2014 terminology.
+  .mat-title,
+  #{$selector} .mat-title {
     @include typography-utils.typography-level($config, title);
     margin: 0 0 16px;
   }
 
   .mat-h3,
-  .mat-subheading-2,
   #{$selector} .mat-h3,
-  #{$selector} .mat-subheading-2,
-  #{$selector} h3 {
+  #{$selector} h3,
+  .mat-subtitle-1,
+  #{$selector} .mat-subtitle-1,
+  // Backwards-compat with the 2014 terminology.
+  .mat-subheading-2,
+  #{$selector} .mat-subheading-2 {
     @include typography-utils.typography-level($config, subheading-2);
     margin: 0 0 16px;
   }
 
-  .mat-h4,
-  .mat-subheading-1,
-  #{$selector} .mat-h4,
-  #{$selector} .mat-subheading-1,
-  #{$selector} h4 {
-    @include typography-utils.typography-level($config, subheading-1);
-    margin: 0 0 16px;
+  // `subheading-1` from the 2014 config is remapped to `body-1` which is a conflict.
+  // Work around it by emitting a different selector depending on the config version.
+  @if $is-2014-config {
+    .mat-h4,
+    .mat-subheading-1,
+    #{$selector} .mat-h4,
+    #{$selector} .mat-subheading-1,
+    #{$selector} h4 {
+      @include typography-utils.typography-level($config, subheading-1);
+      margin: 0 0 16px;
+    }
+  }
+  @else {
+    .mat-h4,
+    .mat-body-1,
+    #{$selector} .mat-h4,
+    #{$selector} .mat-body-1,
+    #{$selector} h4 {
+      @include typography-utils.typography-level($config, subheading-1);
+      margin: 0 0 16px;
+    }
   }
 
   // Note: the spec doesn't have anything that would correspond to h5 and h6, but we add these for
@@ -256,22 +292,46 @@
     margin: 0 0 12px;
   }
 
-  .mat-body-strong,
-  .mat-body-2,
-  #{$selector} .mat-body-strong,
-  #{$selector} .mat-body-2 {
-    @include typography-utils.typography-level($config, body-2);
+  // `body-1` from the 2014 config is remapped to `body-2` which is a conflict.
+  // Work around it by emitting a different selector depending on the config version.
+  @if $is-2014-config {
+    .mat-body-strong,
+    .mat-body-2,
+    #{$selector} .mat-body-strong,
+    #{$selector} .mat-body-2 {
+      @include typography-utils.typography-level($config, body-2);
+    }
+
+    .mat-body,
+    .mat-body-1,
+    #{$selector} .mat-body,
+    #{$selector} .mat-body-1,
+    #{$selector} {
+      @include typography-utils.typography-level($config, body-1);
+
+      p {
+        margin: 0 0 12px;
+      }
+    }
   }
+  @else {
+    .mat-body-strong,
+    .mat-subtitle-2,
+    #{$selector} .mat-body-strong,
+    #{$selector} .mat-subtitle-2 {
+      @include typography-utils.typography-level($config, body-2);
+    }
 
-  .mat-body,
-  .mat-body-1,
-  #{$selector} .mat-body,
-  #{$selector} .mat-body-1,
-  #{$selector} {
-    @include typography-utils.typography-level($config, body-1);
+    .mat-body,
+    .mat-body-2,
+    #{$selector} .mat-body,
+    #{$selector} .mat-body-2,
+    #{$selector} {
+      @include typography-utils.typography-level($config, body-1);
 
-    p {
-      margin: 0 0 12px;
+      p {
+        margin: 0 0 12px;
+      }
     }
   }
 
@@ -282,24 +342,36 @@
     @include typography-utils.typography-level($config, caption);
   }
 
+  .mat-headline-1,
+  #{$selector} .mat-headline-1,
+  // Backwards-compat with the 2014 terminology.
   .mat-display-4,
   #{$selector} .mat-display-4 {
     @include typography-utils.typography-level($config, display-4);
     margin: 0 0 56px;
   }
 
+  .mat-headline-2,
+  #{$selector} .mat-headline-2,
+  // Backwards-compat with the 2014 terminology.
   .mat-display-3,
   #{$selector} .mat-display-3 {
     @include typography-utils.typography-level($config, display-3);
     margin: 0 0 64px;
   }
 
+  .mat-headline-3,
+  #{$selector} .mat-headline-3,
+  // Backwards-compat with the 2014 terminology.
   .mat-display-2,
   #{$selector} .mat-display-2 {
     @include typography-utils.typography-level($config, display-2);
     margin: 0 0 64px;
   }
 
+  .mat-headline-4,
+  #{$selector} .mat-headline-4,
+  // Backwards-compat with the 2014 terminology.
   .mat-display-1,
   #{$selector} .mat-display-1 {
     @include typography-utils.typography-level($config, display-1);

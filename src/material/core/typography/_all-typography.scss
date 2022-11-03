@@ -132,6 +132,7 @@
       mdc-helpers.typography-config-level-from-mdc(button, $overrides)),
     overline: $overline or _rem-to-px(
       mdc-helpers.typography-config-level-from-mdc(overline, $overrides)),
+    version: '2018',
   );
 }
 
