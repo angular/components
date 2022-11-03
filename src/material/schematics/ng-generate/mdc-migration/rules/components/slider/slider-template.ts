@@ -75,7 +75,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
     let charIndex = binding.sourceSpan.start.offset - 1;
 
     // Find the first char before the binding that is not whitespace.
-    while (/\s/.test(originalHtml.charAt(charIndex))) {
+    while (/\s/.test(originalHtml.charAt(charIndex)) && charIndex > -1) {
       charIndex--;
     }
 
