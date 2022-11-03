@@ -556,18 +556,21 @@ export class MatSlider
     transformOrigin: string;
   }): void {
     const trackStyle = this._trackActive.nativeElement.style;
+    const animationOriginChanged =
+      styles.left !== trackStyle.left && styles.right !== trackStyle.right;
+
     trackStyle.left = styles.left;
     trackStyle.right = styles.right;
     trackStyle.transformOrigin = styles.transformOrigin;
 
-    if (styles.transformOrigin !== trackStyle.transformOrigin) {
+    if (animationOriginChanged) {
       this._elementRef.nativeElement.classList.add('mat-mdc-slider-disable-track-animation');
       this._ngZone.onStable.pipe(take(1)).subscribe(() => {
         this._elementRef.nativeElement.classList.remove('mat-mdc-slider-disable-track-animation');
         trackStyle.transform = styles.transform;
       });
     } else {
-      trackStyle.transformOrigin = styles.transformOrigin;
+      trackStyle.transform = styles.transform;
     }
   }
 
