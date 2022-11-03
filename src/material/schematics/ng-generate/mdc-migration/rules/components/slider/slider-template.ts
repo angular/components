@@ -50,6 +50,8 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             inputBindings.push(originalHtml.slice(sourceSpan.start.offset, sourceSpan.end.offset));
             updates.push(this._removeBinding(originalHtml, binding.node));
           }
+
+          // TODO(wagnermaciel): Finish the remapping of other bindings.
         }
 
         const matSliderThumb = inputBindings.length
