@@ -75,7 +75,7 @@ $mat-slider-horizontal-margin: 8px !default;
     .mdc-slider__track--active_fill {
       transition-duration: 80ms;
     }
-    
+
     &.mat-mdc-slider-disable-track-animation {
       .mdc-slider__track--active_fill {
         transition-duration: 0ms;
@@ -105,7 +105,8 @@ $mat-slider-horizontal-margin: 8px !default;
       background-color: var(--mat-mdc-slider-hover-ripple-color, transparent);
     }
 
-    .mat-mdc-slider-focus-ripple, .mat-mdc-slider-active-ripple {
+    .mat-mdc-slider-focus-ripple,
+    .mat-mdc-slider-active-ripple {
       background-color: var(--mat-mdc-slider-focus-ripple-color, transparent);
     }
   }
