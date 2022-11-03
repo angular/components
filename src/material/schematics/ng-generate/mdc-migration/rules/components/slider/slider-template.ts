@@ -37,15 +37,55 @@ export class SliderTemplateMigrator extends TemplateMigrator {
 
     visitElements(ast.nodes, (node: compiler.TmplAstElement) => {
       if (node.name === 'mat-slider') {
-        this._getBindings(node);
+        const originalHtml = node.sourceSpan.start.file.content;
+        const bindings = this._getBindings(node);
+        const inputBindings: string[] = [];
+
+        for (let i = 0; i < bindings.length; i++) {
+          const binding = bindings[i];
+
+          if (binding.name === 'value') {
+            // Move the binding to the <input>.
+            const sourceSpan = binding.node.sourceSpan;
+            inputBindings.push(originalHtml.slice(sourceSpan.start.offset, sourceSpan.end.offset));
+            updates.push(this._removeBinding(originalHtml, node, binding.node));
+          }
+        }
+
+        const matSliderThumb = inputBindings.length
+          ? `<input matSliderThumb ${inputBindings.join(' ')} />`
+          : '<input matSliderThumb />';
 
         updates.push({
-          offset: node.sourceSpan.start.offset,
-          updateFn: (html: string) => html,
+          offset: node.startSourceSpan.end.offset,
+          updateFn: (html: string) =>
+            html.slice(0, node.startSourceSpan.end.offset) +
+            matSliderThumb +
+            html.slice(node.startSourceSpan.end.offset),
         });
       }
     });
     return updates;
+  }
+
+  /** Returns an update that removes the given binding from the given template ast element. */
+  private _removeBinding(
+    originalHtml: string,
+    element: compiler.TmplAstElement,
+    binding: compiler.TmplAstNode,
+  ): Update {
+    let startOffset = binding.sourceSpan.start.offset;
+
+    // Iterate backwards until we reach a non-whitespace char.
+    for (let i = binding.sourceSpan.start.offset - 1; /\s/.test(originalHtml.charAt(i)); i--) {
+      startOffset--;
+    }
+
+    return {
+      offset: startOffset,
+      updateFn: (html: string) =>
+        html.slice(0, startOffset) + html.slice(binding.sourceSpan.end.offset),
+    };
   }
 
   /** Returns all of the property, attribute, event, or two-way bindings on the given node. */
