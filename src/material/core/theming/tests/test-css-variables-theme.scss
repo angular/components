@@ -3,20 +3,6 @@
 @use '../all-theme';
 @use '../palette';
 @use '../theming';
-@use '../../../badge/badge-theme';
-@use '../../../bottom-sheet/bottom-sheet-theme';
-@use '../../../button-toggle/button-toggle-theme';
-@use '../../../datepicker/datepicker-theme';
-@use '../../../divider/divider-theme';
-@use '../../../expansion/expansion-theme';
-@use '../../../grid-list/grid-list-theme';
-@use '../../../icon/icon-theme';
-@use '../../../legacy-progress-spinner/progress-spinner-theme';
-@use '../../../sidenav/sidenav-theme';
-@use '../../../stepper/stepper-theme';
-@use '../../../sort/sort-theme';
-@use '../../../toolbar/toolbar-theme';
-@use '../../../tree/tree-theme';
 @use '../../../legacy-core/theming/all-theme' as legacy-all-theme;
 
 // Recursively replaces all of the values inside a Sass map with a different value.
@@ -46,19 +32,5 @@
     )
   ));
   $css-var-theme: replace-all-values($theme, var(--test-var));
-  @include badge-theme.theme($css-var-theme);
-  @include bottom-sheet-theme.theme($css-var-theme);
-  @include button-toggle-theme.theme($css-var-theme);
-  @include datepicker-theme.theme($css-var-theme);
-  @include divider-theme.theme($css-var-theme);
-  @include expansion-theme.theme($css-var-theme);
-  @include grid-list-theme.theme($css-var-theme);
-  @include icon-theme.theme($css-var-theme);
-  @include progress-spinner-theme.theme($css-var-theme);
-  @include sidenav-theme.theme($css-var-theme);
-  @include stepper-theme.theme($css-var-theme);
-  @include sort-theme.theme($css-var-theme);
-  @include toolbar-theme.theme($css-var-theme);
-  @include tree-theme.theme($css-var-theme);
   @include legacy-all-theme.all-legacy-component-themes($css-var-theme);
 }
