@@ -40,6 +40,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
         const originalHtml = node.sourceSpan.start.file.content;
         const bindings = this._getBindings(node);
         const inputBindings: string[] = [];
+        const comments: string[] = [];
 
         for (let i = 0; i < bindings.length; i++) {
           const binding = bindings[i];
@@ -51,7 +52,17 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             updates.push(this._removeBinding(originalHtml, binding.node));
           }
 
+          if (binding.name === 'invert' || binding.name === 'vertical') {
+            // Remove the binding and leave a comment.
+            comments.push(`<!-- TODO: The '${binding.name}' property no longer exists -->`);
+            updates.push(this._removeBinding(originalHtml, binding.node));
+          }
+
           // TODO(wagnermaciel): Finish the remapping of other bindings.
+        }
+
+        if (comments.length) {
+          updates.push(this._addComments(node, comments));
         }
 
         const matSliderThumb = inputBindings.length
@@ -68,6 +79,37 @@ export class SliderTemplateMigrator extends TemplateMigrator {
       }
     });
     return updates;
+  }
+
+  /** Returns an update the adds the given comments before the given template ast element. */
+  private _addComments(node: compiler.TmplAstElement, comments: string[]): Update {
+    const whitespace = this._parseIndentation(node);
+    const indentation = '\n' + this._parseIndentation(node);
+
+    // If everything leading up to the mat-slider start tag
+    // was whitespace, we don't need to start on a new line.
+    const commentStr =
+      whitespace.length === node.sourceSpan.start.col
+        ? comments.join(indentation)
+        : indentation + comments.join(indentation);
+
+    return {
+      offset: node.sourceSpan.start.offset,
+      updateFn: (html: string) =>
+        html.slice(0, node.sourceSpan.start.offset) +
+        commentStr +
+        `${indentation}${html.slice(node.sourceSpan.start.offset)}`,
+    };
+  }
+
+  /** Returns the whitespace at the start of the given node's line. */
+  private _parseIndentation(node: compiler.TmplAstElement): string {
+    const html = node.sourceSpan.start.file.content;
+    const before = html.slice(
+      node.sourceSpan.start.offset - node.sourceSpan.start.col,
+      node.sourceSpan.start.offset,
+    );
+    return before.slice(0, before.length - before.trimStart().length);
   }
 
   /** Returns an update that removes the given binding from the given template ast element. */
