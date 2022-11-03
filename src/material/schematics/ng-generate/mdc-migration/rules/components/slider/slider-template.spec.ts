@@ -79,4 +79,38 @@ describe('slider template migrator', () => {
       );
     });
   });
+
+  it('should add a comment if a binding has no new mapping', async () => {
+    await runMigrationTest(
+      `
+      <mat-slider invert></mat-slider>`,
+      `
+      <!-- TODO: The 'invert' property no longer exists -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+    await runMigrationTest(
+      `
+      <mat-slider vertical></mat-slider>`,
+      `
+      <!-- TODO: The 'vertical' property no longer exists -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+    await runMigrationTest(
+      `
+      <mat-slider vertical invert></mat-slider>`,
+      `
+      <!-- TODO: The 'vertical' property no longer exists -->
+      <!-- TODO: The 'invert' property no longer exists -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+    await runMigrationTest(
+      `
+      <button>Click Me</button><mat-slider vertical invert></mat-slider>`,
+      `
+      <button>Click Me</button>
+      <!-- TODO: The 'vertical' property no longer exists -->
+      <!-- TODO: The 'invert' property no longer exists -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+  });
 });
