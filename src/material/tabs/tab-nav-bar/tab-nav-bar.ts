@@ -55,6 +55,116 @@ import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab
 // Increasing integer for generating unique ids for tab nav components.
 let nextUniqueId = 0;
 
+/**
+ * Base class with all of the `MatTabNav` functionality.
+ * @docs-private
+ */
+@Directive()
+export abstract class _MatTabNavBase
+  extends MatPaginatedTabHeader
+  implements AfterContentChecked, AfterContentInit, OnDestroy
+{
+  /** Query list of all tab links of the tab navigation. */
+  abstract override _items: QueryList<MatPaginatedTabHeaderItem & {active: boolean; id: string}>;
+
+  /** Background color of the tab nav. */
+  @Input()
+  get backgroundColor(): ThemePalette {
+    return this._backgroundColor;
+  }
+
+  set backgroundColor(value: ThemePalette) {
+    const classList = this._elementRef.nativeElement.classList;
+    classList.remove(`mat-background-${this.backgroundColor}`);
+
+    if (value) {
+      classList.add(`mat-background-${value}`);
+    }
+
+    this._backgroundColor = value;
+  }
+
+  private _backgroundColor: ThemePalette;
+
+  /** Whether the ripple effect is disabled or not. */
+  @Input()
+  get disableRipple(): boolean {
+    return this._disableRipple;
+  }
+
+  set disableRipple(value: BooleanInput) {
+    this._disableRipple = coerceBooleanProperty(value);
+  }
+
+  private _disableRipple: boolean = false;
+
+  /** Theme color of the nav bar. */
+  @Input() color: ThemePalette = 'primary';
+
+  /**
+   * Associated tab panel controlled by the nav bar. If not provided, then the nav bar
+   * follows the ARIA link / navigation landmark pattern. If provided, it follows the
+   * ARIA tabs design pattern.
+   */
+  @Input() tabPanel?: MatTabNavPanel;
+
+  constructor(
+    elementRef: ElementRef,
+    @Optional() dir: Directionality,
+    ngZone: NgZone,
+    changeDetectorRef: ChangeDetectorRef,
+    viewportRuler: ViewportRuler,
+    platform: Platform,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+  ) {
+    super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
+  }
+
+  protected _itemSelected() {
+    // noop
+  }
+
+  override ngAfterContentInit() {
+    // We need this to run before the `changes` subscription in parent to ensure that the
+    // selectedIndex is up-to-date by the time the super class starts looking for it.
+    this._items.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
+      this.updateActiveLink();
+    });
+
+    super.ngAfterContentInit();
+  }
+
+  /** Notifies the component that the active link has been changed. */
+  updateActiveLink() {
+    if (!this._items) {
+      return;
+    }
+
+    const items = this._items.toArray();
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].active) {
+        this.selectedIndex = i;
+        this._changeDetectorRef.markForCheck();
+
+        if (this.tabPanel) {
+          this.tabPanel._activeTabId = items[i].id;
+        }
+
+        return;
+      }
+    }
+
+    // The ink bar should hide itself if no items are active.
+    this.selectedIndex = -1;
+    this._inkBar.hide();
+  }
+
+  _getRole(): string | null {
+    return this.tabPanel ? 'tablist' : this._elementRef.nativeElement.getAttribute('role');
+  }
+}
+
 // Boilerplate for applying mixins to MatTabLink.
 const _MatTabLinkMixinBase = mixinTabIndex(mixinDisableRipple(mixinDisabled(class {})));
 
@@ -188,116 +298,6 @@ export class _MatTabLinkBase
 }
 
 const _MatTabLinkBaseWithInkBarItem = mixinInkBarItem(_MatTabLinkBase);
-
-/**
- * Base class with all of the `MatTabNav` functionality.
- * @docs-private
- */
-@Directive()
-export abstract class _MatTabNavBase
-  extends MatPaginatedTabHeader
-  implements AfterContentChecked, AfterContentInit, OnDestroy
-{
-  /** Query list of all tab links of the tab navigation. */
-  abstract override _items: QueryList<MatPaginatedTabHeaderItem & {active: boolean; id: string}>;
-
-  /** Background color of the tab nav. */
-  @Input()
-  get backgroundColor(): ThemePalette {
-    return this._backgroundColor;
-  }
-
-  set backgroundColor(value: ThemePalette) {
-    const classList = this._elementRef.nativeElement.classList;
-    classList.remove(`mat-background-${this.backgroundColor}`);
-
-    if (value) {
-      classList.add(`mat-background-${value}`);
-    }
-
-    this._backgroundColor = value;
-  }
-
-  private _backgroundColor: ThemePalette;
-
-  /** Whether the ripple effect is disabled or not. */
-  @Input()
-  get disableRipple(): boolean {
-    return this._disableRipple;
-  }
-
-  set disableRipple(value: BooleanInput) {
-    this._disableRipple = coerceBooleanProperty(value);
-  }
-
-  private _disableRipple: boolean = false;
-
-  /** Theme color of the nav bar. */
-  @Input() color: ThemePalette = 'primary';
-
-  /**
-   * Associated tab panel controlled by the nav bar. If not provided, then the nav bar
-   * follows the ARIA link / navigation landmark pattern. If provided, it follows the
-   * ARIA tabs design pattern.
-   */
-  @Input() tabPanel?: MatTabNavPanel;
-
-  constructor(
-    elementRef: ElementRef,
-    @Optional() dir: Directionality,
-    ngZone: NgZone,
-    changeDetectorRef: ChangeDetectorRef,
-    viewportRuler: ViewportRuler,
-    platform: Platform,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
-  }
-
-  protected _itemSelected() {
-    // noop
-  }
-
-  override ngAfterContentInit() {
-    // We need this to run before the `changes` subscription in parent to ensure that the
-    // selectedIndex is up-to-date by the time the super class starts looking for it.
-    this._items.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      this.updateActiveLink();
-    });
-
-    super.ngAfterContentInit();
-  }
-
-  /** Notifies the component that the active link has been changed. */
-  updateActiveLink() {
-    if (!this._items) {
-      return;
-    }
-
-    const items = this._items.toArray();
-
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].active) {
-        this.selectedIndex = i;
-        this._changeDetectorRef.markForCheck();
-
-        if (this.tabPanel) {
-          this.tabPanel._activeTabId = items[i].id;
-        }
-
-        return;
-      }
-    }
-
-    // The ink bar should hide itself if no items are active.
-    this.selectedIndex = -1;
-    this._inkBar.hide();
-  }
-
-  _getRole(): string | null {
-    return this.tabPanel ? 'tablist' : this._elementRef.nativeElement.getAttribute('role');
-  }
-}
 
 /**
  * Navigation component matching the styles of the tab group header.
