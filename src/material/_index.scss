@@ -10,7 +10,7 @@
   $gray-palette, $blue-grey-palette, $blue-gray-palette, $light-theme-background-palette,
   $dark-theme-background-palette, $light-theme-foreground-palette, $dark-theme-foreground-palette;
 @forward './core/typography/typography' show define-typography-level,
-  define-legacy-typography-config, typography-hierarchy;
+  define-legacy-typography-config, legacy-typography-hierarchy, typography-hierarchy;
 @forward './core/typography/typography-utils' show typography-level,
   font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
 

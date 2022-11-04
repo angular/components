@@ -184,6 +184,136 @@
 /// @param {String} $selector Ancestor selector under which native elements, such as h1, will
 ///     be styled.
 @mixin typography-hierarchy($config-or-theme, $selector: '.mat-typography') {
+  $config: private-typography-to-2018-config(theming.get-typography-config($config-or-theme));
+
+  // Note that it seems redundant to prefix the class rules with the `$selector`, however it's
+  // necessary if we want to allow people to overwrite the tag selectors. This is due to
+  // selectors like `#{$selector} h1` being more specific than ones like `.mat-title`.
+  .mat-h1,
+  .mat-headline-5,
+  #{$selector} .mat-h1,
+  #{$selector} .mat-headline-5,
+  #{$selector} h1 {
+    @include typography-utils.typography-level($config, headline-5);
+    margin: 0 0 16px;
+  }
+
+  .mat-h2,
+  .mat-headline-6,
+  #{$selector} .mat-h2,
+  #{$selector} .mat-headline-6,
+  #{$selector} h2 {
+    @include typography-utils.typography-level($config, headline-6);
+    margin: 0 0 16px;
+  }
+
+  .mat-h3,
+  .mat-subtitle-1,
+  #{$selector} .mat-h3,
+  #{$selector} .mat-subtitle-1,
+  #{$selector} h3 {
+    @include typography-utils.typography-level($config, subtitle-1);
+    margin: 0 0 16px;
+  }
+
+  .mat-h4,
+  .mat-body-1,
+  #{$selector} .mat-h4,
+  #{$selector} .mat-body-1,
+  #{$selector} h4 {
+    @include typography-utils.typography-level($config, body-1);
+    margin: 0 0 16px;
+  }
+
+  // Note: the spec doesn't have anything that would correspond to h5 and h6, but we add these for
+  // consistency. The font sizes come from the Chrome user agent styles which have h5 at 0.83em
+  // and h6 at 0.67em.
+  .mat-h5,
+  #{$selector} .mat-h5,
+  #{$selector} h5 {
+    @include typography-utils.font-shorthand(
+       // calc is used here to support css variables
+      calc(#{typography-utils.font-size($config, body-2)} * 0.83),
+      typography-utils.font-weight($config, body-2),
+      typography-utils.line-height($config, body-2),
+      typography-utils.font-family($config, body-2)
+    );
+
+    margin: 0 0 12px;
+  }
+
+  .mat-h6,
+  #{$selector} .mat-h6,
+  #{$selector} h6 {
+    @include typography-utils.font-shorthand(
+       // calc is used here to support css variables
+      calc(#{typography-utils.font-size($config, body-2)} * 0.67),
+      typography-utils.font-weight($config, body-2),
+      typography-utils.line-height($config, body-2),
+      typography-utils.font-family($config, body-2)
+    );
+
+    margin: 0 0 12px;
+  }
+
+  .mat-body-strong,
+  .mat-subtitle-2,
+  #{$selector} .mat-body-strong,
+  #{$selector} .mat-subtitle-2 {
+    @include typography-utils.typography-level($config, subtitle-2);
+  }
+
+  .mat-body,
+  .mat-body-2,
+  #{$selector} .mat-body,
+  #{$selector} .mat-body-2,
+  #{$selector} {
+    @include typography-utils.typography-level($config, body-2);
+
+    p {
+      margin: 0 0 12px;
+    }
+  }
+
+  .mat-small,
+  .mat-caption,
+  #{$selector} .mat-small,
+  #{$selector} .mat-caption {
+    @include typography-utils.typography-level($config, caption);
+  }
+
+  .mat-headline-1,
+  #{$selector} .mat-headline-1 {
+    @include typography-utils.typography-level($config, headline-1);
+    margin: 0 0 56px;
+  }
+
+  .mat-headline-2,
+  #{$selector} .mat-headline-2 {
+    @include typography-utils.typography-level($config, headline-2);
+    margin: 0 0 64px;
+  }
+
+  .mat-headline-3,
+  #{$selector} .mat-headline-3 {
+    @include typography-utils.typography-level($config, headline-3);
+    margin: 0 0 64px;
+  }
+
+  .mat-headline-4,
+  #{$selector} .mat-headline-4 {
+    @include typography-utils.typography-level($config, headline-4);
+    margin: 0 0 64px;
+  }
+}
+
+/// Emits baseline typographic styles based on a given config.
+/// @param {Map} $config-or-theme A typography config for an entire theme.
+/// @param {String} $selector Ancestor selector under which native elements, such as h1, will
+///     be styled.
+/// @deprecated Use `mat.typography-hierarchy` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @breaking-change 17.0.0
+@mixin legacy-typography-hierarchy($config-or-theme, $selector: '.mat-typography') {
   $config: private-typography-to-2014-config(theming.get-typography-config($config-or-theme));
 
   // Note that it seems redundant to prefix the class rules with the `$selector`, however it's

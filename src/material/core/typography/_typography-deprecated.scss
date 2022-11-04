@@ -13,7 +13,7 @@
 
 // @deprecated Use `typography-hierarchy`.
 @mixin base-typography($config-or-theme, $selector: '.mat-typography') {
-  @include typography.typography-hierarchy($config-or-theme, $selector);
+  @include typography.legacy-typography-hierarchy($config-or-theme, $selector);
 }
 
 // @deprecated Use `define-typography-config`.
