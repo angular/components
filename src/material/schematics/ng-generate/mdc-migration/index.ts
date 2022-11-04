@@ -22,6 +22,7 @@ import {Schema} from './schema';
 import {TemplateMigration} from './rules/template-migration';
 import {ThemingStylesMigration} from './rules/theming-styles';
 import {TypographyHierarchyTemplateMigrator} from './rules/components/typography-hierarchy/typography-hierarchy-template';
+import {TypographyHierarchyStylesMigrator} from './rules/components/typography-hierarchy/typography-hierarchy-styles';
 
 /** Groups of components that must be migrated together. */
 const migrationGroups = [
@@ -48,7 +49,7 @@ const migrationGroups = [
 const TYPOGRAPHY_HIERARCHY_MIGRATOR: ComponentMigrator = {
   component: 'typography-hierarchy',
   template: new TypographyHierarchyTemplateMigrator(),
-  styles: null!, // TODO
+  styles: new TypographyHierarchyStylesMigrator(),
 };
 
 function getComponentsToMigrate(requested: string[]): Set<string> {
