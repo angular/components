@@ -7,11 +7,16 @@
  */
 
 import {Component} from '@angular/core';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'typography-demo',
   templateUrl: 'typography-demo.html',
   styleUrls: ['typography-demo.css'],
+  imports: [MatCheckboxModule, FormsModule],
   standalone: true,
 })
-export class TypographyDemo {}
+export class TypographyDemo {
+  isLegacy = false;
+}
