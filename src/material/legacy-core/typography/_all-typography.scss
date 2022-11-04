@@ -57,7 +57,7 @@
 
 
   // Components without MDC versions.
-  @include typography.typography-hierarchy($config);
+  @include typography.legacy-typography-hierarchy($config);
   @include badge-theme.typography($config);
   @include bottom-sheet-theme.typography($config);
   @include button-toggle-theme.typography($config);
