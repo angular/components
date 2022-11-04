@@ -141,6 +141,8 @@ export abstract class _MatCheckboxBase<E>
 
   private _uniqueId: string;
 
+  // test
+
   /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
   @Input() id: string;
 
