@@ -21,6 +21,7 @@ import {RuntimeCodeMigration} from './rules/ts-migration/runtime-migration';
 import {Schema} from './schema';
 import {TemplateMigration} from './rules/template-migration';
 import {ThemingStylesMigration} from './rules/theming-styles';
+import {TypographyHierarchyTemplateMigrator} from './rules/components/typography-hierarchy/typography-hierarchy-template';
 
 /** Groups of components that must be migrated together. */
 const migrationGroups = [
@@ -43,6 +44,12 @@ const migrationGroups = [
   ['tabs'],
   ['tooltip'],
 ];
+
+const TYPOGRAPHY_HIERARCHY_MIGRATOR: ComponentMigrator = {
+  component: 'typography-hierarchy',
+  template: new TypographyHierarchyTemplateMigrator(),
+  styles: null!, // TODO
+};
 
 function getComponentsToMigrate(requested: string[]): Set<string> {
   const componentsToMigrate = new Set<string>(requested);
@@ -94,7 +101,10 @@ export default function (options: Schema): Rule {
     const fileSystem = new DevkitFileSystem(tree);
     const analyzedFiles = new Set<WorkspacePath>();
     const componentsToMigrate = getComponentsToMigrate(options.components);
-    const migrators = MIGRATORS.filter(m => componentsToMigrate.has(m.component));
+    const migrators = MIGRATORS.filter(m => componentsToMigrate.has(m.component)).concat(
+      // The typography hierarchy should always be migrated.
+      TYPOGRAPHY_HIERARCHY_MIGRATOR,
+    );
     let success = true;
 
     if (options.directory) {
