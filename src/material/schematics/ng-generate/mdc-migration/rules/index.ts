@@ -36,6 +36,8 @@ import {OptgroupStylesMigrator} from './components/optgroup/optgroup-styles';
 import {OptionStylesMigrator} from './components/option/option-styles';
 import {FormFieldTemplateMigrator} from './components/form-field/form-field-template';
 import {SliderTemplateMigrator} from './components/slider/slider-template';
+import {TypographyHierarchyTemplateMigrator} from './components/typography-hierarchy/typography-hierarchy-template';
+import {TypographyHierarchyStylesMigrator} from './components/typography-hierarchy/typography-hierarchy-styles';
 
 /** Contains the migrators to migrate a single component. */
 export interface ComponentMigrator {
@@ -189,5 +191,15 @@ export const MIGRATORS: ComponentMigrator[] = [
   {
     component: 'tooltip',
     styles: new TooltipStylesMigrator(),
+  },
+];
+
+export const PERMANENT_MIGRATORS: ComponentMigrator[] = [
+  {
+    // The typography hierarchy used to always be included
+    // with `mat.core` so it always has to be migrated.
+    component: 'typography-hierarchy',
+    template: new TypographyHierarchyTemplateMigrator(),
+    styles: new TypographyHierarchyStylesMigrator(),
   },
 ];
