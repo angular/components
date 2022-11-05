@@ -10,7 +10,7 @@ import {Migration, ResolvedResource} from '@angular/cdk/schematics';
 import {SchematicContext} from '@angular-devkit/schematics';
 import * as postcss from 'postcss';
 import * as scss from 'postcss-scss';
-import {ComponentMigrator, MIGRATORS} from '.';
+import {ComponentMigrator, MIGRATORS, PERMANENT_MIGRATORS} from '.';
 import {RENAMED_TYPOGRAPHY_LEVELS} from './components/typography-hierarchy/constants';
 
 const COMPONENTS_MIXIN_NAME = /\.([^(;]*)/;
@@ -95,7 +95,7 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
   }
 
   isPartialMigration() {
-    return this.upgradeData.length !== MIGRATORS.length;
+    return this.upgradeData.length !== MIGRATORS.length + PERMANENT_MIGRATORS.length;
   }
 
   ruleHandler(rule: postcss.Rule) {
