@@ -25,7 +25,15 @@ export class TypographyHierarchyStylesMigrator extends StyleMigrator {
     super();
 
     RENAMED_TYPOGRAPHY_CLASSES.forEach((newClass, oldClass) => {
-      this.classChanges.push({new: '.' + newClass, old: '.' + oldClass});
+      // Some classes get renamed to each other. E.g. `subheading-1` -> `body-1` -> `body-2`.
+      // PostCSS will re-run its processors whenever an AST is mutated which means that we'll
+      // either end up with an incorrect result or potentially fall into an infinite loop. Wrap
+      // the risky classes in a special string that will be stripped out later to avoid the issue.
+      const wrappedNewClass = RENAMED_TYPOGRAPHY_CLASSES.has(newClass)
+        ? `.${StyleMigrator.wrapValue(newClass)}`
+        : `.${newClass}`;
+
+      this.classChanges.push({new: wrappedNewClass, old: '.' + oldClass});
     });
   }
 }

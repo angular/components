@@ -47,6 +47,26 @@ export abstract class StyleMigrator {
   abstract deprecatedPrefixes: string[];
 
   /**
+   * Data structure used to track which migrators have been applied to an AST node
+   * already so they don't have to be re-run when PostCSS detects changes in the AST.
+   */
+  private _processedNodes = new WeakMap<postcss.Node, Set<string>>();
+
+  /**
+   * Wraps a value in a placeholder string to prevent it
+   * from being matched multiple times in a migration.
+   */
+  static wrapValue(value: string): string {
+    const escapeString = '__NG_MDC_MIGRATION_PLACEHOLDER__';
+    return `${escapeString}${value}${escapeString}`;
+  }
+
+  /** Unwraps all the values that we wrapped by `wrapValue`. */
+  static unwrapAllValues(content: string): string {
+    return content.replace(/__NG_MDC_MIGRATION_PLACEHOLDER__/g, '');
+  }
+
+  /**
    * Returns whether the given at-include at-rule is a use of a legacy mixin for this component.
    *
    * @param namespace the namespace being used for angular/material.
@@ -66,6 +86,12 @@ export abstract class StyleMigrator {
    * @returns the mixin change object or null if not found
    */
   getMixinChange(namespace: string, atRule: postcss.AtRule): MixinChange | null {
+    const processedKey = `mixinChange-${namespace}`;
+
+    if (this._nodeIsProcessed(atRule, processedKey)) {
+      return null;
+    }
+
     const change = this.mixinChanges.find(c => {
       return atRule.params.includes(`${namespace}.${c.old}`);
     });
@@ -94,6 +120,7 @@ export abstract class StyleMigrator {
       });
     }
 
+    this._trackProcessedNode(atRule, processedKey);
     return {old: change.old, new: replacements.length ? replacements : null};
   }
 
@@ -117,11 +144,14 @@ export abstract class StyleMigrator {
    * @param rule a postcss rule.
    */
   replaceLegacySelector(rule: postcss.Rule): void {
-    for (let i = 0; i < this.classChanges.length; i++) {
-      const change = this.classChanges[i];
-      if (rule.selector?.match(change.old + END_OF_SELECTOR_REGEX)) {
-        rule.selector = rule.selector.replace(change.old, change.new);
+    if (!this._nodeIsProcessed(rule, 'replaceLegacySelector')) {
+      for (let i = 0; i < this.classChanges.length; i++) {
+        const change = this.classChanges[i];
+        if (rule.selector?.match(change.old + END_OF_SELECTOR_REGEX)) {
+          rule.selector = rule.selector.replace(change.old, change.new);
+        }
       }
+      this._trackProcessedNode(rule, 'replaceLegacySelector');
     }
   }
 
@@ -136,5 +166,17 @@ export abstract class StyleMigrator {
     return this.deprecatedPrefixes.some(deprecatedPrefix =>
       rule.selector.includes(deprecatedPrefix),
     );
+  }
+
+  /** Tracks that a node has been processed by a specific action. */
+  private _trackProcessedNode(node: postcss.Node, action: string) {
+    const appliedActions = this._processedNodes.get(node) || new Set();
+    appliedActions.add(action);
+    this._processedNodes.set(node, appliedActions);
+  }
+
+  /** Checks whether a node has been processed by an action in this migrator. */
+  private _nodeIsProcessed(node: postcss.Node, action: string) {
+    return !!this._processedNodes.get(node)?.has(action);
   }
 }

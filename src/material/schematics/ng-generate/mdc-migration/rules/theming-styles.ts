@@ -12,6 +12,7 @@ import * as postcss from 'postcss';
 import * as scss from 'postcss-scss';
 import {ComponentMigrator, MIGRATORS, PERMANENT_MIGRATORS} from '.';
 import {RENAMED_TYPOGRAPHY_LEVELS} from './components/typography-hierarchy/constants';
+import {StyleMigrator} from './style-migrator';
 
 const COMPONENTS_MIXIN_NAME = /\.([^(;]*)/;
 
@@ -38,15 +39,19 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
       {
         postcssPlugin: 'theming-styles-migration-plugin',
         AtRule: {
-          use: this.atUseHandler.bind(this),
-          include: this.atIncludeHandler.bind(this),
+          use: this._atUseHandler.bind(this),
+          include: atRule => this._atIncludeHandler(atRule),
         },
-        Rule: this.ruleHandler.bind(this),
+        Rule: rule => this._ruleHandler(rule),
       },
     ]);
 
     try {
-      return processor.process(styles, {syntax: scss}).toString();
+      const result = processor.process(styles, {syntax: scss}).toString();
+      // PostCSS will re-run the processors if it detects that an AST has been mutated. We want to
+      // avoid this when removing the unwrapped values, because it may cause them to be re-migrated
+      // incorrectly. This is achieved by unwrapping after the AST has been converted to a string.
+      return result === styles ? styles : StyleMigrator.unwrapAllValues(result);
     } catch (e) {
       this.context.logger.error(`${e}`);
       this.context.logger.warn(`Failed to process stylesheet: ${filename} (see error above).`);
@@ -54,13 +59,13 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
     }
   }
 
-  atUseHandler(atRule: postcss.AtRule) {
+  private _atUseHandler(atRule: postcss.AtRule) {
     if (isAngularMaterialImport(atRule)) {
       this._namespace = parseNamespace(atRule);
     }
   }
 
-  atIncludeHandler(atRule: postcss.AtRule) {
+  private _atIncludeHandler(atRule: postcss.AtRule) {
     const migrator = this.upgradeData.find(m => {
       return m.styles.isLegacyMixin(this._namespace, atRule);
     });
@@ -98,9 +103,9 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
     return this.upgradeData.length !== MIGRATORS.length + PERMANENT_MIGRATORS.length;
   }
 
-  ruleHandler(rule: postcss.Rule) {
-    let isLegacySelector;
-    let isDeprecatedSelector;
+  private _ruleHandler(rule: postcss.Rule) {
+    let isLegacySelector = false;
+    let isDeprecatedSelector = false;
 
     const migrator = this.upgradeData.find(m => {
       isLegacySelector = m.styles.isLegacySelector(rule);
@@ -108,14 +113,17 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
       return isLegacySelector || isDeprecatedSelector;
     });
 
+    if (!migrator) {
+      return;
+    }
+
     if (isLegacySelector) {
-      migrator?.styles.replaceLegacySelector(rule);
+      migrator.styles.replaceLegacySelector(rule);
     } else if (isDeprecatedSelector) {
       addCommentBeforeNode(
         rule,
-        'TODO(mdc-migration): The following rule targets internal classes of ' +
-          migrator?.component +
-          ' that may no longer apply for the MDC version.',
+        `TODO(mdc-migration): The following rule targets internal classes of ${migrator.component} ` +
+          `that may no longer apply for the MDC version.`,
       );
     }
   }
