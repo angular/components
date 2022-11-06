@@ -28,7 +28,7 @@
 
   @include mdc-helpers.using-mdc-theme($config) {
     $on-surface: rgba(mdc-theme-color.$on-surface, 0.54);
-    $is-dark: map-get($config, is-dark);
+    $is-dark: map.get($config, is-dark);
     $active-border-color: if(
             $is-dark,
             theming.get-color-from-palette(palette.$gray-palette, 200),
