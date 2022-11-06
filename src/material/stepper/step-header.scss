@@ -25,6 +25,17 @@
         text-decoration: underline;
       }
     }
+
+    // When a step header is disabled in high contrast mode, set the text color to the disabled
+    // color, which is (unintuitively) named "GrayText".
+    &[aria-disabled='true'] {
+      outline-color: GrayText;
+      .mat-step-label,
+      .mat-step-icon,
+      .mat-step-optional {
+        color: GrayText;
+      }
+    }
   }
 }
 
