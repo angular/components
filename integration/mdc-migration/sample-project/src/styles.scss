@@ -9,6 +9,9 @@
 // Be sure that you only ever include this mixin once!
 @include mat.all-legacy-component-typographies(mat.define-legacy-typography-config());
 @include mat.legacy-core();
+@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config(
+  $display-4: mat.define-typography-level(42px, 42px, 100)
+), '.custom-typography');
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
