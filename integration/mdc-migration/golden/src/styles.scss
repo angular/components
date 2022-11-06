@@ -9,6 +9,9 @@
 // Be sure that you only ever include this mixin once!
 @include mat.all-component-typographies(mat.define-typography-config());
 @include mat.core();
+@include mat.typography-hierarchy(mat.define-typography-config(
+  $headline-1: mat.define-typography-level(42px, 42px, 100)
+), '.custom-typography');
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
