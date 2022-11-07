@@ -133,6 +133,15 @@
     height: 0;
     overflow: hidden;
   }
+
+  // Used to avoid an issue where when the stepper is nested inside a component that
+  // changes the `visibility` as a part of an Angular animation, the stepper's content
+  // stays hidden (see #25925). The value has to be `!important` to override the incorrect
+  // `visibility` from the animations package. This can also be solved using `visibility: visible`
+  // on `.mat-horizontal-stepper-content`, but it can allow tabbing into hidden content.
+  &:not(.mat-horizontal-stepper-content-inactive) {
+    visibility: inherit !important;
+  }
 }
 
 .mat-horizontal-content-container {
@@ -179,6 +188,15 @@
 .mat-vertical-stepper-content {
   overflow: hidden;
   outline: 0;
+
+  // Used to avoid an issue where when the stepper is nested inside a component that
+  // changes the `visibility` as a part of an Angular animation, the stepper's content
+  // stays hidden (see #25925). The value has to be `!important` to override the incorrect
+  // `visibility` from the animations package. This can also be solved using `visibility: visible`
+  // on `.mat-vertical-stepper-content`, but it can allow tabbing into hidden content.
+  &:not(.mat-vertical-stepper-content-inactive) {
+    visibility: inherit !important;
+  }
 }
 
 .mat-vertical-content {
