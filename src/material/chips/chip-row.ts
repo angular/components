@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   AfterViewInit,
@@ -66,8 +66,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[attr.aria-label]': 'null',
     '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
-    '(mousedown)': '_mousedown($event)',
-    '(dblclick)': '_doubleclick($event)',
+    '(click)': '_click($event)',
   },
   providers: [
     {provide: MatChip, useExisting: MatChipRow},
@@ -136,19 +135,8 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     return !this._isEditing && super._hasTrailingIcon();
   }
 
-  /** Sends focus to the first gridcell when the user clicks anywhere inside the chip. */
-  _mousedown(event: MouseEvent) {
-    if (!this._isEditing) {
-      if (!this.disabled) {
-        this.focus();
-      }
-
-      event.preventDefault();
-    }
-  }
-
   override _handleKeydown(event: KeyboardEvent): void {
-    if (event.keyCode === ENTER && !this.disabled) {
+    if ((event.keyCode === ENTER || event.keyCode === SPACE) && !this.disabled) {
       if (this._isEditing) {
         event.preventDefault();
         this._onEditFinish();
@@ -163,7 +151,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
-  _doubleclick(event: MouseEvent) {
+  _click(event: MouseEvent) {
     if (!this.disabled && this.editable) {
       this._startEditing(event);
     }

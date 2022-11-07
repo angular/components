@@ -379,10 +379,10 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, ngZone: NgZone, focusMonitor: FocusMonitor, _document: any, animationMode?: string, globalRippleOptions?: RippleGlobalOptions, tabIndex?: string);
     // (undocumented)
     protected basicChipAttrName: string;
+    // (undocumented)
+    _click(event: MouseEvent): void;
     contentEditInput?: MatChipEditInput;
     defaultEditInput?: MatChipEditInput;
-    // (undocumented)
-    _doubleclick(event: MouseEvent): void;
     // (undocumented)
     editable: boolean;
     readonly edited: EventEmitter<MatChipEditedEvent>;
@@ -392,7 +392,6 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     _hasTrailingIcon(): boolean;
     // (undocumented)
     _isEditing: boolean;
-    _mousedown(event: MouseEvent): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, mat-basic-chip-row", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "editable": "editable"; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "*", "[matChipEditInput]", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
