@@ -742,9 +742,9 @@ export class MatSlider
 
     const valuetext = this.displayWith(source.value);
 
-    if (this._hasViewInitialized) {
-      source._valuetext = valuetext;
-    }
+    this._hasViewInitialized
+      ? (source._valuetext = valuetext)
+      : source._hostElement.setAttribute('aria-valuetext', valuetext);
 
     if (this.discrete) {
       source.thumbPosition === _MatThumb.START
