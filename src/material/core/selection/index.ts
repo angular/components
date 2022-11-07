@@ -8,3 +8,5 @@
 
 export * from './pseudo-checkbox/pseudo-checkbox';
 export * from './pseudo-checkbox/pseudo-checkbox-module';
+export * from './pseudo-checkmark/pseudo-checkmark';
+export * from './pseudo-checkmark/pseudo-checkmark-module';

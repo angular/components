@@ -1,6 +1,9 @@
 <mat-pseudo-checkbox *ngIf="multiple" class="mat-mdc-option-pseudo-checkbox"
     [state]="selected ? 'checked' : 'unchecked'" [disabled]="disabled"></mat-pseudo-checkbox>
 
+<mat-pseudo-checkmark *ngIf="!multiple" class="mat-mdc-option-pseudo-checkmark"
+    [state]="selected ? 'checked' : 'unchecked'" [disabled]="disabled"></mat-pseudo-checkmark>
+
 <span class="mdc-list-item__primary-text"><ng-content></ng-content></span>
 
 <!-- See a11y notes inside optgroup.ts for context behind this element. -->

@@ -312,7 +312,7 @@ export class MatOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_3.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i4.CommonModule, typeof i1_2.MatCommonModule, typeof i6.MatPseudoCheckboxModule], [typeof i1_3.MatOption, typeof i2.MatOptgroup]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_3.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i4.CommonModule, typeof i1_2.MatCommonModule, typeof i6.MatPseudoCheckboxModule, typeof i7.MatPseudoCheckmarkModule], [typeof i1_3.MatOption, typeof i2.MatOptgroup]>;
 }
 
 // @public
@@ -359,6 +359,32 @@ export class MatPseudoCheckboxModule {
 
 // @public
 export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
+
+// @public
+export class MatPseudoCheckmark {
+    constructor(_animationMode?: string | undefined);
+    // (undocumented)
+    _animationMode?: string | undefined;
+    disabled: boolean;
+    state: MatPseudoCheckmarkState;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatPseudoCheckmark, "mat-pseudo-checkmark", never, { "state": "state"; "disabled": "disabled"; }, {}, never, never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPseudoCheckmark, [{ optional: true; }]>;
+}
+
+// @public (undocumented)
+export class MatPseudoCheckmarkModule {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPseudoCheckmarkModule, never>;
+    // (undocumented)
+    static ɵinj: i0.ɵɵInjectorDeclaration<MatPseudoCheckmarkModule>;
+    // (undocumented)
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckmarkModule, [typeof i1_6.MatPseudoCheckmark], [typeof i1_2.MatCommonModule], [typeof i1_6.MatPseudoCheckmark]>;
+}
+
+// @public (undocumented)
+export type MatPseudoCheckmarkState = 'unchecked' | 'checked';
 
 // @public (undocumented)
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {

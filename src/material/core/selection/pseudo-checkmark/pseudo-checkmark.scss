@@ -1,0 +1,30 @@
+// TODO: implement styles
+@use 'sass:math';
+@use '../../style/checkbox-common';
+@use '../../style/private';
+@use '../../style/variables';
+@use './pseudo-checkmark-common';
+
+// TODO: implement a visual checkmark
+.mat-pseudo-checkmark {
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative;
+    flex-shrink: 0;
+  &::after {
+    position: absolute;
+    opacity: 0;
+    font-family: monospace;
+    content: '✔️'; // TODO: draw a checkmark with CSS. this is jsut a placeholder
+  }
+
+  &.mat-pseudo-checkmark-checked::after {
+    opacity: 1;
+  }
+}
+
+.mat-pseudo-checkmark-disabled {
+  cursor: default;
+}
+
+@include pseudo-checkmark-common.size(checkbox-common.$size);

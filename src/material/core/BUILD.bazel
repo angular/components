@@ -21,6 +21,7 @@ ng_module(
     ),
     assets = [
         ":selection/pseudo-checkbox/pseudo-checkbox.css",
+        ":selection/pseudo-checkmark/pseudo-checkmark.css",
         ":option/option.css",
         ":option/optgroup.css",
     ] + glob(["**/*.html"]),
@@ -78,6 +79,12 @@ sass_library(
 sass_binary(
     name = "pseudo_checkbox_scss",
     src = "selection/pseudo-checkbox/pseudo-checkbox.scss",
+    deps = [":core_scss_lib"],
+)
+
+sass_binary(
+    name = "pseudo_checkmark_scss",
+    src = "selection/pseudo-checkmark/pseudo-checkmark.scss",
     deps = [":core_scss_lib"],
 )
 

@@ -1,0 +1,8 @@
+@forward '../../density/private/compatibility' as mat-*;
+@forward '../../theming/palette'; // TODO: hide unused colors
+@forward '../../theming/palette' as mat-*; // TODO: hide unused colors
+@forward '../../theming/theming' as mat-*;
+@import '../../theming/theming';
+@forward 'pseudo-checkmark-theme' hide color, theme, typography;
+@forward 'pseudo-checkmark-theme' as mat-pseudo-checkmark-* hide mat-pseudo-checkmark-density;
+
