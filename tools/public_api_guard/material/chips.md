@@ -65,6 +65,7 @@ export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 export class MatChip extends _MatChipMixinBase implements AfterViewInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
     _animationsDisabled: boolean;
+    ariaDescription: string | null;
     ariaLabel: string | null;
     protected basicChipAttrName: string;
     // (undocumented)
@@ -113,7 +114,7 @@ export class MatChip extends _MatChipMixinBase implements AfterViewInit, CanColo
     // (undocumented)
     protected _value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, mat-chip", ["matChip"], { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "role": "role"; "id": "id"; "ariaLabel": "aria-label"; "value": "value"; "removable": "removable"; "highlighted": "highlighted"; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, mat-chip", ["matChip"], { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "role": "role"; "id": "id"; "ariaLabel": "aria-label"; "ariaDescription": "aria-description"; "value": "value"; "removable": "removable"; "highlighted": "highlighted"; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChip, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }

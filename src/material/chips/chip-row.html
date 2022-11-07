@@ -13,7 +13,8 @@
     [attr.role]="editable ? 'button' : null"
     [tabIndex]="tabIndex"
     [disabled]="disabled"
-    [attr.aria-label]="ariaLabel">
+    [attr.aria-label]="ariaLabel"
+    [attr.aria-description]="ariaDescription">
     <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic" *ngIf="leadingIcon">
       <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
     </span>

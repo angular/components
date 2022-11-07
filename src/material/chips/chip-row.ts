@@ -64,6 +64,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[id]': 'id',
     '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
+    '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
     '(mousedown)': '_mousedown($event)',
     '(dblclick)': '_doubleclick($event)',

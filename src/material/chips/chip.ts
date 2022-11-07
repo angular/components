@@ -150,6 +150,9 @@ export class MatChip
   /** ARIA label for the content of the chip. */
   @Input('aria-label') ariaLabel: string | null = null;
 
+  /** ARIA description for the content of the chip. */
+  @Input('aria-description') ariaDescription: string | null = null;
+
   private _textElement!: HTMLElement;
 
   /**
