@@ -28,7 +28,6 @@ import * as i0 from '@angular/core';
 import * as i11 from '@angular/material/core';
 import * as i12 from '@angular/common';
 import { InjectionToken } from '@angular/core';
-import { MatChipAvatar as MatChipAvatar_2 } from '@angular/material/chips';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatRipple } from '@angular/material/core';
@@ -340,8 +339,6 @@ export class MatChipOption extends MatChip implements OnInit {
     deselect(): void;
     // (undocumented)
     _handlePrimaryActionInteraction(): void;
-    // (undocumented)
-    _hasLeadingGraphic(): MatChipAvatar_2;
     // (undocumented)
     ngOnInit(): void;
     select(): void;
