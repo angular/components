@@ -1,0 +1,37 @@
+{
+  // Note: When changing, make sure to keep in sync with the internal Copybara config.
+  "syncedFilePatterns": [
+    "LICENSE",
+    "README.md",
+    "src/material/**.ts",
+    "src/material/**.html",
+    "src/material/**.scss",
+    "src/material-experimental/**.ts",
+    "src/material-experimental/**.html",
+    "src/material-experimental/**.scss",
+    "src/cdk/**.ts",
+    "src/cdk/**.html",
+    "src/cdk/**.scss",
+    "src/cdk-experimental/**.ts",
+    "src/cdk-experimental/**.html",
+    "src/cdk-experimental/**.scss",
+    "src/google-maps/**.ts",
+    "src/google-maps/**.html",
+    "src/google-maps/**.scss"
+  ],
+  "alwaysExternalFilePatterns": [
+    "**/typings.d.ts",
+    "src/**/*spec.ts",
+    "src/cdk/schematics/**",
+    "src/material/schematics/**",
+    "src/cdk/testing/testbed/zone-types.d.ts",
+    "src/material/_theming.scss",
+    "src/material/index.ts",
+    "src/material/module.ts",
+    "src/material/core/index.ts",
+    "src/material/legacy-core/index.ts",
+    "src/material/core/theming/tests/**",
+    "src/material/expansion/index.ts",
+    "**import.scss"
+  ]
+}
