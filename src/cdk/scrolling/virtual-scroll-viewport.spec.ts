@@ -1,5 +1,6 @@
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {
+  CdkScrollable,
   CdkVirtualForOf,
   CdkVirtualScrollViewport,
   ScrollDispatcher,
@@ -1175,6 +1176,18 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(50);
     }));
   });
+
+  it('should be able to query for a virtual scroll viewport as a CdkScrollable', () => {
+    TestBed.configureTestingModule({
+      imports: [ScrollingModule],
+      declarations: [VirtualScrollableQuery],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(VirtualScrollableQuery);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.scrollable).toBeTruthy();
+  });
 });
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
@@ -1564,4 +1577,11 @@ class VirtualScrollWithScrollableWindow {
   items = Array(20000)
     .fill(0)
     .map((_, i) => i);
+}
+
+@Component({
+  template: '<cdk-virtual-scroll-viewport itemSize="50"></cdk-virtual-scroll-viewport>',
+})
+class VirtualScrollableQuery {
+  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
 }

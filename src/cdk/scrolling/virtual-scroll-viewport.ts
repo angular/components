@@ -74,7 +74,7 @@ const SCROLL_SCHEDULER =
         virtualScrollable: CdkVirtualScrollable | null,
         viewport: CdkVirtualScrollViewport,
       ) => virtualScrollable || viewport,
-      deps: [CdkVirtualScrollable, CdkVirtualScrollViewport],
+      deps: [[new Optional(), new Inject(VIRTUAL_SCROLLABLE)], CdkVirtualScrollViewport],
     },
   ],
 })
