@@ -94,11 +94,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
 
   /** Whether the menu item opens a menu. */
   get hasMenu() {
-    if (this._menuTrigger?.menuTemplateRef == null) {
-      return false;
-    }
-
-    return true;
+    return this._menuTrigger?.menuTemplateRef != null;
   }
 
   /**

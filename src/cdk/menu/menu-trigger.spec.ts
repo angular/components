@@ -71,13 +71,13 @@ describe('MenuTrigger', () => {
     });
 
     it('should set aria-expanded based on whether a menu is assigned', () => {
-        expect(menuItemElement.hasAttribute('aria-expanded')).toBeTrue();
-        expect(menuItemElement.getAttribute('aria-expanded')).toBe('false');
+      expect(menuItemElement.hasAttribute('aria-expanded')).toBeTrue();
+      expect(menuItemElement.getAttribute('aria-expanded')).toBe('false');
 
-        fixture.componentInstance.trigger.menuTemplateRef = null;
-        fixture.detectChanges();
+      fixture.componentInstance.trigger.menuTemplateRef = null;
+      fixture.detectChanges();
 
-        expect(menuItemElement.hasAttribute('aria-expanded')).toBeFalse();
+      expect(menuItemElement.hasAttribute('aria-expanded')).toBeFalse();
     });
   });
 
@@ -495,7 +495,7 @@ describe('MenuTrigger', () => {
     expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
   });
 
-  xdescribe('null triggerFor', () => {
+  describe('null triggerFor', () => {
     let fixture: ComponentFixture<TriggerWithNullValue>;
 
     let nativeTrigger: HTMLElement;
@@ -509,7 +509,7 @@ describe('MenuTrigger', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TriggerWithNullValue);
-      nativeTrigger = fixture.componentInstance.nativeTrigger.nativeElement
+      nativeTrigger = fixture.componentInstance.nativeTrigger.nativeElement;
     });
 
     it('should not set aria-haspopup', () => {
@@ -547,8 +547,8 @@ describe('MenuTrigger', () => {
   `,
 })
 class TriggerForEmptyMenu {
-    @ViewChild(CdkMenuTrigger) trigger: CdkMenuTrigger;
-    @ViewChild(CdkMenuTrigger, { read: ElementRef }) nativeTrigger: ElementRef;
+  @ViewChild(CdkMenuTrigger) trigger: CdkMenuTrigger;
+  @ViewChild(CdkMenuTrigger, {read: ElementRef}) nativeTrigger: ElementRef;
 }
 
 @Component({
@@ -678,16 +678,12 @@ class TriggerWithData {
 @Component({
   template: `
     <button [cdkMenuTriggerFor]="null">First</button>
-    <button [cdkContextMenuTriggerFor]="null">First</button>
   `,
 })
 class TriggerWithNullValue {
-  @ViewChild(CdkMenuTrigger)
+  @ViewChild(CdkMenuTrigger, {static: true})
   trigger: CdkMenuTrigger;
 
-  @ViewChild(CdkMenuTrigger, {read: ElementRef})
+  @ViewChild(CdkMenuTrigger, {static: true, read: ElementRef})
   nativeTrigger: ElementRef<HTMLElement>;
-
-  @ViewChild(CdkContextMenuTrigger, {read: ElementRef})
-  contextMenuNativeTrigger: ElementRef<HTMLElement>;
 }

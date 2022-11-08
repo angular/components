@@ -127,7 +127,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     getLabel(): string;
     getMenu(): Menu | undefined;
     getMenuTrigger(): CdkMenuTrigger | null;
-    readonly hasMenu: boolean;
+    get hasMenu(): boolean;
     isMenuOpen(): boolean;
     // (undocumented)
     ngOnDestroy(): void;
@@ -220,7 +220,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     menuData: unknown;
     menuPosition: ConnectedPosition[];
     protected readonly menuStack: MenuStack;
-    menuTemplateRef: TemplateRef<unknown>;
+    menuTemplateRef: TemplateRef<unknown> | null;
     // (undocumented)
     ngOnDestroy(): void;
     readonly opened: EventEmitter<void>;
