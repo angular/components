@@ -465,6 +465,7 @@ export class MatSlider
     this._updateValueIndicatorUI(eInput);
 
     this._hasViewInitialized = true;
+    eInput._updateThumbUIByValue();
   }
 
   private _initUIRange(eInput: _MatSliderRangeThumb, sInput: _MatSliderRangeThumb): void {
@@ -477,10 +478,16 @@ export class MatSlider
     eInput._updateMinMax();
     sInput._updateMinMax();
 
+    eInput._updateStaticStyles();
+    sInput._updateStaticStyles();
+
     this._updateValueIndicatorUI(eInput);
     this._updateValueIndicatorUI(sInput);
 
     this._hasViewInitialized = true;
+
+    eInput._updateThumbUIByValue();
+    sInput._updateThumbUIByValue();
   }
 
   ngOnDestroy(): void {
