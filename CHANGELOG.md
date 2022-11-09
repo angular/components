@@ -1,3 +1,19 @@
+<a name="14.2.7"></a>
+# 14.2.7 "smoke-spirit" (2022-11-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f63918a3b8](https://github.com/angular/components/commit/f63918a3b86f88af842cea1153a95d5a8a9d549c) | fix | **scrolling:** error when querying for CdkVirtualScrollViewport as CdkScrollable ([#25937](https://github.com/angular/components/pull/25937)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [53588b51d2](https://github.com/angular/components/commit/53588b51d2caa9ba13d72f3fa282f0aec7f9f338) | fix | **stepper:** add HCM disabled styles for stepper and tabs ([#25393](https://github.com/angular/components/pull/25393)) ([#25932](https://github.com/angular/components/pull/25932)) |
+| [a1473b93fc](https://github.com/angular/components/commit/a1473b93fcc1e737fea03063d092e6d535844f21) | fix | **stepper:** content not visibile on first navigation when nested in tabs ([#25930](https://github.com/angular/components/pull/25930)) |
+## Special Thanks
+Douglas Parker, Kristiyan Kostadinov and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0-rc.1"></a>
 # 15.0.0-rc.1 "feldspar-fence" (2022-11-02)
 ### cdk
