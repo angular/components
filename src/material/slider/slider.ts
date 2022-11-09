@@ -450,6 +450,10 @@ export class MatSlider
       ? this._initUIRange(eInput as _MatSliderRangeThumb, sInput as _MatSliderRangeThumb)
       : this._initUINonRange(eInput!);
 
+    this._updateTrackUI(eInput!);
+    this._updateTickMarkUI();
+    this._updateTickMarkTrackUI();
+
     this._observeHostResize();
     this._cdr.detectChanges();
   }
