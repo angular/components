@@ -38,26 +38,25 @@ requests][font-inlining].
 A **typography level** is a collection of typographic styles that corresponds to a specific
 part of an application's structure, such as a header. Each level includes styles for font family,
 font weight, font size, and letter spacing. Angular Material uses the [typography levels
-from the 2014 version of the Material Design specification][2014-typography], outlined in the
+from the 2018 version of the Material Design specification][2018-typography], outlined in the
 table below.
 
-| Name            | Description                                                                 |
-|-----------------|-----------------------------------------------------------------------------|
-| `display-4`     | 112px, one-off header, usually at the top of the page (e.g. a hero header). |
-| `display-3`     |  56px, one-off header, usually at the top of the page (e.g. a hero header). |
-| `display-2`     |  45px, one-off header, usually at the top of the page (e.g. a hero header). |
-| `display-1`     |  34px, one-off header, usually at the top of the page (e.g. a hero header). |
-| `headline`      | Section heading corresponding to the `<h1>` tag.                            |
-| `title`         | Section heading corresponding to the `<h2>` tag.                            |
-| `subheading-2`  | Section heading corresponding to the `<h3>` tag.                            |
-| `subheading-1`  | Section heading corresponding to the `<h4>` tag.                            |
-| `body-1`        | Base body text.                                                             |
-| `body-2`        | Bolder body text.                                                           |
-| `caption`       | Smaller body and hint text.                                                 |
-| `button`        | Buttons and anchors.                                                        |
-| `input`         | Form input fields.                                                          |
+| Name            | Description                                                                  |
+|-----------------|------------------------------------------------------------------------------|
+| `headline-1`     | One-off header, usually at the top of the page (e.g. a hero header).        |
+| `headline-2`     | One-off header, usually at the top of the page (e.g. a hero header).        |
+| `headline-3`     | One-off header, usually at the top of the page (e.g. a hero header).        |
+| `headline-4`     | One-off header, usually at the top of the page (e.g. a hero header).        |
+| `headline-5`     | Section heading corresponding to the `<h1>` tag.                            |
+| `headline-6`     | Section heading corresponding to the `<h2>` tag.                            |
+| `subtitle-1`     | Section heading corresponding to the `<h3>` tag.                            |
+| `subtitle-2`     | Section heading corresponding to the `<h4>` tag.                            |
+| `body-1`         | Base body text.                                                             |
+| `body-2`         | Bolder body text.                                                           |
+| `caption`        | Smaller body and hint text.                                                 |
+| `button`         | Buttons and anchors.                                                        |
 
-[2014-typography]: https://material.io/archive/guidelines/style/typography.html#typography-styles
+[2018-typography]: https://m2.material.io/design/typography/the-type-system.html#type-scale
 
 ### Define a level
 
@@ -89,11 +88,11 @@ baseline if unspecified.
 @use '@angular/material' as mat;
 
 $my-custom-typography-config: mat.define-typography-config(
-  $display-4: mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
-  $display-3: mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
-  $display-2: mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
-  $display-1: mat.define-typography-level(34px, 40px, 400),
-  $headline:  mat.define-typography-level(24px, 32px, 400),
+  $headline-1: mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+  $headline-2: mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+  $headline-3: mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+  $headline-4: mat.define-typography-level(34px, 40px, 400),
+  $headline-5: mat.define-typography-level(24px, 32px, 400),
   // ...
 );
 ```
@@ -129,7 +128,7 @@ $my-theme: mat.define-light-theme((
   $kids-primary: mat.define-palette(mat.$cyan-palette);
   $kids-accent: mat.define-palette(mat.$yellow-palette);
 
-  // Typography config based on the default, but using "Comic Sans" as the 
+  // Typography config based on the default, but using "Comic Sans" as the
   // default font family for all levels.
   $kids-typography: mat.define-typography-config(
     $font-family: 'Comic Sans',
@@ -170,28 +169,28 @@ your application. These CSS classes correspond to the typography levels in your 
 This mixin also emits styles for native header elements scoped within the `.mat-typography` CSS
 class. The table below lists the CSS classes emitted and the native elements styled.
 
-| CSS class                           | Level name     | Native elements |
-|-------------------------------------|----------------|-----------------|
-| `.mat-display-4`                    | `display-4`    | None            |
-| `.mat-display-3`                    | `display-3`    | None            |
-| `.mat-display-2`                    | `display-2`    | None            |
-| `.mat-display-1`                    | `display-1`    | None            |
-| `.mat-h1` or `.mat-headline`        | `headline`     | `<h1>`          |
-| `.mat-h2` or `.mat-title`           | `title`        | `<h2>`          |
-| `.mat-h3` or `.mat-subheading-2`    | `subheading-2` | `<h3>`          |
-| `.mat-h4` or `.mat-subheading-1`    | `subheading-1` | `<h4>`          |
-| `.mat-h5`                           | None           | `<h5>`          |
-| `.mat-h6`                           | None           | `<h6>`          |
-| `.mat-body` or `.mat-body-1`        | `body-1`       | Body text       |
-| `.mat-body-strong` or `.mat-body-2` | `body-2`       | None            |
-| `.mat-small` or `.mat-caption`      | `caption`      | None            |
+| CSS class                                | Level name     | Native elements |
+|------------------------------------------|----------------|-----------------|
+| `.mat-headline-1`                        | `headline-1`   | None            |
+| `.mat-headline-2`                        | `headline-2`   | None            |
+| `.mat-headline-3`                        | `headline-3`   | None            |
+| `.mat-headline-4`                        | `headline-4`   | None            |
+| `.mat-h1` or `.mat-headline-5`           | `headline-5`   | `<h1>`          |
+| `.mat-h2` or `.mat-headline-6`           | `headline-6`   | `<h2>`          |
+| `.mat-h3` or `.mat-subtitle-1`           | `subtitle-1`   | `<h3>`          |
+| `.mat-h4` or `.mat-body-1`               | `body-1`       | `<h4>`          |
+| `.mat-h5`                                | None           | `<h5>`          |
+| `.mat-h6`                                | None           | `<h6>`          |
+| `.mat-body` or `.mat-body-2`             | `body-2`       | Body text       |
+| `.mat-body-strong` or `.mat-subtitle-2`  | `subtitle-2`   | None            |
+| `.mat-small` or `.mat-caption`           | `caption`      | None            |
 
 In addition to the typographic styles, these style rules also include a `margin-bottom` for
-headers and paragraphs. For `body-1` styles, text is styled within the provided CSS selector.
+headers and paragraphs. For `body` styles, text is styled within the provided CSS selector.
 
 The `.mat-h5` and `.mat-h6` styles don't directly correspond to a specific Material Design
-typography level. The `.mat-h5` style uses the `body-1` level with the font-size scaled down by
-`0.83`. The `.mat-h6` style uses the `body-1` level with the font-size scaled down by `0.67`.
+typography level. The `.mat-h5` style uses the `body-2` level with the font-size scaled down by
+`0.83`. The `.mat-h6` style uses the `body-2` level with the font-size scaled down by `0.67`.
 
 The `button` and `input` typography levels do not map to CSS classes.
 
