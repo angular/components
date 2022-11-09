@@ -1,3 +1,30 @@
+<a name="15.0.0-rc.2"></a>
+# 15.0.0-rc.2 "steam-soul" (2022-11-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f3bce0bf0c](https://github.com/angular/components/commit/f3bce0bf0ce6f06b17bcf2faa8dc8e1fdae98660) | fix | **scrolling:** error when querying for CdkVirtualScrollViewport as CdkScrollable ([#25937](https://github.com/angular/components/pull/25937)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0f52389340](https://github.com/angular/components/commit/0f52389340b6f711bf59616ff5d1da3a72748036) | fix | **chips:** show checkmark for selected non-selectable chips ([#25942](https://github.com/angular/components/pull/25942)) |
+| [8643c9ccb5](https://github.com/angular/components/commit/8643c9ccb56bc6c2a4306ffb8ecb5db25adac1d5) | fix | **chips:** use checkmark graphic for single-selection ([#25890](https://github.com/angular/components/pull/25890)) |
+| [69efb41949](https://github.com/angular/components/commit/69efb41949d83341ed6fb5657149661be6b9009c) | fix | **core:** switch typography hierarchy to new terminology |
+| [a612df148e](https://github.com/angular/components/commit/a612df148ed5076701350557b35c4d93fe5c5a3d) | fix | **schematics:** add binding parsing logic ([#25910](https://github.com/angular/components/pull/25910)) |
+| [a64186a45b](https://github.com/angular/components/commit/a64186a45b6f530ad121b1ac93d88b368a45339b) | fix | **schematics:** add handling for invert and vertical ([#25922](https://github.com/angular/components/pull/25922)) |
+| [a34a28458b](https://github.com/angular/components/commit/a34a28458bc55bf7257d0d6a3c0dff4e9df4595d) | fix | **schematics:** avoid re-entrant processing in MDC style migration |
+| [169bc2e4d6](https://github.com/angular/components/commit/169bc2e4d6de03b0a11b3f019a32d1472cebdc5c) | fix | **schematics:** incorrect partial migration after typography hierarchy inclusion |
+| [056911822c](https://github.com/angular/components/commit/056911822c41eecec0064fe2cf88fc6016c922e6) | fix | **schematics:** migrate legacy typography hierarchy usages in CSS |
+| [9cdb4dbf4d](https://github.com/angular/components/commit/9cdb4dbf4d27bb798f68a55ac47d5dec2c6ae1cf) | fix | **schematics:** migrate typography hierarchy classes in templates |
+| [32827ac58a](https://github.com/angular/components/commit/32827ac58a7ff741ae914948798717717b068102) | fix | **schematics:** migrate typography-hierarchy mixin to legacy |
+| [ec116ab024](https://github.com/angular/components/commit/ec116ab024c970a7dfe86681a5c9decb871ba64f) | fix | **schematics:** move value bindings to slider thumb ([#25916](https://github.com/angular/components/pull/25916)) |
+| [274a114f58](https://github.com/angular/components/commit/274a114f586f28b0bd3a085735f65d3450772c1f) | fix | **stepper:** content not visibile on first navigation when nested in tabs ([#25930](https://github.com/angular/components/pull/25930)) |
+| [66632c9c99](https://github.com/angular/components/commit/66632c9c994b752563f95999dced00ccd604d4af) | fix | **tabs:** avoid reference error ([#25928](https://github.com/angular/components/pull/25928)) |
+## Special Thanks
+Douglas Parker, Jeremy Elbourn, Kristiyan Kostadinov, Paul Gschwendtner, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="14.2.7"></a>
 # 14.2.7 "smoke-spirit" (2022-11-09)
 ### cdk
