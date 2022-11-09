@@ -52,9 +52,25 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             updates.push(this._removeBinding(originalHtml, binding.node));
           }
 
-          if (binding.name === 'invert' || binding.name === 'vertical') {
+          if (
+            binding.name === 'invert' ||
+            binding.name === 'vertical' ||
+            binding.name === 'tickInterval' ||
+            binding.name === 'valueText' ||
+            binding.name === 'defaultColor' ||
+            binding.name === 'defaultTabIndex' ||
+            binding.name === 'onTouched'
+          ) {
             // Remove the binding and leave a comment.
             comments.push(`<!-- TODO: The '${binding.name}' property no longer exists -->`);
+            updates.push(this._removeBinding(originalHtml, binding.node));
+          }
+
+          if (binding.name === 'displayValue') {
+            // Remove the binding and leave a comment.
+            comments.push(
+              `<!-- TODO: The '${binding.name}' property no longer exists. Use 'displayWith' instead. -->`,
+            );
             updates.push(this._removeBinding(originalHtml, binding.node));
           }
 
@@ -93,6 +109,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
         ? comments.join(indentation)
         : indentation + comments.join(indentation);
 
+    console.log(commentStr);
     return {
       offset: node.sourceSpan.start.offset,
       updateFn: (html: string) =>
