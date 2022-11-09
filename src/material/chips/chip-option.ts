@@ -43,12 +43,12 @@ export class MatChipSelectionChange {
   styleUrls: ['chip.css'],
   inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   host: {
-    'class': 'mat-mdc-chip mat-mdc-chip-option mdc-evolution-chip mdc-evolution-chip--filter',
+    'class':
+      'mat-mdc-chip mat-mdc-chip-option mdc-evolution-chip mdc-evolution-chip--filter mdc-evolution-chip--selectable mdc-evolution-chip--with-primary-graphic',
     '[class.mat-mdc-chip-selected]': 'selected',
     '[class.mat-mdc-chip-multiple]': '_chipListMultiple',
     '[class.mat-mdc-chip-disabled]': 'disabled',
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
-    '[class.mdc-evolution-chip--selectable]': 'selectable',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
     '[class.mdc-evolution-chip--selected]': 'selected',
     // This class enables the transition on the checkmark. Usually MDC adds it when selection
@@ -57,7 +57,6 @@ export class MatChipSelectionChange {
     // because they also have an exit animation that we don't care about.
     '[class.mdc-evolution-chip--selecting]': '!_animationsDisabled',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
-    '[class.mdc-evolution-chip--with-primary-graphic]': '_hasLeadingGraphic()',
     '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
     '[class.mdc-evolution-chip--with-avatar]': 'leadingIcon',
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
@@ -161,13 +160,6 @@ export class MatChipOption extends MatChip implements OnInit {
     if (this.selectable && !this.disabled) {
       this.toggleSelected(true);
     }
-  }
-
-  _hasLeadingGraphic() {
-    // The checkmark graphic communicates selected state for both single-select and multi-select.
-    // Include checkmark in single-select to fix a11y issue where selected state is communicated
-    // visually only using color (#25886).
-    return this.leadingIcon || this.selectable;
   }
 
   _setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean) {
