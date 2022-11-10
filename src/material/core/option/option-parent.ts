@@ -17,6 +17,7 @@ export interface MatOptionParentComponent {
   disableRipple?: boolean;
   multiple?: boolean;
   inertGroups?: boolean;
+  hideSingleSelectionIndicator?: boolean;
 }
 
 /**

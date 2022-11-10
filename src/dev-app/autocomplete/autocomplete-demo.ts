@@ -12,6 +12,7 @@ import {CommonModule} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -38,6 +39,7 @@ export interface StateGroup {
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatInputModule,
     ReactiveFormsModule,
   ],
@@ -52,6 +54,7 @@ export class AutocompleteDemo {
   tdStates: State[];
 
   tdDisabled = false;
+  hideSingleSelectionIndicators = false;
 
   reactiveStatesTheme: ThemePalette = 'primary';
   templateStatesTheme: ThemePalette = 'primary';
@@ -61,6 +64,9 @@ export class AutocompleteDemo {
     {value: 'accent', name: 'Accent'},
     {value: 'warn', name: 'Warn'},
   ];
+
+  reactiveHideSingleSelectionIndicator = false;
+  templateHideSingleSelectionIndicator = false;
 
   @ViewChild(NgModel) modelDir: NgModel;
 

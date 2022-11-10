@@ -71,12 +71,15 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 export class MatAutocomplete extends _MatAutocompleteBase {
     // (undocumented)
     protected _hiddenClass: string;
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: BooleanInput);
     optionGroups: QueryList<MatOptgroup>;
     options: QueryList<MatOption>;
+    _syncParentProperties(): void;
     // (undocumented)
     protected _visibleClass: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; }, {}, ["optionGroups", "options"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; "hideSingleSelectionIndicator": "hideSingleSelectionIndicator"; }, {}, ["optionGroups", "options"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocomplete, never>;
 }
@@ -89,7 +92,7 @@ export interface MatAutocompleteActivatedEvent {
 
 // @public
 export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase implements AfterContentInit, CanDisableRipple, OnDestroy {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, defaults: MatAutocompleteDefaultOptions, platform?: Platform);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _defaults: MatAutocompleteDefaultOptions, platform?: Platform);
     ariaLabel: string;
     ariaLabelledby: string;
     get autoActiveFirstOption(): boolean;
@@ -102,6 +105,8 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
         [key: string]: boolean;
     };
     readonly closed: EventEmitter<void>;
+    // (undocumented)
+    protected _defaults: MatAutocompleteDefaultOptions;
     displayWith: ((value: any) => string) | null;
     _emitSelectEvent(option: _MatOptionBase): void;
     _getPanelAriaLabelledby(labelId: string | null): string | null;
@@ -140,6 +145,7 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
 export interface MatAutocompleteDefaultOptions {
     autoActiveFirstOption?: boolean;
     autoSelectActiveOption?: boolean;
+    hideSingleSelectionIndicator?: boolean;
     overlayPanelClass?: string | string[];
 }
 

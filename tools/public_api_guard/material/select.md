@@ -83,6 +83,8 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
     customTrigger: MatSelectTrigger;
     // (undocumented)
     protected _getChangeEvent(value: any): MatSelectChange;
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: BooleanInput);
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -102,8 +104,9 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
     protected _scrollOptionIntoView(index: number): void;
     // (undocumented)
     get shouldLabelFloat(): boolean;
+    _syncParentProperties(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "hideSingleSelectionIndicator": "hideSingleSelectionIndicator"; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, never>;
 }
@@ -128,6 +131,8 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;
     abstract customTrigger: {};
+    // (undocumented)
+    protected _defaultOptions?: MatSelectConfig | undefined;
     protected readonly _destroy: Subject<void>;
     get disableOptionCentering(): boolean;
     set disableOptionCentering(value: BooleanInput);
@@ -231,6 +236,7 @@ export class MatSelectChange {
 // @public
 export interface MatSelectConfig {
     disableOptionCentering?: boolean;
+    hideSingleSelectionIndicator?: boolean;
     overlayPanelClass?: string | string[];
     typeaheadDebounceInterval?: number;
 }

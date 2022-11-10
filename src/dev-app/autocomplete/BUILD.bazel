@@ -13,6 +13,7 @@ ng_module(
         "//src/material/autocomplete",
         "//src/material/button",
         "//src/material/card",
+        "//src/material/checkbox",
         "//src/material/form-field",
         "//src/material/input",
         "@npm//@angular/forms",

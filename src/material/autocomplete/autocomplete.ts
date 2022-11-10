@@ -81,6 +81,9 @@ export interface MatAutocompleteDefaultOptions {
 
   /** Class or list of classes to be applied to the autocomplete's overlay panel. */
   overlayPanelClass?: string | string[];
+
+  /** Wheter icon indicators should be hidden for single-selection. */
+  hideSingleSelectionIndicator?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-autocomplete`. */
@@ -94,7 +97,11 @@ export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<MatAutocomple
 
 /** @docs-private */
 export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefaultOptions {
-  return {autoActiveFirstOption: false, autoSelectActiveOption: false};
+  return {
+    autoActiveFirstOption: false,
+    autoSelectActiveOption: false,
+    hideSingleSelectionIndicator: false,
+  };
 }
 
 /** Base class with all of the `MatAutocomplete` functionality. */
@@ -167,7 +174,7 @@ export abstract class _MatAutocompleteBase
   set autoActiveFirstOption(value: BooleanInput) {
     this._autoActiveFirstOption = coerceBooleanProperty(value);
   }
-  private _autoActiveFirstOption: boolean;
+  private _autoActiveFirstOption = !!this._defaults.autoActiveFirstOption;
 
   /** Whether the active option should be selected as the user is navigating. */
   @Input()
@@ -177,7 +184,7 @@ export abstract class _MatAutocompleteBase
   set autoSelectActiveOption(value: BooleanInput) {
     this._autoSelectActiveOption = coerceBooleanProperty(value);
   }
-  private _autoSelectActiveOption: boolean;
+  private _autoSelectActiveOption = !!this._defaults.autoSelectActiveOption;
 
   /**
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
@@ -232,7 +239,7 @@ export abstract class _MatAutocompleteBase
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef<HTMLElement>,
-    @Inject(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: MatAutocompleteDefaultOptions,
+    @Inject(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS) protected _defaults: MatAutocompleteDefaultOptions,
     platform?: Platform,
   ) {
     super();
@@ -242,8 +249,6 @@ export abstract class _MatAutocompleteBase
     // wasn't resolved in VoiceOver, and if it has, we can remove this and the `inertGroups`
     // option altogether.
     this.inertGroups = platform?.SAFARI || false;
-    this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
-    this._autoSelectActiveOption = !!defaults.autoSelectActiveOption;
   }
 
   ngAfterContentInit() {
@@ -336,4 +341,25 @@ export class MatAutocomplete extends _MatAutocompleteBase {
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
   protected _visibleClass = 'mat-mdc-autocomplete-visible';
   protected _hiddenClass = 'mat-mdc-autocomplete-hidden';
+
+  /** Whether checkmark indicator for single-selection options is hidden. */
+  @Input()
+  get hideSingleSelectionIndicator(): boolean {
+    return this._hideSingleSelectionIndicator;
+  }
+  set hideSingleSelectionIndicator(value: BooleanInput) {
+    this._hideSingleSelectionIndicator = coerceBooleanProperty(value);
+    this._syncParentProperties();
+  }
+  private _hideSingleSelectionIndicator: boolean =
+    this._defaults.hideSingleSelectionIndicator ?? false;
+
+  /** Syncs the parent state with the individual options. */
+  _syncParentProperties(): void {
+    if (this.options) {
+      for (const option of this.options) {
+        option._changeDetectorRef.markForCheck();
+      }
+    }
+  }
 }

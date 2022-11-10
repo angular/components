@@ -64,14 +64,29 @@
 </div>
 
 <h1>Pseudo checkboxes</h1>
-<mat-pseudo-checkbox></mat-pseudo-checkbox>
-<mat-pseudo-checkbox [disabled]="true"></mat-pseudo-checkbox>
+<div>
+  <h2>Full appearance</h2>
+  <mat-pseudo-checkbox></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox [disabled]="true"></mat-pseudo-checkbox>
 
-<mat-pseudo-checkbox state="checked"></mat-pseudo-checkbox>
-<mat-pseudo-checkbox state="checked" [disabled]="true"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="checked"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="checked" [disabled]="true"></mat-pseudo-checkbox>
 
-<mat-pseudo-checkbox state="indeterminate"></mat-pseudo-checkbox>
-<mat-pseudo-checkbox state="indeterminate" [disabled]="true"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="indeterminate"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="indeterminate" [disabled]="true"></mat-pseudo-checkbox>
+<div>
+<div>
+  <h2>Minimal appearance</h2>
+  <mat-pseudo-checkbox appearance="minimal"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox appearance="minimal" [disabled]="true"></mat-pseudo-checkbox>
+
+  <mat-pseudo-checkbox appearance="minimal" state="checked"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox appearance="minimal" state="checked" [disabled]="true"></mat-pseudo-checkbox>
+
+  <mat-pseudo-checkbox appearance="minimal" state="indeterminate"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox appearance="minimal" state="indeterminate" [disabled]="true">
+  </mat-pseudo-checkbox>
+<div>
 
 <h1>Nested Checklist</h1>
 <mat-checkbox-demo-nested-checklist></mat-checkbox-demo-nested-checklist>
