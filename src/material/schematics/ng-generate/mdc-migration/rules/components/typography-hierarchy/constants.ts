@@ -29,3 +29,6 @@ export const RENAMED_TYPOGRAPHY_LEVELS = new Map(mappings);
 export const RENAMED_TYPOGRAPHY_CLASSES = new Map(
   mappings.map(m => ['mat-' + m[0], 'mat-' + m[1]]),
 );
+
+/** Typography levels that have been combined into other levels with no replacement. */
+export const COMBINED_TYPOGRAPHY_LEVELS = new Map([['input', 'body-1']]);
