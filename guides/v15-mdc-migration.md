@@ -568,8 +568,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * The `invert` and `vertical` properties have been removed 
 
 * The slider API has also changed such that there is a new component: `MatSliderThumb`.
-  The MatSliderThumb is the new interface for the following properties:
-  The following 
+  The MatSliderThumb is the new interface for the following:
 
 * To accommodate range sliders, the implementation has changed from the `<mat-slider>` element being
   the form control to the `<mat-slider>` element containing 1-2 `<input>` elements (the slider
