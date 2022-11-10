@@ -56,10 +56,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             binding.name === 'invert' ||
             binding.name === 'vertical' ||
             binding.name === 'tickInterval' ||
-            binding.name === 'valueText' ||
-            binding.name === 'defaultColor' ||
-            binding.name === 'defaultTabIndex' ||
-            binding.name === 'onTouched'
+            binding.name === 'valueText'
           ) {
             // Remove the binding and leave a comment.
             comments.push(`<!-- TODO: The '${binding.name}' property no longer exists -->`);
@@ -109,7 +106,6 @@ export class SliderTemplateMigrator extends TemplateMigrator {
         ? comments.join(indentation)
         : indentation + comments.join(indentation);
 
-    console.log(commentStr);
     return {
       offset: node.sourceSpan.start.offset,
       updateFn: (html: string) =>

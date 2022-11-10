@@ -97,7 +97,7 @@ describe('slider template migrator', () => {
     );
     await runMigrationTest(
       `
-      <mat-slider tickInterval></mat-slider>`,
+      <mat-slider tickInterval="2"></mat-slider>`,
       `
       <!-- TODO: The 'tickInterval' property no longer exists -->
       <mat-slider><input matSliderThumb /></mat-slider>`,
@@ -111,60 +111,16 @@ describe('slider template migrator', () => {
     );
     await runMigrationTest(
       `
-      <mat-slider defaultColor></mat-slider>`,
-      `
-      <!-- TODO: The 'defaultColor' property no longer exists -->
-      <mat-slider><input matSliderThumb /></mat-slider>`,
-    );
-    await runMigrationTest(
-      `
-      <mat-slider defaultTabIndex></mat-slider>`,
-      `
-      <!-- TODO: The 'defaultTabIndex' property no longer exists -->
-      <mat-slider><input matSliderThumb /></mat-slider>`,
-    );
-    await runMigrationTest(
-      `
-      <mat-slider onTouched></mat-slider>`,
-      `
-      <!-- TODO: The 'onTouched' property no longer exists -->
-      <mat-slider><input matSliderThumb /></mat-slider>`,
-    );
-    await runMigrationTest(
-      `
       <mat-slider
         vertical
         invert
         [valueText]="myValueText"
-        defaultColor="accent"
-        defaultTabIndex="4"
-        [onTouched]="touchHandler"></mat-slider>`,
+        tickInterval="4"></mat-slider>`,
       `
       <!-- TODO: The 'valueText' property no longer exists -->
-      <!-- TODO: The 'onTouched' property no longer exists -->
       <!-- TODO: The 'vertical' property no longer exists -->
       <!-- TODO: The 'invert' property no longer exists -->
-      <!-- TODO: The 'defaultColor' property no longer exists -->
-      <!-- TODO: The 'defaultTabIndex' property no longer exists -->
-      <mat-slider><input matSliderThumb /></mat-slider>`,
-    );
-    await runMigrationTest(
-      `
-      <button>Click Me</button><mat-slider
-        vertical
-        invert
-        [valueText]="myValueText"
-        defaultColor="accent"
-        defaultTabIndex="4"
-        [onTouched]="touchHandler"></mat-slider>`,
-      `
-      <button>Click Me</button>
-      <!-- TODO: The 'valueText' property no longer exists -->
-      <!-- TODO: The 'onTouched' property no longer exists -->
-      <!-- TODO: The 'vertical' property no longer exists -->
-      <!-- TODO: The 'invert' property no longer exists -->
-      <!-- TODO: The 'defaultColor' property no longer exists -->
-      <!-- TODO: The 'defaultTabIndex' property no longer exists -->
+      <!-- TODO: The 'tickInterval' property no longer exists -->
       <mat-slider><input matSliderThumb /></mat-slider>`,
     );
   });
