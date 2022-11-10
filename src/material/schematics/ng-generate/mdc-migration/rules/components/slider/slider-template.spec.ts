@@ -124,4 +124,14 @@ describe('slider template migrator', () => {
       <mat-slider><input matSliderThumb /></mat-slider>`,
     );
   });
+
+  it('should remove displayValue and comment suggesting to switch to displayWith', async () => {
+    await runMigrationTest(
+      `
+      <mat-slider [displayValue]="myDisplayValue"></mat-slider>`,
+      `
+      <!-- TODO: The 'displayValue' property no longer exists. Use 'displayWith' instead. -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+  });
 });
