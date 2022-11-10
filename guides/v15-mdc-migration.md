@@ -520,24 +520,54 @@ DOM and CSS of the components, you may need to tweak some of your application's 
     </mat-slider>
   ```
 
-* Range sliders are now supported. A range slider uses two native slider inputs to control two
-  multiple values.
-
 * The new `discrete` property on the `<mat-slider>` now controls whether the slider has tick marks
   and a value indicator tooltip. It replaces `thumbLabel`.
-  
-* The `tickInterval` property has been replaced with the boolean `showTickMarks` and `step`.
 
-* The `displayValue` property has been replaced by `displayWith`.
+  ```html
+  <!-- Before -->
+  <mat-slider thumbLabel></mat-slider>
+
+  <!-- After -->
+  <mat-slider discrete>
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+  
+* The `tickInterval` property has been removed. To switch to the new API, use `showTickMarks` to
+  create a slider with tick marks, and the interval for your tick marks will match your slider's
+  `step`. The `tickInterval` property is under consideration to be added back in future releases.
+
+  ```html
+  <!-- Before -->
+  <mat-slider tickInterval="5" step="5"></mat-slider>
+
+  <!-- After -->
+  <mat-slider step="5" showTickMarks>
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+
+* The `displayValue` property has been removed. The suggested alternative for controlling the
+  value indicator text is to provide a function via `displayWith`.
+
+  ```html
+  <!-- Before -->
+  <mat-slider [displayValue]="myDisplayValue"></mat-slider>
+
+  <!-- After -->
+  <mat-slider [displayWith]="myDisplayWithFn">
+    <input matSliderThumb>
+  </mat-slider>
+  ```
 
 * The `<input>` elements now control the following properties:
     - `value`
     - `percent`
-    - `defaultTabIndex` is now replaced by the native inputs tab index
-    - `valueText` is now replaced by the native inputs aria-valuetext
+    - `valueText` is now replaced by the native input's aria-valuetext
 
+* The `invert` and `vertical` properties have been removed 
 
-* The slider API has also changed such that there is a new Component: `MatSliderThumb`.
+* The slider API has also changed such that there is a new component: `MatSliderThumb`.
   The MatSliderThumb is the new interface for the following properties:
   The following 
 
