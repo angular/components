@@ -42,6 +42,8 @@ export class SliderTemplateMigrator extends TemplateMigrator {
         const inputBindings: string[] = [];
         const comments: string[] = [];
 
+        let alreadyAppendedTemplateVars = false;
+
         for (let i = 0; i < bindings.length; i++) {
           const binding = bindings[i];
 
@@ -71,7 +73,29 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             updates.push(this._removeBinding(originalHtml, binding.node));
           }
 
-          // TODO(wagnermaciel): Finish the remapping of other bindings.
+          if (binding.name === 'input' || binding.name === 'change') {
+            // Replace $event with a MatSliderChange object.
+            const sourceSpan = binding.node.sourceSpan;
+            const oldBindingStr = originalHtml.slice(
+              sourceSpan.start.offset,
+              sourceSpan.end.offset,
+            );
+            const newBindingStr = oldBindingStr.replace(
+              '$event',
+              '{source: ngSliderThumb, parent: ngSlider, value: ngThumb.value}',
+            );
+
+            // Remove the old binding and add the new binding to the <input>.
+            inputBindings.push(newBindingStr);
+            updates.push(this._removeBinding(originalHtml, binding.node));
+
+            if (!alreadyAppendedTemplateVars) {
+              // Add the necessary template vars used in the MatSliderChange object.
+              inputBindings.push('#ngSliderThumb');
+              updates.push(this._insertTemplateVar(node, 'ngSlider'));
+              alreadyAppendedTemplateVars = true;
+            }
+          }
         }
 
         if (comments.length) {
@@ -94,7 +118,18 @@ export class SliderTemplateMigrator extends TemplateMigrator {
     return updates;
   }
 
-  /** Returns an update the adds the given comments before the given template ast element. */
+  /** Returns an update that inserts a template var at the end of the given node. */
+  private _insertTemplateVar(node: compiler.TmplAstElement, varName: string): Update {
+    return {
+      offset: node.startSourceSpan.end.offset - 1,
+      updateFn: html =>
+        html.slice(0, node.startSourceSpan.end.offset - 1) + // -1 to stop before the closing '>'
+        ` #${varName}` +
+        html.slice(node.startSourceSpan.end.offset - 1),
+    };
+  }
+
+  /** Returns an update that adds the given comments before the given template ast element. */
   private _addComments(node: compiler.TmplAstElement, comments: string[]): Update {
     const whitespace = this._parseIndentation(node);
     const indentation = '\n' + this._parseIndentation(node);
