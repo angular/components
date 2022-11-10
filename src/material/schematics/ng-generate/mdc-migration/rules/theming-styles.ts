@@ -11,7 +11,10 @@ import {SchematicContext} from '@angular-devkit/schematics';
 import * as postcss from 'postcss';
 import * as scss from 'postcss-scss';
 import {ComponentMigrator, MIGRATORS, PERMANENT_MIGRATORS} from '.';
-import {RENAMED_TYPOGRAPHY_LEVELS} from './components/typography-hierarchy/constants';
+import {
+  COMBINED_TYPOGRAPHY_LEVELS,
+  RENAMED_TYPOGRAPHY_LEVELS,
+} from './components/typography-hierarchy/constants';
 import {StyleMigrator} from './style-migrator';
 
 const COMPONENTS_MIXIN_NAME = /\.([^(;]*)/;
@@ -259,23 +262,48 @@ function migrateTypographyConfigs(content: string, namespace: string): string {
   const replacements: {start: number; end: number; text: string}[] = [];
 
   calls.forEach(({name, args}) => {
-    const argContent = content.slice(args.start, args.end);
-    replacements.push({start: name.start, end: name.end, text: newFunctionName});
+    const parameters = extractNamedParameters(content, args);
+    const addedParameters = new Set<string>();
 
     RENAMED_TYPOGRAPHY_LEVELS.forEach((newName, oldName) => {
-      const pattern = new RegExp(`\\$(${oldName}) *:`, 'g');
-      let match: RegExpExecArray | null;
+      const correspondingParam = parameters.get(oldName);
 
-      // Technically each argument can only match once, but keep going just in case.
-      while ((match = pattern.exec(argContent))) {
-        const start = args.start + match.index + 1;
+      if (correspondingParam) {
+        addedParameters.add(newName);
         replacements.push({
-          start,
-          end: start + match[1].length,
+          start: correspondingParam.key.start + 1, // + 1 to skip over the $ in the parameter name.
+          end: correspondingParam.key.end,
           text: newName,
         });
       }
     });
+
+    COMBINED_TYPOGRAPHY_LEVELS.forEach((newName, oldName) => {
+      const correspondingParam = parameters.get(oldName);
+
+      if (correspondingParam) {
+        if (addedParameters.has(newName)) {
+          const fullContent = content.slice(
+            correspondingParam.key.start,
+            correspondingParam.value.fullEnd,
+          );
+          replacements.push({
+            start: correspondingParam.key.start,
+            end: correspondingParam.value.fullEnd,
+            text: `/* TODO(mdc-migration): No longer supported. Use \`${newName}\` instead. ${fullContent} */`,
+          });
+        } else {
+          addedParameters.add(newName);
+          replacements.push({
+            start: correspondingParam.key.start + 1, // + 1 to skip over the $ in the parameter name.
+            end: correspondingParam.key.end,
+            text: newName,
+          });
+        }
+      }
+    });
+
+    replacements.push({start: name.start, end: name.end, text: newFunctionName});
   });
 
   replacements
@@ -329,4 +357,108 @@ function extractFunctionCalls(name: string, content: string) {
   }
 
   return results;
+}
+
+/** Extracts all of the named parameters and their values from a string. */
+function extractNamedParameters(content: string, argsRange: {start: number; end: number}) {
+  let escapeCount = 0;
+
+  const args = content
+    .slice(argsRange.start, argsRange.end)
+    // The top-level function parameters can contain function calls with named parameters of their
+    // own (e.g. `$display-4: mat.define-typography-level($font-family: $foo))` which we don't want to
+    // extract. Escape everything between parentheses to make it easier to parse out the value later
+    // on. Note that we escape with an equal-length string so that the string indexes remain the same.
+    .replace(/\(.*\)/g, current => ++escapeCount + '◬'.repeat(current.length - 1));
+
+  let colonIndex = args.indexOf(':');
+
+  const params = new Map<
+    string,
+    {key: {start: number; end: number}; value: {start: number; end: number; fullEnd: number}}
+  >();
+
+  while (colonIndex > -1) {
+    const keyRange = extractKeyRange(args, colonIndex);
+    const valueRange = extractValueRange(args, colonIndex);
+
+    if (keyRange && valueRange) {
+      // + 1 to exclude the $ in the key name.
+      params.set(args.slice(keyRange.start + 1, keyRange.end), {
+        // Add the argument start offset since the indexes are relative to the argument string.
+        key: {start: keyRange.start + argsRange.start, end: keyRange.end + argsRange.start},
+        value: {
+          start: valueRange.start + argsRange.start,
+          end: valueRange.end + argsRange.start,
+          fullEnd: valueRange.fullEnd + argsRange.start,
+        },
+      });
+    }
+
+    colonIndex = args.indexOf(':', colonIndex + 1);
+  }
+
+  return params;
+}
+
+/**
+ * Extracts the text range that contains the key of a named Sass parameter, including the leading $.
+ * @param content Text content in which to search.
+ * @param colonIndex Index of the colon between the key and value.
+ * Used as a starting point for the search.
+ */
+function extractKeyRange(content: string, colonIndex: number) {
+  let index = colonIndex - 1;
+  let start = -1;
+  let end = -1;
+
+  while (index > -1) {
+    const char = content[index];
+    if (char !== ' ' && char !== '\n') {
+      if (end === -1) {
+        end = index + 1;
+      } else if (char === '$') {
+        start = index;
+        break;
+      }
+    }
+    index--;
+  }
+
+  return start > -1 && end > -1 ? {start, end} : null;
+}
+
+/**
+ * Extracts the text range that contains the value of a named Sass parameter.
+ * @param content Text content in which to search.
+ * @param colonIndex Index of the colon between the key and value.
+ * Used as a starting point for the search.
+ */
+function extractValueRange(content: string, colonIndex: number) {
+  let index = colonIndex + 1;
+  let start = -1;
+  let end = -1;
+  let fullEnd = -1; // This is the end including any separators (e.g. commas).
+
+  while (index < content.length) {
+    const char = content[index];
+    const isWhitespace = char === ' ' || char === '\n';
+
+    if (!isWhitespace && start === -1) {
+      start = index;
+    } else if (start > -1 && (isWhitespace || char === ',')) {
+      end = index;
+      fullEnd = index + 1;
+      break;
+    }
+
+    if (start > -1 && index === content.length - 1) {
+      fullEnd = end = content.length;
+      break;
+    }
+
+    index++;
+  }
+
+  return start > -1 && end > -1 ? {start, end, fullEnd} : null;
 }
