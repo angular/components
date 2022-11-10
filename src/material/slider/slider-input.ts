@@ -103,6 +103,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._slider._onValueChange(this);
     this._cdr.detectChanges();
   }
+  /** Event emitted when the `value` is changed. */
   @Output() readonly valueChange: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when the slider thumb starts being dragged. */
@@ -113,7 +114,10 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   @Output() readonly dragEnd: EventEmitter<MatSliderDragEvent> =
     new EventEmitter<MatSliderDragEvent>();
 
-  /** The current translateX in px of the slider visual thumb. */
+  /**
+   * The current translateX in px of the slider visual thumb.
+   * @docs-private
+   */
   get translateX(): number {
     if (this._slider.min >= this._slider.max) {
       this._translateX = 0;
@@ -129,9 +133,13 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
   private _translateX: number | undefined;
 
-  /** Indicates whether this thumb is the start or end thumb. */
+  /**
+   * Indicates whether this thumb is the start or end thumb.
+   * @docs-private
+   */
   thumbPosition: _MatThumb = _MatThumb.END;
 
+  /** @docs-private */
   get min(): number {
     return coerceNumberProperty(this._hostElement.min);
   }
@@ -140,6 +148,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._cdr.detectChanges();
   }
 
+  /** @docs-private */
   get max(): number {
     return coerceNumberProperty(this._hostElement.max);
   }
@@ -156,6 +165,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._cdr.detectChanges();
   }
 
+  /** @docs-private */
   get disabled(): boolean {
     return coerceBooleanProperty(this._hostElement.disabled);
   }
@@ -168,6 +178,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     }
   }
 
+  /** The percentage of the slider that coincides with the value. */
   get percentage(): number {
     if (this._slider.min >= this._slider.max) {
       return this._slider._isRtl ? 1 : 0;
@@ -175,6 +186,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     return (this.value - this._slider.min) / (this._slider.max - this._slider.min);
   }
 
+  /** @docs-private */
   get fillPercentage(): number {
     if (!this._slider._cachedWidth) {
       return this._slider._isRtl ? 1 : 0;
@@ -260,6 +272,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this.dragEnd.complete();
   }
 
+  /** @docs-private */
   initProps(): void {
     this._updateWidthInactive();
     this.disabled = this._slider.disabled;
@@ -269,6 +282,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._initValue();
   }
 
+  /** @docs-private */
   initUI(): void {
     this._updateThumbUIByValue();
   }
@@ -530,6 +544,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   ],
 })
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
+  /** @docs-private */
   getSibling(): _MatSliderRangeThumb | undefined {
     if (!this._sibling) {
       this._sibling = this._slider._getInput(this._isEndThumb ? _MatThumb.START : _MatThumb.END) as
@@ -540,7 +555,10 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   }
   private _sibling: MatSliderRangeThumb | undefined;
 
-  /** Returns the minimum translateX position allowed for this slider input's visual thumb. */
+  /**
+   * Returns the minimum translateX position allowed for this slider input's visual thumb.
+   * @docs-private
+   */
   getMinPos(): number {
     const sibling = this.getSibling();
     if (!this._isLeftThumb && sibling) {
@@ -549,7 +567,10 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     return 0;
   }
 
-  /** Returns the maximum translateX position allowed for this slider input's visual thumb. */
+  /**
+   * Returns the maximum translateX position allowed for this slider input's visual thumb.
+   * @docs-private
+   */
   getMaxPos(): number {
     const sibling = this.getSibling();
     if (this._isLeftThumb && sibling) {

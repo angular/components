@@ -375,7 +375,10 @@ export class MatSlider
 
   // The value indicator tooltip text for the visual slider thumb(s).
 
+  /** @docs-private */
   protected startValueIndicatorText: string = '';
+
+  /** @docs-private */
   protected endValueIndicatorText: string = '';
 
   // Used to control the translateX of the visual slider thumb(s).
