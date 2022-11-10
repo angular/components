@@ -97,19 +97,40 @@ describe('slider template migrator', () => {
     );
     await runMigrationTest(
       `
-      <mat-slider vertical invert></mat-slider>`,
+      <mat-slider tickInterval="2"></mat-slider>`,
       `
-      <!-- TODO: The 'vertical' property no longer exists -->
-      <!-- TODO: The 'invert' property no longer exists -->
+      <!-- TODO: The 'tickInterval' property no longer exists -->
       <mat-slider><input matSliderThumb /></mat-slider>`,
     );
     await runMigrationTest(
       `
-      <button>Click Me</button><mat-slider vertical invert></mat-slider>`,
+      <mat-slider valueText></mat-slider>`,
       `
-      <button>Click Me</button>
+      <!-- TODO: The 'valueText' property no longer exists -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+    await runMigrationTest(
+      `
+      <mat-slider
+        vertical
+        invert
+        [valueText]="myValueText"
+        tickInterval="4"></mat-slider>`,
+      `
+      <!-- TODO: The 'valueText' property no longer exists -->
       <!-- TODO: The 'vertical' property no longer exists -->
       <!-- TODO: The 'invert' property no longer exists -->
+      <!-- TODO: The 'tickInterval' property no longer exists -->
+      <mat-slider><input matSliderThumb /></mat-slider>`,
+    );
+  });
+
+  it('should remove displayValue and comment suggesting to switch to displayWith', async () => {
+    await runMigrationTest(
+      `
+      <mat-slider [displayValue]="myDisplayValue"></mat-slider>`,
+      `
+      <!-- TODO: The 'displayValue' property no longer exists. Use 'displayWith' instead. -->
       <mat-slider><input matSliderThumb /></mat-slider>`,
     );
   });
