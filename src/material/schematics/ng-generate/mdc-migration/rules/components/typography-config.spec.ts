@@ -103,7 +103,6 @@ describe('typography migrations', () => {
             $body-1: $body-1,
             $caption: $caption,
             $button: $button,
-            $input: $input,
           ),
         ));
       `,
@@ -130,7 +129,6 @@ describe('typography migrations', () => {
             $body-2: $body-1,
             $caption: $caption,
             $button: $button,
-            $input: $input,
           ),
         ));
       `,
@@ -193,6 +191,114 @@ describe('typography migrations', () => {
             $subtitle-1: $subheading-2,
           ),
         ));
+      `,
+    );
+  });
+
+  it('should migrate a typography config with a mixture of positional and named arguments', async () => {
+    await runMigrationTest(
+      THEME_FILE,
+      `
+      @use '@angular/material' as mat;
+
+      $sample-project-theme: mat.define-light-theme((
+        color: (
+          primary: $sample-project-primary,
+          accent: $sample-project-accent,
+          warn: $sample-project-warn,
+        ),
+        typography: mat.define-legacy-typography-config($font-family, $display-4: $custom-display-4, $display-3),
+      ));
+      `,
+      `
+      @use '@angular/material' as mat;
+
+      $sample-project-theme: mat.define-light-theme((
+        color: (
+          primary: $sample-project-primary,
+          accent: $sample-project-accent,
+          warn: $sample-project-warn,
+        ),
+        typography: mat.define-typography-config($font-family, $headline-1: $custom-display-4, $display-3),
+      ));
+      `,
+    );
+  });
+
+  it('should replace the `input` level with `body-1` if there is no `body-1` in the config', async () => {
+    await runMigrationTest(
+      THEME_FILE,
+      `
+      @use '@angular/material' as mat;
+
+      $sample-project-theme: mat.define-light-theme((
+        color: (
+          primary: $sample-project-primary,
+          accent: $sample-project-accent,
+          warn: $sample-project-warn,
+        ),
+        typography: mat.define-legacy-typography-config(
+          $display-4: $display-4,
+          $display-3: $display-3,
+          $input: $input,
+        ),
+      ));
+      `,
+      `
+      @use '@angular/material' as mat;
+
+      $sample-project-theme: mat.define-light-theme((
+        color: (
+          primary: $sample-project-primary,
+          accent: $sample-project-accent,
+          warn: $sample-project-warn,
+        ),
+        typography: mat.define-typography-config(
+          $headline-1: $display-4,
+          $headline-2: $display-3,
+          $body-1: $input,
+        ),
+      ));
+      `,
+    );
+  });
+
+  it('should comment out the `input` level if a `body-1` already exists', async () => {
+    await runMigrationTest(
+      THEME_FILE,
+      `
+      @use '@angular/material' as mat;
+
+      $sample-project-theme: mat.define-light-theme((
+        color: (
+          primary: $sample-project-primary,
+          accent: $sample-project-accent,
+          warn: $sample-project-warn,
+        ),
+        typography: mat.define-legacy-typography-config(
+          $display-4: $display-4,
+          $display-3: $display-3,
+          $input: $input,
+          $subheading-1: $subheading-1,
+        ),
+      ));
+      `,
+      `
+      @use '@angular/material' as mat;
+
+      $sample-project-theme: mat.define-light-theme((
+        color: (
+          primary: $sample-project-primary,
+          accent: $sample-project-accent,
+          warn: $sample-project-warn,
+        ),
+        typography: mat.define-typography-config(
+          $headline-1: $display-4,
+          $headline-2: $display-3,
+          /* TODO(mdc-migration): No longer supported. Use \`body-1\` instead. $input: $input, */
+          $body-1: $subheading-1,
+        ),
+      ));
       `,
     );
   });
