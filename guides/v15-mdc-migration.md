@@ -560,7 +560,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   </mat-slider>
   ```
 
-* The `<input>` elements now control the following properties:
+* The `<input>` elements now control the following:
     - `value`
     - `percent`
     - `valueText` is now replaced by the native input's aria-valuetext
