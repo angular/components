@@ -10,6 +10,7 @@ import {
   ParsedTemplate,
   TmplAstElement,
   TmplAstNode,
+  TmplAstTemplate,
   parseTemplate as parseTemplateUsingCompiler,
 } from '@angular/compiler';
 
@@ -32,9 +33,18 @@ export function visitElements(
   nodes.reverse();
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
-    if (node instanceof TmplAstElement) {
+    const isElement = node instanceof TmplAstElement;
+
+    if (isElement) {
       preorderCallback(node);
+    }
+
+    // Descend both into elements and templates in order to cover cases like `*ngIf` and `*ngFor`.
+    if (isElement || node instanceof TmplAstTemplate) {
       visitElements(node.children, preorderCallback, postorderCallback);
+    }
+
+    if (isElement) {
       postorderCallback(node);
     }
   }
@@ -46,8 +56,8 @@ export function visitElements(
  *
  * For more details, see https://github.com/angular/angular/blob/4332897baa2226ef246ee054fdd5254e3c129109/packages/compiler-cli/src/ngtsc/annotations/component/src/resources.ts#L230.
  *
- * @param html text of the template to parse
- * @param filePath URL to use for source mapping of the parsed template
+ * @param template text of the template to parse
+ * @param templateUrl URL to use for source mapping of the parsed template
  * @returns the updated template html.
  */
 export function parseTemplate(template: string, templateUrl: string = ''): ParsedTemplate {
