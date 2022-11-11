@@ -46,7 +46,6 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     displayWith: (value: number) => string;
     // (undocumented)
     _endThumbTransform: string;
-    // (undocumented)
     protected endValueIndicatorText: string;
     _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
     _getThumb(thumbPosition: _MatThumb): _MatSliderVisualThumb;
@@ -101,7 +100,6 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     set showTickMarks(v: BooleanInput);
     // (undocumented)
     _startThumbTransform: string;
-    // (undocumented)
     protected startValueIndicatorText: string;
     get step(): number;
     set step(v: NumberInput);
@@ -150,7 +148,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     _getDefaultValue(): number;
     getMaxPos(): number;
     getMinPos(): number;
-    // (undocumented)
     getSibling(): _MatSliderRangeThumb | undefined;
     _isEndThumb: boolean;
     _isLeftThumb: boolean;
@@ -195,14 +192,12 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     _clamp(v: number): number;
     protected readonly _destroyed: Subject<void>;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(v: BooleanInput);
     readonly dragEnd: EventEmitter<MatSliderDragEvent>;
     readonly dragStart: EventEmitter<MatSliderDragEvent>;
     // (undocumented)
     readonly _elementRef: ElementRef<HTMLInputElement>;
-    // (undocumented)
     get fillPercentage(): number;
     _fixValue(event: PointerEvent): void;
     // (undocumented)
@@ -211,19 +206,15 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     _getDefaultValue(): number;
     _hostElement: HTMLInputElement;
     _initialValue: string | undefined;
-    // (undocumented)
     initProps(): void;
-    // (undocumented)
     initUI(): void;
     // (undocumented)
     _initValue(): void;
     _isActive: boolean;
     _isFocused: boolean;
     _knobRadius: number;
-    // (undocumented)
     get max(): number;
     set max(v: NumberInput);
-    // (undocumented)
     get min(): number;
     set min(v: NumberInput);
     // (undocumented)
@@ -246,7 +237,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
     _onPointerUp(event: PointerEvent): void;
-    // (undocumented)
     get percentage(): number;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
@@ -277,7 +267,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     get value(): number;
     set value(v: NumberInput);
-    // (undocumented)
     readonly valueChange: EventEmitter<number>;
     _valuetext: string;
     writeValue(value: any): void;
