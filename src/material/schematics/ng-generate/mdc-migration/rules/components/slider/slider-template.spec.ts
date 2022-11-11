@@ -134,4 +134,27 @@ describe('slider template migrator', () => {
       <mat-slider><input matSliderThumb /></mat-slider>`,
     );
   });
+
+  it('should remap input & output event handlers', async () => {
+    await runMigrationTest(
+      `
+      <mat-slider (input)="myInputHandler($event)"></mat-slider>`,
+      `
+      <mat-slider #ngSlider><input matSliderThumb (input)="myInputHandler({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value})" #ngSliderThumb="matSliderThumb" /></mat-slider>`,
+    );
+    await runMigrationTest(
+      `
+      <mat-slider (change)="myChangeHandler($event)"></mat-slider>`,
+      `
+      <mat-slider #ngSlider><input matSliderThumb (change)="myChangeHandler({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value})" #ngSliderThumb="matSliderThumb" /></mat-slider>`,
+    );
+    await runMigrationTest(
+      `
+      <mat-slider
+        (input)="myInputHandler($event)"
+        (change)="myChangeHandler($event)"></mat-slider>`,
+      `
+      <mat-slider #ngSlider><input matSliderThumb (input)="myInputHandler({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value})" #ngSliderThumb="matSliderThumb" (change)="myChangeHandler({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value})" /></mat-slider>`,
+    );
+  });
 });

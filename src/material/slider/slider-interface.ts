@@ -65,6 +65,22 @@ export interface MatSliderDragEvent {
   value: number;
 }
 
+/**
+ * A simple change event emitted by the MatSlider component.
+ * @deprecated Use event bindings directly on the MatSliderThumbs for `change` and `input` events. See https://material.angular.io/guide/mdc-migration for information about migrating.
+ * @breaking-change 17.0.0
+ */
+export class MatSliderChange {
+  /** The MatSliderThumb that was interacted with. */
+  source: _MatSliderThumb;
+
+  /** The MatSlider that was interacted with. */
+  parent: _MatSlider;
+
+  /** The new value of the source slider. */
+  value: number;
+}
+
 export interface _MatSlider {
   /** Gets the slider thumb input of the given thumb position. */
   _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
