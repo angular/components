@@ -82,7 +82,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
             );
             const newBindingStr = oldBindingStr.replace(
               '$event',
-              '{source: ngSliderThumb, parent: ngSlider, value: ngThumb.value}',
+              '{source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value}',
             );
 
             // Remove the old binding and add the new binding to the <input>.
@@ -91,7 +91,7 @@ export class SliderTemplateMigrator extends TemplateMigrator {
 
             if (!alreadyAppendedTemplateVars) {
               // Add the necessary template vars used in the MatSliderChange object.
-              inputBindings.push('#ngSliderThumb');
+              inputBindings.push('#ngSliderThumb="matSliderThumb"');
               updates.push(this._insertTemplateVar(node, 'ngSlider'));
               alreadyAppendedTemplateVars = true;
             }
