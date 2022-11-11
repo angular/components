@@ -41,6 +41,7 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {
   _MatThumb,
   _MatTickMark,
@@ -388,6 +389,8 @@ export class MatSlider
   /** Whether the slider is rtl. */
   _isRtl: boolean = false;
 
+  private _hasViewInitialized: boolean = false;
+
   /**
    * The width of the tick mark track.
    * The tick mark track width is different from full track width
@@ -425,9 +428,11 @@ export class MatSlider
     if (this._platform.isBrowser) {
       this._updateDimensions();
     }
+
     const eInput = this._getInput(_MatThumb.END);
     const sInput = this._getInput(_MatThumb.START);
     this._isRange = !!eInput && !!sInput;
+    this._cdr.detectChanges();
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       _validateInputs(
@@ -439,28 +444,51 @@ export class MatSlider
 
     const thumb = this._getThumb(_MatThumb.END);
     this._rippleRadius = thumb._ripple.radius;
-
     this._inputPadding = this._rippleRadius - this._knobRadius;
     this._inputOffset = this._knobRadius;
 
-    if (eInput) {
-      eInput.initProps();
-      eInput.initUI();
-    }
-    if (sInput) {
-      sInput.initProps();
-      sInput.initUI();
-    }
-    if (this._isRange) {
-      (eInput as _MatSliderRangeThumb)._updateMinMax();
-      (sInput as _MatSliderRangeThumb)._updateMinMax();
-    }
+    this._isRange
+      ? this._initUIRange(eInput as _MatSliderRangeThumb, sInput as _MatSliderRangeThumb)
+      : this._initUINonRange(eInput!);
+
     this._updateTrackUI(eInput!);
     this._updateTickMarkUI();
     this._updateTickMarkTrackUI();
 
     this._observeHostResize();
     this._cdr.detectChanges();
+  }
+
+  private _initUINonRange(eInput: _MatSliderThumb): void {
+    eInput.initProps();
+    eInput.initUI();
+
+    this._updateValueIndicatorUI(eInput);
+
+    this._hasViewInitialized = true;
+    eInput._updateThumbUIByValue();
+  }
+
+  private _initUIRange(eInput: _MatSliderRangeThumb, sInput: _MatSliderRangeThumb): void {
+    eInput.initProps();
+    eInput.initUI();
+
+    sInput.initProps();
+    sInput.initUI();
+
+    eInput._updateMinMax();
+    sInput._updateMinMax();
+
+    eInput._updateStaticStyles();
+    sInput._updateStaticStyles();
+
+    this._updateValueIndicatorUI(eInput);
+    this._updateValueIndicatorUI(sInput);
+
+    this._hasViewInitialized = true;
+
+    eInput._updateThumbUIByValue();
+    sInput._updateThumbUIByValue();
   }
 
   ngOnDestroy(): void {
@@ -555,10 +583,22 @@ export class MatSlider
     transformOrigin: string;
   }): void {
     const trackStyle = this._trackActive.nativeElement.style;
+    const animationOriginChanged =
+      styles.left !== trackStyle.left && styles.right !== trackStyle.right;
+
     trackStyle.left = styles.left;
     trackStyle.right = styles.right;
-    trackStyle.transform = styles.transform;
     trackStyle.transformOrigin = styles.transformOrigin;
+
+    if (animationOriginChanged) {
+      this._elementRef.nativeElement.classList.add('mat-mdc-slider-disable-track-animation');
+      this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+        this._elementRef.nativeElement.classList.remove('mat-mdc-slider-disable-track-animation');
+        trackStyle.transform = styles.transform;
+      });
+    } else {
+      trackStyle.transform = styles.transform;
+    }
   }
 
   /** Returns the translateX positioning for a tick mark based on it's index. */
@@ -571,6 +611,10 @@ export class MatSlider
   // Handlers for updating the slider ui.
 
   _onTranslateXChange(source: _MatSliderThumb): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
     this._updateThumbUI(source);
     this._updateTrackUI(source);
     this._updateOverlappingThumbUI(source as _MatSliderRangeThumb);
@@ -580,23 +624,39 @@ export class MatSlider
     input1: _MatSliderRangeThumb,
     input2: _MatSliderRangeThumb,
   ): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
     input1._updateThumbUIByValue();
     input2._updateThumbUIByValue();
   }
 
   _onValueChange(source: _MatSliderThumb): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
     this._updateValueIndicatorUI(source);
     this._updateTickMarkUI();
     this._cdr.detectChanges();
   }
 
   _onMinMaxOrStepChange(): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
     this._updateTickMarkUI();
     this._updateTickMarkTrackUI();
     this._cdr.markForCheck();
   }
 
   _onResize(): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
     this._updateDimensions();
     if (this._isRange) {
       const eInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
@@ -693,7 +753,11 @@ export class MatSlider
     }
 
     const valuetext = this.displayWith(source.value);
-    source._valuetext = valuetext;
+
+    this._hasViewInitialized
+      ? (source._valuetext = valuetext)
+      : source._hostElement.setAttribute('aria-valuetext', valuetext);
+
     if (this.discrete) {
       source.thumbPosition === _MatThumb.START
         ? (this.startValueIndicatorText = valuetext)
