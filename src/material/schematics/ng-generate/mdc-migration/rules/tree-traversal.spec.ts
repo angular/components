@@ -48,6 +48,49 @@ function runClearAttributeTest(html: string, result: string): void {
 }
 
 describe('#visitElements', () => {
+  describe('visitElements', () => {
+    it('should traverse elements with an *ngFor', () => {
+      const visitedElements: string[] = [];
+      const template = `
+        <parent>
+          <child *ngFor="let c of children">
+            <grandchild *ngFor="let g of c.children"></grandchild>
+          </child>
+        </parent>
+      `;
+
+      visitElements(parseTemplate(template).nodes, node => visitedElements.push(node.name));
+      expect(visitedElements).toEqual(['parent', 'child', 'grandchild']);
+    });
+
+    it('should traverse elements inside ng-container', () => {
+      const visitedElements: string[] = [];
+      const template = `
+        <ng-container>
+          <parent>
+            <ng-container>
+              <child>
+                <ng-container>
+                  <grandchild></grandchild>
+                </ng-container>
+              </child>
+            </ng-container>
+          </parent>
+        </ng-container>
+      `;
+
+      visitElements(parseTemplate(template).nodes, node => visitedElements.push(node.name));
+      expect(visitedElements).toEqual([
+        'ng-container',
+        'parent',
+        'ng-container',
+        'child',
+        'ng-container',
+        'grandchild',
+      ]);
+    });
+  });
+
   describe('tag name replacements', () => {
     it('should handle basic cases', async () => {
       runTagNameDuplicationTest('<a></a>', '<aa></aa>');
