@@ -432,6 +432,7 @@ export class MatSlider
     const eInput = this._getInput(_MatThumb.END);
     const sInput = this._getInput(_MatThumb.START);
     this._isRange = !!eInput && !!sInput;
+    this._cdr.detectChanges();
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       _validateInputs(
