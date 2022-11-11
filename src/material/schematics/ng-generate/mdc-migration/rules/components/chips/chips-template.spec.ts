@@ -93,4 +93,66 @@ describe('chips template migrator', () => {
   it('should update standalone chips', async () => {
     await runMigrationTest('<mat-chip></mat-chip>', '<mat-chip-option></mat-chip-option>');
   });
+
+  it('should update mat-chip with an *ngFor', async () => {
+    await runMigrationTest(
+      `
+        <mat-chip-list>
+          <mat-chip *ngFor="let chip of chips">{{chip}}</mat-chip>
+        </mat-chip-list>
+      `,
+      `
+        <mat-chip-listbox>
+          <mat-chip-option *ngFor="let chip of chips">{{chip}}</mat-chip-option>
+        </mat-chip-listbox>
+      `,
+    );
+  });
+
+  it('should update a chip listbox with a nested ng-container', async () => {
+    await runMigrationTest(
+      `
+        <mat-chip-list>
+          <ng-container *ngFor="let category of categories">
+            <ng-container *ngIf="category === 'something'">
+              <mat-chip *ngFor="let chip of category.chips" [selectable]="false">{{chip}}</mat-chip>
+            </ng-container>
+          </ng-container>
+        </mat-chip-list>
+      `,
+      `
+        <mat-chip-listbox>
+          <ng-container *ngFor="let category of categories">
+            <ng-container *ngIf="category === 'something'">
+              <mat-chip-option *ngFor="let chip of category.chips" [selectable]="false">{{chip}}</mat-chip-option>
+            </ng-container>
+          </ng-container>
+        </mat-chip-listbox>
+      `,
+    );
+  });
+
+  it('should update a chip with an *ngIf', async () => {
+    await runMigrationTest(
+      '<mat-chip *ngIf="isShown"></mat-chip>',
+      '<mat-chip-option *ngIf="isShown"></mat-chip-option>',
+    );
+  });
+
+  it('should update a chip grid with an *ngFor', async () => {
+    await runMigrationTest(
+      `
+        <mat-chip-list #chipList>
+          <mat-chip *ngFor="let chip of chips">{{chip}}</mat-chip>
+          <input type="text" matInput [matChipInputFor]="chipList">
+        </mat-chip-list>
+      `,
+      `
+        <mat-chip-grid #chipList>
+          <mat-chip-row *ngFor="let chip of chips">{{chip}}</mat-chip-row>
+          <input type="text" matInput [matChipInputFor]="chipList">
+        </mat-chip-grid>
+      `,
+    );
+  });
 });
