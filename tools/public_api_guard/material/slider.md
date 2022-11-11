@@ -120,6 +120,13 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, Can
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSlider, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
 
+// @public @deprecated
+export class MatSliderChange {
+    parent: _MatSlider;
+    source: _MatSliderThumb;
+    value: number;
+}
+
 // @public
 export interface MatSliderDragEvent {
     parent: _MatSlider;
