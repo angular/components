@@ -135,7 +135,7 @@ describe('slider template migrator', () => {
     );
   });
 
-  it('should remap input and output event handlers', async () => {
+  it('should remap input & output event handlers', async () => {
     await runMigrationTest(
       `
       <mat-slider (input)="myInputHandler($event)"></mat-slider>`,
