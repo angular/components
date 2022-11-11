@@ -578,7 +578,6 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   </mat-slider>
   ```
 
-
 * The slider API has also changed such that there are two new components: `MatSliderThumb` and
   `MatSliderRangeThumb`. They provide the following properties:
     - `@Input() value: number`
