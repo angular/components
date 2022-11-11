@@ -560,15 +560,35 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   </mat-slider>
   ```
 
-* The `<input>` elements now control the following:
-    - `value`
-    - `percent`
-    - `valueText` is now replaced by the native input's aria-valuetext
+* The `valueText` property is now removed in favor of directly using the native input's
+  aria-valuetext or providing a `displayWith` function.
 
-* The `invert` and `vertical` properties have been removed 
+  ```html
+  <!-- Before -->
+  <mat-slider [valueText]="myValueText"></mat-slider>
 
-* The slider API has also changed such that there is a new component: `MatSliderThumb`.
-  The MatSliderThumb is the new interface for the following:
+  <!-- After (Option 1) -->
+  <mat-slider>
+    <input [attr.aria-valuetext]="myValueText" matSliderThumb>
+  </mat-slider>
+
+  <!-- After (Option 2) -->
+  <mat-slider [displayWith]="myDisplayWithFn">
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+
+
+* The slider API has also changed such that there are two new components: `MatSliderThumb` and
+  `MatSliderRangeThumb`. They provide the following properties:
+    - `@Input() value: number`
+    - `@Output() valueChange: EventEmitter<number>`
+    - `@Output() dragEnd: EventEmitter<MatSliderDragEvent>`
+    - `@Output() dragStart: EventEmitter<MatSliderDragEvent>`
+    - `percentage: number`
+  And the following methods:
+    - `blur`
+    - `focus`
 
 * To accommodate range sliders, the implementation has changed from the `<mat-slider>` element being
   the form control to the `<mat-slider>` element containing 1-2 `<input>` elements (the slider
@@ -576,7 +596,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   labels (`aria-label`) now live on the `<input>` elements instead.
 
 * Vertical sliders and inverted sliders are no longer supported, as they are no longer part of the
-  Material Design spec.
+  Material Design spec. As a result, the `invert` and `vertical` properties have been removed.
 
 ### Snack Bar
 
