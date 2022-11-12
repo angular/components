@@ -190,6 +190,9 @@ export const MAC_WK_CMD_RIGHT = 93;
 // @public (undocumented)
 export const META = 91;
 
+// @public
+export type ModifierKey = 'altKey' | 'shiftKey' | 'ctrlKey' | 'metaKey';
+
 // @public (undocumented)
 export const MUTE = 173;
 
