@@ -30,8 +30,7 @@ export function visitElements(
   preorderCallback: (node: TmplAstElement) => void = () => {},
   postorderCallback: (node: TmplAstElement) => void = () => {},
 ): void {
-  nodes.reverse();
-  for (let i = 0; i < nodes.length; i++) {
+  for (let i = nodes.length - 1; i > -1; i--) {
     const node = nodes[i];
     const isElement = node instanceof TmplAstElement;
 
