@@ -1,3 +1,21 @@
+<a name="15.0.0-rc.3"></a>
+# 15.0.0-rc.3 "felt-feather" (2022-11-14)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e801a7656e](https://github.com/angular/components/commit/e801a7656eeff17ae8997ff84d3f26938c48be89) | fix | **schematics:** add clarification about directory path format for MDC migration schematic ([#25969](https://github.com/angular/components/pull/25969)) |
+| [4e468a9b15](https://github.com/angular/components/commit/4e468a9b15823bdb5f3dedb037a5fd90670c61c1) | fix | **schematics:** add handling for several api changes ([#25943](https://github.com/angular/components/pull/25943)) |
+| [f1658695a2](https://github.com/angular/components/commit/f1658695a2f96f1a988a20419759eda0580c5e44) | fix | **schematics:** add slider input & change template updates ([#25952](https://github.com/angular/components/pull/25952)) |
+| [18569b8242](https://github.com/angular/components/commit/18569b8242b747de40a6332e6b8b16f0e1b829ab) | fix | **schematics:** avoid mutating the AST when traversing ([#25964](https://github.com/angular/components/pull/25964)) |
+| [d0a89aef32](https://github.com/angular/components/commit/d0a89aef32fcdffbfa3ecd742f6689ede339d4fb) | fix | **schematics:** handle input level in typography migration ([#25949](https://github.com/angular/components/pull/25949)) |
+| [92b2299e4a](https://github.com/angular/components/commit/92b2299e4a1fe2ff9b7547380a737f8def91df27) | fix | **schematics:** improve instructions for dealing with typography changes ([#25950](https://github.com/angular/components/pull/25950)) |
+| [08f6ef4357](https://github.com/angular/components/commit/08f6ef435707bc8966ec4f10570dcb6441db21d8) | fix | **schematics:** not migrating elements with template directives ([#25956](https://github.com/angular/components/pull/25956)) |
+| [25a3b1b517](https://github.com/angular/components/commit/25a3b1b51737ba5674bbfe2cbbbbad07b14aa965) | fix | **slider:** fix track animation ([#25924](https://github.com/angular/components/pull/25924)) |
+## Special Thanks
+Amy Sorto, Kristiyan Kostadinov, Miles Malerba and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0-rc.2"></a>
 # 15.0.0-rc.2 "steam-soul" (2022-11-09)
 ### cdk
