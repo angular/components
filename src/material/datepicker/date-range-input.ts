@@ -349,8 +349,9 @@ export class MatDateRangeInput<D>
   }
 
   /** Gets the value that is used to mirror the state input. */
-  _getInputMirrorValue() {
-    return this._startInput ? this._startInput.getMirrorValue() : '';
+  _getInputMirrorValue(part: 'start' | 'end') {
+    const input = part === 'start' ? this._startInput : this._endInput;
+    return input ? input.getMirrorValue() : '';
   }
 
   /** Whether the input placeholders should be hidden. */

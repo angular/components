@@ -45,8 +45,24 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
   transition: none;
 }
 
+// Wrapper around the inner inputs. Used to facilitate the auto-resizing input.
+.mat-date-range-input-wrapper {
+  position: relative;
+  overflow: hidden;
+  max-width: $date-range-input-part-max-width;
+}
+
+.mat-date-range-input-end-wrapper {
+  // Allow the end input to fill the rest of the available space.
+  flex-grow: 1;
+}
+
 // Underlying input inside the range input.
 .mat-date-range-input-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+
   // Reset the input so it's just a transparent rectangle.
   font: inherit;
   background: transparent;
@@ -59,6 +75,10 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
   text-align: inherit;
   -webkit-appearance: none;
   width: 100%;
+
+  // Does nothing on Chrome, but necessary for the text
+  // to align in some cases on Safari and Firefox.
+  height: 100%;
 
   // Undo the red box-shadow glow added by Firefox on invalid inputs.
   // See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-ui-invalid
@@ -101,7 +121,7 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
 // We want the start input to be flush against the separator, no matter how much text it has, but
 // the problem is that inputs have a fixed width. We work around the issue by implementing an
 // auto-resizing input that stretches based on its text, up to a point. It works by having
-// a relatively-positioned wrapper (`.mat-date-range-input-start-wrapper` below) and an absolutely-
+// a relatively-positioned wrapper (`.mat-date-range-input-wrapper` below) and an absolutely-
 // positioned `input`, as well as a `span` inside the wrapper which mirrors the input's value and
 // placeholder. As the user is typing, the value gets mirrored in the span which causes the wrapper
 // to stretch and the input with it.
@@ -120,25 +140,6 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
   // Prevent the container from collapsing. Make it more
   // than 1px so the input caret doesn't get clipped.
   min-width: 2px;
-}
-
-// Wrapper around the start input. Used to facilitate the auto-resizing input.
-.mat-date-range-input-start-wrapper {
-  position: relative;
-  overflow: hidden;
-  max-width: $date-range-input-part-max-width;
-
-  .mat-date-range-input-inner {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-}
-
-// Wrapper around the end input that makes sure that it has the proper size.
-.mat-date-range-input-end-wrapper {
-  flex-grow: 1;
-  max-width: $date-range-input-part-max-width;
 }
 
 .mat-mdc-form-field-type-mat-date-range-input .mat-mdc-form-field-infix {
