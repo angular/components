@@ -501,9 +501,93 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * The label is closer to the enabled toggle
 
 ### Slider
-<!-- TODO(wagnermaciel): review -->
 
 * Sliders now work with mobile device screen readers.
+
+* The slider template API has changed from a single `<mat-slider>` element to a `<mat-slider>`
+  element which contains one or two `<input>` elements (depending on whether the slider should)
+  be a standard or range slider. E.g.
+  ```html
+    <!-- Single slider -->
+    <mat-slider>
+      <input matSliderThumb>
+    </mat-slider>
+
+    <!-- Range slider -->
+    <mat-slider>
+      <input matSliderStartThumb>
+      <input matSliderEndThumb>
+    </mat-slider>
+  ```
+
+* The new `discrete` property on the `<mat-slider>` now controls whether the slider has tick marks
+  and a value indicator tooltip. It replaces `thumbLabel`.
+
+  ```html
+  <!-- Before -->
+  <mat-slider thumbLabel></mat-slider>
+
+  <!-- After -->
+  <mat-slider discrete>
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+  
+* The `tickInterval` property has been removed. To switch to the new API, use `showTickMarks` to
+  create a slider with tick marks, and the interval for your tick marks will match your slider's
+  `step`. The `tickInterval` property is under consideration to be added back in future releases.
+
+  ```html
+  <!-- Before -->
+  <mat-slider tickInterval="5" step="5"></mat-slider>
+
+  <!-- After -->
+  <mat-slider step="5" showTickMarks>
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+
+* The `displayValue` property has been removed. The suggested alternative for controlling the
+  value indicator text is to provide a function via `displayWith`.
+
+  ```html
+  <!-- Before -->
+  <mat-slider [displayValue]="myDisplayValue"></mat-slider>
+
+  <!-- After -->
+  <mat-slider [displayWith]="myDisplayWithFn">
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+
+* The `valueText` property is now removed in favor of directly using the native input's
+  aria-valuetext or providing a `displayWith` function.
+
+  ```html
+  <!-- Before -->
+  <mat-slider [valueText]="myValueText"></mat-slider>
+
+  <!-- After (Option 1) -->
+  <mat-slider>
+    <input [attr.aria-valuetext]="myValueText" matSliderThumb>
+  </mat-slider>
+
+  <!-- After (Option 2) -->
+  <mat-slider [displayWith]="myDisplayWithFn">
+    <input matSliderThumb>
+  </mat-slider>
+  ```
+
+* The slider API has also changed such that there are two new components: `MatSliderThumb` and
+  `MatSliderRangeThumb`. They provide the following properties:
+    - `@Input() value: number`
+    - `@Output() valueChange: EventEmitter<number>`
+    - `@Output() dragEnd: EventEmitter<MatSliderDragEvent>`
+    - `@Output() dragStart: EventEmitter<MatSliderDragEvent>`
+    - `percentage: number`
+  And the following methods:
+    - `blur`
+    - `focus`
 
 * To accommodate range sliders, the implementation has changed from the `<mat-slider>` element being
   the form control to the `<mat-slider>` element containing 1-2 `<input>` elements (the slider
@@ -511,9 +595,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   labels (`aria-label`) now live on the `<input>` elements instead.
 
 * Vertical sliders and inverted sliders are no longer supported, as they are no longer part of the
-  Material Design spec.
-
-* Range sliders are now supported. <!-- TODO(wagnermaciel): add more about this. -->
+  Material Design spec. As a result, the `invert` and `vertical` properties have been removed.
 
 ### Snack Bar
 
