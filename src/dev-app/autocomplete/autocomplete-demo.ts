@@ -15,6 +15,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {ThemePalette} from '@angular/material/core';
 
 export interface State {
   code: string;
@@ -51,6 +52,15 @@ export class AutocompleteDemo {
   tdStates: State[];
 
   tdDisabled = false;
+
+  reactiveStatesTheme: ThemePalette = 'primary';
+  templateStatesTheme: ThemePalette = 'primary';
+
+  availableThemes = [
+    {value: 'primary', name: 'Primary'},
+    {value: 'accent', name: 'Accent'},
+    {value: 'warn', name: 'Warn'},
+  ];
 
   @ViewChild(NgModel) modelDir: NgModel;
 

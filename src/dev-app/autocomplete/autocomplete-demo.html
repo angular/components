@@ -6,16 +6,16 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <div>Reactive value: {{ stateCtrl.value | json }}</div>
     <div>Reactive dirty: {{ stateCtrl.dirty }}</div>
 
-    <mat-form-field>
+    <mat-form-field [color]="reactiveStatesTheme">
       <mat-label>State</mat-label>
       <input matInput [matAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
-      <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let state of tempStates" [value]="state">
-          <span>{{ state.name }}</span>
-          <span class="demo-secondary-text"> ({{ state.code }}) </span>
-        </mat-option>
-      </mat-autocomplete>
     </mat-form-field>
+    <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let state of tempStates" [value]="state">
+        <span>{{ state.name }}</span>
+        <span class="demo-secondary-text"> ({{ state.code }}) </span>
+      </mat-option>
+    </mat-autocomplete>
 
     <mat-card-actions>
       <button mat-button (click)="stateCtrl.reset()">RESET</button>
@@ -23,6 +23,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <button mat-button (click)="stateCtrl.enabled ? stateCtrl.disable() : stateCtrl.enable()">
         TOGGLE DISABLED
       </button>
+      <select [(ngModel)]="reactiveStatesTheme">
+        <option *ngFor="let theme of availableThemes" [value]="theme.value">
+          {{theme.name}}
+        </option>
+      </select>
     </mat-card-actions>
 
   </mat-card>
@@ -33,7 +38,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <div>Template-driven dirty: {{ modelDir ? modelDir.dirty : false }}</div>
 
     <!-- Added an ngIf below to test that autocomplete works with ngIf -->
-    <mat-form-field *ngIf="true">
+    <mat-form-field *ngIf="true" [color]="templateStatesTheme">
       <mat-label>State</mat-label>
       <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
         (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
@@ -50,6 +55,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <button mat-button (click)="tdDisabled=!tdDisabled">
         TOGGLE DISABLED
       </button>
+      <select [(ngModel)]="templateStatesTheme">
+        <option *ngFor="let theme of availableThemes" [value]="theme.value">
+          {{theme.name}}
+        </option>
+      </select>
     </mat-card-actions>
 
   </mat-card>
