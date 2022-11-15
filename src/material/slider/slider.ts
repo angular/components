@@ -135,6 +135,17 @@ export class MatSlider
   }
   set discrete(v: BooleanInput) {
     this._discrete = coerceBooleanProperty(v);
+
+    // Ensure the value indicator UI is initialized & up to date.
+    const eInput = this._getInput(_MatThumb.END);
+    const sInput = this._getInput(_MatThumb.START);
+
+    if (eInput) {
+      this._updateValueIndicatorUI(eInput);
+    }
+    if (sInput) {
+      this._updateValueIndicatorUI(sInput);
+    }
   }
   private _discrete: boolean = false;
 
