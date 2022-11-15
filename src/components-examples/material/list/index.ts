@@ -7,6 +7,7 @@ import {ListSectionsExample} from './list-sections/list-sections-example';
 import {ListSelectionExample} from './list-selection/list-selection-example';
 import {ListSingleSelectionExample} from './list-single-selection/list-single-selection-example';
 import {ListHarnessExample} from './list-harness/list-harness-example';
+import {ListVariantsExample} from './list-variants/list-variants-example';
 
 export {
   ListHarnessExample,
@@ -14,6 +15,7 @@ export {
   ListSectionsExample,
   ListSelectionExample,
   ListSingleSelectionExample,
+  ListVariantsExample,
 };
 
 const EXAMPLES = [
@@ -22,6 +24,7 @@ const EXAMPLES = [
   ListSectionsExample,
   ListSelectionExample,
   ListSingleSelectionExample,
+  ListVariantsExample,
 ];
 
 @NgModule({
