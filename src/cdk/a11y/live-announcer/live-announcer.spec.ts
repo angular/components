@@ -1,4 +1,6 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
+import {Overlay} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {Component} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -12,6 +14,7 @@ import {
 
 describe('LiveAnnouncer', () => {
   let announcer: LiveAnnouncer;
+  let overlay: Overlay;
   let ariaLiveElement: Element;
   let fixture: ComponentFixture<TestApp>;
 
@@ -19,17 +22,16 @@ describe('LiveAnnouncer', () => {
     beforeEach(() =>
       TestBed.configureTestingModule({
         imports: [A11yModule],
-        declarations: [TestApp],
+        declarations: [TestApp, TestModal],
       }),
     );
 
-    beforeEach(fakeAsync(
-      inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-        announcer = la;
-        ariaLiveElement = getLiveElement();
-        fixture = TestBed.createComponent(TestApp);
-      }),
-    ));
+    beforeEach(fakeAsync(() => {
+      overlay = TestBed.inject(Overlay);
+      announcer = TestBed.inject(LiveAnnouncer);
+      ariaLiveElement = getLiveElement();
+      fixture = TestBed.createComponent(TestApp);
+    }));
 
     it('should correctly update the announce text', fakeAsync(() => {
       let buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
@@ -171,6 +173,49 @@ describe('LiveAnnouncer', () => {
 
       // Since we're testing whether the timeouts were flushed, we don't need any
       // assertions here. `fakeAsync` will fail the test if a timer was left over.
+    }));
+
+    it('should add aria-owns to open aria-modal elements', fakeAsync(() => {
+      const portal = new ComponentPortal(TestModal);
+      const overlayRef = overlay.create();
+      const componentRef = overlayRef.attach(portal);
+      const modal = componentRef.location.nativeElement;
+      fixture.detectChanges();
+
+      expect(ariaLiveElement.id).toBeTruthy();
+      expect(modal.hasAttribute('aria-owns')).toBe(false);
+
+      announcer.announce('Hey Google', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(ariaLiveElement.id);
+
+      // Verify that the ID isn't duplicated.
+      announcer.announce('Hey Google again', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(ariaLiveElement.id);
+    }));
+
+    it('should expand aria-owns of open aria-modal elements', fakeAsync(() => {
+      const portal = new ComponentPortal(TestModal);
+      const overlayRef = overlay.create();
+      const componentRef = overlayRef.attach(portal);
+      const modal = componentRef.location.nativeElement;
+      fixture.detectChanges();
+
+      componentRef.instance.ariaOwns = 'foo bar';
+      componentRef.changeDetectorRef.detectChanges();
+
+      expect(ariaLiveElement.id).toBeTruthy();
+      expect(modal.getAttribute('aria-owns')).toBe('foo bar');
+
+      announcer.announce('Hey Google', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(`foo bar ${ariaLiveElement.id}`);
+
+      // Verify that the ID isn't duplicated.
+      announcer.announce('Hey Google again', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(`foo bar ${ariaLiveElement.id}`);
     }));
   });
 
@@ -357,6 +402,11 @@ class TestApp {
   announceText(message: string) {
     this.live.announce(message);
   }
+}
+
+@Component({template: '', host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'}})
+class TestModal {
+  ariaOwns: string | null = null;
 }
 
 @Component({
