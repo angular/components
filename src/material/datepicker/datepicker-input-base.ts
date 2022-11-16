@@ -28,7 +28,7 @@ import {
   Validator,
   ValidatorFn,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {Subscription, Subject} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {
@@ -58,6 +58,20 @@ export class MatDatepickerInputEvent<D, S = unknown> {
 
 /** Function that can be used to filter out dates from a calendar. */
 export type DateFilterFn<D> = (date: D | null) => boolean;
+
+/**
+ * Partial representation of `MatFormField` that is used for backwards-compatibility
+ * between the legacy and non-legacy variants.
+ */
+export interface _MatFormFieldPartial {
+  getConnectedOverlayOrigin(): ElementRef;
+  getLabelId(): string | null;
+  color: ThemePalette;
+  _elementRef: ElementRef;
+  _shouldLabelFloat(): boolean;
+  _hasFloatingLabel(): boolean;
+  _labelId: string;
+}
 
 /** Base class for datepicker inputs. */
 @Directive()
