@@ -135,17 +135,7 @@ export class MatSlider
   }
   set discrete(v: BooleanInput) {
     this._discrete = coerceBooleanProperty(v);
-
-    // Ensure the value indicator UI is initialized & up to date.
-    const eInput = this._getInput(_MatThumb.END);
-    const sInput = this._getInput(_MatThumb.START);
-
-    if (eInput) {
-      this._updateValueIndicatorUI(eInput);
-    }
-    if (sInput) {
-      this._updateValueIndicatorUI(sInput);
-    }
+    this._updateValueIndicatorUIs();
   }
   private _discrete: boolean = false;
 
@@ -496,8 +486,7 @@ export class MatSlider
     eInput._updateStaticStyles();
     sInput._updateStaticStyles();
 
-    this._updateValueIndicatorUI(eInput);
-    this._updateValueIndicatorUI(sInput);
+    this._updateValueIndicatorUIs();
 
     this._hasViewInitialized = true;
 
@@ -781,6 +770,19 @@ export class MatSlider
       valuetext.length < 3
         ? visualThumb._hostElement.classList.add('mdc-slider__thumb--short-value')
         : visualThumb._hostElement.classList.remove('mdc-slider__thumb--short-value');
+    }
+  }
+
+  /** Updates all value indicator UIs in the slider. */
+  _updateValueIndicatorUIs(): void {
+    const eInput = this._getInput(_MatThumb.END);
+    const sInput = this._getInput(_MatThumb.START);
+
+    if (eInput) {
+      this._updateValueIndicatorUI(eInput);
+    }
+    if (sInput) {
+      this._updateValueIndicatorUI(sInput);
     }
   }
 
