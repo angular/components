@@ -24,7 +24,7 @@ import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DATE_FORMATS, MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
-import {MatCalendarBody} from './calendar-body';
+import {MatCalendarUserEvent, MatCalendarBody} from './calendar-body';
 import {MatMonthView} from './month-view';
 import {DateRange} from './date-selection-model';
 import {
@@ -107,6 +107,130 @@ describe('MatMonthView', () => {
         let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
         expect((cellEls[4] as HTMLElement).innerText.trim()).toBe('5');
         expect(cellEls[4].classList).toContain('mat-calendar-body-active');
+      });
+
+      describe('drag and drop with default range strategy', () => {
+        const initialRange = new DateRange(new Date(2017, JAN, 10), new Date(2017, JAN, 13));
+
+        beforeEach(() => {
+          testComponent.selected = initialRange;
+          fixture.detectChanges();
+        });
+
+        function getDaysMatching(selector: string) {
+          return Array.from(monthViewNativeElement.querySelectorAll(selector)).map(elem =>
+            Number(elem.textContent!.trim()),
+          );
+        }
+
+        it('drags the range start', () => {
+          const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cellEls[9], 'mousedown');
+          fixture.detectChanges();
+
+          // Grow range.
+          dispatchMouseEvent(cellEls[8], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([9, 10, 11, 12, 13]);
+
+          // Shrink range.
+          dispatchMouseEvent(cellEls[10], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([11, 12, 13]);
+
+          // Move range past end.
+          dispatchMouseEvent(cellEls[13], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([14, 15, 16, 17]);
+
+          // End drag.
+          dispatchMouseEvent(cellEls[13], 'mouseup');
+          fixture.detectChanges();
+
+          expect(testComponent.selected).toEqual(
+            new DateRange(new Date(2017, JAN, 14), new Date(2017, JAN, 17)),
+          );
+        });
+
+        it('drags the range end', () => {
+          const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cellEls[12], 'mousedown');
+          fixture.detectChanges();
+
+          // Grow range.
+          dispatchMouseEvent(cellEls[13], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([10, 11, 12, 13, 14]);
+
+          // Shrink range.
+          dispatchMouseEvent(cellEls[11], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([10, 11, 12]);
+
+          // Move range before start.
+          dispatchMouseEvent(cellEls[8], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([6, 7, 8, 9]);
+
+          // End drag.
+          dispatchMouseEvent(cellEls[8], 'mouseup');
+          fixture.detectChanges();
+
+          expect(testComponent.selected).toEqual(
+            new DateRange(new Date(2017, JAN, 6), new Date(2017, JAN, 9)),
+          );
+        });
+
+        it('drags the range middle', () => {
+          const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cellEls[11], 'mousedown');
+          fixture.detectChanges();
+
+          // Move range down.
+          dispatchMouseEvent(cellEls[10], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([9, 10, 11, 12]);
+
+          // Move range up.
+          dispatchMouseEvent(cellEls[12], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([11, 12, 13, 14]);
+
+          // End drag.
+          dispatchMouseEvent(cellEls[12], 'mouseup');
+          fixture.detectChanges();
+
+          expect(testComponent.selected).toEqual(
+            new DateRange(new Date(2017, JAN, 11), new Date(2017, JAN, 14)),
+          );
+        });
+
+        it('does nothing when dragging outside range', () => {
+          const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cellEls[8], 'mousedown');
+          fixture.detectChanges();
+          dispatchMouseEvent(cellEls[7], 'mouseenter');
+          fixture.detectChanges();
+
+          expect(getDaysMatching('.mat-calendar-body-in-preview')).toEqual([]);
+
+          dispatchMouseEvent(cellEls[7], 'mouseup');
+          fixture.detectChanges();
+
+          expect(testComponent.selected).toEqual(initialRange);
+        });
       });
 
       describe('a11y', () => {
@@ -394,6 +518,54 @@ describe('MatMonthView', () => {
             },
           );
 
+          it('cancels the active drag but not the selection on escape during an active drag', () => {
+            const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+
+            const selectedRange = new DateRange(new Date(2017, JAN, 10), new Date(2017, JAN, 17));
+            testComponent.selected = selectedRange;
+            fixture.detectChanges();
+
+            dispatchMouseEvent(cellEls[11], 'mousedown');
+            fixture.detectChanges();
+            dispatchMouseEvent(cellEls[4], 'mouseenter');
+            fixture.detectChanges();
+
+            const rangeStarts = monthViewNativeElement.querySelectorAll(
+              '.mat-calendar-body-preview-start',
+            ).length;
+            const rangeMids = monthViewNativeElement.querySelectorAll(
+              '.mat-calendar-body-in-preview',
+            ).length;
+            const rangeEnds = monthViewNativeElement.querySelectorAll(
+              '.mat-calendar-body-preview-end',
+            ).length;
+
+            // Note that here we only care that _some_ kind of range is rendered. There are
+            // plenty of tests in the calendar body which assert that everything is correct.
+            expect(rangeStarts).toBeGreaterThan(0);
+            expect(rangeMids).toBeGreaterThan(0);
+            expect(rangeEnds).toBeGreaterThan(0);
+
+            const event = createKeyboardEvent('keydown', ESCAPE, 'Escape');
+            spyOn(event, 'stopPropagation');
+            dispatchEvent(calendarBodyEl, event);
+            fixture.detectChanges();
+
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-start').length,
+            ).toBe(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-preview').length,
+            ).toBe(0);
+            expect(
+              monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-end').length,
+            ).toBe(0);
+
+            expect(event.stopPropagation).toHaveBeenCalled();
+            expect(event.defaultPrevented).toBe(true);
+            expect(testComponent.selected).toEqual(selectedRange);
+          });
+
           it('should clear the preview range when the user is done selecting', () => {
             const cellEls =
               monthViewNativeElement.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
@@ -670,13 +842,32 @@ describe('MatMonthView', () => {
       [(activeDate)]="date"
       [(selected)]="selected"
       (selectedChange)="selectedChangeSpy($event)"
-      (_userSelection)="userSelectionSpy($event)"></mat-month-view>`,
+      (_userSelection)="userSelectionSpy($event)"
+      (dragStarted)="dragStarted($event)"
+      (dragEnded)="dragEnded($event)"
+      [activeDrag]="activeDrag"></mat-month-view>
+      `,
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
   selected: Date | DateRange<Date> = new Date(2017, JAN, 10);
   selectedChangeSpy = jasmine.createSpy('selectedChange');
   userSelectionSpy = jasmine.createSpy('userSelection');
+  activeDrag: MatCalendarUserEvent<Date> | null = null;
+
+  dragStarted(event: MatCalendarUserEvent<Date>) {
+    this.activeDrag = event;
+  }
+
+  dragEnded(event: MatCalendarUserEvent<DateRange<Date> | null>) {
+    if (!this.activeDrag) return;
+
+    if (event.value) {
+      this.selected = event.value;
+    }
+
+    this.activeDrag = null;
+  }
 }
 
 @Component({

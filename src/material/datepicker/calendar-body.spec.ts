@@ -2,7 +2,7 @@ import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 import {By} from '@angular/platform-browser';
-import {dispatchMouseEvent, dispatchFakeEvent} from '../../cdk/testing/private';
+import {dispatchMouseEvent, dispatchFakeEvent, dispatchTouchEvent} from '../../cdk/testing/private';
 
 describe('MatCalendarBody', () => {
   beforeEach(waitForAsync(() => {
@@ -630,6 +630,53 @@ describe('MatCalendarBody', () => {
         }),
       ).toBe(false);
     });
+
+    describe('drag and drop ranges', () => {
+      beforeEach(() => {
+        // Pre-select a range to drag.
+        fixture.componentInstance.startValue = 4;
+        fixture.componentInstance.endValue = 6;
+        fixture.detectChanges();
+      });
+
+      it('triggers and previews a drag (mouse)', () => {
+        dispatchMouseEvent(cells[3], 'mousedown');
+        fixture.detectChanges();
+        expect(fixture.componentInstance.drag).not.toBe(null);
+
+        // Expand to earlier.
+        dispatchMouseEvent(cells[2], 'mouseenter');
+        fixture.detectChanges();
+        expect(cells[2].classList).toContain(previewStartClass);
+        expect(cells[3].classList).toContain(inPreviewClass);
+        expect(cells[4].classList).toContain(inPreviewClass);
+        expect(cells[5].classList).toContain(previewEndClass);
+
+        // End drag.
+        dispatchMouseEvent(cells[2], 'mouseup');
+        expect(fixture.componentInstance.drag).toBe(null);
+      });
+
+      it('triggers and previews a drag (touch)', () => {
+        dispatchTouchEvent(cells[3], 'touchstart');
+        fixture.detectChanges();
+        expect(fixture.componentInstance.drag).not.toBe(null);
+
+        // Expand to earlier.
+        const rect = cells[2].getBoundingClientRect();
+
+        dispatchTouchEvent(cells[2], 'touchmove', rect.left, rect.top, rect.left, rect.top);
+        fixture.detectChanges();
+        expect(cells[2].classList).toContain(previewStartClass);
+        expect(cells[3].classList).toContain(inPreviewClass);
+        expect(cells[4].classList).toContain(inPreviewClass);
+        expect(cells[5].classList).toContain(previewEndClass);
+
+        // End drag.
+        dispatchTouchEvent(cells[2], 'touchend', rect.left, rect.top, rect.left, rect.top);
+        expect(fixture.componentInstance.drag).toBe(null);
+      });
+    });
   });
 });
 
@@ -672,7 +719,10 @@ class StandardCalendarBody {
           [previewStart]="previewStart"
           [previewEnd]="previewEnd"
           (selectedValueChange)="onSelect($event)"
-          (previewChange)="previewChanged($event)">
+          (previewChange)="previewChanged($event)"
+          (dragStarted)="dragStarted($event)"
+          (dragEnded)="dragEnded($event)"
+          >
     </table>`,
 })
 class RangeCalendarBody {
@@ -683,6 +733,7 @@ class RangeCalendarBody {
   comparisonEnd: number | null;
   previewStart: number | null;
   previewEnd: number | null;
+  drag: MatCalendarUserEvent<unknown> | null = null;
 
   onSelect(event: MatCalendarUserEvent<number>) {
     const value = event.value;
@@ -699,6 +750,20 @@ class RangeCalendarBody {
   previewChanged(event: MatCalendarUserEvent<MatCalendarCell<Date> | null>) {
     this.previewStart = this.startValue;
     this.previewEnd = event.value?.compareValue || null;
+
+    if (this.drag) {
+      // For sake of testing, hardcode a preview for drags.
+      this.previewStart = this.startValue! - 1;
+      this.previewEnd = this.endValue;
+    }
+  }
+
+  dragStarted(event: MatCalendarUserEvent<unknown>) {
+    this.drag = event;
+  }
+
+  dragEnded(event: MatCalendarUserEvent<unknown>) {
+    this.drag = null;
   }
 }
 
@@ -728,6 +793,8 @@ function createCalendarCells(weeks: number): MatCalendarCell[][] {
         `${cell}-label`,
         true,
         cell % 2 === 0 ? 'even' : undefined,
+        cell,
+        cell,
       );
     }),
   );

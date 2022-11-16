@@ -37,6 +37,23 @@ export interface MatDateRangeSelectionStrategy<D> {
    *    `mouseenter`/`mouseleave` or `focus`/`blur` depending on how the user is navigating.
    */
   createPreview(activeDate: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
+
+  /**
+   * Called when the user has dragged a date in the currently selected range to another
+   * date. Returns the date updated range that should result from this interaction.
+   *
+   * @param dateOrigin The date the user started dragging from.
+   * @param originalRange The originally selected date range.
+   * @param newDate The currently targeted date in the drag operation.
+   * @param event DOM event that triggered the updated drag state. Will be
+   *     `mouseenter`/`mouseup` or `touchmove`/`touchend` depending on the device type.
+   */
+  createDrag?(
+    dragOrigin: D,
+    originalRange: DateRange<D>,
+    newDate: D,
+    event: Event,
+  ): DateRange<D> | null;
 }
 
 /** Provides the default date range selection behavior. */
@@ -66,6 +83,36 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
     if (currentRange.start && !currentRange.end && activeDate) {
       start = currentRange.start;
       end = activeDate;
+    }
+
+    return new DateRange<D>(start, end);
+  }
+
+  createDrag(dragOrigin: D, originalRange: DateRange<D>, newDate: D) {
+    let start = originalRange.start;
+    let end = originalRange.end;
+
+    if (!start || !end) {
+      // Can't drag from an incomplete range.
+      return null;
+    }
+
+    const diff = this._dateAdapter.compareDate(newDate, dragOrigin);
+    const isRange = this._dateAdapter.compareDate(start, end) !== 0;
+
+    if (isRange && this._dateAdapter.sameDate(dragOrigin, originalRange.start)) {
+      start = newDate;
+      if (this._dateAdapter.compareDate(newDate, end) > 0) {
+        end = this._dateAdapter.addCalendarDays(end, diff);
+      }
+    } else if (isRange && this._dateAdapter.sameDate(dragOrigin, originalRange.end)) {
+      end = newDate;
+      if (this._dateAdapter.compareDate(newDate, start) < 0) {
+        start = this._dateAdapter.addCalendarDays(start, diff);
+      }
+    } else {
+      start = this._dateAdapter.addCalendarDays(start, diff);
+      end = this._dateAdapter.addCalendarDays(end, diff);
     }
 
     return new DateRange<D>(start, end);

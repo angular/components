@@ -240,6 +240,10 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
     }
   }
 
+  _handleUserDragDrop(event: MatCalendarUserEvent<DateRange<D>>) {
+    this._model.updateSelection(event.value as unknown as S, this);
+  }
+
   _startExitAnimation() {
     this._animationState = 'void';
     this._changeDetectorRef.markForCheck();

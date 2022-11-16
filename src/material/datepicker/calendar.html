@@ -13,7 +13,11 @@
       [comparisonEnd]="comparisonEnd"
       [startDateAccessibleName]="startDateAccessibleName"
       [endDateAccessibleName]="endDateAccessibleName"
-      (_userSelection)="_dateSelected($event)">
+      (_userSelection)="_dateSelected($event)"
+      (dragStarted)="_dragStarted($event)"
+      (dragEnded)="_dragEnded($event)"
+      [activeDrag]="_activeDrag"
+      >
   </mat-month-view>
 
   <mat-year-view

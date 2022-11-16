@@ -145,12 +145,24 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** ARIA Accessible name of the `<input matEndDate/>` */
   @Input() endDateAccessibleName: string | null;
 
+  /** Origin of active drag, or null when dragging is not active. */
+  @Input() activeDrag: MatCalendarUserEvent<D> | null = null;
+
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
   @Output() readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>> =
     new EventEmitter<MatCalendarUserEvent<D | null>>();
+
+  /** Emits when the user initiates a date range drag via mouse or touch. */
+  @Output() readonly dragStarted = new EventEmitter<MatCalendarUserEvent<D>>();
+
+  /**
+   * Emits when the user completes or cancels a date range drag.
+   * Emits null when the drag was canceled or the newly selected date range if completed.
+   */
+  @Output() readonly dragEnded = new EventEmitter<MatCalendarUserEvent<DateRange<D> | null>>();
 
   /** Emits when any date is activated. */
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
@@ -227,6 +239,10 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     if (comparisonChange && !comparisonChange.firstChange) {
       this._setRanges(this.selected);
     }
+
+    if (changes['activeDrag'] && !this.activeDrag) {
+      this._clearPreview();
+    }
   }
 
   ngOnDestroy() {
@@ -252,7 +268,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     }
 
     this._userSelection.emit({value: selectedDate, event: event.event});
-    this._previewStart = this._previewEnd = null;
+    this._clearPreview();
     this._changeDetectorRef.markForCheck();
   }
 
@@ -337,9 +353,15 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       case ESCAPE:
         // Abort the current range selection if the user presses escape mid-selection.
         if (this._previewEnd != null && !hasModifierKey(event)) {
-          this._previewStart = this._previewEnd = null;
-          this.selectedChange.emit(null);
-          this._userSelection.emit({value: null, event});
+          this._clearPreview();
+          // If a drag is in progress, cancel the drag without changing the
+          // current selection.
+          if (this.activeDrag) {
+            this.dragEnded.emit({value: null, event});
+          } else {
+            this.selectedChange.emit(null);
+            this._userSelection.emit({value: null, event});
+          }
           event.preventDefault();
           event.stopPropagation(); // Prevents the overlay from closing.
         }
@@ -420,11 +442,47 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       this._previewStart = this._getCellCompareValue(previewRange.start);
       this._previewEnd = this._getCellCompareValue(previewRange.end);
 
+      if (this.activeDrag && value) {
+        const dragRange = this._rangeStrategy.createDrag?.(
+          this.activeDrag.value,
+          this.selected as DateRange<D>,
+          value,
+          event,
+        );
+
+        if (dragRange) {
+          this._previewStart = this._getCellCompareValue(dragRange.start);
+          this._previewEnd = this._getCellCompareValue(dragRange.end);
+        }
+      }
+
       // Note that here we need to use `detectChanges`, rather than `markForCheck`, because
       // the way `_focusActiveCell` is set up at the moment makes it fire at the wrong time
       // when navigating one month back using the keyboard which will cause this handler
       // to throw a "changed after checked" error when updating the preview state.
       this._changeDetectorRef.detectChanges();
+    }
+  }
+
+  /**
+   * Called when the user has ended a drag. If the drag/drop was successful,
+   * computes and emits the new range selection.
+   */
+  protected _dragEnded(event: MatCalendarUserEvent<D | null>) {
+    if (!this.activeDrag) return;
+
+    if (event.value) {
+      // Propagate drag effect
+      const dragDropResult = this._rangeStrategy?.createDrag?.(
+        this.activeDrag.value,
+        this.selected as DateRange<D>,
+        event.value,
+        event.event,
+      );
+
+      this.dragEnded.emit({value: dragDropResult ?? null, event: event.event});
+    } else {
+      this.dragEnded.emit({value: null, event: event.event});
     }
   }
 
@@ -553,5 +611,10 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** Gets whether a date can be selected in the month view. */
   private _canSelect(date: D) {
     return !this.dateFilter || this.dateFilter(date);
+  }
+
+  /** Clears out preview state. */
+  private _clearPreview() {
+    this._previewStart = this._previewEnd = null;
   }
 }
