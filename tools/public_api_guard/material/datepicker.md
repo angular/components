@@ -40,7 +40,6 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDateFormats } from '@angular/material/core';
-import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -427,7 +426,7 @@ export interface MatDatepickerControl<D> {
 
 // @public
 export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> implements MatDatepickerControl<D | null>, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLInputElement>, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats, _formField?: MatFormField | undefined);
+    constructor(elementRef: ElementRef<HTMLInputElement>, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats, _formField?: _MatFormFieldPartial | undefined);
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
     get dateFilter(): DateFilterFn<D | null>;
@@ -557,7 +556,7 @@ export class MatDatepickerToggleIcon {
 
 // @public (undocumented)
 export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangeInputParent<D>, MatDateRangePickerInput<D>, AfterContentInit, OnChanges, OnDestroy {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, control: ControlContainer, _dateAdapter: DateAdapter<D>, _formField?: MatFormField | undefined);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, control: ControlContainer, _dateAdapter: DateAdapter<D>, _formField?: _MatFormFieldPartial | undefined);
     _ariaDescribedBy: string | null;
     comparisonEnd: D | null;
     comparisonStart: D | null;
