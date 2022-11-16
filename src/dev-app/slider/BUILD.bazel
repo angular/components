@@ -11,6 +11,7 @@ ng_module(
     ],
     deps = [
         "//src/material/button-toggle",
+        "//src/material/checkbox",
         "//src/material/slider",
         "//src/material/tabs",
         "@npm//@angular/forms",
