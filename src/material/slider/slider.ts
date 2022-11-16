@@ -774,7 +774,7 @@ export class MatSlider
   }
 
   /** Updates all value indicator UIs in the slider. */
-  _updateValueIndicatorUIs(): void {
+  private _updateValueIndicatorUIs(): void {
     const eInput = this._getInput(_MatThumb.END);
     const sInput = this._getInput(_MatThumb.START);
 
