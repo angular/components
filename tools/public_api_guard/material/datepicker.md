@@ -575,7 +575,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     getConnectedOverlayOrigin(): ElementRef;
     // (undocumented)
     _getEndDateAccessibleName(): string;
-    _getInputMirrorValue(): string;
+    _getInputMirrorValue(part: 'start' | 'end'): string;
     getOverlayLabelId(): string | null;
     // (undocumented)
     _getStartDateAccessibleName(): string;
@@ -811,7 +811,6 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
     protected _assignValueToModel(value: D | null): void;
     // (undocumented)
     protected _formatValue(value: D | null): void;
-    getMirrorValue(): string;
     // (undocumented)
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     // (undocumented)
