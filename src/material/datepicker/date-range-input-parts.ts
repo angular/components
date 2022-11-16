@@ -142,6 +142,13 @@ abstract class MatDateRangeInputPartBase<D>
     this._elementRef.nativeElement.focus();
   }
 
+  /** Gets the value that should be used when mirroring the input's size. */
+  getMirrorValue(): string {
+    const element = this._elementRef.nativeElement;
+    const value = element.value;
+    return value.length > 0 ? value : element.placeholder;
+  }
+
   /** Handles `input` events on the input element. */
   override _onInput(value: string) {
     super._onInput(value);
@@ -284,13 +291,6 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
 
     // Any time the input value is reformatted we need to tell the parent.
     this._rangeInput._handleChildValueChange();
-  }
-
-  /** Gets the value that should be used when mirroring the input's size. */
-  getMirrorValue(): string {
-    const element = this._elementRef.nativeElement;
-    const value = element.value;
-    return value.length > 0 ? value : element.placeholder;
   }
 
   override _onKeydown(event: KeyboardEvent) {
