@@ -49,6 +49,7 @@ ng_test_library(
         ":a11y",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
+        "//src/cdk/overlay",
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/testing/private",
