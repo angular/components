@@ -25,9 +25,9 @@ jobs:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
       - uses: ./.github/actions/yarn-install
 
-      - run: ./scripts/bazel/setup-remote-execution.sh
-        env:
-          GCP_DECRYPT_TOKEN: angular
+      - uses: angular/dev-infra/github-actions/setup-bazel-remote-exec@a632a1601469c0c0a2104cfa6bf1421d706ce80e
+        with:
+          bazelrc: ./.bazelrc.user
 
       # Build the web package. Note: We run Bazel from a low-resource Github action container,
       # so we manually need to instruct Bazel to run more actions concurrently as by default
