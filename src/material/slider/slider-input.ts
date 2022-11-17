@@ -275,7 +275,13 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** @docs-private */
   initProps(): void {
     this._updateWidthInactive();
-    this.disabled = this._slider.disabled;
+
+    // If this or the parent slider is disabled, just make everything disabled.
+    if (this.disabled !== this._slider.disabled) {
+      // The MatSlider setter for disabled will relay this and disable both inputs.
+      this._slider.disabled = true;
+    }
+
     this.step = this._slider.step;
     this.min = this._slider.min;
     this.max = this._slider.max;
