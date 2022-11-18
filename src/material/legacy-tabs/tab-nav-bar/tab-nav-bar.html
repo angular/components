@@ -7,6 +7,7 @@
      [matRippleDisabled]="_disableScrollBefore || disableRipple"
      [class.mat-tab-header-pagination-disabled]="_disableScrollBefore"
      [disabled]="_disableScrollBefore || null"
+     [attr.aria-disabled]="_disableScrollBefore || null"
      (click)="_handlePaginatorClick('before')"
      (mousedown)="_handlePaginatorPress('before', $event)"
      (touchend)="_stopInterval()">
@@ -34,6 +35,7 @@
      [matRippleDisabled]="_disableScrollAfter || disableRipple"
      [class.mat-tab-header-pagination-disabled]="_disableScrollAfter"
      [disabled]="_disableScrollAfter || null"
+     [attr.aria-disabled]="_disableScrollAfter || null"
      tabindex="-1"
      (mousedown)="_handlePaginatorPress('after', $event)"
      (click)="_handlePaginatorClick('after')"

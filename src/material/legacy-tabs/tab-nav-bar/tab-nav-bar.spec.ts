@@ -29,6 +29,7 @@ describe('MatTabNavBar', () => {
         TabBarWithoutPanelWithNativeTabindexAttr,
         TabBarWithInactiveTabsOnInit,
         TabBarWithoutPanel,
+        TabLinkWithLotsOfTabs,
       ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
@@ -333,6 +334,55 @@ describe('MatTabNavBar', () => {
     expect(tabLinks[1].classList.contains('mat-tab-label-active')).toBe(true);
   });
 
+  describe('paginator', () => {
+    it('should aria-disable left paginator when paginator is disabled', () => {
+      const fixture = TestBed.createComponent(TabLinkWithLotsOfTabs);
+      fixture.detectChanges();
+
+      const leftPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-before',
+      );
+      expect(leftPaginator.getAttribute('aria-disabled')).toBe('true');
+    });
+    it('should not set aria-disabled attribute when left paginator is enabled', () => {
+      const fixture = TestBed.createComponent(TabLinkWithLotsOfTabs);
+      fixture.detectChanges();
+
+      const rightPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-after',
+      );
+      rightPaginator.click();
+      fixture.detectChanges();
+
+      const leftPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-before',
+      );
+      expect(leftPaginator.getAttribute('aria-disabled')).toBe(null);
+    });
+    it('should aria-disable right paginator when paginator is disabled', () => {
+      const fixture = TestBed.createComponent(TabLinkWithLotsOfTabs);
+      fixture.detectChanges();
+
+      const rightPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-after',
+      );
+      rightPaginator.click();
+      rightPaginator.click();
+      fixture.detectChanges();
+
+      expect(rightPaginator.getAttribute('aria-disabled')).toBe('true');
+    });
+    it('should not set aria-disabled attribute when right paginator is enabled', () => {
+      const fixture = TestBed.createComponent(TabLinkWithLotsOfTabs);
+      fixture.detectChanges();
+
+      const rightPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-after',
+      );
+      expect(rightPaginator.getAttribute('aria-disabled')).toBe(null);
+    });
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
 
@@ -608,3 +658,20 @@ class TabBarWithoutPanelWithTabIndexBinding {
   `,
 })
 class TabBarWithoutPanelWithNativeTabindexAttr {}
+
+@Component({
+  template: `
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      <a mat-tab-link
+          *ngFor="let tab of tabs; let index = index"
+          [active]="activeIndex === index">
+        Tab link {{label}}
+      </a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel >Tab panel</mat-tab-nav-panel>
+  `,
+})
+class TabLinkWithLotsOfTabs {
+  activeIndex = 0;
+  tabs = [0, 1, 2, 3, 4, 5, 6];
+}
