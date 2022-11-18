@@ -7,7 +7,6 @@
  */
 
 import {
-  AfterViewInit,
   Directive,
   ElementRef,
   EventEmitter,
@@ -39,7 +38,7 @@ import {SharedResizeObserver} from '../resize-observer';
     '[class.mdc-floating-label--float-above]': 'floating',
   },
 })
-export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
+export class MatFormFieldFloatingLabel implements OnDestroy {
   /** Whether the label is floating. */
   @Input()
   get floating() {
@@ -47,9 +46,25 @@ export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
   }
   set floating(value: boolean) {
     this._floating = value;
-    this.resized.emit();
+    if (this.monitorResize) {
+      this.resized.emit();
+    }
   }
   private _floating = false;
+
+  @Input()
+  get monitorResize() {
+    return this._monitorResize;
+  }
+  set monitorResize(value: boolean) {
+    this._monitorResize = value;
+    if (this._monitorResize) {
+      this._startResizeObserver();
+    } else {
+      this._stopResizeObserver();
+    }
+  }
+  private _monitorResize = false;
 
   @Output() resized = new EventEmitter<void>();
 
@@ -60,14 +75,6 @@ export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
   private _stopResizeObserver = () => {};
 
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
-
-  ngAfterViewInit() {
-    this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
-      this._resizeObserver.observe(this._elementRef.nativeElement, () => this.resized.emit(), {
-        box: 'border-box',
-      }),
-    );
-  }
 
   ngOnDestroy() {
     this._stopResizeObserver();
@@ -81,6 +88,15 @@ export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
   /** Gets the HTML element for the floating label. */
   get element(): HTMLElement {
     return this._elementRef.nativeElement;
+  }
+
+  private _startResizeObserver() {
+    this._stopResizeObserver();
+    this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
+      this._resizeObserver.observe(this._elementRef.nativeElement, () => this.resized.emit(), {
+        box: 'border-box',
+      }),
+    );
   }
 }
 

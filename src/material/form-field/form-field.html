@@ -16,6 +16,7 @@
   -->
   <label matFormFieldFloatingLabel
          [floating]="_shouldLabelFloat()"
+         [monitorResize]="appearance === 'outline'"
          *ngIf="_hasFloatingLabel()"
          [id]="_labelId"
          [attr.for]="_control.id"
