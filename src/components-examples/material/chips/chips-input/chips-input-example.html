@@ -4,9 +4,10 @@
     <mat-chip-row *ngFor="let fruit of fruits"
                   (removed)="remove(fruit)"
                   [editable]="true"
-                  (edited)="edit(fruit, $event)">
+                  (edited)="edit(fruit, $event)"
+                  [aria-description]="'press enter to edit ' + fruit.name">
       {{fruit.name}}
-      <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+      <button matChipRemove [attr.aria-label]="'remove ' + fruit.name">
         <mat-icon>cancel</mat-icon>
       </button>
     </mat-chip-row>

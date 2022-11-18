@@ -63,6 +63,7 @@ export class MatChipSelectionChange {
     '[class.mat-mdc-chip-with-trailing-icon]': '_hasTrailingIcon()',
     '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
+    '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
     '[id]': 'id',
   },

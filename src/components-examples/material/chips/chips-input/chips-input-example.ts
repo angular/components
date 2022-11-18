@@ -50,7 +50,7 @@ export class ChipsInputExample {
 
     // Edit existing fruit
     const index = this.fruits.indexOf(fruit);
-    if (index > 0) {
+    if (index >= 0) {
       this.fruits[index].name = value;
     }
   }
