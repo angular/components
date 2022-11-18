@@ -68,6 +68,9 @@ export class InputDemo {
   options: string[] = ['One', 'Two', 'Three'];
   showSecondPrefix = false;
   showPrefix = true;
+  showHidden = false;
+  hiddenLabel = 'Label';
+  hiddenAppearance: MatFormFieldAppearance = 'outline';
 
   name: string;
   errorMessageExample1: string;
