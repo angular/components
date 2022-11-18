@@ -6,7 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Input} from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
+import {SharedResizeObserver} from '../resize-observer';
 
 /**
  * Internal directive that maintains a MDC floating label. This directive does not
@@ -28,11 +38,39 @@ import {Directive, ElementRef, Input} from '@angular/core';
     '[class.mdc-floating-label--float-above]': 'floating',
   },
 })
-export class MatFormFieldFloatingLabel {
+export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
   /** Whether the label is floating. */
-  @Input() floating: boolean = false;
+  @Input()
+  get floating() {
+    return this._floating;
+  }
+  set floating(value: boolean) {
+    this._floating = value;
+    this.resized.emit();
+  }
+  private _floating = false;
+
+  @Output() resized = new EventEmitter<void>();
+
+  private _resizeObserver = inject(SharedResizeObserver);
+
+  private _stopResizeObserver = () => {};
 
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+    this._stopResizeObserver = this._resizeObserver.observe(
+      this._elementRef.nativeElement,
+      () => this.resized.emit(),
+      {
+        box: 'border-box',
+      },
+    );
+  }
+
+  ngOnDestroy() {
+    this._stopResizeObserver();
+  }
 
   /** Gets the width of the label. Used for the outline notch. */
   getWidth(): number {
