@@ -5,10 +5,11 @@ import {Observable} from 'rxjs';
 import {shareReplay, take} from 'rxjs/operators';
 
 import stackblitz from '@stackblitz/sdk';
-import {normalizedMaterialVersion} from '../normalized-version';
 
-const COPYRIGHT =
-  `Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
+import {normalizedMaterialVersion} from '../normalized-version';
+import {normalizePath} from '../normalize-path';
+
+const COPYRIGHT = `Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at https://angular.io/license`;
 
@@ -48,7 +49,7 @@ export const TEMPLATE_FILES = [
   'src/theme.scss',
   'src/app/app.module.ts',
   'src/environments/environment.prod.ts',
-  'src/environments/environment.ts'
+  'src/environments/environment.ts',
 ];
 
 const PROJECT_TAGS = ['angular', 'material', 'cdk', 'web', 'example'];
@@ -70,8 +71,11 @@ export class StackBlitzWriter {
   constructor(private _http: HttpClient, private _ngZone: NgZone) {}
 
   /** Opens a StackBlitz for the specified example. */
-  createStackBlitzForExample(exampleId: string, data: ExampleData,
-                             isTest: boolean): Promise<() => void> {
+  createStackBlitzForExample(
+    exampleId: string,
+    data: ExampleData,
+    isTest: boolean
+  ): Promise<() => void> {
     // Run outside the zone since the creation doesn't interact with Angular
     // and the file requests can cause excessive change detections.
     return this._ngZone.runOutsideAngular(async () => {
@@ -90,15 +94,27 @@ export class StackBlitzWriter {
   }
 
   /** Opens a new WebContainer-based StackBlitz for the given files. */
-  private _openStackBlitz({title, description, openFile, files}:
-      {title: string, description: string, openFile: string, files: FileDictionary}): void {
-    stackblitz.openProject({
-      title,
-      files,
-      description,
-      template: PROJECT_TEMPLATE,
-      tags: PROJECT_TAGS,
-    }, {openFile});
+  private _openStackBlitz({
+    title,
+    description,
+    openFile,
+    files,
+  }: {
+    title: string;
+    description: string;
+    openFile: string;
+    files: FileDictionary;
+  }): void {
+    stackblitz.openProject(
+      {
+        title,
+        files,
+        description,
+        template: PROJECT_TEMPLATE,
+        tags: PROJECT_TAGS,
+      },
+      {openFile}
+    );
   }
 
   /**
@@ -106,7 +122,10 @@ export class StackBlitzWriter {
    * the example. The dictionary can then be passed to StackBlitz as project files.
    */
   private async _buildInMemoryFileDictionary(
-      data: ExampleData, exampleId: string, isTest: boolean): Promise<FileDictionary> {
+    data: ExampleData,
+    exampleId: string,
+    isTest: boolean
+  ): Promise<FileDictionary> {
     const result: FileDictionary = {};
     const tasks: Promise<unknown>[] = [];
     const liveExample = EXAMPLE_COMPONENTS[exampleId];
@@ -114,17 +133,28 @@ export class StackBlitzWriter {
       `${DOCS_CONTENT_PATH}/${liveExample.module.importSpecifier}/${exampleId}/`;
 
     for (const relativeFilePath of TEMPLATE_FILES) {
-      tasks.push(this._loadFile(TEMPLATE_PATH + relativeFilePath)
-        // Replace example placeholders in the template files.
-        .then(content => this._replaceExamplePlaceholders(data, relativeFilePath, content, isTest))
-        .then(content => result[relativeFilePath] = content));
+      tasks.push(
+        this._loadFile(TEMPLATE_PATH + relativeFilePath)
+          // Replace example placeholders in the template files.
+          .then(content =>
+            this._replaceExamplePlaceholders(data, relativeFilePath, content, isTest)
+          )
+          .then(content => (result[relativeFilePath] = content))
+      );
     }
 
     for (const relativeFilePath of data.exampleFiles) {
-      tasks.push(this._loadFile(exampleBaseContentPath + relativeFilePath)
-        // Insert a copyright footer for all example files inserted into the project.
-        .then(content => this._appendCopyright(relativeFilePath, content))
-        .then(content => result[`src/app/${relativeFilePath}`] = content));
+      // Note: Since we join with paths from the example data, we normalize
+      // the final target path. This is necessary because StackBlitz does
+      // not and paths like `./bla.ts` would result in a directory called `.`.
+      const targetPath = normalizePath(`src/app/${relativeFilePath}`);
+
+      tasks.push(
+        this._loadFile(exampleBaseContentPath + relativeFilePath)
+          // Insert a copyright footer for all example files inserted into the project.
+          .then(content => this._appendCopyright(relativeFilePath, content))
+          .then(content => (result[targetPath] = content))
+      );
     }
 
     // Wait for the file dictionary to be populated. All file requests are
@@ -155,8 +185,12 @@ export class StackBlitzWriter {
    * This will replace those placeholders with the names from the example metadata,
    * e.g. "<basic-button-example>" and "BasicButtonExample"
    */
-  private _replaceExamplePlaceholders(data: ExampleData, fileName: string,
-                                      fileContent: string, isTest: boolean): string {
+  private _replaceExamplePlaceholders(
+    data: ExampleData,
+    fileName: string,
+    fileContent: string,
+    isTest: boolean
+  ): string {
     // Replaces the version placeholder in the `index.html` and `package.json` file.
     // Technically we invalidate the `package-lock.json` file for the StackBlitz boilerplate
     // by dynamically changing the version in the `package.json`, but the Turbo package manager
@@ -174,8 +208,7 @@ export class StackBlitzWriter {
         .replace(/material-docs-example/g, data.selectorName)
         .replace(/\${title}/g, data.description);
     } else if (fileName === '.stackblitzrc') {
-      fileContent = fileContent
-        .replace(/\${startCommand}/, isTest ? 'turbo test' : 'turbo start');
+      fileContent = fileContent.replace(/\${startCommand}/, isTest ? 'turbo test' : 'turbo start');
     } else if (fileName === 'src/app/app.module.ts') {
       const joinedComponentNames = data.componentNames.join(', ');
       // Replace the component name in `main.ts`.
@@ -185,27 +218,29 @@ export class StackBlitzWriter {
 
       // Replace `declarations: [MaterialDocsExample]`
       // will be replaced as `declarations: [ButtonDemo]`
-      fileContent = fileContent.
-        replace(/declarations: \[MaterialDocsExample]/g,
-          `declarations: [${joinedComponentNames}]`);
+      fileContent = fileContent.replace(
+        /declarations: \[MaterialDocsExample]/g,
+        `declarations: [${joinedComponentNames}]`
+      );
 
       // Replace `entryComponents: [MaterialDocsExample]`
       // will be replaced as `entryComponents: [DialogContent]`
-      fileContent = fileContent.
-        replace(/entryComponents: \[MaterialDocsExample]/g,
-          `entryComponents: [${joinedComponentNames}]`);
+      fileContent = fileContent.replace(
+        /entryComponents: \[MaterialDocsExample]/g,
+        `entryComponents: [${joinedComponentNames}]`
+      );
 
       // Replace `bootstrap: [MaterialDocsExample]`
       // will be replaced as `bootstrap: [ButtonDemo]`
       // This assumes the first component listed in the main component
-      fileContent = fileContent.
-        replace(/bootstrap: \[MaterialDocsExample]/g,
-          `bootstrap: [${data.componentNames[0]}]`);
+      fileContent = fileContent.replace(
+        /bootstrap: \[MaterialDocsExample]/g,
+        `bootstrap: [${data.componentNames[0]}]`
+      );
 
       const dotIndex = data.indexFilename.lastIndexOf('.');
       const importFileName = data.indexFilename.slice(0, dotIndex === -1 ? undefined : dotIndex);
       fileContent = fileContent.replace(/material-docs-example/g, importFileName);
-
     }
     return fileContent;
   }

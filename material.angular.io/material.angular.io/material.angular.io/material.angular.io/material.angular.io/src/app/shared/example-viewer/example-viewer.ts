@@ -8,13 +8,14 @@ import {
   QueryList,
   Type,
   ViewChildren,
-  ɵNgModuleFactory
+  ɵNgModuleFactory,
 } from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/components-examples';
 import {CodeSnippet} from './code-snippet';
+import {normalizePath} from '../normalize-path';
 
 export type Views = 'snippet' | 'full' | 'demo';
 
@@ -27,7 +28,7 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
 @Component({
   selector: 'example-viewer',
   templateUrl: './example-viewer.html',
-  styleUrls: ['./example-viewer.scss']
+  styleUrls: ['./example-viewer.scss'],
 })
 export class ExampleViewer implements OnInit {
   @ViewChildren(CodeSnippet) readonly snippet!: QueryList<CodeSnippet>;
@@ -39,16 +40,16 @@ export class ExampleViewer implements OnInit {
   exampleTabs: {[tabName: string]: string} = {};
 
   /** Data for the currently selected example. */
-  exampleData: LiveExample|null = null;
+  exampleData: LiveExample | null = null;
 
   /** URL to fetch code snippet for snippet view. */
   fileUrl: string | undefined;
 
   /** Component type for the current example. */
-  _exampleComponentType: Type<any>|null = null;
+  _exampleComponentType: Type<any> | null = null;
 
   /** Module factory that declares the example component. */
-  _exampleModuleFactory: NgModuleFactory<any>|null = null;
+  _exampleModuleFactory: NgModuleFactory<any> | null = null;
 
   /** View of the example component. */
   @Input() view: Views | undefined;
@@ -67,8 +68,9 @@ export class ExampleViewer implements OnInit {
       this._example = exampleName;
       this.exampleData = EXAMPLE_COMPONENTS[exampleName];
       this._generateExampleTabs();
-      this._loadExampleComponent().catch((error) =>
-        console.error(`Could not load example '${exampleName}': ${error}`));
+      this._loadExampleComponent().catch(error =>
+        console.error(`Could not load example '${exampleName}': ${error}`)
+      );
     } else {
       console.error(`Could not find example: ${exampleName}`);
     }
@@ -84,7 +86,8 @@ export class ExampleViewer implements OnInit {
   constructor(
     private readonly snackbar: MatSnackBar,
     private readonly clipboard: Clipboard,
-    private readonly elementRef: ElementRef<HTMLElement>) {}
+    private readonly elementRef: ElementRef<HTMLElement>
+  ) {}
 
   ngOnInit() {
     if (this.file) {
@@ -146,26 +149,29 @@ export class ExampleViewer implements OnInit {
       fileName = `${contentBeforeDot}-${contentAfterDot}.html`;
     }
 
-    return this.exampleData ?
-        `/docs-content/examples-highlighted/${this.exampleData.packagePath}/${fileName}` : '';
+    return this.exampleData
+      ? `/docs-content/examples-highlighted/${this.exampleData.packagePath}/${fileName}`
+      : '';
   }
 
   _getExampleTabNames() {
-    return this.exampleTabs ? Object.keys(this.exampleTabs).sort((a, b) => {
-      let indexA = preferredExampleFileOrder.indexOf(a);
-      let indexB = preferredExampleFileOrder.indexOf(b);
-      // Files which are not part of the preferred example file order should be
-      // moved after all items with a preferred index.
-      if (indexA === -1) {
-        indexA = preferredExampleFileOrder.length;
-      }
+    return this.exampleTabs
+      ? Object.keys(this.exampleTabs).sort((a, b) => {
+          let indexA = preferredExampleFileOrder.indexOf(a);
+          let indexB = preferredExampleFileOrder.indexOf(b);
+          // Files which are not part of the preferred example file order should be
+          // moved after all items with a preferred index.
+          if (indexA === -1) {
+            indexA = preferredExampleFileOrder.length;
+          }
 
-      if (indexB === -1) {
-        indexB = preferredExampleFileOrder.length;
-      }
+          if (indexB === -1) {
+            indexB = preferredExampleFileOrder.length;
+          }
 
-      return (indexA - indexB) || 1;
-    }) : [];
+          return indexA - indexB || 1;
+        })
+      : [];
   }
 
   _copyLink() {
@@ -191,7 +197,8 @@ export class ExampleViewer implements OnInit {
       // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
       const moduleExports: any = await import(
         /* webpackExclude: /\.map$/ */
-      '@angular/components-examples/fesm2020/' + module.importSpecifier);
+        '@angular/components-examples/fesm2020/' + module.importSpecifier
+      );
       this._exampleComponentType = moduleExports[componentName];
       // The components examples package is built with Ivy. This means that no factory files are
       // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
@@ -217,18 +224,25 @@ export class ExampleViewer implements OnInit {
       const exampleBaseFileName = `${this.example}-example`;
       const docsContentPath = `/docs-content/examples-highlighted/${this.exampleData.packagePath}`;
 
+      const tsPath = normalizePath(`${exampleBaseFileName}.ts`);
+      const cssPath = normalizePath(`${exampleBaseFileName}.css`);
+      const htmlPath = normalizePath(`${exampleBaseFileName}.html`);
 
-      for (const fileName of this.exampleData.files) {
+      for (let fileName of this.exampleData.files) {
         // Since the additional files refer to the original file name, we need to transform
         // the file name to match the highlighted HTML file that displays the source.
         const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
         const importPath = `${docsContentPath}/${fileSourceName}`;
 
-        if (fileName === `${exampleBaseFileName}.ts`) {
+        // Normalize the path to allow for more consistent displaying in the tabs,
+        // and to make comparisons below more reliable.
+        fileName = normalizePath(fileName);
+
+        if (fileName === tsPath) {
           this.exampleTabs['TS'] = importPath;
-        } else if (fileName === `${exampleBaseFileName}.css`) {
+        } else if (fileName === cssPath) {
           this.exampleTabs['CSS'] = importPath;
-        } else if (fileName === `${exampleBaseFileName}.html`) {
+        } else if (fileName === htmlPath) {
           this.exampleTabs['HTML'] = importPath;
         } else {
           this.exampleTabs[fileName] = importPath;

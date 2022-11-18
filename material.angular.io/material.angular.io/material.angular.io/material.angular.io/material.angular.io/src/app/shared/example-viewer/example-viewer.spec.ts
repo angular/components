@@ -23,7 +23,6 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 const exampleKey = 'autocomplete-overview';
 const exampleBasePath = `/docs-content/examples-highlighted/material/autocomplete/${exampleKey}`;
 
-
 describe('ExampleViewer', () => {
   let fixture: ComponentFixture<ExampleViewer>;
   let component: ExampleViewer;
@@ -32,12 +31,7 @@ describe('ExampleViewer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        DocViewerModule,
-        DocsAppTestingModule,
-        ReactiveFormsModule,
-        TestExampleModule,
-      ],
+      imports: [DocViewerModule, DocsAppTestingModule, ReactiveFormsModule, TestExampleModule],
     }).compileComponents();
   }));
 
@@ -116,8 +110,7 @@ describe('ExampleViewer', () => {
     component.file = 'file.bad';
     component.selectCorrectTab();
 
-    expect(console.error).toHaveBeenCalledWith(
-      `Could not find tab for file extension: "bad".`);
+    expect(console.error).toHaveBeenCalledWith(`Could not find tab for file extension: "bad".`);
   }));
 
   it('should set and return example properly', waitForAsync(() => {
@@ -149,7 +142,6 @@ describe('ExampleViewer', () => {
   }));
 
   describe('view-source tab group', () => {
-
     it('should only render HTML, TS and CSS files if no additional files are specified', () => {
       component.example = exampleKey;
 
@@ -163,22 +155,26 @@ describe('ExampleViewer', () => {
           'additional-files-example.ts',
           'additional-files-example.html',
           'additional-files-example.css',
-          'some-additional-file.html'
+          './some-file-using-a-dot.ts',
+          'some-additional-file.html',
         ],
       };
 
       component.example = 'additional-files';
 
-      expect(component._getExampleTabNames())
-        .toEqual(['HTML', 'TS', 'CSS', 'some-additional-file.html']);
+      expect(component._getExampleTabNames()).toEqual([
+        'HTML',
+        'TS',
+        'CSS',
+        'some-file-using-a-dot.ts',
+        'some-additional-file.html',
+      ]);
     });
 
     it('should be possible for example to not have CSS or HTML files', () => {
       EXAMPLE_COMPONENTS['additional-files'] = {
         ...EXAMPLE_COMPONENTS[exampleKey],
-        files: [
-          'additional-files-example.ts',
-        ],
+        files: ['additional-files-example.ts'],
       };
 
       component.example = 'additional-files';
@@ -205,37 +201,36 @@ describe('ExampleViewer', () => {
       button = btnDe ? btnDe.nativeElement : null;
     });
 
-    it('should call clipboard service when clicked', (() => {
+    it('should call clipboard service when clicked', () => {
       const clipboardService = TestBed.inject(Clipboard);
       const spy = spyOn(clipboardService, 'copy');
       expect(spy.calls.count()).toBe(0, 'before click');
       button.click();
       expect(spy.calls.count()).toBe(1, 'after click');
       expect(spy.calls.argsFor(0)[0]).toBe('my docs page', 'click content');
-    }));
+    });
 
-    it('should display a message when copy succeeds', (() => {
+    it('should display a message when copy succeeds', () => {
       const snackBar: MatSnackBar = TestBed.inject(MatSnackBar);
       const clipboardService = TestBed.inject(Clipboard);
       spyOn(snackBar, 'open');
       spyOn(clipboardService, 'copy').and.returnValue(true);
       button.click();
       expect(snackBar.open).toHaveBeenCalledWith('Code copied', '', {duration: 2500});
-    }));
+    });
 
-    it('should display an error when copy fails', (() => {
+    it('should display an error when copy fails', () => {
       const snackBar: MatSnackBar = TestBed.inject(MatSnackBar);
       const clipboardService = TestBed.inject(Clipboard);
       spyOn(snackBar, 'open');
       spyOn(clipboardService, 'copy').and.returnValue(false);
       button.click();
-      expect(snackBar.open)
-          .toHaveBeenCalledWith('Copy failed. Please try again!', '', {duration: 2500});
-    }));
+      expect(snackBar.open).toHaveBeenCalledWith('Copy failed. Please try again!', '', {
+        duration: 2500,
+      });
+    });
   });
-
 });
-
 
 // Create a version of ExampleModule for testing with only one component so that we don't have
 // to compile all of the examples for these tests.
@@ -251,12 +246,11 @@ describe('ExampleViewer', () => {
     AutocompleteExamplesModule,
   ],
 })
-class TestExampleModule { }
-
+class TestExampleModule {}
 
 const FAKE_DOCS: {[key: string]: string} = {
   [`${exampleBasePath}/autocomplete-overview-example-html.html`]: '<div>my docs page</div>',
   [`${exampleBasePath}/autocomplete-overview-example-ts.html`]: '<span>const a = 1;</span>',
   [`${exampleBasePath}/autocomplete-overview-example-css.html`]:
-      '<pre>.class { color: black; }</pre>',
+    '<pre>.class { color: black; }</pre>',
 };
