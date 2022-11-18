@@ -1,7 +1,7 @@
 <button class="mat-tab-header-pagination mat-tab-header-pagination-before mat-elevation-z4"
      #previousPaginator
-     aria-hidden="true"
      type="button"
+     aria-label="previous page"
      mat-ripple
      tabindex="-1"
      [matRippleDisabled]="_disableScrollBefore || disableRipple"
@@ -28,8 +28,8 @@
 
 <button class="mat-tab-header-pagination mat-tab-header-pagination-after mat-elevation-z4"
      #nextPaginator
-     aria-hidden="true"
      type="button"
+     aria-label="next page"
      mat-ripple
      [matRippleDisabled]="_disableScrollAfter || disableRipple"
      [class.mat-tab-header-pagination-disabled]="_disableScrollAfter"

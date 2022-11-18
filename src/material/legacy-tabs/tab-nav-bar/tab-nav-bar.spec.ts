@@ -333,6 +333,45 @@ describe('MatTabNavBar', () => {
     expect(tabLinks[1].classList.contains('mat-tab-label-active')).toBe(true);
   });
 
+  describe('paginator', () => {
+    it('should not hide left paginator from screen readers', () => {
+      const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+      fixture.detectChanges();
+
+      const leftPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-before',
+      );
+      expect(leftPaginator.getAttribute('aria-hidden')).toBe(null);
+    });
+    it('should have a aria label on the left paginator', () => {
+      const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+      fixture.detectChanges();
+
+      const leftPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-before',
+      );
+      expect(leftPaginator.getAttribute('aria-label')).toBe('previous page');
+    });
+    it('should not hide the right paginator from screen reader users', () => {
+      const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+      fixture.detectChanges();
+
+      const rightPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-after',
+      );
+      expect(rightPaginator.getAttribute('aria-hidden')).toBe(null);
+    });
+    it('should have a aria label on the right paginator', () => {
+      const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+      fixture.detectChanges();
+
+      const rightPaginator = fixture.nativeElement.querySelector(
+        '.mat-tab-header-pagination-after',
+      );
+      expect(rightPaginator.getAttribute('aria-label')).toBe('next page');
+    });
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
 
