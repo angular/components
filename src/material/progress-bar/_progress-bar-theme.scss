@@ -3,7 +3,14 @@
 @use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use 'sass:color';
+@use 'sass:meta';
 
+@function _get-buffer-color($color) {
+  @if (meta.type-of($color) == 'color') {
+    @return color.adjust($color, $alpha: -0.75);
+  }
+  @return $color;
+}
 
 @mixin _palette-styles($color) {
   // We can't set the `track-color` using `theme`, because it isn't possible for it to use a CSS
@@ -13,7 +20,7 @@
     // writing, their buffer color is hardcoded to #e6e6e6 which both doesn't account for theming
     // and doesn't match the Material design spec. For now we approximate the buffer background by
     // applying an opacity to the color of the bar.
-    track-color: color.adjust(mdc-theme-color.prop-value($color), $alpha: -0.75),
+    track-color: _get-buffer-color(mdc-theme-color.prop-value($color)),
   ));
 
   @include mdc-linear-progress-theme.theme((
