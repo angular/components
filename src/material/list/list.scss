@@ -61,6 +61,7 @@ a.mdc-list-item--activated {
   @include layout-common.fill();
   content: '';
   opacity: 0;
+  pointer-events: none;
 }
 
 // MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
