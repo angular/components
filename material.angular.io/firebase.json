@@ -69,9 +69,9 @@
           },
           {
             "key": "Cache-Control",
-            // The versions file should not be cached for too long since we are
-            // deploying on a weekly basis and this file is rather small.
-            "value": "public, max-age=604800" // 7 days.
+            // The versions file should not be cached as it may change
+            // at any time and otherwise old versions would be rendered.
+            "value": "no-cache"
           }
         ]
       },
