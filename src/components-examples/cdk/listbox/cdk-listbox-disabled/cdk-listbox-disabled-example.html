@@ -1,7 +1,7 @@
 <form>
   <p>
-    <input type="checkbox" [formControl]="canDrinkCtrl">&nbsp;
-    <label>I am 21 or older</label>
+    <input type="checkbox" id="can-drink" [formControl]="canDrinkCtrl">&nbsp;
+    <label for="can-drink">I am 21 or older</label>
   </p>
   <section>
     <div class="example-listbox-container" [class.example-disabled]="!canDrinkCtrl.value">
