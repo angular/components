@@ -17,6 +17,14 @@ a.mdc-list-item--activated {
 // explicitly set `display: block`
 .mat-mdc-list-base {
   display: block;
+
+  // MDC sets `pointer-events: none` on these elements,
+  // even though we allowed interactive content in them.
+  .mdc-list-item__start,
+  .mdc-list-item__end,
+  .mdc-list-item__content {
+    pointer-events: auto;
+  }
 }
 
 // MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
