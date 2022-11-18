@@ -13,6 +13,7 @@ import {
   EventEmitter,
   inject,
   Input,
+  NgZone,
   OnDestroy,
   Output,
 } from '@angular/core';
@@ -52,6 +53,8 @@ export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
 
   @Output() resized = new EventEmitter<void>();
 
+  private _ngZone = inject(NgZone);
+
   private _resizeObserver = inject(SharedResizeObserver);
 
   private _stopResizeObserver = () => {};
@@ -59,12 +62,10 @@ export class MatFormFieldFloatingLabel implements AfterViewInit, OnDestroy {
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
-    this._stopResizeObserver = this._resizeObserver.observe(
-      this._elementRef.nativeElement,
-      () => this.resized.emit(),
-      {
+    this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
+      this._resizeObserver.observe(this._elementRef.nativeElement, () => this.resized.emit(), {
         box: 'border-box',
-      },
+      }),
     );
   }
 

@@ -44,8 +44,7 @@
   <div class="mat-mdc-form-field-focus-overlay" *ngIf="!_hasOutline() && !_control.disabled"></div>
   <div class="mat-mdc-form-field-flex">
     <div *ngIf="_hasOutline()" matFormFieldNotchedOutline
-         [matFormFieldNotchedOutlineOpen]="_shouldLabelFloat()"
-         [matFormFieldNotchedOutlineLabelWidth]="_labelWidth">
+         [matFormFieldNotchedOutlineOpen]="_shouldLabelFloat()">
       <ng-template [ngIf]="!_forceDisplayInfixLabel()">
         <ng-template [ngTemplateOutlet]="labelTemplate"></ng-template>
       </ng-template>

@@ -218,8 +218,6 @@ export class MatFormField
     }
     this._appearance = newAppearance;
     if (this._appearance === 'outline' && this._appearance !== oldValue) {
-      this._refreshOutlineNotchWidth();
-
       // If the appearance has been switched to `outline`, the label offset needs to be updated.
       // The update can happen once the view has been re-checked, but not immediately because
       // the view has not been updated and the notched-outline floating label is not present.
@@ -267,9 +265,6 @@ export class MatFormField
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';
 
-  /** Width of the label element (at scale=1). */
-  _labelWidth = 0;
-
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {
     return this._explicitFormFieldControl || this._formFieldControl;
@@ -310,9 +305,6 @@ export class MatFormField
     // Initial focus state sync. This happens rarely, but we want to account for
     // it in case the form field control has "focused" set to true on init.
     this._updateFocusState();
-    // Initial notch width update. This is needed in case the text-field label floats
-    // on initialization, and renders inside of the notched outline.
-    this._refreshOutlineNotchWidth();
     // Enable animations now. This ensures we don't animate on initial render.
     this._subscriptAnimationState = 'enter';
     // Because the above changes a value used in the template after it was checked, we need
@@ -538,10 +530,11 @@ export class MatFormField
 
   /** Refreshes the width of the outline-notch, if present. */
   _refreshOutlineNotchWidth() {
-    if (!this._hasOutline() || !this._floatingLabel) {
-      return;
+    if (!this._hasOutline() || !this._floatingLabel || !this._shouldLabelFloat()) {
+      this._notchedOutline?._setNotchWidth(0);
+    } else {
+      this._notchedOutline?._setNotchWidth(this._floatingLabel.getWidth());
     }
-    this._labelWidth = this._floatingLabel.getWidth();
   }
 
   /** Does any extra processing that is required when handling the hints. */
