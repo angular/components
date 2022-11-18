@@ -666,6 +666,7 @@ export abstract class _MatAutocompleteTriggerBase
 
     this.autocomplete._setVisibility();
     this.autocomplete._isOpen = this._overlayAttached = true;
+    this.autocomplete._setColor(this._formField?.color);
 
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.

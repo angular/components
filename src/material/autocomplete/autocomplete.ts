@@ -34,6 +34,7 @@ import {
   CanDisableRipple,
   _MatOptionBase,
   _MatOptgroupBase,
+  ThemePalette,
 } from '@angular/material/core';
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
@@ -122,6 +123,14 @@ export abstract class _MatAutocompleteBase
   }
   _isOpen: boolean = false;
 
+  /** @docs-private Sets the theme color of the panel. */
+  _setColor(value: ThemePalette) {
+    this._color = value;
+    this._setThemeClasses(this._classList);
+  }
+  /** @docs-private theme color of the panel */
+  private _color: ThemePalette;
+
   // The @ViewChild query for TemplateRef here needs to be static because some code paths
   // lead to the overlay being created before change detection has finished for this component.
   // Notably, another component may trigger `focus` on the autocomplete-trigger.
@@ -206,6 +215,7 @@ export abstract class _MatAutocompleteBase
     }
 
     this._setVisibilityClasses(this._classList);
+    this._setThemeClasses(this._classList);
     this._elementRef.nativeElement.className = '';
   }
   _classList: {[key: string]: boolean} = {};
@@ -295,6 +305,13 @@ export abstract class _MatAutocompleteBase
   private _setVisibilityClasses(classList: {[key: string]: boolean}) {
     classList[this._visibleClass] = this.showPanel;
     classList[this._hiddenClass] = !this.showPanel;
+  }
+
+  /** Sets the theming classes on a classlist based on the theme of the panel. */
+  private _setThemeClasses(classList: {[key: string]: boolean}) {
+    classList['mat-primary'] = this._color === 'primary';
+    classList['mat-warn'] = this._color === 'warn';
+    classList['mat-accent'] = this._color === 'accent';
   }
 }
 

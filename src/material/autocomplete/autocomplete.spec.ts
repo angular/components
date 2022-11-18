@@ -945,6 +945,28 @@ describe('MDC-based MatAutocomplete', () => {
     });
   });
 
+  describe('with theming', () => {
+    let fixture: ComponentFixture<SimpleAutocomplete>;
+
+    beforeEach(() => {
+      fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+    });
+
+    it('should transfer the theme to the autocomplete panel', () => {
+      fixture.componentInstance.theme = 'warn';
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      const panel = overlayContainerElement.querySelector(
+        '.mat-mdc-autocomplete-panel',
+      )! as HTMLElement;
+      expect(panel.classList).toContain('mat-warn');
+    });
+  });
+
   describe('keyboard events', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
@@ -3393,7 +3415,7 @@ describe('MDC-based MatAutocomplete', () => {
 });
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
-  <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width">
+  <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width" [color]="theme">
     <mat-label *ngIf="hasLabel">State</mat-label>
     <input
       matInput
@@ -3403,7 +3425,6 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
       [matAutocompleteDisabled]="autocompleteDisabled"
       [formControl]="stateCtrl">
   </mat-form-field>
-
   <mat-autocomplete [class]="panelClass" #auto="matAutocomplete" [displayWith]="displayFn"
     [disableRipple]="disableRipple" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
     (opened)="openedSpy()" (closed)="closedSpy()">
@@ -3431,6 +3452,7 @@ class SimpleAutocomplete implements OnDestroy {
   ariaLabel: string;
   ariaLabelledby: string;
   panelClass = 'class-one class-two';
+  theme: string;
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 

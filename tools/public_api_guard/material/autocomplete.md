@@ -38,6 +38,7 @@ import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { TemplateRef } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
@@ -123,6 +124,7 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent>;
     panel: ElementRef;
     panelWidth: string | number;
+    _setColor(value: ThemePalette): void;
     _setScrollTop(scrollTop: number): void;
     _setVisibility(): void;
     showPanel: boolean;
