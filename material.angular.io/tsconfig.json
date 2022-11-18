@@ -12,13 +12,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -29,10 +24,7 @@
     "strictPropertyInitialization": true,
     "useDefineForClassFields": false
   },
-  "exclude": [
-    "src/assets",
-    "dist"
-  ],
+  "exclude": ["src/assets", "dist"],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
