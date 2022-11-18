@@ -60,16 +60,13 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
   }
 
   _getNotchWidth() {
-    if (this.open) {
-      const NOTCH_ELEMENT_PADDING = 8;
-      const NOTCH_ELEMENT_BORDER = 1;
-      return this.labelWidth > 0
-        ? `calc(${this.labelWidth}px * var(--mat-mdc-form-field-floating-label-scale, 0.75) + ${
-            NOTCH_ELEMENT_PADDING + NOTCH_ELEMENT_BORDER
-          }px)`
-        : '0px';
+    if (!this.open || !this.labelWidth) {
+      return null;
     }
-
-    return null;
+    const NOTCH_ELEMENT_PADDING = 8;
+    const NOTCH_ELEMENT_BORDER = 1;
+    return `calc(${this.labelWidth}px * var(--mat-mdc-form-field-floating-label-scale, 0.75) + ${
+      NOTCH_ELEMENT_PADDING + NOTCH_ELEMENT_BORDER
+    }px)`;
   }
 }
