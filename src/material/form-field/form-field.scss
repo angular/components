@@ -63,19 +63,22 @@
   width: 100%;
 }
 
-// The MDC text-field should stretch to the width of the host `<mat-form-field>` element.
-// This allows developers to control the width without needing custom CSS overrides.
 .mat-mdc-text-field-wrapper {
+  // The MDC text-field should stretch to the width of the host `<mat-form-field>` element.
+  // This allows developers to control the width without needing custom CSS overrides.
   width: 100%;
 }
 
-// Vertically center icons.
 .mat-mdc-form-field-icon-prefix,
 .mat-mdc-form-field-icon-suffix {
+  // Vertically center icons.
   align-self: center;
   // The line-height can cause the prefix/suffix container to be taller than the actual icons,
   // breaking the vertical centering. To prevent this we set the line-height to 0.
   line-height: 0;
+  // MDC applies `pointer-events: none` to the `.mdc-text-field--disabled`. This breaks clicking on
+  // prefix and suffix buttons, so we override `pointer-events` to always allow clicking.
+  pointer-events: auto;
 }
 
 // The prefix/suffix needs a little extra padding between the icon and the infix. Because we need to
