@@ -40,7 +40,6 @@ import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
 import {MAT_PREFIX, MatPrefix} from './directives/prefix';
 import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
-import {DOCUMENT} from '@angular/common';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {matFormFieldAnimations} from './form-field-animations';
 import {MatFormFieldControl} from './form-field-control';
@@ -48,6 +47,7 @@ import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
+import {DOCUMENT} from '@angular/common';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -288,7 +288,11 @@ export class MatFormField
     @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
     private _defaults?: MatFormFieldDefaultOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-    @Inject(DOCUMENT) private _document?: any,
+    /**
+     * @deprecated not needed, to be removed.
+     * @breaking-change 17.0.0 remove this param
+     */
+    @Inject(DOCUMENT) _unusedDocument?: any,
   ) {
     if (_defaults) {
       if (_defaults.appearance) {
