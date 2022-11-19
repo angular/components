@@ -17,6 +17,7 @@ import {
   Output,
 } from '@angular/core';
 import {SharedResizeObserver} from '../resize-observer';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * Internal directive that maintains a MDC floating label. This directive does not
@@ -70,6 +71,8 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
 
   private _ngZone = inject(NgZone);
 
+  private _platform = inject(Platform);
+
   private _resizeObserver = inject(SharedResizeObserver);
 
   private _stopResizeObserver = () => {};
@@ -91,12 +94,14 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   }
 
   private _startResizeObserver() {
-    this._stopResizeObserver();
-    this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
-      this._resizeObserver.observe(this._elementRef.nativeElement, () => this.resized.emit(), {
-        box: 'border-box',
-      }),
-    );
+    if (this._platform.isBrowser) {
+      this._stopResizeObserver();
+      this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
+        this._resizeObserver.observe(this._elementRef.nativeElement, () => this.resized.emit(), {
+          box: 'border-box',
+        }),
+      );
+    }
   }
 }
 
