@@ -13,6 +13,7 @@ import {KitchenSinkRootServerModule} from './kitchen-sink-root';
 
 // Resolve the path to the "index.html" through Bazel runfile resolution.
 const indexHtmlPath = runfiles.resolvePackageRelative('./index.html');
+const themeCssPath = runfiles.resolvePackageRelative('./theme.css');
 
 const result = renderModule(KitchenSinkRootServerModule, {
   document: readFileSync(indexHtmlPath, 'utf-8'),
@@ -22,10 +23,12 @@ const outDir = process.env.TEST_UNDECLARED_OUTPUTS_DIR as string;
 result
   .then(content => {
     const filename = join(outDir, 'index-prerendered.html');
+    const themeFilename = join(outDir, 'theme.css');
 
     console.log('Inspect pre-rendered page here:');
     console.log(`file://${filename}`);
     writeFileSync(filename, content, 'utf-8');
+    writeFileSync(themeFilename, readFileSync(themeCssPath, 'utf-8'), 'utf-8');
     console.log('Prerender done.');
   })
   // If rendering the module factory fails, print the error and exit the process
