@@ -46,6 +46,7 @@
       "x-prompt": {
         "message": "What components do you want to migrate?",
         "type": "list",
+        "multiselect": true,
         "items": [
           {
             "value": "button",
