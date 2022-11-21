@@ -93,11 +93,23 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
     return this._elementRef.nativeElement;
   }
 
+  private _handleResize() {
+    // In the case where the label grows in size, the following sequence of events occurs:
+    // 1. The label grows by 1px triggering the ResizeObserver
+    // 2. The notch is expanded to accommodate the entire label
+    // 3. The label expands to its full width, triggering the ResizeObserver again
+    //
+    // This is expected, but If we allow this to all happen within the same macro task it causes an
+    // error: `ResizeObserver loop limit exceeded`. Therefore we push the notch resize out until
+    // the next macro task.
+    setTimeout(() => this.resized.emit());
+  }
+
   private _startResizeObserver() {
     if (this._platform.isBrowser) {
       this._stopResizeObserver();
       this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
-        this._resizeObserver.observe(this._elementRef.nativeElement, () => this.resized.emit(), {
+        this._resizeObserver.observe(this._elementRef.nativeElement, () => this._handleResize(), {
           box: 'border-box',
         }),
       );
