@@ -1,13 +1,14 @@
-<h1>Color Picker</h1>
+<mat-checkbox [color]="colorModel" [(ngModel)]="discrete">Discrete</mat-checkbox>
+<br>
+<mat-checkbox [color]="colorModel" [(ngModel)]="showTickMarks">Show tick marks</mat-checkbox>
+<br>
 <mat-button-toggle-group [(ngModel)]="colorModel" aria-label="Slider color options">
   <mat-button-toggle value="primary">Primary</mat-button-toggle>
   <mat-button-toggle value="accent">Accent</mat-button-toggle>
   <mat-button-toggle value="warn">Warn</mat-button-toggle>
 </mat-button-toggle-group>
 
-<br><br><br>
-
-<mat-tab-group color="{{colorModel}}">
+<mat-tab-group [color]="colorModel">
   <mat-tab label="Reactive form controls">
     <table class="demo-data-table">
       <tr>
@@ -34,12 +35,10 @@
     </table>
     
     <input class="demo-native-slider" type="range" [formControl]="control" #nativeSlider1 />
-    <br>
-    <mat-slider discrete showTickMarks color="{{colorModel}}">
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
       <input matSliderThumb [formControl]="control" #ngThumb1 />
     </mat-slider>
-    <br>
-    <mat-slider discrete showTickMarks color="{{colorModel}}">
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
       <input matSliderStartThumb [formControl]="control" #ngStartThumb1 />
       <input matSliderEndThumb #ngEndThumb1 />
     </mat-slider>
@@ -91,15 +90,11 @@
       </tr>
     </table>
     
-    <br>
-    
     <input class="demo-native-slider" type="range" #nativeSlider2 [(ngModel)]="valueModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel" />
-    <br>
-    <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
       <input matSliderThumb #ngThumb2 [(ngModel)]="valueModel" />
     </mat-slider>
-    <br>
-    <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
       <input matSliderStartThumb #ngStartThumb2 [(ngModel)]="valueModel" />
       <input matSliderEndThumb #ngEndThumb2 />
     </mat-slider>
@@ -152,12 +147,10 @@
     </table>
 
     <input class="demo-native-slider" type="range" #nativeSlider3 [value]="value" [min]="min" [max]="max" [step]="step" [disabled]="disabled" />
-    <br>
-    <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
       <input matSliderThumb #ngThumb3 [value]="value" />
     </mat-slider>
-    <br>
-    <mat-slider discrete showTickMarks color="{{colorModel}}" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
       <input matSliderStartThumb #ngStartThumb3 [value]="value" />
       <input matSliderEndThumb #ngEndThumb3 />
     </mat-slider>
@@ -179,11 +172,10 @@
       </tr>
     </table>
     
-      <mat-slider discrete showTickMarks color="{{colorModel}}">
+      <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
         <input matSliderThumb #ngThumb4 [(value)]="twoWayValue" />
       </mat-slider>
-      <br>
-      <mat-slider discrete showTickMarks color="{{colorModel}}">
+      <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
         <input matSliderStartThumb #ngStartThumb4 [(value)]="twoWayValue" />
         <input matSliderEndThumb #ngEndThumb4 />
       </mat-slider>
