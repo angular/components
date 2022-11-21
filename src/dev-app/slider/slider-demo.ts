@@ -11,6 +11,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
   selector: 'slider-demo',
@@ -18,6 +19,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
   standalone: true,
   imports: [
     FormsModule,
+    MatCheckboxModule,
     MatButtonToggleModule,
     MatSliderModule,
     MatTabsModule,
@@ -26,22 +28,24 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
   styleUrls: ['slider-demo.css'],
 })
 export class SliderDemo {
-  colorModel: string = 'primary';
+  discrete = true;
+  showTickMarks = true;
+  colorModel = 'primary';
 
   noop = () => {};
-  min: string = '0';
-  max: string = '100';
-  step: string = '0';
-  value: string = '0';
-  disabled: boolean = false;
+  min = '0';
+  max = '100';
+  step = '0';
+  value = '0';
+  disabled = false;
 
-  twoWayValue: number = 0;
+  twoWayValue = 0;
 
-  minModel: number = 0;
-  maxModel: number = 100;
-  valueModel: number = 0;
-  stepModel: number = 0;
-  disabledModel: boolean = false;
+  minModel = 0;
+  maxModel = 100;
+  valueModel = 0;
+  stepModel = 0;
+  disabledModel = false;
 
   control = new FormControl('0');
 
