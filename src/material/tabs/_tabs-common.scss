@@ -51,6 +51,12 @@ $mat-tab-animation-duration: 500ms !default;
     pointer-events: none;
   }
 
+  // We support projecting icons into the tab. These styles ensure that they're centered.
+  .mdc-tab__text-label {
+    display: inline-flex;
+    align-items: center;
+  }
+
   // Required for `fitInkBarToContent` to work. This used to be included with MDC's `without-ripple`
   // mixin, but that no longer appears to be the case with `static-styles`. Since the latter is
   // ~10kb smaller, we include this one extra style ourselves.
