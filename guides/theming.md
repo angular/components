@@ -118,7 +118,7 @@ times will result in duplicate CSS in your application.
 
 Angular Material represents a theme as a Sass map that contains your color, typography, and density
 choices. See [Angular Material Typography][mat-typography] for an in-depth guide to customizing typography. See
-[Customizing density][#customizing-density] below for details on adjusting component density.
+[Customizing density](#customizing-density) below for details on adjusting component density.
 
 Constructing the theme first requires defining your primary and accent palettes, with an optional
 warn palette. The `define-palette` Sass function accepts a color palette, described in the
