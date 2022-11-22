@@ -112,7 +112,7 @@ export class SharedResizeObserver implements OnDestroy {
   private _platform = inject(Platform);
 
   constructor() {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+    if (this._platform.isBrowser && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       this._ngZone.runOutsideAngular(() => {
         window.addEventListener('error', loopLimitExceededErrorHandler);
       });
@@ -124,7 +124,7 @@ export class SharedResizeObserver implements OnDestroy {
       observer.destroy();
     }
     this._observers.clear();
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+    if (this._platform.isBrowser && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       window.removeEventListener('error', loopLimitExceededErrorHandler);
     }
   }
