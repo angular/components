@@ -152,17 +152,20 @@ export class MatListModule {
 // @public (undocumented)
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, _selectionList: SelectionList, platform: Platform, _changeDetectorRef: ChangeDetectorRef, globalRippleOptions?: RippleGlobalOptions, animationMode?: string);
-    checkboxPosition: MatListOptionCheckboxPosition;
+    // @deprecated
+    get checkboxPosition(): MatListOptionTogglePosition;
+    set checkboxPosition(value: MatListOptionTogglePosition);
     get color(): ThemePalette;
     set color(newValue: ThemePalette);
     focus(): void;
-    _getCheckboxPosition(): MatListOptionCheckboxPosition;
     getLabel(): string;
+    _getTogglePosition(): MatListOptionTogglePosition;
     // (undocumented)
     _handleBlur(): void;
-    _hasCheckboxAt(position: MatListOptionCheckboxPosition): boolean;
+    _hasCheckboxAt(position: MatListOptionTogglePosition): boolean;
     _hasIconsOrAvatarsAt(position: 'before' | 'after'): boolean;
     _hasProjected(type: 'icons' | 'avatars', position: 'before' | 'after'): boolean;
+    _hasRadioAt(position: MatListOptionTogglePosition): boolean;
     // (undocumented)
     _lines: QueryList<MatListItemLine>;
     _markForCheck(): void;
@@ -179,18 +182,21 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     _titles: QueryList<MatListItemTitle>;
     toggle(): void;
     _toggleOnInteraction(): void;
+    togglePosition: MatListOptionTogglePosition;
     // (undocumented)
     _unscopedContent: ElementRef<HTMLSpanElement>;
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "checkboxPosition": "checkboxPosition"; "color": "color"; "value": "value"; "selected": "selected"; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "togglePosition": "togglePosition"; "checkboxPosition": "checkboxPosition"; "color": "color"; "value": "value"; "selected": "selected"; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatListOption, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public
-export type MatListOptionCheckboxPosition = 'before' | 'after';
+type MatListOptionTogglePosition = 'before' | 'after';
+export { MatListOptionTogglePosition as MatListOptionCheckboxPosition }
+export { MatListOptionTogglePosition }
 
 // @public
 export class MatListSubheaderCssMatStyler {

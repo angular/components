@@ -27,7 +27,7 @@ import {By} from '@angular/platform-browser';
 import {
   MatListModule,
   MatListOption,
-  MatListOptionCheckboxPosition,
+  MatListOptionTogglePosition,
   MatSelectionList,
   MatSelectionListChange,
 } from './index';
@@ -892,7 +892,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     function expectCheckboxAtPosition(
       listItemElement: HTMLElement,
-      position: MatListOptionCheckboxPosition,
+      position: MatListOptionTogglePosition,
     ) {
       const containerSelector =
         position === 'before' ? '.mdc-list-item__start' : 'mdc-list-item__end';
@@ -974,12 +974,12 @@ describe('MDC-based MatSelectionList without forms', () => {
       expectCheckboxAtPosition(listOption, 'after');
       expectIconAt(listOption, 'before');
 
-      fixture.componentInstance.checkboxPosition = 'before';
+      fixture.componentInstance.togglePosition = 'before';
       fixture.detectChanges();
       expectCheckboxAtPosition(listOption, 'before');
       expectIconAt(listOption, 'after');
 
-      fixture.componentInstance.checkboxPosition = 'after';
+      fixture.componentInstance.togglePosition = 'after';
       fixture.detectChanges();
       expectCheckboxAtPosition(listOption, 'after');
       expectIconAt(listOption, 'before');
@@ -995,12 +995,12 @@ describe('MDC-based MatSelectionList without forms', () => {
       expectCheckboxAtPosition(listOption, 'after');
       expectAvatarAt(listOption, 'before');
 
-      fixture.componentInstance.checkboxPosition = 'before';
+      fixture.componentInstance.togglePosition = 'before';
       fixture.detectChanges();
       expectCheckboxAtPosition(listOption, 'before');
       expectAvatarAt(listOption, 'after');
 
-      fixture.componentInstance.checkboxPosition = 'after';
+      fixture.componentInstance.togglePosition = 'after';
       fixture.detectChanges();
       expectCheckboxAtPosition(listOption, 'after');
       expectAvatarAt(listOption, 'before');
@@ -1638,21 +1638,21 @@ describe('MDC-based MatSelectionList with forms', () => {
     [disableRipple]="listRippleDisabled"
     [color]="selectionListColor"
     [multiple]="multiple">
-    <mat-list-option checkboxPosition="before" disabled="true" value="inbox"
+    <mat-list-option togglePosition="before" disabled="true" value="inbox"
                      [color]="firstOptionColor">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id="testSelect" checkboxPosition="before" class="test-native-focus"
+    <mat-list-option id="testSelect" togglePosition="before" class="test-native-focus"
                     value="starred">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition="before" value="sent-mail">
+    <mat-list-option togglePosition="before" value="sent-mail">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition="before" value="archive">
+    <mat-list-option togglePosition="before" value="archive">
       Archive
     </mat-list-option>
-    <mat-list-option checkboxPosition="before" value="drafts" *ngIf="showLastOption">
+    <mat-list-option togglePosition="before" value="drafts" *ngIf="showLastOption">
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
@@ -1670,16 +1670,16 @@ class SelectionListWithListOptions {
 @Component({
   template: `
   <mat-selection-list id="selection-list-2">
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id="testSelect" checkboxPosition="after">
+    <mat-list-option id="testSelect" togglePosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
@@ -1689,16 +1689,16 @@ class SelectionListWithCheckboxPositionAfter {}
 @Component({
   template: `
   <mat-selection-list id="selection-list-3" [disabled]="disabled">
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id="testSelect" checkboxPosition="after">
+    <mat-list-option id="testSelect" togglePosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
@@ -1742,7 +1742,7 @@ class SelectionListWithSelectedOptionAndValue {
 @Component({
   template: `
   <mat-selection-list id="selection-list-4">
-    <mat-list-option checkboxPosition="after" class="test-focus" id="123">
+    <mat-list-option togglePosition="after" class="test-focus" id="123">
       Inbox
     </mat-list-option>
   </mat-selection-list>`,
@@ -1838,7 +1838,7 @@ class SelectionListWithCustomComparator {
 @Component({
   template: `
     <mat-selection-list>
-      <mat-list-option [checkboxPosition]="checkboxPosition">
+      <mat-list-option [togglePosition]="togglePosition">
         <div matListItemAvatar>I</div>
         Inbox
       </mat-list-option>
@@ -1846,13 +1846,13 @@ class SelectionListWithCustomComparator {
   `,
 })
 class SelectionListWithAvatar {
-  checkboxPosition: MatListOptionCheckboxPosition | undefined;
+  togglePosition: MatListOptionTogglePosition | undefined;
 }
 
 @Component({
   template: `
     <mat-selection-list>
-      <mat-list-option [checkboxPosition]="checkboxPosition">
+      <mat-list-option [togglePosition]="togglePosition">
         <div matListItemIcon>I</div>
         Inbox
       </mat-list-option>
@@ -1860,7 +1860,7 @@ class SelectionListWithAvatar {
   `,
 })
 class SelectionListWithIcon {
-  checkboxPosition: MatListOptionCheckboxPosition | undefined;
+  togglePosition: MatListOptionTogglePosition | undefined;
 }
 
 @Component({

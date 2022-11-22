@@ -11,7 +11,7 @@ import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { DividerHarnessFilters } from '@angular/material/divider/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 import { MatDividerHarness } from '@angular/material/divider/testing';
-import { MatListOptionCheckboxPosition } from '@angular/material/list';
+import { MatListOptionTogglePosition } from '@angular/material/list';
 
 // @public (undocumented)
 export interface ActionListHarnessFilters extends BaseHarnessFilters {
@@ -102,7 +102,8 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
     blur(): Promise<void>;
     deselect(): Promise<void>;
     focus(): Promise<void>;
-    getCheckboxPosition(): Promise<MatListOptionCheckboxPosition>;
+    getCheckboxPosition(): Promise<MatListOptionTogglePosition>;
+    getRadioPosition(): Promise<MatListOptionTogglePosition>;
     static hostSelector: string;
     isFocused(): Promise<boolean>;
     isSelected(): Promise<boolean>;

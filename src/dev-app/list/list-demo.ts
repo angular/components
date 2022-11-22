@@ -9,7 +9,7 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatListModule, MatListOptionCheckboxPosition} from '@angular/material/list';
+import {MatListModule, MatListOptionTogglePosition} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {CommonModule} from '@angular/common';
 
@@ -23,7 +23,7 @@ import {CommonModule} from '@angular/common';
 export class ListDemo {
   items: string[] = ['Pepper', 'Salt', 'Paprika'];
 
-  checkboxPosition: MatListOptionCheckboxPosition = 'before';
+  togglePosition: MatListOptionTogglePosition = 'before';
 
   contacts: {name: string; headline: string}[] = [
     {name: 'Nancy', headline: 'Software engineer'},
@@ -75,7 +75,7 @@ export class ListDemo {
   }
 
   toggleCheckboxPosition() {
-    this.checkboxPosition = this.checkboxPosition === 'before' ? 'after' : 'before';
+    this.togglePosition = this.togglePosition === 'before' ? 'after' : 'before';
   }
 
   favoriteOptions: string[] = [];

@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions, ThemePalette} from '@angular/material/core';
 import {MatListBase, MatListItemBase} from './list-base';
-import {LIST_OPTION, ListOption, MatListOptionCheckboxPosition} from './list-option-types';
+import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 import {MatListItemLine, MatListItemTitle} from './list-item-sections';
 import {Platform} from '@angular/cdk/platform';
 
@@ -67,16 +67,18 @@ export interface SelectionList extends MatListBase {
     // As per MDC, only list items in single selection mode should receive the `--selected`
     // class. For multi selection, the checkbox is used as indicator.
     '[class.mdc-list-item--selected]': 'selected && !_selectionList.multiple',
-    // Based on the checkbox position and whether there are icons or avatars, we apply MDC's
+    // Based on the checkbox/radio position and whether there are icons or avatars, we apply MDC's
     // list-item `--leading` and `--trailing` classes.
     '[class.mdc-list-item--with-leading-avatar]': '_hasProjected("avatars", "before")',
     '[class.mdc-list-item--with-leading-icon]': '_hasProjected("icons", "before")',
     '[class.mdc-list-item--with-trailing-icon]': '_hasProjected("icons", "after")',
     '[class.mat-mdc-list-option-with-trailing-avatar]': '_hasProjected("avatars", "after")',
-    // Based on the checkbox position, we apply the `--leading` or `--trailing` MDC classes
-    // which ensure that the checkbox is positioned correctly within the list item.
+    // Based on the checkbox/radio position, we apply the `--leading` or `--trailing` MDC classes
+    // which ensure that the checkbox/radio is positioned correctly within the list item.
     '[class.mdc-list-item--with-leading-checkbox]': '_hasCheckboxAt("before")',
     '[class.mdc-list-item--with-trailing-checkbox]': '_hasCheckboxAt("after")',
+    '[class.mdc-list-item--with-leading-radio]': '_hasRadioAt("before")',
+    '[class.mdc-list-item--with-trailing-radio]': '_hasRadioAt("after")',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_noopAnimations',
@@ -105,10 +107,23 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   @Output()
   readonly selectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
-  @Input() checkboxPosition: MatListOptionCheckboxPosition = 'after';
+  /** Whether the label should appear before or after the checkbox/radio. Defaults to 'after' */
+  @Input() togglePosition: MatListOptionTogglePosition = 'after';
 
-  /** Theme color of the list option. This sets the color of the checkbox. */
+  /**
+   * Whether the label should appear before or after the checkbox/radio. Defaults to 'after'
+   *
+   * @deprecated Use `togglePosition` instead.
+   * @breaking-change 17.0.0
+   */
+  @Input() get checkboxPosition(): MatListOptionTogglePosition {
+    return this.togglePosition;
+  }
+  set checkboxPosition(value: MatListOptionTogglePosition) {
+    this.togglePosition = value;
+  }
+
+  /** Theme color of the list option. This sets the color of the checkbox/radio. */
   @Input()
   get color(): ThemePalette {
     return this._color || this._selectionList.color;
@@ -225,8 +240,13 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   }
 
   /** Whether a checkbox is shown at the given position. */
-  _hasCheckboxAt(position: MatListOptionCheckboxPosition): boolean {
-    return this._selectionList.multiple && this._getCheckboxPosition() === position;
+  _hasCheckboxAt(position: MatListOptionTogglePosition): boolean {
+    return this._selectionList.multiple && this._getTogglePosition() === position;
+  }
+
+  /** Where a radio indicator is shown at the given position. */
+  _hasRadioAt(position: MatListOptionTogglePosition): boolean {
+    return !this._selectionList.multiple && this._getTogglePosition() === position;
   }
 
   /** Whether icons or avatars are shown at the given position. */
@@ -236,10 +256,10 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
 
   /** Gets whether the given type of element is projected at the specified position. */
   _hasProjected(type: 'icons' | 'avatars', position: 'before' | 'after'): boolean {
-    // If the checkbox is shown at the specified position, neither icons or
+    // If the checkbox/radio is shown at the specified position, neither icons or
     // avatars can be shown at the position.
     return (
-      this._getCheckboxPosition() !== position &&
+      this._getTogglePosition() !== position &&
       (type === 'avatars' ? this._avatars.length !== 0 : this._icons.length !== 0)
     );
   }
@@ -248,9 +268,9 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     this._selectionList._onTouched();
   }
 
-  /** Gets the current position of the checkbox. */
-  _getCheckboxPosition() {
-    return this.checkboxPosition || 'after';
+  /** Gets the current position of the checkbox/radio. */
+  _getTogglePosition() {
+    return this.togglePosition || 'after';
   }
 
   /**

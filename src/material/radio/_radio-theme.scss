@@ -1,70 +1,32 @@
-@use 'sass:map';
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/radio/radio' as mdc-radio;
+@use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/form-field' as mdc-form-field;
-@use '../core/theming/theming';
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/theming/palette';
-
-@mixin _color-palette($color-palette) {
-  @include mdc-radio-theme.theme((
-    selected-focus-icon-color: $color-palette,
-    selected-hover-icon-color: $color-palette,
-    selected-icon-color: $color-palette,
-    selected-pressed-icon-color: $color-palette,
-  ));
-
-  --mat-mdc-radio-checked-ripple-color: #{$color-palette};
-}
+@use './radio-private';
+@use 'sass:map';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   $primary: theming.get-color-from-palette(map.get($config, primary));
   $accent: theming.get-color-from-palette(map.get($config, accent));
   $warn: theming.get-color-from-palette(map.get($config, warn));
-  $foreground: map.get($config, foreground);
 
   @include mdc-helpers.using-mdc-theme($config) {
-    $on-surface: rgba(mdc-theme-color.$on-surface, 0.54);
-    $is-dark: map.get($config, is-dark);
-    $active-border-color: if(
-            $is-dark,
-            theming.get-color-from-palette(palette.$gray-palette, 200),
-            theming.get-color-from-palette(palette.$gray-palette, 900)
-    );
-
     .mat-mdc-radio-button {
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-      @include mdc-radio-theme.theme((
-        // The disabled colors don't use the `rgba` version, because
-        // MDC applies a separate opacity to disabled buttons.
-        disabled-selected-icon-color: mdc-theme-color.$on-surface,
-        disabled-unselected-icon-color: mdc-theme-color.$on-surface,
-        unselected-focus-icon-color: $active-border-color,
-        unselected-hover-icon-color: $active-border-color,
-        unselected-icon-color: $on-surface,
-        unselected-pressed-icon-color: $on-surface,
-      ));
-
-      --mat-mdc-radio-ripple-color: #{mdc-theme-color.prop-value(on-surface)};
-
-      // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
-      .mdc-radio--disabled + label {
-        color: theming.get-color-from-palette($foreground, disabled-text);
-      }
 
       &.mat-primary {
-        @include _color-palette($primary);
+        @include radio-private.private-radio-color($config, $primary);
       }
 
       &.mat-accent {
-        @include _color-palette($accent);
+        @include radio-private.private-radio-color($config, $accent);
       }
 
       &.mat-warn {
-        @include _color-palette($warn);
+        @include radio-private.private-radio-color($config, $warn);
       }
     }
   }
