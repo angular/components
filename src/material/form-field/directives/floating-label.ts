@@ -16,8 +16,9 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
-import {SharedResizeObserver} from '../resize-observer';
+import {SharedResizeObserver} from '../shared-resize-observer';
 import {Platform} from '@angular/cdk/platform';
+import {Subscription} from 'rxjs';
 
 /**
  * Internal directive that maintains a MDC floating label. This directive does not
@@ -62,7 +63,7 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
     if (this._monitorResize) {
       this._startResizeObserver();
     } else {
-      this._stopResizeObserver();
+      this._resizeSubscription.unsubscribe();
     }
   }
   private _monitorResize = false;
@@ -75,12 +76,12 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
 
   private _resizeObserver = inject(SharedResizeObserver);
 
-  private _stopResizeObserver = () => {};
+  private _resizeSubscription = new Subscription();
 
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   ngOnDestroy() {
-    this._stopResizeObserver();
+    this._resizeSubscription.unsubscribe();
   }
 
   /** Gets the width of the label. Used for the outline notch. */
@@ -107,12 +108,10 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
 
   private _startResizeObserver() {
     if (this._platform.isBrowser) {
-      this._stopResizeObserver();
-      this._stopResizeObserver = this._ngZone.runOutsideAngular(() =>
-        this._resizeObserver.observe(this._elementRef.nativeElement, () => this._handleResize(), {
-          box: 'border-box',
-        }),
-      );
+      this._resizeSubscription.unsubscribe();
+      this._resizeSubscription = this._resizeObserver
+        .observe(this._elementRef.nativeElement, {box: 'border-box'})
+        .subscribe(() => this._handleResize());
     }
   }
 }
