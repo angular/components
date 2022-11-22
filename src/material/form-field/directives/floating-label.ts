@@ -16,7 +16,7 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
-import {SharedResizeObserver} from '../shared-resize-observer';
+import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {Subscription} from 'rxjs';
 
 /**

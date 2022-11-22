@@ -9,7 +9,7 @@ generate_test_targets(
         [
             "//src/cdk",
             "//src/material",
-        ] + ["//src/cdk/%s" % e for e in CDK_ENTRYPOINTS] +
+        ] + ["//src/cdk/%s" % e for e in CDK_ENTRYPOINTS if not e.endswith("/private")] +
         ["//src/material/%s" % e for e in MATERIAL_ENTRYPOINTS + MATERIAL_TESTING_ENTRYPOINTS],
 )
 
