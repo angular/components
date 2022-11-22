@@ -200,6 +200,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       case SPACE:
       case ENTER:
         if (!hasModifierKey(event)) {
+          event.preventDefault();
           this.trigger({keepOpen: event.keyCode === SPACE && !this.closeOnSpacebarTrigger});
         }
         break;
