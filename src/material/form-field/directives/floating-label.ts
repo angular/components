@@ -17,7 +17,6 @@ import {
   Output,
 } from '@angular/core';
 import {SharedResizeObserver} from '../shared-resize-observer';
-import {Platform} from '@angular/cdk/platform';
 import {Subscription} from 'rxjs';
 
 /**
@@ -54,6 +53,7 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   }
   private _floating = false;
 
+  /** Whether to monitor for resize events on the floating label. */
   @Input()
   get monitorResize() {
     return this._monitorResize;
@@ -61,21 +61,23 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   set monitorResize(value: boolean) {
     this._monitorResize = value;
     if (this._monitorResize) {
-      this._startResizeObserver();
+      this._subscribeToResize();
     } else {
       this._resizeSubscription.unsubscribe();
     }
   }
   private _monitorResize = false;
 
+  /** Emits when the label is resized (if resize events are being monitored). */
   @Output() resized = new EventEmitter<void>();
 
-  private _ngZone = inject(NgZone);
-
-  private _platform = inject(Platform);
-
+  /** The shared ResizeObserver. */
   private _resizeObserver = inject(SharedResizeObserver);
 
+  /** The Angular zone. */
+  private _ngZone = inject(NgZone);
+
+  /** The current resize event subscription. */
   private _resizeSubscription = new Subscription();
 
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
@@ -94,6 +96,7 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
     return this._elementRef.nativeElement;
   }
 
+  /** Handles resize events from the ResizeObserver. */
   private _handleResize() {
     // In the case where the label grows in size, the following sequence of events occurs:
     // 1. The label grows by 1px triggering the ResizeObserver
@@ -106,13 +109,14 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
     setTimeout(() => this.resized.emit());
   }
 
-  private _startResizeObserver() {
-    if (this._platform.isBrowser) {
-      this._resizeSubscription.unsubscribe();
+  /** Subscribes to resize events. */
+  private _subscribeToResize() {
+    this._resizeSubscription.unsubscribe();
+    this._ngZone.runOutsideAngular(() => {
       this._resizeSubscription = this._resizeObserver
         .observe(this._elementRef.nativeElement, {box: 'border-box'})
         .subscribe(() => this._handleResize());
-    }
+    });
   }
 }
 

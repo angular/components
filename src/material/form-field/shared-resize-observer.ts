@@ -8,6 +8,7 @@
 import {inject, Injectable, NgZone, OnDestroy} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {filter, shareReplay, takeUntil} from 'rxjs/operators';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * Handler that logs "ResizeObserver loop limit exceeded" errors.
@@ -32,14 +33,20 @@ class SingleBoxSharedResizeObserver {
   /** Stream of all events from the ResizeObserver. */
   private _resizeSubject = new Subject<ResizeObserverEntry[]>();
   /** ResizeObserver used to observe element resize events. */
-  private _resizeObserver = new ResizeObserver(entries => this._resizeSubject.next(entries));
+  private _resizeObserver?: ResizeObserver;
   /** A map of elements to streams of their resize events. */
   private _elementObservables = new Map<Element, Observable<ResizeObserverEntry[]>>();
 
   constructor(
     /** The box type to observe for resizes. */
     private _box: ResizeObserverBoxOptions,
-  ) {}
+    /** The platform. */
+    platform: Platform,
+  ) {
+    if (platform.isBrowser) {
+      this._resizeObserver = new ResizeObserver(entries => this._resizeSubject.next(entries));
+    }
+  }
 
   /**
    * Gets a stream of resize events for the given element.
@@ -54,9 +61,9 @@ class SingleBoxSharedResizeObserver {
           const subscription = this._resizeSubject
             .pipe(filter(entries => entries.some(entry => entry.target === target)))
             .subscribe(observer);
-          this._resizeObserver.observe(target, {box: this._box});
+          this._resizeObserver?.observe(target, {box: this._box});
           return () => {
-            this._resizeObserver.unobserve(target);
+            this._resizeObserver?.unobserve(target);
             subscription.unsubscribe();
             this._elementObservables.delete(target);
           };
@@ -78,7 +85,6 @@ class SingleBoxSharedResizeObserver {
     this._destroyed.complete();
     this._resizeSubject.complete();
     this._elementObservables.clear();
-    this._resizeObserver.disconnect();
   }
 }
 
@@ -101,6 +107,9 @@ export class SharedResizeObserver implements OnDestroy {
 
   /** The Angular zone. */
   private _ngZone = inject(NgZone);
+
+  /** The platform. */
+  private _platform = inject(Platform);
 
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
@@ -129,7 +138,7 @@ export class SharedResizeObserver implements OnDestroy {
   observe(target: Element, options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
     const box = options?.box || 'content-box';
     if (!this._observers.has(box)) {
-      this._observers.set(box, new SingleBoxSharedResizeObserver(box));
+      this._observers.set(box, new SingleBoxSharedResizeObserver(box, this._platform));
     }
     return this._observers.get(box)!.observe(target);
   }
