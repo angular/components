@@ -26,7 +26,14 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
     const ast = parseTemplate(template, templateUrl);
     const migrators = this.upgradeData.filter(m => m.template).map(m => m.template!);
     const updates: Update[] = [];
-    migrators.forEach(m => updates.push(...m.getUpdates(ast)));
+    migrators.forEach(m => {
+      try {
+        updates.push(...m.getUpdates(ast));
+      } catch (error: any) {
+        this.logger.error(`${error}`);
+        this.logger.warn(`Failed to process template: ${templateUrl} (see error above).`);
+      }
+    });
 
     return writeUpdates(template, updates);
   }
