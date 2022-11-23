@@ -20,8 +20,7 @@
          *ngIf="_hasFloatingLabel()"
          [id]="_labelId"
          [attr.for]="_control.id"
-         [attr.aria-owns]="_control.id"
-         (resized)="_refreshOutlineNotchWidth()">
+         [attr.aria-owns]="_control.id">
     <ng-content select="mat-label"></ng-content>
     <!--
       We set the required marker as a separate element, in order to make it easier to target if

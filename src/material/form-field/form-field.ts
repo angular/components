@@ -33,7 +33,11 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
-import {MatFormFieldFloatingLabel} from './directives/floating-label';
+import {
+  FLOATING_LABEL_PARENT,
+  FloatingLabelParent,
+  MatFormFieldFloatingLabel,
+} from './directives/floating-label';
 import {MatHint} from './directives/hint';
 import {MatLabel} from './directives/label';
 import {MatFormFieldLineRipple} from './directives/line-ripple';
@@ -151,10 +155,13 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{provide: MAT_FORM_FIELD, useExisting: MatFormField}],
+  providers: [
+    {provide: MAT_FORM_FIELD, useExisting: MatFormField},
+    {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
+  ],
 })
 export class MatFormField
-  implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
+  implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
 {
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
@@ -530,6 +537,11 @@ export class MatFormField
     return this._errorChildren && this._errorChildren.length > 0 && this._control.errorState
       ? 'error'
       : 'hint';
+  }
+
+  /** Handle label resize events. */
+  _handleLabelResized() {
+    this._refreshOutlineNotchWidth();
   }
 
   /** Refreshes the width of the outline-notch, if present. */

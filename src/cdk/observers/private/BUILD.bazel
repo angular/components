@@ -15,7 +15,6 @@ ng_module(
     ),
     deps = [
         "//src:dev_mode_types",
-        "//src/cdk/platform",
         "@npm//rxjs",
     ],
 )

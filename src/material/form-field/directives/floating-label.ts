@@ -9,15 +9,22 @@
 import {
   Directive,
   ElementRef,
-  EventEmitter,
   inject,
   Input,
   NgZone,
   OnDestroy,
-  Output,
+  InjectionToken,
 } from '@angular/core';
 import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {Subscription} from 'rxjs';
+
+/** An interface that the parent form-field should implement to receive resize events. */
+export interface FloatingLabelParent {
+  _handleLabelResized(): void;
+}
+
+/** An injion token for the parent form-field. */
+export const FLOATING_LABEL_PARENT = new InjectionToken<FloatingLabelParent>('FloatingLabelParent');
 
 /**
  * Internal directive that maintains a MDC floating label. This directive does not
@@ -48,7 +55,7 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   set floating(value: boolean) {
     this._floating = value;
     if (this.monitorResize) {
-      this.resized.emit();
+      this._handleResize();
     }
   }
   private _floating = false;
@@ -68,14 +75,14 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   }
   private _monitorResize = false;
 
-  /** Emits when the label is resized (if resize events are being monitored). */
-  @Output() resized = new EventEmitter<void>();
-
   /** The shared ResizeObserver. */
   private _resizeObserver = inject(SharedResizeObserver);
 
   /** The Angular zone. */
   private _ngZone = inject(NgZone);
+
+  /** The parent form-field. */
+  private _parent = inject(FLOATING_LABEL_PARENT);
 
   /** The current resize event subscription. */
   private _resizeSubscription = new Subscription();
@@ -106,7 +113,9 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
     // This is expected, but If we allow this to all happen within the same macro task it causes an
     // error: `ResizeObserver loop limit exceeded`. Therefore we push the notch resize out until
     // the next macro task.
-    setTimeout(() => this.resized.emit());
+    this._ngZone.runOutsideAngular(() => {
+      setTimeout(() => this._parent._handleLabelResized());
+    });
   }
 
   /** Subscribes to resize events. */
