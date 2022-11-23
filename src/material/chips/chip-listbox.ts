@@ -102,6 +102,9 @@ export class MatChipListbox
   // TODO: MDC uses `grid` here
   protected override _defaultRole = 'listbox';
 
+  /** Value that was assigned before the listbox was initialized. */
+  private _pendingInitialValue: any;
+
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
   get multiple(): boolean {
@@ -188,6 +191,13 @@ export class MatChipListbox
   override _chips: QueryList<MatChipOption>;
 
   ngAfterContentInit() {
+    if (this._pendingInitialValue !== undefined) {
+      Promise.resolve().then(() => {
+        this._setSelectionByValue(this._pendingInitialValue, false);
+        this._pendingInitialValue = undefined;
+      });
+    }
+
     this._chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
       // Update listbox selectable/multiple properties on chips
       this._syncListboxProperties();
@@ -236,6 +246,8 @@ export class MatChipListbox
   writeValue(value: any): void {
     if (this._chips) {
       this._setSelectionByValue(value, false);
+    } else if (value != null) {
+      this._pendingInitialValue = value;
     }
   }
 

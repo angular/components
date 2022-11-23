@@ -737,30 +737,35 @@ describe('MDC-based MatChipListbox', () => {
       });
 
       describe('multiple selection', () => {
-        beforeEach(() => {
-          fixture = createComponent(MultiSelectionChipListbox);
-          chips = fixture.componentInstance.chips;
-        });
-
-        it('should take an initial view value with reactive forms', () => {
-          fixture.componentInstance.control = new FormControl(['pizza-1']);
+        it('should take an initial view value with reactive forms', fakeAsync(() => {
+          fixture = createComponent(MultiSelectionChipListbox, undefined, initFixture => {
+            initFixture.componentInstance.control = new FormControl(['pizza-1', 'pasta-6']);
+            initFixture.componentInstance.selectable = true;
+          });
           fixture.detectChanges();
+          flush();
 
-          const array = chips.toArray();
+          const array = fixture.componentInstance.chips.toArray();
 
-          expect(array[1].selected).withContext('Expect pizza-1 chip to be selected').toBeTruthy();
+          expect(array[1].selected).withContext('Expect pizza-1 chip to be selected').toBe(true);
+          expect(array[6].selected).withContext('Expect pasta-6 chip to be selected').toBe(true);
 
           dispatchKeyboardEvent(primaryActions[1], 'keydown', SPACE);
           fixture.detectChanges();
+          flush();
 
           expect(array[1].selected)
-            .withContext('Expect chip to be not selected after toggle selected')
-            .toBeFalsy();
-        });
+            .withContext('Expect pizza-1 chip to no longer be selected')
+            .toBe(false);
+          expect(array[6].selected)
+            .withContext('Expect pasta-6 chip to remain selected')
+            .toBe(true);
+        }));
 
         it('should set the view value from the form', () => {
+          fixture = createComponent(MultiSelectionChipListbox);
           const chipListbox = fixture.componentInstance.chipListbox;
-          const array = chips.toArray();
+          const array = fixture.componentInstance.chips.toArray();
 
           expect(chipListbox.value)
             .withContext('Expect chip listbox to have no initial value')
@@ -773,6 +778,8 @@ describe('MDC-based MatChipListbox', () => {
         });
 
         it('should update the form value when the view changes', () => {
+          fixture = createComponent(MultiSelectionChipListbox);
+
           expect(fixture.componentInstance.control.value)
             .withContext(`Expected the control's value to be empty initially.`)
             .toEqual(null);
@@ -786,8 +793,10 @@ describe('MDC-based MatChipListbox', () => {
         });
 
         it('should clear the selection when a nonexistent option value is selected', () => {
-          const array = chips.toArray();
+          fixture = createComponent(MultiSelectionChipListbox);
+          chips = fixture.componentInstance.chips;
 
+          const array = fixture.componentInstance.chips.toArray();
           fixture.componentInstance.control.setValue(['pizza-1']);
           fixture.detectChanges();
 
@@ -805,7 +814,8 @@ describe('MDC-based MatChipListbox', () => {
         });
 
         it('should clear the selection when the control is reset', () => {
-          const array = chips.toArray();
+          fixture = createComponent(MultiSelectionChipListbox);
+          const array = fixture.componentInstance.chips.toArray();
 
           fixture.componentInstance.control.setValue(['pizza-1']);
           fixture.detectChanges();
@@ -824,6 +834,7 @@ describe('MDC-based MatChipListbox', () => {
   function createComponent<T>(
     component: Type<T>,
     direction: Direction = 'ltr',
+    beforeInitialChangeDetection?: (fixture: ComponentFixture<T>) => void,
   ): ComponentFixture<T> {
     directionality = {
       value: direction,
@@ -840,6 +851,7 @@ describe('MDC-based MatChipListbox', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent<T>(component);
+    beforeInitialChangeDetection?.(fixture);
     fixture.detectChanges();
 
     chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
@@ -926,7 +938,7 @@ class MultiSelectionChipListbox {
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
-  control = new FormControl<string | null>(null);
+  control = new FormControl<string[] | null>(null);
   isRequired: boolean;
   tabIndexOverride: number;
   selectable: boolean;
