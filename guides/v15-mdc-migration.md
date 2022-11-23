@@ -226,12 +226,12 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 * `<mat-card-content>` no longer sets any typography styles, users are free to add whatever
   typography styles make sense for their application, either to `<mat-card-content>` itself or any
   child elements as appropriate. For example:
-  
+
   ```scss
   @use '@angular/material' as mat;
   @include mat.typography-hierarchy();
   ```
-  
+
   ```html
   <mat-card>
     <mat-card-content class="mat-body-1">...</mat-card-content>
@@ -246,12 +246,12 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 * Checkbox touch targets are larger, now 40px instead of 16px, which is more accessible. Be sure to
   allow enough space in your layout so that the touch target does not overlap other components. If
-  you are not concerned with accessibility you can match the previous size by using density -5 for
+  you are not concerned with accessibility you can match the previous size by using density -1 for
   the checkbox.
-  
+
   ```scss
   @use '@angular/material' as mat;
-  @include mat.checkbox-density(-5px);
+  @include mat.checkbox-density(-1);
   ```
 
 * Checkbox color may be changed to white or black due to a change in heuristics based on the
@@ -461,11 +461,11 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 * The touch target is now much larger and more accessible. Be sure to allow enough space in your
   layout so that the touch target does not overlap other components. If you are not concerned with
-  accessibility you can match the previous size by using density -5 for the radio.
+  accessibility you can match the previous size by using density -1 for the radio.
 
   ```scss
   @use '@angular/material' as mat;
-  @include mat.radio-density(-5px);
+  @include mat.radio-density(-1);
   ```
 
 ### Select
@@ -491,11 +491,11 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 * The touch target is much larger and more accessible. Be sure to allow enough space in your
   layout so that the touch target does not overlap other components. If you are not concerned with
-  accessibility you can match the previous size by using density -5 for the slide-toggle.
+  accessibility you can match the previous size by using density -1 for the slide-toggle.
 
   ```scss
   @use '@angular/material' as mat;
-  @include mat.slide-toggle-density(-5px);
+  @include mat.slide-toggle-density(-1);
   ```
 
 * The label is closer to the enabled toggle
@@ -532,7 +532,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
     <input matSliderThumb>
   </mat-slider>
   ```
-  
+
 * The `tickInterval` property has been removed. To switch to the new API, use `showTickMarks` to
   create a slider with tick marks, and the interval for your tick marks will match your slider's
   `step`. The `tickInterval` property is under consideration to be added back in future releases.
