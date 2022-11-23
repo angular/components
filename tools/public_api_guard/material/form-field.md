@@ -13,7 +13,6 @@ import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i10 from '@angular/material/core';
 import * as i11 from '@angular/common';
@@ -66,7 +65,7 @@ export class MatError {
 }
 
 // @public
-export class MatFormField implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
+export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
     constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _dir: Directionality, _platform: Platform, _defaults?: MatFormFieldDefaultOptions | undefined, _animationMode?: string | undefined,
     _unusedDocument?: any);
     _animateAndLockLabel(): void;
@@ -91,6 +90,7 @@ export class MatFormField implements AfterContentInit, AfterContentChecked, Afte
     getConnectedOverlayOrigin(): ElementRef;
     _getDisplayedMessages(): 'error' | 'hint';
     getLabelId(): string | null;
+    _handleLabelResized(): void;
     // (undocumented)
     _hasFloatingLabel(): boolean;
     // (undocumented)
