@@ -2,7 +2,7 @@ import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {TAB, SPACE} from '@angular/cdk/keycodes';
+import {TAB, SPACE, ENTER} from '@angular/cdk/keycodes';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenu} from './menu';
@@ -425,13 +425,15 @@ describe('MenuTrigger', () => {
     });
 
     it('should toggle the menu on keyboard events', () => {
-      dispatchKeyboardEvent(nativeTrigger, 'keydown', SPACE);
+      const firstEvent = dispatchKeyboardEvent(nativeTrigger, 'keydown', ENTER);
       detectChanges();
+      expect(firstEvent.defaultPrevented).toBe(true);
       expect(nativeMenus.length).toBe(2);
 
-      dispatchKeyboardEvent(nativeTrigger, 'keydown', SPACE);
+      const secondEvent = dispatchKeyboardEvent(nativeTrigger, 'keydown', ENTER);
       detectChanges();
       expect(nativeMenus.length).toBe(1);
+      expect(secondEvent.defaultPrevented).toBe(true);
     });
 
     it('should close the open menu on background click', () => {

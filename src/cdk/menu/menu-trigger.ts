@@ -131,11 +131,11 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
    */
   _toggleOnKeydown(event: KeyboardEvent) {
     const isParentVertical = this._parentMenu?.orientation === 'vertical';
-    const keyCode = event.keyCode;
-    switch (keyCode) {
+    switch (event.keyCode) {
       case SPACE:
       case ENTER:
         if (!hasModifierKey(event)) {
+          event.preventDefault();
           this.toggle();
           this.childMenu?.focusFirstItem('keyboard');
         }
@@ -167,7 +167,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
           if (!isParentVertical) {
             event.preventDefault();
             this.open();
-            keyCode === DOWN_ARROW
+            event.keyCode === DOWN_ARROW
               ? this.childMenu?.focusFirstItem('keyboard')
               : this.childMenu?.focusLastItem('keyboard');
           }
