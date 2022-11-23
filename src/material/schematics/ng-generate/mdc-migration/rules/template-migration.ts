@@ -31,6 +31,9 @@ export class TemplateMigration extends Migration<ComponentMigrator[], SchematicC
         updates.push(...m.getUpdates(ast));
       } catch (error: any) {
         this.logger.error(`${error}`);
+        if (error instanceof Error) {
+          this.logger.error(`${error.stack}`);
+        }
         this.logger.warn(`Failed to process template: ${templateUrl} (see error above).`);
       }
     });
