@@ -46,8 +46,10 @@
     }
   }
 
+  .mat-icon,
   .mat-pseudo-checkbox {
     margin-right: mdc-list-variables.$side-padding;
+    flex-shrink: 0;
 
     [dir='rtl'] & {
       margin-right: 0;

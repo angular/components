@@ -24,6 +24,7 @@ import {
   Output,
   EventEmitter,
   QueryList,
+  ViewChild,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {MatOptgroup, MAT_OPTGROUP, _MatOptgroupBase} from './optgroup';
@@ -86,6 +87,9 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange<T>>();
 
+  /** Element containing the option's text. */
+  @ViewChild('text', {static: true}) _text: ElementRef<HTMLElement> | undefined;
+
   /** Emits when the state of the option changes and any parents have to be notified. */
   readonly _stateChanges = new Subject<void>();
 
@@ -112,7 +116,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
    */
   get viewValue(): string {
     // TODO(kara): Add input property alternative for node envs.
-    return (this._getHostElement().textContent || '').trim();
+    return (this._text?.nativeElement.textContent || '').trim();
   }
 
   /** Selects the option. */
