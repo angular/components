@@ -26,6 +26,8 @@ $mat-tab-animation-duration: 500ms !default;
 }
 
 @mixin tab {
+  -webkit-tap-highlight-color: transparent;
+
   &.mdc-tab {
     // This is usually included by MDC's tab bar, however we don't
     // use it because we implement our own pagination.
