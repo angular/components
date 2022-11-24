@@ -64,9 +64,6 @@ export interface SelectionList extends MatListBase {
   host: {
     'class': 'mat-mdc-list-item mat-mdc-list-option mdc-list-item',
     'role': 'option',
-    // As per MDC, only list items in single selection mode should receive the `--selected`
-    // class. For multi selection, the checkbox is used as indicator.
-    '[class.mdc-list-item--selected]': 'selected && !_selectionList.multiple',
     // Based on the checkbox/radio position and whether there are icons or avatars, we apply MDC's
     // list-item `--leading` and `--trailing` classes.
     '[class.mdc-list-item--with-leading-avatar]': '_hasProjected("avatars", "before")',

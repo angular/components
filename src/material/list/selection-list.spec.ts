@@ -1041,16 +1041,14 @@ describe('MDC-based MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
-      expect(listOptions[1].nativeElement.classList.contains('mdc-list-item--selected')).toBe(true);
+      expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('true');
 
       dispatchMouseEvent(testListItem2._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem2]);
-      expect(listOptions[1].nativeElement.classList.contains('mdc-list-item--selected')).toBe(
-        false,
-      );
-      expect(listOptions[2].nativeElement.classList.contains('mdc-list-item--selected')).toBe(true);
+      expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
     });
 
     it('should not show check boxes', () => {
