@@ -1188,7 +1188,7 @@ describe('MatMdcInput with forms', () => {
 
   describe('custom error behavior', () => {
     it('should display an error message when a custom error matcher returns true', fakeAsync(() => {
-      let fixture = createComponent(MatInputWithCustomErrorStateMatcher);
+      let fixture = createComponent(InputInFormGroup);
       fixture.detectChanges();
 
       let component = fixture.componentInstance;
@@ -1355,6 +1355,18 @@ describe('MatMdcInput with forms', () => {
     fixture.detectChanges();
 
     expect(notch.style.width).toBeTruthy();
+  }));
+
+  it('should mark the form field as disabled when a group is disabled with emitEvent: false', fakeAsync(() => {
+    const fixture = createComponent(InputInFormGroup);
+    fixture.detectChanges();
+
+    const mdcTextField = fixture.nativeElement.querySelector('.mdc-text-field');
+    expect(mdcTextField.classList).not.toContain('mdc-text-field--disabled');
+
+    fixture.componentInstance.formGroup.disable({emitEvent: false});
+    fixture.detectChanges();
+    expect(mdcTextField.classList).toContain('mdc-text-field--disabled');
   }));
 });
 
@@ -1793,7 +1805,7 @@ class MatInputWithFormErrorMessages {
     </form>
   `,
 })
-class MatInputWithCustomErrorStateMatcher {
+class InputInFormGroup {
   formGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.pattern(/valid value/)]),
   });
