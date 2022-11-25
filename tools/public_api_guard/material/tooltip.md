@@ -107,7 +107,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     _overlayRef: OverlayRef | null;
     get position(): TooltipPosition;
     set position(value: TooltipPosition);
-    // (undocumented)
     get positionAtOrigin(): boolean;
     set positionAtOrigin(value: BooleanInput);
     show(delay?: number, origin?: {
