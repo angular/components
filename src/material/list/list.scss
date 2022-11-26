@@ -33,6 +33,12 @@ a.mdc-list-item--activated {
 .mat-mdc-list-option {
   width: 100%;
   box-sizing: border-box;
+
+  // MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
+  // lists. See: https://github.com/material-components/material-components-web/issues/6443
+  &:not(.mat-mdc-list-item-interactive) {
+    cursor: default;
+  }
 }
 
 // MDC doesn't have list dividers, so we use mat-divider and style appropriately.
@@ -62,12 +68,6 @@ a.mdc-list-item--activated {
   content: '';
   opacity: 0;
   pointer-events: none;
-}
-
-// MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
-// lists. See: https://github.com/material-components/material-components-web/issues/6443
-.mat-mdc-list-non-interactive .mdc-list-item {
-  cursor: default;
 }
 
 // The MDC-based list items already use the `::before` pseudo element for the standard

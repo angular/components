@@ -38,7 +38,6 @@ import {
 
 @Directive({
   host: {
-    '[class.mat-mdc-list-non-interactive]': '_isNonInteractive',
     '[attr.aria-disabled]': 'disabled',
   },
 })
@@ -121,7 +120,10 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   @Input()
   get disableRipple(): boolean {
     return (
-      this.disabled || this._disableRipple || this._listBase.disableRipple || this._noopAnimations
+      this.disabled ||
+      this._disableRipple ||
+      this._noopAnimations ||
+      !!this._listBase?.disableRipple
     );
   }
   set disableRipple(value: boolean) {
@@ -132,7 +134,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   /** Whether the list-item is disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled || (this._listBase && this._listBase.disabled);
+    return this._disabled || !!this._listBase?.disabled;
   }
   set disabled(value: BooleanInput) {
     this._disabled = coerceBooleanProperty(value);
@@ -162,7 +164,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   constructor(
     public _elementRef: ElementRef<HTMLElement>,
     protected _ngZone: NgZone,
-    private _listBase: MatListBase,
+    @Optional() private _listBase: MatListBase | null,
     private _platform: Platform,
     @Optional()
     @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
@@ -173,7 +175,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
     this._hostElement = this._elementRef.nativeElement;
     this._noopAnimations = animationMode === 'NoopAnimations';
 
-    if (!this._listBase._isNonInteractive) {
+    if (_listBase && !_listBase._isNonInteractive) {
       this._initInteractiveListItem();
     }
 
