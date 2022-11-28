@@ -62,7 +62,7 @@ export class MatProgressSpinnerModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, [typeof i1.MatProgressSpinner, typeof i1.MatProgressSpinner], [typeof i2.CommonModule], [typeof i1.MatProgressSpinner, typeof i1.MatProgressSpinner, typeof i3.MatCommonModule]>;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const MatSpinner: typeof MatProgressSpinner;
 
 // @public
