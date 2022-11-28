@@ -10,6 +10,11 @@ $height-mobile-portrait: 56px !default;
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
+
+  .mat-mdc-button-base {
+    --mdc-text-button-label-text-color: inherit;
+    --mdc-outlined-button-label-text-color: inherit;
+  }
 }
 
 .mat-toolbar-row, .mat-toolbar-single-row {
