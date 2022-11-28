@@ -15,6 +15,7 @@
 
 .mat-mdc-slide-toggle {
   display: inline-block;
+  -webkit-tap-highlight-color: transparent;
 
   // Remove the native outline since we use the ripple for focus indication.
   outline: 0;
