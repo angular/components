@@ -14,6 +14,7 @@
     mdc-list-variables.$side-padding, $query: mdc-helpers.$mdc-base-styles-query);
   @include vendor-prefixes.user-select(none);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
   // If the MDC list is loaded after the option, this gets overwritten which breaks the text
   // alignment. Ideally we'd wrap all the MDC mixins above with this selector, but the increased

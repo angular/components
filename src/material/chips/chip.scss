@@ -59,6 +59,8 @@
 }
 
 .mat-mdc-standard-chip {
+  -webkit-tap-highlight-color: transparent;
+
   @include mdc-helpers.disable-mdc-fallback-declarations {
     @include mdc-chip-theme.theme-styles((
       // Static tokens

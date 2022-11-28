@@ -27,12 +27,13 @@ a.mdc-list-item--activated {
   }
 }
 
-// MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
-// cases, we need to make sure it expands to fill the available width.
 .mat-mdc-list-item,
 .mat-mdc-list-option {
+  // MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
+  // cases, we need to make sure it expands to fill the available width.
   width: 100%;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 
   // MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
   // lists. See: https://github.com/material-components/material-components-web/issues/6443
@@ -41,10 +42,8 @@ a.mdc-list-item--activated {
   }
 }
 
-// MDC doesn't have list dividers, so we use mat-divider and style appropriately.
-// TODO(devversion): check if we can use the MDC dividers.
-.mat-mdc-list-item,
-.mat-mdc-list-option {
+  // MDC doesn't have list dividers, so we use mat-divider and style appropriately.
+  // TODO(devversion): check if we can use the MDC dividers.
   .mat-divider-inset {
     position: absolute;
     left: 0;

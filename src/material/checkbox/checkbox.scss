@@ -30,6 +30,7 @@
 
   // Avoids issues in some CSS grid layouts (see #25153).
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 
   .mdc-checkbox {
     // MDC theme styles also include structural styles so we have to include the theme at least

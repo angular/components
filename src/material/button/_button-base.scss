@@ -10,6 +10,8 @@
 // ripple and state container so that they fill the button, match the border radius, and avoid
 // pointer events.
 @mixin mat-private-button-interactive() {
+  -webkit-tap-highlight-color: transparent;
+
   // The ripple container should match the bounds of the entire button.
   .mat-mdc-button-ripple,
   .mat-mdc-button-persistent-ripple,

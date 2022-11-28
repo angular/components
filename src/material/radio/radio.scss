@@ -15,6 +15,8 @@
 }
 
 .mat-mdc-radio-button {
+  -webkit-tap-highlight-color: transparent;
+
   .mdc-radio {
     // MDC theme styles also include structural styles so we have to include the theme at least
     // once here. The values will be overwritten by our own theme file afterwards.
