@@ -6,7 +6,8 @@ data source input and template, except that its element and attribute selectors 
 with `mat-` instead of `cdk-`.
 
 There are two types of trees: Flat tree and nested tree. The DOM structures are different for these
-two types of trees.
+two types of trees. Flat trees generally offer better performance, while nested trees provide
+flexibility.
 
 #### Flat tree
 In a flat tree, the hierarchy is flattened; nodes are not rendered inside of each other,
@@ -26,8 +27,9 @@ used to style the node such that it is indented to the appropriate level.
 
 <!-- example(tree-flat-overview) -->
 
-Flat trees are generally easier to style and inspect. They are also more friendly to
-scrolling variations, such as infinite or virtual scrolling
+Flat trees are generally easier to style and inspect. They are also more friendly to scrolling
+variations, such as infinite or virtual scrolling. Flat trees
+generally offer better performance.
 
 <!--TODO(tinayuangao): Add a flat tree example here -->
 
