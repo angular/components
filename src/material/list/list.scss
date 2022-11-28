@@ -40,7 +40,6 @@ a.mdc-list-item--activated {
   &:not(.mat-mdc-list-item-interactive) {
     cursor: default;
   }
-}
 
   // MDC doesn't have list dividers, so we use mat-divider and style appropriately.
   // TODO(devversion): check if we can use the MDC dividers.
