@@ -84,7 +84,7 @@ export class MatListItem extends MatListItemBase {
   constructor(
     element: ElementRef,
     ngZone: NgZone,
-    listBase: MatListBase,
+    @Optional() listBase: MatListBase | null,
     platform: Platform,
     @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
