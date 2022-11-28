@@ -23,6 +23,7 @@ describe('MDC-based MatList', () => {
         ActionListWithoutType,
         ActionListWithType,
         ListWithDisabledItems,
+        StandaloneListItem,
       ],
     });
 
@@ -369,6 +370,13 @@ describe('MDC-based MatList', () => {
 
     expect(listItems.every(item => item.classList.contains('mdc-list-item--disabled'))).toBe(true);
   });
+
+  it('should allow a list item outside of a list', () => {
+    expect(() => {
+      const fixture = TestBed.createComponent(StandaloneListItem);
+      fixture.detectChanges();
+    }).not.toThrow();
+  });
 });
 
 class BaseTestList {
@@ -558,3 +566,8 @@ class ListWithDisabledItems {
   firstItemDisabled = false;
   listDisabled = false;
 }
+
+@Component({
+  template: `<mat-list-item></mat-list-item>`,
+})
+class StandaloneListItem {}

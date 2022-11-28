@@ -58,7 +58,7 @@ export class MatList extends MatListBase {
 
 // @public (undocumented)
 export class MatListItem extends MatListItemBase {
-    constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase, platform: Platform, globalRippleOptions?: RippleGlobalOptions, animationMode?: string);
+    constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase | null, platform: Platform, globalRippleOptions?: RippleGlobalOptions, animationMode?: string);
     get activated(): boolean;
     set activated(activated: boolean);
     // (undocumented)
@@ -77,7 +77,7 @@ export class MatListItem extends MatListItemBase {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatListItem, "mat-list-item, a[mat-list-item], button[mat-list-item]", ["matListItem"], { "activated": "activated"; }, {}, ["_lines", "_titles", "_meta"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "[matListItemMeta]", "mat-divider"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatListItem, [null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatListItem, [null, null, { optional: true; }, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public
