@@ -164,10 +164,13 @@ export function updateAttribute(
   }
 
   const attr = node.attributes[0];
-  const ctx = attr.sourceSpan.start.getContext(attr.sourceSpan.start.col + 1, 1)!;
-  const indentation = ctx.before;
+  if (attr) {
+    const ctx = attr.sourceSpan.start.getContext(attr.sourceSpan.start.col + 1, 1)!;
+    const indentation = ctx.before;
+    return prefix + indentation + attrText + suffix;
+  }
 
-  return prefix + indentation + attrText + suffix;
+  return prefix + attrText + suffix;
 }
 
 /**
