@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
       - uses: ./.github/actions/yarn-install
 
-      - uses: angular/dev-infra/github-actions/setup-bazel-remote-exec@a632a1601469c0c0a2104cfa6bf1421d706ce80e
+      - uses: angular/dev-infra/github-actions/setup-bazel-remote-exec@a818bed04b1cf671f9af4f61331b12250da39a49
         with:
           bazelrc: ./.bazelrc.user
 
