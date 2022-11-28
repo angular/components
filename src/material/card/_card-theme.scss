@@ -1,6 +1,5 @@
 @use '../core/theming/theming';
 @use '../core/mdc-helpers/mdc-helpers';
-@use '../core/style/private';
 @use '../core/typography/typography';
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
@@ -15,18 +14,12 @@
 
   @include mdc-helpers.using-mdc-theme($config) {
     .mat-mdc-card {
-      // MDC's theme has `container-elevation` and `container-shadow-color` tokens, but we can't
-      // use them because they output under a `.mdc-card` selector whereas the rest of the theme
-      // isn't under any selector. Even if the mixin is pulled out of the selector, it throws a
-      // different error.
-      @include private.private-theme-elevation(1, $config);
       @include mdc-elevated-card-theme.theme((
         container-color: mdc-theme-color.prop-value(surface),
       ));
     }
 
     .mat-mdc-card-outlined {
-      @include private.private-theme-elevation(0, $config);
       @include mdc-outlined-card-theme.theme((
         outline-color: color.mix(mdc-theme-color.prop-value(on-surface),
           mdc-theme-color.prop-value(surface), 12%)
