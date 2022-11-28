@@ -160,9 +160,6 @@ export class MatInput
    */
   @Input()
   get disabled(): boolean {
-    if (this.ngControl && this.ngControl.disabled !== null) {
-      return this.ngControl.disabled;
-    }
     return this._disabled;
   }
   set disabled(value: BooleanInput) {
@@ -356,6 +353,15 @@ export class MatInput
       // error triggers that we can't subscribe to (e.g. parent form submissions). This means
       // that whatever logic is in here has to be super lean or we risk destroying the performance.
       this.updateErrorState();
+
+      // Since the input isn't a `ControlValueAccessor`, we don't have a good way of knowing when
+      // the disabled state has changed. We can't use the `ngControl.statusChanges`, because it
+      // won't fire if the input is disabled with `emitEvents = false`, despite the input becoming
+      // disabled.
+      if (this.ngControl.disabled !== null && this.ngControl.disabled !== this.disabled) {
+        this.disabled = this.ngControl.disabled;
+        this.stateChanges.next();
+      }
     }
 
     // We need to dirty-check the native element's value, because there are some cases where
