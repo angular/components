@@ -73,8 +73,4 @@ body {
 .demo-config-buttons {
   display: flex;
   align-items: center;
-
-  .mat-mdc-button-base {
-    --mdc-text-button-label-text-color: inherit;
-  }
 }
