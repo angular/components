@@ -784,6 +784,21 @@ describe('MatMdcInput without forms', () => {
     expect(iconSuffixEl.nativeElement.innerText.trim()).toEqual('favorite');
   }));
 
+  it('should allow ng-container as prefix and suffix', () => {
+    const fixture = createComponent(InputWithNgContainerPrefixAndSuffix);
+    fixture.detectChanges();
+
+    const textPrefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-text-prefix'))!;
+    const textSuffixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-text-suffix'))!;
+    const iconPrefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-icon-prefix'))!;
+    const iconSuffixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-icon-suffix'))!;
+
+    expect(textPrefixEl.nativeElement.innerText.trim()).toEqual('text-prefix');
+    expect(textSuffixEl.nativeElement.innerText.trim()).toEqual('text-suffix');
+    expect(iconPrefixEl.nativeElement.innerText.trim()).toEqual('icon-prefix');
+    expect(iconSuffixEl.nativeElement.innerText.trim()).toEqual('icon-suffix');
+  });
+
   it('should update empty class when value changes programmatically and OnPush', fakeAsync(() => {
     let fixture = createComponent(MatInputOnPush);
     fixture.detectChanges();
@@ -2064,3 +2079,16 @@ class MatInputWithRequiredFormControl {
   `,
 })
 class MatInputSimple {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <ng-container matIconPrefix>icon-prefix</ng-container>
+      <ng-container matTextPrefix>text-prefix</ng-container>
+      <input matInput>
+      <ng-container matTextSuffix>text-suffix</ng-container>
+      <ng-container matIconSuffix>icon-suffix</ng-container>
+    </mat-form-field>
+  `,
+})
+class InputWithNgContainerPrefixAndSuffix {}
