@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChildNode, Element, parseFragment} from 'parse5';
+import {parseFragment} from 'parse5';
+import {ChildNode, Element} from '../../utils';
 
 /**
  * Parses a HTML fragment and traverses all AST nodes in order find elements that
