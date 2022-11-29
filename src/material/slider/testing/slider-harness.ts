@@ -28,13 +28,13 @@ export class MatSliderHarness extends ComponentHarness {
     this: ComponentHarnessConstructor<T>,
     options: SliderHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption(
-      'isRange',
-      options.isRange,
-      async (harness, value) => {
+    return new HarnessPredicate(this, options)
+      .addOption('isRange', options.isRange, async (harness, value) => {
         return (await harness.isRange()) === value;
-      },
-    );
+      })
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 
   /** Gets the start thumb of the slider (only applicable for range sliders). */
