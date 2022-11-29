@@ -4,14 +4,16 @@
 /**
  * Usage:
  * ```sh
- * node tools/audit-docs <origin> <delay>
+ * node tools/audit-docs <deploy-dir|url> <delay>
  * ```
  *
  * Runs the configured audits on several (pre-defined) pages on the specified
  * origin. It fails if any score for any page is below the minimum (see
  * `MIN_SCORES_PER_PAGE` below).
  *
- * `<origin>` is the origin (scheme + hostname + port) of an material.angular.io
+ *  <deploy-dir> is a path to a directory which should be served and tested.
+ *
+ * `<url>` is the origin (scheme + hostname + port) of an material.angular.io
  *  deployment. It can be remote (e.g. `https://next.material.angular.io`) or local (e.g.
  *  `http://localhost:4200`).
  *
@@ -29,20 +31,19 @@ const lightServer = require('light-server');
 
 // Individual page a11y scores
 const MIN_A11Y_SCORES_PER_PAGE = {
-  '' : 100,
-  'components/categories' : 91,
-  'cdk/categories' : 91,
-  'guides' : 100,
-  'guide/creating-a-custom-form-field-control' : 97,
-  'guide/getting-started' : 96,
-  'cdk/a11y/overview' : 85,
-  'cdk/a11y/api' : 89,
-  'cdk/a11y/examples' : 85,
-  'components/button/overview' : 92,
-  'components/button/api' : 89,
-  'components/button/examples' : 90,
+  '': 100,
+  'components/categories': 91,
+  'cdk/categories': 91,
+  guides: 100,
+  'guide/creating-a-custom-form-field-control': 97,
+  'guide/getting-started': 96,
+  'cdk/a11y/overview': 85,
+  'cdk/a11y/api': 89,
+  'cdk/a11y/examples': 85,
+  'components/button/overview': 92,
+  'components/button/api': 89,
+  'components/button/examples': 90,
 };
-
 
 /**
  * @type {{minScores: {performance: number, accessibility: number, 'best-practices': number, pwa: number, seo: number}, url: string}[]}
@@ -51,17 +52,17 @@ const MIN_SCORES_PER_PAGE = [
   {
     url: '',
     minScores: {
-      'pwa': 70,
-      'performance': 25,
-      'seo': 98,
+      pwa: 70,
+      performance: 25,
+      seo: 98,
       'best-practices': 100,
-      'accessibility': 100
-    }
+      accessibility: 100,
+    },
   },
   ...Object.entries(MIN_A11Y_SCORES_PER_PAGE).map(([url, accessibility]) => ({
     url,
-    minScores: {accessibility}
-  }))
+    minScores: {accessibility},
+  })),
 ];
 
 /**
@@ -79,43 +80,49 @@ function formatScores(scores) {
   return formattedScores;
 }
 
-
 // Launch the light-server to run tests again
-const bundle = process.argv[2];
+const urlOrDeployDir = process.argv[2];
 const delay = process.argv[3];
+let origin = urlOrDeployDir;
 
-const bind = 'localhost';
-const port = 4200;
-const origin = `http://${bind}:${port}`;
+// If a directory has been specified instead of an origin,
+// we start light server for this directory.
+if (!/https?:\/\//.test(urlOrDeployDir)) {
+  const bind = 'localhost';
+  const port = 4200;
 
-console.log('Launch audit HTTP server...');
+  origin = `http://${bind}:${port}`;
+  console.log('Launch audit HTTP server...');
 
-lightServer({
-  port,
-  bind,
-  serve: bundle,
-  quiet: true,
-  noReload: true,
-  historyindex: '/index.html',
+  lightServer({
+    port,
+    bind,
+    serve: urlOrDeployDir,
+    quiet: true,
+    noReload: true,
+    historyindex: '/index.html',
 
-  // Defaults from .bin/light-server
-  interval: 500,
-  delay: 0,
-  proxypaths: ['/'],
-  watchexps: []
-})
-.start()
+    // Defaults from .bin/light-server
+    interval: 500,
+    delay: 0,
+    proxypaths: ['/'],
+    watchexps: [],
+  }).start();
+}
 
 // Run the a11y audit against the above pages
 const lighthouseAuditCmd = `"${process.execPath}" "${__dirname}/lighthouse-audit"`;
 
-setTimeout(async function() {
+setTimeout(async function () {
   console.log('Run audit tests...');
+  console.log('Origin:', origin);
 
   try {
     for (const {url, minScores} of MIN_SCORES_PER_PAGE) {
       await new Promise((resolve, reject) => {
-        const cp = sh.exec(`${lighthouseAuditCmd} ${origin}/${url} ${formatScores(minScores)}`, {async: true});
+        const cp = sh.exec(`${lighthouseAuditCmd} ${origin}/${url} ${formatScores(minScores)}`, {
+          async: true,
+        });
 
         cp.on('error', reject);
         cp.on('exit', err => (err ? reject : resolve)(err));
@@ -123,7 +130,7 @@ setTimeout(async function() {
     }
 
     process.exit(0);
-  } catch(e) {
+  } catch (e) {
     console.log('Audit failure: ', e);
     process.exit(1);
   }
