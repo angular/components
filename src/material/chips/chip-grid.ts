@@ -363,15 +363,7 @@ export class MatChipGrid
     // We must keep this up to date to handle the case where ids are set
     // before the chip input is registered.
     this._ariaDescribedbyIds = ids;
-
-    if (this._chipInput) {
-      // Use a setTimeout in case this is being run during change detection
-      // and the chip input has already determined its host binding for
-      // aria-describedBy.
-      setTimeout(() => {
-        this._chipInput.setDescribedByIds(ids);
-      }, 0);
-    }
+    this._chipInput?.setDescribedByIds(ids);
   }
 
   /**
