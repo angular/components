@@ -6,7 +6,7 @@ MDC_PACKAGE_VERSION = "15.0.0-canary.7971d6ad5.0"
 TSLIB_PACKAGE_VERSION = "^2.3.0"
 RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
 
-# Each placeholder is used to stamp versions during the build process, replacing the key with it's
+# Each placeholder is used to stamp versions during the build process, replacing the key with its
 # value pair. These replacements occur during building of `npm_package` and `ng_package` stamping in
 # the peer dependencies and versions, primarily in `package.json`s.
 NPM_PACKAGE_SUBSTITUTIONS = {
