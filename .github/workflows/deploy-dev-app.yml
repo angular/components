@@ -22,35 +22,11 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
-      - uses: ./.github/actions/yarn-install
-
-      - name: 'Download artifact from build job'
-        run: |
-          ./scripts/github/fetch-workflow-artifact.mjs ${{secrets.GITHUB_TOKEN}} \
-            ${{github.event.workflow_run.id}} devapp > devapp.zip
-
-      - name: Extracting workflow artifact into Firebase public directory.
-        run: |
-          mkdir -p dist/dev-app-web-pkg
-          unzip devapp.zip -d dist/dev-app-web-pkg
-
-      - name: Extracting pull request from extracted workflow artifact.
-        id: pr_info
-        run: |
-          echo "::set-output name=number::$(cat ./dist/dev-app-web-pkg/pr_number)"
-          echo "::set-output name=sha::$(cat ./dist/dev-app-web-pkg/pr_sha)"
-
-      - uses: FirebaseExtended/action-hosting-deploy@276388dd6c2cde23455b30293105cc866c22282d # renovate: tag=v0.0.0
-        id: deploy
+      - uses: angular/dev-infra/github-actions/deploy-previews/upload-artifacts-to-firebase@eba7bac8f0c7afd20cf63d48de1942d06efd0972
         with:
-          repoToken: '${{secrets.GITHUB_TOKEN}}'
-          firebaseServiceAccount: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
-          expires: 20d
-          projectId: ng-comp-dev
-          channelId: pr-${{steps.pr_info.outputs.number}}-${{steps.pr_info.outputs.sha}}
-
-      - uses: marocchino/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # renovate: tag=v2.0.0
-        with:
-          message: |
-            Deployed dev-app to: ${{ steps.deploy.outputs.details_url }}
-          number: ${{ steps.pr_info.outputs.number }}
+          github-token: '${{secrets.GITHUB_TOKEN}}'
+          workflow-artifact-name: 'dev-app'
+          firebase-config-dir: './'
+          firebase-public-dir: './dist/dev-app-web-pkg'
+          firebase-project-id: 'ng-comp-dev'
+          firebase-service-key: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
