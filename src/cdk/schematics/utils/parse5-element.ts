@@ -7,7 +7,12 @@
  */
 
 import {SchematicsException} from '@angular-devkit/schematics';
-import {Element} from 'parse5';
+import {DefaultTreeAdapterMap} from 'parse5';
+
+// At the time of writing `parse5` doesn't expose the node interfaces directly, even though
+// they're used as return types, but We can still access them through `DefaultTreeAdapterMap`.
+export type Element = DefaultTreeAdapterMap['element'];
+export type ChildNode = DefaultTreeAdapterMap['childNode'];
 
 /** Determines the indentation of child elements for the given Parse5 element. */
 export function getChildElementIndentation(element: Element) {

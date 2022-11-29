@@ -7,8 +7,8 @@
  */
 
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
-import {getChildElementIndentation} from './parse5-element';
-import {Element, parse as parseHtml} from 'parse5';
+import {Element, getChildElementIndentation} from './parse5-element';
+import {parse as parseHtml} from 'parse5';
 
 /** Appends the given element HTML fragment to the `<head>` element of the specified HTML file. */
 export function appendHtmlElementToHead(host: Tree, htmlFilePath: string, elementHtml: string) {
@@ -32,7 +32,7 @@ export function appendHtmlElementToHead(host: Tree, htmlFilePath: string, elemen
 
   // We always have access to the source code location here because the `getHeadTagElement`
   // function explicitly has the `sourceCodeLocationInfo` option enabled.
-  const endTagOffset = headTag.sourceCodeLocation!.endTag.startOffset;
+  const endTagOffset = headTag.sourceCodeLocation!.endTag!.startOffset;
   const indentationOffset = getChildElementIndentation(headTag);
   const insertion = `${' '.repeat(indentationOffset)}${elementHtml}`;
 
@@ -81,7 +81,7 @@ export function addBodyClass(host: Tree, htmlFilePath: string, className: string
   } else {
     const recordedChange = host
       .beginUpdate(htmlFilePath)
-      .insertRight(body.sourceCodeLocation!.startTag.endOffset - 1, ` class="${className}"`);
+      .insertRight(body.sourceCodeLocation!.startTag!.endOffset - 1, ` class="${className}"`);
     host.commitUpdate(recordedChange);
   }
 }

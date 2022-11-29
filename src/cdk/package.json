@@ -53,7 +53,7 @@
     "tslib": "0.0.0-TSLIB"
   },
   "optionalDependencies": {
-    "parse5": "^5.0.0"
+    "parse5": "^7.1.2"
   },
   "schematics": "./schematics/collection.json",
   "ng-update": {
