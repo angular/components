@@ -42,6 +42,7 @@ ng_app(
     deps = [
       "//:node_modules/@angular/components-examples",
       "//:node_modules/@stackblitz/sdk",
+      "//:node_modules/path-normalize",
       "//:node_modules/moment",
     ],
 )
