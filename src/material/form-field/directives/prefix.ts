@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, InjectionToken, Input} from '@angular/core';
+import {Directive, InjectionToken, Input} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `MatPrefix`. It serves as
