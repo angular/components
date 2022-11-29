@@ -1831,6 +1831,19 @@ describe('MatSelect', () => {
         expect(trigger.textContent!.trim()).toBe('Calzone');
       }));
 
+      it('should update the trigger value if the text as a result of an expression change', fakeAsync(() => {
+        fixture.componentInstance.control.setValue('pizza-1');
+        fixture.detectChanges();
+
+        expect(trigger.textContent!.trim()).toBe('Pizza');
+
+        fixture.componentInstance.capitalize = true;
+        fixture.detectChanges();
+        fixture.checkNoChanges();
+
+        expect(trigger.textContent!.trim()).toBe('PIZZA');
+      }));
+
       it('should not select disabled options', fakeAsync(() => {
         trigger.click();
         fixture.detectChanges();
@@ -5202,7 +5215,7 @@ describe('MatSelect', () => {
         [panelClass]="panelClass" [disableRipple]="disableRipple"
         [typeaheadDebounceInterval]="typeaheadDebounceInterval">
         <mat-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
-          {{ food.viewValue }}
+          {{ capitalize ? food.viewValue.toUpperCase() : food.viewValue }}
         </mat-option>
       </mat-select>
       <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
@@ -5233,6 +5246,7 @@ class BasicSelect {
   panelClass = ['custom-one', 'custom-two'];
   disableRipple: boolean;
   typeaheadDebounceInterval: number;
+  capitalize = false;
 
   @ViewChild(MatLegacySelect, {static: true}) select: MatLegacySelect;
   @ViewChildren(MatLegacyOption) options: QueryList<MatLegacyOption>;
