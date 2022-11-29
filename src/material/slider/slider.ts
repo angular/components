@@ -284,7 +284,7 @@ export class MatSlider
       this._updateStep(step);
     }
   }
-  private _step: number = 0;
+  private _step: number = 1;
 
   private _updateStep(step: number): void {
     this._step = step;
