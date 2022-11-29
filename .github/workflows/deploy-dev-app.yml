@@ -22,7 +22,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
-      - uses: angular/dev-infra/github-actions/deploy-previews/upload-artifacts-to-firebase@eba7bac8f0c7afd20cf63d48de1942d06efd0972
+      - uses: angular/dev-infra/github-actions/deploy-previews/upload-artifacts-to-firebase@f1a26a04e1edb6d0f2cf239a4036fa67b062447c
         with:
           github-token: '${{secrets.GITHUB_TOKEN}}'
           workflow-artifact-name: 'dev-app'
