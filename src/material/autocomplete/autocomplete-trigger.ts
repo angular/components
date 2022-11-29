@@ -201,13 +201,13 @@ export abstract class _MatAutocompleteTriggerBase
     private _zone: NgZone,
     private _changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
-    @Optional() private _dir: Directionality,
-    @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField,
+    @Optional() private _dir: Directionality | null,
+    @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField | null,
     @Optional() @Inject(DOCUMENT) private _document: any,
     private _viewportRuler: ViewportRuler,
     @Optional()
     @Inject(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS)
-    private _defaults?: MatAutocompleteDefaultOptions,
+    private _defaults?: MatAutocompleteDefaultOptions | null,
   ) {
     this._scrollStrategy = scrollStrategy;
   }
@@ -506,7 +506,9 @@ export abstract class _MatAutocompleteTriggerBase
   /** If the label has been manually elevated, return it to its normal state. */
   private _resetLabel(): void {
     if (this._manuallyFloatingLabel) {
-      this._formField.floatLabel = 'auto';
+      if (this._formField) {
+        this._formField.floatLabel = 'auto';
+      }
       this._manuallyFloatingLabel = false;
     }
   }
@@ -680,7 +682,7 @@ export abstract class _MatAutocompleteTriggerBase
       positionStrategy: this._getOverlayPosition(),
       scrollStrategy: this._scrollStrategy(),
       width: this._getPanelWidth(),
-      direction: this._dir,
+      direction: this._dir ?? undefined,
       panelClass: this._defaults?.overlayPanelClass,
     });
   }
