@@ -199,7 +199,7 @@ export class MatChipSet
     if (this.tabIndex !== -1) {
       this.tabIndex = -1;
 
-      setTimeout(() => {
+      Promise.resolve().then(() => {
         this.tabIndex = previousTabIndex;
         this._changeDetectorRef.markForCheck();
       });

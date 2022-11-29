@@ -229,7 +229,6 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     set addOnBlur(value: BooleanInput);
     // (undocumented)
     _addOnBlur: boolean;
-    _ariaDescribedby?: string;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
     set chipGrid(value: MatChipGrid);
