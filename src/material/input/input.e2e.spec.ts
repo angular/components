@@ -20,7 +20,7 @@ describe('input', () => {
 
     it('should increment when increment button clicked', async () => {
       const input = element(by.id('number-input'));
-      await input.click();
+      await browser.actions().mouseMove(input).click().perform();
 
       const size = await input.getSize();
 
