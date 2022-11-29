@@ -20,11 +20,15 @@
     border: none;
   }
 
-  // In order to ensure proper alignment of the floating label, we reset its line-height.
-  // The line-height is not important as the element is absolutely positioned and only has one line
-  // of text.
   .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+    // In order to ensure proper alignment of the floating label, we reset its line-height.
+    // The line-height is not important as the element is absolutely positioned and only has one
+    // line of text.
     line-height: normal;
+    // This allows users to focus the input by clicking the part of the label above the outline box,
+    // and makes migration from the legacy form-field easier for tests that were depending on
+    // clicking the label to focus the input.
+    pointer-events: all;
   }
 
   // Reset the height that MDC sets on native input elements. We cannot rely on their
