@@ -16,4 +16,6 @@ export interface ButtonToggleHarnessFilters extends BaseHarnessFilters {
   name?: string | RegExp;
   /** Only find instances that are checked. */
   checked?: boolean;
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
 }

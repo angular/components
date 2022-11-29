@@ -37,7 +37,10 @@ export class MatButtonToggleHarness extends ComponentHarness {
         'checked',
         options.checked,
         async (harness, checked) => (await harness.isChecked()) === checked,
-      );
+      )
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 
   /** Gets a boolean promise indicating if the button toggle is checked. */

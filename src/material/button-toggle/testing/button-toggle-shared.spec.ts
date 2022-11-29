@@ -47,6 +47,17 @@ export function runHarnessTests(
     expect(await uncheckedToggle.isChecked()).toBe(false);
   });
 
+  it('should filter by whether the group is disabled', async () => {
+    const enabledToggles = await loader.getAllHarnesses(
+      buttonToggleHarness.with({disabled: false}),
+    );
+    const disabledToggles = await loader.getAllHarnesses(
+      buttonToggleHarness.with({disabled: true}),
+    );
+    expect(enabledToggles.length).toBe(1);
+    expect(disabledToggles.length).toBe(1);
+  });
+
   it('should get the toggle disabled state', async () => {
     const [enabledToggle, disabledToggle] = await loader.getAllHarnesses(buttonToggleHarness);
     expect(await enabledToggle.isDisabled()).toBe(false);
