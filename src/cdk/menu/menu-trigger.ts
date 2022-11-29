@@ -25,6 +25,7 @@ import {
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {fromEvent} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
@@ -191,13 +192,6 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
    * into.
    */
   private _subscribeToMouseEnter() {
-    // Closes any sibling menu items and opens the menu associated with this trigger.
-    const toggleMenus = () =>
-      this._ngZone.run(() => {
-        this._closeSiblingTriggers();
-        this.open();
-      });
-
     this._ngZone.runOutsideAngular(() => {
       fromEvent(this._elementRef.nativeElement, 'mouseenter')
         .pipe(
@@ -205,6 +199,13 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
           takeUntil(this.destroyed),
         )
         .subscribe(() => {
+          // Closes any sibling menu items and opens the menu associated with this trigger.
+          const toggleMenus = () =>
+            this._ngZone.run(() => {
+              this._closeSiblingTriggers();
+              this.open();
+            });
+
           if (this._menuAim) {
             this._menuAim.toggle(toggleMenus);
           } else {
@@ -283,19 +284,17 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     if (this.overlayRef) {
       this.overlayRef
         .outsidePointerEvents()
-        .pipe(
-          filter(
-            e =>
-              e.target != this._elementRef.nativeElement &&
-              !this._elementRef.nativeElement.contains(e.target as Element),
-          ),
-          takeUntil(this.stopOutsideClicksListener),
-        )
+        .pipe(takeUntil(this.stopOutsideClicksListener))
         .subscribe(event => {
-          if (!this.isElementInsideMenuStack(event.target as Element)) {
-            this.menuStack.closeAll();
-          } else {
-            this._closeSiblingTriggers();
+          const target = _getEventTarget(event) as Element;
+          const element = this._elementRef.nativeElement;
+
+          if (target !== element && !element.contains(target)) {
+            if (!this.isElementInsideMenuStack(target)) {
+              this.menuStack.closeAll();
+            } else {
+              this._closeSiblingTriggers();
+            }
           }
         });
     }
