@@ -180,6 +180,7 @@ export abstract class _MatSlideToggleBase<T>
     this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
       if (focusOrigin === 'keyboard' || focusOrigin === 'program') {
         this._focused = true;
+        this._changeDetectorRef.markForCheck();
       } else if (!focusOrigin) {
         // When a focused element becomes disabled, the browser *immediately* fires a blur event.
         // Angular does not expect events to be raised during change detection, so any state
