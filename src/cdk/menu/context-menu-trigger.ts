@@ -15,6 +15,7 @@ import {
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
@@ -191,7 +192,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
         outsideClicks = merge(nonAuxClicks, auxClicks.pipe(skip(1)));
       }
       outsideClicks.pipe(takeUntil(this.stopOutsideClicksListener)).subscribe(event => {
-        if (!this.isElementInsideMenuStack(event.target as Element)) {
+        if (!this.isElementInsideMenuStack(_getEventTarget(event)!)) {
           this.menuStack.closeAll();
         }
       });
