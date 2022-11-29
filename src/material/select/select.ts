@@ -961,7 +961,10 @@ export abstract class _MatSelectBase<C>
     merge(...this.options.map(option => option._stateChanges))
       .pipe(takeUntil(changedOrDestroyed))
       .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
+        // `_stateChanges` can fire as a result of a change in the label's DOM value which may
+        // be the result of an expression changing. We have to use `detectChanges` in order
+        // to avoid "changed after checked" errors (see #14793).
+        this._changeDetectorRef.detectChanges();
         this.stateChanges.next();
       });
   }
