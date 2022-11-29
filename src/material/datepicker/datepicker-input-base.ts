@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, hasModifierKey, ModifierKey} from '@angular/cdk/keycodes';
 import {
   Directive,
   ElementRef,
@@ -305,7 +305,11 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   }
 
   _onKeydown(event: KeyboardEvent) {
-    const isAltDownArrow = event.altKey && event.keyCode === DOWN_ARROW;
+    const ctrlShiftMetaModifiers: ModifierKey[] = ['ctrlKey', 'shiftKey', 'metaKey'];
+    const isAltDownArrow =
+      hasModifierKey(event, 'altKey') &&
+      event.keyCode === DOWN_ARROW &&
+      ctrlShiftMetaModifiers.every((modifier: ModifierKey) => !hasModifierKey(event, modifier));
 
     if (isAltDownArrow && !this._elementRef.nativeElement.readOnly) {
       this._openPopup();

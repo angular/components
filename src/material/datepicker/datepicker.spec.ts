@@ -550,6 +550,27 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepicker.opened).toBe(false);
       }));
 
+      it('should not close the datepicker when using CTRL + SHIFT + ALT + UP_ARROW', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        tick();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(true);
+
+        const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {
+          alt: true,
+          shift: true,
+          control: true,
+        });
+
+        dispatchEvent(document.body, event);
+        fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(true);
+      }));
+
       it('should open the datepicker using ALT + DOWN_ARROW', fakeAsync(() => {
         expect(testComponent.datepicker.opened).toBe(false);
 
@@ -575,6 +596,24 @@ describe('MatDatepicker', () => {
 
         dispatchEvent(input, event);
         fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(false);
+        expect(event.defaultPrevented).toBe(false);
+      }));
+
+      it('should not open the datepicker using SHIFT + CTRL + ALT + DOWN_ARROW', fakeAsync(() => {
+        expect(testComponent.datepicker.opened).toBe(false);
+
+        const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {
+          alt: true,
+          shift: true,
+          control: true,
+        });
+
+        dispatchEvent(fixture.nativeElement.querySelector('input'), event);
+        fixture.detectChanges();
+        tick();
         flush();
 
         expect(testComponent.datepicker.opened).toBe(false);

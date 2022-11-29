@@ -13,6 +13,7 @@ import {
   ESCAPE,
   hasModifierKey,
   LEFT_ARROW,
+  ModifierKey,
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
@@ -819,6 +820,7 @@ export abstract class MatDatepickerBase<
 
   /** Gets an observable that will emit when the overlay is supposed to be closed. */
   private _getCloseStream(overlayRef: OverlayRef) {
+    const ctrlShiftMetaModifiers: ModifierKey[] = ['ctrlKey', 'shiftKey', 'metaKey'];
     return merge(
       overlayRef.backdropClick(),
       overlayRef.detachments(),
@@ -827,7 +829,12 @@ export abstract class MatDatepickerBase<
           // Closing on alt + up is only valid when there's an input associated with the datepicker.
           return (
             (event.keyCode === ESCAPE && !hasModifierKey(event)) ||
-            (this.datepickerInput && hasModifierKey(event, 'altKey') && event.keyCode === UP_ARROW)
+            (this.datepickerInput &&
+              hasModifierKey(event, 'altKey') &&
+              event.keyCode === UP_ARROW &&
+              ctrlShiftMetaModifiers.every(
+                (modifier: ModifierKey) => !hasModifierKey(event, modifier),
+              ))
           );
         }),
       ),
