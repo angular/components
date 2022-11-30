@@ -223,22 +223,24 @@ export class MatLabel {
 
 // @public
 export class MatPrefix {
-    constructor(elementRef: ElementRef);
     // (undocumented)
     _isText: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPrefix, "[matPrefix], [matIconPrefix], [matTextPrefix]", never, {}, {}, never, never, false, never>;
+    set _isTextSelector(value: '');
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPrefix, "[matPrefix], [matIconPrefix], [matTextPrefix]", never, { "_isTextSelector": "matTextPrefix"; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPrefix, never>;
 }
 
 // @public
 export class MatSuffix {
-    constructor(elementRef: ElementRef);
     // (undocumented)
     _isText: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSuffix, "[matSuffix], [matIconSuffix], [matTextSuffix]", never, {}, {}, never, never, false, never>;
+    set _isTextSelector(value: '');
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSuffix, "[matSuffix], [matIconSuffix], [matTextSuffix]", never, { "_isTextSelector": "matTextSuffix"; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSuffix, never>;
 }
