@@ -119,15 +119,6 @@ information on this see the guide on
 will set the color of the form field underline and floating label based on the theme colors
 of your app.
 
-`<mat-form-field>` inherits its `font-size` from its parent element. This can be overridden to an
-explicit size using CSS. We recommend a specificity of at least 1 element + 1 class.
-
-```css
-mat-form-field.mat-form-field {
-  font-size: 16px;
-}
-```
-
 <!-- example(form-field-theming) -->
 
 ### Accessibility
