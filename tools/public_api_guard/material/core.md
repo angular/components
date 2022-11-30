@@ -263,7 +263,7 @@ export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisabl
 export class MatOption<T = any> extends _MatOptionBase<T> {
     constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatOptionParentComponent, group: MatOptgroup);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], {}, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], {}, {}, never, ["mat-icon", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -297,6 +297,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     setActiveStyles(): void;
     setInactiveStyles(): void;
     readonly _stateChanges: Subject<void>;
+    _text: ElementRef<HTMLElement> | undefined;
     value: T;
     get viewValue(): string;
     // (undocumented)
