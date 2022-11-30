@@ -1,3 +1,48 @@
+<a name="15.0.1"></a>
+# 15.0.1 "gypsum-garland" (2022-11-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e1686a87f](https://github.com/angular/components/commit/e1686a87f3d4d6e83946b3a910050c2a20459289) | fix | **a11y:** live announcer not working with aria-modal element ([#25978](https://github.com/angular/components/pull/25978)) |
+| [52e8f448a](https://github.com/angular/components/commit/52e8f448acaf0a64e163c2539d50ba795ff15ddf) | fix | **menu:** not closing when inside shadow DOM ([#26112](https://github.com/angular/components/pull/26112)) |
+| [84bb6608f](https://github.com/angular/components/commit/84bb6608f495a2f81ed6d0345e9b7556752d8963) | fix | **menu:** prevent default selection key actions ([#26051](https://github.com/angular/components/pull/26051)) |
+| [a3c4c00e9](https://github.com/angular/components/commit/a3c4c00e98e65e06c70cec491173ee869a3e1b06) | fix | **menu:** remove unused var ([#26140](https://github.com/angular/components/pull/26140)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0cd409e5b](https://github.com/angular/components/commit/0cd409e5b94da4ad389e2b4c64e40fd615218c76) | fix | **chips:** initial value from forms not reflected in the view ([#26052](https://github.com/angular/components/pull/26052)) |
+| [a64ded01e](https://github.com/angular/components/commit/a64ded01ed8e6f0a6a7a2fae6daf7a2435519da7) | fix | **chips:** make focus overlay not affect text color ([#25892](https://github.com/angular/components/pull/25892)) |
+| [a779d210a](https://github.com/angular/components/commit/a779d210ae80f680018e8a6baab79e63c45d74ee) | fix | **core:** icons not aligned inside mat-option ([#26054](https://github.com/angular/components/pull/26054)) |
+| [c0311aa37](https://github.com/angular/components/commit/c0311aa37bc824b1277f48a409f06dc38f0225ce) | fix | **core:** reintroduce opacity in elevation mixin ([#26015](https://github.com/angular/components/pull/26015)) |
+| [4300f3929](https://github.com/angular/components/commit/4300f39291dd08b830384daeeaa641988bd91922) | fix | **core:** ripples not being removed if container is hidden ([#26096](https://github.com/angular/components/pull/26096)) |
+| [261820ea2](https://github.com/angular/components/commit/261820ea26a46ba156b497614313d8bfc8356fb6) | fix | **datepicker:** date range inputs not aligning in some cases ([#25967](https://github.com/angular/components/pull/25967)) |
+| [dc4e451a2](https://github.com/angular/components/commit/dc4e451a206b022210238eca25304365ab49b77b) | fix | **datepicker:** resolve typing issue when extending datepicker input in legacy app ([#25988](https://github.com/angular/components/pull/25988)) |
+| [e0917085d](https://github.com/angular/components/commit/e0917085d37916d06a7cac824eec26f17694a093) | fix | **form-field:** allow clicking on floating label ([#26110](https://github.com/angular/components/pull/26110)) |
+| [00618a99c](https://github.com/angular/components/commit/00618a99c478f9b111c38d4a0c9723888f9a25bb) | fix | **form-field:** change selector to allow density class on form field ([#26075](https://github.com/angular/components/pull/26075)) |
+| [16ae0be2b](https://github.com/angular/components/commit/16ae0be2bd057a079dffd0f58b4ebafef08454d5) | fix | **form-field:** don't block click on prefix/suffix when disabled ([#25987](https://github.com/angular/components/pull/25987)) |
+| [febf5dc06](https://github.com/angular/components/commit/febf5dc069866143f4933e7c6237327fa4e6c14b) | fix | **form-field:** not visually disabled if form control is disabled without emitting an event ([#26088](https://github.com/angular/components/pull/26088)) |
+| [e922f03be](https://github.com/angular/components/commit/e922f03bea5ae166c15b79a2e39bd38ec81f4c55) | fix | **list:** allow mat-list-item outside list ([#26092](https://github.com/angular/components/pull/26092)) |
+| [78bd450f1](https://github.com/angular/components/commit/78bd450f1d090a7043db5aedb3a053086d8d9ef7) | fix | **list:** hover indication blocking interactions ([#26016](https://github.com/angular/components/pull/26016)) |
+| [6e40e97be](https://github.com/angular/components/commit/6e40e97be0addf6bccf250947c9f8a435b2ceda4) | fix | **list:** pointer events disabled around content ([#26012](https://github.com/angular/components/pull/26012)) |
+| [a9fea8f14](https://github.com/angular/components/commit/a9fea8f141d0078db4c37eefc95e4820782a3397) | fix | **schematics:** add undefined check ([#26081](https://github.com/angular/components/pull/26081)) |
+| [ffb5d077c](https://github.com/angular/components/commit/ffb5d077c5fefdddd25ff76856749413575497e5) | fix | **schematics:** ensure mdc migration compatibility with nx ([#26027](https://github.com/angular/components/pull/26027)) |
+| [a804a949d](https://github.com/angular/components/commit/a804a949d227f68f8606c8ee07cbcebd3827b046) | fix | **schematics:** improve mdc-migration error logging ([#26060](https://github.com/angular/components/pull/26060)) |
+| [f61a21382](https://github.com/angular/components/commit/f61a213821d37917235ab270d5ccff240d4bd6e8) | fix | **select:** changed after checked error if option label changes ([#23315](https://github.com/angular/components/pull/23315)) |
+| [1566ab10d](https://github.com/angular/components/commit/1566ab10d3e68222bf91c4bc9b72ec8fb1b9f9f6) | fix | **slide-toggle:** focus indication not showing inside OnPush parent ([#26111](https://github.com/angular/components/pull/26111)) |
+| [c9a5474f4](https://github.com/angular/components/commit/c9a5474f45c7b1ea387d6e4870bb0068962331fe) | fix | **slider:** fix slider resize w/ transforms ([#26044](https://github.com/angular/components/pull/26044)) |
+| [8aa4a49d7](https://github.com/angular/components/commit/8aa4a49d72b28ea146c52f0fc2fbe744e3fa5318) | fix | **slider:** form control w/ initial disabled state ([#25972](https://github.com/angular/components/pull/25972)) |
+| [dcde7684f](https://github.com/angular/components/commit/dcde7684fe3817760aa7aec480b0c32fe3a48fef) | fix | **slider:** update VI when toggling discrete ([#25985](https://github.com/angular/components/pull/25985)) |
+| [c70875d38](https://github.com/angular/components/commit/c70875d3889d4f0b90fbeed05f256980ed18b966) | fix | **toolbar:** inherit toolbar color in flat buttons ([#26089](https://github.com/angular/components/pull/26089)) |
+| [7755aa547](https://github.com/angular/components/commit/7755aa547858f04462e32c3a73710bf1ee441e93) | perf | **chips:** reduce amount of macro tasks ([#26113](https://github.com/angular/components/pull/26113)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8b53abda9](https://github.com/angular/components/commit/8b53abda978c4bb28b27fd8ef590ab5907af293c) | fix | remove touch tap highlights ([#26073](https://github.com/angular/components/pull/26073)) |
+## Special Thanks
+Andy Chrzaszcz, Bobby Galli, Joey Perrott, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Totati, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.0"></a>
 # 15.0.0 "diamond-dinosaur" (2022-11-16)
 ## Breaking Changes
