@@ -27,7 +27,6 @@ const DRAG_DROP_DIRECTIVES = [
 
 @NgModule({
   imports: DRAG_DROP_DIRECTIVES,
-  declarations: DRAG_DROP_DIRECTIVES,
   exports: [CdkScrollableModule, ...DRAG_DROP_DIRECTIVES],
   providers: [DragDrop],
 })
