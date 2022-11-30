@@ -14,6 +14,7 @@ import { MatLegacyOptionHarness } from '@angular/material/legacy-core/testing';
 
 // @public @deprecated
 export interface LegacyAutocompleteHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
     value?: string | RegExp;
 }
 
