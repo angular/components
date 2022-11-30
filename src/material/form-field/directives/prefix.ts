@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, InjectionToken} from '@angular/core';
+import {Directive, InjectionToken, Input} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `MatPrefix`. It serves as
@@ -21,9 +21,10 @@ export const MAT_PREFIX = new InjectionToken<MatPrefix>('MatPrefix');
   providers: [{provide: MAT_PREFIX, useExisting: MatPrefix}],
 })
 export class MatPrefix {
-  _isText = false;
-
-  constructor(elementRef: ElementRef) {
-    this._isText = elementRef.nativeElement.hasAttribute('matTextPrefix');
+  @Input('matTextPrefix')
+  set _isTextSelector(value: '') {
+    this._isText = true;
   }
+
+  _isText = false;
 }

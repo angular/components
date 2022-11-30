@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, InjectionToken} from '@angular/core';
+import {Directive, InjectionToken, Input} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `MatSuffix`. It serves as
@@ -21,9 +21,10 @@ export const MAT_SUFFIX = new InjectionToken<MatSuffix>('MatSuffix');
   providers: [{provide: MAT_SUFFIX, useExisting: MatSuffix}],
 })
 export class MatSuffix {
-  _isText = false;
-
-  constructor(elementRef: ElementRef) {
-    this._isText = elementRef.nativeElement.hasAttribute('matTextSuffix');
+  @Input('matTextSuffix')
+  set _isTextSelector(value: '') {
+    this._isText = true;
   }
+
+  _isText = false;
 }
