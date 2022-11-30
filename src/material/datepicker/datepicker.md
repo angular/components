@@ -480,6 +480,9 @@ information about `MAT_DATE_FORMATS`.
 export class MyApp {}
 ```
 
+If you need to work with native `Date` objects, but need custom behavior (for example custom date
+parsing), you can consider subclassing `NativeDateAdapter`.
+
 #### Customizing the parse and display formats
 
 The `MAT_DATE_FORMATS` object is a collection of formats that the datepicker uses when parsing
