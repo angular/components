@@ -27,6 +27,7 @@ export const CDK_DROP_LIST_GROUP = new InjectionToken<CdkDropListGroup<unknown>>
 @Directive({
   selector: '[cdkDropListGroup]',
   exportAs: 'cdkDropListGroup',
+  standalone: true,
   providers: [{provide: CDK_DROP_LIST_GROUP, useExisting: CdkDropListGroup}],
 })
 export class CdkDropListGroup<T> implements OnDestroy {
