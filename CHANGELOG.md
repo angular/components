@@ -1,3 +1,23 @@
+<a name="15.1.0-next.0"></a>
+# 15.1.0-next.0 "calcite-cranium" (2022-11-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e0a74b9c2](https://github.com/angular/components/commit/e0a74b9c2bf0aabaedbfdc13ebc2cb3e7f24115b) | feat | **menu:** Allow setting cdkMenuTriggerFor null ([#25818](https://github.com/angular/components/pull/25818)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8554e1538](https://github.com/angular/components/commit/8554e15383ac482f8ad6f0b1d21f7d24900f1edc) | feat | **datepicker:** Support drag and drop to adjust date ranges ([#25548](https://github.com/angular/components/pull/25548)) |
+| [c370e064d](https://github.com/angular/components/commit/c370e064d4a9cd74223ae5d9e793f884b7a6a6f1) | feat | **tabs:** add a harness filter for tab selected state ([#25806](https://github.com/angular/components/pull/25806)) |
+| [44657e262](https://github.com/angular/components/commit/44657e2624cd66f6f9c20413572c0e68f6994cb1) | fix | **autocomplete:** apply theme of parent form field to panel ([#25983](https://github.com/angular/components/pull/25983)) |
+| [9b1f49f6f](https://github.com/angular/components/commit/9b1f49f6f21d0a2898c736af4c646bae6c027dd6) | fix | **chips:** add support for aria-description ([#25935](https://github.com/angular/components/pull/25935)) |
+| [d02cc6817](https://github.com/angular/components/commit/d02cc6817cddee66303ba9242a33d94ace320ad1) | fix | **datepicker:** fix date picker shortcuts ([#25951](https://github.com/angular/components/pull/25951)) |
+| [57676e467](https://github.com/angular/components/commit/57676e467a1ed9875def9a825746799c3427c942) | fix | **list:** add radio toggles ([#25933](https://github.com/angular/components/pull/25933)) |
+## Special Thanks
+Amy Sorto, David Klingenberg, Joey Perrott, Karl Seamon, Miles Malerba, Sasidharan SD, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.1"></a>
 # 15.0.1 "gypsum-garland" (2022-11-30)
 ### cdk
