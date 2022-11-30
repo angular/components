@@ -2,7 +2,7 @@ import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {TAB, SPACE, ENTER} from '@angular/cdk/keycodes';
+import {TAB, ENTER} from '@angular/cdk/keycodes';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenu} from './menu';
