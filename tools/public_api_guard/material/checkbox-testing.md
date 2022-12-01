@@ -14,6 +14,7 @@ import { TestElement } from '@angular/cdk/testing';
 // @public
 export interface CheckboxHarnessFilters extends BaseHarnessFilters {
     checked?: boolean;
+    disabled?: boolean;
     label?: string | RegExp;
     name?: string;
 }

@@ -51,6 +51,19 @@ export function runHarnessTests(
     expect(await checkboxes[0].getLabelText()).toBe('Second');
   });
 
+  it('should load checkbox with disabled state', async () => {
+    let enabledCheckboxes = await loader.getAllHarnesses(checkboxHarness.with({disabled: false}));
+    let disabledCheckboxes = await loader.getAllHarnesses(checkboxHarness.with({disabled: true}));
+    expect(enabledCheckboxes.length).toBe(1);
+    expect(disabledCheckboxes.length).toBe(1);
+
+    fixture.componentInstance.disabled = false;
+    enabledCheckboxes = await loader.getAllHarnesses(checkboxHarness.with({disabled: false}));
+    disabledCheckboxes = await loader.getAllHarnesses(checkboxHarness.with({disabled: true}));
+    expect(enabledCheckboxes.length).toBe(2);
+    expect(disabledCheckboxes.length).toBe(0);
+  });
+
   it('should get checked state', async () => {
     const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(checkboxHarness);
     expect(await checkedCheckbox.isChecked()).toBe(true);
