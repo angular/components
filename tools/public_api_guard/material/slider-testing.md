@@ -45,6 +45,7 @@ export class MatSliderThumbHarness extends ComponentHarness {
 
 // @public
 export interface SliderHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
     isRange?: boolean;
 }
 
