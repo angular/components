@@ -26,7 +26,13 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
   static with(
     options: ButtonToggleGroupHarnessFilters = {},
   ): HarnessPredicate<MatButtonToggleGroupHarness> {
-    return new HarnessPredicate(MatButtonToggleGroupHarness, options);
+    return new HarnessPredicate(MatButtonToggleGroupHarness, options).addOption(
+      'disabled',
+      options.disabled,
+      async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      },
+    );
   }
 
   /**

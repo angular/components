@@ -11,11 +11,13 @@ import { MatButtonToggleAppearance } from '@angular/material/button-toggle';
 
 // @public
 export interface ButtonToggleGroupHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
 }
 
 // @public
 export interface ButtonToggleHarnessFilters extends BaseHarnessFilters {
     checked?: boolean;
+    disabled?: boolean;
     name?: string | RegExp;
     text?: string | RegExp;
 }
