@@ -17,6 +17,8 @@ import {MatButtonModule} from '@angular/material/button';
 
 interface DialogData {
   color: string;
+  discrete: boolean;
+  showTickMarks: boolean;
 }
 
 @Component({
@@ -105,6 +107,8 @@ export class SliderDemo {
     this.dialog.open(SliderDialogDemo, {
       data: {
         color: this.colorModel,
+        discrete: this.discrete,
+        showTickMarks: this.showTickMarks,
       },
     });
   }
@@ -116,10 +120,10 @@ export class SliderDemo {
   template: `
   <h1 mat-dialog-title>Slider in a dialog</h1>
   <div class="demo-dialog-content" mat-dialog-content>
-    <mat-slider discrete showTickMarks [color]="this.data.color" step="10">
+  <mat-slider [discrete]="this.data.discrete" [showTickMarks]="this.data.showTickMarks" [color]="this.data.color" step="10">
       <input value="50" matSliderThumb>
     </mat-slider>
-    <mat-slider discrete showTickMarks [color]="this.data.color" step="10">
+    <mat-slider [discrete]="this.data.discrete" [showTickMarks]="this.data.showTickMarks" [color]="this.data.color" step="10">
       <input value="30" matSliderStartThumb>
       <input value="70" matSliderEndThumb>
     </mat-slider>
