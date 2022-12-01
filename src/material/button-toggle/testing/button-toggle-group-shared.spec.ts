@@ -42,6 +42,24 @@ export function runHarnessTests(
     expect(await group.isDisabled()).toBe(true);
   });
 
+  it('should filter by whether the group is disabled', async () => {
+    let enabledGroups = await loader.getAllHarnesses(
+      buttonToggleGroupHarness.with({disabled: false}),
+    );
+    let disabledGroups = await loader.getAllHarnesses(
+      buttonToggleGroupHarness.with({disabled: true}),
+    );
+    expect(enabledGroups.length).toBe(1);
+    expect(disabledGroups.length).toBe(0);
+
+    fixture.componentInstance.disabled = true;
+
+    enabledGroups = await loader.getAllHarnesses(buttonToggleGroupHarness.with({disabled: false}));
+    disabledGroups = await loader.getAllHarnesses(buttonToggleGroupHarness.with({disabled: true}));
+    expect(enabledGroups.length).toBe(0);
+    expect(disabledGroups.length).toBe(1);
+  });
+
   it('should get whether the group is vertical', async () => {
     const group = await loader.getHarness(buttonToggleGroupHarness);
     expect(await group.isVertical()).toBe(false);
