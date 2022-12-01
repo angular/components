@@ -47,6 +47,20 @@ describe('MDC-based MatSliderHarness', () => {
     expect(await slider.isDisabled()).toBe(true);
   });
 
+  it('should filter by whether a slider is disabled', async () => {
+    let enabledSliders = await loader.getAllHarnesses(MatSliderHarness.with({disabled: false}));
+    let disabledSliders = await loader.getAllHarnesses(MatSliderHarness.with({disabled: true}));
+    expect(enabledSliders.length).toBe(2);
+    expect(disabledSliders.length).toBe(0);
+
+    fixture.componentInstance.singleSliderDisabled = true;
+
+    enabledSliders = await loader.getAllHarnesses(MatSliderHarness.with({disabled: false}));
+    disabledSliders = await loader.getAllHarnesses(MatSliderHarness.with({disabled: true}));
+    expect(enabledSliders.length).toBe(1);
+    expect(disabledSliders.length).toBe(1);
+  });
+
   it('should get the min/max values of a single-thumb slider', async () => {
     const slider = await loader.getHarness(MatSliderHarness);
     const [min, max] = await parallel(() => [slider.getMinValue(), slider.getMaxValue()]);
