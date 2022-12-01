@@ -160,8 +160,12 @@ export class MatAutocompleteHarness extends _MatAutocompleteHarnessBase<
     this: ComponentHarnessConstructor<T>,
     options: AutocompleteHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption('value', options.value, (harness, value) =>
-      HarnessPredicate.stringMatches(harness.getValue(), value),
-    );
+    return new HarnessPredicate(this, options)
+      .addOption('value', options.value, (harness, value) =>
+        HarnessPredicate.stringMatches(harness.getValue(), value),
+      )
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 }
