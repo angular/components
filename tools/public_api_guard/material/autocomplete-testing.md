@@ -15,6 +15,7 @@ import { OptionHarnessFilters } from '@angular/material/core/testing';
 
 // @public
 export interface AutocompleteHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
     value?: string | RegExp;
 }
 

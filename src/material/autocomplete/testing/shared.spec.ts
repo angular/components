@@ -52,6 +52,13 @@ export function runHarnessTests(
     expect(await disabled.isDisabled()).toBe(true);
   });
 
+  it('should filter by whether an autocomplete is disabled', async () => {
+    const enabledInputs = await loader.getAllHarnesses(autocompleteHarness.with({disabled: false}));
+    const disabledInputs = await loader.getAllHarnesses(autocompleteHarness.with({disabled: true}));
+    expect(enabledInputs.length).toBe(4);
+    expect(disabledInputs.length).toBe(1);
+  });
+
   it('should focus and blur an input', async () => {
     const input = await loader.getHarness(autocompleteHarness.with({selector: '#plain'}));
     expect(await input.isFocused()).toBe(false);

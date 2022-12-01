@@ -16,4 +16,7 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 export interface LegacyAutocompleteHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose associated input element matches the given value. */
   value?: string | RegExp;
+
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
 }
