@@ -11,6 +11,7 @@ import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
 export interface ButtonHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
     text?: string | RegExp;
     variant?: ButtonVariant;
 }

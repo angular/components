@@ -34,7 +34,10 @@ export class MatLegacyButtonHarness extends ContentContainerComponentHarness {
       )
       .addOption('variant', options.variant, (harness, variant) =>
         HarnessPredicate.stringMatches(harness.getVariant(), variant),
-      );
+      )
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 
   /**
