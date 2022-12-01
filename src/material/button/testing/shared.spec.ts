@@ -50,6 +50,13 @@ export function runHarnessTests(
     expect(await buttons[1].getText()).toBe('Basic anchor');
   });
 
+  it('should filter by whether a button is disabled', async () => {
+    const enabledButtons = await loader.getAllHarnesses(buttonHarness.with({disabled: false}));
+    const disabledButtons = await loader.getAllHarnesses(buttonHarness.with({disabled: true}));
+    expect(enabledButtons.length).toBe(13);
+    expect(disabledButtons.length).toBe(2);
+  });
+
   it('should get disabled state', async () => {
     // Grab each combination of [enabled, disabled] ⨯ [button, anchor]
     const [disabledFlatButton, enabledFlatAnchor] = await loader.getAllHarnesses(

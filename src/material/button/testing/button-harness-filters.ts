@@ -18,4 +18,7 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
 
   /** Only find instances with a variant. */
   variant?: ButtonVariant;
+
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
 }
