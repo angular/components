@@ -6,6 +6,10 @@
     @include button-theme.theme($theme);
     @include icon-button-theme.theme($theme);
   }
+
+  .mat-datepicker-toggle {
+    @include icon-button-theme.theme($theme);
+  }
 }
 
 @mixin legacy-button-compat() {
