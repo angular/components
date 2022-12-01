@@ -35,9 +35,13 @@ export class MatChipHarness extends ContentContainerComponentHarness {
     this: ComponentHarnessConstructor<T>,
     options: ChipHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption('text', options.text, (harness, label) => {
-      return HarnessPredicate.stringMatches(harness.getText(), label);
-    });
+    return new HarnessPredicate(this, options)
+      .addOption('text', options.text, (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getText(), label);
+      })
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 
   /** Gets a promise for the text content the option. */

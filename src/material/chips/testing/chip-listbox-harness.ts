@@ -29,7 +29,13 @@ export class MatChipListboxHarness extends ComponentHarness {
     this: ComponentHarnessConstructor<T>,
     options: ChipListboxHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options);
+    return new HarnessPredicate(this, options).addOption(
+      'disabled',
+      options.disabled,
+      async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      },
+    );
   }
 
   /** Gets whether the chip listbox is disabled. */

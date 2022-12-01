@@ -26,6 +26,19 @@ describe('MatChipGridHarness', () => {
     expect(harnesses.length).toBe(1);
   });
 
+  it('should load chip grids with disabled state match', async () => {
+    let enabledChips = await loader.getAllHarnesses(MatChipGridHarness.with({disabled: false}));
+    let disabledChips = await loader.getAllHarnesses(MatChipGridHarness.with({disabled: true}));
+    expect(enabledChips.length).toBe(1);
+    expect(disabledChips.length).toBe(0);
+
+    fixture.componentInstance.control.disable();
+    enabledChips = await loader.getAllHarnesses(MatChipGridHarness.with({disabled: false}));
+    disabledChips = await loader.getAllHarnesses(MatChipGridHarness.with({disabled: true}));
+    expect(enabledChips.length).toBe(0);
+    expect(disabledChips.length).toBe(1);
+  });
+
   it('should get correct number of rows', async () => {
     const harness = await loader.getHarness(MatChipGridHarness);
     const rows = await harness.getRows();

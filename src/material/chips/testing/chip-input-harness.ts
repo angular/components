@@ -34,6 +34,9 @@ export class MatChipInputHarness extends ComponentHarness {
       })
       .addOption('placeholder', options.placeholder, async (harness, placeholder) => {
         return (await harness.getPlaceholder()) === placeholder;
+      })
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
       });
   }
 
