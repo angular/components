@@ -21,7 +21,6 @@ export class DialogOverviewExample {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '250px',
       data: {name: this.name, animal: this.animal},
     });
 
