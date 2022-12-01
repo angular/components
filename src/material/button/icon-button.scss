@@ -31,6 +31,13 @@
   // Prevent the button from shrinking since it's always supposed to be a circle.
   flex-shrink: 0;
 
+  // Ensure the icons are centered.
+  text-align: center;
+
+  svg {
+    vertical-align: baseline;
+  }
+
   @include button-base.mat-private-button-disabled() {
     // The color is already dimmed when the button is disabled. Restore the opacity both to
     // help with the color contrast and to align with what we had before switching to the new API.
