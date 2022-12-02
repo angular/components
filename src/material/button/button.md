@@ -32,6 +32,19 @@ certain locales. It is also worth noting that using ALL CAPS in the text itself 
 screen-readers, which will read the text character-by-character. We leave the decision of how to
 approach this to the consuming app.
 
+### Extended fab buttons
+Traditional fab buttons ar circular and only have space for a single icon. However, you can add the
+`extended` attribute to allow the fab to expand into a rounded rectangle shape with space for a text
+label in addition to the icon. Only full sized fabs support the `extended` attribute, mini fabs do
+not.
+
+```html
+<button mat-fab extended>
+  <mat-icon>home</mat-icon>
+  Home
+</button>
+```
+
 ### Accessibility
 Angular Material uses native `<button>` and `<a>` elements to ensure an accessible experience by
 default. A `<button>` element should be used for any interaction that _performs an action on the
