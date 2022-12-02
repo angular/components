@@ -260,10 +260,7 @@ export class MatSelectionList extends MatListBase implements SelectionList, Cont
 export class MatSelectionListChange {
     constructor(
     source: MatSelectionList,
-    option: MatListOption,
     options: MatListOption[]);
-    // @deprecated
-    option: MatListOption;
     options: MatListOption[];
     source: MatSelectionList;
 }
