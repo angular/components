@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 $padding: 24px !default;
 $border-radius: 4px !default;
 $max-height: 65vh !default;
@@ -22,7 +20,7 @@ $button-margin: 8px !default;
   min-height: inherit;
   max-height: inherit;
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }

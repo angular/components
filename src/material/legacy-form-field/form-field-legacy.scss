@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 // Styles that only apply to the legacy appearance of the form-field.
 
 // The height of the underline.
@@ -34,7 +32,7 @@ $legacy-underline-height: 1px !default;
   .mat-form-field-underline {
     height: $legacy-underline-height;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       height: 0;
       border-top: solid $legacy-underline-height;
     }
@@ -49,7 +47,7 @@ $legacy-underline-height: 1px !default;
     // the desired form-field ripple height. See: angular/components#6351
     overflow: hidden;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       height: 0;
       border-top: solid $height;
     }
@@ -59,7 +57,7 @@ $legacy-underline-height: 1px !default;
     background-position: 0;
     background-color: transparent;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       border-top-style: dotted;
       border-top-width: 2px;
       border-top-color: GrayText;

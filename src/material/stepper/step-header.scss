@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/layout-common';
 @use './stepper-variables';
 
@@ -17,7 +15,7 @@
     content: '';
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
 
     &[aria-selected='true'] {

@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 $horizontal-padding: 8px;
 $max-width: 250px;
 $margin: 14px;
@@ -23,7 +21,7 @@ $handset-margin: 24px;
     transform: scale(1);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }

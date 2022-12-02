@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/button-common';
 
@@ -173,7 +172,7 @@ $calendar-range-end-body-cell-size:
   // Fade out the disabled cells so that they can be distinguished from the enabled ones. Note that
   // ideally we'd use `color: GreyText` here which is what the browser uses for disabled buttons,
   // but we can't because Firefox doesn't recognize it.
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     opacity: 0.5;
   }
 }
@@ -206,12 +205,12 @@ $calendar-range-end-body-cell-size:
     position: absolute;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     border: none;
   }
 }
 
-@include cdk.high-contrast(active, off) {
+@media(forced-colors: active) {
   $main-range-border: solid 1px;
   $comparison-range-border: dashed 1px;
 
@@ -227,7 +226,10 @@ $calendar-range-end-body-cell-size:
   // These backgrounds need to be removed, because they'll block the date ranges.
   .mat-calendar-body-cell::before,
   .mat-calendar-body-cell::after,
-  .mat-calendar-body-selected {
+  .mat-calendar-body-selected,
+  .mat-calendar-body-in-range.mat-calendar-body-cell::before,
+  .mat-calendar-body-in-range.mat-calendar-body-cell::after,
+  .mat-calendar-body-in-range .mat-calendar-body-selected {
     background: none;
   }
 

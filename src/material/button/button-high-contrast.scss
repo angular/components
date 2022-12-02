@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 // Add an outline to make buttons more visible in high contrast mode. Stroked buttons and FABs
 // don't need a special look in high-contrast mode, because those already have an outline.
 .mat-mdc-button:not(.mdc-button--outlined),
@@ -7,7 +5,7 @@
 .mat-mdc-raised-button:not(.mdc-button--outlined),
 .mat-mdc-outlined-button:not(.mdc-button--outlined),
 .mat-mdc-icon-button {
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }

@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use '@material/menu-surface/mixins' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list;
 
@@ -16,7 +15,7 @@
   transform-origin: center top;
 
   @include mdc-list.list-base($query: structure);
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 

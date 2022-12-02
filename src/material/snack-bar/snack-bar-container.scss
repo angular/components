@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '@angular/cdk';
 @use '@material/snackbar/snackbar' as mdc-snackbar;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use '../core/mdc-helpers/mdc-helpers';
@@ -60,7 +59,7 @@
   // of positions, so we'll defer logic there.
   position: static;
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     border: solid 1px;
   }
 

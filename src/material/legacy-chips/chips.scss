@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/variables';
 @use '../core/style/elevation';
 @use '../core/style/layout-common';
@@ -99,12 +97,14 @@ $chip-remove-size: 18px;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
+  @media(forced-colors: active) {
+    &.mat-focus-indicator {
+      outline: solid 1px;
 
-    // Seleted state is shown using a background color which isn't visible in high contrast mode.
-    &.mat-chip-selected {
-      outline-width: 3px;
+      // Seleted state is shown using a background color which isn't visible in high contrast mode.
+      &.mat-chip-selected {
+        outline-width: 3px;
+      }
     }
   }
 

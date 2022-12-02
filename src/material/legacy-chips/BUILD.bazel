@@ -41,7 +41,6 @@ sass_binary(
     name = "chips_scss",
     src = "chips.scss",
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/variables';
 @use '../core/style/elevation';
@@ -39,7 +38,7 @@ $header-size: 40px !default;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }

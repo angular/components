@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/variables';
 @use '../core/ripple/ripple';
@@ -96,7 +95,7 @@ $ripple-radius: 20px;
     opacity: 1;
     transition: $base-transition;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       // Since we use a background color to render the circle, it won't be
       // displayed in high contrast mode. Use a border as a fallback.
       border: solid math.div($size, 2);
@@ -216,7 +215,7 @@ $ripple-radius: 20px;
   content: '';
 }
 
-@include cdk.high-contrast(active, off) {
+@media(forced-colors: active) {
   .mat-radio-disabled {
     opacity: 0.5;
   }

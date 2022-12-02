@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 // The bottom sheet minimum width on larger screen sizes is based
 // on increments of the toolbar, according to the spec. See:
 // https://material.io/guidelines/components/bottom-sheets.html#bottom-sheets-specs
@@ -17,7 +15,7 @@ $container-horizontal-padding: 16px !default;
   max-height: 80vh;
   overflow: auto;
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: 1px solid;
   }
 }

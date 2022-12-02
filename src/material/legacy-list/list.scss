@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/list-common';
 @use '../core/style/layout-common';
 @use '../divider/divider-offset';
@@ -310,12 +308,12 @@ mat-action-list {
 
   // Since we can't use a color to indicate that the list
   // item is disabled, we have to use opacity instead.
-  @include cdk.high-contrast {
+  @media(forced-colors: active) {
     opacity: 0.5;
   }
 }
 
-@include cdk.high-contrast(active, off) {
+@media(forced-colors: active) {
   .mat-list-option,
   .mat-nav-list .mat-list-item,
   mat-action-list .mat-list-item {

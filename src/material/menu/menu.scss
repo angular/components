@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '@angular/cdk';
 @use '@material/menu-surface' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list-mixins;
 @use '@material/list/evolution-variables' as mdc-list-variables;
@@ -22,7 +21,7 @@ mat-menu {
 }
 
 .mat-mdc-menu-panel {
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }
@@ -119,7 +118,7 @@ mat-menu {
     @include menu-common.item-submenu-trigger(mdc-list-variables.$side-padding);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     $outline-width: 1px;
 
     // We need to move the item 1px down, because Firefox seems to have

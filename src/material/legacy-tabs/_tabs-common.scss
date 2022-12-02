@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/variables';
 @use '../core/style/private';
 @use '../core/style/vendor-prefixes';
@@ -34,7 +32,7 @@ $tab-animation-duration: 500ms !default;
   &.mat-tab-disabled {
     cursor: default;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       opacity: 0.5;
     }
   }
@@ -46,7 +44,7 @@ $tab-animation-duration: 500ms !default;
     white-space: nowrap;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     opacity: 1;
   }
 }
@@ -68,7 +66,7 @@ $tab-animation-duration: 500ms !default;
     top: 0;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid $height;
     height: 0;
   }

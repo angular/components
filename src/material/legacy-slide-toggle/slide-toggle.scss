@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/vendor-prefixes';
 @use '../core/style/variables';
@@ -228,7 +227,7 @@ $bar-track-width: $bar-width - $thumb-size;
 }
 
 // Custom styling to make the slide-toggle usable in high contrast mode.
-@include cdk.high-contrast(active, off) {
+@media(forced-colors: active) {
   .mat-slide-toggle-thumb,
   .mat-slide-toggle-bar {
     border: 1px solid;

@@ -39,7 +39,6 @@ sass_binary(
     src = "button.scss",
     deps = [
         ":legacy_button_scss_lib",
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
         "//src/material/datepicker:datepicker_scss_lib",
     ],

@@ -44,7 +44,6 @@ sass_binary(
     name = "list_scss",
     src = "list.scss",
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
         "//src/material/divider:divider_scss_lib",
     ],

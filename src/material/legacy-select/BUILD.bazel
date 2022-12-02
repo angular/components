@@ -33,7 +33,6 @@ sass_binary(
     name = "legacy_select_scss",
     src = "select.scss",
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

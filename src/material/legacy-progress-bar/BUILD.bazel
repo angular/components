@@ -37,7 +37,6 @@ sass_binary(
     name = "progress_bar_scss",
     src = "progress-bar.scss",
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

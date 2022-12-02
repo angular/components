@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/variables';
 
@@ -28,19 +27,19 @@ $fill-subscript-padding: math.div($fill-side-padding, $fill-subscript-font-scale
     padding: $fill-line-spacing $fill-side-padding 0
              $fill-side-padding;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       outline: solid 1px;
     }
   }
 
   &.mat-form-field-disabled .mat-form-field-flex {
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       outline-color: GrayText;
     }
   }
 
   &.mat-focused .mat-form-field-flex {
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       outline: dashed 3px;
     }
   }
@@ -58,7 +57,7 @@ $fill-subscript-padding: math.div($fill-side-padding, $fill-subscript-font-scale
     bottom: 0;
     height: $fill-underline-ripple-height;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       // In high-contrast mode, we hide the ripple as we have a dashed outline as
       // focus indicator.
       height: 0;

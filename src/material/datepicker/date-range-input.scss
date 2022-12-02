@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
@@ -103,7 +102,7 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
       -webkit-text-fill-color: transparent;
       transition: none;
 
-      @include cdk.high-contrast(active, off) {
+      @media(forced-colors: active) {
         // In high contrast mode the browser will render the
         // placeholder despite the `color: transparent` above.
         opacity: 0;

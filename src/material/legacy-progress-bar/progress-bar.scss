@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/vendor-prefixes';
 @use '../core/style/private';
 
@@ -32,7 +30,7 @@ $piece-animation-duration: 250ms !default;
     // during the background scroll animation.
     width: calc(100% + 10px);
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       display: none;
     }
   }
@@ -43,7 +41,7 @@ $piece-animation-duration: 250ms !default;
     transform-origin: top left;
     transition: transform $piece-animation-duration ease;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       border-top: solid 5px;
       opacity: 0.5;
     }
@@ -61,7 +59,7 @@ $piece-animation-duration: 250ms !default;
     transform-origin: top left;
     transition: transform $piece-animation-duration ease;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       border-top: solid $height;
     }
   }

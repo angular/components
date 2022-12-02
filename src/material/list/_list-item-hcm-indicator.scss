@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use '@material/list/evolution-variables' as mdc-list-variables;
 
 // Renders a circle indicator when Windows Hich Constrast mode (HCM) is enabled. In some
@@ -6,7 +5,7 @@
 // its background color. Since that doesn't work in HCM, this mixin provides an alternative by
 // rendering a circle.
 @mixin private-high-contrast-list-item-indicator() {
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
         &::after {
             $size: 10px;
             content: '';

@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/menu-common';
 
 // The max-height of the panel, currently matching mat-select value.
@@ -37,7 +35,7 @@ $panel-border-radius: 4px !default;
     margin-top: -1px;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }

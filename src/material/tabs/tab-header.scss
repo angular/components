@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use './tabs-common';
 
 @include tabs-common.paginated-tab-header;
@@ -18,7 +17,7 @@
     margin: 5px;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     // When a tab is disabled in high contrast mode, set the text color to the disabled
     // color, which is (unintuitively) named "GrayText".
     &[aria-disabled='true'] {

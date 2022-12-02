@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '@angular/cdk';
 @use '../style/layout-common';
 @use '../theming/theming';
 
@@ -46,7 +45,7 @@ $default-border-radius: 4px;
   }
 
   // Enable the indicator in high contrast mode.
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     @include customize-focus-indicators((display: block), $prefix);
   }
 }

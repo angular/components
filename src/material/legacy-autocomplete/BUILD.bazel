@@ -39,7 +39,6 @@ sass_binary(
     name = "legacy_autocomplete_scss",
     src = "autocomplete.scss",
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

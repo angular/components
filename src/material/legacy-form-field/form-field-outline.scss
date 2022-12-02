@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/variables';
 
@@ -119,7 +118,7 @@ $outline-subscript-padding: math.div($outline-side-padding, $outline-subscript-f
   }
 
   &.mat-focused .mat-form-field-outline-thick {
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       border: 3px dashed;
     }
   }
@@ -140,7 +139,7 @@ $outline-subscript-padding: math.div($outline-side-padding, $outline-subscript-f
   }
 
   &.mat-form-field-disabled .mat-form-field-outline {
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       color: GrayText;
     }
   }

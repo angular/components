@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/vendor-prefixes';
 @use '../core/style/layout-common';
 
@@ -23,7 +21,7 @@ $legacy-border-radius: 2px !default;
   // Fixes the ripples not being clipped to the border radius on Safari.
   transform: translateZ(0);
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }
@@ -32,7 +30,7 @@ $legacy-border-radius: 2px !default;
 .mat-button-toggle-group-appearance-standard {
   border-radius: $standard-border-radius;
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: 0;
   }
 }
@@ -116,7 +114,7 @@ $legacy-border-radius: 2px !default;
   opacity: 0;
 }
 
-@include cdk.high-contrast(active, off) {
+@media(forced-colors: active) {
   // Changing the background color for the selected item won't be visible in high contrast mode.
   // We fall back to using the overlay to draw a brighter, semi-transparent tint on top instead.
   // It uses a border, because the browser will render it using a brighter color.
@@ -125,6 +123,11 @@ $legacy-border-radius: 2px !default;
       border-bottom: solid $legacy-height;
       opacity: 0.5;
       height: 0;
+    }
+
+    // Ensure opacity is correctly set for legacy appearance.
+    &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
+      opacity: 0.5;
     }
 
     &:hover .mat-button-toggle-focus-overlay {

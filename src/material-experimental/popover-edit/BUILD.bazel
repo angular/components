@@ -26,7 +26,6 @@ sass_library(
     name = "popover_edit_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material:sass_lib",
     ],
 )

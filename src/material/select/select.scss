@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 @use '@material/menu-surface' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list;
 @use '../core/style/vendor-prefixes';
@@ -79,7 +78,7 @@ $scale: 0.75 !default;
     left: 50%;
     transform: translate(-50%, -50%);
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       // On Chromium browsers the `currentColor` blends in with the
       // background for SVGs so we have to fall back to `CanvasText`.
       fill: CanvasText;
@@ -100,7 +99,7 @@ $scale: 0.75 !default;
   outline: 0;
 
   @include mdc-list.list-base($query: structure);
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 

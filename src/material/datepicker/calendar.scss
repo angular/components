@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/layout-common';
 @use '../core/focus-indicators/private';
 
@@ -64,7 +62,7 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
     margin: 0 $calendar-arrow-size 0 0;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     // Setting the fill to `currentColor` doesn't work on Chromium browsers.
     fill: CanvasText;
   }

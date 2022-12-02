@@ -57,7 +57,6 @@ sass_binary(
     src = "expansion-panel-header.scss",
     deps = [
         ":expansion_scss_lib",
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

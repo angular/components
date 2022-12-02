@@ -30,7 +30,6 @@ sass_binary(
     name = "card_scss",
     src = "card.scss",
     deps = [
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

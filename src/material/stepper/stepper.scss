@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use 'sass:math';
 
 @use '../core/style/variables';
@@ -145,7 +144,7 @@
 }
 
 .mat-horizontal-content-container {
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 
@@ -158,7 +157,7 @@
 }
 
 .mat-vertical-content-container {
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 

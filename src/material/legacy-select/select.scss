@@ -1,5 +1,4 @@
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/style/menu-common';
 @use '../core/style/list-common';
@@ -110,7 +109,7 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
   border-radius: 4px;
   outline: 0;
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 }

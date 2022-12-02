@@ -5,7 +5,6 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:math';
-@use '@angular/cdk';
 
 @use '../core/theming/theming';
 @use '../core/typography/typography';
@@ -167,7 +166,7 @@ $_badge-structure-emitted: false !default;
     color: theming.get-color-from-palette($primary, default-contrast);
     background: theming.get-color-from-palette($primary);
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       outline: solid 1px;
       border-radius: 0;
     }

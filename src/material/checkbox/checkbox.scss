@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use '@material/checkbox/checkbox' as mdc-checkbox;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
@@ -100,7 +99,7 @@
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     &.mat-mdc-checkbox-disabled {
       opacity: 0.5;
     }

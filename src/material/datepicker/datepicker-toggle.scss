@@ -1,12 +1,10 @@
-@use '@angular/cdk';
-
 // We support the case where the form field is disabled, but the datepicker is not.
 // MDC sets `pointer-events: none` on disabled form fields which prevents clicks on the toggle.
 .mat-datepicker-toggle {
   pointer-events: auto;
 }
 
-@include cdk.high-contrast(active, off) {
+@media(forced-colors: active) {
   .mat-datepicker-toggle-default-icon {
     // On Chromium-based browsers the icon doesn't appear to inherit the text color in high
     // contrast mode so we have to set it explicitly. This is a no-op on IE and Firefox.

@@ -1,6 +1,4 @@
 
-@use '@angular/cdk';
-
 @use '../core/style/variables';
 @use '../core/style/elevation';
 
@@ -35,7 +33,7 @@
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     outline: solid 1px;
   }
 

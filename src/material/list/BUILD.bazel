@@ -39,9 +39,6 @@ ng_module(
 sass_library(
     name = "hcm_indicator_scss_lib",
     srcs = ["_list-item-hcm-indicator.scss"],
-    deps = [
-        "//:mdc_sass_lib",
-    ],
 )
 
 sass_library(

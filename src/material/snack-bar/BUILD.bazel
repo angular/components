@@ -49,7 +49,6 @@ sass_binary(
     src = "snack-bar-container.scss",
     deps = [
         "//:mdc_sass_lib",
-        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

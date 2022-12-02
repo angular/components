@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use 'sass:math';
 
 @use '../../core/style/menu-common';
@@ -36,7 +35,7 @@
     content: '';
   }
 
-  @include cdk.high-contrast(active, off) {
+  @media(forced-colors: active) {
     // Fade out the option when it is disabled so that it can be distinguished from the enabled
     // options. Note that ideally we'd use `color: GreyText` here which is what the browser uses
     // for disabled buttons, but we can't because Firefox doesn't recognize it.

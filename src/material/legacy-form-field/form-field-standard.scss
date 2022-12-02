@@ -1,5 +1,3 @@
-@use '@angular/cdk';
-
 @use '../core/style/variables';
 
 
@@ -22,7 +20,7 @@ $standard-padding-top: 0.75em !default;
   .mat-form-field-underline {
     height: $standard-underline-height;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       height: 0;
       border-top: solid $standard-underline-height;
     }
@@ -33,7 +31,7 @@ $standard-padding-top: 0.75em !default;
     bottom: 0;
     height: $height;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       height: 0;
       border-top: solid $height;
     }
@@ -43,7 +41,7 @@ $standard-padding-top: 0.75em !default;
     background-position: 0;
     background-color: transparent;
 
-    @include cdk.high-contrast(active, off) {
+    @media(forced-colors: active) {
       border-top-style: dotted;
       border-top-width: 2px;
     }
