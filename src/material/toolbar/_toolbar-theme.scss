@@ -21,21 +21,21 @@
 }
 
 @mixin _form-field-overrides {
-  .mat-form-field-underline,
-  .mat-form-field-ripple,
-  .mat-focused .mat-form-field-ripple {
+  .mat-mdc-form-field-underline,
+  .mat-mdc-form-field-ripple,
+  .mat-mdc-focused .mat-mdc-form-field-ripple {
     background-color: currentColor;
   }
 
-  .mat-form-field-label,
-  .mat-focused .mat-form-field-label,
-  .mat-select-value,
-  .mat-select-arrow,
-  .mat-form-field.mat-focused .mat-select-arrow {
+  .mat-mdc-form-field-label,
+  .mat-mdc-focused .mat-mdc-form-field-label,
+  .mat-mdc-select-value,
+  .mat-mdc-select-arrow,
+  .mat-mdc-form-field.mat-mdc-focused .mat-mdc-select-arrow {
     color: inherit;
   }
 
-  .mat-input-element {
+  .mat-mdc-input-element {
     caret-color: currentColor;
   }
 }
