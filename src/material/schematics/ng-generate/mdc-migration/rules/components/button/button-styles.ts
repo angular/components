@@ -39,6 +39,6 @@ export class ButtonStylesMigrator extends StyleMigrator {
     {old: '.mat-fab', new: '.mat-mdc-fab'},
     {old: '.mat-mini-fab', new: '.mat-mdc-mini-fab'},
     {old: '.mat-stroked-button', new: '.mat-mdc-outlined-button'},
-    {old: '.mat-flat-button', new: '.mat-mdc-flat-button'},
+    {old: '.mat-flat-button', new: '.mat-mdc-unelevated-button'},
   ];
 }
