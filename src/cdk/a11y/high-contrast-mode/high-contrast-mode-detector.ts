@@ -12,20 +12,40 @@ import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
-/** Set of possible high-contrast mode backgrounds. */
+/**
+ * Set of possible high-contrast mode backgrounds.
+ *
+ * @deprecated Use `forced-colors` media query instead.
+ * @breaking-change 18.0.0
+ */
 export const enum HighContrastMode {
   NONE,
   BLACK_ON_WHITE,
   WHITE_ON_BLACK,
 }
 
-/** CSS class applied to the document body when in black-on-white high-contrast mode. */
+/**
+ * CSS class applied to the document body when in black-on-white high-contrast mode.
+ *
+ * @deprecated Use `forced-colors` media query instead.
+ * @breaking-change 18.0.0
+ */
 export const BLACK_ON_WHITE_CSS_CLASS = 'cdk-high-contrast-black-on-white';
 
-/** CSS class applied to the document body when in white-on-black high-contrast mode. */
+/**
+ * CSS class applied to the document body when in white-on-black high-contrast mode.
+ *
+ * @deprecated Use `forced-colors` media query instead.
+ * @breaking-change 18.0.0
+ */
 export const WHITE_ON_BLACK_CSS_CLASS = 'cdk-high-contrast-white-on-black';
 
-/** CSS class applied to the document body when in high-contrast mode. */
+/**
+ * CSS class applied to the document body when in high-contrast mode.
+ *
+ * @deprecated Use `forced-colors` media query instead.
+ * @breaking-change 18.0.0
+ */
 export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
 
 /**
@@ -38,6 +58,9 @@ export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
  * IE, Edge, and Firefox currently support this mode. Chrome does not support Windows High Contrast
  * Mode. This service does not detect high-contrast mode as added by the Chrome "High Contrast"
  * browser extension.
+ *
+ * @deprecated Use `forced-colors` media query instead.
+ * @breaking-change 18.0.0
  */
 @Injectable({providedIn: 'root'})
 export class HighContrastModeDetector implements OnDestroy {
@@ -62,7 +85,12 @@ export class HighContrastModeDetector implements OnDestroy {
       });
   }
 
-  /** Gets the current high-contrast-mode for the page. */
+  /**
+   * Gets the current high-contrast-mode for the page.
+   *
+   * @deprecated Use `forced-colors` media query instead.
+   * @breaking-change 18.0.0
+   */
   getHighContrastMode(): HighContrastMode {
     if (!this._platform.isBrowser) {
       return HighContrastMode.NONE;
@@ -111,7 +139,12 @@ export class HighContrastModeDetector implements OnDestroy {
     this._breakpointSubscription.unsubscribe();
   }
 
-  /** Applies CSS classes indicating high-contrast mode to document body (browser-only). */
+  /**
+   * Applies CSS classes indicating high-contrast mode to document body (browser-only).
+   *
+   * @deprecated Use `forced-colors` media query instead.
+   * @breaking-change 18.0.0
+   */
   _applyBodyHighContrastModeCssClasses(): void {
     if (!this._hasCheckedHighContrastMode && this._platform.isBrowser && this._document.body) {
       const bodyClasses = this._document.body.classList;

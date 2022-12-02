@@ -54,12 +54,39 @@
   }
 }
 
+/// @deprecated Use `active` target instead.
+/// @breaking-change 18.0.0
+///
+/// Emits the mixin's content nested under a `.cdk-high-contrast-black-on-white` or
+/// `.cdk-high-contrast-white-on-black-on-white` selector if $target is black-on-white or
+/// white-on-black.
+///
+/// Supports the deprecated `black-on-white` and `white-on-black` targets, which depend on
+/// deprecated `HighContrastModeDetector`. To be removed when `HighContrastModeDetector` is
+/// removed.
+///
+/// @param {String} target Type of high contrast setting to target. Can be `active`,
+///     `white-on-black` or `black-on-white`.
+@mixin _optinally-nest-target-class($target) {
+  @if ($target == 'black-on-white' or $target == 'white-on-black') {
+    .cdk-high-contrast-#{$target} {
+      @content;
+    }
+  }
+  @else {
+    @content;
+  }
+}
+
 /// Applies styles for users in high contrast mode. Note that this only applies
 /// to Microsoft browsers. Chrome can be included by checking for the `html[hc]`
 /// attribute, however Chrome handles high contrast differently.
 ///
-/// @param {String} target Type of high contrast setting to target. Defaults to `active`, can be
-///     `white-on-black` or `black-on-white`.
+/// Target of `white-on-black` and `black-on-white` are deprecated. Functionality will be removed
+/// in a future version. Use `active` target or forced-colors media query instead.
+///
+/// @param {String} target Type of high contrast setting to target. Defaults to `active`. Types of
+///     `white-on-black` and `black-on-white` are deprecated.
 /// @param {String} encapsulation Whether to emit styles for view encapsulation. Values are:
 ///     * `on` - works for `Emulated`, `Native`, and `ShadowDom`
 ///     * `off` - works for `None`
@@ -68,6 +95,12 @@
   @if ($target != 'active' and $target != 'black-on-white' and $target != 'white-on-black') {
     @error 'Unknown cdk-high-contrast value "#{$target}" provided. ' +
            'Allowed values are "active", "black-on-white", and "white-on-black"';
+  }
+
+  @if ($target == 'black-on-white' or $target == 'white-on-black') {
+    @warn 'Deprecated cdk-high-contrast value "#{$target}" provided. ' +
+          'Support for "#{$target}" will be removed in a future version. ' +
+          'Use "active" value or forced-colors media query instead.';
   }
 
   @if ($encapsulation != 'on' and $encapsulation != 'off' and $encapsulation != 'any') {
@@ -84,7 +117,7 @@
     @if ($encapsulation != 'on') {
       // Note that if this selector is updated, the same change has to be made inside
       // `_overlay.scss` which can't depend on this mixin due to some infrastructure limitations.
-      .cdk-high-contrast-#{$target} {
+      @include _optinally-nest-target-class($target) {
         @include _optionally-nest-content($selector-context) {
           @content;
         }
@@ -92,9 +125,11 @@
     }
 
     @if ($encapsulation != 'off') {
-      .cdk-high-contrast-#{$target} :host {
-        @include _optionally-nest-content($selector-context) {
-          @content;
+      @include _optinally-nest-target-class($target) {
+        :host {
+          @include _optionally-nest-content($selector-context) {
+            @content;
+          }
         }
       }
     }
