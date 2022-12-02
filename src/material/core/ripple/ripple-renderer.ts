@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {ElementRef, NgZone} from '@angular/core';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {Platform, normalizePassiveListenerOptions, _getEventTarget} from '@angular/cdk/platform';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {coerceElement} from '@angular/cdk/coercion';
 import {RippleRef, RippleState, RippleConfig} from './ripple-ref';
+import {RippleEventManager} from './ripple-event-manager';
 
 /**
  * Interface that describes the target for launching ripples.
@@ -45,8 +46,11 @@ export const defaultRippleAnimationConfig = {
  */
 const ignoreMouseEventsTimeout = 800;
 
-/** Options that apply to all the event listeners that are bound by the ripple renderer. */
-const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
+/** Options used to bind a passive capturing event. */
+const passiveCapturingEventOptions = normalizePassiveListenerOptions({
+  passive: true,
+  capture: true,
+});
 
 /** Events that signal that the pointer is down. */
 const pointerDownEvents = ['mousedown', 'touchstart'];
@@ -94,14 +98,16 @@ export class RippleRenderer implements EventListenerObject {
    */
   private _containerRect: ClientRect | null;
 
+  private static _eventManager = new RippleEventManager();
+
   constructor(
     private _target: RippleTarget,
     private _ngZone: NgZone,
     elementOrElementRef: HTMLElement | ElementRef<HTMLElement>,
-    platform: Platform,
+    private _platform: Platform,
   ) {
     // Only do anything if we're on the browser.
-    if (platform.isBrowser) {
+    if (_platform.isBrowser) {
       this._containerElement = coerceElement(elementOrElementRef);
     }
   }
@@ -252,15 +258,19 @@ export class RippleRenderer implements EventListenerObject {
   setupTriggerEvents(elementOrElementRef: HTMLElement | ElementRef<HTMLElement>) {
     const element = coerceElement(elementOrElementRef);
 
-    if (!element || element === this._triggerElement) {
+    if (!this._platform.isBrowser || !element || element === this._triggerElement) {
       return;
     }
 
     // Remove all previously registered event listeners from the trigger element.
     this._removeTriggerEvents();
-
     this._triggerElement = element;
-    this._registerEvents(pointerDownEvents);
+
+    // Use event delegation for the trigger events since they're
+    // set up during creation and are performance-sensitive.
+    pointerDownEvents.forEach(type => {
+      RippleRenderer._eventManager.addHandler(this._ngZone, type, element, this);
+    });
   }
 
   /**
@@ -280,7 +290,17 @@ export class RippleRenderer implements EventListenerObject {
     // We do this on-demand in order to reduce the total number of event listeners
     // registered by the ripples, which speeds up the rendering time for large UIs.
     if (!this._pointerUpEventsRegistered) {
-      this._registerEvents(pointerUpEvents);
+      // The events for hiding the ripple are bound directly on the trigger, because:
+      // 1. Some of them occur frequently (e.g. `mouseleave`) and any advantage we get from
+      // delegation will be diminished by having to look through all the data structures often.
+      // 2. They aren't as performance-sensitive, because they're bound only after the user
+      // has interacted with an element.
+      this._ngZone.runOutsideAngular(() => {
+        pointerUpEvents.forEach(type => {
+          this._triggerElement!.addEventListener(type, this, passiveCapturingEventOptions);
+        });
+      });
+
       this._pointerUpEventsRegistered = true;
     }
   }
@@ -393,30 +413,23 @@ export class RippleRenderer implements EventListenerObject {
     });
   }
 
-  /** Registers event listeners for a given list of events. */
-  private _registerEvents(eventTypes: string[]) {
-    this._ngZone.runOutsideAngular(() => {
-      eventTypes.forEach(type => {
-        this._triggerElement!.addEventListener(type, this, passiveEventOptions);
-      });
-    });
-  }
-
   private _getActiveRipples(): RippleRef[] {
     return Array.from(this._activeRipples.keys());
   }
 
   /** Removes previously registered event listeners from the trigger element. */
   _removeTriggerEvents() {
-    if (this._triggerElement) {
-      pointerDownEvents.forEach(type => {
-        this._triggerElement!.removeEventListener(type, this, passiveEventOptions);
-      });
+    const trigger = this._triggerElement;
+
+    if (trigger) {
+      pointerDownEvents.forEach(type =>
+        RippleRenderer._eventManager.removeHandler(type, trigger, this),
+      );
 
       if (this._pointerUpEventsRegistered) {
-        pointerUpEvents.forEach(type => {
-          this._triggerElement!.removeEventListener(type, this, passiveEventOptions);
-        });
+        pointerUpEvents.forEach(type =>
+          trigger.removeEventListener(type, this, passiveCapturingEventOptions),
+        );
       }
     }
   }

@@ -524,7 +524,7 @@ export class RippleRef {
 
 // @public
 export class RippleRenderer implements EventListenerObject {
-    constructor(_target: RippleTarget, _ngZone: NgZone, elementOrElementRef: HTMLElement | ElementRef<HTMLElement>, platform: Platform);
+    constructor(_target: RippleTarget, _ngZone: NgZone, elementOrElementRef: HTMLElement | ElementRef<HTMLElement>, _platform: Platform);
     fadeInRipple(x: number, y: number, config?: RippleConfig): RippleRef;
     fadeOutAll(): void;
     fadeOutAllNonPersistent(): void;
