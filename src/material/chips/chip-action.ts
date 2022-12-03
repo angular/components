@@ -28,9 +28,7 @@ const _MatChipActionMixinBase = mixinTabIndex(_MatChipActionBase, -1);
   host: {
     'class': 'mdc-evolution-chip__action mat-mdc-chip-action',
     '[class.mdc-evolution-chip__action--primary]': '_isPrimary',
-    // Note that while our actions are interactive, we have to add the `--presentational` class,
-    // in order to avoid some super-specific `:hover` styles from MDC.
-    '[class.mdc-evolution-chip__action--presentational]': '_isPrimary',
+    '[class.mdc-evolution-chip__action--presentational]': '!isInteractive',
     '[class.mdc-evolution-chip__action--trailing]': '!_isPrimary',
     '[attr.tabindex]': '_getTabindex()',
     '[attr.disabled]': '_getDisabledAttribute()',
