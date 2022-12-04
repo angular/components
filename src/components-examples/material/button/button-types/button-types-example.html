@@ -40,45 +40,90 @@
 
 <h3>Icon Buttons</h3>
 <div class="example-button-row">
-  <button mat-icon-button aria-label="Example icon-button with a heart icon">
+  <button mat-icon-button matTooltip="Basic" aria-label="Example icon-button with a heart icon">
     <mat-icon>favorite</mat-icon>
   </button>
-  <button mat-icon-button color="primary" aria-label="Example icon-button with a heart icon">
+  <button mat-icon-button matTooltip="Primary" color="primary" aria-label="Example icon-button with a heart icon">
     <mat-icon>favorite</mat-icon>
   </button>
-  <button mat-icon-button color="accent" aria-label="Example icon-button with a heart icon">
+  <button mat-icon-button matTooltip="Accent" color="accent" aria-label="Example icon-button with a heart icon">
     <mat-icon>favorite</mat-icon>
   </button>
-  <button mat-icon-button color="warn" aria-label="Example icon-button with a heart icon">
+  <button mat-icon-button matTooltip="Warn" color="warn" aria-label="Example icon-button with a heart icon">
     <mat-icon>favorite</mat-icon>
   </button>
-  <button mat-icon-button disabled aria-label="Example icon-button with a heart icon">
+  <div matTooltip="Disabled" class="example-disabled">
+    <button mat-icon-button disabled aria-label="Example icon-button with a heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </div>
+  <a mat-icon-button matTooltip="Lik" routerLink="." aria-label="Example icon-button with a heart icon">
     <mat-icon>favorite</mat-icon>
-  </button>
+  </a>
 </div>
 
 <h3>Fab Buttons</h3>
 <div class="example-button-row">
-  <button mat-fab>Basic</button>
-  <button mat-fab color="primary">Primary</button>
-  <button mat-fab color="accent">Accent</button>
-  <button mat-fab color="warn">Warn</button>
-  <button mat-fab disabled>Disabled</button>
-  <button mat-fab aria-label="Example icon-button with a heart icon">
+  <button mat-fab matTooltip="Primary" color="primary" aria-label="Example fab with a heart icon">
     <mat-icon>favorite</mat-icon>
   </button>
-  <a mat-fab routerLink=".">Link</a>
+  <button mat-fab matTooltip="Accent" color="accent" aria-label="Example fab with a heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-fab matTooltip="Warn" color="warn" aria-label="Example fab with a heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <div matTooltip="Disabled" class="example-disabled">
+    <button mat-fab disabled aria-label="Example fab with a heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </div>
+  <a mat-fab matTooltip="Link" routerLink="." aria-label="Example fab with a heart icon">
+    <mat-icon>favorite</mat-icon>
+  </a>
 </div>
 
 <h3>Mini Fab Buttons</h3>
 <div class="example-button-row">
-  <button mat-mini-fab>Basic</button>
-  <button mat-mini-fab color="primary">Primary</button>
-  <button mat-mini-fab color="accent">Accent</button>
-  <button mat-mini-fab color="warn">Warn</button>
-  <button mat-mini-fab disabled>Disabled</button>
-  <button mat-mini-fab aria-label="Example icon-button with a heart icon">
+  <button mat-mini-fab matTooltip="Primary" color="primary" aria-label="Example mini fab with a heart icon">
     <mat-icon>favorite</mat-icon>
   </button>
-  <a mat-mini-fab routerLink=".">Link</a>
+  <button mat-mini-fab matTooltip="Accent" color="accent" aria-label="Example mini fab with a heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-mini-fab matTooltip="Warn" color="warn" aria-label="Example mini fab with a heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <div matTooltip="Disabled" class="example-disabled">
+    <button mat-mini-fab disabled aria-label="Example mini fab with a heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </div>
+  <a mat-mini-fab matTooltip="Link" routerLink="." aria-label="Example mini fab with a heart icon">
+    <mat-icon>favorite</mat-icon>
+  </a>
+</div>
+
+<h3>Extended Fab</h3>
+<div class="example-button-row">
+  <button mat-fab extended color="primary">
+    <mat-icon>favorite</mat-icon>
+    Primary
+  </button>
+  <button mat-fab extended color="accent">
+    <mat-icon>favorite</mat-icon>
+    Accent
+  </button>
+  <button mat-fab extended color="warn">
+    <mat-icon>favorite</mat-icon>
+    Warn
+  </button>
+  <button mat-fab extended disabled>
+    <mat-icon>favorite</mat-icon>
+    Disabled
+  </button>
+  <a mat-fab extended routerLink=".">
+    <mat-icon>favorite</mat-icon>
+    Link
+  </a>
 </div>
