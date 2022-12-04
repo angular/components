@@ -19,6 +19,7 @@ ng_module(
         "//src/material/button/testing",
         "//src/material/divider",
         "//src/material/icon",
+        "//src/material/tooltip",
         "@npm//@angular/platform-browser",
         "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
