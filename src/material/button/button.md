@@ -33,7 +33,7 @@ screen-readers, which will read the text character-by-character. We leave the de
 approach this to the consuming app.
 
 ### Extended fab buttons
-Traditional fab buttons ar circular and only have space for a single icon. However, you can add the
+Traditional fab buttons are circular and only have space for a single icon. However, you can add the
 `extended` attribute to allow the fab to expand into a rounded rectangle shape with space for a text
 label in addition to the icon. Only full sized fabs support the `extended` attribute, mini fabs do
 not.
