@@ -37,5 +37,7 @@ export class SnackBarMigrator extends StyleMigrator {
     {old: '.mat-snack-bar-container', new: '.mat-mdc-snack-bar-container'},
     {old: '.mat-snack-bar-handset', new: '.mat-mdc-snack-bar-handset'},
     {old: '.mat-simple-snackbar', new: '.mat-mdc-simple-snack-bar'},
+    {old: '.mat-simple-snack-bar-content', new: '.mat-mdc-snack-bar-label'},
+    {old: '.mat-simple-snackbar-action', new: '.mat-mdc-snack-bar-action'},
   ];
 }
