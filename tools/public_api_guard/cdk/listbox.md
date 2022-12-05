@@ -34,10 +34,12 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     protected _getAriaActiveDescendant(): string | null | undefined;
     protected _getTabIndex(): number | null;
     protected _handleFocus(): void;
+    protected _handleFocusIn(): void;
     protected _handleFocusOut(event: FocusEvent): void;
     protected _handleKeydown(event: KeyboardEvent): void;
     get id(): string;
     set id(value: string);
+    isActive(option: CdkOption<T>): boolean;
     isSelected(option: CdkOption<T>): boolean;
     isValueSelected(value: T): boolean;
     protected listKeyManager: ActiveDescendantKeyManager<CdkOption<T>>;
