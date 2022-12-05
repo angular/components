@@ -62,6 +62,7 @@ const DRAG_HOST_CLASS = 'cdk-drag';
 @Directive({
   selector: '[cdkDrag]',
   exportAs: 'cdkDrag',
+  standalone: true,
   host: {
     'class': DRAG_HOST_CLASS,
     '[class.cdk-drag-disabled]': 'disabled',
