@@ -706,6 +706,38 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(options[options.length - 1].isActive()).toBeTrue();
     });
+
+    it('should focus the selected option when the listbox is focused', () => {
+      const {testComponent, fixture, listbox, listboxEl, options} =
+        setupComponent(ListboxWithOptions);
+      testComponent.selectedValue = 'peach';
+      fixture.detectChanges();
+      listbox.focus();
+      fixture.detectChanges();
+
+      expect(options[3].isActive()).toBeTrue();
+
+      dispatchKeyboardEvent(listboxEl, 'keydown', UP_ARROW);
+      fixture.detectChanges();
+
+      expect(options[2].isActive()).toBeTrue();
+    });
+
+    it('should not move focus to the selected option while the user is navigating', () => {
+      const {testComponent, fixture, listbox, listboxEl, options} =
+        setupComponent(ListboxWithOptions);
+      listbox.focus();
+      fixture.detectChanges();
+      expect(options[0].isActive()).toBeTrue();
+
+      dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      expect(options[1].isActive()).toBeTrue();
+
+      testComponent.selectedValue = 'peach';
+      fixture.detectChanges();
+      expect(options[1].isActive()).toBeTrue();
+    });
   });
 
   describe('with roving tabindex', () => {
@@ -909,6 +941,7 @@ describe('CdkOption and CdkListbox', () => {
          [cdkListboxOrientation]="orientation"
          [cdkListboxNavigationWrapDisabled]="!navigationWraps"
          [cdkListboxNavigatesDisabledOptions]="!navigationSkipsDisabled"
+         [cdkListboxValue]="selectedValue"
          (cdkListboxValueChange)="onSelectionChange($event)">
       <div cdkOption="apple"
            [cdkOptionDisabled]="isAppleDisabled"
@@ -937,6 +970,7 @@ class ListboxWithOptions {
   appleId: string;
   appleTabindex: number;
   orientation: 'horizontal' | 'vertical' = 'vertical';
+  selectedValue: string;
 
   onSelectionChange(event: ListboxValueChangeEvent<unknown>) {
     this.changedOption = event.option;

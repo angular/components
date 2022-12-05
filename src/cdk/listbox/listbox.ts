@@ -146,9 +146,6 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   /** Emits when the option is clicked. */
   readonly _clicked = new Subject<MouseEvent>();
 
-  /** Whether the option is currently active. */
-  private _active = false;
-
   ngOnDestroy() {
     this.destroyed.next();
     this.destroyed.complete();
@@ -161,7 +158,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /** Whether this option is active. */
   isActive() {
-    return this._active;
+    return this.listbox.isActive(this);
   }
 
   /** Toggle the selected state of this option. */
@@ -190,20 +187,16 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   }
 
   /**
-   * Set the option as active.
+   * No-op implemented as a part of `Highlightable`.
    * @docs-private
    */
-  setActiveStyles() {
-    this._active = true;
-  }
+  setActiveStyles() {}
 
   /**
-   * Set the option as inactive.
+   * No-op implemented as a part of `Highlightable`.
    * @docs-private
    */
-  setInactiveStyles() {
-    this._active = false;
-  }
+  setInactiveStyles() {}
 
   /** Handle focus events on the option. */
   protected _handleFocus() {
@@ -240,6 +233,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     '(focus)': '_handleFocus()',
     '(keydown)': '_handleKeydown($event)',
     '(focusout)': '_handleFocusOut($event)',
+    '(focusin)': '_handleFocusIn()',
   },
   providers: [
     {
@@ -419,6 +413,9 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /** A predicate that does not skip any options. */
   private readonly _skipNonePredicate = () => false;
 
+  /** Whether the listbox currently has focus. */
+  private _hasFocus = false;
+
   ngAfterContentInit() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       this._verifyNoOptionValueCollisions();
@@ -524,6 +521,14 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    */
   isSelected(option: CdkOption<T>) {
     return this.isValueSelected(option.value);
+  }
+
+  /**
+   * Get whether the given option is active.
+   * @param option The option to get the active state of
+   */
+  isActive(option: CdkOption<T>): boolean {
+    return !!(this.listKeyManager?.activeItem === option);
   }
 
   /**
@@ -653,7 +658,12 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /** Called when the listbox receives focus. */
   protected _handleFocus() {
     if (!this.useActiveDescendant) {
-      this.listKeyManager.setNextItemActive();
+      if (this.selectionModel.selected.length > 0) {
+        this._setNextFocusToSelectedOption();
+      } else {
+        this.listKeyManager.setNextItemActive();
+      }
+
       this._focusActiveOption();
     }
   }
@@ -759,6 +769,13 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     }
   }
 
+  /** Called when a focus moves into the listbox. */
+  protected _handleFocusIn() {
+    // Note that we use a `focusin` handler for this instead of the existing `focus` handler,
+    // because focus won't land on the listbox if `useActiveDescendant` is enabled.
+    this._hasFocus = true;
+  }
+
   /**
    * Called when the focus leaves an element in the listbox.
    * @param event The focusout event
@@ -767,6 +784,8 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     const otherElement = event.relatedTarget as Element;
     if (this.element !== otherElement && !this.element.contains(otherElement)) {
       this._onTouched();
+      this._hasFocus = false;
+      this._setNextFocusToSelectedOption();
     }
   }
 
@@ -800,6 +819,10 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
       this.listKeyManager.withHorizontalOrientation(this._dir?.value || 'ltr');
     }
 
+    if (this.selectionModel.selected.length) {
+      Promise.resolve().then(() => this._setNextFocusToSelectedOption());
+    }
+
     this.listKeyManager.change.subscribe(() => this._focusActiveOption());
   }
 
@@ -820,6 +843,20 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
       this.selectionModel.clear(false);
     }
     this.selectionModel.setSelection(...this._coerceValue(value));
+
+    if (!this._hasFocus) {
+      this._setNextFocusToSelectedOption();
+    }
+  }
+
+  /** Sets the first selected option as first in the keyboard focus order. */
+  private _setNextFocusToSelectedOption() {
+    // Null check the options since they only get defined after `ngAfterContentInit`.
+    const selected = this.options?.find(option => option.isSelected());
+
+    if (selected) {
+      this.listKeyManager.updateActiveItem(selected);
+    }
   }
 
   /** Update the internal value of the listbox based on the selection model. */
