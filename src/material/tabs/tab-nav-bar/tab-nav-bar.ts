@@ -75,10 +75,10 @@ export abstract class _MatTabNavBase
 
   set backgroundColor(value: ThemePalette) {
     const classList = this._elementRef.nativeElement.classList;
-    classList.remove(`mat-background-${this.backgroundColor}`);
+    classList.remove('mat-tabs-with-background', `mat-background-${this.backgroundColor}`);
 
     if (value) {
-      classList.add(`mat-background-${value}`);
+      classList.add('mat-tabs-with-background', `mat-background-${value}`);
     }
 
     this._backgroundColor = value;

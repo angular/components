@@ -62,36 +62,10 @@
 }
 
 @mixin _background($background-color, $foreground-color) {
-  // Note that these selectors target direct descendants so
-  // that the styles don't apply to any nested tab groups.
-
-  > .mat-mdc-tab-header, > .mat-mdc-tab-link-container, > .mat-mdc-tab-header-pagination {
-    // Set background color for the tab group
-    @include mdc-theme.prop(background-color, $background-color);
-  }
-
-  > .mat-mdc-tab-header, > .mat-mdc-tab-link-container {
-    // Set labels to contrast against background
-    .mat-mdc-tab .mdc-tab__text-label, .mat-mdc-tab-link .mdc-tab__text-label {
-      @include mdc-theme.prop(color, $foreground-color);
-    }
-
-    .mdc-tab-indicator__content--underline,
-    .mat-mdc-tab-header-pagination-chevron,
-    .mat-mdc-focus-indicator::before {
-      @include mdc-theme.prop(border-color, $foreground-color);
-    }
-  }
-
-  > .mat-mdc-tab-header, > .mat-mdc-tab-link-container, > .mat-mdc-tab-header-pagination {
-    .mat-ripple-element, .mdc-tab__ripple::before {
-      @include mdc-theme.prop(background-color, $foreground-color);
-    }
-
-    .mat-mdc-tab-header-pagination-chevron {
-      @include mdc-theme.prop(border-color, $foreground-color);
-    }
-  }
+  $background-value: mdc-theme-color.prop-value($background-color);
+  $foreground-value: mdc-theme-color.prop-value($foreground-color);
+  --mat-mdc-tab-header-with-background-background-color: #{$background-value};
+  --mat-mdc-tab-header-with-background-foreground-color: #{$foreground-value};
 }
 
 @mixin _palette-styles($color) {
