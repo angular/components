@@ -199,12 +199,12 @@ export abstract class _MatTabGroupBase
   }
 
   set backgroundColor(value: ThemePalette) {
-    const nativeElement: HTMLElement = this._elementRef.nativeElement;
+    const classList: DOMTokenList = this._elementRef.nativeElement.classList;
 
-    nativeElement.classList.remove(`mat-background-${this.backgroundColor}`);
+    classList.remove('mat-tabs-with-background', `mat-background-${this.backgroundColor}`);
 
     if (value) {
-      nativeElement.classList.add(`mat-background-${value}`);
+      classList.add('mat-tabs-with-background', `mat-background-${value}`);
     }
 
     this._backgroundColor = value;
