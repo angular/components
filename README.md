@@ -14,6 +14,7 @@ own custom components. The team maintains several npm packages.
 | `@angular/youtube-player` | Angular component built on top of the [YouTube Player API][]                        | [Docs][ytp-docs] |
 
 
+
 #### Quick links
 [Documentation, demos, and guides][mat-docs] |
 [Frequently Asked Questions](FAQ.md) |
@@ -54,7 +55,7 @@ The Angular Components team is part of the Angular team at Google. The team incl
 employees and community contributors from around the globe.
 
 Our team has two primary goals:
-* Build high-quality UI components that developers can drop into existing applications 
+* Build high-quality UI components that developers can drop into existing applications
 * Provide tools that help developers build their own custom components with common interaction
 patterns
 
