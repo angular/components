@@ -28,7 +28,10 @@ export interface CellDef {
  * Cell definition for a CDK table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({selector: '[cdkCellDef]'})
+@Directive({
+  selector: '[cdkCellDef]',
+  standalone: true,
+})
 export class CdkCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
@@ -37,7 +40,10 @@ export class CdkCellDef implements CellDef {
  * Header cell definition for a CDK table.
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkHeaderCellDef]'})
+@Directive({
+  selector: '[cdkHeaderCellDef]',
+  standalone: true,
+})
 export class CdkHeaderCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
@@ -46,7 +52,10 @@ export class CdkHeaderCellDef implements CellDef {
  * Footer cell definition for a CDK table.
  * Captures the template of a column's footer cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkFooterCellDef]'})
+@Directive({
+  selector: '[cdkFooterCellDef]',
+  standalone: true,
+})
 export class CdkFooterCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
@@ -63,6 +72,7 @@ const _CdkColumnDefBase: CanStickCtor & typeof CdkColumnDefBase =
  */
 @Directive({
   selector: '[cdkColumnDef]',
+  standalone: true,
   inputs: ['sticky'],
   providers: [{provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: CdkColumnDef}],
 })
@@ -157,6 +167,7 @@ export class BaseCdkCell {
 /** Header cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-header-cell, th[cdk-header-cell]',
+  standalone: true,
   host: {
     'class': 'cdk-header-cell',
     'role': 'columnheader',
@@ -171,6 +182,7 @@ export class CdkHeaderCell extends BaseCdkCell {
 /** Footer cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-footer-cell, td[cdk-footer-cell]',
+  standalone: true,
   host: {
     'class': 'cdk-footer-cell',
   },
@@ -189,6 +201,7 @@ export class CdkFooterCell extends BaseCdkCell {
 /** Cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-cell, td[cdk-cell]',
+  standalone: true,
   host: {
     'class': 'cdk-cell',
   },

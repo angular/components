@@ -37,34 +37,31 @@ import {
 import {CdkTextColumn} from './text-column';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
-const EXPORTED_DECLARATIONS = [
-  CdkTable,
-  CdkRowDef,
+const TABLE_DIRECTIVES = [
   CdkCellDef,
-  CdkCellOutlet,
   CdkHeaderCellDef,
   CdkFooterCellDef,
   CdkColumnDef,
-  CdkCell,
-  CdkRow,
   CdkHeaderCell,
   CdkFooterCell,
-  CdkHeaderRow,
+  CdkCell,
   CdkHeaderRowDef,
-  CdkFooterRow,
   CdkFooterRowDef,
+  CdkRowDef,
+  CdkCellOutlet,
+  CdkNoDataRow,
+  CdkRecycleRows,
   DataRowOutlet,
   HeaderRowOutlet,
   FooterRowOutlet,
-  CdkTextColumn,
-  CdkNoDataRow,
-  CdkRecycleRows,
   NoDataRowOutlet,
 ];
 
+const EXPORTED_DECLARATIONS = [CdkTable, CdkRow, CdkHeaderRow, CdkFooterRow, CdkTextColumn];
+
 @NgModule({
-  exports: EXPORTED_DECLARATIONS,
+  exports: [...EXPORTED_DECLARATIONS, ...TABLE_DIRECTIVES],
   declarations: EXPORTED_DECLARATIONS,
-  imports: [ScrollingModule],
+  imports: [ScrollingModule, ...TABLE_DIRECTIVES],
 })
 export class CdkTableModule {}
