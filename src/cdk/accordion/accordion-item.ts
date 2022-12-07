@@ -32,6 +32,7 @@ let nextId = 0;
 @Directive({
   selector: 'cdk-accordion-item, [cdkAccordionItem]',
   exportAs: 'cdkAccordionItem',
+  standalone: true,
   providers: [
     // Provide `CDK_ACCORDION` as undefined to prevent nested accordion items from
     // registering to the same accordion.
