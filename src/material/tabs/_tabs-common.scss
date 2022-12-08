@@ -204,9 +204,7 @@ $mat-tab-animation-duration: 500ms !default;
 }
 
 @mixin paginated-tab-header-with-background($header-selector) {
-  // TODO(crisbeto): the class is repeated here to ensure the specificity is high enough.
-  // We should be able to remove it once the tabs are switched to the new theming API.
-  &.mat-tabs-with-background.mat-tabs-with-background {
+  &.mat-tabs-with-background {
     // Note that these selectors target direct descendants so
     // that the styles don't apply to any nested tab groups.
     > #{$header-selector}, > .mat-mdc-tab-header-pagination {
