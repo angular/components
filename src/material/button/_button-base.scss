@@ -4,14 +4,20 @@
 @use '../core/style/layout-common';
 @use '../core/mdc-helpers/mdc-helpers';
 
+// Styles to ensure consistent rendering of buttons across browsers.
+@mixin mat-private-button-reset() {
+  text-decoration: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
 // Adds styles necessary to provide stateful interactions with the button. This includes providing
 // content for the state container's ::before and ::after so that they can be given a background
 // color and opacity for states like hover, active, and focus. Additionally, adds styles to the
 // ripple and state container so that they fill the button, match the border radius, and avoid
 // pointer events.
 @mixin mat-private-button-interactive() {
-  -webkit-tap-highlight-color: transparent;
-
   // The ripple container should match the bounds of the entire button.
   .mat-mdc-button-ripple,
   .mat-mdc-button-persistent-ripple,

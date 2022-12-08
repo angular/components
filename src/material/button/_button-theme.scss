@@ -1,11 +1,11 @@
 @use 'sass:map';
-@use '@material/button/button' as mdc-button;
 @use '@material/button/button-theme' as mdc-button-theme;
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
 @use '@material/theme/theme-color' as mdc-theme-color;
+@use '@material/typography/typography' as mdc-typography;
 
 @use './button-theme-private';
 @use '../core/mdc-helpers/mdc-helpers';
@@ -187,7 +187,28 @@
   $config: typography.private-typography-to-2018-config(
     theming.get-typography-config($config-or-theme));
   @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
+    $tokens: (
+      label-text-font: mdc-typography.get-font(button),
+      label-text-size: mdc-typography.get-size(button),
+      label-text-tracking: mdc-typography.get-tracking(button),
+      label-text-weight: mdc-typography.get-weight(button),
+    );
+
+    .mat-mdc-button {
+      @include mdc-button-text-theme.theme($tokens);
+    }
+
+    .mat-mdc-unelevated-button {
+      @include mdc-button-filled-theme.theme($tokens);
+    }
+
+    .mat-mdc-raised-button {
+      @include mdc-button-protected-theme.theme($tokens);
+    }
+
+    .mat-mdc-outlined-button {
+      @include mdc-button-outlined-theme.theme($tokens);
+    }
   }
 }
 

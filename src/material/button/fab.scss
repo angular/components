@@ -12,6 +12,7 @@
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
   @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-reset();
   @include button-base.mat-private-button-touch-target(true);
   @include style-private.private-animation-noop();
 

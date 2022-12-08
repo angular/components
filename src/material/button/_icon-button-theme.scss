@@ -6,7 +6,6 @@
 @use './button-theme-private';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
-@use '../core/typography/typography';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -40,13 +39,7 @@
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-    theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-icon-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-  }
-}
+@mixin typography($config-or-theme) {}
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);

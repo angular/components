@@ -65,6 +65,7 @@
   $config: typography.private-typography-to-2018-config(
     theming.get-typography-config($config-or-theme));
   @include mdc-helpers.using-mdc-typography($config) {
+    // TODO(crisbeto): the FAB typography isn't supported through the theming API yet.
     @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
   }
 }
