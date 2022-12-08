@@ -1,3 +1,27 @@
+<a name="15.0.2"></a>
+# 15.0.2 "polystyrene-penguin" (2022-12-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dac9e81f78](https://github.com/angular/components/commit/dac9e81f78d1ec76087311b46ff080c99b35c177) | fix | **listbox:** set initial focus to selected option ([#26174](https://github.com/angular/components/pull/26174)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c388758606](https://github.com/angular/components/commit/c388758606c1b9b307bfb71edd3ecc1831ce80d1) | fix | **button:** ensure svg icon is centered ([#26146](https://github.com/angular/components/pull/26146)) |
+| [afd6e1a277](https://github.com/angular/components/commit/afd6e1a277fc8bd0dbffca50ec1421059e92f8df) | fix | **chips:** set correct cursor on interactive chips ([#26171](https://github.com/angular/components/pull/26171)) |
+| [639fa52ff1](https://github.com/angular/components/commit/639fa52ff122f93d7c202384591410883d03046f) | fix | **dialog:** change width to not cut off form field in component example ([#26157](https://github.com/angular/components/pull/26157)) |
+| [976562f35e](https://github.com/angular/components/commit/976562f35e06b6f635d352eefa3a03095df4044b) | fix | **form-field:** allow ng-container to be used as prefix/suffix ([#26127](https://github.com/angular/components/pull/26127)) |
+| [0a617d6f0f](https://github.com/angular/components/commit/0a617d6f0f32dc9b234d90598bbf811595856fd5) | fix | **list:** remove previously removed API ([#26165](https://github.com/angular/components/pull/26165)) |
+| [679df1a074](https://github.com/angular/components/commit/679df1a074034937549987d3c46629bfe196a699) | fix | **schematics:** some snack bar styles not being migrated ([#26180](https://github.com/angular/components/pull/26180)) |
+| [1ab52961b0](https://github.com/angular/components/commit/1ab52961b088d6a42ba68841e30fe253c0ec4d39) | fix | **schematics:** update flat button styles class name mapping ([#26158](https://github.com/angular/components/pull/26158)) |
+| [3bb07ae9d9](https://github.com/angular/components/commit/3bb07ae9d97c02291d8a675defc0368bf880541a) | fix | **tabs:** icons not centered inside tab ([#26053](https://github.com/angular/components/pull/26053)) |
+| [356aab723c](https://github.com/angular/components/commit/356aab723c639c7bca76974c3b490e20614b8e87) | perf | **core:** delegate trigger events ([#26147](https://github.com/angular/components/pull/26147)) |
+| [a526ede4af](https://github.com/angular/components/commit/a526ede4af1ee0a2aefd8a01234b095fee5a2a77) | perf | **tabs:** reduce amount of CSS generated for background color ([#26186](https://github.com/angular/components/pull/26186)) |
+## Special Thanks
+Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Shauni and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.0-next.0"></a>
 # 15.1.0-next.0 "calcite-cranium" (2022-11-30)
 ### cdk
