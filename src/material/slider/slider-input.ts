@@ -443,7 +443,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._isActive = false;
     setTimeout(() => {
       this._updateWidthInactive();
-    }, 10);
+    });
   }
 
   _clamp(v: number): number {
@@ -641,7 +641,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       setTimeout(() => {
         this._sibling!._updateWidthInactive();
         this._sibling!._hostElement.classList.remove('mat-mdc-slider-input-no-pointer-events');
-      }, 10);
+      });
     }
   }
 
