@@ -1,3 +1,28 @@
+<a name="15.1.0-next.1"></a>
+# 15.1.0-next.1 "polycarbonate-parrot" (2022-12-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f99af6d044](https://github.com/angular/components/commit/f99af6d044c9412fba501aab5c6e11b16a52a09b) | fix | **listbox:** set initial focus to selected option ([#26174](https://github.com/angular/components/pull/26174)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1d2d7e11c3](https://github.com/angular/components/commit/1d2d7e11c34799cfd99c1ff08210f19d9e90dcab) | fix | **button:** ensure svg icon is centered ([#26146](https://github.com/angular/components/pull/26146)) |
+| [33f704c01e](https://github.com/angular/components/commit/33f704c01e72e78ba1129542af77b95c27602221) | fix | **chips:** set correct cursor on interactive chips ([#26171](https://github.com/angular/components/pull/26171)) |
+| [93818e5338](https://github.com/angular/components/commit/93818e5338180a4d14c643c04316637f8bc4fa1b) | fix | **dialog:** change width to not cut off form field in component example ([#26157](https://github.com/angular/components/pull/26157)) |
+| [b3da94a094](https://github.com/angular/components/commit/b3da94a09455d4eb9c72432bd16f5f288668e848) | fix | **form-field:** allow ng-container to be used as prefix/suffix ([#26127](https://github.com/angular/components/pull/26127)) |
+| [5b57863702](https://github.com/angular/components/commit/5b578637024ce637388553b3c951d905ece12182) | fix | **list:** align color scheme between single and multi selection list ([#26074](https://github.com/angular/components/pull/26074)) |
+| [3d298e0fb7](https://github.com/angular/components/commit/3d298e0fb741b6638c5dbccde3416d8723c3267e) | fix | **list:** remove previously removed API ([#26165](https://github.com/angular/components/pull/26165)) |
+| [a007b92ebd](https://github.com/angular/components/commit/a007b92ebda339fbe243098a1f1209c0670f812a) | fix | **schematics:** some snack bar styles not being migrated ([#26180](https://github.com/angular/components/pull/26180)) |
+| [1a8d04189f](https://github.com/angular/components/commit/1a8d04189faaa1e163446701caf599157e5c2df8) | fix | **schematics:** update flat button styles class name mapping ([#26158](https://github.com/angular/components/pull/26158)) |
+| [7b98f1af1a](https://github.com/angular/components/commit/7b98f1af1a11b5868feb83c95a60ac084c8f1cca) | fix | **tabs:** icons not centered inside tab ([#26053](https://github.com/angular/components/pull/26053)) |
+| [efb7f2ee9f](https://github.com/angular/components/commit/efb7f2ee9f434453ca6c0db171b01ba9e158de7e) | perf | **core:** delegate trigger events ([#26147](https://github.com/angular/components/pull/26147)) |
+| [8719700f72](https://github.com/angular/components/commit/8719700f72e2af37ed8c6cdf95684069d69715e9) | perf | **tabs:** reduce amount of CSS generated for background color ([#26186](https://github.com/angular/components/pull/26186)) |
+## Special Thanks
+Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Shauni and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.2"></a>
 # 15.0.2 "polystyrene-penguin" (2022-12-08)
 ### cdk
