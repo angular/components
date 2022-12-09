@@ -60,6 +60,7 @@ export abstract class _MatSelectHarnessBase<OptionType extends ComponentHarnessC
 
 // @public
 export interface SelectHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
 }
 
 // (No @packageDocumentation comment for this package)
