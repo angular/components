@@ -14,7 +14,7 @@
     [tabIndex]="tabIndex"
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel"
-    [attr.aria-description]="ariaDescription">
+    [attr.aria-describedby]="_ariaDescriptionId">
     <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic" *ngIf="leadingIcon">
       <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
     </span>
@@ -38,3 +38,5 @@
   *ngIf="_hasTrailingIcon()">
   <ng-content select="mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"></ng-content>
 </span>
+
+<span class="cdk-visually-hidden" [id]="_ariaDescriptionId">{{ariaDescription}}</span>

@@ -340,15 +340,35 @@ describe('MDC-based Row Chips', () => {
 
         fixture.detectChanges();
 
-        const primaryGridCell = fixture.nativeElement.querySelector(
+        const primaryGridCell = (fixture.nativeElement as HTMLElement).querySelector(
           '[role="gridcell"].mdc-evolution-chip__cell--primary .mat-mdc-chip-action',
         );
         expect(primaryGridCell)
           .withContext('expected to find the grid cell for the primary chip action')
           .toBeTruthy();
 
-        expect(primaryGridCell.getAttribute('aria-label')).toBe('chip name');
-        expect(primaryGridCell.getAttribute('aria-description')).toBe('chip description');
+        expect(primaryGridCell!.getAttribute('aria-label')).toMatch(/chip name/i);
+
+        const primaryGridCellDescribedBy = primaryGridCell!.getAttribute('aria-describedby');
+        expect(primaryGridCellDescribedBy)
+          .withContext('expected primary grid cell to have a non-empty aria-describedby attribute')
+          .toBeTruthy();
+
+        const primaryGridCellDescriptions = Array.from(
+          (fixture.nativeElement as HTMLElement).querySelectorAll(
+            primaryGridCellDescribedBy!
+              .split(/\s+/g)
+              .map(x => `#${x}`)
+              .join(','),
+          ),
+        );
+
+        const primaryGridCellDescription = primaryGridCellDescriptions
+          .map(x => x.textContent?.trim())
+          .join(' ')
+          .trim();
+
+        expect(primaryGridCellDescription).toMatch(/chip description/i);
       });
     });
   });

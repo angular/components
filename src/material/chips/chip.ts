@@ -147,11 +147,20 @@ export class MatChip
   /** A unique id for the chip. If none is supplied, it will be auto-generated. */
   @Input() id: string = `mat-mdc-chip-${uid++}`;
 
+  // TODO(#26104): Consider deprecating and using `_computeAriaAccessibleName` instead.
+  // `ariaLabel` may be unnecessary, and `_computeAriaAccessibleName` only supports
+  // datepicker's use case.
   /** ARIA label for the content of the chip. */
   @Input('aria-label') ariaLabel: string | null = null;
 
+  // TODO(#26104): Consider deprecating and using `_computeAriaAccessibleName` instead.
+  // `ariaDescription` may be unnecessary, and `_computeAriaAccessibleName` only supports
+  // datepicker's use case.
   /** ARIA description for the content of the chip. */
   @Input('aria-description') ariaDescription: string | null = null;
+
+  /** Id of a span that contains this chip's aria description. */
+  _ariaDescriptionId = `${this.id}-aria-description`;
 
   private _textElement!: HTMLElement;
 

@@ -308,8 +308,28 @@ describe('MDC-based Option Chips', () => {
           .withContext('expected to find an element with option role')
           .toBeTruthy();
 
-        expect(optionElement.getAttribute('aria-label')).toBe('option name');
-        expect(optionElement.getAttribute('aria-description')).toBe('option description');
+        expect(optionElement.getAttribute('aria-label')).toMatch(/option name/i);
+
+        const optionElementDescribedBy = optionElement!.getAttribute('aria-describedby');
+        expect(optionElementDescribedBy)
+          .withContext('expected primary grid cell to have a non-empty aria-describedby attribute')
+          .toBeTruthy();
+
+        const optionElementDescriptions = Array.from(
+          (fixture.nativeElement as HTMLElement).querySelectorAll(
+            optionElementDescribedBy!
+              .split(/\s+/g)
+              .map(x => `#${x}`)
+              .join(','),
+          ),
+        );
+
+        const optionElementDescription = optionElementDescriptions
+          .map(x => x.textContent?.trim())
+          .join(' ')
+          .trim();
+
+        expect(optionElementDescription).toMatch(/option description/i);
       });
     });
 

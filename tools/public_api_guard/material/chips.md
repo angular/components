@@ -65,6 +65,7 @@ export class MatChip extends _MatChipMixinBase implements AfterViewInit, CanColo
     constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
     _animationsDisabled: boolean;
     ariaDescription: string | null;
+    _ariaDescriptionId: string;
     ariaLabel: string | null;
     protected basicChipAttrName: string;
     // (undocumented)
