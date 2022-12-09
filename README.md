@@ -33,21 +33,11 @@ If you'd like to contribute, please follow our [contributing guidelines][contrib
 our [`help wanted`][help-wanted] label for a list of issues with good opportunities for
 contribution.
 
-## What we're working on now (Q4 2021):
-* Continuing to create new, API-compatible versions of the Angular Material components backed by
-[MDC Web][] ([see @jelbourn's ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891)). Much of our effort
-is dedicated towards rolling out these new versions of the components across Angular apps
-inside Google. This work will pay off with the following benefits:
-  * Dramatically improve consistency with the Material Design spec, which has changed significantly
-    since Angular Material's 2016 inception. This also makes future versions of Material Design
-    significantly easier to adopt.
-  * Introduce a new theming API for component density, a top feature request.
-  * Fix a number of longstanding accessibility bugs.
-  * Increase number of people working to continuously improve the components on an ongoing basis
-    (both the Angular team and the Material Design team).
-* Accessibility - we'll be focusing on improving the accessibility of `MatDatepicker` as well as
-evaluating accessibility bugs for mobile web platforms.
-
+## What we're working on now (Q4 2022):
+* Investigating and fixing reported regressions for the new components launched in v15
+* Creating a new more flexible theming API in collaboration with [MDC Web](https://github.com/material-components/material-components-web/)
+* Designing and Implementing a CDK combobox component
+* Continuing to focus on improving the accessibility of Angular Material components
 
 ## About the team
 The Angular Components team is part of the Angular team at Google. The team includes both Google
