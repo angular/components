@@ -14,4 +14,6 @@ export interface FormFieldHarnessFilters extends BaseHarnessFilters {
   floatingLabelText?: string | RegExp;
   /** Filters based on whether the form field has error messages. */
   hasErrors?: boolean;
+  /** Filters based on whether the form field value is valid. */
+  valid?: boolean;
 }
