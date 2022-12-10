@@ -217,7 +217,7 @@ export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, Ca
     _setTriggersSubmenu(triggersSubmenu: boolean): void;
     _triggersSubmenu: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "role": "role"; }, {}, never, ["mat-icon", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "role": "role"; }, {}, never, ["mat-icon, [matMenuItemIcon]", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenuItem, [null, null, null, { optional: true; }, null]>;
 }
