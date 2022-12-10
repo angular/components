@@ -62,7 +62,7 @@ export const CUSTOM_TS_SYMBOL_RENAMINGS = [
   {old: 'DialogPosition', new: 'LegacyDialogPosition'},
   {old: '_closeDialogVia', new: '_closeLegacyDialogVia'},
   {old: 'FormFieldControlHarness', new: 'LegacyFormFieldControlHarness'},
-  {old: 'LegacyFloatLabelType', new: 'LegacyFloatLabelType'},
+  {old: 'FloatLabelType', new: 'LegacyFloatLabelType'},
   {old: 'getMatFormFieldDuplicatedHintError', new: 'getMatLegacyFormFieldDuplicatedHintError'},
   {old: 'getMatFormFieldMissingControlError', new: 'getMatLegacyFormFieldMissingControlError'},
   {
