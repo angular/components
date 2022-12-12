@@ -38,6 +38,17 @@ describe('MatChipListboxHarness', () => {
     expect(await harness.isMultiple()).toBe(true);
   });
 
+  it('should load chip inputs with disabled state match', async () => {
+    let enabledChips = await loader.getAllHarnesses(MatChipListboxHarness.with({disabled: false}));
+    let disabledChips = await loader.getAllHarnesses(MatChipListboxHarness.with({disabled: true}));
+    expect(enabledChips.length).toBe(1);
+    expect(disabledChips.length).toBe(0);
+
+    fixture.componentInstance.disabled = true;
+    enabledChips = await loader.getAllHarnesses(MatChipListboxHarness.with({disabled: false}));
+    disabledChips = await loader.getAllHarnesses(MatChipListboxHarness.with({disabled: true}));
+  });
+
   it('should get whether the listbox is disabled', async () => {
     const harness = await loader.getHarness(MatChipListboxHarness);
     expect(await harness.isDisabled()).toBe(false);
