@@ -198,13 +198,13 @@ export function runHarnessTests(
   });
 
   it('should be able to get form-field by validity', async () => {
-    let invalid = await loader.getAllHarnesses(formFieldHarness.with({valid: false}));
+    let invalid = await loader.getAllHarnesses(formFieldHarness.with({isValid: false}));
     expect(invalid.length).toBe(0);
 
     fixture.componentInstance.requiredControl.setValue('');
     dispatchFakeEvent(fixture.nativeElement.querySelector('#with-errors input'), 'blur');
 
-    invalid = await loader.getAllHarnesses(formFieldHarness.with({valid: false}));
+    invalid = await loader.getAllHarnesses(formFieldHarness.with({isValid: false}));
     expect(invalid.length).toBe(1);
   });
 
