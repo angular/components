@@ -1686,7 +1686,7 @@ function setValueByClick(
   input.focus();
   dispatchPointerEvent(inputElement, 'pointerup', x, y);
   dispatchEvent(input._hostElement, new Event('change'));
-  tick(10);
+  tick();
 }
 
 /** Slides the MatSlider's thumb to the given value. */
@@ -1702,7 +1702,7 @@ function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number) {
   dispatchEvent(input._hostElement, new Event('input'));
   dispatchPointerEvent(sliderElement, 'pointerup', endX, endY);
   dispatchEvent(input._hostElement, new Event('change'));
-  tick(10);
+  tick();
 }
 
 /** Returns the x and y coordinates for the given slider value. */
