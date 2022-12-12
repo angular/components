@@ -190,6 +190,41 @@ describe('#visitElements', () => {
     it('should add value to existing attribute that does not have a value', async () => {
       runAddAttributeTest('<a add></a>', '<a add="val"></a>');
     });
+
+    it('should handle all forms of indentation', async () => {
+      runAddAttributeTest(
+        '<a *ngFor="let item of items">',
+        '<a add="val" *ngFor="let item of items">',
+      );
+      runAddAttributeTest(
+        `
+        <a
+          *ngFor="let item of items">`,
+        `
+        <a
+          add="val"
+          *ngFor="let item of items">`,
+      );
+      runAddAttributeTest(
+        `
+        <a *ngFor="let item of items"
+        >`,
+        `
+        <a add="val" *ngFor="let item of items"
+        >`,
+      );
+      runAddAttributeTest(
+        `
+        <a
+          [attr]="
+          val">`,
+        `
+        <a
+          add="val"
+          [attr]="
+          val">`,
+      );
+    });
   });
 
   describe('remove attribute tests', () => {
