@@ -19,21 +19,25 @@ export interface ChipAvatarHarnessFilters extends BaseHarnessFilters {
 
 // @public (undocumented)
 export interface ChipGridHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
 }
 
 // @public (undocumented)
 export interface ChipHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
     text?: string | RegExp;
 }
 
 // @public (undocumented)
 export interface ChipInputHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
     placeholder?: string | RegExp;
     value?: string | RegExp;
 }
 
 // @public (undocumented)
 export interface ChipListboxHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
 }
 
 // @public (undocumented)

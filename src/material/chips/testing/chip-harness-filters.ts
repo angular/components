@@ -11,6 +11,8 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 export interface ChipHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
   text?: string | RegExp;
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
 }
 
 export interface ChipInputHarnessFilters extends BaseHarnessFilters {
@@ -18,16 +20,24 @@ export interface ChipInputHarnessFilters extends BaseHarnessFilters {
   value?: string | RegExp;
   /** Filters based on the placeholder text of the input. */
   placeholder?: string | RegExp;
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
 }
 
-export interface ChipListboxHarnessFilters extends BaseHarnessFilters {}
+export interface ChipListboxHarnessFilters extends BaseHarnessFilters {
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
+}
 
 export interface ChipOptionHarnessFilters extends ChipHarnessFilters {
   /** Only find chip instances whose selected state matches the given value. */
   selected?: boolean;
 }
 
-export interface ChipGridHarnessFilters extends BaseHarnessFilters {}
+export interface ChipGridHarnessFilters extends BaseHarnessFilters {
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
+}
 
 export interface ChipRowHarnessFilters extends ChipHarnessFilters {}
 

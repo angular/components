@@ -25,6 +25,13 @@ describe('MatChipInputHarness', () => {
     expect(harnesses.length).toBe(2);
   });
 
+  it('should load chip inputs with disabled state match', async () => {
+    const enabledChips = await loader.getAllHarnesses(MatChipInputHarness.with({disabled: false}));
+    const disabledChips = await loader.getAllHarnesses(MatChipInputHarness.with({disabled: true}));
+    expect(enabledChips.length).toBe(1);
+    expect(disabledChips.length).toBe(1);
+  });
+
   it('should get the disabled state', async () => {
     const harnesses = await loader.getAllHarnesses(MatChipInputHarness);
     expect(await harnesses[0].isDisabled()).toBe(false);
