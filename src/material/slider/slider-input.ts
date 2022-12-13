@@ -439,12 +439,11 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     }
   }
 
-  _onPointerUp(event: PointerEvent): void {
+  _onPointerUp(): void {
     this._isActive = false;
-    this._updateWidthInactive();
-    if (!this.disabled) {
-      this._handleValueCorrection(event);
-    }
+    setTimeout(() => {
+      this._updateWidthInactive();
+    });
   }
 
   _clamp(v: number): number {
@@ -636,11 +635,13 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     super._onPointerDown(event);
   }
 
-  override _onPointerUp(event: PointerEvent): void {
-    super._onPointerUp(event);
+  override _onPointerUp(): void {
+    super._onPointerUp();
     if (this._sibling) {
-      this._sibling._updateWidthInactive();
-      this._sibling._hostElement.classList.remove('mat-mdc-slider-input-no-pointer-events');
+      setTimeout(() => {
+        this._sibling!._updateWidthInactive();
+        this._sibling!._hostElement.classList.remove('mat-mdc-slider-input-no-pointer-events');
+      });
     }
   }
 
