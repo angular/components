@@ -167,7 +167,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     // (undocumented)
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
-    _onPointerUp(event: PointerEvent): void;
+    _onPointerUp(): void;
     // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
@@ -243,7 +243,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     _onPointerMove(event: PointerEvent): void;
     // (undocumented)
-    _onPointerUp(event: PointerEvent): void;
+    _onPointerUp(): void;
     get percentage(): number;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
