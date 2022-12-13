@@ -13,7 +13,9 @@
 }
 
 @mixin legacy-button-compat() {
-  .mat-datepicker-toggle .mat-mdc-button-base {
+  // Class repeated for additional specificity to ensure this takes precedence over styles in
+  // legacy-button-compat-theme
+  .mat-datepicker-toggle.mat-datepicker-toggle .mat-mdc-button-base {
     width: 40px;
     height: 40px;
     padding: 8px 0;
