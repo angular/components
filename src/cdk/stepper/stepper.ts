@@ -542,7 +542,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
       this.selectedIndex = manager.activeItemIndex;
       event.preventDefault();
     } else {
-      manager.onKeydown(event);
+      manager.setFocusOrigin('keyboard').onKeydown(event);
     }
   }
 
