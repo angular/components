@@ -28,6 +28,7 @@ export type FormFieldControlHarness = MatInputHarness | MatSelectHarness | MatDa
 export interface FormFieldHarnessFilters extends BaseHarnessFilters {
     floatingLabelText?: string | RegExp;
     hasErrors?: boolean;
+    isValid?: boolean;
 }
 
 // @public

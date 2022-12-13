@@ -57,6 +57,11 @@ export class MatLegacyFormFieldHarness extends _MatFormFieldHarnessBase<
         'hasErrors',
         options.hasErrors,
         async (harness, hasErrors) => (await harness.hasErrors()) === hasErrors,
+      )
+      .addOption(
+        'isValid',
+        options.isValid,
+        async (harness, isValid) => (await harness.isControlValid()) === isValid,
       );
   }
 
