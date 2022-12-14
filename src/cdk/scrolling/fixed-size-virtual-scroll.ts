@@ -192,6 +192,7 @@ export function _fixedSizeVirtualScrollStrategyFactory(fixedSizeDir: CdkFixedSiz
 /** A virtual scroll strategy that supports fixed-size items. */
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[itemSize]',
+  standalone: true,
   providers: [
     {
       provide: VIRTUAL_SCROLL_STRATEGY,
