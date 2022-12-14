@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as experimental;
+@use '@angular/material/chips/chips-theme';
 
 // Plus imports for other components in your app.
 
@@ -31,6 +32,9 @@ $candy-app-theme: mat.define-light-theme((
 
 @include mat.legacy-typography-hierarchy($candy-app-theme, '.mat-legacy-typography');
 @include mat.typography-hierarchy($candy-app-theme);
+
+// TODO: create a demo with opt-out applied rather than applying opt-out to everything
+@include chips-theme.without-accessible-single-selection-indicators();
 
 .demo-strong-focus {
   // Note: we can theme the indicators directly through `strong-focus-indicators` as well.

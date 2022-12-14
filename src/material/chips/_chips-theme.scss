@@ -106,3 +106,10 @@
     }
   }
 }
+
+@mixin without-accessible-single-selection-indicators() {
+  .mat-mdc-chip-listbox[multiple="false"] .mdc-evolution-chip__graphic {
+    width: 0;
+    opacity: 0;
+  }
+}
