@@ -1,3 +1,27 @@
+<a name="15.1.0-next.2"></a>
+# 15.1.0-next.2 "cashmere-cardigan" (2022-12-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [08c5a12e87](https://github.com/angular/components/commit/08c5a12e87f3d485d176efca737595d32a137017) | fix | **stepper:** set focus origin when navigating with keyboard ([#26239](https://github.com/angular/components/pull/26239)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dcf2fac042](https://github.com/angular/components/commit/dcf2fac0420116236c29c31573c577eac99d68b0) | fix | **chips:** implement ariaDescription with aria-describedby ([#26105](https://github.com/angular/components/pull/26105)) |
+| [f8dd0180cd](https://github.com/angular/components/commit/f8dd0180cd77b52d980c1ea50b995bb10b9b2d82) | fix | **core:** better handling of css variables in theme palettes ([#26260](https://github.com/angular/components/pull/26260)) |
+| [46a4db2d4f](https://github.com/angular/components/commit/46a4db2d4fb6b23278901e6dcbd7d94a4b8b7374) | fix | **form-field:** allow getting harness by validity ([#26232](https://github.com/angular/components/pull/26232)) |
+| [9f4557a730](https://github.com/angular/components/commit/9f4557a730ea51af5d9213ae64adb8c113cf4ac3) | fix | **form-field:** prevent focus overlay stealing clicks ([#26229](https://github.com/angular/components/pull/26229)) |
+| [1cc831c507](https://github.com/angular/components/commit/1cc831c5078193942df3fb42ffee2541423d0d99) | fix | **menu:** add selector for projecting non-Material icons ([#26235](https://github.com/angular/components/pull/26235)) |
+| [c8961cd134](https://github.com/angular/components/commit/c8961cd13454772d4a56b9cc2ace61c5209c3cf3) | fix | **schematics:** fix card tmpl migration ([#26169](https://github.com/angular/components/pull/26169)) |
+| [06fe1f2f50](https://github.com/angular/components/commit/06fe1f2f504907725e856853bb3201f68775a0f0) | fix | **schematics:** fix transform for FloatLabelType ([#26234](https://github.com/angular/components/pull/26234)) |
+| [399890651a](https://github.com/angular/components/commit/399890651af9343a31b32e2d76f8fd759b58a3c4) | fix | **slider:** avoid manual fixing values on pointer up ([#26215](https://github.com/angular/components/pull/26215)) |
+| [03264d8f25](https://github.com/angular/components/commit/03264d8f2525590a95b53762f2eb6c765c4ddcbf) | fix | **tabs:** allow both foreground and background colors to be set ([#26212](https://github.com/angular/components/pull/26212)) |
+| [e19addb084](https://github.com/angular/components/commit/e19addb0846a8679a31fdce6d3c66c5596861918) | fix | **toolbar:** don't override colors of themed buttons ([#26222](https://github.com/angular/components/pull/26222)) |
+## Special Thanks
+Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Ruslan Nevecheria, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.3"></a>
 # 15.0.3 "velvet-village" (2022-12-14)
 ### cdk
