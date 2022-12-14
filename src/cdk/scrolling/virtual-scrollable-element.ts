@@ -17,6 +17,7 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 @Directive({
   selector: '[cdkVirtualScrollingElement]',
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableElement}],
+  standalone: true,
   host: {
     'class': 'cdk-virtual-scrollable',
   },

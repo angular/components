@@ -82,6 +82,7 @@ function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 
 @Directive({
   selector: '[cdkVirtualFor][cdkVirtualForOf]',
   providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
+  standalone: true,
 })
 export class CdkVirtualForOf<T>
   implements CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy
