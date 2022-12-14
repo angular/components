@@ -1,3 +1,26 @@
+<a name="15.0.3"></a>
+# 15.0.3 "velvet-village" (2022-12-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [325475774f](https://github.com/angular/components/commit/325475774f1bc58d2021c48de0db0975ca49f8e4) | fix | **stepper:** set focus origin when navigating with keyboard ([#26239](https://github.com/angular/components/pull/26239)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [80c4321ddd](https://github.com/angular/components/commit/80c4321ddd92163265cd2062c8ee33bab4378429) | fix | **core:** better handling of css variables in theme palettes ([#26260](https://github.com/angular/components/pull/26260)) |
+| [67db1a6043](https://github.com/angular/components/commit/67db1a6043d92cfcbbd6230fbf52ed8f281a3333) | fix | **form-field:** allow getting harness by validity ([#26232](https://github.com/angular/components/pull/26232)) |
+| [df7ac2709a](https://github.com/angular/components/commit/df7ac2709aa6dbd6b10efc3ba8c8c4e8042ceeb2) | fix | **form-field:** prevent focus overlay stealing clicks ([#26229](https://github.com/angular/components/pull/26229)) |
+| [1e93df3ab3](https://github.com/angular/components/commit/1e93df3ab3a09a4caf94598afad86e01532c9b83) | fix | **menu:** add selector for projecting non-Material icons ([#26235](https://github.com/angular/components/pull/26235)) |
+| [83825bd5c3](https://github.com/angular/components/commit/83825bd5c37332184be88632a8ad9021d9ce4dd5) | fix | **schematics:** fix card tmpl migration ([#26169](https://github.com/angular/components/pull/26169)) |
+| [ae3c77835a](https://github.com/angular/components/commit/ae3c77835a47b5225fa536903dc5c3b067bc85e5) | fix | **schematics:** fix transform for FloatLabelType ([#26234](https://github.com/angular/components/pull/26234)) |
+| [fee5d0b7d3](https://github.com/angular/components/commit/fee5d0b7d39e606f65fb629da70cfad5ad306043) | fix | **slider:** avoid manual fixing values on pointer up ([#26215](https://github.com/angular/components/pull/26215)) |
+| [15c77e0950](https://github.com/angular/components/commit/15c77e09506c2048ccd40b915b59a05bfe3a6fc8) | fix | **tabs:** allow both foreground and background colors to be set ([#26212](https://github.com/angular/components/pull/26212)) |
+| [0ca8c77349](https://github.com/angular/components/commit/0ca8c77349ed29d33c257aaa08c25ca11f92d196) | fix | **toolbar:** don't override colors of themed buttons ([#26222](https://github.com/angular/components/pull/26222)) |
+## Special Thanks
+Kristiyan Kostadinov, Miles Malerba, Ruslan Nevecheria and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.0-next.1"></a>
 # 15.1.0-next.1 "polycarbonate-parrot" (2022-12-08)
 ### cdk
