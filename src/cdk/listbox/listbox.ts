@@ -78,6 +78,7 @@ class ListboxSelectionModel<T> extends SelectionModel<T> {
 /** A selectable option in a listbox. */
 @Directive({
   selector: '[cdkOption]',
+  standalone: true,
   exportAs: 'cdkOption',
   host: {
     'role': 'option',
@@ -220,6 +221,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
 @Directive({
   selector: '[cdkListbox]',
+  standalone: true,
   exportAs: 'cdkListbox',
   host: {
     'role': 'listbox',
