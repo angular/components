@@ -97,6 +97,21 @@ $mat-typography-mdc-level-mappings: (
   );
 }
 
+// MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
+// This function falls back to determining the tone based on whether the theme is light or dark.
+@function _variable-safe-contrast-tone($value, $is-dark) {
+  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
+    @return mdc-theme-color.contrast-tone($value);
+  }
+
+  @return if($is-dark, 'light', 'dark');
+}
+
+@function _variable-safe-ink-color-for-fill($text-style, $fill-color, $is-dark) {
+  $contrast-tone: _variable-safe-contrast-tone($fill-color, $is-dark);
+  @return map.get(map.get(mdc-theme-color.$text-colors, $contrast-tone), $text-style);
+}
+
 // Configures MDC's global variables to reflect the given theme, applies the given styles,
 // then resets the global variables to prevent unintended side effects.
 @mixin using-mdc-theme($config) {
@@ -104,6 +119,7 @@ $mat-typography-mdc-level-mappings: (
   $accent: theming.get-color-from-palette(map.get($config, accent));
   $warn: theming.get-color-from-palette(map.get($config, warn));
   $background-palette: map.get($config, background);
+  $is-dark: map.get($config, is-dark);
 
   // Save the original values.
   $orig-primary: mdc-theme-color.$primary;
@@ -120,17 +136,17 @@ $mat-typography-mdc-level-mappings: (
   // Set new values based on the given Angular Material theme.
   mdc-theme-color.$primary: $primary;
   mdc-theme-color.$on-primary:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$primary) == 'dark', #000, #fff);
+      if(_variable-safe-contrast-tone(mdc-theme-color.$primary, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$secondary: $accent;
   mdc-theme-color.$on-secondary:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$secondary) == 'dark', #000, #fff);
+      if(_variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$background: theming.get-color-from-palette($background-palette, background);
   mdc-theme-color.$surface: theming.get-color-from-palette($background-palette, card);
   mdc-theme-color.$on-surface:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$surface) == 'dark', #000, #fff);
+      if(_variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$error: $warn;
   mdc-theme-color.$on-error:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$error) == 'dark', #000, #fff);
+      if(_variable-safe-contrast-tone(mdc-theme-color.$error, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$property-values: (
       // Primary
       primary: mdc-theme-color.$primary,
@@ -148,27 +164,27 @@ $mat-typography-mdc-level-mappings: (
       on-error: mdc-theme-color.$on-error,
       // Text-primary on "background" background
       text-primary-on-background:
-          mdc-theme-color.ink-color-for-fill_(primary, mdc-theme-color.$background),
+          _variable-safe-ink-color-for-fill(primary, mdc-theme-color.$background, $is-dark),
       text-secondary-on-background:
-          mdc-theme-color.ink-color-for-fill_(secondary, mdc-theme-color.$background),
+          _variable-safe-ink-color-for-fill(secondary, mdc-theme-color.$background, $is-dark),
       text-hint-on-background:
-          mdc-theme-color.ink-color-for-fill_(hint, mdc-theme-color.$background),
+          _variable-safe-ink-color-for-fill(hint, mdc-theme-color.$background, $is-dark),
       text-disabled-on-background:
-          mdc-theme-color.ink-color-for-fill_(disabled, mdc-theme-color.$background),
+          _variable-safe-ink-color-for-fill(disabled, mdc-theme-color.$background, $is-dark),
       text-icon-on-background:
-          mdc-theme-color.ink-color-for-fill_(icon, mdc-theme-color.$background),
+          _variable-safe-ink-color-for-fill(icon, mdc-theme-color.$background, $is-dark),
       // Text-primary on "light" background
-      text-primary-on-light: mdc-theme-color.ink-color-for-fill_(primary, light),
-      text-secondary-on-light: mdc-theme-color.ink-color-for-fill_(secondary, light),
-      text-hint-on-light: mdc-theme-color.ink-color-for-fill_(hint, light),
-      text-disabled-on-light: mdc-theme-color.ink-color-for-fill_(disabled, light),
-      text-icon-on-light: mdc-theme-color.ink-color-for-fill_(icon, light),
+      text-primary-on-light: _variable-safe-ink-color-for-fill(primary, light, $is-dark),
+      text-secondary-on-light: _variable-safe-ink-color-for-fill(secondary, light, $is-dark),
+      text-hint-on-light: _variable-safe-ink-color-for-fill(hint, light, $is-dark),
+      text-disabled-on-light: _variable-safe-ink-color-for-fill(disabled, light, $is-dark),
+      text-icon-on-light: _variable-safe-ink-color-for-fill(icon, light, $is-dark),
       // Text-primary on "dark" background
-      text-primary-on-dark: mdc-theme-color.ink-color-for-fill_(primary, dark),
-      text-secondary-on-dark: mdc-theme-color.ink-color-for-fill_(secondary, dark),
-      text-hint-on-dark: mdc-theme-color.ink-color-for-fill_(hint, dark),
-      text-disabled-on-dark: mdc-theme-color.ink-color-for-fill_(disabled, dark),
-      text-icon-on-dark: mdc-theme-color.ink-color-for-fill_(icon, dark)
+      text-primary-on-dark: _variable-safe-ink-color-for-fill(primary, dark, $is-dark),
+      text-secondary-on-dark: _variable-safe-ink-color-for-fill(secondary, dark, $is-dark),
+      text-hint-on-dark: _variable-safe-ink-color-for-fill(hint, dark, $is-dark),
+      text-disabled-on-dark: _variable-safe-ink-color-for-fill(disabled, dark, $is-dark),
+      text-icon-on-dark: _variable-safe-ink-color-for-fill(icon, dark, $is-dark)
   );
 
   // Apply given rules.

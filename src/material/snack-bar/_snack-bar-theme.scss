@@ -6,6 +6,7 @@
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use 'sass:color';
 @use 'sass:map';
+@use 'sass:meta';
 
 
 @mixin color($config-or-theme) {
@@ -18,16 +19,19 @@
       $button-color:
           if($is-dark-theme, currentColor, theming.get-color-from-palette($accent, text));
       --mat-mdc-snack-bar-button-color: #{$button-color};
+      $on-surface: mdc-theme-color.prop-value(on-surface);
+      $surface: mdc-theme-color.prop-value(surface);
 
       @include mdc-snackbar-theme.theme((
-        container-color: color.mix(
-          mdc-theme-color.prop-value(on-surface),
-          mdc-theme-color.prop-value(surface),
-          80%
+        container-color: if(
+          meta.type-of($on-surface) == color and meta.type-of($surface) == color,
+          color.mix($on-surface, $surface, 80%),
+          $on-surface
         ),
-        supporting-text-color: rgba(
-          mdc-theme-color.prop-value(surface),
-          mdc-theme-color.text-emphasis(high)
+        supporting-text-color: if(
+          meta.type-of($surface) == color,
+          rgba($surface, mdc-theme-color.text-emphasis(high)),
+          $surface
         )
       ));
     }

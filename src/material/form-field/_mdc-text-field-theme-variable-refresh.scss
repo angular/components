@@ -1,6 +1,7 @@
 @use '@material/textfield' as mdc-textfield;
 @use '@material/theme/variables' as mdc-theme-variables;
 @use 'sass:color';
+@use 'sass:meta';
 
 // Mixin that refreshes the MDC text-field theming variables. This mixin should be used when
 // the base MDC theming variables have been explicitly updated, but the component specific
@@ -8,38 +9,48 @@
 // restores the previous values for the variables to avoid unexpected global side effects.
 @mixin private-text-field-refresh-theme-variables() {
   $_disabled-border: mdc-textfield.$disabled-border;
-  mdc-textfield.$disabled-border: rgba(mdc-theme-variables.prop-value(on-surface), 0.06);
+  mdc-textfield.$disabled-border:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.06);
   $_bottom-line-hover: mdc-textfield.$bottom-line-hover;
-  mdc-textfield.$bottom-line-hover: rgba(mdc-theme-variables.prop-value(on-surface), 0.87);
+  mdc-textfield.$bottom-line-hover:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.87);
   $_bottom-line-idle: mdc-textfield.$bottom-line-idle;
-  mdc-textfield.$bottom-line-idle: rgba(mdc-theme-variables.prop-value(on-surface), 0.42);
+  mdc-textfield.$bottom-line-idle:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.42);
   $_label: mdc-textfield.$label;
-  mdc-textfield.$label: rgba(mdc-theme-variables.prop-value(on-surface), 0.6);
+  mdc-textfield.$label: _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.6);
   $_ink-color: mdc-textfield.$ink-color;
-  mdc-textfield.$ink-color: rgba(mdc-theme-variables.prop-value(on-surface), 0.87);
+  mdc-textfield.$ink-color: _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.87);
   $_focused-label-color: mdc-textfield.$focused-label-color;
-  mdc-textfield.$focused-label-color: rgba(mdc-theme-variables.prop-value(primary), 0.87);
+  mdc-textfield.$focused-label-color:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(primary), 0.87);
   $_placeholder-ink-color: mdc-textfield.$placeholder-ink-color;
-  mdc-textfield.$placeholder-ink-color: rgba(mdc-theme-variables.prop-value(on-surface), 0.6);
+  mdc-textfield.$placeholder-ink-color:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.6);
   $_disabled-label-color: mdc-textfield.$disabled-label-color;
-  mdc-textfield.$disabled-label-color: rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
+  mdc-textfield.$disabled-label-color:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
   $_disabled-ink-color: mdc-textfield.$disabled-ink-color;
-  mdc-textfield.$disabled-ink-color: rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
+  mdc-textfield.$disabled-ink-color:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
   $_disabled-placeholder-ink-color: mdc-textfield.$disabled-placeholder-ink-color;
   mdc-textfield.$disabled-placeholder-ink-color:
-      rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
+      _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
   $_background: mdc-textfield.$background;
-  mdc-textfield.$background: color.mix(mdc-theme-variables.prop-value(on-surface),
+  mdc-textfield.$background: _variable-safe-mix(mdc-theme-variables.prop-value(on-surface),
     mdc-theme-variables.prop-value(surface), 4%);
   $_disabled-background: mdc-textfield.$disabled-background;
-  mdc-textfield.$disabled-background: color.mix(mdc-theme-variables.prop-value(on-surface),
+  mdc-textfield.$disabled-background: _variable-safe-mix(mdc-theme-variables.prop-value(on-surface),
     mdc-theme-variables.prop-value(surface), 2%);
   $_outlined-idle-border: mdc-textfield.$outlined-idle-border;
-  mdc-textfield.$outlined-idle-border: rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
+  mdc-textfield.$outlined-idle-border:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.38);
   $_outlined-disabled-border: mdc-textfield.$outlined-disabled-border;
-  mdc-textfield.$outlined-disabled-border: rgba(mdc-theme-variables.prop-value(on-surface), 0.06);
+  mdc-textfield.$outlined-disabled-border:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.06);
   $_outlined-hover-border: mdc-textfield.$outlined-hover-border;
-  mdc-textfield.$outlined-hover-border: rgba(mdc-theme-variables.prop-value(on-surface), 0.87);
+  mdc-textfield.$outlined-hover-border:
+    _variable-safe-rgba(mdc-theme-variables.prop-value(on-surface), 0.87);
 
   // The content will be generated with the refreshed MDC text-field theming variables.
   @content;
@@ -60,4 +71,18 @@
   mdc-textfield.$outlined-idle-border: $_outlined-idle-border;
   mdc-textfield.$outlined-disabled-border: $_outlined-disabled-border;
   mdc-textfield.$outlined-hover-border: $_outlined-hover-border;
+}
+
+@function _variable-safe-rgba($color, $opacity) {
+  @if (meta.type-of($color) == color) {
+    @return rgba($color, $opacity);
+  }
+  @return $color;
+}
+
+@function _variable-safe-mix($first-color, $second-color, $amount) {
+  @if (meta.type-of($first-color) == color and meta.type-of($second-color) == color) {
+    @return color.mix($first-color, $second-color, $amount);
+  }
+  @return $first-color;
 }

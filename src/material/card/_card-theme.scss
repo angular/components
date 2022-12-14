@@ -8,12 +8,16 @@
 @use '@material/theme/theme-color' as mdc-theme-color;
 @use 'sass:color';
 @use 'sass:map';
+@use 'sass:meta';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   $foreground: map.get($config, foreground);
 
   @include mdc-helpers.using-mdc-theme($config) {
+    $on-surface: mdc-theme-color.prop-value(on-surface);
+    $surface: mdc-theme-color.prop-value(surface);
+
     .mat-mdc-card {
       // MDC's theme has `container-elevation` and `container-shadow-color` tokens, but we can't
       // use them because they output under a `.mdc-card` selector whereas the rest of the theme
@@ -21,15 +25,18 @@
       // different error.
       @include private.private-theme-elevation(1, $config);
       @include mdc-elevated-card-theme.theme((
-        container-color: mdc-theme-color.prop-value(surface),
+        container-color: $surface,
       ));
     }
 
     .mat-mdc-card-outlined {
       @include private.private-theme-elevation(0, $config);
       @include mdc-outlined-card-theme.theme((
-        outline-color: color.mix(mdc-theme-color.prop-value(on-surface),
-          mdc-theme-color.prop-value(surface), 12%)
+        outline-color: if(
+          meta.type-of($on-surface) == color and meta.type-of($surface) == color,
+          color.mix($on-surface, $surface, 12%),
+          $on-surface
+        )
       ));
     }
 
