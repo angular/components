@@ -64,6 +64,7 @@ export class ListDemo {
   infoClicked = false;
   selectionListDisabled = false;
   selectionListRippleDisabled = false;
+  selectionListSingleSelectionIndicatorHidden = false;
 
   selectedOptions: string[] = ['apples'];
   changeEventCount = 0;

@@ -13,6 +13,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -35,6 +36,7 @@ import {
   MatListItemIcon,
   MatListItemAvatar,
 } from './list-item-sections';
+import {MAT_LIST_CONFIG} from './tokens';
 
 @Directive({
   host: {
@@ -67,6 +69,8 @@ export abstract class MatListBase {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
+
+  protected _defaultOptions = inject(MAT_LIST_CONFIG, {optional: true});
 }
 
 @Directive({
