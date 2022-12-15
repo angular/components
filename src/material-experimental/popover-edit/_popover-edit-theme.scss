@@ -72,6 +72,10 @@
                     opacity 100ms mat.$private-swift-ease-out-timing-function,
                     background-color 300ms mat.$private-swift-ease-out-timing-function;
         visibility: visible;
+
+        @include cdk.high-contrast {
+          border-bottom: 3px dashed black;
+        }
       }
     }
   }
