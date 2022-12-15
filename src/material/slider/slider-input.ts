@@ -12,6 +12,7 @@ import {
   coerceNumberProperty,
   NumberInput,
 } from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectorRef,
   Directive,
@@ -248,12 +249,17 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** Callback called when the slider input has been touched. */
   private _onTouchedFn: () => void = () => {};
 
+  /** Whether the platform is safari on IOS. */
+  protected _isSafariIOS: boolean;
+
   constructor(
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
     @Inject(MAT_SLIDER) protected _slider: _MatSlider,
+    readonly _platform: Platform,
   ) {
+    this._isSafariIOS = this._platform.IOS && this._platform.SAFARI;
     this._hostElement = _elementRef.nativeElement;
     this._ngZone.runOutsideAngular(() => {
       this._hostElement.addEventListener('pointerdown', this._onPointerDown.bind(this));
@@ -357,6 +363,13 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._updateWidthActive();
     this._slider._updateDimensions();
 
+    if (this._isSafariIOS) {
+      const thumb = this._slider._getThumb(this.thumbPosition);
+      const rect = thumb._hostElement.getBoundingClientRect();
+      this._isActive = this._isSafariIOSThumbPressed(event, rect);
+      return;
+    }
+
     // Does nothing if a step is defined because we
     // want the value to snap to the values on input.
     if (!this._slider.step) {
@@ -389,7 +402,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     setTimeout(() => {
       this._skipUIUpdate = false;
       this._fixValue(event);
-    }, 0);
+    });
   }
 
   /** Corrects the value of the slider based on the pointer event's position. */
@@ -439,10 +452,13 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     }
   }
 
-  _onPointerUp(): void {
+  _onPointerUp(event: PointerEvent): void {
     this._isActive = false;
     setTimeout(() => {
       this._updateWidthInactive();
+      if (this._isSafariIOS) {
+        this._handleValueCorrection(event);
+      }
     });
   }
 
@@ -538,6 +554,17 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   blur(): void {
     this._hostElement.blur();
   }
+
+  private _isSafariIOSThumbPressed(event: PointerEvent, rect: DOMRect) {
+    // The IOS Safari slider knob is actually 16 but for some reason
+    // using 16 can cause this to return false when it should be true.
+    const radius = 17;
+    const centerX = rect.x + radius;
+    const centerY = rect.y + radius;
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    return Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(radius, 2);
+  }
 }
 
 @Directive({
@@ -600,8 +627,9 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     @Inject(MAT_SLIDER) _slider: _MatSlider,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
+    override readonly _platform: Platform,
   ) {
-    super(_ngZone, _elementRef, _cdr, _slider);
+    super(_ngZone, _elementRef, _cdr, _slider, _platform);
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
     this.thumbPosition = this._isEndThumb ? _MatThumb.END : _MatThumb.START;
@@ -635,8 +663,8 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     super._onPointerDown(event);
   }
 
-  override _onPointerUp(): void {
-    super._onPointerUp();
+  override _onPointerUp(event: PointerEvent): void {
+    super._onPointerUp(event);
     if (this._sibling) {
       setTimeout(() => {
         this._sibling!._updateWidthInactive();
@@ -682,7 +710,10 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       this._slider.min < this._slider.max
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
         : 1;
-    const width = maxWidth * percentage + minWidth;
+    let width = maxWidth * percentage + minWidth;
+    if (this._isSafariIOS) {
+      width -= 2;
+    }
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
   }
@@ -702,8 +733,8 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       : (midValue - this.min) / (this._slider.max - this._slider.min);
 
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
-
-    const width = maxWidth * percentage + 24;
+    const offset = this._isSafariIOS ? 22 : 24;
+    const width = maxWidth * percentage + offset;
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = '0px';
 
