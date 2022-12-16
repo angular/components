@@ -711,7 +711,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       this._slider.min < this._slider.max
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
         : 1;
-    let width = maxWidth * percentage + minWidth;
+    const width = maxWidth * percentage + minWidth;
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
   }
@@ -731,8 +731,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       : (midValue - this.min) / (this._slider.max - this._slider.min);
 
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
-    const offset = 24;
-    const width = maxWidth * percentage + offset;
+    const width = maxWidth * percentage + 24;
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = '0px';
 
