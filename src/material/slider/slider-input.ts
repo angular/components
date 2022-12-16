@@ -19,6 +19,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -249,6 +250,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** Callback called when the slider input has been touched. */
   private _onTouchedFn: () => void = () => {};
 
+  private _platform = inject(Platform);
+
   /** Whether the platform is safari on IOS. */
   protected _isSafariIOS: boolean;
 
@@ -257,7 +260,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
     @Inject(MAT_SLIDER) protected _slider: _MatSlider,
-    readonly _platform: Platform,
   ) {
     this._isSafariIOS = this._platform.IOS && this._platform.SAFARI;
     this._hostElement = _elementRef.nativeElement;
@@ -364,20 +366,21 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._slider._updateDimensions();
 
     if (this._isSafariIOS) {
+      // On IOS Safari, the native slider does not begin dragging unless
+      // the pointer down even happens directly on top of the slider knob.
       const thumb = this._slider._getThumb(this.thumbPosition);
       const rect = thumb._hostElement.getBoundingClientRect();
       this._isActive = this._isSafariIOSThumbPressed(event, rect);
-      return;
-    }
+    } else {
+      // Does nothing if a step is defined because we
+      // want the value to snap to the values on input.
+      if (!this._slider.step) {
+        this._updateThumbUIByPointerEvent(event, {withAnimation: true});
+      }
 
-    // Does nothing if a step is defined because we
-    // want the value to snap to the values on input.
-    if (!this._slider.step) {
-      this._updateThumbUIByPointerEvent(event, {withAnimation: true});
-    }
-
-    if (!this.disabled) {
-      this._handleValueCorrection(event);
+      if (!this.disabled) {
+        this._handleValueCorrection(event);
+      }
     }
   }
 
@@ -555,15 +558,14 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._hostElement.blur();
   }
 
+  /** Returns true if the given event happened directly on the native slider knob. */
   private _isSafariIOSThumbPressed(event: PointerEvent, rect: DOMRect) {
-    // The IOS Safari slider knob is actually 16 but for some reason
-    // using 16 can cause this to return false when it should be true.
-    const radius = 17;
+    const radius = 16;
     const centerX = rect.x + radius;
     const centerY = rect.y + radius;
     const dx = event.clientX - centerX;
     const dy = event.clientY - centerY;
-    return Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(radius, 2);
+    return Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(radius, 2);
   }
 }
 
@@ -627,9 +629,8 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     @Inject(MAT_SLIDER) _slider: _MatSlider,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
-    override readonly _platform: Platform,
   ) {
-    super(_ngZone, _elementRef, _cdr, _slider, _platform);
+    super(_ngZone, _elementRef, _cdr, _slider);
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
     this.thumbPosition = this._isEndThumb ? _MatThumb.END : _MatThumb.START;
@@ -711,9 +712,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
         : 1;
     let width = maxWidth * percentage + minWidth;
-    if (this._isSafariIOS) {
-      width -= 2;
-    }
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
   }
@@ -733,7 +731,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       : (midValue - this.min) / (this._slider.max - this._slider.min);
 
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
-    const offset = this._isSafariIOS ? 22 : 24;
+    const offset = 24;
     const width = maxWidth * percentage + offset;
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = '0px';
