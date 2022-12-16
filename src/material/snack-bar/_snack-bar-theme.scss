@@ -16,8 +16,11 @@
 
   @include mdc-helpers.using-mdc-theme($config) {
     .mat-mdc-snack-bar-container {
-      $button-color:
-          if($is-dark-theme, currentColor, theming.get-color-from-palette($accent, text));
+      $button-color: if(
+        $is-dark-theme,
+        mdc-theme-color.prop-value(text-primary-on-light),
+        theming.get-color-from-palette($accent, text)
+      );
       --mat-mdc-snack-bar-button-color: #{$button-color};
       $on-surface: mdc-theme-color.prop-value(on-surface);
       $surface: mdc-theme-color.prop-value(surface);
