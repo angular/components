@@ -144,7 +144,7 @@ export class MatSliderModule {
 
 // @public (undocumented)
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
-    constructor(_ngZone: NgZone, _slider: _MatSlider, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef, _platform: Platform);
+    constructor(_ngZone: NgZone, _slider: _MatSlider, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef);
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     // (undocumented)
@@ -169,8 +169,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     // (undocumented)
     _onPointerUp(event: PointerEvent): void;
     // (undocumented)
-    readonly _platform: Platform;
-    // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
     _updateMinMax(): void;
@@ -189,7 +187,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
 // @public
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
-    constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef, _slider: _MatSlider, _platform: Platform);
+    constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef, _slider: _MatSlider);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -248,8 +246,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     _onPointerUp(event: PointerEvent): void;
     get percentage(): number;
-    // (undocumented)
-    readonly _platform: Platform;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
     setDisabledState(isDisabled: boolean): void;
