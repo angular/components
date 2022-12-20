@@ -168,7 +168,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   included by default when you include a theme mixin.
 
   ```scss
-  @import '@angular/material' as mat;
+  @use '@angular/material' as mat;
 
   $theme: mat.define-light-theme((
     color: ...
