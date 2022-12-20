@@ -14,6 +14,7 @@ export * from './selection-list';
 export * from './list-option';
 export * from './subheader';
 export * from './list-item-sections';
+export * from './tokens';
 
 export {MatListOption} from './list-option';
 

@@ -123,6 +123,17 @@ export class MatSelectionList
   }
   private _multiple = true;
 
+  /** Whether radio indicator for all list items is hidden. */
+  @Input()
+  get hideSingleSelectionIndicator(): boolean {
+    return this._hideSingleSelectionIndicator;
+  }
+  set hideSingleSelectionIndicator(value: BooleanInput) {
+    this._hideSingleSelectionIndicator = coerceBooleanProperty(value);
+  }
+  private _hideSingleSelectionIndicator: boolean =
+    this._defaultOptions?.hideSingleSelectionIndicator ?? false;
+
   /** The currently selected options. */
   selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
@@ -160,10 +171,12 @@ export class MatSelectionList
   ngOnChanges(changes: SimpleChanges) {
     const disabledChanges = changes['disabled'];
     const disableRippleChanges = changes['disableRipple'];
+    const hideSingleSelectionIndicatorChanges = changes['hideSingleSelectionIndicator'];
 
     if (
       (disableRippleChanges && !disableRippleChanges.firstChange) ||
-      (disabledChanges && !disabledChanges.firstChange)
+      (disabledChanges && !disabledChanges.firstChange) ||
+      (hideSingleSelectionIndicatorChanges && !hideSingleSelectionIndicatorChanges.firstChange)
     ) {
       this._markOptionsForCheck();
     }

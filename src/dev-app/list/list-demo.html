@@ -123,6 +123,7 @@
                         (selectionChange)="changeEventCount = changeEventCount + 1"
                         [disabled]="selectionListDisabled"
                         [disableRipple]="selectionListRippleDisabled"
+                        [hideSingleSelectionIndicator]="selectionListSingleSelectionIndicatorHidden"
                         color="primary">
       <div mat-subheader>Groceries</div>
 
@@ -162,6 +163,12 @@
       </label>
     </p>
     <p>
+      <label>
+        Hide Single-Selection indicators
+        <input type="checkbox" [(ngModel)]="selectionListSingleSelectionIndicatorHidden">
+      </label>
+    </p>
+    <p>
       <button mat-raised-button (click)="groceries.selectAll()">Select all</button>
       <button mat-raised-button (click)="groceries.deselectAll()">Deselect all</button>
     </p>
@@ -173,6 +180,7 @@
     <mat-selection-list #favorite
                         [(ngModel)]="favoriteOptions"
                         [multiple]="false"
+                        [hideSingleSelectionIndicator]="selectionListSingleSelectionIndicatorHidden"
                         color="primary">
       <div mat-subheader>Favorite Grocery</div>
 

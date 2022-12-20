@@ -30,6 +30,8 @@ import {
   MatListOptionTogglePosition,
   MatSelectionList,
   MatSelectionListChange,
+  MatListConfig,
+  MAT_LIST_CONFIG,
 } from './index';
 
 describe('MDC-based MatSelectionList without forms', () => {
@@ -663,7 +665,7 @@ describe('MDC-based MatSelectionList without forms', () => {
     });
   });
 
-  describe('with list option selected', () => {
+  describe('multiple-selection with list option selected', () => {
     let fixture: ComponentFixture<SelectionListWithSelectedOption>;
     let listOptionElements: DebugElement[];
     let selectionList: DebugElement;
@@ -701,6 +703,79 @@ describe('MDC-based MatSelectionList without forms', () => {
       // ensure that other options are not reachable through tab.
       expect(listOptionElements.map(el => el.nativeElement.tabIndex)).toEqual([-1, 0, -1, -1]);
     }));
+  });
+
+  describe('single-selection with list option selected', () => {
+    let fixture: ComponentFixture<SingleSelectionListWithSelectedOption>;
+    let listOptionElements: DebugElement[];
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SingleSelectionListWithSelectedOption],
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SingleSelectionListWithSelectedOption);
+      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
+      fixture.detectChanges();
+    }));
+
+    it('displays radio indicators by default', () => {
+      expect(
+        listOptionElements[0].nativeElement.querySelector('input[type="radio"]'),
+      ).not.toBeNull();
+      expect(
+        listOptionElements[1].nativeElement.querySelector('input[type="radio"]'),
+      ).not.toBeNull();
+
+      expect(listOptionElements[0].nativeElement.classList).not.toContain(
+        'mdc-list-item--selected',
+      );
+      expect(listOptionElements[1].nativeElement.classList).not.toContain(
+        'mdc-list-item--selected',
+      );
+    });
+  });
+
+  describe('with token to hide radio indicators', () => {
+    let fixture: ComponentFixture<SingleSelectionListWithSelectedOption>;
+    let listOptionElements: DebugElement[];
+
+    beforeEach(waitForAsync(() => {
+      const matListConfig: MatListConfig = {hideSingleSelectionIndicator: true};
+
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SingleSelectionListWithSelectedOption],
+        providers: [{provide: MAT_LIST_CONFIG, useValue: matListConfig}],
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SingleSelectionListWithSelectedOption);
+      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
+      fixture.detectChanges();
+    }));
+
+    it('does not display radio indicators', () => {
+      expect(listOptionElements[0].nativeElement.querySelector('input[type="radio"]')).toBeNull();
+      expect(listOptionElements[1].nativeElement.querySelector('input[type="radio"]')).toBeNull();
+
+      expect(listOptionElements[0].nativeElement.classList).not.toContain(
+        'mdc-list-item--selected',
+      );
+
+      expect(listOptionElements[1].nativeElement.getAttribute('aria-selected'))
+        .withContext('Expected second option to be selected')
+        .toBe('true');
+      expect(listOptionElements[1].nativeElement.classList).toContain('mdc-list-item--selected');
+    });
   });
 
   describe('with option disabled', () => {
@@ -1726,6 +1801,15 @@ class SelectionListWithDisabledOption {
   </mat-selection-list>`,
 })
 class SelectionListWithSelectedOption {}
+
+@Component({
+  template: `
+  <mat-selection-list [multiple]="false">
+    <mat-list-option>Not selected - Item #1</mat-list-option>
+    <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
+  </mat-selection-list>`,
+})
+class SingleSelectionListWithSelectedOption {}
 
 @Component({
   template: `

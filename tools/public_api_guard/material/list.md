@@ -33,6 +33,9 @@ import { ThemePalette } from '@angular/material/core';
 export const MAT_LIST: InjectionToken<MatList>;
 
 // @public
+export const MAT_LIST_CONFIG: InjectionToken<MatListConfig>;
+
+// @public
 export const MAT_NAV_LIST: InjectionToken<MatNavList>;
 
 // @public (undocumented)
@@ -54,6 +57,11 @@ export class MatList extends MatListBase {
     static ɵcmp: i0.ɵɵComponentDeclaration<MatList, "mat-list", ["matList"], {}, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatList, never>;
+}
+
+// @public
+export interface MatListConfig {
+    hideSingleSelectionIndicator?: boolean;
 }
 
 // @public (undocumented)
@@ -229,6 +237,8 @@ export class MatSelectionList extends MatListBase implements SelectionList, Cont
     _emitChangeEvent(options: MatListOption[]): void;
     focus(options?: FocusOptions): void;
     _handleKeydown(event: KeyboardEvent): void;
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: BooleanInput);
     // (undocumented)
     _items: QueryList<MatListOption>;
     get multiple(): boolean;
@@ -251,7 +261,7 @@ export class MatSelectionList extends MatListBase implements SelectionList, Cont
     _value: string[] | null;
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "color": "color"; "compareWith": "compareWith"; "multiple": "multiple"; "disabled": "disabled"; }, { "selectionChange": "selectionChange"; }, ["_items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "color": "color"; "compareWith": "compareWith"; "multiple": "multiple"; "hideSingleSelectionIndicator": "hideSingleSelectionIndicator"; "disabled": "disabled"; }, { "selectionChange": "selectionChange"; }, ["_items"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelectionList, never>;
 }
@@ -276,6 +286,8 @@ export interface SelectionList extends MatListBase {
     compareWith: (o1: any, o2: any) => boolean;
     // (undocumented)
     _emitChangeEvent(options: MatListOption[]): void;
+    // (undocumented)
+    hideSingleSelectionIndicator: boolean;
     // (undocumented)
     multiple: boolean;
     // (undocumented)
