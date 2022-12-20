@@ -26,6 +26,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {_getEventTarget} from '@angular/cdk/platform';
+import {InputModalityDetector} from '@angular/cdk/a11y';
 import {fromEvent} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
@@ -51,7 +52,7 @@ import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
     '(focusin)': '_setHasFocus(true)',
     '(focusout)': '_setHasFocus(false)',
     '(keydown)': '_toggleOnKeydown($event)',
-    '(click)': 'toggle()',
+    '(click)': '_handleClick()',
   },
   inputs: [
     'menuTemplateRef: cdkMenuTriggerFor',
@@ -65,23 +66,17 @@ import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
   ],
 })
 export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
-  /** The host element. */
   private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
-
-  /** The CDK overlay service. */
   private readonly _overlay = inject(Overlay);
-
-  /** The Angular zone. */
   private readonly _ngZone = inject(NgZone);
+  private readonly _directionality = inject(Directionality, {optional: true});
+  private readonly _inputModalityDetector = inject(InputModalityDetector);
 
   /** The parent menu this trigger belongs to. */
   private readonly _parentMenu = inject(CDK_MENU, {optional: true});
 
   /** The menu aim service used by this menu. */
   private readonly _menuAim = inject(MENU_AIM, {optional: true});
-
-  /** The directionality of the page. */
-  private readonly _directionality = inject(Directionality, {optional: true});
 
   constructor() {
     super();
@@ -136,7 +131,6 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
       case SPACE:
       case ENTER:
         if (!hasModifierKey(event)) {
-          event.preventDefault();
           this.toggle();
           this.childMenu?.focusFirstItem('keyboard');
         }
@@ -174,6 +168,15 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
           }
         }
         break;
+    }
+  }
+
+  /** Handles clicks on the menu trigger. */
+  _handleClick() {
+    // Don't handle clicks originating from the keyboard since we
+    // already do the same on `keydown` events for enter and space.
+    if (this._inputModalityDetector.mostRecentModality !== 'keyboard') {
+      this.toggle();
     }
   }
 

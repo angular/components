@@ -119,18 +119,22 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     constructor();
     protected closeOnSpacebarTrigger: boolean;
     protected readonly destroyed: Subject<void>;
+    // (undocumented)
     protected readonly _dir: Directionality | null;
     get disabled(): boolean;
     set disabled(value: BooleanInput);
+    // (undocumented)
     readonly _elementRef: ElementRef<HTMLElement>;
     focus(): void;
     getLabel(): string;
     getMenu(): Menu | undefined;
     getMenuTrigger(): CdkMenuTrigger | null;
+    _handleClick(): void;
     get hasMenu(): boolean;
     isMenuOpen(): boolean;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
     protected _ngZone: NgZone;
     _onKeydown(event: KeyboardEvent): void;
     _resetTabIndex(): void;
@@ -198,6 +202,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     constructor();
     close(): void;
     getMenu(): Menu | undefined;
+    _handleClick(): void;
     open(): void;
     _setHasFocus(hasFocus: boolean): void;
     toggle(): void;

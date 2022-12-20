@@ -438,7 +438,7 @@ describe('MenuTrigger', () => {
       expect(nativeMenus.length).toBe(2);
     });
 
-    it('should toggle the menu on trigger', () => {
+    it('should toggle the menu on clicks', () => {
       nativeTrigger.click();
       detectChanges();
       expect(nativeMenus.length).toBe(2);
@@ -451,13 +451,13 @@ describe('MenuTrigger', () => {
     it('should toggle the menu on keyboard events', () => {
       const firstEvent = dispatchKeyboardEvent(nativeTrigger, 'keydown', ENTER);
       detectChanges();
-      expect(firstEvent.defaultPrevented).toBe(true);
+      expect(firstEvent.defaultPrevented).toBe(false);
       expect(nativeMenus.length).toBe(2);
 
       const secondEvent = dispatchKeyboardEvent(nativeTrigger, 'keydown', ENTER);
       detectChanges();
       expect(nativeMenus.length).toBe(1);
-      expect(secondEvent.defaultPrevented).toBe(true);
+      expect(secondEvent.defaultPrevented).toBe(false);
     });
 
     it('should close the open menu on background click', () => {
