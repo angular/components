@@ -16,6 +16,7 @@ import {
   ContentChildren,
   EventEmitter,
   forwardRef,
+  inject,
   Input,
   OnDestroy,
   Output,
@@ -28,6 +29,7 @@ import {startWith, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipOption, MatChipSelectionChange} from './chip-option';
 import {MatChipSet} from './chip-set';
+import {MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
 
 /** Change event object that is emitted when the chip listbox value has changed. */
 export class MatChipListboxChange {
@@ -105,6 +107,9 @@ export class MatChipListbox
   /** Value that was assigned before the listbox was initialized. */
   private _pendingInitialValue: any;
 
+  /** Default chip options. */
+  private _defaultOptions = inject(MAT_CHIPS_DEFAULT_OPTIONS, {optional: true});
+
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
   get multiple(): boolean {
@@ -157,6 +162,18 @@ export class MatChipListbox
     this._required = coerceBooleanProperty(value);
   }
   protected _required: boolean = false;
+
+  /** Whether checkmark indicator for single-selection options is hidden. */
+  @Input()
+  get hideSingleSelectionIndicator(): boolean {
+    return this._hideSingleSelectionIndicator;
+  }
+  set hideSingleSelectionIndicator(value: BooleanInput) {
+    this._hideSingleSelectionIndicator = coerceBooleanProperty(value);
+    this._syncListboxProperties();
+  }
+  private _hideSingleSelectionIndicator: boolean =
+    this._defaultOptions?.hideSingleSelectionIndicator ?? false;
 
   /** Combined stream of all of the child chips' selection change events. */
   get chipSelectionChanges(): Observable<MatChipSelectionChange> {
@@ -363,6 +380,7 @@ export class MatChipListbox
         this._chips.forEach(chip => {
           chip._chipListMultiple = this.multiple;
           chip.chipListSelectable = this._selectable;
+          chip._chipListHideSingleSelectionIndicator = this.hideSingleSelectionIndicator;
           chip._changeDetectorRef.markForCheck();
         });
       });

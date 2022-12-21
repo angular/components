@@ -52,9 +52,24 @@ export class ChipsDemo {
   removable = true;
   addOnBlur = true;
   disabledListboxes = false;
+  listboxesWithAvatar = false;
   disableInputs = false;
   editable = false;
   message = '';
+
+  shirtSizes = [
+    {label: 'Extra Small', avatar: 'XS', disabled: false},
+    {label: 'Small', avatar: 'S', disabled: false},
+    {label: 'Medium', avatar: 'M', disabled: true},
+    {label: 'Large', avatar: 'L', disabled: false},
+  ];
+
+  restaurantHints = [
+    {label: 'Open Now', avatar: 'O', selected: true},
+    {label: 'Takes Reservations', avatar: 'R', selected: false},
+    {label: 'Pet Friendly', avatar: 'P', selected: true},
+    {label: 'Good for Brunch', avatar: 'B', selected: false},
+  ];
 
   // Enter, comma, semi-colon
   separatorKeysCodes = [ENTER, COMMA, 186];
