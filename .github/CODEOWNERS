@@ -106,6 +106,7 @@
 /src/cdk/collections/**                                     @crisbeto @andrewseguin
 /src/cdk/dialog/**                                          @jelbourn @crisbeto
 /src/cdk/drag-drop/**                                       @crisbeto
+/src/cdk/global-listener/**                                 @wagnermaciel
 /src/cdk/keycodes/**                                        @andrewseguin
 /src/cdk/layout/**                                          @andrewseguin
 /src/cdk/listbox/**                                         @jelbourn
