@@ -16,6 +16,7 @@ const bzlConfigPath = join(currentDir, '../../packages.bzl');
  *
  *   `N.x.x` requires Angular `^N.0.0 || (N+1).0.0`
  *   `N.0.0-x` requires Angular `^N.0.0-0 || (N+1).0.0`
+ *   `N.x.0-x` requires Angular `^N.0.0 || ^N.x.0-x || (N+1).0.0`
  *
  * The rationale is that we want to satisfy peer dependencies if we are publishing
  * pre-releases for a major while Angular framework cuts pre-releases as well. e.g.
@@ -23,11 +24,19 @@ const bzlConfigPath = join(currentDir, '../../packages.bzl');
  */
 export async function assertValidFrameworkPeerDependency(newVersion: semver.SemVer) {
   const currentVersionRange = _extractAngularVersionPlaceholderOrThrow();
-  const isMajorWithPrerelease =
-    newVersion.minor === 0 && newVersion.patch === 0 && !!newVersion.prerelease[0];
-  const requiredRange = isMajorWithPrerelease
-    ? `^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0`
-    : `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0`;
+  const isMinor = newVersion.minor !== 0;
+  const isPrerelease = !!newVersion.prerelease[0];
+  let requiredRange: string;
+
+  if (isPrerelease) {
+    requiredRange = isMinor
+      ? `^${newVersion.major}.0.0 || ^${newVersion.major}.${newVersion.minor}.0-0 || ^${
+          newVersion.major + 1
+        }.0.0`
+      : `^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0`;
+  } else {
+    requiredRange = `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0`;
+  }
 
   if (requiredRange !== currentVersionRange) {
     Log.error(
