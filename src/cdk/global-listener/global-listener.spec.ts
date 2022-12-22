@@ -1,23 +1,29 @@
-import {Component, Directive, ElementRef, OnDestroy, QueryList, ViewChildren} from '@angular/core';
+import {
+  Component,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {GlobalListener} from './global-listener';
 
 describe('GlobalListener', () => {
-  let fixture: ComponentFixture<MockButtonDemo>;
-  let mockButtons: QueryList<MockButton>;
+  let fixture: ComponentFixture<ButtonDemo>;
+  let myButtons: QueryList<MyButton>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [MockButtonDemo, MockButton],
-    }).compileComponents();
-    fixture = TestBed.createComponent(MockButtonDemo);
+    TestBed.configureTestingModule({declarations: [ButtonDemo, MyButton]}).compileComponents();
+    fixture = TestBed.createComponent(ButtonDemo);
     fixture.detectChanges();
-    mockButtons = fixture.componentInstance.mockButtons;
+    myButtons = fixture.componentInstance.myButtons;
   });
 
   it('should call the click handler when a click event occurs', () => {
-    const button = mockButtons.get(0)!;
+    const button = myButtons.get(0)!;
     spyOn(button, 'onClick');
     expect(button.onClick).not.toHaveBeenCalled();
 
@@ -30,8 +36,8 @@ describe('GlobalListener', () => {
   });
 
   it('should only call the handler for the button that the event happened on', () => {
-    const button0 = mockButtons.get(0)!;
-    const button1 = mockButtons.get(1)!;
+    const button0 = myButtons.get(0)!;
+    const button1 = myButtons.get(1)!;
 
     spyOn(button0, 'onClick');
     spyOn(button1, 'onClick');
@@ -47,13 +53,22 @@ describe('GlobalListener', () => {
     expect(button0.onClick).toHaveBeenCalledTimes(2);
     expect(button1.onClick).toHaveBeenCalledTimes(1);
   });
+
+  it('should call the handler if the event target is a child of the specified element', () => {
+    const buttonText = fixture.componentInstance.buttonText.nativeElement;
+    const button = myButtons.get(2)!;
+    spyOn(button, 'onClick');
+    expect(button.onClick).toHaveBeenCalledTimes(0);
+
+    buttonText.click();
+    expect(button.onClick).toHaveBeenCalledTimes(1);
+  });
 });
 
 @Directive({
-  selector: '[mock-button]',
-  host: {class: 'mock-button'},
+  selector: 'button[my-button]',
 })
-class MockButton implements OnDestroy {
+class MyButton implements OnDestroy {
   private _subscription: Subscription;
 
   constructor(
@@ -74,10 +89,12 @@ class MockButton implements OnDestroy {
 
 @Component({
   template: `
-    <button mock-button >Mock Button #1</button>
-    <button mock-button >Mock Button #2</button>
+    <button my-button>Button #1</button>
+    <button my-button>Button #2</button>
+    <button my-button><span #buttonText>Button #3</span></button>
   `,
 })
-export class MockButtonDemo {
-  @ViewChildren(MockButton) mockButtons: QueryList<MockButton>;
+export class ButtonDemo {
+  @ViewChildren(MyButton) myButtons: QueryList<MyButton>;
+  @ViewChild('buttonText') buttonText: ElementRef<HTMLElement>;
 }

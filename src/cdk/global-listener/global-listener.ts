@@ -56,7 +56,7 @@ export class GlobalListener implements OnDestroy {
     return this._ngZone.runOutsideAngular(() =>
       this._observables.get(type)!.subscribe((event: Event) =>
         this._ngZone.run(() => {
-          if (event.target === element) {
+          if (event.target instanceof Node && element.contains(event.target)) {
             listener(event);
           }
         }),
@@ -66,7 +66,7 @@ export class GlobalListener implements OnDestroy {
 
   /** Creates an observable that emits all events of the given type. */
   private _createGlobalEventObservable(type: keyof DocumentEventMap) {
-    return fromEvent(this._document, type, {passive: true}).pipe(
+    return fromEvent(this._document, type, {passive: true, capture: true}).pipe(
       takeUntil(this._destroyed),
       finalize(() => this._observables.delete(type)),
       share(),
