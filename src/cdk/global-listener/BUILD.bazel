@@ -38,3 +38,8 @@ markdown_to_html(
     name = "overview",
     srcs = [":global-listener.md"],
 )
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)
