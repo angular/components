@@ -7,7 +7,7 @@
 @use '../core/focus-indicators/private' as focus-indicators-private;
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-base-styles-query);
+  @include mdc-fab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
 }
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
