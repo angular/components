@@ -14,18 +14,18 @@
     mdc-ripple-theme.$light-ink-opacities, mdc-ripple-theme.$dark-ink-opacities);
 
   // Ideally these styles would be structural, but MDC bases some of the opacities on the theme.
-  &:hover .mat-mdc-button-persistent-ripple::before {
+  &:hover .mat-mdc-button-ripple::before {
     opacity: map.get($opacities, hover);
   }
 
   &.cdk-program-focused,
   &.cdk-keyboard-focused {
-    .mat-mdc-button-persistent-ripple::before {
+    .mat-mdc-button-ripple::before {
       opacity: map.get($opacities, focus);
     }
   }
 
-  &:active .mat-mdc-button-persistent-ripple::before {
+  &:active .mat-mdc-button-ripple::before {
     opacity: map.get($opacities, press);
   }
 
@@ -59,7 +59,7 @@
 // Hides the touch target on lower densities.
 @mixin touch-target-density($scale) {
   @include mdc-helpers.if-touch-targets-unsupported($scale) {
-    .mat-mdc-button-touch-target {
+    &::after {
       display: none;
     }
   }

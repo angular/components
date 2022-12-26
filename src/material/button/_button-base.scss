@@ -14,8 +14,7 @@
 
   // The ripple container should match the bounds of the entire button.
   .mat-mdc-button-ripple,
-  .mat-mdc-button-persistent-ripple,
-  .mat-mdc-button-persistent-ripple::before {
+  .mat-mdc-button-ripple::before {
     @include layout-common.fill;
 
     // Disable pointer events for the ripple container and state overlay because the container
@@ -31,7 +30,7 @@
   }
 
   // We use ::before so that we can reuse some of MDC's theming.
-  .mat-mdc-button-persistent-ripple::before {
+  .mat-mdc-button-ripple::before {
     content: '';
     opacity: 0;
     background-color: var(--mat-mdc-button-persistent-ripple-color);
@@ -77,10 +76,11 @@
   // goes against our rule of not having margins on the host node. Furthermore, having the margin on
   // the button itself would require us to wrap it in another div. See:
   // https://github.com/material-components/material-components-web/tree/master/packages/mdc-button#making-buttons-accessible
-  .mat-mdc-button-touch-target {
+  &::after {
     @include mdc-touch-target.touch-target(
       $set-width: $is-square,
       $query: mdc-helpers.$mdc-base-styles-query);
+    content: '';
   }
 }
 

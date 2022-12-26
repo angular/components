@@ -101,6 +101,6 @@
 
 // All FABs are square except the extended ones so we
 // need to set the touch target back to full-width.
-.mat-mdc-extended-fab .mat-mdc-button-touch-target {
+.mat-mdc-extended-fab::after {
   width: 100%;
 }
