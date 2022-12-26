@@ -98,7 +98,7 @@ export class FocusMonitor implements OnDestroy {
   private _windowFocusTimeoutId: number;
 
   /** The timeout id of the origin clearing timeout. */
-  private _originTimeoutId: number;
+    private _originTimeoutId: ReturnType<typeof setTimeout>;
 
   /**
    * Whether the origin was determined via a touch interaction. Necessary as properly attributing
