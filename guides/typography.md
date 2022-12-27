@@ -51,8 +51,8 @@ table below.
 | `headline-6`     | Section heading corresponding to the `<h2>` tag.                            |
 | `subtitle-1`     | Section heading corresponding to the `<h3>` tag.                            |
 | `subtitle-2`     | Section heading corresponding to the `<h4>` tag.                            |
-| `body-1`         | Base body text.                                                             |
-| `body-2`         | Bolder body text.                                                           |
+| `body-1`         | Bolder body text.                                                             |
+| `body-2`         | Base body text.                                                           |
 | `caption`        | Smaller body and hint text.                                                 |
 | `button`         | Buttons and anchors.                                                        |
 
