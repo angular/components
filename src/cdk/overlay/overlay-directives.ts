@@ -78,6 +78,7 @@ export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY = new InjectionToken<() => Sc
 @Directive({
   selector: '[cdk-overlay-origin], [overlay-origin], [cdkOverlayOrigin]',
   exportAs: 'cdkOverlayOrigin',
+  standalone: true,
 })
 export class CdkOverlayOrigin {
   constructor(
@@ -93,6 +94,7 @@ export class CdkOverlayOrigin {
 @Directive({
   selector: '[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]',
   exportAs: 'cdkConnectedOverlay',
+  standalone: true,
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
