@@ -797,7 +797,7 @@ export class MatSlider
 
   /** Updates the width of the tick mark track. */
   private _updateTickMarkTrackUI(): void {
-    if (this._skipUpdate()) {
+    if (!this.showTickMarks || this._skipUpdate()) {
       return;
     }
 
@@ -883,7 +883,12 @@ export class MatSlider
 
   /** Updates the dots along the slider track. */
   _updateTickMarkUI(): void {
-    if (this.step === undefined || this.min === undefined || this.max === undefined) {
+    if (
+      !this.showTickMarks ||
+      this.step === undefined ||
+      this.min === undefined ||
+      this.max === undefined
+    ) {
       return;
     }
     const step = this.step > 0 ? this.step : 1;
