@@ -384,6 +384,7 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit, After
     if (!this.tabPanel && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw new Error('A mat-tab-nav-panel must be specified via [tabPanel].');
     }
+    super.ngAfterViewInit();
   }
 }
 
