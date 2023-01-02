@@ -119,25 +119,45 @@ $_emitted-density: () !default;
 
 // Validates the specified theme by ensuring that the optional color config defines
 // a primary, accent and warn palette. Returns the theme if no failures were found.
-@function _mat-validate-theme($theme) {
+@function _validate-theme($theme) {
   @if map.get($theme, color) {
+    // These variables are only used to invoke the validation functions, otherwise they're unused.
     $color: map.get($theme, color);
-    @if not map.get($color, primary) {
-      @error 'Theme does not define a valid "primary" palette.';
-    }
-    @else if not map.get($color, accent) {
-      @error 'Theme does not define a valid "accent" palette.';
-    }
-    @else if not map.get($color, warn) {
-      @error 'Theme does not define a valid "warn" palette.';
-    }
+    $primary: _validate-palette($color, 'primary');
+    $accent: _validate-palette($color, 'accent');
+    $warn: _validate-palette($color, 'warn');
   }
   @return $theme;
 }
 
+// Validates that a specific palette in a theme has the correct shape.
+@function _validate-palette($theme, $name) {
+  $palette: map.get($theme, $name);
+  $required-keys: ('default', 'lighter', 'darker', 'text');
+  $missing-keys: ();
+
+  @if not $palette {
+    @error 'Theme does not define a "#{$name}" palette.';
+  }
+
+  @each $key in $required-keys {
+    @if not map.has-key($palette, $key) {
+      $missing-keys: list.append($missing-keys, $key);
+    }
+  }
+
+  @if list.length($missing-keys) > 0 {
+    @error 'Palette "#{$name}" is invalid, because it does not define the following keys: ' +
+           '#{$missing-keys}. Ensure that your palette is wrapped in a call to Material\'s ' +
+           '`define-palette` function.';
+  }
+
+  @return $palette;
+}
+
 // Creates a light-themed color configuration from the specified
 // primary, accent and warn palettes.
-@function _mat-create-light-color-config($primary, $accent, $warn: null) {
+@function _create-light-color-config($primary, $accent, $warn: null) {
   @return (
     primary: $primary,
     accent: $accent,
@@ -150,7 +170,7 @@ $_emitted-density: () !default;
 
 // Creates a dark-themed color configuration from the specified
 // primary, accent and warn palettes.
-@function _mat-create-dark-color-config($primary, $accent, $warn: null) {
+@function _create-dark-color-config($primary, $accent, $warn: null) {
   @return (
     primary: $primary,
     accent: $accent,
@@ -183,9 +203,9 @@ $_emitted-density: () !default;
   // configuration for the `color` theming part.
   @if $accent != null {
     @warn $_legacy-theme-warning;
-    @return private-create-backwards-compatibility-theme(_mat-validate-theme((
+    @return private-create-backwards-compatibility-theme(_validate-theme((
       _is-legacy-theme: true,
-      color: _mat-create-light-color-config($primary, $accent, $warn),
+      color: _create-light-color-config($primary, $accent, $warn),
     )));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
@@ -197,9 +217,9 @@ $_emitted-density: () !default;
     $primary: map.get($color-settings, primary);
     $accent: map.get($color-settings, accent);
     $warn: map.get($color-settings, warn);
-    $result: map.merge($result, (color: _mat-create-light-color-config($primary, $accent, $warn)));
+    $result: map.merge($result, (color: _create-light-color-config($primary, $accent, $warn)));
   }
-  @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
+  @return private-create-backwards-compatibility-theme(_validate-theme($result));
 }
 
 // TODO: Remove legacy API and rename below `$primary` to `$config`. Currently it cannot be renamed
@@ -224,9 +244,9 @@ $_emitted-density: () !default;
   // configuration for the `color` theming part.
   @if $accent != null {
     @warn $_legacy-theme-warning;
-    @return private-create-backwards-compatibility-theme(_mat-validate-theme((
+    @return private-create-backwards-compatibility-theme(_validate-theme((
       _is-legacy-theme: true,
-      color: _mat-create-dark-color-config($primary, $accent, $warn),
+      color: _create-dark-color-config($primary, $accent, $warn),
     )));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
@@ -238,9 +258,9 @@ $_emitted-density: () !default;
     $primary: map.get($color-settings, primary);
     $accent: map.get($color-settings, accent);
     $warn: map.get($color-settings, warn);
-    $result: map.merge($result, (color: _mat-create-dark-color-config($primary, $accent, $warn)));
+    $result: map.merge($result, (color: _create-dark-color-config($primary, $accent, $warn)));
   }
-  @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
+  @return private-create-backwards-compatibility-theme(_validate-theme($result));
 }
 
 /// Gets the color configuration from the given theme or configuration.
