@@ -67,10 +67,10 @@ describe('MenuItem', () => {
       expect(menuItem.hasMenu).toBeFalse();
     });
 
-    it('should prevent the default selection key action', () => {
+    it('should not prevent the default selection key action', () => {
       const event = dispatchKeyboardEvent(nativeButton, 'keydown', ENTER);
       fixture.detectChanges();
-      expect(event.defaultPrevented).toBe(true);
+      expect(event.defaultPrevented).toBe(false);
     });
   });
 
