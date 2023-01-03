@@ -22,6 +22,17 @@ mat-menu {
 }
 
 .mat-mdc-menu-panel {
+  // Prevent users from interacting with the panel while it's animating. Note that
+  // people won't be able to click through it, because the overlay pane will catch the click.
+  // This fixes the following issues:
+  //  * Users accidentally opening sub-menus when the `overlapTrigger` option is enabled.
+  //  * Users accidentally tapping on content inside the sub-menu on touch devices, if the
+  //    sub-menu overlaps the trigger. The issue is due to touch devices emulating the
+  //    `mouseenter` event by dispatching it on tap.
+  &.ng-animating {
+    pointer-events: none;
+  }
+
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
