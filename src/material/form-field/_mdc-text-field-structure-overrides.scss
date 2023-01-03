@@ -20,6 +20,19 @@
     border: none;
   }
 
+  // TODO(crisbeto): port this fix over into MDC
+  // MDC only sets a max-width form outlined form fields, but we need it
+  // for filled ones as well in order for the text truncation to work.
+  .mat-form-field-appearance-fill {
+    .mdc-floating-label {
+      max-width: 100%;
+    }
+
+    .mdc-floating-label--float-above {
+      max-width: 133.33%;
+    }
+  }
+
   .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
     // In order to ensure proper alignment of the floating label, we reset its line-height.
     // The line-height is not important as the element is absolutely positioned and only has one
@@ -135,5 +148,4 @@
   .mat-mdc-text-field-wrapper::before {
     content: none;
   }
-
 }
