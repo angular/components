@@ -26,9 +26,11 @@ import {
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterContentInit,
+  ChangeDetectorRef,
   Directive,
   ElementRef,
   EventEmitter,
+  inject,
   Inject,
   InjectionToken,
   Input,
@@ -93,6 +95,7 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
   private _hoverSubscription = Subscription.EMPTY;
   private _menuCloseSubscription = Subscription.EMPTY;
   private _scrollStrategy: () => ScrollStrategy;
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   /**
    * We're specifically looking for a `MatMenu` here since the generic `MatMenuPanel`
@@ -436,11 +439,15 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
 
   // set state rather than toggle to support triggers sharing a menu
   private _setIsMenuOpen(isOpen: boolean): void {
-    this._menuOpen = isOpen;
-    this._menuOpen ? this.menuOpened.emit() : this.menuClosed.emit();
+    if (isOpen !== this._menuOpen) {
+      this._menuOpen = isOpen;
+      this._menuOpen ? this.menuOpened.emit() : this.menuClosed.emit();
 
-    if (this.triggersSubmenu()) {
-      this._menuItemInstance._setHighlighted(isOpen);
+      if (this.triggersSubmenu()) {
+        this._menuItemInstance._setHighlighted(isOpen);
+      }
+
+      this._changeDetectorRef.markForCheck();
     }
   }
 
