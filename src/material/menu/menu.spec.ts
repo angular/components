@@ -897,6 +897,26 @@ describe('MDC-based MatMenu', () => {
     expect(triggerEl.getAttribute('aria-expanded')).toBe('false');
   }));
 
+  it('should toggle aria-expanded on the trigger in an OnPush component', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenuOnPush, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    expect(triggerEl.getAttribute('aria-expanded')).toBe('false');
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(triggerEl.getAttribute('aria-expanded')).toBe('true');
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(triggerEl.getAttribute('aria-expanded')).toBe('false');
+  }));
+
   it('should throw if assigning a menu that contains the trigger', fakeAsync(() => {
     expect(() => {
       const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
@@ -2737,34 +2757,34 @@ describe('MatMenu default overrides', () => {
   }));
 });
 
-@Component({
-  template: `
-    <button
-      [matMenuTriggerFor]="menu"
-      [matMenuTriggerRestoreFocus]="restoreFocus"
-      #triggerEl>Toggle menu</button>
-    <mat-menu
-      #menu="matMenu"
-      [class]="panelClass"
-      (closed)="closeCallback($event)"
-      [backdropClass]="backdropClass"
-      [aria-label]="ariaLabel"
-      [aria-labelledby]="ariaLabelledby"
-      [aria-describedby]="ariaDescribedby">
+const SIMPLE_MENU_TEMPLATE = `
+  <button
+    [matMenuTriggerFor]="menu"
+    [matMenuTriggerRestoreFocus]="restoreFocus"
+    #triggerEl>Toggle menu</button>
+  <mat-menu
+    #menu="matMenu"
+    [class]="panelClass"
+    (closed)="closeCallback($event)"
+    [backdropClass]="backdropClass"
+    [aria-label]="ariaLabel"
+    [aria-labelledby]="ariaLabelledby"
+    [aria-describedby]="ariaDescribedby">
 
-      <button mat-menu-item> Item </button>
-      <button mat-menu-item disabled> Disabled </button>
-      <button mat-menu-item disableRipple>
-        <mat-icon>unicorn</mat-icon>
-        Item with an icon
-      </button>
-      <button mat-menu-item>
-        <span>Item with text inside span</span>
-      </button>
-      <button *ngFor="let item of extraItems" mat-menu-item> {{item}} </button>
-    </mat-menu>
-  `,
-})
+    <button mat-menu-item> Item </button>
+    <button mat-menu-item disabled> Disabled </button>
+    <button mat-menu-item disableRipple>
+      <mat-icon>unicorn</mat-icon>
+      Item with an icon
+    </button>
+    <button mat-menu-item>
+      <span>Item with text inside span</span>
+    </button>
+    <button *ngFor="let item of extraItems" mat-menu-item> {{item}} </button>
+  </mat-menu>
+`;
+
+@Component({template: SIMPLE_MENU_TEMPLATE})
 class SimpleMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
@@ -2779,6 +2799,9 @@ class SimpleMenu {
   ariaLabelledby: string;
   ariaDescribedby: string;
 }
+
+@Component({template: SIMPLE_MENU_TEMPLATE, changeDetection: ChangeDetectionStrategy.OnPush})
+class SimpleMenuOnPush extends SimpleMenu {}
 
 @Component({
   template: `
