@@ -33,6 +33,9 @@ const ignorePackages = [
   // tests for the actual snapshot Angular framework code.
   '@angular/build-tooling',
   '@angular/ng-dev',
+  // TODO(ESM-MIGRATION): Angular Bazel no longer generates dev-mode and relies on `ts_library`
+  //  being patched. Until our setup is compatible with it, we do not update `@angular/bazel`.
+  '@angular/bazel',
 ];
 
 const {writeFileSync} = require('fs');
