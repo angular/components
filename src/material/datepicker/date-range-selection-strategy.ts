@@ -97,22 +97,34 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
       return null;
     }
 
-    const diff = this._dateAdapter.compareDate(newDate, dragOrigin);
-    const isRange = this._dateAdapter.compareDate(start, end) !== 0;
+    const adapter = this._dateAdapter;
 
-    if (isRange && this._dateAdapter.sameDate(dragOrigin, originalRange.start)) {
+    const isRange = adapter.compareDate(start, end) !== 0;
+    const diffYears = adapter.getYear(newDate) - adapter.getYear(dragOrigin);
+    const diffMonths = adapter.getMonth(newDate) - adapter.getMonth(dragOrigin);
+    const diffDays = adapter.getDate(newDate) - adapter.getDate(dragOrigin);
+
+    if (isRange && adapter.sameDate(dragOrigin, originalRange.start)) {
       start = newDate;
-      if (this._dateAdapter.compareDate(newDate, end) > 0) {
-        end = this._dateAdapter.addCalendarDays(end, diff);
+      if (adapter.compareDate(newDate, end) > 0) {
+        end = adapter.addCalendarYears(end, diffYears);
+        end = adapter.addCalendarMonths(end, diffMonths);
+        end = adapter.addCalendarDays(end, diffDays);
       }
-    } else if (isRange && this._dateAdapter.sameDate(dragOrigin, originalRange.end)) {
+    } else if (isRange && adapter.sameDate(dragOrigin, originalRange.end)) {
       end = newDate;
-      if (this._dateAdapter.compareDate(newDate, start) < 0) {
-        start = this._dateAdapter.addCalendarDays(start, diff);
+      if (adapter.compareDate(newDate, start) < 0) {
+        start = adapter.addCalendarYears(start, diffYears);
+        start = adapter.addCalendarMonths(start, diffMonths);
+        start = adapter.addCalendarDays(start, diffDays);
       }
     } else {
-      start = this._dateAdapter.addCalendarDays(start, diff);
-      end = this._dateAdapter.addCalendarDays(end, diff);
+      start = adapter.addCalendarYears(start, diffYears);
+      start = adapter.addCalendarMonths(start, diffMonths);
+      start = adapter.addCalendarDays(start, diffDays);
+      end = adapter.addCalendarYears(end, diffYears);
+      end = adapter.addCalendarMonths(end, diffMonths);
+      end = adapter.addCalendarDays(end, diffDays);
     }
 
     return new DateRange<D>(start, end);
