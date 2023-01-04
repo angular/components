@@ -72,6 +72,9 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
     'class': 'mdc-slider__input',
     'type': 'range',
     '[attr.aria-valuetext]': '_valuetext',
+    '[attr.aria-valuemin]': 'min',
+    '[attr.aria-valuemax]': 'max',
+    '[attr.aria-valuenow]': 'value',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
     // TODO(wagnermaciel): Consider using a global event listener instead.
