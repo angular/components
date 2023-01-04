@@ -34,6 +34,9 @@ $mat-slider-horizontal-margin: 8px !default;
   -webkit-tap-highlight-color: transparent;
 
   .mdc-slider__input {
+    // It's common for apps to globally set `box-sizing: border-box` which messes up our
+    // measurements. Explicitly set `content-box` to avoid issues like #26246.
+    box-sizing: content-box;
     pointer-events: auto;
 
     &.mat-mdc-slider-input-no-pointer-events {
