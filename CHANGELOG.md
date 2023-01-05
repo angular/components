@@ -1,3 +1,25 @@
+<a name="15.0.4"></a>
+# 15.0.4 "spandex-sword" (2023-01-05)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7fc766379](https://github.com/angular/components/commit/e7fc7663791431774761e9885bf0a3c79c71d321) | fix | **menu:** aria-expanded not updating in an OnPush component ([#26279](https://github.com/angular/components/pull/26279)) |
+| [caa8f7b005](https://github.com/angular/components/commit/caa8f7b0051537767d6869d9498dbae423980d1d) | fix | **menu:** prevent pointer events on animating menu ([#26323](https://github.com/angular/components/pull/26323)) |
+| [ee63ad32b2](https://github.com/angular/components/commit/ee63ad32b204559c26256a1758c708f86db6503e) | fix | **slider:** avoid updating tick marks unnecessarily ([#26322](https://github.com/angular/components/pull/26322)) |
+| [41cfc6e2f4](https://github.com/angular/components/commit/41cfc6e2f4d0c2608d019501623e0af9a8208653) | fix | **slider:** dragEnd not being emitted ([#26289](https://github.com/angular/components/pull/26289)) |
+| [6c4a1f74b4](https://github.com/angular/components/commit/6c4a1f74b4f2a558edb2b7548a082c71f552bded) | fix | **slider:** value jumping after drag with box-sizing: border-box ([#26345](https://github.com/angular/components/pull/26345)) |
+| [b52cd63bb1](https://github.com/angular/components/commit/b52cd63bb149aa4e6ce28bfe0498ee08384889d0) | fix | **snack-bar:** incorrect width at some breakpoints ([#26334](https://github.com/angular/components/pull/26334)) |
+| [5cce2fe6d6](https://github.com/angular/components/commit/5cce2fe6d6dd240fc820b802c20d4f9a17bcd00a) | fix | **snack-bar:** set explicit color on action in dark themes ([#26268](https://github.com/angular/components/pull/26268)) |
+| [3e50216f6d](https://github.com/angular/components/commit/3e50216f6d1589b6c5699a85738ba66e2addb00b) | fix | **tabs:** touch gestures not working on tab nav bar ([#26344](https://github.com/angular/components/pull/26344)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [70cf080cd5](https://github.com/angular/components/commit/70cf080cd582bc653e6a0aa69e596949d9560578) | fix | **popover-edit:** Make cell focus indicator visible in high contrast (forced colors) mode ([#26275](https://github.com/angular/components/pull/26275)) |
+## Special Thanks
+Daniel, Karl Seamon, Kristiyan Kostadinov, Paul Gschwendtner and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.0-next.2"></a>
 # 15.1.0-next.2 "cashmere-cardigan" (2022-12-14)
 ### cdk
