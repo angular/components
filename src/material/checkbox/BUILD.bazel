@@ -27,7 +27,6 @@ ng_module(
         "@npm//@angular/animations",
         "@npm//@angular/core",
         "@npm//@angular/forms",
-        "@npm//@material/checkbox",
     ],
 )
 

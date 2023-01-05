@@ -22,7 +22,6 @@ import {
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {cssClasses, numbers} from '@material/dialog';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 
@@ -31,6 +30,21 @@ interface LegacyDialogAnimationEvent {
   state: 'opened' | 'opening' | 'closing' | 'closed';
   totalTime: number;
 }
+
+/** Class added when the dialog is open. */
+const OPEN_CLASS = 'mdc-dialog--open';
+
+/** Class added while the dialog is opening. */
+const OPENING_CLASS = 'mdc-dialog--opening';
+
+/** Class added while the dialog is closing. */
+const CLOSING_CLASS = 'mdc-dialog--closing';
+
+/** Duration of the opening animation in milliseconds. */
+export const OPEN_ANIMATION_DURATION = 150;
+
+/** Duration of the closing animation in milliseconds. */
+export const CLOSE_ANIMATION_DURATION = 75;
 
 /**
  * Base class for the `MatDialogContainer`. The base class does not implement
@@ -145,11 +159,11 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
   /** Duration of the dialog open animation. */
   private _openAnimationDuration = this._animationsEnabled
-    ? parseCssTime(this._config.enterAnimationDuration) ?? numbers.DIALOG_ANIMATION_OPEN_TIME_MS
+    ? parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION
     : 0;
   /** Duration of the dialog close animation. */
   private _closeAnimationDuration = this._animationsEnabled
-    ? parseCssTime(this._config.exitAnimationDuration) ?? numbers.DIALOG_ANIMATION_CLOSE_TIME_MS
+    ? parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: number | null = null;
@@ -213,11 +227,11 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
         TRANSITION_DURATION_PROPERTY,
         `${this._openAnimationDuration}ms`,
       );
-      this._hostElement.classList.add(cssClasses.OPENING);
-      this._hostElement.classList.add(cssClasses.OPEN);
+      this._hostElement.classList.add(OPENING_CLASS);
+      this._hostElement.classList.add(OPEN_CLASS);
       this._waitForAnimationToComplete(this._openAnimationDuration, this._finishDialogOpen);
     } else {
-      this._hostElement.classList.add(cssClasses.OPEN);
+      this._hostElement.classList.add(OPEN_CLASS);
       // Note: We could immediately finish the dialog opening here with noop animations,
       // but we defer until next tick so that consumers can subscribe to `afterOpened`.
       // Executing this immediately would mean that `afterOpened` emits synchronously
@@ -232,14 +246,14 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
    */
   _startExitAnimation(): void {
     this._animationStateChanged.emit({state: 'closing', totalTime: this._closeAnimationDuration});
-    this._hostElement.classList.remove(cssClasses.OPEN);
+    this._hostElement.classList.remove(OPEN_CLASS);
 
     if (this._animationsEnabled) {
       this._hostElement.style.setProperty(
         TRANSITION_DURATION_PROPERTY,
         `${this._openAnimationDuration}ms`,
       );
-      this._hostElement.classList.add(cssClasses.CLOSING);
+      this._hostElement.classList.add(CLOSING_CLASS);
       this._waitForAnimationToComplete(this._closeAnimationDuration, this._finishDialogClose);
     } else {
       // This subscription to the `OverlayRef#backdropClick` observable in the `DialogRef` is
@@ -283,8 +297,8 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
 
   /** Clears all dialog animation classes. */
   private _clearAnimationClasses() {
-    this._hostElement.classList.remove(cssClasses.OPENING);
-    this._hostElement.classList.remove(cssClasses.CLOSING);
+    this._hostElement.classList.remove(OPENING_CLASS);
+    this._hostElement.classList.remove(CLOSING_CLASS);
   }
 
   private _waitForAnimationToComplete(duration: number, callback: () => void) {

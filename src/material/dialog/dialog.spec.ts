@@ -40,7 +40,6 @@ import {
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {numbers} from '@material/dialog';
 import {Subject} from 'rxjs';
 import {
   MatDialog,
@@ -50,6 +49,7 @@ import {
   MAT_DIALOG_DATA,
   MAT_DIALOG_DEFAULT_OPTIONS,
 } from './index';
+import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 
 describe('MDC-based MatDialog', () => {
   let dialog: MatDialog;
@@ -1999,14 +1999,12 @@ describe('MDC-based MatDialog with animations enabled', () => {
     // callback should not be called before animation is complete
     expect(spy).not.toHaveBeenCalled();
 
-    tick(numbers.DIALOG_ANIMATION_OPEN_TIME_MS);
+    tick(OPEN_ANIMATION_DURATION);
     expect(spy).toHaveBeenCalled();
   }));
 
   it('should return the current state of the dialog', fakeAsync(() => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
-    // Duration of the close animation in milliseconds.
-    const dialogCloseDuration = numbers.DIALOG_ANIMATION_CLOSE_TIME_MS;
 
     expect(dialogRef.getState()).toBe(MatDialogState.OPEN);
     dialogRef.close();
@@ -2017,7 +2015,7 @@ describe('MDC-based MatDialog with animations enabled', () => {
     // Ensure that the closing state is still set if half of the animation has
     // passed by. The dialog state should be only set to `closed` when the dialog
     // finished the close animation.
-    tick(dialogCloseDuration / 2);
+    tick(CLOSE_ANIMATION_DURATION / 2);
     expect(dialogRef.getState()).toBe(MatDialogState.CLOSING);
 
     // Flush the remaining duration of the closing animation. We flush all other remaining
