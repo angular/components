@@ -11,7 +11,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {CommonModule} from '@angular/common';
 import {ThemePalette} from '@angular/material/core';
 import {MatChipInputEvent, MatChipEditedEvent, MatChipsModule} from '@angular/material/chips';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -71,11 +71,12 @@ export class ChipsDemo {
     {label: 'Good for Brunch', avatar: 'B', selected: false},
   ];
 
+  control = new FormControl<Person[]>([], Validators.required);
+
   // Enter, comma, semi-colon
   separatorKeysCodes = [ENTER, COMMA, 186];
 
   selectedPeople = null;
-
   people: Person[] = [
     {name: 'Kara'},
     {name: 'Jeremy'},
@@ -96,16 +97,29 @@ export class ChipsDemo {
     this.message = message;
   }
 
-  add(event: MatChipInputEvent): void {
+  add(event: MatChipInputEvent, isReactiveForm?: boolean): void {
     const value = (event.value || '').trim();
 
     // Add our person
     if (value) {
-      this.people.push({name: value});
+      isReactiveForm
+        ? this.control.setValue([...this.control.value!, {name: value}])
+        : this.people.push({name: value});
     }
 
     // Clear the input value
     event.chipInput!.clear();
+  }
+
+  edit(person: Person, event: MatChipEditedEvent): void {
+    if (!event.value.trim().length) {
+      this.remove(person);
+    }
+
+    const index = this.people.indexOf(person);
+    const newPeople = this.people.slice();
+    newPeople[index] = {...newPeople[index], name: event.value};
+    this.people = newPeople;
   }
 
   remove(person: Person): void {
@@ -116,16 +130,29 @@ export class ChipsDemo {
     }
   }
 
-  edit(person: Person, event: MatChipEditedEvent): void {
-    if (!event.value.trim().length) {
-      this.remove(person);
+  editControl(event: MatChipEditedEvent, index: number): void {
+    const value = event.value.trim();
+    const options: any[] = [...this.control.value!];
+
+    // Remove chip if it no longer has a name
+    if (!value) {
+      options.splice(index, 1);
+      this.control.setValue(options);
       return;
     }
 
-    const index = this.people.indexOf(person);
-    const newPeople = this.people.slice();
-    newPeople[index] = {...newPeople[index], name: event.value};
-    this.people = newPeople;
+    options[index] = {name: value} as Person;
+    this.control.setValue(options);
+  }
+
+  removeControl(index: number): void {
+    const options: any[] = [...this.control.value!];
+    options.splice(index, 1);
+    this.control.setValue(options);
+  }
+
+  displayFn(obj: any): any {
+    return obj['name'];
   }
 
   toggleVisible(): void {

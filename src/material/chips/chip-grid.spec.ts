@@ -35,7 +35,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
+import {
+  MatChipEditedEvent,
+  MatChipEditInput,
+  MatChipEvent,
+  MatChipGrid,
+  MatChipInputEvent,
+  MatChipRow,
+  MatChipsModule,
+} from './index';
 
 describe('MDC-based MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
@@ -566,6 +574,109 @@ describe('MDC-based MatChipGrid', () => {
     }));
   });
 
+  describe('chip grid with chip input bound to Reactive form', () => {
+    let fixture: ComponentFixture<InputReactiveFormChipGrid>;
+    let nativeInput: HTMLInputElement;
+
+    beforeEach(() => {
+      fixture = createComponent(InputReactiveFormChipGrid);
+      nativeInput = fixture.nativeElement.querySelector('input');
+    });
+
+    it('should add new chip on user input', fakeAsync(() => {
+      expect(fixture.componentInstance.control.value)
+        .withContext(`Expected the control's value to be empty initially.`)
+        .toEqual(null);
+
+      nativeInput.focus();
+
+      typeInElement(nativeInput, '123');
+      fixture.detectChanges();
+      dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
+      fixture.detectChanges();
+      flush();
+
+      dispatchFakeEvent(nativeInput, 'blur');
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.control.value).toContain(
+        jasmine.objectContaining({value: '123-0'}),
+      );
+    }));
+
+    it('should add new chip on user input having already items', fakeAsync(() => {
+      fixture.componentInstance.control.setValue([{value: '234-0', viewValue: '234'}]);
+
+      expect(fixture.componentInstance.control.value)
+        .withContext(`Expected the control's value to have default values initially.`)
+        .toContain(jasmine.objectContaining({value: '234-0', viewValue: '234'}));
+
+      nativeInput.focus();
+      typeInElement(nativeInput, '123');
+      fixture.detectChanges();
+      dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
+      fixture.detectChanges();
+      flush();
+
+      dispatchFakeEvent(nativeInput, 'blur');
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.control.value).toContain(
+        jasmine.objectContaining({value: '123-1'}),
+      );
+    }));
+
+    it('should edit existing chip and update form value', fakeAsync(() => {
+      fixture.componentInstance.control.setValue([{value: '234-0', viewValue: '234'}]);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.control.value)
+        .withContext(`Expected the control's value to have default values initially.`)
+        .toContain(jasmine.objectContaining({value: '234-0', viewValue: '234'}));
+
+      const nativeChipDebug = fixture.debugElement.query(By.directive(MatChipRow));
+      const nativeChip: HTMLElement = nativeChipDebug.nativeElement;
+      nativeChip.focus();
+      dispatchKeyboardEvent(nativeChip, 'keydown', ENTER);
+      dispatchFakeEvent(nativeChip, 'dblclick');
+      fixture.detectChanges();
+      flush();
+
+      const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
+      const editInputInstance =
+        editInputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
+      editInputInstance.setValue('456');
+      dispatchKeyboardEvent(nativeChip.querySelector('.mat-chip-edit-input')!, 'keydown', ENTER);
+      flush();
+
+      expect(fixture.componentInstance.control.value).toContain(
+        jasmine.objectContaining({value: '456-1', viewValue: '456'}),
+      );
+    }));
+
+    it('should display empty value having provided unknown property', fakeAsync(() => {
+      fixture.componentInstance.control.setValue([{value: '234-0', viewValue: '234'}]);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.control.value)
+        .withContext(`Expected the control's value to have default values initially.`)
+        .toContain(jasmine.objectContaining({value: '234-0', viewValue: '234'}));
+
+      fixture.componentInstance.displayWith = (value: any) => value.unknownProperty;
+      fixture.detectChanges();
+
+      const nativeChipDebug = fixture.debugElement.query(By.directive(MatChipRow));
+      const nativeChip: HTMLElement = nativeChipDebug.nativeElement;
+      nativeChip.focus();
+      dispatchKeyboardEvent(nativeChip, 'keydown', ENTER);
+      dispatchFakeEvent(nativeChip, 'dblclick');
+      fixture.detectChanges();
+      flush();
+
+      expect(nativeChip.textContent).toBe('');
+    }));
+  });
+
   describe('chip grid with chip input', () => {
     let fixture: ComponentFixture<InputChipGrid>;
     let nativeChips: HTMLElement[];
@@ -710,7 +821,7 @@ describe('MDC-based MatChipGrid', () => {
     it('should mark the component as required if the control has a required validator', () => {
       fixture.destroy();
       fixture = TestBed.createComponent(InputChipGrid);
-      fixture.componentInstance.control = new FormControl('', [Validators.required]);
+      fixture.componentInstance.control = new FormControl(null, [Validators.required]);
       fixture.detectChanges();
 
       expect(
@@ -769,7 +880,7 @@ describe('MDC-based MatChipGrid', () => {
     }));
 
     it('should set aria-invalid if the form field is invalid', fakeAsync(() => {
-      fixture.componentInstance.control = new FormControl('', [Validators.required]);
+      fixture.componentInstance.control = new FormControl(null, [Validators.required]);
       fixture.detectChanges();
 
       const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
@@ -1140,6 +1251,86 @@ class InputChipGrid {
 
   @ViewChild(MatChipGrid) chipGrid: MatChipGrid;
   @ViewChildren(MatChipRow) chips: QueryList<MatChipRow>;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>New food...</mat-label>
+      <mat-chip-grid #chipGrid placeholder="Food" [formControl]="control">
+        <mat-chip-row
+            *ngFor="let food of control.value; let index = index"
+            [value]="food"
+            [displayWith]="displayWith"
+            [editable]="editable"
+            (edited)="edit($event, index)"
+            (removed)="remove(index)">
+          {{ food.viewValue }}
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)"/>
+    </mat-form-field>
+  `,
+})
+class InputReactiveFormChipGrid {
+  control = new FormControl<{value: string; viewValue: string}[] | null>(null);
+
+  separatorKeyCodes = [ENTER, SPACE];
+  addOnBlur: boolean = true;
+  editable: boolean = true;
+
+  @ViewChild(MatChipGrid) chipGrid: MatChipGrid;
+  @ViewChildren(MatChipRow) chips: QueryList<MatChipRow>;
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our foods
+    if (value) {
+      // Create empty array if control value is null
+      const ctrlVal = this.control.value! || [];
+      this.control.setValue([
+        ...ctrlVal,
+        {
+          value: `${value.toLowerCase()}-${ctrlVal.length}`,
+          viewValue: value,
+        },
+      ]);
+    }
+
+    // Reset the input value
+    event.chipInput!.clear();
+  }
+
+  edit(event: MatChipEditedEvent, index: number): void {
+    const value = event.value.trim();
+    const ctrlVal = [...this.control.value!];
+
+    // Remove chip if it no longer has a name
+    if (!value) {
+      ctrlVal.splice(index, 1);
+      return;
+    }
+
+    (ctrlVal[index] = {
+      value: `${value.toLowerCase()}-${ctrlVal.length}`,
+      viewValue: value,
+    }),
+      this.control.setValue(ctrlVal);
+  }
+
+  remove(index: number): void {
+    const ctrlVal = this.control.value!.splice(index, 1);
+    this.control.setValue(ctrlVal);
+  }
+
+  displayWith(value: {value: string; viewValue: string}): string {
+    return value ? value.viewValue : '';
+  }
 }
 
 @Component({
