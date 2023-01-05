@@ -1,3 +1,31 @@
+<a name="15.1.0-rc.0"></a>
+# 15.1.0-rc.0 "cashmere-club" (2023-01-05)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [836b777526](https://github.com/angular/components/commit/836b7775269e5851c566ad8b3d759454d6a152b7) | fix | **menu:** don't prevent default selection key actions ([#26296](https://github.com/angular/components/pull/26296)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4da9e1944a](https://github.com/angular/components/commit/4da9e1944af639031a3ab66d4bbc61cdcbfaeb30) | fix | **datepicker:** Update strategy to handle dragging across month boundaries and/or DateAdapter implementations that do not return difference in days from compareDate ([#26341](https://github.com/angular/components/pull/26341)) |
+| [25d9217fd1](https://github.com/angular/components/commit/25d9217fd19cdc404ad5370975afe36fe4a14ce7) | fix | **list:** add opt-out for radio indicators ([#26283](https://github.com/angular/components/pull/26283)) |
+| [77f0a77831](https://github.com/angular/components/commit/77f0a77831a009aceb65b7e831e0c08ec7afdae7) | fix | **menu:** aria-expanded not updating in an OnPush component ([#26279](https://github.com/angular/components/pull/26279)) |
+| [dffb07bd69](https://github.com/angular/components/commit/dffb07bd69b1fe7bba525fa04e0a60410f37162d) | fix | **menu:** prevent pointer events on animating menu ([#26323](https://github.com/angular/components/pull/26323)) |
+| [638be65c09](https://github.com/angular/components/commit/638be65c09fed39dc700e226b042a9bd9f8bb3f1) | fix | **slider:** avoid updating tick marks unnecessarily ([#26322](https://github.com/angular/components/pull/26322)) |
+| [3939bb14da](https://github.com/angular/components/commit/3939bb14dadd960d39ecf244b18c47ed1d3fe4a5) | fix | **slider:** dragEnd not being emitted ([#26289](https://github.com/angular/components/pull/26289)) |
+| [6f393ff3fc](https://github.com/angular/components/commit/6f393ff3fcb1ab51b3ea2f4aaaf96bef3902498e) | fix | **slider:** value jumping after drag with box-sizing: border-box ([#26345](https://github.com/angular/components/pull/26345)) |
+| [397bd419ae](https://github.com/angular/components/commit/397bd419ae6f8976bb3f8c0f51ab771e96d0b82f) | fix | **snack-bar:** incorrect width at some breakpoints ([#26334](https://github.com/angular/components/pull/26334)) |
+| [a6c3f796ea](https://github.com/angular/components/commit/a6c3f796ea272733ad0cc36febabd5fce4f1e872) | fix | **snack-bar:** set explicit color on action in dark themes ([#26268](https://github.com/angular/components/pull/26268)) |
+| [d2dcd7693a](https://github.com/angular/components/commit/d2dcd7693a21c85be08728966eaa9efa1ff72927) | fix | **tabs:** touch gestures not working on tab nav bar ([#26344](https://github.com/angular/components/pull/26344)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [98365a8b4b](https://github.com/angular/components/commit/98365a8b4b5f4d60f5f3244fd57a4791b85b9232) | fix | **popover-edit:** Make cell focus indicator visible in high contrast (forced colors) mode ([#26275](https://github.com/angular/components/pull/26275)) |
+## Special Thanks
+Daniel, Karl Seamon, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.0.4"></a>
 # 15.0.4 "spandex-sword" (2023-01-05)
 ### material
