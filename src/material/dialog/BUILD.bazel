@@ -24,7 +24,6 @@ ng_module(
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/material/core",
-        "@npm//@material/dialog",
     ],
 )
 
@@ -69,7 +68,6 @@ ng_test_library(
         "//src/cdk/testing/private",
         "@npm//@angular/common",
         "@npm//@angular/platform-browser",
-        "@npm//@material/dialog",
         "@npm//rxjs",
     ],
 )
