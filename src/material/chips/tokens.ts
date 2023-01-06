@@ -12,6 +12,9 @@ import {InjectionToken} from '@angular/core';
 export interface MatChipsDefaultOptions {
   /** The list of key codes that will trigger a chipEnd event. */
   separatorKeyCodes: readonly number[] | ReadonlySet<number>;
+
+  /** Wheter icon indicators should be hidden for single-selection. */
+  hideSingleSelectionIndicator?: boolean;
 }
 
 /** Injection token to be used to override the default options for the chips module. */

@@ -289,6 +289,8 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     // (undocumented)
     protected _defaultRole: string;
     focus(): void;
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: BooleanInput);
     // (undocumented)
     _keydown(event: KeyboardEvent): void;
     get multiple(): boolean;
@@ -317,7 +319,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     protected _value: any;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipListbox, "mat-chip-listbox", never, { "tabIndex": "tabIndex"; "multiple": "multiple"; "ariaOrientation": "aria-orientation"; "selectable": "selectable"; "compareWith": "compareWith"; "required": "required"; "value": "value"; }, { "change": "change"; }, ["_chips"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipListbox, "mat-chip-listbox", never, { "tabIndex": "tabIndex"; "multiple": "multiple"; "ariaOrientation": "aria-orientation"; "selectable": "selectable"; "compareWith": "compareWith"; "required": "required"; "hideSingleSelectionIndicator": "hideSingleSelectionIndicator"; "value": "value"; }, { "change": "change"; }, ["_chips"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipListbox, never>;
 }
@@ -335,11 +337,14 @@ export class MatChipListboxChange {
 export class MatChipOption extends MatChip implements OnInit {
     get ariaSelected(): string | null;
     protected basicChipAttrName: string;
+    _chipListHideSingleSelectionIndicator: boolean;
     _chipListMultiple: boolean;
     chipListSelectable: boolean;
     deselect(): void;
     // (undocumented)
     _handlePrimaryActionInteraction(): void;
+    // (undocumented)
+    _hasLeadingGraphic(): boolean;
     // (undocumented)
     ngOnInit(): void;
     select(): void;
@@ -401,6 +406,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 
 // @public
 export interface MatChipsDefaultOptions {
+    hideSingleSelectionIndicator?: boolean;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
 }
 

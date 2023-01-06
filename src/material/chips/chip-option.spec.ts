@@ -9,10 +9,12 @@ import {
   MatChipEvent,
   MatChipListbox,
   MatChipOption,
+  MatChipsDefaultOptions,
   MatChipSelectionChange,
   MatChipsModule,
+  MAT_CHIPS_DEFAULT_OPTIONS,
 } from './index';
-import {SPACE} from '@angular/cdk/keycodes';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
 describe('MDC-based Option Chips', () => {
   let fixture: ComponentFixture<any>;
@@ -23,8 +25,15 @@ describe('MDC-based Option Chips', () => {
   let globalRippleOptions: RippleGlobalOptions;
   let dir = 'ltr';
 
+  let hideSingleSelectionIndicator: boolean | undefined;
+
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
+    const defaultOptions: MatChipsDefaultOptions = {
+      separatorKeyCodes: [ENTER, SPACE],
+      hideSingleSelectionIndicator,
+    };
+
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
       declarations: [SingleChip],
@@ -37,6 +46,7 @@ describe('MDC-based Option Chips', () => {
             change: new Subject(),
           }),
         },
+        {provide: MAT_CHIPS_DEFAULT_OPTIONS, useFactory: () => defaultOptions},
       ],
     });
 
@@ -294,6 +304,20 @@ describe('MDC-based Option Chips', () => {
 
         expect(primaryAction.getAttribute('aria-disabled')).toBe('true');
       });
+
+      it('should display checkmark graphic by default', () => {
+        expect(
+          fixture.debugElement.injector.get(MAT_CHIPS_DEFAULT_OPTIONS)
+            ?.hideSingleSelectionIndicator,
+        )
+          .withContext(
+            'expected not to have a default value set for `hideSingleSelectionIndicator`',
+          )
+          .toBeUndefined();
+
+        expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();
+        expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+      });
     });
 
     describe('a11y', () => {
@@ -331,6 +355,37 @@ describe('MDC-based Option Chips', () => {
 
         expect(optionElementDescription).toMatch(/option description/i);
       });
+
+      it('should display checkmark graphic by default', () => {
+        expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();
+        expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+      });
+    });
+
+    describe('with token to hide single-selection checkmark indicator', () => {
+      beforeAll(() => {
+        hideSingleSelectionIndicator = true;
+      });
+
+      afterAll(() => {
+        hideSingleSelectionIndicator = undefined;
+      });
+
+      it('does not display checkmark graphic', () => {
+        expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeNull();
+        expect(chipNativeElement.classList).not.toContain(
+          'mdc-evolution-chip--with-primary-graphic',
+        );
+      });
+
+      it('displays checkmark graphic when avatar is provided', () => {
+        testComponent.selected = true;
+        testComponent.avatarLabel = 'A';
+        fixture.detectChanges();
+
+        expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();
+        expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+      });
     });
 
     it('should contain a focus indicator inside the text label', () => {
@@ -349,7 +404,7 @@ describe('MDC-based Option Chips', () => {
                  (destroyed)="chipDestroy($event)"
                  (selectionChange)="chipSelectionChange($event)"
                  [aria-label]="ariaLabel" [aria-description]="ariaDescription">
-          <span class="avatar" matChipAvatar></span>
+          <span class="avatar" matChipAvatar *ngIf="avatarLabel">{{avatarLabel}}</span>
           {{name}}
         </mat-chip-option>
       </div>
@@ -365,6 +420,7 @@ class SingleChip {
   shouldShow: boolean = true;
   ariaLabel: string | null = null;
   ariaDescription: string | null = null;
+  avatarLabel: string | null = null;
 
   chipDestroy: (event?: MatChipEvent) => void = () => {};
   chipSelectionChange: (event?: MatChipSelectionChange) => void = () => {};

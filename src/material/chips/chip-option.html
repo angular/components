@@ -13,7 +13,7 @@
     [attr.aria-label]="ariaLabel"
     [attr.aria-describedby]="_ariaDescriptionId"
     role="option">
-    <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic">
+    <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic" *ngIf="_hasLeadingGraphic()">
       <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
       <span class="mdc-evolution-chip__checkmark">
         <svg class="mdc-evolution-chip__checkmark-svg" viewBox="-2 -3 30 30" focusable="false">
