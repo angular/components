@@ -24,14 +24,21 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
   private _hasPossibleTemplateMigrations = true;
 
   override visitNode(node: ts.Node): void {
-    if (ts.isSourceFile(node)) {
-      this._migrateSourceFileReferences(node);
-    } else if (this._isComponentDecorator(node)) {
-      this._migrateComponentDecorator(node as ts.Decorator);
-    } else if (this._isImportExpression(node)) {
-      this._migrateModuleSpecifier(node.arguments[0]);
-    } else if (this._isTypeImportExpression(node)) {
-      this._migrateModuleSpecifier(node.argument.literal);
+    try {
+      if (ts.isSourceFile(node)) {
+        this._migrateSourceFileReferences(node);
+      } else if (this._isComponentDecorator(node)) {
+        this._migrateComponentDecorator(node as ts.Decorator);
+      } else if (this._isImportExpression(node)) {
+        this._migrateModuleSpecifier(node.arguments[0]);
+      } else if (this._isTypeImportExpression(node)) {
+        this._migrateModuleSpecifier(node.argument.literal);
+      }
+    } catch (e) {
+      this.context.logger.error(`${e}`);
+      this.context.logger.warn(
+        `Failed to process file: ${node.getSourceFile().fileName} (see error above).`,
+      );
     }
   }
 
