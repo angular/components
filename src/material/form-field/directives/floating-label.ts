@@ -113,9 +113,7 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
     // This is expected, but If we allow this to all happen within the same macro task it causes an
     // error: `ResizeObserver loop limit exceeded`. Therefore we push the notch resize out until
     // the next macro task.
-    this._ngZone.runOutsideAngular(() => {
-      setTimeout(() => this._parent._handleLabelResized());
-    });
+    setTimeout(() => this._parent._handleLabelResized());
   }
 
   /** Subscribes to resize events. */
