@@ -494,6 +494,15 @@ export class DropListRef<T = any> {
     _isOverContainer(x: number, y: number): boolean;
     isReceiving(): boolean;
     lockAxis: 'x' | 'y';
+    readonly receivingStarted: Subject<{
+        receiver: DropListRef;
+        initiator: DropListRef;
+        items: DragRefInternal[];
+    }>;
+    readonly receivingStopped: Subject<{
+        receiver: DropListRef;
+        initiator: DropListRef;
+    }>;
     readonly sorted: Subject<{
         previousIndex: number;
         currentIndex: number;
