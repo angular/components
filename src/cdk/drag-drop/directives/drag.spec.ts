@@ -5838,6 +5838,33 @@ describe('CdkDrag', () => {
       }),
     );
 
+    it('should set the receiving class when the list is wrapped in an OnPush component', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropListsInOnPush, undefined, undefined, [
+        DraggableInOnPushDropZone,
+      ]);
+      fixture.detectChanges();
+
+      const dropZones = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.cdk-drop-list'),
+      );
+      const item = dropZones[0].querySelector('.cdk-drag')!;
+
+      expect(dropZones.every(c => !c.classList.contains('cdk-drop-list-receiving')))
+        .withContext('Expected neither of the containers to have the class.')
+        .toBe(true);
+
+      startDraggingViaMouse(fixture, item);
+      fixture.detectChanges();
+
+      expect(dropZones[0].classList)
+        .withContext('Expected source container not to have the receiving class.')
+        .not.toContain('cdk-drop-list-receiving');
+
+      expect(dropZones[1].classList)
+        .withContext('Expected target container to have the receiving class.')
+        .toContain('cdk-drop-list-receiving');
+    }));
+
     it(
       'should be able to move the item over an intermediate container before ' +
         'dropping it into the final one',
@@ -6763,10 +6790,21 @@ class DraggableInDropZone implements AfterViewInit {
 }
 
 @Component({
+  selector: 'draggable-in-on-push-zone',
   template: DROP_ZONE_FIXTURE_TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DraggableInOnPushDropZone extends DraggableInDropZone {}
+
+@Component({
+  template: `
+    <div cdkDropListGroup>
+      <draggable-in-on-push-zone></draggable-in-on-push-zone>
+      <draggable-in-on-push-zone></draggable-in-on-push-zone>
+    </div>
+  `,
+})
+class ConnectedDropListsInOnPush {}
 
 @Component({
   template: DROP_ZONE_FIXTURE_TEMPLATE,

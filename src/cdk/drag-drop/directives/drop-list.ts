@@ -35,7 +35,7 @@ import {DropListRef} from '../drop-list-ref';
 import {DragRef} from '../drag-ref';
 import {DragDrop} from '../drag-drop';
 import {DropListOrientation, DragAxis, DragDropConfig, CDK_DRAG_CONFIG} from './config';
-import {Subject} from 'rxjs';
+import {merge, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {assertElementNode} from './assertions';
 
@@ -375,6 +375,10 @@ export class CdkDropList<T = any> implements OnDestroy {
       // detection and we're not guaranteed for something else to have triggered it.
       this._changeDetectorRef.markForCheck();
     });
+
+    merge(ref.receivingStarted, ref.receivingStopped).subscribe(() =>
+      this._changeDetectorRef.markForCheck(),
+    );
   }
 
   /** Assigns the default input values based on a provided config object. */
