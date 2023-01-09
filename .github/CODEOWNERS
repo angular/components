@@ -213,6 +213,7 @@
 /src/dev-app/menu/**                                        @crisbeto
 /src/dev-app/menubar/**                                     @jelbourn
 /src/dev-app/overlay/**                                     @jelbourn @crisbeto
+/src/dev-app/performance/**                                 @wagnermaciel
 /src/dev-app/paginator/**                                   @andrewseguin
 /src/dev-app/platform/**                                    @andrewseguin @devversion
 /src/dev-app/popover-edit/**                                @andrewseguin

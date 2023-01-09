@@ -74,6 +74,7 @@ ng_module(
         "//src/dev-app/menu",
         "//src/dev-app/menubar",
         "//src/dev-app/paginator",
+        "//src/dev-app/performance",
         "//src/dev-app/platform",
         "//src/dev-app/popover-edit",
         "//src/dev-app/portal",
