@@ -130,6 +130,19 @@ export class DropListRef<T = any> {
     item: DragRef;
   }>();
 
+  /** Emits when a dragging sequence is started in a list connected to the current one. */
+  readonly receivingStarted = new Subject<{
+    receiver: DropListRef;
+    initiator: DropListRef;
+    items: DragRef[];
+  }>();
+
+  /** Emits when a dragging sequence is stopped from a list connected to the current one. */
+  readonly receivingStopped = new Subject<{
+    receiver: DropListRef;
+    initiator: DropListRef;
+  }>();
+
   /** Arbitrary data that can be attached to the drop list. */
   data: T;
 
@@ -207,6 +220,8 @@ export class DropListRef<T = any> {
     this.exited.complete();
     this.dropped.complete();
     this.sorted.complete();
+    this.receivingStarted.complete();
+    this.receivingStopped.complete();
     this._activeSiblings.clear();
     this._scrollNode = null!;
     this._parentPositions.clear();
@@ -637,6 +652,11 @@ export class DropListRef<T = any> {
       activeSiblings.add(sibling);
       this._cacheParentPositions();
       this._listenToScrollEvents();
+      this.receivingStarted.next({
+        initiator: sibling,
+        receiver: this,
+        items,
+      });
     }
   }
 
@@ -647,6 +667,7 @@ export class DropListRef<T = any> {
   _stopReceiving(sibling: DropListRef) {
     this._activeSiblings.delete(sibling);
     this._viewportScrollSubscription.unsubscribe();
+    this.receivingStopped.next({initiator: sibling, receiver: this});
   }
 
   /**
