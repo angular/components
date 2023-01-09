@@ -5,7 +5,7 @@
 <span class="mat-mdc-chip-focus-overlay"></span>
 
 <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary">
-  <div matChipAction [isInteractive]="false">
+  <span matChipAction [isInteractive]="false">
     <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic" *ngIf="leadingIcon">
       <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
     </span>
@@ -13,7 +13,7 @@
       <ng-content></ng-content>
       <span class="mat-mdc-chip-primary-focus-indicator mat-mdc-focus-indicator"></span>
     </span>
-  </div>
+  </span>
 </span>
 
 <span
