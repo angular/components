@@ -45,6 +45,14 @@ sass_binary(
     deps = ["//src/material:sass_lib"],
 )
 
+# Sass binary that asserts that setting the font family for a typography config works as expected.
+sass_binary(
+    name = "test-typography-font-family",
+    testonly = True,
+    src = "test-typography-font-family.scss",
+    deps = ["//src/material:sass_lib"],
+)
+
 build_test(
     name = "sass_compile_tests",
     targets = [
@@ -52,6 +60,7 @@ build_test(
         ":test-theming-api",
         ":test-theming-bundle",
         ":test-legacy-theming-bundle",
+        ":test-typography-font-family",
     ],
 )
 
