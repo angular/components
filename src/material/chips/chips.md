@@ -187,3 +187,5 @@ For both MatChipGrid and MatChipListbox, always apply an accessible label to the
 Always apply MatChipRemove to a `<button>` element, never a `<mat-icon>` element.
 
 When using MatChipListbox, never nest other interactive controls inside of the `<mat-chip-option>` element. Nesting controls degrades the experience for assistive technology users.
+
+By default, `MatChipListbox` displays a checkmark to identify selected items. While you can hide the checkmark indicator for single-selection via `hideSingleSelectionIndicator`, this makes the component less accessible by making it harder or impossible for users to visually identify selected items.
