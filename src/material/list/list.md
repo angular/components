@@ -213,6 +213,11 @@ these options, including buttons and anchors.
 Always provide an accessible label for the `<mat-selection-list>` element via `aria-label` or
 `aria-labelledby` that describes the selection being made.
 
+By default, `MatSelectionList` displays radio or checkmark indicators to identify selected items.
+While you can hide the radio indicator for single-selection via `hideSingleSelectionIndicator`, this
+makes the component less accessible by making it harder or impossible for users to visually identify
+selected items.
+
 #### Custom scenarios
 
 By default, the list assumes that it will be used in a purely decorative fashion and thus it sets no
