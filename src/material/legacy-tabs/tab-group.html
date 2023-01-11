@@ -8,7 +8,7 @@
        cdkMonitorElementFocus
        *ngFor="let tab of _tabs; let i = index"
        [id]="_getTabLabelId(i)"
-       [attr.tabIndex]="_getTabIndex(tab, i)"
+       [attr.tabIndex]="_getTabIndex(i)"
        [attr.aria-posinset]="i + 1"
        [attr.aria-setsize]="_tabs.length"
        [attr.aria-controls]="_getTabContentId(i)"
