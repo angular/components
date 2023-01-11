@@ -1,28 +1,29 @@
-<a name="15.1.0-rc.0"></a>
-# 15.1.0-rc.0 "cashmere-club" (2023-01-05)
+<a name="15.1.0"></a>
+# 15.1.0 "silk-sandal" (2023-01-11)
 ### cdk
 | Commit | Type | Description |
 | -- | -- | -- |
+| [e0a74b9c2b](https://github.com/angular/components/commit/e0a74b9c2bf0aabaedbfdc13ebc2cb3e7f24115b) | feat | **menu:** Allow setting cdkMenuTriggerFor null ([#25818](https://github.com/angular/components/pull/25818)) |
+| [b0f0b5b162](https://github.com/angular/components/commit/b0f0b5b1620760b7fccb0f8502747247e2f02df7) | fix | **drag-drop:** receiving class not updated in OnPush component ([#26386](https://github.com/angular/components/pull/26386)) |
 | [836b777526](https://github.com/angular/components/commit/836b7775269e5851c566ad8b3d759454d6a152b7) | fix | **menu:** don't prevent default selection key actions ([#26296](https://github.com/angular/components/pull/26296)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
+| [8554e15383](https://github.com/angular/components/commit/8554e15383ac482f8ad6f0b1d21f7d24900f1edc) | feat | **datepicker:** Support drag and drop to adjust date ranges ([#25548](https://github.com/angular/components/pull/25548)) |
+| [c370e064d4](https://github.com/angular/components/commit/c370e064d4a9cd74223ae5d9e793f884b7a6a6f1) | feat | **tabs:** add a harness filter for tab selected state ([#25806](https://github.com/angular/components/pull/25806)) |
+| [44657e2624](https://github.com/angular/components/commit/44657e2624cd66f6f9c20413572c0e68f6994cb1) | fix | **autocomplete:** apply theme of parent form field to panel ([#25983](https://github.com/angular/components/pull/25983)) |
+| [9b1f49f6f2](https://github.com/angular/components/commit/9b1f49f6f21d0a2898c736af4c646bae6c027dd6) | fix | **chips:** add support for aria-description ([#25935](https://github.com/angular/components/pull/25935)) |
+| [8b19fd9e29](https://github.com/angular/components/commit/8b19fd9e29a609e317b7f1eeae653f8642eea8f4) | fix | **chips:** change div to span ([#26343](https://github.com/angular/components/pull/26343)) |
+| [dcf2fac042](https://github.com/angular/components/commit/dcf2fac0420116236c29c31573c577eac99d68b0) | fix | **chips:** implement ariaDescription with aria-describedby ([#26105](https://github.com/angular/components/pull/26105)) |
+| [e536ce0736](https://github.com/angular/components/commit/e536ce0736273c225e661b5519fded72f4caa1b4) | fix | **core:** default font family not applied to custom typography levels ([#26394](https://github.com/angular/components/pull/26394)) |
+| [d02cc6817c](https://github.com/angular/components/commit/d02cc6817cddee66303ba9242a33d94ace320ad1) | fix | **datepicker:** fix date picker shortcuts ([#25951](https://github.com/angular/components/pull/25951)) |
 | [4da9e1944a](https://github.com/angular/components/commit/4da9e1944af639031a3ab66d4bbc61cdcbfaeb30) | fix | **datepicker:** Update strategy to handle dragging across month boundaries and/or DateAdapter implementations that do not return difference in days from compareDate ([#26341](https://github.com/angular/components/pull/26341)) |
 | [25d9217fd1](https://github.com/angular/components/commit/25d9217fd19cdc404ad5370975afe36fe4a14ce7) | fix | **list:** add opt-out for radio indicators ([#26283](https://github.com/angular/components/pull/26283)) |
-| [77f0a77831](https://github.com/angular/components/commit/77f0a77831a009aceb65b7e831e0c08ec7afdae7) | fix | **menu:** aria-expanded not updating in an OnPush component ([#26279](https://github.com/angular/components/pull/26279)) |
-| [dffb07bd69](https://github.com/angular/components/commit/dffb07bd69b1fe7bba525fa04e0a60410f37162d) | fix | **menu:** prevent pointer events on animating menu ([#26323](https://github.com/angular/components/pull/26323)) |
-| [638be65c09](https://github.com/angular/components/commit/638be65c09fed39dc700e226b042a9bd9f8bb3f1) | fix | **slider:** avoid updating tick marks unnecessarily ([#26322](https://github.com/angular/components/pull/26322)) |
-| [3939bb14da](https://github.com/angular/components/commit/3939bb14dadd960d39ecf244b18c47ed1d3fe4a5) | fix | **slider:** dragEnd not being emitted ([#26289](https://github.com/angular/components/pull/26289)) |
-| [6f393ff3fc](https://github.com/angular/components/commit/6f393ff3fcb1ab51b3ea2f4aaaf96bef3902498e) | fix | **slider:** value jumping after drag with box-sizing: border-box ([#26345](https://github.com/angular/components/pull/26345)) |
-| [397bd419ae](https://github.com/angular/components/commit/397bd419ae6f8976bb3f8c0f51ab771e96d0b82f) | fix | **snack-bar:** incorrect width at some breakpoints ([#26334](https://github.com/angular/components/pull/26334)) |
-| [a6c3f796ea](https://github.com/angular/components/commit/a6c3f796ea272733ad0cc36febabd5fce4f1e872) | fix | **snack-bar:** set explicit color on action in dark themes ([#26268](https://github.com/angular/components/pull/26268)) |
-| [d2dcd7693a](https://github.com/angular/components/commit/d2dcd7693a21c85be08728966eaa9efa1ff72927) | fix | **tabs:** touch gestures not working on tab nav bar ([#26344](https://github.com/angular/components/pull/26344)) |
-### material-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [98365a8b4b](https://github.com/angular/components/commit/98365a8b4b5f4d60f5f3244fd57a4791b85b9232) | fix | **popover-edit:** Make cell focus indicator visible in high contrast (forced colors) mode ([#26275](https://github.com/angular/components/pull/26275)) |
+| [57676e467a](https://github.com/angular/components/commit/57676e467a1ed9875def9a825746799c3427c942) | fix | **list:** add radio toggles ([#25933](https://github.com/angular/components/pull/25933)) |
+| [5b57863702](https://github.com/angular/components/commit/5b578637024ce637388553b3c951d905ece12182) | fix | **list:** align color scheme between single and multi selection list ([#26074](https://github.com/angular/components/pull/26074)) |
+| [1819d3027b](https://github.com/angular/components/commit/1819d3027bd612cd2ce689ec8335ad803e99e3cf) | fix | **tabs:** allow focus on disabled tabs ([#26397](https://github.com/angular/components/pull/26397)) |
 ## Special Thanks
-Daniel, Karl Seamon, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
+Amy Sorto, David Klingenberg, Joey Perrott, Karl Seamon, Kristiyan Kostadinov, Miles Malerba, Sasidharan SD, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -45,30 +46,6 @@ Daniel, Karl Seamon, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wag
 | [70cf080cd5](https://github.com/angular/components/commit/70cf080cd582bc653e6a0aa69e596949d9560578) | fix | **popover-edit:** Make cell focus indicator visible in high contrast (forced colors) mode ([#26275](https://github.com/angular/components/pull/26275)) |
 ## Special Thanks
 Daniel, Karl Seamon, Kristiyan Kostadinov, Paul Gschwendtner and Wagner Maciel
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="15.1.0-next.2"></a>
-# 15.1.0-next.2 "cashmere-cardigan" (2022-12-14)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [08c5a12e87](https://github.com/angular/components/commit/08c5a12e87f3d485d176efca737595d32a137017) | fix | **stepper:** set focus origin when navigating with keyboard ([#26239](https://github.com/angular/components/pull/26239)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [dcf2fac042](https://github.com/angular/components/commit/dcf2fac0420116236c29c31573c577eac99d68b0) | fix | **chips:** implement ariaDescription with aria-describedby ([#26105](https://github.com/angular/components/pull/26105)) |
-| [f8dd0180cd](https://github.com/angular/components/commit/f8dd0180cd77b52d980c1ea50b995bb10b9b2d82) | fix | **core:** better handling of css variables in theme palettes ([#26260](https://github.com/angular/components/pull/26260)) |
-| [46a4db2d4f](https://github.com/angular/components/commit/46a4db2d4fb6b23278901e6dcbd7d94a4b8b7374) | fix | **form-field:** allow getting harness by validity ([#26232](https://github.com/angular/components/pull/26232)) |
-| [9f4557a730](https://github.com/angular/components/commit/9f4557a730ea51af5d9213ae64adb8c113cf4ac3) | fix | **form-field:** prevent focus overlay stealing clicks ([#26229](https://github.com/angular/components/pull/26229)) |
-| [1cc831c507](https://github.com/angular/components/commit/1cc831c5078193942df3fb42ffee2541423d0d99) | fix | **menu:** add selector for projecting non-Material icons ([#26235](https://github.com/angular/components/pull/26235)) |
-| [c8961cd134](https://github.com/angular/components/commit/c8961cd13454772d4a56b9cc2ace61c5209c3cf3) | fix | **schematics:** fix card tmpl migration ([#26169](https://github.com/angular/components/pull/26169)) |
-| [06fe1f2f50](https://github.com/angular/components/commit/06fe1f2f504907725e856853bb3201f68775a0f0) | fix | **schematics:** fix transform for FloatLabelType ([#26234](https://github.com/angular/components/pull/26234)) |
-| [399890651a](https://github.com/angular/components/commit/399890651af9343a31b32e2d76f8fd759b58a3c4) | fix | **slider:** avoid manual fixing values on pointer up ([#26215](https://github.com/angular/components/pull/26215)) |
-| [03264d8f25](https://github.com/angular/components/commit/03264d8f2525590a95b53762f2eb6c765c4ddcbf) | fix | **tabs:** allow both foreground and background colors to be set ([#26212](https://github.com/angular/components/pull/26212)) |
-| [e19addb084](https://github.com/angular/components/commit/e19addb0846a8679a31fdce6d3c66c5596861918) | fix | **toolbar:** don't override colors of themed buttons ([#26222](https://github.com/angular/components/pull/26222)) |
-## Special Thanks
-Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Ruslan Nevecheria, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -95,31 +72,6 @@ Kristiyan Kostadinov, Miles Malerba, Ruslan Nevecheria and Wagner Maciel
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="15.1.0-next.1"></a>
-# 15.1.0-next.1 "polycarbonate-parrot" (2022-12-08)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [f99af6d044](https://github.com/angular/components/commit/f99af6d044c9412fba501aab5c6e11b16a52a09b) | fix | **listbox:** set initial focus to selected option ([#26174](https://github.com/angular/components/pull/26174)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1d2d7e11c3](https://github.com/angular/components/commit/1d2d7e11c34799cfd99c1ff08210f19d9e90dcab) | fix | **button:** ensure svg icon is centered ([#26146](https://github.com/angular/components/pull/26146)) |
-| [33f704c01e](https://github.com/angular/components/commit/33f704c01e72e78ba1129542af77b95c27602221) | fix | **chips:** set correct cursor on interactive chips ([#26171](https://github.com/angular/components/pull/26171)) |
-| [93818e5338](https://github.com/angular/components/commit/93818e5338180a4d14c643c04316637f8bc4fa1b) | fix | **dialog:** change width to not cut off form field in component example ([#26157](https://github.com/angular/components/pull/26157)) |
-| [b3da94a094](https://github.com/angular/components/commit/b3da94a09455d4eb9c72432bd16f5f288668e848) | fix | **form-field:** allow ng-container to be used as prefix/suffix ([#26127](https://github.com/angular/components/pull/26127)) |
-| [5b57863702](https://github.com/angular/components/commit/5b578637024ce637388553b3c951d905ece12182) | fix | **list:** align color scheme between single and multi selection list ([#26074](https://github.com/angular/components/pull/26074)) |
-| [3d298e0fb7](https://github.com/angular/components/commit/3d298e0fb741b6638c5dbccde3416d8723c3267e) | fix | **list:** remove previously removed API ([#26165](https://github.com/angular/components/pull/26165)) |
-| [a007b92ebd](https://github.com/angular/components/commit/a007b92ebda339fbe243098a1f1209c0670f812a) | fix | **schematics:** some snack bar styles not being migrated ([#26180](https://github.com/angular/components/pull/26180)) |
-| [1a8d04189f](https://github.com/angular/components/commit/1a8d04189faaa1e163446701caf599157e5c2df8) | fix | **schematics:** update flat button styles class name mapping ([#26158](https://github.com/angular/components/pull/26158)) |
-| [7b98f1af1a](https://github.com/angular/components/commit/7b98f1af1a11b5868feb83c95a60ac084c8f1cca) | fix | **tabs:** icons not centered inside tab ([#26053](https://github.com/angular/components/pull/26053)) |
-| [efb7f2ee9f](https://github.com/angular/components/commit/efb7f2ee9f434453ca6c0db171b01ba9e158de7e) | perf | **core:** delegate trigger events ([#26147](https://github.com/angular/components/pull/26147)) |
-| [8719700f72](https://github.com/angular/components/commit/8719700f72e2af37ed8c6cdf95684069d69715e9) | perf | **tabs:** reduce amount of CSS generated for background color ([#26186](https://github.com/angular/components/pull/26186)) |
-## Special Thanks
-Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Shauni and Wagner Maciel
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="15.0.2"></a>
 # 15.0.2 "polystyrene-penguin" (2022-12-08)
 ### cdk
@@ -141,26 +93,6 @@ Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Shauni and Wagner Maciel
 | [a526ede4af](https://github.com/angular/components/commit/a526ede4af1ee0a2aefd8a01234b095fee5a2a77) | perf | **tabs:** reduce amount of CSS generated for background color ([#26186](https://github.com/angular/components/pull/26186)) |
 ## Special Thanks
 Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Shauni and Wagner Maciel
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="15.1.0-next.0"></a>
-# 15.1.0-next.0 "calcite-cranium" (2022-11-30)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e0a74b9c2](https://github.com/angular/components/commit/e0a74b9c2bf0aabaedbfdc13ebc2cb3e7f24115b) | feat | **menu:** Allow setting cdkMenuTriggerFor null ([#25818](https://github.com/angular/components/pull/25818)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8554e1538](https://github.com/angular/components/commit/8554e15383ac482f8ad6f0b1d21f7d24900f1edc) | feat | **datepicker:** Support drag and drop to adjust date ranges ([#25548](https://github.com/angular/components/pull/25548)) |
-| [c370e064d](https://github.com/angular/components/commit/c370e064d4a9cd74223ae5d9e793f884b7a6a6f1) | feat | **tabs:** add a harness filter for tab selected state ([#25806](https://github.com/angular/components/pull/25806)) |
-| [44657e262](https://github.com/angular/components/commit/44657e2624cd66f6f9c20413572c0e68f6994cb1) | fix | **autocomplete:** apply theme of parent form field to panel ([#25983](https://github.com/angular/components/pull/25983)) |
-| [9b1f49f6f](https://github.com/angular/components/commit/9b1f49f6f21d0a2898c736af4c646bae6c027dd6) | fix | **chips:** add support for aria-description ([#25935](https://github.com/angular/components/pull/25935)) |
-| [d02cc6817](https://github.com/angular/components/commit/d02cc6817cddee66303ba9242a33d94ace320ad1) | fix | **datepicker:** fix date picker shortcuts ([#25951](https://github.com/angular/components/pull/25951)) |
-| [57676e467](https://github.com/angular/components/commit/57676e467a1ed9875def9a825746799c3427c942) | fix | **list:** add radio toggles ([#25933](https://github.com/angular/components/pull/25933)) |
-## Special Thanks
-Amy Sorto, David Klingenberg, Joey Perrott, Karl Seamon, Miles Malerba, Sasidharan SD, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
