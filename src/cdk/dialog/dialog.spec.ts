@@ -398,7 +398,7 @@ describe('Dialog', () => {
     viewContainerFixture.detectChanges();
     flushMicrotasks();
 
-    dialogRef = dialog.open(PizzaMsg, {
+    dialog.open(PizzaMsg, {
       maxWidth: '100px',
     });
 
