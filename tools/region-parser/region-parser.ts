@@ -33,7 +33,6 @@ function regionParserImpl(
 
   if (regionMatcher) {
     const lines = contents.split(/\r?\n/).filter(line => {
-      // debugger;
       const startRegion = line.match(regionMatcher.regionStartMatcher);
       const endRegion = line.match(regionMatcher.regionEndMatcher);
 
