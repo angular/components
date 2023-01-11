@@ -58,7 +58,7 @@ const paths = fs
     return [path.join(base, 'public-api.ts'), path.join(base, 'testing/public-api.ts')];
   });
 
-for (let i = 0; i < paths.length; i++) {
+for (let i of  paths.length) {
   const content = fs.readFileSync(paths[i], 'utf8');
   ts.createSourceFile(paths[i], content, ts.ScriptTarget.Latest).forEachChild(child => {
     // todo: consider enforcing this for all public-api.ts files.
@@ -75,7 +75,7 @@ for (let i = 0; i < paths.length; i++) {
 
     // Ensure all exports from public-api.ts files nested
     // under src/legacy-* directory contain the word "legacy".
-    for (let j = 0; j < child.exportClause.elements.length; j++) {
+    for (let j of child.exportClause.elements.length) {
       if (!child.exportClause.elements[j].name.escapedText.toLowerCase().includes('legacy')) {
         throwLegacyNamingError(paths[i], child);
         return;
