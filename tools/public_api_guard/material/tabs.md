@@ -322,7 +322,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     _focusChanged(index: number): void;
     focusTab(index: number): void;
     _getTabContentId(i: number): string;
-    _getTabIndex(tab: MatTab, index: number): number | null;
+    _getTabIndex(index: number): number;
     _getTabLabelId(i: number): string;
     _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
     headerPosition: MatTabHeaderPosition;
