@@ -215,7 +215,9 @@ export abstract class MatPaginatedTabHeader
     this._keyManager = new FocusKeyManager<MatPaginatedTabHeaderItem>(this._items)
       .withHorizontalOrientation(this._getLayoutDirection())
       .withHomeAndEnd()
-      .withWrap();
+      .withWrap()
+      // Allow focus to land on disabled tabs, as per https://w3c.github.io/aria-practices/#kbd_disabled_controls
+      .skipPredicate(() => false);
 
     this._keyManager.updateActiveItem(this._selectedIndex);
 
@@ -329,8 +331,12 @@ export abstract class MatPaginatedTabHeader
       case ENTER:
       case SPACE:
         if (this.focusIndex !== this.selectedIndex) {
-          this.selectFocusedIndex.emit(this.focusIndex);
-          this._itemSelected(event);
+          const item = this._items.get(this.focusIndex);
+
+          if (item && !item.disabled) {
+            this.selectFocusedIndex.emit(this.focusIndex);
+            this._itemSelected(event);
+          }
         }
         break;
       default:
@@ -392,12 +398,7 @@ export abstract class MatPaginatedTabHeader
    * providing a valid index and return true.
    */
   _isValidIndex(index: number): boolean {
-    if (!this._items) {
-      return true;
-    }
-
-    const tab = this._items ? this._items.toArray()[index] : null;
-    return !!tab && !tab.disabled;
+    return this._items ? !!this._items.toArray()[index] : true;
   }
 
   /**

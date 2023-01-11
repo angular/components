@@ -16,7 +16,6 @@
 // MDC doesn't support disabled tabs so we need to improvise.
 .mat-mdc-tab-disabled {
   opacity: 0.4;
-  pointer-events: none;
 }
 
 .mat-mdc-tab-group {
