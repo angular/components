@@ -16,6 +16,7 @@
   "scripts": {
     "postinstall": "node tools/postinstall/apply-patches.js",
     "ng-dev": "cross-env TS_NODE_PROJECT=$PWD/.ng-dev/tsconfig.json TS_NODE_TRANSPILE_ONLY=1 node --no-warnings --loader ts-node/esm node_modules/@angular/ng-dev/bundles/cli.mjs",
+    "ng-dev:stamp": "yarn -s ng-dev release build-env-stamp --additional-stamping-script=tools/bazel-additional-stamp.mjs",
     "build": "ts-node --esm --project scripts/tsconfig.json ./scripts/build-packages-dist-main.mts",
     "build-docs-content": "ts-node --esm --project scripts/tsconfig.json ./scripts/build-docs-content-main.mts",
     "build-and-check-release-output": "ts-node --esm --project scripts/tsconfig.json scripts/build-and-check-release-output.mts",
@@ -77,7 +78,7 @@
     "@angular/cli": "^15.1.0-rc.0",
     "@angular/compiler-cli": "^15.1.0-rc.0",
     "@angular/localize": "^15.1.0-rc.0",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#20d1bd232100d278c53820226427039f51881d3f",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#757a386a63e960c4006efd26482f0d52dd0a1604",
     "@angular/platform-browser-dynamic": "^15.1.0-rc.0",
     "@angular/platform-server": "^15.1.0-rc.0",
     "@angular/router": "^15.1.0-rc.0",
