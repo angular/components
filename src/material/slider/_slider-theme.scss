@@ -53,7 +53,7 @@
     .mat-mdc-slider {
       @include mdc-slider-theme.theme((
         label-label-text-font: mdc-typography.get-font(subtitle2),
-        label-label-text-font-size: mdc-typography.get-size(subtitle2),
+        label-label-text-size: mdc-typography.get-size(subtitle2),
         label-label-text-line-height: mdc-typography.get-line-height(subtitle2),
         label-label-text-tracking: mdc-typography.get-tracking(subtitle2),
         label-label-text-weight: mdc-typography.get-weight(subtitle2),
