@@ -3,7 +3,7 @@
 import {
   ActiveReleaseTrains,
   getBranchesForMajorVersions,
-  getVersionForVersionBranch,
+  convertVersionBranchToSemVer,
   isVersionBranch,
 } from '@angular/ng-dev';
 import {firebaseConfig, sites} from './utils.mjs';
@@ -90,7 +90,7 @@ async function main() {
     return;
   }
 
-  const branchVersion = getVersionForVersionBranch(branchName)!;
+  const branchVersion = convertVersionBranchToSemVer(branchName)!;
   const branchMajor = branchVersion.major;
   const branchesForMajor = await getBranchesForMajorVersions(repo, [branchMajor]);
 
