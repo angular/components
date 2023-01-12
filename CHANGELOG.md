@@ -1,3 +1,15 @@
+<a name="15.2.0-next.0"></a>
+# 15.2.0-next.0 "cotton-candle" (2023-01-12)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5e96eb04ca](https://github.com/angular/components/commit/5e96eb04ca23a0748860cf67980e319ab108cc4e) | fix | **chips:** add opt-out for single-select checkmarks ([#26338](https://github.com/angular/components/pull/26338)) |
+| [769e20431a](https://github.com/angular/components/commit/769e20431a05a4ad8230530fa2a4aab9c117a162) | fix | **select:** active class not removed from reset option when new value is assigned through form control ([#26414](https://github.com/angular/components/pull/26414)) |
+## Special Thanks
+Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.0"></a>
 # 15.1.0 "silk-sandal" (2023-01-11)
 ### cdk
