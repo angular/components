@@ -3406,12 +3406,14 @@ describe('MDC-based MatSelect', () => {
   describe('with reset option and a form control', () => {
     let fixture: ComponentFixture<SelectWithResetOptionAndFormControl>;
     let options: HTMLElement[];
+    let trigger: HTMLElement;
 
     beforeEach(fakeAsync(() => {
       configureMatSelectTestingModule([SelectWithResetOptionAndFormControl]);
       fixture = TestBed.createComponent(SelectWithResetOptionAndFormControl);
       fixture.detectChanges();
-      fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement.click();
+      trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
+      trigger.click();
       fixture.detectChanges();
       options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
     }));
@@ -3438,6 +3440,22 @@ describe('MDC-based MatSelect', () => {
       flush();
       expect(fixture.componentInstance.select.value).toBe('a');
       expect(fixture.componentInstance.control.value).toBe('a');
+    }));
+
+    it('should deselect the reset option when a value is assigned through the form control', fakeAsync(() => {
+      expect(options[0].classList).toContain('mat-mdc-option-active');
+
+      options[0].click();
+      fixture.detectChanges();
+      flush();
+
+      fixture.componentInstance.control.setValue('c');
+      fixture.detectChanges();
+      trigger.click();
+      fixture.detectChanges();
+
+      expect(options[0].classList).not.toContain('mat-mdc-option-active');
+      expect(options[3].classList).toContain('mat-mdc-option-active');
     }));
   });
 
