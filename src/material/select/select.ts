@@ -837,7 +837,7 @@ export abstract class _MatSelectBase<C>
    * found with the designated value, the select trigger is cleared.
    */
   private _setSelectionByValue(value: any | any[]): void {
-    this._selectionModel.selected.forEach(option => option.setInactiveStyles());
+    this.options.forEach(option => option.setInactiveStyles());
     this._selectionModel.clear();
 
     if (this.multiple && value) {
