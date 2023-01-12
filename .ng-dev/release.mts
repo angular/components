@@ -1,6 +1,5 @@
 import semver from 'semver';
 import {ReleaseConfig} from '@angular/ng-dev';
-import {assertValidFrameworkPeerDependency} from '../tools/release-checks/check-framework-peer-dependency.mjs';
 import {assertValidUpdateMigrationCollections} from '../tools/release-checks/check-migration-collections.mjs';
 import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output/index.mjs';
 
@@ -52,7 +51,6 @@ export const release: ReleaseConfig = {
   prereleaseCheck: async (newVersionStr, builtPackagesWithInfo) => {
     const newVersion = new semver.SemVer(newVersionStr);
 
-    await assertValidFrameworkPeerDependency(newVersion);
     await assertValidUpdateMigrationCollections(newVersion);
     await assertValidNpmPackageOutput(builtPackagesWithInfo, newVersion);
   },

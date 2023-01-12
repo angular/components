@@ -1,7 +1,6 @@
 # Each individual package uses a placeholder for the version of Angular to ensure they're
 # all in-sync. This map is passed to each ng_package rule to stamp out the appropriate
 # version for the placeholders.
-ANGULAR_PACKAGE_VERSION = "^15.0.0-0 || ^15.1.0-0 || ^15.2.0-0 || ^15.3.0-0 || ^16.0.0-0"
 MDC_PACKAGE_VERSION = "15.0.0-canary.fd95ca7ef.0"
 TSLIB_PACKAGE_VERSION = "^2.3.0"
 RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
@@ -12,8 +11,8 @@ RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
 NPM_PACKAGE_SUBSTITUTIONS = {
     # Version of `material-components-web`
     "0.0.0-MDC": MDC_PACKAGE_VERSION,
-    # Version of `@angular/core`
-    "0.0.0-NG": ANGULAR_PACKAGE_VERSION,
+    # Peer dependency version on the Angular framework.
+    "0.0.0-NG": "{STABLE_FRAMEWORK_PEER_DEP_RANGE}",
     # Version of `tslib`
     "0.0.0-TSLIB": TSLIB_PACKAGE_VERSION,
     # Version of the local package being built, generated via the `--workspace_status_command` flag.
@@ -26,6 +25,7 @@ NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS = dict(NPM_PACKAGE_SUBSTITUTIONS, **{
     # When building NPM packages for tests (where stamping is disabled),
     # we use `0.0.0` for the version placeholder.
     "0.0.0-PLACEHOLDER": "0.0.0",
+    "0.0.0-NG": ">=0.0.0",
 })
 
 # List of MDC packages (used for package externals and for Sass target deps)
