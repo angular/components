@@ -14,26 +14,29 @@ const bzlConfigPath = join(currentDir, '../../packages.bzl');
  * Ensures that the Angular version placeholder has been correctly updated to support
  * given Angular versions. The following rules apply:
  *
- *   `N.x.x` requires Angular `^N.0.0 || (N+1).0.0`
- *   `N.0.0-x` requires Angular `^N.0.0-0 || (N+1).0.0`
- *   `N.x.0-x` requires Angular `^N.0.0 || ^N.x.0-x || (N+1).0.0`
+ *   `N.x.x` requires Angular `^N.0.0 || ^(N+1).0.0`
+ *   `N.x.x-x` requires Angular `^N.0.0-0 || ^N.1.0-0 || ^N.2.0-0 || ^N.3.0-0 || ^(N+1).0.0-0`
  *
  * The rationale is that we want to satisfy peer dependencies if we are publishing
  * pre-releases for a major while Angular framework cuts pre-releases as well. e.g.
  * Angular CDK v14.0.0-rc.1 should also work with `@angular/core@v14.0.0-rc.1`.
+ *
+ * Note: When we cut pre-releases, the peer dependency includes all anticipated
+ * pre-releases because a range like `^15.0.0-0` itself would not allow for future minor
+ * releases like `15.1.0-next.0`. NPM requires the explicit minors pre-release ranges.
  */
 export async function assertValidFrameworkPeerDependency(newVersion: semver.SemVer) {
   const currentVersionRange = _extractAngularVersionPlaceholderOrThrow();
-  const isMinor = newVersion.minor !== 0;
   const isPrerelease = !!newVersion.prerelease[0];
   let requiredRange: string;
 
   if (isPrerelease) {
-    requiredRange = isMinor
-      ? `^${newVersion.major}.0.0 || ^${newVersion.major}.${newVersion.minor}.0-0 || ^${
-          newVersion.major + 1
-        }.0.0`
-      : `^${newVersion.major}.0.0-0 || ^${newVersion.major + 1}.0.0`;
+    requiredRange =
+      `^${newVersion.major}.0.0-0 || ` +
+      `^${newVersion.major}.1.0-0 || ` +
+      `^${newVersion.major}.2.0-0 || ` +
+      `^${newVersion.major}.3.0-0 ||` +
+      `^${newVersion.major + 1}.0.0-0`;
   } else {
     requiredRange = `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0`;
   }
