@@ -244,7 +244,7 @@ jobs:
       - *yarn_install
       - *setup_bazel_binary
 
-      - run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+      - run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only --test_env=NG_UPDATE_BUFFER_V2=1 -- src/...
       - *slack_notify_on_failure
 
   # ----------------------------------------------------------------------------
