@@ -82,6 +82,7 @@
 /src/material/core/style/**                                 @andrewseguin
 /src/material/core/testing/**                               @crisbeto
 /src/material/core/theming/**                               @andrewseguin @jelbourn
+/src/material/core/tokens/**                                @mmalerba
 /src/material/core/typography/**                            @crisbeto
 /src/material/core/util/**                                  @andrewseguin
 /src/material/legacy-core/*                                 @andrewseguin
