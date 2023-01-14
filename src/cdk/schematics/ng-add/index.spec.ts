@@ -18,7 +18,7 @@ describe('CDK ng-add', () => {
   });
 
   it('should update the package.json', async () => {
-    const tree = await runner.runSchematicAsync('ng-add', {}, appTree).toPromise();
+    const tree = await runner.runSchematic('ng-add', {}, appTree);
     const packageJson = JSON.parse(getFileContent(tree, '/package.json')) as PackageJson;
     const dependencies = packageJson.dependencies;
 
@@ -36,7 +36,7 @@ describe('CDK ng-add', () => {
     // requested package version into the `package.json` before the actual schematic runs.
     addPackageToPackageJson(appTree, '@angular/cdk', '^9.0.0');
 
-    const tree = await runner.runSchematicAsync('ng-add', {}, appTree).toPromise();
+    const tree = await runner.runSchematic('ng-add', {}, appTree);
     const packageJson = JSON.parse(getFileContent(tree, '/package.json')) as PackageJson;
     const dependencies = packageJson.dependencies;
 

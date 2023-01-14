@@ -32,7 +32,9 @@ export async function migrateComponents(
   runner: SchematicTestRunner,
   tree: UnitTestTree,
 ): Promise<UnitTestTree> {
-  return await runner
-    .runSchematicAsync('mdcMigration', {tsconfig: TS_CONFIG, components: components}, tree)
-    .toPromise();
+  return await runner.runSchematic(
+    'mdcMigration',
+    {tsconfig: TS_CONFIG, components: components},
+    tree,
+  );
 }
