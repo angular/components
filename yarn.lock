@@ -223,10 +223,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/bazel@15.1.0-next.3":
-  version "15.1.0-next.3"
-  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-15.1.0-next.3.tgz#bcb619d0764863016de60d3d72a923290bf31905"
-  integrity sha512-UeNRHDDlHkVVeG9t97O70iw9xtJQbIU2Fg82gUaeEYXI4hxa8yFrFudZL/5YjA/8Ico3cp0KZdPx+lbIQdthkA==
+"@angular/bazel@15.0.4":
+  version "15.0.4"
+  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-15.0.4.tgz#2f6f39897b86e0852602c9fc0aa3e6876bc86a63"
+  integrity sha512-7vp6PUoH5v9T4itJm9V/3TnabFWLDZU2qtamCUxB3o2iJqF6zGAWGFIJScaNj4JwXdGFvx2qDS5E+e7rBPydeg==
   dependencies:
     "@microsoft/api-extractor" "^7.24.2"
     shelljs "^0.8.5"
