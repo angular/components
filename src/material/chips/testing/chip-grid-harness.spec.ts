@@ -1,4 +1,4 @@
-import {HarnessLoader} from '@angular/cdk/testing';
+import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Component} from '@angular/core';
@@ -78,12 +78,55 @@ describe('MatChipGridHarness', () => {
 
     expect(await harness.isInvalid()).toBe(true);
   });
+
+  it('should get whether a chip is editable', async () => {
+    const grid = await loader.getHarness(MatChipGridHarness);
+    const chips = await grid.getRows();
+    fixture.componentInstance.firstChipEditable = true;
+
+    expect(await parallel(() => chips.map(chip => chip.isEditable()))).toEqual([
+      true,
+      false,
+      false,
+    ]);
+  });
+
+  it('should throw when trying to edit a chip that is not editable', async () => {
+    const grid = await loader.getHarness(MatChipGridHarness);
+    const chip = (await grid.getRows())[0];
+    let error: string | null = null;
+    fixture.componentInstance.firstChipEditable = false;
+
+    try {
+      await chip.startEditing();
+    } catch (e: any) {
+      error = e.message;
+    }
+
+    expect(error).toBe('Cannot begin editing a chip that is not editable.');
+  });
+
+  it('should be able to edit a chip row', async () => {
+    const grid = await loader.getHarness(MatChipGridHarness);
+    const chip = (await grid.getRows())[0];
+    fixture.componentInstance.firstChipEditable = true;
+
+    await chip.startEditing();
+    await (await chip.getEditInput()).setValue('new value');
+    await chip.finishEditing();
+
+    expect(fixture.componentInstance.editSpy).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        value: 'new value',
+      }),
+    );
+  });
 });
 
 @Component({
   template: `
     <mat-chip-grid [formControl]="control" [required]="required" #grid>
-      <mat-chip-row>Chip A</mat-chip-row>
+      <mat-chip-row [editable]="firstChipEditable" (edited)="editSpy($event)">Chip A</mat-chip-row>
       <mat-chip-row>Chip B</mat-chip-row>
       <mat-chip-row>Chip C</mat-chip-row>
       <input [matChipInputFor]="grid"/>
@@ -93,4 +136,6 @@ describe('MatChipGridHarness', () => {
 class ChipGridHarnessTest {
   control = new FormControl('value', [Validators.required]);
   required = false;
+  firstChipEditable = false;
+  editSpy = jasmine.createSpy('editSpy');
 }
