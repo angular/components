@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {TestKey} from '@angular/cdk/testing';
+import {MatChipEditInputHarness} from './chip-edit-input-harness';
 import {MatChipHarness} from './chip-harness';
-
-// TODO(crisbeto): add harness for the chip edit input inside the row.
+import {ChipEditInputHarnessFilters} from './chip-harness-filters';
 
 /** Harness for interacting with a mat-chip-row in tests. */
 export class MatChipRowHarness extends MatChipHarness {
@@ -22,5 +23,25 @@ export class MatChipRowHarness extends MatChipHarness {
   /** Whether the chip is currently being edited. */
   async isEditing(): Promise<boolean> {
     return (await this.host()).hasClass('mat-mdc-chip-editing');
+  }
+
+  /** Sets the chip row into an editing state, if it is editable. */
+  async startEditing(): Promise<void> {
+    if (!(await this.isEditable())) {
+      throw new Error('Cannot begin editing a chip that is not editable.');
+    }
+    return (await this.host()).dispatchEvent('dblclick');
+  }
+
+  /** Stops editing the chip, if it was in the editing state. */
+  async finishEditing(): Promise<void> {
+    if (await this.isEditing()) {
+      await (await this.host()).sendKeys(TestKey.ENTER);
+    }
+  }
+
+  /** Gets the edit input inside the chip row. */
+  async getEditInput(filter: ChipEditInputHarnessFilters = {}): Promise<MatChipEditInputHarness> {
+    return this.locatorFor(MatChipEditInputHarness.with(filter))();
   }
 }

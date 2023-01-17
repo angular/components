@@ -16,3 +16,4 @@ export * from './chip-listbox-harness';
 export * from './chip-grid-harness';
 export * from './chip-row-harness';
 export * from './chip-set-harness';
+export * from './chip-edit-input-harness';

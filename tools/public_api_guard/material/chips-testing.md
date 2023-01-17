@@ -18,6 +18,10 @@ export interface ChipAvatarHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public (undocumented)
+export interface ChipEditInputHarnessFilters extends BaseHarnessFilters {
+}
+
+// @public (undocumented)
 export interface ChipGridHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
 }
@@ -62,6 +66,14 @@ export class MatChipAvatarHarness extends ComponentHarness {
     // (undocumented)
     static hostSelector: string;
     static with<T extends MatChipAvatarHarness>(this: ComponentHarnessConstructor<T>, options?: ChipAvatarHarnessFilters): HarnessPredicate<T>;
+}
+
+// @public
+export class MatChipEditInputHarness extends ComponentHarness {
+    // (undocumented)
+    static hostSelector: string;
+    setValue(value: string): Promise<void>;
+    static with<T extends MatChipEditInputHarness>(this: ComponentHarnessConstructor<T>, options?: ChipEditInputHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public
@@ -140,10 +152,13 @@ export class MatChipRemoveHarness extends ComponentHarness {
 
 // @public
 export class MatChipRowHarness extends MatChipHarness {
+    finishEditing(): Promise<void>;
+    getEditInput(filter?: ChipEditInputHarnessFilters): Promise<MatChipEditInputHarness>;
     // (undocumented)
     static hostSelector: string;
     isEditable(): Promise<boolean>;
     isEditing(): Promise<boolean>;
+    startEditing(): Promise<void>;
 }
 
 // @public
