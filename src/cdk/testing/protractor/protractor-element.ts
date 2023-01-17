@@ -199,6 +199,20 @@ export class ProtractorElement implements TestElement {
     return browser.executeScript(`return (arguments[0].textContent || '').trim()`, this.element);
   }
 
+  /**
+   * Sets the value of a `contenteditable` element.
+   * @param value Value to be set on the element.
+   */
+  async setContenteditableValue(value: string): Promise<void> {
+    const contenteditableAttr = await this.getAttribute('contenteditable');
+
+    if (contenteditableAttr !== '' && contenteditableAttr !== 'true') {
+      throw new Error('setContenteditableValue can only be called on a `contenteditable` element.');
+    }
+
+    return browser.executeScript(`arguments[0].textContent = arguments[1];`, this.element, value);
+  }
+
   /** Gets the value for the given attribute from the element. */
   async getAttribute(name: string): Promise<string | null> {
     return browser.executeScript(
