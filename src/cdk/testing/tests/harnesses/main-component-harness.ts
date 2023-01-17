@@ -40,6 +40,7 @@ export class MainComponentHarness extends ComponentHarness {
   readonly numberInput = this.locatorFor('#number-input');
   readonly numberInputValue = this.locatorFor('#number-input-value');
   readonly contextmenuTestResult = this.locatorFor('.contextmenu-test-result');
+  readonly contenteditable = this.locatorFor('#contenteditable');
   // Allow null for element
   readonly nullItem = this.locatorForOptional('wrong locator');
   // Allow null for component harness

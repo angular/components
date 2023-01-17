@@ -251,6 +251,7 @@ export interface TestElement {
     selectOptions(...optionIndexes: number[]): Promise<void>;
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
+    setContenteditableValue?(value: string): Promise<void>;
     setInputValue(value: string): Promise<void>;
     text(options?: TextOptions): Promise<string>;
 }

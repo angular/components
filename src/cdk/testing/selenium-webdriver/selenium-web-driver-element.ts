@@ -154,6 +154,25 @@ export class SeleniumWebDriverElement implements TestElement {
     );
   }
 
+  /**
+   * Sets the value of a `contenteditable` element.
+   * @param value Value to be set on the element.
+   */
+  async setContenteditableValue(value: string): Promise<void> {
+    const contenteditableAttr = await this.getAttribute('contenteditable');
+
+    if (contenteditableAttr !== '' && contenteditableAttr !== 'true') {
+      throw new Error('setContenteditableValue can only be called on a `contenteditable` element.');
+    }
+
+    await this._stabilize();
+    return this._executeScript(
+      (element: Element, valueToSet: string) => (element.textContent = valueToSet),
+      this.element(),
+      value,
+    );
+  }
+
   /** Gets the value for the given attribute from the element. */
   async getAttribute(name: string): Promise<string | null> {
     await this._stabilize();
