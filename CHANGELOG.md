@@ -1,3 +1,16 @@
+<a name="15.1.1"></a>
+# 15.1.1 "purple-plush" (2023-01-18)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0fc52fca6](https://github.com/angular/components/commit/0fc52fca68e477588c525d1d2e9ba56415eb27ce) | fix | **schematics:** don't migrate unknown stylesheet formats ([#26450](https://github.com/angular/components/pull/26450)) |
+| [6bdc2e383](https://github.com/angular/components/commit/6bdc2e383f7edba0228eebf3185b38fdf73ed598) | fix | **select:** active class not removed from reset option when new value is assigned through form control ([#26414](https://github.com/angular/components/pull/26414)) |
+| [072d6d036](https://github.com/angular/components/commit/072d6d03605c71def61bb0f249761a79efa9ed5e) | fix | **slider:** Use non-deprecated theme key ([#26378](https://github.com/angular/components/pull/26378)) |
+## Special Thanks
+Alan Agius, Alka Vats, Kevin Vizcarra, Kristiyan Kostadinov and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.0"></a>
 # 15.1.0 "silk-sandal" (2023-01-11)
 ### cdk
