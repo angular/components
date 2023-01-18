@@ -8,6 +8,7 @@
 
 import {Migration, ResolvedResource} from '@angular/cdk/schematics';
 import {SchematicContext} from '@angular-devkit/schematics';
+import {extname} from 'path';
 import * as postcss from 'postcss';
 import * as scss from 'postcss-scss';
 import {ComponentMigrator, MIGRATORS, PERMANENT_MIGRATORS} from '.';
@@ -24,20 +25,28 @@ export class ThemingStylesMigration extends Migration<ComponentMigrator[], Schem
   private _namespace: string;
 
   override visitStylesheet(stylesheet: ResolvedResource) {
-    let migratedContent = this.migrate(stylesheet.content, stylesheet.filePath);
+    let migratedContent = this.migrate(stylesheet.content, stylesheet.filePath, stylesheet.inline);
 
     // Note: needs to run after `migrate` so that the `namespace` has been resolved.
     if (this._namespace) {
       migratedContent = migrateTypographyConfigs(migratedContent, this._namespace);
     }
 
-    this.fileSystem
-      .edit(stylesheet.filePath)
-      .remove(stylesheet.start, stylesheet.content.length)
-      .insertRight(stylesheet.start, migratedContent);
+    if (migratedContent !== stylesheet.content) {
+      this.fileSystem
+        .edit(stylesheet.filePath)
+        .remove(stylesheet.start, stylesheet.content.length)
+        .insertRight(stylesheet.start, migratedContent);
+    }
   }
 
-  migrate(styles: string, filename: string): string {
+  migrate(styles: string, filename: string, isInline: boolean): string {
+    const extension = extname(filename).toLowerCase();
+
+    if (!isInline && extension && extension !== '.css' && extension !== '.scss') {
+      return styles;
+    }
+
     const processor = new postcss.Processor([
       {
         postcssPlugin: 'theming-styles-migration-plugin',
