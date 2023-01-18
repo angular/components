@@ -1,3 +1,21 @@
+<a name="15.2.0-next.1"></a>
+# 15.2.0-next.1 "pavement-payphone" (2023-01-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [62bd54e8e](https://github.com/angular/components/commit/62bd54e8ed4b55308e8b834515456a07951627b0) | feat | **testing:** add method to set the text of an element |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b42650c88](https://github.com/angular/components/commit/b42650c88c148f722def987d0834e06dcde135b7) | feat | **chips:** add test harness support for edit input |
+| [46cfbe566](https://github.com/angular/components/commit/46cfbe566ab99207c3951c6c86aed20f65d925a6) | fix | **core:** add checkmark for single-select ([#25962](https://github.com/angular/components/pull/25962)) |
+| [3038d72ac](https://github.com/angular/components/commit/3038d72acbd7a8691e80ebbcc083449dace4aef4) | fix | **schematics:** don't migrate unknown stylesheet formats ([#26450](https://github.com/angular/components/pull/26450)) |
+| [6391fc189](https://github.com/angular/components/commit/6391fc189ae2a94443659e303da32ce391512dd1) | fix | **slider:** Use non-deprecated theme key ([#26378](https://github.com/angular/components/pull/26378)) |
+## Special Thanks
+Alan Agius, Alka Vats, Kevin Vizcarra, Kristiyan Kostadinov and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.1"></a>
 # 15.1.1 "purple-plush" (2023-01-18)
 ### material
