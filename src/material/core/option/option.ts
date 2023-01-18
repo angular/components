@@ -83,6 +83,11 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     return !!(this._parent && this._parent.disableRipple);
   }
 
+  /** Whether to display checkmark for single-selection. */
+  get hideSingleSelectionIndicator(): boolean {
+    return !!(this._parent && this._parent.hideSingleSelectionIndicator);
+  }
+
   /** Event emitted when the option is selected or deselected. */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange<T>>();
@@ -95,7 +100,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
 
   constructor(
     private _element: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
+    public _changeDetectorRef: ChangeDetectorRef,
     private _parent: MatOptionParentComponent,
     readonly group: _MatOptgroupBase,
   ) {}

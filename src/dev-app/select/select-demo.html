@@ -12,8 +12,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-label>Drink</mat-label>
         <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
           [disabled]="drinksDisabled" #drinkControl="ngModel">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
+          <mat-option [disabled]="drinksOptionsDisabled">None</mat-option>
+          <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drinksOptionsDisabled">
             {{ drink.viewValue }}
           </mat-option>
         </mat-select>
@@ -52,6 +52,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>
       <button mat-button (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
       <button mat-button (click)="drinksDisabled=!drinksDisabled">TOGGLE DISABLED</button>
+      <button mat-button (click)="drinksOptionsDisabled=!drinksOptionsDisabled">TOGGLE DISABLED OPTIONS</button>
       <button mat-button (click)="drinkControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>
@@ -64,7 +65,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-label>Pokemon</mat-label>
         <mat-select multiple [(ngModel)]="currentPokemon"
           [required]="pokemonRequired" [disabled]="pokemonDisabled" #pokemonControl="ngModel">
-          <mat-option *ngFor="let creature of pokemon" [value]="creature.value">
+          <mat-option *ngFor="let creature of pokemon" [value]="creature.value" [disabled]="pokemonOptionsDisabled">
             {{ creature.viewValue }}
           </mat-option>
         </mat-select>
@@ -82,6 +83,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <button mat-button (click)="setPokemonValue()">SET VALUE</button>
       <button mat-button (click)="pokemonRequired=!pokemonRequired">TOGGLE REQUIRED</button>
       <button mat-button (click)="pokemonDisabled=!pokemonDisabled">TOGGLE DISABLED</button>
+      <button mat-button (click)="pokemonOptionsDisabled=!pokemonOptionsDisabled">TOGGLE DISABLED OPTIONS</button>
       <button mat-button (click)="pokemonControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>
@@ -354,5 +356,43 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       </mat-form-field>
       <button color="primary" mat-raised-button>Submit</button>
     </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="demo-card demo-narrow">
+  <mat-card-subtitle>Narrow</mat-card-subtitle>
+  <mat-card-content>
+    <p class="demo-narrow-sandwich">
+      <mat-form-field>
+        <mat-label>Bread</mat-label>
+        <mat-select [(ngModel)]="sandwichBread"
+          [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
+          <mat-option *ngFor="let bread of breads" [value]="bread.value">
+            {{ bread.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Meat</mat-label>
+        <mat-select [(ngModel)]="sandwichMeat"
+          [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
+          <mat-option *ngFor="let meat of meats" [value]="meat.value">
+            {{ meat.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Cheese</mat-label>
+        <mat-select [(ngModel)]="sandwichCheese"
+          [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
+          <mat-option *ngFor="let cheese of cheeses" [value]="cheese.value">
+            {{ cheese.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <mat-checkbox [(ngModel)]="sandwichHideSingleSelectionIndicator">
+      Hide Single-Selection Indicator
+    </mat-checkbox>
   </mat-card-content>
 </mat-card>

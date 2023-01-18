@@ -25,3 +25,12 @@
 .demo-card {
   margin: 30px 0;
 }
+
+.demo-narrow {
+  max-width: 450px;
+
+  .demo-narrow-sandwich {
+    display: flex;
+    gap: 16px;
+  }
+}

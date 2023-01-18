@@ -1321,6 +1321,56 @@ describe('MDC-based MatSelect', () => {
             )
             .toEqual([options[7]]);
         }));
+
+        it('should render a checkmark on selected option', fakeAsync(() => {
+          fixture.componentInstance.control.setValue(fixture.componentInstance.foods[2].value);
+          fixture.detectChanges();
+
+          trigger.click();
+          fixture.detectChanges();
+          flush();
+
+          const pseudoCheckboxes = options
+            .map(option => option.querySelector('.mat-pseudo-checkbox-minimal'))
+            .filter((x): x is HTMLElement => !!x);
+          const selectedOption = options[2];
+
+          expect(selectedOption.querySelector('.mat-pseudo-checkbox-minimal')).not.toBeNull();
+          expect(pseudoCheckboxes.length).toBe(1);
+        }));
+
+        it('should render checkboxes for multi-select', fakeAsync(() => {
+          fixture.destroy();
+
+          const multiFixture = TestBed.createComponent(MultiSelect);
+          multiFixture.detectChanges();
+
+          multiFixture.componentInstance.control.setValue([
+            multiFixture.componentInstance.foods[2].value,
+          ]);
+          multiFixture.detectChanges();
+
+          trigger = multiFixture.debugElement.query(
+            By.css('.mat-mdc-select-trigger'),
+          )!.nativeElement;
+
+          trigger.click();
+          multiFixture.detectChanges();
+          flush();
+
+          options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+          const pseudoCheckboxes = options
+            .map(option => option.querySelector('.mat-pseudo-checkbox.mat-pseudo-checkbox-full'))
+            .filter((x): x is HTMLElement => !!x);
+          const selectedPseudoCheckbox = pseudoCheckboxes[2];
+
+          expect(pseudoCheckboxes.length)
+            .withContext('expecting each option to have a pseudo-checkbox with "full" appearance')
+            .toEqual(options.length);
+          expect(selectedPseudoCheckbox.classList)
+            .withContext('expecting selected pseudo-checkbox to be checked')
+            .toContain('mat-pseudo-checkbox-checked');
+        }));
       });
 
       describe('for option groups', () => {
@@ -4376,6 +4426,39 @@ describe('MDC-based MatSelect', () => {
     expect(select.typeaheadDebounceInterval).toBe(1337);
     expect(document.querySelector('.cdk-overlay-pane')?.classList).toContain('test-panel-class');
   }));
+
+  it('should be able to hide checkmark icon through an injection token', () => {
+    const matSelectConfig: MatSelectConfig = {hideSingleSelectionIndicator: true};
+    configureMatSelectTestingModule(
+      [NgModelSelect],
+      [
+        {
+          provide: MAT_SELECT_CONFIG,
+          useValue: matSelectConfig,
+        },
+      ],
+    );
+    const fixture = TestBed.createComponent(NgModelSelect);
+    fixture.detectChanges();
+    const select = fixture.componentInstance.select;
+
+    fixture.componentInstance.select.value = fixture.componentInstance.foods[0].value;
+    select.open();
+    fixture.detectChanges();
+
+    // Select the first value to ensure selection state is displayed. That way this test ensures
+    // that the selection state hides the checkmark icon, rather than hiding the checkmark icon
+    // because nothing is selected.
+    expect(document.querySelector('mat-option[aria-selected="true"]'))
+      .withContext('expecting selection state to be displayed')
+      .not.toBeNull();
+
+    const pseudoCheckboxes = document.querySelectorAll('.mat-pseudo-checkbox');
+
+    expect(pseudoCheckboxes.length)
+      .withContext('expecting not to display a pseudo-checkbox')
+      .toBe(0);
+  });
 
   it('should not not throw if the select is inside an ng-container with ngIf', fakeAsync(() => {
     configureMatSelectTestingModule([SelectInNgContainer]);

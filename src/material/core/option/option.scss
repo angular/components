@@ -48,13 +48,23 @@
   }
 
   .mat-icon,
-  .mat-pseudo-checkbox {
+  .mat-pseudo-checkbox-full {
     margin-right: mdc-list-variables.$side-padding;
     flex-shrink: 0;
 
     [dir='rtl'] & {
       margin-right: 0;
       margin-left: mdc-list-variables.$side-padding;
+    }
+  }
+
+  .mat-pseudo-checkbox-minimal {
+    margin-left: mdc-list-variables.$side-padding;
+    flex-shrink: 0;
+
+    [dir='rtl'] & {
+      margin-right: mdc-list-variables.$side-padding;
+      margin-left: 0;
     }
   }
 
@@ -84,6 +94,13 @@
     font-family: inherit;
     text-decoration: inherit;
     text-transform: inherit;
+
+    margin-right: auto;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: auto;
+    }
   }
 
   @include cdk.high-contrast(active, off) {

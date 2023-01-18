@@ -130,6 +130,9 @@ export interface MatSelectConfig {
 
   /** Class or list of classes to be applied to the menu's overlay panel. */
   overlayPanelClass?: string | string[];
+
+  /** Wheter icon indicators should be hidden for single-selection. */
+  hideSingleSelectionIndicator?: boolean;
 }
 
 /** Injection token that can be used to provide the default options the select module. */
@@ -483,7 +486,7 @@ export abstract class _MatSelectBase<C>
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
     private _liveAnnouncer: LiveAnnouncer,
-    @Optional() @Inject(MAT_SELECT_CONFIG) private _defaultOptions?: MatSelectConfig,
+    @Optional() @Inject(MAT_SELECT_CONFIG) protected _defaultOptions?: MatSelectConfig,
   ) {
     super(elementRef, _defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
@@ -1290,5 +1293,26 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
         ? this._preferredOverlayOrigin.elementRef
         : this._preferredOverlayOrigin || this._elementRef;
     return refToMeasure.nativeElement.getBoundingClientRect().width;
+  }
+
+  /** Whether checkmark indicator for single-selection options is hidden. */
+  @Input()
+  get hideSingleSelectionIndicator(): boolean {
+    return this._hideSingleSelectionIndicator;
+  }
+  set hideSingleSelectionIndicator(value: BooleanInput) {
+    this._hideSingleSelectionIndicator = coerceBooleanProperty(value);
+    this._syncParentProperties();
+  }
+  private _hideSingleSelectionIndicator: boolean =
+    this._defaultOptions?.hideSingleSelectionIndicator ?? false;
+
+  /** Syncs the parent state with the individual options. */
+  _syncParentProperties(): void {
+    if (this.options) {
+      for (const option of this.options) {
+        option._changeDetectorRef.markForCheck();
+      }
+    }
   }
 }

@@ -46,6 +46,7 @@ import {map, startWith} from 'rxjs/operators';
 import {
   getMatAutocompleteMissingPanelError,
   MatAutocomplete,
+  MatAutocompleteDefaultOptions,
   MatAutocompleteModule,
   MatAutocompleteOrigin,
   MatAutocompleteSelectedEvent,
@@ -3412,6 +3413,50 @@ describe('MDC-based MatAutocomplete', () => {
 
     subscription.unsubscribe();
   }));
+
+  describe('a11y', () => {
+    it('should display checkmark for selection by default', () => {
+      const fixture = createComponent(AutocompleteWithNgModel);
+      fixture.componentInstance.selectedState = 'New York';
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      dispatchFakeEvent(document.querySelector('mat-option')!, 'click');
+      fixture.detectChanges();
+
+      const selectedOption = document.querySelector('mat-option[aria-selected="true"');
+      expect(selectedOption).withContext('Expected an option to be selected.').not.toBeNull();
+      expect(selectedOption?.querySelector('.mat-pseudo-checkbox.mat-pseudo-checkbox-minimal'))
+        .withContext(
+          'Expected selection option to have a pseudo-checkbox with "minimal" appearance.',
+        )
+        .toBeTruthy();
+    });
+  });
+
+  describe('with token to hide single selection indicator', () => {
+    it('should not display checkmark', () => {
+      const defaultOptions: MatAutocompleteDefaultOptions = {
+        hideSingleSelectionIndicator: true,
+      };
+      const fixture = createComponent(AutocompleteWithNgModel, [
+        {provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: defaultOptions},
+      ]);
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      dispatchFakeEvent(document.querySelector('mat-option')!, 'click');
+      fixture.detectChanges();
+
+      const selectedOption = document.querySelector('mat-option[aria-selected="true"');
+      expect(selectedOption).withContext('Expected an option to be selected.').not.toBeNull();
+      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(0);
+    });
+  });
 });
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
@@ -3575,6 +3620,8 @@ class AutocompleteWithNgModel {
   filteredStates: any[];
   selectedState: string;
   states = ['New York', 'Washington', 'Oregon'];
+
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
 
   constructor() {
     this.filteredStates = this.states.slice();

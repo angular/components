@@ -10,7 +10,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <mat-label>State</mat-label>
       <input matInput [matAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
     </mat-form-field>
-    <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
+    <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn"
+      [hideSingleSelectionIndicator]="reactiveHideSingleSelectionIndicator">
       <mat-option *ngFor="let state of tempStates" [value]="state">
         <span>{{ state.name }}</span>
         <span class="demo-secondary-text"> ({{ state.code }}) </span>
@@ -23,11 +24,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <button mat-button (click)="stateCtrl.enabled ? stateCtrl.disable() : stateCtrl.enable()">
         TOGGLE DISABLED
       </button>
-      <select [(ngModel)]="reactiveStatesTheme">
-        <option *ngFor="let theme of availableThemes" [value]="theme.value">
-          {{theme.name}}
-        </option>
-      </select>
+    </mat-card-actions>
+    <mat-card-actions>
+      <mat-checkbox [(ngModel)]="reactiveHideSingleSelectionIndicator">
+        Hide Single-Selection Indicator
+      </mat-checkbox>
     </mat-card-actions>
 
   </mat-card>
@@ -42,7 +43,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <mat-label>State</mat-label>
       <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
         (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
-      <mat-autocomplete #tdAuto="matAutocomplete">
+      <mat-autocomplete #tdAuto="matAutocomplete"
+        [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator">
         <mat-option *ngFor="let state of tdStates" [value]="state.name">
           <span>{{ state.name }}</span>
         </mat-option>
@@ -60,6 +62,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           {{theme.name}}
         </option>
       </select>
+    </mat-card-actions>
+    <mat-card-actions>
+      <mat-checkbox [(ngModel)]="templateHideSingleSelectionIndicator">
+        Hide Single-Selection Indicator
+      </mat-checkbox>
     </mat-card-actions>
 
   </mat-card>

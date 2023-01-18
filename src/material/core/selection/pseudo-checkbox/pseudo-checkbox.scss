@@ -5,7 +5,6 @@
 @use './pseudo-checkbox-common';
 
 .mat-pseudo-checkbox {
-  border: checkbox-common.$border-width solid;
   border-radius: 2px;
   cursor: pointer;
   display: inline-block;
@@ -25,10 +24,6 @@
     border-bottom: checkbox-common.$border-width solid currentColor;
     transition: opacity checkbox-common.$transition-duration
       variables.$linear-out-slow-in-timing-function;
-  }
-
-  &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
-    border-color: transparent;
   }
 
   @include private.private-animation-noop {
@@ -54,6 +49,13 @@
   transform: rotate(-45deg);
   opacity: 1;
   box-sizing: content-box;
+}
+
+.mat-pseudo-checkbox-full {
+  border: checkbox-common.$border-width solid;
+  &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
+    border-color: transparent;
+  }
 }
 
 @include pseudo-checkbox-common.size(checkbox-common.$size);
