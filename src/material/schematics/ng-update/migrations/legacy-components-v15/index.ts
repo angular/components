@@ -19,11 +19,18 @@ import {
   MIGRATED_CORE_SYMBOLS,
 } from './constants';
 import {Migration, ResolvedResource, TargetVersion, WorkspacePath} from '@angular/cdk/schematics';
+import {extname} from 'path';
 
 export class LegacyComponentsMigration extends Migration<null> {
   enabled = this.targetVersion === TargetVersion.V15;
 
   override visitStylesheet(stylesheet: ResolvedResource): void {
+    const extension = extname(stylesheet.filePath).toLowerCase();
+
+    if (!stylesheet.inline && extension && extension !== '.css' && extension !== '.scss') {
+      return;
+    }
+
     let namespace: string | undefined = undefined;
     const processor = new postcss.Processor([
       {
