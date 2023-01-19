@@ -162,6 +162,35 @@ export function updateAttribute(
   return prefix + indentation + attrText + suffix;
 }
 
+/**
+ * Replaces an attribute with a new name and value.
+ *
+ * @param html The template html to be updated.
+ * @param node The node to be updated.
+ * @param oldName The name of the attribute being replaced.
+ * @param newName The name of the new attribute.
+ * @param newValue The value of the new attribute.
+ * @returns The updated template html.
+ */
+export function replaceAttribute(
+  html: string,
+  node: TmplAstElement,
+  oldName: string,
+  newName: string,
+  newValue: string | null,
+): string {
+  const existingAttr = node.attributes.find(currentAttr => currentAttr.name === oldName);
+  if (existingAttr && existingAttr.keySpan) {
+    const attrText = newValue ? ` ${newName}="${newValue}"` : ` ${newName}`;
+    return (
+      html.slice(0, existingAttr.sourceSpan.start.offset).trimEnd() +
+      attrText +
+      html.slice(existingAttr.sourceSpan.end.offset)
+    );
+  }
+  return html; // cannot be replaced, attribute was not found
+}
+
 function parseIndentation(html: string, node: TmplAstElement): string {
   let whitespace = '';
   let startOffset = node.startSourceSpan.start.offset + node.name.length + 1;
