@@ -327,6 +327,9 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
 export const MENU_PANEL_TOP_PADDING = 8;
 
 // @public
+export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
+
+// @public
 export type MenuPositionX = 'before' | 'after';
 
 // @public (undocumented)

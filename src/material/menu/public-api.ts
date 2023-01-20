@@ -6,7 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export {MatMenu, _MatMenuBase, MAT_MENU_DEFAULT_OPTIONS, MatMenuDefaultOptions} from './menu';
+export {
+  MatMenu,
+  _MatMenuBase,
+  MAT_MENU_DEFAULT_OPTIONS,
+  MatMenuDefaultOptions,
+  MenuCloseReason,
+} from './menu';
 export * from './menu-item';
 export * from './menu-content';
 export {
