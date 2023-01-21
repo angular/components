@@ -3,6 +3,7 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkListboxModule} from '@angular/cdk/listbox';
 import {PortalModule} from '@angular/cdk/portal';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {CdkStepperModule} from '@angular/cdk/stepper';
@@ -51,6 +52,7 @@ import {DialogModule} from '@angular/cdk/dialog';
     A11yModule,
     CdkAccordionModule,
     ClipboardModule,
+    CdkListboxModule,
     CdkMenuModule,
     CdkStepperModule,
     CdkTableModule,
