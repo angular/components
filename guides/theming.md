@@ -206,7 +206,7 @@ $my-theme: mat.define-light-theme((
 
 As an alternative to listing every component that your application uses, Angular Material offers
 Sass mixins that includes styles for all components in the library: `all-component-colors`,
-`all-component-typographies`, `all-component-densitites`, and `all-component-themes`. These mixins behave the same as
+`all-component-typographies`, `all-component-densities`, and `all-component-themes`. These mixins behave the same as
 individual component mixins, except they emit styles for `core-theme` and _all_ 35+ components in Angular
 Material. Unless your application uses every single component, this will produce unnecessary CSS.
 
