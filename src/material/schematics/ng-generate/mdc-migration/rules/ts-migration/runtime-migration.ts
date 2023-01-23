@@ -36,6 +36,9 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       }
     } catch (e) {
       this.context.logger.error(`${e}`);
+      if (e instanceof Error) {
+        this.logger.error(`${e.stack}`);
+      }
       this.context.logger.warn(
         `Failed to process file: ${node.getSourceFile().fileName} (see error above).`,
       );
