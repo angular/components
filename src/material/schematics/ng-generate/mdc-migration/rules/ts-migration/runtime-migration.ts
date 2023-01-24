@@ -204,7 +204,9 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
     }
 
     node.initializer.forEachChild(stringLiteralNode => {
-      this._migratePropertyAssignment(stringLiteralNode as ts.StringLiteral, this._stylesMigration);
+      if (ts.isStringLiteralLike(stringLiteralNode)) {
+        this._migratePropertyAssignment(stringLiteralNode, this._stylesMigration);
+      }
     });
   }
 
@@ -231,7 +233,9 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       }
     }
 
-    this._migratePropertyAssignment(node.initializer as ts.StringLiteral, this._templateMigration);
+    if (ts.isStringLiteralLike(node.initializer)) {
+      this._migratePropertyAssignment(node.initializer, this._templateMigration);
+    }
   }
 
   private _migratePropertyAssignment(
