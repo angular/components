@@ -8,10 +8,10 @@
 
 import {HighContrastModeDetector} from '@angular/cdk/a11y';
 import {BidiModule} from '@angular/cdk/bidi';
-import {Inject, InjectionToken, NgModule, Optional} from '@angular/core';
+import {inject, Inject, InjectionToken, NgModule, Optional} from '@angular/core';
 import {VERSION as CDK_VERSION} from '@angular/cdk';
 import {DOCUMENT} from '@angular/common';
-import {_isTestEnvironment} from '@angular/cdk/platform';
+import {Platform, _isTestEnvironment} from '@angular/cdk/platform';
 import {VERSION} from '../version';
 
 /** @docs-private */
@@ -65,12 +65,15 @@ export class MatCommonModule {
       this._hasDoneGlobalChecks = true;
 
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        // Inject in here so the reference to `Platform` can be removed in production mode.
+        const platform = inject(Platform, {optional: true});
+
         if (this._checkIsEnabled('doctype')) {
           _checkDoctypeIsDefined(this._document);
         }
 
         if (this._checkIsEnabled('theme')) {
-          _checkThemeIsPresent(this._document);
+          _checkThemeIsPresent(this._document, !!platform?.isBrowser);
         }
 
         if (this._checkIsEnabled('version')) {
@@ -105,10 +108,10 @@ function _checkDoctypeIsDefined(doc: Document): void {
 }
 
 /** Checks that a theme has been included. */
-function _checkThemeIsPresent(doc: Document): void {
+function _checkThemeIsPresent(doc: Document, isBrowser: boolean): void {
   // We need to assert that the `body` is defined, because these checks run very early
   // and the `body` won't be defined if the consumer put their scripts in the `head`.
-  if (!doc.body || typeof getComputedStyle !== 'function') {
+  if (!doc.body || !isBrowser) {
     return;
   }
 
