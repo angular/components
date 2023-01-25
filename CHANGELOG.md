@@ -1,3 +1,17 @@
+<a name="15.1.2"></a>
+# 15.1.2 "arsenic-angel" (2023-01-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4f2767fb0](https://github.com/angular/components/commit/4f2767fb0b0e7fe93dd9a798f6557c6449afa2eb) | fix | **core:** top-level font family not copied when converting between typography formats ([#26471](https://github.com/angular/components/pull/26471)) |
+| [419c73871](https://github.com/angular/components/commit/419c73871bbd0de4475e2f3ae1e7deb9005f5da6) | fix | **core:** use Platform to check whether to run theming check ([#26477](https://github.com/angular/components/pull/26477)) |
+| [9ac46d80e](https://github.com/angular/components/commit/9ac46d80ea02f61515b14ea6badd7502b224e384) | fix | **schematics:** add string literal check ([#26475](https://github.com/angular/components/pull/26475)) |
+| [8465f9ec5](https://github.com/angular/components/commit/8465f9ec5ce1103e5e7b31bc3096a2abdafcb5c7) | fix | **schematics:** improve logging of mdc-migration ts migrator ([#26377](https://github.com/angular/components/pull/26377)) |
+## Special Thanks
+Kristiyan Kostadinov, Thomas Chandelle and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.0-next.1"></a>
 # 15.2.0-next.1 "pavement-payphone" (2023-01-18)
 ### cdk
