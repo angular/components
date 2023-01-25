@@ -1,3 +1,17 @@
+<a name="15.2.0-next.2"></a>
+# 15.2.0-next.2 "brass-bottle" (2023-01-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [434ec52c8](https://github.com/angular/components/commit/434ec52c8de5c714e458ae12514e5b43c6977933) | fix | **core:** top-level font family not copied when converting between typography formats ([#26471](https://github.com/angular/components/pull/26471)) |
+| [5f146901e](https://github.com/angular/components/commit/5f146901e38e08b62d96f20fbb552064c3de2f49) | fix | **core:** use Platform to check whether to run theming check ([#26477](https://github.com/angular/components/pull/26477)) |
+| [834e865d4](https://github.com/angular/components/commit/834e865d48cac7abe3c4316b83591321d6baf5a5) | fix | **schematics:** add string literal check ([#26475](https://github.com/angular/components/pull/26475)) |
+| [f56bd5c24](https://github.com/angular/components/commit/f56bd5c243ff96eca5c72428cb6ac54764e01844) | fix | **schematics:** improve logging of mdc-migration ts migrator ([#26377](https://github.com/angular/components/pull/26377)) |
+## Special Thanks
+Kristiyan Kostadinov, Thomas Chandelle and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.2"></a>
 # 15.1.2 "arsenic-angel" (2023-01-25)
 ### material
