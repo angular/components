@@ -13,7 +13,7 @@ const ID_DELIMITER = ' ';
  * Adds the given ID to the specified ARIA attribute on an element.
  * Used for attributes such as aria-labelledby, aria-owns, etc.
  */
-export function addAriaReferencedId(el: Element, attr: string, id: string) {
+export function addAriaReferencedId(el: Element, attr: `aria-${string}`, id: string) {
   const ids = getAriaReferenceIds(el, attr);
   if (ids.some(existingId => existingId.trim() == id.trim())) {
     return;
@@ -27,7 +27,7 @@ export function addAriaReferencedId(el: Element, attr: string, id: string) {
  * Removes the given ID from the specified ARIA attribute on an element.
  * Used for attributes such as aria-labelledby, aria-owns, etc.
  */
-export function removeAriaReferencedId(el: Element, attr: string, id: string) {
+export function removeAriaReferencedId(el: Element, attr: `aria-${string}`, id: string) {
   const ids = getAriaReferenceIds(el, attr);
   const filteredIds = ids.filter(val => val != id.trim());
 
