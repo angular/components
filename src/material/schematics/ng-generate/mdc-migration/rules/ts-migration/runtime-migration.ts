@@ -22,6 +22,7 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
   private _stylesMigration: ThemingStylesMigration;
   private _templateMigration: TemplateMigration;
   private _hasPossibleTemplateMigrations = true;
+  private _updates: {offset: number; update: () => void}[] | undefined;
 
   override visitNode(node: ts.Node): void {
     try {
@@ -337,7 +338,18 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
     const start = oldNode.getStart();
     const width = oldNode.getWidth();
 
-    this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newNodeText);
+    this._updates ??= [];
+    this._updates.push({
+      offset: start,
+      update: () =>
+        this.fileSystem.edit(filePath).remove(start, width).insertRight(start, newNodeText),
+    });
+  }
+
+  override postAnalysis(): void {
+    // Apply the updates in reverse offset order this ensures that there are no
+    // overlapping changes which would caused a change in offsets.
+    this._updates?.sort((a, b) => b.offset - a.offset).forEach(({update}) => update());
   }
 
   /** Checks whether a specifier identifier is referring to an imported symbol. */

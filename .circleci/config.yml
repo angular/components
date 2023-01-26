@@ -582,6 +582,9 @@ jobs:
       # Setup the components repository to use the MDC snapshot builds.
       # Run project tests with the MDC canary builds.
       - run: bazel test --build_tag_filters=-docs-package,-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+      # The below tests should be removed when consuming Angular CLI version 16 which should contain
+      # https://github.com/angular/angular-cli/pull/24211
+      - run: bazel test //src/cdk/schematics/... //src/material/schematics/... --build_tests_only --test_env=NG_UPDATE_BUFFER_V2=1
       - *slack_notify_on_failure
 
 # ----------------------------------------------------------------------------------------
