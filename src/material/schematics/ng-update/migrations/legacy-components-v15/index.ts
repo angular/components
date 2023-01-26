@@ -23,6 +23,7 @@ import {extname} from 'path';
 
 export class LegacyComponentsMigration extends Migration<null> {
   enabled = this.targetVersion === TargetVersion.V15;
+  private _updates: {offset: number; update: () => void}[] | undefined;
 
   override visitStylesheet(stylesheet: ResolvedResource): void {
     const extension = extname(stylesheet.filePath).toLowerCase();
@@ -429,6 +430,17 @@ export class LegacyComponentsMigration extends Migration<null> {
     str: {old: string; new: string},
   ): void {
     const index = this.fileSystem.read(filePath)!.indexOf(str.old, offset);
-    this.fileSystem.edit(filePath).remove(index, str.old.length).insertRight(index, str.new);
+    this._updates ??= [];
+    this._updates.push({
+      offset: index,
+      update: () =>
+        this.fileSystem.edit(filePath).remove(index, str.old.length).insertRight(index, str.new),
+    });
+  }
+
+  override postAnalysis(): void {
+    // Apply the updates in reverse offset order this ensures that there are no
+    // overlapping changes which would caused a change in offsets.
+    this._updates?.sort((a, b) => b.offset - a.offset).forEach(({update}) => update());
   }
 }
