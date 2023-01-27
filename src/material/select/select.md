@@ -165,6 +165,11 @@ this interferes with most assistive technology.
 Always provide an accessible label for the select. This can be done by adding a `<mat-label>`
 inside of `<mat-form-field>`, the `aria-label` attribute, or the `aria-labelledby` attribute.
 
+By default, `MatSelect` displays a checkmark to identify selected items. While you can hide the
+checkmark indicator for single-selection via `hideSingleSelectionIndicator`, this makes the
+component less accessible by making it harder or impossible for users to visually identify selected
+items.
+
 ### Troubleshooting
 
 #### Error: Cannot change `multiple` mode of select after initialization
