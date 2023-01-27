@@ -709,14 +709,23 @@
   <mat-toolbar color="primary">Appearance toggle</mat-toolbar>
   <mat-card-content>
     <mat-form-field [appearance]="appearance" class="demo-horizontal-spacing">
-      <mat-label>Label</mat-label>
+      <mat-label *ngIf="appearanceToggleLabelControl.value">{{appearanceToggleLabelControl.value}}</mat-label>
       <input matInput value="Initial">
+    </mat-form-field>
+    <mat-form-field [appearance]="'outline'" class="demo-horizontal-spacing">
+      <mat-label >{{appearanceToggleLabelControl.value}}</mat-label>
+      <input matInput value="Initial">
+      <mat-hint>mat-label not updates correctly with appearance='outline'</mat-hint>
     </mat-form-field>
     <p>
       <mat-button-toggle-group [(ngModel)]="appearance">
         <mat-button-toggle value="fill">Fill</mat-button-toggle>
         <mat-button-toggle value="outline">Outline</mat-button-toggle>
       </mat-button-toggle-group>
+      <button
+      mat-raised-button
+      color="primary"
+      (click)="toggleAppearanceToggleLabel()">Toggle Label</button>
     </p>
   </mat-card-content>
 </mat-card>

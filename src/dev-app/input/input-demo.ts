@@ -82,6 +82,7 @@ export class InputDemo {
   formControl = new FormControl('hello', Validators.required);
   emailFormControl = new FormControl('', [Validators.required, Validators.pattern(EMAIL_REGEX)]);
   delayedFormControl = new FormControl('');
+  appearanceToggleLabelControl = new FormControl('Label');
   model = 'hello';
   isAutofilled = false;
   customAutofillStyle = true;
@@ -122,6 +123,12 @@ export class InputDemo {
     this.placeholderTestControl.touched
       ? this.placeholderTestControl.markAsUntouched()
       : this.placeholderTestControl.markAsTouched();
+  }
+
+  toggleAppearanceToggleLabel() {
+    this.appearanceToggleLabelControl.setValue(
+      this.appearanceToggleLabelControl.value === '' ? 'Label' : '',
+    );
   }
 
   parseNumber(value: string): number {
