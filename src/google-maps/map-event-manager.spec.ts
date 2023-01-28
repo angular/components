@@ -141,6 +141,20 @@ describe('MapEventManager', () => {
     alternateTarget.triggerListeners('click');
     expect(spy).toHaveBeenCalledTimes(2);
   });
+
+  it('should not throw with an invalid target', () => {
+    manager.setTarget({
+      addListener: () => undefined,
+    });
+    const stream = manager.getLazyEmitter('click');
+    const completeSpy = jasmine.createSpy('completeSpy');
+    const errorSpy = jasmine.createSpy('errorSpy');
+    stream.subscribe({complete: completeSpy, error: errorSpy});
+
+    expect(() => manager.destroy()).not.toThrow();
+    expect(completeSpy).toHaveBeenCalled();
+    expect(errorSpy).not.toHaveBeenCalled();
+  });
 });
 
 /** Imitates a Google Maps event target and keeps track of the registered events. */
