@@ -32,7 +32,8 @@ export class CdkDragDropCustomPreviewExample {
     },
     {
       title: 'Episode V - The Empire Strikes Back',
-      poster: 'https://upload.wikimedia.org/wikipedia/en/3/3c/SW_-_Empire_Strikes_Back.jpg',
+      poster:
+        'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
     },
     {
       title: 'Episode VI - Return of the Jedi',
