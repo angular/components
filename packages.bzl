@@ -16,7 +16,7 @@ NPM_PACKAGE_SUBSTITUTIONS = {
     # Version of `tslib`
     "0.0.0-TSLIB": TSLIB_PACKAGE_VERSION,
     # Version of the local package being built, generated via the `--workspace_status_command` flag.
-    "0.0.0-PLACEHOLDER": "{BUILD_SCM_VERSION}",
+    "0.0.0-PLACEHOLDER": "{STABLE_PROJECT_VERSION}",
     # Version of `rxjs`
     "0.0.0-RXJS": RXJS_PACKAGE_VERSION,
 }
