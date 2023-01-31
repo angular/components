@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {createLinkerEsbuildPlugin} from '@angular/build-tooling/shared-scripts/angular-linker/esbuild-plugin.mjs';
+import {createEsbuildAngularOptimizePlugin} from '@angular/build-tooling/shared-scripts/angular-optimization/esbuild-plugin.mjs';
 import child_process from 'child_process';
 import esbuild from 'esbuild';
 import fs from 'fs';
@@ -48,7 +48,14 @@ async function main() {
   await compileProjectWithNgtsc();
 
   const specEntryPointFile = await createEntryPointSpecFile();
-  const esbuildLinkerPlugin = await createLinkerEsbuildPlugin(/fesm2020/, false);
+  const esbuildLinkerPlugin = await createEsbuildAngularOptimizePlugin({
+    enableLinker: {
+      filterPaths: /fesm2020/,
+      linkerOptions: {
+        linkerJitMode: true,
+      },
+    },
+  });
   const esbuildResolvePlugin = await createResolveEsbuildPlugin();
 
   const result = await esbuild.build({
