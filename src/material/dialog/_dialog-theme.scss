@@ -9,16 +9,16 @@
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
+  $background: map.get($config, background);
 
   @include mdc-helpers.using-mdc-theme($config) {
     .mat-mdc-dialog-container {
-      $surface: mdc-theme-color.$surface;
       $on-surface: mdc-theme-color.$on-surface;
       $text-emphasis-high: mdc-theme-color.text-emphasis(high);
       $text-emphasis-medium: mdc-theme-color.text-emphasis(medium);
 
       @include mdc-dialog-theme.theme((
-        container-color: $surface,
+        container-color: theming.get-color-from-palette($background, dialog),
         with-divider-divider-color: rgba($on-surface, mdc-dialog.$scroll-divider-opacity),
         subhead-color: rgba($on-surface, $text-emphasis-high),
         supporting-text-color: rgba($on-surface, $text-emphasis-medium),
