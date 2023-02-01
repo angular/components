@@ -247,6 +247,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./paginator/paginator-demo').then(m => m.PaginatorDemo),
   },
   {
+    path: 'performance',
+    loadComponent: () => import('./performance/performance-demo').then(m => m.PerformanceDemo),
+  },
+  {
     path: 'platform',
     loadComponent: () => import('./platform/platform-demo').then(m => m.PlatformDemo),
   },
