@@ -20,9 +20,7 @@
 
   @include mdc-helpers.using-mdc-theme($config) {
     .mat-mdc-tab, .mat-mdc-tab-link {
-      &:not(.mat-mdc-tab-disabled) {
-        @include mdc-tab-mixins.text-label-color(rgba(mdc-theme-color.$on-surface, 0.6));
-      }
+      @include mdc-tab-mixins.text-label-color(rgba(mdc-theme-color.$on-surface, 0.6));
 
       // MDC seems to include a background color on tabs which only stands out on dark themes.
       // Disable for now for backwards compatibility. These styles are inside the theme in order
