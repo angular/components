@@ -104,12 +104,14 @@ export class MatSort
     if (
       direction &&
       direction !== 'asc' &&
+      direction !== 'ASC' &&
       direction !== 'desc' &&
+      direction !== 'DESC' &&
       (typeof ngDevMode === 'undefined' || ngDevMode)
     ) {
       throw getSortInvalidDirectionError(direction);
     }
-    this._direction = direction;
+    this._direction = direction.toLowerCase() as 'asc' | 'desc';
   }
   private _direction: SortDirection = '';
 
