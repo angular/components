@@ -59,11 +59,15 @@ $mat-tab-animation-duration: 500ms !default;
     align-items: center;
   }
 
-  // Required for `fitInkBarToContent` to work. This used to be included with MDC's `without-ripple`
-  // mixin, but that no longer appears to be the case with `static-styles`. Since the latter is
-  // ~10kb smaller, we include this one extra style ourselves.
   .mdc-tab__content {
+    // Required for `fitInkBarToContent` to work. This used to be included with MDC's
+    // `without-ripple` mixin, but that no longer appears to be the case with `static-styles`.
+    // Since the latter is ~10kb smaller, we include this one extra style ourselves.
     @include mdc-tab-indicator.surface;
+
+    // MDC sets `pointer-events: none` on the content which prevents interactions with the
+    // nested content. Re-enable it since we allow nesting any content in the tab (see #26195).
+    pointer-events: auto;
   }
 
   // We need to handle the hover and focus indication ourselves, because we don't use MDC's ripple.
