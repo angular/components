@@ -14,6 +14,7 @@ import { _MatSelectHarnessBase } from '@angular/material/select/testing';
 
 // @public @deprecated
 export interface LegacySelectHarnessFilters extends BaseHarnessFilters {
+    disabled?: boolean;
 }
 
 // @public @deprecated

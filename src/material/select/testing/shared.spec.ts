@@ -44,6 +44,23 @@ export function runHarnessTests(
     expect(selects.length).toBe(4);
   });
 
+  it('should filter by whether a select is disabled', async () => {
+    let enabledSelects = await loader.getAllHarnesses(selectHarness.with({disabled: false}));
+    let disabledSelects = await loader.getAllHarnesses(selectHarness.with({disabled: true}));
+
+    expect(enabledSelects.length).toBe(4);
+    expect(disabledSelects.length).toBe(0);
+
+    fixture.componentInstance.isDisabled = true;
+    fixture.detectChanges();
+
+    enabledSelects = await loader.getAllHarnesses(selectHarness.with({disabled: false}));
+    disabledSelects = await loader.getAllHarnesses(selectHarness.with({disabled: true}));
+
+    expect(enabledSelects.length).toBe(3);
+    expect(disabledSelects.length).toBe(1);
+  });
+
   it('should be able to check whether a select is in multi-selection mode', async () => {
     const singleSelection = await loader.getHarness(
       selectHarness.with({
