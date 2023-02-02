@@ -547,6 +547,16 @@ export class MatCheckbox
     super._handleInputClick();
   }
 
+  _onTouchTargetClick() {
+    super._handleInputClick();
+
+    if (!this.disabled) {
+      // Normally the input should be focused already, but if the click
+      // comes from the touch target, then we might have to focus it ourselves.
+      this._inputElement.nativeElement.focus();
+    }
+  }
+
   /**
    *  Prevent click events that come from the `<label/>` element from bubbling. This prevents the
    *  click handler on the host from triggering twice when clicking on the `<label/>` element. After

@@ -404,6 +404,20 @@ describe('MDC-based MatCheckbox', () => {
       expect(document.activeElement).toBe(inputElement);
     }));
 
+    it('should focus underlying input element when the touch target is clicked', fakeAsync(() => {
+      const touchTarget = checkboxElement.querySelector(
+        '.mat-mdc-checkbox-touch-target',
+      ) as HTMLElement;
+
+      expect(document.activeElement).not.toBe(inputElement);
+
+      touchTarget.click();
+      fixture.detectChanges();
+      flush();
+
+      expect(document.activeElement).toBe(inputElement);
+    }));
+
     it('should forward the value to input element', fakeAsync(() => {
       testComponent.checkboxValue = 'basic_checkbox';
       fixture.detectChanges();
