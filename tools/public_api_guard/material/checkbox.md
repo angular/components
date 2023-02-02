@@ -58,6 +58,8 @@ export class MatCheckbox extends _MatCheckboxBase<MatCheckboxChange> implements 
     protected _getAnimationTargetElement(): HTMLInputElement;
     // (undocumented)
     _onInputClick(): void;
+    // (undocumented)
+    _onTouchTargetClick(): void;
     _preventBubblingFromLabel(event: MouseEvent): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "disableRipple": "disableRipple"; "color": "color"; "tabIndex": "tabIndex"; }, {}, never, ["*"], false, never>;
