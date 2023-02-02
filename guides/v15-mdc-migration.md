@@ -347,7 +347,7 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   following styles:
 
   ```scss
-  .mat-mdc-input-element::-webkit-calendar-picker-indicator {
+  input.mat-mdc-input-element::-webkit-calendar-picker-indicator {
     display: block;
   }
   ```
