@@ -1,3 +1,25 @@
+<a name="15.1.3"></a>
+# 15.1.3 "obsidian-organism" (2023-02-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d9124166a1](https://github.com/angular/components/commit/d9124166a1203e43f1d9093db82365cbaf9b70bc) | fix | **collections:** SelectionModel does not always respect the compareWith function ([#26447](https://github.com/angular/components/pull/26447)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [621d1755df](https://github.com/angular/components/commit/621d1755dfb18be44732334d784fa0d65197dca1) | fix | **checkbox:** focus not moved to input when clicking on touch target ([#26545](https://github.com/angular/components/pull/26545)) |
+| [f1d83f19c9](https://github.com/angular/components/commit/f1d83f19c96152fc1cef63a869a7d0c3334be946) | fix | **dialog:** take dialog background from theme palette ([#26324](https://github.com/angular/components/pull/26324)) |
+| [719cff0c4d](https://github.com/angular/components/commit/719cff0c4d4b4ece24919a9e55fefe2f1483de8a) | fix | **tabs:** set color on disabled tabs ([#26319](https://github.com/angular/components/pull/26319)) |
+| [9efb60f6b4](https://github.com/angular/components/commit/9efb60f6b47912897a1e61e21cb64926afeed2d6) | fix | **tabs:** unable to click projected content in tab label ([#26527](https://github.com/angular/components/pull/26527)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e48a5af71f](https://github.com/angular/components/commit/e48a5af71fdf9057b058c91338f08bb9d9ec3cf2) | fix | error if API is initialized incorrectly ([#26520](https://github.com/angular/components/pull/26520)) |
+## Special Thanks
+Alan Agius, Aurélien Loyer, Kristiyan Kostadinov, MECHERI Akram, Paul Gschwendtner, Pei Wang and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.2"></a>
 # 15.1.2 "arsenic-angel" (2023-01-25)
 ### material
