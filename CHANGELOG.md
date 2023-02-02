@@ -1,3 +1,25 @@
+<a name="15.2.0-next.3"></a>
+# 15.2.0-next.3 "tritium-turnstile" (2023-02-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [50ec808eae](https://github.com/angular/components/commit/50ec808eaef5b554df382591a6a58f88b429237f) | fix | **collections:** SelectionModel does not always respect the compareWith function ([#26447](https://github.com/angular/components/pull/26447)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [48b4445a1c](https://github.com/angular/components/commit/48b4445a1ca367555df44166312a1df470fc12c6) | fix | **checkbox:** focus not moved to input when clicking on touch target ([#26545](https://github.com/angular/components/pull/26545)) |
+| [0e35cc0e5d](https://github.com/angular/components/commit/0e35cc0e5ddacc34eadf133a270a6d31a88d31f5) | fix | **dialog:** take dialog background from theme palette ([#26324](https://github.com/angular/components/pull/26324)) |
+| [a1d5614f18](https://github.com/angular/components/commit/a1d5614f18066c0c2dc2580c7b5099e8f68a8e74) | fix | **tabs:** set color on disabled tabs ([#26319](https://github.com/angular/components/pull/26319)) |
+| [fd9853da88](https://github.com/angular/components/commit/fd9853da88f3cb93a82ce38e207ace8047bec958) | fix | **tabs:** unable to click projected content in tab label ([#26527](https://github.com/angular/components/pull/26527)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [15648802d0](https://github.com/angular/components/commit/15648802d00341da251e8b8b9da7de8094737696) | fix | error if API is initialized incorrectly ([#26520](https://github.com/angular/components/pull/26520)) |
+## Special Thanks
+Alan Agius, Aurélien Loyer, Kristiyan Kostadinov, MECHERI Akram, Miles Malerba, Paul Gschwendtner, Pei Wang and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.3"></a>
 # 15.1.3 "obsidian-organism" (2023-02-02)
 ### cdk
