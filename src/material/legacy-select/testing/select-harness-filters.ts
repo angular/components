@@ -13,4 +13,7 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
  * @deprecated Use `SelectHarnessFilters` from `@angular/material/select/testing` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
  * @breaking-change 17.0.0
  */
-export interface LegacySelectHarnessFilters extends BaseHarnessFilters {}
+export interface LegacySelectHarnessFilters extends BaseHarnessFilters {
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
+}

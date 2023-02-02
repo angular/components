@@ -41,6 +41,12 @@ export class MatLegacySelectHarness extends _MatSelectHarnessBase<
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: LegacySelectHarnessFilters = {}): HarnessPredicate<MatLegacySelectHarness> {
-    return new HarnessPredicate(MatLegacySelectHarness, options);
+    return new HarnessPredicate(MatLegacySelectHarness, options).addOption(
+      'disabled',
+      options.disabled,
+      async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      },
+    );
   }
 }
