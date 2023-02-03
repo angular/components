@@ -611,6 +611,17 @@ export abstract class _MatRadioButtonBase
     }
   }
 
+  /** Triggered when the user clicks on the touch target. */
+  _onTouchTargetClick(event: Event) {
+    this._onInputInteraction(event);
+
+    if (!this.disabled) {
+      // Normally the input should be focused already, but if the click
+      // comes from the touch target, then we might have to focus it ourselves.
+      this._inputElement.nativeElement.focus();
+    }
+  }
+
   /** Sets the disabled state and marks for check if a change occurred. */
   protected _setDisabled(value: boolean) {
     if (this._disabled !== value) {
