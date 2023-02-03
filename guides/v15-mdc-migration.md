@@ -159,6 +159,9 @@ DOM and CSS of the components, you may need to tweak some of your application's 
   instead of `mat-button`. However, not all elements in the previous implementation have an
   equivalent element in the new implementation.
 
+* The styles associated with the `mat-typography` class are no longer generated automatically. You
+  have to include them using the `mat.typography-hierarchy` mixin.
+
 ### Theming
 
 * Default typography levels defined by `mat.define-typography-config` have been updated to reflect
