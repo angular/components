@@ -359,12 +359,12 @@ export abstract class _MatPaginatorBase<
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
   private _emitPageEvent(previousPageIndex: number) {
-    this.page.emit({
-      previousPageIndex,
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      length: this.length,
-    });
+    const event = new PageEvent();
+    event.previousPageIndex = previousPageIndex;
+    event.pageIndex = this.pageIndex;
+    event.pageSize = this.pageSize;
+    event.length = this.length;
+    this.page.emit(event);
   }
 }
 
