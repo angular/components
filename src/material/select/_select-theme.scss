@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/menu-surface' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list;
@@ -17,16 +18,17 @@
   $config: theming.get-color-config($config-or-theme);
 
   @include mdc-helpers.using-mdc-theme($config) {
-    $disabled-color: rgba(mdc-theme-color.prop-value(on-surface), 0.38);
+    $foreground: map.get($config, foreground);
+    $disabled-color: theming.get-color-from-palette($foreground, text, 0.38);
     @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-theme-styles-query);
     @include mdc-list.without-ripple(mdc-helpers.$mdc-theme-styles-query);
 
     .mat-mdc-select-value {
-      color: rgba(mdc-theme-color.prop-value(on-surface), 0.87);
+      color: theming.get-color-from-palette($foreground, text, 0.87);
     }
 
     .mat-mdc-select-placeholder {
-      color: rgba(mdc-theme-color.prop-value(on-surface), 0.6);
+      color: theming.get-color-from-palette($foreground, text, 0.6);
     }
 
     .mat-mdc-select-disabled .mat-mdc-select-value {
@@ -34,7 +36,7 @@
     }
 
     .mat-mdc-select-arrow {
-      color: rgba(mdc-theme-color.prop-value(on-surface), 0.54);
+      color: theming.get-color-from-palette($foreground, text, 0.54);
     }
 
     .mat-mdc-form-field {
