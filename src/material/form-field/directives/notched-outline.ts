@@ -13,6 +13,8 @@ import {
   ElementRef,
   Input,
   NgZone,
+  OnChanges,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -34,7 +36,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatFormFieldNotchedOutline implements AfterViewInit {
+export class MatFormFieldNotchedOutline implements AfterViewInit, OnChanges {
   /** Width of the label (original scale) */
   @Input('matFormFieldNotchedOutlineLabelWidth') labelWidth: number = 0;
 
@@ -43,8 +45,22 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
 
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {}
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.labelWidth !== undefined) {
+      this._elementRef.nativeElement.classList.remove('mdc-notched-outline--no-label');
+      this._elementRef.nativeElement.classList.remove('mdc-notched-outline--upgraded');
+      if (changes.labelWidth.currentValue > 0) {
+        this._elementRef.nativeElement.classList.add('mdc-notched-outline--upgraded');
+      } else {
+        this._elementRef.nativeElement.classList.add('mdc-notched-outline--no-label');
+      }
+    }
+  }
+
   ngAfterViewInit(): void {
     const label = this._elementRef.nativeElement.querySelector<HTMLElement>('.mdc-floating-label');
+    this._elementRef.nativeElement.classList.remove('mdc-notched-outline--no-label');
+    this._elementRef.nativeElement.classList.remove('mdc-notched-outline--upgraded');
     if (label) {
       this._elementRef.nativeElement.classList.add('mdc-notched-outline--upgraded');
 
@@ -60,6 +76,7 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
   }
 
   _getNotchWidth() {
+    const NO_PADDING = '0px padding-right: 0px';
     if (this.open) {
       const NOTCH_ELEMENT_PADDING = 8;
       const NOTCH_ELEMENT_BORDER = 1;
@@ -67,9 +84,9 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
         ? `calc(${this.labelWidth}px * var(--mat-mdc-form-field-floating-label-scale, 0.75) + ${
             NOTCH_ELEMENT_PADDING + NOTCH_ELEMENT_BORDER
           }px)`
-        : '0px';
+        : NO_PADDING;
     }
 
-    return null;
+    return NO_PADDING;
   }
 }

@@ -531,7 +531,7 @@ export class MatFormField
   }
 
   _shouldLabelFloat() {
-    return this._control.shouldLabelFloat || this._shouldAlwaysFloat();
+    return this._control?.shouldLabelFloat || this._shouldAlwaysFloat();
   }
 
   /**
@@ -556,6 +556,10 @@ export class MatFormField
       return;
     }
     this._labelWidth = this._floatingLabel.getWidth();
+
+    // If label changes, subcomponent notched-outline needs to no modify a native element.
+    this._changeDetectorRef.markForCheck();
+    this._changeDetectorRef.detectChanges();
   }
 
   /** Does any extra processing that is required when handling the hints. */
