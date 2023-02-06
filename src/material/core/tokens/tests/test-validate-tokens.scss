@@ -1,0 +1,27 @@
+@use 'sass:list';
+@use 'sass:map';
+@use '@material/theme/validate' as mdc-validate;
+@use '@material/list/list-theme' as mdc-list-theme;
+@use '../m2/mdc/list' as tokens-mdc-list;
+
+@mixin validate-slots(
+  $component,
+  $slots,
+  $reference
+) {
+  @debug 'Validating #{$component}...';
+  // We don't care what the values are, just that every valid token is present in the slots map.
+  // Specifically its ok if the token is explicitly mapped to `null`. We therefore replace all the
+  // token values with true to prevent the validation function from complaining about the explicit
+  // `null` tokens being missing.
+  @each $token, $_ in $slots {
+    $slots: map.set($slots, $token, true);
+  }
+  $x: mdc-validate.theme-styles($reference, $slots);
+}
+
+@include validate-slots(
+    $component: 'm2.mdc.list',
+    $slots: tokens-mdc-list.get-token-slots(),
+    $reference: mdc-list-theme.$light-theme
+);
