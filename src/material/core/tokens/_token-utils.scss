@@ -3,19 +3,22 @@
 @use '@material/theme/theme' as mdc-theme;
 @use '../mdc-helpers/mdc-helpers';
 @use '../theming/palette';
+@use '../theming/theming';
+
+$_placeholder-color-palette: theming.define-palette(palette.$red-palette);
 
 // Placeholder color config that can be passed to token getter functions when generating token
 // slots.
 $placeholder-color-config: (
-    primary: palette.$red-palette,
-    accent: palette.$red-palette,
-    warn: palette.$red-palette,
+    primary: $_placeholder-color-palette,
+    accent: $_placeholder-color-palette,
+    warn: $_placeholder-color-palette,
     is-dark: false,
     foreground: palette.$light-theme-foreground-palette,
     background: palette.$light-theme-background-palette,
 );
 
-$_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-mdc(headline1);
+$_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-mdc(body1);
 
 // Placeholder typography config that can be passed to token getter functions when generating token
 // slots.

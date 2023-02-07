@@ -34,7 +34,15 @@ $prefix: (mdc, list);
       list-item-disabled-state-layer-color: transparent,
     // Opacity of the list item's overlay when the item is disabled.
       list-item-disabled-state-layer-opacity: 0,
-    // === TOKENS NOT USED IN ANGULAR MATERIAL ===
+    // Opacity of the list item's primary & supporting text when the item is disabled.
+      list-item-disabled-label-text-opacity: 0.38,
+    // Opacity of the list item's leading icon when the item is disabled.
+      list-item-disabled-leading-icon-opacity: 0.38,
+    // Opacity of the list item's trailing icon when the item is disabled.
+      list-item-disabled-trailing-icon-opacity: 0.38,
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
     // Overline not implemented in Angular Material.
     // TODO(mmalerba): Consider implementing in the future.
       list-item-overline-color: null,
@@ -78,8 +86,8 @@ $prefix: (mdc, list);
   $foreground: map.get($config, foreground);
   $is-dark: map.get($config, is-dark);
   $foreground-base: theming.get-color-from-palette($foreground, base);
-  $text-icon-on-background: if($is-dark, rgba($foreground-base, 0.5), rgba($foreground-base, 0.38));
-  $disabled-text-icon-opacity: if($is-dark, 05, 0.38);
+  $text-icon-on-background:
+      theming.get-color-from-palette($foreground, base, if($is-dark, 0.5, 0.38));
 
   @return (
     // Text color of the list item primary text.
@@ -117,12 +125,6 @@ $prefix: (mdc, list);
       list-item-focus-state-layer-color: theming.get-color-from-palette($foreground, base),
     // Opacity of the list item's overlay when the item is focused.
       list-item-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    // Opacity of the list item's primary & supporting text when the item is disabled.
-      list-item-disabled-label-text-opacity: $disabled-text-icon-opacity,
-    // Opacity of the list item's leading icon when the item is disabled.
-      list-item-disabled-leading-icon-opacity: $disabled-text-icon-opacity,
-    // Opacity of the list item's trailing icon when the item is disabled.
-      list-item-disabled-trailing-icon-opacity: $disabled-text-icon-opacity,
   );
 }
 
@@ -130,7 +132,8 @@ $prefix: (mdc, list);
 @function get-typography-tokens($config) {
   @return (
     // Font family of the list item primary text.
-      list-item-label-text-font: typography-utils.font-family($config, body-1),
+      list-item-label-text-font: typography-utils.font-family($config, body-1)
+          or typography-utils.font-family($config),
     // Line height of the list item primary text.
       list-item-label-text-line-height: typography-utils.line-height($config, body-1),
     // Font size of the list item primary text.
@@ -140,7 +143,8 @@ $prefix: (mdc, list);
     // Font weight of the list item primary text.
       list-item-label-text-weight: typography-utils.font-weight($config, body-1),
     // Font family of the list item supporting text.
-      list-item-supporting-text-font: typography-utils.font-family($config, body-2),
+      list-item-supporting-text-font: typography-utils.font-family($config, body-2)
+          or typography-utils.font-family($config),
     // Line height of the list item supporting text.
       list-item-supporting-text-line-height: typography-utils.line-height($config, body-2),
     // Font size of the list item supporting text.
@@ -150,7 +154,8 @@ $prefix: (mdc, list);
     // Font weight of the list item supporting text.
       list-item-supporting-text-weight: typography-utils.font-weight($config, body-2),
     // Font family of the list item's trailing text.
-      list-item-trailing-supporting-text-font: typography-utils.font-family($config, caption),
+      list-item-trailing-supporting-text-font: typography-utils.font-family($config, caption)
+          or typography-utils.font-family($config),
     // Line height of the list item's trailing text.
       list-item-trailing-supporting-text-line-height: typography-utils.line-height(
               $config, caption),
