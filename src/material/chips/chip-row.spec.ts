@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {BACKSPACE, DELETE, ENTER} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -330,6 +330,14 @@ describe('MDC-based Row Chips', () => {
         keyDownOnPrimaryAction(ENTER, 'Enter');
         flush();
         expect(document.activeElement).not.toBe(primaryAction);
+      }));
+
+      it('should not prevent SPACE events when editing', fakeAsync(() => {
+        const event = dispatchKeyboardEvent(getEditInput(), 'keydown', SPACE);
+        fixture.detectChanges();
+        flush();
+
+        expect(event.defaultPrevented).toBe(false);
       }));
     });
 

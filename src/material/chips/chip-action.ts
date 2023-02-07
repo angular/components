@@ -85,6 +85,7 @@ export class MatChipAction extends _MatChipActionMixinBase implements HasTabInde
       _handlePrimaryActionInteraction(): void;
       remove(): void;
       disabled: boolean;
+      _isEditing?: boolean;
     },
   ) {
     super();
@@ -110,7 +111,8 @@ export class MatChipAction extends _MatChipActionMixinBase implements HasTabInde
       (event.keyCode === ENTER || event.keyCode === SPACE) &&
       !this.disabled &&
       this.isInteractive &&
-      this._isPrimary
+      this._isPrimary &&
+      !this._parentChip._isEditing
     ) {
       event.preventDefault();
       this._parentChip._handlePrimaryActionInteraction();
