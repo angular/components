@@ -1,3 +1,14 @@
+<a name="15.1.4"></a>
+# 15.1.4 "felt-fern" (2023-02-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0526ada2ce](https://github.com/angular/components/commit/0526ada2ce5934488d75289ebd1558f9db226caf) | fix | **chips:** unable to add space when editing chip ([#26564](https://github.com/angular/components/pull/26564)) |
+## Special Thanks
+Hubert Frei, Kristiyan Kostadinov and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.3"></a>
 # 15.1.3 "obsidian-organism" (2023-02-02)
 ### cdk
