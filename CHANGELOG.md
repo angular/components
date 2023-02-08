@@ -1,3 +1,14 @@
+<a name="15.2.0-next.4"></a>
+# 15.2.0-next.4 "lace-leaf" (2023-02-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1186c80361](https://github.com/angular/components/commit/1186c8036182bdbb850738a57118d5bc623e9aca) | fix | **chips:** unable to add space when editing chip ([#26564](https://github.com/angular/components/pull/26564)) |
+## Special Thanks
+Amy Sorto, Hubert Frei, Kristiyan Kostadinov and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.4"></a>
 # 15.1.4 "felt-fern" (2023-02-08)
 ### material
