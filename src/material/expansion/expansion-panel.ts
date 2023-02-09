@@ -103,6 +103,7 @@ export class MatExpansionPanel
 {
   private _document: Document;
   private _hideToggle = false;
+  private _disableToggle = false;
   private _togglePosition: MatAccordionTogglePosition;
 
   /** Whether the toggle indicator should be hidden. */
@@ -112,6 +113,15 @@ export class MatExpansionPanel
   }
   set hideToggle(value: BooleanInput) {
     this._hideToggle = coerceBooleanProperty(value);
+  }
+
+  /** Whether the toggle functionality should be disabled. */
+  @Input()
+  get disableToggle(): boolean {
+    return this._disableToggle || (this.accordion && this.accordion.disableToggle);
+  }
+  set disableToggle(value: BooleanInput) {
+    this._disableToggle = coerceBooleanProperty(value);
   }
 
   /** The position of the expansion indicator. */
@@ -203,6 +213,7 @@ export class MatExpansionPanel
 
   /** Toggles the expanded state of the expansion panel. */
   override toggle(): void {
+    if (this.disableToggle) return;
     this.expanded = !this.expanded;
   }
 
