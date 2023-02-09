@@ -213,7 +213,9 @@ export class MatExpansionPanel
 
   /** Toggles the expanded state of the expansion panel. */
   override toggle(): void {
-    if (this.disableToggle) return;
+    if (this.disableToggle) {
+      return;
+    }
     this.expanded = !this.expanded;
   }
 
