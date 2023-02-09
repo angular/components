@@ -115,7 +115,7 @@ export class MatExpansionPanel
     this._hideToggle = coerceBooleanProperty(value);
   }
 
-  /** Whether the toggle funcionality should be disabled. */
+  /** Whether the toggle functionality should be disabled. */
   @Input()
   get disableToggle(): boolean {
     return this._disableToggle || (this.accordion && this.accordion.disableToggle);
