@@ -21,7 +21,7 @@ export type MatAccordionTogglePosition = 'before' | 'after';
  */
 export interface MatAccordionBase extends CdkAccordion {
   /** Whether the toggle functionality should be disabled. */
-  disableToggle: MatAccordionBase;
+  disableToggle: boolean;
 
   /** Whether the expansion indicator should be hidden. */
   hideToggle: boolean;
