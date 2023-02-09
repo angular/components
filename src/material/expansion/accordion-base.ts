@@ -23,6 +23,9 @@ export interface MatAccordionBase extends CdkAccordion {
   /** Whether the expansion indicator should be hidden. */
   hideToggle: boolean;
 
+  /** Whether the toggle funcionality should be disabled. */
+  disableToggle: boolean;
+
   /** Display mode used for all expansion panels in the accordion. */
   displayMode: MatAccordionDisplayMode;
 
