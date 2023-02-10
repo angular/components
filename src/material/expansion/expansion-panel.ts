@@ -101,9 +101,9 @@ export class MatExpansionPanel
   extends CdkAccordionItem
   implements AfterContentInit, OnChanges, OnDestroy
 {
+  private _disableToggle = false;
   private _document: Document;
   private _hideToggle = false;
-  private _disableToggle = false;
   private _togglePosition: MatAccordionTogglePosition;
 
   /** Whether the toggle indicator should be hidden. */
