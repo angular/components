@@ -129,3 +129,7 @@ attribute, or the `aria-labelledby` attribute.
 
 `MatAutocomplete` preserves focus on the text trigger, using `aria-activedescendant` to support
 navigation though the autocomplete options.
+
+By default, `MatAutocomplete` displays a checkmark to identify the selected item. While you can hide
+the checkmark indicator via `hideSingleSelectionIndicator`, this makes the component less accessible
+by making it harder or impossible for users to visually identify selected items.
