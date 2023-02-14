@@ -1,0 +1,220 @@
+@use 'sass:map';
+@use '../../../theming/theming';
+@use '../../../typography/typography-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, list);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
+@function get-unthemable-tokens() {
+  @return (
+    // Border radius of list items.
+      list-item-container-shape: 0,
+    // Border radius of the list item's leading avatar.
+      list-item-leading-avatar-shape: 50%,
+    // Background color of list items.
+      list-item-container-color: transparent,
+    // Background color of list items when selected.
+      list-item-selected-container-color: transparent,
+    // Background color of the list item's leading avatar.
+      list-item-leading-avatar-color: transparent,
+    // Height & width of the list item's leading icon.
+      list-item-leading-icon-size: 24px,
+    // Height & width of the list item's leading avatar.
+      list-item-leading-avatar-size: 40px,
+    // Height & width of the list item's trailing icon.
+      list-item-trailing-icon-size: 24px,
+    // Color of the list item's overlay when the item is disabled.
+      list-item-disabled-state-layer-color: transparent,
+    // Opacity of the list item's overlay when the item is disabled.
+      list-item-disabled-state-layer-opacity: 0,
+    // Opacity of the list item's primary & supporting text when the item is disabled.
+      list-item-disabled-label-text-opacity: 0.38,
+    // Opacity of the list item's leading icon when the item is disabled.
+      list-item-disabled-leading-icon-opacity: 0.38,
+    // Opacity of the list item's trailing icon when the item is disabled.
+      list-item-disabled-trailing-icon-opacity: 0.38,
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
+    // Overline not implemented in Angular Material.
+    // TODO(mmalerba): Consider implementing in the future.
+      list-item-overline-color: null,
+      list-item-overline-font: null,
+      list-item-overline-line-height: null,
+      list-item-overline-size: null,
+      list-item-overline-tracking: null,
+      list-item-overline-weight: null,
+    // Leading video not implemented in Angular Material.
+    // TODO(mmalerba): Consider implementing in the future.
+      list-item-leading-video-shape: null,
+      list-item-leading-video-width: null,
+      list-item-leading-video-height: null,
+    // Leading image not implemented in Angular Material.
+    // TODO(mmalerba): Consider implementing in the future.
+      list-item-leading-image-width: null,
+      list-item-leading-image-height: null,
+      list-item-leading-image-shape: null,
+    // List divider is not implemented in Angular Material.
+    // TODO(mmalerba): Maybe mat-divider should be based on these tokens?
+      divider-color: null,
+      divider-height: null,
+    // Redundant since it is always overridden by one- two- or three- line tokens, omitted to save
+    // bytes.
+      list-item-container-height: null,
+    // MDC does not seem to emit any CSS variables for these tokens, may be use in the future.
+    // TODO(mmalerba): Discuss with MDC if these should be added.
+      list-item-container-elevation: null,
+      list-item-leading-avatar-label-color: null,
+      list-item-leading-avatar-label-font: null,
+      list-item-leading-avatar-label-line-height: null,
+      list-item-leading-avatar-label-size: null,
+      list-item-leading-avatar-label-tracking: null,
+      list-item-leading-avatar-label-weight: null,
+      list-item-unselected-trailing-icon-color: null,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($config) {
+  $foreground: map.get($config, foreground);
+  $is-dark: map.get($config, is-dark);
+  $foreground-base: theming.get-color-from-palette($foreground, base);
+  $text-icon-on-background:
+      theming.get-color-from-palette($foreground, base, if($is-dark, 0.5, 0.38));
+
+  @return (
+    // Text color of the list item primary text.
+      list-item-label-text-color: theming.get-color-from-palette($foreground, text),
+    // Text color of the list item supporting text.
+      list-item-supporting-text-color: theming.get-color-from-palette($foreground, secondary-text),
+    // Color of the list item's leading icon.
+      list-item-leading-icon-color: $text-icon-on-background,
+    // Text color of the list item's trailing text.
+      list-item-trailing-supporting-text-color: theming.get-color-from-palette(
+              $foreground, hint-text),
+    // Color of the list item's trailing icon.
+      list-item-trailing-icon-color: $text-icon-on-background,
+    // Color of the list item's trailing icon when the item is selected.
+      list-item-selected-trailing-icon-color: $text-icon-on-background,
+    // Text color of the list item's primary text when the  item is disabled.
+      list-item-disabled-label-text-color: theming.get-color-from-palette($foreground, base),
+    // Color of the list item's leading icon when the item is disabled.
+      list-item-disabled-leading-icon-color: theming.get-color-from-palette($foreground, base),
+    // Color of the list item's trailing icon when the item is disabled.
+      list-item-disabled-trailing-icon-color: theming.get-color-from-palette($foreground, base),
+    // Color of the list item's primary text when the item is being hovered.
+      list-item-hover-label-text-color: theming.get-color-from-palette($foreground, text),
+    // Color of the list item's leading icon when the item is being hovered.
+      list-item-hover-leading-icon-color: $text-icon-on-background,
+    // Color of the list item's trailing icon when the item is being hovered.
+      list-item-hover-trailing-icon-color: $text-icon-on-background,
+    // Color of the list item's primary text when the item is focused.
+      list-item-focus-label-text-color: theming.get-color-from-palette($foreground, text),
+    // Color of the list item's overlay when the item is hovered.
+      list-item-hover-state-layer-color: theming.get-color-from-palette($foreground, base),
+    // Opacity of the list item's overlay when the item is hovered.
+      list-item-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    // Color of the list item's overlay when the item is focused.
+      list-item-focus-state-layer-color: theming.get-color-from-palette($foreground, base),
+    // Opacity of the list item's overlay when the item is focused.
+      list-item-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($config) {
+  @return (
+    // Font family of the list item primary text.
+      list-item-label-text-font: typography-utils.font-family($config, body-1)
+          or typography-utils.font-family($config),
+    // Line height of the list item primary text.
+      list-item-label-text-line-height: typography-utils.line-height($config, body-1),
+    // Font size of the list item primary text.
+      list-item-label-text-size: typography-utils.font-size($config, body-1),
+    // Letter spacing of the list item primary text.
+      list-item-label-text-tracking: typography-utils.letter-spacing($config, body-1),
+    // Font weight of the list item primary text.
+      list-item-label-text-weight: typography-utils.font-weight($config, body-1),
+    // Font family of the list item supporting text.
+      list-item-supporting-text-font: typography-utils.font-family($config, body-2)
+          or typography-utils.font-family($config),
+    // Line height of the list item supporting text.
+      list-item-supporting-text-line-height: typography-utils.line-height($config, body-2),
+    // Font size of the list item supporting text.
+      list-item-supporting-text-size: typography-utils.font-size($config, body-2),
+    // Letter spacing of the list item supporting text.
+      list-item-supporting-text-tracking: typography-utils.letter-spacing($config, body-2),
+    // Font weight of the list item supporting text.
+      list-item-supporting-text-weight: typography-utils.font-weight($config, body-2),
+    // Font family of the list item's trailing text.
+      list-item-trailing-supporting-text-font: typography-utils.font-family($config, caption)
+          or typography-utils.font-family($config),
+    // Line height of the list item's trailing text.
+      list-item-trailing-supporting-text-line-height: typography-utils.line-height(
+              $config, caption),
+    // Font size of the list item's trailing text.
+      list-item-trailing-supporting-text-size: typography-utils.font-size($config, caption),
+    // Letter spacing color of the list item's trailing text.
+      list-item-trailing-supporting-text-tracking: typography-utils.letter-spacing(
+              $config, caption),
+    // Font weight of the list item's trailing text.
+      list-item-trailing-supporting-text-weight: typography-utils.font-weight($config, caption),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($config) {
+  $scale: theming.clamp-density($config, -5);
+
+  @return (
+    // Height of one line list items.
+      list-item-one-line-container-height: map.get((
+          0: 48px,
+          -1: 44px,
+          -2: 40px,
+          -3: 36px,
+          -4: 32px,
+          -5: 24px,
+      ), $scale),
+    // Height of two line list items.
+      list-item-two-line-container-height: map.get((
+          0: 64px,
+          -1: 60px,
+          -2: 56px,
+          -3: 52px,
+          -4: 48px,
+          -5: 48px,
+      ), $scale),
+    // Height of three line list items.
+      list-item-three-line-container-height: map.get((
+          0: 88px,
+          -1: 84px,
+          -2: 80px,
+          -3: 76px,
+          -4: 72px,
+          -5: 56px,
+      ), $scale),
+  );
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return map.merge(
+          get-unthemable-tokens(),
+          map.merge(
+                  get-color-tokens(token-utils.$placeholder-color-config),
+                  map.merge(
+                          get-typography-tokens(token-utils.$placeholder-typography-config),
+                          get-density-tokens(token-utils.$placeholder-density-config)
+                  )
+          )
+  );
+}

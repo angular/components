@@ -1,0 +1,80 @@
+@use 'sass:map';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@material/theme/theme' as mdc-theme;
+@use '../mdc-helpers/mdc-helpers';
+@use '../theming/palette';
+@use '../theming/theming';
+
+$_placeholder-color-palette: theming.define-palette(palette.$red-palette);
+
+// Placeholder color config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-color-config: (
+    primary: $_placeholder-color-palette,
+    accent: $_placeholder-color-palette,
+    warn: $_placeholder-color-palette,
+    is-dark: false,
+    foreground: palette.$light-theme-foreground-palette,
+    background: palette.$light-theme-background-palette,
+);
+
+$_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-mdc(body1);
+
+// Placeholder typography config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-typography-config: (
+    font-family: Roboto,
+    headline-1: $_placeholder-typography-level-config,
+    headline-2: $_placeholder-typography-level-config,
+    headline-3: $_placeholder-typography-level-config,
+    headline-4: $_placeholder-typography-level-config,
+    headline-5: $_placeholder-typography-level-config,
+    headline-6: $_placeholder-typography-level-config,
+    subtitle-1: $_placeholder-typography-level-config,
+    subtitle-2: $_placeholder-typography-level-config,
+    body-1: $_placeholder-typography-level-config,
+    body-2: $_placeholder-typography-level-config,
+    caption: $_placeholder-typography-level-config,
+    button: $_placeholder-typography-level-config,
+    overline: $_placeholder-typography-level-config,
+);
+
+// Placeholder density config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-density-config: 0;
+
+$_tokens: null;
+$_component-prefix: null;
+
+@mixin _configure-token-prefix($first, $rest...) {
+  $_component-prefix: '' !global;
+  @each $item in $rest {
+    $_component-prefix:
+        if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+  }
+  @include mdc-custom-properties.configure($varname-prefix: $first) {
+    @content;
+  }
+  $_component-prefix: null !global;
+}
+
+// Sets the token prefix and map to use when creating token slots.
+@mixin use-tokens($prefix, $tokens) {
+  $_tokens: $tokens !global;
+  @include _configure-token-prefix($prefix...) {
+    @content;
+  }
+  $_tokens: null !global;
+}
+
+// Emits a slot for the given token, provided that it has a non-null value in the token map passed
+// to `use-tokens`.
+@mixin create-token-slot($property, $token) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error '`create-token-slot` must be used within `use-tokens`';
+  }
+  @if map.get($_tokens, $token) != null {
+    $value: mdc-custom-properties.create('#{$_component-prefix}-#{$token}');
+    @include mdc-theme.property($property, $value);
+  }
+}

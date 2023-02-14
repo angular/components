@@ -1,11 +1,12 @@
 @use 'sass:map';
-@use '@material/list/evolution-mixins' as mdc-list;
+@use '@material/list/evolution-mixins';
+@use '@material/list/list-theme' as mdc-list-theme;
 
 @use '../core/theming/theming';
+@use '../core/tokens/m2/mdc/list' as m2-mdc-list;
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
 @use '../core/mdc-helpers/mdc-helpers';
-@use './interactive-list-theme';
 @use './list-option-theme';
 
 @mixin color($config-or-theme) {
@@ -13,13 +14,16 @@
   $primary: theming.get-color-from-palette(map.get($config, primary));
   $accent: theming.get-color-from-palette(map.get($config, accent));
   $warn: theming.get-color-from-palette(map.get($config, warn));
+  $mdc-list-color-tokens: m2-mdc-list.get-color-tokens($config);
 
+
+  // Add values for MDC list tokens.
+  .mat-mdc-list-base {
+    @include mdc-list-theme.theme($mdc-list-color-tokens);
+  }
+
+  // TODO(mmalerba): This should use MDC checkbox's token API instead.
   @include mdc-helpers.using-mdc-theme($config) {
-    // MDC's state styles are tied in with their ripple. Since we don't use the MDC
-    // ripple, we need to add the hover, focus and selected states manually.
-    @include interactive-list-theme.private-interactive-list-item-state-colors($config);
-    @include mdc-list.without-ripple($query: mdc-helpers.$mdc-theme-styles-query);
-
     .mat-mdc-list-option {
       @include list-option-theme.private-list-option-color-override($config, $primary, primary);
     }
@@ -30,36 +34,81 @@
       @include list-option-theme.private-list-option-color-override($config, $warn, error);
     }
   }
+
+  // There is no token for activated color on nav list.
+  // TODO(mmalerba): Add a token to MDC or make a custom one.
+  .mat-mdc-list-base.mat-mdc-list-base {
+    @include evolution-mixins.list-selected-ink-color($primary);
+  }
+
+  // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can cause
+  //  opacity issues, so we need this override for now. We can remove it when all Angular Material
+  //  components stop using the old MDC mixins.
+  .mat-mdc-list-base .mdc-list-item--disabled {
+    .mdc-list-item__start,
+    .mdc-list-item__content,
+    .mdc-list-item__end {
+      opacity: 1;
+    }
+  }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
+  $mdc-list-density-tokens: m2-mdc-list.get-density-tokens($density-scale);
 
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    .mat-mdc-list-item {
-      @include mdc-list.one-line-item-density($density-scale);
-      @include mdc-list.two-line-item-density($density-scale);
-      @include mdc-list.three-line-item-density($density-scale);
+  // Add values for MDC list tokens.
+  .mat-mdc-list-base {
+    @include mdc-list-theme.theme($mdc-list-density-tokens);
+  }
+
+  // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based API,
+  //  to avoid screenshot diffs. We should remove it in favor of following MDC's current style, or
+  //  add custom tokens for it.
+  $clamped-density-scale: theming.clamp-density($density-scale, -5);
+  .mat-mdc-list-item {
+    &.mdc-list-item--with-leading-avatar,
+    &.mdc-list-item--with-leading-checkbox,
+    &.mdc-list-item--with-leading-icon {
+      &.mdc-list-item--with-one-line {
+        height: map.get((
+            0: 56px,
+            -1: 52px,
+            -2: 48px,
+            -3: 44px,
+            -4: 40px,
+            -5: 40px,
+        ), $clamped-density-scale);
+      }
+
+      &.mdc-list-item--with-two-lines {
+        height: map.get((
+            0: 72px,
+            -1: 68px,
+            -2: 64px,
+            -3: 60px,
+            -4: 56px,
+            -5: 56px,
+        ), $clamped-density-scale);
+      }
     }
-
-    @include list-option-theme.private-list-option-density-styles($density-scale);
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-list.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-    @include list-option-theme.private-list-option-typography-styles();
+  $mdc-list-typography-tokens: m2-mdc-list.get-typography-tokens($config);
+
+  // Add values for MDC list tokens.
+  .mat-mdc-list-base {
+    @include mdc-list-theme.theme($mdc-list-typography-tokens);
   }
 
-  // According to the public spec this should be subtitle-1.
-  // However, body-1 and subtitle-1 are nearly identical in the public spec,
-  // and the Google-specific spec states that it should be body-1.
-  // For consistency, we use body-1 for both public and Google internal.
-  .mat-mdc-list-item .mdc-list-item__primary-text {
-    @include typography-utils.typography-level($config, body-1);
+  // MDC does not have tokens for the subheader.
+  // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
+  .mdc-list-group__subheader {
+    @include typography-utils.typography-level($config, subtitle-1);
   }
 }
 

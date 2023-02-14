@@ -1,5 +1,6 @@
 @use 'sass:list';
 @use 'sass:map';
+@use 'sass:math';
 @use 'sass:meta';
 @use 'palette';
 @use '../density/private/compatibility';
@@ -466,11 +467,31 @@ $_emitted-density: () !default;
   ));
 }
 
-
 // Approximates an rgba color into a solid hex color, given a background color.
 @function private-rgba-to-hex($color, $background-color) {
   // We convert the rgba color into a solid one by taking the opacity from the rgba
   // value and using it to determine the percentage of the background to put
   // into foreground when mixing the colors together.
   @return mix($background-color, rgba($color, 1), (1 - opacity($color)) * 100%);
+}
+
+// Clamps the density scale to a number between the given min and max.
+// 'minimum' and 'maximum' are converted to the given min or max number respectively.
+@function clamp-density($density-scale, $min, $max: 0) {
+  @if $density-scale == minimum {
+    @return $min;
+  }
+  @if $density-scale == maximum {
+    @return $max;
+  }
+  @if meta.type-of($density-scale) != 'number' or not math.is-unitless($density-scale) {
+    @return 0;
+  }
+  @if $density-scale < $min {
+    @return $min;
+  }
+  @if $density-scale > $max {
+    @return $max;
+  }
+  @return $density-scale;
 }

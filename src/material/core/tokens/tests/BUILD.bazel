@@ -1,0 +1,23 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+package(default_visibility = ["//visibility:public"])
+
+# Test theme used to ensure that our themes will compile using CSS variables in
+# the palettes.
+sass_binary(
+    name = "test-validate-tokens",
+    testonly = True,
+    src = "test-validate-tokens.scss",
+    deps = [
+        "//:mdc_sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+build_test(
+    name = "sass_compile_tests",
+    targets = [
+        ":test-validate-tokens",
+    ],
+)
