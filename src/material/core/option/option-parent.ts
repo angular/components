@@ -14,6 +14,7 @@ import {InjectionToken} from '@angular/core';
  * @docs-private
  */
 export interface MatOptionParentComponent {
+  value?: unknown;
   disableRipple?: boolean;
   multiple?: boolean;
   inertGroups?: boolean;

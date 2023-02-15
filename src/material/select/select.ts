@@ -87,6 +87,8 @@ import {
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
   _MatOptionBase,
+  MatLazyOption,
+  MAT_OPTION,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldControl, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
@@ -601,6 +603,7 @@ export abstract class _MatSelectBase<C>
       this._panelOpen = true;
       this._keyManager.withHorizontalOrientation(null);
       this._highlightCorrectOption();
+      this.options.forEach(opt => opt.show());
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -1187,7 +1190,7 @@ export class MatSelectTrigger {}
   ],
 })
 export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit, AfterViewInit {
-  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
+  @ContentChildren(MAT_OPTION, {descendants: true}) options: QueryList<MatOption | MatLazyOption>;
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
   @ContentChild(MAT_SELECT_TRIGGER) customTrigger: MatSelectTrigger;
 

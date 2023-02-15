@@ -10,6 +10,7 @@ import {FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
+  AfterViewInit,
   Component,
   ViewEncapsulation,
   ChangeDetectionStrategy,
@@ -17,6 +18,7 @@ import {
   ChangeDetectorRef,
   Optional,
   Inject,
+  InjectionToken,
   Directive,
   AfterViewChecked,
   OnDestroy,
@@ -29,6 +31,11 @@ import {
 import {Subject} from 'rxjs';
 import {MatOptgroup, MAT_OPTGROUP, _MatOptgroupBase} from './optgroup';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
+
+/**
+ * Injection token used to provide mat-options.
+ */
+export const MAT_OPTION = new InjectionToken<MatOption>('MAT_OPTION');
 
 /**
  * Option IDs need to be unique across components, so this counter exists outside of
@@ -52,6 +59,12 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   private _active = false;
   private _disabled = false;
   private _mostRecentViewValue = '';
+  protected _hide = false;
+
+  show(): void {
+    this._hide = false;
+    this._changeDetectorRef.detectChanges();
+  }
 
   /** Whether the wrapping component is in multiple selection mode. */
   get multiple() {
@@ -93,7 +106,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange<T>>();
 
   /** Element containing the option's text. */
-  @ViewChild('text', {static: true}) _text: ElementRef<HTMLElement> | undefined;
+  @ViewChild('text') _text: ElementRef<HTMLElement> | undefined;
 
   /** Emits when the state of the option changes and any parents have to be notified. */
   readonly _stateChanges = new Subject<void>();
@@ -277,6 +290,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: MAT_OPTION, useExisting: MatOption}],
 })
 export class MatOption<T = any> extends _MatOptionBase<T> {
   constructor(
@@ -286,6 +300,51 @@ export class MatOption<T = any> extends _MatOptionBase<T> {
     @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup,
   ) {
     super(element, changeDetectorRef, parent, group);
+  }
+}
+
+/**
+ * Single lazily rendered option inside of a `<mat-select>` element.
+ */
+@Component({
+  selector: 'mat-lazy-option',
+  exportAs: 'matLazyOption',
+  host: {
+    'role': 'option',
+    '[attr.tabindex]': '_getTabIndex()',
+    '[class.mdc-list-item--selected]': 'selected',
+    '[class.mat-mdc-option-multiple]': 'multiple',
+    '[class.mat-mdc-option-active]': 'active',
+    '[class.mdc-list-item--disabled]': 'disabled',
+    '[id]': 'id',
+    '[attr.aria-selected]': '_getAriaSelected()',
+    '[attr.aria-disabled]': 'disabled.toString()',
+    '(click)': '_selectViaInteraction()',
+    '(keydown)': '_handleKeydown($event)',
+    'class': 'mat-mdc-option mat-mdc-focus-indicator mdc-list-item',
+  },
+  styleUrls: ['option.css'],
+  templateUrl: 'option.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: MAT_OPTION, useExisting: MatLazyOption}],
+})
+export class MatLazyOption<T = any> extends _MatOptionBase<T> implements AfterViewInit {
+  override _hide = true;
+
+  constructor(
+    element: ElementRef<HTMLElement>,
+    changeDetectorRef: ChangeDetectorRef,
+    @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) readonly parent: MatOptionParentComponent,
+    @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup,
+  ) {
+    super(element, changeDetectorRef, parent, group);
+  }
+
+  ngAfterViewInit(): void {
+    if (this.parent.value !== undefined && this.parent.value === this.value) {
+      this.show();
+    }
   }
 }
 
