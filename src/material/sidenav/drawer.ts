@@ -101,6 +101,7 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
     'class': 'mat-drawer-content',
     '[style.margin-left.px]': '_container._contentMargins.left',
     '[style.margin-right.px]': '_container._contentMargins.right',
+    'ngSkipHydration': 'true',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -150,6 +151,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     '[@transform]': '_animationState',
     '(@transform.start)': '_animationStarted.next($event)',
     '(@transform.done)': '_animationEnd.next($event)',
+    'ngSkipHydration': 'true',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -635,6 +637,7 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
   host: {
     'class': 'mat-drawer-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
+    'ngSkipHydration': 'true',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

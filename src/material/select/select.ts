@@ -1171,6 +1171,7 @@ export class MatSelectTrigger {}
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
+    'ngSkipHydration': 'true',
     '[class.mat-mdc-select-disabled]': 'disabled',
     '[class.mat-mdc-select-invalid]': 'errorState',
     '[class.mat-mdc-select-required]': 'required',

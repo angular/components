@@ -54,6 +54,7 @@ import {
     'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
+    'ngSkipHydration': 'true',
   },
 })
 export class MatLegacyTabGroup extends _MatTabGroupBase {
