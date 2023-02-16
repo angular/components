@@ -136,8 +136,8 @@ $my-theme: mat.define-light-theme((
 
   $kids-theme: mat.define-light-theme((
    color: (
-     primary: $my-primary,
-     accent: $my-accent,
+     primary: $kids-primary,
+     accent: $kids-accent,
    ),
    typography: $kids-typography,
   ));
