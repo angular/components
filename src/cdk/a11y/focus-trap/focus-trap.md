@@ -2,7 +2,7 @@
 
 The `cdkTrapFocus` directive traps <kbd>Tab</kbd> key focus within an element. This is intended to
 be used to create accessible experience for components like
-[modal dialogs](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal), where focus must be
+[modal dialogs](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), where focus must be
 constrained.
 
 This directive is declared in `A11yModule`.
