@@ -1,3 +1,16 @@
+<a name="15.1.5"></a>
+# 15.1.5 "highdensityfoam-pelican" (2023-02-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [994e0a14c](https://github.com/angular/components/commit/994e0a14c9819ce561e603ca8cedefe8657ad2c0) | fix | **core:** Fix legacy prebuilt themes export ([#26624](https://github.com/angular/components/pull/26624)) |
+| [4c8cad2d2](https://github.com/angular/components/commit/4c8cad2d2deb7389a22db1f8318ba2036714a2dc) | fix | **radio:** input not focused when clicking on touch target ([#26618](https://github.com/angular/components/pull/26618)) |
+| [890765bf4](https://github.com/angular/components/commit/890765bf4329db9b8ab9eb097ad0877facb98587) | fix | **slider:** make valueChange emit only on change and not on input ([#26535](https://github.com/angular/components/pull/26535)) |
+## Special Thanks
+Kai Schönberger, Kristiyan Kostadinov, Lukáš Matta, Wagner Maciel, Zach Arend and ᚷᛁᛟᚱᚷᛁ ᛒᚨᛚᚨᚲᚻᚨᛞᛉᛖ
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.0-next.4"></a>
 # 15.2.0-next.4 "lace-leaf" (2023-02-08)
 ### material
