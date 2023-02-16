@@ -1,3 +1,16 @@
+<a name="15.2.0-rc.0"></a>
+# 15.2.0-rc.0 "sterlingsilver-whale" (2023-02-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [664100474](https://github.com/angular/components/commit/664100474290b5c9c21df2dd767a9c3e8a522978) | fix | **core:** Fix legacy prebuilt themes export ([#26624](https://github.com/angular/components/pull/26624)) |
+| [a9a169cee](https://github.com/angular/components/commit/a9a169cee306d10f169afd02fec1481cdc67db6b) | fix | **radio:** input not focused when clicking on touch target ([#26618](https://github.com/angular/components/pull/26618)) |
+| [6d89b9de0](https://github.com/angular/components/commit/6d89b9de0592a5a0ee60b15e72b89188a53d5a66) | fix | **slider:** make valueChange emit only on change and not on input ([#26535](https://github.com/angular/components/pull/26535)) |
+## Special Thanks
+Kai Schönberger, Kristiyan Kostadinov, Lukáš Matta, Miles Malerba, Wagner Maciel, Zach Arend and ᚷᛁᛟᚱᚷᛁ ᛒᚨᛚᚨᚲᚻᚨᛞᛉᛖ
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.5"></a>
 # 15.1.5 "highdensityfoam-pelican" (2023-02-16)
 ### material
