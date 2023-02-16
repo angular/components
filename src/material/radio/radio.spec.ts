@@ -807,6 +807,15 @@ describe('MDC-based MatRadio', () => {
       }
     });
 
+    it('should focus on underlying input element when clicking on the touch target', () => {
+      const input = radioDebugElements[0].nativeElement.querySelector('input');
+      expect(document.activeElement).not.toBe(input);
+
+      radioDebugElements[0].nativeElement.querySelector('.mat-mdc-radio-touch-target').click();
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(input);
+    });
+
     it('should not change focus origin if origin not specified', () => {
       fruitRadioInstances[0].focus(undefined, 'mouse');
       fruitRadioInstances[1].focus();

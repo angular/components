@@ -86,6 +86,7 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     // (undocumented)
     _onInputClick(event: Event): void;
     _onInputInteraction(event: Event): void;
+    _onTouchTargetClick(event: Event): void;
     radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>;
     get required(): boolean;
     set required(value: BooleanInput);
