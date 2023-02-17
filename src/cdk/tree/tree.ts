@@ -185,9 +185,6 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /** Maintain a synchronous cache of the currently known data nodes. */
   private _dataNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
-  /** Maintain a synchronous cache of the currently rendered nodes. */
-  private _renderedNodes: BehaviorSubject<Set<T>> = new BehaviorSubject<Set<T>>(new Set());
-
   /** The mapping between data and the node that is rendered. */
   private _nodes: BehaviorSubject<Map<K, CdkTreeNode<T, K>>> = new BehaviorSubject(
     new Map<K, CdkTreeNode<T, K>>(),
