@@ -48,14 +48,6 @@ export function getMultipleTreeControlsError() {
 }
 
 /**
- * Returns an error to be thrown when tree control did not implement functions for flat/nested node.
- * @docs-private
- */
-export function getTreeControlFunctionsMissingError() {
-  return Error(`Could not find functions for nested/flat tree in tree control.`);
-}
-
-/**
  * Returns an error to be thrown when the node type is not specified.
  * @docs-private
  */

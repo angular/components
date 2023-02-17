@@ -27,7 +27,6 @@ import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
-import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 describe('CdkTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
@@ -1126,20 +1125,6 @@ describe('CdkTree', () => {
         expect(changedNodes[5].getAttribute('initialIndex')).toBe('2');
       });
     });
-
-    it('should throw an error when missing function in nested tree', fakeAsync(() => {
-      configureCdkTreeTestingModule([NestedCdkErrorTreeApp]);
-      expect(() => {
-        try {
-          TestBed.createComponent(NestedCdkErrorTreeApp).detectChanges();
-          flush();
-        } catch {
-          flush();
-        } finally {
-          flush();
-        }
-      }).toThrowError(getTreeControlFunctionsMissingError().message);
-    }));
   });
 
   describe('with depth', () => {
@@ -1629,28 +1614,6 @@ class ObservableDataSourceNestedCdkTreeApp {
   get dataObservable() {
     return this.dataSource._dataChange;
   }
-
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
-}
-
-@Component({
-  template: `
-    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
-                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-         <ng-template cdkTreeNodeOutlet></ng-template>
-      </cdk-nested-tree-node>
-    </cdk-tree>
-  `,
-})
-class NestedCdkErrorTreeApp {
-  getLevel = (node: TestData) => node.level;
-
-  isExpandable = (node: TestData) => node.children.length > 0;
-
-  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
-
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
