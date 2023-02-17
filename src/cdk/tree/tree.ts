@@ -450,7 +450,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       this._getAllDescendants()
-        .pipe(take(1), takeUntil(this._onDestroy))
+        .pipe(takeUntil(this._onDestroy))
         .subscribe(children => {
           expansionModel.select(...children.map(child => this._getExpansionKey(child)));
         });
@@ -464,7 +464,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       this._getAllDescendants()
-        .pipe(take(1), takeUntil(this._onDestroy))
+        .pipe(takeUntil(this._onDestroy))
         .subscribe(children => {
           expansionModel.deselect(...children.map(child => this._getExpansionKey(child)));
         });
