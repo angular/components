@@ -381,7 +381,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     // Node context that will be provided to created embedded view
     const context = new CdkTreeNodeOutletContext<T>(nodeData);
 
-    parentData ??= this._parents.get(this._trackExpansionKey(nodeData)) ?? undefined;
+    parentData ??= this._parents.get(this._getExpansionKey(nodeData)) ?? undefined;
     // If the tree is flat tree, then use the `getLevel` function in flat tree control
     // Otherwise, use the level of parent node.
     const levelAccessor = this._getLevelAccessor();
@@ -533,7 +533,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   _getDirectChildren(dataNode: T): Observable<T[]> {
     const levelAccessor = this._getLevelAccessor();
     if (levelAccessor && this._expansionModel) {
-      const key = this._trackExpansionKey(dataNode);
+      const key = this._getExpansionKey(dataNode);
       const isExpanded = this._expansionModel.changed.pipe(
         switchMap(changes => {
           if (changes.added.includes(key)) {
@@ -587,13 +587,13 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * This primarily facilitates keyboard navigation.
    */
   _registerNode(node: CdkTreeNode<T, K>) {
-    this._nodes.value.set(this._trackExpansionKey(node.data), node);
+    this._nodes.value.set(this._getExpansionKey(node.data), node);
     this._nodes.next(this._nodes.value);
   }
 
   /** Removes the specified node component from the tree's internal registry. */
   _unregisterNode(node: CdkTreeNode<T, K>) {
-    this._nodes.value.delete(this._trackExpansionKey(node.data));
+    this._nodes.value.delete(this._getExpansionKey(node.data));
     this._nodes.next(this._nodes.value);
   }
 
@@ -671,7 +671,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       switchMap(children => {
         // Here, we cache the parents of a particular child so that we can compute the levels.
         for (const child of children) {
-          this._parents.set(this._trackExpansionKey(child), dataNode);
+          this._parents.set(this._getExpansionKey(child), dataNode);
         }
         return observableOf(...children).pipe(
           concatMap(child => concat(observableOf([child]), this._getAllChildrenRecursively(child))),
