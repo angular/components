@@ -29,7 +29,7 @@ import { TemplateRef } from '@angular/core';
 import { TrackByFunction } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
-// @public
+// @public @deprecated
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     collapse(dataNode: T): void;
     collapseAll(): void;
@@ -94,6 +94,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     _getLevel(node: T): number | undefined;
     _getLevelAccessor(): ((dataNode: T) => number) | undefined;
     _getNodeDef(data: T, i: number): CdkTreeNodeDef<T>;
+    _getPositionInSet(dataNode: T): number;
+    _getSetSize(dataNode: T): number;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
     isExpanded(dataNode: T): boolean;
     levelAccessor?: (dataNode: T) => number;
@@ -147,6 +149,8 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
     focus(): void;
+    _getPositionInSet(): number;
+    _getSetSize(): number;
     // (undocumented)
     isExpandable: boolean;
     // (undocumented)
@@ -250,7 +254,7 @@ export class CdkTreeNodeToggle<T, K = T> {
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeToggle<any, any>, never>;
 }
 
-// @public
+// @public @deprecated
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     constructor(getLevel: (dataNode: T) => number, isExpandable: (dataNode: T) => boolean, options?: FlatTreeControlOptions<T, K> | undefined);
     expandAll(): void;
@@ -287,7 +291,7 @@ export function getTreeMultipleDefaultNodeDefsError(): Error;
 // @public
 export function getTreeNoValidDataSourceError(): Error;
 
-// @public
+// @public @deprecated
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     constructor(getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null, options?: NestedTreeControlOptions<T, K> | undefined);
     expandAll(): void;
@@ -305,7 +309,7 @@ export interface NestedTreeControlOptions<T, K> {
     trackBy?: (dataNode: T) => K;
 }
 
-// @public
+// @public @deprecated
 export interface TreeControl<T, K = T> {
     collapse(dataNode: T): void;
     collapseAll(): void;
