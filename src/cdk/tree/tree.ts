@@ -96,6 +96,20 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /** Level of nodes */
   private _levels: Map<T, number> = new Map<T, number>();
 
+  /** The immediate parents for a node. This is `null` if there is no parent. */
+  private _parents: Map<T, T | null> = new Map<T, T | null>();
+
+  /**
+   * The internal node groupings for each node; we use this, primarily for flattened trees, to
+   * determine where a particular node is within each group.
+   *
+   * The structure of this is that:
+   * - the outer index is the level
+   * - the inner index is the parent node for this particular group. If there is no parent node, we
+   *   use `null`.
+   */
+  private _groups: Map<number, Map<T | null, T[]>> = new Map<number, Map<T | null, T[]>>();
+
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
    * stream of view window (what dataNodes are currently on screen).
@@ -328,7 +342,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
           this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex!);
+          const group = this._getNodeGroup(item.item);
           this._levels.delete(item.item);
+          this._parents.delete(item.item);
+          group.splice(group.indexOf(item.item), 1);
         } else {
           const view = viewContainer.get(adjustedPreviousIndex!);
           viewContainer.move(view!, currentIndex);
@@ -382,6 +399,19 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       context.level = 0;
     }
     this._levels.set(nodeData, context.level);
+    const parent = parentData ?? this._findParentForNode(nodeData, index);
+    this._parents.set(nodeData, parent);
+
+    // Determine where to insert this new node into the group, then insert it.
+    // We do this by looking at the previous node in our flattened node list. If it's in the same
+    // group, we place the current node after. Otherwise, we place it at the start of the group.
+    const currentGroup = this._groups.get(context.level) ?? new Map<T | null, T[]>();
+    const group = currentGroup.get(parent) ?? [];
+    const previousNode = this._dataNodes?.[index - 1];
+    const groupInsertionIndex = (previousNode && group.indexOf(previousNode) + 1) ?? 0;
+    group.splice(groupInsertionIndex, 0, nodeData);
+    currentGroup.set(parent, group);
+    this._groups.set(context.level, currentGroup);
 
     // Use default tree nodeOutlet, or nested node's nodeOutlet
     const container = viewContainer ? viewContainer : this._nodeOutlet.viewContainer;
@@ -711,6 +741,32 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       this._dataNodes.next(nodes);
       return observableOf(nodes);
     }
+  }
+
+  private _getNodeGroup(node: T) {
+    const level = this._levels.get(node);
+    const parent = this._parents.get(node);
+    const group = this._groups.get(level ?? 0)?.get(parent ?? null);
+    return group ?? [node];
+  }
+
+  private _findParentForNode(node: T, index: number) {
+    // In all cases, we have a mapping from node to level; all we need to do here is backtrack in
+    // our flattened list of nodes to determine the first node that's of a level lower than the
+    // provided node.
+    if (!this._dataNodes) {
+      return null;
+    }
+    const currentLevel = this._levels.get(node) ?? 0;
+    for (let parentIndex = index; parentIndex >= 0; parentIndex--) {
+      const parentNode = this._dataNodes[parentIndex];
+      const parentLevel = this._levels.get(parentNode) ?? 0;
+
+      if (parentLevel < currentLevel) {
+        return parentNode;
+      }
+    }
+    return null;
   }
 }
 
