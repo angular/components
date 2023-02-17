@@ -1,0 +1,22 @@
+<cdk-tree [dataSource]="dataSource" [levelAccessor]="levelAccessor">
+  <!-- This is the tree node template for leaf nodes -->
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="example-tree-node">
+    <!-- use a disabled button to provide padding for tree leaf -->
+    <button mat-icon-button disabled></button>
+    {{node.name}}
+  </cdk-nested-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild"
+                        [isExpandable]="node.expandable"
+                        class="example-tree-node">
+    <button mat-icon-button cdkTreeNodeToggle
+            [attr.aria-label]="'Toggle ' + node.name"
+            (click)="node.isExpanded = !node.isExpanded"
+            [style.visibility]="node.expandable ? 'visible' : 'hidden'">
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{node.isExpanded ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    {{node.name}}
+  </cdk-nested-tree-node>
+</cdk-tree>
