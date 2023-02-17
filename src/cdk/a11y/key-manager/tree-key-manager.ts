@@ -7,7 +7,7 @@
  */
 
 import {QueryList} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {isObservable, Observable, Subject} from 'rxjs';
 
 // TODO(cassc): Temporarily disable tslint since this is just the raw API.
 // tslint:disable
@@ -91,7 +91,23 @@ export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
  * keyboard events occur.
  */
 export class TreeKeyManager<T extends TreeKeyManagerItem> {
-  constructor(options: TreeKeyManagerOptions<T>) {}
+  private _activeItemIndex = -1;
+  private _activeItem: T | null = null;
+
+  constructor({items}: TreeKeyManagerOptions<T>) {
+    // We allow for the items to be an array or Observable because, in some cases, the consumer may
+    // not have access to a QueryList of the items they want to manage (e.g. when the
+    // items aren't being collected via `ViewChildren` or `ContentChildren`).
+    if (items instanceof QueryList) {
+      items.changes.subscribe((newItems: QueryList<T>) => {
+        this._updateActiveItemIndex(newItems.toArray());
+      });
+    } else if (isObservable(items)) {
+      items.subscribe(newItems => {
+        this._updateActiveItemIndex(newItems);
+      });
+    }
+  }
 
   /**
    * Stream that emits any time the TAB key is pressed, so components can react
@@ -113,12 +129,22 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
   /** Index of the currently active item. */
   getActiveItemIndex(): number | null {
-    return null;
+    return this._activeItemIndex;
   }
 
   /** The currently active item. */
   getActiveItem(): T | null {
-    return null;
+    return this._activeItem;
+  }
+
+  private _updateActiveItemIndex(newItems: T[]) {
+    if (this._activeItem) {
+      const newIndex = newItems.indexOf(this._activeItem);
+
+      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+        this._activeItemIndex = newIndex;
+      }
+    }
   }
 }
 
