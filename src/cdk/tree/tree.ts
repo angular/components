@@ -40,7 +40,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {concatMap, map, reduce, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+import {concatMap, map, reduce, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -155,6 +155,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    *
    * This controls what selection of data the tree will render.
    */
+  // NB: we're unable to determine this ourselves; Angular's ContentChildren
+  // unfortunately does not pick up the necessary information.
   @Input() nodeType?: 'flat' | 'nested';
 
   // Outlets within the tree's template where the dataNodes will be inserted.
@@ -182,7 +184,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /** Keep track of which nodes are expanded. */
   private _expansionModel?: SelectionModel<K>;
 
-  /** Maintain a synchronous cache of the currently known data nodes. */
+  /**
+   * Maintain a synchronous cache of the currently known data nodes. In the
+   * case of nested nodes (i.e. if `nodeType` is 'nested'), this will
+   * only contain the root nodes.
+   */
   private _dataNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
   /** The mapping between data and the node that is rendered. */
@@ -291,39 +297,22 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     if (dataStream) {
       this._dataSubscription = dataStream
         .pipe(
-          switchMap(data => this._flattenChildren(data)),
+          switchMap(data => this._convertChildren(data)),
           takeUntil(this._onDestroy),
         )
-        .subscribe(data => this.renderNodeChanges(data));
+        .subscribe(data => this._renderNodeChanges(data));
     } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getTreeNoValidDataSourceError();
     }
   }
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */
-  renderNodeChanges(
+  _renderNodeChanges(
     data: readonly T[],
     dataDiffer: IterableDiffer<T> = this._dataDiffer,
     viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
     parentData?: T,
   ) {
-    this._dataNodes.next(data);
-
-    this._renderNodeChanges(data, dataDiffer, viewContainer, parentData);
-  }
-
-  /** Check for changes made in the data and render each change (node added/removed/moved). */
-  _renderNodeChanges(
-    data: readonly T[],
-    dataDiffer: IterableDiffer<T>,
-    viewContainer: ViewContainerRef,
-    parentData?: T,
-  ) {
-    const levelAccessor = this._getLevelAccessor();
-    if (levelAccessor && this.nodeType === 'nested' && !parentData) {
-      data = data.filter(data => levelAccessor(data) === 0);
-    }
-
     const changes = dataDiffer.diff(data);
     if (!changes) {
       return;
@@ -691,19 +680,36 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
   }
 
-  private _flattenChildren(nodes: readonly T[]): Observable<readonly T[]> {
-    // If we're using TreeControl or levelAccessor, we don't need to manually
-    // flatten things here.
-    if (!this.childrenAccessor) {
-      return observableOf(nodes);
-    } else {
+  /**
+   * Converts children for certain tree configurations. Note also that this
+   * caches the known nodes for use in other parts of the tree.
+   */
+  private _convertChildren(nodes: readonly T[]): Observable<readonly T[]> {
+    // The only situations where we have to convert children types is when
+    // they're mismatched; i.e. if the tree is using a childrenAccessor and the
+    // nodes are flat, or if the tree is using a levelAccessor and the nodes are
+    // nested.
+    if (this.childrenAccessor && this.nodeType === 'flat') {
+      // This flattens children into a single array.
       return observableOf(...nodes).pipe(
         concatMap(node => concat(observableOf([node]), this._getAllChildrenRecursively(node))),
         reduce((results, nodes) => {
           results.push(...nodes);
           return results;
         }, [] as T[]),
+        tap(nodes => {
+          this._dataNodes.next(nodes);
+        }),
       );
+    } else if (this.levelAccessor && this.nodeType === 'nested') {
+      this._dataNodes.next(nodes);
+      // In the nested case, we only look for root nodes. The CdkNestedNode
+      // itself will handle rendering each individual node's children.
+      const levelAccessor = this.levelAccessor;
+      return observableOf(nodes.filter(node => levelAccessor(node) === 0));
+    } else {
+      this._dataNodes.next(nodes);
+      return observableOf(nodes);
     }
   }
 }
