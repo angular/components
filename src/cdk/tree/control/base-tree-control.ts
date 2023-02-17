@@ -13,6 +13,7 @@ import {TreeControl} from './tree-control';
  * Base tree control. It has basic toggle/expand/collapse operations on a single data node.
  *
  * @deprecated Use one of levelAccessor or childrenAccessor
+ * @breaking-change 14.0.0
  */
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
   /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */

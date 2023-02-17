@@ -17,6 +17,7 @@ export interface FlatTreeControlOptions<T, K> {
  * Flat tree control. Able to expand/collapse a subtree recursively for flattened tree.
  *
  * @deprecated Use one of levelAccessor or childrenAccessor
+ * @breaking-change 14.0.0
  */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with flat tree data node functions getLevel and isExpandable. */

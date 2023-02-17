@@ -18,6 +18,7 @@ export interface NestedTreeControlOptions<T, K> {
  * Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type.
  *
  * @deprecated Use one of levelAccessor or childrenAccessor
+ * @breaking-change 14.0.0
  */
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with nested tree function getChildren. */

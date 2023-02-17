@@ -870,19 +870,19 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   }
 
   /**
-    * Determines the size of this node's parent's child set.
-    *
-    * This is intended to be used for `aria-setsize`.
-    */
+   * Determines the size of this node's parent's child set.
+   *
+   * This is intended to be used for `aria-setsize`.
+   */
   _getSetSize(): number {
     return this._tree._getSetSize(this._data);
   }
 
   /**
-    * Determines the index (starting from 1) of this node in its parent's child set.
-    *
-    * This is intended to be used for `aria-posinset`.
-    */
+   * Determines the index (starting from 1) of this node in its parent's child set.
+   *
+   * This is intended to be used for `aria-posinset`.
+   */
   _getPositionInSet(): number {
     return this._tree._getPositionInSet(this._data);
   }
