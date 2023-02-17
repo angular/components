@@ -481,6 +481,17 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return this.treeControl?.getChildren ?? this.childrenAccessor;
   }
 
+  /**
+   * Gets all nodes in the tree, through recursive expansion.
+   *
+   * NB: this will emit multiple times; the collective sum of the emissions
+   * will encompass the entire tree. This is done so that `expandAll` and
+   * `collapseAll` can incrementally expand/collapse instead of waiting for an
+   * all asynchronous operations to complete before expanding.
+   *
+   * Note also that this does not capture continual changes to descendants in
+   * the tree.
+   */
   private _getAllDescendants(): Observable<T[]> {
     return merge(...(this._dataNodes?.map(dataNode => this._getDescendants(dataNode)) ?? []));
   }
