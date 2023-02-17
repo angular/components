@@ -482,6 +482,43 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /**
+   * Gets the direct children of a node; used for compatibility between the old tree and the
+   * new tree.
+   */
+  _getDirectChildren(dataNode: T): Observable<T[]> {
+    const levelAccessor = this._getLevelAccessor();
+    if (levelAccessor) {
+      // If we have no known nodes, we wouldn't be able to determine descendants
+      if (!this._dataNodes) {
+        return observableOf([]);
+      }
+      const startIndex = this._dataNodes.indexOf(dataNode);
+      const results: T[] = [dataNode];
+
+      // Goes through flattened tree nodes in the `dataNodes` array, and get all direct descendants.
+      // The level of descendants of a tree node must be equal to the level of the given
+      // tree node + 1.
+      // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
+      // If we reach a node whose level is greater than the level of the tree node, we hit a
+      // sibling of an ancestor.
+      const currentLevel = levelAccessor(dataNode);
+      for (
+        let i = startIndex + 1;
+        i < this._dataNodes.length && currentLevel + 1 === levelAccessor(this._dataNodes[i]);
+        i++
+      ) {
+        results.push(this._dataNodes[i]);
+      }
+      return observableOf(results);
+    }
+    const childrenAccessor = this._getChildrenAccessor();
+    if (childrenAccessor) {
+      return coerceObservable(childrenAccessor(dataNode) ?? []);
+    }
+    throw getTreeControlMissingError();
+  }
+
+  /**
    * Gets all nodes in the tree, through recursive expansion.
    *
    * NB: this will emit multiple times; the collective sum of the emissions
