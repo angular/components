@@ -193,6 +193,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     new Map<K, CdkTreeNode<T, K>>(),
   );
 
+  /** The mapping between data nodes and the parent node. `null` if no parent. */
+  private _parents: Map<K, T | null> = new Map<K, T | null>();
+
   constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -381,6 +384,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     // Node context that will be provided to created embedded view
     const context = new CdkTreeNodeOutletContext<T>(nodeData);
 
+    parentData ??= this._parents.get(this._trackExpansionKey(nodeData)) ?? undefined;
     // If the tree is flat tree, then use the `getLevel` function in flat tree control
     // Otherwise, use the level of parent node.
     const levelAccessor = this._getLevelAccessor();
@@ -596,6 +600,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     this._nodes.next(this._nodes.value);
   }
 
+  _getLevel(node: T) {
+    return this._levels.get(node);
+  }
+
   /**
    * Gets all nodes in the tree, through recursive expansion.
    *
@@ -664,6 +672,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return coerceObservable(this.childrenAccessor(dataNode)).pipe(
       take(1),
       switchMap(children => {
+        // Here, we cache the parents of a particular child so that we can compute the levels.
+        for (const child of children) {
+          this._parents.set(this._trackExpansionKey(child), dataNode);
+        }
         return observableOf(...children).pipe(
           concatMap(child => concat(observableOf([child]), this._getAllChildrenRecursively(child))),
         );
@@ -772,7 +784,7 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     // If the tree has a levelAccessor, use it to get the level. Otherwise read the
     // aria-level off the parent node and use it as the level for this node (note aria-level is
     // 1-indexed, while this property is 0-indexed, so we don't need to increment).
-    return this._tree._getLevelAccessor()?.(this._data) ?? this._parentNodeAriaLevel;
+    return this._tree._getLevel(this._data) ?? this._parentNodeAriaLevel;
   }
 
   constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
