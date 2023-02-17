@@ -16,24 +16,4 @@ export class CdkTreeNestedLevelAccessorExample {
   dataSource = new ArrayDataSource(FLAT_DATA);
 
   hasChild = (_: number, node: FlatFoodNode) => node.expandable;
-
-  getParentNode(node: FlatFoodNode) {
-    const nodeIndex = FLAT_DATA.indexOf(node);
-
-    // Determine the node's parent by finding the first preceding node that's
-    // one level shallower.
-    for (let i = nodeIndex - 1; i >= 0; i--) {
-      if (FLAT_DATA[i].level === node.level - 1) {
-        return FLAT_DATA[i];
-      }
-    }
-
-    return null;
-  }
-
-  shouldRender(node: FlatFoodNode): boolean {
-    // This node should render if it is a root node or if all of its ancestors are expanded.
-    const parent = this.getParentNode(node);
-    return !parent || (!!parent.isExpanded && this.shouldRender(parent));
-  }
 }
