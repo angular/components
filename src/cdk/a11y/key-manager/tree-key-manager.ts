@@ -27,7 +27,7 @@ import {isObservable, Observable, Subject} from 'rxjs';
 /** Represents an item within a tree that can be passed to a TreeKeyManager. */
 export interface TreeKeyManagerItem {
   /** Whether the item is disabled. */
-  isDisabled?(): boolean;
+  isDisabled?: (() => boolean) | boolean;
 
   /** The user-facing label for this item. */
   getLabel?(): string;
@@ -36,13 +36,13 @@ export interface TreeKeyManagerItem {
   activate(): void;
 
   /** Retrieves the parent for this item. This is `null` if there is no parent. */
-  getParent(): this | null;
+  getParent(): TreeKeyManagerItem | null;
 
   /** Retrieves the children for this item. */
-  getChildren(): this[] | Observable<this[]>;
+  getChildren(): TreeKeyManagerItem[] | Observable<TreeKeyManagerItem[]>;
 
   /** Determines if the item is currently expanded. */
-  isExpanded(): boolean;
+  isExpanded: (() => boolean) | boolean;
 
   /** Collapses the item, hiding its children. */
   collapse(): void;
@@ -112,12 +112,13 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    * Predicate function that can be used to check whether an item should be skipped
    * by the key manager. By default, disabled items are skipped.
    */
-  private _skipPredicateFn = (item: T) => !!item.isDisabled?.();
+  private _skipPredicateFn = (item: T) =>
+    typeof item.isDisabled === 'boolean' ? item.isDisabled : !!item.isDisabled?.();
 
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
 
-  private _items: Observable<T[]> | QueryList<T> | T[];
+  private _items: T[] = [];
 
   constructor({
     items,
@@ -140,19 +141,22 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
       this._activationFollowsFocus = activationFollowsFocus;
     }
 
-    this._items = items;
-
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (items instanceof QueryList) {
+      this._items = items.toArray();
       items.changes.subscribe((newItems: QueryList<T>) => {
-        this._updateActiveItemIndex(newItems.toArray());
+        this._items = newItems.toArray();
+        this._updateActiveItemIndex(this._items);
       });
     } else if (isObservable(items)) {
       items.subscribe(newItems => {
+        this._items = newItems;
         this._updateActiveItemIndex(newItems);
       });
+    } else {
+      this._items = items;
     }
   }
 
@@ -161,6 +165,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    * when focus is shifted off of the list.
    */
   readonly tabOut = new Subject<void>();
+
+  /** Stream that emits any time the focused item changes. */
+  readonly change = new Subject<T | null>();
 
   /**
    * Handles a keyboard event on the tree.
@@ -172,6 +179,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     switch (keyCode) {
       case TAB:
         this.tabOut.next();
+        // NB: return here, in order to allow Tab to actually tab out of the tree
         return;
 
       case DOWN_ARROW:
@@ -211,8 +219,8 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
           break;
         }
 
-        // Note that we return here, in order to avoid preventing the default action of
-        // non-navigational keys or resetting the buffer of pressed letters.
+        // NB: return here, in order to avoid preventing the default action of non-navigational
+        // keys or resetting the buffer of pressed letters.
         return;
     }
 
@@ -237,30 +245,34 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     return this._activeItem;
   }
 
-  private _setActiveItem(index: number) {
-    this._getItems()
-      .pipe(take(1))
-      .subscribe(items => {
-        // Clamp the index between 0 and the length of the list.
-        index = Math.min(Math.max(index, 0), items.length - 1);
-        const activeItem = items[index];
+  private _setActiveItem(index: number): void;
+  private _setActiveItem(item: T): void;
+  private _setActiveItem(itemOrIndex: number | T) {
+    let index =
+      typeof itemOrIndex === 'number'
+        ? itemOrIndex
+        : this._items.findIndex(item => this._trackByFn(item) === this._trackByFn(itemOrIndex));
+    if (index < 0 || index >= this._items.length) {
+      return;
+    }
+    const activeItem = this._items[index];
 
-        // If we're just setting the same item, don't re-call activate or focus
-        if (
-          this._activeItem !== null &&
-          this._trackByFn(activeItem) === this._trackByFn(this._activeItem)
-        ) {
-          return;
-        }
+    // If we're just setting the same item, don't re-call activate or focus
+    if (
+      this._activeItem !== null &&
+      this._trackByFn(activeItem) === this._trackByFn(this._activeItem)
+    ) {
+      return;
+    }
 
-        this._activeItem = activeItem ?? null;
-        this._activeItemIndex = index;
+    this._activeItem = activeItem ?? null;
+    this._activeItemIndex = index;
 
-        this._activeItem?.focus();
-        if (this._activationFollowsFocus) {
-          this._activateCurrentItem();
-        }
-      });
+    this.change.next(this._activeItem);
+    this._activeItem?.focus();
+    if (this._activationFollowsFocus) {
+      this._activateCurrentItem();
+    }
   }
 
   private _updateActiveItemIndex(newItems: T[]) {
@@ -273,30 +285,40 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     }
   }
 
-  private _getItems(): Observable<T[]> {
-    return coerceObservable(this._items);
-  }
-
   //// Navigational methods
 
   private _focusFirstItem() {
-    this._setActiveItem(0);
+    this._setActiveItem(this._findNextAvailableItemIndex(-1));
   }
 
   private _focusLastItem() {
-    this._getItems()
-      .pipe(take(1))
-      .subscribe(items => {
-        this._setActiveItem(items.length - 1);
-      });
+    this._setActiveItem(this._findPreviousAvailableItemIndex(this._items.length));
   }
 
   private _focusPreviousItem() {
-    this._setActiveItem(this._activeItemIndex - 1);
+    this._setActiveItem(this._findPreviousAvailableItemIndex(this._activeItemIndex));
   }
 
   private _focusNextItem() {
-    this._setActiveItem(this._activeItemIndex + 1);
+    this._setActiveItem(this._findNextAvailableItemIndex(this._activeItemIndex));
+  }
+
+  private _findNextAvailableItemIndex(startingIndex: number) {
+    for (let i = startingIndex + 1; i < this._items.length; i++) {
+      if (!this._isItemDisabled(this._items[i])) {
+        return i;
+      }
+    }
+    return startingIndex;
+  }
+
+  private _findPreviousAvailableItemIndex(startingIndex: number) {
+    for (let i = startingIndex - 1; i >= 0; i--) {
+      if (!this._isItemDisabled(this._items[i])) {
+        return i;
+      }
+    }
+    return startingIndex;
   }
 
   /**
@@ -309,6 +331,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    */
   private _expandCurrentItem() {}
 
+  private _isCurrentItemExpanded() {
+    if (!this._activeItem) {
+      return false;
+    }
+    return typeof this._activeItem.isExpanded === 'boolean'
+      ? this._activeItem.isExpanded
+      : this._activeItem.isExpanded();
+  }
+
+  private _isItemDisabled(item: T) {
+    return typeof item.isDisabled === 'boolean' ? item.isDisabled : item.isDisabled?.();
+  }
+
   /** For all items that are the same level as the current item, we expand those items. */
   private _expandAllItemsAtCurrentItemLevel() {}
 
@@ -316,4 +351,3 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._activeItem?.activate();
   }
 }
-
