@@ -60,6 +60,10 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   return data;
 }
 
+function isNotNullish<T>(val: T | null | undefined): val is T {
+  return val != null;
+}
+
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
