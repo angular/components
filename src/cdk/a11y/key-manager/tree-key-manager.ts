@@ -243,11 +243,21 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
           break;
         }
 
+        // Attempt to use the `event.key` which also maps it to the user's keyboard language,
+        // otherwise fall back to resolving alphanumeric characters via the keyCode.
+        if (event.key && event.key.length === 1) {
+          this._letterKeyStream.next(event.key.toLocaleUpperCase());
+        } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
+          this._letterKeyStream.next(String.fromCharCode(keyCode));
+        }
+
         // NB: return here, in order to avoid preventing the default action of non-navigational
         // keys or resetting the buffer of pressed letters.
         return;
     }
 
+    // Reset the typeahead since the user has used a navigational key.
+    this._pressedLetters = [];
     event.preventDefault();
   }
 
