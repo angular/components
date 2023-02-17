@@ -698,7 +698,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   /** Given a CdkTreeNode, gets the node that renders that node's parent's data. */
   _getNodeParent(node: CdkTreeNode<T, K>) {
-    const parent = this._parents.get(node.data);
+    const parent = this._parents.get(this._getExpansionKey(node.data));
     return parent && this._nodes.value.get(this._getExpansionKey(parent));
   }
 
@@ -817,6 +817,32 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
   }
 
+  private _getNodeGroup(node: T) {
+    const level = this._levels.get(this._getExpansionKey(node));
+    const parent = this._parents.get(this._getExpansionKey(node));
+    const group = this._groups.get(level ?? 0)?.get(parent ?? null);
+    return group ?? [node];
+  }
+
+  private _findParentForNode(node: T, index: number) {
+    // In all cases, we have a mapping from node to level; all we need to do here is backtrack in
+    // our flattened list of nodes to determine the first node that's of a level lower than the
+    // provided node.
+    if (!this._dataNodes) {
+      return null;
+    }
+    const currentLevel = this._levels.get(this._getExpansionKey(node)) ?? 0;
+    for (let parentIndex = index; parentIndex >= 0; parentIndex--) {
+      const parentNode = this._dataNodes.value[parentIndex];
+      const parentLevel = this._levels.get(this._getExpansionKey(parentNode)) ?? 0;
+
+      if (parentLevel < currentLevel) {
+        return parentNode;
+      }
+    }
+    return null;
+  }
+
   /**
    * Converts children for certain tree configurations. Note also that this
    * caches the known nodes for use in other parts of the tree.
@@ -847,48 +873,6 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     } else {
       this._dataNodes.next(nodes);
       return observableOf(nodes);
-    }
-  }
-
-  private _getNodeGroup(node: T) {
-    const level = this._levels.get(this._getExpansionKey(node));
-    const parent = this._parents.get(this._getExpansionKey(node));
-    const group = this._groups.get(level ?? 0)?.get(parent ?? null);
-    return group ?? [node];
-  }
-
-  private _findParentForNode(node: T, index: number) {
-    // In all cases, we have a mapping from node to level; all we need to do here is backtrack in
-    // our flattened list of nodes to determine the first node that's of a level lower than the
-    // provided node.
-    if (!this._dataNodes) {
-      return null;
-    }
-    const currentLevel = this._levels.get(this._getExpansionKey(node)) ?? 0;
-    for (let parentIndex = index; parentIndex >= 0; parentIndex--) {
-      const parentNode = this._dataNodes.value[parentIndex];
-      const parentLevel = this._levels.get(this._getExpansionKey(parentNode)) ?? 0;
-
-      if (parentLevel < currentLevel) {
-        return parentNode;
-      }
-    }
-    return null;
-  }
-
-  private _flattenChildren(nodes: readonly T[]): Observable<readonly T[]> {
-    // If we're using TreeControl or levelAccessor, we don't need to manually
-    // flatten things here.
-    if (!this.childrenAccessor) {
-      return observableOf(nodes);
-    } else {
-      return observableOf(...nodes).pipe(
-        concatMap(node => concat(observableOf([node]), this._getAllChildrenRecursively(node))),
-        reduce((results, nodes) => {
-          results.push(...nodes);
-          return results;
-        }, [] as T[]),
-      );
     }
   }
 }

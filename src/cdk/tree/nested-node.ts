@@ -95,7 +95,7 @@ export class CdkNestedTreeNode<T, K = T>
     }
     if (outlet && this._children) {
       const viewContainer = outlet.viewContainer;
-      this._tree._renderNodeChanges(this._children, this._dataDiffer, viewContainer, this._data);
+      this._tree.renderNodeChanges(this._children, this._dataDiffer, viewContainer, this._data);
     } else {
       // Reset the data differ if there's no children nodes displayed
       this._dataDiffer.diff([]);
