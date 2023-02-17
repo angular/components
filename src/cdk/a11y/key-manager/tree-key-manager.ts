@@ -276,6 +276,14 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     return this._activeItem;
   }
 
+  /**
+   * Focus the initial element; this is intended to be called when the tree is focused for
+   * the first time.
+   */
+  onInitialFocus(): void {
+    this._focusFirstItem();
+  }
+
   private _setActiveItem(index: number): void;
   private _setActiveItem(item: T): void;
   private _setActiveItem(itemOrIndex: number | T) {
