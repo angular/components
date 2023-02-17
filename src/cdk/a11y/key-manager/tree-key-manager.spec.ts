@@ -14,7 +14,7 @@ import {createKeyboardEvent} from '../../testing/private';
 import {QueryList} from '@angular/core';
 import {take} from 'rxjs/operators';
 import {TreeKeyManager, TreeKeyManagerItem} from './tree-key-manager';
-import {Observable, of as observableOf} from 'rxjs';
+import {Observable, of as observableOf, Subscription} from 'rxjs';
 
 class FakeBaseTreeKeyManagerItem {
   _isExpanded = false;
@@ -64,6 +64,12 @@ interface ItemConstructorTestContext {
   constructor: new (label: string) =>
     | FakeArrayTreeKeyManagerItem
     | FakeObservableTreeKeyManagerItem;
+}
+
+interface ExpandCollapseKeyEventTestContext {
+  direction: 'ltr' | 'rtl';
+  expandKeyEvent: () => KeyboardEvent;
+  collapseKeyEvent: () => KeyboardEvent;
 }
 
 describe('TreeKeyManager', () => {
@@ -429,6 +435,298 @@ describe('TreeKeyManager', () => {
           keyManager.onKeydown(fakeKeyEvents.upArrow);
           expect(fakeKeyEvents.upArrow.defaultPrevented).toBe(true);
         });
+      });
+
+      describe('expand/collapse key events', () => {
+        const parameters: ExpandCollapseKeyEventTestContext[] = [
+          {
+            direction: 'ltr',
+            expandKeyEvent: () => fakeKeyEvents.rightArrow,
+            collapseKeyEvent: () => fakeKeyEvents.leftArrow,
+          },
+          {
+            direction: 'rtl',
+            expandKeyEvent: () => fakeKeyEvents.leftArrow,
+            collapseKeyEvent: () => fakeKeyEvents.rightArrow,
+          },
+        ];
+
+        for (const param of parameters) {
+          describe(`in ${param.direction} mode`, () => {
+            beforeEach(() => {
+              keyManager = new TreeKeyManager({
+                items: itemList,
+                horizontalOrientation: param.direction,
+              });
+              for (const item of itemList) {
+                item._isExpanded = false;
+              }
+            });
+
+            it('with nothing active, expand key does not expand any items', () => {
+              expect(itemList.toArray().map(item => item.isExpanded()))
+                .withContext('item expansion state, for all items')
+                .toEqual(itemList.toArray().map(_ => false));
+
+              keyManager.onKeydown(param.expandKeyEvent());
+
+              expect(itemList.toArray().map(item => item.isExpanded()))
+                .withContext('item expansion state, for all items, after expand event')
+                .toEqual(itemList.toArray().map(_ => false));
+            });
+
+            it('with nothing active, collapse key does not collapse any items', () => {
+              for (const item of itemList) {
+                item._isExpanded = true;
+              }
+              expect(itemList.toArray().map(item => item.isExpanded()))
+                .withContext('item expansion state, for all items')
+                .toEqual(itemList.toArray().map(_ => true));
+
+              keyManager.onKeydown(param.collapseKeyEvent());
+
+              expect(itemList.toArray().map(item => item.isExpanded()))
+                .withContext('item expansion state, for all items')
+                .toEqual(itemList.toArray().map(_ => true));
+            });
+
+            it('with nothing active, expand key does not change the active item index', () => {
+              expect(keyManager.getActiveItemIndex())
+                .withContext('active item index, initial')
+                .toEqual(-1);
+
+              keyManager.onKeydown(param.expandKeyEvent());
+
+              expect(keyManager.getActiveItemIndex())
+                .withContext('active item index, after expand event')
+                .toEqual(-1);
+            });
+
+            it('with nothing active, collapse key does not change the active item index', () => {
+              for (const item of itemList) {
+                item._isExpanded = true;
+              }
+
+              expect(keyManager.getActiveItemIndex())
+                .withContext('active item index, initial')
+                .toEqual(-1);
+
+              keyManager.onKeydown(param.collapseKeyEvent());
+
+              expect(keyManager.getActiveItemIndex())
+                .withContext('active item index, after collapse event')
+                .toEqual(-1);
+            });
+
+            describe('if the current item is expanded', () => {
+              let spy: jasmine.Spy;
+              let subscription: Subscription;
+
+              beforeEach(() => {
+                keyManager.onClick(parentItem);
+                parentItem._isExpanded = true;
+
+                spy = jasmine.createSpy('change spy');
+                subscription = keyManager.change.subscribe(spy);
+              });
+
+              afterEach(() => {
+                subscription.unsubscribe();
+              });
+
+              it('when the expand key is pressed, moves to the first child', () => {
+                keyManager.onKeydown(param.expandKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one expand key event.')
+                  .toBe(1);
+                expect(spy).not.toHaveBeenCalledWith(parentItem);
+                expect(spy).toHaveBeenCalledWith(childItem);
+              });
+
+              it(
+                'when the expand key is pressed, and the first child is disabled, ' +
+                  'moves to the first non-disabled child',
+                () => {
+                  childItem.isDisabled = true;
+
+                  keyManager.onKeydown(param.expandKeyEvent());
+
+                  expect(keyManager.getActiveItemIndex())
+                    .withContext('active item index, after one expand key event.')
+                    .toBe(3);
+                  expect(spy).not.toHaveBeenCalledWith(parentItem);
+                  expect(spy).not.toHaveBeenCalledWith(childItem);
+                  expect(spy).toHaveBeenCalledWith(childItemWithNoChildren);
+                },
+              );
+
+              it(
+                'when the expand key is pressed, and all children are disabled, ' +
+                  'does not change the active item',
+                () => {
+                  childItem.isDisabled = true;
+                  childItemWithNoChildren.isDisabled = true;
+
+                  keyManager.onKeydown(param.expandKeyEvent());
+
+                  expect(keyManager.getActiveItemIndex())
+                    .withContext('active item index, after one expand key event.')
+                    .toBe(0);
+                  expect(spy).not.toHaveBeenCalled();
+                },
+              );
+
+              it('when the collapse key is pressed, collapses the item', () => {
+                expect(parentItem.isExpanded())
+                  .withContext('active item initial expansion state')
+                  .toBe(true);
+
+                keyManager.onKeydown(param.collapseKeyEvent());
+
+                expect(parentItem.isExpanded())
+                  .withContext('active item expansion state, after collapse key')
+                  .toBe(false);
+              });
+
+              it('when the collapse key is pressed, does not change the active item', () => {
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, initial')
+                  .toBe(0);
+
+                keyManager.onKeydown(param.collapseKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one collapse key event.')
+                  .toBe(0);
+                expect(spy).not.toHaveBeenCalled();
+              });
+            });
+
+            describe('if the current item is expanded, and there are no children', () => {
+              let spy: jasmine.Spy;
+              let subscription: Subscription;
+
+              beforeEach(() => {
+                keyManager.onClick(childItemWithNoChildren);
+                childItemWithNoChildren._isExpanded = true;
+
+                spy = jasmine.createSpy('change spy');
+                subscription = keyManager.change.subscribe(spy);
+              });
+
+              afterEach(() => {
+                subscription.unsubscribe();
+              });
+
+              it('when the expand key is pressed, does not change the active item', () => {
+                keyManager.onKeydown(param.expandKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one expand key event.')
+                  .toBe(3);
+                expect(spy).not.toHaveBeenCalled();
+              });
+            });
+
+            describe('if the current item is collapsed, and has a parent item', () => {
+              let spy: jasmine.Spy;
+              let subscription: Subscription;
+
+              beforeEach(() => {
+                keyManager.onClick(childItem);
+                childItem._isExpanded = false;
+
+                spy = jasmine.createSpy('change spy');
+                subscription = keyManager.change.subscribe(spy);
+              });
+
+              afterEach(() => {
+                subscription.unsubscribe();
+              });
+
+              it('when the expand key is pressed, expands the current item', () => {
+                expect(childItem.isExpanded())
+                  .withContext('active item initial expansion state')
+                  .toBe(false);
+
+                keyManager.onKeydown(param.expandKeyEvent());
+
+                expect(childItem.isExpanded())
+                  .withContext('active item expansion state, after expand key')
+                  .toBe(true);
+              });
+
+              it('when the expand key is pressed, does not change active item', () => {
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, initial')
+                  .toBe(1);
+
+                keyManager.onKeydown(param.expandKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one collapse key event.')
+                  .toBe(1);
+                expect(spy).not.toHaveBeenCalled();
+              });
+
+              it('when the collapse key is pressed, moves the active item to the parent', () => {
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, initial')
+                  .toBe(1);
+
+                keyManager.onKeydown(param.collapseKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one collapse key event.')
+                  .toBe(0);
+              });
+
+              it('when the collapse key is pressed, and the parent is disabled, does nothing', () => {
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, initial')
+                  .toBe(1);
+
+                parentItem.isDisabled = true;
+                keyManager.onKeydown(param.collapseKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one collapse key event.')
+                  .toBe(1);
+              });
+            });
+
+            describe('if the current item is collapsed, and has no parent items', () => {
+              let spy: jasmine.Spy;
+              let subscription: Subscription;
+
+              beforeEach(() => {
+                keyManager.onClick(parentItem);
+                parentItem._isExpanded = false;
+
+                spy = jasmine.createSpy('change spy');
+                subscription = keyManager.change.subscribe(spy);
+              });
+
+              afterEach(() => {
+                subscription.unsubscribe();
+              });
+
+              it('when the collapse key is pressed, does nothing', () => {
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, initial')
+                  .toBe(0);
+
+                keyManager.onKeydown(param.collapseKeyEvent());
+
+                expect(keyManager.getActiveItemIndex())
+                  .withContext('active item index, after one collapse key event.')
+                  .toBe(0);
+                expect(spy).not.toHaveBeenCalledWith(parentItem);
+              });
+            });
+          });
+        }
       });
     });
   }

@@ -325,11 +325,11 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
       return;
     }
 
-    if (!this._isCurrentItemExpanded()) {
+    if (this._isCurrentItemExpanded()) {
       this._activeItem.collapse();
     } else {
       const parent = this._activeItem.getParent();
-      if (!parent) {
+      if (!parent || this._isItemDisabled(parent)) {
         return;
       }
       this._setActiveItem(parent as T);
@@ -350,13 +350,26 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
       coerceObservable(this._activeItem.getChildren())
         .pipe(take(1))
         .subscribe(children => {
-          const firstChild = children[0];
+          const firstChild = children.find(child => !this._isItemDisabled(child));
           if (!firstChild) {
             return;
           }
           this._setActiveItem(firstChild as T);
         });
     }
+  }
+
+  private _isCurrentItemExpanded() {
+    if (!this._activeItem) {
+      return false;
+    }
+    return typeof this._activeItem.isExpanded === 'boolean'
+      ? this._activeItem.isExpanded
+      : this._activeItem.isExpanded();
+  }
+
+  private _isItemDisabled(item: TreeKeyManagerItem) {
+    return typeof item.isDisabled === 'boolean' ? item.isDisabled : item.isDisabled?.();
   }
 
   /** For all items that are the same level as the current item, we expand those items. */
