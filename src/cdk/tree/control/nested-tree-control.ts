@@ -14,7 +14,11 @@ export interface NestedTreeControlOptions<T, K> {
   trackBy?: (dataNode: T) => K;
 }
 
-/** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
+/**
+ * Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type.
+ *
+ * @deprecated Use one of levelAccessor or childrenAccessor
+ */
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with nested tree function getChildren. */
   constructor(

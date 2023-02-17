@@ -13,7 +13,11 @@ export interface FlatTreeControlOptions<T, K> {
   trackBy?: (dataNode: T) => K;
 }
 
-/** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
+/**
+ * Flat tree control. Able to expand/collapse a subtree recursively for flattened tree.
+ *
+ * @deprecated Use one of levelAccessor or childrenAccessor
+ */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with flat tree data node functions getLevel and isExpandable. */
   constructor(
