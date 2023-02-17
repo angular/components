@@ -3,8 +3,8 @@ import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {CdkTreeFlatExample} from './cdk-tree-flat/cdk-tree-flat-example';
-import {CdkTreeFlatLevelAccessorExample} from './cdk-tree-flat-level-accessor/cdk-tree-flat-level-accessor-example';
 import {CdkTreeNestedExample} from './cdk-tree-nested/cdk-tree-nested-example';
+import {CdkTreeFlatLevelAccessorExample} from './cdk-tree-redesign/cdk-tree-flat-level-accessor-example';
 
 export {CdkTreeFlatExample, CdkTreeNestedExample, CdkTreeFlatLevelAccessorExample};
 
