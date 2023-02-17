@@ -105,6 +105,8 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
 
+  private _items: Observable<T[]> | QueryList<T> | T[];
+
   constructor({
     items,
     skipPredicate,
@@ -125,6 +127,8 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     if (typeof activationFollowsFocus !== 'undefined') {
       this._activationFollowsFocus = activationFollowsFocus;
     }
+
+    this._items = items;
 
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
@@ -168,6 +172,26 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     return this._activeItem;
   }
 
+  private _setActiveItem(index: number) {
+    this._getItems()
+      .pipe(take(1))
+      .subscribe(items => {
+        const activeItem = items[index];
+
+        // Explicitly check for `null` and `undefined` because other falsy values are valid.
+        this._activeItem = activeItem == null ? null : activeItem;
+        this._activeItemIndex = index;
+
+        if (!this._activeItem) {
+          return;
+        }
+        this._activeItem.focus();
+        if (this._activationFollowsFocus) {
+          this._activeItem.activate();
+        }
+      });
+  }
+
   private _updateActiveItemIndex(newItems: T[]) {
     if (this._activeItem) {
       const newIndex = newItems.indexOf(this._activeItem);
@@ -176,6 +200,10 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
         this._activeItemIndex = newIndex;
       }
     }
+  }
+
+  private _getItems(): Observable<T[]> {
+    return coerceObservable(this._items);
   }
 }
 
