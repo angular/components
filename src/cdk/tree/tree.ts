@@ -29,6 +29,7 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject,
+  combineLatest,
   concat,
   isObservable,
   merge,
@@ -37,7 +38,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {reduce, switchMap, take, takeUntil} from 'rxjs/operators';
+import {reduce, switchMap, take, map, takeUntil, pairwise, startWith} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -55,6 +56,10 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
     return observableOf(data);
   }
   return data;
+}
+
+function isNotNullish<T>(val: T | null | undefined): val is T {
+  return val != null;
 }
 
 /**
@@ -170,8 +175,14 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   /** Keep track of which nodes are expanded. */
   private _expansionModel?: SelectionModel<K>;
+
   /** Maintain a synchronous cache of the currently known data nodes. */
-  private _dataNodes?: readonly T[];
+  private _dataNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
+
+  /** The mapping between data and the node that is rendered. */
+  private _nodes: BehaviorSubject<Map<K, CdkTreeNode<T, K>>> = new BehaviorSubject(
+    new Map<K, CdkTreeNode<T, K>>(),
+  );
 
   constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
 
@@ -279,7 +290,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
     parentData?: T,
   ) {
-    this._dataNodes = data;
+    this._dataNodes.next(data);
     const changes = dataDiffer.diff(data);
     if (!changes) {
       return;
@@ -519,6 +530,22 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /**
+   * Adds the specified node component to the tree's internal registry.
+   *
+   * This primarily facilitates keyboard navigation.
+   */
+  _registerNode(node: CdkTreeNode<T, K>) {
+    this._nodes.value.set(this._trackExpansionKey(node.data), node);
+    this._nodes.next(this._nodes.value);
+  }
+
+  /** Removes the specified node component from the tree's internal registry. */
+  _unregisterNode(node: CdkTreeNode<T, K>) {
+    this._nodes.value.delete(this._trackExpansionKey(node.data));
+    this._nodes.next(this._nodes.value);
+  }
+
+  /**
    * Gets all nodes in the tree, through recursive expansion.
    *
    * NB: this will emit multiple times; the collective sum of the emissions
@@ -530,7 +557,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * the tree.
    */
   private _getAllDescendants(): Observable<T[]> {
-    return merge(...(this._dataNodes?.map(dataNode => this._getDescendants(dataNode)) ?? []));
+    return merge(...this._dataNodes.value.map(dataNode => this._getDescendants(dataNode)));
   }
 
   private _getDescendants(dataNode: T): Observable<T[]> {
@@ -538,11 +565,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       return observableOf(this.treeControl.getDescendants(dataNode));
     }
     if (this.levelAccessor) {
-      // If we have no known nodes, we wouldn't be able to determine descendants
-      if (!this._dataNodes) {
-        return observableOf([]);
-      }
-      const startIndex = this._dataNodes.indexOf(dataNode);
+      const startIndex = this._dataNodes.value.indexOf(dataNode);
       const results: T[] = [dataNode];
 
       // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
@@ -554,10 +577,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       const currentLevel = this.levelAccessor(dataNode);
       for (
         let i = startIndex + 1;
-        i < this._dataNodes.length && currentLevel < this.levelAccessor(this._dataNodes[i]);
+        i < this._dataNodes.value.length &&
+        currentLevel < this.levelAccessor(this._dataNodes.value[i]);
         i++
       ) {
-        results.push(this._dataNodes[i]);
+        results.push(this._dataNodes.value[i]);
       }
       return observableOf(results);
     }
@@ -693,6 +717,7 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   ngOnInit(): void {
     this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
     this._elementRef.nativeElement.setAttribute('aria-level', `${this.level + 1}`);
+    this._tree._registerNode(this);
   }
 
   ngOnDestroy() {
