@@ -1,6 +1,6 @@
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
-import {FlatFoodNode, FLAT_DATA, NESTED_DATA} from './tree-data';
+import {FlatFoodNode, FLAT_DATA} from './tree-data';
 
 /**
  * @title Tree with flat nodes
