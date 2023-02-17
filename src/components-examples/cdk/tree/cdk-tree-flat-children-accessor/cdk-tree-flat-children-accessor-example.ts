@@ -5,13 +5,15 @@ import {timer} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
 import {NestedFoodNode, NESTED_DATA} from '../tree-data';
 
-function* allNodes(nodes: NestedFoodNode[]): Iterable<NestedFoodNode> {
+function flattenNodes(nodes: NestedFoodNode[]): NestedFoodNode[] {
+  const flattenedNodes = [];
   for (const node of nodes) {
-    yield node;
+    flattenedNodes.push(node);
     if (node.children) {
-      yield* allNodes(node.children);
+      flattenedNodes.push(...flattenNodes(node.children));
     }
   }
+  return flattenedNodes;
 }
 
 /**
@@ -33,7 +35,7 @@ export class CdkTreeFlatChildrenAccessorExample {
   hasChild = (_: number, node: NestedFoodNode) => !!node.children?.length;
 
   getParentNode(node: NestedFoodNode) {
-    for (const parent of allNodes(NESTED_DATA)) {
+    for (const parent of flattenNodes(NESTED_DATA)) {
       if (parent.children?.includes(node)) {
         return parent;
       }
