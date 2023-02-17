@@ -6,6 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {
+  A,
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  NINE,
+  RIGHT_ARROW,
+  SPACE,
+  TAB,
+  UP_ARROW,
+  Z,
+  ZERO,
+} from '@angular/cdk/keycodes';
 import {QueryList} from '@angular/core';
 import {isObservable, Observable, Subject} from 'rxjs';
 
@@ -154,7 +169,58 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    * Handles a keyboard event on the tree.
    * @param event Keyboard event that represents the user interaction with the tree.
    */
-  onKeydown(event: KeyboardEvent) {}
+  onKeydown(event: KeyboardEvent) {
+    const keyCode = event.keyCode;
+
+    switch (keyCode) {
+      case TAB:
+        this.tabOut.next();
+        return;
+
+      case DOWN_ARROW:
+        this._focusNextItem();
+        break;
+
+      case UP_ARROW:
+        this._focusPreviousItem();
+        break;
+
+      case RIGHT_ARROW:
+        this._horizontal === 'rtl' ? this._collapseCurrentItem() : this._expandCurrentItem();
+        break;
+
+      case LEFT_ARROW:
+        this._horizontal === 'rtl' ? this._expandCurrentItem() : this._collapseCurrentItem();
+        break;
+
+      case HOME:
+        this._focusFirstItem();
+        break;
+
+      case END:
+        this._focusLastItem();
+        break;
+
+      case ENTER:
+      case SPACE:
+        this._activateCurrentItem();
+        break;
+
+      default:
+        // The keyCode for `*` is the same as the keyCode for `8`, so we check the event key
+        // instead.
+        if (event.key === '*') {
+          this._expandAllItemsAtCurrentItemLevel();
+          break;
+        }
+
+        // Note that we return here, in order to avoid preventing the default action of
+        // non-navigational keys or resetting the buffer of pressed letters.
+        return;
+    }
+
+    event.preventDefault();
+  }
 
   /**
    * Handles a mouse click on a particular tree item.
@@ -205,6 +271,31 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   private _getItems(): Observable<T[]> {
     return coerceObservable(this._items);
   }
+
+  //// Navigational methods
+
+  private _focusFirstItem() {}
+
+  private _focusLastItem() {}
+
+  private _focusPreviousItem() {}
+
+  private _focusNextItem() {}
+
+  /**
+   * If the item is already expanded, we collapse the item. Otherwise, we will focus the parent.
+   */
+  private _collapseCurrentItem() {}
+
+  /**
+   * If the item is already collapsed, we expand the item. Otherwise, we will focus the first child.
+   */
+  private _expandCurrentItem() {}
+
+  /** For all items that are the same level as the current item, we expand those items. */
+  private _expandAllItemsAtCurrentItemLevel() {}
+
+  private _activateCurrentItem() {}
 }
 
 // tslint:enable
