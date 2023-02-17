@@ -31,6 +31,7 @@ import {
   BehaviorSubject,
   combineLatest,
   concat,
+  EMPTY,
   isObservable,
   merge,
   Observable,
@@ -38,7 +39,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {reduce, switchMap, take, map, takeUntil, pairwise, startWith} from 'rxjs/operators';
+import {reduce, switchMap, take, map, takeUntil, filter, startWith, tap} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -48,6 +49,7 @@ import {
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
+  getTreeControlNodeTypeUnspecifiedError,
 } from './tree-errors';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 
@@ -56,10 +58,6 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
     return observableOf(data);
   }
   return data;
-}
-
-function isNotNullish<T>(val: T | null | undefined): val is T {
-  return val != null;
 }
 
 /**
@@ -151,6 +149,14 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    */
   @Input() expansionKey?: (dataNode: T) => K;
 
+  /**
+   * What type of node is being used in the tree. This must be provided if either of
+   * `levelAccessor` or `childrenAccessor` are provided.
+   *
+   * This controls what selection of data the tree will render.
+   */
+  @Input() nodeType?: 'flat' | 'nested';
+
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
 
@@ -179,6 +185,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /** Maintain a synchronous cache of the currently known data nodes. */
   private _dataNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
+  /** Maintain a synchronous cache of the currently rendered nodes. */
+  private _renderedNodes: BehaviorSubject<Set<T>> = new BehaviorSubject<Set<T>>(new Set());
+
   /** The mapping between data and the node that is rendered. */
   private _nodes: BehaviorSubject<Map<K, CdkTreeNode<T, K>>> = new BehaviorSubject(
     new Map<K, CdkTreeNode<T, K>>(),
@@ -196,6 +205,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
         throw getMultipleTreeControlsError();
       } else if (provided === 0) {
         throw getTreeControlMissingError();
+      }
+
+      // Check that the node type is also provided if treeControl is not.
+      if (!this.treeControl && !this.nodeType) {
+        throw getTreeControlNodeTypeUnspecifiedError();
       }
     }
 
@@ -291,6 +305,22 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     parentData?: T,
   ) {
     this._dataNodes.next(data);
+
+    this._renderNodeChanges(data, dataDiffer, viewContainer, parentData);
+  }
+
+  /** Check for changes made in the data and render each change (node added/removed/moved). */
+  _renderNodeChanges(
+    data: readonly T[],
+    dataDiffer: IterableDiffer<T>,
+    viewContainer: ViewContainerRef,
+    parentData?: T,
+  ) {
+    const levelAccessor = this._getLevelAccessor();
+    if (levelAccessor && this.nodeType === 'nested' && !parentData) {
+      data = data.filter(data => levelAccessor(data) === 0);
+    }
+
     const changes = dataDiffer.diff(data);
     if (!changes) {
       return;
@@ -498,30 +528,47 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    */
   _getDirectChildren(dataNode: T): Observable<T[]> {
     const levelAccessor = this._getLevelAccessor();
-    if (levelAccessor) {
-      // If we have no known nodes, we wouldn't be able to determine descendants
-      if (!this._dataNodes) {
-        return observableOf([]);
-      }
-      const startIndex = this._dataNodes.value.indexOf(dataNode);
-      const results: T[] = [dataNode];
+    if (levelAccessor && this._expansionModel) {
+      const key = this._trackExpansionKey(dataNode);
+      const isExpanded = this._expansionModel.changed.pipe(
+        switchMap(changes => {
+          if (changes.added.includes(key)) {
+            return observableOf(true);
+          } else if (changes.removed.includes(key)) {
+            return observableOf(false);
+          }
+          return EMPTY;
+        }),
+        startWith(this.isExpanded(dataNode)),
+      );
 
-      // Goes through flattened tree nodes in the `dataNodes` array, and get all direct descendants.
-      // The level of descendants of a tree node must be equal to the level of the given
-      // tree node + 1.
-      // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
-      // If we reach a node whose level is greater than the level of the tree node, we hit a
-      // sibling of an ancestor.
-      const currentLevel = levelAccessor(dataNode);
-      for (
-        let i = startIndex + 1;
-        i < this._dataNodes.value.length &&
-        currentLevel + 1 === levelAccessor(this._dataNodes.value[i]);
-        i++
-      ) {
-        results.push(this._dataNodes.value[i]);
-      }
-      return observableOf(results);
+      return combineLatest([isExpanded, this._dataNodes]).pipe(
+        map(([expanded, dataNodes]) => {
+          if (!expanded) {
+            return [];
+          }
+          const startIndex = dataNodes.indexOf(dataNode);
+          const level = levelAccessor(dataNode) + 1;
+          const results: T[] = [];
+
+          // Goes through flattened tree nodes in the `dataNodes` array, and get all direct descendants.
+          // The level of descendants of a tree node must be equal to the level of the given
+          // tree node + 1.
+          // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
+          // If we reach a node whose level is greater than the level of the tree node, we hit a
+          // sibling of an ancestor.
+          for (let i = startIndex + 1; i < dataNodes.length; i++) {
+            const currentLevel = levelAccessor(dataNodes[i]);
+            if (level > currentLevel) {
+              break;
+            }
+            if (level === currentLevel) {
+              results.push(dataNodes[i]);
+            }
+          }
+          return results;
+        }),
+      );
     }
     const childrenAccessor = this._getChildrenAccessor();
     if (childrenAccessor) {
