@@ -321,7 +321,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
    * render change subscription if one exists. If the data source is null, interpret this by
-   * clearIng the node outlet. Otherwise start listening for new data.
+   * clearing the node outlet. Otherwise start listening for new data.
    */
   private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
     if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
