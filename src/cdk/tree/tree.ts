@@ -43,7 +43,17 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {concatMap, map, reduce, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {
+  concatMap,
+  map,
+  pairwise,
+  reduce,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -864,6 +874,22 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       }
     }
     return null;
+  }
+
+  private _flattenChildren(nodes: readonly T[]): Observable<readonly T[]> {
+    // If we're using TreeControl or levelAccessor, we don't need to manually
+    // flatten things here.
+    if (!this.childrenAccessor) {
+      return observableOf(nodes);
+    } else {
+      return observableOf(...nodes).pipe(
+        concatMap(node => concat(observableOf([node]), this._getAllChildrenRecursively(node))),
+        reduce((results, nodes) => {
+          results.push(...nodes);
+          return results;
+        }, [] as T[]),
+      );
+    }
   }
 }
 
