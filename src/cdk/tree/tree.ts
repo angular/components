@@ -5,7 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {FocusableOption} from '@angular/cdk/a11y';
+import {TreeKeyManager, TreeKeyManagerItem} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CollectionViewer, DataSource, isDataSource, SelectionModel} from '@angular/cdk/collections';
 import {
@@ -16,12 +17,14 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  EventEmitter,
   Input,
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   TrackByFunction,
   ViewChild,
@@ -75,6 +78,9 @@ function isNotNullish<T>(val: T | null | undefined): val is T {
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
+    '[attr.tabindex]': '_getTabindex()',
+    '(keydown)': '_sendKeydownToKeyManager($event)',
+    '(focus)': '_focusInitialTreeItem()',
   },
   encapsulation: ViewEncapsulation.None,
 
@@ -214,7 +220,14 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     new Map<K, CdkTreeNode<T, K>>(),
   );
 
-  constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
+  /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
+  _keyManager: TreeKeyManager<CdkTreeNode<T, K>>;
+
+  constructor(
+    private _differs: IterableDiffers,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _dir: Directionality,
+  ) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
@@ -256,6 +269,26 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     }
   }
 
+  ngAfterContentInit() {
+    this._keyManager = new TreeKeyManager({
+      items: combineLatest([this._dataNodes, this._nodes]).pipe(
+        map(([dataNodes, nodes]) =>
+          dataNodes.map(data => nodes.get(this._getExpansionKey(data))).filter(isNotNullish),
+        ),
+      ),
+      trackBy: node => this._getExpansionKey(node.data),
+      typeAheadDebounceInterval: true,
+      horizontalOrientation: this._dir.value,
+    });
+
+    this._keyManager.change
+      .pipe(startWith(null), pairwise(), takeUntil(this._onDestroy))
+      .subscribe(([prev, next]) => {
+        prev?._setTabUnfocusable();
+        next?._setTabFocusable();
+      });
+  }
+
   ngAfterContentChecked() {
     const defaultNodeDefs = this._nodeDefs.filter(def => !def.when);
     if (defaultNodeDefs.length > 1 && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -268,13 +301,17 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     }
   }
 
-  // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
-  //     and nested trees.
+  _getTabindex() {
+    // If the `TreeKeyManager` has no active item, then we know that we need to focus the initial
+    // item when the tree is focused. We set the tabindex to be `0` so that we can capture
+    // the focus event and redirect it. Otherwise, we unset it.
+    return this._keyManager.getActiveItem() ? null : 0;
+  }
 
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
    * render change subscription if one exists. If the data source is null, interpret this by
-   * clearing the node outlet. Otherwise start listening for new data.
+   * clearIng the node outlet. Otherwise start listening for new data.
    */
   private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
     if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
@@ -649,6 +686,37 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return group.indexOf(dataNode) + 1;
   }
 
+  /** Given a CdkTreeNode, gets the node that renders that node's parent's data. */
+  _getNodeParent(node: CdkTreeNode<T, K>) {
+    const parent = this._parents.get(node.data);
+    return parent && this._nodes.value.get(this._getExpansionKey(parent));
+  }
+
+  /** Given a CdkTreeNode, gets the nodes that renders that node's child data. */
+  _getNodeChildren(node: CdkTreeNode<T, K>) {
+    const children = coerceObservable(this._getChildrenAccessor()?.(node.data) ?? []);
+    return children.pipe(
+      map(children =>
+        children
+          .map(child => this._nodes.value.get(this._getExpansionKey(child)))
+          .filter(isNotNullish),
+      ),
+    );
+  }
+
+  /** `keydown` event handler; this just passes the event to the `TreeKeyManager`. */
+  _sendKeydownToKeyManager(event: KeyboardEvent) {
+    this._keyManager.onKeydown(event);
+  }
+
+  /** `focus` event handler; this focuses the initial item if there isn't already one available. */
+  _focusInitialTreeItem() {
+    if (this._keyManager.getActiveItem()) {
+      return;
+    }
+    this._keyManager.onInitialFocus();
+  }
+
   /**
    * Gets all nodes in the tree, through recursive expansion.
    *
@@ -811,9 +879,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
+    'tabindex': '-1',
   },
 })
-export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit {
+export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
   /**
    * The role of the tree node.
    *
@@ -843,6 +912,16 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
       this._tree.collapse(this.data);
     }
   }
+
+  /**
+   * Whether or not this node is disabled. If it's disabled, then the user won't be able to focus
+   * or activate this node.
+   */
+  @Input() isDisabled?: boolean;
+
+  /** This emits when the node has been programatically activated. */
+  @Output()
+  readonly activation: EventEmitter<T> = new EventEmitter<T>();
 
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
@@ -918,9 +997,40 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     this._destroyed.complete();
   }
 
-  /** Focuses the menu item. Implements for FocusableOption. */
+  getParent(): CdkTreeNode<T, K> | null {
+    return this._tree._getNodeParent(this) ?? null;
+  }
+
+  getChildren(): Array<CdkTreeNode<T, K>> | Observable<Array<CdkTreeNode<T, K>>> {
+    return this._tree._getNodeChildren(this);
+  }
+
+  /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
     this._elementRef.nativeElement.focus();
+  }
+
+  /** Emits an activation event. Implemented for TreeKeyManagerItem. */
+  activate(): void {
+    this.activation.next(this._data);
+  }
+
+  /** Collapses this data node. Implemented for TreeKeyManagerItem. */
+  collapse(): void {
+    this._tree.collapse(this._data);
+  }
+
+  /** Expands this data node. Implemented for TreeKeyManagerItem. */
+  expand(): void {
+    this._tree.expand(this._data);
+  }
+
+  _setTabFocusable() {
+    this._elementRef.nativeElement.setAttribute('tabindex', '0');
+  }
+
+  _setTabUnfocusable() {
+    this._elementRef.nativeElement.setAttribute('tabindex', '-1');
   }
 
   // TODO: role should eventually just be set in the component host
