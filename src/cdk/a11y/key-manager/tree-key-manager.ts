@@ -242,10 +242,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._getItems()
       .pipe(take(1))
       .subscribe(items => {
+        // Clamp the index between 0 and the length of the list.
+        index = Math.min(Math.max(index, 0), items.length - 1);
         const activeItem = items[index];
 
-        // Explicitly check for `null` and `undefined` because other falsy values are valid.
-        this._activeItem = activeItem == null ? null : activeItem;
+        // If we're just setting the same item, don't re-call activate or focus
+        if (
+          this._activeItem !== null &&
+          this._trackByFn(activeItem) === this._trackByFn(this._activeItem)
+        ) {
+          return;
+        }
+
+        this._activeItem = activeItem ?? null;
         this._activeItemIndex = index;
 
         this._activeItem?.focus();
@@ -271,13 +280,25 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
   //// Navigational methods
 
-  private _focusFirstItem() {}
+  private _focusFirstItem() {
+    this._setActiveItem(0);
+  }
 
-  private _focusLastItem() {}
+  private _focusLastItem() {
+    this._getItems()
+      .pipe(take(1))
+      .subscribe(items => {
+        this._setActiveItem(items.length - 1);
+      });
+  }
 
-  private _focusPreviousItem() {}
+  private _focusPreviousItem() {
+    this._setActiveItem(this._activeItemIndex - 1);
+  }
 
-  private _focusNextItem() {}
+  private _focusNextItem() {
+    this._setActiveItem(this._activeItemIndex + 1);
+  }
 
   /**
    * If the item is already expanded, we collapse the item. Otherwise, we will focus the parent.
