@@ -320,15 +320,65 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   /**
    * If the item is already expanded, we collapse the item. Otherwise, we will focus the parent.
    */
-  private _collapseCurrentItem() {}
+  private _collapseCurrentItem() {
+    if (!this._activeItem) {
+      return;
+    }
+
+    if (!this._isCurrentItemExpanded()) {
+      this._activeItem.collapse();
+    } else {
+      const parent = this._activeItem.getParent();
+      if (!parent) {
+        return;
+      }
+      this._setActiveItem(parent as T);
+    }
+  }
 
   /**
    * If the item is already collapsed, we expand the item. Otherwise, we will focus the first child.
    */
-  private _expandCurrentItem() {}
+  private _expandCurrentItem() {
+    if (!this._activeItem) {
+      return;
+    }
+
+    if (!this._isCurrentItemExpanded()) {
+      this._activeItem.expand();
+    } else {
+      coerceObservable(this._activeItem.getChildren())
+        .pipe(take(1))
+        .subscribe(children => {
+          const firstChild = children[0];
+          if (!firstChild) {
+            return;
+          }
+          this._setActiveItem(firstChild as T);
+        });
+    }
+  }
 
   /** For all items that are the same level as the current item, we expand those items. */
-  private _expandAllItemsAtCurrentItemLevel() {}
+  private _expandAllItemsAtCurrentItemLevel() {
+    if (!this._activeItem) {
+      return;
+    }
+
+    const parent = this._activeItem.getParent();
+    let itemsToExpand;
+    if (!parent) {
+      itemsToExpand = observableOf(this._items.filter(item => item.getParent() === null));
+    } else {
+      itemsToExpand = coerceObservable(parent.getChildren());
+    }
+
+    itemsToExpand.pipe(take(1)).subscribe(items => {
+      for (const item of items) {
+        item.expand();
+      }
+    });
+  }
 
   private _activateCurrentItem() {
     this._activeItem?.activate();
