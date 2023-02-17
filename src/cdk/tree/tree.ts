@@ -620,6 +620,16 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return this._levels.get(node);
   }
 
+  _getPositionInSet(dataNode: T) {
+    const group = this._getNodeGroup(dataNode);
+    return group.indexOf(dataNode) + 1;
+  }
+
+  _getSetSize(dataNode: T) {
+    const group = this._getNodeGroup(dataNode);
+    return group.length;
+  }
+
   /**
    * Gets all nodes in the tree, through recursive expansion.
    *
@@ -850,11 +860,11 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   }
 
   _getSetSize(): number {
-    return 0;
+    return this._tree._getSetSize(this._data);
   }
 
   _getPositionInSet(): number {
-    return 0;
+    return this._tree._getPositionInSet(this._data);
   }
 
   constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
