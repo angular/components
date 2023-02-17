@@ -89,6 +89,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     expandDescendants(dataNode: T): void;
     expansionKey?: (dataNode: T) => K;
     _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
+    _getDirectChildren(dataNode: T): Observable<T[]>;
+    // (undocumented)
+    _getLevel(node: T): number | undefined;
     _getLevelAccessor(): ((dataNode: T) => number) | undefined;
     _getNodeDef(data: T, i: number): CdkTreeNodeDef<T>;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
@@ -103,12 +106,16 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
     // (undocumented)
     _nodeOutlet: CdkTreeNodeOutlet;
+    nodeType?: 'flat' | 'nested';
+    _registerNode(node: CdkTreeNode<T, K>): void;
     renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
+    _renderNodeChanges(data: readonly T[], dataDiffer: IterableDiffer<T>, viewContainer: ViewContainerRef, parentData?: T): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
     trackBy: TrackByFunction<T>;
     // @deprecated
     treeControl?: TreeControl<T, K>;
+    _unregisterNode(node: CdkTreeNode<T, K>): void;
     readonly viewChange: BehaviorSubject<{
         start: number;
         end: number;
@@ -271,6 +278,9 @@ export function getTreeControlFunctionsMissingError(): Error;
 
 // @public
 export function getTreeControlMissingError(): Error;
+
+// @public
+export function getTreeControlNodeTypeUnspecifiedError(): Error;
 
 // @public
 export function getTreeMissingMatchingNodeDefError(): Error;
