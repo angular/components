@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FocusableOption} from '@angular/cdk/a11y';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CollectionViewer, DataSource, isDataSource, SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
@@ -39,19 +40,18 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {reduce, switchMap, take, map, takeUntil, filter, startWith, tap} from 'rxjs/operators';
+import {concatMap, map, reduce, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {
   getMultipleTreeControlsError,
   getTreeControlMissingError,
+  getTreeControlNodeTypeUnspecifiedError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
-  getTreeControlNodeTypeUnspecifiedError,
 } from './tree-errors';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   if (!isObservable(data)) {
@@ -290,7 +290,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
     if (dataStream) {
       this._dataSubscription = dataStream
-        .pipe(takeUntil(this._onDestroy))
+        .pipe(
+          switchMap(data => this._flattenChildren(data)),
+          takeUntil(this._onDestroy),
+        )
         .subscribe(data => this.renderNodeChanges(data));
     } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getTreeNoValidDataSourceError();
@@ -634,7 +637,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       return observableOf(results);
     }
     if (this.childrenAccessor) {
-      return this._getChildrenRecursively(dataNode).pipe(
+      return this._getAllChildrenRecursively(dataNode).pipe(
         reduce(
           (allChildren: T[], nextChildren) => {
             allChildren.push(...nextChildren);
@@ -653,7 +656,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * This will emit multiple times, in the order that the children will appear
    * in the tree, and can be combined with a `reduce` operator.
    */
-  private _getChildrenRecursively(dataNode: T): Observable<T[]> {
+  private _getAllChildrenRecursively(dataNode: T): Observable<T[]> {
     if (!this.childrenAccessor) {
       return observableOf([]);
     }
@@ -661,9 +664,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return coerceObservable(this.childrenAccessor(dataNode)).pipe(
       take(1),
       switchMap(children => {
-        return concat(
-          observableOf(children),
-          ...children.map(child => this._getChildrenRecursively(child)),
+        return observableOf(...children).pipe(
+          concatMap(child => concat(observableOf([child]), this._getAllChildrenRecursively(child))),
         );
       }),
     );
@@ -678,6 +680,22 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     //   the return type.
     // - if it's not, then K will be defaulted to T.
     return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
+  }
+
+  private _flattenChildren(nodes: readonly T[]): Observable<readonly T[]> {
+    // If we're using TreeControl or levelAccessor, we don't need to manually
+    // flatten things here.
+    if (!this.childrenAccessor) {
+      return observableOf(nodes);
+    } else {
+      return observableOf(...nodes).pipe(
+        concatMap(node => concat(observableOf([node]), this._getAllChildrenRecursively(node))),
+        reduce((results, nodes) => {
+          results.push(...nodes);
+          return results;
+        }, [] as T[]),
+      );
+    }
   }
 }
 
