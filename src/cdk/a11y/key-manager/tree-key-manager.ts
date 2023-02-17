@@ -24,9 +24,8 @@ import {
   Observable,
   Subject,
   Subscription,
-  throwError,
 } from 'rxjs';
-import {debounceTime, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, take, tap} from 'rxjs/operators';
 
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
 
@@ -322,44 +321,36 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   private _setTypeAhead(debounceInterval: number) {
     this._typeaheadSubscription.unsubscribe();
 
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      this._items.length &&
+      this._items.some(item => typeof item.getLabel !== 'function')
+    ) {
+      throw new Error(
+        'TreeKeyManager items in typeahead mode must implement the `getLabel` method.',
+      );
+    }
+
     // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
     // and convert those letters back into a string. Afterwards find the first item that starts
     // with that string and select it.
-    this._typeaheadSubscription = this._getItems()
+    this._typeaheadSubscription = this._letterKeyStream
       .pipe(
-        switchMap(items => {
-          if (
-            (typeof ngDevMode === 'undefined' || ngDevMode) &&
-            items.length &&
-            items.some(item => typeof item.getLabel !== 'function')
-          ) {
-            return throwError(
-              new Error(
-                'TreeKeyManager items in typeahead mode must implement the `getLabel` method.',
-              ),
-            );
-          }
-          return observableOf(items) as Observable<Array<T & {getLabel(): string}>>;
-        }),
-        switchMap(items => {
-          return this._letterKeyStream.pipe(
-            tap(letter => this._pressedLetters.push(letter)),
-            debounceTime(debounceInterval),
-            filter(() => this._pressedLetters.length > 0),
-            map(() => [this._pressedLetters.join(''), items] as const),
-          );
-        }),
+        tap(letter => this._pressedLetters.push(letter)),
+        debounceTime(debounceInterval),
+        filter(() => this._pressedLetters.length > 0),
+        map(() => this._pressedLetters.join('')),
       )
-      .subscribe(([inputString, items]) => {
+      .subscribe(inputString => {
         // Start at 1 because we want to start searching at the item immediately
         // following the current active item.
-        for (let i = 1; i < items.length + 1; i++) {
-          const index = (this._activeItemIndex + i) % items.length;
-          const item = items[index];
+        for (let i = 1; i < this._items.length + 1; i++) {
+          const index = (this._activeItemIndex + i) % this._items.length;
+          const item = this._items[index];
 
           if (
             !this._skipPredicateFn(item) &&
-            item.getLabel().toUpperCase().trim().indexOf(inputString) === 0
+            item.getLabel?.().toUpperCase().trim().indexOf(inputString) === 0
           ) {
             this._setActiveItem(index);
             break;
