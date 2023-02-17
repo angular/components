@@ -18,8 +18,17 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {QueryList} from '@angular/core';
-import {isObservable, of as observableOf, Observable, Subject} from 'rxjs';
-import {take} from 'rxjs/operators';
+import {
+  of as observableOf,
+  isObservable,
+  Observable,
+  Subject,
+  Subscription,
+  throwError,
+} from 'rxjs';
+import {debounceTime, filter, map, switchMap, take, tap} from 'rxjs/operators';
+
+const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
 
 function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   if (!isObservable(data)) {
@@ -111,6 +120,8 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   private _activeItem: T | null = null;
   private _activationFollowsFocus = false;
   private _horizontal: 'ltr' | 'rtl' = 'ltr';
+  private readonly _letterKeyStream = new Subject<string>();
+  private _typeaheadSubscription = Subscription.EMPTY;
 
   /**
    * Predicate function that can be used to check whether an item should be skipped
@@ -120,6 +131,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
+
+  /** Buffer for the letters that the user has pressed when the typeahead option is turned on. */
+  private _pressedLetters: string[] = [];
 
   private _items: T[] = [];
 
@@ -142,6 +156,13 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     }
     if (typeof activationFollowsFocus !== 'undefined') {
       this._activationFollowsFocus = activationFollowsFocus;
+    }
+    if (typeof typeAheadDebounceInterval !== 'undefined') {
+      this._setTypeAhead(
+        typeof typeAheadDebounceInterval === 'number'
+          ? typeAheadDebounceInterval
+          : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS,
+      );
     }
 
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
@@ -286,6 +307,57 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
         this._activeItemIndex = newIndex;
       }
     }
+  }
+
+  private _setTypeAhead(debounceInterval: number) {
+    this._typeaheadSubscription.unsubscribe();
+
+    // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
+    // and convert those letters back into a string. Afterwards find the first item that starts
+    // with that string and select it.
+    this._typeaheadSubscription = this._getItems()
+      .pipe(
+        switchMap(items => {
+          if (
+            (typeof ngDevMode === 'undefined' || ngDevMode) &&
+            items.length &&
+            items.some(item => typeof item.getLabel !== 'function')
+          ) {
+            return throwError(
+              new Error(
+                'TreeKeyManager items in typeahead mode must implement the `getLabel` method.',
+              ),
+            );
+          }
+          return observableOf(items) as Observable<Array<T & {getLabel(): string}>>;
+        }),
+        switchMap(items => {
+          return this._letterKeyStream.pipe(
+            tap(letter => this._pressedLetters.push(letter)),
+            debounceTime(debounceInterval),
+            filter(() => this._pressedLetters.length > 0),
+            map(() => [this._pressedLetters.join(''), items] as const),
+          );
+        }),
+      )
+      .subscribe(([inputString, items]) => {
+        // Start at 1 because we want to start searching at the item immediately
+        // following the current active item.
+        for (let i = 1; i < items.length + 1; i++) {
+          const index = (this._activeItemIndex + i) % items.length;
+          const item = items[index];
+
+          if (
+            !this._skipPredicateFn(item) &&
+            item.getLabel().toUpperCase().trim().indexOf(inputString) === 0
+          ) {
+            this._setActiveItem(index);
+            break;
+          }
+        }
+
+        this._pressedLetters = [];
+      });
   }
 
   //// Navigational methods
