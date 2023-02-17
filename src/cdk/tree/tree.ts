@@ -503,7 +503,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       if (!this._dataNodes) {
         return observableOf([]);
       }
-      const startIndex = this._dataNodes.indexOf(dataNode);
+      const startIndex = this._dataNodes.value.indexOf(dataNode);
       const results: T[] = [dataNode];
 
       // Goes through flattened tree nodes in the `dataNodes` array, and get all direct descendants.
@@ -515,10 +515,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       const currentLevel = levelAccessor(dataNode);
       for (
         let i = startIndex + 1;
-        i < this._dataNodes.length && currentLevel + 1 === levelAccessor(this._dataNodes[i]);
+        i < this._dataNodes.value.length &&
+        currentLevel + 1 === levelAccessor(this._dataNodes.value[i]);
         i++
       ) {
-        results.push(this._dataNodes[i]);
+        results.push(this._dataNodes.value[i]);
       }
       return observableOf(results);
     }
