@@ -9,10 +9,9 @@
                         class="example-tree-node example-expandable">
     <button mat-icon-button cdkTreeNodeToggle
             [attr.aria-label]="'Toggle ' + node.name"
-            (click)="node.isExpanded = !node.isExpanded"
             [style.visibility]="node.expandable ? 'visible' : 'hidden'">
       <mat-icon class="mat-icon-rtl-mirror">
-        {{node.isExpanded ? 'expand_more' : 'chevron_right'}}
+        {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
       </mat-icon>
     </button>
     {{node.name}}
