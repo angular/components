@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   Component,
   ErrorHandler,

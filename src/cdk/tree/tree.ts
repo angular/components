@@ -693,12 +693,12 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       // This flattens children into a single array.
       return observableOf(...nodes).pipe(
         concatMap(node => concat(observableOf([node]), this._getAllChildrenRecursively(node))),
-        reduce((results, nodes) => {
-          results.push(...nodes);
+        reduce((results, children) => {
+          results.push(...children);
           return results;
         }, [] as T[]),
-        tap(nodes => {
-          this._dataNodes.next(nodes);
+        tap(allNodes => {
+          this._dataNodes.next(allNodes);
         }),
       );
     } else if (this.levelAccessor && this.nodeType === 'nested') {
