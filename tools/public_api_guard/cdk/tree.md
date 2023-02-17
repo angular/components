@@ -108,8 +108,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     _nodeOutlet: CdkTreeNodeOutlet;
     nodeType?: 'flat' | 'nested';
     _registerNode(node: CdkTreeNode<T, K>): void;
-    renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
-    _renderNodeChanges(data: readonly T[], dataDiffer: IterableDiffer<T>, viewContainer: ViewContainerRef, parentData?: T): void;
+    _renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
     trackBy: TrackByFunction<T>;
@@ -272,9 +271,6 @@ export interface FlatTreeControlOptions<T, K> {
 
 // @public
 export function getMultipleTreeControlsError(): Error;
-
-// @public
-export function getTreeControlFunctionsMissingError(): Error;
 
 // @public
 export function getTreeControlMissingError(): Error;
