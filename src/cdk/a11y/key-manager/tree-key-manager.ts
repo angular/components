@@ -93,8 +93,39 @@ export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
 export class TreeKeyManager<T extends TreeKeyManagerItem> {
   private _activeItemIndex = -1;
   private _activeItem: T | null = null;
+  private _activationFollowsFocus = false;
+  private _horizontal: 'ltr' | 'rtl' = 'ltr';
 
-  constructor({items}: TreeKeyManagerOptions<T>) {
+  /**
+   * Predicate function that can be used to check whether an item should be skipped
+   * by the key manager. By default, disabled items are skipped.
+   */
+  private _skipPredicateFn = (item: T) => !!item.isDisabled?.();
+
+  /** Function to determine equivalent items. */
+  private _trackByFn: (item: T) => unknown = (item: T) => item;
+
+  constructor({
+    items,
+    skipPredicate,
+    trackBy,
+    horizontalOrientation,
+    activationFollowsFocus,
+    typeAheadDebounceInterval,
+  }: TreeKeyManagerOptions<T>) {
+    if (typeof skipPredicate !== 'undefined') {
+      this._skipPredicateFn = skipPredicate;
+    }
+    if (typeof trackBy !== 'undefined') {
+      this._trackByFn = trackBy;
+    }
+    if (typeof horizontalOrientation !== 'undefined') {
+      this._horizontal = horizontalOrientation;
+    }
+    if (typeof activationFollowsFocus !== 'undefined') {
+      this._activationFollowsFocus = activationFollowsFocus;
+    }
+
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
