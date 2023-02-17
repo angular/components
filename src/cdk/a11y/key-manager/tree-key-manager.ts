@@ -24,9 +24,6 @@ import {
 import {QueryList} from '@angular/core';
 import {isObservable, Observable, Subject} from 'rxjs';
 
-// TODO(cassc): Temporarily disable tslint since this is just the raw API.
-// tslint:disable
-
 /** Represents an item within a tree that can be passed to a TreeKeyManager. */
 export interface TreeKeyManagerItem {
   /** Whether the item is disabled. */
@@ -226,7 +223,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    * Handles a mouse click on a particular tree item.
    * @param treeItem The item that was clicked by the user.
    */
-  onClick(treeItem: T) {}
+  onClick(treeItem: T) {
+    this._setActiveItem(treeItem);
+  }
 
   /** Index of the currently active item. */
   getActiveItemIndex(): number | null {
@@ -318,4 +317,3 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   }
 }
 
-// tslint:enable
