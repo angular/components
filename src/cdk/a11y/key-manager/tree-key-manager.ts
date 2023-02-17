@@ -248,12 +248,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
         this._activeItem = activeItem == null ? null : activeItem;
         this._activeItemIndex = index;
 
-        if (!this._activeItem) {
-          return;
-        }
-        this._activeItem.focus();
+        this._activeItem?.focus();
         if (this._activationFollowsFocus) {
-          this._activeItem.activate();
+          this._activateCurrentItem();
         }
       });
   }
@@ -295,7 +292,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   /** For all items that are the same level as the current item, we expand those items. */
   private _expandAllItemsAtCurrentItemLevel() {}
 
-  private _activateCurrentItem() {}
+  private _activateCurrentItem() {
+    this._activeItem?.activate();
+  }
 }
 
 // tslint:enable
