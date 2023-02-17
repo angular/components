@@ -723,6 +723,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   host: {
     'class': 'cdk-tree-node',
     '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-level]': 'level + 1',
+    '[attr.aria-posinset]': '_getPositionInSet()',
+    '[attr.aria-setsize]': '_getSetSize()',
   },
 })
 export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit {
@@ -790,6 +793,14 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     return this._tree._getLevel(this._data) ?? this._parentNodeAriaLevel;
   }
 
+  _getSetSize(): number {
+    return 0;
+  }
+
+  _getPositionInSet(): number {
+    return 0;
+  }
+
   constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
     this.role = 'treeitem';
@@ -797,7 +808,6 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
 
   ngOnInit(): void {
     this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
-    this._elementRef.nativeElement.setAttribute('aria-level', `${this.level + 1}`);
     this._tree._registerNode(this);
   }
 
