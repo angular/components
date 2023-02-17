@@ -2,3 +2,8 @@
   display: flex;
   align-items: center;
 }
+
+.example-tree-node:not(.example-expandable) {
+  line-height: 40px;
+  padding-left: 40px;
+}
