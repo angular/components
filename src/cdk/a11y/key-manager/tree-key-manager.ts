@@ -18,7 +18,15 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {QueryList} from '@angular/core';
-import {isObservable, Observable, Subject} from 'rxjs';
+import {isObservable, of as observableOf, Observable, Subject} from 'rxjs';
+import {take} from 'rxjs/operators';
+
+function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
+  if (!isObservable(data)) {
+    return observableOf(data);
+  }
+  return data;
+}
 
 /** Represents an item within a tree that can be passed to a TreeKeyManager. */
 export interface TreeKeyManagerItem {
