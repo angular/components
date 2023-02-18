@@ -1,6 +1,7 @@
 <mat-tab-header #tabHeader
                 [selectedIndex]="selectedIndex || 0"
                 [disableRipple]="disableRipple"
+                [disablePagination]="disablePagination"
                 (indexFocused)="_focusChanged($event)"
                 (selectFocusedIndex)="selectedIndex = $event">
 
