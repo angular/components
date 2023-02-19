@@ -569,7 +569,7 @@ export class MatTabGroup extends _MatTabGroupBase {
     this.stretchTabs =
       defaultConfig && defaultConfig.stretchTabs != null
         ? defaultConfig.stretchTabs
-        : false;
+        : true;
   }
 }
 
