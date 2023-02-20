@@ -211,7 +211,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
    * information.
    */
   _getAriaSelected(): boolean | null {
-    return this.selected || (this.multiple ? false : null);
+    return this.selected;
   }
 
   /** Returns the correct tabindex for the option depending on disabled state. */

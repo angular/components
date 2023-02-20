@@ -204,6 +204,23 @@ describe('MatOption component', () => {
     expect(optionNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
   });
 
+  it('should have the correct aria-selected', () => {
+    const fixture = TestBed.createComponent(BasicOption);
+    fixture.detectChanges();
+
+    const optionNativeElement: HTMLElement = fixture.debugElement.query(
+      By.directive(MatOption),
+    )!.nativeElement;
+    const optionInstance: MatOption = fixture.debugElement.query(
+      By.directive(MatOption),
+    )!.componentInstance;
+
+    optionInstance.deselect();
+    fixture.detectChanges();
+
+    expect(optionNativeElement.getAttribute('aria-selected')).toBe('false');
+  });
+
   describe('inside inert group', () => {
     let fixture: ComponentFixture<InsideGroup>;
 
