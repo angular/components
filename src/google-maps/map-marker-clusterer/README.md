@@ -1,6 +1,6 @@
 #MapMarkerClusterer
 
-The `MapMarkerClusterer` component wraps the [`MarkerClusterer` class](https://googlemaps.github.io/js-markerclustererplus/classes/markerclusterer.html) from the [Google Maps JavaScript MarkerClustererPlus Library](https://github.com/googlemaps/js-markerclustererplus). The `MapMarkerClusterer` component displays a cluster of markers that are children of the `<map-marker-clusterer>` tag. Unlike the other Google Maps components, MapMarkerClusterer does not have an `options` input, so any input (listed in the [documentation](https://googlemaps.github.io/js-markerclustererplus/index.html) for the `MarkerClusterer` class) should be set directly.
+The `MapMarkerClusterer` component wraps the [`MarkerClusterer` class](https://github.com/googlemaps/js-markerclusterer/blob/main/src/markerclusterer.ts) from the [Google Maps JavaScript MarkerClustererPlus Library](https://github.com/googlemaps/js-markerclusterer). The `MapMarkerClusterer` component displays a cluster of markers that are children of the `<map-marker-clusterer>` tag. Unlike the other Google Maps components, MapMarkerClusterer does not have an `options` input, so any input (listed in the [documentation](https://googlemaps.github.io/js-markerclustererplus/index.html) for the `MarkerClusterer` class) should be set directly.
 
 ## Loading the Library
 
