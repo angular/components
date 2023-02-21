@@ -95,6 +95,8 @@ export class MatBottomSheet implements OnDestroy {
       ..._config,
       // Disable closing since we need to sync it up to the animation ourselves.
       disableClose: true,
+      // Disable closing on detachments so that we can sync up the animation.
+      closeOnOverlayDetachments: false,
       maxWidth: '100%',
       container: MatBottomSheetContainer,
       scrollStrategy: _config.scrollStrategy || this._overlay.scrollStrategies.block(),
