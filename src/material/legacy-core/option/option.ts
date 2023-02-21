@@ -38,7 +38,7 @@ import {MatLegacyOptgroup} from './optgroup';
     '[class.mat-option-multiple]': 'multiple',
     '[class.mat-active]': 'active',
     '[id]': 'id',
-    '[attr.aria-selected]': '_getAriaSelected()',
+    '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-option-disabled]': 'disabled',
     '(click)': '_selectViaInteraction()',
