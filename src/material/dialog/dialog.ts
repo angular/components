@@ -170,6 +170,9 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       // We want to do the cleanup here, rather than the CDK service, because the CDK destroys
       // the dialogs immediately whereas we want it to wait for the animations to finish.
       closeOnDestroy: false,
+      // Disable closing on detachments so that we can sync up the animation.
+      // The Material dialog ref handles this manually.
+      closeOnOverlayDetachments: false,
       container: {
         type: this._dialogContainerType,
         providers: () => [
