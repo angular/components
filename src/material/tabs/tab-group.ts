@@ -567,9 +567,7 @@ export class MatTabGroup extends _MatTabGroupBase {
         ? defaultConfig.fitInkBarToContent
         : false;
     this.stretchTabs =
-      defaultConfig && defaultConfig.stretchTabs != null
-        ? defaultConfig.stretchTabs
-        : true;
+      defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
   }
 }
 
