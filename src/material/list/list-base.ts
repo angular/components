@@ -282,6 +282,9 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
       const treatAsTitle = this._titles.length === 0 && numberOfLines === 1;
       unscopedContentEl.classList.toggle('mdc-list-item__primary-text', treatAsTitle);
       unscopedContentEl.classList.toggle('mdc-list-item__secondary-text', !treatAsTitle);
+      if (unscopedContentEl.textContent) {
+        unscopedContentEl.textContent = unscopedContentEl.textContent.trim();
+      }
     } else {
       unscopedContentEl.classList.remove('mdc-list-item__primary-text');
       unscopedContentEl.classList.remove('mdc-list-item__secondary-text');

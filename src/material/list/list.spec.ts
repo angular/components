@@ -24,6 +24,7 @@ describe('MDC-based MatList', () => {
         ActionListWithType,
         ListWithDisabledItems,
         StandaloneListItem,
+        ListWithUnscopedListItem,
       ],
     });
 
@@ -377,6 +378,17 @@ describe('MDC-based MatList', () => {
       fixture.detectChanges();
     }).not.toThrow();
   });
+
+  it('should trim whitespaces from unscoped content of list item to prevent breaking symmetry', () => {
+    const fixture = TestBed.createComponent(ListWithUnscopedListItem);
+    const listItemUnscopedContent = fixture.debugElement.query(
+      By.css('.mat-mdc-list-item-unscoped-content'),
+    )!;
+    fixture.detectChanges();
+    expect(listItemUnscopedContent.nativeElement.textContent).toBe(
+      listItemUnscopedContent.nativeElement.textContent.trim(),
+    );
+  });
 });
 
 class BaseTestList {
@@ -571,3 +583,14 @@ class ListWithDisabledItems {
   template: `<mat-list-item></mat-list-item>`,
 })
 class StandaloneListItem {}
+
+@Component({
+  template: `
+  <mat-list>
+    <mat-list-item>
+      <span matListItemTitle>Title</span>
+      Paprika
+    </mat-list-item>
+  </mat-list>`,
+})
+class ListWithUnscopedListItem extends BaseTestList {}
