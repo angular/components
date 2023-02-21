@@ -23,7 +23,7 @@ import {By} from '@angular/platform-browser';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
-import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
@@ -31,6 +31,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
+import {Subject} from 'rxjs';
 import {DIALOG_DATA, Dialog, DialogModule, DialogRef} from './index';
 
 describe('Dialog', () => {
@@ -41,6 +42,7 @@ describe('Dialog', () => {
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
   let mockLocation: SpyLocation;
   let overlay: Overlay;
+  let scrolledSubject = new Subject();
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
@@ -59,6 +61,10 @@ describe('Dialog', () => {
       providers: [
         {provide: Location, useClass: SpyLocation},
         {provide: TEMPLATE_INJECTOR_TEST_TOKEN, useValue: 'hello from test module'},
+        {
+          provide: ScrollDispatcher,
+          useFactory: () => ({scrolled: () => scrolledSubject}),
+        },
       ],
     });
 
@@ -504,24 +510,28 @@ describe('Dialog', () => {
   }));
 
   it('should close all dialogs when the user goes forwards/backwards in history', fakeAsync(() => {
-    dialog.open(PizzaMsg);
+    const closeSpy = jasmine.createSpy('closed');
+    dialog.open(PizzaMsg).closed.subscribe(closeSpy);
     viewContainerFixture.detectChanges();
-    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg).closed.subscribe(closeSpy);
     viewContainerFixture.detectChanges();
 
     expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(2);
+    expect(closeSpy).not.toHaveBeenCalled();
 
     mockLocation.simulateUrlPop('');
     viewContainerFixture.detectChanges();
     flush();
 
     expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(0);
+    expect(closeSpy).toHaveBeenCalledTimes(2);
   }));
 
   it('should close all open dialogs when the location hash changes', fakeAsync(() => {
-    dialog.open(PizzaMsg);
+    const closeSpy = jasmine.createSpy('closed');
+    dialog.open(PizzaMsg).closed.subscribe(closeSpy);
     viewContainerFixture.detectChanges();
-    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg).closed.subscribe(closeSpy);
     viewContainerFixture.detectChanges();
 
     expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(2);
@@ -531,6 +541,28 @@ describe('Dialog', () => {
     flush();
 
     expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(0);
+  }));
+
+  it('should close the dialog when detached externally', fakeAsync(() => {
+    const closeSpy = jasmine.createSpy('closed');
+    dialog
+      .open(PizzaMsg, {scrollStrategy: overlay.scrollStrategies.close()})
+      .closed.subscribe(closeSpy);
+    viewContainerFixture.detectChanges();
+    dialog
+      .open(PizzaMsg, {scrollStrategy: overlay.scrollStrategies.close()})
+      .closed.subscribe(closeSpy);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(2);
+    expect(closeSpy).not.toHaveBeenCalled();
+
+    scrolledSubject.next();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(0);
+    expect(closeSpy).toHaveBeenCalledTimes(2);
   }));
 
   it('should have the componentInstance available in the afterClosed callback', fakeAsync(() => {

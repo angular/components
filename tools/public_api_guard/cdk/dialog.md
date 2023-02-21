@@ -127,6 +127,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     backdropClass?: string | string[];
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
+    closeOnOverlayDetachments?: boolean;
     componentFactoryResolver?: ComponentFactoryResolver;
     container?: Type<C> | {
         type: Type<C>;
