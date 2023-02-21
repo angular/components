@@ -622,6 +622,23 @@ describe('MDC-based MatTabGroup', () => {
         jasmine.objectContaining({index: 1}),
       );
     }));
+
+    it('should be able to disable the pagination', fakeAsync(() => {
+      fixture.componentInstance.disablePagination = true;
+      fixture.detectChanges();
+      tick();
+
+      for (let i = 0; i < 50; i++) {
+        fixture.componentInstance.tabs.push({label: `Extra ${i}`, content: ''});
+      }
+
+      fixture.detectChanges();
+      tick();
+
+      expect(
+        fixture.nativeElement.querySelector('.mat-mdc-tab-header-pagination-controls-enabled'),
+      ).toBeFalsy();
+    }));
   });
 
   describe('async tabs', () => {
@@ -1111,7 +1128,8 @@ class SimpleTabsTestApp {
     <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         (focusChange)="handleFocus($event)"
-        (selectedTabChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)"
+        [disablePagination]="disablePagination">
       <mat-tab *ngFor="let tab of tabs">
         <ng-template mat-tab-label>{{tab.label}}</ng-template>
         {{tab.content}}
@@ -1128,6 +1146,7 @@ class SimpleDynamicTabsTestApp {
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;
+  disablePagination = false;
   handleFocus(event: any) {
     this.focusEvent = event;
   }
