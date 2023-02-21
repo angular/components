@@ -1,5 +1,6 @@
-@use '../core/theming/theming';
+@use 'sass:map';
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/theming/theming';
 @use '../core/style/private';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/elevated-card' as m2-mdc-elevated-card;
@@ -7,10 +8,6 @@
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 @use '@material/typography' as mdc-typography;
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use 'sass:color';
-@use 'sass:map';
-@use 'sass:meta';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -21,6 +18,23 @@
   .mat-mdc-card {
     @include mdc-elevated-card-theme.theme($mdc-elevated-card-color-tokens);
     @include mdc-outlined-card-theme.theme($mdc-outlined-card-color-tokens);
+
+    // TODO(mmalerba): This should be based on tokens, but the elevation tokens don't seem to be
+    //  working currently. They wind up setting values like `box-shadow: var(--e); --e: 1`
+    @include private.private-theme-elevation(1, $config);
+  }
+
+  .mat-mdc-card-outlined {
+    // TODO(mmalerba): This should be based on tokens, but the elevation tokens don't seem to be
+    //  working currently. They wind up setting values like `box-shadow: var(--e); --e: 1`
+    @include private.private-theme-elevation(0, $config);
+  }
+
+  // Card subtitles are an Angular Material construct (not part of MDC),
+  // so we add their color styles here.
+  // TODO(mmalerba): Add custom tokens for this.
+  .mat-mdc-card-subtitle {
+    color: theming.get-color-from-palette(map.get($config, foreground), secondary-text);
   }
 }
 
@@ -34,6 +48,19 @@
   .mat-mdc-card {
     @include mdc-elevated-card-theme.theme($mdc-elevated-card-typography-tokens);
     @include mdc-outlined-card-theme.theme($mdc-outlined-card-typography-tokens);
+
+    // Card subtitles and titles are an Angular Material construct (not part of MDC),
+    // so we explicitly set their typographic styles here.
+    // TODO(mmalerba): Add custom tokens for this.
+    @include mdc-helpers.using-mdc-typography($config) {
+      .mat-mdc-card-title {
+        @include mdc-typography.typography(headline6);
+      }
+
+      .mat-mdc-card-subtitle {
+        @include mdc-typography.typography(subtitle2);
+      }
+    }
   }
 }
 

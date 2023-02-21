@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../../../theming/theming';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -12,40 +13,56 @@ $prefix: (mdc, outlined-card);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-      container-color: red,
-      container-elevation: 0,
-      container-shadow-color: red,
-      container-shape: 0,
-      container-surface-tint-layer-color: red,
-      disabled-container-elevation: 0,
-      disabled-outline-color: red,
-      disabled-outline-opacity: 0,
-      dragged-container-elevation: 0,
-      dragged-outline-color: red,
-      dragged-state-layer-color: red,
-      dragged-state-layer-opacity: 0,
-      focus-container-elevation: 0,
-      focus-outline-color: red,
-      focus-state-layer-color: red,
-      focus-state-layer-opacity: 0,
-      hover-container-elevation: 0,
-      hover-outline-color: red,
-      hover-state-layer-color: red,
-      hover-state-layer-opacity: 0,
-      icon-color: red,
-      icon-size: 0,
-      outline-color: red,
-      outline-width: 0,
-      pressed-container-elevation: 0,
-      pressed-outline-color: red,
-      pressed-state-layer-color: red,
-      pressed-state-layer-opacity: 0,
+    // The border-radius of the card.
+      container-shape: 4px,
+    // The thickness of the card's border.
+      outline-width: 1px,
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
+    // TODO(mmalerba): The elevation tokens don't seem to work currently.
+    //  Should work with MDC to figure out what's wrong.
+      container-elevation: null,
+      container-shadow-color: null,
+    // Angular Material's card is not an interactive element, and therefore does not support states.
+      disabled-container-elevation: null,
+      disabled-outline-color: null,
+      disabled-outline-opacity: null,
+      dragged-container-elevation: null,
+      dragged-outline-color: null,
+      dragged-state-layer-color: null,
+      dragged-state-layer-opacity: null,
+      focus-container-elevation: null,
+      focus-outline-color: null,
+      focus-state-layer-color: null,
+      focus-state-layer-opacity: null,
+      hover-container-elevation: null,
+      hover-outline-color: null,
+      hover-state-layer-color: null,
+      hover-state-layer-opacity: null,
+      pressed-container-elevation: null,
+      pressed-outline-color: null,
+      pressed-state-layer-color: null,
+      pressed-state-layer-opacity: null,
+    // Angular Material does not currently support surface tint.
+      container-surface-tint-layer-color: null,
+    // MDC does not seem to use these tokens.
+      icon-color: null,
+      icon-size: null,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($config) {
-  @return ();
+  $background: map.get($config, background);
+  $foreground: map.get($config, foreground);
+
+  @return (
+    // The background color of the card.
+      container-color: theming.get-color-from-palette($background, card),
+    // The border color of the card.
+      outline-color: theming.get-color-from-palette($foreground, base, 0.12),
+  );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
