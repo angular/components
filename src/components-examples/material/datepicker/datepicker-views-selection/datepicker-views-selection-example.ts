@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -45,6 +45,7 @@ export const MY_FORMATS = {
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DatepickerViewsSelectionExample {
   date = new FormControl(moment());
