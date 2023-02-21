@@ -8,7 +8,7 @@
 
 import {OverlayRef} from '@angular/cdk/overlay';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {DialogConfig} from './dialog-config';
 import {FocusOrigin} from '@angular/cdk/a11y';
 import {BasePortalOutlet} from '@angular/cdk/portal';
@@ -50,6 +50,9 @@ export class DialogRef<R = unknown, C = unknown> {
   /** Unique ID for the dialog. */
   readonly id: string;
 
+  /** Subscription to external detachments of the dialog. */
+  private _detachSubscription: Subscription;
+
   constructor(
     readonly overlayRef: OverlayRef,
     readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>,
@@ -72,6 +75,13 @@ export class DialogRef<R = unknown, C = unknown> {
         this.close(undefined, {focusOrigin: 'mouse'});
       }
     });
+
+    this._detachSubscription = overlayRef.detachments().subscribe(() => {
+      // Check specifically for `false`, because we want `undefined` to be treated like `true`.
+      if (config.closeOnOverlayDetachments !== false) {
+        this.close();
+      }
+    });
   }
 
   /**
@@ -83,6 +93,9 @@ export class DialogRef<R = unknown, C = unknown> {
     if (this.containerInstance) {
       const closedSubject = this.closed as Subject<R | undefined>;
       this.containerInstance._closeInteractionType = options?.focusOrigin || 'program';
+      // Drop the detach subscription first since it can be triggered by the
+      // `dispose` call and override the result of this closing sequence.
+      this._detachSubscription.unsubscribe();
       this.overlayRef.dispose();
       closedSubject.next(result);
       closedSubject.complete();
