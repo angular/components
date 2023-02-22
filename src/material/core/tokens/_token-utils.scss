@@ -78,3 +78,12 @@ $_component-prefix: null;
     @include mdc-theme.property($property, $value);
   }
 }
+
+// Merges together a list of maps into a single map.
+@function merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
+}
