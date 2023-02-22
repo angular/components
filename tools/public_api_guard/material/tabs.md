@@ -568,6 +568,7 @@ export interface MatTabsConfig {
     dynamicHeight?: boolean;
     fitInkBarToContent?: boolean;
     preserveContent?: boolean;
+    stretchTabs?: boolean;
 }
 
 // @public (undocumented)
