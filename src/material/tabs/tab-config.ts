@@ -36,6 +36,9 @@ export interface MatTabsConfig {
    * like iframes and videos from reloading next time it comes back into the view.
    */
   preserveContent?: boolean;
+
+  /** Whether tabs should be stretched to fill the header. */
+  stretchTabs?: boolean;
 }
 
 /** Injection token that can be used to provide the default options the tabs module. */
