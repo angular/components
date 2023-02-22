@@ -1,3 +1,18 @@
+<a name="15.1.6"></a>
+# 15.1.6 "fluorite-floss" (2023-02-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [248c41221](https://github.com/angular/components/commit/248c41221c0e7415827fa99359c9e25ac4afc039) | fix | **dialog:** not emitting closed event on external detachments ([#26608](https://github.com/angular/components/pull/26608)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [277f65a0f](https://github.com/angular/components/commit/277f65a0f5b5f61ac807e05753260fed7dfae346) | fix | **tabs:** disablePagination not working ([#26647](https://github.com/angular/components/pull/26647)) |
+## Special Thanks
+Joey Perrott and Kristiyan Kostadinov
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.1.5"></a>
 # 15.1.5 "highdensityfoam-pelican" (2023-02-16)
 ### material
