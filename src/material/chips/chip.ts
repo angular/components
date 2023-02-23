@@ -80,7 +80,7 @@ const _MatChipMixinBase = mixinTabIndex(
  * Extended by MatChipOption and MatChipRow for different interaction patterns.
  */
 @Component({
-  selector: 'mat-basic-chip, mat-chip',
+  selector: 'mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]',
   inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   exportAs: 'matChip',
   templateUrl: 'chip.html',
