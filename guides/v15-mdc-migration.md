@@ -271,6 +271,8 @@ DOM and CSS of the components, you may need to tweak some of your application's 
 
 ### Chips
 
+* Chips used to be directives, but they're now components. This means that they can't be applied to
+  other components anymore.
 * The chips component has been split into multiple variants corresponding with more appropriate
   interaction patterns for accessibility. The original `mat-chip-list` used `role="listbox"`, but
   this interaction pattern is not suited for all use-cases. The new chips have:
