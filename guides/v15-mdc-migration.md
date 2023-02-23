@@ -87,7 +87,7 @@ Angular Material includes a schematic to help migrate applications to use the ne
 components. To get started, upgrade your application to Angular Material 15.
 
 ```shell
-ng update @angular/material^15
+ng update @angular/material@15
 ```
 
 As part of this update, a schematic will run to automatically move your application to use the
