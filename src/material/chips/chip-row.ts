@@ -44,7 +44,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
  * the matChipInputFor directive.
  */
 @Component({
-  selector: 'mat-chip-row, mat-basic-chip-row',
+  selector: 'mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]',
   templateUrl: 'chip-row.html',
   styleUrls: ['chip.css'],
   inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],

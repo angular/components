@@ -39,7 +39,7 @@ export class MatChipSelectionChange {
  * user cannot click disabled chips.
  */
 @Component({
-  selector: 'mat-basic-chip-option, mat-chip-option',
+  selector: 'mat-basic-chip-option, [mat-basic-chip-option], mat-chip-option, [mat-chip-option]',
   templateUrl: 'chip-option.html',
   styleUrls: ['chip.css'],
   inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
