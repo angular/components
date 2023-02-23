@@ -88,6 +88,9 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 
   @Input() editable: boolean = false;
 
+  /** Function that maps option's control value to its display value. Used in case of editable="true" and having an object as value */
+  @Input() displayWith: ((value: any) => string) | null = null;
+
   /** Emitted when the chip is edited. */
   @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
     new EventEmitter<MatChipEditedEvent>();
@@ -178,7 +181,12 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
 
     // The value depends on the DOM so we need to extract it before we flip the flag.
-    const value = this.value;
+    let value: any;
+    if (this.displayWith) {
+      value = this.displayWith(this.value);
+    } else {
+      value = this.value;
+    }
 
     this._isEditing = true;
     this._editStartPending = true;

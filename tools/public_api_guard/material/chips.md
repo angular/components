@@ -386,6 +386,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     protected basicChipAttrName: string;
     contentEditInput?: MatChipEditInput;
     defaultEditInput?: MatChipEditInput;
+    displayWith: ((value: any) => string) | null;
     // (undocumented)
     _doubleclick(event: MouseEvent): void;
     // (undocumented)
@@ -399,7 +400,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     _isEditing: boolean;
     _mousedown(event: MouseEvent): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, mat-basic-chip-row", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "editable": "editable"; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "*", "[matChipEditInput]", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, mat-basic-chip-row", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "editable": "editable"; "displayWith": "displayWith"; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "*", "[matChipEditInput]", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipRow, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
