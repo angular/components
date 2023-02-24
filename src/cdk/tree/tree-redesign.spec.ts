@@ -26,6 +26,10 @@ import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
+/**
+ * This is a cloned version of `tree.spec.ts` that contains all the same tests,
+ * but modifies them to use the newer API.
+ */
 describe('CdkTree redesign', () => {
   /** Represents an indent for expectNestedTreeToMatch */
   const _ = {};
