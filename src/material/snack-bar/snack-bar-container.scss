@@ -90,6 +90,13 @@
       opacity: 0.1;
     }
   }
+
+  // MDC uses this pseudo element to work around an issue with their live announcer, but it
+  // can cause additional space for long snack bar messages (see #26685). Since we don't use
+  // MDC's announcer, we can hide the element.
+  .mdc-snackbar__label::before {
+    display: none;
+  }
 }
 
 // These elements need to have full width using flex layout.
