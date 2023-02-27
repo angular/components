@@ -10,6 +10,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   AfterViewInit,
+  AfterContentInit,
   Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,6 +26,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   Attribute,
+  ContentChildren,
+  QueryList,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -41,7 +44,7 @@ import {
   RippleGlobalOptions,
 } from '@angular/material/core';
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Subject} from 'rxjs';
+import {merge, Subject, Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {MatChipAvatar, MatChipTrailingIcon, MatChipRemove} from './chip-icons';
 import {MatChipAction} from './chip-action';
@@ -112,7 +115,14 @@ const _MatChipMixinBase = mixinTabIndex(
 })
 export class MatChip
   extends _MatChipMixinBase
-  implements AfterViewInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy
+  implements
+    AfterViewInit,
+    AfterContentInit,
+    CanColor,
+    CanDisableRipple,
+    CanDisable,
+    HasTabIndex,
+    OnDestroy
 {
   protected _document: Document;
 
@@ -137,8 +147,23 @@ export class MatChip
   /** Whether moving focus into the chip is pending. */
   private _pendingFocus: boolean;
 
+  /** Subscription to changes in the chip's actions. */
+  private _actionChanges: Subscription | undefined;
+
   /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
+
+  /** All avatars present in the chip. */
+  @ContentChildren(MAT_CHIP_AVATAR, {descendants: true})
+  protected _allLeadingIcons: QueryList<MatChipAvatar>;
+
+  /** All trailing icons present in the chip. */
+  @ContentChildren(MAT_CHIP_TRAILING_ICON, {descendants: true})
+  protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
+
+  /** All remove icons present in the chip. */
+  @ContentChildren(MAT_CHIP_REMOVE, {descendants: true})
+  protected _allRemoveIcons: QueryList<MatChipRemove>;
 
   _hasFocus() {
     return this._hasFocusInternal;
@@ -259,8 +284,19 @@ export class MatChip
     }
   }
 
+  ngAfterContentInit(): void {
+    // Since the styling depends on the presence of some
+    // actions, we have to mark for check on changes.
+    this._actionChanges = merge(
+      this._allLeadingIcons.changes,
+      this._allTrailingIcons.changes,
+      this._allRemoveIcons.changes,
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
+    this._actionChanges?.unsubscribe();
     this.destroyed.emit({chip: this});
     this.destroyed.complete();
   }
