@@ -46,9 +46,9 @@ const _MatChipSetMixinBase = mixinTabIndex(MatChipSetBase);
 @Component({
   selector: 'mat-chip-set',
   template: `
-    <span class="mdc-evolution-chip-set__chips" role="presentation">
+    <div class="mdc-evolution-chip-set__chips" role="presentation">
       <ng-content></ng-content>
-    </span>
+    </div>
   `,
   styleUrls: ['chip-set.css'],
   host: {
