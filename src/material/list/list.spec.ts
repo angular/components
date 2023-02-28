@@ -1,6 +1,6 @@
 import {fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {Component, QueryList, ViewChildren} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
@@ -22,6 +22,8 @@ describe('MDC-based MatList', () => {
         NavListWithActivatedItem,
         ActionListWithoutType,
         ActionListWithType,
+        ActionListWithDisabledList,
+        ActionListWithDisabledItem,
         ListWithDisabledItems,
         StandaloneListItem,
       ],
@@ -377,6 +379,34 @@ describe('MDC-based MatList', () => {
       fixture.detectChanges();
     }).not.toThrow();
   });
+
+  it('should be able to disable and enable the entire action list', () => {
+    const fixture = TestBed.createComponent(ActionListWithDisabledList);
+    const listItems: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('[mat-list-item]'),
+    );
+    fixture.detectChanges();
+
+    expect(listItems.every(listItem => listItem.hasAttribute('disabled'))).toBe(true);
+
+    fixture.componentInstance.disableList = false;
+    fixture.detectChanges();
+
+    expect(listItems.every(listItem => !listItem.hasAttribute('disabled'))).toBe(true);
+  });
+
+  it('should be able to disable and enable button item', () => {
+    const fixture = TestBed.createComponent(ActionListWithDisabledItem);
+    const buttonItem: HTMLButtonElement = fixture.nativeElement.querySelector('[mat-list-item]');
+    fixture.detectChanges();
+
+    expect(buttonItem.hasAttribute('disabled')).toBe(true);
+
+    fixture.componentInstance.buttonItem.disabled = false;
+    fixture.detectChanges();
+
+    expect(buttonItem.hasAttribute('disabled')).toBe(false);
+  });
 });
 
 class BaseTestList {
@@ -458,6 +488,31 @@ class ActionListWithoutType extends BaseTestList {
 })
 class ActionListWithType extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+}
+
+@Component({
+  template: `
+  <mat-action-list [disabled]="disableList">
+    <button mat-list-item *ngFor="let item of items">
+      {{item.name}}
+    </button>
+  </mat-action-list>`,
+})
+class ActionListWithDisabledList extends BaseTestList {
+  disableList = true;
+}
+
+@Component({
+  template: `
+  <mat-action-list>
+    <button mat-list-item [disabled]="disableItem">
+      Paprika
+    </button>
+  </mat-action-list>`,
+})
+class ActionListWithDisabledItem extends BaseTestList {
+  @ViewChild(MatListItem) buttonItem: MatListItem;
+  disableItem = true;
 }
 
 @Component({

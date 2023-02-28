@@ -77,6 +77,7 @@ export abstract class MatListBase {
   host: {
     '[class.mdc-list-item--disabled]': 'disabled',
     '[attr.aria-disabled]': 'disabled',
+    '[attr.disabled]': '(_isButtonElement && disabled) || null',
   },
 })
 /** @docs-private */
@@ -97,6 +98,9 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
 
   /** Host element for the list item. */
   _hostElement: HTMLElement;
+
+  /** indicate whether the host element is a button or not */
+  _isButtonElement: boolean;
 
   /** Whether animations are disabled. */
   _noopAnimations: boolean;
@@ -177,6 +181,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   ) {
     this.rippleConfig = globalRippleOptions || {};
     this._hostElement = this._elementRef.nativeElement;
+    this._isButtonElement = this._hostElement.nodeName.toLowerCase() === 'button';
     this._noopAnimations = animationMode === 'NoopAnimations';
 
     if (_listBase && !_listBase._isNonInteractive) {
@@ -186,10 +191,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
     // If no type attribute is specified for a host `<button>` element, set it to `button`. If a
     // type attribute is already specified, we do nothing. We do this for backwards compatibility.
     // TODO: Determine if we intend to continue doing this for the MDC-based list.
-    if (
-      this._hostElement.nodeName.toLowerCase() === 'button' &&
-      !this._hostElement.hasAttribute('type')
-    ) {
+    if (this._isButtonElement && !this._hostElement.hasAttribute('type')) {
       this._hostElement.setAttribute('type', 'button');
     }
   }
