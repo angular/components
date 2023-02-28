@@ -41,20 +41,20 @@ font weight, font size, and letter spacing. Angular Material uses the [typograph
 from the 2018 version of the Material Design specification][2018-typography], outlined in the
 table below.
 
-| Name            | Description                                                                  |
-|-----------------|------------------------------------------------------------------------------|
-| `headline-1`     | One-off header, usually at the top of the page (e.g. a hero header).        |
-| `headline-2`     | One-off header, usually at the top of the page (e.g. a hero header).        |
-| `headline-3`     | One-off header, usually at the top of the page (e.g. a hero header).        |
-| `headline-4`     | One-off header, usually at the top of the page (e.g. a hero header).        |
-| `headline-5`     | Section heading corresponding to the `<h1>` tag.                            |
-| `headline-6`     | Section heading corresponding to the `<h2>` tag.                            |
-| `subtitle-1`     | Section heading corresponding to the `<h3>` tag.                            |
-| `subtitle-2`     | Section heading corresponding to the `<h4>` tag.                            |
-| `body-1`         | Bolder body text.                                                             |
-| `body-2`         | Base body text.                                                           |
-| `caption`        | Smaller body and hint text.                                                 |
-| `button`         | Buttons and anchors.                                                        |
+| Name            | Description                                                  |
+|-----------------|--------------------------------------------------------------|
+| `headline-1`     | One-off header, usually at the top of the page (e.g. a hero header). |
+| `headline-2`     | One-off header, usually at the top of the page (e.g. a hero header). |
+| `headline-3`     | One-off header, usually at the top of the page (e.g. a hero header). |
+| `headline-4`     | One-off header, usually at the top of the page (e.g. a hero header). |
+| `headline-5`     | Section heading corresponding to the `<h1>` tag.             |
+| `headline-6`     | Section heading corresponding to the `<h2>` tag.             |
+| `subtitle-1`     | Section heading corresponding to the `<h3>` tag.             |
+| `subtitle-2`     | Section heading corresponding to the `<h4>` tag.             |
+| `body-1`         | Base body text.                                              |
+| `body-2`         | Secondary body text.                                         |
+| `caption`        | Smaller body and hint text.                                  |
+| `button`         | Buttons and anchors.                                         |
 
 [2018-typography]: https://m2.material.io/design/typography/the-type-system.html#type-scale
 
