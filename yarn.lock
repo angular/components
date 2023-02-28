@@ -2091,15 +2091,6 @@
   resolved "https://registry.yarnpkg.com/@bazel/buildifier/-/buildifier-6.0.1.tgz#3ef5ce4f807db2ec0838ac889775a081fe9208f8"
   integrity sha512-PKOx5srLU7K1x0BQhiqu78lrxwvgimx+JRe5JXgiPfyA2/iMB1aNn41BozVMmWnEF/DUKbls6DOaNk83kgraag==
 
-"@bazel/concatjs@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/concatjs/-/concatjs-5.7.3.tgz#a1111713e3e33d3e4ffc4fb5119ef478d2c9916e"
-  integrity sha512-fhqIwX3DT5p9Gy1K6gzBNXHxUmcERKampdsHE2ew5dbXSCFrShwvur3sIuMnp6YVYbHZBUGnx7HtUw5Z34q8mg==
-  dependencies:
-    protobufjs "6.8.8"
-    source-map-support "0.5.9"
-    tsutils "3.21.0"
-
 "@bazel/concatjs@5.8.1":
   version "5.8.1"
   resolved "https://registry.yarnpkg.com/@bazel/concatjs/-/concatjs-5.8.1.tgz#dd20882429e382cae79c08cbd3238dfc680d2d67"
@@ -2108,11 +2099,6 @@
     protobufjs "6.8.8"
     source-map-support "0.5.9"
     tsutils "3.21.0"
-
-"@bazel/esbuild@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/esbuild/-/esbuild-5.7.3.tgz#98a82b69bafd9b68dcf9aba340d67727a777bcbc"
-  integrity sha512-SzOmPlvI3rzYz73tHNVl3GlvfSo+NFZzuQQeJWhUq3JMHLYjUU14A9nY0WhBKTamD4MatJg9mUJOdOnXvOVtxQ==
 
 "@bazel/esbuild@5.8.1":
   version "5.8.1"
@@ -2124,45 +2110,30 @@
   resolved "https://registry.yarnpkg.com/@bazel/ibazel/-/ibazel-0.16.2.tgz#05dd7f06659759fda30f87b15534f1e42f1201bb"
   integrity sha512-KgqAWMH0emL6f3xH6nqyTryoBMqlJ627LBIe9PT1PRRQPz2FtHib3FIHJPukp1slzF3hJYZvdiVwgPnHbaSOOA==
 
-"@bazel/jasmine@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-5.7.3.tgz#1ff86f5391e4a0509f94befaf6ef0f354b9be7cf"
-  integrity sha512-5U01yBW1vL7hBpkAZt1ZouzszL2QIw8yfkEfnprfnKlYAGqK48hpxmYV7bZy1UV5PCKlLRfwtY0bADY1ah7I1Q==
+"@bazel/jasmine@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-5.8.1.tgz#c549f10806474ff742f37544733fbfdccf78ba66"
+  integrity sha512-052veW5EbJRH+5hL4l9Sf99bTmdKQ5WXXMF0QiBOZcA3ZHYMAaKfYNO+brutiWoX6FrBloiskLrMzF8OiHBqyw==
   dependencies:
     c8 "~7.5.0"
     jasmine-reporters "~2.5.0"
-
-"@bazel/protractor@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-5.7.3.tgz#848d874a5f7d504bfeaebfdd6a7cc90a69eb7aeb"
-  integrity sha512-7/qwN7fnj8AspaMBqQv9kf//+CvbpIJwQKidLq2e1djJZ5EDBfcHbCKy16s5nrecwl3q7IMJXyxj4jh4k41OTg==
 
 "@bazel/protractor@5.8.1":
   version "5.8.1"
   resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-5.8.1.tgz#d006187e132721e607e8f49a49eb160511554be5"
   integrity sha512-6JpP4uQLVRu3m0GrpexDjICKK8YJW/9voc8rZFQxVf3sm8yNjapUVN/b/PBAwua+nDY3uMe3W9aHgStZFOST0A==
 
-"@bazel/rollup@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/rollup/-/rollup-5.7.3.tgz#5bfa0ca324a4c0df7018389f9ed127a286a06041"
-  integrity sha512-OfZWQZcNRiA5hd2DCQZZ2k5IQ2R13PHwlfiTQPhRWiFNnijCu4EZSDHZkmMN9XGMMC5OP+K0gvDTRvkWl4mIfA==
+"@bazel/rollup@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@bazel/rollup/-/rollup-5.8.1.tgz#ee876c35595b456f700d258385412e4f0dd57c15"
+  integrity sha512-Ys+UWbRp1TY2j+z15N+SZgID/nuqAtJTgJDsz0NZVjm8F8KzmgXxLDnBb/cUKFVk83pNOAi84G/bq1tINjMSNA==
   dependencies:
-    "@bazel/worker" "5.7.3"
-
-"@bazel/runfiles@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/runfiles/-/runfiles-5.7.3.tgz#d359bb9fae52ff0fb1bea870bc74b6ded357fda2"
-  integrity sha512-GKN9mdquGwZZroVJTItoNgzDxjZihQZ78C3dDlLpZVlBqm0FyXsYnKOPpEGrtbuFehO0LSMdqVhS390o/vvTSQ==
+    "@bazel/worker" "5.8.1"
 
 "@bazel/runfiles@5.8.1":
   version "5.8.1"
   resolved "https://registry.yarnpkg.com/@bazel/runfiles/-/runfiles-5.8.1.tgz#737d5b3dc9739767054820265cfe432a80564c82"
   integrity sha512-NDdfpdQ6rZlylgv++iMn5FkObC/QlBQvipinGLSOguTYpRywmieOyJ29XHvUilspwTFSILWpoE9CqMGkHXug1g==
-
-"@bazel/terser@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/terser/-/terser-5.7.3.tgz#28411aaa8f6bb1bb5543d7f5d39ee2ce84443bd9"
-  integrity sha512-tk3/iEYspWego6ICBKEttEUH/dsTpV88BhHYLCpkMIzF6JIUc7hKagek3dpjOA1UHAPOGX9gx5dsp181jPfp6Q==
 
 "@bazel/terser@5.8.1":
   version "5.8.1"
@@ -2178,13 +2149,6 @@
     semver "5.6.0"
     source-map-support "0.5.9"
     tsutils "3.21.0"
-
-"@bazel/worker@5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-5.7.3.tgz#cfe01294a0a98b0bcf3e736d66b1ed1535cbcf4c"
-  integrity sha512-P3Qo3bTw/NgxkcUNdUTb5j8jm6qIzRvKmFYMMyUyUBN0b7sAB6Qlk0QAP9Lok9+G9TbCXmmbT0dauftsH2x5fQ==
-  dependencies:
-    google-protobuf "^3.6.1"
 
 "@bazel/worker@5.8.1":
   version "5.8.1"
