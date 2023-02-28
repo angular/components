@@ -8,7 +8,7 @@
 
 import {Migration, getPropertyNameText} from '@angular/cdk/schematics';
 import {SchematicContext} from '@angular-devkit/schematics';
-import {ComponentMigrator, LEGACY_MODULES} from '../index';
+import {ComponentMigrator, CORE_COMPONENTS, LEGACY_MODULES} from '../index';
 import * as ts from 'typescript';
 import {ThemingStylesMigration} from '../theming-styles';
 import {TemplateMigration} from '../template-migration';
@@ -65,6 +65,16 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
       });
   }
 
+  private _importPathHasComponentToMigrate(importTextPath: string): boolean {
+    const lastImportName = importTextPath.split('/').slice(-1)[0];
+    return !!this.upgradeData.find(componentMigrator => {
+      return (
+        lastImportName.includes(componentMigrator.component) ||
+        (lastImportName === 'legacy-core' && CORE_COMPONENTS.includes(componentMigrator.component))
+      );
+    });
+  }
+
   /** Finds the imported symbols in a file that need to be migrated. */
   private _findImportsToMigrate(sourceFile: ts.SourceFile) {
     const importSpecifiersToNewNames = new Map<ts.ImportSpecifier, string>();
@@ -77,7 +87,8 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
         ts.isStringLiteral(statement.moduleSpecifier) &&
         statement.importClause?.namedBindings &&
         ts.isNamedImports(statement.importClause.namedBindings) &&
-        LEGACY_MODULES.has(statement.moduleSpecifier.text)
+        LEGACY_MODULES.has(statement.moduleSpecifier.text) &&
+        this._importPathHasComponentToMigrate(statement.moduleSpecifier.text)
       ) {
         statement.importClause.namedBindings.elements.forEach(element => {
           const oldName = (element.propertyName || element.name).text;

@@ -385,6 +385,78 @@ describe('runtime code migration', () => {
     );
   });
 
+  it('should not replace imports from non selected components', async () => {
+    declareLibrarySymbols('legacy-button', 'export declare class MatLegacyButtonModule {};');
+    declareLibrarySymbols('legacy-checkbox', 'export declare class MatLegacyCheckboxModule {};');
+
+    await runMigrationTest(
+      `
+        import {NgModule} from '@angular/core';
+        import {MatLegacyButtonModule} from '@angular/material/legacy-button';
+        import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
+
+        @NgModule({imports: [MatLegacyButtonModule, MatLegacyCheckboxModule]})
+        export class AppModule {}
+      `,
+      `
+        import {NgModule} from '@angular/core';
+        import {MatButtonModule} from '@angular/material/button';
+        import {MatLegacyCheckboxModule} from '@angular/material/legacy-checkbox';
+
+        @NgModule({imports: [MatButtonModule, MatLegacyCheckboxModule]})
+        export class AppModule {}
+      `,
+    );
+  });
+
+  it('should migrate legacy-core symbols when option or optgroup is choosen for migration', async () => {
+    declareLibrarySymbols('legacy-select', 'export declare class MatLegacySelectModule {};');
+
+    async function runMigrationSelectTest(oldFileContent: string, newFileContent: string) {
+      cliAppTree.overwrite(APP_MODULE_FILE, oldFileContent);
+      const tree = await migrateComponents(['select'], runner, cliAppTree);
+      expect(tree.readContent(APP_MODULE_FILE)).toBe(newFileContent);
+    }
+
+    await runMigrationSelectTest(
+      `
+        import {NgModule} from '@angular/core';
+        import {MatLegacySelectModule as MatSelectModule} from '@angular/material/legacy-select';
+        import {MatLegacyOptionModule as MatOptionModule, LEGACY_VERSION as VERSION} from '@angular/material/legacy-core';
+
+        @NgModule({imports: [MatSelectModule, MatOptionModule]})
+        export class AppModule {}
+      `,
+      `
+        import {NgModule} from '@angular/core';
+        import {MatSelectModule} from '@angular/material/select';
+        import {MatOptionModule, VERSION} from '@angular/material/core';
+
+        @NgModule({imports: [MatSelectModule, MatOptionModule]})
+        export class AppModule {}
+      `,
+    );
+  });
+
+  it('should not migrate legacy-core symbols when option or optgroup are not choosen for migration', async () => {
+    await runMigrationTest(
+      `
+        import {NgModule} from '@angular/core';
+        import {MatLegacyOptionModule as MatOptionModule, LEGACY_VERSION as VERSION} from '@angular/material/legacy-core';
+
+        @NgModule({imports: [MatOptionModule]})
+        export class AppModule {}
+      `,
+      `
+        import {NgModule} from '@angular/core';
+        import {MatLegacyOptionModule as MatOptionModule, LEGACY_VERSION as VERSION} from '@angular/material/legacy-core';
+
+        @NgModule({imports: [MatOptionModule]})
+        export class AppModule {}
+      `,
+    );
+  });
+
   it('should migrate styles for a component', async () => {
     await runMigrationTest(
       `
