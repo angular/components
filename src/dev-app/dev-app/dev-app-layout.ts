@@ -130,7 +130,7 @@ export class DevAppLayout {
   currentDensityIndex = 0;
 
   /** List of possible global density scale values. */
-  densityScales = [0, -1, -2, 'minimum', 'maximum'];
+  densityScales = [0, -1, -2, -3, 'minimum', 'maximum'];
 
   /** Whether animations are disabled. */
   animationsDisabled = localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true';
