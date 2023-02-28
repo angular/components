@@ -203,3 +203,5 @@ export const PERMANENT_MIGRATORS: ComponentMigrator[] = [
     styles: new TypographyHierarchyStylesMigrator(),
   },
 ];
+
+export const CORE_COMPONENTS = ['option', 'optgroup'];
