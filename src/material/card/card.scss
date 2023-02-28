@@ -1,10 +1,56 @@
 @use '@material/card' as mdc-card;
-@use '@material/card/variables' as mdc-card-variables;
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
-@use '../core/mdc-helpers/mdc-helpers';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/card' as tokens-mat-card;
+@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
+@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 
 // TODO(jelbourn): move header and title-group styles to their own files.
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-elevated-card-token-slots: tokens-mdc-elevated-card.get-token-slots();
+  $mdc-outlined-card-token-slots: tokens-mdc-outlined-card.get-token-slots();
+
+  // Add the MDC card static styles.
+  @include mdc-card.static-styles();
+
+  .mat-mdc-card {
+    // Add the official slots for the MDC elevated-card.
+    @include mdc-elevated-card-theme.theme-styles($mdc-elevated-card-token-slots);
+
+    // Add default values for MDC card tokens that aren't outputted by the theming API.
+    @include mdc-elevated-card-theme.theme(tokens-mdc-elevated-card.get-unthemable-tokens());
+    @include mdc-outlined-card-theme.theme(tokens-mdc-outlined-card.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+            tokens-mat-card.$prefix, tokens-mat-card.get-unthemable-tokens());
+  }
+
+  .mat-mdc-card-outlined {
+    // Add the official slots for the MDC outlined-card.
+    @include mdc-outlined-card-theme.theme-styles($mdc-outlined-card-token-slots);
+  }
+
+  // Add slots for custom Angular Material card tokens.
+  @include token-utils.use-tokens(tokens-mat-card.$prefix, tokens-mat-card.get-token-slots()) {
+    .mat-mdc-card-title {
+      @include token-utils.create-token-slot(font-family, title-text-font);
+      @include token-utils.create-token-slot(line-height, title-text-line-height);
+      @include token-utils.create-token-slot(font-size, title-text-size);
+      @include token-utils.create-token-slot(letter-spacing, title-text-tracking);
+      @include token-utils.create-token-slot(font-weight, title-text-weight);
+    }
+
+    .mat-mdc-card-subtitle {
+      @include token-utils.create-token-slot(color, subtitle-text-color);
+      @include token-utils.create-token-slot(font-family, subtitle-text-font);
+      @include token-utils.create-token-slot(line-height, subtitle-text-line-height);
+      @include token-utils.create-token-slot(font-size, subtitle-text-size);
+      @include token-utils.create-token-slot(letter-spacing, subtitle-text-tracking);
+      @include token-utils.create-token-slot(font-weight, subtitle-text-weight);
+    }
+  }
+}
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -12,29 +58,8 @@ $mat-card-header-size: 40px !default;
 // Default padding for text content within a card.
 $mat-card-default-padding: 16px !default;
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  // Include all MDC card styles except for color and typography.
-  @include mdc-card.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-}
-
 .mat-mdc-card {
   position: relative;
-
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include mdc-elevated-card-theme.theme-styles((
-      container-color: transparent,
-      container-shape: mdc-card-variables.$shape-radius,
-    ));
-  }
-}
-
-.mat-mdc-card-outlined {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include mdc-outlined-card-theme.theme-styles((
-      outline-color: transparent,
-      outline-width: 1px,
-    ));
-  }
 }
 
 // Title text and subtitles text within a card. MDC doesn't have pre-made title sections for cards.

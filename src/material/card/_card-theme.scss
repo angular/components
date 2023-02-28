@@ -1,70 +1,65 @@
 @use '../core/theming/theming';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private';
 @use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/card' as tokens-mat-card;
+@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
+@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
-@use '@material/typography' as mdc-typography;
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use 'sass:color';
-@use 'sass:map';
-@use 'sass:meta';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $foreground: map.get($config, foreground);
+  $mdc-elevated-card-color-tokens: tokens-mdc-elevated-card.get-color-tokens($config);
+  $mdc-outlined-card-color-tokens: tokens-mdc-outlined-card.get-color-tokens($config);
+  $mat-card-color-tokens: tokens-mat-card.get-color-tokens($config);
 
-  @include mdc-helpers.using-mdc-theme($config) {
-    $on-surface: mdc-theme-color.prop-value(on-surface);
-    $surface: mdc-theme-color.prop-value(surface);
+  // Add values for card tokens.
+  .mat-mdc-card {
+    @include mdc-elevated-card-theme.theme($mdc-elevated-card-color-tokens);
+    @include mdc-outlined-card-theme.theme($mdc-outlined-card-color-tokens);
+    @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-color-tokens);
 
-    .mat-mdc-card {
-      // MDC's theme has `container-elevation` and `container-shadow-color` tokens, but we can't
-      // use them because they output under a `.mdc-card` selector whereas the rest of the theme
-      // isn't under any selector. Even if the mixin is pulled out of the selector, it throws a
-      // different error.
-      @include private.private-theme-elevation(1, $config);
-      @include mdc-elevated-card-theme.theme((
-        container-color: $surface,
-      ));
-    }
+    // TODO(mmalerba): This should be based on tokens, but the elevation tokens don't seem to be
+    //  working currently. They wind up setting values like `box-shadow: var(--e); --e: 1`
+    @include private.private-theme-elevation(1, $config);
+  }
 
-    .mat-mdc-card-outlined {
-      @include private.private-theme-elevation(0, $config);
-      @include mdc-outlined-card-theme.theme((
-        outline-color: if(
-          meta.type-of($on-surface) == color and meta.type-of($surface) == color,
-          color.mix($on-surface, $surface, 12%),
-          $on-surface
-        )
-      ));
-    }
-
-    // Card subtitles are an Angular Material construct (not MDC), so we explicitly set their
-    // color to secondary text here.
-    .mat-mdc-card-subtitle {
-      color: theming.get-color-from-palette($foreground, secondary-text);
-    }
+  .mat-mdc-card-outlined {
+    // TODO(mmalerba): This should be based on tokens, but the elevation tokens don't seem to be
+    //  working currently. They wind up setting values like `box-shadow: var(--e); --e: 1`
+    @include private.private-theme-elevation(0, $config);
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    // Card subtitles and titles are an Angular Material construct (not MDC), so we explicitly
-    // set their typographic styles here.
-    .mat-mdc-card-title {
-      @include mdc-typography.typography(headline6);
-    }
+          theming.get-typography-config($config-or-theme));
+  $mdc-elevated-card-typography-tokens: tokens-mdc-elevated-card.get-typography-tokens($config);
+  $mdc-outlined-card-typography-tokens: tokens-mdc-outlined-card.get-typography-tokens($config);
+  $mat-card-typography-tokens: tokens-mat-card.get-typography-tokens($config);
 
-    .mat-mdc-card-subtitle {
-      @include mdc-typography.typography(subtitle2);
-    }
+  // Add values for card tokens.
+  .mat-mdc-card {
+    @include mdc-elevated-card-theme.theme($mdc-elevated-card-typography-tokens);
+    @include mdc-outlined-card-theme.theme($mdc-outlined-card-typography-tokens);
+    @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-typography-tokens);
   }
 }
 
-@mixin density($config-or-theme) {}
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+  $mdc-elevated-card-density-tokens: tokens-mdc-elevated-card.get-density-tokens($density-scale);
+  $mdc-outlined-card-density-tokens: tokens-mdc-outlined-card.get-density-tokens($density-scale);
+  $mat-card-density-tokens: tokens-mat-card.get-density-tokens($density-scale);
+
+  // Add values for card tokens.
+  .mat-mdc-card {
+    @include mdc-elevated-card-theme.theme($mdc-elevated-card-density-tokens);
+    @include mdc-outlined-card-theme.theme($mdc-outlined-card-density-tokens);
+    @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-density-tokens);
+  }
+}
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
