@@ -12,16 +12,15 @@ import {
   NullableDevkitMigration,
   TargetVersion,
 } from '@angular/cdk/schematics';
-import {LegacyComponentsMigration} from './migrations/legacy-components-v15';
 
 import {materialUpgradeData} from './upgrade-data';
 
-const materialMigrations: NullableDevkitMigration[] = [LegacyComponentsMigration];
+const materialMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular Material v15 */
-export function updateToV15(): Rule {
+/** Entry point for the migration schematics with target of Angular Material v16 */
+export function updateToV16(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V15,
+    TargetVersion.V16,
     materialMigrations,
     materialUpgradeData,
     onMigrationComplete,
