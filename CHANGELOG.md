@@ -1,3 +1,27 @@
+<a name="15.2.1"></a>
+# 15.2.1 "silicone-soliloquy" (2023-03-01)
+## Breaking Changes
+### 
+- the description for body-1 and body-2 has changed
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9a57674fea](https://github.com/angular/components/commit/9a57674feae46a26a086b3b8e6abb38c54e95118) | fix | **chips:** allow attribute selectors for chips ([#26683](https://github.com/angular/components/pull/26683)) |
+| [fdf1dc4b07](https://github.com/angular/components/commit/fdf1dc4b07c3044140d5f38634d716b6f58824fc) | fix | **chips:** chips should assume their minimum density rather than error for small densities ([#26688](https://github.com/angular/components/pull/26688)) |
+| [d61443b62d](https://github.com/angular/components/commit/d61443b62d30eda39d1d8f3ef896991d618569f8) | fix | **chips:** remove spans from top level of component ([#26689](https://github.com/angular/components/pull/26689)) |
+| [5e67c1a345](https://github.com/angular/components/commit/5e67c1a345a2829dd53bdb82a60f90f448d5bc96) | fix | **chips:** styling not updating when actions are removed ([#26696](https://github.com/angular/components/pull/26696)) |
+| [a87735e4ba](https://github.com/angular/components/commit/a87735e4bacd5f6abc4c8933c8198ce984df0f33) | fix | **list:** add disabled attribute for mat-list-item buttons ([#26672](https://github.com/angular/components/pull/26672)) |
+| [54d157f3d2](https://github.com/angular/components/commit/54d157f3d2b629d6e025ab92edfd64172a81decd) | fix | **schematics:** migrate to mdc components selectively bug ([#26427](https://github.com/angular/components/pull/26427)) |
+| [4338e5ee57](https://github.com/angular/components/commit/4338e5ee5724a28a434f2d04d3e1f29d43c4a0b3) | fix | **snack-bar:** misaligned lines on safari for long messages ([#26692](https://github.com/angular/components/pull/26692)) |
+### 
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b71fa77f7d](https://github.com/angular/components/commit/b71fa77f7da620fa10dee32503c772758b15413f) | docs | reverse body-1 and body-2 typography description ([#26330](https://github.com/angular/components/pull/26330)) |
+## Special Thanks
+Hamza jayri, Kristiyan Kostadinov, Matthieu Riegler, Miles Malerba, OneSidedPrism, VICTORIA JOHNSON and llorenspujol
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.0"></a>
 # 15.2.0 "sodalite-soda" (2023-02-22)
 ### cdk
