@@ -1,3 +1,15 @@
+<a name="16.0.0-next.0"></a>
+# 16.0.0-next.0 "adenosine-aside" (2023-03-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [506bca5712](https://github.com/angular/components/commit/506bca5712c1b170668eb92d81dac89c7f70a8c7) | feat | **tabs:** add `stretchTabs` to `MatTabsConfig` ([#26644](https://github.com/angular/components/pull/26644)) |
+| [8a32172678](https://github.com/angular/components/commit/8a32172678cf4f1732f4029d26a3266f5599991f) | fix | **card:** refactor to depend on @angular/material/core/tokens ([#26674](https://github.com/angular/components/pull/26674)) |
+## Special Thanks
+Alan Agius, Joel Kesler, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.1"></a>
 # 15.2.1 "silicone-soliloquy" (2023-03-01)
 ## Breaking Changes
