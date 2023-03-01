@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {ResolvedResource} from '../../update-tool/component-resource-collector';
 import {Migration} from '../../update-tool/migration';
-import {findAllSubstringIndices} from '../typescript/literal';
 import {UpgradeData} from '../upgrade-data';
 
 /**
