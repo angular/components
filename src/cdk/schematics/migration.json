@@ -6,6 +6,11 @@
       "description": "Updates the Angular CDK to v15",
       "factory": "./ng-update/index#updateToV15"
     },
+    "migration-v16": {
+      "version": "16.0.0-0",
+      "description": "Updates the Angular CDK to v16",
+      "factory": "./ng-update/index#updateToV16"
+    },
     "ng-post-update": {
       "description": "Prints out results after ng-update.",
       "factory": "./ng-update/index#postUpdate",
