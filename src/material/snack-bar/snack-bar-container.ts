@@ -14,11 +14,13 @@ import {
   Directive,
   ElementRef,
   EmbeddedViewRef,
+  inject,
   NgZone,
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {matSnackBarAnimations} from './snack-bar-animations';
 import {
   BasePortalOutlet,
@@ -34,12 +36,17 @@ import {AnimationEvent} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {MatSnackBarConfig} from './snack-bar-config';
 
+let uniqueId = 0;
+
 /**
  * Base class for snack bar containers.
  * @docs-private
  */
 @Directive()
 export abstract class _MatSnackBarContainerBase extends BasePortalOutlet implements OnDestroy {
+  private _document = inject(DOCUMENT);
+  private _trackedModals = new Set<Element>();
+
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
 
@@ -72,6 +79,9 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
    * JAWS does not read out aria-live message.
    */
   _role?: 'status' | 'alert';
+
+  /** Unique ID of the aria-live element. */
+  readonly _liveElementId = `mat-snack-bar-container-live-${uniqueId++}`;
 
   constructor(
     private _ngZone: NgZone,
@@ -188,6 +198,7 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
   /** Makes sure the exit callbacks have been invoked when the element is destroyed. */
   ngOnDestroy() {
     this._destroyed = true;
+    this._clearFromModals();
     this._completeExit();
   }
 
@@ -220,6 +231,54 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
         element.classList.add(panelClasses);
       }
     }
+
+    this._exposeToModals();
+  }
+
+  /**
+   * Some browsers won't expose the accessibility node of the live element if there is an
+   * `aria-modal` and the live element is outside of it. This method works around the issue by
+   * pointing the `aria-owns` of all modals to the live element.
+   */
+  private _exposeToModals() {
+    // TODO(crisbeto): consider de-duplicating this with the `LiveAnnouncer`.
+    // Note that the selector here is limited to CDK overlays at the moment in order to reduce the
+    // section of the DOM we need to look through. This should cover all the cases we support, but
+    // the selector can be expanded if it turns out to be too narrow.
+    const id = this._liveElementId;
+    const modals = this._document.querySelectorAll(
+      'body > .cdk-overlay-container [aria-modal="true"]',
+    );
+
+    for (let i = 0; i < modals.length; i++) {
+      const modal = modals[i];
+      const ariaOwns = modal.getAttribute('aria-owns');
+      this._trackedModals.add(modal);
+
+      if (!ariaOwns) {
+        modal.setAttribute('aria-owns', id);
+      } else if (ariaOwns.indexOf(id) === -1) {
+        modal.setAttribute('aria-owns', ariaOwns + ' ' + id);
+      }
+    }
+  }
+
+  /** Clears the references to the live element from any modals it was added to. */
+  private _clearFromModals() {
+    this._trackedModals.forEach(modal => {
+      const ariaOwns = modal.getAttribute('aria-owns');
+
+      if (ariaOwns) {
+        const newValue = ariaOwns.replace(this._liveElementId, '').trim();
+
+        if (newValue.length > 0) {
+          modal.setAttribute('aria-owns', newValue);
+        } else {
+          modal.removeAttribute('aria-owns');
+        }
+      }
+    });
+    this._trackedModals.clear();
   }
 
   /** Asserts that no content is already attached to the container. */
