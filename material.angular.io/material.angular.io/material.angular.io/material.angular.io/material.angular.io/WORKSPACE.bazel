@@ -2,9 +2,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "aspect_bazel_lib",
-    sha256 = "3534a27621725fbbf1d3e53daa0c1dda055a2732d9031b8c579f917d7347b6c4",
-    strip_prefix = "bazel-lib-1.16.1",
-    url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.16.1.tar.gz",
+    sha256 = "2518c757715d4f5fc7cc7e0a68742dd1155eaafc78fb9196b8a18e13a738cea2",
+    strip_prefix = "bazel-lib-1.28.0",
+    url = "https://github.com/aspect-build/bazel-lib/releases/download/v1.28.0/bazel-lib-v1.28.0.tar.gz",
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
@@ -13,9 +13,9 @@ aspect_bazel_lib_dependencies()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "dda5fee3926e62c483660b35b25d1577d23f88f11a2775e3555b57289f4edb12",
-    strip_prefix = "rules_js-1.6.9",
-    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.6.9.tar.gz",
+    sha256 = "1aa0ab76d1f9520bb8993e2d84f82da2a9c87da1e6e8d121dbb4c857a292c2cd",
+    strip_prefix = "rules_js-1.20.1",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v1.20.1/rules_js-v1.20.1.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -62,8 +62,9 @@ load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 
 npm_translate_lock(
     name = "npm",
-    package_json = "//:package.json",
+    data = ["//:package.json"],
     yarn_lock = "//:yarn.lock",
+    pnpm_lock = "//:pnpm-lock.yaml",
     npmrc = "//:.npmrc",
     verify_node_modules_ignored = "//:.bazelignore",
     patches = {
