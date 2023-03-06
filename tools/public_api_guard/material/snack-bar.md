@@ -142,6 +142,7 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
     enter(): void;
     exit(): Observable<void>;
     _live: AriaLivePoliteness;
+    readonly _liveElementId: string;
     ngOnDestroy(): void;
     onAnimationEnd(event: AnimationEvent_2): void;
     readonly _onAnnounce: Subject<void>;
