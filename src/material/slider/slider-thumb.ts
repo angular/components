@@ -123,6 +123,9 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
 
   ngOnDestroy() {
     const input = this._sliderInputEl;
+    if (!input) {
+      return;
+    }
     input.removeEventListener('pointermove', this._onPointerMove);
     input.removeEventListener('pointerdown', this._onDragStart);
     input.removeEventListener('pointerup', this._onDragEnd);
