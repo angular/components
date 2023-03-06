@@ -28,6 +28,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
+type DisableDrinkOption = 'none' | 'first-middle-last' | 'all';
+
 @Component({
   selector: 'select-demo',
   templateUrl: 'select-demo.html',
@@ -50,7 +52,7 @@ export class SelectDemo {
   drinkObjectRequired = false;
   pokemonRequired = false;
   drinksDisabled = false;
-  drinksOptionsDisabled = false;
+  drinksOptionsDisabled: DisableDrinkOption = 'none';
   pokemonDisabled = false;
   pokemonOptionsDisabled = false;
   showSelect = false;
@@ -203,5 +205,19 @@ export class SelectDemo {
 
   toggleSelected() {
     this.currentAppearanceValue = this.currentAppearanceValue ? null : this.digimon[0].value;
+  }
+
+  isDrinkOptionDisabled(index: number) {
+    if (this.drinksOptionsDisabled === 'all') {
+      return true;
+    }
+    if (this.drinksOptionsDisabled === 'first-middle-last') {
+      return (
+        index === 0 ||
+        index === this.drinks.length - 1 ||
+        index === Math.floor(this.drinks.length / 2)
+      );
+    }
+    return false;
   }
 }

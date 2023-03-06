@@ -252,7 +252,9 @@ export abstract class _MatAutocompleteBase
   }
 
   ngAfterContentInit() {
-    this._keyManager = new ActiveDescendantKeyManager<_MatOptionBase>(this.options).withWrap();
+    this._keyManager = new ActiveDescendantKeyManager<_MatOptionBase>(this.options)
+      .withWrap()
+      .skipPredicate(this._skipPredicate);
     this._activeOptionChanges = this._keyManager.change.subscribe(index => {
       if (this.isOpen) {
         this.optionActivated.emit({source: this, option: this.options.toArray()[index] || null});
@@ -318,6 +320,10 @@ export abstract class _MatAutocompleteBase
     classList['mat-warn'] = this._color === 'warn';
     classList['mat-accent'] = this._color === 'accent';
   }
+
+  protected _skipPredicate(option: _MatOptionBase) {
+    return option.disabled;
+  }
 }
 
 @Component({
@@ -362,5 +368,23 @@ export class MatAutocomplete extends _MatAutocompleteBase {
         option._changeDetectorRef.markForCheck();
       }
     }
+  }
+
+  // `skipPredicate` determines if key manager should avoid putting a given option in the tab
+  // order. Allow disabled list items to receive focus via keyboard to align with WAI ARIA
+  // recommendation.
+  //
+  // Normally WAI ARIA's instructions are to exclude disabled items from the tab order, but it
+  // makes a few exceptions for compound widgets.
+  //
+  // From [Developing a Keyboard Interface](
+  // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/):
+  //   "For the following composite widget elements, keep them focusable when disabled: Options in a
+  //   Listbox..."
+  //
+  // The user can focus disabled options using the keyboard, but the user cannot click disabled
+  // options.
+  protected override _skipPredicate(_option: _MatOptionBase) {
+    return false;
   }
 }

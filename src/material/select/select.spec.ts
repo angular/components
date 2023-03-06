@@ -1057,12 +1057,12 @@ describe('MDC-based MatSelect', () => {
             fixture.detectChanges();
           });
 
-          expect(host.getAttribute('aria-activedescendant')).toBe(options[4].id);
+          expect(host.getAttribute('aria-activedescendant')).toBe(options[3].id);
 
           dispatchKeyboardEvent(host, 'keydown', UP_ARROW);
           fixture.detectChanges();
 
-          expect(host.getAttribute('aria-activedescendant')).toBe(options[3].id);
+          expect(host.getAttribute('aria-activedescendant')).toBe(options[2].id);
         }));
 
         it('should not change the aria-activedescendant using the horizontal arrow keys', fakeAsync(() => {
@@ -2453,14 +2453,12 @@ describe('MDC-based MatSelect', () => {
         host = groupFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
         panel = overlayContainerElement.querySelector('.mat-mdc-select-panel')! as HTMLElement;
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 8; i++) {
           dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
         }
 
-        // Note that we press down 5 times, but it will skip
-        // 3 options because the second group is disabled.
         // <top padding> + <(option index + group labels) * height> - <panel height> =
-        //    8 + (9 + 3) * 48 - 275 = 309
+        //    8 + (8 + 3) * 48 - 275 = 309
         expect(panel.scrollTop).withContext('Expected scroll to be at the 9th option.').toBe(309);
       }));
 
@@ -4465,6 +4463,7 @@ describe('MDC-based MatSelect', () => {
     const fixture = TestBed.createComponent(SelectInNgContainer);
     expect(() => fixture.detectChanges()).not.toThrow();
   }));
+
   describe('page up/down with disabled options', () => {
     let fixture: ComponentFixture<BasicSelectWithFirstAndLastOptionDisabled>;
     let host: HTMLElement;
@@ -4484,30 +4483,30 @@ describe('MDC-based MatSelect', () => {
       host = fixture.debugElement.query(By.css('mat-select'))!.nativeElement;
     }));
 
-    it('should scroll to the second one pressing PAGE_UP, because the first one is disabled', fakeAsync(() => {
+    it('should be able to scroll to disabled option when pressing PAGE_UP', fakeAsync(() => {
       expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(1);
 
       dispatchKeyboardEvent(host, 'keydown', PAGE_UP);
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(1);
+      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(0);
 
       dispatchKeyboardEvent(host, 'keydown', PAGE_UP);
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(1);
+      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(0);
     }));
 
-    it('should scroll by PAGE_DOWN to the one before the last, because last one is disabled', fakeAsync(() => {
+    it('should be able to scroll to disabled option when pressing PAGE_DOWN', fakeAsync(() => {
       dispatchKeyboardEvent(host, 'keydown', PAGE_DOWN);
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(6);
+      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(7);
 
       dispatchKeyboardEvent(host, 'keydown', PAGE_DOWN);
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(6);
+      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(7);
     }));
   });
 });

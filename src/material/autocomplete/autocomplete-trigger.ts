@@ -748,16 +748,29 @@ export abstract class _MatAutocompleteTriggerBase
   }
 
   /**
-   * Resets the active item to -1 so arrow events will activate the
-   * correct options, or to 0 if the consumer opted into it.
+   * Reset the active item to -1. This is so that pressing arrow keys will activate the correct
+   * option.
+   *
+   * If the consumer opted-in to automatically activatating the first option, activate the first
+   * *enabled* option.
    */
   private _resetActiveItem(): void {
     const autocomplete = this.autocomplete;
 
     if (autocomplete.autoActiveFirstOption) {
-      // Note that we go through `setFirstItemActive`, rather than `setActiveItem(0)`, because
-      // the former will find the next enabled option, if the first one is disabled.
-      autocomplete._keyManager.setFirstItemActive();
+      // Find the index of the first *enabled* option. Avoid calling `_keyManager.setActiveItem`
+      // because it activates the first option that passes the skip predicate, rather than the
+      // first *enabled* option.
+      let firstEnabledOptionIndex = -1;
+
+      for (let index = 0; index < autocomplete.options.length; index++) {
+        const option = autocomplete.options.get(index)!;
+        if (!option.disabled) {
+          firstEnabledOptionIndex = index;
+          break;
+        }
+      }
+      autocomplete._keyManager.setActiveItem(firstEnabledOptionIndex);
     } else {
       autocomplete._keyManager.setActiveItem(-1);
     }
