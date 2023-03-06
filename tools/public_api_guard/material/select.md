@@ -104,6 +104,8 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
     protected _scrollOptionIntoView(index: number): void;
     // (undocumented)
     get shouldLabelFloat(): boolean;
+    // (undocumented)
+    protected _skipPredicate: (option: MatOption) => boolean;
     _syncParentProperties(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "hideSingleSelectionIndicator": "hideSingleSelectionIndicator"; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
@@ -204,6 +206,8 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     setDescribedByIds(ids: string[]): void;
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
+    // (undocumented)
+    protected _skipPredicate(item: MatOption): boolean;
     sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
     toggle(): void;
     trigger: ElementRef;

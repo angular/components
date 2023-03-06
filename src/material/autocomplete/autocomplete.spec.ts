@@ -2307,6 +2307,23 @@ describe('MDC-based MatAutocomplete', () => {
       }),
     );
 
+    it('should not activate any option if all options are disabled', fakeAsync(() => {
+      const testComponent = fixture.componentInstance;
+      testComponent.trigger.autocomplete.autoActiveFirstOption = true;
+      for (const state of testComponent.states) {
+        state.disabled = true;
+      }
+      testComponent.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      const selectedOptions = overlayContainerElement.querySelectorAll(
+        'mat-option.mat-mdc-option-active',
+      );
+      expect(selectedOptions.length).withContext('expected no options to be active').toBe(0);
+    }));
+
     it('should remove aria-activedescendant when panel is closed with autoActiveFirstOption', fakeAsync(() => {
       const input: HTMLElement = fixture.nativeElement.querySelector('input');
 

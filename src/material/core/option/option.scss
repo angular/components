@@ -32,8 +32,19 @@
   &.mdc-list-item--disabled {
     // This is the same as `mdc-list-mixins.list-disabled-opacity` which
     // we can't use directly, because it comes with some selectors.
-    opacity: mdc-list-variables.$content-disabled-opacity;
     cursor: default;
+
+    // Reduce opacity of the contents of a disabled item to give a "grayed out" appearance. Avoid
+    // changing opacity of the option element itself to support focusing on disabled options using
+    // keyboard.
+    > * {
+      opacity: mdc-list-variables.$content-disabled-opacity;
+    }
+
+    // Prevent clicking on disabled options with mouse. Support focusing on disabled option using
+    // keyboard, but not with mouse.
+    pointer-events: none;
+
   }
 
   // Note that we bump the padding here, rather than padding inside the

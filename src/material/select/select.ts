@@ -912,6 +912,10 @@ export abstract class _MatSelectBase<C>
     return false;
   }
 
+  protected _skipPredicate(item: MatOption): boolean {
+    return item.disabled;
+  }
+
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options)
@@ -920,7 +924,8 @@ export abstract class _MatSelectBase<C>
       .withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr')
       .withHomeAndEnd()
       .withPageUpDown()
-      .withAllowedModifierKeys(['shiftKey']);
+      .withAllowedModifierKeys(['shiftKey'])
+      .skipPredicate(this._skipPredicate);
 
     this._keyManager.tabOut.subscribe(() => {
       if (this.panelOpen) {
@@ -1047,12 +1052,24 @@ export abstract class _MatSelectBase<C>
 
   /**
    * Highlights the selected item. If no option is selected, it will highlight
-   * the first item instead.
+   * the first *enabled* option.
    */
   private _highlightCorrectOption(): void {
     if (this._keyManager) {
       if (this.empty) {
-        this._keyManager.setFirstItemActive();
+        // Find the index of the first *enabled* option. Avoid calling `_keyManager.setActiveItem`
+        // because it activates the first option that passes the skip predicate, rather than the
+        // first *enabled* option.
+        let firstEnabledOptionIndex = -1;
+        for (let index = 0; index < this.options.length; index++) {
+          const option = this.options.get(index)!;
+          if (!option.disabled) {
+            firstEnabledOptionIndex = index;
+            break;
+          }
+        }
+
+        this._keyManager.setActiveItem(firstEnabledOptionIndex);
       } else {
         this._keyManager.setActiveItem(this._selectionModel.selected[0]);
       }
@@ -1316,4 +1333,30 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
       }
     }
   }
+
+  // `skipPredicate` determines if key manager should avoid putting a given option in the tab
+  // order. Allow disabled list items to receive focus via keyboard to align with WAI ARIA
+  // recommendation.
+  //
+  // Normally WAI ARIA's instructions are to exclude disabled items from the tab order, but it
+  // makes a few exceptions for compound widgets.
+  //
+  // From [Developing a Keyboard Interface](
+  // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/):
+  //   "For the following composite widget elements, keep them focusable when disabled: Options in a
+  //   Listbox..."
+  //
+  // The user can focus disabled options using the keyboard, but the user cannot click disabled
+  // options.
+  protected override _skipPredicate = (option: MatOption) => {
+    if (this.panelOpen) {
+      // Support keyboard focusing disabled options in an ARIA listbox.
+      return false;
+    }
+
+    // When the panel is closed, skip over disabled options. Support options via the UP/DOWN arrow
+    // keys on a closed select. ARIA listbox interaction pattern is less relevant when the panel is
+    // closed.
+    return option.disabled;
+  };
 }

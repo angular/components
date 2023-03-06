@@ -75,6 +75,8 @@ export class MatAutocomplete extends _MatAutocompleteBase {
     set hideSingleSelectionIndicator(value: BooleanInput);
     optionGroups: QueryList<MatOptgroup>;
     options: QueryList<MatOption>;
+    // (undocumented)
+    protected _skipPredicate(_option: _MatOptionBase): boolean;
     _syncParentProperties(): void;
     // (undocumented)
     protected _visibleClass: string;
@@ -133,6 +135,8 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     _setScrollTop(scrollTop: number): void;
     _setVisibility(): void;
     showPanel: boolean;
+    // (undocumented)
+    protected _skipPredicate(option: _MatOptionBase): boolean;
     template: TemplateRef<any>;
     protected abstract _visibleClass: string;
     // (undocumented)
