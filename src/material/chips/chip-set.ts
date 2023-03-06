@@ -189,20 +189,18 @@ export class MatChipSet
   }
 
   /**
-   * Removes the `tabindex` from the chip grid and resets it back afterwards, allowing the
-   * user to tab out of it. This prevents the grid from capturing focus and redirecting
+   * Removes the `tabindex` from the chip set and resets it back afterwards, allowing the
+   * user to tab out of it. This prevents the set from capturing focus and redirecting
    * it back to the first chip, creating a focus trap, if it user tries to tab away.
    */
   protected _allowFocusEscape() {
-    const previousTabIndex = this.tabIndex;
-
     if (this.tabIndex !== -1) {
+      const previousTabIndex = this.tabIndex;
       this.tabIndex = -1;
 
-      Promise.resolve().then(() => {
-        this.tabIndex = previousTabIndex;
-        this._changeDetectorRef.markForCheck();
-      });
+      // Note that this needs to be a `setTimeout`, because a `Promise.resolve`
+      // doesn't allow enough time for the focus to escape.
+      setTimeout(() => (this.tabIndex = previousTabIndex));
     }
   }
 
