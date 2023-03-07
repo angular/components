@@ -1,36 +1,26 @@
-@use 'sass:map';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '@angular/cdk';
 @use '@material/circular-progress/circular-progress' as mdc-circular-progress;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/tokens/m2/mdc/circular-progress' as m2-mdc-circular-progress;
 
+// The slots for tokens that will be configured in the theme can be emitted with no fallback.
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-circular-progress-token-slots: m2-mdc-circular-progress.get-token-slots();
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-circular-progress.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+  // Add the MDC progress spinner static styles.
+  @include mdc-circular-progress.static-styles();
+
+  .mat-mdc-progress-spinner {
+    // Add the official slots for the MDC circular progress.
+    @include mdc-circular-progress-theme.theme-styles($mdc-circular-progress-token-slots);
+
+    // Add default values for tokens that aren't outputted by the theming API.
+    @include mdc-circular-progress-theme.theme(m2-mdc-circular-progress.get-unthemable-tokens());
+  }
 }
 
 .mat-mdc-progress-spinner {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include mdc-circular-progress-theme.theme-styles(map.merge(
-      mdc-circular-progress-theme.$light-theme,
-      (
-        active-indicator-color: transparent,
-
-        // We don't support the multi color variant so we exclude these variables.
-        four-color-active-indicator-four-color: null,
-        four-color-active-indicator-one-color: null,
-        four-color-active-indicator-three-color: null,
-        four-color-active-indicator-two-color: null,
-
-        // We currently size the element ourselves so we can exclude these styles as well.
-        // TODO(crisbeto): look into reusing MDC's styles by binding to a CSS variable
-        // in our own template.
-        active-indicator-width: null,
-        size: null,
-      )
-    ));
-  }
-
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
   display: block;
 
@@ -43,7 +33,8 @@
   line-height: 0;
 
   &._mat-animation-noopable {
-    &, .mdc-circular-progress__determinate-circle {
+    &,
+    .mdc-circular-progress__determinate-circle {
       // The spinner itself has a transition on `opacity`.
       transition: none;
     }
