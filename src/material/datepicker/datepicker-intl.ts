@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Optional, SkipSelf} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /** Datepicker data that requires internationalization. */
@@ -75,15 +75,3 @@ export class MatDatepickerIntl {
     return `${start} to ${end}`;
   }
 }
-
-/** @docs-private */
-export function MAT_DATEPICKER_INTL_PROVIDER_FACTORY(parentIntl: MatDatepickerIntl) {
-  return parentIntl || new MatDatepickerIntl();
-}
-
-/** @docs-private */
-export const MAT_DATEPICKER_INTL_PROVIDER = {
-  provide: MatDatepickerIntl,
-  deps: [[new Optional(), new SkipSelf(), MatDatepickerIntl]],
-  useFactory: MAT_DATEPICKER_INTL_PROVIDER_FACTORY,
-};

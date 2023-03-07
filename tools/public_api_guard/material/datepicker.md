@@ -48,7 +48,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -107,16 +106,6 @@ export type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D :
 
 // @public
 export const MAT_DATE_RANGE_SELECTION_STRATEGY: InjectionToken<MatDateRangeSelectionStrategy<any>>;
-
-// @public
-export const MAT_DATEPICKER_INTL_PROVIDER: {
-    provide: typeof MatDatepickerIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_DATEPICKER_INTL_PROVIDER_FACTORY;
-};
-
-// @public
-export function MAT_DATEPICKER_INTL_PROVIDER_FACTORY(parentIntl: MatDatepickerIntl): MatDatepickerIntl;
 
 // @public
 export const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;

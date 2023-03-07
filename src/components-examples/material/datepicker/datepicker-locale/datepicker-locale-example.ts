@@ -9,11 +9,6 @@ import 'moment/locale/ja';
 import 'moment/locale/fr';
 import {MatDatepickerIntl} from '@angular/material/datepicker';
 
-@Injectable()
-export class DatepickerIntl extends MatDatepickerIntl {
-  override closeCalendarLabel = 'カレンダーを閉じる';
-}
-
 /** @title Datepicker with different locale */
 @Component({
   selector: 'datepicker-locale-example',
@@ -32,7 +27,6 @@ export class DatepickerIntl extends MatDatepickerIntl {
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
-    {provide: MatDatepickerIntl, useClass: DatepickerIntl},
     {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
   ],
 })
@@ -41,7 +35,10 @@ export class DatepickerLocaleExample {
     private _adapter: DateAdapter<any>,
     private _intl: MatDatepickerIntl,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
-  ) {}
+  ) {
+    this._intl.closeCalendarLabel = 'カレンダーを閉じる';
+    this._intl.changes.next();
+  }
 
   french() {
     this._locale = 'fr';
