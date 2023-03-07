@@ -183,7 +183,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   updateBufferSize(minBufferPx: number, maxBufferPx: number) {
     if (maxBufferPx < minBufferPx) {
-      throw 'CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx';
+      throw Error('CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx');
     }
     this._minBufferPx = minBufferPx;
     this._maxBufferPx = maxBufferPx;
