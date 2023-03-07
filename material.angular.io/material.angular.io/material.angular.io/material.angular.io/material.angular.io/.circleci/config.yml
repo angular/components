@@ -28,11 +28,11 @@ var_4: &save_cache
   save_cache:
     key: *cache_key
     paths:
-    - "node_modules"
+      - 'node_modules'
 
 var_5: &yarn_install
   run:
-    name: "Installing project dependencies"
+    name: 'Installing project dependencies'
     command: yarn install --frozen-lockfile --non-interactive
 
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
@@ -58,12 +58,12 @@ jobs:
   lint:
     <<: *job_defaults
     steps:
-    - checkout
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - run: yarn lint
-    - *save_cache
+      - checkout
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - run: yarn lint
+      - *save_cache
 
   build:
     <<: *job_defaults
@@ -72,24 +72,24 @@ jobs:
     # https://circleci.com/docs/2.0/configuration-reference/#resource_class
     resource_class: large
     steps:
-    - checkout
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - run: yarn prod-build
-    - *save_cache
-    - store_build_output
+      - checkout
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - run: yarn prod-build
+      - *save_cache
+      - store_build_output
 
   test:
     <<: *job_defaults
     steps:
-    - checkout
-    - browser-tools/install-chrome
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - browser-tools/install-browser-tools
-    - run: yarn test --watch false --progress=false
+      - checkout
+      - browser-tools/install-chrome
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - browser-tools/install-browser-tools
+      - run: yarn test --watch false --progress=false
 
   lighthouse_audits:
     <<: *job_defaults
@@ -106,69 +106,77 @@ jobs:
     <<: *job_defaults
     resource_class: large
     steps:
-    - checkout
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - run: yarn bazel build //...
-    - *save_cache
+      - checkout
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - run:
+          command: yarn bazel build //...
+          environment:
+            # TODO: Remove when pnpm is exclusively used.
+            ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
+      - *save_cache
 
   bazel-test:
     <<: *job_defaults
     resource_class: large
     steps:
-    - checkout
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - run: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
-    - *save_cache
-    - store_artifacts:
-        path: bazel-testlogs/
-    - store_artifacts:
-        path: bazel-testlogs/scenes/
+      - checkout
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - run:
+          command: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
+          environment:
+            # TODO: Remove when pnpm is exclusively used.
+            ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
+      - *save_cache
+      - store_artifacts:
+          path: bazel-testlogs/
+      - store_artifacts:
+          path: bazel-testlogs/scenes/
 
   bazel-lint:
     <<: *job_defaults
     resource_class: large
     steps:
-    - checkout
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - run: yarn bazel test --test_tag_filters=+lint //...
-    - *save_cache
-    - store_artifacts:
-        path: bazel-testlogs/
-    - store_artifacts:
-        path: bazel-testlogs/scenes/
+      - checkout
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - run: yarn bazel test --test_tag_filters=+lint //...
+      - *save_cache
+      - store_artifacts:
+          path: bazel-testlogs/
+      - store_artifacts:
+          path: bazel-testlogs/scenes/
 
   bazel-lighthouse_audits:
     <<: *job_defaults
     resource_class: xlarge
     steps:
-    - checkout
-    - restore_cache:
-        key: *cache_key
-    - *yarn_install
-    - run: yarn bazel test --test_tag_filters=+audit //...
-    - *save_cache
-    - store_artifacts:
-        path: bazel-testlogs/
-    - store_artifacts:
-        path: bazel-testlogs/scenes/
+      - checkout
+      - restore_cache:
+          key: *cache_key
+      - *yarn_install
+      - run: yarn bazel test --test_tag_filters=+audit //...
+      - *save_cache
+      - store_artifacts:
+          path: bazel-testlogs/
+      - store_artifacts:
+          path: bazel-testlogs/scenes/
 
 workflows:
   version: 2
   default_workflow:
     jobs:
-    - lint
-    - build
-    - test
-    - lighthouse_audits:
-        requires:
-          - build
-    - bazel-build
-    - bazel-test
-    - bazel-lighthouse_audits
-    - bazel-lint
+      - lint
+      - build
+      - test
+      - lighthouse_audits:
+          requires:
+            - build
+      - bazel-build
+      - bazel-test
+      - bazel-lighthouse_audits
+      - bazel-lint
