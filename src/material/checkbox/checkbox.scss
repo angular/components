@@ -197,7 +197,7 @@
     }
   }
 
-  // Apply base styles to the MDC ripple to adjust appearance for state changes (hover, focus, press)
+  // Apply base styles to the MDC ripple when not hovered, focused, or pressed.
   .mdc-checkbox__ripple {
     opacity: 0;
   }
