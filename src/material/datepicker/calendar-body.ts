@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,6 +20,7 @@ import {
   SimpleChanges,
   OnDestroy,
   AfterViewChecked,
+  inject,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 
@@ -71,6 +73,8 @@ let calendarBodyId = 1;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
+  private _platform = inject(Platform);
+
   /**
    * Used to skip the next focus event when rendering the preview range.
    * We need a flag like this, because some browsers fire focus events asynchronously.
@@ -177,8 +181,11 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
       element.addEventListener('blur', this._leaveHandler, true);
       element.addEventListener('mousedown', this._mousedownHandler);
       element.addEventListener('touchstart', this._mousedownHandler);
-      window.addEventListener('mouseup', this._mouseupHandler);
-      window.addEventListener('touchend', this._touchendHandler);
+
+      if (this._platform.isBrowser) {
+        window.addEventListener('mouseup', this._mouseupHandler);
+        window.addEventListener('touchend', this._touchendHandler);
+      }
     });
   }
 
@@ -232,8 +239,11 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     element.removeEventListener('blur', this._leaveHandler, true);
     element.removeEventListener('mousedown', this._mousedownHandler);
     element.removeEventListener('touchstart', this._mousedownHandler);
-    window.removeEventListener('mouseup', this._mouseupHandler);
-    window.removeEventListener('touchend', this._touchendHandler);
+
+    if (this._platform.isBrowser) {
+      window.removeEventListener('mouseup', this._mouseupHandler);
+      window.removeEventListener('touchend', this._touchendHandler);
+    }
   }
 
   /** Returns whether a cell is active. */
