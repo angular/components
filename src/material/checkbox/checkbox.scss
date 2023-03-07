@@ -1,18 +1,15 @@
+@use 'sass:map';
 @use '@angular/cdk';
 @use '@material/checkbox/checkbox' as mdc-checkbox;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
-@use '@material/ripple' as mdc-ripple;
 @use '@material/touch-target' as mdc-touch-target;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
-@use 'sass:map';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/token-utils';
-
-@use './checkbox-private';
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   // Add the checkbox static styles.
