@@ -31,8 +31,6 @@
   $private-ease-in-out-curve-function, $private-swift-ease-out-duration, $private-xsmall;
 @forward './core/typography/typography' show private-typography-to-2014-config,
   private-typography-to-2018-config;
-@forward './checkbox/checkbox-private' show private-checkbox-styles-with-color,
-  $private-checkbox-theme-config;
 @forward './table/table-flex-styles' show private-table-flex-styles;
 @forward './core/style/menu-common' as private-menu-common-*;
 @forward './core/style/button-common' as private-button-common-*;
