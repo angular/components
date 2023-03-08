@@ -25,7 +25,7 @@
     "scenes:generate": "ng e2e --port 4201 scenes && yarn scenes:optimize",
     "scenes:optimize": "node tools/optimize-scene-screenshots",
     "test:audit:localhost": "node tools/audit-docs dist/material-angular-io",
-    "test:audit:bazel": "node tools/audit-docs $(bazel cquery --output=files //:build.production)",
+    "test:audit:bazel": "node tools/audit-docs $(bazel cquery --output=files //mio:build.production)",
     "test:audit:ci": "node tools/audit-docs ../dist/material-angular-io"
   },
   "private": true,
