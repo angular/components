@@ -173,6 +173,6 @@ npm_translate_lock(
     },
 )
 
-load("@npm//:repositories.bzl", "npm_repositories")
+load("@npm_mio//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
