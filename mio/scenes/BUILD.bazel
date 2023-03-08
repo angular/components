@@ -1,4 +1,4 @@
-load("//:defs.bzl", "ng_app")
+load("//mio:defs.bzl", "ng_app")
 
 package(default_visibility = ["//visibility:public"])
 
