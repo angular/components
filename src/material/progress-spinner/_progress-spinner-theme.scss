@@ -1,27 +1,23 @@
 @use 'sass:map';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
+@use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
-
-
-@mixin _palette-styles($config, $palette) {
-  $color: theming.get-color-from-palette(map.get($config, $palette));
-  @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
-}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-progress-spinner {
-      @include _palette-styles($config, primary);
+  $mdc-circular-progress-color-tokens: tokens-mdc-circular-progress.get-color-tokens($config);
 
-      &.mat-accent {
-        @include _palette-styles($config, accent);
-      }
+  .mat-mdc-progress-spinner {
+    @include mdc-circular-progress-theme.theme($mdc-circular-progress-color-tokens);
 
-      &.mat-warn {
-        @include _palette-styles($config, warn);
-      }
+    &.mat-accent {
+      $color: theming.get-color-from-palette(map.get($config, accent));
+      @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
+    }
+
+    &.mat-warn {
+      $color: theming.get-color-from-palette(map.get($config, warn));
+      @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
     }
   }
 }
