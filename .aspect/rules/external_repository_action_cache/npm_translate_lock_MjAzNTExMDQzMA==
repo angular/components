@@ -1,0 +1,6 @@
+# Input hashes for repository rule npm_translate_lock(name = "npm_mio", pnpm_lock = "//mio:pnpm-lock.yaml").
+# This file should be checked into version control along with the pnpm-lock.yaml file.
+mio/.npmrc=-1306950124
+mio/pnpm-lock.yaml=-499422130
+mio/yarn.lock=2045546914
+mio/package.json=-1343479525
