@@ -1,3 +1,22 @@
+<a name="16.0.0-next.1"></a>
+# 16.0.0-next.1 "jade-jacket" (2023-03-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [168619b12](https://github.com/angular/components/commit/168619b12425978476cebd6b060c007e57b5d3af) | fix | **chips:** unable to shift + tab out of a chip set ([#26727](https://github.com/angular/components/pull/26727)) |
+| [4c8f50554](https://github.com/angular/components/commit/4c8f50554466db6049eeb21e6875347fb3a1e6fd) | fix | **core:** mat-option sets aria-selected="false" ([#26673](https://github.com/angular/components/pull/26673)) |
+| [fbca2e931](https://github.com/angular/components/commit/fbca2e93176e6b263fe7158fd85e2748f5985150) | fix | **datepicker:** resolve server-side rendering error ([#26742](https://github.com/angular/components/pull/26742)) |
+| [3442c0ee0](https://github.com/angular/components/commit/3442c0ee01782fd9f05cf712cc28cf82d8e4f57a) | fix | **paginator:** opt-out of single-selection indicator ([#26746](https://github.com/angular/components/pull/26746)) |
+| [5ea4ca579](https://github.com/angular/components/commit/5ea4ca579c6f829507e04fe6819499c71f7a18d9) | fix | **snack-bar:** live region not working when modal is open ([#26725](https://github.com/angular/components/pull/26725)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7043a51da](https://github.com/angular/components/commit/7043a51da122927f63f6ea9c72ba4c28fafcc507) | fix | **scrolling:** throw error rather than string ([#26736](https://github.com/angular/components/pull/26736)) |
+## Special Thanks
+Kristiyan Kostadinov, RuoJia123, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.2"></a>
 # 15.2.2 "topaz-toast" (2023-03-08)
 ### material
