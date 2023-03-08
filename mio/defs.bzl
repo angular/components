@@ -1,4 +1,4 @@
-load("@npm_mio//:@angular-devkit/architect-cli/package_json.bzl", architect_cli = "bin")
+load("@npm_mio//mio:@angular-devkit/architect-cli/package_json.bzl", architect_cli = "bin")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 
 # NOTE:
