@@ -10,40 +10,40 @@ COMMON_CONFIG = [
     "//:ng-base-config",
 
     # The architect-cli invoking the build
-    "//:node_modules/@angular-devkit/architect-cli",
+    "//mio:node_modules/@angular-devkit/architect-cli",
 
     # Required for angular.json reference to '@angular/cli/lib/config/schema.json'
-    "//:node_modules/@angular/cli",
+    "//mio:node_modules/@angular/cli",
 
     # builders referenced from angular.json
-    "//:node_modules/@angular-devkit/build-angular",
+    "//mio:node_modules/@angular-devkit/build-angular",
 ]
 
 # Standard dependencies common across libs/tests
 # Only include the core Angular + Components/Material which are versioned together
 NG_COMMON_DEPS = [
     # Angular libraries versioned together
-    "//:node_modules/@angular/animations",
-    "//:node_modules/@angular/common",
-    "//:node_modules/@angular/core",
-    "//:node_modules/@angular/forms",
-    "//:node_modules/@angular/localize",
-    "//:node_modules/@angular/router",
-    "//:node_modules/@angular/platform-browser",
-    "//:node_modules/@angular/platform-browser-dynamic",
+    "//mio:node_modules/@angular/animations",
+    "//mio:node_modules/@angular/common",
+    "//mio:node_modules/@angular/core",
+    "//mio:node_modules/@angular/forms",
+    "//mio:node_modules/@angular/localize",
+    "//mio:node_modules/@angular/router",
+    "//mio:node_modules/@angular/platform-browser",
+    "//mio:node_modules/@angular/platform-browser-dynamic",
 
     # Angular cdk+material libraries versioned together
-    "//:node_modules/@angular/cdk",
-    "//:node_modules/@angular/cdk-experimental",
-    "//:node_modules/@angular/material",
-    "//:node_modules/@angular/material-experimental",
-    "//:node_modules/@angular/material-moment-adapter",
-    "//:node_modules/@angular/youtube-player",
+    "//mio:node_modules/@angular/cdk",
+    "//mio:node_modules/@angular/cdk-experimental",
+    "//mio:node_modules/@angular/material",
+    "//mio:node_modules/@angular/material-experimental",
+    "//mio:node_modules/@angular/material-moment-adapter",
+    "//mio:node_modules/@angular/youtube-player",
 
     # Common libraries used throughout
-    "//:node_modules/rxjs",
-    "//:node_modules/tslib",
-    "//:node_modules/zone.js",
+    "//mio:node_modules/rxjs",
+    "//mio:node_modules/tslib",
+    "//mio:node_modules/zone.js",
 ]
 
 # Common dependencies of Angular CLI applications
@@ -60,18 +60,18 @@ TEST_CONFIG = COMMON_CONFIG + [
 
     "//:ng-base-test-config",
     ":ng-test-config",
-    "//:node_modules/karma",
-    "//:node_modules/karma-chrome-launcher",
-    "//:node_modules/karma-firefox-launcher",
-    "//:node_modules/karma-jasmine",
-    "//:node_modules/karma-jasmine-html-reporter",
-    "//:node_modules/karma-coverage-istanbul-reporter",
+    "//mio:node_modules/karma",
+    "//mio:node_modules/karma-chrome-launcher",
+    "//mio:node_modules/karma-firefox-launcher",
+    "//mio:node_modules/karma-jasmine",
+    "//mio:node_modules/karma-jasmine-html-reporter",
+    "//mio:node_modules/karma-coverage-istanbul-reporter",
 ]
 TEST_DEPS = [
-    "//:node_modules/@types/jasmine",
-    "//:node_modules/@types/node",
-    "//:node_modules/@angular/compiler",
-    "//:node_modules/jasmine-core",
+    "//mio:node_modules/@types/jasmine",
+    "//mio:node_modules/@types/node",
+    "//mio:node_modules/@angular/compiler",
+    "//mio:node_modules/jasmine-core",
 ]
 
 # Common dependencies of Angular CLI e2e tests
@@ -81,13 +81,13 @@ E2E_CONFIG = COMMON_CONFIG + [
 
     "//:ng-base-test-config",
     ":ng-e2e-config",
-    "//:node_modules/jasmine-spec-reporter",
+    "//mio:node_modules/jasmine-spec-reporter",
 ]
 E2E_DEPS = APPLICATION_DEPS + [
-    "//:node_modules/@types/jasmine",
-    "//:node_modules/@types/node",
-    "//:node_modules/protractor",
-    "//:node_modules/webdriver-manager",
+    "//mio:node_modules/@types/jasmine",
+    "//mio:node_modules/@types/node",
+    "//mio:node_modules/protractor",
+    "//mio:node_modules/webdriver-manager",
 ]
 
 LINT_CONFIG = COMMON_CONFIG + [
@@ -95,20 +95,20 @@ LINT_CONFIG = COMMON_CONFIG + [
   "//:ng-base-test-config",
   ":ng-e2e-config",
   "//:ng-base-lint-config",
-  "//:node_modules/@angular-eslint/builder",
-  "//:node_modules/@angular-eslint/eslint-plugin",
-  "//:node_modules/@angular-eslint/eslint-plugin-template",
-  "//:node_modules/@angular-eslint/template-parser",
-  "//:node_modules/eslint-plugin-ban",
-  "//:node_modules/eslint-plugin-import",
-  "//:node_modules/eslint-plugin-jsdoc",
-  "//:node_modules/eslint-plugin-prefer-arrow",
-  "//:node_modules/@typescript-eslint/eslint-plugin",
-  "//:node_modules/@typescript-eslint/parser",
+  "//mio:node_modules/@angular-eslint/builder",
+  "//mio:node_modules/@angular-eslint/eslint-plugin",
+  "//mio:node_modules/@angular-eslint/eslint-plugin-template",
+  "//mio:node_modules/@angular-eslint/template-parser",
+  "//mio:node_modules/eslint-plugin-ban",
+  "//mio:node_modules/eslint-plugin-import",
+  "//mio:node_modules/eslint-plugin-jsdoc",
+  "//mio:node_modules/eslint-plugin-prefer-arrow",
+  "//mio:node_modules/@typescript-eslint/eslint-plugin",
+  "//mio:node_modules/@typescript-eslint/parser",
 ]
 LINT_DEPS = APPLICATION_DEPS + [
   # TODO(bazel): this should be included as a transitive of @angular-devkit/architect-cli!?
-  "//:node_modules/@angular-devkit/architect",
+  "//mio:node_modules/@angular-devkit/architect",
 ]
 
 

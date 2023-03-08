@@ -40,10 +40,10 @@ ng_app(
     name = "app",
     project_name = "material-angular-io",
     deps = [
-      "//:node_modules/@angular/components-examples",
-      "//:node_modules/@stackblitz/sdk",
-      "//:node_modules/path-normalize",
-      "//:node_modules/moment",
+      "//mio:node_modules/@angular/components-examples",
+      "//mio:node_modules/@stackblitz/sdk",
+      "//mio:node_modules/path-normalize",
+      "//mio:node_modules/moment",
     ],
 )
 
@@ -57,11 +57,11 @@ js_test(
   data = [
     "tools/lighthouse-audit.js",
     "//:build.production",
-    "//:node_modules/lighthouse",
-    "//:node_modules/lighthouse-logger",
-    "//:node_modules/puppeteer",
-    "//:node_modules/shelljs",
-    "//:node_modules/light-server",
+    "//mio:node_modules/lighthouse",
+    "//mio:node_modules/lighthouse-logger",
+    "//mio:node_modules/puppeteer",
+    "//mio:node_modules/shelljs",
+    "//mio:node_modules/light-server",
   ],
   tags = ["audit"],
 )
