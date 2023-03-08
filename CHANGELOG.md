@@ -1,3 +1,22 @@
+<a name="15.2.2"></a>
+# 15.2.2 "topaz-toast" (2023-03-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7612c747](https://github.com/angular/components/commit/e7612c747cd75e16f1c36090bb152285c8046d3c) | fix | **chips:** unable to shift + tab out of a chip set ([#26727](https://github.com/angular/components/pull/26727)) |
+| [1bf2fc2e1](https://github.com/angular/components/commit/1bf2fc2e12a1bc4c07b6a88634d599ee00431016) | fix | **core:** mat-option sets aria-selected="false" ([#26673](https://github.com/angular/components/pull/26673)) |
+| [9473b1688](https://github.com/angular/components/commit/9473b1688aeaa61ded53a2ee56fd3a61b91ffd2b) | fix | **datepicker:** resolve server-side rendering error ([#26742](https://github.com/angular/components/pull/26742)) |
+| [99dac0835](https://github.com/angular/components/commit/99dac0835ac71bf381dca66120bb89f78c01e7ee) | fix | **paginator:** opt-out of single-selection indicator ([#26746](https://github.com/angular/components/pull/26746)) |
+| [ec824f1f7](https://github.com/angular/components/commit/ec824f1f75232f88892a2dda02f925e28d29a6ad) | fix | **snack-bar:** live region not working when modal is open ([#26725](https://github.com/angular/components/pull/26725)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e1c8fe85b](https://github.com/angular/components/commit/e1c8fe85bdf81dd84d79d40c24e62d3a2f9f8968) | fix | **scrolling:** throw error rather than string ([#26736](https://github.com/angular/components/pull/26736)) |
+## Special Thanks
+Kristiyan Kostadinov, RuoJia123 and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.1"></a>
 # 15.2.1 "silicone-soliloquy" (2023-03-01)
 ## Breaking Changes
