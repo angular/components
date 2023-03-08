@@ -26,6 +26,37 @@ build --incompatible_strict_action_env
 # and https://github.com/bazelbuild/bazel/commit/03246077f948f2790a83520e7dccc2625650e6df
 build --nobuild_runfile_links
 
+# Disable watchfs as it causes tests to be flaky on Windows
+# https://github.com/angular/angular/issues/29541
+build --nowatchfs
+
+# Don't check if output files have been modified
+build --noexperimental_check_output_files
+
+# Fixes use of npm paths with spaces such as some within the puppeteer module
+build --experimental_inprocess_symlink_creation
+
+# Enable runfiles even on Windows.
+# Architect resolves output files from data files, and this isn't possible without runfile support.
+build --enable_runfiles
+
+###############################
+# Performance                 #
+###############################
+
+# Enable remote caching of build/action tree
+build --experimental_remote_merkle_tree_cache
+
+###############################
+# Correctness                 #
+###############################
+
+# Ensure that tags applied in BUILDs propagate to actions
+common --experimental_allow_tags_propagation
+
+# Ensure sandboxing is enabled even for exclusive tests
+test --incompatible_exclusive_test_sandboxed
+
 ###############################
 # Output control              #
 ###############################

@@ -24,3 +24,9 @@ integration/mdc-migration/golden/.angular
 integration/mdc-migration/golden/node_modules
 integration/mdc-migration/sample-project/.angular
 integration/mdc-migration/sample-project/node_modules
+
+mio/dist/
+mio/node_modules/
+mio/.angular/
+mio/.circleci/
+mio/.github/

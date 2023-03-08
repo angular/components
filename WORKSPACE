@@ -12,6 +12,36 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-5.8.0.tar.gz"],
 )
 
+# rules_js is used for the mio (material.angulare.io) build
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "1aa0ab76d1f9520bb8993e2d84f82da2a9c87da1e6e8d121dbb4c857a292c2cd",
+    strip_prefix = "rules_js-1.20.1",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v1.20.1/rules_js-v1.20.1.tar.gz",
+)
+
+# dev-infra required for browser repositories
+http_archive(
+  name = "dev-infra",
+  strip_prefix = "dev-infra-9bc16c6fd4297c5220eb7627e42f8117ca6d1967",
+  sha256 = "3208595ba1b237d71a1b1542a6241210a5a543074d42adb0f0378b7408b5369d",
+  url = "https://github.com/angular/dev-infra/archive/9bc16c6fd4297c5220eb7627e42f8117ca6d1967/9bc16c6fd4297c5220eb7627e42f8117ca6d1967.tar.gz",
+)
+
+# Add a patch fix for rules_webtesting v0.3.5 required for enabling runfiles on Windows.
+# TODO: Remove the http_archive for this transitive dependency when a release is cut
+# for https://github.com/bazelbuild/rules_webtesting/commit/581b1557e382f93419da6a03b91a45c2ac9a9ec8
+# and the version is updated in rules_nodejs.
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    patch_args = ["-p1"],
+    patches = [
+        "//mio:tools/patches/rules_webtesting__windows_runfiles_fix.patch",
+    ],
+    sha256 = "e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a",
+    urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
+)
+
 # Add sass rules
 http_archive(
     name = "io_bazel_rules_sass",
@@ -50,6 +80,10 @@ rules_pkg_dependencies()
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+
+rules_js_dependencies()
 
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 
@@ -94,6 +128,10 @@ load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
 
 npm_bazel_protractor_dependencies()
 
+load("@dev-infra//bazel/browsers:browser_repositories.bzl", "browser_repositories")
+
+browser_repositories()
+
 # Setup web testing. We need to setup a browser because the web testing rules for TypeScript need
 # a reference to a registered browser (ideally that's a hermetic version of a browser)
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
@@ -120,3 +158,21 @@ load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "
 esbuild_repositories(
     npm_repository = "npm",
 )
+
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+
+npm_translate_lock(
+    name = "npm_mio",
+    data = ["//mio:package.json"],
+    yarn_lock = "//mio:yarn.lock",
+    pnpm_lock = "//mio:pnpm-lock.yaml",
+    npmrc = "//mio:.npmrc",
+    verify_node_modules_ignored = "//:.bazelignore",
+    patches = {
+      "@angular-devkit/architect-cli": ["//mio:tools/patches/bazel-architect-cli.patch"],
+    },
+)
+
+load("@npm//:repositories.bzl", "npm_repositories")
+
+npm_repositories()
