@@ -1,0 +1,83 @@
+.docs-footer {
+  padding: 12px;
+  font-size: 12px;
+}
+
+.docs-footer-list {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px;
+}
+
+.docs-footer-logo {
+  flex: 1;
+}
+
+.docs-footer-angular-logo {
+  height: 50px;
+}
+
+.docs-footer-version {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+
+  .angular-material-logo {
+    width: 40px;
+    height: 40px;
+    margin: 10px 0 10px 16px;
+  }
+  .version {
+    margin: 0 40px;
+  }
+}
+
+.docs-footer-copyright {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  flex-direction: column;
+  min-width: 225px;
+  margin-top: 16px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    text-align: center;
+  }
+
+  @media (min-width: 885px) {
+    margin-top: 0;
+  }
+}
+
+.docs-footer-logo span {
+  display: inline-block;
+  line-height: 50px;
+  margin: 0 40px;
+  vertical-align: bottom;
+
+  a {
+    font-size: 16px;
+    padding: 0;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
+@media screen and (max-width: 884px){
+  .docs-footer-list {
+    flex-direction: column;
+  }
+}

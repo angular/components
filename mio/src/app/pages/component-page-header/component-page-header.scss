@@ -1,0 +1,40 @@
+@use '../../../styles/constants';
+
+.component-page-header {
+  display: flex;
+  align-items: center;
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    padding-left: 0;
+  }
+}
+
+h1 {
+  outline: none;
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    padding: 24px 8px;
+    font-size: 20px;
+  }
+}
+
+.sidenav-toggle {
+  padding: 0;
+  margin: 8px;
+  min-width: 64px;
+  display: none;
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  mat-icon {
+    font-size: 30px;
+    height: 64px;
+    width: 64px;
+    line-height: 64px;
+    color: white;
+  }
+}

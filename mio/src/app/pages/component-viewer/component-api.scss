@@ -1,0 +1,48 @@
+.docs-api-class-name {
+  margin-top: 28px;
+  margin-bottom: 0;
+  display: block;
+  font-weight: bold;
+  font-size: 20px;
+  background: none;
+
+  code {
+    background: none;
+  }
+}
+
+.docs-api-type-alias-name,
+.docs-api-class-name {
+  @media (max-width: 399px) {
+    word-break: break-word;
+  }
+}
+
+.docs-api-h3 {
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 32px;
+  margin: 40px 0 20px;
+  padding-bottom: 3px;
+}
+
+.docs-api-method-name-cell,
+.docs-api-method-header,
+.docs-api-method-description-cell,
+.docs-api-property-description,
+.docs-api-class-export-label,
+.docs-api-directive-selectors,
+.docs-api-class-description,
+.docs-api-class-export-name {
+  font-size: 15px;
+}
+
+.docs-api-class-description {
+  line-height: 24px;
+}
+
+.docs-api-property-type {
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 5px;
+}

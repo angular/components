@@ -1,0 +1,20 @@
+{
+  "name": "Angular Material",
+  "short_name": "Angular Material",
+  "theme_color": "#FFFFFF",
+  "background_color": "#3F51B5",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/assets/img/favicons/android-chrome-192x192.png?v=8.2.3",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/img/favicons/android-chrome-512x512.png?v=8.2.3",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

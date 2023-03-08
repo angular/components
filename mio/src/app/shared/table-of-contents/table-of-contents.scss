@@ -1,0 +1,43 @@
+:host {
+  font-size: 13px;
+  // Width is container width minus content width
+  width: 19%;
+  position: sticky;
+  top: 0;
+  padding-left: 25px;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.docs-toc-container {
+  width: 100%;
+  padding: 5px 0 10px 10px;
+
+  & + .docs-toc-container {
+    padding-top: 8px;
+  }
+}
+
+.docs-toc-heading {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+a {
+  line-height: 16px;
+  margin: 8px 0 0;
+  position: relative;
+  text-decoration: none;
+  display: block;
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+}
+
+.docs-level-h4 {
+  margin-left: 12px;
+}

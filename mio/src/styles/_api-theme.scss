@@ -1,0 +1,49 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+// Mixin to apply theme colors for generated API docs.
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
+
+  .docs-api-method-name-cell {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, 800));
+  }
+
+  .docs-api-method-returns-type,
+  .docs-api-method-parameter-type {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, darker));
+  }
+
+  .docs-api-modifier-method-marker {
+    $async-method-marker-hue: if($is-dark-theme, 200, 400);
+    background-color: mat.get-color-from-palette($primary, $async-method-marker-hue);
+    color: mat.get-color-from-palette($primary, '#{$async-method-marker-hue}-contrast');
+  }
+
+  // Force the top-level API docs header to be hidden, since this is already
+  // captured in the top nav-bar.
+  .docs-api-h1 {
+    display: none !important;
+  }
+
+  // Prevent p tags from not breaking, causing x axis overflows.
+  .docs-api > p {
+    word-break: break-word;
+  }
+
+  .docs-api a {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
+  }
+
+  .docs-api-class-name,
+  .docs-api-module-import,
+  .docs-api-class-selector-name,
+  .docs-api-class-export-name {
+    background: rgba(mat.get-color-from-palette($foreground, secondary-text), 0.06);
+  }
+}

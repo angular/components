@@ -1,0 +1,38 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
+  $nav-background-opacity: if($is-dark-theme, 0.2, 0.03);
+
+  .docs-component-category-list-summary a {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
+  }
+
+  .docs-component-category-list-card-summary {
+    color: mat.get-color-from-palette($foreground, secondary-text);
+  }
+
+  .docs-component-category-list-card {
+    border: 1px solid mat.get-color-from-palette($foreground, divider);
+    border-radius: 4px;
+    background: mat.get-color-from-palette($background, card);
+  }
+
+  .docs-component-category-list-card:hover {
+    background: rgba(0, 0, 0, $nav-background-opacity);
+  }
+
+  .docs-component-category-list-card-title {
+    color: mat.get-color-from-palette($foreground, text);
+  }
+
+  .docs-component-category-list-card-image-wrapper {
+    border-bottom: 1px solid mat.get-color-from-palette($foreground, divider);
+  }
+}

@@ -1,0 +1,21 @@
+button {
+  width: 150px;
+  height: 60px;
+}
+
+#scene-ripples-button {
+  overflow: hidden;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
+.mat-button-wrapper {
+  font-size: 18px;
+}
+
+.scene-ripples-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

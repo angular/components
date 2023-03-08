@@ -1,0 +1,255 @@
+// The margin between two sections
+$margin-promotion-sections: 50px;
+$margin-promotion-sections-small: 15px;
+
+.docs-header-background {
+  overflow: hidden;
+  position: relative;
+  height: 420px;
+}
+
+.docs-header-background::before {
+  content: '';
+  position: absolute;
+  background-image: url('../../../assets/img/homepage/angular-white-transparent.svg');
+  background-size: 600px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-position: 80% 20px;
+  opacity: 0.2;
+}
+
+.docs-header-section {
+  width: 90%;
+  position: absolute;
+  z-index: 0;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.docs-header-headline {
+  h1 {
+    font-size: 56px;
+    font-weight: bold;
+    line-height: 56px;
+    margin: 15px 5px;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 28px;
+    margin: 15px 0 25px 0;
+  }
+}
+
+.docs-homepage-promo {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  width: 75%;
+  max-width: 1080px;
+  margin: auto;
+
+  a {
+    text-decoration: none;
+  }
+
+  h2 {
+    font-size: 25px;
+    font-weight: 400;
+    margin: 0 0 16px;
+    padding: 0;
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    margin: 0 0 24px 0;
+    padding: 0;
+  }
+
+  mat-divider {
+    width: 100%;
+  }
+
+  mat-icon {
+    vertical-align: middle;
+  }
+}
+
+.carousel-item {
+  width: 48%;
+
+  & + & {
+    margin-left: 2%;
+  }
+
+  @media (min-width: 1020px) {
+    max-width: 32%;
+  }
+}
+
+.docs-homepage-row {
+  display: flex;
+  flex-direction: row;
+  margin: $margin-promotion-sections 0;
+}
+
+.docs-homepage-carousel-row {
+  margin: $margin-promotion-sections 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.docs-homepage-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.docs-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.docs-homepage-guides {
+  .docs-homepage-guides-card-divider {
+    width: 30%;
+    height: 5px;
+    margin: 15px auto;
+  }
+
+  .docs-homepage-guides-carousel-item {
+    display: flex;
+    text-decoration: none;
+    box-sizing: border-box;
+
+    // We need a slight padding so the box shadow doesn't get cut off by the carousel.
+    padding: 3px;
+
+    .mat-mdc-card {
+      // Ensures that the cards stretch to the full width of the item.
+      width: 100%;
+      min-height: 140px;
+    }
+  }
+
+  .docs-homepage-guides-card.mat-mdc-card {
+    text-align: center;
+  }
+
+  .docs-homepage-guides-card .mat-mdc-card-title {
+    height: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+}
+
+.docs-homepage-featured-components {
+  .docs-featured-components-carousel-item {
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 18px;
+
+    .docs-homepage-img-container {
+      overflow: hidden;
+      margin-bottom: 16px;
+      max-height: 200px;
+    }
+
+    img {
+      transition: 0.3s ease-in-out;
+      width: 100%;
+
+      :host(.animations-disabled) & {
+        transition: none;
+      }
+    }
+
+    &:hover, &:focus {
+      img {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+.docs-homepage-row-column {
+  display: flex;
+  flex-direction: column;
+  width: 32%;
+
+  & + & {
+    margin-left: 2%;
+  }
+}
+
+.docs-header-start {
+  text-align: center;
+  margin: $margin-promotion-sections 0 0 0;
+
+  .mat-mdc-raised-button {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .docs-header-background {
+    height: 330px;
+  }
+  .docs-header-background:before {
+    background-image: none;
+  }
+}
+
+@media (max-width: 850px) {
+
+  .docs-header-background:before {
+    background-image: none;
+  }
+  .docs-introduction {
+    flex-direction: column;
+  }
+
+  .docs-homepage-row-column {
+    width: 100%;
+
+    & + & {
+      margin-left: 0;
+    }
+  }
+}
+
+/**
+  * Rules for when the device is detected to be a small screen.
+  */
+@media (max-width: 720px) {
+  .docs-header-start {
+    margin: $margin-promotion-sections-small 0 0 0;
+  }
+
+  .docs-homepage-row, .docs-homepage-carousel-row {
+    margin: $margin-promotion-sections-small 0;
+  }
+}

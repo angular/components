@@ -1,0 +1,20 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '../../app-theme';
+@use '../../highlightjs/material-dark';
+
+// Define the dark theme.
+$primary: mat.define-palette(mat.$pink-palette);
+$accent:  mat.define-palette(mat.$blue-grey-palette);
+$theme: mat.define-dark-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+  ),
+  typography: mat.define-typography-config(),
+));
+
+@include mat.all-component-themes(map.merge($theme, (
+  typography: mat.define-typography-config()
+)));
+@include app-theme.theme($theme);

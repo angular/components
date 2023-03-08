@@ -1,0 +1,12 @@
+<div class="docs-component-viewer-nav">
+  <div class="docs-component-viewer-nav-content" *ngIf="(params | async)?.section as section">
+      <mat-nav-list>
+        <a mat-list-item *ngFor="let component of docItems.getItems(section)"
+           [routerLink]="'/' + section+ '/' + component.id"
+           routerLinkActive="docs-component-viewer-sidenav-item-selected"
+           [attr.aria-current]="currentItemId === component.id ? 'page': 'false'">
+          {{component.name}}
+        </a>
+      </mat-nav-list>
+  </div>
+</div>

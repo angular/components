@@ -1,0 +1,24 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
+
+  .docs-toc-container {
+    border-left: solid 4px mat.get-color-from-palette($primary);
+
+    .docs-link {
+      color: mat.get-color-from-palette($foreground, secondary-text);
+
+      &:hover,
+      &.docs-active {
+        color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
+      }
+    }
+  }
+}

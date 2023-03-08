@@ -1,0 +1,112 @@
+// Styles for API docs generated via dgeni from material2 source JsDocs.
+
+.docs-api {
+  max-width: 100%;
+}
+
+// Top header, e.g., "API documentation for dialog".
+.docs-api-h2 {
+  font-size: 30px;
+}
+
+// Section header, e.g. "Services" or "Directives"
+.docs-api-h3 {
+  font-size: 24px;
+  font-weight: 400;
+  margin-top: 45px;
+}
+
+.docs-api-h4 {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.docs-api-class-description {
+  font-size: 12px;
+}
+.docs-api-property-name {
+  margin: 0;
+}
+
+.docs-api-method-name-row,
+.docs-api-method-parameter-row,
+.docs-api-properties-name-cell {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+}
+
+.docs-api-properties-name-cell,
+.docs-api-method-parameter-row {
+  font-size: 14px;
+}
+
+.docs-api-method-parameter-type {
+  font-size: 12px;
+}
+
+.docs-api-class-name,
+.docs-api-module-import {
+  display: inline;
+}
+
+.docs-api-method-name-cell {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.docs-api-method-parameters-header-cell,
+.docs-api-method-returns-header-cell {
+  font-size: 14px;
+}
+
+.docs-api-input-marker,
+.docs-api-output-marker,
+.docs-api-deprecated-marker {
+  // Size corresponding to "caption"-style text in the spec.
+  font-size: 12px;
+}
+
+.docs-api-deprecated-marker {
+  margin-right: 8px;
+}
+
+.docs-api-module-import,
+.docs-api-class-selector-name,
+.docs-api-class-export-name {
+  font-family: 'Roboto Mono', monospace;
+  padding: 3px;
+}
+
+.docs-api-class-extends-type {
+  text-decoration: none;
+  border-bottom: 1px dotted;
+  color: inherit;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.docs-api-modifier-method-marker {
+  display: inline-block;
+  vertical-align: baseline;
+  padding: 2px 7px;
+  margin-right: 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  user-select: none;
+}
+
+.docs-api-deprecated-marker,
+.docs-api-class-deprecated-marker,
+.docs-api-interface-deprecated-marker {
+  display: inline-block;
+  font-weight: bold;
+
+  &[title] {
+    border-bottom: 1px dotted grey;
+    cursor: help;
+  }
+}
+
+.docs-api-deprecated-marker + .docs-api-property-name {
+  text-decoration: line-through;
+}

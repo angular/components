@@ -1,0 +1,26 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+
+  app-navbar {
+    color: mat.get-color-from-palette($primary, default-contrast);
+
+    .docs-navbar, .docs-navbar-header {
+      background: mat.get-color-from-palette($primary);
+
+      & a:hover, & a:focus {
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      .docs-navbar-header-item-selected {
+        background: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}

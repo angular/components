@@ -1,0 +1,10 @@
+mat-panel-description,
+.docs-expansion-scene-panel mat-panel-title,
+.docs-expansion-scene-content {
+  display: flex;
+  align-items: center;
+}
+
+.docs-expansion-scene-content mat-icon {
+  margin-right: 5px;
+}

@@ -1,0 +1,67 @@
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//:defs.bzl", "ng_app")
+
+package(default_visibility = ["//visibility:public"])
+
+# Link npm packages
+npm_link_all_packages(name = "node_modules")
+
+# Root config files used throughout build/test/lint etc
+copy_to_bin(
+    name = "ng-base-config",
+    srcs = [
+      "angular.json",
+      "tsconfig.json",
+      "package.json",
+    ],
+)
+
+# Test config files
+copy_to_bin(
+  name = "ng-base-test-config",
+  srcs = [
+    "karma-custom-launchers.js",
+  ],
+)
+
+# Lint config files
+copy_to_bin(
+  name = "ng-base-lint-config",
+  srcs = [
+      ".eslintrc.json",
+  ],
+)
+
+
+# The main application
+ng_app(
+    name = "app",
+    project_name = "material-angular-io",
+    deps = [
+      "//:node_modules/@angular/components-examples",
+      "//:node_modules/@stackblitz/sdk",
+      "//:node_modules/path-normalize",
+      "//:node_modules/moment",
+    ],
+)
+
+
+js_test(
+  name = "audit",
+  entry_point = "tools/audit-docs.js",
+  args = [
+    "$(location //:build.production)",
+  ],
+  data = [
+    "tools/lighthouse-audit.js",
+    "//:build.production",
+    "//:node_modules/lighthouse",
+    "//:node_modules/lighthouse-logger",
+    "//:node_modules/puppeteer",
+    "//:node_modules/shelljs",
+    "//:node_modules/light-server",
+  ],
+  tags = ["audit"],
+)

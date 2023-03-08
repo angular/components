@@ -1,0 +1,84 @@
+// Styles for overview and guide docs generated via `marked` from the material2 repo.
+
+.docs-markdown {
+  max-width: 100%;
+
+  h1 {
+    display: inline-block;
+    font-size: 34px;
+    font-weight: 400;
+    padding: 5px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h2, h4 {
+    margin-top: 40px;
+  }
+
+  h5 {
+    font-size: 18px;
+  }
+
+  p, ul, ol {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  pre {
+    border-radius: 5px;
+    display: block;
+    margin: 16px auto;
+    overflow-x: auto;
+    padding: 20px;
+    white-space: pre-wrap;
+
+    code {
+      padding: 0;
+      font-size: 100%;
+    }
+  }
+
+  code {
+    padding: 3px;
+  }
+}
+
+.docs-header-link {
+  // padding to prevent the site header from headbutting the headers when navigating using fragment links
+  padding-top: 20px;
+  margin-top: -20px;
+
+  header-link {
+    // deduct -30px so the anchor icon will be positioned outside the content
+    margin-left: -30px;
+    // Slight margin to try and center the icon better.
+    margin-top: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+
+    a {
+      display: inline-flex;
+      text-decoration: none;
+    }
+  }
+
+  .material-icons {
+    visibility: hidden;
+  }
+
+  &:hover .material-icons {
+    visibility: visible;
+  }
+}

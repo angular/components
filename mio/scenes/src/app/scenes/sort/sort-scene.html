@@ -1,0 +1,11 @@
+<table matSort matSortActive="calories" matSortDirection="desc">
+  <tr>
+    <th mat-sort-header="name">Dessert (100g)</th>
+    <th mat-sort-header="calories">Calories</th>
+  </tr>
+
+  <tr *ngFor="let dessert of desserts">
+    <td>{{dessert.name}}</td>
+    <td>{{dessert.calories}}</td>
+  </tr>
+</table>

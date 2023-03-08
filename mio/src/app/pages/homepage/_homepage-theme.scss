@@ -1,0 +1,62 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+
+  app-homepage {
+    .docs-header-background {
+      background: mat.get-color-from-palette($primary);
+    }
+
+    .docs-header-headline {
+      color: mat.get-color-from-palette($primary, default-contrast);
+    }
+
+    .docs-header-start {
+      color: mat.get-color-from-palette($primary);
+
+      .docs-link {
+        color: mat.get-color-from-palette($primary, default-contrast);
+      }
+    }
+
+    .docs-homepage-row {
+      color: mat.get-color-from-palette($foreground, secondary-text);
+    }
+
+    .docs-homepage-carousel-row h2 {
+      color: mat.get-color-from-palette($foreground, secondary-text);
+    }
+
+    a.docs-link, a.docs-featured-components-carousel-item {
+      color: mat.get-color-from-palette($foreground, secondary-text)
+    }
+
+    .docs-homepage-guides-card,
+    a.docs-link:hover {
+      color: mat.get-color-from-palette($foreground, text);
+    }
+
+    .docs-homepage-guides-card-divider {
+      background: mat.get-color-from-palette($accent)
+    }
+
+    [carousel-item]:hover {
+      .docs-homepage-guides-card {
+        background: mat.get-color-from-palette($background, hover);
+      }
+    }
+
+    [carousel-item]:focus {
+      .docs-homepage-guides-card {
+        background: mat.get-color-from-palette($background, focused-button);
+      }
+      outline: none;
+    }
+  }
+}

@@ -1,0 +1,58 @@
+@use '@angular/material' as mat;
+@use 'sass:color';
+@use 'sass:map';
+@use '../../../styles/constants';
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
+  $nav-background-opacity: if($is-dark-theme, 0.2, 0.03);
+  $nav-background-focus-opacity: if($is-dark-theme, 0.25, 0.08);
+
+  .docs-component-viewer-nav-content {
+    border-right: 1px solid mat.get-color-from-palette($foreground, divider);
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .26);
+    }
+
+    a {
+      color: map.get($foreground, secondary-text);
+
+      &:hover {
+        color: mat.get-color-from-palette($foreground, text);
+      }
+
+      &.docs-component-viewer-sidenav-item-selected {
+        background: rgba(mat.get-color-from-palette($primary, default), 0.15);
+
+        .mdc-list-item__primary-text {
+          color: color.adjust(
+            mat.get-color-from-palette($primary, default),
+            $lightness: if($is-dark-theme, 25%, 0%)
+          );
+        }
+      }
+
+      &.docs-component-viewer-sidenav-item-selected:hover {
+        background: rgba(mat.get-color-from-palette($primary, default), 0.3);
+      }
+    }
+  }
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    .docs-component-viewer-sidenav {
+      .docs-component-viewer-nav-content {
+        background: none;
+      }
+    }
+
+    .mat-drawer {
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, .26);
+      }
+    }
+  }
+}

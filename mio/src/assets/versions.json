@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://material.angular.io/",
+    "title": "13.3.0"
+  },
+  {
+    "url": "https://v12.material.angular.io/",
+    "title": "12.2.13"
+  },
+  {
+    "url": "https://v11.material.angular.io/",
+    "title": "11.2.13"
+  },
+  {
+    "url": "https://v10.material.angular.io/",
+    "title": "10.2.7"
+  },
+  {
+    "url": "https://v9.material.angular.io/",
+    "title": "9.2.4"
+  },
+  {
+    "url": "https://v8.material.angular.io/",
+    "title": "8.2.3"
+  },
+  {
+    "url": "https://v7.material.angular.io/",
+    "title": "7.3.7"
+  },
+  {
+    "url": "https://v6.material.angular.io/",
+    "title": "6.4.7"
+  },
+  {
+    "url": "https://v5.material.angular.io/",
+    "title": "5.2.5"
+  }
+]

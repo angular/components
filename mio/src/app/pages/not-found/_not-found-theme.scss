@@ -1,0 +1,31 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $foreground: map.get($theme, foreground);
+  $background: map.get($theme, background);
+  $frown-color: mat.get-color-from-palette($background, background);
+  $shield-color: mat.get-color-from-palette($primary);
+
+  app-not-found {
+    color: mat.get-color-from-palette($foreground, text);
+
+    .shield-left {
+      fill: $shield-color;
+    }
+
+    .shield-right {
+      fill: color.adjust($shield-color, $lightness: -10%);
+    }
+
+    .eye {
+      fill: $frown-color;
+    }
+
+    .frown {
+      stroke: $frown-color;
+    }
+  }
+}

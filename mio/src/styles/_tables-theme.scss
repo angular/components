@@ -1,0 +1,25 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+// Mixin to apply theme colors for both generated API docs and markdown docs (guides/overviews).
+@mixin theme($theme) {
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+
+  .docs-api table,
+  .docs-markdown > table {
+    color: mat.get-color-from-palette($foreground, text);
+  }
+
+  .docs-api th,
+  .docs-markdown > table th {
+    background: mat.get-color-from-palette($background, app-bar);
+  }
+
+  .docs-api td,
+  .docs-api thead,
+  .docs-markdown > table td,
+  .docs-markdown > table thead {
+    border: 1px solid mat.get-color-from-palette($foreground, divider);
+  }
+}
