@@ -1,10 +1,6 @@
 {
   "extends": ["rxjs-tslint-rules"],
-  "rulesDirectory": [
-    "./tools/tslint-rules/",
-    "node_modules/vrsource-tslint-rules/rules",
-    "node_modules/codelyzer"
-  ],
+  "rulesDirectory": ["./tools/tslint-rules/", "node_modules/vrsource-tslint-rules/rules"],
   "rules": {
     "ban-types": [true, ["ReadonlyArray<.+>", "Use 'readonly T[]' instead."]],
     // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
@@ -58,15 +54,6 @@
     "await-promise": [true, "PromiseLike"],
     "array-type": [true, "array"],
 
-    // Codelyzer
-    "template-banana-in-box": true,
-    "contextual-lifecycle": true,
-    "contextual-decorator": true,
-    "no-output-on-prefix": true,
-    "prefer-output-readonly": true,
-    "template-no-negated-async": true,
-    "use-lifecycle-interface": true,
-
     // RxJS
     "rxjs-no-unsafe-takeuntil": true,
     "rxjs-no-unsafe-catch": true,
@@ -80,6 +67,7 @@
     "no-undecorated-class-with-angular-features": true,
     "setters-after-getters": true,
     "ng-on-changes-property-access": true,
+    "lifecycle-hook-interface": true,
     "require-breaking-change-version": true,
     "no-nested-ternary": true,
     "prefer-const-enum": true,
