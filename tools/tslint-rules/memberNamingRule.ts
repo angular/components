@@ -37,7 +37,7 @@ class Walker extends Lint.RuleWalker {
   override visitClassDeclaration(node: ts.ClassDeclaration) {
     node.members.forEach(member => {
       // Members without a modifier are considered public.
-      if (!member.modifiers || this._hasModifier(member, ts.SyntaxKind.PublicKeyword)) {
+      if (this._hasModifier(member, ts.SyntaxKind.PublicKeyword)) {
         this._validateMember(member, 'public');
       } else if (this._hasModifier(member, ts.SyntaxKind.PrivateKeyword)) {
         this._validateMember(member, 'private');
@@ -105,6 +105,6 @@ class Walker extends Lint.RuleWalker {
     node: ts.ClassElement | ts.ParameterDeclaration,
     targetKind: ts.SyntaxKind,
   ): boolean {
-    return !!node.modifiers?.some(({kind}) => kind === targetKind);
+    return ts.canHaveModifiers(node) && !!node.modifiers?.some(({kind}) => kind === targetKind);
   }
 }
