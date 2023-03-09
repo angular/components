@@ -7,7 +7,7 @@
  */
 
 import {AbstractConstructor, Constructor} from './constructor';
-import {ElementRef} from '@angular/core';
+import {Directive, ElementRef} from '@angular/core';
 
 /** @docs-private */
 export interface CanColor {
@@ -37,7 +37,14 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
   base: T,
   defaultColor?: ThemePalette,
 ): CanColorCtor & T {
-  return class extends base {
+  @Directive({
+    host: {
+      '[class.mat-primary]': 'color == "primary"',
+      '[class.mat-accent]': 'color == "accent"',
+      '[class.mat-warn]': 'color == "warn"',
+    },
+  })
+  class MixinColorBase extends base {
     private _color: ThemePalette;
     defaultColor = defaultColor;
 
@@ -45,18 +52,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
       return this._color;
     }
     set color(value: ThemePalette) {
-      const colorPalette = value || this.defaultColor;
-
-      if (colorPalette !== this._color) {
-        if (this._color) {
-          this._elementRef.nativeElement.classList.remove(`mat-${this._color}`);
-        }
-        if (colorPalette) {
-          this._elementRef.nativeElement.classList.add(`mat-${colorPalette}`);
-        }
-
-        this._color = colorPalette;
-      }
+      this._color = value || this.defaultColor;
     }
 
     constructor(...args: any[]) {
@@ -65,5 +61,6 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
       // Set the default color that can be specified from the mixin.
       this.color = defaultColor;
     }
-  };
+  }
+  return MixinColorBase;
 }
