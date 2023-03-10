@@ -28,6 +28,7 @@ import {
   Attribute,
   ContentChildren,
   QueryList,
+  OnInit,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -116,6 +117,7 @@ const _MatChipMixinBase = mixinTabIndex(
 export class MatChip
   extends _MatChipMixinBase
   implements
+    OnInit,
     AfterViewInit,
     AfterContentInit,
     CanColor,
@@ -136,7 +138,7 @@ export class MatChip
   readonly _onBlur = new Subject<MatChipEvent>();
 
   /** Whether this chip is a basic (unstyled) chip. */
-  readonly _isBasicChip: boolean;
+  _isBasicChip: boolean;
 
   /** Role for the root of the chip. */
   @Input() role: string | null = null;
@@ -263,16 +265,21 @@ export class MatChip
     @Attribute('tabindex') tabIndex?: string,
   ) {
     super(elementRef);
-    const element = elementRef.nativeElement;
     this._document = _document;
     this._animationsDisabled = animationMode === 'NoopAnimations';
-    this._isBasicChip =
-      element.hasAttribute(this.basicChipAttrName) ||
-      element.tagName.toLowerCase() === this.basicChipAttrName;
     if (tabIndex != null) {
       this.tabIndex = parseInt(tabIndex) ?? this.defaultTabIndex;
     }
     this._monitorFocus();
+  }
+
+  ngOnInit() {
+    // This check needs to happen in `ngOnInit` so the overridden value of
+    // `basicChipAttrName` coming from base classes can be picked up.
+    const element = this._elementRef.nativeElement;
+    this._isBasicChip =
+      element.hasAttribute(this.basicChipAttrName) ||
+      element.tagName.toLowerCase() === this.basicChipAttrName;
   }
 
   ngAfterViewInit() {

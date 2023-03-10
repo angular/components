@@ -61,7 +61,7 @@ export const MAT_CHIP_TRAILING_ICON: InjectionToken<unknown>;
 export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
-export class MatChip extends _MatChipMixinBase implements AfterViewInit, AfterContentInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy {
+export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit, AfterContentInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
     protected _allLeadingIcons: QueryList<MatChipAvatar>;
     protected _allRemoveIcons: QueryList<MatChipRemove>;
@@ -89,7 +89,7 @@ export class MatChip extends _MatChipMixinBase implements AfterViewInit, AfterCo
     // (undocumented)
     protected _highlighted: boolean;
     id: string;
-    readonly _isBasicChip: boolean;
+    _isBasicChip: boolean;
     readonly _isRippleCentered = false;
     _isRippleDisabled(): boolean;
     leadingIcon: MatChipAvatar;
@@ -99,6 +99,8 @@ export class MatChip extends _MatChipMixinBase implements AfterViewInit, AfterCo
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     protected _ngZone: NgZone;
     readonly _onBlur: Subject<MatChipEvent>;

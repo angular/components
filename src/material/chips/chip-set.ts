@@ -222,8 +222,7 @@ export class MatChipSet
     let currentElement = event.target as HTMLElement | null;
 
     while (currentElement && currentElement !== this._elementRef.nativeElement) {
-      // Null check the classList, because IE and Edge don't support it on all elements.
-      if (currentElement.classList && currentElement.classList.contains('mdc-evolution-chip')) {
+      if (currentElement.classList.contains('mat-mdc-chip')) {
         return true;
       }
       currentElement = currentElement.parentElement;
