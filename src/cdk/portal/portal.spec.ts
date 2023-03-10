@@ -740,6 +740,7 @@ class ChocolateInjector {
 
 /** Simple component for testing ComponentPortal. */
 @Component({
+  jit: true,
   selector: 'pizza-msg',
   template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
 })
@@ -752,6 +753,7 @@ class PizzaMsg {
  * Useful to see where the element was in the DOM when it was first attached.
  */
 @Directive({
+  jit: true,
   selector: '[savesParentNodeOnInit]',
 })
 class SaveParentNodeOnInit implements AfterViewInit {
@@ -766,7 +768,9 @@ class SaveParentNodeOnInit implements AfterViewInit {
 
 /** Simple component to grab an arbitrary ViewContainerRef */
 @Component({
+  jit: true,
   selector: 'some-placeholder',
+
   template: `
     <p>Hello</p>
 
@@ -784,7 +788,9 @@ class ArbitraryViewContainerRefComponent {
 
 /** Test-bed component that contains a portal outlet and a couple of template portals. */
 @Component({
+  jit: true,
   selector: 'portal-test',
+
   template: `
   <div class="portal-container">
     <ng-template [cdkPortalOutlet]="selectedPortal" (attached)="attachedSpy($event)"></ng-template>
@@ -846,6 +852,8 @@ class PortalTestApp {
 
 /** Test-bed component that contains a portal outlet and a couple of template portals. */
 @Component({
+  jit: true,
+
   template: `
     <div class="portal-container">
       <ng-template cdkPortalOutlet></ng-template>

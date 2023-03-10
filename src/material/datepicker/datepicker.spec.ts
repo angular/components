@@ -2484,6 +2484,8 @@ const inputFixedWidthStyles = `
 `;
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [value]="date" [min]="min" [max]="max">
     <mat-datepicker
@@ -2494,6 +2496,7 @@ const inputFixedWidthStyles = `
       [xPosition]="xPosition"
       [yPosition]="yPosition"></mat-datepicker>
   `,
+
   styles: [inputFixedWidthStyles],
 })
 class StandardDatepicker {
@@ -2510,6 +2513,8 @@ class StandardDatepicker {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d"><input [matDatepicker]="d"><mat-datepicker #d></mat-datepicker>
   `,
@@ -2517,6 +2522,7 @@ class StandardDatepicker {
 class MultiInputDatepicker {}
 
 @Component({
+  jit: true,
   template: `<mat-datepicker #d></mat-datepicker>`,
 })
 class NoInputDatepicker {
@@ -2524,6 +2530,8 @@ class NoInputDatepicker {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [value]="date">
     <mat-datepicker #d [startAt]="startDate"></mat-datepicker>
@@ -2536,6 +2544,8 @@ class DatepickerWithStartAt {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [value]="date">
     <mat-datepicker #d startView="year" (monthSelected)="onYearSelection()"></mat-datepicker>
@@ -2549,6 +2559,8 @@ class DatepickerWithStartViewYear {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [value]="date">
     <mat-datepicker #d startView="multi-year"
@@ -2563,6 +2575,8 @@ class DatepickerWithStartViewMultiYear {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [(ngModel)]="selected" [matDatepicker]="d">
     <mat-datepicker #d></mat-datepicker>
@@ -2575,6 +2589,8 @@ class DatepickerWithNgModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [formControl]="formControl" [matDatepicker]="d">
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
@@ -2589,6 +2605,8 @@ class DatepickerWithFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d">
     <mat-datepicker-toggle [for]="d" [aria-label]="ariaLabel"></mat-datepicker-toggle>
@@ -2604,7 +2622,9 @@ class DatepickerWithToggle {
 }
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.ShadowDom,
+
   template: `
     <input [matDatepicker]="d">
     <mat-datepicker-toggle [for]="d" [aria-label]="ariaLabel"></mat-datepicker-toggle>
@@ -2614,6 +2634,8 @@ class DatepickerWithToggle {
 class DatepickerWithToggleInShadowDom extends DatepickerWithToggle {}
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d">
     <mat-datepicker-toggle [for]="d">
@@ -2625,6 +2647,8 @@ class DatepickerWithToggleInShadowDom extends DatepickerWithToggle {}
 class DatepickerWithCustomIcon {}
 
 @Component({
+  jit: true,
+
   template: `
       <mat-form-field>
         <mat-label>Pick a date</mat-label>
@@ -2640,6 +2664,8 @@ class FormFieldDatepicker {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
@@ -2655,6 +2681,8 @@ class DatepickerWithMinAndMaxValidation {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [(ngModel)]="date" [matDatepickerFilter]="filter">
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
@@ -2669,6 +2697,8 @@ class DatepickerWithFilterAndValidation {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" (change)="onChange()" (input)="onInput()"
            (dateChange)="onDateChange()" (dateInput)="onDateInput()">
@@ -2688,6 +2718,8 @@ class DatepickerWithChangeAndInputEvents {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [(ngModel)]="date">
     <mat-datepicker #d></mat-datepicker>
@@ -2700,6 +2732,8 @@ class DatepickerWithi18n {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max">
     <mat-datepicker #d [startAt]="startAt"></mat-datepicker>
@@ -2715,6 +2749,8 @@ class DatepickerWithISOStrings {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [(ngModel)]="selected" [matDatepicker]="d">
     <mat-datepicker (opened)="openedSpy()" (closed)="closedSpy()" #d></mat-datepicker>
@@ -2728,6 +2764,8 @@ class DatepickerWithEvents {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input (focus)="d.open()" [matDatepicker]="d">
     <mat-datepicker #d="matDatepicker"></mat-datepicker>
@@ -2738,6 +2776,8 @@ class DatepickerOpeningOnFocus {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="ch">
     <mat-datepicker #ch [calendarHeaderComponent]="customHeaderForDatePicker"></mat-datepicker>
@@ -2749,6 +2789,8 @@ class DatepickerWithCustomHeader {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div class="custom-element">Custom element</div>
     <mat-calendar-header></mat-calendar-header>
@@ -2757,6 +2799,8 @@ class DatepickerWithCustomHeader {
 class CustomHeaderForDatepicker {}
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="assignedDatepicker" [value]="date">
     <mat-datepicker #d [touchUi]="touch"></mat-datepicker>
@@ -2770,6 +2814,8 @@ class DelayedDatepicker {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d">
     <mat-datepicker-toggle tabIndex="7" [for]="d" [disabled]="disabled">
@@ -2783,6 +2829,8 @@ class DatepickerWithTabindexOnToggle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-datepicker-toggle></mat-datepicker-toggle>
   `,
@@ -2790,6 +2838,8 @@ class DatepickerWithTabindexOnToggle {
 class DatepickerToggleWithNoDatepicker {}
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d">
   `,
@@ -2797,7 +2847,9 @@ class DatepickerToggleWithNoDatepicker {}
 class DatepickerInputWithNoDatepicker {}
 
 @Directive({
+  jit: true,
   selector: '[customValidator]',
+
   providers: [
     {
       provide: NG_VALIDATORS,
@@ -2811,6 +2863,8 @@ class CustomValidator implements Validator {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max" customValidator>
     <mat-datepicker #d></mat-datepicker>
@@ -2824,6 +2878,8 @@ class DatepickerInputWithCustomValidator {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <input [matDatepicker]="d" [value]="date">
   <mat-datepicker [panelClass]="panelClass" touchUi #d></mat-datepicker>

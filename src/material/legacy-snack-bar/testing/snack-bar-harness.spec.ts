@@ -54,6 +54,7 @@ describe('Non-MDC-based MatSnackBarHarness (non-MDC only behavior)', () => {
 });
 
 @Component({
+  jit: true,
   template: `<ng-template>My custom snack-bar.</ng-template>`,
 })
 class SnackbarHarnessTest {

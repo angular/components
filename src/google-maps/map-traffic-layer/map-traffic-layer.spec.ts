@@ -47,7 +47,9 @@ describe('MapTrafficLayer', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-traffic-layer [autoRefresh]="autoRefresh">
                 </map-traffic-layer>

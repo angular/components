@@ -1704,6 +1704,8 @@ describe('MDC-based MatSelectionList with forms', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list
     id="selection-list-1"
@@ -1741,6 +1743,8 @@ class SelectionListWithListOptions {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list id="selection-list-2">
     <mat-list-option togglePosition="after">
@@ -1760,6 +1764,8 @@ class SelectionListWithListOptions {
 class SelectionListWithCheckboxPositionAfter {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list id="selection-list-3" [disabled]="disabled">
     <mat-list-option togglePosition="after">
@@ -1781,6 +1787,8 @@ class SelectionListWithListDisabled {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list>
     <mat-list-option [disabled]="disableItem">Item</mat-list-option>
@@ -1792,6 +1800,8 @@ class SelectionListWithDisabledOption {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list>
     <mat-list-option>Not selected - Item #1</mat-list-option>
@@ -1803,6 +1813,8 @@ class SelectionListWithDisabledOption {
 class SelectionListWithSelectedOption {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list [multiple]="false">
     <mat-list-option>Not selected - Item #1</mat-list-option>
@@ -1812,6 +1824,8 @@ class SelectionListWithSelectedOption {}
 class SingleSelectionListWithSelectedOption {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list>
     <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
@@ -1822,6 +1836,8 @@ class SelectionListWithSelectedOptionAndValue {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list id="selection-list-4">
     <mat-list-option togglePosition="after" class="test-focus" id="123">
@@ -1832,6 +1848,8 @@ class SelectionListWithSelectedOptionAndValue {
 class SelectionListWithOnlyOneOption {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list
       [(ngModel)]="selectedOptions"
@@ -1848,6 +1866,8 @@ class SelectionListWithModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list [formControl]="formControl" *ngIf="renderList">
       <mat-list-option value="opt1">Option 1</mat-list-option>
@@ -1864,6 +1884,8 @@ class SelectionListWithFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions">
       <mat-list-option value="opt1">Option 1</mat-list-option>
@@ -1875,6 +1897,8 @@ class SelectionListWithPreselectedOption {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions">
       <mat-list-option value="opt1">Option 1</mat-list-option>
@@ -1886,7 +1910,9 @@ class SelectionListWithPreselectedOptionAndModel {
 }
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <mat-selection-list [formControl]="formControl">
       <mat-list-option *ngFor="let opt of opts" [value]="opt">{{opt}}</mat-list-option>
@@ -1899,6 +1925,8 @@ class SelectionListWithPreselectedFormControlOnPush {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
       <mat-list-option *ngFor="let option of options" [value]="option">
@@ -1918,6 +1946,8 @@ class SelectionListWithCustomComparator {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list>
       <mat-list-option [togglePosition]="togglePosition">
@@ -1932,6 +1962,8 @@ class SelectionListWithAvatar {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list>
       <mat-list-option [togglePosition]="togglePosition">
@@ -1946,7 +1978,8 @@ class SelectionListWithIcon {
 }
 
 @Component({
-  // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+  jit: true,
+
   template: `
     <mat-selection-list>
       <ng-container [ngSwitch]="true">
@@ -1960,6 +1993,8 @@ class SelectionListWithIndirectChildOptions {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-selection-list>
     <mat-list-option [(selected)]="selected">Item</mat-list-option>

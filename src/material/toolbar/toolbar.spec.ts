@@ -104,6 +104,8 @@ describe('MatToolbar', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-toolbar [color]="toolbarColor">
       <span>First Row</span>
@@ -115,6 +117,8 @@ class ToolbarSingleRow {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-toolbar>
       <mat-toolbar-row>First Row</mat-toolbar-row>
@@ -125,6 +129,8 @@ class ToolbarSingleRow {
 class ToolbarMultipleRows {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-toolbar>
       First Row
@@ -137,7 +143,8 @@ class ToolbarMixedRowModes {
 }
 
 @Component({
-  // The ng-container is there so we have a node with a directive between the toolbar and the rows.
+  jit: true,
+
   template: `
     <mat-toolbar>
       <ng-container [ngSwitch]="true">

@@ -250,6 +250,8 @@ describe('MDC-based MatChipInput', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-chip-grid #chipGrid [required]="required">

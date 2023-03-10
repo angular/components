@@ -160,6 +160,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
       <button type="button" id="settings" [matMenuTriggerFor]="settingsMenu">Settings</button>
       <button type="button" disabled [matMenuTriggerFor]="settingsMenu">Disabled menu</button>
@@ -173,6 +175,8 @@ export function runHarnessTests(
 class MenuHarnessTest {}
 
 @Component({
+  jit: true,
+
   template: `
       <button [matMenuTriggerFor]="menu1">Menu 1</button>
 

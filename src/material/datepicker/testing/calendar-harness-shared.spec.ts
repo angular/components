@@ -313,6 +313,8 @@ export function runCalendarHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar
       id="single"

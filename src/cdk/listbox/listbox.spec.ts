@@ -931,6 +931,8 @@ describe('CdkOption and CdkListbox', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox
          [id]="listboxId"
@@ -978,11 +980,14 @@ class ListboxWithOptions {
 }
 
 @Component({
+  jit: true,
   template: `<div cdkListbox></div>`,
 })
 class ListboxWithNoOptions {}
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox
          [formControl]="formControl"
@@ -1002,6 +1007,8 @@ class ListboxWithFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox [formControl]="formControl">
       <div *ngFor="let option of options" [cdkOption]="option">{{option}}</div>
@@ -1014,6 +1021,8 @@ class ListboxWithPreselectedFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox [formControl]="formControl">
       <div *ngFor="let option of options" [cdkOption]="option">{{option}}</div>
@@ -1026,6 +1035,8 @@ class ListboxWithInvalidPreselectedFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <ul cdkListbox>
       <li cdkOption="apple" cdkOptionTypeaheadLabel="apple">🍎</li>
@@ -1038,6 +1049,8 @@ class ListboxWithInvalidPreselectedFormControl {
 class ListboxWithCustomTypeahead {}
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox
          [cdkListboxValue]="value">
@@ -1053,6 +1066,8 @@ class ListboxWithBoundValue {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox
          cdkListboxMultiple
@@ -1069,6 +1084,8 @@ class ListboxWithMultipleBoundValues {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkListbox [cdkListboxCompareWith]="fruitCompare">
       <div *ngFor="let fruit of fruits" [cdkOption]="fruit">{{fruit.name}}</div>

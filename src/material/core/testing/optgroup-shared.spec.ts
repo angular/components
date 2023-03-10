@@ -67,6 +67,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-optgroup label="Plain group">
       <mat-option>Option 1</mat-option>

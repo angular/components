@@ -76,6 +76,8 @@ describe('MenuStack', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div>
       <div cdkMenuBar id="menu_bar">

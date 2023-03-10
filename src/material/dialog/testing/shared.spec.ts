@@ -118,6 +118,8 @@ export function runHarnessTests(
   });
 
   @Component({
+    jit: true,
+
     template: `
     <ng-template>
       <div matDialogTitle>I'm the dialog title</div>

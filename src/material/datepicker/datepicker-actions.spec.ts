@@ -282,6 +282,8 @@ describe('MatDatepickerActions', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Pick a date</mat-label>

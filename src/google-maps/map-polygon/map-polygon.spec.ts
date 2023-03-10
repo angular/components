@@ -147,7 +147,9 @@ describe('MapPolygon', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-polygon [options]="options"
                               [paths]="paths"

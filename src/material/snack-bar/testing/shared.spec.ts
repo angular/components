@@ -134,6 +134,7 @@ export function runHarnessTests(
   });
 
   @Component({
+    jit: true,
     template: `<ng-template>My custom snack-bar.</ng-template>`,
   })
   class SnackbarHarnessTest {

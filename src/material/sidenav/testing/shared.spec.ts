@@ -175,6 +175,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer id="one" position="start">One</mat-drawer>
@@ -193,6 +195,8 @@ class DrawerHarnessTest {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-sidenav-container>
       <mat-sidenav id="one" position="start">One</mat-sidenav>

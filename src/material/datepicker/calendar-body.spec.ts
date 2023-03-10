@@ -681,6 +681,8 @@ describe('MatCalendarBody', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <table mat-calendar-body
           [label]="label"
@@ -708,6 +710,8 @@ class StandardCalendarBody {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table mat-calendar-body
           [isRange]="true"

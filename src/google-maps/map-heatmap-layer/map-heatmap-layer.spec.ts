@@ -154,7 +154,9 @@ describe('MapHeatmapLayer', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `
     <google-map>
       <map-heatmap-layer [data]="data" [options]="options">

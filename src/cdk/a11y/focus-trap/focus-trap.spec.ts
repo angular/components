@@ -326,6 +326,8 @@ function getActiveElement() {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTrapFocus>
       <input>
@@ -345,7 +347,10 @@ const AUTO_FOCUS_TEMPLATE = `
   </div>
 `;
 
-@Component({template: AUTO_FOCUS_TEMPLATE})
+@Component({
+  jit: true,
+  template: AUTO_FOCUS_TEMPLATE,
+})
 class FocusTrapWithAutoCapture {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
   showTrappedRegion = false;
@@ -353,12 +358,15 @@ class FocusTrapWithAutoCapture {
 }
 
 @Component({
+  jit: true,
   template: AUTO_FOCUS_TEMPLATE,
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {}
 
 @Component({
+  jit: true,
+
   template: `
     <div *ngIf="renderFocusTrap" [cdkTrapFocus]="_isFocusTrapEnabled">
       <input>
@@ -373,6 +381,8 @@ class FocusTrapWithBindings {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTrapFocus>
       <input>
@@ -390,6 +400,8 @@ class FocusTrapTargets {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTrapFocus>
       <div cdkFocusInitial></div>
@@ -401,6 +413,8 @@ class FocusTrapUnfocusableTarget {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTrapFocus>
       <svg xmlns="http://www.w3.org/2000/svg">
@@ -414,6 +428,8 @@ class FocusTrapWithSvg {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTrapFocus>
       <p>Hello</p>
@@ -425,6 +441,8 @@ class FocusTrapWithoutFocusableElements {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div class="portal-outlet">
     <ng-template cdkPortalOutlet></ng-template>

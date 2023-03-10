@@ -124,6 +124,8 @@ describe('MatChipGridHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-grid [formControl]="control" [required]="required" #grid>
       <mat-chip-row [editable]="firstChipEditable" (edited)="editSpy($event)">Chip A</mat-chip-row>

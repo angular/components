@@ -65,6 +65,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-toolbar><span>My App</span></mat-toolbar>
     <mat-toolbar>

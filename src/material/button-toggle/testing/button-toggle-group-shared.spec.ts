@@ -76,6 +76,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-button-toggle-group [disabled]="disabled" [vertical]="vertical" [appearance]="appearance">
       <mat-button-toggle value="1">One</mat-button-toggle>

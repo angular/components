@@ -398,7 +398,9 @@ describe('GoogleMap', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map [height]="height"
                          [width]="width"
                          [center]="center"

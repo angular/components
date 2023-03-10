@@ -75,6 +75,8 @@ describe('MatChipOptionHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-listbox>
       <mat-basic-chip-option> Basic Chip Option </mat-basic-chip-option>

@@ -148,7 +148,9 @@ describe('MapPolyline', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-polyline [options]="options"
                               [path]="path"

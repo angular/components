@@ -148,7 +148,9 @@ describe('MapKmlLayer', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-kml-layer [options]="options"
                                [url]="url"

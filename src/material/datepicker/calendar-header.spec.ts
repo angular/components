@@ -376,6 +376,8 @@ describe('MatCalendarHeader', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar
         [startAt]="startDate"
@@ -392,6 +394,8 @@ class StandardCalendar {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar
       [startAt]="startAt"

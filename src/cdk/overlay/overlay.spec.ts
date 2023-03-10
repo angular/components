@@ -1119,13 +1119,17 @@ describe('Overlay', () => {
 
 /** Simple component for testing ComponentPortal. */
 @Component({
+  jit: true,
   selector: 'pizza',
   template: '<p>Pizza</p>',
 })
 class PizzaMsg {}
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
-@Component({template: `<ng-template cdk-portal>Cake</ng-template>`})
+@Component({
+  jit: true,
+  template: `<ng-template cdk-portal>Cake</ng-template>`,
+})
 class TestComponentWithTemplatePortals {
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 

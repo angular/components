@@ -151,8 +151,8 @@ export function runHarnessTests(
 }
 
 @Component({
-  // Include one of each type of button selector to ensure that they're all captured by
-  // the harness's selector.
+  jit: true,
+
   template: `
     <button id="basic" type="button" mat-button (click)="clicked = true">
       Basic button

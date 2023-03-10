@@ -393,6 +393,8 @@ function expectMessage(el: Element, message: string) {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #element1></div>
     <div #element2></div>

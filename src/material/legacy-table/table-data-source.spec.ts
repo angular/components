@@ -78,6 +78,7 @@ describe('MatTableDataSource', () => {
 });
 
 @Component({
+  jit: true,
   template: `<div matSort matSortDirection="asc"></div>`,
 })
 class MatSortApp {

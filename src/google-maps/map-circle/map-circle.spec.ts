@@ -156,7 +156,9 @@ describe('MapCircle', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-circle [options]="options"
                             [center]="center"

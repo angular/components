@@ -440,6 +440,8 @@ describe('CdkContextMenuTrigger', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div [cdkContextMenuTriggerFor]="context"></div>
     <div id="other"></div>
@@ -461,6 +463,8 @@ class SimpleContextMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #cut_trigger [cdkContextMenuTriggerFor]="cut">
       <div
@@ -490,6 +494,8 @@ class NestedContextMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div [cdkContextMenuTriggerFor]="cut"></div>
 
@@ -513,6 +519,8 @@ class ContextMenuWithSubmenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar id="menu_bar">
       <button #trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
@@ -548,6 +556,8 @@ class ContextMenuWithMenuBarAndInlineMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="menu">First</button>
@@ -569,6 +579,8 @@ class MenuBarAndContextTriggerShareMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div [cdkContextMenuTriggerFor]="context" [cdkContextMenuTriggerData]="menuData"></div>
 

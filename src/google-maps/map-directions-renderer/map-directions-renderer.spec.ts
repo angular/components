@@ -126,7 +126,9 @@ describe('MapDirectionsRenderer', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                <map-directions-renderer [options]="options"
                                         [directions]="directions"

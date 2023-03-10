@@ -141,7 +141,9 @@ describe('MapRectangle', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-rectangle [options]="options"
                                [bounds]="bounds"

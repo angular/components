@@ -3483,7 +3483,10 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
   </mat-autocomplete>
 `;
 
-@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE})
+@Component({
+  jit: true,
+  template: SIMPLE_AUTOCOMPLETE_TEMPLATE,
+})
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
   filteredStates: any[];
@@ -3538,10 +3541,16 @@ class SimpleAutocomplete implements OnDestroy {
   }
 }
 
-@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE, encapsulation: ViewEncapsulation.ShadowDom})
+@Component({
+  jit: true,
+  template: SIMPLE_AUTOCOMPLETE_TEMPLATE,
+  encapsulation: ViewEncapsulation.ShadowDom,
+})
 class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field *ngIf="isVisible">
       <input matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
@@ -3576,6 +3585,8 @@ class NgIfAutocomplete {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="State" [matAutocomplete]="auto"
@@ -3603,6 +3614,8 @@ class AutocompleteWithoutForms {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="State" [matAutocomplete]="auto" [(ngModel)]="selectedState"
@@ -3633,6 +3646,8 @@ class AutocompleteWithNgModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="Number" [matAutocomplete]="auto" [(ngModel)]="selectedNumber">
@@ -3651,7 +3666,9 @@ class AutocompleteWithNumbers {
 }
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <mat-form-field>
       <input type="text" matInput [matAutocomplete]="auto">
@@ -3674,6 +3691,8 @@ class AutocompleteWithOnPushDelay implements OnInit {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
 
@@ -3705,6 +3724,7 @@ class AutocompleteWithNativeInput {
 }
 
 @Component({
+  jit: true,
   template: `<input placeholder="Choose" [matAutocomplete]="auto" [formControl]="control">`,
 })
 class AutocompleteWithoutPanel {
@@ -3713,6 +3733,8 @@ class AutocompleteWithoutPanel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="State" [matAutocomplete]="auto" [(ngModel)]="selectedState">
@@ -3747,6 +3769,8 @@ class AutocompleteWithGroups {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="State" [matAutocomplete]="auto" [(ngModel)]="selectedState">
@@ -3766,6 +3790,8 @@ class AutocompleteWithGroups {
 class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="State" [matAutocomplete]="auto" [(ngModel)]="selectedState">
@@ -3788,6 +3814,8 @@ class AutocompleteWithSelectEvent {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [formControl]="formControl" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
@@ -3798,6 +3826,8 @@ class PlainAutocompleteInputWithFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input type="number" matInput [matAutocomplete]="auto" [(ngModel)]="selectedValue">
@@ -3814,6 +3844,8 @@ class AutocompleteWithNumberInputAndNgModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div>
       <mat-form-field>
@@ -3847,6 +3879,8 @@ class AutocompleteWithDifferentOrigin {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input autocomplete="changed" [(ngModel)]="value" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
@@ -3857,11 +3891,14 @@ class AutocompleteWithNativeAutocompleteAttribute {
 }
 
 @Component({
+  jit: true,
   template: '<input [matAutocomplete]="null" matAutocompleteDisabled>',
 })
 class InputWithoutAutocompleteAndDisabled {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput [matAutocomplete]="auto">

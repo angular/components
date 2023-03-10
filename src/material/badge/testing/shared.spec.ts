@@ -108,6 +108,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button id="simple" [matBadge]="simpleContent">Simple</button>
     <button

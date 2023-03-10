@@ -107,12 +107,15 @@ export function runHarnessTests(
   });
 
   @Component({
+    jit: true,
+
     providers: [
       {
         provide: MAT_OPTION_PARENT_COMPONENT,
         useExisting: OptionHarnessTest,
       },
     ],
+
     template: `
       <mat-option>Plain option</mat-option>
       <mat-option disabled>Disabled option</mat-option>

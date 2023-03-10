@@ -654,6 +654,8 @@ describe('MatCalendar', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar
         [startAt]="startDate"
@@ -670,6 +672,8 @@ class StandardCalendar {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></mat-calendar>
   `,
@@ -681,6 +685,8 @@ class CalendarWithMinMax {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
     </mat-calendar>
@@ -696,6 +702,8 @@ class CalendarWithDateFilter {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-calendar
       [startAt]="startAt"

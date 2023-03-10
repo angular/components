@@ -82,6 +82,8 @@ describe('MatChipHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-basic-chip>Basic Chip</mat-basic-chip>
     <mat-chip>Chip <span matChipTrailingIcon>trailing_icon</span></mat-chip>

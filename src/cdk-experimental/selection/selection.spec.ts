@@ -436,6 +436,8 @@ describe('cdkSelectionColumn with multiple = false', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <ul cdkSelection [dataSource]="data" [cdkSelectionMultiple]="true"
         (cdkSelectionChange)="selectionChange = $event">
@@ -499,6 +501,8 @@ class ListWithMultiSelection {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <ul cdkSelection [dataSource]="data" [cdkSelectionMultiple]="false"
         (cdkSelectionChange)="selectionChange = $event" >
@@ -538,6 +542,8 @@ class ListWithSingleSelection {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table cdk-table cdkSelection [dataSource]="data" [cdkSelectionMultiple]="true">
       <cdk-selection-column cdkSelectionColumnName="select"></cdk-selection-column>
@@ -601,6 +607,8 @@ class MultiSelectTableWithSelectionColumn {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table cdk-table cdkSelection [dataSource]="data" [cdkSelectionMultiple]="false">
       <cdk-selection-column cdkSelectionColumnName="select"></cdk-selection-column>

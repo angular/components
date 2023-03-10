@@ -549,23 +549,37 @@ describe('MatLegacyProgressSpinner', () => {
   });
 });
 
-@Component({template: '<mat-progress-spinner></mat-progress-spinner>'})
+@Component({
+  jit: true,
+  template: '<mat-progress-spinner></mat-progress-spinner>',
+})
 class BasicProgressSpinner {}
 
-@Component({template: '<mat-progress-spinner [strokeWidth]="strokeWidth"></mat-progress-spinner>'})
+@Component({
+  jit: true,
+  template: '<mat-progress-spinner [strokeWidth]="strokeWidth"></mat-progress-spinner>',
+})
 class ProgressSpinnerCustomStrokeWidth {
   strokeWidth: number;
 }
 
-@Component({template: '<mat-progress-spinner [diameter]="diameter"></mat-progress-spinner>'})
+@Component({
+  jit: true,
+  template: '<mat-progress-spinner [diameter]="diameter"></mat-progress-spinner>',
+})
 class ProgressSpinnerCustomDiameter {
   diameter: number;
 }
 
-@Component({template: '<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>'})
+@Component({
+  jit: true,
+  template: '<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>',
+})
 class IndeterminateProgressSpinner {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
   `,
@@ -575,6 +589,7 @@ class IndeterminateSpinnerCustomDiameter {
 }
 
 @Component({
+  jit: true,
   template: '<mat-progress-spinner [value]="value" [mode]="mode"></mat-progress-spinner>',
 })
 class ProgressSpinnerWithValueAndBoundMode {
@@ -582,17 +597,25 @@ class ProgressSpinnerWithValueAndBoundMode {
   value = 50;
 }
 
-@Component({template: `<mat-spinner [color]="color"></mat-spinner>`})
+@Component({
+  jit: true,
+  template: `<mat-spinner [color]="color"></mat-spinner>`,
+})
 class SpinnerWithColor {
   color: string = 'primary';
 }
 
-@Component({template: `<mat-progress-spinner value="50" [color]="color"></mat-progress-spinner>`})
+@Component({
+  jit: true,
+  template: `<mat-progress-spinner value="50" [color]="color"></mat-progress-spinner>`,
+})
 class ProgressSpinnerWithColor {
   color: string = 'primary';
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-progress-spinner value="25" diameter="37" strokeWidth="11"></mat-progress-spinner>
   `,
@@ -600,9 +623,12 @@ class ProgressSpinnerWithColor {
 class ProgressSpinnerWithStringValues {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
   `,
+
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class IndeterminateSpinnerInShadowDom {
@@ -610,11 +636,14 @@ class IndeterminateSpinnerInShadowDom {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div *ngIf="true">
       <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
     </div>
   `,
+
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class IndeterminateSpinnerInShadowDomWithNgIf {
@@ -624,5 +653,8 @@ class IndeterminateSpinnerInShadowDomWithNgIf {
   diameter: number;
 }
 
-@Component({template: '<mat-spinner mode="determinate"></mat-spinner>'})
+@Component({
+  jit: true,
+  template: '<mat-spinner mode="determinate"></mat-spinner>',
+})
 class SpinnerWithMode {}

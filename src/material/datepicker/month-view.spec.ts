@@ -837,6 +837,8 @@ describe('MatMonthView', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-month-view
       [(activeDate)]="date"
@@ -871,6 +873,8 @@ class StandardMonthView {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-month-view
       [activeDate]="activeDate"
@@ -888,6 +892,7 @@ class MonthViewWithDateFilter {
 }
 
 @Component({
+  jit: true,
   template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`,
 })
 class MonthViewWithDateClass {

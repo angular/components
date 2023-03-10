@@ -254,7 +254,9 @@ describe('MapInfoWindow', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                <map-info-window [position]="position"
                                 [options]="options"

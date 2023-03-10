@@ -371,6 +371,8 @@ describe('Combobox', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
   <button cdkCombobox #toggleCombobox="cdkCombobox" class="example-combobox"
           [cdkComboboxTriggerFor]="panel"

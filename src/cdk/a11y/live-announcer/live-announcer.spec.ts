@@ -395,7 +395,10 @@ function getLiveElement(): Element {
   return document.body.querySelector('.cdk-live-announcer-element')!;
 }
 
-@Component({template: `<button (click)="announceText('Test')">Announce</button>`})
+@Component({
+  jit: true,
+  template: `<button (click)="announceText('Test')">Announce</button>`,
+})
 class TestApp {
   constructor(public live: LiveAnnouncer) {}
 
@@ -404,12 +407,18 @@ class TestApp {
   }
 }
 
-@Component({template: '', host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'}})
+@Component({
+  jit: true,
+  template: '',
+  host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'},
+})
 class TestModal {
   ariaOwns: string | null = null;
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       [cdkAriaLive]="politeness ? politeness : null"

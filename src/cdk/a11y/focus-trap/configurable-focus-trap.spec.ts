@@ -102,6 +102,8 @@ function createComponent<T>(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #focusTrapElement>
       <input>

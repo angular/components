@@ -82,6 +82,8 @@ describe('MenuGroup', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
@@ -111,6 +113,8 @@ class CheckboxMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>

@@ -515,6 +515,8 @@ describe('MatSelectionListHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
       <mat-list class="test-base-list-functionality">
         <mat-list-item>
@@ -551,6 +553,8 @@ class ListHarnessTest {
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-action-list class="test-base-list-functionality">
         <mat-list-item (click)="lastClicked = 'Item 1'">
@@ -591,6 +595,8 @@ class ActionListHarnessTest {
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-nav-list class="test-base-list-functionality">
         <a mat-list-item (click)="onClick($event, 'Item 1')">
@@ -637,6 +643,8 @@ class NavListHarnessTest {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-selection-list class="test-base-list-functionality">
       <mat-list-option togglePosition="before">

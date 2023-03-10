@@ -1134,12 +1134,16 @@ describe('MatSnackBar Positioning', () => {
   }));
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  jit: true,
+  selector: 'dir-with-view-container',
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component',
   template: `<dir-with-view-container *ngIf="childComponentExists"></dir-with-view-container>`,
 })
@@ -1154,7 +1158,9 @@ class ComponentWithChildViewContainer {
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component-with-template-ref',
+
   template: `
     <ng-template let-data>
       Fries {{localValue}} {{data?.value}}
@@ -1167,7 +1173,10 @@ class ComponentWithTemplateRef {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Burritos are on the way.</p>'})
+@Component({
+  jit: true,
+  template: '<p>Burritos are on the way.</p>',
+})
 class BurritosNotification {
   constructor(
     public snackBarRef: MatLegacySnackBarRef<BurritosNotification>,
@@ -1176,6 +1185,7 @@ class BurritosNotification {
 }
 
 @Component({
+  jit: true,
   template: '',
   providers: [MatLegacySnackBar],
 })

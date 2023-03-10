@@ -18,7 +18,10 @@ describe('MixinColor', () => {
 
   it('should augment an existing class with a color property', () => {
     const classWithColor = mixinColor(TestClass);
-    @Component({template: ''})
+    @Component({
+      jit: true,
+      template: '',
+    })
     class TestComponent extends classWithColor {
       constructor(elementRef: ElementRef) {
         super(elementRef);
@@ -42,7 +45,10 @@ describe('MixinColor', () => {
 
   it('should remove old color classes if new color is set', () => {
     const classWithColor = mixinColor(TestClass);
-    @Component({template: ''})
+    @Component({
+      jit: true,
+      template: '',
+    })
     class TestComponent extends classWithColor {
       constructor(elementRef: ElementRef) {
         super(elementRef);
@@ -77,7 +83,10 @@ describe('MixinColor', () => {
 
   it('should allow having no color set', () => {
     const classWithColor = mixinColor(TestClass);
-    @Component({template: ''})
+    @Component({
+      jit: true,
+      template: '',
+    })
     class TestComponent extends classWithColor {
       constructor(elementRef: ElementRef) {
         super(elementRef);
@@ -108,7 +117,10 @@ describe('MixinColor', () => {
 
   it('should allow having a default color if specified', () => {
     const classWithColor = mixinColor(TestClass, 'accent');
-    @Component({template: ''})
+    @Component({
+      jit: true,
+      template: '',
+    })
     class TestComponent extends classWithColor {
       constructor(elementRef: ElementRef) {
         super(elementRef);
@@ -132,7 +144,10 @@ describe('MixinColor', () => {
 
   it('should allow for the default color to change after init', () => {
     const classWithColor = mixinColor(TestClass, 'accent');
-    @Component({template: ''})
+    @Component({
+      jit: true,
+      template: '',
+    })
     class TestComponent extends classWithColor {
       constructor(elementRef: ElementRef) {
         super(elementRef);

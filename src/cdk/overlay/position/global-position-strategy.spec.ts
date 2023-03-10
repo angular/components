@@ -459,5 +459,8 @@ describe('GlobalPositonStrategy', () => {
   });
 });
 
-@Component({template: ''})
+@Component({
+  jit: true,
+  template: '',
+})
 class BlankPortal {}

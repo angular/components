@@ -5223,7 +5223,9 @@ describe('MatSelect', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'basic-select',
+
   template: `
     <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
@@ -5271,7 +5273,9 @@ class BasicSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'ng-model-select',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" ngModel [disabled]="isDisabled">
@@ -5295,7 +5299,9 @@ class NgModelSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'many-selects',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="First">
@@ -5314,7 +5320,9 @@ class NgModelSelect {
 class ManySelects {}
 
 @Component({
+  jit: true,
   selector: 'ng-if-select',
+
   template: `
     <div *ngIf="isShowing">
       <mat-form-field>
@@ -5340,7 +5348,9 @@ class NgIfSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'select-with-change-event',
+
   template: `
     <mat-form-field>
       <mat-select (selectionChange)="changeListener($event)">
@@ -5365,7 +5375,9 @@ class SelectWithChangeEvent {
 }
 
 @Component({
+  jit: true,
   selector: 'select-init-without-options',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food I want to eat right now" [formControl]="control">
@@ -5393,8 +5405,10 @@ class SelectInitWithoutOptions {
 }
 
 @Component({
+  jit: true,
   selector: 'custom-select-accessor',
   template: `<mat-form-field><mat-select></mat-select></mat-form-field>`,
+
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -5412,8 +5426,10 @@ class CustomSelectAccessor implements ControlValueAccessor {
 }
 
 @Component({
+  jit: true,
   selector: 'comp-with-custom-select',
   template: `<custom-select-accessor [formControl]="ctrl"></custom-select-accessor>`,
+
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -5428,7 +5444,9 @@ class CompWithCustomSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'select-infinite-loop',
+
   template: `
     <mat-form-field>
       <mat-select [(ngModel)]="value"></mat-select>
@@ -5441,6 +5459,7 @@ class SelectWithErrorSibling {
 }
 
 @Component({
+  jit: true,
   selector: 'throws-error-on-init',
   template: '',
 })
@@ -5451,8 +5470,10 @@ class ThrowsErrorOnInit implements OnInit {
 }
 
 @Component({
+  jit: true,
   selector: 'basic-select-on-push',
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control">
@@ -5473,8 +5494,10 @@ class BasicSelectOnPush {
 }
 
 @Component({
+  jit: true,
   selector: 'basic-select-on-push-preselected',
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control">
@@ -5496,7 +5519,9 @@ class BasicSelectOnPushPreselected {
 }
 
 @Component({
+  jit: true,
   selector: 'floating-label-select',
+
   template: `
     <mat-form-field [floatLabel]="floatLabel">
       <mat-select [placeholder]="placeholder" [formControl]="control">
@@ -5521,7 +5546,9 @@ class FloatLabelSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'multi-select',
+
   template: `
     <mat-form-field>
       <mat-select multiple placeholder="Food" [formControl]="control"
@@ -5552,13 +5579,16 @@ class MultiSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'select-with-plain-tabindex',
   template: `<mat-form-field><mat-select tabindex="5"></mat-select></mat-form-field>`,
 })
 class SelectWithPlainTabindex {}
 
 @Component({
+  jit: true,
   selector: 'select-early-sibling-access',
+
   template: `
     <mat-form-field>
       <mat-select #select="matSelect"></mat-select>
@@ -5569,7 +5599,9 @@ class SelectWithPlainTabindex {}
 class SelectEarlyAccessSibling {}
 
 @Component({
+  jit: true,
   selector: 'basic-select-initially-hidden',
+
   template: `
     <mat-form-field>
       <mat-select [style.display]="isVisible ? 'block' : 'none'">
@@ -5583,7 +5615,9 @@ class BasicSelectInitiallyHidden {
 }
 
 @Component({
+  jit: true,
   selector: 'basic-select-no-placeholder',
+
   template: `
     <mat-form-field>
       <mat-select>
@@ -5595,7 +5629,9 @@ class BasicSelectInitiallyHidden {
 class BasicSelectNoPlaceholder {}
 
 @Component({
+  jit: true,
   selector: 'basic-select-with-theming',
+
   template: `
     <mat-form-field [color]="theme">
       <mat-select placeholder="Food">
@@ -5611,7 +5647,9 @@ class BasicSelectWithTheming {
 }
 
 @Component({
+  jit: true,
   selector: 'reset-values-select',
+
   template: `
     <mat-form-field>
       <mat-select [formControl]="control">
@@ -5638,6 +5676,8 @@ class ResetValuesSelect {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select [formControl]="control">
@@ -5658,7 +5698,9 @@ class FalsyValueSelect {
 }
 
 @Component({
+  jit: true,
   selector: 'select-with-groups',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
@@ -5715,9 +5757,9 @@ class SelectWithGroups {
 }
 
 @Component({
+  jit: true,
   selector: 'select-with-indirect-groups',
-  // Note that we need the blank `ngSwitch` in order to have
-  // a directive between `mat-select` and `mat-optgroup`.
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
@@ -5737,7 +5779,9 @@ class SelectWithGroups {
 class SelectWithIndirectDescendantGroups extends SelectWithGroups {}
 
 @Component({
+  jit: true,
   selector: 'select-with-groups',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
@@ -5761,6 +5805,8 @@ class SelectWithGroupsAndNgContainer {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <form>
       <mat-form-field>
@@ -5774,6 +5820,8 @@ class InvalidSelectInForm {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <form [formGroup]="formGroup">
       <mat-form-field>
@@ -5802,6 +5850,8 @@ class SelectInsideFormGroup {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(value)]="selectedFood">
@@ -5824,6 +5874,8 @@ class BasicSelectWithoutForms {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(value)]="selectedFood">
@@ -5845,6 +5897,8 @@ class BasicSelectWithoutFormsPreselected {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(value)]="selectedFoods" multiple>
@@ -5867,7 +5921,9 @@ class BasicSelectWithoutFormsMultiple {
 }
 
 @Component({
+  jit: true,
   selector: 'select-with-custom-trigger',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control" #select="matSelect">
@@ -5890,7 +5946,9 @@ class SelectWithCustomTrigger {
 }
 
 @Component({
+  jit: true,
   selector: 'ng-model-compare-with',
+
   template: `
     <mat-form-field>
       <mat-select [ngModel]="selectedFood" (ngModelChange)="setFoodByCopy($event)"
@@ -5938,6 +5996,8 @@ class NgModelCompareWithSelect {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
       <mat-option *ngFor="let food of foods" [value]="food.value">
@@ -5957,6 +6017,8 @@ class CustomErrorBehaviorSelect {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(ngModel)]="selectedFoods">
@@ -5981,7 +6043,9 @@ class SingleSelectWithPreselectedArrayValues {
 }
 
 @Component({
+  jit: true,
   selector: 'select-without-option-centering',
+
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control" disableOptionCentering>
@@ -6010,6 +6074,8 @@ class SelectWithoutOptionCentering {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Select a thing</mat-label>
@@ -6025,6 +6091,8 @@ class SelectWithFormFieldLabel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field appearance="fill">
       <mat-label>Select something</mat-label>
@@ -6039,6 +6107,8 @@ class SelectWithNgIfAndLabel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select multiple [ngModel]="value">
@@ -6061,7 +6131,9 @@ class MultiSelectWithLotsOfOptions {
 }
 
 @Component({
+  jit: true,
   selector: 'basic-select-with-reset',
+
   template: `
     <mat-form-field>
       <mat-select [formControl]="control">
@@ -6080,7 +6152,9 @@ class SelectWithResetOptionAndFormControl {
 }
 
 @Component({
+  jit: true,
   selector: 'select-with-placeholder-in-ngcontainer-with-ngIf',
+
   template: `
     <mat-form-field>
       <ng-container *ngIf="true">
@@ -6096,6 +6170,8 @@ class SelectWithResetOptionAndFormControl {
 class SelectInNgContainer {}
 
 @Component({
+  jit: true,
+
   template: `
     <form [formGroup]="form">
       <mat-form-field>

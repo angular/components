@@ -207,6 +207,8 @@ describe('ContentObserver injectable', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div
       (cdkObserveContent)="doSomething()"
@@ -219,13 +221,17 @@ class ComponentWithTextContent {
   doSomething() {}
 }
 
-@Component({template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>`})
+@Component({
+  jit: true,
+  template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>`,
+})
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}
 }
 
 @Component({
+  jit: true,
   template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`,
 })
 class ComponentWithDebouncedListener {
@@ -234,6 +240,7 @@ class ComponentWithDebouncedListener {
 }
 
 @Component({
+  jit: true,
   template: `<div #contentEl>{{text}}</div>`,
 })
 class UnobservedComponentWithTextContent {

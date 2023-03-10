@@ -506,6 +506,8 @@ describe('Menu', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="panel"></button>
@@ -527,6 +529,8 @@ class MenuCheckboxGroup {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenu>
       <button cdkMenuItem>Inbox</button>
@@ -537,6 +541,8 @@ class MenuCheckboxGroup {
 class InlineMenu {}
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTargetMenuAim cdkMenuBar>
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
@@ -595,6 +601,8 @@ class WithComplexNestedMenus {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar cdkTargetMenuAim style="position: fixed; bottom: 0">
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>

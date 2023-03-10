@@ -392,6 +392,8 @@ describe('MatMultiYearView', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-multi-year-view [(activeDate)]="date" [(selected)]="selected"
                          (yearSelected)="selectedYear=$event"></mat-multi-year-view>`,
@@ -405,6 +407,8 @@ class StandardMultiYearView {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-multi-year-view
       [(activeDate)]="activeDate"
@@ -423,6 +427,8 @@ class MultiYearViewWithDateFilter {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-multi-year-view [(activeDate)]="activeDate" [minDate]="minDate" [maxDate]="maxDate">
     </mat-multi-year-view>
@@ -435,6 +441,8 @@ class MultiYearViewWithMinMaxDate {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-multi-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-multi-year-view>
   `,

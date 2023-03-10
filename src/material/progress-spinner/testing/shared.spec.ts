@@ -50,6 +50,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-progress-spinner mode="determinate" [value]="value"></mat-progress-spinner>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

@@ -44,6 +44,8 @@ export function runHarnessTests(
 
 // TODO: Add and test progress bars with modes `buffer` and `query`.
 @Component({
+  jit: true,
+
   template: `
     <mat-progress-bar mode="determinate" [value]="value"></mat-progress-bar>
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>

@@ -1531,7 +1531,9 @@ describe('MDC-based MatTooltip', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'app',
+
   template: `
     <button #button
             *ngIf="showButton"
@@ -1553,7 +1555,9 @@ class BasicTooltipDemo {
 }
 
 @Component({
+  jit: true,
   selector: 'app',
+
   template: `
     <div cdkScrollable style="padding: 100px; margin: 300px;
                                height: 200px; width: 200px; overflow: auto;">
@@ -1583,12 +1587,15 @@ class ScrollableTooltipDemo {
 }
 
 @Component({
+  jit: true,
   selector: 'app',
+
   template: `
     <button [matTooltip]="message"
             [matTooltipPosition]="position">
       Button
     </button>`,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class OnPushTooltipDemo {
@@ -1597,7 +1604,9 @@ class OnPushTooltipDemo {
 }
 
 @Component({
+  jit: true,
   selector: 'app',
+
   template: `
     <button *ngFor="let tooltip of tooltips"
             [matTooltip]="tooltip">
@@ -1609,6 +1618,7 @@ class DynamicTooltipsDemo {
 }
 
 @Component({
+  jit: true,
   template: `<button [matTooltip]="message" [attr.aria-label]="message">Click me</button>`,
 })
 class DataBoundAriaLabelTooltip {
@@ -1616,6 +1626,8 @@ class DataBoundAriaLabelTooltip {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input
       #input
@@ -1635,6 +1647,8 @@ class TooltipOnTextFields {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button
       #button
@@ -1649,6 +1663,7 @@ class TooltipOnDraggableElement {
 }
 
 @Component({
+  jit: true,
   selector: 'app',
   template: `<button #button [matTooltip]="message">Button</button>`,
 })
@@ -1659,6 +1674,7 @@ class TooltipDemoWithoutPositionBinding {
 }
 
 @Component({
+  jit: true,
   selector: 'app',
   styles: [`button { width: 500px; height: 500px; }`],
   template: `<button #button [matTooltip]="message">Button</button>`,

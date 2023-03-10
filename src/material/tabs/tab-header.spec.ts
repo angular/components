@@ -717,6 +717,8 @@ interface Tab {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div [dir]="dir">
     <mat-tab-header [selectedIndex]="selectedIndex" [disableRipple]="disableRipple"
@@ -732,6 +734,7 @@ interface Tab {
     </mat-tab-header>
   </div>
   `,
+
   styles: [
     `
     :host {

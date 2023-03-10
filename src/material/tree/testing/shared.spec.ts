@@ -224,6 +224,8 @@ interface ExampleFlatNode {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="flatTreeDataSource" [treeControl]="flatTreeControl">
       <!-- This is the tree node template for leaf nodes -->

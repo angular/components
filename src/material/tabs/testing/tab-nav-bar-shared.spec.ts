@@ -101,6 +101,8 @@ export function runTabNavBarHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a href="#" (click)="select(0, $event)" [active]="activeLink === 0" matTabLink>First</a>

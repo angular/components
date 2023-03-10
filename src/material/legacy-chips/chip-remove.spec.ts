@@ -87,6 +87,8 @@ describe('Chip Remove', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip
       [removable]="removable"

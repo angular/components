@@ -8,7 +8,9 @@ import {PendingCopy} from './pending-copy';
 const COPY_CONTENT = 'copy content';
 
 @Component({
+  jit: true,
   selector: 'copy-to-clipboard-host',
+
   template: `
     <button
     [cdkCopyToClipboard]="content"

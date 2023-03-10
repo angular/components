@@ -1109,6 +1109,8 @@ describe('MenuBar', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <ul cdkMenuBar>
       <li role="none">
@@ -1127,6 +1129,8 @@ describe('MenuBar', () => {
 class MenuBarRadioGroup {}
 
 @Component({
+  jit: true,
+
   template: `
     <div>
       <div cdkMenuBar id="menu_bar">
@@ -1168,6 +1172,8 @@ class MultiMenuWithSubmenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div>
       <div cdkMenuBar id="menu_bar">
@@ -1194,6 +1200,8 @@ class MenuWithCheckboxes {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div>
       <div cdkMenuBar id="menu_bar">
@@ -1220,6 +1228,8 @@ class MenuWithRadioButtons {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div id="container">
       <div cdkMenuBar>

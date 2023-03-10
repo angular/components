@@ -70,6 +70,8 @@ function finishInit(fixture: ComponentFixture<any>) {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport
         autosize [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx"
@@ -81,6 +83,7 @@ function finishInit(fixture: ComponentFixture<any>) {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-content-wrapper {
@@ -93,6 +96,7 @@ function finishInit(fixture: ComponentFixture<any>) {
     }
   `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class AutoSizeVirtualScroll {

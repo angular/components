@@ -996,12 +996,18 @@ describe('MatBottomSheet with default options', () => {
   }));
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  jit: true,
+  selector: 'dir-with-view-container',
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
-@Component({template: `<dir-with-view-container></dir-with-view-container>`})
+@Component({
+  jit: true,
+  template: `<dir-with-view-container></dir-with-view-container>`,
+})
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
 
@@ -1011,7 +1017,9 @@ class ComponentWithChildViewContainer {
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component-with-template-ref',
+
   template: `<ng-template let-data let-bottomSheetRef="bottomSheetRef">
       Cheese {{localValue}} {{data?.value}}{{setRef(bottomSheetRef)}}</ng-template>`,
 })
@@ -1027,7 +1035,10 @@ class ComponentWithTemplateRef {
   }
 }
 
-@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({
+  jit: true,
+  template: '<p>Pizza</p> <input> <button>Close</button>',
+})
 class PizzaMsg {
   constructor(
     public bottomSheetRef: MatBottomSheetRef<PizzaMsg>,
@@ -1036,10 +1047,15 @@ class PizzaMsg {
   ) {}
 }
 
-@Component({template: '<p>Taco</p>'})
+@Component({
+  jit: true,
+  template: '<p>Taco</p>',
+})
 class TacoMsg {}
 
 @Component({
+  jit: true,
+
   template: `
     <h1>This is the title</h1>
     <p>This is the paragraph</p>
@@ -1048,6 +1064,7 @@ class TacoMsg {}
 class ContentElementDialog {}
 
 @Component({
+  jit: true,
   template: '',
   providers: [MatBottomSheet],
 })
@@ -1055,12 +1072,16 @@ class ComponentThatProvidesMatBottomSheet {
   constructor(public bottomSheet: MatBottomSheet) {}
 }
 
-@Component({template: ''})
+@Component({
+  jit: true,
+  template: '',
+})
 class BottomSheetWithInjectedData {
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {}
 }
 
 @Component({
+  jit: true,
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
 })

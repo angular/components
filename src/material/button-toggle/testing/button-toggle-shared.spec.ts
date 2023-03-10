@@ -135,6 +135,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-button-toggle
         name="first-name"

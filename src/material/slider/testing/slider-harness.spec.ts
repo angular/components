@@ -188,6 +188,8 @@ describe('MDC-based MatSliderHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-slider id="single" [displayWith]="displayFn" [disabled]="singleSliderDisabled">
       <input

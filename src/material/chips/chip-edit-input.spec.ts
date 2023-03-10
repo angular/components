@@ -44,6 +44,7 @@ describe('MDC-based MatChipEditInput', () => {
 });
 
 @Component({
+  jit: true,
   template: `<mat-chip><span matChipEditInput></span></mat-chip>`,
 })
 class ChipEditInputContainer {}

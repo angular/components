@@ -1042,6 +1042,8 @@ describe('MDC-based MatChipGrid', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-grid [tabIndex]="tabIndex" [role]="role" #chipGrid>
       <mat-chip-row *ngFor="let i of chips"
@@ -1060,6 +1062,8 @@ class StandardChipGrid {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Add a chip</mat-label>
@@ -1083,6 +1087,8 @@ class FormFieldChipGrid {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>New food...</mat-label>
@@ -1143,6 +1149,8 @@ class InputChipGrid {
 }
 
 @Component({
+  jit: true,
+
   template: `
 <form #form="ngForm" novalidate>
   <mat-form-field>
@@ -1171,11 +1179,14 @@ class ChipGridWithFormErrorMessages {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-grid #chipGrid>
       <mat-chip-row *ngFor="let i of numbers" (removed)="remove(i)">{{i}}</mat-chip-row>
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-chip-grid>`,
+
   animations: [
     // For the case we're testing this animation doesn't
     // have to be used anywhere, it just has to be defined.
@@ -1197,6 +1208,8 @@ class StandardChipGridWithAnimations {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-chip-grid #chipGrid>

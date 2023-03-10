@@ -553,6 +553,8 @@ function getLastButton(fixture: ComponentFixture<any>) {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator [pageIndex]="pageIndex"
                    [pageSize]="pageSize"
@@ -587,6 +589,8 @@ class MatPaginatorApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator></mat-paginator>
   `,
@@ -596,6 +600,8 @@ class MatPaginatorWithoutInputsApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
   `,
@@ -605,6 +611,8 @@ class MatPaginatorWithoutPageSizeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator [pageSize]="10"></mat-paginator>
   `,
@@ -614,6 +622,8 @@ class MatPaginatorWithoutOptionsApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator pageIndex="0"
                    pageSize="10"
@@ -627,6 +637,8 @@ class MatPaginatorWithStringValues {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator [pageSizeOptions]="pageSizeOptions">
     </mat-paginator>

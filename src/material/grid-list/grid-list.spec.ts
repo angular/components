@@ -524,24 +524,36 @@ function getComputedLeft(element: DebugElement): number {
   return elementRect.left - bodyRect.left;
 }
 
-@Component({template: '<mat-grid-list></mat-grid-list>'})
+@Component({
+  jit: true,
+  template: '<mat-grid-list></mat-grid-list>',
+})
 class GridListWithoutCols {}
 
-@Component({template: '<mat-grid-list cols="4" rowHeight="4:3:2"></mat-grid-list>'})
+@Component({
+  jit: true,
+  template: '<mat-grid-list cols="4" rowHeight="4:3:2"></mat-grid-list>',
+})
 class GridListWithInvalidRowHeightRatio {}
 
 @Component({
+  jit: true,
   template: '<mat-grid-list cols="4"><mat-grid-tile colspan="5"></mat-grid-tile></mat-grid-list>',
 })
 class GridListWithTooWideColspan {}
 
-@Component({template: '<mat-grid-list [cols]="cols"></mat-grid-list>'})
+@Component({
+  jit: true,
+  template: '<mat-grid-list [cols]="cols"></mat-grid-list>',
+})
 class GridListWithDynamicCols {
   @ViewChild(MatGridList) gridList: MatGridList;
   cols = 2;
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:200px">
       <mat-grid-list cols="1">
@@ -552,6 +564,8 @@ class GridListWithDynamicCols {
 class GridListWithUnspecifiedRowHeight {}
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:400px">
       <mat-grid-list cols="1" [rowHeight]="rowHeight">
@@ -564,6 +578,8 @@ class GirdListWithRowHeightRatio {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="1" rowHeight="fit" [style.height]="totalHeight">
       <mat-grid-tile></mat-grid-tile>
@@ -575,6 +591,8 @@ class GridListWithFitRowHeightMode {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="4" [rowHeight]="rowHeight">
       <mat-grid-tile></mat-grid-tile>
@@ -585,6 +603,8 @@ class GridListWithFixedRowHeightMode {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="4" rowHeight="100">
       <mat-grid-tile></mat-grid-tile>
@@ -595,6 +615,8 @@ class GridListWithUnitlessFixedRowHeight {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:200px">
       <mat-grid-list cols="2" rowHeight="100px">
@@ -607,6 +629,8 @@ class GridListWithUnitlessFixedRowHeight {
 class GridListWithUnspecifiedGutterSize {}
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:200px">
       <mat-grid-list cols="2" gutterSize="2px" rowHeight="100px">
@@ -619,6 +643,8 @@ class GridListWithUnspecifiedGutterSize {}
 class GridListWithGutterSize {}
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:200px">
       <mat-grid-list cols="2" gutterSize="2" rowHeight="100px">
@@ -631,6 +657,8 @@ class GridListWithGutterSize {}
 class GridListWithUnitlessGutterSize {}
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:400px">
       <mat-grid-list cols="1" rowHeight="4:1">
@@ -642,6 +670,8 @@ class GridListWithUnitlessGutterSize {}
 class GridListWithRatioHeightAndMulipleRows {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="1" rowHeight="100px">
       <mat-grid-tile></mat-grid-tile>
@@ -651,6 +681,8 @@ class GridListWithRatioHeightAndMulipleRows {}
 class GridListWithFixRowHeightAndMultipleRows {}
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:400px">
       <mat-grid-list cols="4">
@@ -663,6 +695,8 @@ class GridListWithColspanBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="1" rowHeight="100px">
       <mat-grid-tile [rowspan]="rowspan"></mat-grid-tile>
@@ -673,6 +707,8 @@ class GridListWithRowspanBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:400px">
       <mat-grid-list cols="4" rowHeight="100px">
@@ -688,6 +724,8 @@ class GridListWithComplexLayout {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div style="width:100px">
     <mat-grid-list [cols]="10" gutterSize="0px" rowHeight="10px">
@@ -702,6 +740,8 @@ class GridListWithComplexLayout {
 class GridListWithLayout {}
 
 @Component({
+  jit: true,
+
   template: `
   <div style="width:100px">
     <mat-grid-list [cols]="10" gutterSize="0px" rowHeight="10px">
@@ -715,6 +755,8 @@ class GridListWithLayout {}
 class GridListWithSingleCellAtBeginning {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="1">
       <mat-grid-tile>
@@ -727,6 +769,8 @@ class GridListWithSingleCellAtBeginning {}
 class GridListWithFootersWithoutLines {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="1">
       <mat-grid-tile>
@@ -740,6 +784,8 @@ class GridListWithFootersWithoutLines {}
 class GridListWithFooterContainingTwoLines {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list cols="1">
       <mat-grid-tile>
@@ -755,6 +801,8 @@ class GridListWithFooterContainingTwoLines {}
 class GridListWithFooterContainingTwoIndirectDescendantLines {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-grid-list cols="5">
     <mat-grid-tile [rowspan]="1" [colspan]="3">1</mat-grid-tile>
@@ -767,19 +815,22 @@ class GridListWithFooterContainingTwoIndirectDescendantLines {}
 class GridListWithoutMatchingGap {}
 
 @Component({
+  jit: true,
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
   providers: [{provide: Directionality, useValue: {}}],
 })
 class GridListWithEmptyDirectionality {}
 
 @Component({
+  jit: true,
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
   providers: [{provide: Directionality, useValue: {value: 'rtl'}}],
 })
 class GridListWithRtl {}
 
 @Component({
-  // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+  jit: true,
+
   template: `
     <div style="width:200px">
       <mat-grid-list cols="1">
@@ -793,6 +844,8 @@ class GridListWithRtl {}
 class GridListWithIndirectTileDescendants {}
 
 @Component({
+  jit: true,
+
   template: `
     <div style="width:200px">
       <mat-grid-list cols="2" rowHeight="100px">

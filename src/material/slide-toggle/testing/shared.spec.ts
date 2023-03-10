@@ -166,6 +166,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-slide-toggle
           [formControl]="ctrl"

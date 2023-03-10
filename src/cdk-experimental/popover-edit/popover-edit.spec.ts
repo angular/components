@@ -64,7 +64,9 @@ interface PeriodicElement {
   weight: number;
 }
 
-@Directive()
+@Directive({
+  jit: true,
+})
 abstract class BaseTestComponent {
   @ViewChild('table') table: ElementRef;
 
@@ -184,6 +186,8 @@ abstract class BaseTestComponent {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <table #table editable [dir]="direction">
     <ng-template #nameEdit let-element>
@@ -218,6 +222,8 @@ class VanillaTableOutOfCell extends BaseTestComponent {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <table #table editable [dir]="direction">
     <tr *ngFor="let element of elements">
@@ -263,6 +269,8 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div #table [dir]="direction">
     <cdk-table cdk-table editable [dataSource]="dataSource">
@@ -313,6 +321,8 @@ class CdkFlexTableInCell extends BaseTestComponent {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div #table [dir]="direction">
     <table cdk-table editable [dataSource]="dataSource">

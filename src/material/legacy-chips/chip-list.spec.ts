@@ -1576,6 +1576,8 @@ describe('MatChipList', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-list [tabIndex]="tabIndex" [selectable]="selectable">
       <mat-chip *ngFor="let i of chips" (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
@@ -1593,6 +1595,8 @@ class StandardChipList {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Add a chip</mat-label>
@@ -1616,7 +1620,9 @@ class FormFieldChipList {
 }
 
 @Component({
+  jit: true,
   selector: 'basic-chip-list',
+
   template: `
     <mat-form-field>
       <mat-chip-list placeholder="Food" [formControl]="control"
@@ -1648,7 +1654,9 @@ class BasicChipList {
 }
 
 @Component({
+  jit: true,
   selector: 'multi-selection-chip-list',
+
   template: `
     <mat-form-field>
       <mat-chip-list [multiple]="true" placeholder="Food" [formControl]="control"
@@ -1682,7 +1690,9 @@ class MultiSelectionChipList {
 }
 
 @Component({
+  jit: true,
   selector: 'input-chip-list',
+
   template: `
     <mat-form-field>
       <mat-chip-list [multiple]="true"
@@ -1746,6 +1756,8 @@ class InputChipList {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-chip-list [formControl]="control">
@@ -1764,6 +1776,8 @@ class FalsyValueChipList {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-list>
       <mat-chip *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
@@ -1783,6 +1797,8 @@ class SelectedChipList {
 }
 
 @Component({
+  jit: true,
+
   template: `
 <form #form="ngForm" novalidate>
   <mat-form-field>
@@ -1810,10 +1826,13 @@ class ChipListWithFormErrorMessages {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-list>
       <mat-chip *ngFor="let i of numbers" (removed)="remove(i)">{{i}}</mat-chip>
     </mat-chip-list>`,
+
   animations: [
     // For the case we're testing this animation doesn't
     // have to be used anywhere, it just has to be defined.
@@ -1835,6 +1854,8 @@ class StandardChipListWithAnimations {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-chip-list>
@@ -1855,6 +1876,8 @@ class ChipListWithRemove {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-chip-list [formControl]="control">
@@ -1863,6 +1886,7 @@ class ChipListWithRemove {
       </mat-chip-list>
     </mat-form-field>
   `,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PreselectedChipInsideOnPush {
@@ -1870,6 +1894,8 @@ class PreselectedChipInsideOnPush {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <form [formGroup]="form">
       <mat-form-field>
@@ -1897,7 +1923,9 @@ class ChipListInsideDynamicFormGroup {
 }
 
 @Component({
+  jit: true,
   selector: 'basic-chip-list',
+
   template: `
     <mat-form-field>
       <mat-chip-list placeholder="Food" [formControl]="control"

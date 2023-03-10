@@ -834,6 +834,8 @@ describe('MatRipple', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div id="container" #ripple="matRipple" matRipple
          style="position: relative; width:300px; height:200px;">
@@ -845,6 +847,8 @@ class BasicRippleContainer {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div id="container" style="position: relative; width:300px; height:200px;"
       matRipple
@@ -869,11 +873,13 @@ class RippleContainerWithInputBindings {
 }
 
 @Component({
+  jit: true,
   template: `<div id="container" #ripple="matRipple" matRipple></div>`,
 })
 class RippleContainerWithoutBindings {}
 
 @Component({
+  jit: true,
   template: `<div id="container" matRipple *ngIf="!isDestroyed"></div>`,
 })
 class RippleContainerWithNgIf {
@@ -882,6 +888,7 @@ class RippleContainerWithNgIf {
 }
 
 @Component({
+  jit: true,
   styles: [`* { transition: none !important; }`],
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
@@ -889,6 +896,7 @@ class RippleContainerWithNgIf {
 class RippleCssTransitionNone {}
 
 @Component({
+  jit: true,
   styles: [`* { transition-duration: 0ms !important; }`],
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
@@ -896,6 +904,8 @@ class RippleCssTransitionNone {}
 class RippleCssTransitionDurationZero {}
 
 @Component({
+  jit: true,
+
   template: `
     <div *ngIf="show" (click)="show = false" matRipple>
       Click to remove this element.

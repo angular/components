@@ -197,6 +197,8 @@ describe('MatTabBody', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <ng-template>Tab Body Content</ng-template>
     <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>

@@ -1204,12 +1204,16 @@ describe('Dialog with a parent Dialog', () => {
   }));
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  jit: true,
+  selector: 'dir-with-view-container',
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
 })
@@ -1218,6 +1222,7 @@ class ComponentWithOnPushViewContainer {
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component',
   template: `<dir-with-view-container></dir-with-view-container>`,
 })
@@ -1230,7 +1235,9 @@ class ComponentWithChildViewContainer {
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component-with-template-ref',
+
   template: `<ng-template let-data let-dialogRef="dialogRef">
       Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
 })
@@ -1247,7 +1254,10 @@ class ComponentWithTemplateRef {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({
+  jit: true,
+  template: '<p>Pizza</p> <input> <button>Close</button>',
+})
 class PizzaMsg {
   constructor(
     public dialogRef: DialogRef<PizzaMsg>,
@@ -1257,6 +1267,8 @@ class PizzaMsg {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <h1>This is the title</h1>
   `,
@@ -1266,6 +1278,7 @@ class ContentElementDialog {
 }
 
 @Component({
+  jit: true,
   template: '',
   providers: [Dialog],
 })
@@ -1274,15 +1287,22 @@ class ComponentThatProvidesMatDialog {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: ''})
+@Component({
+  jit: true,
+  template: '',
+})
 class DialogWithInjectedData {
   constructor(@Inject(DIALOG_DATA) public data: any) {}
 }
 
-@Component({template: '<p>Pasta</p>'})
+@Component({
+  jit: true,
+  template: '<p>Pasta</p>',
+})
 class DialogWithoutFocusableElements {}
 
 @Component({
+  jit: true,
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
 })
@@ -1291,7 +1311,9 @@ class ShadowDomComponent {}
 const TEMPLATE_INJECTOR_TEST_TOKEN = new InjectionToken<string>('TEMPLATE_INJECTOR_TEST_TOKEN');
 
 @Component({
+  jit: true,
   template: `<ng-template><template-injector-inner></template-injector-inner></ng-template>`,
+
   providers: [
     {
       provide: TEMPLATE_INJECTOR_TEST_TOKEN,
@@ -1305,6 +1327,7 @@ class TemplateInjectorParentComponent {
 }
 
 @Directive({
+  jit: true,
   selector: 'template-injector-inner',
 })
 class TemplateInjectorInnerDirective {

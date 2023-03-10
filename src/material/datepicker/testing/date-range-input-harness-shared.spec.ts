@@ -226,6 +226,8 @@ export function runDateRangeInputHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-date-range-input
       basic

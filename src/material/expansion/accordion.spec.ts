@@ -301,6 +301,8 @@ describe('MatAccordion', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
   <mat-accordion [multi]="multi">
     <mat-expansion-panel *ngFor="let i of [0, 1, 2, 3]">
@@ -318,6 +320,8 @@ class SetOfItems {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-accordion>
     <mat-expansion-panel>
@@ -343,6 +347,8 @@ class NestedAccordions {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-accordion>
     <mat-expansion-panel #outerPanel="matExpansionPanel">
@@ -360,6 +366,8 @@ class NestedPanel {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-accordion [hideToggle]="hideToggle">
     <mat-expansion-panel>
@@ -373,6 +381,8 @@ class AccordionWithHideToggle {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-accordion [togglePosition]="togglePosition">
     <mat-expansion-panel>

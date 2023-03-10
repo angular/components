@@ -868,6 +868,8 @@ describe('MDC-based MatChipListbox', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-listbox [tabIndex]="tabIndex" [selectable]="selectable" [role]="role">
       <mat-chip-option *ngFor="let i of chips" (select)="chipSelect(i)"
@@ -887,6 +889,8 @@ class StandardChipListbox {
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-chip-listbox [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [selectable]="selectable">
@@ -917,6 +921,8 @@ class BasicChipListbox {
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-chip-listbox [multiple]="true" [formControl]="control"
         [required]="isRequired"
@@ -948,6 +954,8 @@ class MultiSelectionChipListbox {
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-chip-listbox [formControl]="control">
         <mat-chip-option *ngFor="let food of foods" [value]="food.value">
@@ -966,6 +974,8 @@ class FalsyValueChipListbox {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-listbox>
         <mat-chip-option *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
@@ -984,6 +994,8 @@ class SelectedChipListbox {
 }
 
 @Component({
+  jit: true,
+
   template: `
       <mat-chip-listbox [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [selectable]="selectable">

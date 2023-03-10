@@ -37,6 +37,8 @@ interface TestData {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="data">
       <mat-text-column name="propertyA"></mat-text-column>

@@ -1114,6 +1114,8 @@ describe('MatDateRangeInput', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field hintLabel="Pick between a start and an end">
       <mat-label>Enter a date</mat-label>
@@ -1164,6 +1166,8 @@ class StandardRangePicker {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-date-range-input [rangePicker]="rangePicker">
@@ -1177,6 +1181,8 @@ class StandardRangePicker {
 class RangePickerNoStart {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-date-range-input [rangePicker]="rangePicker">
@@ -1190,6 +1196,8 @@ class RangePickerNoStart {}
 class RangePickerNoEnd {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-date-range-input [rangePicker]="rangePicker">
@@ -1228,6 +1236,8 @@ class RangePickerNgModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-date-range-input [rangePicker]="rangePicker">
@@ -1245,7 +1255,9 @@ class RangePickerNoLabel {
 }
 
 @Directive({
+  jit: true,
   selector: '[customValidator]',
+
   providers: [
     {
       provide: NG_VALIDATORS,
@@ -1259,6 +1271,8 @@ class CustomValidator implements Validator {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-date-range-input [rangePicker]="rangePicker" [min]="min" [max]="max">
@@ -1279,6 +1293,8 @@ class RangePickerWithCustomValidator {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-date-range-input [rangePicker]="rangePicker">

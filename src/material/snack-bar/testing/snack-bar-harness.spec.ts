@@ -60,6 +60,8 @@ describe('MDC-based MatSnackBarHarness (MDC only behavior)', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <ng-template #custom>My custom snack-bar.</ng-template>
     <ng-template #customWithAction>

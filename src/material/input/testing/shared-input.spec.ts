@@ -222,6 +222,8 @@ export function runInputHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="Favorite food" value="Sushi" name="favorite-food">

@@ -152,6 +152,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-grid-list [cols]="columns">
       <mat-grid-tile>

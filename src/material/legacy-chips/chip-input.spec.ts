@@ -263,6 +263,8 @@ describe('MatChipInput', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-chip-list #chipList [required]="required">

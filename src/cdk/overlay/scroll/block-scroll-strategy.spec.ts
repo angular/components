@@ -214,5 +214,8 @@ describe('BlockScrollStrategy', () => {
 });
 
 /** Simple component that we can attach to the overlay. */
-@Component({template: '<p>Focaccia</p>'})
+@Component({
+  jit: true,
+  template: '<p>Focaccia</p>',
+})
 class FocacciaMsg {}

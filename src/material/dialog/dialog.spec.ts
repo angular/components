@@ -2056,12 +2056,16 @@ describe('MatDialog with explicit injector provided', () => {
   });
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  jit: true,
+  selector: 'dir-with-view-container',
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
 })
@@ -2070,6 +2074,7 @@ class ComponentWithOnPushViewContainer {
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component',
   template: `<dir-with-view-container *ngIf="showChildView"></dir-with-view-container>`,
 })
@@ -2084,7 +2089,9 @@ class ComponentWithChildViewContainer {
 }
 
 @Component({
+  jit: true,
   selector: 'arbitrary-component-with-template-ref',
+
   template: `<ng-template let-data let-dialogRef="dialogRef">
     Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
 })
@@ -2101,7 +2108,10 @@ class ComponentWithTemplateRef {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({
+  jit: true,
+  template: '<p>Pizza</p> <input> <button>Close</button>',
+})
 class PizzaMsg {
   constructor(
     public dialogRef: MatDialogRef<PizzaMsg>,
@@ -2111,6 +2121,8 @@ class PizzaMsg {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <h1 mat-dialog-title>This is the title</h1>
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
@@ -2129,6 +2141,8 @@ class PizzaMsg {
 class ContentElementDialog {}
 
 @Component({
+  jit: true,
+
   template: `
     <ng-template>
       <h1 mat-dialog-title>This is the title</h1>
@@ -2150,27 +2164,41 @@ class ComponentWithContentElementTemplateRef {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 }
 
-@Component({template: '', providers: [MatDialog]})
+@Component({
+  jit: true,
+  template: '',
+  providers: [MatDialog],
+})
 class ComponentThatProvidesMatDialog {
   constructor(public dialog: MatDialog) {}
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: ''})
+@Component({
+  jit: true,
+  template: '',
+})
 class DialogWithInjectedData {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 }
 
-@Component({template: '<p>Pasta</p>'})
+@Component({
+  jit: true,
+  template: '<p>Pasta</p>',
+})
 class DialogWithoutFocusableElements {}
 
 @Component({
+  jit: true,
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class ShadowDomComponent {}
 
-@Component({template: ''})
+@Component({
+  jit: true,
+  template: '',
+})
 class ModuleBoundDialogParentComponent {
   constructor(private _injector: Injector, private _dialog: MatDialog) {}
 
@@ -2190,16 +2218,22 @@ class ModuleBoundDialogService {
 }
 
 @Component({
+  jit: true,
   template: '<module-bound-dialog-child-component></module-bound-dialog-child-component>',
 })
 class ModuleBoundDialogComponent {}
 
-@Component({selector: 'module-bound-dialog-child-component', template: '<p>{{service.name}}</p>'})
+@Component({
+  jit: true,
+  selector: 'module-bound-dialog-child-component',
+  template: '<p>{{service.name}}</p>',
+})
 class ModuleBoundDialogChildComponent {
   constructor(public service: ModuleBoundDialogService) {}
 }
 
 @NgModule({
+  jit: true,
   declarations: [ModuleBoundDialogComponent, ModuleBoundDialogChildComponent],
   providers: [ModuleBoundDialogService],
 })

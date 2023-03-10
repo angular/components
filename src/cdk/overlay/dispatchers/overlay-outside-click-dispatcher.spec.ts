@@ -405,6 +405,7 @@ describe('OverlayOutsideClickDispatcher', () => {
 });
 
 @Component({
+  jit: true,
   template: 'Hello',
 })
 class TestComponent {}

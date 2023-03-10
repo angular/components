@@ -157,6 +157,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-autocomplete #autocomplete="matAutocomplete">
       <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>

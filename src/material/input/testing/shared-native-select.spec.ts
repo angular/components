@@ -195,6 +195,8 @@ export function runNativeSelectHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <select

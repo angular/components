@@ -343,7 +343,9 @@ describe('MatLegacyButton', () => {
 
 /** Test component that contains an MatLegacyButton. */
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `
     <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">

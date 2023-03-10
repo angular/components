@@ -615,6 +615,8 @@ function testSingleColumnSortDirectionSequence(
 type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'overrideDisableClear';
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort
          [matSortActive]="active"
@@ -707,6 +709,8 @@ class FakeDataSource extends DataSource<any> {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-table [dataSource]="dataSource" matSort>
       <ng-container cdkColumnDef="column_a">
@@ -737,6 +741,8 @@ class CdkTableMatSortApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="column_a">
@@ -767,11 +773,14 @@ class MatTableMatSortApp {
 }
 
 @Component({
+  jit: true,
   template: `<div mat-sort-header="a"> A </div>`,
 })
 class MatSortHeaderMissingMatSortApp {}
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort>
       <div mat-sort-header="duplicateId"> A </div>
@@ -782,6 +791,8 @@ class MatSortHeaderMissingMatSortApp {}
 class MatSortDuplicateMatSortableIdsApp {}
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort>
       <div mat-sort-header> A </div>
@@ -791,6 +802,8 @@ class MatSortDuplicateMatSortableIdsApp {}
 class MatSortableMissingIdApp {}
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort matSortDirection="ascending">
       <div mat-sort-header="a"> A </div>
@@ -800,6 +813,8 @@ class MatSortableMissingIdApp {}
 class MatSortableInvalidDirection {}
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort
          [matSortActive]="active"
@@ -833,6 +848,8 @@ class MatSortWithoutExplicitInputs {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort>
       <div id="defaultA" #defaultA mat-sort-header="defaultA" [arrowPosition]="arrowPosition">
@@ -852,6 +869,8 @@ class MatSortWithArrowPosition {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div matSort>
       <div id="defaultA" #defaultA mat-sort-header="defaultA">

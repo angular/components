@@ -116,5 +116,8 @@ describe('RepositionScrollStrategy', () => {
 });
 
 /** Simple component that we can attach to the overlay. */
-@Component({template: '<p>Pasta</p>'})
+@Component({
+  jit: true,
+  template: '<p>Pasta</p>',
+})
 class PastaMsg {}

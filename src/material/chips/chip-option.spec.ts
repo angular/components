@@ -396,6 +396,8 @@ describe('MDC-based Option Chips', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-listbox>
       <div *ngIf="shouldShow">

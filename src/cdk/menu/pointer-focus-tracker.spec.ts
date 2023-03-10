@@ -96,6 +96,7 @@ describe('FocusMouseManger', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'wrapper',
   template: `<ng-content></ng-content>`,
 })
@@ -104,6 +105,8 @@ class MockWrapper implements FocusableElement {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div>
       <wrapper>First</wrapper>

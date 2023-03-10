@@ -896,11 +896,13 @@ describe('FocusMonitor input label detection', () => {
 });
 
 @Component({
+  jit: true,
   template: `<div class="parent"><button>focus me!</button></div>`,
 })
 class PlainButton {}
 
 @Component({
+  jit: true,
   template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`,
 })
 class ButtonWithFocusClasses {
@@ -908,26 +910,32 @@ class ButtonWithFocusClasses {
 }
 
 @Component({
+  jit: true,
   template: `<div tabindex="0" cdkMonitorElementFocus><button></button></div>`,
 })
 class ComplexComponentWithMonitorElementFocus {}
 
 @Component({
+  jit: true,
   template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`,
 })
 class ComplexComponentWithMonitorSubtreeFocus {}
 
 @Component({
+  jit: true,
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`,
 })
 class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {}
 
 @Component({
+  jit: true,
   template: `<ng-container cdkMonitorElementFocus></ng-container>`,
 })
 class FocusMonitorOnCommentNode {}
 
 @Component({
+  jit: true,
+
   template: `
     <label for="test-checkbox">Check me</label>
     <input id="test-checkbox" type="checkbox">
@@ -936,6 +944,7 @@ class FocusMonitorOnCommentNode {}
 class CheckboxWithLabel {}
 
 @Component({
+  jit: true,
   template: `<button cdkMonitorElementFocus #exportedDir="cdkMonitorFocus"></button>`,
 })
 class ExportedFocusMonitor {

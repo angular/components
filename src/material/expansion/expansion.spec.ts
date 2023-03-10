@@ -560,6 +560,8 @@ describe('MatExpansionPanel', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
   <mat-expansion-panel [expanded]="expanded"
                       [hideToggle]="hideToggle"
@@ -581,6 +583,8 @@ class PanelWithContent {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div *ngIf="expansionShown">
     <mat-expansion-panel>
@@ -594,11 +598,14 @@ class PanelWithContentInNgIf {
 }
 
 @Component({
+  jit: true,
+
   styles: [
     `mat-expansion-panel {
       margin: 13px 37px;
     }`,
   ],
+
   template: `
   <mat-expansion-panel [expanded]="expanded">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta
@@ -610,6 +617,8 @@ class PanelWithCustomMargin {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-expansion-panel [expanded]="expanded">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
@@ -625,6 +634,8 @@ class LazyPanelWithContent {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
@@ -637,6 +648,8 @@ class LazyPanelWithContent {
 class LazyPanelOpenOnLoad {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-expansion-panel [(expanded)]="expanded">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
@@ -647,6 +660,8 @@ class PanelWithTwoWayBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-expansion-panel>
     <mat-expansion-panel-header tabindex="7">Panel Title</mat-expansion-panel-header>
@@ -655,6 +670,8 @@ class PanelWithTwoWayBinding {
 class PanelWithHeaderTabindex {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-expansion-panel class="parent-panel" [expanded]="parentExpanded">
       Parent content

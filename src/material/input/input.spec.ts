@@ -1566,6 +1566,8 @@ function createComponent<T>(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [floatLabel]="floatLabel">
       <mat-label>Label</mat-label>
@@ -1577,6 +1579,7 @@ class MatInputWithId {
 }
 
 @Component({
+  jit: true,
   template: `<mat-form-field><input matInput [disabled]="disabled"></mat-form-field>`,
 })
 class MatInputWithDisabled {
@@ -1584,6 +1587,7 @@ class MatInputWithDisabled {
 }
 
 @Component({
+  jit: true,
   template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`,
 })
 class MatInputWithRequired {
@@ -1591,6 +1595,7 @@ class MatInputWithRequired {
 }
 
 @Component({
+  jit: true,
   template: `<mat-form-field><input matInput [type]="type"></mat-form-field>`,
 })
 class MatInputWithType {
@@ -1598,6 +1603,8 @@ class MatInputWithType {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
       <mat-label>hello</mat-label>
@@ -1610,6 +1617,8 @@ class MatInputLabelRequiredTestComponent {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="Hello" [formControl]="formControl">
@@ -1620,6 +1629,7 @@ class MatInputWithFormControl {
 }
 
 @Component({
+  jit: true,
   template: `<mat-form-field><input matInput><mat-hint>{{label}}</mat-hint></mat-form-field>`,
 })
 class MatInputHintLabel2TestController {
@@ -1627,6 +1637,8 @@ class MatInputHintLabel2TestController {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [hintLabel]="label">
       <input matInput aria-describedby="initial">
@@ -1637,6 +1649,8 @@ class MatInputHintLabelTestController {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [hintLabel]="label">
       <input matInput [formControl]="formControl" [aria-describedby]="userDescribedByValue">
@@ -1650,12 +1664,17 @@ class MatInputWithSubscriptAndAriaDescribedBy {
   formControl = new FormControl('');
 }
 
-@Component({template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`})
+@Component({
+  jit: true,
+  template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`,
+})
 class MatInputInvalidTypeTestController {
   t = 'file';
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field hintLabel="Hello">
       <input matInput>
@@ -1665,6 +1684,8 @@ class MatInputInvalidTypeTestController {
 class MatInputInvalidHint2TestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput>
@@ -1675,6 +1696,8 @@ class MatInputInvalidHint2TestController {}
 class MatInputInvalidHintTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput>
@@ -1688,6 +1711,8 @@ class MatInputMultipleHintTestController {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field hintLabel="Hello">
       <input matInput>
@@ -1697,6 +1722,8 @@ class MatInputMultipleHintTestController {
 class MatInputMultipleHintMixedTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput type="date" placeholder="Placeholder">
@@ -1705,6 +1732,8 @@ class MatInputMultipleHintMixedTestController {}
 class MatInputDateTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
@@ -1714,6 +1743,8 @@ class MatInputDateTestController {}
 class MatInputTextTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput type="password" placeholder="Placeholder">
@@ -1722,6 +1753,8 @@ class MatInputTextTestController {}
 class MatInputPasswordTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput type="number" placeholder="Placeholder">
@@ -1730,6 +1763,8 @@ class MatInputPasswordTestController {}
 class MatInputNumberTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput type="number" placeholder="Placeholder" [(ngModel)]="value">
@@ -1740,6 +1775,8 @@ class MatInputZeroTestController {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="Label" [value]="value">
@@ -1750,6 +1787,8 @@ class MatInputWithValueBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput placeholder="Label">
@@ -1759,6 +1798,8 @@ class MatInputWithValueBinding {
 class MatInputWithStaticLabel {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [floatLabel]="shouldFloat">
       <mat-label>Label</mat-label>
@@ -1770,6 +1811,8 @@ class MatInputWithDynamicLabel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <textarea matNativeControl [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks">
@@ -1783,11 +1826,14 @@ class MatInputTextareaWithBindings {
 }
 
 @Component({
+  jit: true,
   template: `<mat-form-field><input></mat-form-field>`,
 })
 class MatInputMissingMatInputTestController {}
 
 @Component({
+  jit: true,
+
   template: `
     <form #form="ngForm" novalidate>
       <mat-form-field>
@@ -1808,6 +1854,8 @@ class MatInputWithFormErrorMessages {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <form [formGroup]="formGroup">
       <mat-form-field>
@@ -1833,6 +1881,8 @@ class InputInFormGroup {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <form [formGroup]="formGroup" novalidate>
       <mat-form-field>
@@ -1851,6 +1901,8 @@ class MatInputWithFormGroupErrorMessages {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-icon matIconPrefix>favorite</mat-icon>
@@ -1864,6 +1916,8 @@ class MatInputWithFormGroupErrorMessages {
 class MatInputWithPrefixAndSuffix {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput *ngIf="renderInput">
@@ -1875,7 +1929,9 @@ class MatInputWithNgIf {
 }
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
@@ -1888,6 +1944,8 @@ class MatInputOnPush {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
@@ -1898,6 +1956,8 @@ class MatInputOnPush {
 class MatInputWithLabel {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [floatLabel]="floatLabel" [appearance]="appearance">
       <mat-label>Label</mat-label>
@@ -1911,6 +1971,8 @@ class MatInputWithLabelAndPlaceholder {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [appearance]="appearance">
       <mat-label>My Label</mat-label>
@@ -1924,6 +1986,8 @@ class MatInputWithAppearance {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [subscriptSizing]="sizing">
       <mat-label>My Label</mat-label>
@@ -1937,6 +2001,8 @@ class MatInputWithSubscriptSizing {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput>
@@ -1946,6 +2012,8 @@ class MatInputWithSubscriptSizing {
 class MatInputWithoutPlaceholder {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
@@ -1963,6 +2031,8 @@ class MatInputSelect {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Form-field label</mat-label>
@@ -1977,6 +2047,8 @@ class MatInputSelect {
 class MatInputSelectWithNoLabelNoValue {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
@@ -1991,6 +2063,8 @@ class MatInputSelectWithNoLabelNoValue {}
 class MatInputSelectWithLabel {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
@@ -2005,6 +2079,8 @@ class MatInputSelectWithLabel {}
 class MatInputSelectWithInnerHtml {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput customInputAccessor placeholder="Placeholder">
@@ -2013,6 +2089,8 @@ class MatInputSelectWithInnerHtml {}
 class MatInputWithCustomAccessor {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <select matNativeControl>
@@ -2023,7 +2101,9 @@ class MatInputSelectWithoutOptions {}
 
 /** Custom component that never has a value. Used for testing the `MAT_INPUT_VALUE_ACCESSOR`. */
 @Directive({
+  jit: true,
   selector: 'input[customInputAccessor]',
+
   providers: [
     {
       provide: MAT_INPUT_VALUE_ACCESSOR,
@@ -2040,6 +2120,8 @@ class CustomMatInputAccessor {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field [color]="color">
       <input matNativeControl>
@@ -2050,6 +2132,8 @@ class MatInputWithColor {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input class="inside" matNativeControl>
@@ -2061,6 +2145,8 @@ class MatInputWithColor {
 class MatInputInsideOutsideFormField {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-label>Hello</mat-label>
@@ -2072,6 +2158,8 @@ class MatInputWithRequiredFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <input matInput>
@@ -2081,6 +2169,8 @@ class MatInputWithRequiredFormControl {
 class MatInputSimple {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <ng-container matIconPrefix>icon-prefix</ng-container>

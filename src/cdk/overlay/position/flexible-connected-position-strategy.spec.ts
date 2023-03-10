@@ -2923,6 +2923,8 @@ function createOverflowContainerElement() {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       class="transform-origin"

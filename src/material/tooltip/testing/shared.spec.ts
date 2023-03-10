@@ -59,6 +59,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matTooltip]="message" id="one">Trigger 1</button>
     <button matTooltip="Static message" id="two">Trigger 2</button>

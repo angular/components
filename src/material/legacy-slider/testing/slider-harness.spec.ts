@@ -166,6 +166,8 @@ describe('Non-MDC-based MatSliderHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-slider value="50" disabled></mat-slider>
     <div [dir]="dir">

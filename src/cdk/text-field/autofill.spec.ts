@@ -217,6 +217,8 @@ describe('cdkAutofill', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <input #input1>
     <input #input2>
@@ -231,6 +233,7 @@ class Inputs {
 }
 
 @Component({
+  jit: true,
   template: `<input #input cdkAutofill>`,
 })
 class InputWithCdkAutofilled {

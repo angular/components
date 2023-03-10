@@ -1358,6 +1358,8 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
@@ -1381,6 +1383,8 @@ class SimpleCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <ng-container [ngSwitch]="true">
@@ -1396,6 +1400,8 @@ class SimpleCdkTreeApp {
 class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
@@ -1416,6 +1422,8 @@ class NestedCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
@@ -1446,6 +1454,8 @@ class StaticNestedCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
@@ -1472,6 +1482,8 @@ class WhenNodeNestedCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
@@ -1495,6 +1507,8 @@ class CdkTreeAppWithToggle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
@@ -1519,6 +1533,8 @@ class NestedCdkTreeAppWithToggle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
@@ -1547,6 +1563,8 @@ class WhenNodeCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node"
@@ -1573,6 +1591,8 @@ class ArrayDataSourceCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataObservable" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node"
@@ -1599,6 +1619,8 @@ class ObservableDataSourceCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">
@@ -1623,6 +1645,8 @@ class ArrayDataSourceNestedCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataObservable" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">
@@ -1647,6 +1671,8 @@ class ObservableDataSourceNestedCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
@@ -1678,6 +1704,8 @@ class FakeTreeControl extends BaseTreeControl<TestData> {
   }
 }
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
@@ -1700,6 +1728,8 @@ class FlatCdkErrorTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node; let level = level">
@@ -1725,6 +1755,8 @@ class DepthNestedCdkTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackByFn">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
@@ -1757,6 +1789,8 @@ class CdkTreeAppWithTrackBy {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl" [trackBy]="trackByFn">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">

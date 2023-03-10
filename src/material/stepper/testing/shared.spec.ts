@@ -265,6 +265,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-stepper orientation="vertical" id="one-stepper">
       <mat-step label="One">

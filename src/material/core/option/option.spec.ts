@@ -239,6 +239,7 @@ describe('MatOption component', () => {
 });
 
 @Component({
+  jit: true,
   template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`,
 })
 class BasicOption {
@@ -247,6 +248,8 @@ class BasicOption {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-optgroup label="Group">
       <mat-option>Option</mat-option>

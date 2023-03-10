@@ -202,6 +202,7 @@ describe('OverlayKeyboardDispatcher', () => {
 });
 
 @Component({
+  jit: true,
   template: 'Hello',
 })
 class TestComponent {}

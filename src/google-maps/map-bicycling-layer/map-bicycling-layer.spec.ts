@@ -45,7 +45,9 @@ describe('MapBicyclingLayer', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                 <map-bicycling-layer></map-bicycling-layer>
             </google-map>`,

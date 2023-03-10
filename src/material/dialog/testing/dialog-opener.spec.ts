@@ -57,6 +57,8 @@ interface ExampleDialogResult {
 
 /** Simple component for testing MatTestDialogOpener. */
 @Component({
+  jit: true,
+
   template: `
     Data: {{data}}
     <button id="close-btn" (click)="close()">Close</button>

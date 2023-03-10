@@ -490,7 +490,9 @@ describe('MatTabNavBar with a default config', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `
     <nav mat-tab-nav-bar
          [disableRipple]="disableRippleOnBar"
@@ -523,6 +525,8 @@ class SimpleTabNavBarTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngIf="!isDestroyed">Link</a>
@@ -535,6 +539,8 @@ class TabLinkWithNgIf {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngFor="let tab of tabs" [active]="false">Tab link {{label}}</a>

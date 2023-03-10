@@ -121,6 +121,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table matSort (matSortChange)="sortData($event)">
       <tr>

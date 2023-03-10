@@ -112,6 +112,8 @@ describe('CdkAccordion', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
   <cdk-accordion [multi]="multi">
     <cdk-accordion-item></cdk-accordion-item>
@@ -125,6 +127,8 @@ class SetOfItems {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <cdk-accordion>
     <cdk-accordion-item #outerItem="cdkAccordionItem">

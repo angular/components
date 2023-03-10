@@ -155,6 +155,8 @@ interface TestData {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-table [dataSource]="data">
       <cdk-text-column name="propertyA" [dataAccessor]="dataAccessorA"></cdk-text-column>
@@ -180,6 +182,8 @@ class BasicTextColumnApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-text-column name="column-a"></cdk-text-column>
   `,
@@ -187,6 +191,8 @@ class BasicTextColumnApp {
 class MissingTableApp {}
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-table [dataSource]="data">
       <cdk-text-column [dataAccessor]="dataAccessorA"></cdk-text-column>

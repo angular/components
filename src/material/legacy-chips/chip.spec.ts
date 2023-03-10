@@ -454,6 +454,8 @@ describe('MatChip', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-list>
       <div *ngIf="shouldShow">
@@ -485,16 +487,19 @@ class SingleChip {
 }
 
 @Component({
+  jit: true,
   template: `<mat-basic-chip>Hello</mat-basic-chip>`,
 })
 class BasicChip {}
 
 @Component({
+  jit: true,
   template: `<mat-basic-chip tabindex="3">Hello</mat-basic-chip>`,
 })
 class BasicChipWithStaticTabindex {}
 
 @Component({
+  jit: true,
   template: `<mat-basic-chip [tabIndex]="tabindex">Hello</mat-basic-chip>`,
 })
 class BasicChipWithBoundTabindex {

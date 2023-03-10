@@ -1065,6 +1065,8 @@ describe('MatCheckboxDefaultOptions', () => {
 
 /** Simple component for testing a single checkbox. */
 @Component({
+  jit: true,
+
   template: `
   <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true" (click)="onCheckboxClick($event)">
     <mat-checkbox
@@ -1101,6 +1103,8 @@ class SingleCheckbox {
 
 /** Simple component for testing an MatCheckbox with required ngModel. */
 @Component({
+  jit: true,
+
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood"
                            [disabled]="isDisabled">Be good</mat-checkbox>`,
 })
@@ -1111,6 +1115,7 @@ class CheckboxWithNgModel {
 }
 
 @Component({
+  jit: true,
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</mat-checkbox>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -1118,6 +1123,8 @@ class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
 
 /** Simple test component with multiple checkboxes. */
 @Component({
+  jit: true,
+
   template: `
     <mat-checkbox>Option 1</mat-checkbox>
     <mat-checkbox>Option 2</mat-checkbox>
@@ -1127,6 +1134,8 @@ class MultipleCheckboxes {}
 
 /** Simple test component with tabIndex */
 @Component({
+  jit: true,
+
   template: `
     <mat-checkbox
         [tabIndex]="customTabIndex"
@@ -1139,46 +1148,69 @@ class CheckboxWithTabIndex {
 }
 
 /** Simple test component with an aria-label set. */
-@Component({template: `<mat-checkbox aria-label="Super effective"></mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox aria-label="Super effective"></mat-checkbox>`,
+})
 class CheckboxWithAriaLabel {}
 
 /** Simple test component with an aria-label set. */
-@Component({template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`,
+})
 class CheckboxWithAriaLabelledby {}
 
 /** Simple test component with an aria-describedby set. */
 @Component({
+  jit: true,
   template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`,
 })
 class CheckboxWithAriaDescribedby {}
 
 /** Simple test component with name attribute */
-@Component({template: `<mat-checkbox name="test-name"></mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox name="test-name"></mat-checkbox>`,
+})
 class CheckboxWithNameAttribute {}
 
 /** Simple test component with change event */
-@Component({template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`,
+})
 class CheckboxWithChangeEvent {
   lastEvent: MatCheckboxChange;
 }
 
 /** Test component with reactive forms */
-@Component({template: `<mat-checkbox [formControl]="formControl"></mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox [formControl]="formControl"></mat-checkbox>`,
+})
 class CheckboxWithFormControl {
   formControl = new FormControl(false);
 }
 
 /** Test component without label */
-@Component({template: `<mat-checkbox>{{ label }}</mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox>{{ label }}</mat-checkbox>`,
+})
 class CheckboxWithoutLabel {
   label: string;
 }
 
 /** Test component with the native tabindex attribute. */
-@Component({template: `<mat-checkbox tabindex="5"></mat-checkbox>`})
+@Component({
+  jit: true,
+  template: `<mat-checkbox tabindex="5"></mat-checkbox>`,
+})
 class CheckboxWithTabindexAttr {}
 
 @Component({
+  jit: true,
   template: `<mat-checkbox aria-label="Checkbox" aria-labelledby="something"></mat-checkbox>`,
 })
 class CheckboxWithStaticAriaAttributes {}

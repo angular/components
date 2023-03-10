@@ -184,6 +184,8 @@ export function runDatepickerInputHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input
       id="basic"

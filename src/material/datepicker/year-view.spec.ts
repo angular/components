@@ -384,6 +384,8 @@ describe('MatYearView', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-year-view [(activeDate)]="date" [(selected)]="selected"
                    (monthSelected)="selectedMonth=$event"></mat-year-view>`,
@@ -397,6 +399,8 @@ class StandardYearView {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-year-view
       [activeDate]="activeDate"
@@ -420,6 +424,7 @@ class YearViewWithDateFilter {
 }
 
 @Component({
+  jit: true,
   template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`,
 })
 class YearViewWithDateClass {

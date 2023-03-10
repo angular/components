@@ -1599,18 +1599,21 @@ const styles = `
 `;
 
 @Component({
+  jit: true,
   template: `<mat-slider></mat-slider>`,
   styles: [styles],
 })
 class StandardSlider {}
 
 @Component({
+  jit: true,
   template: `<mat-slider disabled></mat-slider>`,
   styles: [styles],
 })
 class DisabledSlider {}
 
 @Component({
+  jit: true,
   template: `<mat-slider [min]="min" [max]="max" [step]="step" tickInterval="6"></mat-slider>`,
   styles: [styles],
 })
@@ -1621,12 +1624,14 @@ class SliderWithMinAndMax {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider value="26"></mat-slider>`,
   styles: [styles],
 })
 class SliderWithValue {}
 
 @Component({
+  jit: true,
   template: `<mat-slider [step]="step" [valueText]="valueText"></mat-slider>`,
   styles: [styles],
 })
@@ -1636,12 +1641,14 @@ class SliderWithStep {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider step="5" tickInterval="auto"></mat-slider>`,
   styles: [styles],
 })
 class SliderWithAutoTickInterval {}
 
 @Component({
+  jit: true,
   template: `<mat-slider step="3" [tickInterval]="tickInterval"></mat-slider>`,
   styles: [styles],
 })
@@ -1650,12 +1657,14 @@ class SliderWithSetTickInterval {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider thumbLabel></mat-slider>`,
   styles: [styles],
 })
 class SliderWithThumbLabel {}
 
 @Component({
+  jit: true,
   template: `<mat-slider min="1" max="100000" [displayWith]="displayWith" thumbLabel></mat-slider>`,
   styles: [styles],
 })
@@ -1670,6 +1679,7 @@ class SliderWithCustomThumbLabelFormatting {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider [value]="val"></mat-slider>`,
   styles: [styles],
 })
@@ -1678,6 +1688,7 @@ class SliderWithOneWayBinding {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider [formControl]="control"></mat-slider>`,
   styles: [styles],
 })
@@ -1686,6 +1697,7 @@ class SliderWithFormControl {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider [(ngModel)]="val"></mat-slider>`,
   styles: [styles],
 })
@@ -1695,18 +1707,21 @@ class SliderWithNgModel {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider value="3" min="4" max="6"></mat-slider>`,
   styles: [styles],
 })
 class SliderWithValueSmallerThanMin {}
 
 @Component({
+  jit: true,
   template: `<mat-slider value="7" min="4" max="6"></mat-slider>`,
   styles: [styles],
 })
 class SliderWithValueGreaterThanMax {}
 
 @Component({
+  jit: true,
   template: `<mat-slider (change)="onChange($event)" (input)="onInput($event)"></mat-slider>`,
   styles: [styles],
 })
@@ -1718,6 +1733,7 @@ class SliderWithChangeHandler {
 }
 
 @Component({
+  jit: true,
   template: `<div [dir]="dir"><mat-slider [invert]="invert" tickInterval="5"></mat-slider></div>`,
   styles: [styles],
 })
@@ -1727,6 +1743,7 @@ class SliderWithDirAndInvert {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider vertical [invert]="invert"></mat-slider>`,
   styles: [styles],
 })
@@ -1735,6 +1752,7 @@ class VerticalSlider {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider [tabIndex]="tabIndex"></mat-slider>`,
   styles: [styles],
 })
@@ -1743,6 +1761,7 @@ class SliderWithTabIndexBinding {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slider tabindex="5"></mat-slider>`,
   styles: [styles],
 })
@@ -1751,6 +1770,7 @@ class SliderWithNativeTabindexAttr {
 }
 
 @Component({
+  jit: true,
   template: '<mat-slider [(value)]="value"></mat-slider>',
   styles: [styles],
 })

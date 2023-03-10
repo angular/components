@@ -212,9 +212,10 @@ describe('MatBadge', () => {
 
 /** Test component that contains a MatBadge. */
 @Component({
-  // Explicitly set the view encapsulation since we have a test that checks for it.
+  jit: true,
   encapsulation: ViewEncapsulation.Emulated,
   styles: ['span { color: hotpink; }'],
+
   template: `
     <span [matBadge]="badgeContent"
           [matBadgeColor]="badgeColor"
@@ -241,6 +242,8 @@ class BadgeTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <span matBadge="Hello">
       home
@@ -251,6 +254,8 @@ class BadgeTestApp {
 class PreExistingBadge {}
 
 @Component({
+  jit: true,
+
   template: `
     <span matBadge="Hello">
       home
@@ -261,6 +266,7 @@ class PreExistingBadge {}
 class NestedBadge {}
 
 @Component({
+  jit: true,
   template: `<ng-template matBadge="1">Notifications</ng-template>`,
 })
 class BadgeOnTemplate {}

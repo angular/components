@@ -233,11 +233,14 @@ describe('CdkAccordionItem', () => {
 });
 
 @Component({
+  jit: true,
   template: `<cdk-accordion-item #item1></cdk-accordion-item>`,
 })
 class SingleItem {}
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-accordion-item #item1></cdk-accordion-item>
     <cdk-accordion-item #item2></cdk-accordion-item>
@@ -246,6 +249,8 @@ class SingleItem {}
 class ItemGroupWithoutAccordion {}
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-accordion>
       <cdk-accordion-item #item1></cdk-accordion-item>

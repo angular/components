@@ -419,6 +419,8 @@ class BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <a mat-list-item>
@@ -433,6 +435,8 @@ class ListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-nav-list [disableRipple]="disableListRipple">
     <a mat-list-item [disableRipple]="disableItemRipple">
@@ -447,6 +451,8 @@ class NavListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-nav-list [disableRipple]="disableListRipple">
     <a *ngFor="let item of items; let index = index" mat-list-item [disableRipple]="disableItemRipple"
@@ -465,6 +471,8 @@ class NavListWithActivatedItem extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-action-list [disableRipple]="disableListRipple">
     <button mat-list-item [disableRipple]="disableItemRipple">
@@ -479,6 +487,8 @@ class ActionListWithoutType extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-action-list>
     <button mat-list-item type="submit">
@@ -491,6 +501,8 @@ class ActionListWithType extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-action-list [disabled]="disableList">
     <button mat-list-item *ngFor="let item of items">
@@ -503,6 +515,8 @@ class ActionListWithDisabledList extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-action-list>
     <button mat-list-item [disabled]="disableItem">
@@ -516,6 +530,8 @@ class ActionListWithDisabledItem extends BaseTestList {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item>
@@ -526,6 +542,8 @@ class ActionListWithDisabledItem extends BaseTestList {
 class ListWithOneItem extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
@@ -538,6 +556,8 @@ class ListWithOneItem extends BaseTestList {}
 class ListWithTwoLineItem extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
@@ -550,6 +570,8 @@ class ListWithTwoLineItem extends BaseTestList {}
 class ListWithThreeLineItem extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
@@ -563,6 +585,8 @@ class ListWithThreeLineItem extends BaseTestList {}
 class ListWithManyLines extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item>
@@ -577,6 +601,8 @@ class ListWithManyLines extends BaseTestList {}
 class ListWithAvatar extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item class="test-class" *ngFor="let item of items">
@@ -588,6 +614,8 @@ class ListWithAvatar extends BaseTestList {}
 class ListWithItemWithCssClass extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
@@ -600,6 +628,8 @@ class ListWithItemWithCssClass extends BaseTestList {}
 class ListWithDynamicNumberOfLines extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list>
     <mat-list-item *ngFor="let item of items">
@@ -610,6 +640,8 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
 class ListWithMultipleItems extends BaseTestList {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-list [disabled]="listDisabled">
     <mat-list-item [disabled]="firstItemDisabled">One</mat-list-item>
@@ -623,6 +655,7 @@ class ListWithDisabledItems {
 }
 
 @Component({
+  jit: true,
   template: `<mat-list-item></mat-list-item>`,
 })
 class StandaloneListItem {}

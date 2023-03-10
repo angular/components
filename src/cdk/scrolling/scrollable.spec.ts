@@ -217,6 +217,8 @@ describe('CdkScrollable', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div #scrollContainer class="scroll-container" cdkScrollable [dir]="dir">
       <div class="row">
@@ -228,6 +230,7 @@ describe('CdkScrollable', () => {
         <div #lastRowEnd class="cell"></div>
       </div>
     </div>`,
+
   styles: [
     `
     .scroll-container {

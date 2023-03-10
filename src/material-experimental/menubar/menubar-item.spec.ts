@@ -61,6 +61,8 @@ describe('MatMenuBarItem', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-menubar>
       <mat-menubar-item [cdkMenuTriggerFor]="sub">File</mat-menubar-item>

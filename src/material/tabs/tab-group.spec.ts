@@ -1081,6 +1081,8 @@ describe('MatTabNavBar with a default config', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
@@ -1124,6 +1126,8 @@ class SimpleTabsTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
@@ -1156,6 +1160,8 @@ class SimpleDynamicTabsTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
       <mat-tab *ngFor="let tab of tabs" label="{{tab.label}}">
@@ -1181,6 +1187,8 @@ class BindedTabsTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group class="tab-group">
       <mat-tab>
@@ -1204,6 +1212,8 @@ class DisabledTabsTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group class="tab-group">
       <mat-tab *ngFor="let tab of tabs | async">
@@ -1230,6 +1240,8 @@ class AsyncTabsTestApp implements OnInit {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-tab-group [preserveContent]="preserveContent">
     <mat-tab label="Junk food"> Pizza, fries </mat-tab>
@@ -1247,6 +1259,8 @@ class TabGroupWithSimpleApi {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group>
       <mat-tab label="One">Tab one content</mat-tab>
@@ -1265,6 +1279,8 @@ class NestedTabs {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group>
       <mat-tab label="One">
@@ -1281,6 +1297,8 @@ class NestedTabs {
 class TemplateTabs {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-tab-group>
     <mat-tab [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"></mat-tab>
@@ -1293,6 +1311,8 @@ class TabGroupWithAriaInputs {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group>
       <mat-tab label="Junk food" #pizza> Pizza, fries </mat-tab>
@@ -1305,6 +1325,8 @@ class TabGroupWithAriaInputs {
 class TabGroupWithIsActiveBinding {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group animationDuration="500">
       <mat-tab label="One">Tab one content</mat-tab>
@@ -1315,6 +1337,8 @@ class TabGroupWithIsActiveBinding {}
 class TabsWithCustomAnimationDuration {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group>
       <ng-container [ngSwitch]="true">
@@ -1329,6 +1353,8 @@ class TabGroupWithIndirectDescendantTabs {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group [fitInkBarToContent]="fitInkBarToContent">
       <mat-tab label="One">Tab one content</mat-tab>
@@ -1341,6 +1367,8 @@ class TabGroupWithInkBarFitToContent {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div style="height: 300px; background-color: aqua">
       Top Content here
@@ -1362,6 +1390,8 @@ class TabGroupWithSpaceAbove {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group>
       <mat-tab label="Parent 1">
@@ -1382,6 +1412,8 @@ class TabGroupWithSpaceAbove {
 class NestedTabGroupWithLabel {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group class="tab-group">
       <mat-tab label="Tab One" [labelClass]="labelClassList" [bodyClass]="bodyClassList">

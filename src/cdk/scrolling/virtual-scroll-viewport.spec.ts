@@ -1216,6 +1216,8 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport
         [itemSize]="itemSize" [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx"
@@ -1230,6 +1232,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-content-wrapper {
@@ -1255,6 +1258,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
     }
   `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class FixedSizeVirtualScroll {
@@ -1287,6 +1291,8 @@ class FixedSizeVirtualScroll {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport dir="rtl"
         [itemSize]="itemSize" [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx"
@@ -1300,6 +1306,7 @@ class FixedSizeVirtualScroll {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-content-wrapper {
@@ -1321,6 +1328,7 @@ class FixedSizeVirtualScroll {
     }
   `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class FixedSizeVirtualScrollWithRtlDirection {
@@ -1350,11 +1358,14 @@ class FixedSizeVirtualScrollWithRtlDirection {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport>
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-viewport {
@@ -1373,6 +1384,7 @@ class VirtualScrollWithNoStrategy {
 }
 
 @Directive({
+  jit: true,
   selector: '[injects-view-container]',
 })
 class InjectsViewContainer {
@@ -1380,11 +1392,14 @@ class InjectsViewContainer {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport itemSize="50">
       <div injects-view-container class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-content-wrapper {
@@ -1406,6 +1421,7 @@ class InjectsViewContainer {
     }
   `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class VirtualScrollWithItemInjectingViewContainer {
@@ -1417,6 +1433,8 @@ class VirtualScrollWithItemInjectingViewContainer {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport [itemSize]="itemSize">
       <ng-container *ngIf="renderVirtualFor">
@@ -1424,6 +1442,7 @@ class VirtualScrollWithItemInjectingViewContainer {
       </ng-container>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-content-wrapper {
@@ -1445,6 +1464,7 @@ class VirtualScrollWithItemInjectingViewContainer {
     }
   `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class DelayedInitializationVirtualScroll {
@@ -1458,11 +1478,14 @@ class DelayedInitializationVirtualScroll {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <cdk-virtual-scroll-viewport appendOnly itemSize="50">
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
     .cdk-virtual-scroll-content-wrapper {
@@ -1484,6 +1507,7 @@ class DelayedInitializationVirtualScroll {
     }
   `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class VirtualScrollWithAppendOnly {
@@ -1495,6 +1519,8 @@ class VirtualScrollWithAppendOnly {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkVirtualScrollingElement class="scrolling-element">
       <cdk-virtual-scroll-viewport itemSize="50">
@@ -1502,6 +1528,7 @@ class VirtualScrollWithAppendOnly {
       </cdk-virtual-scroll-viewport>
     </div>
   `,
+
   styles: [
     `
         .cdk-virtual-scroll-content-wrapper {
@@ -1527,6 +1554,7 @@ class VirtualScrollWithAppendOnly {
         }
     `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class VirtualScrollWithCustomScrollingElement {
@@ -1538,12 +1566,15 @@ class VirtualScrollWithCustomScrollingElement {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div class="before-virtual-viewport"></div>
     <cdk-virtual-scroll-viewport scrollWindow itemSize="50">
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
+
   styles: [
     `
         .cdk-virtual-scroll-content-wrapper {
@@ -1569,6 +1600,7 @@ class VirtualScrollWithCustomScrollingElement {
         }
     `,
   ],
+
   encapsulation: ViewEncapsulation.None,
 })
 class VirtualScrollWithScrollableWindow {
@@ -1580,6 +1612,7 @@ class VirtualScrollWithScrollableWindow {
 }
 
 @Component({
+  jit: true,
   template: '<cdk-virtual-scroll-viewport itemSize="50"></cdk-virtual-scroll-viewport>',
 })
 class VirtualScrollableQuery {

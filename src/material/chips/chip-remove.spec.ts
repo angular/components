@@ -105,6 +105,8 @@ describe('MDC-based Chip Remove', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-set>
       <mat-chip

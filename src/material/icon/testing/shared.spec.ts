@@ -98,6 +98,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-icon fontSet="fontIcons" fontIcon="fontIcon"></mat-icon>
     <mat-icon svgIcon="svgIcons:svgIcon"></mat-icon>

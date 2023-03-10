@@ -380,6 +380,8 @@ describe('MDC-based Row Chips', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-grid #chipGrid>
       <div *ngIf="shouldShow">

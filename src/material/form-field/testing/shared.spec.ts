@@ -314,6 +314,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field id="first-form-field" [floatLabel]="shouldLabelFloat">
       <span matPrefix *ngIf="!isMdc">prefix_text</span>

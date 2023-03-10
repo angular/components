@@ -147,11 +147,14 @@ describe('MenuItem', () => {
 });
 
 @Component({
+  jit: true,
   template: `<button cdkMenuItem>Click me!</button>`,
 })
 class SingleMenuItem {}
 
 @Component({
+  jit: true,
+
   template: `
     <button cdkMenuItem [cdkMenuitemTypeaheadLabel]="typeahead">
       <mat-icon>unicorn</mat-icon>
@@ -164,6 +167,8 @@ class MenuItemWithIcon {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button cdkMenuItem [cdkMenuitemTypeaheadLabel]="typeahead">
       <div class="material-icons">unicorn</div>
@@ -176,11 +181,14 @@ class MenuItemWithIconClass {
 }
 
 @Component({
+  jit: true,
   template: ` <button cdkMenuItem><b>Click</b> me!</button> `,
 })
 class MenuItemWithBoldElement {}
 
 @Component({
+  jit: true,
+
   template: `
     <button cdkMenuItem [cdkMenuitemTypeaheadLabel]="typeahead">
       <div>
@@ -199,6 +207,7 @@ class MenuItemWithMultipleNestings {
 }
 
 @Component({
+  jit: true,
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
 })

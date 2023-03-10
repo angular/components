@@ -244,6 +244,8 @@ class FakeDataSource extends DataSource<TestData> {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkTableScrollContainer>
     <table cdk-table [dataSource]="dataSource">
@@ -273,6 +275,7 @@ class FakeDataSource extends DataSource<TestData> {
     </table>
     </div>
   `,
+
   styles: [
     `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {

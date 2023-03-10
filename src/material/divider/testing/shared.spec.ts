@@ -43,6 +43,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-divider></mat-divider>
     <mat-divider inset vertical></mat-divider>

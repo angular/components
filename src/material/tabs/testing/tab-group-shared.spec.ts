@@ -166,6 +166,8 @@ export function runTabGroupHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tab-group>
       <mat-tab label="First" aria-label="First tab">

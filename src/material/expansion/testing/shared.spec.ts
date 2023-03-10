@@ -274,6 +274,8 @@ function getActiveElementTag() {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-accordion id="accordion1" [hideToggle]="hideToggleIndicators"
                    [togglePosition]="toggleIndicatorsPosition"

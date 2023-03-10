@@ -6574,6 +6574,8 @@ describe('CdkDrag', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div class="wrapper" style="width: 200px; height: 200px; background: green;">
       <div
@@ -6603,7 +6605,9 @@ class StandaloneDraggable {
 }
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <div cdkDrag #dragElement style="width: 100px; height: 100px; background: red;"></div>
   `,
@@ -6614,6 +6618,8 @@ class StandaloneDraggableWithOnPush {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragElement cdkDrag [cdkDragDisabled]="draggingDisabled"
       style="width: 100px; height: 100px; background: red; position: relative">
@@ -6630,6 +6636,8 @@ class StandaloneDraggableWithHandle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragElement cdkDrag
       style="width: 100px; height: 100px; background: red; position: relative">
@@ -6649,6 +6657,8 @@ class StandaloneDraggableWithPreDisabledHandle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragElement cdkDrag
       style="width: 100px; height: 100px; background: red; position: relative">
@@ -6666,6 +6676,8 @@ class StandaloneDraggableWithDelayedHandle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragElement cdkDrag
       style="width: 100px; height: 100px; background: red; position: relative">
@@ -6685,6 +6697,7 @@ class StandaloneDraggableWithIndirectHandle {
 }
 
 @Component({
+  jit: true,
   selector: 'shadow-wrapper',
   template: '<ng-content></ng-content>',
   encapsulation: ViewEncapsulation.ShadowDom,
@@ -6692,6 +6705,8 @@ class StandaloneDraggableWithIndirectHandle {
 class ShadowWrapper {}
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragElement cdkDrag style="width: 100px; height: 100px; background: red;">
       <div cdkDragHandle style="width: 10px; height: 10px;">
@@ -6708,7 +6723,9 @@ class StandaloneDraggableWithShadowInsideHandle {
 }
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.None,
+
   styles: [
     `
     .cdk-drag-handle {
@@ -6720,6 +6737,7 @@ class StandaloneDraggableWithShadowInsideHandle {
     }
   `,
   ],
+
   template: `
     <div #dragElement cdkDrag
       style="width: 100px; height: 100px; background: red; position: relative">
@@ -6758,7 +6776,10 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
   <div #alternatePreviewContainer></div>
 `;
 
-@Component({template: DROP_ZONE_FIXTURE_TEMPLATE})
+@Component({
+  jit: true,
+  template: DROP_ZONE_FIXTURE_TEMPLATE,
+})
 class DraggableInDropZone implements AfterViewInit {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
   @ViewChild(CdkDropList) dropInstance: CdkDropList;
@@ -6790,6 +6811,7 @@ class DraggableInDropZone implements AfterViewInit {
 }
 
 @Component({
+  jit: true,
   selector: 'draggable-in-on-push-zone',
   template: DROP_ZONE_FIXTURE_TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -6797,6 +6819,8 @@ class DraggableInDropZone implements AfterViewInit {
 class DraggableInOnPushDropZone extends DraggableInDropZone {}
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropListGroup>
       <draggable-in-on-push-zone></draggable-in-on-push-zone>
@@ -6807,10 +6831,9 @@ class DraggableInOnPushDropZone extends DraggableInDropZone {}
 class ConnectedDropListsInOnPush {}
 
 @Component({
+  jit: true,
   template: DROP_ZONE_FIXTURE_TEMPLATE,
 
-  // Note that it needs a margin to ensure that it's not flush against the viewport
-  // edge which will cause the viewport to scroll, rather than the list.
   styles: [
     `
     .drop-list {
@@ -6832,14 +6855,14 @@ class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       #scrollContainer
       class="scroll-container"
       cdkScrollable>${DROP_ZONE_FIXTURE_TEMPLATE}</div>`,
 
-  // Note that it needs a margin to ensure that it's not flush against the viewport
-  // edge which will cause the viewport to scroll, rather than the list.
   styles: [
     `
     .scroll-container {
@@ -6872,7 +6895,8 @@ class DraggableInScrollableParentContainer extends DraggableInDropZone implement
 }
 
 @Component({
-  // Note that we need the blank `ngSwitch` below to hit the code path that we're testing.
+  jit: true,
+
   template: `
     <div
       cdkDropList
@@ -6930,6 +6954,7 @@ const HORIZONTAL_FIXTURE_TEMPLATE = `
 `;
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.None,
   styles: [HORIZONTAL_FIXTURE_STYLES],
   template: HORIZONTAL_FIXTURE_TEMPLATE,
@@ -6959,10 +6984,9 @@ class DraggableInHorizontalDropZone implements AfterViewInit {
 }
 
 @Component({
+  jit: true,
   template: HORIZONTAL_FIXTURE_TEMPLATE,
 
-  // Note that it needs a margin to ensure that it's not flush against the viewport
-  // edge which will cause the viewport to scroll, rather than the list.
   styles: [
     HORIZONTAL_FIXTURE_STYLES,
     `
@@ -6986,6 +7010,8 @@ class DraggableInScrollableHorizontalDropZone extends DraggableInHorizontalDropZ
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       <div
@@ -7020,6 +7046,8 @@ class DraggableInDropZoneWithCustomPreview {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       <div
@@ -7041,6 +7069,8 @@ class DraggableInDropZoneWithCustomTextOnlyPreview {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       <div
@@ -7063,6 +7093,8 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       cdkDropList
@@ -7080,6 +7112,7 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
       </div>
     </div>
   `,
+
   styles: [
     `
     .tall-placeholder {
@@ -7097,6 +7130,8 @@ class DraggableInDropZoneWithCustomPlaceholder {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       <div *ngFor="let item of items" cdkDrag
@@ -7113,6 +7148,8 @@ class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       <div *ngFor="let item of items" cdkDrag
@@ -7192,6 +7229,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
 `;
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.None,
   styles: CONNECTED_DROP_ZONES_STYLES,
   template: CONNECTED_DROP_ZONES_TEMPLATE,
@@ -7220,6 +7258,7 @@ class ConnectedDropZones implements AfterViewInit {
 }
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.ShadowDom,
   styles: CONNECTED_DROP_ZONES_STYLES,
   template: `<div *ngIf="true">${CONNECTED_DROP_ZONES_TEMPLATE}</div>`,
@@ -7227,7 +7266,9 @@ class ConnectedDropZones implements AfterViewInit {
 class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.None,
+
   styles: [
     `
     .cdk-drop-list {
@@ -7244,6 +7285,7 @@ class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
     }
   `,
   ],
+
   template: `
     <div cdkDropListGroup [cdkDropListGroupDisabled]="groupDisabled">
       <div
@@ -7267,6 +7309,8 @@ class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragRoot class="alternate-root" style="width: 200px; height: 200px; background: hotpink">
       <div
@@ -7285,7 +7329,9 @@ class DraggableWithAlternateRoot {
 }
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.None,
+
   styles: [
     `
     .cdk-drop-list {
@@ -7302,6 +7348,7 @@ class DraggableWithAlternateRoot {
     }
   `,
   ],
+
   template: `
     <div
       cdkDropList
@@ -7328,6 +7375,8 @@ class ConnectedDropZonesWithSingleItems {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDropListGroup #group="cdkDropListGroup">
       <div cdkDropList #listOne="cdkDropList">
@@ -7346,6 +7395,8 @@ class NestedDropListGroups {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <ng-container cdkDrag></ng-container>
   `,
@@ -7353,6 +7404,8 @@ class NestedDropListGroups {
 class DraggableOnNgContainer {}
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkDrag>
       <ng-container cdkDragHandle></ng-container>
@@ -7362,6 +7415,8 @@ class DraggableOnNgContainer {}
 class DragHandleOnNgContainer {}
 
 @Component({
+  jit: true,
+
   template: `
     <ng-container cdkDropList></ng-container>
   `,
@@ -7369,7 +7424,9 @@ class DragHandleOnNgContainer {}
 class DropListOnNgContainer {}
 
 @Component({
+  jit: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       <div *ngFor="let item of items"
@@ -7391,7 +7448,9 @@ class DraggableInDropZoneWithoutEvents {
 }
 
 @Component({
+  jit: true,
   encapsulation: ViewEncapsulation.None,
+
   styles: [
     `
     .cdk-drop-list {
@@ -7408,6 +7467,7 @@ class DraggableInDropZoneWithoutEvents {
     }
   `,
   ],
+
   template: `
     <div cdkDropListGroup>
       <wrapped-drop-container [items]="todo"></wrapped-drop-container>
@@ -7421,6 +7481,8 @@ class ConnectedWrappedDropZones {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       class="drop-list scroll-container"
@@ -7464,6 +7526,8 @@ class DraggableWithCanvasInDropZone extends DraggableInDropZone implements After
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       class="drop-list scroll-container"
@@ -7493,6 +7557,7 @@ class DraggableWithInvalidCanvasInDropZone extends DraggableInDropZone {}
  * Used to test having drag elements being projected into a component.
  */
 @Component({
+  jit: true,
   selector: 'passthrough-component',
   template: '<ng-content></ng-content>',
 })
@@ -7500,12 +7565,15 @@ class PassthroughComponent {}
 
 /** Component that wraps a drop container and uses OnPush change detection. */
 @Component({
+  jit: true,
   selector: 'wrapped-drop-container',
+
   template: `
     <div cdkDropList [cdkDropListData]="items">
       <div *ngFor="let item of items" cdkDrag>{{item}}</div>
     </div>
   `,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class WrappedDropContainerComponent {
@@ -7513,6 +7581,8 @@ class WrappedDropContainerComponent {
 }
 
 @Component({
+  jit: true,
+
   styles: [
     `
     :host {
@@ -7532,6 +7602,7 @@ class WrappedDropContainerComponent {
     }
   `,
   ],
+
   template: `
     <div
       cdkDrag
@@ -7563,6 +7634,8 @@ class NestedDragsComponent {
 }
 
 @Component({
+  jit: true,
+
   styles: [
     `
     :host {
@@ -7582,6 +7655,7 @@ class NestedDragsComponent {
     }
   `,
   ],
+
   template: `
     <div
       cdkDrag
@@ -7611,6 +7685,8 @@ class NestedDragsThroughTemplate {
 }
 
 @Component({
+  jit: true,
+
   styles: [
     `
     .drop-list {
@@ -7619,6 +7695,7 @@ class NestedDragsThroughTemplate {
     }
   `,
   ],
+
   template: `
     <div cdkDropList class="drop-list" #outerList>
       <div cdkDropList class="drop-list" #innerList>
@@ -7638,6 +7715,7 @@ class NestedDropZones {
 }
 
 @Component({
+  jit: true,
   template: `<div cdkDrag></div>`,
 })
 class PlainStandaloneDraggable {
@@ -7645,6 +7723,7 @@ class PlainStandaloneDraggable {
 }
 
 @Component({
+  jit: true,
   template: `<div cdkDropList></div>`,
 })
 class PlainStandaloneDropList {
@@ -7652,6 +7731,8 @@ class PlainStandaloneDropList {
 }
 
 @Component({
+  jit: true,
+
   styles: [
     `
     .list {
@@ -7668,6 +7749,7 @@ class PlainStandaloneDropList {
     }
   `,
   ],
+
   template: `
     <div class="list" cdkDropList cdkDropListOrientation="horizontal">
       <div *ngFor="let item of items" class="item" cdkDrag>
@@ -7686,7 +7768,9 @@ class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
 }
 
 @Component({
+  jit: true,
   styles: CONNECTED_DROP_ZONES_STYLES,
+
   template: `
     <div
       cdkDropList
@@ -7724,6 +7808,8 @@ class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
 class ConnectedDropZonesWithIntermediateSibling extends ConnectedDropZones {}
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragRoot class="alternate-root" style="width: 200px; height: 200px; background: hotpink">
       <div
@@ -7742,6 +7828,8 @@ class DraggableWithAlternateRootAndSelfHandle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       cdkDropList
@@ -7774,6 +7862,8 @@ class DraggableWithInputsInDropZone extends DraggableInDropZone {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div
       cdkDropList
@@ -7799,6 +7889,8 @@ class DraggableWithRadioInputsInDropZone {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div #dragRoot class="alternate-root" style="width: 200px; height: 200px; background: hotpink">
       <ng-container cdkDrag cdkDragRootElement=".alternate-root">

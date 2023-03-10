@@ -664,6 +664,8 @@ class FakeDataSource extends DataSource<TestData> {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">
@@ -705,6 +707,8 @@ class MatTableApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">
@@ -738,6 +742,8 @@ class NativeHtmlTableApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">
@@ -786,6 +792,8 @@ class NestedHtmlTableApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">
@@ -806,6 +814,8 @@ class StickyTableApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource" [multiTemplateDataRows]="multiTemplateDataRows">
       <ng-container matColumnDef="column_a">
@@ -834,6 +844,8 @@ class MatTableWithWhenRowApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="column_a">
@@ -892,6 +904,8 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="column_a">
@@ -941,6 +955,8 @@ class MatTableWithSortApp implements OnInit {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">
@@ -992,6 +1008,8 @@ class MatTableWithPaginatorApp implements OnInit {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">

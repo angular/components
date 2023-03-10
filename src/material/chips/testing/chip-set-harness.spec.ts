@@ -33,6 +33,8 @@ describe('MatChipSetHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-set>
       <mat-chip> Chip A </mat-chip>

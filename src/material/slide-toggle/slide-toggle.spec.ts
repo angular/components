@@ -785,6 +785,8 @@ describe('MDC-based MatSlideToggle with forms', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-slide-toggle [dir]="direction" [required]="isRequired"
                      [disabled]="isDisabled"
@@ -830,6 +832,8 @@ class SlideToggleBasic {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <form ngNativeValidate (ngSubmit)="isSubmitted = true">
       <mat-slide-toggle name="slide" ngModel [required]="isRequired">Required</mat-slide-toggle>
@@ -842,6 +846,8 @@ class SlideToggleWithForm {
 }
 
 @Component({
+  jit: true,
+
   template: `<mat-slide-toggle [(ngModel)]="modelValue" [disabled]="isDisabled"
                                [checked]="isChecked"></mat-slide-toggle>`,
 })
@@ -852,11 +858,14 @@ class SlideToggleWithModel {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slide-toggle checked disabled>Label</mat-slide-toggle>`,
 })
 class SlideToggleCheckedAndDisabledAttr {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-slide-toggle [formControl]="formControl">
       <span>Test Slide Toggle</span>
@@ -866,12 +875,16 @@ class SlideToggleWithFormControl {
   formControl = new FormControl(false);
 }
 
-@Component({template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`})
+@Component({
+  jit: true,
+  template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`,
+})
 class SlideToggleWithTabindexAttr {
   disabled = false;
 }
 
 @Component({
+  jit: true,
   template: `<mat-slide-toggle>{{label}}</mat-slide-toggle>`,
 })
 class SlideToggleWithoutLabel {
@@ -879,6 +892,7 @@ class SlideToggleWithoutLabel {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slide-toggle [(ngModel)]="checked" (change)="onChange()"></mat-slide-toggle>`,
 })
 class SlideToggleWithModelAndChangeEvent {
@@ -887,11 +901,13 @@ class SlideToggleWithModelAndChangeEvent {
 }
 
 @Component({
+  jit: true,
   template: `<mat-slide-toggle><some-text></some-text></mat-slide-toggle>`,
 })
 class SlideToggleProjectedLabel {}
 
 @Component({
+  jit: true,
   selector: 'some-text',
   template: `<span>{{text}}</span>`,
 })
@@ -900,6 +916,8 @@ class TextBindingComponent {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-slide-toggle aria-label="Slide toggle" aria-labelledby="something"></mat-slide-toggle>
   `,

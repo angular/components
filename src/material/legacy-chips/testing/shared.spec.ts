@@ -331,6 +331,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-list
       [disabled]="isDisabled"

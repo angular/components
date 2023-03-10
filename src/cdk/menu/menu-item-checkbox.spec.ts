@@ -99,6 +99,7 @@ describe('MenuItemCheckbox', () => {
 });
 
 @Component({
+  jit: true,
   template: `<button cdkMenuItemCheckbox>Click me!</button>`,
 })
 class SingleCheckboxButton {}

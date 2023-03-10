@@ -1383,58 +1383,91 @@ describe('MatIcon with default options', () => {
   }));
 });
 
-@Component({template: `<mat-icon>{{iconName}}</mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon>{{iconName}}</mat-icon>`,
+})
 class IconWithLigature {
   iconName = '';
 }
 
-@Component({template: `<mat-icon [fontIcon]="iconName"></mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [fontIcon]="iconName"></mat-icon>`,
+})
 class IconWithLigatureByAttribute {
   iconName = '';
 }
 
-@Component({template: `<mat-icon [color]="iconColor">{{iconName}}</mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [color]="iconColor">{{iconName}}</mat-icon>`,
+})
 class IconWithColor {
   iconName = '';
   iconColor = 'primary';
 }
 
-@Component({template: `<mat-icon [fontSet]="fontSet" [fontIcon]="fontIcon"></mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [fontSet]="fontSet" [fontIcon]="fontIcon"></mat-icon>`,
+})
 class IconWithCustomFontCss {
   fontSet = '';
   fontIcon = '';
 }
 
-@Component({template: `<mat-icon [svgIcon]="iconName"></mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
+})
 class IconFromSvgName {
   iconName: string | undefined = '';
 }
 
-@Component({template: '<mat-icon aria-hidden="false">face</mat-icon>'})
+@Component({
+  jit: true,
+  template: '<mat-icon aria-hidden="false">face</mat-icon>',
+})
 class IconWithAriaHiddenFalse {}
 
-@Component({template: `<mat-icon [svgIcon]="iconName" *ngIf="showIcon">{{iconName}}</mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [svgIcon]="iconName" *ngIf="showIcon">{{iconName}}</mat-icon>`,
+})
 class IconWithBindingAndNgIf {
   iconName = 'fluffy';
   showIcon = true;
 }
 
-@Component({template: `<mat-icon [inline]="inline">{{iconName}}</mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [inline]="inline">{{iconName}}</mat-icon>`,
+})
 class InlineIcon {
   inline = false;
 }
 
-@Component({template: `<mat-icon [svgIcon]="iconName"><div>Hello</div></mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon [svgIcon]="iconName"><div>Hello</div></mat-icon>`,
+})
 class SvgIconWithUserContent {
   iconName: string | undefined = '';
 }
 
-@Component({template: '<mat-icon [svgIcon]="iconName">house</mat-icon>'})
+@Component({
+  jit: true,
+  template: '<mat-icon [svgIcon]="iconName">house</mat-icon>',
+})
 class IconWithLigatureAndSvgBinding {
   iconName: string | undefined;
 }
 
-@Component({template: `<mat-icon></mat-icon>`})
+@Component({
+  jit: true,
+  template: `<mat-icon></mat-icon>`,
+})
 class BlankIcon {
   @ViewChild(MatIcon) icon: MatIcon;
 }

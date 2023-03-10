@@ -2718,6 +2718,8 @@ describe('MatMenu default overrides', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <button
       [matMenuTriggerFor]="menu"
@@ -2761,6 +2763,8 @@ class SimpleMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu [xPosition]="xPosition" [yPosition]="yPosition" #menu="matMenu">
@@ -2780,6 +2784,8 @@ interface TestableMenu {
   triggerEl: ElementRef<HTMLElement>;
 }
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu [overlapTrigger]="overlapTrigger" #menu="matMenu">
@@ -2794,13 +2800,16 @@ class OverlapMenu implements TestableMenu {
 }
 
 @Component({
+  jit: true,
   selector: 'custom-menu',
+
   template: `
     <ng-template>
       Custom Menu header
       <ng-content></ng-content>
     </ng-template>
   `,
+
   exportAs: 'matCustomMenu',
 })
 class CustomMenuPanel implements MatMenuPanel {
@@ -2818,6 +2827,8 @@ class CustomMenuPanel implements MatMenuPanel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu">Toggle menu</button>
     <custom-menu #menu="matCustomMenu">
@@ -2830,6 +2841,8 @@ class CustomMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button
       [matMenuTriggerFor]="root"
@@ -2896,6 +2909,8 @@ class NestedMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="root" #rootTrigger="matMenuTrigger">Toggle menu</button>
 
@@ -2916,6 +2931,8 @@ class NestedMenuCustomElevation {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="root" #rootTriggerEl>Toggle menu</button>
     <mat-menu #root="matMenu">
@@ -2940,6 +2957,8 @@ class NestedMenuRepeater {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="root" #rootTriggerEl>Toggle menu</button>
 
@@ -2957,12 +2976,15 @@ class SubmenuDeclaredInsideParentMenu {
 }
 
 @Component({
+  jit: true,
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
 })
 class FakeIcon {}
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
 
@@ -2981,6 +3003,8 @@ class SimpleLazyMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button
       [matMenuTriggerFor]="menu"
@@ -3005,6 +3029,8 @@ class LazyMenuWithContext {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="one">Toggle menu</button>
     <mat-menu #one="matMenu">
@@ -3023,6 +3049,8 @@ class DynamicPanelMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu">Toggle menu</button>
 
@@ -3037,6 +3065,8 @@ class MenuWithCheckboxItems {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu">Toggle menu</button>
     <mat-menu #menu="matMenu">
@@ -3058,6 +3088,8 @@ class SimpleMenuWithRepeater {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu">Toggle menu</button>
     <mat-menu #menu="matMenu">
@@ -3080,6 +3112,8 @@ class SimpleMenuWithRepeaterInLazyContent {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
 
@@ -3095,6 +3129,7 @@ class SimpleMenuWithRepeaterInLazyContent {
       </ng-template>
     </mat-menu>
   `,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class LazyMenuWithOnPush {
@@ -3103,6 +3138,8 @@ class LazyMenuWithOnPush {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-menu #menu="matMenu">
       <button [matMenuTriggerFor]="menu"></button>
@@ -3112,21 +3149,26 @@ class LazyMenuWithOnPush {
 class InvalidRecursiveMenu {}
 
 @Component({
+  jit: true,
   template: '<mat-menu aria-label="label"></mat-menu>',
 })
 class StaticAriaLabelMenu {}
 
 @Component({
+  jit: true,
   template: '<mat-menu aria-labelledby="some-element"></mat-menu>',
 })
 class StaticAriaLabelledByMenu {}
 
 @Component({
+  jit: true,
   template: '<mat-menu aria-describedby="some-element"></mat-menu>',
 })
 class StaticAriaDescribedbyMenu {}
 
 @Component({
+  jit: true,
+
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu #menu="matMenu">

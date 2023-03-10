@@ -54,6 +54,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <ng-template>
       Hello from the bottom sheet!

@@ -93,6 +93,7 @@ describe('MenuItemRadio', () => {
 });
 
 @Component({
+  jit: true,
   template: `<button cdkMenuItemRadio>Click me!</button>`,
 })
 class SimpleRadioButton {}

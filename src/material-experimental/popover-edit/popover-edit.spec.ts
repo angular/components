@@ -62,7 +62,9 @@ interface PeriodicElement {
   weight: number;
 }
 
-@Directive()
+@Directive({
+  jit: true,
+})
 abstract class BaseTestComponent {
   @ViewChild('table') table: ElementRef;
 
@@ -184,6 +186,8 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div #table style="margin: 16px; max-width: 90vw; max-height: 90vh;">
     <mat-table editable [dataSource]="dataSource">
@@ -223,6 +227,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
     </mat-table>
   </div>
   `,
+
   styles: [
     `
     mat-table {
@@ -237,6 +242,8 @@ class MatFlexTableInCell extends BaseTestComponent {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <div #table style="margin: 16px">
     <table mat-table editable [dataSource]="dataSource">
@@ -276,6 +283,7 @@ class MatFlexTableInCell extends BaseTestComponent {
     </table>
   <div>
   `,
+
   styles: [
     `
     table {

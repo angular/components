@@ -149,7 +149,9 @@ function getFlexTemplate(defaultEnabled: boolean) {
 
 const MOUSE_START_OFFSET = 1000;
 
-@Directive()
+@Directive({
+  jit: true,
+})
 abstract class BaseTestComponent {
   @ViewChild('table') table: ElementRef;
 
@@ -249,7 +251,9 @@ abstract class BaseTestComponent {
   }
 }
 
-@Directive()
+@Directive({
+  jit: true,
+})
 abstract class BaseTestComponentRtl extends BaseTestComponent {
   override direction = 'rtl';
 
@@ -266,36 +270,58 @@ abstract class BaseTestComponentRtl extends BaseTestComponent {
   }
 }
 
-@Component({template: getTableTemplate(false)})
+@Component({
+  jit: true,
+  template: getTableTemplate(false),
+})
 class MatResizeTest extends BaseTestComponent {
   @ViewChild(MatColumnResize) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getTableTemplate(false), changeDetection: ChangeDetectionStrategy.OnPush})
+@Component({
+  jit: true,
+  template: getTableTemplate(false),
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MatResizeOnPushTest extends MatResizeTest {}
 
-@Component({template: getTableTemplate(true)})
+@Component({
+  jit: true,
+  template: getTableTemplate(true),
+})
 class MatResizeDefaultTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getTableTemplate(true)})
+@Component({
+  jit: true,
+  template: getTableTemplate(true),
+})
 class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getFlexTemplate(false)})
+@Component({
+  jit: true,
+  template: getFlexTemplate(false),
+})
 class MatResizeFlexTest extends BaseTestComponent {
   @ViewChild(MatColumnResizeFlex) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getFlexTemplate(true)})
+@Component({
+  jit: true,
+  template: getFlexTemplate(true),
+})
 class MatResizeDefaultFlexTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
   columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getFlexTemplate(true)})
+@Component({
+  jit: true,
+  template: getFlexTemplate(true),
+})
 class MatResizeDefaultFlexRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
   columnResize: AbstractMatColumnResize;

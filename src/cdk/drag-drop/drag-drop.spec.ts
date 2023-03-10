@@ -39,6 +39,7 @@ describe('DragDrop', () => {
 });
 
 @Component({
+  jit: true,
   template: '<div></div>',
 })
 class TestComponent {

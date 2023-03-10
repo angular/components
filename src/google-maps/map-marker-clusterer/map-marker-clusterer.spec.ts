@@ -302,7 +302,9 @@ describe('MapMarkerClusterer', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `<google-map>
                <map-marker-clusterer [ariaLabelFn]="ariaLabelFn"
                                      [averageCenter]="averageCenter"

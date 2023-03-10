@@ -1420,53 +1420,68 @@ describe('MDC-based MatSlider', () => {
 const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class StandardSlider {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class StandardRangeSlider {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider disabled>
     <input matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class DisabledSlider {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider disabled>
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class DisabledRangeSlider {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider [min]="min" [max]="max">
     <input matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithMinAndMax {
@@ -1475,12 +1490,15 @@ class SliderWithMinAndMax {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider [min]="min" [max]="max">
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithMinAndMax {
@@ -1489,32 +1507,41 @@ class RangeSliderWithMinAndMax {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input value="50" matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithValue {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input value="25" matSliderStartThumb>
     <input value="75" matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithValue {}
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider [step]="step">
     <input matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithStep {
@@ -1522,12 +1549,15 @@ class SliderWithStep {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider [step]="step">
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithStep {
@@ -1535,11 +1565,14 @@ class RangeSliderWithStep {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider [displayWith]="displayWith" min="1" max="200" discrete>
     <input matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class DiscreteSliderWithDisplayWith {
@@ -1549,12 +1582,15 @@ class DiscreteSliderWithDisplayWith {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider [displayWith]="displayWith" min="1" max="200" discrete>
     <input matSliderStartThumb>
     <input matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class DiscreteRangeSliderWithDisplayWith {
@@ -1564,11 +1600,14 @@ class DiscreteRangeSliderWithDisplayWith {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [value]="value" matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithOneWayBinding {
@@ -1576,12 +1615,15 @@ class SliderWithOneWayBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [value]="startValue" matSliderStartThumb>
     <input [value]="endValue" matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithOneWayBinding {
@@ -1590,11 +1632,14 @@ class RangeSliderWithOneWayBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [(ngModel)]="val" matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithNgModel {
@@ -1603,12 +1648,15 @@ class SliderWithNgModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [(ngModel)]="startVal" matSliderStartThumb>
     <input [(ngModel)]="endVal" matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithNgModel {
@@ -1618,10 +1666,13 @@ class RangeSliderWithNgModel {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [formControl]="control" matSliderThumb>
   </mat-slider>`,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithFormControl {
@@ -1629,11 +1680,14 @@ class SliderWithFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [formControl]="startInputControl" matSliderStartThumb>
     <input [formControl]="endInputControl" matSliderEndThumb>
   </mat-slider>`,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithFormControl {
@@ -1642,11 +1696,14 @@ class RangeSliderWithFormControl {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [(value)]="value" matSliderThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class SliderWithTwoWayBinding {
@@ -1654,12 +1711,15 @@ class SliderWithTwoWayBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <mat-slider>
     <input [(value)]="startValue" matSliderStartThumb>
     <input [(value)]="endValue" matSliderEndThumb>
   </mat-slider>
   `,
+
   styles: SLIDER_STYLES,
 })
 class RangeSliderWithTwoWayBinding {

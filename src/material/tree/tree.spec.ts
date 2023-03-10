@@ -764,6 +764,8 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
@@ -842,6 +844,8 @@ const TREE_DATA: FoodNode[] = [
 ];
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
@@ -878,6 +882,8 @@ class MatTreeWithNullOrUndefinedChild {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass">
@@ -901,6 +907,8 @@ class MatNestedTreeWithNullOrUndefinedChild {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass">
@@ -928,6 +936,8 @@ class NestedMatTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node">
@@ -964,6 +974,8 @@ class WhenNodeNestedMatTreeApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
@@ -1007,6 +1019,8 @@ class MatTreeAppWithToggle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass"
@@ -1038,6 +1052,8 @@ class NestedMatTreeAppWithToggle {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"

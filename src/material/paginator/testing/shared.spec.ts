@@ -132,6 +132,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-paginator
       (page)="handlePageEvent($event)"

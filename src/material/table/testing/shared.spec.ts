@@ -188,6 +188,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="position">

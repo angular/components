@@ -266,6 +266,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-radio-button *ngFor="let value of values, let i = index"
                       [name]="value === 'opt3' ? 'group2' : 'group1'"

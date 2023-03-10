@@ -266,6 +266,8 @@ export function runHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-form-field>
       <mat-select [disabled]="isDisabled" [required]="isRequired" id="single-selection">

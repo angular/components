@@ -1105,11 +1105,16 @@ describe('MatDrawerContainer', () => {
 });
 
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */
-@Component({template: `<mat-drawer-container></mat-drawer-container>`})
+@Component({
+  jit: true,
+  template: `<mat-drawer-container></mat-drawer-container>`,
+})
 class DrawerContainerNoDrawerTestApp {}
 
 /** Test component that contains an MatDrawerContainer and 2 MatDrawer in the same position. */
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer position="start"></mat-drawer>
@@ -1122,6 +1127,8 @@ class DrawerContainerTwoDrawerTestApp {
 
 /** Test component that contains an MatDrawerContainer and one MatDrawer. */
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container (backdropClick)="backdropClicked()" [hasBackdrop]="hasBackdrop">
       <mat-drawer #drawer="matDrawer" [position]="position"
@@ -1180,6 +1187,8 @@ class BasicTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer #drawer mode="side" opened="false">
@@ -1190,6 +1199,8 @@ class BasicTestApp {
 class DrawerSetToOpenedFalse {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer #drawer mode="side" opened="true" (opened)="openCallback()">
@@ -1202,6 +1213,8 @@ class DrawerSetToOpenedTrue {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer #drawer mode="side" [(opened)]="isOpen">
@@ -1214,6 +1227,8 @@ class DrawerOpenBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer #drawer1 [position]="drawer1Position"></mat-drawer>
@@ -1226,8 +1241,8 @@ class DrawerDynamicPosition {
 }
 
 @Component({
-  // Note: we use inputs here, because they're guaranteed
-  // to be focusable across all platforms.
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer position="start" [mode]="mode">
@@ -1241,6 +1256,8 @@ class DrawerWithFocusableElements {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer position="start" mode="over">
@@ -1251,6 +1268,8 @@ class DrawerWithFocusableElements {
 class DrawerWithoutFocusableElements {}
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer *ngIf="showDrawer" #drawer mode="side">Drawer</mat-drawer>
@@ -1263,6 +1282,8 @@ class DrawerDelayed {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container [dir]="direction">
       <mat-drawer *ngIf="renderDrawer" [mode]="mode" style="width:100px"></mat-drawer>
@@ -1278,6 +1299,8 @@ class DrawerContainerStateChangesTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container autosize style="min-height: 200px;">
       <mat-drawer mode="push" [position]="drawer1Position">
@@ -1293,6 +1316,8 @@ class AutosizeDrawer {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container>
       <mat-drawer>Drawer</mat-drawer>
@@ -1305,8 +1330,8 @@ class DrawerContainerWithContent {
 }
 
 @Component({
-  // Note that we need the `ng-container` with the `ngSwitch` so that
-  // there's a directive between the container and the drawer.
+  jit: true,
+
   template: `
     <mat-drawer-container #container>
       <ng-container [ngSwitch]="true">
@@ -1320,6 +1345,8 @@ class IndirectDescendantDrawer {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <mat-drawer-container #outerContainer>
       <mat-drawer #outerDrawer>Drawer</mat-drawer>

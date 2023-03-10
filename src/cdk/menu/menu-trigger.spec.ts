@@ -542,6 +542,8 @@ describe('MenuTrigger', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar><button cdkMenuItem [cdkMenuTriggerFor]="noop">Click me!</button></div>
     <ng-template #noop><div cdkMenu></div></ng-template>
@@ -553,6 +555,8 @@ class TriggerForEmptyMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>
@@ -582,6 +586,8 @@ class MenuBarWithNestedSubMenus {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="menu">First</button>
@@ -603,6 +609,8 @@ class TriggersWithSameMenuDifferentMenuBars {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="menu">First</button>
@@ -622,6 +630,8 @@ class TriggersWithSameMenuSameMenuBar {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <div cdkMenuBar>
       <button cdkMenuItem [cdkMenuTriggerFor]="menu"></button>
@@ -640,6 +650,8 @@ class TriggerOpensItsMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>
 
@@ -662,6 +674,8 @@ class StandaloneTriggerWithInlineMenu {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button
       [cdkMenuTriggerFor]="menu"
@@ -677,6 +691,8 @@ class TriggerWithData {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <button [cdkMenuTriggerFor]="null">First</button>
   `,

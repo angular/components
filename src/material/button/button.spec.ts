@@ -359,7 +359,9 @@ describe('MatFabDefaultOptions', () => {
 
 /** Test component that contains an MatButton. */
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `
     <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">

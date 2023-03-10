@@ -72,6 +72,8 @@ describe('MatChipInputHarness', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
     <mat-chip-grid #grid1>
       <input [matChipInputFor]="grid1" [required]="required" placeholder="Placeholder" />

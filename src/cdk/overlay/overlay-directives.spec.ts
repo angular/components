@@ -690,6 +690,8 @@ describe('Overlay directives', () => {
 });
 
 @Component({
+  jit: true,
+
   template: `
   <button cdk-overlay-origin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
   <button cdk-overlay-origin id="otherTrigger" #otherTrigger="cdkOverlayOrigin">Toggle menu</button>
@@ -760,6 +762,8 @@ class ConnectedOverlayDirectiveTest {
 }
 
 @Component({
+  jit: true,
+
   template: `
   <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
   <ng-template cdk-connected-overlay>Menu content</ng-template>`,

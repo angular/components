@@ -81,6 +81,8 @@ export function runDatepickerToggleHarnessTests(
 }
 
 @Component({
+  jit: true,
+
   template: `
     <input [matDatepicker]="picker">
     <mat-datepicker-toggle id="basic" [for]="picker" [disabled]="disabled"></mat-datepicker-toggle>

@@ -110,6 +110,7 @@ describe('FullscreenOverlayContainer', () => {
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({
+  jit: true,
   template: `<ng-template cdk-portal>Cake</ng-template>`,
   providers: [Overlay],
 })
@@ -120,8 +121,10 @@ class TestComponentWithTemplatePortals {
 }
 
 @NgModule({
+  jit: true,
   imports: [OverlayModule, PortalModule],
   declarations: [TestComponentWithTemplatePortals],
+
   providers: [
     {
       provide: OverlayContainer,

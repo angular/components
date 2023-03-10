@@ -522,7 +522,9 @@ describe('MatTabNavBar', () => {
 });
 
 @Component({
+  jit: true,
   selector: 'test-app',
+
   template: `
     <nav mat-tab-nav-bar [disableRipple]="disableRippleOnBar" [tabPanel]="tabPanel">
       <a mat-tab-link
@@ -549,6 +551,8 @@ class SimpleTabNavBarTestApp {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngIf="!isDestroyed">Link</a>
@@ -561,6 +565,8 @@ class TabLinkWithNgIf {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngFor="let tab of tabs" [active]="false">Tab link {{label}}</a>
@@ -573,6 +579,8 @@ class TabBarWithInactiveTabsOnInit {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar>
       <a mat-tab-link
@@ -590,6 +598,8 @@ class TabBarWithoutPanel {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar>
       <a mat-tab-link [tabIndex]="tabIndex">TabIndex Link</a>
@@ -601,6 +611,8 @@ class TabBarWithoutPanelWithTabIndexBinding {
 }
 
 @Component({
+  jit: true,
+
   template: `
     <nav mat-tab-nav-bar>
       <a mat-tab-link tabindex="5">Link</a>
