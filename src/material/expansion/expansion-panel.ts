@@ -95,6 +95,7 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
     '[class.mat-expanded]': 'expanded',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
+    '[@.disabled]': '_animationsDisabled',
   },
 })
 export class MatExpansionPanel
@@ -149,6 +150,12 @@ export class MatExpansionPanel
 
   /** Stream of body animation done events. */
   readonly _bodyAnimationDone = new Subject<AnimationEvent>();
+
+  /** Whether Angular animations in the panel body should be disabled. */
+  _animationsDisabled = false;
+
+  /** Whether panel body should be hidden. */
+  _panelHidden = false;
 
   constructor(
     @Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
@@ -218,6 +225,9 @@ export class MatExpansionPanel
 
   ngAfterContentInit() {
     if (this._lazyContent && this._lazyContent._expansionPanel === this) {
+      this._panelHidden = !this.expanded;
+      this._animationsDisabled = !this.expanded;
+
       // Render the content as soon as the panel becomes open.
       this.opened
         .pipe(
@@ -227,6 +237,7 @@ export class MatExpansionPanel
         )
         .subscribe(() => {
           this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef);
+          this._hidePanel();
         });
     }
   }
@@ -250,6 +261,31 @@ export class MatExpansionPanel
     }
 
     return false;
+  }
+
+  _animationStarted() {
+    // Currently the `bodyExpansion` animation has a `void => collapsed` transition which is
+    // there to work around a bug in Angular (see #13088), however this introduces a different
+    // issue. The new transition will cause to flicker in certain situations (see #22715), if the
+    // consumer has set a inner lazy-loaded expansion panel's header height that is different from the
+    // default one.
+    // Part of work around is to disable animations on the body and re-enabling them after the first animation has run.
+    // Ideally this wouldn't be necessary if we remove the `void => collapsed` transition, but we have
+    // to wait for https://github.com/angular/angular/issues/18847 to be resolved.
+    this._animationsDisabled = false;
+  }
+
+  private _hidePanel(): void {
+    // Currently the `bodyExpansion` animation has a `void => collapsed` transition which is
+    // there to work around a bug in Angular (see #13088), however this introduces a different
+    // issue. The new transition will cause to flicker in certain situations (see #22715), if the
+    // consumer has set a inner lazy-loaded expansion panel's header height that is different from the
+    // default one.
+    // Part of work around is to set non-expanded panel's height to 0px with class on init
+    // so that outer expansion panel can calculate height of its body properly.
+    // Ideally this wouldn't be necessary if we remove the `void => collapsed` transition, but we have
+    // to wait for https://github.com/angular/angular/issues/18847 to be resolved.
+    this._panelHidden = false;
   }
 }
 

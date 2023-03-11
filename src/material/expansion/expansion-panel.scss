@@ -62,6 +62,10 @@
   }
 }
 
+.mat-expansion-panel-hidden {
+  height: 0;
+}
+
 .mat-expansion-panel-body {
   padding: 0 24px 16px;
 }

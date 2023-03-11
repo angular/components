@@ -1,11 +1,15 @@
 <ng-content select="mat-expansion-panel-header"></ng-content>
-<div class="mat-expansion-panel-content"
-     role="region"
-     [@bodyExpansion]="_getExpandedState()"
-     (@bodyExpansion.done)="_bodyAnimationDone.next($event)"
-     [attr.aria-labelledby]="_headerId"
-     [id]="id"
-     #body>
+<div
+  class="mat-expansion-panel-content"
+  role="region"
+  [class.mat-expansion-panel-hidden]="_panelHidden"
+  [@bodyExpansion]="_getExpandedState()"
+  (@bodyExpansion.start)="_animationStarted()"
+  (@bodyExpansion.done)="_bodyAnimationDone.next($event)"
+  [attr.aria-labelledby]="_headerId"
+  [id]="id"
+  #body
+>
   <div class="mat-expansion-panel-body">
     <ng-content></ng-content>
     <ng-template [cdkPortalOutlet]="_portal"></ng-template>
