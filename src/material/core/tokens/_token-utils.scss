@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:string';
 @use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/theme/theme' as mdc-theme;
@@ -52,7 +51,8 @@ $_component-prefix: null;
 @mixin _configure-token-prefix($first, $rest...) {
   $_component-prefix: '' !global;
   @each $item in $rest {
-    $_component-prefix: if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+    $_component-prefix:
+        if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
   }
   @include mdc-custom-properties.configure($varname-prefix: $first) {
     @content;
