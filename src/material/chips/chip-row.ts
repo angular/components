@@ -62,12 +62,14 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-with-trailing-icon]': '_hasTrailingIcon()',
     '[id]': 'id',
-    '[attr.tabindex]': 'null',
+    // Has to have a negative tabindex in order to capture
+    // focus and redirect it to the primary action.
+    '[attr.tabindex]': 'disabled ? null : -1',
     '[attr.aria-label]': 'null',
     '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
-    '(mousedown)': '_mousedown($event)',
-    '(dblclick)': '_doubleclick($event)',
+    '(focus)': '_handleFocus($event)',
+    '(dblclick)': '_handleDoubleclick($event)',
   },
   providers: [
     {provide: MatChip, useExisting: MatChipRow},
@@ -137,13 +139,9 @@ export class MatChipRow extends MatChip implements AfterViewInit {
   }
 
   /** Sends focus to the first gridcell when the user clicks anywhere inside the chip. */
-  _mousedown(event: MouseEvent) {
-    if (!this._isEditing) {
-      if (!this.disabled) {
-        this.focus();
-      }
-
-      event.preventDefault();
+  _handleFocus() {
+    if (!this._isEditing && !this.disabled) {
+      this.focus();
     }
   }
 
@@ -163,7 +161,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
-  _doubleclick(event: MouseEvent) {
+  _handleDoubleclick(event: MouseEvent) {
     if (!this.disabled && this.editable) {
       this._startEditing(event);
     }
