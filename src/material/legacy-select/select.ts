@@ -149,6 +149,7 @@ export class MatLegacySelectTrigger {}
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
+    'ngSkipHydration': 'true',
   },
   animations: [
     matLegacySelectAnimations.transformPanelWrap,

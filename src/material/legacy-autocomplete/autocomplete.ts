@@ -35,6 +35,7 @@ import {_MatAutocompleteBase} from '@angular/material/autocomplete';
   inputs: ['disableRipple'],
   host: {
     'class': 'mat-autocomplete',
+    'ngSkipHydration': 'true',
   },
   providers: [{provide: MAT_LEGACY_OPTION_PARENT_COMPONENT, useExisting: MatLegacyAutocomplete}],
 })
