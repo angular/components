@@ -39,9 +39,8 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
 ): CanColorCtor & T {
   @Directive({
     host: {
-      '[class.mat-primary]': 'color == "primary"',
-      '[class.mat-accent]': 'color == "accent"',
-      '[class.mat-warn]': 'color == "warn"',
+      // tslint:disable-next-line:validate-decorators
+      '[class]': 'colorClass',
     },
   })
   class MixinColorBase extends base {
@@ -53,6 +52,10 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
     }
     set color(value: ThemePalette) {
       this._color = value || this.defaultColor;
+    }
+
+    get colorClass() {
+      return this.color ? `mat-${this.color}` : '';
     }
 
     constructor(...args: any[]) {
