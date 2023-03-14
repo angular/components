@@ -44,8 +44,10 @@ export class MatChipSelectionChange {
   styleUrls: ['chip.css'],
   inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   host: {
-    'class':
-      'mat-mdc-chip mat-mdc-chip-option mdc-evolution-chip mdc-evolution-chip--filter mdc-evolution-chip--selectable',
+    'class': 'mat-mdc-chip mat-mdc-chip-option',
+    '[class.mdc-evolution-chip]': '!_isBasicChip',
+    '[class.mdc-evolution-chip--filter]': '!_isBasicChip',
+    '[class.mdc-evolution-chip--selectable]': '!_isBasicChip',
     '[class.mat-mdc-chip-selected]': 'selected',
     '[class.mat-mdc-chip-multiple]': '_chipListMultiple',
     '[class.mat-mdc-chip-disabled]': 'disabled',
@@ -141,7 +143,8 @@ export class MatChipOption extends MatChip implements OnInit {
   @Output() readonly selectionChange: EventEmitter<MatChipSelectionChange> =
     new EventEmitter<MatChipSelectionChange>();
 
-  ngOnInit() {
+  override ngOnInit() {
+    super.ngOnInit();
     this.role = 'presentation';
   }
 

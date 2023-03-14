@@ -167,6 +167,12 @@
   }
 }
 
+// Keeps basic listbox chips looking consistent with the other variations. Listbox chips don't
+// inherit the font size, because they wrap the label in a `button` that has user agent styles.
+.mat-mdc-basic-chip .mdc-evolution-chip__action--primary {
+  font: inherit;
+}
+
 // MDC's focus and hover indication is handled through their ripple which we currently
 // don't use due to size concerns so we have to re-implement it ourselves.
 .mat-mdc-chip-focus-overlay {

@@ -19,6 +19,19 @@
         <mat-basic-chip>Basic Chip 3</mat-basic-chip>
       </mat-chip-set>
 
+      <mat-chip-listbox>
+        <mat-basic-chip-option>Basic Chip Option 1</mat-basic-chip-option>
+        <mat-basic-chip-option>Basic Chip Option 2</mat-basic-chip-option>
+        <mat-basic-chip-option>Basic Chip Option 3</mat-basic-chip-option>
+      </mat-chip-listbox>
+
+      <mat-chip-grid #basicGrid>
+        <mat-basic-chip-row>Basic Chip Row 1</mat-basic-chip-row>
+        <mat-basic-chip-row>Basic Chip Row 2</mat-basic-chip-row>
+        <mat-basic-chip-row>Basic Chip Row 3</mat-basic-chip-row>
+        <input [matChipInputFor]="basicGrid" readonly>
+      </mat-chip-grid>
+
       <h4>With avatar, icons, and color</h4>
 
       <mat-chip-set>
