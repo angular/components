@@ -42,6 +42,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
       // tslint:disable-next-line:validate-decorators
       '[class]': 'colorClass',
     },
+    inputs: ['color'],
   })
   class MixinColorBase extends base {
     private _color: ThemePalette;
