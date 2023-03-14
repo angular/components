@@ -94,8 +94,6 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     abstract focus(origin?: FocusOrigin): void;
     protected abstract _getAnimationTargetElement(): HTMLElement | null;
     // (undocumented)
-    _getAriaChecked(): 'true' | 'false' | 'mixed';
-    // (undocumented)
     protected _handleInputClick(): void;
     id: string;
     get indeterminate(): boolean;

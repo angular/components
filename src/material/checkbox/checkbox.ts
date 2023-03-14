@@ -311,14 +311,6 @@ export abstract class _MatCheckboxBase<E>
     this.disabled = isDisabled;
   }
 
-  _getAriaChecked(): 'true' | 'false' | 'mixed' {
-    if (this.checked) {
-      return 'true';
-    }
-
-    return this.indeterminate ? 'mixed' : 'false';
-  }
-
   private _transitionCheckState(newState: TransitionCheckState) {
     let oldState = this._currentCheckState;
     let element = this._getAnimationTargetElement();
