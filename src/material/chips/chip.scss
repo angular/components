@@ -226,6 +226,11 @@
 // Required for the strong focus indicator to fill the chip.
 .mat-mdc-chip {
   position: relative;
+
+  // `.mat-mdc-chip-action-label` below sets a `z-index: 1` to put the label above the focus
+  // overlay, but that can also cause it to appear above other elements like sticky columns
+  // (see #26793). Set an explicit `z-index` to prevent the label from leaking out.
+  z-index: 0;
 }
 
 .mat-mdc-chip-action-label {
