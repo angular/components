@@ -266,9 +266,11 @@ describe('MDC-based MatTabHeader', () => {
         // Focus on the last tab, expect this to be the maximum scroll distance.
         appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
         fixture.detectChanges();
-        expect(appComponent.tabHeader.scrollDistance).toBe(
-          appComponent.tabHeader._getMaxScrollDistance(),
+        const {offsetLeft, offsetWidth} = appComponent.getSelectedLabel(
+          appComponent.tabHeader.focusIndex,
         );
+        const viewLength = appComponent.getViewLength();
+        expect(appComponent.tabHeader.scrollDistance).toBe(offsetLeft + offsetWidth - viewLength);
 
         // Focus on the first tab, expect this to be the maximum scroll distance.
         appComponent.tabHeader.focusIndex = 0;
@@ -329,9 +331,11 @@ describe('MDC-based MatTabHeader', () => {
         // Focus the last tab so the header scrolls to the end.
         appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
         fixture.detectChanges();
-        expect(appComponent.tabHeader.scrollDistance).toBe(
-          appComponent.tabHeader._getMaxScrollDistance(),
+        const {offsetLeft, offsetWidth} = appComponent.getSelectedLabel(
+          appComponent.tabHeader.focusIndex,
         );
+        const viewLength = appComponent.getViewLength();
+        expect(appComponent.tabHeader.scrollDistance).toBe(offsetLeft + offsetWidth - viewLength);
 
         // Remove the first two tabs which includes the selected tab.
         appComponent.tabs = appComponent.tabs.slice(2);
@@ -360,9 +364,8 @@ describe('MDC-based MatTabHeader', () => {
         // Focus on the last tab, expect this to be the maximum scroll distance.
         appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
         fixture.detectChanges();
-        expect(appComponent.tabHeader.scrollDistance).toBe(
-          appComponent.tabHeader._getMaxScrollDistance(),
-        );
+        const {offsetLeft} = appComponent.getSelectedLabel(appComponent.tabHeader.focusIndex);
+        expect(offsetLeft).toBe(0);
 
         // Focus on the first tab, expect this to be the maximum scroll distance.
         appComponent.tabHeader.focusIndex = 0;
@@ -756,5 +759,13 @@ class SimpleTabHeaderApp {
     for (let i = 0; i < amount; i++) {
       this.tabs.push({label: 'new'});
     }
+  }
+
+  getViewLength() {
+    return this.tabHeader._tabListContainer.nativeElement.offsetWidth;
+  }
+
+  getSelectedLabel(index: number) {
+    return this.tabHeader._items.toArray()[this.tabHeader.focusIndex].elementRef.nativeElement;
   }
 }
