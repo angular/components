@@ -1,3 +1,18 @@
+<a name="15.2.3"></a>
+# 15.2.3 "aluminum-statue" (2023-03-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7dfcf8ff3](https://github.com/angular/components/commit/7dfcf8ff3ce49475d3022bd47bc721e6ee34755c) | fix | **checkbox:** fix ARIA semantics and use native DOM properties ([#26710](https://github.com/angular/components/pull/26710)) |
+| [40d38889c](https://github.com/angular/components/commit/40d38889c029605483bd05b384b52fb64addb1ef) | fix | **chips:** chip label appearing above sticky columns ([#26794](https://github.com/angular/components/pull/26794)) |
+| [b846d1e05](https://github.com/angular/components/commit/b846d1e05d71b68cbb66ea118499c78f5138d25e) | fix | **chips:** don't prevent default mousedown action ([#26765](https://github.com/angular/components/pull/26765)) |
+| [501d73e5b](https://github.com/angular/components/commit/501d73e5b6c549ad20e321546c6df964c6510f9a) | fix | **chips:** styling not cleared on basic chips in listbox and grid ([#26771](https://github.com/angular/components/pull/26771)) |
+| [06ed54c25](https://github.com/angular/components/commit/06ed54c2510661cc08ba00fb001ea46ee1cd5ec2) | fix | **tabs:** update MatTab _scrollToLabel function to always display a label from its start ([#26736](https://github.com/angular/components/pull/26736)) ([#26737](https://github.com/angular/components/pull/26737)) |
+## Special Thanks
+Boyi Li, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-next.1"></a>
 # 16.0.0-next.1 "jade-jacket" (2023-03-08)
 ### material
