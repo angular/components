@@ -6,6 +6,7 @@
 @use '../mdc-helpers/mdc-helpers';
 @use '../style/vendor-prefixes';
 @use '../style/layout-common';
+@use '../focus-indicators/private' as focus-indicators-private;
 
 
 .mat-mdc-option {
@@ -130,4 +131,29 @@
 // For options, render the focus indicator when the class .mat-mdc-option-active is present.
 .mat-mdc-option-active::before {
   content: '';
+}
+
+// Re-apply the `border` and `border-radius` for strong focus. Override the MDC styles which come
+// list. MDC uses the `::before` pseudo element for the default focus/hover/selected state. The MDC
+// styles normally override the strong focus indicator styles. Increase specificity to override MDC.
+// Fix issue where strong focus indicator is not present for selected option (#26801).
+.mat-mdc-option-active.mat-mdc-focus-indicator::before {
+  $prefix: 'mat';
+
+  border: var(
+      --#{$prefix}-focus-indicator-border-width,
+      #{focus-indicators-private.$default-border-width}
+    )
+    var(
+      --#{$prefix}-focus-indicator-border-style,
+      #{focus-indicators-private.$default-border-style}
+    )
+    var(
+      --#{$prefix}-focus-indicator-border-color,
+      #{focus-indicators-private.$default-border-color}
+    );
+  border-radius: var(
+    --#{$prefix}-focus-indicator-border-radius,
+    #{focus-indicators-private.$default-border-radius}
+  );
 }
