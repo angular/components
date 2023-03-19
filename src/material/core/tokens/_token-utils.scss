@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/theme/keys' as mdc-keys;
@@ -11,12 +12,12 @@ $_placeholder-color-palette: theming.define-palette(palette.$red-palette);
 // Placeholder color config that can be passed to token getter functions when generating token
 // slots.
 $placeholder-color-config: (
-    primary: $_placeholder-color-palette,
-    accent: $_placeholder-color-palette,
-    warn: $_placeholder-color-palette,
-    is-dark: false,
-    foreground: palette.$light-theme-foreground-palette,
-    background: palette.$light-theme-background-palette,
+  primary: $_placeholder-color-palette,
+  accent: $_placeholder-color-palette,
+  warn: $_placeholder-color-palette,
+  is-dark: false,
+  foreground: palette.$light-theme-foreground-palette,
+  background: palette.$light-theme-background-palette,
 );
 
 $_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-mdc(body1);
@@ -24,20 +25,20 @@ $_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-
 // Placeholder typography config that can be passed to token getter functions when generating token
 // slots.
 $placeholder-typography-config: (
-    font-family: Roboto,
-    headline-1: $_placeholder-typography-level-config,
-    headline-2: $_placeholder-typography-level-config,
-    headline-3: $_placeholder-typography-level-config,
-    headline-4: $_placeholder-typography-level-config,
-    headline-5: $_placeholder-typography-level-config,
-    headline-6: $_placeholder-typography-level-config,
-    subtitle-1: $_placeholder-typography-level-config,
-    subtitle-2: $_placeholder-typography-level-config,
-    body-1: $_placeholder-typography-level-config,
-    body-2: $_placeholder-typography-level-config,
-    caption: $_placeholder-typography-level-config,
-    button: $_placeholder-typography-level-config,
-    overline: $_placeholder-typography-level-config,
+  font-family: Roboto,
+  headline-1: $_placeholder-typography-level-config,
+  headline-2: $_placeholder-typography-level-config,
+  headline-3: $_placeholder-typography-level-config,
+  headline-4: $_placeholder-typography-level-config,
+  headline-5: $_placeholder-typography-level-config,
+  headline-6: $_placeholder-typography-level-config,
+  subtitle-1: $_placeholder-typography-level-config,
+  subtitle-2: $_placeholder-typography-level-config,
+  body-1: $_placeholder-typography-level-config,
+  body-2: $_placeholder-typography-level-config,
+  caption: $_placeholder-typography-level-config,
+  button: $_placeholder-typography-level-config,
+  overline: $_placeholder-typography-level-config,
 );
 
 // Placeholder density config that can be passed to token getter functions when generating token
@@ -93,4 +94,16 @@ $_component-prefix: null;
     $result: map.merge($result, $map);
   }
   @return $result;
+}
+
+// MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
+// the elevation and shadow-color tokens into a full box-shadow and use it as the value for the
+// elevation token.
+@function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
+  $elevation: map.get($tokens, $elevation-token);
+  $shadow-color: map.get($tokens, $shadow-color-token);
+  @return map.merge($tokens, (
+    $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
+    $shadow-color-token: null,
+  ));
 }

@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../../../style/elevation';
 @use '../../../theming/theming';
 @use '../../token-utils';
 
@@ -14,41 +15,37 @@ $prefix: (mdc, outlined-card);
 @function get-unthemable-tokens() {
   @return (
     // The border-radius of the card.
-      container-shape: 4px,
+    container-shape: 4px,
     // The thickness of the card's border.
-      outline-width: 1px,
+    outline-width: 1px,
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
-    // TODO(mmalerba): The elevation tokens don't seem to work currently.
-    //  Should work with MDC to figure out what's wrong.
-      container-elevation: null,
-      container-shadow-color: null,
     // Angular Material's card is not an interactive element, and therefore does not support states.
-      disabled-container-elevation: null,
-      disabled-outline-color: null,
-      disabled-outline-opacity: null,
-      dragged-container-elevation: null,
-      dragged-outline-color: null,
-      dragged-state-layer-color: null,
-      dragged-state-layer-opacity: null,
-      focus-container-elevation: null,
-      focus-outline-color: null,
-      focus-state-layer-color: null,
-      focus-state-layer-opacity: null,
-      hover-container-elevation: null,
-      hover-outline-color: null,
-      hover-state-layer-color: null,
-      hover-state-layer-opacity: null,
-      pressed-container-elevation: null,
-      pressed-outline-color: null,
-      pressed-state-layer-color: null,
-      pressed-state-layer-opacity: null,
+    disabled-container-elevation: null,
+    disabled-outline-color: null,
+    disabled-outline-opacity: null,
+    dragged-container-elevation: null,
+    dragged-outline-color: null,
+    dragged-state-layer-color: null,
+    dragged-state-layer-opacity: null,
+    focus-container-elevation: null,
+    focus-outline-color: null,
+    focus-state-layer-color: null,
+    focus-state-layer-opacity: null,
+    hover-container-elevation: null,
+    hover-outline-color: null,
+    hover-state-layer-color: null,
+    hover-state-layer-opacity: null,
+    pressed-container-elevation: null,
+    pressed-outline-color: null,
+    pressed-state-layer-color: null,
+    pressed-state-layer-opacity: null,
     // Angular Material does not currently support surface tint.
-      container-surface-tint-layer-color: null,
+    container-surface-tint-layer-color: null,
     // MDC does not seem to use these tokens.
-      icon-color: null,
-      icon-size: null,
+    icon-color: null,
+    icon-size: null,
   );
 }
 
@@ -56,12 +53,19 @@ $prefix: (mdc, outlined-card);
 @function get-color-tokens($config) {
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
+  $elevation: theming.get-color-from-palette($foreground, elevation);
 
   @return (
     // The background color of the card.
-      container-color: theming.get-color-from-palette($background, card),
+    container-color: theming.get-color-from-palette($background, card),
     // The border color of the card.
-      outline-color: theming.get-color-from-palette($foreground, base, 0.12),
+    outline-color: theming.get-color-from-palette($foreground, base, 0.12),
+    // The elevation level of the card.
+    // (Part of the color tokens because it needs to be combined with the shadow color to generate
+    // the final box-shadow).
+    container-elevation: 0,
+    // The color of the card's shadow.
+    container-shadow-color: if($elevation != null, $elevation, elevation.$color),
   );
 }
 
@@ -79,9 +83,9 @@ $prefix: (mdc, outlined-card);
 // This is used to create token slots.
 @function get-token-slots() {
   @return token-utils.merge-all(
-          get-unthemable-tokens(),
-          get-color-tokens(token-utils.$placeholder-color-config),
-          get-typography-tokens(token-utils.$placeholder-typography-config),
-          get-density-tokens(token-utils.$placeholder-density-config)
+      get-unthemable-tokens(),
+      get-color-tokens(token-utils.$placeholder-color-config),
+      get-typography-tokens(token-utils.$placeholder-typography-config),
+      get-density-tokens(token-utils.$placeholder-density-config)
   );
 }

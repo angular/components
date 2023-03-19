@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/card' as mdc-card;
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
@@ -17,7 +18,18 @@
 
   .mat-mdc-card {
     // Add the official slots for the MDC elevated-card.
-    @include mdc-elevated-card-theme.theme-styles($mdc-elevated-card-token-slots);
+    @include mdc-elevated-card-theme.theme-styles(map.merge($mdc-elevated-card-token-slots, (
+      // MDC emits the box-shadow on .mdc-card, so the full selector would be
+      // `.mat-mdc-card .mdc-card` which is incorrect. We emit the elevation slot ourselves instead.
+      container-elevation: null,
+      container-shadow-color: null,
+    )));
+
+    // Emit the elevation slot directly on .mat-mdc-card.
+    @include token-utils.use-tokens(
+        tokens-mdc-elevated-card.$prefix, $mdc-elevated-card-token-slots) {
+      @include token-utils.create-token-slot(box-shadow, container-elevation);
+    }
 
     // Add default values for MDC card tokens that aren't outputted by the theming API.
     @include mdc-elevated-card-theme.theme(tokens-mdc-elevated-card.get-unthemable-tokens());
@@ -28,7 +40,19 @@
 
   .mat-mdc-card-outlined {
     // Add the official slots for the MDC outlined-card.
-    @include mdc-outlined-card-theme.theme-styles($mdc-outlined-card-token-slots);
+    @include mdc-outlined-card-theme.theme-styles(map.merge($mdc-outlined-card-token-slots, (
+      // MDC emits the box-shadow on .mdc-card, so the full selector would be
+      // `.mat-mdc-card-outlined .mdc-card` which is incorrect. We emit the elevation slot ourselves
+      // instead.
+      container-elevation: null,
+      container-shadow-color: null,
+    )));
+
+    // Emit the elevation slot directly on .mat-mdc-card-outlined.
+    @include token-utils.use-tokens(
+        tokens-mdc-outlined-card.$prefix, $mdc-outlined-card-token-slots) {
+      @include token-utils.create-token-slot(box-shadow, container-elevation);
+    }
   }
 
   // Add slots for custom Angular Material card tokens.
