@@ -1597,7 +1597,7 @@ describe('MDC-based MatAutocomplete', () => {
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
-      tick();
+      zone.simulateZoneExit();
       fixture.detectChanges();
       const container = document.querySelector('.mat-mdc-autocomplete-panel') as HTMLElement;
 
