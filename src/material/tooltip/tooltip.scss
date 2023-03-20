@@ -26,12 +26,32 @@
   &::before {
     $offset: -8px;
     content: '';
-    top: $offset;
-    right: $offset;
-    bottom: $offset;
-    left: $offset;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     z-index: -1;
     position: absolute;
+
+    // Only set the offset on the side closest to the panel so we
+    // don't accidentally cover more content than we need to.
+    .mat-mdc-tooltip-panel-below & {
+      top: $offset;
+    }
+
+    .mat-mdc-tooltip-panel-above & {
+      bottom: $offset;
+    }
+
+    // Note that here we use left/right instead of before/after
+    // so that we don't have to add extra styles for RTL.
+    .mat-mdc-tooltip-panel-right & {
+      left: $offset;
+    }
+
+    .mat-mdc-tooltip-panel-left & {
+      right: $offset;
+    }
   }
 
   &._mat-animation-noopable {
