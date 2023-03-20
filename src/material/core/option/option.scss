@@ -128,6 +128,6 @@
 }
 
 // For options, render the focus indicator when the class .mat-mdc-option-active is present.
-.mat-mdc-option-active::before {
+.mat-mdc-option-active .mat-mdc-focus-indicator::before {
   content: '';
 }
