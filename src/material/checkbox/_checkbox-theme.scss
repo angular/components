@@ -1,74 +1,36 @@
-@use '@material/checkbox/checkbox' as mdc-checkbox;
+@use 'sass:map';
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/theme/theme';
-@use 'sass:map';
-@use 'sass:color';
-@use '../core/ripple/ripple-theme';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/mdc-helpers/mdc-helpers';
-@use './checkbox-private';
-
-// Apply ripple colors to the MatRipple element and the MDC ripple element when the
-// checkbox is selected.
-@mixin _selected-ripple-colors($theme, $mdc-color) {
-  .mdc-checkbox--selected ~ {
-    .mat-mdc-checkbox-ripple {
-      @include ripple-theme.color((
-          foreground: (
-              base: mdc-theme-color.prop-value($mdc-color)
-          ),
-      ));
-    }
-
-    .mdc-checkbox__ripple {
-      background: $theme;
-    }
-  }
-}
+@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
+  $primary: map.get($config, primary);
+  $warn: map.get($config, warn);
   $foreground: map.get($config, foreground);
 
-  @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-checkbox {
-      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-      @include ripple-theme.color((
-        foreground: (
-          base: mdc-theme-color.prop-value(on-surface)
-        ),
-      ));
+  .mat-mdc-checkbox {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
 
-      .mdc-checkbox__ripple {
-        background: mdc-theme-color.prop-value(on-surface);
-      }
-
-      // MDC's checkbox doesn't support a `color` property. We add support for it by adding a CSS
-      // class for accent and warn style, and applying the appropriate overrides below. Since we
-      // don't use MDC's ripple, we also need to set the color for our replacement ripple.
-      &.mat-primary {
-        @include checkbox-private.private-checkbox-styles-with-color($config, $primary, primary);
-        @include _selected-ripple-colors($primary, primary);
-      }
-
-      &.mat-accent {
-        @include checkbox-private.private-checkbox-styles-with-color($config, $accent, secondary);
-        @include _selected-ripple-colors($accent, secondary);
-      }
-
-      &.mat-warn {
-        @include checkbox-private.private-checkbox-styles-with-color($config, $warn, error);
-        @include _selected-ripple-colors($warn, error);
-      }
+    &.mat-primary {
+      $primary-config: map.merge($config, (accent: $primary));
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($primary-config));
     }
 
-    .mat-mdc-checkbox-disabled label {
+    &.mat-warn {
+      $warn-config: map.merge($config, (accent: $warn));
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($warn-config));
+    }
+
+    @include mdc-helpers.using-mdc-theme($config) {
+      // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
+      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
+    }
+
+    &.mat-mdc-checkbox-disabled label {
       // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
       color: theming.get-color-from-palette($foreground, disabled-text);
     }
@@ -78,27 +40,26 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
           theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-checkbox.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-    @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+  .mat-mdc-checkbox {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($config));
+
+    @include mdc-helpers.using-mdc-typography($config) {
+      // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
+      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+    }
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
 
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    .mat-mdc-checkbox .mdc-checkbox {
-      @include mdc-checkbox-theme.density(
-        $density-scale,
-        $query: mdc-helpers.$mdc-base-styles-query
-      );
-    }
+  .mat-mdc-checkbox {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-density-tokens($density-scale));
+  }
 
-    @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
-      .mat-mdc-checkbox-touch-target {
-        display: none;
-      }
+  @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
+    .mat-mdc-checkbox-touch-target {
+      display: none;
     }
   }
 }

@@ -2,11 +2,13 @@
 @use 'sass:map';
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
+@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 @use '@material/theme/validate' as mdc-validate;
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '../m2/mdc/elevated-card' as tokens-mdc-elevated-card;
+@use '../m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../m2/mdc/list' as tokens-mdc-list;
 @use '../m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 
@@ -42,4 +44,9 @@
   $component: 'm2.mdc.outlined-card',
   $slots: tokens-mdc-outlined-card.get-token-slots(),
   $reference: mdc-outlined-card-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.checkbox',
+  $slots: tokens-mdc-checkbox.get-token-slots(),
+  $reference: mdc-checkbox-theme.$light-theme
 );

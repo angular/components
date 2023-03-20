@@ -1,71 +1,167 @@
+@use 'sass:map';
 @use '@angular/cdk';
 @use '@material/checkbox/checkbox' as mdc-checkbox;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
-@use '@material/ripple' as mdc-ripple;
 @use '@material/touch-target' as mdc-touch-target;
-@use 'sass:map';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
 @use '../core/style/vendor-prefixes';
+@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/token-utils';
 
-@use './checkbox-private';
-
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-checkbox.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  // Add the checkbox static styles.
+  @include mdc-checkbox.static-styles();
+  // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
   @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);
-}
 
-// Apply base styles to the MDC ripple to adjust appearance for state changes (hover, focus, press)
-@mixin _ripple-base-styles() {
-  .mdc-checkbox__ripple {
-    opacity: 0;
+  $mdc-checkbox-slots: tokens-mdc-checkbox.get-token-slots();
+
+  .mdc-checkbox {
+    // Add the slots for MDC checkbox.
+    @include mdc-checkbox-theme.theme-styles(map.merge($mdc-checkbox-slots, (
+      // Angular Material focuses the native input. rather than the element MDC expects,
+      // so we create this slot ourselves.
+        selected-focus-icon-color: null,
+        unselected-focus-icon-color: null,
+      // MDC expects `.mdc-checkbox__ripple::before` to be the state layer, but we use
+      // `.mdc-checkbox__ripple` instead, so we emit the state layer slots ourselves.
+        unselected-hover-state-layer-opacity: null,
+        unselected-hover-state-layer-color: null,
+        unselected-focus-state-layer-opacity: null,
+        unselected-focus-state-layer-color: null,
+        unselected-pressed-state-layer-opacity: null,
+        unselected-pressed-state-layer-color: null,
+        selected-hover-state-layer-opacity: null,
+        selected-hover-state-layer-color: null,
+        selected-focus-state-layer-opacity: null,
+        selected-focus-state-layer-color: null,
+        selected-pressed-state-layer-opacity: null,
+        selected-pressed-state-layer-color: null,
+    )));
+
+    @include token-utils.use-tokens(tokens-mdc-checkbox.$prefix, $mdc-checkbox-slots) {
+      // MDC expects focus on .mdc-checkbox, but we focus the native element instead, so we need to
+      // emit a our own slot for the focus styles.
+      .mdc-checkbox__native-control:enabled:focus {
+        // Extra `:focus` included to achieve higher specificity than MDC's `:hover` style.
+        &:focus:not(:checked):not(:indeterminate) ~ .mdc-checkbox__background {
+          @include token-utils.create-token-slot(border-color, unselected-focus-icon-color);
+        }
+
+        &:checked,
+        &:indeterminate {
+          & ~ .mdc-checkbox__background {
+            @include token-utils.create-token-slot(border-color, selected-focus-icon-color);
+            @include token-utils.create-token-slot(background-color, selected-focus-icon-color);
+          }
+        }
+      }
+
+      // MDC expects `.mdc-checkbox__ripple::before` to be the state layer, but we use
+      // `.mdc-checkbox__ripple` instead, so we emit the state layer slots ourselves.
+      &:hover {
+        .mdc-checkbox__ripple {
+          @include token-utils.create-token-slot(opacity, unselected-hover-state-layer-opacity);
+          @include token-utils.create-token-slot(
+                  background-color, unselected-hover-state-layer-color);
+        }
+
+        .mat-mdc-checkbox-ripple .mat-ripple-element {
+          @include token-utils.create-token-slot(
+                  background-color, unselected-hover-state-layer-color);
+        }
+      }
+
+      .mdc-checkbox__native-control:focus {
+        & ~ .mdc-checkbox__ripple {
+          @include token-utils.create-token-slot(opacity, unselected-focus-state-layer-opacity);
+          @include token-utils.create-token-slot(
+                  background-color, unselected-focus-state-layer-color);
+        }
+
+        & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+          @include token-utils.create-token-slot(
+                  background-color, unselected-focus-state-layer-color);
+        }
+      }
+
+      &:active .mdc-checkbox__native-control {
+        & ~ .mdc-checkbox__ripple {
+          @include token-utils.create-token-slot(opacity, unselected-pressed-state-layer-opacity);
+          @include token-utils.create-token-slot(
+                  background-color, unselected-pressed-state-layer-color);
+        }
+
+        & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+          @include token-utils.create-token-slot(
+                  background-color, unselected-pressed-state-layer-color);
+        }
+      }
+
+      &:hover .mdc-checkbox__native-control:checked {
+        & ~ .mdc-checkbox__ripple {
+          @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
+          @include token-utils.create-token-slot(
+                  background-color, selected-hover-state-layer-color);
+        }
+
+        & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+          @include token-utils.create-token-slot(
+                  background-color, selected-hover-state-layer-color);
+        }
+      }
+
+      .mdc-checkbox__native-control:focus:checked {
+        & ~ .mdc-checkbox__ripple {
+          @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
+          @include token-utils.create-token-slot(
+                  background-color, selected-focus-state-layer-color);
+        }
+
+        & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+          @include token-utils.create-token-slot(
+                  background-color, selected-focus-state-layer-color);
+        }
+      }
+
+      &:active .mdc-checkbox__native-control:checked {
+        & ~ .mdc-checkbox__ripple {
+          @include token-utils.create-token-slot(opacity, selected-pressed-state-layer-opacity);
+          @include token-utils.create-token-slot(
+                  background-color, selected-pressed-state-layer-color);
+        }
+
+        & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+          @include token-utils.create-token-slot(
+                  background-color, selected-pressed-state-layer-color);
+        }
+      }
+    }
+  }
+
+  .mat-mdc-checkbox {
+    // Add default values for MDC checkbox tokens that aren't outputted by the theming API.
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
   }
 }
 
 .mat-mdc-checkbox {
-  // The host node defaults to `diplay: inline` so
-  // we have to change it in order for margins to work.
+  // The host node defaults to `display: inline`, we have to change it in order for margins to work.
   display: inline-block;
-
   // Avoids issues in some CSS grid layouts (see #25153).
   position: relative;
+  // Disable the browser's tap highlight since we indicate state with the ripple instead.
   -webkit-tap-highlight-color: transparent;
 
-  .mdc-checkbox {
-    // MDC theme styles also include structural styles so we have to include the theme at least
-    // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-helpers.disable-mdc-fallback-declarations {
-      @include mdc-checkbox-theme.theme-styles(checkbox-private.$private-checkbox-theme-config);
-    }
-
-    // The MDC checkbox styles related to the hover state are intertwined with the MDC ripple
-    // styles. We currently don't use the MDC ripple due to size concerns, therefore we need to
-    // add some additional styles to restore the hover state.
-    &:hover .mdc-checkbox__native-control:not([disabled]) ~ .mdc-checkbox__ripple {
-      opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
-      transform: scale(1);
-      transition: mdc-checkbox.transition-enter(opacity, 0, 80ms),
-      mdc-checkbox.transition-enter(transform, 0, 80ms);
-    }
-
-    // Note that the :not([disabled]) here isn't necessary, but we need it for the
-    // extra specificity so that the hover styles don't override the focus styles.
-    .mdc-checkbox__native-control:not([disabled]):focus ~ .mdc-checkbox__ripple {
-      opacity: map.get(mdc-ripple.$dark-ink-opacities, hover) +
-        map.get(mdc-ripple.$dark-ink-opacities, focus);
-    }
-  }
-
-
   .mdc-checkbox__background {
-    // force browser to show background-color when using the print function
+    // Force browser to show background-color when using the print function
     @include vendor-prefixes.color-adjust(exact);
   }
 
   // Angular Material supports disabling all animations when NoopAnimationsModule is imported.
-  // TODO(mmalerba): Look into using MDC's Sass queries to separate the animation styles and
-  //  conditionally add them. Consider the size cost when deciding whether to switch.
   &._mat-animation-noopable {
     *,
     *::before {
@@ -90,16 +186,6 @@
     display: none;
   }
 
-  // We don't inherit the border focus style from MDC since we don't use their ripple.
-  // Instead we need to replicate it here.
-  .mdc-checkbox__native-control {
-    &:focus:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) {
-      & ~ .mdc-checkbox__background {
-        border-color: var(--mdc-checkbox-unselected-focus-icon-color, black);
-      }
-    }
-  }
-
   @include cdk.high-contrast(active, off) {
     &.mat-mdc-checkbox-disabled {
       opacity: 0.5;
@@ -111,7 +197,10 @@
     }
   }
 
-  @include _ripple-base-styles();
+  // Apply base styles to the MDC ripple when not hovered, focused, or pressed.
+  .mdc-checkbox__ripple {
+    opacity: 0;
+  }
 }
 
 .mat-mdc-checkbox-ripple, .mdc-checkbox__ripple {
@@ -128,6 +217,10 @@
   &:not(:empty) {
     transform: translateZ(0);
   }
+}
+
+.mat-mdc-checkbox-ripple .mat-ripple-element {
+  opacity: 0.1;
 }
 
 // Element used to provide a larger tap target for users on touch devices.

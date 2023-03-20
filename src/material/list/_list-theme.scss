@@ -1,20 +1,22 @@
 @use 'sass:map';
 @use '@material/list/evolution-mixins';
+@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 
 @use '../core/theming/theming';
-@use '../core/tokens/m2/mdc/list' as m2-mdc-list;
+@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
 @use '../core/mdc-helpers/mdc-helpers';
-@use './list-option-theme';
+@use '../radio/radio-private';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
-  $mdc-list-color-tokens: m2-mdc-list.get-color-tokens($config);
+  $primary: map.get($config, primary);
+  $accent: map.get($config, accent);
+  $warn: map.get($config, warn);
+  $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($config);
 
 
   // Add values for MDC list tokens.
@@ -22,23 +24,45 @@
     @include mdc-list-theme.theme($mdc-list-color-tokens);
   }
 
-  // TODO(mmalerba): This should use MDC checkbox's token API instead.
+  // TODO(mmalerba): This should use MDC radio's token API instead.
   @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-list-option {
-      @include list-option-theme.private-list-option-color-override($config, $primary, primary);
+    .mdc-list-item__start,
+    .mdc-list-item__end {
+      @include radio-private.private-radio-color($config, theming.get-color-from-palette($primary));
     }
-    .mat-mdc-list-option.mat-accent {
-      @include list-option-theme.private-list-option-color-override($config, $accent, secondary);
+
+    .mat-accent {
+      .mdc-list-item__start,
+      .mdc-list-item__end {
+        @include radio-private.private-radio-color(
+                $config, theming.get-color-from-palette($accent));
+      }
     }
-    .mat-mdc-list-option.mat-warn {
-      @include list-option-theme.private-list-option-color-override($config, $warn, error);
+
+    .mat-warn {
+      .mdc-list-item__start,
+      .mdc-list-item__end {
+        @include radio-private.private-radio-color($config, theming.get-color-from-palette($warn));
+      }
     }
+  }
+
+  .mat-mdc-list-option {
+    $primary-config: map.merge($config, (accent: $primary));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($primary-config));
+  }
+  .mat-mdc-list-option.mat-accent {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
+  }
+  .mat-mdc-list-option.mat-warn {
+    $warn-config: map.merge($config, (accent: $warn));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($warn-config));
   }
 
   // There is no token for activated color on nav list.
   // TODO(mmalerba): Add a token to MDC or make a custom one.
   .mat-mdc-list-base.mat-mdc-list-base {
-    @include evolution-mixins.list-selected-ink-color($primary);
+    @include evolution-mixins.list-selected-ink-color(theming.get-color-from-palette($primary));
   }
 
   // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can cause
@@ -55,7 +79,7 @@
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $mdc-list-density-tokens: m2-mdc-list.get-density-tokens($density-scale);
+  $mdc-list-density-tokens: tokens-mdc-list.get-density-tokens($density-scale);
 
   // Add values for MDC list tokens.
   .mat-mdc-list-base {
@@ -98,7 +122,7 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  $mdc-list-typography-tokens: m2-mdc-list.get-typography-tokens($config);
+  $mdc-list-typography-tokens: tokens-mdc-list.get-typography-tokens($config);
 
   // Add values for MDC list tokens.
   .mat-mdc-list-base {
