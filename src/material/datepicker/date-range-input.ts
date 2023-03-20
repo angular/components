@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 import {MatFormFieldControl, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {ThemePalette, DateAdapter} from '@angular/material/core';
-import {NgControl, ControlContainer} from '@angular/forms';
+import {NgControl, ControlContainer, Validators} from '@angular/forms';
 import {Subject, merge, Subscription} from 'rxjs';
 import {FocusOrigin} from '@angular/cdk/a11y';
 import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
@@ -130,12 +130,18 @@ export class MatDateRangeInput<D>
   /** Whether the input is required. */
   @Input()
   get required(): boolean {
-    return !!this._required;
+    return (
+      this._required ??
+      (this._isTargetRequired(this) ||
+        this._isTargetRequired(this._startInput) ||
+        this._isTargetRequired(this._endInput)) ??
+      false
+    );
   }
   set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
   }
-  private _required: boolean;
+  private _required: boolean | undefined;
 
   /** Function that can be used to filter out dates within the date range picker. */
   @Input()
@@ -421,5 +427,10 @@ export class MatDateRangeInput<D>
     if (this._endInput) {
       this._endInput._registerModel(model);
     }
+  }
+
+  /** Checks whether a specific range input directive is required. */
+  private _isTargetRequired(target: {ngControl: NgControl | null} | null): boolean | undefined {
+    return target?.ngControl?.control?.hasValidator(Validators.required);
   }
 }

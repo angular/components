@@ -8,6 +8,7 @@ import {
   NG_VALIDATORS,
   Validator,
   NgModel,
+  Validators,
 } from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Directionality} from '@angular/cdk/bidi';
@@ -1111,6 +1112,31 @@ describe('MatDateRangeInput', () => {
       .withContext('End date set three times')
       .toBe(3);
   }));
+
+  it('should mark the range picker as required when the entire group has the required validator', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.componentInstance.range = new FormGroup(
+      {
+        start: new FormControl<Date | null>(null),
+        end: new FormControl<Date | null>(null),
+      },
+      Validators.required,
+    );
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.rangeInput.required).toBe(true);
+  });
+
+  it('should mark the range picker as required when one part is required', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.componentInstance.range = new FormGroup({
+      start: new FormControl<Date | null>(null, Validators.required),
+      end: new FormControl<Date | null>(null),
+    });
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.rangeInput.required).toBe(true);
+  });
 });
 
 @Component({
