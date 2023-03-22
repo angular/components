@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CdkStepperNext, CdkStepperPrevious} from '@angular/cdk/stepper';
+import {CdkStepperNext, CdkStepperPrevious, CdkStepperComplete} from '@angular/cdk/stepper';
 import {Directive} from '@angular/core';
 
 /** Button that moves to the next step in a stepper workflow. */
@@ -30,3 +30,14 @@ export class MatStepperNext extends CdkStepperNext {}
   inputs: ['type'],
 })
 export class MatStepperPrevious extends CdkStepperPrevious {}
+
+/** Button that triggers Output event what stepper have reached end of it is workflow. */
+@Directive({
+  selector: 'button[matStepperComplete]',
+  host: {
+    'class': 'mat-stepper-complete',
+    '[type]': 'type',
+  },
+  inputs: ['type'],
+})
+export class MatStepperComplete extends CdkStepperComplete {}

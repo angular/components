@@ -39,3 +39,18 @@ export class CdkStepperPrevious {
 
   constructor(public _stepper: CdkStepper) {}
 }
+
+/** Button that moves to the previous step in a stepper workflow. */
+@Directive({
+  selector: 'button[cdkStepperComplete]',
+  host: {
+    '[type]': 'type',
+    '(click)': '_stepper.complete()',
+  },
+})
+export class CdkStepperComplete {
+  /** Type of the complete button. Defaults to "button" if not specified. */
+  @Input() type: string = 'button';
+
+  constructor(public _stepper: CdkStepper) {}
+}
