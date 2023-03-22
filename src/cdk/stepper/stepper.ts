@@ -339,6 +339,9 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   }
   private _orientation: StepperOrientation = 'horizontal';
 
+  /** Event emitted when the stepper has been completed. */
+  @Output() readonly stepperCompleted = new EventEmitter<StepperSelectionEvent>();
+
   constructor(
     @Optional() private _dir: Directionality,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -426,6 +429,17 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   /** Selects and focuses the previous step in list. */
   previous(): void {
     this.selectedIndex = Math.max(this._selectedIndex - 1, 0);
+  }
+
+  /** Triggers an Event that represents Stepper's 'matStepperComplete' button has been clicked. */
+  complete(): void {
+    const stepsArray = this.steps.toArray();
+    this.stepperCompleted.emit({
+      selectedIndex: this.selectedIndex,
+      previouslySelectedIndex: this._selectedIndex,
+      selectedStep: stepsArray[this.selectedIndex],
+      previouslySelectedStep: stepsArray[this._selectedIndex],
+    });
   }
 
   /** Resets the stepper to its initial state. Note that this includes clearing form data. */

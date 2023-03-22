@@ -9,13 +9,21 @@
 import {NgModule} from '@angular/core';
 import {CdkStepper, CdkStep} from './stepper';
 import {CdkStepLabel} from './step-label';
-import {CdkStepperNext, CdkStepperPrevious} from './stepper-button';
+import {CdkStepperNext, CdkStepperPrevious, CdkStepperComplete} from './stepper-button';
 import {CdkStepHeader} from './step-header';
 import {BidiModule} from '@angular/cdk/bidi';
 
 @NgModule({
   imports: [BidiModule],
-  exports: [CdkStep, CdkStepper, CdkStepHeader, CdkStepLabel, CdkStepperNext, CdkStepperPrevious],
+  exports: [
+    CdkStep,
+    CdkStepper,
+    CdkStepHeader,
+    CdkStepLabel,
+    CdkStepperNext,
+    CdkStepperPrevious,
+    CdkStepperComplete,
+  ],
   declarations: [
     CdkStep,
     CdkStepper,
@@ -23,6 +31,7 @@ import {BidiModule} from '@angular/cdk/bidi';
     CdkStepLabel,
     CdkStepperNext,
     CdkStepperPrevious,
+    CdkStepperComplete,
   ],
 })
 export class CdkStepperModule {}

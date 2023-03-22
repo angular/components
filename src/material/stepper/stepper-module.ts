@@ -15,7 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {MatStep, MatStepper} from './stepper';
-import {MatStepperNext, MatStepperPrevious} from './stepper-button';
+import {MatStepperNext, MatStepperPrevious, MatStepperComplete} from './stepper-button';
 import {MatStepperIcon} from './stepper-icon';
 import {MAT_STEPPER_INTL_PROVIDER} from './stepper-intl';
 import {MatStepContent} from './step-content';
@@ -39,6 +39,7 @@ import {MatStepContent} from './step-content';
     MatStepHeader,
     MatStepperIcon,
     MatStepContent,
+    MatStepperComplete,
   ],
   declarations: [
     MatStep,
@@ -49,6 +50,7 @@ import {MatStepContent} from './step-content';
     MatStepHeader,
     MatStepperIcon,
     MatStepContent,
+    MatStepperComplete,
   ],
   providers: [MAT_STEPPER_INTL_PROVIDER, ErrorStateMatcher],
 })
