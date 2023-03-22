@@ -1,4 +1,4 @@
-<mat-pseudo-checkbox *ngIf="multiple" class="mat-mdc-option-pseudo-checkbox"
+<mat-pseudo-checkbox *ngIf="multiple" class="mat-mdc-option-pseudo-checkbox" [attr.aria-hidden]="'true'"
     [state]="selected ? 'checked' : 'unchecked'" [disabled]="disabled"></mat-pseudo-checkbox>
 
 <ng-content select="mat-icon"></ng-content>
@@ -8,12 +8,12 @@
 <!-- Render checkmark at the end for single-selection. -->
 <mat-pseudo-checkbox *ngIf="!multiple && selected && !hideSingleSelectionIndicator"
     class="mat-mdc-option-pseudo-checkbox" state="checked" [disabled]="disabled"
-    appearance="minimal"></mat-pseudo-checkbox>
+    appearance="minimal" [attr.aria-hidden]="'true'"></mat-pseudo-checkbox>
 
 <!-- See a11y notes inside optgroup.ts for context behind this element. -->
 <span class="cdk-visually-hidden" *ngIf="group && group._inert">({{ group.label }})</span>
 
-<div class="mat-mdc-option-ripple mat-mdc-focus-indicator" mat-ripple
+<div class="mat-mdc-option-ripple mat-mdc-focus-indicator" mat-ripple [attr.aria-hidden]="'true'"
      [matRippleTrigger]="_getHostElement()"
      [matRippleDisabled]="disabled || disableRipple">
 </div>
