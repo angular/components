@@ -270,7 +270,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    'class': 'mat-mdc-option mat-mdc-focus-indicator mdc-list-item',
+    'class': 'mat-mdc-option mdc-list-item',
   },
   styleUrls: ['option.css'],
   templateUrl: 'option.html',

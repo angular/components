@@ -201,7 +201,12 @@ describe('MatOption component', () => {
     const fixture = TestBed.createComponent(BasicOption);
     const optionNativeElement = fixture.debugElement.query(By.directive(MatOption))!.nativeElement;
 
-    expect(optionNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+    expect(optionNativeElement.parentElement.querySelector('.mat-mdc-focus-indicator'))
+      .withContext(
+        'expected to find a focus indicator on ' +
+          "either the mat-option element or one of it's children",
+      )
+      .not.toBeNull();
   });
 
   describe('inside inert group', () => {
