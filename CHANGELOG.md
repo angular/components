@@ -13,6 +13,19 @@ Kristiyan Kostadinov, Miles Malerba, Sneaky, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
+<a name="15.2.4"></a>
+# 15.2.4 "brimstone-bank" (2023-03-23)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [580fbf500](https://github.com/angular/components/commit/580fbf500c87bbe8753d4bea22b65cd1196c3bbd) | fix | **core:** apply strong focus styles to selected option ([#26811](https://github.com/angular/components/pull/26811)) |
+| [1ba5ade41](https://github.com/angular/components/commit/1ba5ade41c86562d25397a0a3093984245f4118b) | fix | **datepicker:** date range input not marked as required when using reactive forms ([#26749](https://github.com/angular/components/pull/26749)) |
+| [acc7d8148](https://github.com/angular/components/commit/acc7d81484c8d58ca29dfb894984d9a6a8ed41ce) | fix | **tooltip:** only expand hover area on side closest to trigger ([#26786](https://github.com/angular/components/pull/26786)) |
+## Special Thanks
+Kristiyan Kostadinov, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-next.2"></a>
 # 16.0.0-next.2 "feather-shark" (2023-03-16)
 ### material
