@@ -1,13 +1,39 @@
 @use '@material/fab' as mdc-fab;
+@use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
+@use '@material/fab/fab-theme' as mdc-fab-theme;
 @use '@material/elevation/elevation-theme' as mdc-elevation-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private' as style-private;
 @use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m2/mdc/extended-fab' as m2-mdc-extended-fab;
+@use '../core/tokens/m2/mdc/fab' as m2-mdc-fab;
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-base-styles-query);
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-fab-token-slots: m2-mdc-fab.get-token-slots();
+  $mdc-extended-fab-token-slots: m2-mdc-extended-fab.get-token-slots();
+
+  // Add the MDC fab static styles.
+  @include mdc-fab.static-styles();
+
+  // Add default values for tokens that aren't outputted by the theming API.
+  .mat-mdc-fab, .mat-mdc-mini-fab {
+    // Add the official slots for the MDC fab.
+    @include mdc-fab-theme.theme-styles($mdc-fab-token-slots);
+
+    // Add default values for tokens that aren't outputted by the theming API.
+    @include mdc-fab-theme.theme(m2-mdc-fab.get-unthemable-tokens());
+  }
+
+  .mat-mdc-extended-fab {
+    // Add the official slots for the MDC fab.
+    @include mdc-extended-fab-theme.theme-styles($mdc-extended-fab-token-slots);
+
+    // Add default values for tokens that aren't outputted by the theming API.
+    @include mdc-extended-fab-theme.theme(m2-mdc-extended-fab.get-unthemable-tokens());
+  }
 }
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
@@ -16,13 +42,6 @@
   @include style-private.private-animation-noop();
 
   @include mdc-helpers.disable-mdc-fallback-declarations {
-    // Theme configuration is copied over from MDC, because it isn't exported
-    @include mdc-fab.theme-styles(button-base.mat-private-button-remove-ripple((
-      container-color: transparent,
-      container-shape: mdc-fab.$shape-radius,
-      icon-color: inherit,
-    )));
-
     // TODO(crisbeto): the elevation can be controlled using `container-elevation` in `theme-styles`
     // however when it is passed in, MDC throws an error that `container-shadow-color` isn't
     // passed in. When `container-shadow-color` is passed in, MDC throws another error, because
@@ -76,8 +95,6 @@
 }
 
 .mat-mdc-extended-fab {
-  @include mdc-fab.extended_($query: mdc-helpers.$mdc-base-styles-query);
-
   & > .mat-icon,
   & > .material-icons {  // stylelint-disable-line selector-class-pattern
     @include mdc-fab.extended-icon-padding(
