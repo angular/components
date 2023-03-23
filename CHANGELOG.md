@@ -1,3 +1,18 @@
+<a name="16.0.0-next.3"></a>
+# 16.0.0-next.3 "limonite-lime" (2023-03-23)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7e9878c96](https://github.com/angular/components/commit/7e9878c96e18a5252d0c95d01d3b467d74525246) | fix | **card:** tokenize the card elevation ([#26770](https://github.com/angular/components/pull/26770)) |
+| [76eeaaf20](https://github.com/angular/components/commit/76eeaaf204cfcb491492b92f7b08c29074253164) | fix | **checkbox:** refactor to depend on @angular/material/core/tokens ([#26744](https://github.com/angular/components/pull/26744)) |
+| [96aadaa41](https://github.com/angular/components/commit/96aadaa411a3af93626af9aa73fb4abd6600d0b3) | fix | **core:** apply strong focus styles to selected option ([#26811](https://github.com/angular/components/pull/26811)) |
+| [7cd18004d](https://github.com/angular/components/commit/7cd18004d4f3c0c4665eebc19986b92bcdb7783b) | fix | **datepicker:** date range input not marked as required when using reactive forms ([#26749](https://github.com/angular/components/pull/26749)) |
+| [142e845a1](https://github.com/angular/components/commit/142e845a1232cf7fb7256072c60960b7be973eb3) | fix | **tooltip:** only expand hover area on side closest to trigger ([#26786](https://github.com/angular/components/pull/26786)) |
+## Special Thanks
+Kristiyan Kostadinov, Miles Malerba, Sneaky, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-next.2"></a>
 # 16.0.0-next.2 "feather-shark" (2023-03-16)
 ### material
