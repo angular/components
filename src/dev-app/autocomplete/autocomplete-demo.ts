@@ -21,12 +21,15 @@ import {ThemePalette} from '@angular/material/core';
 export interface State {
   code: string;
   name: string;
+  index: number;
 }
 
 export interface StateGroup {
   letter: string;
   states: State[];
 }
+
+type DisableStateOption = 'none' | 'first-middle-last' | 'all';
 
 @Component({
   selector: 'autocomplete-demo',
@@ -55,7 +58,6 @@ export class AutocompleteDemo {
 
   tdDisabled = false;
   hideSingleSelectionIndicators = false;
-
   reactiveStatesTheme: ThemePalette = 'primary';
   templateStatesTheme: ThemePalette = 'primary';
 
@@ -67,6 +69,12 @@ export class AutocompleteDemo {
 
   reactiveHideSingleSelectionIndicator = false;
   templateHideSingleSelectionIndicator = false;
+
+  reactiveAutoActiveFirstOption = false;
+  templateAutoActiveFirstOption = false;
+
+  reactiveDisableStateOption: DisableStateOption = 'none';
+  templateDisableStateOption: DisableStateOption = 'none';
 
   @ViewChild(NgModel) modelDir: NgModel;
 
@@ -123,7 +131,7 @@ export class AutocompleteDemo {
     {code: 'WV', name: 'West Virginia'},
     {code: 'WI', name: 'Wisconsin'},
     {code: 'WY', name: 'Wyoming'},
-  ];
+  ].map((state, index) => ({...state, index}));
 
   constructor() {
     this.tdStates = this.states;
@@ -142,7 +150,7 @@ export class AutocompleteDemo {
           groups.push(group);
         }
 
-        group.states.push({code: state.code, name: state.name});
+        group.states.push({...state});
 
         return groups;
       },
@@ -171,5 +179,27 @@ export class AutocompleteDemo {
   private _filter(states: State[], val: string) {
     const filterValue = val.toLowerCase();
     return states.filter(state => state.name.toLowerCase().startsWith(filterValue));
+  }
+
+  reactiveIsStateDisabled(index: number) {
+    return this._isStateDisabled(index, this.reactiveDisableStateOption);
+  }
+
+  templateIsStateDisabled(index: number) {
+    return this._isStateDisabled(index, this.templateDisableStateOption);
+  }
+
+  private _isStateDisabled(stateIndex: number, disableStateOption: DisableStateOption) {
+    if (disableStateOption === 'all') {
+      return true;
+    }
+    if (disableStateOption === 'first-middle-last') {
+      return (
+        stateIndex === 0 ||
+        stateIndex === this.states.length - 1 ||
+        stateIndex === Math.floor(this.states.length / 2)
+      );
+    }
+    return false;
   }
 }

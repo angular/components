@@ -11,25 +11,40 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <input matInput [matAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
     </mat-form-field>
     <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn"
-      [hideSingleSelectionIndicator]="reactiveHideSingleSelectionIndicator">
-      <mat-option *ngFor="let state of tempStates" [value]="state">
+      [hideSingleSelectionIndicator]="reactiveHideSingleSelectionIndicator"
+      [autoActiveFirstOption]="reactiveAutoActiveFirstOption">
+      <mat-option *ngFor="let state of tempStates; let index = index" [value]="state"
+        [disabled]="reactiveIsStateDisabled(state.index)">
         <span>{{ state.name }}</span>
         <span class="demo-secondary-text"> ({{ state.code }}) </span>
       </mat-option>
     </mat-autocomplete>
 
-    <mat-card-actions>
+    <p>
       <button mat-button (click)="stateCtrl.reset()">RESET</button>
       <button mat-button (click)="stateCtrl.setValue(states[10])">SET VALUE</button>
       <button mat-button (click)="stateCtrl.enabled ? stateCtrl.disable() : stateCtrl.enable()">
         TOGGLE DISABLED
       </button>
-    </mat-card-actions>
-    <mat-card-actions>
+    </p>
+    <p>
+      <label for="reactive-disable-state-options">Disable States</label>
+      <select [(ngModel)]="reactiveDisableStateOption" id="reactive-disable-state-options">
+        <option value="none">None</option>
+        <option value="first-middle-last">Disable First, Middle and Last States</option>
+        <option value="all">Disable All States</option>
+      </select>
+    </p>
+    <p>
       <mat-checkbox [(ngModel)]="reactiveHideSingleSelectionIndicator">
         Hide Single-Selection Indicator
       </mat-checkbox>
-    </mat-card-actions>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="reactiveAutoActiveFirstOption">
+        Automatically activate first option
+      </mat-checkbox>
+    </p>
 
   </mat-card>
 
@@ -44,14 +59,16 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
         (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
       <mat-autocomplete #tdAuto="matAutocomplete"
-        [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator">
-        <mat-option *ngFor="let state of tdStates" [value]="state.name">
+        [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator"
+        [autoActiveFirstOption]="templateAutoActiveFirstOption">
+        <mat-option *ngFor="let state of tdStates" [value]="state.name"
+          [disabled]="templateIsStateDisabled(state.index)">
           <span>{{ state.name }}</span>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-card-actions>
+    <p>
       <button mat-button (click)="modelDir.reset()">RESET</button>
       <button mat-button (click)="currentState='California'">SET VALUE</button>
       <button mat-button (click)="tdDisabled=!tdDisabled">
@@ -62,12 +79,24 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           {{theme.name}}
         </option>
       </select>
-    </mat-card-actions>
-    <mat-card-actions>
+    </p>
+    <p>
       <mat-checkbox [(ngModel)]="templateHideSingleSelectionIndicator">
         Hide Single-Selection Indicator
       </mat-checkbox>
-    </mat-card-actions>
+    <p>
+      <mat-checkbox [(ngModel)]="templateAutoActiveFirstOption">
+        Automatically activate first option
+      </mat-checkbox>
+    </p>
+    <p>
+      <label for="template-disable-state-options">Disable States</label>
+      <select [(ngModel)]="templateDisableStateOption" id="template-disable-state-options">
+        <option value="none">None</option>
+        <option value="first-middle-last">Disable First, Middle and Last States</option>
+        <option value="all">Disable All States</option>
+      </select>
+    </p>
 
   </mat-card>
 

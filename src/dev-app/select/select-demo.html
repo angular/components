@@ -12,8 +12,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-label>Drink</mat-label>
         <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
           [disabled]="drinksDisabled" #drinkControl="ngModel">
-          <mat-option [disabled]="drinksOptionsDisabled">None</mat-option>
-          <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drinksOptionsDisabled">
+          <mat-option [disabled]="drinksOptionsDisabled === 'all'">None</mat-option>
+          <mat-option *ngFor="let drink of drinks; let index = index" [value]="drink.value"
+            [disabled]="isDrinkOptionDisabled(index)">
             {{ drink.viewValue }}
           </mat-option>
         </mat-select>
@@ -48,11 +49,18 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           </option>
         </select>
       </p>
+      <p>
+        <label for="drinks-disabled-options">Disabled options:</label>
+        <select [(ngModel)]="drinksOptionsDisabled" id="drinks-disabled-options">
+          <option value="none">None</option>
+          <option value="first-middle-last">Disable First, Middle, and Last Options</option>
+          <option value="all">Disable All Options</option>
+        </select>
+      </p>
 
       <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>
       <button mat-button (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
       <button mat-button (click)="drinksDisabled=!drinksDisabled">TOGGLE DISABLED</button>
-      <button mat-button (click)="drinksOptionsDisabled=!drinksOptionsDisabled">TOGGLE DISABLED OPTIONS</button>
       <button mat-button (click)="drinkControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>

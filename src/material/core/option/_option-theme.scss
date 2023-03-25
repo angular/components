@@ -17,9 +17,10 @@
       // we have explicitly set the default color.
       @include mdc-theme.prop(color, text-primary-on-background);
 
+      // Increase specificity to override styles from list theme.
       &:hover:not(.mdc-list-item--disabled),
-      &:focus:not(.mdc-list-item--disabled),
-      &.mat-mdc-option-active,
+      &:focus.mdc-list-item,
+      &.mat-mdc-option-active.mdc-list-item,
 
       // In multiple mode there is a checkbox to show that the option is selected.
       &.mdc-list-item--selected:not(.mat-mdc-option-multiple):not(.mdc-list-item--disabled) {
