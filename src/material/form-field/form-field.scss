@@ -71,6 +71,8 @@
 
 .mat-mdc-form-field-icon-prefix,
 .mat-mdc-form-field-icon-suffix {
+  // Allow content to flow horizontally if multiple elements are projected in.
+  display: inline-flex;
   // Vertically center icons.
   align-self: center;
   // The line-height can cause the prefix/suffix container to be taller than the actual icons,
