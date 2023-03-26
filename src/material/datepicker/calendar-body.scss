@@ -76,6 +76,7 @@ $calendar-range-end-body-cell-size:
   left: 0;
   z-index: 0;
   box-sizing: border-box;
+  display: block;
 
   // We want the range background to be slightly shorter than the cell so
   // that there's a gap when the range goes across multiple rows.
