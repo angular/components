@@ -92,6 +92,7 @@ const _CdkHeaderRowDefBase: CanStickCtor & typeof CdkHeaderRowDefBase =
  */
 @Directive({
   selector: '[cdkHeaderRowDef]',
+  standalone: true,
   inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
 })
 export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
@@ -122,6 +123,7 @@ const _CdkFooterRowDefBase: CanStickCtor & typeof CdkFooterRowDefBase =
  */
 @Directive({
   selector: '[cdkFooterRowDef]',
+  standalone: true,
   inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
 })
 export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
@@ -147,6 +149,7 @@ export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, O
  */
 @Directive({
   selector: '[cdkRowDef]',
+  standalone: true,
   inputs: ['columns: cdkRowDefColumns', 'when: cdkRowDefWhen'],
 })
 export class CdkRowDef<T> extends BaseRowDef {
@@ -228,7 +231,10 @@ export interface CdkCellOutletMultiRowContext<T> {
  * Outlet for rendering cells inside of a row or header row.
  * @docs-private
  */
-@Directive({selector: '[cdkCellOutlet]'})
+@Directive({
+  selector: '[cdkCellOutlet]',
+  standalone: true,
+})
 export class CdkCellOutlet implements OnDestroy {
   /** The ordered list of cells to render within this outlet's view container */
   cells: CdkCellDef[];
@@ -306,6 +312,7 @@ export class CdkRow {}
 /** Row that can be used to display a message when no data is shown in the table. */
 @Directive({
   selector: 'ng-template[cdkNoDataRow]',
+  standalone: true,
 })
 export class CdkNoDataRow {
   _contentClassName = 'cdk-no-data-row';

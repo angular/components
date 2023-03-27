@@ -92,6 +92,7 @@ import {CDK_TABLE} from './tokens';
  */
 @Directive({
   selector: 'cdk-table[recycleRows], table[cdk-table][recycleRows]',
+  standalone: true,
   providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
 })
 export class CdkRecycleRows {}
@@ -108,7 +109,10 @@ export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observab
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
  * @docs-private
  */
-@Directive({selector: '[rowOutlet]'})
+@Directive({
+  selector: '[rowOutlet]',
+  standalone: true,
+})
 export class DataRowOutlet implements RowOutlet {
   constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
 }
@@ -117,7 +121,10 @@ export class DataRowOutlet implements RowOutlet {
  * Provides a handle for the table to grab the view container's ng-container to insert the header.
  * @docs-private
  */
-@Directive({selector: '[headerRowOutlet]'})
+@Directive({
+  selector: '[headerRowOutlet]',
+  standalone: true,
+})
 export class HeaderRowOutlet implements RowOutlet {
   constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
 }
@@ -126,7 +133,10 @@ export class HeaderRowOutlet implements RowOutlet {
  * Provides a handle for the table to grab the view container's ng-container to insert the footer.
  * @docs-private
  */
-@Directive({selector: '[footerRowOutlet]'})
+@Directive({
+  selector: '[footerRowOutlet]',
+  standalone: true,
+})
 export class FooterRowOutlet implements RowOutlet {
   constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
 }
@@ -136,7 +146,10 @@ export class FooterRowOutlet implements RowOutlet {
  * container's ng-container to insert the no data row.
  * @docs-private
  */
-@Directive({selector: '[noDataRowOutlet]'})
+@Directive({
+  selector: '[noDataRowOutlet]',
+  standalone: true,
+})
 export class NoDataRowOutlet implements RowOutlet {
   constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
 }
