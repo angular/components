@@ -204,6 +204,18 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     }
   }
 
+  _getRole(): string {
+    return this.multiple ? 'checkbox' : 'option';
+  }
+
+  _getAriaSelected(): boolean | null {
+    return this.multiple ? null : this.selected;
+  }
+
+  _getAriaChecked(): boolean | null {
+    return this.multiple ? this.selected : null;
+  }
+
   /** Returns the correct tabindex for the option depending on disabled state. */
   _getTabIndex(): string {
     return this.disabled ? '-1' : '0';
@@ -250,23 +262,18 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   selector: 'mat-option',
   exportAs: 'matOption',
   host: {
-    'role': 'option',
+    // For single selection, return ‘option’, and for multiple selection, return ‘checkbox’, as these visually match the representation.
+    '[attr.role]': '_getRole()',
     '[attr.tabindex]': '_getTabIndex()',
     '[class.mdc-list-item--selected]': 'selected',
     '[class.mat-mdc-option-multiple]': 'multiple',
     '[class.mat-mdc-option-active]': 'active',
     '[class.mdc-list-item--disabled]': 'disabled',
     '[id]': 'id',
-    // Set aria-selected to false for non-selected items and true for selected items. Conform to
-    // [WAI ARIA Listbox authoring practices guide](
-    //  https://www.w3.org/WAI/ARIA/apg/patterns/listbox/), "If any options are selected, each
-    // selected option has either aria-selected or aria-checked  set to true. All options that are
-    // selectable but not selected have either aria-selected or aria-checked set to false." Align
-    // aria-selected implementation of Chips and List components.
-    //
-    // Set `aria-selected="false"` on not-selected listbox options to fix VoiceOver announcing
-    // every option as "selected" (#21491).
-    '[attr.aria-selected]': 'selected',
+    // For single selection, set aria-selected to false for non-selected items and true for selected items.
+    // For multiple selection, set aria-checked to false for non-checked items and true for checked items.
+    '[attr.aria-selected]': '_getAriaSelected()',
+    '[attr.aria-checked]': '_getAriaChecked()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',

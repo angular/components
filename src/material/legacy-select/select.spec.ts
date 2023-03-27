@@ -1175,7 +1175,7 @@ describe('MatSelect', () => {
             .toBe(true);
         }));
 
-        it('should set aria-selected on each option for multi-select', fakeAsync(() => {
+        it('should set aria-checked on each option for multi-select', fakeAsync(() => {
           fixture.destroy();
 
           const multiFixture = TestBed.createComponent(MultiSelect);
@@ -1190,12 +1190,12 @@ describe('MatSelect', () => {
           expect(
             options.every(
               option =>
-                option.hasAttribute('aria-selected') &&
-                option.getAttribute('aria-selected') === 'false',
+                option.hasAttribute('aria-checked') &&
+                option.getAttribute('aria-checked') === 'false',
             ),
           )
             .withContext(
-              'Expected all unselected multi-select options to have ' + 'aria-selected="false".',
+              'Expected all unselected multi-select options to have ' + 'aria-checked="false".',
             )
             .toBe(true);
 
@@ -1206,19 +1206,19 @@ describe('MatSelect', () => {
           multiFixture.detectChanges();
           flush();
 
-          expect(options[1].getAttribute('aria-selected'))
-            .withContext('Expected selected multi-select option to have ' + 'aria-selected="true".')
+          expect(options[1].getAttribute('aria-checked'))
+            .withContext('Expected selected multi-select option to have ' + 'aria-checked="true".')
             .toEqual('true');
           options.splice(1, 1);
           expect(
             options.every(
               option =>
-                option.hasAttribute('aria-selected') &&
-                option.getAttribute('aria-selected') === 'false',
+                option.hasAttribute('aria-checked') &&
+                option.getAttribute('aria-checked') === 'false',
             ),
           )
             .withContext(
-              'Expected all unselected multi-select options to have ' + 'aria-selected="false".',
+              'Expected all unselected multi-select options to have ' + 'aria-checked="false".',
             )
             .toBe(true);
         }));

@@ -279,8 +279,14 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     set disabled(value: BooleanInput);
     get disableRipple(): boolean;
     focus(_origin?: FocusOrigin, options?: FocusOptions): void;
+    // (undocumented)
+    _getAriaChecked(): boolean | null;
+    // (undocumented)
+    _getAriaSelected(): boolean | null;
     _getHostElement(): HTMLElement;
     getLabel(): string;
+    // (undocumented)
+    _getRole(): string;
     _getTabIndex(): string;
     // (undocumented)
     readonly group: _MatOptgroupBase;
