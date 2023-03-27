@@ -22,6 +22,7 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   NgZone,
+  CSP_NONCE,
 } from '@angular/core';
 import {CanColor, mixinColor} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -191,6 +192,7 @@ export class MatLegacyProgressSpinner
     changeDetectorRef?: ChangeDetectorRef,
     viewportRuler?: ViewportRuler,
     ngZone?: NgZone,
+    @Inject(CSP_NONCE) @Optional() private _nonce?: string | null,
   ) {
     super(elementRef);
 
@@ -305,6 +307,11 @@ export class MatLegacyProgressSpinner
 
     if (!diametersForElement || !diametersForElement.has(currentDiameter)) {
       const styleTag: HTMLStyleElement = this._document.createElement('style');
+
+      if (this._nonce) {
+        styleTag.nonce = this._nonce;
+      }
+
       styleTag.setAttribute('mat-spinner-animation', this._spinnerAnimationLabel);
       styleTag.textContent = this._getAnimationText();
       styleRoot.appendChild(styleTag);
