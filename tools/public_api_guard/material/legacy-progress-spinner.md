@@ -32,7 +32,7 @@ export { MAT_LEGACY_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY }
 // @public @deprecated
 export class MatLegacyProgressSpinner extends _MatProgressSpinnerBase implements OnInit, OnDestroy, CanColor {
     constructor(elementRef: ElementRef<HTMLElement>, _platform: Platform, _document: any, animationMode: string, defaults?: MatLegacyProgressSpinnerDefaultOptions,
-    changeDetectorRef?: ChangeDetectorRef, viewportRuler?: ViewportRuler, ngZone?: NgZone);
+    changeDetectorRef?: ChangeDetectorRef, viewportRuler?: ViewportRuler, ngZone?: NgZone, _nonce?: string | null | undefined);
     get diameter(): number;
     set diameter(size: NumberInput);
     _getCircleRadius(): number;
@@ -55,7 +55,7 @@ export class MatLegacyProgressSpinner extends _MatProgressSpinnerBase implements
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyProgressSpinner, "mat-progress-spinner, mat-spinner", ["matProgressSpinner"], { "color": { "alias": "color"; "required": false; }; "diameter": { "alias": "diameter"; "required": false; }; "strokeWidth": { "alias": "strokeWidth"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyProgressSpinner, [null, null, { optional: true; }, { optional: true; }, null, null, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyProgressSpinner, [null, null, { optional: true; }, { optional: true; }, null, null, null, null, { optional: true; }]>;
 }
 
 export { MatLegacyProgressSpinnerDefaultOptions }
