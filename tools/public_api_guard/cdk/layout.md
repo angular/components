@@ -60,10 +60,10 @@ export class LayoutModule {
 
 // @public
 export class MediaMatcher {
-    constructor(_platform: Platform);
+    constructor(_platform: Platform, _nonce?: string | null | undefined);
     matchMedia(query: string): MediaQueryList;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, [null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<MediaMatcher>;
 }
