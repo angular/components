@@ -10,6 +10,7 @@ import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll
 import {OverlayReference} from '../overlay-reference';
 import {Subscription} from 'rxjs';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {filter} from 'rxjs/operators';
 
 /**
  * Config options for the CloseScrollStrategy.
@@ -49,7 +50,14 @@ export class CloseScrollStrategy implements ScrollStrategy {
       return;
     }
 
-    const stream = this._scrollDispatcher.scrolled(0);
+    const stream = this._scrollDispatcher.scrolled(0).pipe(
+      filter(scrollable => {
+        return (
+          !scrollable ||
+          !this._overlayRef.overlayElement.contains(scrollable.getElementRef().nativeElement)
+        );
+      }),
+    );
 
     if (this._config && this._config.threshold && this._config.threshold > 1) {
       this._initialScrollPosition = this._viewportRuler.getViewportScrollPosition().top;
