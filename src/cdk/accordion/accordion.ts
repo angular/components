@@ -26,6 +26,7 @@ export const CDK_ACCORDION = new InjectionToken<CdkAccordion>('CdkAccordion');
 @Directive({
   selector: 'cdk-accordion, [cdkAccordion]',
   exportAs: 'cdkAccordion',
+  standalone: true,
   providers: [{provide: CDK_ACCORDION, useExisting: CdkAccordion}],
 })
 export class CdkAccordion implements OnDestroy, OnChanges {
