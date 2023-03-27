@@ -36,7 +36,7 @@ export const TEMPLATE_FILES = [
   'angular.json',
   'karma.conf.js',
   'package.json',
-  'package-lock.json',
+  'yarn.lock',
   'tsconfig.app.json',
   'tsconfig.json',
   'tsconfig.spec.json',
@@ -221,13 +221,6 @@ export class StackBlitzWriter {
       fileContent = fileContent.replace(
         /declarations: \[MaterialDocsExample]/g,
         `declarations: [${joinedComponentNames}]`
-      );
-
-      // Replace `entryComponents: [MaterialDocsExample]`
-      // will be replaced as `entryComponents: [DialogContent]`
-      fileContent = fileContent.replace(
-        /entryComponents: \[MaterialDocsExample]/g,
-        `entryComponents: [${joinedComponentNames}]`
       );
 
       // Replace `bootstrap: [MaterialDocsExample]`

@@ -19,7 +19,6 @@ import {HttpClientModule} from '@angular/common/http';
     MaterialExampleModule,
     ReactiveFormsModule,
   ],
-  providers: [],
   bootstrap: [MaterialDocsExample],
 })
 export class AppModule {}
