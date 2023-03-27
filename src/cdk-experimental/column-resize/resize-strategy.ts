@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, OnDestroy, Provider} from '@angular/core';
+import {Inject, Injectable, OnDestroy, Provider, CSP_NONCE, Optional} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {CdkTable, _CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from '@angular/cdk/table';
@@ -144,6 +144,7 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
     protected readonly styleScheduler: _CoalescedStyleScheduler,
     protected readonly table: CdkTable<unknown>,
     @Inject(DOCUMENT) document: any,
+    @Inject(CSP_NONCE) @Optional() private readonly _nonce?: string | null,
   ) {
     super();
     this._document = document;
@@ -235,6 +236,11 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
   private _getStyleSheet(): CSSStyleSheet {
     if (!this._styleElement) {
       this._styleElement = this._document.createElement('style');
+
+      if (this._nonce) {
+        this._styleElement.nonce = this._nonce;
+      }
+
       this._styleElement.appendChild(this._document.createTextNode(''));
       this._document.head.appendChild(this._styleElement);
     }
