@@ -1,14 +1,14 @@
 import {inject, TestBed, fakeAsync} from '@angular/core/testing';
-import {Component, NgZone} from '@angular/core';
+import {Component, ElementRef, NgZone} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {Overlay, OverlayConfig, OverlayRef, OverlayModule, OverlayContainer} from '../index';
 
 describe('CloseScrollStrategy', () => {
   let overlayRef: OverlayRef;
   let componentPortal: ComponentPortal<MozarellaMsg>;
-  let scrolledSubject = new Subject();
+  let scrolledSubject = new Subject<CdkScrollable | undefined>();
   let scrollPosition: number;
 
   beforeEach(fakeAsync(() => {
@@ -53,6 +53,16 @@ describe('CloseScrollStrategy', () => {
 
     scrolledSubject.next();
     expect(overlayRef.detach).toHaveBeenCalled();
+  });
+
+  it('should not detach if the scrollable is inside the overlay', () => {
+    overlayRef.attach(componentPortal);
+    spyOn(overlayRef, 'detach');
+
+    scrolledSubject.next({
+      getElementRef: () => new ElementRef(overlayRef.overlayElement),
+    } as CdkScrollable);
+    expect(overlayRef.detach).not.toHaveBeenCalled();
   });
 
   it('should not attempt to detach the overlay after it has been detached', () => {
