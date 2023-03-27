@@ -66,13 +66,13 @@
         [attr.aria-describedby]="_getDescribedby(item.compareValue)"
         (click)="_cellClicked(item, $event)"
         (focus)="_emitActiveDateChange(item, $event)">
-        <div class="mat-calendar-body-cell-content mat-focus-indicator"
+        <span class="mat-calendar-body-cell-content mat-focus-indicator"
           [class.mat-calendar-body-selected]="_isSelected(item.compareValue)"
           [class.mat-calendar-body-comparison-identical]="_isComparisonIdentical(item.compareValue)"
           [class.mat-calendar-body-today]="todayValue === item.compareValue">
           {{item.displayValue}}
-        </div>
-        <div class="mat-calendar-body-cell-preview" aria-hidden="true"></div>
+        </span>
+        <span class="mat-calendar-body-cell-preview" aria-hidden="true"></span>
     </button>
   </td>
 </tr>
