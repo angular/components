@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 export * from './aria-describer/aria-describer';
+export * from './aria-describer/aria-reference';
 export * from './key-manager/activedescendant-key-manager';
 export * from './key-manager/focus-key-manager';
 export * from './key-manager/list-key-manager';

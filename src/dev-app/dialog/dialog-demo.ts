@@ -125,15 +125,30 @@ export class DialogDemo {
   selector: 'demo-jazz-dialog',
   template: `
     <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-      <p>It's Jazz!</p>
+      <p>Order printer ink refills.</p>
 
       <mat-form-field>
-        <mat-label>How much?</mat-label>
+        <mat-label>How many?</mat-label>
         <input matInput #howMuch>
       </mat-form-field>
 
+      <mat-form-field>
+        <mat-label>What color?</mat-label>
+        <mat-select #whatColor>
+          <mat-option></mat-option>
+          <mat-option value="black">Black</mat-option>
+          <mat-option value="cyan">Cyan</mat-option>
+          <mat-option value="magenta">Magenta</mat-option>
+          <mat-option value="yellow">Yellow</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <p cdkDragHandle> {{ data.message }} </p>
-      <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>
+      <button type="button" class="demo-dialog-button"
+              (click)="dialogRef.close({ quantity: howMuch.value, color: whatColor.value })">
+
+        Close dialog
+      </button>
       <button (click)="togglePosition()">Change dimensions</button>
       <button (click)="temporarilyHide()">Hide for 2 seconds</button>
     </div>
@@ -141,7 +156,7 @@ export class DialogDemo {
   encapsulation: ViewEncapsulation.None,
   styles: [`.hidden-dialog { opacity: 0; }`],
   standalone: true,
-  imports: [MatInputModule, DragDropModule],
+  imports: [DragDropModule, MatInputModule, MatSelectModule],
 })
 export class JazzDialog {
   private _dimensionToggle = false;

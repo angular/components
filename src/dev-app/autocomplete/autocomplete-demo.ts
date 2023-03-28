@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {FormControl, NgModel, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -17,6 +17,7 @@ import {MatInputModule} from '@angular/material/input';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {ThemePalette} from '@angular/material/core';
+import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
 export interface State {
   code: string;
@@ -43,6 +44,7 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatInputModule,
     ReactiveFormsModule,
   ],
@@ -201,5 +203,65 @@ export class AutocompleteDemo {
       );
     }
     return false;
+  }
+
+  dialog = inject(MatDialog);
+  dialogRef: MatDialogRef<AutocompleteDemoExampleDialog> | null;
+
+  openDialog() {
+    this.dialogRef = this.dialog.open(AutocompleteDemoExampleDialog, {width: '400px'});
+  }
+}
+
+@Component({
+  selector: 'autocomplete-demo-example-dialog',
+  template: `
+    <form (submit)="close()">
+      <p>Choose a T-shirt size.</p>
+      <mat-form-field>
+        <mat-label>T-Shirt Size</mat-label>
+        <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentSize" name="size">
+        <mat-autocomplete #tdAuto="matAutocomplete">
+          <mat-option *ngFor="let size of sizes" [value]="size">
+            {{size}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <button type="submit" mat-button>Close</button>
+    </form>
+  `,
+  styles: [
+    `
+    :host {
+      display: block;
+      padding: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  `,
+  ],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatInputModule,
+  ],
+})
+export class AutocompleteDemoExampleDialog {
+  constructor(public dialogRef: MatDialogRef<AutocompleteDemoExampleDialog>) {}
+
+  currentSize = '';
+  sizes = ['S', 'M', 'L'];
+
+  close() {
+    this.dialogRef.close();
   }
 }

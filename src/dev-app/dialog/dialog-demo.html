@@ -116,18 +116,30 @@
 <p>Last beforeClose result: {{lastBeforeCloseResult}}</p>
 
 <ng-template let-data let-dialogRef="dialogRef">
-  I'm a template dialog. I've been opened {{numTemplateOpens}} times!
-
-  <p>It's Jazz!</p>
+  <p>Order printer ink refills.</p>
 
   <mat-form-field>
-    <mat-label>How much?</mat-label>
+    <mat-label>How many?</mat-label>
     <input matInput #howMuch>
   </mat-form-field>
 
+  <mat-form-field>
+    <mat-label>What color?</mat-label>
+    <mat-select #whatColor>
+      <mat-option></mat-option>
+      <mat-option value="black">Black</mat-option>
+      <mat-option value="cyan">Cyan</mat-option>
+      <mat-option value="magenta">Magenta</mat-option>
+      <mat-option value="yellow">Yellow</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <p> {{ data.message }} </p>
-  <button type="button" (click)="dialogRef.close(howMuch.value)" class="demo-dialog-button"
-          cdkFocusInitial>
+
+  <p>I'm a template dialog. I've been opened {{numTemplateOpens}} times!</p>
+
+  <button type="button" class="demo-dialog-button" cdkFocusInitial
+          (click)="dialogRef.close({ quantity: howMuch.value, color: whatColor.value })">
     Close dialog
   </button>
   <button (click)="dialogRef.updateSize('500px', '500px').updatePosition({top: '25px', left: '25px'});"

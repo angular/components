@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -244,6 +245,7 @@ export abstract class _MatAutocompleteTriggerBase
     this._componentDestroyed = true;
     this._destroyPanel();
     this._closeKeyEventStream.complete();
+    this._clearFromModal();
   }
 
   /** Whether or not the autocomplete panel is open. */
@@ -670,6 +672,8 @@ export abstract class _MatAutocompleteTriggerBase
     this.autocomplete._isOpen = this._overlayAttached = true;
     this.autocomplete._setColor(this._formField?.color);
 
+    this._applyModalPanelOwnership();
+
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.
     if (this.panelOpen && wasOpen !== this.panelOpen) {
@@ -858,6 +862,68 @@ export abstract class _MatAutocompleteTriggerBase
     // but the behvior isn't exactly the same and it ends up breaking some internal tests.
     overlayRef.outsidePointerEvents().subscribe();
   }
+
+  /**
+   * Track which modal we have modified the `aria-owns` attribute of. When the combobox trigger is
+   * inside an aria-modal, we apply aria-owns to the parent modal with the `id` of the options
+   * panel. Track the modal we have changed so we can undo the changes on destroy.
+   */
+  private _trackedModal: Element | null = null;
+
+  /**
+   * If the autocomplete trigger is inside of an `aria-modal` element, connect
+   * that modal to the options panel with `aria-owns`.
+   *
+   * For some browser + screen reader combinations, when navigation is inside
+   * of an `aria-modal` element, the screen reader treats everything outside
+   * of that modal as hidden or invisible.
+   *
+   * This causes a problem when the combobox trigger is _inside_ of a modal, because the
+   * options panel is rendered _outside_ of that modal, preventing screen reader navigation
+   * from reaching the panel.
+   *
+   * We can work around this issue by applying `aria-owns` to the modal with the `id` of
+   * the options panel. This effectively communicates to assistive technology that the
+   * options panel is part of the same interaction as the modal.
+   *
+   * At time of this writing, this issue is present in VoiceOver.
+   * See https://github.com/angular/components/issues/20694
+   */
+  private _applyModalPanelOwnership() {
+    // TODO(http://github.com/angular/components/issues/26853): consider de-duplicating this with
+    // the `LiveAnnouncer` and any other usages.
+    //
+    // Note that the selector here is limited to CDK overlays at the moment in order to reduce the
+    // section of the DOM we need to look through. This should cover all the cases we support, but
+    // the selector can be expanded if it turns out to be too narrow.
+    const modal = this._element.nativeElement.closest(
+      'body > .cdk-overlay-container [aria-modal="true"]',
+    );
+
+    if (!modal) {
+      // Most commonly, the autocomplete trigger is not inside a modal.
+      return;
+    }
+
+    const panelId = this.autocomplete.id;
+
+    if (this._trackedModal) {
+      removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
+    }
+
+    addAriaReferencedId(modal, 'aria-owns', panelId);
+    this._trackedModal = modal;
+  }
+
+  /** Clears the references to the listbox overlay element from the modal it was added to. */
+  private _clearFromModal() {
+    if (this._trackedModal) {
+      const panelId = this.autocomplete.id;
+
+      removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
+      this._trackedModal = null;
+    }
+  }
 }
 
 @Directive({
@@ -869,7 +935,7 @@ export abstract class _MatAutocompleteTriggerBase
     '[attr.aria-autocomplete]': 'autocompleteDisabled ? null : "list"',
     '[attr.aria-activedescendant]': '(panelOpen && activeOption) ? activeOption.id : null',
     '[attr.aria-expanded]': 'autocompleteDisabled ? null : panelOpen.toString()',
-    '[attr.aria-owns]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
+    '[attr.aria-controls]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
     '[attr.aria-haspopup]': 'autocompleteDisabled ? null : "listbox"',
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
