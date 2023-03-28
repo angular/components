@@ -47,7 +47,7 @@
     Clicking on the label will trigger another click event from the button.
     Stop propagation here so other listeners further up in the DOM don't execute twice.
   -->
-  <label [for]="buttonId" [attr.id]="_labelId" (click)="$event.stopPropagation()">
+  <label class="mdc-label" [for]="buttonId" [attr.id]="_labelId" (click)="$event.stopPropagation()">
     <ng-content></ng-content>
   </label>
 </div>
