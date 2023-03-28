@@ -75,7 +75,6 @@ const _MatSortBase = mixinInitialized(mixinDisabled(class {}));
   exportAs: 'matSort',
   host: {
     'class': 'mat-sort',
-    'ngSkipHydration': 'true',
   },
   inputs: ['disabled: matSortDisabled'],
 })
