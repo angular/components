@@ -125,6 +125,15 @@
     <input matInput #howMuch>
   </mat-form-field>
 
+  <!-- TODO: remove debug code -->
+  <mat-form-field>
+    <mat-select [(ngModel)]="actionsAlignment">
+      <mat-option>Start</mat-option>
+      <mat-option value="end">End</mat-option>
+      <mat-option value="center">Center</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <p> {{ data.message }} </p>
   <button type="button" (click)="dialogRef.close(howMuch.value)" class="demo-dialog-button"
           cdkFocusInitial>

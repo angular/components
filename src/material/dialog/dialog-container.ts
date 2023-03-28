@@ -149,6 +149,7 @@ function parseCssTime(time: string | number | undefined): number | null {
     '[attr.aria-label]': '_config.ariaLabel',
     '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
     '[class._mat-animation-noopable]': '!_animationsEnabled',
+    '[attr.aria-owns]': '"cdk-overlay-1 cdk-overlay-2 cdk-overlay-3"', // TODO: remove debug code
   },
 })
 export class MatDialogContainer extends _MatDialogContainerBase implements OnDestroy {
