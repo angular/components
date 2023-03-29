@@ -62,7 +62,7 @@
     "@angular/core": "^16.0.0-next.2",
     "@angular/forms": "^16.0.0-next.2",
     "@angular/platform-browser": "^16.0.0-next.2",
-    "@types/google.maps": "^3.47.3",
+    "@types/google.maps": "^3.52.4",
     "@types/youtube": "^0.0.46",
     "rxjs": "^6.6.7",
     "rxjs-tslint-rules": "^4.34.8",

@@ -102,7 +102,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     ngOnInit(): void;
     // (undocumented)
     set options(options: google.maps.MapOptions);
-    get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType>;
+    get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType | null>;
     panBy(x: number, y: number): void;
     panTo(latLng: google.maps.LatLng | google.maps.LatLngLiteral): void;
     panToBounds(latLngBounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral, padding?: number | google.maps.Padding): void;
@@ -412,7 +412,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     getCursor(): string | null;
     getDraggable(): boolean;
     getIcon(): string | google.maps.Icon | google.maps.Symbol | null;
-    getLabel(): google.maps.MarkerLabel | null;
+    getLabel(): google.maps.MarkerLabel | string | null;
     getOpacity(): number | null;
     getPosition(): google.maps.LatLng | null;
     getShape(): google.maps.MarkerShape | null;
