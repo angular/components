@@ -375,7 +375,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getLabel
    */
-  getLabel(): google.maps.MarkerLabel | null {
+  getLabel(): google.maps.MarkerLabel | string | null {
     this._assertInitialized();
     return this.marker.getLabel() || null;
   }

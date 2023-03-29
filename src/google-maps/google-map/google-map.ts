@@ -476,7 +476,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * See
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.overlayMapTypes
    */
-  get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType> {
+  get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType | null> {
     this._assertInitialized();
     return this.googleMap.overlayMapTypes;
   }
