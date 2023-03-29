@@ -1,3 +1,18 @@
+<a name="15.2.5"></a>
+# 15.2.5 "metal-plumber" (2023-03-29)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4ec3abd723](https://github.com/angular/components/commit/4ec3abd7233df53586c2a52082d01199b58b8e1b) | fix | **overlay:** don't close if scroll is coming from inside overlay ([#26840](https://github.com/angular/components/pull/26840)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [600d40eb24](https://github.com/angular/components/commit/600d40eb24502816a03133bff4b01080a02194c9) | fix | **datepicker:** remove div as a child of button ([#26838](https://github.com/angular/components/pull/26838)) |
+## Special Thanks
+Kristiyan Kostadinov and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-next.3"></a>
 # 16.0.0-next.3 "limonite-lime" (2023-03-23)
 ### material
