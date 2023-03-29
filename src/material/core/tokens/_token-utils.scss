@@ -25,7 +25,7 @@ $_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-
 // Placeholder typography config that can be passed to token getter functions when generating token
 // slots.
 $placeholder-typography-config: (
-  font-family: Roboto,
+  font-family: 'Roboto, sans-serif',
   headline-1: $_placeholder-typography-level-config,
   headline-2: $_placeholder-typography-level-config,
   headline-3: $_placeholder-typography-level-config,

@@ -84,13 +84,13 @@ $mat-typography-mdc-level-mappings: (
 }
 
 // Converts an MDC typography level config to an Angular Material one.
-@function typography-config-level-from-mdc($mdc-level) {
+@function typography-config-level-from-mdc($mdc-level, $font-family: null) {
   $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
 
-  // Explicitly set the font family to null since we'll apply it globally
+  // Explicitly default the font family to null since we'll apply it globally
   // through the `define-typgraphy-config`/`define-legacy-typography-config`.
   @return typography.define-typography-level(
-    $font-family: null,
+    $font-family: $font-family,
     $font-size: map.get($mdc-level-config, font-size),
     $line-height: map.get($mdc-level-config, line-height),
     $font-weight: map.get($mdc-level-config, font-weight),
@@ -224,6 +224,34 @@ $mat-typography-mdc-level-mappings: (
 
   // Reset the original values.
   mdc-typography.$styles: $orig-mdc-typography-styles;
+}
+
+// Function to create an Angular Material typography config from MDC's predefined typography levels.
+// This is used for components where we accidentally ended up supporting null typography configs
+// that were silently falling back to MDC's typography. At the moment of writing this includes
+// `dialog`, `slider` and `tooltip`.
+// Important! We shouldn't introduce any new usages of this pattern and we should eventually clean
+// up any existing usages.
+@function private-fallback-typography-from-mdc() {
+  // This is very close to what we have in `define-typography-config`, but we can't use it here,
+  // because it would cause a circular import and moving it here doesn't make sense.
+  $font-family: mdc-typography.$font-family;
+  @return (
+    font-family: $font-family,
+    headline-1: typography-config-level-from-mdc(headline1, $font-family),
+    headline-2: typography-config-level-from-mdc(headline2, $font-family),
+    headline-3: typography-config-level-from-mdc(headline3, $font-family),
+    headline-4: typography-config-level-from-mdc(headline4, $font-family),
+    headline-5: typography-config-level-from-mdc(headline5, $font-family),
+    headline-6: typography-config-level-from-mdc(headline6, $font-family),
+    subtitle-1: typography-config-level-from-mdc(subtitle1, $font-family),
+    subtitle-2: typography-config-level-from-mdc(subtitle2, $font-family),
+    body-1: typography-config-level-from-mdc(body1, $font-family),
+    body-2: typography-config-level-from-mdc(body2, $font-family),
+    caption: typography-config-level-from-mdc(caption, $font-family),
+    button: typography-config-level-from-mdc(button, $font-family),
+    overline: typography-config-level-from-mdc(overline, $font-family),
+  );
 }
 
 // Disables MDC's CSS custom property fallbacks for the specified mixin content.
