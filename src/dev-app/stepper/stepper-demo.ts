@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -40,6 +40,7 @@ import {MatStepperModule} from '@angular/material/stepper';
   ],
 })
 export class StepperDemo {
+  private _formBuilder = inject(FormBuilder);
   isNonLinear = false;
   isNonEditable = false;
   disableRipple = false;
@@ -86,6 +87,4 @@ export class StepperDemo {
   get formArray(): AbstractControl | null {
     return this.formGroup.get('formArray');
   }
-
-  constructor(private _formBuilder: FormBuilder) {}
 }

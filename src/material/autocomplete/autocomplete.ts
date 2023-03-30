@@ -174,7 +174,7 @@ export abstract class _MatAutocompleteBase
   set autoActiveFirstOption(value: BooleanInput) {
     this._autoActiveFirstOption = coerceBooleanProperty(value);
   }
-  private _autoActiveFirstOption = !!this._defaults.autoActiveFirstOption;
+  private _autoActiveFirstOption: boolean;
 
   /** Whether the active option should be selected as the user is navigating. */
   @Input()
@@ -184,7 +184,7 @@ export abstract class _MatAutocompleteBase
   set autoSelectActiveOption(value: BooleanInput) {
     this._autoSelectActiveOption = coerceBooleanProperty(value);
   }
-  private _autoSelectActiveOption = !!this._defaults.autoSelectActiveOption;
+  private _autoSelectActiveOption: boolean;
 
   /**
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
@@ -249,6 +249,8 @@ export abstract class _MatAutocompleteBase
     // wasn't resolved in VoiceOver, and if it has, we can remove this and the `inertGroups`
     // option altogether.
     this.inertGroups = platform?.SAFARI || false;
+    this._autoActiveFirstOption = !!_defaults.autoActiveFirstOption;
+    this._autoSelectActiveOption = !!_defaults.autoSelectActiveOption;
   }
 
   ngAfterContentInit() {

@@ -16,10 +16,10 @@ import {MatMenuBarModule} from '@angular/material-experimental/menubar';
   exportAs: 'demoMenu',
   template: '<ng-content></ng-content>',
   host: {
-    '[tabindex]': 'isInline() ? 0 : null',
+    '[tabindex]': 'isInline ? 0 : null',
     'role': 'menu',
     'class': 'cdk-menu mat-menu mat-menu-panel',
-    '[class.cdk-menu-inline]': 'isInline()',
+    '[class.cdk-menu-inline]': 'isInline',
     '[attr.aria-orientation]': 'orientation',
   },
   providers: [

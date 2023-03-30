@@ -9,7 +9,7 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {Directive, Input, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ import {MapEventManager} from '../map-event-manager';
   exportAs: 'mapKmlLayer',
 })
 export class MapKmlLayer implements OnInit, OnDestroy {
-  private _eventManager = new MapEventManager(this._ngZone);
+  private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.KmlLayerOptions>({});
   private readonly _url = new BehaviorSubject<string>('');
 

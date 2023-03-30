@@ -50,7 +50,7 @@ async function main() {
   const specEntryPointFile = await createEntryPointSpecFile();
   const esbuildLinkerPlugin = await createEsbuildAngularOptimizePlugin({
     enableLinker: {
-      filterPaths: /fesm2020/,
+      filterPaths: /fesm2022/,
       linkerOptions: {
         linkerJitMode: true,
       },
@@ -63,6 +63,7 @@ async function main() {
     sourceRoot: projectDir,
     platform: 'browser',
     format: 'iife',
+    target: 'es2015',
     outfile: outFile,
     plugins: [esbuildResolvePlugin, esbuildLinkerPlugin],
     stdin: {contents: specEntryPointFile, resolveDir: projectDir},

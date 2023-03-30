@@ -364,7 +364,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   inputs: POPOVER_EDIT_INPUTS,
 })
 export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
-  protected override focusTrap?: FocusEscapeNotifier;
+  protected override focusTrap?: FocusEscapeNotifier = undefined;
 
   constructor(
     elementRef: ElementRef,
@@ -382,10 +382,7 @@ export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
       .escapes()
       .pipe(takeUntil(this.destroyed))
       .subscribe(direction => {
-        if (this.services.editEventDispatcher.editRef) {
-          this.services.editEventDispatcher.editRef.blur();
-        }
-
+        this.services.editEventDispatcher.editRef?.blur();
         this.services.focusDispatcher.moveFocusHorizontally(
           closest(this.elementRef.nativeElement!, CELL_SELECTOR) as HTMLElement,
           direction === FocusEscapeNotifierDirection.START ? -1 : 1,

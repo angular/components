@@ -109,8 +109,7 @@ export class MatLegacyChipInput
    * Defaults to `[ENTER]`.
    */
   @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: readonly number[] | ReadonlySet<number> =
-    this._defaultOptions.separatorKeyCodes;
+  separatorKeyCodes: readonly number[] | ReadonlySet<number>;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd') readonly chipEnd = new EventEmitter<MatLegacyChipInputEvent>();
@@ -141,9 +140,10 @@ export class MatLegacyChipInput
 
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement>,
-    @Inject(MAT_LEGACY_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatLegacyChipsDefaultOptions,
+    @Inject(MAT_LEGACY_CHIPS_DEFAULT_OPTIONS) defaultOptions: MatLegacyChipsDefaultOptions,
   ) {
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
+    this.separatorKeyCodes = defaultOptions.separatorKeyCodes;
   }
 
   ngOnChanges(): void {

@@ -43,10 +43,7 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   protected _index?: number;
 
   /** The checked state of the selection toggle */
-  readonly checked: Observable<boolean> = this._selection.change.pipe(
-    switchMap(() => observableOf(this._isSelected())),
-    distinctUntilChanged(),
-  );
+  readonly checked: Observable<boolean>;
 
   /** Toggles the selection */
   toggle() {
@@ -61,7 +58,12 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
     @Self()
     @Inject(NG_VALUE_ACCESSOR)
     private _controlValueAccessors: ControlValueAccessor[],
-  ) {}
+  ) {
+    this.checked = _selection.change.pipe(
+      switchMap(() => observableOf(this._isSelected())),
+      distinctUntilChanged(),
+    );
+  }
 
   ngOnInit() {
     this._assertValidParentSelection();

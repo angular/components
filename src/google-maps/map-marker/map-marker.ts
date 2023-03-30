@@ -18,6 +18,7 @@ import {
   Directive,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import {Observable} from 'rxjs';
 
@@ -43,7 +44,7 @@ export const DEFAULT_MARKER_OPTIONS = {
   exportAs: 'mapMarker',
 })
 export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
-  private _eventManager = new MapEventManager(this._ngZone);
+  private _eventManager = new MapEventManager(inject(NgZone));
 
   /**
    * Title of the marker.

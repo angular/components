@@ -237,7 +237,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     this._showDelay = coerceNumberProperty(value);
   }
 
-  private _showDelay = this._defaultOptions.showDelay;
+  private _showDelay: number;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
   @Input('matTooltipHideDelay')
@@ -253,7 +253,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     }
   }
 
-  private _hideDelay = this._defaultOptions.hideDelay;
+  private _hideDelay: number;
 
   /**
    * How touch gestures should be handled by the tooltip. On touch devices the tooltip directive
@@ -325,7 +325,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
   private _document: Document;
 
   /** Timer started at the last `touchstart` event. */
-  private _touchstartTimeout: number;
+  private _touchstartTimeout: ReturnType<typeof setTimeout>;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -348,6 +348,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     this._document = _document;
 
     if (_defaultOptions) {
+      this._showDelay = _defaultOptions.showDelay;
+      this._hideDelay = _defaultOptions.hideDelay;
+
       if (_defaultOptions.position) {
         this.position = _defaultOptions.position;
       }
@@ -916,10 +919,10 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   tooltipClass: string | string[] | Set<string> | {[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
-  private _showTimeoutId: number | undefined;
+  private _showTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  private _hideTimeoutId: number | undefined;
+  private _hideTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /** Element that caused the tooltip to open. */
   _triggerElement: HTMLElement;
@@ -961,7 +964,9 @@ export abstract class _TooltipComponentBase implements OnDestroy {
    */
   show(delay: number): void {
     // Cancel the delayed hide if it is scheduled
-    clearTimeout(this._hideTimeoutId);
+    if (this._hideTimeoutId != null) {
+      clearTimeout(this._hideTimeoutId);
+    }
 
     this._showTimeoutId = setTimeout(() => {
       this._toggleVisibility(true);
@@ -975,7 +980,9 @@ export abstract class _TooltipComponentBase implements OnDestroy {
    */
   hide(delay: number): void {
     // Cancel the delayed show if it is scheduled
-    clearTimeout(this._showTimeoutId);
+    if (this._showTimeoutId != null) {
+      clearTimeout(this._showTimeoutId);
+    }
 
     this._hideTimeoutId = setTimeout(() => {
       this._toggleVisibility(false);
@@ -1045,8 +1052,14 @@ export abstract class _TooltipComponentBase implements OnDestroy {
 
   /** Cancels any pending animation sequences. */
   _cancelPendingAnimations() {
-    clearTimeout(this._showTimeoutId);
-    clearTimeout(this._hideTimeoutId);
+    if (this._showTimeoutId != null) {
+      clearTimeout(this._showTimeoutId);
+    }
+
+    if (this._hideTimeoutId != null) {
+      clearTimeout(this._hideTimeoutId);
+    }
+
     this._showTimeoutId = this._hideTimeoutId = undefined;
   }
 

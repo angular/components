@@ -104,8 +104,7 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
    * Defaults to `[ENTER]`.
    */
   @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: readonly number[] | ReadonlySet<number> =
-    this._defaultOptions.separatorKeyCodes;
+  separatorKeyCodes: readonly number[] | ReadonlySet<number>;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
@@ -137,10 +136,11 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
 
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement>,
-    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions,
+    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) defaultOptions: MatChipsDefaultOptions,
     @Optional() @Inject(MAT_FORM_FIELD) formField?: MatFormField,
   ) {
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
+    this.separatorKeyCodes = defaultOptions.separatorKeyCodes;
 
     if (formField) {
       this.inputElement.classList.add('mat-mdc-form-field-input-control');

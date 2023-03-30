@@ -55,11 +55,11 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   @ViewChild('exchange') exchangeInput: HTMLInputElement;
   @ViewChild('subscriber') subscriberInput: HTMLInputElement;
 
-  parts = this._formBuilder.group({
-    area: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-    exchange: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-    subscriber: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
-  });
+  parts: FormGroup<{
+    area: FormControl<string | null>;
+    exchange: FormControl<string | null>;
+    subscriber: FormControl<string | null>;
+  }>;
   stateChanges = new Subject<void>();
   focused = false;
   touched = false;
@@ -134,7 +134,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   }
 
   constructor(
-    private _formBuilder: FormBuilder,
+    formBuilder: FormBuilder,
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
     @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
@@ -143,6 +143,12 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
+
+    this.parts = formBuilder.group({
+      area: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      exchange: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      subscriber: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
+    });
   }
 
   ngOnDestroy() {
