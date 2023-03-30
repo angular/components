@@ -1,6 +1,5 @@
 @use '@material/dialog' as mdc-dialog;
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../core/mdc-helpers/mdc-helpers';
 @use './mdc-dialog-structure-overrides';
