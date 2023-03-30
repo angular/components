@@ -9,7 +9,16 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, ElementRef, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -28,7 +37,7 @@ import {MapAnchorPoint} from '../map-anchor-point';
   host: {'style': 'display: none'},
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
-  private _eventManager = new MapEventManager(this._ngZone);
+  private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.InfoWindowOptions>({});
   private readonly _position = new BehaviorSubject<
     google.maps.LatLngLiteral | google.maps.LatLng | undefined

@@ -23,6 +23,7 @@ import {
   QueryList,
   SimpleChanges,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -62,7 +63,7 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
 })
 export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
   private readonly _currentMarkers = new Set<google.maps.Marker>();
-  private readonly _eventManager = new MapEventManager(this._ngZone);
+  private readonly _eventManager = new MapEventManager(inject(NgZone));
   private readonly _destroy = new Subject<void>();
 
   /** Whether the clusterer is allowed to be initialized. */

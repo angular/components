@@ -9,7 +9,7 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {Directive, Input, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ import {MapEventManager} from '../map-event-manager';
   exportAs: 'mapGroundOverlay',
 })
 export class MapGroundOverlay implements OnInit, OnDestroy {
-  private _eventManager = new MapEventManager(this._ngZone);
+  private _eventManager = new MapEventManager(inject(NgZone));
 
   private readonly _opacity = new BehaviorSubject<number>(1);
   private readonly _url = new BehaviorSubject<string>('');

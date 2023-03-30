@@ -24,6 +24,7 @@ import {
   NgZone,
   SimpleChanges,
   EventEmitter,
+  inject,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {Observable} from 'rxjs';
@@ -60,7 +61,7 @@ export const DEFAULT_WIDTH = '500px';
   encapsulation: ViewEncapsulation.None,
 })
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
-  private _eventManager: MapEventManager = new MapEventManager(this._ngZone);
+  private _eventManager: MapEventManager = new MapEventManager(inject(NgZone));
   private _mapEl: HTMLElement;
   private _existingAuthFailureCallback: GoogleMapsWindow['gm_authFailure'];
 

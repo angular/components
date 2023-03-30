@@ -32,18 +32,14 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
    * The checked state of the toggle.
    * Resolves to `true` if all the values are selected, `false` if no value is selected.
    */
-  readonly checked: Observable<boolean> = this._selection.change.pipe(
-    switchMap(() => observableOf(this._selection.isAllSelected())),
-  );
+  readonly checked: Observable<boolean>;
 
   /**
    * The indeterminate state of the toggle.
    * Resolves to `true` if part (not all) of the values are selected, `false` if all values or no
    * value at all are selected.
    */
-  readonly indeterminate: Observable<boolean> = this._selection.change.pipe(
-    switchMap(() => observableOf(this._selection.isPartialSelected())),
-  );
+  readonly indeterminate: Observable<boolean>;
 
   /**
    * Toggles the select-all state.
@@ -72,7 +68,15 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
     @Self()
     @Inject(NG_VALUE_ACCESSOR)
     private readonly _controlValueAccessor: ControlValueAccessor[],
-  ) {}
+  ) {
+    this.checked = _selection.change.pipe(
+      switchMap(() => observableOf(_selection.isAllSelected())),
+    );
+
+    this.indeterminate = _selection.change.pipe(
+      switchMap(() => observableOf(_selection.isPartialSelected())),
+    );
+  }
 
   ngOnInit() {
     this._assertValidParentSelection();

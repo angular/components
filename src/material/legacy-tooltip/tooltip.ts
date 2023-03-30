@@ -107,7 +107,7 @@ export class MatLegacyTooltip extends _MatTooltipBase<LegacyTooltipComponent> {
 })
 export class LegacyTooltipComponent extends _TooltipComponentBase {
   /** Stream that emits whether the user has a handset-sized display.  */
-  _isHandset: Observable<BreakpointState> = this._breakpointObserver.observe(Breakpoints.Handset);
+  _isHandset: Observable<BreakpointState>;
   _showAnimation = 'mat-tooltip-show';
   _hideAnimation = 'mat-tooltip-hide';
 
@@ -120,9 +120,10 @@ export class LegacyTooltipComponent extends _TooltipComponentBase {
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
-    private _breakpointObserver: BreakpointObserver,
+    breakpointObserver: BreakpointObserver,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
   ) {
     super(changeDetectorRef, animationMode);
+    this._isHandset = breakpointObserver.observe(Breakpoints.Handset);
   }
 }
