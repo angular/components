@@ -22,7 +22,7 @@ export class MatLegacyCard {
 export class MatLegacyCardActions {
     align: 'start' | 'end';
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardActions, "mat-card-actions", ["matCardActions"], { "align": "align"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyCardActions, "mat-card-actions", ["matCardActions"], { "align": { "alias": "align"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyCardActions, never>;
 }

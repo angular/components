@@ -89,7 +89,7 @@ export class MatLegacyTab extends _MatLegacyTabBase {
     get templateLabel(): MatTabLabel;
     set templateLabel(value: MatTabLabel);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTab, "mat-tab", ["matTab"], { "disabled": "disabled"; }, {}, ["templateLabel", "_explicitContent"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTab, never>;
 }
@@ -142,7 +142,7 @@ export class MatLegacyTabGroup extends _MatLegacyTabGroupBase {
     // (undocumented)
     _tabHeader: MatTabGroupBaseHeader;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabGroup, "mat-tab-group", ["matTabGroup"], { "color": "color"; "disableRipple": "disableRipple"; }, {}, ["_allTabs"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabGroup, "mat-tab-group", ["matTabGroup"], { "color": { "alias": "color"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, ["_allTabs"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTabGroup, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -167,7 +167,7 @@ export class MatLegacyTabHeader extends _MatLegacyTabHeaderBase {
     // (undocumented)
     _tabListInner: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabHeader, "mat-tab-header", never, { "selectedIndex": "selectedIndex"; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["_items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabHeader, "mat-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["_items"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -187,7 +187,7 @@ export class MatLegacyTabLabel extends MatTabLabel {
 // @public @deprecated (undocumented)
 export class MatLegacyTabLabelWrapper extends _MatTabLabelWrapperBase {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyTabLabelWrapper, "[matTabLabelWrapper]", never, { "disabled": "disabled"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyTabLabelWrapper, "[matTabLabelWrapper]", never, { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTabLabelWrapper, never>;
 }
@@ -198,7 +198,7 @@ export class MatLegacyTabLink extends _MatLegacyTabLinkBase implements OnDestroy
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTabLink, [null, null, null, null, { optional: true; }, { attribute: "tabindex"; }, null, { optional: true; }]>;
 }
@@ -223,7 +223,7 @@ export class MatLegacyTabNav extends _MatLegacyTabNavBase {
     // (undocumented)
     _tabListInner: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "color": "color"; }, {}, ["_items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "color": { "alias": "color"; "required": false; }; }, {}, ["_items"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTabNav, [null, { optional: true; }, null, null, null, null, { optional: true; }]>;
 }
@@ -235,7 +235,7 @@ export class MatLegacyTabNavPanel {
     _activeTabId?: string;
     id: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabNavPanel, "mat-tab-nav-panel", ["matTabNavPanel"], { "id": "id"; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyTabNavPanel, "mat-tab-nav-panel", ["matTabNavPanel"], { "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyTabNavPanel, never>;
 }

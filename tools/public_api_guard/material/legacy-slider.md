@@ -100,7 +100,7 @@ export class MatLegacySlider extends _MatSliderBase implements ControlValueAcces
     set vertical(value: BooleanInput);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacySlider, "mat-slider", ["matSlider"], { "disabled": "disabled"; "color": "color"; "tabIndex": "tabIndex"; "invert": "invert"; "max": "max"; "min": "min"; "step": "step"; "thumbLabel": "thumbLabel"; "tickInterval": "tickInterval"; "value": "value"; "displayWith": "displayWith"; "valueText": "valueText"; "vertical": "vertical"; }, { "change": "change"; "input": "input"; "valueChange": "valueChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacySlider, "mat-slider", ["matSlider"], { "disabled": { "alias": "disabled"; "required": false; }; "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "invert": { "alias": "invert"; "required": false; }; "max": { "alias": "max"; "required": false; }; "min": { "alias": "min"; "required": false; }; "step": { "alias": "step"; "required": false; }; "thumbLabel": { "alias": "thumbLabel"; "required": false; }; "tickInterval": { "alias": "tickInterval"; "required": false; }; "value": { "alias": "value"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "valueText": { "alias": "valueText"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; }, { "change": "change"; "input": "input"; "valueChange": "valueChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacySlider, [null, null, null, { optional: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
 }

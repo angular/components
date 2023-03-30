@@ -44,7 +44,7 @@ export { LEGACY_SCROLL_THROTTLE_MS }
 
 // @public @deprecated
 export class LegacyTooltipComponent extends _TooltipComponentBase {
-    constructor(changeDetectorRef: ChangeDetectorRef, _breakpointObserver: BreakpointObserver, animationMode?: string);
+    constructor(changeDetectorRef: ChangeDetectorRef, breakpointObserver: BreakpointObserver, animationMode?: string);
     // (undocumented)
     _hideAnimation: string;
     _isHandset: Observable<BreakpointState>;

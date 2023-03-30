@@ -64,7 +64,7 @@ export class MatLegacyError {
     // (undocumented)
     id: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyError, "mat-error", never, { "id": "id"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyError, "mat-error", never, { "id": { "alias": "id"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyError, [{ attribute: "aria-live"; }, null]>;
 }
@@ -141,7 +141,7 @@ export class MatLegacyFormField extends _MatFormFieldBase implements AfterConten
     updateOutlineGap(): void;
     protected _validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"], ["[matPrefix]", "*", "mat-placeholder", "mat-label", "[matSuffix]", "mat-error", "mat-hint:not([align='end'])", "mat-hint[align='end']"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyFormField, "mat-form-field", ["matFormField"], { "color": { "alias": "color"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"], ["[matPrefix]", "*", "mat-placeholder", "mat-label", "[matSuffix]", "mat-error", "mat-hint:not([align='end'])", "mat-hint[align='end']"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyFormField, [null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -176,7 +176,7 @@ export class MatLegacyHint {
     align: 'start' | 'end';
     id: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyHint, "mat-hint", never, { "align": "align"; "id": "id"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyHint, "mat-hint", never, { "align": { "alias": "align"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyHint, never>;
 }
