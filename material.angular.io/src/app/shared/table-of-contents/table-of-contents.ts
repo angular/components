@@ -152,6 +152,10 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
     const scrollOffset = this.getScrollOffset();
     let hasChanged = false;
 
+    if (scrollOffset == null) {
+      return;
+    }
+
     for (let i = 0; i < this._links.length; i++) {
       // A link is considered active if the page is scrolled past the
       // anchor without also being scrolled passed the next link.
