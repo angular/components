@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {SECTIONS} from '../../shared/documentation-items/documentation-items';
 
 /**
@@ -7,7 +7,7 @@ import {SECTIONS} from '../../shared/documentation-items/documentation-items';
  * items.
  */
 @Injectable({providedIn: 'root'})
-export class CanActivateComponentSidenav implements CanActivate {
+export class CanActivateComponentSidenav  {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot) {
