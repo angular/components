@@ -1,29 +1,36 @@
-@use 'sass:map';
 @use '@material/icon-button/icon-button' as mdc-icon-button;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+
+@use '../core/tokens/m2/mdc/icon-button' as m2-mdc-icon-button;
 
 @use './button-base';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private';
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-icon-button.without-ripple($query: mdc-helpers.$mdc-base-styles-query);
+// The slots for tokens that will be configured in the theme can be emitted with no fallback.
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $token-slots: m2-mdc-icon-button.get-token-slots();
+
+  // Add the MDC component static styles.
+  @include mdc-icon-button.static-styles();
+
+  .mat-mdc-icon-button {
+    // Add the official slots for the MDC component.
+    @include mdc-icon-button-theme.theme-styles($token-slots);
+
+    // Add default values for tokens that aren't outputted by the theming API.
+    @include mdc-icon-button-theme.theme(m2-mdc-icon-button.get-unthemable-tokens());
+  }
 }
 
 .mat-mdc-icon-button {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    $theme-overrides: button-base.mat-private-button-remove-ripple((
-      icon-color: inherit,
-      // We don't change the color on focus/hover so exclude
-      // these styles both to reduce bundle size and specificity.
-      focus-icon-color: null,
-      hover-icon-color: null,
-      pressed-icon-color: null,
-    ));
+  // Not all applications import the theming which would apply a default padding.
+  // TODO: Determine how to enforce theming exists, otherwise padding will be unset.
+  padding: 12px;
 
-    @include mdc-icon-button-theme.theme-styles(
-      map.merge(mdc-icon-button-theme.$light-theme, $theme-overrides));
-  }
+  // Icon size used to be placed on the host element. Now, in `theme-styles` it is placed on
+  // the unused `.mdc-button__icon` class. Explicitly set the font-size here.
+  font-size: var(--mdc-icon-button-icon-size);
 
   // Border radius is inherited by ripple to know its shape. Set to 50% so the ripple is round.
   border-radius: 50%;
