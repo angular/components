@@ -29,7 +29,7 @@ import {Subject} from 'rxjs';
 })
 export class FormFieldCustomControlExample {
   form: FormGroup = new FormGroup({
-    tel: new FormControl(new MyTel('', '', '')),
+    tel: new FormControl(null),
   });
 }
 
