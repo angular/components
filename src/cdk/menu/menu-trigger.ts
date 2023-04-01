@@ -177,6 +177,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     // already do the same on `keydown` events for enter and space.
     if (this._inputModalityDetector.mostRecentModality !== 'keyboard') {
       this.toggle();
+      this.childMenu?.focusFirstItem('mouse');
     }
   }
 
