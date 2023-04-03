@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/checkbox/checkbox' as mdc-checkbox;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/radio/radio' as mdc-radio;
@@ -6,7 +5,7 @@
 
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
-@use '../radio/radio-private';
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use './list-option-trailing-avatar-compat';
 @use './list-item-hcm-indicator';
 
@@ -29,16 +28,6 @@
     }
   }
 
-  $without-ripple-config: (
-      // Since this checkbox/radio isn't interactive, we can exclude the focus/hover/press styles.
-      selected-focus-icon-color: null,
-      selected-hover-icon-color: null,
-      selected-pressed-icon-color: null,
-      unselected-focus-icon-color: null,
-      unselected-hover-icon-color: null,
-      unselected-pressed-icon-color: null,
-  );
-
   // We can't use the MDC checkbox here directly, because this checkbox is purely
   // decorative and including the MDC one will bring in unnecessary JS.
   .mdc-checkbox {
@@ -50,13 +39,10 @@
   // We can't use the MDC radio here directly, because this radio is purely
   // decorative and including the MDC one will bring in unnecessary JS.
   .mdc-radio {
-    $config: map.merge(radio-private.$private-radio-theme-config, $without-ripple-config);
-
     // MDC theme styles also include structural styles so we have to include the theme at least
     // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-radio-theme.theme-styles($config);
+    @include mdc-radio-theme.theme-styles(tokens-mdc-radio.get-token-slots());
   }
-
 
   // The internal checkbox/radio is purely decorative, but because it's an `input`, the user can
   // still focus it by tabbing or clicking. Furthermore, `mat-list-option` has the `option` role
