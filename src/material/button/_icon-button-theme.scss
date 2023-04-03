@@ -8,7 +8,7 @@
 @use './button-theme-private';
 @use '../core/theming/theming';
 
-$icon-size: 24px;
+$_icon-size: 24px;
 
 @mixin _ripple-color($color) {
   --mat-mdc-button-persistent-ripple-color: #{$color};
@@ -100,7 +100,7 @@ $icon-size: 24px;
     // fails validation because the variable is "undefined" in the sass stack.
     width: var(--mdc-icon-button-state-layer-size);
     height: var(--mdc-icon-button-state-layer-size);
-    padding: ($calculated-size - $icon-size) / 2;
+    padding: ($calculated-size - $_icon-size) / 2;
 
     @include button-theme-private.touch-target-density($density-scale);
   }
