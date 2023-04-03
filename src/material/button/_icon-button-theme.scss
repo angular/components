@@ -6,9 +6,9 @@
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 
 @use './button-theme-private';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
-@use '../core/typography/typography';
+
+$icon-size: 24px;
 
 @mixin _ripple-color($color) {
   --mat-mdc-button-persistent-ripple-color: #{$color};
@@ -22,7 +22,6 @@
 
   @return if($is-dark, 'light', 'dark');
 }
-
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -66,34 +65,44 @@
 }
 
 @mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-    theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-icon-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-  }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
+  // Manually apply the expected density theming, and include the padding
+  // as it was applied before
+  $calculated-size: mdc-density-functions.prop-value(
+    $density-config: (
+      size: (
+        default: 48px,
+        maximum: 48px,
+        minimum: 28px,
+      ),
+    ),
+    $density-scale: $density-scale,
+    $property-name: size,
+  );
 
   .mat-mdc-icon-button {
-    // Manually apply the expected density theming, and include the padding
-    // as it was applied before
-    $calculated-size: mdc-density-functions.prop-value(
-      $density-config: (
-        size: (
-          default: 48px,
-          maximum: 48px,
-          minimum: 28px,
-        ),
-      ),
-      $density-scale: $density-scale,
-      $property-name: size,
-    );
-
     @include mdc-icon-button-theme.theme((
       state-layer-size: $calculated-size,
     ));
+  }
+
+  // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    // Match the styles that used to be present. This is necessary for backwards
+    // compat to match the previous implementations selector count (two classes).
+    // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
+    // Currently fails validation because the variable is "undefined"
+    // in the sass stack.
+    // TODO: Switch icon-size to "var(--mdc-icon-button-icon-size)". Currently
+    // fails validation because the variable is "undefined" in the sass stack.
+    width: var(--mdc-icon-button-state-layer-size);
+    height: var(--mdc-icon-button-state-layer-size);
+    padding: ($calculated-size - $icon-size) / 2;
+
+    @include button-theme-private.touch-target-density($density-scale);
   }
 }
 
