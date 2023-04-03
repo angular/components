@@ -447,6 +447,7 @@ describe('Menu', () => {
       it('should close the edit menu when hovering directly up from the edit menu trigger to the print item without waiting', fakeAsync(() => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
+        tick();
 
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const printPosition = nativeFileButtons![0].getBoundingClientRect();
@@ -490,6 +491,8 @@ describe('Menu', () => {
       it('should not close the edit submenu when hovering into its items in time', fakeAsync(() => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
+        tick();
+
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const undoPosition = nativeEditButtons![0].getBoundingClientRect();
 
