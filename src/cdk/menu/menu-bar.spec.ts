@@ -1037,11 +1037,11 @@ describe('MenuBar', () => {
 
       dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
       detectChanges();
-      expect(document.activeElement).toEqual(fileMenuNativeItems[0]);
+      expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
 
       dispatchKeyboardEvent(nativeMenus[0], 'keydown', DOWN_ARROW);
       detectChanges();
-      expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
+      expect(document.activeElement).toEqual(fileMenuNativeItems[2]);
     });
 
     it(

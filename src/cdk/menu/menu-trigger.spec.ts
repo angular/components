@@ -1,5 +1,5 @@
 import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {TAB, SPACE, ENTER} from '@angular/cdk/keycodes';
@@ -539,6 +539,26 @@ describe('MenuTrigger', () => {
       expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
     });
   });
+
+  it('should focus the first item when opening on click', fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [CdkMenuModule],
+      declarations: [TriggersWithSameMenuDifferentMenuBars],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TriggersWithSameMenuDifferentMenuBars);
+    fixture.detectChanges();
+
+    fixture.componentInstance.nativeTriggers.first.nativeElement.click();
+    fixture.detectChanges();
+    tick();
+
+    const firstItem =
+      fixture.componentInstance.nativeMenus.first.nativeElement.querySelector('.cdk-menu-item');
+
+    expect(firstItem).toBeTruthy();
+    expect(document.activeElement).toBe(firstItem);
+  }));
 });
 
 @Component({
@@ -599,7 +619,10 @@ class MenuBarWithNestedSubMenus {
 })
 class TriggersWithSameMenuDifferentMenuBars {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenuTrigger, {read: ElementRef}) nativeTriggers: QueryList<ElementRef>;
+
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
 }
 
 @Component({
