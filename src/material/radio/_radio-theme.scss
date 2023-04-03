@@ -3,31 +3,44 @@
 @use '@material/form-field' as mdc-form-field;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use './radio-private';
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
+@use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
 @use 'sass:map';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
+  $primary: map.get($config, primary);
+  $accent: map.get($config, accent);
+  $warn: map.get($config, warn);
 
   @include mdc-helpers.using-mdc-theme($config) {
     .mat-mdc-radio-button {
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
+    }
+  }
 
-      &.mat-primary {
-        @include radio-private.private-radio-color($config, $primary);
-      }
+  .mat-mdc-radio-button {
+    &.mat-primary {
+      $primary-config: map.merge($config, (accent: $primary));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($primary-config));
+      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-color-tokens($primary-config));
+    }
 
-      &.mat-accent {
-        @include radio-private.private-radio-color($config, $accent);
-      }
+    &.mat-accent {
+      $accent-config: map.merge($config, (accent: $accent));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($accent-config));
+      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-color-tokens($accent-config));
+    }
 
-      &.mat-warn {
-        @include radio-private.private-radio-color($config, $warn);
-      }
+    &.mat-warn {
+      $warn-config: map.merge($config, (accent: $warn));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($warn-config));
+      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-color-tokens($warn-config));
     }
   }
 }
@@ -35,16 +48,19 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-radio.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-    @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+
+  .mat-mdc-radio-button {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($config));
+    @include mdc-helpers.using-mdc-typography($config) {
+      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+    }
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
   .mat-mdc-radio-button .mdc-radio {
-    @include mdc-radio-theme.density($density-scale, $query: mdc-helpers.$mdc-base-styles-query);
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($density-scale));
   }
 
   @include mdc-helpers.if-touch-targets-unsupported($density-scale) {

@@ -1,15 +1,15 @@
 @use 'sass:map';
 @use '@material/list/evolution-mixins';
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
+@use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 
 @use '../core/theming/theming';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
-@use '../core/mdc-helpers/mdc-helpers';
-@use '../radio/radio-private';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -17,6 +17,9 @@
   $accent: map.get($config, accent);
   $warn: map.get($config, warn);
   $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($config);
+  $inner-control-primary: map.merge($config, (accent: $primary));
+  $inner-control-accent: map.merge($config, (accent: $accent));
+  $inner-control-warn: map.merge($config, (accent: $warn));
 
 
   // Add values for MDC list tokens.
@@ -24,39 +27,33 @@
     @include mdc-list-theme.theme($mdc-list-color-tokens);
   }
 
-  // TODO(mmalerba): This should use MDC radio's token API instead.
-  @include mdc-helpers.using-mdc-theme($config) {
+  .mdc-list-item__start,
+  .mdc-list-item__end {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($inner-control-primary));
+  }
+
+  .mat-accent {
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include radio-private.private-radio-color($config, theming.get-color-from-palette($primary));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($inner-control-accent));
     }
+  }
 
-    .mat-accent {
-      .mdc-list-item__start,
-      .mdc-list-item__end {
-        @include radio-private.private-radio-color(
-                $config, theming.get-color-from-palette($accent));
-      }
-    }
-
-    .mat-warn {
-      .mdc-list-item__start,
-      .mdc-list-item__end {
-        @include radio-private.private-radio-color($config, theming.get-color-from-palette($warn));
-      }
+  .mat-warn {
+    .mdc-list-item__start,
+    .mdc-list-item__end {
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($inner-control-warn));
     }
   }
 
   .mat-mdc-list-option {
-    $primary-config: map.merge($config, (accent: $primary));
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($primary-config));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($inner-control-primary));
   }
   .mat-mdc-list-option.mat-accent {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($inner-control-accent));
   }
   .mat-mdc-list-option.mat-warn {
-    $warn-config: map.merge($config, (accent: $warn));
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($warn-config));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($inner-control-warn));
   }
 
   // There is no token for activated color on nav list.

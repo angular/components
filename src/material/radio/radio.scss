@@ -4,101 +4,119 @@
 @use '@material/form-field' as mdc-form-field;
 @use '@material/touch-target' as mdc-touch-target;
 @use '@material/ripple' as mdc-ripple;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
+@use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
+@use '../core/tokens/token-utils';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
-@use './radio-private';
 
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   @include mdc-radio.static-styles($query: mdc-helpers.$mdc-base-styles-query);
   @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);
-}
 
-.mat-mdc-radio-button {
-  -webkit-tap-highlight-color: transparent;
+  .mat-mdc-radio-button {
+    @include token-utils.create-token-values(
+      tokens-mat-radio.$prefix, tokens-mat-radio.get-unthemable-tokens());
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-unthemable-tokens());
+    -webkit-tap-highlight-color: transparent;
 
-  .mdc-radio {
-    // MDC theme styles also include structural styles so we have to include the theme at least
-    // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-helpers.disable-mdc-fallback-declarations {
-      @include mdc-radio-theme.theme-styles(radio-private.$private-radio-theme-config);
+    .mdc-radio {
+      @include mdc-radio-theme.theme-styles(tokens-mdc-radio.get-token-slots());
 
-      // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
-      @include mdc-radio-theme.focus-indicator-color(
-        var(--mat-mdc-radio-ripple-color, transparent));
-    }
+      @include token-utils.use-tokens(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-token-slots()
+      ) {
+        // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
+        .mdc-radio__background::before {
+          @include token-utils.create-token-slot(background-color, ripple-color);
+        }
+      }
 
-    // MDC's hover indication comes from their ripple which we don't use.
-    &:hover .mdc-radio__native-control:not([disabled]):not(:focus) {
-      & ~ .mdc-radio__background::before {
-        opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
-        transform: scale(1);
+      // MDC's hover indication comes from their ripple which we don't use.
+      &:hover .mdc-radio__native-control:not([disabled]):not(:focus) {
+        & ~ .mdc-radio__background::before {
+          opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
+          transform: scale(1);
+        }
       }
     }
-  }
 
-  &.mat-mdc-radio-checked {
-    // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
-    @include mdc-radio-theme.focus-indicator-color(
-      var(--mat-mdc-radio-checked-ripple-color, transparent));
+    &.mat-mdc-radio-checked {
+      @include token-utils.use-tokens(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-token-slots()
+      ) {
+        // TODO(crisbeto): this should be included by MDC's `theme-styles`, but it isn't currently.
+        .mdc-radio__background::before {
+          @include token-utils.create-token-slot(background-color, checked-ripple-color);
+        }
 
-    .mat-ripple-element {
-      background-color: var(--mat-mdc-radio-checked-ripple-color, transparent);
-    }
-  }
-
-  // This is necessary because we do not depend on MDC's ripple, but have our own that should be
-  // positioned correctly. This can be removed once we start using MDC's ripple implementation.
-  .mat-radio-ripple {
-    @include layout-common.fill;
-    pointer-events: none;
-    border-radius: 50%;
-
-    .mat-ripple-element {
-      opacity: mdc-radio-theme.$ripple-opacity;
+        .mat-ripple-element {
+          @include token-utils.create-token-slot(background-color, checked-ripple-color);
+        }
+      }
     }
 
-    &::before {
+    // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
+    .mdc-radio--disabled + label {
+      @include token-utils.use-tokens(tokens-mat-radio.$prefix,tokens-mat-radio.get-token-slots()) {
+        @include token-utils.create-token-slot(color, disabled-label-color);
+      }
+    }
+
+    // This is necessary because we do not depend on MDC's ripple, but have our own that should be
+    // positioned correctly. This can be removed once we start using MDC's ripple implementation.
+    .mat-radio-ripple {
+      @include layout-common.fill;
+      pointer-events: none;
       border-radius: 50%;
+
+      .mat-ripple-element {
+        opacity: mdc-radio-theme.$ripple-opacity;
+      }
+
+      &::before {
+        border-radius: 50%;
+      }
+    }
+
+    &._mat-animation-noopable {
+      .mdc-radio__background::before,
+      .mdc-radio__outer-circle,
+      .mdc-radio__inner-circle {
+        // Needs to be `!important`, because MDC's selectors are really specific.
+        transition: none !important;
+      }
+    }
+
+    // We don't inherit the border focus style from MDC since we don't use their ripple.
+    // Instead we need to replicate it here.
+    .mdc-radio .mdc-radio__native-control:focus:enabled:not(:checked) {
+      & ~ .mdc-radio__background .mdc-radio__outer-circle {
+        border-color: var(--mdc-radio-unselected-focus-icon-color, black);
+      }
+    }
+
+    // For radios render the focus indicator when we know
+    // the hidden input is focused (slightly different for each control).
+    &.cdk-focused .mat-mdc-focus-indicator::before {
+      content: '';
     }
   }
 
-  &._mat-animation-noopable {
-    .mdc-radio__background::before,
-    .mdc-radio__outer-circle,
-    .mdc-radio__inner-circle {
-      // Needs to be `!important`, because MDC's selectors are really specific.
-      transition: none !important;
-    }
-  }
-
-  // We don't inherit the border focus style from MDC since we don't use their ripple.
-  // Instead we need to replicate it here.
-  .mdc-radio .mdc-radio__native-control:focus:enabled:not(:checked) {
-    & ~ .mdc-radio__background .mdc-radio__outer-circle {
-      border-color: var(--mdc-radio-unselected-focus-icon-color, black);
-    }
-  }
-
-  // For radios render the focus indicator when we know
-  // the hidden input is focused (slightly different for each control).
-  &.cdk-focused .mat-mdc-focus-indicator::before {
-    content: '';
-  }
-}
-
-// Element used to provide a larger tap target for users on touch devices.
-.mat-mdc-radio-touch-target {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
+  // Element used to provide a larger tap target for users on touch devices.
+  .mat-mdc-radio-touch-target {
     @include mdc-touch-target.touch-target(
       $set-width: true,
       $query: mdc-helpers.$mdc-base-styles-query);
-  }
 
-  [dir='rtl'] & {
-    left: 0;
-    right: 50%;
-    transform: translate(50%, -50%);
+    [dir='rtl'] & {
+      left: 0;
+      right: 50%;
+      transform: translate(50%, -50%);
+    }
   }
 }
-
