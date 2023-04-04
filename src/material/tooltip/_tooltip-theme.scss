@@ -1,41 +1,37 @@
-@use 'sass:map';
-@use '@material/tooltip/plain-tooltip-theme';
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/typography/typography' as mdc-typography;
+@use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
 @use '../core/theming/theming';
-@use '../core/theming/palette';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/typography/typography';
+@use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-tooltip {
-      @include plain-tooltip-theme.theme((
-        container-color: map.get(palette.$light-theme-background-palette, tooltip),
-        supporting-text-color: mdc-theme-color.prop-value(text-primary-on-dark)
-      ));
-    }
+  $mdc-tooltip-color-tokens: m2-mdc-plain-tooltip.get-color-tokens($config);
+
+  // Add values for MDC tooltip tokens.
+  .mat-mdc-tooltip {
+    @include mdc-plain-tooltip-theme.theme($mdc-tooltip-color-tokens);
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
           theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    .mat-mdc-tooltip {
-      @include plain-tooltip-theme.theme((
-        supporting-text-font: mdc-typography.get-font(caption),
-        supporting-text-size: mdc-typography.get-size(caption),
-        supporting-text-weight: mdc-typography.get-weight(caption),
-        supporting-text-tracking: mdc-typography.get-tracking(caption),
-      ));
-    }
+  $mdc-tooltip-typography-tokens: m2-mdc-plain-tooltip.get-typography-tokens($config);
+
+  // Add values for MDC tooltip tokens.
+  .mat-mdc-tooltip {
+    @include mdc-plain-tooltip-theme.theme($mdc-tooltip-typography-tokens);
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
+  $mdc-tooltip-density-tokens: m2-mdc-plain-tooltip.get-density-tokens($density-scale);
+
+  // Add values for MDC tooltip tokens.
+  .mat-mdc-tooltip {
+    @include mdc-plain-tooltip-theme.theme($mdc-tooltip-density-tokens);
+  }
 }
 
 @mixin theme($theme-or-color-config) {
