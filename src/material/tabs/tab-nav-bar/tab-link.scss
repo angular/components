@@ -11,9 +11,6 @@
     // due to other directives potentially registering their events earlier. This shouldn't cause
     // the user to click through, because we always have a `.mat-tab-links` behind the link.
     pointer-events: none;
-
-    // MDC doesn't support disabled tabs so we need to improvise.
-    opacity: 0.4;
   }
 
   // Note that we only want to target direct descendant tabs.

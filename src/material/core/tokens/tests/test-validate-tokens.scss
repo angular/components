@@ -9,6 +9,8 @@
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
+@use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
+@use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '@material/theme/validate' as mdc-validate;
 
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
@@ -19,6 +21,8 @@
 @use '../m2/mdc/list' as tokens-mdc-list;
 @use '../m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 @use '../m2/mdc/radio' as tokens-mdc-radio;
+@use '../m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../m2/mdc/tab' as tokens-mdc-tab;
 
 @mixin validate-slots($component, $slots, $reference) {
   @debug 'Validating #{$component}...';
@@ -71,4 +75,14 @@
   $component: 'm2.mdc.radio',
   $slots: tokens-mdc-radio.get-token-slots(),
   $reference: mdc-radio-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.tab-indicator',
+  $slots: tokens-mdc-tab-indicator.get-token-slots(),
+  $reference: mdc-tab-indicator-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.tab',
+  $slots: tokens-mdc-tab.get-token-slots(),
+  $reference: mdc-tab-theme.$secondary-light-theme
 );
