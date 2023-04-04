@@ -8,6 +8,7 @@
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
+@use '@material/tooltip/plain-tooltip-theme' as mdc-plaintip-tooltip-theme;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/theme/validate' as mdc-validate;
 
@@ -18,6 +19,7 @@
 @use '../m2/mdc/linear-progress' as tokens-mdc-linear-progress;
 @use '../m2/mdc/list' as tokens-mdc-list;
 @use '../m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use '../m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use '../m2/mdc/radio' as tokens-mdc-radio;
 
 @mixin validate-slots($component, $slots, $reference) {
@@ -66,6 +68,11 @@
   $component: 'm2.mdc.linear-progress',
   $slots: tokens-mdc-linear-progress.get-token-slots(),
   $reference: mdc-linear-progress-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.plain-tooltip',
+  $slots: tokens-mdc-plain-tooltip.get-token-slots(),
+  $reference: mdc-plaintip-tooltip-theme.$light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.radio',
