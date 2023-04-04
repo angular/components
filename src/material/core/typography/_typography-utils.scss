@@ -86,12 +86,14 @@
 /// @param {Map} $config A typography config.
 /// @param {Map} $level A typography level.
 @mixin typography-level($config, $level) {
-  $font-size: font-size($config, $level);
-  $font-weight: font-weight($config, $level);
-  $line-height: line-height($config, $level);
-  $font-family: font-family($config, $level);
+  // we deliberately do not use the font shorthand here because it overrides
+  // certain font properties that can't be configured in the current typography
+  // config, e.g. the font-variant-caps or font-feature-settings property
+  font-size: font-size($config, $level);
+  font-weight: font-weight($config, $level);
+  line-height: line-height($config, $level);
+  font-family: font-family($config, $level);
 
-  @include font-shorthand($font-size, $font-weight, $line-height, $font-family);
   letter-spacing: letter-spacing($config, $level);
 }
 
