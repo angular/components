@@ -67,7 +67,7 @@ index d800ffe..9ca5dc9 100755
          ),
      ),
 diff --git a/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs b/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
-index 354671a..0318b0f 100755
+index 354671a..8193af4 100755
 --- a/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
 +++ b/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
 @@ -5,6 +5,7 @@
@@ -87,21 +87,29 @@ index 354671a..0318b0f 100755
  const NGC_GEN_FILES = /^(.*?)\.(ngfactory|ngsummary|ngstyle|shim\.ngstyle)(.*)$/;
  // FIXME: we should be able to add the assets to the tsconfig so FileLoader
  // knows about them
-@@ -21,6 +22,12 @@ const NGC_ASSETS = /\.(css|html|ngsummary\.json)$/;
+@@ -21,6 +22,7 @@ const NGC_ASSETS = /\.(css|html|ngsummary\.json)$/;
  const BAZEL_BIN = /\b(blaze|bazel)-out\b.*?\bbin\b/;
  // Note: We compile the content of node_modules with plain ngc command line.
  const ALL_DEPS_COMPILED_WITH_BAZEL = false;
 +
-+main(process.argv.slice(2)).then(exitCode => process.exitCode = exitCode).catch(e => {
-+    console.error(e);
-+    process.exitCode = 1;
-+});
-+
  export async function main(args) {
      if (tscw.runAsWorker(args)) {
          await tscw.runWorkerLoop(runOneBuild);
+@@ -368,6 +370,12 @@ function gatherDiagnosticsForInputsOnly(options, bazelOpts, ngProgram) {
+     }
+     return diagnostics;
+ }
++
++main(process.argv.slice(2)).then(exitCode => process.exitCode = exitCode).catch(e => {
++  console.error(e);
++  process.exitCode = 1;
++});
++
+ /**
+  * @deprecated
+  * Kept here just for compatibility with 1P tools. To be removed soon after 1P update.
 diff --git a/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs b/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
-index 3649c11..d6ee150 100755
+index 3649c11..0f4af3c 100755
 --- a/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
 +++ b/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
 @@ -5,7 +5,7 @@
