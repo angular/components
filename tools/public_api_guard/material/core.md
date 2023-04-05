@@ -376,6 +376,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     set disabled(value: boolean);
     fadeOutAll(): void;
     fadeOutAllNonPersistent(): void;
+    _isInitialized: boolean;
     launch(config: RippleConfig): RippleRef;
     launch(x: number, y: number, config?: RippleConfig): RippleRef;
     // (undocumented)

@@ -4,6 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton, MatFabDefaultOptions, MAT_FAB_DEFAULT_OPTIONS} from './index';
 import {MatRipple, ThemePalette} from '@angular/material/core';
 import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
+import {MAT_BUTTON_RIPPLE_UNINITIALIZED} from './button-lazy-loader';
 
 describe('MDC-based MatButton', () => {
   beforeEach(waitForAsync(() => {
@@ -267,10 +268,8 @@ describe('MDC-based MatButton', () => {
     let fixture: ComponentFixture<TestApp>;
     let testComponent: TestApp;
     let buttonDebugElement: DebugElement;
-    let buttonRippleDebugElement: DebugElement;
     let buttonRippleInstance: MatRipple;
     let anchorDebugElement: DebugElement;
-    let anchorRippleDebugElement: DebugElement;
     let anchorRippleInstance: MatRipple;
 
     beforeEach(() => {
@@ -280,12 +279,10 @@ describe('MDC-based MatButton', () => {
       testComponent = fixture.componentInstance;
 
       buttonDebugElement = fixture.debugElement.query(By.css('button[mat-button]'))!;
-      buttonRippleDebugElement = buttonDebugElement.query(By.directive(MatRipple))!;
-      buttonRippleInstance = buttonRippleDebugElement.injector.get<MatRipple>(MatRipple);
+      buttonRippleInstance = buttonDebugElement.componentInstance.ripple;
 
       anchorDebugElement = fixture.debugElement.query(By.css('a[mat-button]'))!;
-      anchorRippleDebugElement = anchorDebugElement.query(By.directive(MatRipple))!;
-      anchorRippleInstance = anchorRippleDebugElement.injector.get<MatRipple>(MatRipple);
+      anchorRippleInstance = anchorDebugElement.componentInstance.ripple;
     });
 
     it('should disable the ripple if matRippleDisabled input is set', () => {
@@ -315,6 +312,43 @@ describe('MDC-based MatButton', () => {
         'Expected a disabled a[mat-button] not to have an enabled ripple',
       );
     });
+
+    it('should render the ripple once it is referenced', () => {
+      const fab = fixture.debugElement.query(By.css('button[mat-fab]'))!;
+      let ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
+      expect(ripple).withContext('Expect ripple to be absent before user interaction').toBeNull();
+      expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED))
+        .withContext('Expect mat-button to have the "uninitialized" attr before user interaction')
+        .toBeTrue();
+
+      // Referencing the ripple should instantiate the ripple.
+      expect(fab.componentInstance.ripple).toBeDefined();
+
+      ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
+      expect(ripple)
+        .withContext('Expect ripple to be present after user interaction')
+        .not.toBeNull();
+      expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED))
+        .withContext(
+          'Expect mat-button NOT to have the "uninitialized" attr after user interaction',
+        )
+        .toBeFalse();
+    });
+
+    // Ensure each of these events triggers the initialization of the button ripple.
+    for (const event of ['click', 'touchstart', 'mouseenter', 'focus']) {
+      it(`should render the ripple once a button has received a "${event}" event`, () => {
+        const fab = fixture.debugElement.query(By.css('button[mat-fab]'))!;
+        let ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
+        expect(ripple).toBeNull();
+        expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED)).toBeTrue();
+
+        dispatchEvent(fab.nativeElement, createMouseEvent(event));
+        ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
+        expect(ripple).not.toBeNull();
+        expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED)).toBeFalse();
+      });
+    }
   });
 
   it('should have a focus indicator', () => {
