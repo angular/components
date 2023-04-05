@@ -103,6 +103,8 @@ export class MatIconAnchor extends MatAnchorBase {
 // @public
 export class MatIconButton extends MatButtonBase {
     constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string);
+    // @deprecated
+    get ripple(): MatRipple;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatIconButton, "button[mat-icon-button]", ["matButton"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
