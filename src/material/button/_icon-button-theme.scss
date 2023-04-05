@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:math';
 @use '@material/density/functions' as mdc-density-functions;
 @use '@material/icon-button/mixins' as mdc-icon-button;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
@@ -100,7 +101,7 @@ $_icon-size: 24px;
     // fails validation because the variable is "undefined" in the sass stack.
     width: var(--mdc-icon-button-state-layer-size);
     height: var(--mdc-icon-button-state-layer-size);
-    padding: ($calculated-size - $_icon-size) / 2;
+    padding: math.div($calculated-size - $_icon-size, 2);
 
     @include button-theme-private.touch-target-density($density-scale);
   }
