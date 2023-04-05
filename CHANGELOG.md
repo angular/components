@@ -1,3 +1,18 @@
+<a name="15.2.6"></a>
+# 15.2.6 "chiffon-cardigan" (2023-04-05)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cc5f7d0890](https://github.com/angular/components/commit/cc5f7d089072dc8839f467d0bf9648f8d7ab34ad) | fix | **menu:** move focus when opening via click ([#26874](https://github.com/angular/components/pull/26874)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fd58310a1f](https://github.com/angular/components/commit/fd58310a1fb0afd1fbda65663479b855dff2b560) | fix | **core:** don't use font shorthand property in typography-level ([#26865](https://github.com/angular/components/pull/26865)) |
+## Special Thanks
+Jonathan Meier and Kristiyan Kostadinov
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.5"></a>
 # 15.2.5 "metal-plumber" (2023-03-29)
 ### cdk
