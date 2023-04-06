@@ -13,13 +13,8 @@
   }
 }
 
-// MDC doesn't support disabled tabs so we need to improvise.
-.mat-mdc-tab-disabled {
-  opacity: 0.4;
-}
-
 .mat-mdc-tab-group {
-  @include tabs-common.paginated-tab-header-with-background('.mat-mdc-tab-header');
+  @include tabs-common.paginated-tab-header-with-background('.mat-mdc-tab-header', '.mat-mdc-tab');
   display: flex;
   flex-direction: column;
 
