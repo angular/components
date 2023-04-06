@@ -193,10 +193,11 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     if (!this.isValid(date)) {
       throw Error('LuxonDateAdapter: Cannot format invalid date.');
     }
-    return date
-      .setLocale(this.locale)
-      .setZone(this._useUTC ? 'utc' : undefined)
-      .toFormat(displayFormat);
+    if (this._useUTC) {
+      return date.setLocale(this.locale).setZone('utc').toFormat(displayFormat);
+    } else {
+      return date.setLocale(this.locale).toFormat(displayFormat);
+    }
   }
 
   addCalendarYears(date: LuxonDateTime, years: number): LuxonDateTime {

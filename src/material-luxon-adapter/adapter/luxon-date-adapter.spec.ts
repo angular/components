@@ -9,7 +9,7 @@
 import {LOCALE_ID} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
-import {DateTime} from 'luxon';
+import {DateTime, FixedOffsetZone, Settings} from 'luxon';
 import {LuxonDateModule} from './index';
 import {MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
 
@@ -349,6 +349,16 @@ describe('LuxonDateAdapter', () => {
 
     date = adapter.format(DateTime.local(2017, JAN, 2), 'DD');
     expect(date).toEqual('2. jan. 2017');
+  });
+
+  it('should format with a different timezone', () => {
+    Settings.defaultZone = FixedOffsetZone.parseSpecifier('UTC-12');
+
+    let date = adapter.format(DateTime.local(2017, JAN, 2, {zone: 'UTC-12'}), 'DD');
+    expect(date).toEqual('Jan 2, 2017');
+
+    date = adapter.format(DateTime.local(2017, JAN, 2, {zone: 'UTC+12'}), 'DD');
+    expect(date).toEqual('Jan 2, 2017');
   });
 
   it('should throw when attempting to format invalid date', () => {
