@@ -33,7 +33,6 @@ import {MatLegacyOptgroup} from './optgroup';
   exportAs: 'matOption',
   host: {
     'role': 'option',
-    '[attr.tabindex]': '_getTabIndex()',
     '[class.mat-selected]': 'selected',
     '[class.mat-option-multiple]': 'multiple',
     '[class.mat-active]': 'active',

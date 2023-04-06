@@ -790,17 +790,27 @@ describe('MatSelect', () => {
               'mat-option',
             ) as NodeListOf<HTMLElement>;
 
-            options[3].focus();
+            select.focus();
+            multiFixture.detectChanges();
+            multiFixture.componentInstance.select._keyManager.setActiveItem(3);
+            multiFixture.detectChanges();
+
             expect(document.activeElement)
-              .withContext('Expected fourth option to be focused.')
-              .toBe(options[3]);
+              .withContext('Expected select to have DOM focus.')
+              .toBe(select);
+            expect(select.getAttribute('aria-activedescendant'))
+              .withContext('Expected fourth option to be activated.')
+              .toBe(options[3].id);
 
             multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
             multiFixture.detectChanges();
 
             expect(document.activeElement)
-              .withContext('Expected fourth option to remain focused.')
-              .toBe(options[3]);
+              .withContext('Expected select to have DOM focus.')
+              .toBe(select);
+            expect(select.getAttribute('aria-activedescendant'))
+              .withContext('Expected fourth optino to remain activated.')
+              .toBe(options[3].id);
           }),
         );
 
@@ -1223,10 +1233,10 @@ describe('MatSelect', () => {
             .toBe(true);
         }));
 
-        it('should set the tabindex of each option according to disabled state', fakeAsync(() => {
-          expect(options[0].getAttribute('tabindex')).toEqual('0');
-          expect(options[1].getAttribute('tabindex')).toEqual('0');
-          expect(options[2].getAttribute('tabindex')).toEqual('-1');
+        it('should omit the tabindex attribute on each option', fakeAsync(() => {
+          expect(options[0].hasAttribute('tabindex')).toBeFalse();
+          expect(options[1].hasAttribute('tabindex')).toBeFalse();
+          expect(options[2].hasAttribute('tabindex')).toBeFalse();
         }));
 
         it('should set aria-disabled for disabled options', fakeAsync(() => {

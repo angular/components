@@ -281,7 +281,6 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     focus(_origin?: FocusOrigin, options?: FocusOptions): void;
     _getHostElement(): HTMLElement;
     getLabel(): string;
-    _getTabIndex(): string;
     // (undocumented)
     readonly group: _MatOptgroupBase;
     _handleKeydown(event: KeyboardEvent): void;
