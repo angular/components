@@ -1,108 +1,87 @@
 @use 'sass:map';
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/theme/theme' as mdc-theme;
-@use '@material/tab-indicator' as mdc-tab-indicator;
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/tab' as mdc-tab;
-@use '@material/tab/mixins' as mdc-tab-mixins;
-@use '@material/tab-bar' as mdc-tab-bar;
+@use '@material/tab/tab-theme' as mdc-tab-theme;
+@use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
+@use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
+@use '../core/tokens/m2/mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/token-utils';
 
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
-  $foreground: map.get($config, foreground);
 
-  @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-tab, .mat-mdc-tab-link {
-      @include mdc-tab-mixins.text-label-color(rgba(mdc-theme-color.$on-surface, 0.6));
+  .mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
+    @include _palette-styles($config, primary);
 
-      // MDC seems to include a background color on tabs which only stands out on dark themes.
-      // Disable for now for backwards compatibility. These styles are inside the theme in order
-      // to avoid CSS specificity issues.
-      background-color: transparent;
-
-      &.mat-mdc-tab-disabled {
-        .mdc-tab__ripple::before,
-        .mat-ripple-element {
-          background-color: theming.get-color-from-palette($foreground, disabled);
-        }
-      }
+    &.mat-accent {
+      @include _palette-styles($config, accent);
     }
 
-    @include _palette-styles($primary);
-
-    .mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
-      &.mat-accent {
-        @include _palette-styles($accent);
-      }
-
-      &.mat-warn {
-        @include _palette-styles($warn);
-      }
+    &.mat-warn {
+      @include _palette-styles($config, warn);
     }
 
-    .mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
-      &.mat-background-primary {
-        @include _background(primary, on-primary);
-      }
-
-      &.mat-background-accent {
-        @include _background(secondary, on-secondary);
-      }
-
-      &.mat-background-warn {
-        @include _background(error, on-error);
-      }
+    &.mat-background-primary {
+      @include _background-styles($config, primary);
     }
 
-    .mat-mdc-tab-header-pagination-chevron {
-      @include mdc-theme.prop(border-color, on-surface);
+    &.mat-background-accent {
+      @include _background-styles($config, accent);
+    }
+
+    &.mat-background-warn {
+      @include _background-styles($config, warn);
     }
   }
 }
 
-@mixin _background($background-color, $foreground-color) {
-  $background-value: mdc-theme-color.prop-value($background-color);
-  $foreground-value: mdc-theme-color.prop-value($foreground-color);
-  --mat-mdc-tab-header-with-background-background-color: #{$background-value};
-  --mat-mdc-tab-header-with-background-foreground-color: #{$foreground-value};
+@mixin _background-styles($initial-config, $palette) {
+  $config: map.merge($initial-config, (primary: map.get($initial-config, $palette)));
+  @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
+    tokens-mat-tab-header-with-background.get-color-tokens($config));
 }
 
-@mixin _palette-styles($color) {
-  .mat-mdc-tab, .mat-mdc-tab-link {
-    &:not(.mat-mdc-tab-disabled) {
-      @include mdc-tab-mixins.active-text-label-color($color);
-      @include mdc-tab-indicator-theme.theme-styles((active-indicator-color: $color));
-    }
-  }
-
-  .mdc-tab__ripple::before,
-  .mat-mdc-tab .mat-ripple-element,
-  .mat-mdc-tab-header-pagination .mat-ripple-element,
-  .mat-mdc-tab-link .mat-ripple-element {
-    @include mdc-theme.prop(background-color, $color);
-  }
+@mixin _palette-styles($initial-config, $palette) {
+  $config: map.merge($initial-config, (primary: map.get($initial-config, $palette)));
+  @include mdc-tab-theme.secondary-navigation-tab-theme(
+    tokens-mdc-tab.get-color-tokens($config));
+  @include mdc-tab-indicator-theme.theme(
+    tokens-mdc-tab-indicator.get-color-tokens($config));
+  @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
+   tokens-mat-tab-header.get-color-tokens($config));
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-tab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-    @include mdc-tab-indicator.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+
+  .mat-mdc-tab-header {
+    @include mdc-tab-theme.secondary-navigation-tab-theme(
+      tokens-mdc-tab.get-typography-tokens($config));
+    @include mdc-tab-indicator-theme.theme(
+      tokens-mdc-tab-indicator.get-typography-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-typography-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
+      tokens-mat-tab-header-with-background.get-typography-tokens($config));
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
   .mat-mdc-tab-header {
-    @include mdc-tab-bar.density($density-scale, $query: mdc-helpers.$mdc-base-styles-query);
+    @include mdc-tab-theme.secondary-navigation-tab-theme(
+      tokens-mdc-tab.get-density-tokens($density-scale));
+    @include mdc-tab-indicator-theme.theme(
+      tokens-mdc-tab-indicator.get-density-tokens($density-scale));
+    @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-density-tokens($density-scale));
+    @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
+      tokens-mat-tab-header-with-background.get-density-tokens($density-scale));
   }
 }
 
