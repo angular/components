@@ -27,29 +27,28 @@ describe('FullscreenOverlayContainer', () => {
               body: document.body,
               fullscreenElement: document.createElement('div'),
               fullscreenEnabled: true,
-              addEventListener: function (eventName: string, listener: EventListener) {
+              addEventListener: (eventName: string, listener: EventListener) => {
                 if (eventName === 'fullscreenchange') {
                   fullscreenListeners.add(listener);
                 } else {
                   document.addEventListener(eventName, listener);
                 }
               },
-              removeEventListener: function (eventName: string, listener: EventListener) {
+              removeEventListener: (eventName: string, listener: EventListener) => {
                 if (eventName === 'fullscreenchange') {
                   fullscreenListeners.delete(listener);
                 } else {
                   document.addEventListener(eventName, listener);
                 }
               },
-              querySelectorAll: function (...args: [string]) {
-                return document.querySelectorAll(...args);
-              },
-              createElement: function (...args: [string, (ElementCreationOptions | undefined)?]) {
-                return document.createElement(...args);
-              },
-              getElementsByClassName: function (...args: [string]) {
-                return document.getElementsByClassName(...args);
-              },
+              querySelectorAll: (...args: [string]) => document.querySelectorAll(...args),
+              createElement: (...args: [string, (ElementCreationOptions | undefined)?]) =>
+                document.createElement(...args),
+              getElementsByClassName: (...args: [string]) =>
+                document.getElementsByClassName(...args),
+              querySelector: (...args: [string]) => document.querySelector(...args),
+              createTextNode: (...args: [string]) => document.createTextNode(...args),
+              createComment: (...args: [string]) => document.createComment(...args),
             };
 
             return fakeDocument;

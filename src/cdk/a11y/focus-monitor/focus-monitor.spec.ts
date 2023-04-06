@@ -46,6 +46,8 @@ describe('FocusMonitor', () => {
               'querySelectorAll',
               'addEventListener',
               'removeEventListener',
+              'querySelector',
+              'createTextNode',
             ].forEach(method => {
               (fakeDocument as any)[method] = function () {
                 return (document as any)[method].apply(document, arguments);
