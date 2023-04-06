@@ -2497,27 +2497,24 @@ describe('CdkDrag', () => {
         documentElement: document.documentElement,
         fullscreenElement: document.createElement('div'),
         ELEMENT_NODE: Node.ELEMENT_NODE,
-        querySelectorAll: function (...args: [string]) {
-          return document.querySelectorAll(...args);
-        },
-        addEventListener: function (
+        querySelectorAll: (...args: [string]) => document.querySelectorAll(...args),
+        querySelector: (...args: [string]) => document.querySelector(...args),
+        createElement: (...args: [string]) => document.createElement(...args),
+        createTextNode: (...args: [string]) => document.createTextNode(...args),
+        addEventListener: (
           ...args: [
             string,
             EventListenerOrEventListenerObject,
             (boolean | AddEventListenerOptions | undefined)?,
           ]
-        ) {
-          document.addEventListener(...args);
-        },
-        removeEventListener: function (
+        ) => document.addEventListener(...args),
+        removeEventListener: (
           ...args: [
             string,
             EventListenerOrEventListenerObject,
             (boolean | AddEventListenerOptions | undefined)?,
           ]
-        ) {
-          document.addEventListener(...args);
-        },
+        ) => document.addEventListener(...args),
         createComment: (text: string) => document.createComment(text),
       };
       const fixture = createComponent(DraggableInDropZone, [
