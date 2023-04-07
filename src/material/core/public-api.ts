@@ -13,5 +13,6 @@ export * from './datetime/index';
 export * from './error/error-options';
 export * from './line/line';
 export * from './option/index';
+export * from './private/index';
 export * from './ripple/index';
 export * from './selection/index';

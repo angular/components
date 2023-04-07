@@ -76,6 +76,7 @@
 /src/material/core/mdc-helpers/**                           @mmalerba
 /src/material/core/option/**                                @crisbeto
 /src/material/core/placeholder/**                           @mmalerba
+/src/material/core/private/**                               @wagnermaciel
 /src/material/core/ripple/**                                @devversion
 /src/material/core/selection/**                             @andrewseguin
 /src/material/core/selection/pseudo*/**                     @crisbeto @andrewseguin

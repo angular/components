@@ -395,6 +395,26 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRipple, [null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
+// @public
+export class MatRippleLoader implements OnDestroy {
+    constructor();
+    // (undocumented)
+    attachRipple(host: Element, ripple: MatRipple): void;
+    configureRipple(host: HTMLElement, config: {
+        className?: string;
+        centered?: boolean;
+    }): void;
+    createRipple(host: HTMLElement): MatRipple | undefined;
+    getRipple(host: HTMLElement): MatRipple | undefined;
+    // (undocumented)
+    ngOnDestroy(): void;
+    setDisabled(host: HTMLElement, disabled: boolean): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatRippleLoader, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<MatRippleLoader>;
+}
+
 // @public (undocumented)
 export class MatRippleModule {
     // (undocumented)

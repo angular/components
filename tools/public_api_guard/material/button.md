@@ -17,6 +17,7 @@ import * as i0 from '@angular/core';
 import * as i4 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { MatRippleLoader } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -104,8 +105,6 @@ export class MatIconAnchor extends MatAnchorBase {
 // @public
 export class MatIconButton extends MatButtonBase {
     constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string);
-    // @deprecated
-    get ripple(): MatRipple;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatIconButton, "button[mat-icon-button]", ["matButton"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, {}, never, ["*"], false, never, false>;
     // (undocumented)
