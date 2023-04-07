@@ -37,7 +37,7 @@ export class VersionPicker {
    */
   onVersionChanged(version: VersionInfo) {
     if (!version.url.startsWith(window.location.href)) {
-      window.location.assign(version.url);
+      window.location.assign(window.location.pathname ? (version.url + window.location.pathname + window.location.hash) : version.url );
     }
   }
 }
