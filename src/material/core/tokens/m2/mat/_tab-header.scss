@@ -17,15 +17,27 @@ $prefix: (mat, tab-header);
   $is-dark: map.get($config, is-dark);
   $foreground: map.get($config, foreground);
   $primary: map.get($config, primary);
+  $inactive-label-text-color: rgba(if($is-dark, #fff, #000), 0.6);
+  $active-label-text-color: theming.get-color-from-palette($primary, default);
+  $ripple-color: theming.get-color-from-palette($primary, default);
 
   @return (
-    ripple-color: theming.get-color-from-palette($primary, default),
     disabled-ripple-color: theming.get-color-from-palette($foreground, disabled),
     pagination-icon-color: if($is-dark, #fff, #000),
 
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
-    inactive-label-text-color: rgba(if($is-dark, #fff, #000), 0.6),
-    active-label-text-color: theming.get-color-from-palette($primary, default),
+    inactive-label-text-color: $inactive-label-text-color,
+    active-label-text-color: $active-label-text-color,
+
+    // Tokens needed to implement the gmat styles. Externally they don't change.
+    active-ripple-color: $ripple-color,
+    inactive-ripple-color: $ripple-color,
+    inactive-focus-label-text-color: $inactive-label-text-color,
+    inactive-hover-label-text-color: $inactive-label-text-color,
+    active-focus-label-text-color: $active-label-text-color,
+    active-hover-label-text-color: $active-label-text-color,
+    active-focus-indicator-color: $active-label-text-color,
+    active-hover-indicator-color: $active-label-text-color,
   );
 }
 
