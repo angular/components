@@ -130,8 +130,10 @@ export abstract class _MatPaginatorBase<
     return this._pageIndex;
   }
   set pageIndex(value: NumberInput) {
+    const previousPageIndex = this._pageIndex;
     this._pageIndex = Math.max(coerceNumberProperty(value), 0);
     this._changeDetectorRef.markForCheck();
+    this._emitPageEvent(previousPageIndex);
   }
   private _pageIndex = 0;
 
@@ -242,9 +244,7 @@ export abstract class _MatPaginatorBase<
       return;
     }
 
-    const previousPageIndex = this.pageIndex;
     this.pageIndex = this.pageIndex + 1;
-    this._emitPageEvent(previousPageIndex);
   }
 
   /** Move back to the previous page if it exists. */
@@ -253,9 +253,7 @@ export abstract class _MatPaginatorBase<
       return;
     }
 
-    const previousPageIndex = this.pageIndex;
     this.pageIndex = this.pageIndex - 1;
-    this._emitPageEvent(previousPageIndex);
   }
 
   /** Move to the first page if not already there. */
@@ -277,9 +275,7 @@ export abstract class _MatPaginatorBase<
       return;
     }
 
-    const previousPageIndex = this.pageIndex;
     this.pageIndex = this.getNumberOfPages() - 1;
-    this._emitPageEvent(previousPageIndex);
   }
 
   /** Whether there is a previous page. */
