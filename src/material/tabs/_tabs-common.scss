@@ -46,7 +46,16 @@ $mat-tab-animation-duration: 500ms !default;
   }
 
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-decoration: none;
+
+  &.mdc-tab {
+    // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
+    // is an opt-in behavior. Also technically we don't need to combine the two classes, but
+    // we need the extra specificity to avoid issues with CSS insertion order.
+    flex-grow: 0;
+  }
 
   @include token-utils.use-tokens(
     tokens-mat-tab-header.$prefix,
@@ -57,20 +66,43 @@ $mat-tab-animation-duration: 500ms !default;
     @include token-utils.create-token-slot(letter-spacing, label-text-letter-spacing);
     @include token-utils.create-token-slot(line-height, label-text-line-height);
     @include token-utils.create-token-slot(font-weight, label-text-weight);
-  }
 
-  &.mdc-tab {
-    // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
-    // is an opt-in behavior. Also technically we don't need to combine the two classes, but
-    // we need the extra specificity to avoid issues with CSS insertion order.
-    flex-grow: 0;
+    &:hover .mdc-tab__text-label {
+      @include token-utils.create-token-slot(color, inactive-hover-label-text-color);
+    }
 
-    &:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
-      @include token-utils.use-tokens(
-        tokens-mat-tab-header.$prefix,
-        tokens-mat-tab-header.get-token-slots()
-      ) {
+    &:focus .mdc-tab__text-label {
+      @include token-utils.create-token-slot(color, inactive-focus-label-text-color);
+    }
+
+    &.mdc-tab--active {
+      .mdc-tab__text-label {
         @include token-utils.create-token-slot(color, active-label-text-color);
+      }
+
+      .mdc-tab__ripple::before,
+      .mat-ripple-element {
+        @include token-utils.create-token-slot(background-color, active-ripple-color);
+      }
+
+      &:hover {
+        .mdc-tab__text-label {
+          @include token-utils.create-token-slot(color, active-hover-label-text-color);
+        }
+
+        .mdc-tab-indicator__content--underline {
+          @include token-utils.create-token-slot(border-color, active-hover-indicator-color);
+        }
+      }
+
+      &:focus {
+        .mdc-tab__text-label {
+          @include token-utils.create-token-slot(color, active-focus-label-text-color);
+        }
+
+        .mdc-tab-indicator__content--underline {
+          @include token-utils.create-token-slot(border-color, active-focus-indicator-color);
+        }
       }
     }
   }
@@ -78,6 +110,14 @@ $mat-tab-animation-duration: 500ms !default;
   &.mat-mdc-tab-disabled {
     // MDC doesn't support disabled tabs so we need to improvise.
     opacity: 0.4;
+
+    // We use `pointer-events` to make the element unclickable when it's disabled, rather than
+    // preventing the default action through JS, because we can't prevent the action reliably
+    // due to other directives potentially registering their events earlier. This shouldn't cause
+    // the user to click through, because we always have a header behind the tab. Furthermore, this
+    // saves us some CSS, because we don't have to add `:not(.mat-mdc-tab-disabled)` to all the
+    // hover and focus selectors.
+    pointer-events: none;
 
     @include token-utils.use-tokens(
       tokens-mat-tab-header.$prefix,
@@ -107,7 +147,7 @@ $mat-tab-animation-duration: 500ms !default;
       tokens-mat-tab-header.$prefix,
       tokens-mat-tab-header.get-token-slots()
     ) {
-      @include token-utils.create-token-slot(background-color, ripple-color);
+      @include token-utils.create-token-slot(background-color, inactive-ripple-color);
     }
   }
 
@@ -154,7 +194,7 @@ $mat-tab-animation-duration: 500ms !default;
       tokens-mat-tab-header.$prefix,
       tokens-mat-tab-header.get-token-slots()
     ) {
-      @include token-utils.create-token-slot(background-color, ripple-color);
+      @include token-utils.create-token-slot(background-color, inactive-ripple-color);
     }
   }
 }
@@ -202,7 +242,7 @@ $mat-tab-animation-duration: 500ms !default;
         tokens-mat-tab-header.$prefix,
         tokens-mat-tab-header.get-token-slots()
       ) {
-        @include token-utils.create-token-slot(background-color, ripple-color);
+        @include token-utils.create-token-slot(background-color, inactive-ripple-color);
       }
     }
 

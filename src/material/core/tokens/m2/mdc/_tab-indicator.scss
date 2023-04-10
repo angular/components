@@ -15,10 +15,8 @@ $prefix: (mdc, tab-indicator);
   @return (
     active-indicator-height: 2px,
 
-    // =============================================================================================
-    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
-    // =============================================================================================
-    active-indicator-shape: null,
+    // Currently set to zero, but used by the gmat styles to make the indicator rounded.
+    active-indicator-shape: 0,
   );
 }
 
