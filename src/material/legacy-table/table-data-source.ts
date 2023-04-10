@@ -14,7 +14,7 @@ import {_MatTableDataSource} from '@angular/material/table';
  * sorting (using MatSort), and pagination (using paginator).
  *
  * Allows for sort customization by overriding sortingDataAccessor, which defines how data
- * properties are accessed. Also allows for filter customization by overriding filterTermAccessor,
+ * properties are accessed. Also allows for filter customization by overriding filterPredicate,
  * which defines how row data is converted to a string for filter matching.
  *
  * **Note:** This class is meant to be a simple data source to help you get started. As such
