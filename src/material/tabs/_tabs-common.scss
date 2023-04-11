@@ -50,6 +50,9 @@ $mat-tab-animation-duration: 500ms !default;
   -moz-osx-font-smoothing: grayscale;
   text-decoration: none;
 
+  // Tabs might be `button` elements so we have to reset the user agent styling.
+  background: none;
+
   &.mdc-tab {
     // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
     // is an opt-in behavior. Also technically we don't need to combine the two classes, but
