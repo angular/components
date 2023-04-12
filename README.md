@@ -33,7 +33,7 @@ If you'd like to contribute, please follow our [contributing guidelines][contrib
 our [`help wanted`][help-wanted] label for a list of issues with good opportunities for
 contribution.
 
-## What we're working on now (Q4 2023):
+## What we're working on now (Q2 2023):
 * Investigating and fixing reported regressions for the new components launched in v15
 * Creating a new more flexible theming API in collaboration with [MDC Web](https://github.com/material-components/material-components-web/)
 * Continuing to focus on improving the accessibility of Angular Material components
