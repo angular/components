@@ -33,11 +33,11 @@ If you'd like to contribute, please follow our [contributing guidelines][contrib
 our [`help wanted`][help-wanted] label for a list of issues with good opportunities for
 contribution.
 
-## What we're working on now (Q4 2022):
+## What we're working on now (Q2 2023):
 * Investigating and fixing reported regressions for the new components launched in v15
 * Creating a new more flexible theming API in collaboration with [MDC Web](https://github.com/material-components/material-components-web/)
-* Designing and Implementing a CDK combobox component
 * Continuing to focus on improving the accessibility of Angular Material components
+* Improving the performance of our components in large applications
 
 ## About the team
 The Angular Components team is part of the Angular team at Google. The team includes both Google
