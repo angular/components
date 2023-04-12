@@ -180,7 +180,11 @@ export abstract class _MatCheckboxBase<E>
   /** The native `<label>` element */
   @ViewChild('label') _labelElement: ElementRef<HTMLInputElement>;
 
-  /** Reference to the ripple instance of the checkbox. */
+  /**
+   * Reference to the MatRipple instance of the checkbox.
+   * @deprecated Considered an implementation detail. To be removed.
+   * @breaking-change 17.0.0
+   */
   @ViewChild(MatRipple) ripple: MatRipple;
 
   /**

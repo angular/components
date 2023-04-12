@@ -246,7 +246,11 @@ export class MatChip
   /** The chip's trailing remove icon. */
   @ContentChild(MAT_CHIP_REMOVE) removeIcon: MatChipRemove;
 
-  /** Reference to the MatRipple instance of the chip. */
+  /**
+   * Reference to the MatRipple instance of the chip.
+   * @deprecated Considered an implementation detail. To be removed.
+   * @breaking-change 17.0.0
+   */
   @ViewChild(MatRipple) ripple: MatRipple;
 
   /** Action receiving the primary set of user interactions. */
