@@ -19,7 +19,7 @@
     "noImplicitThis": true,
     "skipLibCheck": true,
     "strictBindCallApply": true,
-    "target": "es2020",
+    "target": "es2022",
     "lib": ["es2020", "dom"],
     "types": ["jasmine"],
     "baseUrl": ".",

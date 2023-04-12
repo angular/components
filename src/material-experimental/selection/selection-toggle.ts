@@ -27,5 +27,5 @@ import {Directive, Input} from '@angular/core';
 })
 export class MatSelectionToggle<T> extends CdkSelectionToggle<T> {
   /** The value that is associated with the toggle */
-  @Input('matSelectionToggleValue') override value: T;
+  @Input('matSelectionToggleValue') override value: T = undefined!;
 }

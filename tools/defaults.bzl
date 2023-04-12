@@ -111,13 +111,13 @@ def ts_library(
         # NodeJS executions, by activating the Bazel NodeJS linker.
         # See: https://github.com/bazelbuild/rules_nodejs/pull/2799.
         package_name = module_name,
-        # For prodmode, the target is set to `ES2020`. `@bazel/typecript` sets `ES2015` by default. Note
+        # For prodmode, the target is set to `ES2022`. `@bazel/typecript` sets `ES2015` by default. Note
         # that this should be in sync with the `ng_module` tsconfig generation to emit proper APF v13.
         # https://github.com/bazelbuild/rules_nodejs/blob/901df3868e3ceda177d3ed181205e8456a5592ea/third_party/github.com/bazelbuild/rules_typescript/internal/common/tsconfig.bzl#L195
-        prodmode_target = prodmode_target if prodmode_target != None else "es2020",
+        prodmode_target = prodmode_target if prodmode_target != None else "es2022",
         # We also set devmode output to the same settings as prodmode as a first step in combining
         # devmode and prodmode output. We will not rely on AMD output anyway due to the linker processing.
-        devmode_target = devmode_target if devmode_target != None else "es2020",
+        devmode_target = devmode_target if devmode_target != None else "es2022",
         devmode_module = devmode_module if devmode_module != None else "esnext",
         tsconfig = tsconfig,
         testonly = testonly,
