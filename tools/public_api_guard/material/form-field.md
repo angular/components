@@ -115,6 +115,7 @@ export class MatFormField implements AfterContentInit, AfterContentChecked, Afte
     _labelChildNonStatic: MatLabel | undefined;
     // (undocumented)
     _labelChildStatic: MatLabel | undefined;
+    _labelContentChanged(): void;
     // (undocumented)
     readonly _labelId: string;
     _labelWidth: number;
@@ -137,6 +138,7 @@ export class MatFormField implements AfterContentInit, AfterContentChecked, Afte
     _shouldForward(prop: keyof AbstractControlDirective): boolean;
     // (undocumented)
     _shouldLabelFloat(): boolean;
+    _shouldObserveLabelContentChanges(): boolean;
     _subscriptAnimationState: string;
     get subscriptSizing(): SubscriptSizing;
     set subscriptSizing(value: SubscriptSizing);

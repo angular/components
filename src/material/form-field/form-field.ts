@@ -282,6 +282,7 @@ export class MatFormField
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
+  private _isInitialized = false;
 
   constructor(
     public _elementRef: ElementRef,
@@ -332,6 +333,7 @@ export class MatFormField
     // Because the above changes a value used in the template after it was checked, we need
     // to trigger CD or the change might not be reflected if there is no other CD scheduled.
     this._changeDetectorRef.detectChanges();
+    this._isInitialized = true;
   }
 
   ngAfterContentInit() {
@@ -552,10 +554,26 @@ export class MatFormField
 
   /** Refreshes the width of the outline-notch, if present. */
   _refreshOutlineNotchWidth() {
-    if (!this._hasOutline() || !this._floatingLabel) {
-      return;
+    if (this._hasOutline() && this._floatingLabel) {
+      this._labelWidth = this._floatingLabel.getWidth();
     }
-    this._labelWidth = this._floatingLabel.getWidth();
+  }
+
+  /** Invoked when the content of the label has changed. */
+  _labelContentChanged(): void {
+    this._refreshOutlineNotchWidth();
+    // Required since the changed might have happened after check,
+    // e.g. if the `required` state of the control has changed.
+    this._changeDetectorRef.detectChanges();
+  }
+
+  /** Determines whether the content of the label should be observed for size changes. */
+  _shouldObserveLabelContentChanges(): boolean {
+    // Note that this could be simplified by checking `_isInitialized` in `_labelContentChanged`.
+    // We don't do it, because it doesn't allow us to skip the first emit which is unnecessary
+    // since we already measure the label or init. We want the observer to be set up *after*
+    // the initial content is in place.
+    return this._isInitialized && this._hasOutline();
   }
 
   /** Does any extra processing that is required when handling the hints. */

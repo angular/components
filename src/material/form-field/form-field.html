@@ -17,8 +17,8 @@
   <label matFormFieldFloatingLabel
          [floating]="_shouldLabelFloat()"
          *ngIf="_hasFloatingLabel()"
-         (cdkObserveContent)="_refreshOutlineNotchWidth()"
-         [cdkObserveContentDisabled]="!_hasOutline()"
+         (cdkObserveContent)="_labelContentChanged()"
+         [cdkObserveContentDisabled]="!_shouldObserveLabelContentChanges()"
          [id]="_labelId"
          [attr.for]="_control.id"
          [attr.aria-owns]="_control.id">
