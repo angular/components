@@ -124,6 +124,7 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     registerOnTouched(fn: any): void;
     get required(): boolean;
     set required(value: BooleanInput);
+    // @deprecated
     ripple: MatRipple;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
