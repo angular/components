@@ -206,7 +206,8 @@ export class MatChipListbox
     // indirect descendants if it's left as false.
     descendants: true,
   })
-  override _chips: QueryList<MatChipOption>;
+  // We need an initializer here to avoid a TS error. The value will be set in `ngAfterViewInit`.
+  override _chips: QueryList<MatChipOption> = undefined!;
 
   ngAfterContentInit() {
     if (this._pendingInitialValue !== undefined) {

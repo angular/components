@@ -20,6 +20,8 @@
     "importHelpers": true,
     "strictBindCallApply": true,
     "esModuleInterop": true,
+    // Keep the below in sync with https://github.com/angular/angular/blob/f9b821f07d8dba57a6a7e5fc127dc096247424aa/packages/bazel/src/ng_module/ng_module.bzl#L214
+    "useDefineForClassFields": false,
     "newLine": "lf",
     // Bazel either uses "umd" or "esnext". We replicate this here for IDE support.
     // https://github.com/bazelbuild/rules_typescript/blob/master/internal/common/tsconfig.bzl#L199
@@ -27,7 +29,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "inlineSources": true,
-    "target": "es2020",
+    "target": "es2022",
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "types": ["tslib"]

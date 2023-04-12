@@ -261,7 +261,8 @@ export class MatChipGrid
     // indirect descendants if it's left as false.
     descendants: true,
   })
-  override _chips: QueryList<MatChipRow>;
+  // We need an initializer here to avoid a TS error. The value will be set in `ngAfterViewInit`.
+  override _chips: QueryList<MatChipRow> = undefined!;
 
   constructor(
     elementRef: ElementRef,

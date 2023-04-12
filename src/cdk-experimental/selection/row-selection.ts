@@ -26,7 +26,8 @@ import {CdkSelection} from './selection';
   },
 })
 export class CdkRowSelection<T> {
-  @Input('cdkRowSelectionValue') value: T;
+  // We need an initializer here to avoid a TS error.
+  @Input('cdkRowSelectionValue') value: T = undefined!;
 
   @Input('cdkRowSelectionIndex')
   get index(): number | undefined {
