@@ -14,8 +14,8 @@
     "components"
   ],
   "exports": {
-    "./fesm2020": {
-      "default": "./fesm2020"
+    "./fesm2022": {
+      "default": "./fesm2022"
     }
   },
   "license": "MIT",
