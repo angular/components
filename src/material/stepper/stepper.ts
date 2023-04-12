@@ -68,7 +68,8 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   private _isSelected = Subscription.EMPTY;
 
   /** Content for step label given by `<ng-template matStepLabel>`. */
-  @ContentChild(MatStepLabel) override stepLabel: MatStepLabel;
+  // We need an initializer here to avoid a TS error.
+  @ContentChild(MatStepLabel) override stepLabel: MatStepLabel = undefined!;
 
   /** Theme color for the particular step. */
   @Input() color: ThemePalette;
@@ -150,10 +151,14 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 })
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren(MatStepHeader) override _stepHeader: QueryList<MatStepHeader>;
+  // We need an initializer here to avoid a TS error.
+  @ViewChildren(MatStepHeader) override _stepHeader: QueryList<MatStepHeader> =
+    undefined as unknown as QueryList<MatStepHeader>;
 
   /** Full list of steps inside the stepper, including inside nested steppers. */
-  @ContentChildren(MatStep, {descendants: true}) override _steps: QueryList<MatStep>;
+  // We need an initializer here to avoid a TS error.
+  @ContentChildren(MatStep, {descendants: true}) override _steps: QueryList<MatStep> =
+    undefined as unknown as QueryList<MatStep>;
 
   /** Steps that belong to the current stepper, excluding ones from nested steppers. */
   override readonly steps: QueryList<MatStep> = new QueryList<MatStep>();

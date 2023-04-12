@@ -13,7 +13,7 @@ import {
 } from './output-validations.mjs';
 
 /** Glob that matches all JavaScript files within a release package. */
-const releaseJsFilesGlob = '+(fesm2015|esm2015|bundles)/**/*.js';
+const releaseJsFilesGlob = '+(fesm2022|esm2022|bundles)/**/*.js';
 
 /** Glob that matches all TypeScript definition files within a release package. */
 const releaseTypeDefinitionsGlob = '**/*.d.ts';

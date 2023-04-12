@@ -56,7 +56,7 @@ if (failedPackages) {
  * @returns An object containing linker failures and passed files.
  */
 function testPackage(pkg) {
-  const entryPointFesmFiles = glob.sync(`+(fesm2015|fesm2020)/**/*.mjs`, {cwd: pkg.pkgPath});
+  const entryPointFesmFiles = glob.sync(`fesm2022/**/*.mjs`, {cwd: pkg.pkgPath});
   const passedFiles = [];
   const failures = [];
 

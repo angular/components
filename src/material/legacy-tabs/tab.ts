@@ -49,5 +49,6 @@ export class MatLegacyTab extends _MatTabBase {
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
   @ContentChild(MAT_TAB_CONTENT, {read: TemplateRef, static: true})
-  override _explicitContent: TemplateRef<any>;
+  // We need an initializer here to avoid a TS error. The value will be set in `ngAfterViewInit`.
+  override _explicitContent: TemplateRef<any> = undefined!;
 }

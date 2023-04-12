@@ -146,7 +146,9 @@ export class MatSidenavContainer extends MatDrawerContainer {
     // indirect descendants if it's left as false.
     descendants: true,
   })
-  override _allDrawers: QueryList<MatSidenav>;
+  // We need an initializer here to avoid a TS error.
+  override _allDrawers: QueryList<MatSidenav> = undefined!;
 
-  @ContentChild(MatSidenavContent) override _content: MatSidenavContent;
+  // We need an initializer here to avoid a TS error.
+  @ContentChild(MatSidenavContent) override _content: MatSidenavContent = undefined!;
 }
