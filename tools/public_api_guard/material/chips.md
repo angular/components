@@ -113,6 +113,7 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     remove(): void;
     readonly removed: EventEmitter<MatChipEvent>;
     removeIcon: MatChipRemove;
+    // @deprecated
     ripple: MatRipple;
     role: string | null;
     trailingIcon: MatChipTrailingIcon;
