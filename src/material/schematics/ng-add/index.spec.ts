@@ -219,39 +219,56 @@ describe('ng-add schematic', () => {
       expect(errorOutput[0]).toMatch(/Could not set up "BrowserAnimationsModule"/);
     });
 
-    it('should add the BrowserAnimationsModule to a bootstrapApplication call', async () => {
+    it('should add the provideAnimations to a bootstrapApplication call', async () => {
       appTree.delete('/projects/material/src/app/app.module.ts');
+      appTree.create(
+        '/projects/material/src/app/app.config.ts',
+        `
+        export const appConfig = {
+          providers: [{ provide: 'foo', useValue: 1 }]
+        };
+      `,
+      );
       appTree.overwrite(
         '/projects/material/src/main.ts',
         `
-          import { importProvidersFrom } from '@angular/core';
-          import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+          import { bootstrapApplication } from '@angular/platform-browser';
           import { AppComponent } from './app/app.component';
+          import { appConfig } from './app/app.config';
 
-          bootstrapApplication(AppComponent, {
-            providers: [{provide: 'foo', useValue: 1}, importProvidersFrom(BrowserModule)]
-          });
+          bootstrapApplication(AppComponent, appConfig);
         `,
       );
 
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const fileContent = getFileContent(tree, '/projects/material/src/main.ts');
-      expect(fileContent).toContain('importProvidersFrom(BrowserModule, BrowserAnimationsModule)');
+      const fileContent = getFileContent(tree, '/projects/material/src/app/app.config.ts');
+
+      expect(fileContent).toContain(
+        `import { provideAnimations } from '@angular/platform-browser/animations';`,
+      );
+      expect(fileContent).toContain(`[{ provide: 'foo', useValue: 1 }, provideAnimations()]`);
     });
 
-    it('should not add BrowserAnimationsModule if NoopAnimationsModule is set up in a bootstrapApplication call', async () => {
+    it('should not add provideAnimations if provideNoopAnimations is set up in a bootstrapApplication call', async () => {
       appTree.delete('/projects/material/src/app/app.module.ts');
+      appTree.create(
+        '/projects/material/src/app/app.config.ts',
+        `
+        import { provideNoopAnimations } from '@angular/platform-browser/animations';
+
+        export const appConfig = {
+          providers: [{ provide: 'foo', useValue: 1 }, provideNoopAnimations()]
+        };
+      `,
+      );
       appTree.overwrite(
         '/projects/material/src/main.ts',
         `
-          import { importProvidersFrom } from '@angular/core';
           import { bootstrapApplication } from '@angular/platform-browser';
-          import { NoopAnimationsModule } from '@angular/platform-browser/animations';
           import { AppComponent } from './app/app.component';
+          import { appConfig } from './app/app.config';
 
-          bootstrapApplication(AppComponent, {
-            providers: [{provide: 'foo', useValue: 1}, importProvidersFrom(NoopAnimationsModule)]
-          });
+          bootstrapApplication(AppComponent, appConfig);
         `,
       );
 
@@ -259,7 +276,7 @@ describe('ng-add schematic', () => {
 
       expect(errorOutput.length).toBe(1);
       expect(errorOutput[0]).toMatch(
-        /Could not set up "BrowserAnimationsModule" because "NoopAnimationsModule" is already imported/,
+        /Could not add "provideAnimations" because "provideNoopAnimations" is already provided/,
       );
     });
   });
