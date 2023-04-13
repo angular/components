@@ -1,3 +1,13 @@
+<a name="16.0.0-rc.0"></a>
+# 16.0.0-rc.0 "quilt-quail" (2023-04-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [22410a996](https://github.com/angular/components/commit/22410a99676ae5e6da0248d18893be7f4756afab) | fix | **schematics:** use provider functions in ng add ([#26920](https://github.com/angular/components/pull/26920)) |
+| [c98c2c5fd](https://github.com/angular/components/commit/c98c2c5fd32757d4c337e3b991a0f3cee751b626) | fix | **table:** correct filterPredicate typo ([#26902](https://github.com/angular/components/pull/26902)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.7"></a>
 # 15.2.7 "paper-pelican" (2023-04-13)
 ### material
