@@ -1,3 +1,16 @@
+<a name="15.2.7"></a>
+# 15.2.7 "paper-pelican" (2023-04-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [de22cdc72](https://github.com/angular/components/commit/de22cdc7227187ad11e385caf0456639cfea1da8) | fix | **table:** correct filterPredicate typo ([#26902](https://github.com/angular/components/pull/26902)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6c00403a8](https://github.com/angular/components/commit/6c00403a874dd3132de6995d4dcd9e4ebf9dfb82) | fix | zone on DateTime ignored ([#26887](https://github.com/angular/components/pull/26887)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.6"></a>
 # 15.2.6 "chiffon-cardigan" (2023-04-05)
 ### cdk
