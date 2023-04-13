@@ -29,7 +29,7 @@ import { TemplateRef } from '@angular/core';
 import { TrackByFunction } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
-// @public
+// @public @deprecated
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     collapse(dataNode: T): void;
     collapseAll(): void;
@@ -70,7 +70,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
     nodeOutlet: QueryList<CdkTreeNodeOutlet>;
     protected updateChildrenNodes(children?: T[]): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], { "role": "role"; "disabled": "disabled"; "tabIndex": "tabIndex"; }, {}, ["nodeOutlet"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["nodeOutlet"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkNestedTreeNode<any, any>, never>;
 }
@@ -89,8 +89,12 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     expandDescendants(dataNode: T): void;
     expansionKey?: (dataNode: T) => K;
     _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
+    _getDirectChildren(dataNode: T): Observable<T[]>;
+    _getLevel(node: T): number | undefined;
     _getLevelAccessor(): ((dataNode: T) => number) | undefined;
     _getNodeDef(data: T, i: number): CdkTreeNodeDef<T>;
+    _getPositionInSet(dataNode: T): number;
+    _getSetSize(dataNode: T): number;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
     isExpanded(dataNode: T): boolean;
     levelAccessor?: (dataNode: T) => number;
@@ -103,18 +107,21 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
     // (undocumented)
     _nodeOutlet: CdkTreeNodeOutlet;
-    renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
+    nodeType?: 'flat' | 'nested';
+    _registerNode(node: CdkTreeNode<T, K>): void;
+    _renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
     trackBy: TrackByFunction<T>;
     // @deprecated
     treeControl?: TreeControl<T, K>;
+    _unregisterNode(node: CdkTreeNode<T, K>): void;
     readonly viewChange: BehaviorSubject<{
         start: number;
         end: number;
     }>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": "dataSource"; "treeControl": "treeControl"; "levelAccessor": "levelAccessor"; "childrenAccessor": "childrenAccessor"; "trackBy": "trackBy"; "expansionKey": "expansionKey"; }, {}, ["_nodeDefs"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "expansionKey": { "alias": "expansionKey"; "required": false; }; "nodeType": { "alias": "nodeType"; "required": false; }; }, {}, ["_nodeDefs"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTree<any, any>, never>;
 }
@@ -141,6 +148,8 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
     focus(): void;
+    _getPositionInSet(): number;
+    _getSetSize(): number;
     // (undocumented)
     isExpandable: boolean;
     // (undocumented)
@@ -161,7 +170,7 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     // (undocumented)
     protected _tree: CdkTree<T, K>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": "role"; "isExpandable": "isExpandable"; "isExpanded": "isExpanded"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": { "alias": "role"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNode<any, any>, never>;
 }
@@ -173,7 +182,7 @@ export class CdkTreeNodeDef<T> {
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeDef<any>, "[cdkTreeNodeDef]", never, { "when": "cdkTreeNodeDefWhen"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeDef<any>, "[cdkTreeNodeDef]", never, { "when": { "alias": "cdkTreeNodeDefWhen"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeDef<any>, never>;
 }
@@ -220,7 +229,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
     // (undocumented)
     _setPadding(forceChange?: boolean): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodePadding<any, any>, "[cdkTreeNodePadding]", never, { "level": "cdkTreeNodePadding"; "indent": "cdkTreeNodePaddingIndent"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodePadding<any, any>, "[cdkTreeNodePadding]", never, { "level": { "alias": "cdkTreeNodePadding"; "required": false; }; "indent": { "alias": "cdkTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodePadding<any, any>, [null, null, null, { optional: true; }]>;
 }
@@ -239,12 +248,12 @@ export class CdkTreeNodeToggle<T, K = T> {
     // (undocumented)
     protected _treeNode: CdkTreeNode<T, K>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeToggle<any, any>, "[cdkTreeNodeToggle]", never, { "recursive": "cdkTreeNodeToggleRecursive"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeToggle<any, any>, "[cdkTreeNodeToggle]", never, { "recursive": { "alias": "cdkTreeNodeToggleRecursive"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeToggle<any, any>, never>;
 }
 
-// @public
+// @public @deprecated
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     constructor(getLevel: (dataNode: T) => number, isExpandable: (dataNode: T) => boolean, options?: FlatTreeControlOptions<T, K> | undefined);
     expandAll(): void;
@@ -267,10 +276,10 @@ export interface FlatTreeControlOptions<T, K> {
 export function getMultipleTreeControlsError(): Error;
 
 // @public
-export function getTreeControlFunctionsMissingError(): Error;
+export function getTreeControlMissingError(): Error;
 
 // @public
-export function getTreeControlMissingError(): Error;
+export function getTreeControlNodeTypeUnspecifiedError(): Error;
 
 // @public
 export function getTreeMissingMatchingNodeDefError(): Error;
@@ -281,7 +290,7 @@ export function getTreeMultipleDefaultNodeDefsError(): Error;
 // @public
 export function getTreeNoValidDataSourceError(): Error;
 
-// @public
+// @public @deprecated
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     constructor(getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null, options?: NestedTreeControlOptions<T, K> | undefined);
     expandAll(): void;
@@ -299,7 +308,7 @@ export interface NestedTreeControlOptions<T, K> {
     trackBy?: (dataNode: T) => K;
 }
 
-// @public
+// @public @deprecated
 export interface TreeControl<T, K = T> {
     collapse(dataNode: T): void;
     collapseAll(): void;
