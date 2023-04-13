@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   Component,
   ErrorHandler,
@@ -24,7 +24,6 @@ import {map} from 'rxjs/operators';
 
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
-import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 /**
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,
@@ -1127,20 +1126,6 @@ describe('CdkTree redesign', () => {
         expect(changedNodes[5].getAttribute('initialIndex')).toBe('2');
       });
     });
-
-    it('should throw an error when missing function in nested tree', fakeAsync(() => {
-      configureCdkTreeTestingModule([NestedCdkErrorTreeApp]);
-      expect(() => {
-        try {
-          TestBed.createComponent(NestedCdkErrorTreeApp).detectChanges();
-          flush();
-        } catch {
-          flush();
-        } finally {
-          flush();
-        }
-      }).toThrowError(getTreeControlFunctionsMissingError().message);
-    }));
   });
 
   describe('with depth', () => {
@@ -1356,7 +1341,8 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
+    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel"
+        nodeType="flat">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="indent"
                      cdkTreeNodeToggle
@@ -1383,7 +1369,8 @@ class SimpleCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
+    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel"
+        nodeType="flat">
       <ng-container [ngSwitch]="true">
         <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                       cdkTreeNodePadding [cdkTreeNodePaddingIndent]="indent"
@@ -1399,7 +1386,8 @@ class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1417,7 +1405,8 @@ class NestedCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1445,7 +1434,8 @@ class StaticNestedCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1469,7 +1459,8 @@ class WhenNodeNestedCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
+    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel"
+        nodeType="flat">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding
                      cdkTreeNodeToggle [cdkTreeNodeToggleRecursive]="toggleRecursively"
@@ -1492,7 +1483,8 @@ class CdkTreeAppWithToggle {
 
 @Component({
   template: `
-    <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                             cdkTreeNodeToggle [cdkTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
@@ -1515,7 +1507,8 @@ class NestedCdkTreeAppWithToggle {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
+    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel"
+        nodeType="flat">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
                      cdkTreeNodeToggle
@@ -1543,7 +1536,8 @@ class WhenNodeCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataArray" [levelAccessor]="getLevel">
+    <cdk-tree [dataSource]="dataArray" [levelAccessor]="getLevel"
+        nodeType="flat">
       <cdk-tree-node *cdkTreeNodeDef="let node"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
                      cdkTreeNodeToggle
@@ -1568,7 +1562,8 @@ class ArrayDataSourceCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataObservable" [levelAccessor]="getLevel">
+    <cdk-tree [dataSource]="dataObservable" [levelAccessor]="getLevel"
+        nodeType="flat">
       <cdk-tree-node *cdkTreeNodeDef="let node"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
                      cdkTreeNodeToggle
@@ -1593,7 +1588,8 @@ class ObservableDataSourceCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataArray" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataArray" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">
                      [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
          <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1615,7 +1611,8 @@ class ArrayDataSourceNestedCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataObservable" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataObservable" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">
                      [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
          <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1637,28 +1634,8 @@ class ObservableDataSourceNestedCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
-      <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
-          [isExpandable]="isExpandable(node)">
-                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-         <ng-template cdkTreeNodeOutlet></ng-template>
-      </cdk-nested-tree-node>
-    </cdk-tree>
-  `,
-})
-class NestedCdkErrorTreeApp {
-  getLevel = (node: TestData) => node.level;
-
-  isExpandable = (node: TestData) => node.children.length > 0;
-
-  dataSource: FakeDataSource | null = new FakeDataSource();
-
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
-}
-
-@Component({
-  template: `
-    <cdk-tree [dataSource]="dataArray" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataArray" [childrenAccessor]="getChildren"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node; let level = level">
           <span class="tree-test-level">{{level}}</span>
            [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
@@ -1681,7 +1658,8 @@ class DepthNestedCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel" [trackBy]="trackByFn">
+    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel" [trackBy]="trackByFn"
+        nodeType="flat">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass" [isExpandable]="isExpandable(node)">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </cdk-tree-node>
@@ -1712,7 +1690,8 @@ class CdkTreeAppWithTrackBy {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataArray" [childrenAccessor]="getChildren" [trackBy]="trackByFn">
+    <cdk-tree [dataSource]="dataArray" [childrenAccessor]="getChildren" [trackBy]="trackByFn"
+        nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">
            [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
          <ng-template cdkTreeNodeOutlet></ng-template>

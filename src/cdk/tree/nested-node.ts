@@ -16,12 +16,10 @@ import {
   OnInit,
   QueryList,
 } from '@angular/core';
-import {isObservable} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {CDK_TREE_NODE_OUTLET_NODE, CdkTreeNodeOutlet} from './outlet';
 import {CdkTree, CdkTreeNode} from './tree';
-import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
@@ -69,22 +67,13 @@ export class CdkNestedTreeNode<T, K = T>
 
   ngAfterContentInit() {
     this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
-    const childrenAccessor = this._tree._getChildrenAccessor();
-    if (!childrenAccessor && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw getTreeControlFunctionsMissingError();
-    } else if (childrenAccessor) {
-      const childrenNodes = childrenAccessor(this.data);
-      if (Array.isArray(childrenNodes)) {
-        this.updateChildrenNodes(childrenNodes as T[]);
-      } else if (isObservable(childrenNodes)) {
-        childrenNodes
-          .pipe(takeUntil(this._destroyed))
-          .subscribe(result => this.updateChildrenNodes(result));
-      }
-      this.nodeOutlet.changes
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(() => this.updateChildrenNodes());
-    }
+    this._tree
+      ._getDirectChildren(this.data)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(result => this.updateChildrenNodes(result));
+    this.nodeOutlet.changes
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this.updateChildrenNodes());
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091
@@ -106,7 +95,7 @@ export class CdkNestedTreeNode<T, K = T>
     }
     if (outlet && this._children) {
       const viewContainer = outlet.viewContainer;
-      this._tree.renderNodeChanges(this._children, this._dataDiffer, viewContainer, this._data);
+      this._tree._renderNodeChanges(this._children, this._dataDiffer, viewContainer, this._data);
     } else {
       // Reset the data differ if there's no children nodes displayed
       this._dataDiffer.diff([]);

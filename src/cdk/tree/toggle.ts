@@ -18,6 +18,7 @@ import {CdkTree, CdkTreeNode} from './tree';
   selector: '[cdkTreeNodeToggle]',
   host: {
     '(click)': '_toggle($event)',
+    'tabindex': '0',
   },
 })
 export class CdkTreeNodeToggle<T, K = T> {
