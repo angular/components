@@ -12,6 +12,5 @@
 }
 
 .mat-mdc-tab-nav-bar {
-  @include tabs-common.paginated-tab-header-with-background('.mat-mdc-tab-link-container',
-    '.mat-mdc-tab-link');
+  @include tabs-common.paginated-tab-header-with-background('.mat-mdc-tab-link-container');
 }

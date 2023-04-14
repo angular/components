@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CSP_NONCE, Directive, ElementRef, Inject, OnDestroy, OnInit, Optional} from '@angular/core';
+import {Directive, ElementRef, Inject, OnDestroy, OnInit, Optional} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {Directionality} from '@angular/cdk/bidi';
 import {_getShadowRoot} from '@angular/cdk/platform';
@@ -52,7 +52,6 @@ export class CdkTableScrollContainer implements StickyPositioningListener, OnDes
     private readonly _elementRef: ElementRef<HTMLElement>,
     @Inject(DOCUMENT) private readonly _document: Document,
     @Optional() private readonly _directionality?: Directionality,
-    @Optional() @Inject(CSP_NONCE) private readonly _nonce?: string | null,
   ) {
     this._uniqueClassName = `cdk-table-scroll-container-${++nextId}`;
     _elementRef.nativeElement.classList.add(this._uniqueClassName);
@@ -115,11 +114,6 @@ export class CdkTableScrollContainer implements StickyPositioningListener, OnDes
   private _getStyleSheet(): CSSStyleSheet {
     if (!this._styleElement) {
       this._styleElement = this._document.createElement('style');
-
-      if (this._nonce) {
-        this._styleElement.nonce = this._nonce;
-      }
-
       this._styleRoot.appendChild(this._styleElement);
     }
 
