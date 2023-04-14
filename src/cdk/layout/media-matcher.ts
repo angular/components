@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Injectable, CSP_NONCE, Optional, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 
 /** Global registry for all dynamically-created, injected media queries. */
@@ -20,10 +20,7 @@ export class MediaMatcher {
   /** The internal matchMedia method to return back a MediaQueryList like object. */
   private _matchMedia: (query: string) => MediaQueryList;
 
-  constructor(
-    private _platform: Platform,
-    @Optional() @Inject(CSP_NONCE) private _nonce?: string | null,
-  ) {
+  constructor(private _platform: Platform) {
     this._matchMedia =
       this._platform.isBrowser && window.matchMedia
         ? // matchMedia is bound to the window scope intentionally as it is an illegal invocation to
@@ -40,7 +37,7 @@ export class MediaMatcher {
    */
   matchMedia(query: string): MediaQueryList {
     if (this._platform.WEBKIT || this._platform.BLINK) {
-      createEmptyStyleRule(query, this._nonce);
+      createEmptyStyleRule(query);
     }
     return this._matchMedia(query);
   }
@@ -55,7 +52,7 @@ export class MediaMatcher {
  * inside the `@media` match existing elements on the page. We work around it by having one rule
  * targeting the `body`. See https://github.com/angular/components/issues/23546.
  */
-function createEmptyStyleRule(query: string, nonce: string | undefined | null) {
+function createEmptyStyleRule(query: string) {
   if (mediaQueriesForWebkitCompatibility.has(query)) {
     return;
   }
@@ -63,11 +60,6 @@ function createEmptyStyleRule(query: string, nonce: string | undefined | null) {
   try {
     if (!mediaQueryStyleNode) {
       mediaQueryStyleNode = document.createElement('style');
-
-      if (nonce) {
-        mediaQueryStyleNode.nonce = nonce;
-      }
-
       mediaQueryStyleNode.setAttribute('type', 'text/css');
       document.head!.appendChild(mediaQueryStyleNode);
     }
