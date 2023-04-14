@@ -1,13 +1,10 @@
-@use 'sass:map';
 @use '@material/snackbar/snackbar' as mdc-snackbar;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
+@use '../core/tokens/token-utils';
 @use '../core/mdc-helpers/mdc-helpers';
-
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  // Include the styles without the animations since we
-  // reuse the same animation as the non-MDC version.
-  @include mdc-snackbar.static-styles($query: mdc-helpers.$mdc-base-styles-without-animation-query);
-}
 
 @mixin _container-min-width {
   $min-width: mdc-snackbar-theme.$min-width;
@@ -28,8 +25,12 @@
   }
 }
 
-.mat-mdc-snack-bar-container {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  // Include the styles without the animations since we
+  // reuse the same animation as the non-MDC version.
+  @include mdc-snackbar.static-styles($query: mdc-helpers.$mdc-base-styles-without-animation-query);
+
+  .mat-mdc-snack-bar-container {
     @include _container-min-width;
     @include mdc-snackbar-theme.max-width(
       mdc-snackbar-theme.$max-width,
@@ -45,57 +46,42 @@
     // a white background behind the rounded corners, because the `border-radius` is on the
     // surface element.
     @include mdc-snackbar-theme.elevation(mdc-snackbar-theme.$elevation);
+    @include mdc-snackbar-theme.theme-styles(tokens-mdc-snack-bar.get-token-slots());
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-unthemable-tokens());
 
-    @include mdc-snackbar-theme.theme-styles(map.merge(mdc-snackbar-theme.$light-theme, (
-      container-color: inherit,
-      supporting-text-color: inherit,
-      container-shape: mdc-snackbar-theme.$shape-radius,
-      supporting-text-font: inherit,
-      supporting-text-line-height: inherit,
-      supporting-text-size: inherit,
-      supporting-text-weight: inherit,
+    // MDC sets the position as fixed and sets the container on the bottom center of the page (or
+    // otherwise can be set to be "leading"). Our overlay handles a more advanced configuration
+    // of positions, so we'll defer logic there.
+    position: static;
 
-      // Removed to match the previous appearance.
-      supporting-text-tracking: null,
+    // The `mat-mdc-button` and `:not(:disabled)` here are redundant, but we need them to increase
+    // the specificity over the button styles that may bleed in from the rest of the app.
+    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+      // MDC's `action-label-text-color` should be able to do this, but the button theme has a
+      // higher specificity so it ends up overriding it. Define our own variable that we can
+      // use to control the color instead.
+      @include token-utils.use-tokens(
+        tokens-mat-snack-bar.$prefix,
+        tokens-mat-snack-bar.get-token-slots()
+      ) {
+        @include token-utils.create-token-slot(color, button-color);
+      }
 
-      // We're not using any of these since the button styling goes through `mat-button`.
-      action-label-text-color: null,
-      action-focus-state-layer-opacity: null,
-      action-hover-state-layer-opacity: null,
-      action-pressed-state-layer-opacity: null,
-      icon-focus-state-layer-opacity: null,
-      icon-hover-state-layer-opacity: null,
-      icon-pressed-state-layer-opacity: null,
-    )));
-  }
+      // Darken the ripples in the button so they're visible against the dark background.
+      --mat-mdc-button-persistent-ripple-color: currentColor;
 
-  // MDC sets the position as fixed and sets the container on the bottom center of the page (or
-  // otherwise can be set to be "leading"). Our overlay handles a more advanced configuration
-  // of positions, so we'll defer logic there.
-  position: static;
-
-  // The `mat-mdc-button` and `:not(:disabled)` here are redundant, but we need them to increase
-  // the specificity over the button styles that may bleed in from the rest of the app.
-  .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-    // MDC's `action-label-text-color` should be able to do this, but the button theme has a
-    // higher specificity so it ends up overriding it. Define our own variable that we can
-    // use to control the color instead.
-    color: var(--mat-mdc-snack-bar-button-color, transparent);
-
-    // Darken the ripples in the button so they're visible against the dark background.
-    --mat-mdc-button-persistent-ripple-color: currentColor;
-
-    .mat-ripple-element {
-      background-color: currentColor;
-      opacity: 0.1;
+      .mat-ripple-element {
+        background-color: currentColor;
+        opacity: 0.1;
+      }
     }
-  }
 
-  // MDC uses this pseudo element to work around an issue with their live announcer, but it
-  // can cause additional space for long snack bar messages (see #26685). Since we don't use
-  // MDC's announcer, we can hide the element.
-  .mdc-snackbar__label::before {
-    display: none;
+    // MDC uses this pseudo element to work around an issue with their live announcer, but it
+    // can cause additional space for long snack bar messages (see #26685). Since we don't use
+    // MDC's announcer, we can hide the element.
+    .mdc-snackbar__label::before {
+      display: none;
+    }
   }
 }
 
