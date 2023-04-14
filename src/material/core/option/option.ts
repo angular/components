@@ -205,6 +205,9 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   }
 
   /** Returns the correct tabindex for the option depending on disabled state. */
+  // This method is only used by `MatLegacyOption`. Keeping it here to avoid breaking the types.
+  // That's because `MatLegacyOption` use `MatOption` type in a few places such as
+  // `MatOptionSelectionChange`. It is safe to delete this when `MatLegacyOption` is deleted.
   _getTabIndex(): string {
     return this.disabled ? '-1' : '0';
   }
@@ -251,7 +254,6 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   exportAs: 'matOption',
   host: {
     'role': 'option',
-    '[attr.tabindex]': '_getTabIndex()',
     '[class.mdc-list-item--selected]': 'selected',
     '[class.mat-mdc-option-multiple]': 'multiple',
     '[class.mat-mdc-option-active]': 'active',
