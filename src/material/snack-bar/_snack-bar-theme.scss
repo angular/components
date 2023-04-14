@@ -1,60 +1,29 @@
-@use '../core/theming/theming';
-@use '../core/mdc-helpers/mdc-helpers';
-@use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
-@use 'sass:color';
-@use 'sass:map';
-@use 'sass:meta';
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
 
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $is-dark-theme: map.get($config, is-dark);
-  $accent: map.get($config, accent);
 
-  @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-snack-bar-container {
-      $button-color: if(
-        $is-dark-theme,
-        mdc-theme-color.prop-value(text-primary-on-light),
-        theming.get-color-from-palette($accent, text)
-      );
-      --mat-mdc-snack-bar-button-color: #{$button-color};
-      $on-surface: mdc-theme-color.prop-value(on-surface);
-      $surface: mdc-theme-color.prop-value(surface);
-
-      @include mdc-snackbar-theme.theme((
-        container-color: if(
-          meta.type-of($on-surface) == color and meta.type-of($surface) == color,
-          color.mix($on-surface, $surface, 80%),
-          $on-surface
-        ),
-        supporting-text-color: if(
-          meta.type-of($surface) == color,
-          rgba($surface, mdc-theme-color.text-emphasis(high)),
-          $surface
-        )
-      ));
-    }
+  .mat-mdc-snack-bar-container {
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-color-tokens($config));
+    @include token-utils.create-token-values(
+      tokens-mat-snack-bar.$prefix,
+      tokens-mat-snack-bar.get-color-tokens($config)
+    );
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @if ($config) {
-      .mat-mdc-snack-bar-container {
-        @include mdc-snackbar-theme.theme((
-          supporting-text-font: typography-utils.font-family($config, body-2),
-          supporting-text-line-height: typography-utils.line-height($config, body-2),
-          supporting-text-size: typography-utils.font-size($config, body-2),
-          supporting-text-weight: typography-utils.font-weight($config, body-2),
-        ));
-      }
-    }
+
+  .mat-mdc-snack-bar-container {
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-typography-tokens($config));
   }
 }
 
