@@ -84,16 +84,14 @@ $_icon-size: 24px;
     $property-name: size,
   );
 
-  .mat-mdc-icon-button {
-    @include mdc-icon-button-theme.theme((
-      state-layer-size: $calculated-size,
-    ));
-  }
-
   // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
   .mat-mdc-icon-button.mat-mdc-button-base {
     // Match the styles that used to be present. This is necessary for backwards
     // compat to match the previous implementations selector count (two classes).
+    @include mdc-icon-button-theme.theme((
+      state-layer-size: $calculated-size,
+    ));
+
     // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
     // Currently fails validation because the variable is "undefined"
     // in the sass stack.
