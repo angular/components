@@ -32,10 +32,7 @@ describe('StackBlitzWriter', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [],
-      providers: [
-        StackBlitzWriter,
-      ]
+      providers: [StackBlitzWriter]
     }).compileComponents();
   }));
 

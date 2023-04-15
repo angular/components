@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  NgModule,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
@@ -12,7 +11,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {CommonModule} from '@angular/common';
+import {NgFor} from '@angular/common';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -24,7 +23,9 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   templateUrl: 'theme-picker.html',
   styleUrls: ['theme-picker.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule, NgFor]
 })
 export class ThemePicker implements OnInit, OnDestroy {
   private _queryParamSubscription = Subscription.EMPTY;
@@ -119,17 +120,3 @@ export class ThemePicker implements OnInit, OnDestroy {
     }
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatTooltipModule,
-  ],
-  exports: [ThemePicker],
-  declarations: [ThemePicker],
-  providers: [StyleManager, ThemeStorage],
-})
-export class ThemePickerModule { }

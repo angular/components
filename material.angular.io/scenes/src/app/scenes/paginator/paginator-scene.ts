@@ -1,4 +1,4 @@
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatPaginatorModule} from '@angular/material/paginator';
 
 
@@ -6,16 +6,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-paginator-scene',
   templateUrl: './paginator-scene.html',
-  styleUrls: ['./paginator-scene.scss']
+  styleUrls: ['./paginator-scene.scss'],
+  standalone: true,
+  imports: [MatPaginatorModule]
 })
-export class PaginatorScene {
-}
-
-@NgModule({
-  imports: [
-    MatPaginatorModule
-  ],
-  exports: [PaginatorScene],
-  declarations: [PaginatorScene]
-})
-export class PaginatorSceneModule {}
+export class PaginatorScene {}

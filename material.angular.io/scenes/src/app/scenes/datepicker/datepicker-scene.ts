@@ -1,4 +1,4 @@
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
 
@@ -6,18 +6,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-datepicker-scene',
   templateUrl: './datepicker-scene.html',
-  styleUrls: ['./datepicker-scene.scss']
+  styleUrls: ['./datepicker-scene.scss'],
+  standalone: true,
+  imports: [MatDatepickerModule]
 })
-export class DatepickerScene {
-}
-
-@NgModule({
-  imports: [
-    MatDatepickerModule,
-  ],
-  exports: [DatepickerScene],
-  declarations: [DatepickerScene],
-})
-export class DatepickerSceneModule {
-}
-
+export class DatepickerScene {}

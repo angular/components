@@ -1,4 +1,4 @@
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTreeModule, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -35,6 +35,12 @@ interface FileFlatNode {
   selector: 'app-tree-scene',
   templateUrl: './tree-scene.html',
   styleUrls: ['./tree-scene.scss'],
+  standalone: true,
+  imports: [
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
 })
 export class TreeScene {
   treeControl = new FlatTreeControl<FileFlatNode>(
@@ -67,10 +73,3 @@ export class TreeScene {
 
   hasChild = (_: number, node: FileFlatNode) => node.expandable;
 }
-
-@NgModule({
-  imports: [MatIconModule, MatTreeModule, MatButtonModule],
-  exports: [TreeScene],
-  declarations: [TreeScene],
-})
-export class TreeSceneModule {}

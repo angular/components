@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {GuideList, GuideListModule} from './guide-list';
+import {GuideList} from './guide-list';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
@@ -8,13 +8,10 @@ describe('GuideList', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GuideListModule, DocsAppTestingModule],
+      imports: [DocsAppTestingModule],
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(GuideList);
-  });
+  }));
 
   it('should display a link for each item in guide items', () => {
     const component = fixture.componentInstance;

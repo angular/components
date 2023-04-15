@@ -1,6 +1,4 @@
 import {ComponentType} from '@angular/cdk/overlay';
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {SceneViewer} from './scene-viewer/scene-viewer';
 import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
 import {BadgeScene} from './scenes/badge/badge-scene';
@@ -51,7 +49,7 @@ type SceneViewerRoute = {
   }
 };
 
-const routes: SceneViewerRoute[] = [
+export const routes: SceneViewerRoute[] = [
   {path: 'autocomplete', component: SceneViewer, data: {scene: AutocompleteScene}},
   {path: 'badge', component: SceneViewer, data: {scale: 1.5, scene: BadgeScene}},
   {path: 'bottom-sheet', component: SceneViewer, data: {scene: BottomSheetScene}},
@@ -94,10 +92,3 @@ const routes: SceneViewerRoute[] = [
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
 ].sort((a, b) => (a.path > b.path) ? 1 : ((b.path > a.path) ? -1 : 0))
   .map((route: SceneViewerRoute) => ({...route, data: {...route.data, hueRotate: 15 * hue++}}));
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {
-}

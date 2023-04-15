@@ -8,9 +8,7 @@ describe('DocViewer', () => {
   let docsItems: DocumentationItems;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [DocumentationItems]
-    }).compileComponents();
+    TestBed.configureTestingModule({}).compileComponents();
   }));
 
   beforeEach(inject([DocumentationItems], (di: DocumentationItems) => {

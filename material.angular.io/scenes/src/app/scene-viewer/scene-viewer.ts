@@ -3,13 +3,11 @@ import {
   ComponentFactoryResolver,
   HostBinding,
   Input,
-  NgModule,
   OnInit,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
@@ -18,6 +16,7 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
   selector: 'app-scene-viewer',
   templateUrl: './scene-viewer.html',
   styleUrls: ['./scene-viewer.scss'],
+  standalone: true,
 })
 export class SceneViewer implements OnInit {
   @HostBinding('style.filter') filter: SafeStyle | undefined;
@@ -63,14 +62,4 @@ export class SceneViewer implements OnInit {
     container.style.transform = `scale(${this.scale})`;
     container.style.transformOrigin = 'center';
   }
-}
-
-@NgModule({
-  imports: [
-    CommonModule,
-  ],
-  exports: [SceneViewer],
-  declarations: [SceneViewer]
-})
-export class SceneViewerModule {
 }

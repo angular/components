@@ -1,9 +1,10 @@
 import {HttpClient} from '@angular/common/http';
-import {Component, ElementRef, Input, NgModule, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'docs-svg-viewer',
   template: '<div class="docs-svg-viewer" aria-hidden="true"></div>',
+  standalone: true,
 })
 export class SvgViewer implements OnInit {
   @Input() src: string | undefined;
@@ -39,9 +40,3 @@ export class SvgViewer implements OnInit {
 function getAbsolutePathFromSrc(src: string) {
   return src.slice(src.indexOf('assets/') - 1);
 }
-
-@NgModule({
-  exports: [SvgViewer],
-  declarations: [SvgViewer],
-})
-export class SvgViewerModule { }

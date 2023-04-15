@@ -1,4 +1,4 @@
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
@@ -18,19 +18,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
 @Component({
   selector: 'app-table-scene',
   templateUrl: './table-scene.html',
-  styleUrls: ['./table-scene.scss']
+  styleUrls: ['./table-scene.scss'],
+  standalone: true,
+  imports: [MatTableModule]
 })
 export class TableScene {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
 }
-
-@NgModule({
-  imports: [
-    MatTableModule,
-  ],
-  exports: [TableScene],
-  declarations: [TableScene]
-})
-export class TableSceneModule {}
-

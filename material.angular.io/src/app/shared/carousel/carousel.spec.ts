@@ -1,8 +1,8 @@
-import {Carousel} from './carousel';
+import {Component, ViewChild} from '@angular/core';
+import {NgFor} from '@angular/common';
 import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DocsAppTestingModule} from '../../testing/testing-module';
-import {Component, ViewChild} from '@angular/core';
-import {CarouselModule} from './carousel-module';
+import {Carousel, CarouselItem} from './carousel';
 
 
 describe('HorizontalCarousel', () => {
@@ -11,12 +11,9 @@ describe('HorizontalCarousel', () => {
 
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule(
-      {
-        imports: [CarouselModule, DocsAppTestingModule],
-        declarations: [CarouselTestComponent],
-      }
-    ).compileComponents();
+    TestBed.configureTestingModule({
+      imports: [DocsAppTestingModule, CarouselTestComponent],
+    }).compileComponents();
   }));
 
   beforeEach(fakeAsync(() => {
@@ -55,8 +52,7 @@ describe('HorizontalCarousel', () => {
 
 @Component({
   selector: 'test-carousel',
-  template:
-      `
+  template: `
     <app-carousel>
       <div carousel-item class="docs-carousel-item-container"
            *ngFor="let i of [].constructor(numberOfItems) "></div>
@@ -66,7 +62,9 @@ describe('HorizontalCarousel', () => {
       display: flex;
       width: 250px;
     }
-  `]
+  `],
+  standalone: true,
+  imports: [Carousel, CarouselItem, NgFor, DocsAppTestingModule]
 })
 class CarouselTestComponent {
   numberOfItems = 6;

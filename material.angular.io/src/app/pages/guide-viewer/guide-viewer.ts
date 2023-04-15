@@ -1,17 +1,26 @@
 import {Component, HostBinding, NgModule, OnInit} from '@angular/core';
 import {ActivatedRoute, Router, RouterModule, Routes} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
-import {FooterModule} from '../../shared/footer/footer';
+import {Footer} from '../../shared/footer/footer';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
-import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
+
 import {ComponentPageTitle} from '../page-title/page-title';
 import {ReactiveFormsModule} from '@angular/forms';
-import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
+import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
+import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
+import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
 
 @Component({
   selector: 'guide-viewer',
   templateUrl: './guide-viewer.html',
   styleUrls: ['./guide-viewer.scss'],
+  standalone: true,
+  imports: [
+    DocViewer,
+    NavigationFocus,
+    TableOfContents,
+    Footer,
+  ],
 })
 export class GuideViewer implements OnInit {
   @HostBinding('class.main-content') readonly mainContentClass = true;
@@ -47,11 +56,11 @@ const routes: Routes = [ {path : '', component : GuideViewer} ];
 // These imports may need to be updated when adding examples to new or existing guides.
 @NgModule({
   imports: [
-    DocViewerModule, FooterModule, TableOfContentsModule, ReactiveFormsModule,
-    RouterModule.forChild(routes), NavigationFocusModule,
+    DocViewerModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    GuideViewer,
   ],
   exports: [GuideViewer],
-  declarations: [GuideViewer],
-  providers: [GuideItems],
 })
 export class GuideViewerModule {}
