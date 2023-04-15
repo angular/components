@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ComponentHeaderModule, ComponentPageHeader} from './component-page-header';
+import {ComponentPageHeader} from './component-page-header';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
@@ -8,7 +8,7 @@ describe('ComponentPageHeader', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ComponentHeaderModule, DocsAppTestingModule],
+      imports: [DocsAppTestingModule],
     }).compileComponents();
   }));
 

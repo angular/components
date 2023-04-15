@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, NgModule, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSlider, MatSliderModule} from '@angular/material/slider';
 
@@ -7,7 +7,9 @@ import {MatSlider, MatSliderModule} from '@angular/material/slider';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-slider-scene',
   templateUrl: './slider-scene.html',
-  styleUrls: ['./slider-scene.scss']
+  styleUrls: ['./slider-scene.scss'],
+  standalone: true,
+  imports: [MatIconModule, MatSliderModule]
 })
 export class SliderScene implements AfterViewInit {
   @ViewChild('volume') volume!: MatSlider;
@@ -17,14 +19,3 @@ export class SliderScene implements AfterViewInit {
     (this.volume as any).focus();
   }
 }
-
-@NgModule({
-  imports: [
-    MatIconModule,
-    MatSliderModule
-  ],
-  exports: [SliderScene],
-  declarations: [SliderScene]
-})
-export class SliderSceneModule {}
-

@@ -1,23 +1,15 @@
-import {Component, HostBinding, NgModule} from '@angular/core';
+import {Component, HostBinding} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {FooterModule} from '../../shared/footer/footer';
-import {RouterModule, Routes} from '@angular/router';
+import {Footer} from '../../shared/footer/footer';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-not-found',
   templateUrl: './not-found.html',
-  styleUrls: ['./not-found.scss']
+  styleUrls: ['./not-found.scss'],
+  standalone: true,
+  imports: [MatButtonModule, RouterLink, Footer]
 })
 export class NotFound {
   @HostBinding('class.main-content') readonly mainContentClass = true;
-}
-
-const routes: Routes = [{path: '', component: NotFound}];
-
-@NgModule({
-  imports: [MatButtonModule, FooterModule, RouterModule.forChild(routes)],
-  exports: [NotFound],
-  declarations: [NotFound]
-})
-export class NotFoundModule {
 }

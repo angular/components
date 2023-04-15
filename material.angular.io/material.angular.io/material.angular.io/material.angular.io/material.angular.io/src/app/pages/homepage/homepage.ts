@@ -1,18 +1,19 @@
-import {Component, HostBinding, Inject, NgModule, OnInit, Optional} from '@angular/core';
+import {Component, HostBinding, Inject, OnInit, Optional} from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
+
 import {MatButtonModule} from '@angular/material/button';
-import {FooterModule} from '../../shared/footer/footer';
-import {RouterModule, Routes} from '@angular/router';
+import {Footer} from '../../shared/footer/footer';
+import {RouterLink} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
-import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
+import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule} from '@angular/material/card';
 import {GuideItems} from '../../shared/guide-items/guide-items';
-import {CommonModule} from '@angular/common';
-import {CarouselModule} from '../../shared/carousel/carousel-module';
+import {NgFor} from '@angular/common';
+
 import {Support} from '../../shared/support/support';
+import {Carousel, CarouselItem} from '../../shared/carousel/carousel';
 
 const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button'];
 
@@ -20,6 +21,20 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
   selector: 'app-homepage',
   templateUrl: './homepage.html',
   styleUrls: ['./homepage.scss'],
+  standalone: true,
+  imports: [
+    NavigationFocus,
+    MatButtonModule,
+    RouterLink,
+    MatDividerModule,
+    MatIconModule,
+    Carousel,
+    NgFor,
+    CarouselItem,
+    MatCardModule,
+    Support,
+    Footer,
+  ],
 })
 export class Homepage implements OnInit {
   @HostBinding('class.main-content') readonly mainContentClass = true;
@@ -41,20 +56,4 @@ export class Homepage implements OnInit {
   getTopComponents(): string[] {
     return TOP_COMPONENTS;
   }
-}
-
-const routes: Routes = [{path: '', component: Homepage}];
-
-@NgModule({
-  imports: [SvgViewerModule,
-    MatButtonModule,
-    FooterModule,
-    RouterModule.forChild(routes),
-    NavigationFocusModule, MatIconModule, MatDividerModule, MatCardModule, CommonModule,
-    CarouselModule],
-  exports: [Homepage],
-  declarations: [Homepage, Support],
-  providers: [GuideItems]
-})
-export class HomepageModule {
 }

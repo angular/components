@@ -1,21 +1,11 @@
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-tabs-scene',
   templateUrl: './tabs-scene.html',
-  styleUrls: ['./tabs-scene.scss']
+  styleUrls: ['./tabs-scene.scss'],
+  standalone: true,
+  imports: [MatTabsModule]
 })
-export class TabsScene {
-}
-
-@NgModule({
-  imports: [
-    MatTabsModule,
-  ],
-  exports: [TabsScene],
-  declarations: [TabsScene]
-})
-export class TabsSceneModule {
-}
-
+export class TabsScene {}

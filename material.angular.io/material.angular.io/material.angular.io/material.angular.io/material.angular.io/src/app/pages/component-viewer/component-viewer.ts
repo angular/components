@@ -1,5 +1,5 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgFor, NgIf, AsyncPipe} from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -13,16 +13,24 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
-import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
+import {ActivatedRoute,
+  Params,
+  Router,
+  RouterModule,
+  RouterLinkActive,
+  RouterLink,
+  RouterOutlet
+} from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
-import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
+
 import {ComponentPageTitle} from '../page-title/page-title';
-import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
+import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
 import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
+import {ExampleViewer} from '../../shared/example-viewer/example-viewer';
 
 
 @Component({
@@ -30,6 +38,15 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
   templateUrl: './component-viewer.html',
   styleUrls: ['./component-viewer.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    MatTabsModule,
+    NavigationFocus,
+    NgFor,
+    RouterLinkActive,
+    RouterLink,
+    RouterOutlet,
+  ],
 })
 export class ComponentViewer implements OnDestroy {
   componentDocItem = new ReplaySubject<DocItem>(1);
@@ -134,6 +151,13 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   selector: 'component-overview',
   templateUrl: './component-overview.html',
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    NgIf,
+    DocViewer,
+    TableOfContents,
+    AsyncPipe,
+  ],
 })
 export class ComponentOverview extends ComponentBaseView {
   constructor(
@@ -160,6 +184,14 @@ export class ComponentOverview extends ComponentBaseView {
   templateUrl: './component-api.html',
   styleUrls: ['./component-api.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    NgIf,
+    DocViewer,
+    NgFor,
+    TableOfContents,
+    AsyncPipe,
+  ],
 })
 export class ComponentApi extends ComponentBaseView {
   constructor(
@@ -180,6 +212,13 @@ export class ComponentApi extends ComponentBaseView {
   selector: 'component-examples',
   templateUrl: './component-examples.html',
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    ExampleViewer,
+    AsyncPipe,
+  ],
 })
 export class ComponentExamples extends ComponentBaseView {
   constructor(
@@ -197,11 +236,8 @@ export class ComponentExamples extends ComponentBaseView {
     RouterModule,
     DocViewerModule,
     CommonModule,
-    TableOfContentsModule,
-    NavigationFocusModule,
+    ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples,
   ],
   exports: [ComponentViewer],
-  declarations: [ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples],
-  providers: [DocumentationItems],
 })
 export class ComponentViewerModule {}

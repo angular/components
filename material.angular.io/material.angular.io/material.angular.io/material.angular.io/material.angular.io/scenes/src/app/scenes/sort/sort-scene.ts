@@ -1,5 +1,5 @@
-import {CommonModule} from '@angular/common';
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {NgFor} from '@angular/common';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatSortModule} from '@angular/material/sort';
 
 export interface Dessert {
@@ -14,7 +14,9 @@ export interface Dessert {
   encapsulation: ViewEncapsulation.None,
   selector: 'app-sort-scene',
   templateUrl: './sort-scene.html',
-  styleUrls: ['./sort-scene.scss']
+  styleUrls: ['./sort-scene.scss'],
+  standalone: true,
+  imports: [MatSortModule, NgFor]
 })
 export class SortScene {
   desserts: Dessert[] = [
@@ -23,15 +25,3 @@ export class SortScene {
     {name: 'Frozen yogurt', calories: 159, fat: 6, carbs: 24, protein: 4},
   ];
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatSortModule
-  ],
-  exports: [SortScene],
-  declarations: [SortScene]
-})
-export class SortSceneModule {
-}
-

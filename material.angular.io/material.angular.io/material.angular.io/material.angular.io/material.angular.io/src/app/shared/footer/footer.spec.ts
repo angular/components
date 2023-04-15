@@ -1,6 +1,6 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {Footer, FooterModule} from './footer';
+import {Footer} from './footer';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
@@ -9,7 +9,7 @@ describe('Footer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [FooterModule, DocsAppTestingModule],
+      imports: [DocsAppTestingModule],
     }).compileComponents();
   }));
 

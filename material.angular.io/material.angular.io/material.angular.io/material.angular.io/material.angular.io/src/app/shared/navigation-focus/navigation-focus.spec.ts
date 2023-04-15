@@ -1,9 +1,9 @@
-import {Component, NgModule, NgZone} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 import {NavigationFocusService} from './navigation-focus.service';
-import {NavigationFocusModule} from './navigation-focus';
+import {NavigationFocus} from './navigation-focus';
 
 describe('Navigation focus service', () => {
   let navigationFocusService: NavigationFocusService;
@@ -18,12 +18,14 @@ describe('Navigation focus service', () => {
 
   beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([
-          {path: '', component: RouteTest},
-          {path: 'cdk', component: RouteTest},
-          {path: 'guides', component: RouteTest}
-        ]),
-        NavigationFocusModule],
+        imports: [
+          RouterTestingModule.withRoutes([
+            {path: '', component: RouteTest},
+            {path: 'cdk', component: RouteTest},
+            {path: 'guides', component: RouteTest}
+          ]),
+          NavigationFocus
+        ],
         providers: [NavigationFocusService],
         declarations: [NavigationFocusTest, RouteTest],
       });
@@ -130,9 +132,6 @@ describe('Navigation focus service', () => {
 })
 class NavigationFocusTest {
 }
-@NgModule({
-  imports: [NavigationFocusModule]
-})
 
 @Component({
   selector: 'route-test',

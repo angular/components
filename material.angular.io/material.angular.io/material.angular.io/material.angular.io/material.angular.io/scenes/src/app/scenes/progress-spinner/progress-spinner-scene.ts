@@ -1,4 +1,4 @@
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
@@ -6,16 +6,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-input-scene',
   templateUrl: './progress-spinner-scene.html',
-  styleUrls: ['./progress-spinner-scene.scss']
+  styleUrls: ['./progress-spinner-scene.scss'],
+  standalone: true,
+  imports: [MatProgressSpinnerModule]
 })
 export class ProgressSpinnerScene {}
-
-@NgModule({
-  imports: [
-    MatProgressSpinnerModule
-  ],
-  exports: [ProgressSpinnerScene],
-  declarations: [ProgressSpinnerScene]
-})
-export class ProgressSpinnerSceneModule {}
-

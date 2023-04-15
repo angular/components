@@ -574,7 +574,7 @@ const ALL_COMPONENTS = processDocs('material', DOCS[COMPONENTS]);
 const ALL_CDK = processDocs('cdk', DOCS[CDK]);
 const ALL_DOCS = [...ALL_COMPONENTS, ...ALL_CDK];
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class DocumentationItems {
 
   getItems(section: string): DocItem[] {

@@ -1,5 +1,5 @@
-import {CommonModule} from '@angular/common';
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {NgFor} from '@angular/common';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 
 @Component({
@@ -7,6 +7,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
   templateUrl: './grid-list-scene.html',
   styleUrls: ['./grid-list-scene.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatGridListModule, NgFor],
 })
 export class GridListScene {
   tiles = [
@@ -16,14 +18,3 @@ export class GridListScene {
     {cols: 2, rows: 1, color: '#d66'},
   ];
 }
-
-@NgModule({
-  imports: [
-    MatGridListModule,
-    CommonModule
-  ],
-  exports: [GridListScene],
-  declarations: [GridListScene],
-})
-export class GridListSceneModule {}
-

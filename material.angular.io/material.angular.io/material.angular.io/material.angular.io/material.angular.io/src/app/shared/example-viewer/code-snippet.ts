@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  ViewChild
+  ViewChild,
+  forwardRef
 } from '@angular/core';
 import {DocViewer} from '../doc-viewer/doc-viewer';
 
@@ -10,7 +11,9 @@ import {DocViewer} from '../doc-viewer/doc-viewer';
   selector: 'code-snippet',
   templateUrl: './code-snippet.html',
   styleUrls: ['./example-viewer.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [forwardRef(() => DocViewer)]
 })
 export class CodeSnippet {
   @Input() source: string | undefined;

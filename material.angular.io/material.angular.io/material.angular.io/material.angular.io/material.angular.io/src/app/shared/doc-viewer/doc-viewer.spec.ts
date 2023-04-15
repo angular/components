@@ -13,8 +13,7 @@ describe('DocViewer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [DocViewerModule, DocsAppTestingModule],
-      declarations: [DocViewerTestComponent],
+      imports: [DocViewerModule, DocsAppTestingModule, DocViewerTestComponent],
     }).compileComponents();
   }));
 
@@ -147,6 +146,8 @@ describe('DocViewer', () => {
 @Component({
   selector: 'test',
   template: `<doc-viewer [documentUrl]="documentUrl"></doc-viewer>`,
+  standalone: true,
+  imports: [DocViewerModule, DocsAppTestingModule],
 })
 class DocViewerTestComponent {
   documentUrl = 'http://material.angular.io/simple-doc.html';

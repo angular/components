@@ -7,14 +7,14 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadChildren: () => import('./pages/homepage').then(m => m.HomepageModule)
+    loadComponent: () => import('./pages/homepage').then(m => m.Homepage)
   },
   {path: 'categories', redirectTo: '/components/categories'},
   {path: 'cdk', pathMatch: 'full', redirectTo: '/cdk/categories'},
   {path: 'components', pathMatch: 'full', redirectTo: '/components/categories'},
   {
     path: 'guides',
-    loadChildren: () => import('./pages/guide-list').then(m => m.GuideListModule)
+    loadComponent: () => import('./pages/guide-list').then(m => m.GuideList)
   },
   // Since https://github.com/angular/components/pull/9574, the cdk-table guide became the overview
   // document for the cdk table. To avoid any dead / broken links, we redirect to the new location.
@@ -26,7 +26,7 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   // Needs to be defined before `:section` so it gets picked first when redirecting a missing page.
   {
     path: '404',
-    loadChildren: () => import('./pages/not-found').then(m => m.NotFoundModule)
+    loadComponent: () => import('./pages/not-found').then(m => m.NotFound)
   },
   {
     path: ':section',

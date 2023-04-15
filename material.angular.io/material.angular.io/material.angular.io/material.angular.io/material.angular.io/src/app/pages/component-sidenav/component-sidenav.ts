@@ -1,23 +1,35 @@
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {CdkAccordionModule} from '@angular/cdk/accordion';
-import {BreakpointObserver} from '@angular/cdk/layout';
-import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
-import {
-  Component,
+import {Component,
   Input,
   NgModule,
   NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  forwardRef
 } from '@angular/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {CommonModule, NgIf, AsyncPipe, NgFor} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
-import {MatSidenav, MatSidenavModule, MatDrawerToggleResult} from '@angular/material/sidenav';
-import {ActivatedRoute, Params, RouterModule, Routes} from '@angular/router';
+import {
+  MatSidenav,
+  MatSidenavModule,
+  MatDrawerToggleResult,
+} from '@angular/material/sidenav';
+import {
+  ActivatedRoute,
+  Params,
+  RouterModule,
+  Routes,
+  RouterOutlet,
+  RouterLinkActive,
+  RouterLink
+} from '@angular/router';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -25,22 +37,17 @@ import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {
   DocumentationItems
 } from '../../shared/documentation-items/documentation-items';
-import {FooterModule} from '../../shared/footer/footer';
-import {
-  NavigationFocusModule
-} from '../../shared/navigation-focus/navigation-focus';
+import {Footer} from '../../shared/footer/footer';
+
 import {
   NavigationFocusService
 } from '../../shared/navigation-focus/navigation-focus.service';
-import {StackBlitzButtonModule} from '../../shared/stack-blitz';
-import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
+
 import {
   ComponentCategoryList,
   ComponentCategoryListModule
 } from '../component-category-list/component-category-list';
-import {
-  ComponentHeaderModule
-} from '../component-page-header/component-page-header';
+import {ComponentPageHeader} from '../component-page-header/component-page-header';
 import {
   ComponentApi,
   ComponentExamples,
@@ -64,6 +71,16 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   templateUrl: './component-sidenav.html',
   styleUrls: ['./component-sidenav.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    MatSidenavModule,
+    NgIf,
+    forwardRef(() => ComponentNav),
+    ComponentPageHeader,
+    RouterOutlet,
+    Footer,
+    AsyncPipe,
+  ],
 })
 export class ComponentSidenav implements OnInit, OnDestroy {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
@@ -113,10 +130,19 @@ export class ComponentSidenav implements OnInit, OnDestroy {
   templateUrl: './component-nav.html',
   animations: [
     trigger('bodyExpansion', [
-      state('collapsed', style({height: '0px', display: 'none'})),
-      state('expanded', style({height: '*', display: 'block'})),
+      state('collapsed', style({ height: '0px', display: 'none' })),
+      state('expanded', style({ height: '*', display: 'block' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4,0.0,0.2,1)')),
     ]),
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    MatListModule,
+    NgFor,
+    RouterLinkActive,
+    RouterLink,
+    AsyncPipe,
   ],
 })
 export class ComponentNav {
@@ -159,21 +185,15 @@ const routes: Routes = [{
     RouterModule,
     CommonModule,
     ComponentCategoryListModule,
-    ComponentHeaderModule,
     ComponentViewerModule,
     DocViewerModule,
-    FooterModule,
     FormsModule,
     HttpClientModule,
     CdkAccordionModule,
     MatIconModule,
-    StackBlitzButtonModule,
-    SvgViewerModule,
     RouterModule.forChild(routes),
-    NavigationFocusModule
+    ComponentSidenav, ComponentNav
   ],
   exports: [ComponentSidenav],
-  declarations: [ComponentSidenav, ComponentNav],
-  providers: [DocumentationItems],
 })
 export class ComponentSidenavModule {}

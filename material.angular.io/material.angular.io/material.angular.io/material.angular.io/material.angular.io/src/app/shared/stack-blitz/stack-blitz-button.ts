@@ -1,14 +1,20 @@
-import {Component, Input, NgModule, NgZone} from '@angular/core';
+import {Component, Input, NgZone} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {StackBlitzWriter} from './stack-blitz-writer';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'stack-blitz-button',
   templateUrl: './stack-blitz-button.html',
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+  ],
 })
 export class StackBlitzButton {
   exampleData: ExampleData | undefined;
@@ -56,11 +62,3 @@ export class StackBlitzButton {
     });
   }
 }
-
-@NgModule({
-  imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatSnackBarModule],
-  exports: [StackBlitzButton],
-  declarations: [StackBlitzButton],
-  providers: [StackBlitzWriter],
-})
-export class StackBlitzButtonModule {}

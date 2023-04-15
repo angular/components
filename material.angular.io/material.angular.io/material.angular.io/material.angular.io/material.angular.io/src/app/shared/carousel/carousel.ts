@@ -15,9 +15,13 @@ import {
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {NgIf} from '@angular/common';
 
 @Directive({
   selector: '[carousel-item]',
+  standalone: true,
 })
 export class CarouselItem implements FocusableOption {
   @HostBinding('attr.role') readonly role = 'listitem';
@@ -35,6 +39,12 @@ export class CarouselItem implements FocusableOption {
   templateUrl: './carousel.html',
   styleUrls: ['./carousel.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    NgIf,
+    MatButtonModule,
+    MatIconModule,
+  ],
 })
 export class Carousel implements AfterContentInit {
   @Input('aria-label') ariaLabel: string | undefined;

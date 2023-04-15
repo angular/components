@@ -1,6 +1,5 @@
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Component, ViewEncapsulation} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -8,16 +7,10 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
   template: '<div class="docs-scene-snackbar-background"></div>',
   styleUrls: ['./snack-bar-scene.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
 })
 export class SnackBarScene {
   constructor(snackbar: MatSnackBar) {
     snackbar.open('Message archived', 'Undo');
   }
 }
-
-@NgModule({
-  imports: [NoopAnimationsModule, MatSnackBarModule],
-  declarations: [SnackBarScene],
-  exports: [SnackBarScene],
-})
-export class SnackBarSceneModule { }
