@@ -23,6 +23,7 @@ class FakeBaseTreeKeyManagerItem {
   _children: FakeBaseTreeKeyManagerItem[] = [];
 
   isDisabled?: boolean = false;
+  skipItem?: boolean = false;
 
   constructor(private _label: string) {}
 
@@ -263,12 +264,32 @@ describe('TreeKeyManager', () => {
           expect(keyManager.getActiveItemIndex()).toBe(0);
         });
 
+        it('should focus the first non-disabled item when Home is pressed', () => {
+          itemList.get(0)!.isDisabled = true;
+          keyManager.onClick(itemList.get(2)!);
+          expect(keyManager.getActiveItemIndex()).toBe(2);
+
+          keyManager.onKeydown(fakeKeyEvents.home);
+
+          expect(keyManager.getActiveItemIndex()).toBe(1);
+        });
+
         it('should focus the last item when End is pressed', () => {
           keyManager.onClick(itemList.get(0)!);
           expect(keyManager.getActiveItemIndex()).toBe(0);
 
           keyManager.onKeydown(fakeKeyEvents.end);
           expect(keyManager.getActiveItemIndex()).toBe(itemList.length - 1);
+        });
+
+        it('should focus the last non-disabled item when End is pressed', () => {
+          itemList.get(itemList.length - 1)!.isDisabled = true;
+          keyManager.onClick(itemList.get(0)!);
+          expect(keyManager.getActiveItemIndex()).toBe(0);
+
+          keyManager.onKeydown(fakeKeyEvents.end);
+
+          expect(keyManager.getActiveItemIndex()).toBe(itemList.length - 2);
         });
       });
 
@@ -945,6 +966,195 @@ describe('TreeKeyManager', () => {
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(-1);
         }));
+      });
+
+      describe('focusItem', () => {
+        beforeEach(() => {
+          keyManager.onInitialFocus();
+        });
+
+        it('should focus the provided index', () => {
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+
+          keyManager.focusItem(1);
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
+        });
+
+        it('should be able to set the active item by reference', () => {
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+
+          keyManager.focusItem(itemList.get(2)!);
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(2);
+        });
+
+        it('should be able to set the active item without emitting an event', () => {
+          const spy = jasmine.createSpy('change spy');
+          const subscription = keyManager.change.subscribe(spy);
+
+          expect(keyManager.getActiveItemIndex()).toBe(0);
+
+          keyManager.focusItem(2, {emitChangeEvent: false});
+
+          expect(keyManager.getActiveItemIndex()).toBe(2);
+          expect(spy).not.toHaveBeenCalled();
+
+          subscription.unsubscribe();
+        });
+
+        it('should not emit an event if the item did not change', () => {
+          const spy = jasmine.createSpy('change spy');
+          const subscription = keyManager.change.subscribe(spy);
+
+          keyManager.focusItem(2);
+          keyManager.focusItem(2);
+
+          expect(spy).toHaveBeenCalledTimes(1);
+
+          subscription.unsubscribe();
+        });
+      });
+
+      describe('focusFirstItem', () => {
+        beforeEach(() => {
+          keyManager.onInitialFocus();
+        });
+
+        it('should focus the first item', () => {
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(2);
+
+          keyManager.focusFirstItem();
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+        });
+
+        it('should set the active item to the second item if the first one is disabled', () => {
+          itemList.get(0)!.isDisabled = true;
+
+          keyManager.focusFirstItem();
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
+        });
+      });
+
+      describe('focusLastItem', () => {
+        beforeEach(() => {
+          keyManager.onInitialFocus();
+        });
+
+        it('should focus the last item', () => {
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+
+          keyManager.focusLastItem();
+          expect(keyManager.getActiveItemIndex())
+            .withContext('active item index')
+            .toBe(itemList.length - 1);
+        });
+
+        it('should set the active item to the second-to-last item if the last is disabled', () => {
+          itemList.get(itemList.length - 1)!.isDisabled = true;
+
+          keyManager.focusLastItem();
+          expect(keyManager.getActiveItemIndex())
+            .withContext('active item index')
+            .toBe(itemList.length - 2);
+        });
+      });
+
+      describe('focusNextItem', () => {
+        beforeEach(() => {
+          keyManager.onInitialFocus();
+        });
+
+        it('should focus the next item', () => {
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+
+          keyManager.focusNextItem();
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
+        });
+
+        it('should skip disabled items', () => {
+          itemList.get(1)!.isDisabled = true;
+
+          keyManager.focusNextItem();
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(2);
+        });
+      });
+
+      describe('focusPreviousItem', () => {
+        beforeEach(() => {
+          keyManager.onInitialFocus();
+        });
+
+        it('should focus the previous item', () => {
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
+
+          keyManager.focusPreviousItem();
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+        });
+
+        it('should skip disabled items', () => {
+          itemList.get(1)!.isDisabled = true;
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(2);
+
+          keyManager.focusPreviousItem();
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
+        });
+      });
+
+      describe('skip predicate', () => {
+        beforeEach(() => {
+          keyManager = new TreeKeyManager({
+            items: itemList,
+            skipPredicate: item => item.skipItem ?? false,
+          });
+          keyManager.onInitialFocus();
+        });
+
+        it('should be able to skip items with a custom predicate', () => {
+          itemList.get(1)!.skipItem = true;
+          expect(keyManager.getActiveItemIndex()).toBe(0);
+
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+          expect(keyManager.getActiveItemIndex()).toBe(2);
+        });
+      });
+
+      describe('focus', () => {
+        beforeEach(() => {
+          keyManager.onInitialFocus();
+
+          for (const item of itemList) {
+            spyOn(item, 'focus');
+          }
+        });
+
+        it('calls .focus() on focused items', () => {
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+          expect(itemList.get(0)!.focus).not.toHaveBeenCalled();
+          expect(itemList.get(1)!.focus).toHaveBeenCalledTimes(1);
+          expect(itemList.get(2)!.focus).not.toHaveBeenCalled();
+
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+          expect(itemList.get(0)!.focus).not.toHaveBeenCalled();
+          expect(itemList.get(1)!.focus).toHaveBeenCalledTimes(1);
+          expect(itemList.get(2)!.focus).toHaveBeenCalledTimes(1);
+        });
+
+        it('calls .focus() on focused items, when pressing up key', () => {
+          keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+          expect(itemList.get(0)!.focus).not.toHaveBeenCalled();
+          expect(itemList.get(1)!.focus).toHaveBeenCalledTimes(1);
+
+          keyManager.onKeydown(fakeKeyEvents.upArrow);
+
+          expect(itemList.get(0)!.focus).toHaveBeenCalledTimes(1);
+          expect(itemList.get(1)!.focus).toHaveBeenCalledTimes(1);
+        });
       });
     });
   }

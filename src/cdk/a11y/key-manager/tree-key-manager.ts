@@ -66,6 +66,9 @@ export interface TreeKeyManagerItem {
   focus(): void;
 }
 
+/**
+ * Configuration for the TreeKeyManager.
+ */
 export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
   items: Observable<T[]> | QueryList<T> | T[];
 
@@ -284,9 +287,49 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._focusFirstItem();
   }
 
-  private _setActiveItem(index: number): void;
-  private _setActiveItem(item: T): void;
-  private _setActiveItem(itemOrIndex: number | T) {
+  /**
+   * Focus the provided item by index.
+   * @param index The index of the item to focus.
+   * @param options Additional focusing options.
+   */
+  focusItem(index: number, options?: {emitChangeEvent?: boolean}): void;
+  /**
+   * Focus the provided item.
+   * @param item The item to focus. Equality is determined via the trackBy function.
+   * @param options Additional focusing options.
+   */
+  focusItem(item: T, options?: {emitChangeEvent?: boolean}): void;
+  focusItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void {
+    this._setActiveItem(itemOrIndex, options);
+  }
+
+  /** Focus the first available item. */
+  focusFirstItem(): void {
+    this._focusFirstItem();
+  }
+
+  /** Focus the last available item. */
+  focusLastItem(): void {
+    this._focusLastItem();
+  }
+
+  /** Focus the next available item. */
+  focusNextItem(): void {
+    this._focusNextItem();
+  }
+
+  /** Focus the previous available item. */
+  focusPreviousItem(): void {
+    this._focusPreviousItem();
+  }
+
+  private _setActiveItem(index: number, options?: {emitChangeEvent?: boolean}): void;
+  private _setActiveItem(item: T, options?: {emitChangeEvent?: boolean}): void;
+  private _setActiveItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
+  private _setActiveItem(itemOrIndex: number | T, options: {emitChangeEvent?: boolean} = {}) {
+    // Set default options
+    options.emitChangeEvent ??= true;
+
     let index =
       typeof itemOrIndex === 'number'
         ? itemOrIndex
@@ -307,7 +350,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._activeItem = activeItem ?? null;
     this._activeItemIndex = index;
 
-    this.change.next(this._activeItem);
+    if (options.emitChangeEvent) {
+      this.change.next(this._activeItem);
+    }
     this._activeItem?.focus();
     if (this._activationFollowsFocus) {
       this._activateCurrentItem();
