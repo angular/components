@@ -94,7 +94,8 @@
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
   $density-scale: theming.clamp-density($density-scale, -2);
-  .mat-mdc-chip {
+  .mat-mdc-chip,
+  .mat-mdc-standard-chip.mat-mdc-standard-chip {
     @include mdc-chip-theme.density($density-scale, $query: mdc-helpers.$mdc-base-styles-query);
   }
 }
