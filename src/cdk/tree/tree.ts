@@ -11,6 +11,7 @@ import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CollectionViewer, DataSource, isDataSource, SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
+  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -100,7 +101,9 @@ function isNotNullish<T>(val: T | null | undefined): val is T {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTree<T, K = T>
+  implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
+{
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
 
@@ -704,8 +707,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   /** Given a CdkTreeNode, gets the nodes that renders that node's child data. */
   _getNodeChildren(node: CdkTreeNode<T, K>) {
-    const children = coerceObservable(this._getChildrenAccessor()?.(node.data) ?? []);
-    return children.pipe(
+    return coerceObservable(this._getChildrenAccessor()?.(node.data) ?? []).pipe(
       map(children =>
         children
           .map(child => this._nodes.value.get(this._getExpansionKey(child)))
@@ -1015,7 +1017,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     return this._tree._getNodeParent(this) ?? null;
   }
 
-  getChildren(): Array<CdkTreeNode<T, K>> | Observable<Array<CdkTreeNode<T, K>>> {
+  getChildren(): CdkTreeNode<T, K>[] | Observable<CdkTreeNode<T, K>[]> {
     return this._tree._getNodeChildren(this);
   }
 
