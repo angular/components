@@ -7,19 +7,15 @@
  */
 
 import {
-  A,
   DOWN_ARROW,
   END,
   ENTER,
   HOME,
   LEFT_ARROW,
-  NINE,
   RIGHT_ARROW,
   SPACE,
   TAB,
   UP_ARROW,
-  Z,
-  ZERO,
 } from '@angular/cdk/keycodes';
 import {QueryList} from '@angular/core';
 import {isObservable, Observable, Subject} from 'rxjs';
@@ -305,7 +301,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
   private _findNextAvailableItemIndex(startingIndex: number) {
     for (let i = startingIndex + 1; i < this._items.length; i++) {
-      if (!this._isItemDisabled(this._items[i])) {
+      if (!this._skipPredicateFn(this._items[i])) {
         return i;
       }
     }
@@ -314,7 +310,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
   private _findPreviousAvailableItemIndex(startingIndex: number) {
     for (let i = startingIndex - 1; i >= 0; i--) {
-      if (!this._isItemDisabled(this._items[i])) {
+      if (!this._skipPredicateFn(this._items[i])) {
         return i;
       }
     }
@@ -330,19 +326,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    * If the item is already collapsed, we expand the item. Otherwise, we will focus the first child.
    */
   private _expandCurrentItem() {}
-
-  private _isCurrentItemExpanded() {
-    if (!this._activeItem) {
-      return false;
-    }
-    return typeof this._activeItem.isExpanded === 'boolean'
-      ? this._activeItem.isExpanded
-      : this._activeItem.isExpanded();
-  }
-
-  private _isItemDisabled(item: T) {
-    return typeof item.isDisabled === 'boolean' ? item.isDisabled : item.isDisabled?.();
-  }
 
   /** For all items that are the same level as the current item, we expand those items. */
   private _expandAllItemsAtCurrentItemLevel() {}
