@@ -12,18 +12,16 @@ import {
 } from '@angular/cdk/keycodes';
 import {createKeyboardEvent} from '../../testing/private';
 import {QueryList} from '@angular/core';
-import {fakeAsync, tick} from '@angular/core/testing';
 import {take} from 'rxjs/operators';
-import {FocusOrigin} from '../focus-monitor/focus-monitor';
 import {TreeKeyManager, TreeKeyManagerItem} from './tree-key-manager';
 import {Observable, of as observableOf} from 'rxjs';
 
 class FakeBaseTreeKeyManagerItem {
-  public _isExpanded = false;
-  public _parent: FakeBaseTreeKeyManagerItem | null = null;
-  public _children: FakeBaseTreeKeyManagerItem[] = [];
+  _isExpanded = false;
+  _parent: FakeBaseTreeKeyManagerItem | null = null;
+  _children: FakeBaseTreeKeyManagerItem[] = [];
 
-  public isDisabled?: boolean = false;
+  isDisabled?: boolean = false;
 
   constructor(private _label: string) {}
 
@@ -73,7 +71,7 @@ interface ExpandCollapseKeyEventTestContext {
   collapseKeyEvent: KeyboardEvent;
 }
 
-fdescribe('TreeKeyManager', () => {
+describe('TreeKeyManager', () => {
   let fakeKeyEvents: {
     downArrow: KeyboardEvent;
     upArrow: KeyboardEvent;
