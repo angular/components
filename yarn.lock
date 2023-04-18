@@ -257,7 +257,6 @@
 
 "@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#6e41369810084e8f9a5c539c0e3cef79d8f191de":
   version "0.0.0-3c0ae65166d0d4ad64ea16e0891a59b0eed2682c"
-  uid "6e41369810084e8f9a5c539c0e3cef79d8f191de"
   resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#6e41369810084e8f9a5c539c0e3cef79d8f191de"
   dependencies:
     "@angular-devkit/build-angular" "16.0.0-rc.0"
@@ -379,7 +378,6 @@
 
 "@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#74d2d9b79bfe17a5334fa7b619af9464514be570":
   version "0.0.0-3c0ae65166d0d4ad64ea16e0891a59b0eed2682c"
-  uid "74d2d9b79bfe17a5334fa7b619af9464514be570"
   resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#74d2d9b79bfe17a5334fa7b619af9464514be570"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
@@ -5941,15 +5939,10 @@ camelcase@^6.2.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
-caniuse-lite@^1.0.30001317, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001449:
-  version "1.0.30001453"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001453.tgz"
-  integrity sha512-R9o/uySW38VViaTrOtwfbFEiBFUh7ST3uIG4OEymIG3/uKdHDO4xk/FaqfUw0d+irSUyFPy3dZszf9VvSTPnsA==
-
-caniuse-lite@^1.0.30001464:
-  version "1.0.30001472"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001472.tgz#3f484885f2a2986c019dc416e65d9d62798cdd64"
-  integrity sha512-xWC/0+hHHQgj3/vrKYY0AAzeIUgr7L9wlELIcAvZdDUHlhL/kNxMdnQLOSOQfP8R51ZzPhmHdyMkI0MMpmxCfg==
+caniuse-lite@^1.0.30001317, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001449, caniuse-lite@^1.0.30001464:
+  version "1.0.30001480"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001480.tgz"
+  integrity sha512-q7cpoPPvZYgtyC4VaBSN0Bt+PJ4c4EYRf0DrduInOz2SkFpHD5p3LnvEpqBp7UnJn+8x1Ogl1s38saUxe+ihQQ==
 
 canonical-path@^1.0.0:
   version "1.0.0"
