@@ -1,3 +1,26 @@
+<a name="16.0.0-rc.1"></a>
+# 16.0.0-rc.1 "gallium-grill" (2023-04-19)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0d56af508](https://github.com/angular/components/commit/0d56af5089d537c8b10f913eb2c607912ee51fff) | fix | **layout:** resolve CSP errors |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e092663d5](https://github.com/angular/components/commit/e092663d56b21a0d226d6083398953c80d1b0c2b) | fix | **button:** add specificity to icon button density ([#26911](https://github.com/angular/components/pull/26911)) |
+| [9147660f5](https://github.com/angular/components/commit/9147660f520d255cfc8c7ef535a58702948270ac) | fix | **core:** remove tabindex from mat-option ([#26917](https://github.com/angular/components/pull/26917)) |
+| [c4a64a15c](https://github.com/angular/components/commit/c4a64a15c87a3a9a0f499a44e6d9a6dfd6aab677) | fix | **form-field:** inconsistent height for non-text inputs ([#26941](https://github.com/angular/components/pull/26941)) |
+| [c6644d65d](https://github.com/angular/components/commit/c6644d65dbfa9b90f0ec982883c417b852e25694) | fix | **legacy-progress-spinner:** avoid CSP errors |
+| [f8a70bf06](https://github.com/angular/components/commit/f8a70bf06089937f298d798e503cf91a31313491) | fix | **schematics:** reference correct entrypoint in schematic definition ([#26930](https://github.com/angular/components/pull/26930)) |
+| [ead5efc4c](https://github.com/angular/components/commit/ead5efc4c54909cd9e53e9fe430c0d488e2097d1) | fix | **tabs:** remove background color from tabs ([#26905](https://github.com/angular/components/pull/26905)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d4d2ea5a4](https://github.com/angular/components/commit/d4d2ea5a45f232477681bd164dcb871347beaf8b) | fix | **column-resize:** avoid CSP errors |
+| [412c691c5](https://github.com/angular/components/commit/412c691c5e22d93ba2f58ee96018ec020a02a33e) | fix | **table-scroll-container:** avoid CSP errors |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-rc.0"></a>
 # 16.0.0-rc.0 "quilt-quail" (2023-04-13)
 ### material
