@@ -1,3 +1,13 @@
+<a name="15.2.8"></a>
+# 15.2.8 "nickel-nickel" (2023-04-19)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af293a124](https://github.com/angular/components/commit/af293a1249fab93f0ae71ecf88a39d4fe6090643) | fix | **core:** remove tabindex from mat-option ([#26917](https://github.com/angular/components/pull/26917)) |
+| [5623a8c8b](https://github.com/angular/components/commit/5623a8c8b8b058f04f2a5aa266bbb00c9518ca9b) | fix | **form-field:** inconsistent height for non-text inputs ([#26941](https://github.com/angular/components/pull/26941)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.7"></a>
 # 15.2.7 "paper-pelican" (2023-04-13)
 ### material
