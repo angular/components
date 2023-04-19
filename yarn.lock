@@ -6022,9 +6022,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001317, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001426, caniuse-lite@^1.0.30001449:
-  version "1.0.30001469"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001469.tgz"
-  integrity sha512-Rcp7221ScNqQPP3W+lVOYDyjdR6dC+neEQCttoNr5bAyz54AboB4iwpnWgyi8P4YUsPybVzT4LgWiBbI3drL4g==
+  version "1.0.30001480"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001480.tgz"
+  integrity sha512-q7cpoPPvZYgtyC4VaBSN0Bt+PJ4c4EYRf0DrduInOz2SkFpHD5p3LnvEpqBp7UnJn+8x1Ogl1s38saUxe+ihQQ==
 
 canonical-path@^1.0.0:
   version "1.0.0"
