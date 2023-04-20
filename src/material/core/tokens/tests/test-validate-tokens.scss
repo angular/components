@@ -1,6 +1,7 @@
 @use 'sass:list';
 @use 'sass:map';
 
+@use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
@@ -14,6 +15,7 @@
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use '@material/theme/validate' as mdc-validate;
 
+@use '../m2/mdc/button-text' as tokens-mdc-button-text;
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '../m2/mdc/elevated-card' as tokens-mdc-elevated-card;
 @use '../m2/mdc/icon-button' as tokens-mdc-icon-button;
@@ -92,4 +94,9 @@
   $component: 'm2.mdc.snackbar',
   $slots: tokens-mdc-snack-bar.get-token-slots(),
   $reference: mdc-snackbar-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.button-text',
+  $slots: tokens-mdc-button-text.get-token-slots(),
+  $reference: mdc-button-text-theme.$light-theme
 );
