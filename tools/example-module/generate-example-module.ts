@@ -60,9 +60,18 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
     return result;
   }, {} as any);
 
-  return fs
-    .readFileSync(require.resolve('./example-module.template'), 'utf8')
-    .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2));
+  let loadText = '\nexport async function loadExample(id: string): Promise<any> {\n';
+  loadText += 'switch (id) {';
+  for (const example of exampleMetadata) {
+    loadText += `\ncase '${example.id}':\nreturn import('@angular/components-examples/${example.module.packagePath}');`;
+  }
+  loadText += 'default:\nreturn undefined;\n}\n}';
+
+  return (
+    fs
+      .readFileSync(require.resolve('./example-module.template'), 'utf8')
+      .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2)) + loadText
+  );
 }
 
 /** Converts a given camel-cased string to a dash-cased string. */
