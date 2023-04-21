@@ -60,12 +60,17 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
     return result;
   }, {} as any);
 
-  let loadText = '\nexport async function loadExample(id: string): Promise<any> {\n';
-  loadText += 'switch (id) {';
-  for (const example of exampleMetadata) {
-    loadText += `\ncase '${example.id}':\nreturn import('@angular/components-examples/${example.module.packagePath}');`;
-  }
-  loadText += 'default:\nreturn undefined;\n}\n}';
+  const loadText = [
+    `export async function loadExample(id: string): Promise<any> {`,
+    `  switch (id) {`,
+    ...exampleMetadata.map(
+      data =>
+        `  case '${data.id}':\nreturn import('@angular/components-examples/${data.module.packagePath}');`,
+    ),
+    `    default:\nreturn undefined;`,
+    `  }`,
+    '}',
+  ].join('\n');
 
   return (
     fs
