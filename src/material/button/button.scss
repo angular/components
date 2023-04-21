@@ -6,14 +6,31 @@
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private' as style-private;
 @use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m2/mdc/button-text' as tokens-mdc-button-text;
+
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  @include mdc-button.static-styles();
+
+  // Note that we don't include a feature query, because this mixins declare
+  // all the "slots" for CSS variables that will be defined in the theme.
+  .mat-mdc-button {
+    $mdc-button-text-slots: tokens-mdc-button-text.get-token-slots();
+
+    // Add the slots for MDC text button.
+    @include mdc-button-text-theme.theme-styles($mdc-button-text-slots);
+
+    // Add default values for MDC text button tokens that aren't outputted by the theming API.
+    @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-unthemable-tokens());
+  }
+}
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-button.static-styles-without-ripple($query: mdc-helpers.$mdc-base-styles-query);
 
   // Keys to exclude from the MDC theme config, allowing us to drop styles we don't need.
   $override-keys: button-base.mat-private-button-remove-ripple((
@@ -25,13 +42,6 @@
     with-icon-icon-size: null,
     label-text-color: inherit,
   ));
-
-  // Note that we don't include a feature query, because this mixins declare
-  // all the "slots" for CSS variables that will be defined in the theme.
-  .mat-mdc-button {
-    @include mdc-button-text-theme.theme-styles(
-      map.merge(mdc-button-text-theme.$light-theme, $override-keys));
-  }
 
   .mat-mdc-unelevated-button {
     @include mdc-button-filled-theme.theme-styles(

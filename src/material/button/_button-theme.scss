@@ -11,12 +11,7 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-
-@mixin _button-variant($color) {
-  @include mdc-button-text-theme.theme((
-    label-text-color: $color,
-  ));
-}
+@use '../core/tokens/m2/mdc/button-text' as tokens-mdc-button-text;
 
 @mixin _unelevated-button-variant($foreground, $background) {
   @include mdc-button-filled-theme.theme((
@@ -40,6 +35,11 @@
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
+
+  .mat-mdc-button {
+    @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-color-tokens($config));
+  }
+
   @include mdc-helpers.using-mdc-theme($config) {
     $is-dark: map.get($config, is-dark);
     $on-surface: mdc-theme-color.prop-value(on-surface);
@@ -52,33 +52,6 @@
     $on-secondary: mdc-theme-color.prop-value(on-secondary);
     $error: mdc-theme-color.prop-value(error);
     $on-error: mdc-theme-color.prop-value(on-error);
-
-    .mat-mdc-button {
-      &.mat-unthemed {
-        @include _button-variant($on-surface);
-      }
-
-      &.mat-primary {
-        @include _button-variant($primary);
-      }
-
-      &.mat-accent {
-        @include _button-variant($secondary);
-      }
-
-      &.mat-warn {
-        @include _button-variant($error);
-      }
-
-      @include button-theme-private.apply-disabled-style() {
-        @include mdc-button-text-theme.theme((
-          // We need to pass both the disabled and enabled values, because the enabled
-          // ones apply to anchors while the disabled ones are for buttons.
-          disabled-label-text-color: $disabled-ink-color,
-          label-text-color: $disabled-ink-color
-        ));
-      }
-    }
 
     .mat-mdc-unelevated-button {
       &.mat-unthemed {
@@ -186,6 +159,11 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
     theming.get-typography-config($config-or-theme));
+
+  .mat-mdc-button {
+    @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-typography-tokens($config));
+  }
+
   @include mdc-helpers.using-mdc-typography($config) {
     @include mdc-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
   }
@@ -193,7 +171,11 @@
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  .mat-mdc-button,
+
+  .mat-mdc-button {
+    @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-density-tokens($density-scale));
+  }
+
   .mat-mdc-raised-button,
   .mat-mdc-unelevated-button,
   .mat-mdc-outlined-button {
