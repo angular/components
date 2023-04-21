@@ -30,6 +30,12 @@
     border-radius: inherit;
   }
 
+  // This style used to be applied by the MatRipple
+  // directive, which is no longer attached to this element.
+  .mat-mdc-button-ripple {
+    overflow: hidden;
+  }
+
   // We use ::before so that we can reuse some of MDC's theming.
   .mat-mdc-button-persistent-ripple::before {
     content: '';

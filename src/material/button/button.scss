@@ -92,12 +92,6 @@
   }
 }
 
-// This style used to be applied by the MatRipple
-// directive, which is no longer attached to this element.
-.mat-mdc-button-ripple {
-  overflow: hidden;
-}
-
 // Since the stroked button has has an actual border that reduces the available space for
 // child elements such as the ripple container or focus overlay, an inherited border radius
 // for the absolute-positioned child elements does not work properly. This is because the

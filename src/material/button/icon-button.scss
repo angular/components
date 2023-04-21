@@ -55,12 +55,6 @@
   @include button-base.mat-private-button-touch-target(true);
   @include private.private-animation-noop();
 
-  // This style used to be applied by the MatRipple
-  // directive, which is no longer attached to this element.
-  .mat-mdc-button-ripple {
-    overflow: hidden;
-  }
-
   .mat-mdc-button-persistent-ripple {
     border-radius: 50%;
   }
