@@ -12,13 +12,10 @@
 
   // Add the official slots for the MDC progress-bar.
   @include mdc-linear-progress-theme.theme-styles(
-    map.merge(
-      $mdc-progress-bar-token-slots,
-      (
-        // Excluded because it is meant to be set by theme (b/273562256).
-        track-color: null
-      )
-    )
+      map.merge($mdc-progress-bar-token-slots, (
+      // Excluded because it is meant to be set by theme (b/273562256).
+      track-color: null,
+    ))
   );
 
   // Add default values for tokens that aren't outputted by the theming API.
