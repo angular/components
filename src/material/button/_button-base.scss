@@ -40,11 +40,6 @@
   .mat-mdc-button-persistent-ripple::before {
     content: '';
     opacity: 0;
-    background-color: var(--mat-mdc-button-persistent-ripple-color);
-  }
-
-  .mat-ripple-element {
-    background-color: var(--mat-mdc-button-ripple-color);
   }
 
   // The content should appear over the state and ripple layers, otherwise they may adversely affect

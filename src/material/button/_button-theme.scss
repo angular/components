@@ -33,11 +33,42 @@
   ));
 }
 
+@function _get-text-button-color-tokens-for-palette($palette) {
+  @return (
+    focus-label-text-color: theming.get-color-from-palette($palette),
+    focus-state-layer-color: theming.get-color-from-palette($palette),
+    hover-label-text-color: theming.get-color-from-palette($palette),
+    hover-state-layer-color: theming.get-color-from-palette($palette),
+    label-text-color: theming.get-color-from-palette($palette),
+    pressed-label-text-color: theming.get-color-from-palette($palette),
+    pressed-state-layer-color: theming.get-color-from-palette($palette),
+    with-icon-icon-color: theming.get-color-from-palette($palette),
+    with-icon-hover-icon-color: theming.get-color-from-palette($palette),
+    with-icon-focus-icon-color: theming.get-color-from-palette($palette),
+    with-icon-pressed-icon-color: theming.get-color-from-palette($palette),
+  );
+}
+
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
+  $primary: map.get($config, primary);
+  $accent: map.get($config, accent);
+  $warn: map.get($config, warn);
 
   .mat-mdc-button {
     @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-color-tokens($config));
+
+    &.mat-primary {
+      @include mdc-button-text-theme.theme(_get-text-button-color-tokens-for-palette($primary));
+    }
+
+    &.mat-accent {
+      @include mdc-button-text-theme.theme(_get-text-button-color-tokens-for-palette($accent));
+    }
+
+    &.mat-warn {
+      @include mdc-button-text-theme.theme(_get-text-button-color-tokens-for-palette($warn));
+    }
   }
 
   @include mdc-helpers.using-mdc-theme($config) {
@@ -146,7 +177,7 @@
     }
 
     // Ripple colors
-    .mat-mdc-button, .mat-mdc-outlined-button {
+    .mat-mdc-outlined-button {
       @include button-theme-private.ripple-theme-styles($config, false);
     }
 
@@ -174,6 +205,16 @@
 
   .mat-mdc-button {
     @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-density-tokens($density-scale));
+
+    // TODO(mmalerba): I discovered while tokenizing the mdc text button that all densities other
+    //  than 0 (including maximum) have their top and bottom margin removed. At the very least this
+    //  seems to be a bug for the maximum case. I'm adding this code to  reduce churn for now, but
+    //  we should revisit to determine the correct behavior and implement it using a custom token
+    //  if necessary (or just remove this code).
+    @if $density-scale != 0 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
   }
 
   .mat-mdc-raised-button,

@@ -13,6 +13,7 @@
 @use '../core/style/private' as style-private;
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use '../core/tokens/m2/mdc/button-text' as tokens-mdc-button-text;
+@use '../core/tokens/token-utils';
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   @include mdc-button.static-styles();
@@ -23,15 +24,126 @@
     $mdc-button-text-slots: tokens-mdc-button-text.get-token-slots();
 
     // Add the slots for MDC text button.
-    @include mdc-button-text-theme.theme-styles($mdc-button-text-slots);
+    @include mdc-button-text-theme.theme-styles(map.merge($mdc-button-text-slots, (
+      // MDC targets disabled styles at :disabled which doesn't work with anchors, so we emit these
+      // slots ourselves.
+      disabled-label-text-color: null,
+      // MDC uses the :focus pseudo-class for displaying focus, but we use .cdk-keyboard-focused, so
+      // we emit these slots ourselves.
+      focus-state-layer-opacity: null,
+      focus-state-layer-color: null,
+      // MDC applies the pressed state slots to the ::after element, but we use ::before, so we emit
+      // these slots ourselves.
+      pressed-state-layer-color: null,
+      pressed-state-layer-opacity: null,
+      // MDC structures its icons differently, so we emit these slots ourselves.
+      with-icon-icon-size: null,
+      with-icon-icon-color: null,
+      with-icon-hover-icon-color: null,
+      with-icon-focus-icon-color: null,
+      with-icon-pressed-icon-color: null,
+      with-icon-disabled-icon-color: null,
+    )));
 
     // Add default values for MDC text button tokens that aren't outputted by the theming API.
     @include mdc-button-text-theme.theme(tokens-mdc-button-text.get-unthemable-tokens());
+
+    @include token-utils.use-tokens(tokens-mdc-button-text.$prefix, $mdc-button-text-slots) {
+      // Angular does not use the `:focus` pseudo-class to display focus styles. Instead we emit the
+      // focus-related slots under the `.cdk-keyboard-focused` class
+      &.cdk-keyboard-focused .mdc-button__ripple::before {
+        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+        @include token-utils.create-token-slot(background-color, focus-state-layer-color);
+      }
+
+      // We prefer to have the pressed state on the `::before` element rather than `::after` where
+      // MDC adds it, so we emit these slots ourselves.
+      &:active .mdc-button__ripple::before {
+        @include token-utils.create-token-slot(background-color, pressed-state-layer-color);
+        @include token-utils.create-token-slot(opacity, pressed-state-layer-opacity);
+      }
+
+      // We structure our icons differently than MDC in order to take advantage of the mat-icon
+      // component. Therefore we need to emit slots related to the text button icons ourselves.
+      & > .mat-icon {
+        @include token-utils.create-token-slot(font-size, with-icon-icon-size);
+        @include token-utils.create-token-slot(color, with-icon-icon-color);
+      }
+
+      &:hover > .mat-icon {
+        @include token-utils.create-token-slot(color, with-icon-hover-icon-color);
+      }
+
+      &.cdk-keyboard-focused > .mat-icon {
+        @include token-utils.create-token-slot(color, with-icon-focus-icon-color);
+      }
+
+      &:active > .mat-icon {
+        @include token-utils.create-token-slot(color, with-icon-pressed-icon-color);
+      }
+
+      // MDC targets disabled styles at the `:disabled` pseudo-class which doesn't work for anchors,
+      // Therefore we emit these slots ourselves targeted at `[disabled]` instead.
+      &[disabled] {
+        @include token-utils.create-token-slot(color, disabled-label-text-color);
+
+        & > .mat-icon {
+          @include token-utils.create-token-slot(color, with-icon-disabled-icon-color);
+        }
+      }
+
+      // Make the ripple the same color as the button text.
+      .mat-ripple-element {
+        @include token-utils.create-token-slot(background-color, label-text-color);
+      }
+    }
   }
 }
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
+.mat-mdc-button {
+  @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-disabled();
+  @include button-base.mat-private-button-touch-target(false);
+  @include style-private.private-animation-noop();
 
+  // MDC expects button icons to contain this HTML content:
+  // ```html
+  //   <span class="mdc-button__icon material-icons">favorite</span>
+  // ```
+  // However, Angular Material expects a `mat-icon` instead. The following
+  // styles will style the icons appropriately.
+  & > .mat-icon {
+    margin-left: 0;
+    margin-right: 8px;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    width: 1em;
+    height: 1em;
+
+    [dir="rtl"] & {
+      margin-left: 8px;
+      margin-right: 0;
+    }
+  }
+
+  .mdc-button__label + .mat-icon {
+    margin-left: 8px;
+    margin-right: 0;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
+
+  .mat-ripple-element {
+    opacity: 0.1;
+  }
+}
+
+// TODO(mmalerba): Tokenize the MDC filled, protected, and outline buttons as well.
+@include mdc-helpers.disable-mdc-fallback-declarations {
   // Keys to exclude from the MDC theme config, allowing us to drop styles we don't need.
   $override-keys: button-base.mat-private-button-remove-ripple((
     label-text-font: null,
@@ -63,7 +175,6 @@
   }
 }
 
-.mat-mdc-button,
 .mat-mdc-unelevated-button,
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button {
@@ -73,18 +184,15 @@
   @include style-private.private-animation-noop();
 }
 
-// MDC expects button icons to contain this HTML content:
-// ```html
-//   <span class="mdc-button__icon material-icons">favorite</span>
-// ```
-// However, Angular Material expects a `mat-icon` instead. The following
-// mixins will style the icons appropriately.
-.mat-mdc-button {
-  & > .mat-icon {
-    @include mdc-button-base.icon();
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  .mat-mdc-button-persistent-ripple::before {
+    background-color: var(--mat-mdc-button-persistent-ripple-color);
   }
-  .mdc-button__label + .mat-icon {
-    @include mdc-button-base.icon-trailing();
+
+  .mat-ripple-element {
+    background-color: var(--mat-mdc-button-ripple-color);
   }
 }
 

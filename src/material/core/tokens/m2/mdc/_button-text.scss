@@ -1,11 +1,11 @@
 @use 'sass:map';
 @use '../../../theming/palette';
 @use '../../../theming/theming';
+@use '../../../typography/typography-utils';
 @use '../../token-utils';
-@use '@material/theme/theme-color' as mdc-theme-color;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, button-text);
+$prefix: (mdc, text-button);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -15,47 +15,90 @@ $prefix: (mdc, button-text);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    container-height: 10px,
-    container-shape: 50%,
-    disabled-label-text-color: red,
-    focus-label-text-color: red,
-    focus-state-layer-color: red,
-    focus-state-layer-opacity: 1,
-    hover-label-text-color: red,
-    hover-state-layer-color: red,
-    hover-state-layer-opacity: 1,
-    keep-touch-target: false,
-    label-text-color: red,
-    label-text-font: Arial,
-    label-text-size: 10px,
-    label-text-tracking: 0,
+    // The border radius of text buttons.
+    container-shape: 4px,
+    // The text transform used for text buttons.
     label-text-transform: none,
-    label-text-weight: bold,
-    pressed-label-text-color: red,
-    pressed-state-layer-color: red,
-    pressed-state-layer-opacity: 1,
-    with-icon-disabled-icon-color: red,
-    with-icon-focus-icon-color: red,
-    with-icon-hover-icon-color: red,
-    with-icon-icon-color: red,
-    with-icon-icon-size: 10px,
-    with-icon-pressed-icon-color: red,
+    // The size of icons used inside text buttons.
+    with-icon-icon-size: 1.125rem,
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
+    // This is an odd token that does not result in a runtime configurable CSS variable. Instead it
+    // toggles emission of some styles in the sass mixin. We don't use this in Angular.
+    keep-touch-target: null,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($config) {
-  @return ();
+  $foreground: map.get($config, foreground);
+  $is-dark: map.get($config, is-dark);
+
+  @return (
+    // The text color for text buttons in the disabled state.
+    disabled-label-text-color: theming.get-color-from-palette($foreground, disabled-text),
+    // The text color for text buttons in the focused state.
+    focus-label-text-color: theming.get-color-from-palette($foreground, base),
+    // The state overlay color for text buttons in the focused state.
+    focus-state-layer-color: theming.get-color-from-palette($foreground, base),
+    // The opacity of the state overlay for text buttons in the focused state.
+    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    // The text color for text buttons in the hovered state.
+    hover-label-text-color: theming.get-color-from-palette($foreground, base),
+    // The state overlay color for text buttons in the hovered state.
+    hover-state-layer-color: theming.get-color-from-palette($foreground, base),
+    // The opacity of the state overlay for text buttons in the hovered state.
+    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    // The text color for text buttons.
+    label-text-color: theming.get-color-from-palette($foreground, base),
+    // The text color for text buttons in the pressed state.
+    pressed-label-text-color: theming.get-color-from-palette($foreground, base),
+    // The state overlay color for text buttons in the pressed state.
+    pressed-state-layer-color: theming.get-color-from-palette($foreground, base),
+    // The opacity of the state overlay for text buttons in the pressed state.
+    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    // The color of icons used within text buttons.
+    with-icon-icon-color: theming.get-color-from-palette($foreground, base),
+    // The color of icons used within text buttons in the hovered state.
+    with-icon-hover-icon-color: theming.get-color-from-palette($foreground, base),
+    // The color of icons used within text buttons in the focused state.
+    with-icon-focus-icon-color: theming.get-color-from-palette($foreground, base),
+    // The color of icons used within text buttons in the pressed state.
+    with-icon-pressed-icon-color: theming.get-color-from-palette($foreground, base),
+    // The color of icons used within text buttons in the disabled state.
+    with-icon-disabled-icon-color: theming.get-color-from-palette($foreground, base),
+  );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($config) {
-  @return ();
+  @return (
+    // The font family for text buttons.
+    label-text-font: typography-utils.font-family($config, button)
+          or typography-utils.font-family($config),
+    // The font size for text buttons.
+    label-text-size: typography-utils.font-size($config, button),
+    // The letter spacing for text buttons.
+    label-text-tracking: typography-utils.letter-spacing($config, button),
+    // The font weight for text buttons.
+    label-text-weight: typography-utils.font-weight($config, button),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($config) {
-  @return ();
+  $scale: theming.clamp-density($config, -3);
+
+  @return (
+    // The height of text buttons.
+    container-height: map.get((
+      0: 36px,
+      -1: 32px,
+      -2: 28px,
+      -3: 24px,
+    ), $scale),
+  );
 }
 
 // Combines the tokens generated by the above functions into a single map with placeholder values.
