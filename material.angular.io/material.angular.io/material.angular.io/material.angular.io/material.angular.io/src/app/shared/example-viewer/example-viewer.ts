@@ -13,7 +13,7 @@ import {
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
 
-import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/components-examples';
+import {EXAMPLE_COMPONENTS, LiveExample, loadExample} from '@angular/components-examples';
 import {CodeSnippet} from './code-snippet';
 import {normalizePath} from '../normalize-path';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -207,16 +207,8 @@ export class ExampleViewer implements OnInit {
   private async _loadExampleComponent() {
     if (this._example != null) {
       const {componentName, module} = EXAMPLE_COMPONENTS[this._example];
-      // Lazily loads the example package that contains the requested example. Webpack needs to be
-      // able to statically determine possible imports for proper chunk generation. Explicitly
-      // specifying the path to the `fesm` folder as first segment instructs Webpack to generate
-      // chunks for each example flat ESM bundle. To avoid generating unnecessary chunks for
-      // source maps (which would never be loaded), we instruct Webpack to exclude source map
-      // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
-      const moduleExports: any = await import(
-        /* webpackExclude: /\.map$/ */
-        '@angular/components-examples/fesm2022/' + module.importSpecifier
-      );
+      // Lazily loads the example package that contains the requested example.
+      const moduleExports = await loadExample(this._example);
       this._exampleComponentType = moduleExports[componentName];
       // The components examples package is built with Ivy. This means that no factory files are
       // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
