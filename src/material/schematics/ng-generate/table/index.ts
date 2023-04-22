@@ -11,6 +11,7 @@ import {
   addModuleImportToModule,
   buildComponent,
   findModuleFromOptions,
+  isStandaloneSchematic,
 } from '@angular/cdk/schematics';
 import {Schema} from './schema';
 
@@ -38,9 +39,18 @@ export default function (options: Schema): Rule {
  */
 function addTableModulesToModule(options: Schema) {
   return async (host: Tree) => {
-    const modulePath = (await findModuleFromOptions(host, options))!;
-    addModuleImportToModule(host, modulePath, 'MatTableModule', '@angular/material/table');
-    addModuleImportToModule(host, modulePath, 'MatPaginatorModule', '@angular/material/paginator');
-    addModuleImportToModule(host, modulePath, 'MatSortModule', '@angular/material/sort');
+    const isStandalone = await isStandaloneSchematic(host, options);
+
+    if (!isStandalone) {
+      const modulePath = (await findModuleFromOptions(host, options))!;
+      addModuleImportToModule(host, modulePath, 'MatTableModule', '@angular/material/table');
+      addModuleImportToModule(
+        host,
+        modulePath,
+        'MatPaginatorModule',
+        '@angular/material/paginator',
+      );
+      addModuleImportToModule(host, modulePath, 'MatSortModule', '@angular/material/sort');
+    }
   };
 }
