@@ -11,6 +11,7 @@ import {
   addModuleImportToModule,
   buildComponent,
   findModuleFromOptions,
+  isStandaloneSchematic,
 } from '@angular/cdk/schematics';
 import {Schema} from './schema';
 
@@ -38,9 +39,13 @@ export default function (options: Schema): Rule {
  */
 function addTreeModulesToModule(options: Schema) {
   return async (host: Tree) => {
-    const modulePath = (await findModuleFromOptions(host, options))!;
-    addModuleImportToModule(host, modulePath, 'MatTreeModule', '@angular/material/tree');
-    addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material/icon');
-    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
+    const isStandalone = await isStandaloneSchematic(host, options);
+
+    if (!isStandalone) {
+      const modulePath = (await findModuleFromOptions(host, options))!;
+      addModuleImportToModule(host, modulePath, 'MatTreeModule', '@angular/material/tree');
+      addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material/icon');
+      addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
+    }
   };
 }
