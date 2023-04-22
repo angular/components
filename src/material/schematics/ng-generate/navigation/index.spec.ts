@@ -18,13 +18,11 @@ describe('material-navigation-schematic', () => {
 
   function expectNavigationSchematicModuleImports(tree: UnitTestTree) {
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
-    expect(moduleContent).toMatch(/LayoutModule,\s+/);
     expect(moduleContent).toMatch(/MatToolbarModule,\s+/);
     expect(moduleContent).toMatch(/MatButtonModule,\s+/);
     expect(moduleContent).toMatch(/MatSidenavModule,\s+/);
     expect(moduleContent).toMatch(/MatIconModule,\s+/);
     expect(moduleContent).toMatch(/MatListModule\s+],/);
-    expect(moduleContent).toContain(`import { LayoutModule } from '@angular/cdk/layout';`);
     expect(moduleContent).toContain(`import { MatButtonModule } from '@angular/material/button';`);
     expect(moduleContent).toContain(`import { MatIconModule } from '@angular/material/icon';`);
     expect(moduleContent).toContain(`import { MatListModule } from '@angular/material/list';`);
@@ -69,6 +67,44 @@ describe('material-navigation-schematic', () => {
     await expectAsync(
       runner.runSchematic('navigation', {project: 'material'}, appTree),
     ).toBeRejectedWithError(/required property 'name'/);
+  });
+
+  describe('standalone option', () => {
+    it('should generate a standalone component', async () => {
+      const app = await createTestApp(runner);
+      const tree = await runner.runSchematic('navigation', {...baseOptions, standalone: true}, app);
+      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
+      const requiredModules = [
+        'MatToolbarModule',
+        'MatButtonModule',
+        'MatSidenavModule',
+        'MatListModule',
+        'MatIconModule',
+      ];
+
+      requiredModules.forEach(name => {
+        expect(module).withContext('Module should not import dependencies').not.toContain(name);
+        expect(component).withContext('Component should import dependencies').toContain(name);
+      });
+
+      expect(module).not.toContain('FooComponent');
+      expect(component).toContain('standalone: true');
+      expect(component).toContain('imports: [');
+    });
+
+    it('should infer the standalone option from the project structure', async () => {
+      const app = await createTestApp(runner, {standalone: true});
+      const tree = await runner.runSchematic('navigation', baseOptions, app);
+      const componentContent = getFileContent(
+        tree,
+        '/projects/material/src/app/foo/foo.component.ts',
+      );
+
+      expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
+      expect(componentContent).toContain('standalone: true');
+      expect(componentContent).toContain('imports: [');
+    });
   });
 
   describe('style option', () => {
