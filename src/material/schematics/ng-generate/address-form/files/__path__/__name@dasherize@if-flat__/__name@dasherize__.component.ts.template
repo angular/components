@@ -1,5 +1,14 @@
-import { Component<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+<% if(standalone) { %>
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+<% } else { %>
 import { FormBuilder, Validators } from '@angular/forms';
+<% } %>
 
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
@@ -12,9 +21,19 @@ import { FormBuilder, Validators } from '@angular/forms';
   `]<% } else { %>
   styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
-  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
+  standalone: true,
+  imports: [
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule,
+    ReactiveFormsModule
+  ]<% } %>
 })
 export class <%= classify(name) %>Component {
+  private fb = inject(FormBuilder);
   addressForm = this.fb.group({
     company: null,
     firstName: [null, Validators.required],
@@ -92,8 +111,6 @@ export class <%= classify(name) %>Component {
     {name: 'Wisconsin', abbreviation: 'WI'},
     {name: 'Wyoming', abbreviation: 'WY'}
   ];
-
-  constructor(private fb: FormBuilder) {}
 
   onSubmit(): void {
     alert('Thanks!');
