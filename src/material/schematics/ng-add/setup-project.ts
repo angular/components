@@ -14,10 +14,10 @@ import {
   getProjectMainFile,
   getProjectStyleFile,
   hasNgModuleImport,
+  isStandaloneApp,
 } from '@angular/cdk/schematics';
 import {
   importsProvidersFrom,
-  findBootstrapApplicationCall,
   addFunctionalProvidersToStandaloneBootstrap,
   callsProvidersFunction,
 } from '@schematics/angular/private/components';
@@ -26,7 +26,6 @@ import {ProjectType} from '@schematics/angular/utility/workspace-models';
 import {addFontsToIndex} from './fonts/material-fonts';
 import {Schema} from './schema';
 import {addThemeToAppStyles, addTypographyClass} from './theming/theming';
-import * as ts from 'typescript';
 
 /**
  * Scaffolds the basics of a Angular Material application, this includes:
@@ -68,13 +67,8 @@ function addAnimationsModule(options: Schema) {
     const workspace = await getWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const mainFilePath = getProjectMainFile(project);
-    const mainSourceFile = ts.createSourceFile(
-      mainFilePath,
-      host.readText(mainFilePath),
-      ts.ScriptTarget.Latest,
-    );
 
-    if (findBootstrapApplicationCall(mainSourceFile)) {
+    if (isStandaloneApp(host, mainFilePath)) {
       addAnimationsToStandaloneApp(host, mainFilePath, context, options);
     } else {
       addAnimationsToNonStandaloneApp(host, project, mainFilePath, context, options);
