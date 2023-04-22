@@ -1,5 +1,5 @@
 import { Component<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { <% if(standalone) { %>CdkDrag, CdkDropList, <% } %>CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
@@ -9,10 +9,12 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
   templateUrl: './<%= dasherize(name) %>.component.html',<% } if(inlineStyle) { %>
   styles: [`
     <%= indentTextContent(resolvedFiles.stylesheet, 4) %>
-  `],<% } else { %>
-  styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>'],<% } %><% if(!!viewEncapsulation) { %>
-  encapsulation: ViewEncapsulation.<%= viewEncapsulation %>,<% } if (changeDetection !== 'Default') { %>
-  changeDetection: ChangeDetectionStrategy.<%= changeDetection %>,<% } %>
+  `]<% } else { %>
+  styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
+  encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
+  standalone: true,
+  imports: [CdkDrag, CdkDropList]<% } %>
 })
 export class <%= classify(name) %>Component {
   todo = [
