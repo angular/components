@@ -1,6 +1,11 @@
-import { Component<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';<% if(standalone) { %>
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';<% } %>
 
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
@@ -13,9 +18,19 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
   `]<% } else { %>
   styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
-  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
+  standalone: true,
+  imports: [
+    MatGridListModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule
+  ]<% } %>
 })
 export class <%= classify(name) %>Component {
+  private breakpointObserver = inject(BreakpointObserver);
+
   /** Based on the screen size, switch from standard to one column per row */
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => {
@@ -36,6 +51,4 @@ export class <%= classify(name) %>Component {
       ];
     })
   );
-
-  constructor(private breakpointObserver: BreakpointObserver) {}
 }
