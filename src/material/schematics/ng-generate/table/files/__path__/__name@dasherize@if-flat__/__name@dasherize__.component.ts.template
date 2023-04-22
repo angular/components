@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { <% if(standalone) { %>MatTableModule, <% } %>MatTable } from '@angular/material/table';
+import { <% if(standalone) { %>MatPaginatorModule, <% } %>MatPaginator } from '@angular/material/paginator';
+import { <% if(standalone) { %>MatSortModule, <% } %>MatSort } from '@angular/material/sort';
 import { <%= classify(name) %>DataSource, <%= classify(name) %>Item } from './<%= dasherize(name) %>-datasource';
 
 @Component({
@@ -15,7 +15,9 @@ import { <%= classify(name) %>DataSource, <%= classify(name) %>Item } from './<%
   `]<% } else { %>
   styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
-  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule]<% } %>
 })
 export class <%= classify(name) %>Component implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
