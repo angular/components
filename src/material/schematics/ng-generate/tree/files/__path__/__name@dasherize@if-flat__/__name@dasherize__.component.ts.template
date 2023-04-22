@@ -1,6 +1,8 @@
 import { Component<% if (!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if (changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { FlatTreeControl } from '@angular/cdk/tree';
+import { <% if(standalone) { %>MatTreeModule, <% } %>MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';<% if(standalone) { %>
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';<% } %>
 import { files } from './example-data';
 
 /** File node data with possible child nodes. */
@@ -32,7 +34,9 @@ export interface FlatTreeNode {
   `]<% } else { %>
   styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
-  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
+  standalone: true,
+  imports: [MatTreeModule, MatButtonModule, MatIconModule]<% } %>
 })
 export class <%= classify(name) %>Component {
 
