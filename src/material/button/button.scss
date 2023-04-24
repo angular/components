@@ -121,7 +121,7 @@
     width: 1em;
     height: 1em;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       margin-left: 8px;
       margin-right: 0;
     }
@@ -131,7 +131,7 @@
     margin-left: 8px;
     margin-right: 0;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       margin-left: 0;
       margin-right: 8px;
     }
