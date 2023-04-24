@@ -82,7 +82,6 @@
     "@angular/platform-browser-dynamic": "^16.0.0-rc.2",
     "@angular/platform-server": "^16.0.0-rc.2",
     "@angular/router": "^16.0.0-rc.2",
-    "@axe-core/webdriverjs": "^4.3.2",
     "@babel/core": "^7.16.12",
     "@bazel/bazelisk": "1.12.1",
     "@bazel/buildifier": "6.0.1",
