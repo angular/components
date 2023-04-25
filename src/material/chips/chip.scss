@@ -74,11 +74,8 @@
 }
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
-  // @include mdc-chip.static-styles();
   @include _missing-mdc-theme-styles();
 }
-
-//
 
 .mat-mdc-standard-chip {
   -webkit-tap-highlight-color: transparent;

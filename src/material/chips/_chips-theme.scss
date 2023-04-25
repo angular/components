@@ -1,49 +1,73 @@
+@use 'sass:color';
 @use 'sass:map';
+@use 'sass:meta';
 @use '@material/chips/chip-theme' as mdc-chip-theme;
 @use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
+@use '../core/theming/palette';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 
-@mixin _colored-chip($config, $palette-name) {
-  $palette: map.get($config, $palette-name);
-  $background: theming.get-color-from-palette($palette);
-  $foreground: theming.get-color-from-palette($palette, default-contrast);
+// Determine whether to use dark or light text on top of given color to
+// meet accessibility standards for contrast. Returns 'dark' if the
+// given color is light and 'light' if the given color is dark.
+@function contrast-tone($color) {
+  @return if(tone($color) == 'dark', 'light', 'dark');
+}
 
-  &.mat-mdc-chip-selected,
-  &.mat-mdc-chip-highlighted {
-    @include mdc-chip-theme.theme(
-      (
-        elevated-container-color: $background,
-        elevated-disabled-container-color: $background,
-        label-text-color: $foreground,
-        disabled-label-text-color: $foreground,
-        with-icon-icon-color: $foreground,
-        with-icon-disabled-icon-color: $foreground,
-        with-trailing-icon-disabled-trailing-icon-color: $foreground,
-        with-trailing-icon-trailing-icon-color: $foreground,
-        with-icon-selected-icon-color: $foreground,
-      )
-    );
+// MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
+// This function falls back to determining the tone based on whether the theme is light or dark.
+@function _variable-safe-contrast-tone($value, $is-dark) {
+  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
+    @return contrast-tone($value);
   }
+
+  @return if($is-dark, 'light', 'dark');
+}
+
+@function _get-default-palette($config) {
+  $is-dark: map.get($config, is-dark);
+  $grey-50: map.get(palette.$grey-palette, 50);
+  $grey-900: map.get(palette.$grey-palette, 900);
+  $default-foreground: if($is-dark, $grey-50, $grey-900);
+
+  $surface: map.get(map.get($config, background), card);
+  $on-surface: if(_variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
+  $default-background: if(
+    meta.type-of($on-surface) == color and meta.type-of($surface) == color,
+    color.mix($on-surface, $surface, 12%),
+    $on-surface
+  );
+
+  @return (default: $default-background, default-contrast: $default-foreground);
 }
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $color-tokens: tokens-mdc-chip.get-color-tokens($config);
 
   .mat-mdc-standard-chip {
-    @include mdc-chip-theme.theme($color-tokens);
+    $default-palette: _get-default-palette($config);
+    $default-config: map.merge($config, (primary: $default-palette));
+    $default-color-tokens: tokens-mdc-chip.get-color-tokens($default-config);
+    @include mdc-chip-theme.theme($default-color-tokens);
 
-    &.mat-primary {
-      @include _colored-chip($config, primary);
-    }
+    &.mat-mdc-chip-selected,
+    &.mat-mdc-chip-highlighted {
+      &.mat-primary {
+        $primary-color-tokens: tokens-mdc-chip.get-color-tokens($config);
+        @include mdc-chip-theme.theme($primary-color-tokens);
+      }
 
-    &.mat-accent {
-      @include _colored-chip($config, accent);
-    }
+      &.mat-accent {
+        $accent-config: map.merge($config, (primary: map.get($config, accent)));
+        $accent-color-tokens: tokens-mdc-chip.get-color-tokens($accent-config);
+        @include mdc-chip-theme.theme($accent-color-tokens);
+      }
 
-    &.mat-warn {
-      @include _colored-chip($config, warn);
+      &.mat-warn {
+        $warn-config: map.merge($config, (primary: map.get($config, warn)));
+        $warn-color-tokens: tokens-mdc-chip.get-color-tokens($warn-config);
+        @include mdc-chip-theme.theme($warn-color-tokens);
+      }
     }
   }
 

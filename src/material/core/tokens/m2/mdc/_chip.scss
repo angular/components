@@ -1,6 +1,5 @@
 @use 'sass:color';
 @use 'sass:map';
-@use 'sass:meta';
 @use '../../token-utils';
 @use '../../../mdc-helpers/mdc-helpers';
 @use '../../../theming/theming';
@@ -8,23 +7,6 @@
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, chip);
-
-// Determine whether to use dark or light text on top of given color to
-// meet accessibility standards for contrast. Returns 'dark' if the
-// given color is light and 'light' if the given color is dark.
-@function contrast-tone($color) {
-  @return if(tone($color) == 'dark', 'light', 'dark');
-}
-
-// MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
-// This function falls back to determining the tone based on whether the theme is light or dark.
-@function _variable-safe-contrast-tone($value, $is-dark) {
-  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
-    @return contrast-tone($value);
-  }
-
-  @return if($is-dark, 'light', 'dark');
-}
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -251,36 +233,29 @@ $prefix: (mdc, chip);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($config) {
-  $is-dark: map.get($config, is-dark);
-  $surface: map.get(map.get($config, background), card);
-  $on-surface: if(_variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
-  $standard-background: if(
-    meta.type-of($on-surface) == color and meta.type-of($surface) == color,
-    color.mix($on-surface, $surface, 12%),
-    $on-surface
-  );
-
-  $grey: if($is-dark, #fafafa, #212121);
+  $palette: map.get($config, primary);
+  $background: theming.get-color-from-palette($palette);
+  $foreground: theming.get-color-from-palette($palette, default-contrast);
 
   @return (
-    // The background-color of the chip.
-    elevated-container-color: $standard-background,
-    // The background-color of a disabled chip.
-    elevated-disabled-container-color: $standard-background,
-    // The chip text color.
-    label-text-color: $grey,
     // The text color of a disabled chip.
-    disabled-label-text-color: $grey,
+    disabled-label-text-color: $foreground,
+    // The background-color of the chip.
+    elevated-container-color: $background,
+    // The background-color of a disabled chip.
+    elevated-disabled-container-color: $background,
+    // The chip text color.
+    label-text-color: $foreground,
     // The icon color of a chip.
-    with-icon-icon-color: $grey,
+    with-icon-icon-color: $foreground,
     // The color of the icon of a disabled chip.
-    with-icon-disabled-icon-color: $grey,
-    // The color of the icon at the end of a disabled chip.
-    with-trailing-icon-disabled-trailing-icon-color: $grey,
-    // The color of the icon at the end of the chip.
-    with-trailing-icon-trailing-icon-color: $grey,
+    with-icon-disabled-icon-color: $foreground,
     // The color of the icon of a selected chip.
-    with-icon-selected-icon-color: $grey
+    with-icon-selected-icon-color: $foreground,
+    // The color of the icon at the end of a disabled chip.
+    with-trailing-icon-disabled-trailing-icon-color: $foreground,
+    // The color of the icon at the end of the chip.
+    with-trailing-icon-trailing-icon-color: $foreground
   );
 }
 
