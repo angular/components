@@ -129,7 +129,7 @@ export abstract class _MatAutocompleteHarnessBase<
   }
 
   /** Gets the selector that can be used to find the autocomplete trigger's panel. */
-  private async _getPanelSelector(): Promise<string> {
+  protected async _getPanelSelector(): Promise<string> {
     return `#${await (await this.host()).getAttribute('aria-owns')}`;
   }
 }
@@ -167,5 +167,10 @@ export class MatAutocompleteHarness extends _MatAutocompleteHarnessBase<
       .addOption('disabled', options.disabled, async (harness, disabled) => {
         return (await harness.isDisabled()) === disabled;
       });
+  }
+
+  /** Gets the selector that can be used to find the autocomplete trigger's panel. */
+  protected override async _getPanelSelector(): Promise<string> {
+    return `#${await (await this.host()).getAttribute('aria-controls')}`;
   }
 }

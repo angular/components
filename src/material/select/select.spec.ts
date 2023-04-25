@@ -14,7 +14,7 @@ import {
   PAGE_DOWN,
   PAGE_UP,
 } from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -27,6 +27,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DebugElement,
+  ElementRef,
   OnInit,
   QueryList,
   ViewChild,
@@ -96,6 +97,7 @@ describe('MDC-based MatSelect', () => {
         ReactiveFormsModule,
         FormsModule,
         NoopAnimationsModule,
+        OverlayModule,
       ],
       declarations: declarations,
       providers: [
@@ -117,6 +119,7 @@ describe('MDC-based MatSelect', () => {
     beforeEach(waitForAsync(() => {
       configureMatSelectTestingModule([
         BasicSelect,
+        SelectInsideAModal,
         MultiSelect,
         SelectWithGroups,
         SelectWithGroupsAndNgContainer,
@@ -153,19 +156,6 @@ describe('MDC-based MatSelect', () => {
           const ariaControls = select.getAttribute('aria-controls');
           expect(ariaControls).toBeTruthy();
           expect(ariaControls).toBe(document.querySelector('.mat-mdc-select-panel')!.id);
-        }));
-
-        it('should point the aria-owns attribute to the listbox on the trigger', fakeAsync(() => {
-          const trigger = select.querySelector('.mat-mdc-select-trigger')!;
-          expect(trigger.hasAttribute('aria-owns')).toBe(false);
-
-          fixture.componentInstance.select.open();
-          fixture.detectChanges();
-          flush();
-
-          const ariaOwns = trigger.getAttribute('aria-owns');
-          expect(ariaOwns).toBeTruthy();
-          expect(ariaOwns).toBe(document.querySelector('.mat-mdc-select-panel')!.id);
         }));
 
         it('should set aria-expanded based on the select open state', fakeAsync(() => {
@@ -1169,6 +1159,27 @@ describe('MDC-based MatSelect', () => {
           const panel = document.querySelector('.mat-mdc-select-panel')!;
           expect(panel.getAttribute('aria-label')).toBe('My label');
           expect(panel.hasAttribute('aria-labelledby')).toBe(false);
+        }));
+      });
+
+      describe('for select inside a modal', () => {
+        let fixture: ComponentFixture<SelectInsideAModal>;
+
+        beforeEach(fakeAsync(() => {
+          fixture = TestBed.createComponent(SelectInsideAModal);
+          fixture.detectChanges();
+        }));
+
+        it('should add the id of the select panel to the aria-owns of the modal', fakeAsync(() => {
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+
+          const panelId = `${fixture.componentInstance.select.id}-panel`;
+          const modalElement = fixture.componentInstance.modal.nativeElement;
+
+          expect(modalElement.getAttribute('aria-owns')?.split(' '))
+            .withContext('expecting modal to own the select panel')
+            .toContain(panelId);
         }));
       });
 
@@ -5449,4 +5460,35 @@ class BasicSelectWithFirstAndLastOptionDisabled {
 
   @ViewChild(MatSelect, {static: true}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
+}
+
+@Component({
+  selector: 'select-inside-a-modal',
+  template: `
+    <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">open dialog</button>
+    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="true"
+      [cdkConnectedOverlayOrigin]="trigger">
+      <div role="dialog" [attr.aria-modal]="'true'" #modal>
+        <mat-form-field>
+          <mat-label>Select a food</mat-label>
+          <mat-select placeholder="Food" ngModel>
+            <mat-option *ngFor="let food of foods"
+                        [value]="food.value">{{ food.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-template>
+  `,
+})
+class SelectInsideAModal {
+  foods = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
+  ];
+
+  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild('modal') modal: ElementRef;
 }

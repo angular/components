@@ -112,6 +112,13 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         (ngModelChange)="filteredGroupedStates = filterStateGroups(currentGroupedState)">
     </mat-form-field>
   </mat-card>
+
+  <mat-card>
+    <mat-card-subtitle>Autocomplete inside a Dialog</mat-card-subtitle>
+    <mat-card-content>
+      <button mat-button (click)="openDialog()">Open dialog</button>
+    </mat-card-content>
+  </mat-card>
 </div>
 
 <mat-autocomplete #groupedAuto="matAutocomplete">

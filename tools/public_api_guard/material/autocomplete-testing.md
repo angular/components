@@ -21,6 +21,7 @@ export interface AutocompleteHarnessFilters extends BaseHarnessFilters {
 
 // @public
 export class MatAutocompleteHarness extends _MatAutocompleteHarnessBase<typeof MatOptionHarness, MatOptionHarness, OptionHarnessFilters, typeof MatOptgroupHarness, MatOptgroupHarness, OptgroupHarnessFilters> {
+    protected _getPanelSelector(): Promise<string>;
     static hostSelector: string;
     // (undocumented)
     protected _optionClass: typeof MatOptionHarness;
@@ -45,6 +46,7 @@ export abstract class _MatAutocompleteHarnessBase<OptionType extends ComponentHa
     focus(): Promise<void>;
     getOptionGroups(filters?: Omit<OptionGroupFilters, 'ancestor'>): Promise<OptionGroup[]>;
     getOptions(filters?: Omit<OptionFilters, 'ancestor'>): Promise<Option[]>;
+    protected _getPanelSelector(): Promise<string>;
     getValue(): Promise<string>;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;

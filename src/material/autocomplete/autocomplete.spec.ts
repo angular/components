@@ -1,6 +1,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {Overlay, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -16,6 +16,7 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   NgZone,
   OnDestroy,
   OnInit,
@@ -69,6 +70,7 @@ describe('MDC-based MatAutocomplete', () => {
         FormsModule,
         ReactiveFormsModule,
         NoopAnimationsModule,
+        OverlayModule,
       ],
       declarations: [component],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}, ...providers],
@@ -1863,7 +1865,7 @@ describe('MDC-based MatAutocomplete', () => {
         .toBe('false');
     }));
 
-    it('should set aria-owns based on the attached autocomplete', () => {
+    it('should set aria-controls based on the attached autocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -1871,18 +1873,18 @@ describe('MDC-based MatAutocomplete', () => {
         By.css('.mat-mdc-autocomplete-panel'),
       )!.nativeElement;
 
-      expect(input.getAttribute('aria-owns'))
-        .withContext('Expected aria-owns to match attached autocomplete.')
+      expect(input.getAttribute('aria-controls'))
+        .withContext('Expected aria-controls to match attached autocomplete.')
         .toBe(panel.getAttribute('id'));
     });
 
-    it('should not set aria-owns while the autocomplete is closed', () => {
-      expect(input.getAttribute('aria-owns')).toBeFalsy();
+    it('should not set aria-controls while the autocomplete is closed', () => {
+      expect(input.getAttribute('aria-controls')).toBeFalsy();
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      expect(input.getAttribute('aria-owns')).toBeTruthy();
+      expect(input.getAttribute('aria-controls')).toBeTruthy();
     });
 
     it('should restore focus to the input when clicking to select a value', fakeAsync(() => {
@@ -3474,6 +3476,27 @@ describe('MDC-based MatAutocomplete', () => {
       expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(0);
     });
   });
+
+  describe('when used inside a modal', () => {
+    let fixture: ComponentFixture<AutocompleteInsideAModal>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(AutocompleteInsideAModal);
+      fixture.detectChanges();
+    }));
+
+    it('should add the id of the autocomplete panel to the aria-owns of the modal', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      const panelId = fixture.componentInstance.autocomplete.id;
+      const modalElement = fixture.componentInstance.modal.nativeElement;
+
+      expect(modalElement.getAttribute('aria-owns')?.split(' '))
+        .withContext('expecting modal to own the autocommplete panel')
+        .toContain(panelId);
+    }));
+  });
 });
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
@@ -3896,4 +3919,39 @@ class AutocompleteWithActivatedEvent {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
+}
+
+@Component({
+  selector: 'autocomplete-inside-a-modal',
+  template: `
+    <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">open dialog</button>
+    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="true"
+      [cdkConnectedOverlayOrigin]="trigger">
+      <div role="dialog" [attr.aria-modal]="'true'" #modal>
+        <mat-form-field>
+          <mat-label>Food</mat-label>
+          <input matInput [matAutocomplete]="reactiveAuto" [formControl]="formControl">
+        </mat-form-field>
+        <mat-autocomplete #reactiveAuto="matAutocomplete">
+          <mat-option *ngFor="let food of foods; let index = index" [value]="food">
+            {{food.viewValue}}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+    </ng-template>
+  `,
+})
+class AutocompleteInsideAModal {
+  foods = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
+  ];
+
+  formControl = new FormControl();
+
+  @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
+  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild('modal') modal: ElementRef;
 }
