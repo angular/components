@@ -32,41 +32,42 @@ $prefix: (mdc, text-button);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($config) {
   $foreground: map.get($config, foreground);
+  $foreground-base-color: theming.get-color-from-palette($foreground, base);
   $is-dark: map.get($config, is-dark);
 
   @return (
     // The text color for text buttons in the disabled state.
     disabled-label-text-color: theming.get-color-from-palette($foreground, disabled-text),
     // The text color for text buttons in the focused state.
-    focus-label-text-color: theming.get-color-from-palette($foreground, base),
+    focus-label-text-color: $foreground-base-color,
     // The state overlay color for text buttons in the focused state.
-    focus-state-layer-color: theming.get-color-from-palette($foreground, base),
+    focus-state-layer-color: $foreground-base-color,
     // The opacity of the state overlay for text buttons in the focused state.
     focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     // The text color for text buttons in the hovered state.
-    hover-label-text-color: theming.get-color-from-palette($foreground, base),
+    hover-label-text-color: $foreground-base-color,
     // The state overlay color for text buttons in the hovered state.
-    hover-state-layer-color: theming.get-color-from-palette($foreground, base),
+    hover-state-layer-color: $foreground-base-color,
     // The opacity of the state overlay for text buttons in the hovered state.
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     // The text color for text buttons.
-    label-text-color: theming.get-color-from-palette($foreground, base),
+    label-text-color: $foreground-base-color,
     // The text color for text buttons in the pressed state.
-    pressed-label-text-color: theming.get-color-from-palette($foreground, base),
+    pressed-label-text-color: $foreground-base-color,
     // The state overlay color for text buttons in the pressed state.
-    pressed-state-layer-color: theming.get-color-from-palette($foreground, base),
+    pressed-state-layer-color: $foreground-base-color,
     // The opacity of the state overlay for text buttons in the pressed state.
     pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
     // The color of icons used within text buttons.
-    with-icon-icon-color: theming.get-color-from-palette($foreground, base),
+    with-icon-icon-color: $foreground-base-color,
     // The color of icons used within text buttons in the hovered state.
-    with-icon-hover-icon-color: theming.get-color-from-palette($foreground, base),
+    with-icon-hover-icon-color: $foreground-base-color,
     // The color of icons used within text buttons in the focused state.
-    with-icon-focus-icon-color: theming.get-color-from-palette($foreground, base),
+    with-icon-focus-icon-color: $foreground-base-color,
     // The color of icons used within text buttons in the pressed state.
-    with-icon-pressed-icon-color: theming.get-color-from-palette($foreground, base),
+    with-icon-pressed-icon-color: $foreground-base-color,
     // The color of icons used within text buttons in the disabled state.
-    with-icon-disabled-icon-color: theming.get-color-from-palette($foreground, base),
+    with-icon-disabled-icon-color: $foreground-base-color,
   );
 }
 

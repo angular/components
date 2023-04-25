@@ -34,18 +34,20 @@
 }
 
 @function _get-text-button-color-tokens-for-palette($palette) {
+  $palette-color: theming.get-color-from-palette($palette);
+
   @return (
-    focus-label-text-color: theming.get-color-from-palette($palette),
-    focus-state-layer-color: theming.get-color-from-palette($palette),
-    hover-label-text-color: theming.get-color-from-palette($palette),
-    hover-state-layer-color: theming.get-color-from-palette($palette),
-    label-text-color: theming.get-color-from-palette($palette),
-    pressed-label-text-color: theming.get-color-from-palette($palette),
-    pressed-state-layer-color: theming.get-color-from-palette($palette),
-    with-icon-icon-color: theming.get-color-from-palette($palette),
-    with-icon-hover-icon-color: theming.get-color-from-palette($palette),
-    with-icon-focus-icon-color: theming.get-color-from-palette($palette),
-    with-icon-pressed-icon-color: theming.get-color-from-palette($palette),
+    focus-label-text-color: $palette-color,
+    focus-state-layer-color: $palette-color,
+    hover-label-text-color: $palette-color,
+    hover-state-layer-color: $palette-color,
+    label-text-color: $palette-color,
+    pressed-label-text-color: $palette-color,
+    pressed-state-layer-color: $palette-color,
+    with-icon-icon-color: $palette-color,
+    with-icon-hover-icon-color: $palette-color,
+    with-icon-focus-icon-color: $palette-color,
+    with-icon-pressed-icon-color: $palette-color,
   );
 }
 
