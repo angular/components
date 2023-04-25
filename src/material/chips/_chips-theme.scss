@@ -6,23 +6,7 @@
 @use '../core/theming/palette';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-
-// Determine whether to use dark or light text on top of given color to
-// meet accessibility standards for contrast. Returns 'dark' if the
-// given color is light and 'light' if the given color is dark.
-@function contrast-tone($color) {
-  @return if(tone($color) == 'dark', 'light', 'dark');
-}
-
-// MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
-// This function falls back to determining the tone based on whether the theme is light or dark.
-@function _variable-safe-contrast-tone($value, $is-dark) {
-  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
-    @return contrast-tone($value);
-  }
-
-  @return if($is-dark, 'light', 'dark');
-}
+@use '../core/mdc-helpers/mdc-helpers';
 
 @function _get-default-palette($config) {
   $is-dark: map.get($config, is-dark);
@@ -31,7 +15,7 @@
   $default-foreground: if($is-dark, $grey-50, $grey-900);
 
   $surface: map.get(map.get($config, background), card);
-  $on-surface: if(_variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
+  $on-surface: if(mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
   $default-background: if(
     meta.type-of($on-surface) == color and meta.type-of($surface) == color,
     color.mix($on-surface, $surface, 12%),

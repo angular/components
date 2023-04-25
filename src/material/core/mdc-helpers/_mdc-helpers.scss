@@ -100,7 +100,7 @@ $mat-typography-mdc-level-mappings: (
 
 // MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
 // This function falls back to determining the tone based on whether the theme is light or dark.
-@function _variable-safe-contrast-tone($value, $is-dark) {
+@function variable-safe-contrast-tone($value, $is-dark) {
   @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
     @return mdc-theme-color.contrast-tone($value);
   }
@@ -109,7 +109,7 @@ $mat-typography-mdc-level-mappings: (
 }
 
 @function _variable-safe-ink-color-for-fill($text-style, $fill-color, $is-dark) {
-  $contrast-tone: _variable-safe-contrast-tone($fill-color, $is-dark);
+  $contrast-tone: variable-safe-contrast-tone($fill-color, $is-dark);
   @return map.get(map.get(mdc-theme-color.$text-colors, $contrast-tone), $text-style);
 }
 
@@ -137,17 +137,17 @@ $mat-typography-mdc-level-mappings: (
   // Set new values based on the given Angular Material theme.
   mdc-theme-color.$primary: $primary;
   mdc-theme-color.$on-primary:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$primary, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$primary, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$secondary: $accent;
   mdc-theme-color.$on-secondary:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$background: theming.get-color-from-palette($background-palette, background);
   mdc-theme-color.$surface: theming.get-color-from-palette($background-palette, card);
   mdc-theme-color.$on-surface:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$error: $warn;
   mdc-theme-color.$on-error:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$error, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$error, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$property-values: (
       // Primary
       primary: mdc-theme-color.$primary,
