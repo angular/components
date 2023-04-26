@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 dev-app {
   &::before {
     content: 'Using experimental theming API';
@@ -12,3 +14,5 @@ dev-app {
     color: white;
   }
 }
+
+@debug 'Generated M2 tokens:' mat.m2-tokens-from-theme();

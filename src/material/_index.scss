@@ -13,6 +13,7 @@
   define-legacy-typography-config, legacy-typography-hierarchy, typography-hierarchy;
 @forward './core/typography/typography-utils' show typography-level,
   font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
+@forward './core/tokens/m2' show m2-tokens-from-theme;
 
 // Private/Internal
 @forward './core/density/private/all-density' show all-component-densities;
