@@ -1,0 +1,14 @@
+dev-app {
+  &::before {
+    content: 'Using experimental theming API';
+    display: inline-block;
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background: red;
+    color: white;
+  }
+}
