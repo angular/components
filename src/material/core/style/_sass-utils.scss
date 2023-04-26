@@ -1,7 +1,19 @@
+@use 'sass:map';
+
 // Include content under the current selector (&) or the document root if there is no current
 // selector.
 @mixin current-selector-or-root($root: html) {
   @at-root #{& or $root} {
     @content;
   }
+}
+
+// A version of the standard `map.deep-merge` function that takes a variable number of arguments.
+// Each argument is deep-merged into the final result from left to right.
+@function deep-merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.deep-merge($result, $map);
+  }
+  @return $result;
 }
