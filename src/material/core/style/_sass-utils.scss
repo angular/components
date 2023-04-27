@@ -1,4 +1,6 @@
+@use 'sass:list';
 @use 'sass:map';
+@use 'sass:meta';
 
 // A version of the standard `map.deep-merge` function that takes a variable number of arguments.
 // Each argument is deep-merged into the final result from left to right.
@@ -8,4 +10,11 @@
     $result: map.deep-merge($result, $map);
   }
   @return $result;
+}
+
+// Normalizes a list of arguments to ensure it really is a list and not a single arg.
+// This should be used when dealing with user-passed lists of args to avoid confusing errors,
+// since Sass treats `($x)` as equivalent to `$x`.
+@function normalize-args-list($list) {
+  @return if(meta.type-of($list) != 'list', ($list,), $list);
 }

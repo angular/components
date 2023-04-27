@@ -1,0 +1,102 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use '@angular/material' as mat;
+
+// Whether to throw an error when a required dep is not configured. If false, the dep will be
+// automatically configured instead.
+$_error-on-missing-dep: false;
+
+// Applies the theme for the given component configuration.
+@mixin _apply-theme($tokens, $component) {
+  $id: map.get($component, id);
+  $tokens: map.deep-merge($tokens, map.get($component, customizations));
+
+  // NOTE: for now we use a hardcoded if-chain, but in the future when first-class mixins are
+  // supported, the configuration data will contain a reference to its own theme mixin.
+  @if $id == 'mat.card' {
+    @include mat.private-apply-card-theme-from-tokens($tokens);
+  } @else if $id == 'mat.checkbox' {
+    @include mat.private-apply-checkbox-theme-from-tokens($tokens);
+  } @else {
+    @error 'Unrecognized component theme: #{id}';
+  }
+}
+
+// Gets the transitive dependency configurations for the given list of component configurations.
+@function _get-transitive-deps($components, $configured: ()) {
+  // Mark the given components as configured.
+  @each $component in $components {
+    $configured: map.set($configured, map.get($component, id), true);
+  }
+  $new-deps: ();
+
+  // Check each of the given components for new deps.
+  @each $component in $components {
+    @each $dep-getter in mat.private-normalize-args-list(map.get($component, deps)) {
+      $dep: meta.call($dep-getter);
+      $dep-id: map.get($dep, id);
+      @if not (map.has-key($configured, $dep-id)) {
+        @if $_error-on-missing-dep {
+          @error 'Missing theme: `#{map.get($component, id)}` depends on `#{$dep-id}`.' +
+            ' Please configure the theme for `#{$dep-id}` in your call to `mat.theme`';
+        } @else {
+          $configured: map.set($configured, $dep-id, true);
+          $new-deps: list.append($new-deps, $dep);
+        }
+      }
+    }
+  }
+
+  // Append on the new deps to this list of component configurations and return.
+  @if list.length($new-deps) > 0 {
+    $components: list.join($components, _get-transitive-deps($new-deps, $configured));
+  }
+  @return $components;
+}
+
+@mixin _theme($tokens, $components) {
+  // Call the theme mixin for each configured component.
+  @at-root #{& or body} {
+    @each $component in $components {
+      @include _apply-theme($tokens, $component);
+    }
+  }
+}
+
+// Takes the full list of tokens and a list of components to configure, and outputs all theme
+// tokens for the configured components.
+@mixin theme($tokens: mat.m2-tokens-from-theme(), $components) {
+  @include _theme($tokens, _get-transitive-deps(mat.private-normalize-args-list($components)));
+}
+
+// TODO(mmalerba): What should we call this?
+//   - update-theme
+//   - adjust-theme
+//   - edit-theme
+//   - override-theme
+//   - retheme
+// Takes a list of components to configure, and outputs only the theme tokens that are explicitly
+// customized by the configurations.
+@mixin update-theme($components) {
+  @include _theme((), $components);
+}
+
+// Configure the mat-card's theme.
+@function card($customizations: ()) {
+  @return (
+    id: 'mat.card',
+    customizations: $customizations,
+    deps: (),
+  );
+}
+
+// Configure the mat-checkbox's theme.
+@function checkbox($customizations: ()) {
+  @return (
+    id: 'mat.checkbox',
+    customizations: $customizations,
+    deps: (),
+  );
+}
