@@ -96,7 +96,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
     @Optional() @Inject(DOCUMENT) _document: any,
     @Inject(DialogConfig) readonly _config: C,
     private _interactivityChecker: InteractivityChecker,
-    private _ngZone: NgZone,
+    protected _ngZone: NgZone,
     private _overlayRef: OverlayRef,
     private _focusMonitor?: FocusMonitor,
   ) {

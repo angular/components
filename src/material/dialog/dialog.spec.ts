@@ -2000,6 +2000,8 @@ describe('MDC-based MatDialog with animations enabled', () => {
     expect(spy).not.toHaveBeenCalled();
 
     tick(OPEN_ANIMATION_DURATION);
+    flush();
+
     expect(spy).toHaveBeenCalled();
   }));
 
