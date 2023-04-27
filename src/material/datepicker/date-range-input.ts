@@ -270,9 +270,11 @@ export class MatDateRangeInput<D>
     // The datepicker module can be used both with MDC and non-MDC form fields. We have
     // to conditionally add the MDC input class so that the range picker looks correctly.
     if (_formField?._elementRef.nativeElement.classList.contains('mat-mdc-form-field')) {
-      const classList = _elementRef.nativeElement.classList;
-      classList.add('mat-mdc-input-element');
-      classList.add('mat-mdc-form-field-input-control');
+      _elementRef.nativeElement.classList.add(
+        'mat-mdc-input-element',
+        'mat-mdc-form-field-input-control',
+        'mdc-text-field__input',
+      );
     }
 
     // TODO(crisbeto): remove `as any` after #18206 lands.
