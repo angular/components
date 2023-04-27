@@ -1,4 +1,6 @@
+@use 'sass:list';
 @use 'sass:map';
+@use 'sass:meta';
 
 // Include content under the current selector (&) or the document root if there is no current
 // selector.
@@ -16,4 +18,11 @@
     $result: map.deep-merge($result, $map);
   }
   @return $result;
+}
+
+// Normalizes a list of arguments to ensure it really is a list and not a single arg.
+// This should be used when dealing with user-passed lists of args to avoid confusing errors,
+// since Sass treats `($x)` as equivalent to `$x`.
+@function normalize-args-list($list) {
+  @return if(meta.type-of($list) != 'list', ($list,), $list);
 }

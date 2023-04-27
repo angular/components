@@ -4,4 +4,7 @@
 @forward './popover-edit/popover-edit-theme' as popover-edit-* show popover-edit-color,
   popover-edit-typography, popover-edit-density, popover-edit-theme;
 
+// Token-based theming API
+@forward './theming/theming' show theme, card, checkbox;
+
 // Additional public APIs for individual components
