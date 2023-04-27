@@ -64,6 +64,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     protected _focusTrapFactory: FocusTrapFactory;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    protected _ngZone: NgZone;
     _portalOutlet: CdkPortalOutlet;
     _recaptureFocus(): void;
     protected _trapFocus(): void;

@@ -166,7 +166,7 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     ? parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION
     : 0;
   /** Current timer for dialog animations. */
-  private _animationTimer: number | null = null;
+  private _animationTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     elementRef: ElementRef,
@@ -221,14 +221,15 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     this._animationStateChanged.emit({state: 'opening', totalTime: this._openAnimationDuration});
 
     if (this._animationsEnabled) {
-      // One would expect that the open class is added once the animation finished, but MDC
-      // uses the open class in combination with the opening class to start the animation.
       this._hostElement.style.setProperty(
         TRANSITION_DURATION_PROPERTY,
         `${this._openAnimationDuration}ms`,
       );
-      this._hostElement.classList.add(OPENING_CLASS);
-      this._hostElement.classList.add(OPEN_CLASS);
+
+      // We need to give the `setProperty` call from above some time to be applied.
+      // One would expect that the open class is added once the animation finished, but MDC
+      // uses the open class in combination with the opening class to start the animation.
+      this._requestAnimationFrame(() => this._hostElement.classList.add(OPENING_CLASS, OPEN_CLASS));
       this._waitForAnimationToComplete(this._openAnimationDuration, this._finishDialogOpen);
     } else {
       this._hostElement.classList.add(OPEN_CLASS);
@@ -253,7 +254,9 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
         TRANSITION_DURATION_PROPERTY,
         `${this._openAnimationDuration}ms`,
       );
-      this._hostElement.classList.add(CLOSING_CLASS);
+
+      // We need to give the `setProperty` call from above some time to be applied.
+      this._requestAnimationFrame(() => this._hostElement.classList.add(CLOSING_CLASS));
       this._waitForAnimationToComplete(this._closeAnimationDuration, this._finishDialogClose);
     } else {
       // This subscription to the `OverlayRef#backdropClick` observable in the `DialogRef` is
@@ -297,8 +300,7 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
 
   /** Clears all dialog animation classes. */
   private _clearAnimationClasses() {
-    this._hostElement.classList.remove(OPENING_CLASS);
-    this._hostElement.classList.remove(CLOSING_CLASS);
+    this._hostElement.classList.remove(OPENING_CLASS, CLOSING_CLASS);
   }
 
   private _waitForAnimationToComplete(duration: number, callback: () => void) {
@@ -309,5 +311,16 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
     // Note that we want this timer to run inside the NgZone, because we want
     // the related events like `afterClosed` to be inside the zone as well.
     this._animationTimer = setTimeout(callback, duration);
+  }
+
+  /** Runs a callback in `requestAnimationFrame`, if available. */
+  private _requestAnimationFrame(callback: () => void) {
+    this._ngZone.runOutsideAngular(() => {
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(callback);
+      } else {
+        callback();
+      }
+    });
   }
 }
