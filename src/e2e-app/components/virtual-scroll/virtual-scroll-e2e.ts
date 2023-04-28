@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
 
 const itemSizeSample = [100, 25, 50, 50, 100, 200, 75, 100, 50, 250];
 
@@ -6,6 +8,8 @@ const itemSizeSample = [100, 25, 50, 50, 100, 200, 75, 100, 50, 250];
   selector: 'virtual-scroll-e2e',
   templateUrl: 'virtual-scroll-e2e.html',
   styleUrls: ['virtual-scroll-e2e.css'],
+  standalone: true,
+  imports: [ScrollingModule, ExperimentalScrollingModule],
 })
 export class VirtualScrollE2E {
   uniformItems = Array(1000).fill(50);
