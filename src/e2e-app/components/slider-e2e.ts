@@ -7,6 +7,7 @@
  */
 
 import {Component} from '@angular/core';
+import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
   selector: 'slider-e2e',
@@ -25,5 +26,7 @@ import {Component} from '@angular/core';
     </mat-slider>
     `,
   styles: ['.mat-mdc-slider { width: 148px; }'],
+  standalone: true,
+  imports: [MatSliderModule],
 })
 export class SliderE2e {}

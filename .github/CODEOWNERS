@@ -243,34 +243,12 @@
 
 # E2E app
 /src/e2e-app/*                                              @andrewseguin
-/src/e2e-app/block-scroll-strategy/**                       @andrewseguin @crisbeto
-/src/e2e-app/button-toggle/**                               @andrewseguin
-/src/e2e-app/card/**                                        @andrewseguin
-/src/e2e-app/component-harness/**                           @mmalerba
-/src/e2e-app/e2e-app/**                                     @andrewseguin
-/src/e2e-app/example-viewer/**                              @andrewseguin
-/src/e2e-app/expansion/**                                   @andrewseguin
-/src/e2e-app/grid-list/**                                   @andrewseguin
-/src/e2e-app/icon/**                                        @andrewseguin
-/src/e2e-app/list/**                                        @andrewseguin
-/src/e2e-app/button/**                                      @andrewseguin
-/src/e2e-app/checkbox/**                                    @mmalerba
-/src/e2e-app/dialog/**                                      @devversion
-/src/e2e-app/input/**                                       @devversion
-/src/e2e-app/menu/**                                        @crisbeto
-/src/e2e-app/progress-bar/**                                @crisbeto
-/src/e2e-app/progress-spinner/**                            @mmalerba
-/src/e2e-app/radio/**                                       @mmalerba
-/src/e2e-app/slide-toggle/**                                @crisbeto
-/src/e2e-app/slider/**                                      @andrewseguin
-/src/e2e-app/table/**                                       @andrewseguin
-/src/e2e-app/tabs/**                                        @crisbeto
-/src/e2e-app/select/**                                      @crisbeto
-/src/e2e-app/sidenav/**                                     @mmalerba
-/src/e2e-app/stepper/**                                     @mmalerba
-/src/e2e-app/test-util/**                                   @andrewseguin
-/src/e2e-app/toolbar/**                                     @devversion
-/src/e2e-app/virtual-scroll/**                              @mmalerba
+/src/e2e-app/components/home.ts                             @andrewseguin
+/src/e2e-app/components/block-scroll-strategy/**            @andrewseguin @crisbeto
+/src/e2e-app/components/component-harness-e2e.ts            @mmalerba
+/src/e2e-app/components/e2e-app/**                          @andrewseguin
+/src/e2e-app/components/slider-e2e.ts                       @andrewseguin
+/src/e2e-app/components/virtual-scroll/**                   @mmalerba
 
 # Universal app
 /src/universal-app/**                                       @devversion
