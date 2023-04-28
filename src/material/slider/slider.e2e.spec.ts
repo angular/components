@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {clickElementAtPoint, getElement, Point} from '../../cdk/testing/private/e2e';
 import {$, browser, by, element, ElementFinder} from 'protractor';
 import {logging} from 'selenium-webdriver';
 
@@ -121,7 +120,7 @@ async function getSliderValue(slider: ElementFinder, thumbPosition: Thumb): Prom
 
 /** Focuses on the MatSlider at the coordinates corresponding to the given thumb. */
 async function focusSliderThumb(slider: ElementFinder, thumbPosition: Thumb): Promise<void> {
-  const webElement = await getElement(slider).getWebElement();
+  const webElement = await slider.getWebElement();
   const coords = await getCoordsForValue(slider, await getSliderValue(slider, thumbPosition));
   return await browser.actions().mouseMove(webElement, coords).mouseDown().perform();
 }
@@ -137,7 +136,7 @@ async function slideToValue(
   value: number,
   thumbPosition: Thumb,
 ): Promise<void> {
-  const webElement = await getElement(slider).getWebElement();
+  const webElement = await slider.getWebElement();
   const startCoords = await getCoordsForValue(slider, await getSliderValue(slider, thumbPosition));
   const endCoords = await getCoordsForValue(slider, value);
   return await browser
@@ -172,4 +171,18 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
 const enum Thumb {
   START = 1,
   END = 2,
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * Clicks an element at a specific point. Useful if there's another element
+ * that covers part of the target and can catch the click.
+ */
+async function clickElementAtPoint(target: ElementFinder, coords: Point) {
+  const webElement = await target.getWebElement();
+  await browser.actions().mouseMove(webElement, coords).click().perform();
 }
