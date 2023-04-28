@@ -99,7 +99,6 @@ ng_e2e_test_library(
     srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
         ":slider",
-        "//src/cdk/testing/private/e2e",
     ],
 )
 
@@ -107,6 +106,5 @@ e2e_test_suite(
     name = "e2e_tests",
     deps = [
         ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
     ],
 )
