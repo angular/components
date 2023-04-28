@@ -1,5 +1,4 @@
 import {browser, Key, element, by} from 'protractor';
-import {getScrollPosition} from '../../testing/private/e2e';
 
 describe('scroll blocking', () => {
   beforeEach(() => browser.get('/block-scroll-strategy'));
@@ -115,4 +114,21 @@ async function clickOn(id: string) {
 // Scrolls the page to the specified coordinates.
 async function scrollPage(x: number, y: number) {
   await browser.executeScript(`window.scrollTo(${x}, ${y});`);
+}
+
+/**
+ * Determines the current scroll position of the page.
+ */
+async function getScrollPosition(): Promise<{x: number; y: number}> {
+  const snippet = `
+    var documentRect = document.documentElement.getBoundingClientRect();
+    var x = -documentRect.left || document.body.scrollLeft || window.scrollX ||
+             document.documentElement.scrollLeft || 0;
+    var y = -documentRect.top || document.body.scrollTop || window.scrollY ||
+             document.documentElement.scrollTop || 0;
+
+    return {x: x, y: y};
+  `;
+
+  return await browser.executeScript(snippet);
 }

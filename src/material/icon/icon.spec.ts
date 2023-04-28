@@ -107,6 +107,13 @@ describe('MatIcon', () => {
     },
   ));
 
+  it('should apply the correct role', () => {
+    const fixture = TestBed.createComponent(IconWithColor);
+
+    const icon = fixture.debugElement.nativeElement.querySelector('mat-icon');
+    expect(icon.getAttribute('role')).toBe('img');
+  });
+
   it('should include notranslate class by default', () => {
     const fixture = TestBed.createComponent(IconWithColor);
 
