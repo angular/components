@@ -1,14 +1,16 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-
-@Component({selector: 'home', template: `<p>e2e website!</p>`})
-export class Home {}
+import {NgFor, NgIf} from '@angular/common';
+import {MatListModule} from '@angular/material/list';
+import {RouterLink, RouterOutlet} from '@angular/router';
 
 @Component({
-  selector: 'e2e-app-layout',
-  templateUrl: 'e2e-app-layout.html',
+  selector: 'e2e-app',
+  templateUrl: 'e2e-app.html',
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatListModule, NgIf, NgFor, RouterLink, RouterOutlet],
 })
-export class E2eAppLayout {
+export class E2eApp {
   showLinks = false;
 
   navLinks = [
