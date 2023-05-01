@@ -1,3 +1,27 @@
+<a name="16.0.0-rc.2"></a>
+# 16.0.0-rc.2 "organza-ocarina" (2023-05-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fc6ae988a3](https://github.com/angular/components/commit/fc6ae988a396ee789075c19d8f6802974675ed5a) | fix | **schematics:** skip module-related operations for standalone apps |
+| [26d76c67b1](https://github.com/angular/components/commit/26d76c67b1b378eb7d709f73adf1c8aef3400acd) | fix | **schematics:** update drag-drop schematic to support standalone |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f8598f8658](https://github.com/angular/components/commit/f8598f86586dbbe71089f78ab0a285391c3716ac) | fix | **button:** fix ripple style for all types of buttons ([#26970](https://github.com/angular/components/pull/26970)) |
+| [efe05e4f05](https://github.com/angular/components/commit/efe05e4f05780e68d913c80ae922336faa63d327) | fix | **chips:** avoid double emit of changed event on blur ([#26963](https://github.com/angular/components/pull/26963)) |
+| [ae9407c2cc](https://github.com/angular/components/commit/ae9407c2ccdda202df34c933bb3e89529656568f) | fix | **chips:** fix chip density styles ([#26951](https://github.com/angular/components/pull/26951)) |
+| [701f2b70ec](https://github.com/angular/components/commit/701f2b70ec444791230f7928138db6f22a5096f2) | fix | **datepicker:** date range input incorrectly inheriting text color ([#26988](https://github.com/angular/components/pull/26988)) |
+| [a65d790c30](https://github.com/angular/components/commit/a65d790c3016a4d798180678d469bafe536af014) | fix | **dialog:** opening animation sometimes being skipped ([#26971](https://github.com/angular/components/pull/26971)) |
+| [aeed6bb10c](https://github.com/angular/components/commit/aeed6bb10cf26044c856bbe4642d74aaf608c0a9) | fix | **progress-bar:** account for new height token ([#27008](https://github.com/angular/components/pull/27008)) |
+| [f8fad4f079](https://github.com/angular/components/commit/f8fad4f079199c56f671447cf0ef54bae9841270) | fix | **schematics:** support standalone projects in address from schematic |
+| [313348e13f](https://github.com/angular/components/commit/313348e13f3f7fbf5560f1b787f659d094399714) | fix | **schematics:** support standalone projects in dashboard schematic |
+| [186c8747ef](https://github.com/angular/components/commit/186c8747ef405ed8f74743bd768a99a6625047bf) | fix | **schematics:** support standalone projects in navigation schematic |
+| [7a9112d554](https://github.com/angular/components/commit/7a9112d5546ce732109ca311a352a04596b5ce63) | fix | **schematics:** support standalone projects in table schematic |
+| [360e19be4f](https://github.com/angular/components/commit/360e19be4fd8a4d0a779c6e34ebe2003e1a6bf31) | fix | **schematics:** support standalone projects in tree schematic |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-rc.1"></a>
 # 16.0.0-rc.1 "gallium-grill" (2023-04-19)
 ### cdk
