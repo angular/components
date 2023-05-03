@@ -1,79 +1,45 @@
-<a name="16.0.0-rc.2"></a>
-# 16.0.0-rc.2 "organza-ocarina" (2023-05-01)
+<a name="16.0.0"></a>
+# 16.0.0 "canvas-cup" (2023-05-03)
 ### cdk
 | Commit | Type | Description |
 | -- | -- | -- |
+| [0d56af5089](https://github.com/angular/components/commit/0d56af5089d537c8b10f913eb2c607912ee51fff) | fix | **layout:** resolve CSP errors |
 | [fc6ae988a3](https://github.com/angular/components/commit/fc6ae988a396ee789075c19d8f6802974675ed5a) | fix | **schematics:** skip module-related operations for standalone apps |
 | [26d76c67b1](https://github.com/angular/components/commit/26d76c67b1b378eb7d709f73adf1c8aef3400acd) | fix | **schematics:** update drag-drop schematic to support standalone |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
+| [2604f15424](https://github.com/angular/components/commit/2604f1542470d3951fecbe06f6f020d1fd67b775) | feat | **button:** change icon-button to use MDC's token API ([#26824](https://github.com/angular/components/pull/26824)) |
+| [d6d3e3e506](https://github.com/angular/components/commit/d6d3e3e506e03d1ec33e96b786da42570ede9505) | feat | **button:** make button ripples lazy ([#26568](https://github.com/angular/components/pull/26568)) |
+| [506bca5712](https://github.com/angular/components/commit/506bca5712c1b170668eb92d81dac89c7f70a8c7) | feat | **tabs:** add `stretchTabs` to `MatTabsConfig` ([#26644](https://github.com/angular/components/pull/26644)) |
+| [e092663d56](https://github.com/angular/components/commit/e092663d56b21a0d226d6083398953c80d1b0c2b) | fix | **button:** add specificity to icon button density ([#26911](https://github.com/angular/components/pull/26911)) |
+| [b049b8d816](https://github.com/angular/components/commit/b049b8d816eaaf376768af4c6be8c7d9e051d934) | fix | **button:** fix icon button density ([#26877](https://github.com/angular/components/pull/26877)) |
 | [f8598f8658](https://github.com/angular/components/commit/f8598f86586dbbe71089f78ab0a285391c3716ac) | fix | **button:** fix ripple style for all types of buttons ([#26970](https://github.com/angular/components/pull/26970)) |
-| [efe05e4f05](https://github.com/angular/components/commit/efe05e4f05780e68d913c80ae922336faa63d327) | fix | **chips:** avoid double emit of changed event on blur ([#26963](https://github.com/angular/components/pull/26963)) |
+| [8a32172678](https://github.com/angular/components/commit/8a32172678cf4f1732f4029d26a3266f5599991f) | fix | **card:** refactor to depend on @angular/material/core/tokens ([#26674](https://github.com/angular/components/pull/26674)) |
+| [7e9878c96e](https://github.com/angular/components/commit/7e9878c96e18a5252d0c95d01d3b467d74525246) | fix | **card:** tokenize the card elevation ([#26770](https://github.com/angular/components/pull/26770)) |
+| [76eeaaf204](https://github.com/angular/components/commit/76eeaaf204cfcb491492b92f7b08c29074253164) | fix | **checkbox:** refactor to depend on @angular/material/core/tokens ([#26744](https://github.com/angular/components/pull/26744)) |
 | [ae9407c2cc](https://github.com/angular/components/commit/ae9407c2ccdda202df34c933bb3e89529656568f) | fix | **chips:** fix chip density styles ([#26951](https://github.com/angular/components/pull/26951)) |
-| [701f2b70ec](https://github.com/angular/components/commit/701f2b70ec444791230f7928138db6f22a5096f2) | fix | **datepicker:** date range input incorrectly inheriting text color ([#26988](https://github.com/angular/components/pull/26988)) |
-| [a65d790c30](https://github.com/angular/components/commit/a65d790c3016a4d798180678d469bafe536af014) | fix | **dialog:** opening animation sometimes being skipped ([#26971](https://github.com/angular/components/pull/26971)) |
+| [6ad47bf0f7](https://github.com/angular/components/commit/6ad47bf0f7794147cbd05631dc972d5aa19bcfef) | fix | **core:** allow keyboard navigation to disabled options ([#26745](https://github.com/angular/components/pull/26745)) |
+| [a9b61352c5](https://github.com/angular/components/commit/a9b61352c575f7869a22d8a311dfe1c66c2da7ef) | fix | **form-field:** Add `mdc-label` class to `<label>` ([#26851](https://github.com/angular/components/pull/26851)) |
+| [c6644d65db](https://github.com/angular/components/commit/c6644d65dbfa9b90f0ec982883c417b852e25694) | fix | **legacy-progress-spinner:** avoid CSP errors |
 | [aeed6bb10c](https://github.com/angular/components/commit/aeed6bb10cf26044c856bbe4642d74aaf608c0a9) | fix | **progress-bar:** account for new height token ([#27008](https://github.com/angular/components/pull/27008)) |
+| [f8a70bf060](https://github.com/angular/components/commit/f8a70bf06089937f298d798e503cf91a31313491) | fix | **schematics:** reference correct entrypoint in schematic definition ([#26930](https://github.com/angular/components/pull/26930)) |
 | [f8fad4f079](https://github.com/angular/components/commit/f8fad4f079199c56f671447cf0ef54bae9841270) | fix | **schematics:** support standalone projects in address from schematic |
 | [313348e13f](https://github.com/angular/components/commit/313348e13f3f7fbf5560f1b787f659d094399714) | fix | **schematics:** support standalone projects in dashboard schematic |
 | [186c8747ef](https://github.com/angular/components/commit/186c8747ef405ed8f74743bd768a99a6625047bf) | fix | **schematics:** support standalone projects in navigation schematic |
 | [7a9112d554](https://github.com/angular/components/commit/7a9112d5546ce732109ca311a352a04596b5ce63) | fix | **schematics:** support standalone projects in table schematic |
 | [360e19be4f](https://github.com/angular/components/commit/360e19be4fd8a4d0a779c6e34ebe2003e1a6bf31) | fix | **schematics:** support standalone projects in tree schematic |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.0.0-rc.1"></a>
-# 16.0.0-rc.1 "gallium-grill" (2023-04-19)
-### cdk
+| [22410a9967](https://github.com/angular/components/commit/22410a99676ae5e6da0248d18893be7f4756afab) | fix | **schematics:** use provider functions in ng add ([#26920](https://github.com/angular/components/pull/26920)) |
+| [ead5efc4c5](https://github.com/angular/components/commit/ead5efc4c54909cd9e53e9fe430c0d488e2097d1) | fix | **tabs:** remove background color from tabs ([#26905](https://github.com/angular/components/pull/26905)) |
+### google-maps
 | Commit | Type | Description |
 | -- | -- | -- |
-| [0d56af508](https://github.com/angular/components/commit/0d56af5089d537c8b10f913eb2c607912ee51fff) | fix | **layout:** resolve CSP errors |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e092663d5](https://github.com/angular/components/commit/e092663d56b21a0d226d6083398953c80d1b0c2b) | fix | **button:** add specificity to icon button density ([#26911](https://github.com/angular/components/pull/26911)) |
-| [9147660f5](https://github.com/angular/components/commit/9147660f520d255cfc8c7ef535a58702948270ac) | fix | **core:** remove tabindex from mat-option ([#26917](https://github.com/angular/components/pull/26917)) |
-| [c4a64a15c](https://github.com/angular/components/commit/c4a64a15c87a3a9a0f499a44e6d9a6dfd6aab677) | fix | **form-field:** inconsistent height for non-text inputs ([#26941](https://github.com/angular/components/pull/26941)) |
-| [c6644d65d](https://github.com/angular/components/commit/c6644d65dbfa9b90f0ec982883c417b852e25694) | fix | **legacy-progress-spinner:** avoid CSP errors |
-| [f8a70bf06](https://github.com/angular/components/commit/f8a70bf06089937f298d798e503cf91a31313491) | fix | **schematics:** reference correct entrypoint in schematic definition ([#26930](https://github.com/angular/components/pull/26930)) |
-| [ead5efc4c](https://github.com/angular/components/commit/ead5efc4c54909cd9e53e9fe430c0d488e2097d1) | fix | **tabs:** remove background color from tabs ([#26905](https://github.com/angular/components/pull/26905)) |
+| [e4901dfa72](https://github.com/angular/components/commit/e4901dfa720183b66ffc4d387aa5fba0b43210eb) | fix | update to latest typings ([#26854](https://github.com/angular/components/pull/26854)) |
 ### cdk-experimental
 | Commit | Type | Description |
 | -- | -- | -- |
-| [d4d2ea5a4](https://github.com/angular/components/commit/d4d2ea5a45f232477681bd164dcb871347beaf8b) | fix | **column-resize:** avoid CSP errors |
-| [412c691c5](https://github.com/angular/components/commit/412c691c5e22d93ba2f58ee96018ec020a02a33e) | fix | **table-scroll-container:** avoid CSP errors |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.0.0-rc.0"></a>
-# 16.0.0-rc.0 "quilt-quail" (2023-04-13)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [22410a996](https://github.com/angular/components/commit/22410a99676ae5e6da0248d18893be7f4756afab) | fix | **schematics:** use provider functions in ng add ([#26920](https://github.com/angular/components/pull/26920)) |
-| [c98c2c5fd](https://github.com/angular/components/commit/c98c2c5fd32757d4c337e3b991a0f3cee751b626) | fix | **table:** correct filterPredicate typo ([#26902](https://github.com/angular/components/pull/26902)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.0.0-next.5"></a>
-# 16.0.0-next.5 "polyester-peach" (2023-04-06)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [5825d4aa59](https://github.com/angular/components/commit/5825d4aa5925466a79c93441fd71a0a62d151d3f) | fix | **menu:** move focus when opening via click ([#26874](https://github.com/angular/components/pull/26874)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [2604f15424](https://github.com/angular/components/commit/2604f1542470d3951fecbe06f6f020d1fd67b775) | feat | **button:** change icon-button to use MDC's token API ([#26824](https://github.com/angular/components/pull/26824)) |
-| [d6d3e3e506](https://github.com/angular/components/commit/d6d3e3e506e03d1ec33e96b786da42570ede9505) | feat | **button:** make button ripples lazy ([#26568](https://github.com/angular/components/pull/26568)) |
-| [b049b8d816](https://github.com/angular/components/commit/b049b8d816eaaf376768af4c6be8c7d9e051d934) | fix | **button:** fix icon button density ([#26877](https://github.com/angular/components/pull/26877)) |
-| [13755056e9](https://github.com/angular/components/commit/13755056e98335890593d227af5a575d082583a7) | fix | **core:** don't use font shorthand property in typography-level ([#26865](https://github.com/angular/components/pull/26865)) |
-### material-luxon-adapter
-| Commit | Type | Description |
-| -- | -- | -- |
-| [00ff979b96](https://github.com/angular/components/commit/00ff979b966e52565df0755570205548f2cc8467) | fix | zone on DateTime ignored ([#26887](https://github.com/angular/components/pull/26887)) |
-## Special Thanks
-Amy Sorto, Andrew Seguin, Joey Perrott, Jonathan Meier, Kristiyan Kostadinov, Paul Gschwendtner, Wagner Maciel and cusher
+| [d4d2ea5a45](https://github.com/angular/components/commit/d4d2ea5a45f232477681bd164dcb871347beaf8b) | fix | **column-resize:** avoid CSP errors |
+| [412c691c5e](https://github.com/angular/components/commit/412c691c5e22d93ba2f58ee96018ec020a02a33e) | fix | **table-scroll-container:** avoid CSP errors |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -92,27 +58,6 @@ Jonathan Meier and Kristiyan Kostadinov
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="16.0.0-next.4"></a>
-# 16.0.0-next.4 "plastic-pipe" (2023-03-29)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [24fab9992f](https://github.com/angular/components/commit/24fab9992f6ec689bcab7750cbbec18685e236c2) | fix | **overlay:** don't close if scroll is coming from inside overlay ([#26840](https://github.com/angular/components/pull/26840)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6ad47bf0f7](https://github.com/angular/components/commit/6ad47bf0f7794147cbd05631dc972d5aa19bcfef) | fix | **core:** allow keyboard navigation to disabled options ([#26745](https://github.com/angular/components/pull/26745)) |
-| [e6f1a7dd54](https://github.com/angular/components/commit/e6f1a7dd54b8e783d9bb2d123576ca5764c6437b) | fix | **datepicker:** remove div as a child of button ([#26838](https://github.com/angular/components/pull/26838)) |
-| [a9b61352c5](https://github.com/angular/components/commit/a9b61352c575f7869a22d8a311dfe1c66c2da7ef) | fix | **form-field:** Add `mdc-label` class to `<label>` ([#26851](https://github.com/angular/components/pull/26851)) |
-### google-maps
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e4901dfa72](https://github.com/angular/components/commit/e4901dfa720183b66ffc4d387aa5fba0b43210eb) | fix | update to latest typings ([#26854](https://github.com/angular/components/pull/26854)) |
-## Special Thanks
-Andrew Seguin, Jessica Janiuk, Kevin Vizcarra, Kristiyan Kostadinov, Wagner Maciel and Zach Arend
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="15.2.5"></a>
 # 15.2.5 "metal-plumber" (2023-03-29)
 ### cdk
@@ -125,21 +70,6 @@ Andrew Seguin, Jessica Janiuk, Kevin Vizcarra, Kristiyan Kostadinov, Wagner Maci
 | [600d40eb24](https://github.com/angular/components/commit/600d40eb24502816a03133bff4b01080a02194c9) | fix | **datepicker:** remove div as a child of button ([#26838](https://github.com/angular/components/pull/26838)) |
 ## Special Thanks
 Kristiyan Kostadinov and Wagner Maciel
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.0.0-next.3"></a>
-# 16.0.0-next.3 "limonite-lime" (2023-03-23)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [7e9878c96](https://github.com/angular/components/commit/7e9878c96e18a5252d0c95d01d3b467d74525246) | fix | **card:** tokenize the card elevation ([#26770](https://github.com/angular/components/pull/26770)) |
-| [76eeaaf20](https://github.com/angular/components/commit/76eeaaf204cfcb491492b92f7b08c29074253164) | fix | **checkbox:** refactor to depend on @angular/material/core/tokens ([#26744](https://github.com/angular/components/pull/26744)) |
-| [96aadaa41](https://github.com/angular/components/commit/96aadaa411a3af93626af9aa73fb4abd6600d0b3) | fix | **core:** apply strong focus styles to selected option ([#26811](https://github.com/angular/components/pull/26811)) |
-| [7cd18004d](https://github.com/angular/components/commit/7cd18004d4f3c0c4665eebc19986b92bcdb7783b) | fix | **datepicker:** date range input not marked as required when using reactive forms ([#26749](https://github.com/angular/components/pull/26749)) |
-| [142e845a1](https://github.com/angular/components/commit/142e845a1232cf7fb7256072c60960b7be973eb3) | fix | **tooltip:** only expand hover area on side closest to trigger ([#26786](https://github.com/angular/components/pull/26786)) |
-## Special Thanks
-Kristiyan Kostadinov, Miles Malerba, Sneaky, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -156,21 +86,6 @@ Kristiyan Kostadinov, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="16.0.0-next.2"></a>
-# 16.0.0-next.2 "feather-shark" (2023-03-16)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [5c5617de4](https://github.com/angular/components/commit/5c5617de4b63daf2bec94f2fc539c48c93a984d3) | fix | **checkbox:** fix ARIA semantics and use native DOM properties ([#26710](https://github.com/angular/components/pull/26710)) |
-| [e3917ea17](https://github.com/angular/components/commit/e3917ea173fdadfe20dba332d69c3d84ea6a8d32) | fix | **chips:** chip label appearing above sticky columns ([#26794](https://github.com/angular/components/pull/26794)) |
-| [f6ea2ff92](https://github.com/angular/components/commit/f6ea2ff92d7e2952742d84c64f684d0251eabc90) | fix | **chips:** don't prevent default mousedown action ([#26765](https://github.com/angular/components/pull/26765)) |
-| [d444c5889](https://github.com/angular/components/commit/d444c588905f5fd4f9587d215385125e16c70cfb) | fix | **chips:** styling not cleared on basic chips in listbox and grid ([#26771](https://github.com/angular/components/pull/26771)) |
-| [946cc6743](https://github.com/angular/components/commit/946cc6743c4d0f46c943fca7fdb2ed07148535d9) | fix | **tabs:** update MatTab _scrollToLabel function to always display a label from its start ([#26736](https://github.com/angular/components/pull/26736)) ([#26737](https://github.com/angular/components/pull/26737)) |
-## Special Thanks
-Boyi Li, Jessica Janiuk, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="15.2.3"></a>
 # 15.2.3 "aluminum-statue" (2023-03-16)
 ### material
@@ -183,25 +98,6 @@ Boyi Li, Jessica Janiuk, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
 | [06ed54c25](https://github.com/angular/components/commit/06ed54c2510661cc08ba00fb001ea46ee1cd5ec2) | fix | **tabs:** update MatTab _scrollToLabel function to always display a label from its start ([#26736](https://github.com/angular/components/pull/26736)) ([#26737](https://github.com/angular/components/pull/26737)) |
 ## Special Thanks
 Boyi Li, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.0.0-next.1"></a>
-# 16.0.0-next.1 "jade-jacket" (2023-03-08)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [168619b12](https://github.com/angular/components/commit/168619b12425978476cebd6b060c007e57b5d3af) | fix | **chips:** unable to shift + tab out of a chip set ([#26727](https://github.com/angular/components/pull/26727)) |
-| [4c8f50554](https://github.com/angular/components/commit/4c8f50554466db6049eeb21e6875347fb3a1e6fd) | fix | **core:** mat-option sets aria-selected="false" ([#26673](https://github.com/angular/components/pull/26673)) |
-| [fbca2e931](https://github.com/angular/components/commit/fbca2e93176e6b263fe7158fd85e2748f5985150) | fix | **datepicker:** resolve server-side rendering error ([#26742](https://github.com/angular/components/pull/26742)) |
-| [3442c0ee0](https://github.com/angular/components/commit/3442c0ee01782fd9f05cf712cc28cf82d8e4f57a) | fix | **paginator:** opt-out of single-selection indicator ([#26746](https://github.com/angular/components/pull/26746)) |
-| [5ea4ca579](https://github.com/angular/components/commit/5ea4ca579c6f829507e04fe6819499c71f7a18d9) | fix | **snack-bar:** live region not working when modal is open ([#26725](https://github.com/angular/components/pull/26725)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [7043a51da](https://github.com/angular/components/commit/7043a51da122927f63f6ea9c72ba4c28fafcc507) | fix | **scrolling:** throw error rather than string ([#26736](https://github.com/angular/components/pull/26736)) |
-## Special Thanks
-Kristiyan Kostadinov, RuoJia123, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -221,18 +117,6 @@ Kristiyan Kostadinov, RuoJia123, Wagner Maciel and Zach Arend
 | [e1c8fe85b](https://github.com/angular/components/commit/e1c8fe85bdf81dd84d79d40c24e62d3a2f9f8968) | fix | **scrolling:** throw error rather than string ([#26736](https://github.com/angular/components/pull/26736)) |
 ## Special Thanks
 Kristiyan Kostadinov, RuoJia123 and Zach Arend
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.0.0-next.0"></a>
-# 16.0.0-next.0 "adenosine-aside" (2023-03-01)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [506bca5712](https://github.com/angular/components/commit/506bca5712c1b170668eb92d81dac89c7f70a8c7) | feat | **tabs:** add `stretchTabs` to `MatTabsConfig` ([#26644](https://github.com/angular/components/pull/26644)) |
-| [8a32172678](https://github.com/angular/components/commit/8a32172678cf4f1732f4029d26a3266f5599991f) | fix | **card:** refactor to depend on @angular/material/core/tokens ([#26674](https://github.com/angular/components/pull/26674)) |
-## Special Thanks
-Alan Agius, Joel Kesler, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
