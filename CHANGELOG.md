@@ -1,3 +1,14 @@
+<a name="15.2.9"></a>
+# 15.2.9 "vinyl-violin" (2023-05-03)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4804b0230c](https://github.com/angular/components/commit/4804b0230cf668f6b6a3f518f315d6d081fe14c9) | fix | **chips:** avoid double emit of changed event on blur ([#26963](https://github.com/angular/components/pull/26963)) |
+| [757a45685e](https://github.com/angular/components/commit/757a45685eaa63c2856346bbb2fb7d2d45c73064) | fix | **datepicker:** date range input incorrectly inheriting text color ([#26988](https://github.com/angular/components/pull/26988)) |
+| [95066faf3d](https://github.com/angular/components/commit/95066faf3dd0a36d8783827da6ef1a5d185a4f24) | fix | **dialog:** opening animation sometimes being skipped ([#26971](https://github.com/angular/components/pull/26971)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="15.2.8"></a>
 # 15.2.8 "nickel-nickel" (2023-04-19)
 ### material
