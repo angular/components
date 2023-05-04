@@ -43,15 +43,20 @@ $prefix: 'mat-elevation-z';
   @else {
     // Copied from @material/elevation/_elevation-theme.scss#_box-shadow
     // TODO(mmalerba): Add support for graceful handling of CSS var color to MDC.
-    $shadow-color:
-      if(meta.type-of($color) == color and $opacity != null, rgba($color, $opacity), $color);
     $umbra-z-value: map.get(mdc-elevation.$umbra-map, $zValue);
     $penumbra-z-value: map.get(mdc-elevation.$penumbra-map, $zValue);
     $ambient-z-value: map.get(mdc-elevation.$ambient-map, $zValue);
+
+    $color-opacity: if($opacity != null, $opacity, 1);
+    $umbra-color: _compute-color-opacity($color, mdc-elevation.$umbra-opacity * $color-opacity);
+    $penumbra-color:
+      _compute-color-opacity($color, mdc-elevation.$penumbra-opacity * $color-opacity);
+    $ambient-color: _compute-color-opacity($color, mdc-elevation.$ambient-opacity * $color-opacity);
+
     $box-shadow: (
-      #{'#{$umbra-z-value} #{$shadow-color}'},
-      #{'#{$penumbra-z-value} #{$shadow-color}'},
-      #{$ambient-z-value} $shadow-color
+      #{'#{$umbra-z-value} #{$umbra-color}'},
+      #{'#{$penumbra-z-value} #{$penumbra-color}'},
+      #{$ambient-z-value} $ambient-color
     );
     @include mdc-elevation.shadow($box-shadow);
   }
@@ -59,9 +64,9 @@ $prefix: 'mat-elevation-z';
 
 // Applies the elevation to an element in a manner that allows
 // consumers to override it via the Material elevation classes.
-@mixin overridable-elevation($zValue, $color: $color) {
+@mixin overridable-elevation($zValue, $color: $color, $opacity: null) {
   &:not([class*='#{$prefix}']) {
-    @include elevation($zValue, $color);
+    @include elevation($zValue, $color, $opacity);
   }
 }
 
@@ -88,4 +93,13 @@ $prefix: 'mat-elevation-z';
     $duration: $transition-duration,
     $easing: $transition-timing-function) {
   transition: private-transition-property-value($duration, $easing);
+}
+
+@function _compute-color-opacity($color, $opacity) {
+  @if meta.type-of($color) == color and $opacity != null {
+    @return rgba($color, $opacity);
+  }
+  @else {
+    @return $color;
+  }
 }
