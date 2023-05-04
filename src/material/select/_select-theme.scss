@@ -2,6 +2,8 @@
 @use '@material/menu-surface' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list;
 @use '@material/typography' as mdc-typography;
+@use '@material/density' as mdc-density;
+@use '@material/textfield' as mdc-textfield;
 
 @use '../core/theming/theming';
 @use '../core/typography/typography';
@@ -79,7 +81,24 @@
   }
 }
 
-@mixin density($config-or-theme) {}
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+
+  // Density is clamped at -5 here, because MDC's form field throws an error for anything lower.
+  $form-field-height: mdc-density.prop-value(
+    $density-config: mdc-textfield.$density-config,
+    $density-scale: theming.clamp-density($density-scale, -5),
+    $property-name: height,
+  );
+
+  // On lower densities the filled form field hides its label which causes the label to
+  // be misaligned. Remove the additional offset that was added because of the label.
+  @if ($form-field-height < mdc-textfield.$minimum-height-for-filled-label) {
+    .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+      transform: none;
+    }
+  }
+}
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
