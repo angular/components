@@ -18,7 +18,15 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {QueryList} from '@angular/core';
-import {isObservable, Observable, Subject} from 'rxjs';
+import {isObservable, of as observableOf, Observable, Subject} from 'rxjs';
+import {take} from 'rxjs/operators';
+
+function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
+  if (!isObservable(data)) {
+    return observableOf(data);
+  }
+  return data;
+}
 
 /** Represents an item within a tree that can be passed to a TreeKeyManager. */
 export interface TreeKeyManagerItem {
@@ -108,8 +116,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    * Predicate function that can be used to check whether an item should be skipped
    * by the key manager. By default, disabled items are skipped.
    */
-  private _skipPredicateFn = (item: T) =>
-    typeof item.isDisabled === 'boolean' ? item.isDisabled : !!item.isDisabled?.();
+  private _skipPredicateFn = (item: T) => this._isItemDisabled(item);
 
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
@@ -320,15 +327,78 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   /**
    * If the item is already expanded, we collapse the item. Otherwise, we will focus the parent.
    */
-  private _collapseCurrentItem() {}
+  private _collapseCurrentItem() {
+    if (!this._activeItem) {
+      return;
+    }
+
+    if (this._isCurrentItemExpanded()) {
+      this._activeItem.collapse();
+    } else {
+      const parent = this._activeItem.getParent();
+      if (!parent || this._skipPredicateFn(parent as T)) {
+        return;
+      }
+      this._setActiveItem(parent as T);
+    }
+  }
 
   /**
    * If the item is already collapsed, we expand the item. Otherwise, we will focus the first child.
    */
-  private _expandCurrentItem() {}
+  private _expandCurrentItem() {
+    if (!this._activeItem) {
+      return;
+    }
+
+    if (!this._isCurrentItemExpanded()) {
+      this._activeItem.expand();
+    } else {
+      coerceObservable(this._activeItem.getChildren())
+        .pipe(take(1))
+        .subscribe(children => {
+          const firstChild = children.find(child => !this._skipPredicateFn(child as T));
+          if (!firstChild) {
+            return;
+          }
+          this._setActiveItem(firstChild as T);
+        });
+    }
+  }
+
+  private _isCurrentItemExpanded() {
+    if (!this._activeItem) {
+      return false;
+    }
+    return typeof this._activeItem.isExpanded === 'boolean'
+      ? this._activeItem.isExpanded
+      : this._activeItem.isExpanded();
+  }
+
+  private _isItemDisabled(item: TreeKeyManagerItem) {
+    return typeof item.isDisabled === 'boolean' ? item.isDisabled : item.isDisabled?.();
+  }
 
   /** For all items that are the same level as the current item, we expand those items. */
-  private _expandAllItemsAtCurrentItemLevel() {}
+  private _expandAllItemsAtCurrentItemLevel() {
+    if (!this._activeItem) {
+      return;
+    }
+
+    const parent = this._activeItem.getParent();
+    let itemsToExpand;
+    if (!parent) {
+      itemsToExpand = observableOf(this._items.filter(item => item.getParent() === null));
+    } else {
+      itemsToExpand = coerceObservable(parent.getChildren());
+    }
+
+    itemsToExpand.pipe(take(1)).subscribe(items => {
+      for (const item of items) {
+        item.expand();
+      }
+    });
+  }
 
   private _activateCurrentItem() {
     this._activeItem?.activate();
