@@ -325,6 +325,8 @@ export abstract class _MatTabGroupBase
             // event, otherwise the consumer may end up in an infinite loop in some edge cases like
             // adding a tab within the `selectedIndexChange` event.
             this._indexToSelect = this._selectedIndex = i;
+            // We need to update that the selectedIndex have changed.
+            this.selectedIndexChange.emit(this._selectedIndex);
             this._lastFocusedTabIndex = null;
             selectedTab = tabs[i];
             break;
