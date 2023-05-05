@@ -6,6 +6,7 @@ import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatIconHarness} from '@angular/material/icon/testing/icon-harness';
 import {DomSanitizer} from '@angular/platform-browser';
 import {IconType} from './icon-harness-filters';
+import {MatBadgeModule} from '@angular/material/badge';
 
 /** Shared tests to run on both the original and MDC-based icons. */
 export function runHarnessTests(
@@ -18,7 +19,7 @@ export function runHarnessTests(
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [iconModule],
+      imports: [iconModule, MatBadgeModule],
       declarations: [IconHarnessTest],
     }).compileComponents();
 
@@ -37,7 +38,7 @@ export function runHarnessTests(
 
   it('should load all icon harnesses', async () => {
     const icons = await loader.getAllHarnesses(iconHarness);
-    expect(icons.length).toBe(4);
+    expect(icons.length).toBe(5);
   });
 
   it('should filter icon harnesses based on their type', async () => {
@@ -47,7 +48,7 @@ export function runHarnessTests(
     ]);
 
     expect(svgIcons.length).toBe(1);
-    expect(fontIcons.length).toBe(3);
+    expect(fontIcons.length).toBe(4);
   });
 
   it('should filter icon harnesses based on their name', async () => {
@@ -69,40 +70,53 @@ export function runHarnessTests(
 
     expect(regexFilterResults.length).toBe(1);
     expect(stringFilterResults.length).toBe(1);
-    expect(nullFilterResults.length).toBe(2);
+    expect(nullFilterResults.length).toBe(3);
   });
 
   it('should get the type of each icon', async () => {
     const icons = await loader.getAllHarnesses(iconHarness);
     const types = await parallel(() => icons.map(icon => icon.getType()));
-    expect(types).toEqual([IconType.FONT, IconType.SVG, IconType.FONT, IconType.FONT]);
+    expect(types).toEqual([
+      IconType.FONT,
+      IconType.SVG,
+      IconType.FONT,
+      IconType.FONT,
+      IconType.FONT,
+    ]);
   });
 
   it('should get the name of an icon', async () => {
     const icons = await loader.getAllHarnesses(iconHarness);
     const names = await parallel(() => icons.map(icon => icon.getName()));
-    expect(names).toEqual(['fontIcon', 'svgIcon', 'ligature_icon', 'ligature_icon_by_attribute']);
+    expect(names).toEqual([
+      'fontIcon',
+      'svgIcon',
+      'ligature_icon',
+      'notifications',
+      'ligature_icon_by_attribute',
+    ]);
   });
 
   it('should get the namespace of an icon', async () => {
     const icons = await loader.getAllHarnesses(iconHarness);
     const namespaces = await parallel(() => icons.map(icon => icon.getNamespace()));
-    expect(namespaces).toEqual(['fontIcons', 'svgIcons', null, null]);
+    expect(namespaces).toEqual(['fontIcons', 'svgIcons', null, null, null]);
   });
 
   it('should get whether an icon is inline', async () => {
     const icons = await loader.getAllHarnesses(iconHarness);
     const inlineStates = await parallel(() => icons.map(icon => icon.isInline()));
-    expect(inlineStates).toEqual([false, false, true, false]);
+    expect(inlineStates).toEqual([false, false, true, true, false]);
   });
 }
 
 @Component({
   template: `
-    <mat-icon fontSet="fontIcons" fontIcon="fontIcon"></mat-icon>
-    <mat-icon svgIcon="svgIcons:svgIcon"></mat-icon>
-    <mat-icon inline>ligature_icon</mat-icon>
-    <mat-icon fontIcon="ligature_icon_by_attribute"></mat-icon>
+    <mat-icon fontSet='fontIcons' fontIcon='fontIcon'></mat-icon>
+    <mat-icon svgIcon='svgIcons:svgIcon'></mat-icon>
+    <mat-icon inline><span>ligature_icon</span></mat-icon>
+    <mat-icon inline matBadge='15'>notifications</mat-icon>
+    <mat-icon fontIcon='ligature_icon_by_attribute'></mat-icon>
   `,
 })
 class IconHarnessTest {}

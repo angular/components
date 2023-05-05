@@ -50,7 +50,7 @@ export class MatIconHarness extends ComponentHarness {
     // Some icons support defining the icon as a ligature.
     // As a fallback, try to extract it from the DOM text.
     if ((await this.getType()) === IconType.FONT) {
-      return host.text();
+      return host.text({exclude: '.mat-badge-content'});
     }
 
     return null;

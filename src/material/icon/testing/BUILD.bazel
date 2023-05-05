@@ -31,6 +31,7 @@ ng_test_library(
         "//src/cdk/platform",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
+        "//src/material/badge",
         "//src/material/icon",
         "@npm//@angular/platform-browser",
     ],
