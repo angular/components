@@ -17,6 +17,7 @@ import {_MatTooltipHarnessBase, TooltipHarnessFilters} from '@angular/material/t
 export class MatLegacyTooltipHarness extends _MatTooltipHarnessBase {
   protected _optionalPanel = this.documentRootLocatorFactory().locatorForOptional('.mat-tooltip');
   protected _hiddenClass = 'mat-tooltip-hide';
+  protected _disabledClass = 'mat-tooltip-disabled';
   protected _showAnimationName = 'mat-tooltip-show';
   protected _hideAnimationName = 'mat-tooltip-hide';
   static hostSelector = '.mat-tooltip-trigger';

@@ -15,6 +15,8 @@ export { LegacyTooltipHarnessFilters }
 // @public @deprecated
 export class MatLegacyTooltipHarness extends _MatTooltipHarnessBase {
     // (undocumented)
+    protected _disabledClass: string;
+    // (undocumented)
     protected _hiddenClass: string;
     // (undocumented)
     protected _hideAnimationName: string;
