@@ -228,6 +228,9 @@ export abstract class _MatTabGroupBase
 
   private _groupId: number;
 
+  /** To check if we should fire SelectIndexChange incase our this._selectedIndex === indexToSelect are equal */
+  private _fireSelectIndexChanged: boolean = false;
+
   constructor(
     elementRef: ElementRef,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -286,6 +289,17 @@ export abstract class _MatTabGroupBase
       });
     }
 
+    if (this._selectedIndex === indexToSelect && this._fireSelectIndexChanged) {
+      const isFirstRun = this._selectedIndex === null;
+
+      if (!isFirstRun) {
+        Promise.resolve().then(() => {
+          this.selectedIndexChange.emit(indexToSelect);
+          this._fireSelectIndexChanged = false;
+        });
+      }
+    }
+
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MatTab, index: number) => {
       tab.position = index - indexToSelect;
@@ -325,8 +339,9 @@ export abstract class _MatTabGroupBase
             // event, otherwise the consumer may end up in an infinite loop in some edge cases like
             // adding a tab within the `selectedIndexChange` event.
             this._indexToSelect = this._selectedIndex = i;
-            // We need to update that the selectedIndex have changed.
-            this.selectedIndexChange.emit(this._selectedIndex);
+            // We need to update that the selectedIndex have changed, setting this true will trigger
+            // selectedIndexChange in ngAfterContentChecked
+            this._fireSelectIndexChanged = true;
             this._lastFocusedTabIndex = null;
             selectedTab = tabs[i];
             break;

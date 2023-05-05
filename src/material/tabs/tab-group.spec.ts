@@ -639,6 +639,32 @@ describe('MDC-based MatTabGroup', () => {
         fixture.nativeElement.querySelector('.mat-mdc-tab-header-pagination-controls-enabled'),
       ).toBeFalsy();
     }));
+
+    it('should update selected index if the first tab removed while second selected', fakeAsync(() => {
+      const component: MatTabGroup = fixture.debugElement.query(
+        By.css('mat-tab-group'),
+      ).componentInstance;
+
+      // Select second indexed Tab.
+      fixture.componentInstance.selectedIndex = 1;
+      fixture.detectChanges();
+      tick();
+
+      // Remove first indexed Tab, it should fire selectIndexChange to update the selectedIndex.
+      fixture.componentInstance.tabs.shift();
+      fixture.detectChanges();
+      tick();
+
+      const tabs = fixture.componentInstance.tabs;
+      // Make sure there's two Tabs now.
+      expect(tabs.length).toBe(2);
+      // Make sure that component's selectedIndex gets updated.
+      expect(fixture.componentInstance.selectedIndex).toBe(0);
+      // Make sure that next selected Tab is selected.
+      expect(component._tabs.toArray()[fixture.componentInstance.selectedIndex].isActive).toBe(
+        true,
+      );
+    }));
   });
 
   describe('async tabs', () => {
