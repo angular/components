@@ -528,6 +528,7 @@ export abstract class _MatTabGroupBase
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
     '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
+    '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {

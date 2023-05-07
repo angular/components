@@ -45,7 +45,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
 import {MatInkBar, MatInkBarItem, mixinInkBarItem} from '../ink-bar';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {SPACE} from '@angular/cdk/keycodes';
@@ -319,6 +319,7 @@ const _MatTabLinkBaseWithInkBarItem = mixinInkBarItem(_MatTabLinkBase);
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
@@ -345,6 +346,17 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit, After
     this._stretchTabs = coerceBooleanProperty(v);
   }
   private _stretchTabs = true;
+
+  @Input()
+  get animationDuration(): string {
+    return this._animationDuration;
+  }
+
+  set animationDuration(value: NumberInput) {
+    this._animationDuration = /^\d+$/.test(value + '') ? value + 'ms' : (value as string);
+  }
+
+  private _animationDuration: string;
 
   @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
   @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;

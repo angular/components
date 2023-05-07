@@ -999,6 +999,15 @@ describe('nested MatTabGroup with enabled animations', () => {
       tick();
     }).not.toThrow();
   }));
+
+  it('should set appropiate css variable given a specified animationDuration', fakeAsync(() => {
+    let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+    fixture.detectChanges();
+    tick();
+
+    const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+    expect(tabGroup.style.getPropertyValue('--mat-tab-animation-duration')).toBe('500ms');
+  }));
 });
 
 describe('MatTabGroup with ink bar fit to content', () => {
