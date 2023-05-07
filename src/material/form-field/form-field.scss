@@ -81,6 +81,9 @@
   // MDC applies `pointer-events: none` to the `.mdc-text-field--disabled`. This breaks clicking on
   // prefix and suffix buttons, so we override `pointer-events` to always allow clicking.
   pointer-events: auto;
+  // Needs a z-index to ensure it's on top of other content clickable. See #27043.
+  position: relative;
+  z-index: 1;
 }
 
 // The prefix/suffix needs a little extra padding between the icon and the infix. Because we need to
