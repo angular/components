@@ -217,6 +217,10 @@ $mat-tab-animation-duration: 500ms !default;
       tokens-mat-tab-header.$prefix, tokens-mat-tab-header.get-unthemable-tokens());
   }
 
+  .mdc-tab-indicator .mdc-tab-indicator__content {
+    transition-duration: var(--mat-tab-animation-duration, 250ms);
+  }
+
   .mat-mdc-tab-header-pagination {
     @include vendor-prefixes.user-select(none);
     position: relative;

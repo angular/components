@@ -489,6 +489,34 @@ describe('MatTabNavBar with a default config', () => {
   });
 });
 
+describe('MatTabNavBar with enabled animations', () => {
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule],
+      declarations: [TabsWithCustomAnimationDuration],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  it('should not throw when setting an animationDuration without units', fakeAsync(() => {
+    expect(() => {
+      let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+      fixture.detectChanges();
+      tick();
+    }).not.toThrow();
+  }));
+
+  it('should set appropiate css variable given a specified animationDuration', fakeAsync(() => {
+    let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+    fixture.detectChanges();
+    tick();
+
+    const tabNavBar = fixture.nativeElement.querySelector('.mat-mdc-tab-nav-bar');
+    expect(tabNavBar.style.getPropertyValue('--mat-tab-animation-duration')).toBe('500ms');
+  }));
+});
+
 @Component({
   selector: 'test-app',
   template: `
@@ -544,4 +572,16 @@ class TabLinkWithNgIf {
 })
 class TabBarWithInactiveTabsOnInit {
   tabs = [0, 1, 2];
+}
+
+@Component({
+  template: `
+    <nav [animationDuration]="500" mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a mat-tab-link *ngFor="let link of links">{{link}}</a>
+  </nav>
+  <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
+  `,
+})
+class TabsWithCustomAnimationDuration {
+  links = ['First', 'Second', 'Third'];
 }
