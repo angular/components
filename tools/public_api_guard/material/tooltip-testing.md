@@ -14,6 +14,8 @@ import { TestElement } from '@angular/cdk/testing';
 // @public
 export class MatTooltipHarness extends _MatTooltipHarnessBase {
     // (undocumented)
+    protected _disabledClass: string;
+    // (undocumented)
     protected _hiddenClass: string;
     // (undocumented)
     protected _hideAnimationName: string;
@@ -28,12 +30,15 @@ export class MatTooltipHarness extends _MatTooltipHarnessBase {
 
 // @public (undocumented)
 export abstract class _MatTooltipHarnessBase extends ComponentHarness {
+    // (undocumented)
+    protected abstract _disabledClass: string;
     getTooltipText(): Promise<string>;
     // (undocumented)
     protected abstract _hiddenClass: string;
     hide(): Promise<void>;
     // (undocumented)
     protected abstract _hideAnimationName: string;
+    isDisabled(): Promise<boolean>;
     isOpen(): Promise<boolean>;
     // (undocumented)
     protected abstract _optionalPanel: AsyncFactoryFn<TestElement | null>;

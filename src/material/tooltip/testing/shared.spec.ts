@@ -27,7 +27,7 @@ export function runHarnessTests(
 
   it('should load all tooltip harnesses', async () => {
     const tooltips = await loader.getAllHarnesses(tooltipHarness);
-    expect(tooltips.length).toBe(2);
+    expect(tooltips.length).toBe(3);
   });
 
   it('should be able to show a tooltip', async () => {
@@ -56,12 +56,21 @@ export function runHarnessTests(
     const tooltip = await loader.getHarness(tooltipHarness.with({selector: '#one'}));
     expect(await tooltip.getTooltipText()).toBe('');
   });
+
+  it('should get disabled state', async () => {
+    const enabled = await loader.getHarness(tooltipHarness.with({selector: '#one'}));
+    const disabled = await loader.getHarness(tooltipHarness.with({selector: '#three'}));
+
+    expect(await enabled.isDisabled()).toBe(false);
+    expect(await disabled.isDisabled()).toBe(true);
+  });
 }
 
 @Component({
   template: `
-    <button [matTooltip]="message" id="one">Trigger 1</button>
-    <button matTooltip="Static message" id="two">Trigger 2</button>
+    <button [matTooltip]='message' id='one'>Trigger 1</button>
+    <button matTooltip='Static message' id='two'>Trigger 2</button>
+    <button matTooltip='Disabled Tooltip' [matTooltipDisabled]='true' id='three'>Trigger 3</button>
   `,
 })
 class TooltipHarnessTest {

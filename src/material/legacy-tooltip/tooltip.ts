@@ -49,6 +49,7 @@ import {
   exportAs: 'matTooltip',
   host: {
     'class': 'mat-tooltip-trigger',
+    '[class.mat-tooltip-disabled]': 'disabled',
   },
 })
 export class MatLegacyTooltip extends _MatTooltipBase<LegacyTooltipComponent> {
