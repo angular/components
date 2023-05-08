@@ -256,9 +256,10 @@
     "@angular/core" "^13.0.0 || ^14.0.0-0"
     reflect-metadata "^0.1.13"
 
-"@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#361db170e384cfb8ae5df5ea784000cdf1c9fbf3":
-  version "0.0.0-c00711978a6aab483888d7a90e82fcd9700164c4"
-  resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#361db170e384cfb8ae5df5ea784000cdf1c9fbf3"
+"@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#988781b092b543a21af7996f26cda23b43b70226":
+  version "0.0.0-e82631b66d14e57672e21ca7d021b8425214771e"
+  uid "988781b092b543a21af7996f26cda23b43b70226"
+  resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#988781b092b543a21af7996f26cda23b43b70226"
   dependencies:
     "@angular-devkit/build-angular" "16.0.0-rc.4"
     "@angular/benchpress" "0.3.0"
@@ -377,9 +378,10 @@
     glob "8.1.0"
     yargs "^17.2.1"
 
-"@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#194b9ed6cd0603acdfb53568303487e11b19388b":
-  version "0.0.0-c00711978a6aab483888d7a90e82fcd9700164c4"
-  resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#194b9ed6cd0603acdfb53568303487e11b19388b"
+"@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#01d77bf81a01d438b86026aacb9abeee03f53f65":
+  version "0.0.0-e82631b66d14e57672e21ca7d021b8425214771e"
+  uid "01d77bf81a01d438b86026aacb9abeee03f53f65"
+  resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#01d77bf81a01d438b86026aacb9abeee03f53f65"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     typescript "~4.9.0"
@@ -5848,11 +5850,6 @@ camelcase@^6.2.0:
 caniuse-lite@^1.0.30001317, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001449, caniuse-lite@^1.0.30001464:
   version "1.0.30001485"
   resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001485.tgz"
-  integrity sha512-8aUpZ7sjhlOyiNsg+pgcrTTPUXKh+rg544QYHSvQErljVEKJzvkYkCR/hUFeeVoEfTToUtY9cUKNRC7+c45YkA==
-
-caniuse-lite@^1.0.30001485:
-  version "1.0.30001485"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001485.tgz#026bb7319f1e483391872dc303a973d4f513f619"
   integrity sha512-8aUpZ7sjhlOyiNsg+pgcrTTPUXKh+rg544QYHSvQErljVEKJzvkYkCR/hUFeeVoEfTToUtY9cUKNRC7+c45YkA==
 
 canonical-path@^1.0.0:
