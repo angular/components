@@ -10,6 +10,9 @@ npmPackageMappings = dicts.add(
     },
 )
 
+# Name of the generated app.
+APP_NAME = "ng-add-standalone"
+
 node_integration_test(
     name = "test",
     srcs = glob(["**/*"]),
@@ -19,6 +22,22 @@ node_integration_test(
         # See: https://github.com/yarnpkg/yarn/issues/2165.
         # TODO(devversion): determine if a solution/workaround could live in the test runner.
         "yarn install --cache-folder .yarn_cache_folder/",
+
+        # Generate a new standalone project with the default options.
+        # Skip installation since we installed the dependencies already.
+        "yarn ng new --defaults --standalone --skip-install --style=scss --name=%s" % APP_NAME,
+        # Delete the package.json that the CLI generated since we want to use the existing one.
+        "rm -f %s/package.json" % APP_NAME,
+        # Delete the Karma config since we need to use a headless browser.
+        "rm -f %s/karma.conf.js" % APP_NAME,
+        # We can't name the checked-in config `angular.json`, because the CLI doesn't allow
+        # `ng new` to run in a directory that has an `angular.json` already.
+        "mv _angular.json angular.json",
+        # Delete the angular.json since we have a specific config for the test.
+        "rm -f %s/angular.json" % APP_NAME,
+        # Move the generated project one level up so it can reuse the package.json and node_modules.
+        "mv %s/* ." % APP_NAME,
+        # Install Material and run the unit tests.
         "yarn ng add @angular/material",
         "yarn test",
     ],
