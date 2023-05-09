@@ -22,6 +22,7 @@ $prefix: (mdc, linear-progress);
     // Specify both while the transition is in progress.
     bar-and-track-height: $height,
     track-height: $height,
+    active-indicator-height: 4px,
   );
 }
 
