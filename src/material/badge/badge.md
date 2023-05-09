@@ -48,10 +48,12 @@ background color to `primary`, `accent`, or `warn`.
               "region":"mat-badge-color"}) -->
 
 ### Accessibility
-Badges should be given a meaningful description via `matBadgeDescription`. This description will be
-applied, via `aria-describedby` to the element decorated by `matBadge`.
+You must provide a meaningful description via `matBadgeDescription`. When attached to an interactive
+element, `MatBadge` applies this description to its host via `aria-describedby`. When attached to
+a non-interactive element, `MatBadge` appends a visually-hidden, inline description element. The
+badge determines interactivity based on whether the host element is focusable.
 
-When applying a badge to a `<mat-icon>`, it is important to know that the icon is marked as
-`aria-hidden` by default. If the combination of icon and badge communicates some meaningful
-information, that information should be surfaced in another way. [See the guidance on indicator
+When applying a badge to a `<mat-icon>`, it is important to know that `<mat-icon>` is
+`aria-hidden="true"` by default. If the combination of icon and badge communicates meaningful
+information, always surface this information in another way. [See the guidance on indicator
 icons for more information](https://material.angular.io/components/icon/overview#indicator-icons).
