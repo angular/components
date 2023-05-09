@@ -10,18 +10,18 @@
     </div>
 
     <div class="example-form-fields">
-      <mat-form-field appearance="fill"
+      <mat-form-field
           [hideRequiredMarker]="hideRequiredControl.value"
           [floatLabel]="getFloatLabelValue()">
         <input matInput placeholder="Simple placeholder" required>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+      <mat-form-field [floatLabel]="getFloatLabelValue()">
         <mat-label>Both a label and a placeholder</mat-label>
         <input matInput placeholder="Simple placeholder">
       </mat-form-field>
 
-      <mat-form-field appearance="fill"
+      <mat-form-field
           [hideRequiredMarker]="hideRequiredControl.value"
           [floatLabel]="getFloatLabelValue()">
         <mat-select required>
