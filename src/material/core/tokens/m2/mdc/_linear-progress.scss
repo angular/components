@@ -17,9 +17,11 @@ $prefix: (mdc, linear-progress);
   $height: 4px;
 
   @return (
-    // The height of the progress bar track. MDC has two tokens with the goal of having
-    // `track-height` apply only to the track. In our case both are always the same.
-    // Specify both while the transition is in progress.
+    // The height of the progress bar. MDC has three tokens with the goal
+    // of having `track-height` apply only to the track. In our case, all three
+    // are always the same. Specify all three while the transition is in
+    // progress.
+    active-indicator-height: $height,
     bar-and-track-height: $height,
     track-height: $height,
   );
