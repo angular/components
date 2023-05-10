@@ -1,3 +1,28 @@
+<a name="16.1.0-next.0"></a>
+# 16.1.0-next.0 "magnesium-monster" (2023-05-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1ce3a3bbe](https://github.com/angular/components/commit/1ce3a3bbe5e4eb104e1a4e545b04156309565cfc) | fix | **schematics:** avoid throwing an error for empty program ([#27060](https://github.com/angular/components/pull/27060)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9aee2ee77](https://github.com/angular/components/commit/9aee2ee77f2328ac2294344e9104cf926abfeb13) | feat | **tabs:** synchronize ink bar animation with tab ([#27056](https://github.com/angular/components/pull/27056)) |
+| [0028c6833](https://github.com/angular/components/commit/0028c6833f2a0266cbe63a1525eb449ab695a40b) | feat | **tooltip:** add isDisabled method to harness ([#27038](https://github.com/angular/components/pull/27038)) |
+| [f0a5008b2](https://github.com/angular/components/commit/f0a5008b237d4bde3e8d759ca9e793c164656d7a) | fix | **badge:** insert inline description for non-interactive hosts ([#27025](https://github.com/angular/components/pull/27025)) |
+| [514c113dc](https://github.com/angular/components/commit/514c113dc6a9646a7ea2df4d3dcb25c5f6e3b70b) | fix | **core:** fix opacity in elevation mixin ([#26805](https://github.com/angular/components/pull/26805)) |
+| [0a5815581](https://github.com/angular/components/commit/0a581558149799131b58e1780068258549526a45) | fix | **form-field:** ensure prefix and suffix are on top of other content ([#27050](https://github.com/angular/components/pull/27050)) |
+| [764a68f98](https://github.com/angular/components/commit/764a68f980bcef700d9c1422b1294a93170dba11) | fix | **form-field:** ensure prefix and suffix are on top of other content ([#27050](https://github.com/angular/components/pull/27050)) |
+| [d0cd9bb3e](https://github.com/angular/components/commit/d0cd9bb3ec1552c67797d0b063db7732d211a815) | fix | **select:** ensure arrow is centered on all densities ([#27011](https://github.com/angular/components/pull/27011)) |
+| [a1e7de910](https://github.com/angular/components/commit/a1e7de910ab0dc1e861cbb0f1c1b8ae1fe34f572) | fix | **tabs:** avoid unnecessary updates of tab ink bar ([#27031](https://github.com/angular/components/pull/27031)) |
+| [44b57a5b2](https://github.com/angular/components/commit/44b57a5b26ade017a08fa409d75813f8d2d14d07) | fix | **tooltip:** change tooltip to use MDC's token API |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [33a9543f6](https://github.com/angular/components/commit/33a9543f61e06f7656c8c3f9c4ae93358ace5ffe) | fix | fix VoiceOver confused by Select/Autocomplete's ARIA semantics ([#26861](https://github.com/angular/components/pull/26861)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0"></a>
 # 16.0.0 "canvas-cup" (2023-05-03)
 ### cdk
