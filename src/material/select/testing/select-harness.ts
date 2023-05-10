@@ -91,6 +91,9 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
 
   /** Gets the options inside the select panel. */
   async getOptions(filter?: Omit<OptionHarnessFilters, 'ancestor'>): Promise<MatOptionHarness[]> {
+    if (!(await this.isOpen())) {
+      throw new Error('Unable to retrieve options for select. Select panel is closed.');
+    }
     return this._documentRootLocator.locatorForAll(
       this._optionClass.with({
         ...(filter || {}),
@@ -103,6 +106,9 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
   async getOptionGroups(
     filter?: Omit<OptgroupHarnessFilters, 'ancestor'>,
   ): Promise<MatOptgroupHarness[]> {
+    if (!(await this.isOpen())) {
+      throw new Error('Unable to retrieve option groups for select. Select panel is closed.');
+    }
     return this._documentRootLocator.locatorForAll(
       this._optionGroupClass.with({
         ...(filter || {}),
