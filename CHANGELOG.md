@@ -1,3 +1,19 @@
+<a name="16.0.1"></a>
+# 16.0.1 "sulfur-socks" (2023-05-11)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9c1112d40](https://github.com/angular/components/commit/9c1112d408361a47c98dfd470b8e990cbd1753db) | fix | **schematics:** avoid throwing an error for empty program ([#27060](https://github.com/angular/components/pull/27060)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bae2830b3](https://github.com/angular/components/commit/bae2830b3262ff0cf16a4c36f795dbe96d08f80c) | fix | **badge:** insert inline description for non-interactive hosts ([#27025](https://github.com/angular/components/pull/27025)) |
+| [54507552d](https://github.com/angular/components/commit/54507552df0bcb47e15fc7339bc7ae4d7ddc56e0) | fix | **core:** fix opacity in elevation mixin ([#26805](https://github.com/angular/components/pull/26805)) |
+| [d018bf63e](https://github.com/angular/components/commit/d018bf63e4eab2ef8c66e2db7e9815a99eaff77a) | fix | **select:** ensure arrow is centered on all densities ([#27011](https://github.com/angular/components/pull/27011)) |
+| [3ee392eec](https://github.com/angular/components/commit/3ee392eece5b1f59270a3fbcae24e5c6531ee210) | fix | **tabs:** avoid unnecessary updates of tab ink bar ([#27031](https://github.com/angular/components/pull/27031)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.0-next.0"></a>
 # 16.1.0-next.0 "magnesium-monster" (2023-05-10)
 ### cdk
