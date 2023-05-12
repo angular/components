@@ -16,9 +16,9 @@ $_error-on-missing-dep: false;
   // NOTE: for now we use a hardcoded if-chain, but in the future when first-class mixins are
   // supported, the configuration data will contain a reference to its own theme mixin.
   @if $id == 'mat.card' {
-    @include mat.private-apply-card-theme-from-tokens($tokens);
+    @include mat.card-theme($tokens);
   } @else if $id == 'mat.checkbox' {
-    @include mat.private-apply-checkbox-theme-from-tokens($tokens);
+    @include mat.checkbox-theme($tokens);
   } @else {
     @error 'Unrecognized component theme: #{id}';
   }
@@ -56,7 +56,16 @@ $_error-on-missing-dep: false;
   @return $components;
 }
 
+// Applies a theme using the given fallback tokens and component configurations.
 @mixin _theme($tokens, $components) {
+  $tokens: map.merge($tokens, (_mat-theme-type: 'tokens'));
+
+  // Save the original selector when back-compat is turned on. This lets us avoid nesting styles
+  // generated from the legacy theme in the default `body` selector.
+  @if map.has-key($tokens, back-compat) {
+    $tokens: map.deep-merge($tokens, (back-compat: (root-selector: &)));
+  }
+
   // Call the theme mixin for each configured component.
   @at-root #{& or body} {
     @each $component in $components {

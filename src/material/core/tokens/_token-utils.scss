@@ -1,3 +1,4 @@
+@use 'sass:list';
 @use 'sass:map';
 @use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
@@ -96,4 +97,17 @@ $_component-prefix: null;
     $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
     $shadow-color-token: null,
   ));
+}
+
+@mixin back-compat-root-context($tokens) {
+  $selector: map.get($tokens, back-compat, root-selector);
+  @if ($selector) {
+    @at-root #{$selector} {
+      @content;
+    }
+  } @else {
+    @at-root {
+      @content;
+    }
+  }
 }

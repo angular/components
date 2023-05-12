@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
@@ -8,82 +9,84 @@
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $mdc-elevated-card-color-tokens: token-utils.resolve-elevation(
-      tokens-mdc-elevated-card.get-color-tokens($config),
+@mixin _emit-tokens($tokens) {
+  @include mdc-elevated-card-theme.theme(token-utils.resolve-elevation(
+      map.get($tokens, tokens-mdc-elevated-card.$prefix) or (),
       container-elevation,
       container-shadow-color
-  );
-  $mdc-outlined-card-color-tokens: token-utils.resolve-elevation(
-      tokens-mdc-outlined-card.get-color-tokens($config),
+  ));
+  @include mdc-outlined-card-theme.theme(token-utils.resolve-elevation(
+      map.get($tokens, tokens-mdc-outlined-card.$prefix) or (),
       container-elevation,
-      container-shadow-color,
+      container-shadow-color
+  ));
+  @include token-utils.create-token-values(
+      tokens-mat-card.$prefix,
+      map.get($tokens, tokens-mat-card.$prefix) or ()
   );
-  $mat-card-color-tokens: tokens-mat-card.get-color-tokens($config);
+}
 
-  // Add values for card tokens.
+@mixin color($config-or-theme, $tokens: null) {
+  $config: theming.get-color-config($config-or-theme);
+  $tokens: $tokens or sass-utils.deep-merge-all((
+    tokens-mdc-elevated-card.$prefix: tokens-mdc-elevated-card.get-color-tokens($config),
+    tokens-mdc-outlined-card.$prefix: tokens-mdc-outlined-card.get-color-tokens($config),
+    tokens-mat-card.$prefix: tokens-mat-card.get-color-tokens($config),
+  ));
+
   .mat-mdc-card {
-    @include mdc-elevated-card-theme.theme($mdc-elevated-card-color-tokens);
-    @include mdc-outlined-card-theme.theme($mdc-outlined-card-color-tokens);
-    @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-color-tokens);
+    @include _emit-tokens($tokens);
   }
 }
 
-@mixin typography($config-or-theme) {
+@mixin typography($config-or-theme, $tokens: null) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  $mdc-elevated-card-typography-tokens: tokens-mdc-elevated-card.get-typography-tokens($config);
-  $mdc-outlined-card-typography-tokens: tokens-mdc-outlined-card.get-typography-tokens($config);
-  $mat-card-typography-tokens: tokens-mat-card.get-typography-tokens($config);
+  $tokens: $tokens or sass-utils.deep-merge-all((
+    tokens-mdc-elevated-card.$prefix: tokens-mdc-elevated-card.get-typography-tokens($config),
+    tokens-mdc-outlined-card.$prefix: tokens-mdc-outlined-card.get-typography-tokens($config),
+    tokens-mat-card.$prefix: tokens-mat-card.get-typography-tokens($config),
+  ));
 
-  // Add values for card tokens.
   .mat-mdc-card {
-    @include mdc-elevated-card-theme.theme($mdc-elevated-card-typography-tokens);
-    @include mdc-outlined-card-theme.theme($mdc-outlined-card-typography-tokens);
-    @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-typography-tokens);
+    @include _emit-tokens($tokens);
   }
 }
 
-@mixin density($config-or-theme) {
+@mixin density($config-or-theme, $tokens: null) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $mdc-elevated-card-density-tokens: tokens-mdc-elevated-card.get-density-tokens($density-scale);
-  $mdc-outlined-card-density-tokens: tokens-mdc-outlined-card.get-density-tokens($density-scale);
-  $mat-card-density-tokens: tokens-mat-card.get-density-tokens($density-scale);
+  $tokens: $tokens or sass-utils.deep-merge-all((
+    tokens-mdc-elevated-card.$prefix: tokens-mdc-elevated-card.get-density-tokens($density-scale),
+    tokens-mdc-outlined-card.$prefix: tokens-mdc-outlined-card.get-density-tokens($density-scale),
+    tokens-mat-card.$prefix: tokens-mat-card.get-density-tokens($density-scale),
+  ));
 
-  // Add values for card tokens.
   .mat-mdc-card {
-    @include mdc-elevated-card-theme.theme($mdc-elevated-card-density-tokens);
-    @include mdc-outlined-card-theme.theme($mdc-outlined-card-density-tokens);
-    @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-density-tokens);
+    @include _emit-tokens($tokens);
   }
 }
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+  $tokens: map.get($theme, tokens);
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
-  }
-}
+  @include _emit-tokens($tokens or ());
 
-@mixin theme-from-tokens($tokens) {
-  // Add values for card tokens.
-  .mat-mdc-card {
-    @include mdc-elevated-card-theme.theme(map.get($tokens, tokens-mdc-elevated-card.$prefix));
-    @include mdc-outlined-card-theme.theme(map.get($tokens, tokens-mdc-outlined-card.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-card.$prefix, map.get($tokens, tokens-mat-card.$prefix));
+  @include token-utils.back-compat-root-context($tokens or ()) {
+    @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
+      $color: theming.get-color-config($theme);
+      $density: theming.get-density-config($theme);
+      $typography: theming.get-typography-config($theme);
+
+      @if $color {
+        @include color($color, $tokens and ());
+      }
+      @if $density {
+        @include density($density, $tokens and ());
+      }
+      @if $typography {
+        @include typography($typography, $tokens and ());
+      }
+    }
   }
 }

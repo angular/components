@@ -23,6 +23,15 @@ dev-app {
 
 @include mat.core();
 
+$light-theme: mat.define-light-theme((
+  color: (
+      primary: mat.define-palette(mat.$indigo-palette),
+      accent: mat.define-palette(mat.$pink-palette),
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
 $dark-theme: mat.define-dark-theme((
   color: (
     primary: mat.define-palette(mat.$blue-grey-palette),
@@ -35,7 +44,7 @@ $dark-theme: mat.define-dark-theme((
 
 // Set up light theme.
 
-@include material-experimental.theme($components: (
+@include material-experimental.theme($tokens: mat.m2-tokens-from-theme($light-theme), $components: (
   material-experimental.card(),
   material-experimental.checkbox(),
 ));

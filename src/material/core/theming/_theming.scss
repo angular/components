@@ -448,6 +448,13 @@ $_emitted-density: () !default;
   @return map.merge($theme, $color);
 }
 
+@function _is-tokens($object) {
+  @if meta.type-of($object) == 'map' and map.get($object, _mat-theme-type) == 'tokens' {
+    @return true;
+  }
+  @return false;
+}
+
 // Gets the theme from the given value that is either already a theme, or a color configuration.
 // This handles the legacy case where developers pass a color configuration directly to the
 // theme mixin. Before we introduced the new pattern for constructing a theme, developers passed
@@ -456,6 +463,18 @@ $_emitted-density: () !default;
 // TODO(devversion): remove this in the future. Constructing themes manually is rare,
 // and the code can be easily updated to the new API.
 @function private-legacy-get-theme($theme-or-color-config) {
+  @if _is-tokens($theme-or-color-config) {
+    $back-compat-theme: map.get($theme-or-color-config, back-compat, theme) or (
+      color: null,
+      typography: null,
+      density: null
+    );
+    $back-compat-theme: map.merge(private-legacy-get-theme($back-compat-theme), (
+      tokens: $theme-or-color-config
+    ));
+    @return $back-compat-theme;
+  }
+
   @if private-is-theme-object($theme-or-color-config) {
     @return $theme-or-color-config;
   }

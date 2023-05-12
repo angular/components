@@ -24,6 +24,10 @@
 @use './mdc/tab' as tokens-mdc-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
 
+// Option to save the original theme object into the tokens map, so that theme mixins can continue
+// using it while migration to tokens is in progress.
+$_enable-back-compat-theme-access: true;
+
 // Gets the tokens for the given theme, m2 tokens module, and theming system.
 // Valid theming systems are: unthemable, color, typography, density.
 @function _get-tokens-for-module-and-system($theme, $module, $system) {
@@ -52,33 +56,38 @@
 //     token: value
 //   )
 // )
-@function m2-tokens-from-theme($theme: ()) {
-  $theme: map.merge((
+@function m2-tokens-from-theme($theme: null) {
+  $full-theme: map.merge((
     color: theming.define-light-theme(
         theming.define-palette(palette.$indigo-palette),
         theming.define-palette(palette.$pink-palette),
     ),
     typography: all-typography.define-typography-config(),
     density: 0
-  ), $theme);
+  ), $theme or ());
 
-  @return sass-utils.deep-merge-all(
-      _get-tokens-for-module($theme, tokens-mat-card),
-      _get-tokens-for-module($theme, tokens-mat-radio),
-      _get-tokens-for-module($theme, tokens-mat-snack-bar),
-      _get-tokens-for-module($theme, tokens-mat-tab-header),
-      _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
-      _get-tokens-for-module($theme, tokens-mdc-checkbox),
-      _get-tokens-for-module($theme, tokens-mdc-circular-progress),
-      _get-tokens-for-module($theme, tokens-mdc-dialog),
-      _get-tokens-for-module($theme, tokens-mdc-elevated-card),
-      _get-tokens-for-module($theme, tokens-mdc-icon-button),
-      _get-tokens-for-module($theme, tokens-mdc-linear-progress),
-      _get-tokens-for-module($theme, tokens-mdc-list),
-      _get-tokens-for-module($theme, tokens-mdc-outlined-card),
-      _get-tokens-for-module($theme, tokens-mdc-radio),
-      _get-tokens-for-module($theme, tokens-mdc-snack-bar),
-      _get-tokens-for-module($theme, tokens-mdc-tab),
-      _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
+  $tokens: sass-utils.deep-merge-all(
+      _get-tokens-for-module($full-theme, tokens-mat-card),
+      _get-tokens-for-module($full-theme, tokens-mat-radio),
+      _get-tokens-for-module($full-theme, tokens-mat-snack-bar),
+      _get-tokens-for-module($full-theme, tokens-mat-tab-header),
+      _get-tokens-for-module($full-theme, tokens-mat-tab-header-with-background),
+      _get-tokens-for-module($full-theme, tokens-mdc-checkbox),
+      _get-tokens-for-module($full-theme, tokens-mdc-circular-progress),
+      _get-tokens-for-module($full-theme, tokens-mdc-dialog),
+      _get-tokens-for-module($full-theme, tokens-mdc-elevated-card),
+      _get-tokens-for-module($full-theme, tokens-mdc-icon-button),
+      _get-tokens-for-module($full-theme, tokens-mdc-linear-progress),
+      _get-tokens-for-module($full-theme, tokens-mdc-list),
+      _get-tokens-for-module($full-theme, tokens-mdc-outlined-card),
+      _get-tokens-for-module($full-theme, tokens-mdc-radio),
+      _get-tokens-for-module($full-theme, tokens-mdc-snack-bar),
+      _get-tokens-for-module($full-theme, tokens-mdc-tab),
+      _get-tokens-for-module($full-theme, tokens-mdc-tab-indicator),
   );
+
+  @if $_enable-back-compat-theme-access and $theme {
+    $tokens: map.deep-merge($tokens, (back-compat: (theme: $theme)));
+  }
+  @return $tokens;
 }
