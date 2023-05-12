@@ -15,7 +15,11 @@
   $default-foreground: if($is-dark, $grey-50, $grey-900);
 
   $surface: map.get(map.get($config, background), card);
-  $on-surface: if(mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
+  $on-surface: if(
+    mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark',
+    #000,
+    #fff
+  );
   $default-background: if(
     meta.type-of($on-surface) == color and meta.type-of($surface) == color,
     color.mix($on-surface, $surface, 12%),
