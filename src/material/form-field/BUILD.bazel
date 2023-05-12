@@ -18,7 +18,7 @@ ng_module(
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/bidi",
-        "//src/cdk/observers",
+        "//src/cdk/observers/private",
         "//src/cdk/platform",
         "//src/material/core",
         "@npm//@angular/forms",

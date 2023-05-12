@@ -850,3 +850,19 @@
     </p>
   </mat-card-content>
 </mat-card>
+
+<mat-card class="demo-card demo-basic">
+  <mat-card-content>
+    <button (click)="showHidden = !showHidden">Show/hide hidden form-field</button>
+    <button (click)="hiddenLabel = hiddenLabel + '!!'">Add !!</button>
+    <button (click)="hiddenAppearance = hiddenAppearance === 'fill' ? 'outline' : 'fill'">
+      Toggle appearance
+    </button>
+    <p [style.display]="showHidden ? 'block' : 'none'">
+      <mat-form-field [appearance]="hiddenAppearance">
+        <mat-label>{{hiddenLabel}}</mat-label>
+        <input matInput value="value">
+      </mat-form-field>
+    </p>
+  </mat-card-content>
+</mat-card>

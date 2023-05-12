@@ -8,7 +8,7 @@ import {
   Type,
   ViewChild,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -1357,17 +1357,20 @@ describe('MatMdcInput with forms', () => {
   it('should update notch size after changing appearance to outline', fakeAsync(() => {
     const fixture = createComponent(MatInputWithAppearance);
     fixture.detectChanges();
+    tick(16);
 
     expect(fixture.nativeElement.querySelector('.mdc-notched-outline__notch')).toBe(null);
 
     fixture.componentInstance.appearance = 'outline';
     fixture.detectChanges();
+    tick(16);
 
     let notch = fixture.nativeElement.querySelector('.mdc-notched-outline__notch')! as HTMLElement;
     expect(notch.style.width).toBeFalsy();
 
     fixture.nativeElement.querySelector('input')!.focus();
     fixture.detectChanges();
+    tick(16);
 
     expect(notch.style.width).toBeTruthy();
   }));

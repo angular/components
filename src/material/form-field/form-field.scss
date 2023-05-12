@@ -156,3 +156,12 @@
     @include mdc-line-ripple.core-styles($query: animation);
   }
 }
+
+// Allow the label to grow 1px bigger than the notch.
+// If we see this actually happen we know we need to resize the notch.
+.mdc-notched-outline .mdc-floating-label {
+  max-width: calc(100% + 1px);
+}
+.mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+  max-width: calc(100% * 4 / 3 + 1px);
+}

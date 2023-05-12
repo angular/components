@@ -33,14 +33,17 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
-import {MatFormFieldFloatingLabel} from './directives/floating-label';
+import {
+  FLOATING_LABEL_PARENT,
+  FloatingLabelParent,
+  MatFormFieldFloatingLabel,
+} from './directives/floating-label';
 import {MatHint} from './directives/hint';
 import {MatLabel} from './directives/label';
 import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
 import {MAT_PREFIX, MatPrefix} from './directives/prefix';
 import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
-import {DOCUMENT} from '@angular/common';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {matFormFieldAnimations} from './form-field-animations';
 import {MatFormFieldControl} from './form-field-control';
@@ -48,6 +51,7 @@ import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
+import {DOCUMENT} from '@angular/common';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -151,10 +155,13 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{provide: MAT_FORM_FIELD, useExisting: MatFormField}],
+  providers: [
+    {provide: MAT_FORM_FIELD, useExisting: MatFormField},
+    {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
+  ],
 })
 export class MatFormField
-  implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
+  implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
 {
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
@@ -218,8 +225,6 @@ export class MatFormField
     }
     this._appearance = newAppearance;
     if (this._appearance === 'outline' && this._appearance !== oldValue) {
-      this._refreshOutlineNotchWidth();
-
       // If the appearance has been switched to `outline`, the label offset needs to be updated.
       // The update can happen once the view has been re-checked, but not immediately because
       // the view has not been updated and the notched-outline floating label is not present.
@@ -267,9 +272,6 @@ export class MatFormField
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';
 
-  /** Width of the label element (at scale=1). */
-  _labelWidth = 0;
-
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {
     return this._explicitFormFieldControl || this._formFieldControl;
@@ -293,7 +295,11 @@ export class MatFormField
     @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
     private _defaults?: MatFormFieldDefaultOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-    @Inject(DOCUMENT) private _document?: any,
+    /**
+     * @deprecated not needed, to be removed.
+     * @breaking-change 17.0.0 remove this param
+     */
+    @Inject(DOCUMENT) _unusedDocument?: any,
   ) {
     if (_defaults) {
       if (_defaults.appearance) {
@@ -310,23 +316,6 @@ export class MatFormField
     // Initial focus state sync. This happens rarely, but we want to account for
     // it in case the form field control has "focused" set to true on init.
     this._updateFocusState();
-    // Initial notch width update. This is needed in case the text-field label floats
-    // on initialization, and renders inside of the notched outline.
-    this._refreshOutlineNotchWidth();
-    // Make sure fonts are loaded before calculating the width.
-    // zone.js currently doesn't patch the FontFaceSet API so two calls to
-    // _refreshOutlineNotchWidth is needed for this to work properly in async tests.
-    // Furthermore if the font takes a long time to load we want the outline notch to be close
-    // to the correct width from the start then correct itself when the fonts load.
-    if (this._document?.fonts?.ready) {
-      this._document.fonts.ready.then(() => {
-        this._refreshOutlineNotchWidth();
-        this._changeDetectorRef.markForCheck();
-      });
-    } else {
-      // FontFaceSet is not supported in IE
-      setTimeout(() => this._refreshOutlineNotchWidth(), 100);
-    }
     // Enable animations now. This ensures we don't animate on initial render.
     this._subscriptAnimationState = 'enter';
     // Because the above changes a value used in the template after it was checked, we need
@@ -550,12 +539,18 @@ export class MatFormField
       : 'hint';
   }
 
+  /** Handle label resize events. */
+  _handleLabelResized() {
+    this._refreshOutlineNotchWidth();
+  }
+
   /** Refreshes the width of the outline-notch, if present. */
   _refreshOutlineNotchWidth() {
-    if (!this._hasOutline() || !this._floatingLabel) {
-      return;
+    if (!this._hasOutline() || !this._floatingLabel || !this._shouldLabelFloat()) {
+      this._notchedOutline?._setNotchWidth(0);
+    } else {
+      this._notchedOutline?._setNotchWidth(this._floatingLabel.getWidth());
     }
-    this._labelWidth = this._floatingLabel.getWidth();
   }
 
   /** Does any extra processing that is required when handling the hints. */

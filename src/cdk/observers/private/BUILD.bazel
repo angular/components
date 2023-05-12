@@ -1,0 +1,43 @@
+load(
+    "//tools:defaults.bzl",
+    "ng_module",
+    "ng_test_library",
+    "ng_web_test_suite",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "private",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//src:dev_mode_types",
+        "@npm//rxjs",
+    ],
+)
+
+ng_test_library(
+    name = "private_tests_lib",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [
+        ":private_tests_lib",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

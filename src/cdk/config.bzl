@@ -13,6 +13,7 @@ CDK_ENTRYPOINTS = [
     "listbox",
     "menu",
     "observers",
+    "observers/private",
     "overlay",
     "platform",
     "portal",

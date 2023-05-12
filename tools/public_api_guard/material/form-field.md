@@ -65,8 +65,9 @@ export class MatError {
 }
 
 // @public
-export class MatFormField implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
-    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _dir: Directionality, _platform: Platform, _defaults?: MatFormFieldDefaultOptions | undefined, _animationMode?: string | undefined, _document?: any);
+export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
+    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _dir: Directionality, _platform: Platform, _defaults?: MatFormFieldDefaultOptions | undefined, _animationMode?: string | undefined,
+    _unusedDocument?: any);
     _animateAndLockLabel(): void;
     // (undocumented)
     _animationMode?: string | undefined;
@@ -89,6 +90,7 @@ export class MatFormField implements AfterContentInit, AfterContentChecked, Afte
     getConnectedOverlayOrigin(): ElementRef;
     _getDisplayedMessages(): 'error' | 'hint';
     getLabelId(): string | null;
+    _handleLabelResized(): void;
     // (undocumented)
     _hasFloatingLabel(): boolean;
     // (undocumented)
@@ -117,7 +119,6 @@ export class MatFormField implements AfterContentInit, AfterContentChecked, Afte
     _labelChildStatic: MatLabel | undefined;
     // (undocumented)
     readonly _labelId: string;
-    _labelWidth: number;
     // (undocumented)
     _lineRipple: MatFormFieldLineRipple | undefined;
     // (undocumented)
