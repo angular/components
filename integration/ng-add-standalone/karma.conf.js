@@ -43,7 +43,7 @@ module.exports = function (config) {
     // Chrome cannot run with sandbox enabled as this test already runs within
     // the Bazel sandbox environment and the sandboxes would conflict otherwise.
     browsers: ['ChromeHeadlessNoSandbox'],
-    singleRun: false,
+    singleRun: true,
     restartOnFileChange: true,
   });
 };
