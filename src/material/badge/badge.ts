@@ -157,13 +157,13 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
         throw Error('matBadge must be attached to an element node.');
       }
 
-      const badgeTabName: string = 'mat-icon';
+      const badgeTagName: string = 'mat-icon';
 
-      // Heads-up for developers to avoid putting matBadge on MatInput
+      // Heads-up for developers to avoid putting matBadge on MatIcon
       // as it is aria-hidden by default docs mention this at:
       // https://material.angular.io/components/badge/overview#accessibility
       if (
-        nativeElement.tagName.toLowerCase() === badgeTabName &&
+        nativeElement.tagName.toLowerCase() === badgeTagName &&
         nativeElement.getAttribute('aria-hidden') === 'true'
       ) {
         console.warn(
