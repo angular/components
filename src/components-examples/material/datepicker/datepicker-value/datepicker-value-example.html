@@ -1,4 +1,4 @@
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Angular forms</mat-label>
   <input matInput [matDatepicker]="picker1" [formControl]="date">
   <mat-hint>MM/DD/YYYY</mat-hint>
@@ -6,7 +6,7 @@
   <mat-datepicker #picker1></mat-datepicker>
 </mat-form-field>
 
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Angular forms (w/ deserialization)</mat-label>
   <input matInput [matDatepicker]="picker2"
          [formControl]="serializedDate">
@@ -15,7 +15,7 @@
   <mat-datepicker #picker2></mat-datepicker>
 </mat-form-field>
 
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Value binding</mat-label>
   <input matInput [matDatepicker]="picker3" [value]="date.value">
   <mat-hint>MM/DD/YYYY</mat-hint>
