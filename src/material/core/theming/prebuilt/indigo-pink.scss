@@ -22,7 +22,7 @@ $theme: theming.define-light-theme((
   density: 0,
 ));
 
-@include typography.typography-hierarchy($theme);
-
 // Include all theme styles for the components.
 @include all-theme.all-component-themes($theme);
+
+@include typography.typography-hierarchy($theme);
