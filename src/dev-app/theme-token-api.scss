@@ -46,7 +46,9 @@ $dark-theme: mat.define-dark-theme((
 
 @include material-experimental.theme($tokens: mat.m2-tokens-from-theme($light-theme), $components: (
   material-experimental.card(),
-  material-experimental.checkbox(),
+  material-experimental.checkbox((
+    color-palette: mat.define-palette(mat.$purple-palette)
+  )),
 ));
 
 // Set up dark theme.
@@ -54,9 +56,8 @@ $dark-theme: mat.define-dark-theme((
 .demo-unicorn-dark-theme {
   @include material-experimental.theme($tokens: mat.m2-tokens-from-theme($dark-theme), $components: (
     material-experimental.checkbox((
-      (mdc, checkbox): (
-        selected-checkmark-color: red,
-      )
+      color-palette: mat.define-palette(mat.$purple-palette),
+      checkmark-color: red,
     )),
   ));
 }

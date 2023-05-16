@@ -101,11 +101,42 @@ $_error-on-missing-dep: false;
   );
 }
 
-// Configure the mat-checkbox's theme.
-@function checkbox($customizations: ()) {
-  @return (
-    id: 'mat.checkbox',
-    customizations: $customizations,
-    deps: (),
-  );
+// Creates a map of relative token names to fully qualified token name under the given namespace.
+@function forward-tokens($tokens, $namespace) {
+  $result: ();
+  @each $token in $tokens {
+    $result: map.set($result, $token, ($namespace, $token));
+  }
+  @return $tokens;
+}
+
+// Creates a map of local alias names to fully qualified canonical names under the given namespace.
+@function rename-tokens($tokens, $namespace) {
+  $result: ();
+  @each $from, $to in $tokens {
+    $result: map.set($result, $from, ($namespace, $to));
+  }
+  @return $result;
+}
+
+// Gets the full set of customized tokens from a component configuration's customization map.
+@function get-customized-tokens($component-id, $customization-defs, $customizations) {
+  $result: ();
+
+  @each $customization, $value in $customizations {
+    $def: map.get($customization-defs, $customization);
+    @if not $def {
+      @error 'Unrecognized customization #{$customization} for #{$component-id}';
+    }
+
+    $def-type: meta.type-of($def);
+    @if $def-type == 'list' {
+      $key-and-value: list.append($def, $value);
+      $result: map.deep-merge($result, map.set((), $key-and-value...));
+    } @else if $def-type == 'function' {
+      $result: map.deep-merge($result, meta.call($def, $value))
+    }
+  }
+
+  @return $result;
 }
