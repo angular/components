@@ -71,13 +71,17 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
+
+  // "html" selector was added to increase specificity in order to take precedence over the
+  // typography styles defined in typography-hierarchy, even if mat.all-component-typography()
+  // is called before mat.typography-hierarchy() in theme
   .mat-toolbar,
-  .mat-toolbar h1,
-  .mat-toolbar h2,
-  .mat-toolbar h3,
-  .mat-toolbar h4,
-  .mat-toolbar h5,
-  .mat-toolbar h6 {
+  html .mat-toolbar h1,
+  html .mat-toolbar h2,
+  html .mat-toolbar h3,
+  html .mat-toolbar h4,
+  html .mat-toolbar h5,
+  html .mat-toolbar h6 {
     @include typography-utils.typography-level($config, title);
     margin: 0;
   }
