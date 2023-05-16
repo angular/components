@@ -16,6 +16,10 @@ import {
   SPACE,
   TAB,
   UP_ARROW,
+  A,
+  Z,
+  ZERO,
+  NINE,
 } from '@angular/cdk/keycodes';
 import {QueryList} from '@angular/core';
 import {of as observableOf, isObservable, Observable, Subject, Subscription} from 'rxjs';
