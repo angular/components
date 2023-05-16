@@ -6,6 +6,6 @@
 
 // Token-based theming API
 @forward './theming/checkbox' show checkbox;
-@forward './theming/theming' show theme, card, checkbox;
+@forward './theming/theming' show theme, update-theme, card, checkbox;
 
 // Additional public APIs for individual components

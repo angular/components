@@ -26,7 +26,7 @@
 
 // Option to save the original theme object into the tokens map, so that theme mixins can continue
 // using it while migration to tokens is in progress.
-$_enable-back-compat-theme-access: true;
+$_enable-back-compat-theme-access: false;
 
 // Gets the tokens for the given theme, m2 tokens module, and theming system.
 // Valid theming systems are: unthemable, color, typography, density.

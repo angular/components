@@ -33,11 +33,11 @@
   );
 }
 
-@function _get-tokens-for-theme-type($theme) {
-  $is-dark: $theme == dark;
-  $foreground: if($id-dark, white, black);
-  $disabled-color: color.adjust($foreground, $alpha: 0.38);
-  $border-color: color.adjust($foreground, $alpha: 0.54);
+@function _get-tokens-for-theme-type($type) {
+  $is-dark: $type == dark;
+  $foreground: if($is-dark, white, black);
+  $disabled-color: color.change($foreground, $alpha: 0.38);
+  $border-color: color.change($foreground, $alpha: 0.54);
   $active-border-color: mat.get-color-from-palette(mat.$gray-palette, if($is-dark, 200, 900));
 
   @return (
