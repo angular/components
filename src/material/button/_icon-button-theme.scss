@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '@material/density/functions' as mdc-density-functions;
-@use '@material/icon-button/mixins' as mdc-icon-button;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '@material/theme/theme-color' as mdc-theme-color;
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;

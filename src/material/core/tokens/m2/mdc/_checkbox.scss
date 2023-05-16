@@ -59,7 +59,8 @@ $prefix: (mdc, checkbox);
   $disabled-color: theming.get-color-from-palette($foreground, base, 0.38);
   $selected-color: theming.get-color-from-palette($accent);
   $border-color: theming.get-color-from-palette($foreground, base, 0.54);
-  $active-border-color: theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
+  $active-border-color:
+    theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
 
   @return (
     // The color of the checkbox fill when the checkbox is selected and disabled.

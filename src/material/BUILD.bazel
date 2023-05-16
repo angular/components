@@ -24,6 +24,7 @@ sass_library(
     srcs = [
         "_index.scss",
         "_theming.scss",
+        "_token-theming.scss",
     ],
     deps = [
         "//src/material/core:core_scss_lib",

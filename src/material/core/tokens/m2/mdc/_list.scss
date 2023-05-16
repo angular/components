@@ -87,7 +87,8 @@ $prefix: (mdc, list);
   $foreground: map.get($config, foreground);
   $is-dark: map.get($config, is-dark);
   $foreground-base: theming.get-color-from-palette($foreground, base);
-  $text-icon-on-background: theming.get-color-from-palette($foreground, base, if($is-dark, 0.5, 0.38));
+  $text-icon-on-background:
+    theming.get-color-from-palette($foreground, base, if($is-dark, 0.5, 0.38));
 
   @return (
     // Text color of the list item primary text.

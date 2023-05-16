@@ -43,11 +43,13 @@ $dark-theme: mat.define-dark-theme((
 // Set up dark theme.
 
 .demo-unicorn-dark-theme {
-  @include material-experimental.theme($tokens: mat.m2-tokens-from-theme($dark-theme), $components: (
-    material-experimental.checkbox((
-      (mdc, checkbox): (
-        selected-checkmark-color: red,
-      )
-    )),
-  ));
+  @include material-experimental.theme(
+    $tokens: mat.m2-tokens-from-theme($dark-theme),
+    $components: (
+      material-experimental.checkbox((
+        (mdc, checkbox): (
+          selected-checkmark-color: red,
+        )
+      )),
+    ));
 }

@@ -1,7 +1,6 @@
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
-@use 'sass:string';
 @use '@angular/material' as mat;
 
 // Whether to throw an error when a required dep is not configured. If false, the dep will be
@@ -17,9 +16,11 @@ $_error-on-missing-dep: false;
   // supported, the configuration data will contain a reference to its own theme mixin.
   @if $id == 'mat.card' {
     @include mat.private-apply-card-theme-from-tokens($tokens);
-  } @else if $id == 'mat.checkbox' {
+  }
+  @else if $id == 'mat.checkbox' {
     @include mat.private-apply-checkbox-theme-from-tokens($tokens);
-  } @else {
+  }
+  @else {
     @error 'Unrecognized component theme: #{id}';
   }
 }
@@ -41,7 +42,8 @@ $_error-on-missing-dep: false;
         @if $_error-on-missing-dep {
           @error 'Missing theme: `#{map.get($component, id)}` depends on `#{$dep-id}`.' +
             ' Please configure the theme for `#{$dep-id}` in your call to `mat.theme`';
-        } @else {
+        }
+        @else {
           $configured: map.set($configured, $dep-id, true);
           $new-deps: list.append($new-deps, $dep);
         }

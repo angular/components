@@ -1,5 +1,5 @@
 @forward 'checkbox-theme' hide color, density, private-checkbox-styles-with-color, theme,
-typography;
+typography, theme-from-tokens;
 @forward 'checkbox-theme' as mat-mdc-* hide $mat-mdc-mdc-checkbox-border-color,
 $mat-mdc-mdc-checkbox-disabled-color, mat-mdc-background-focus-density,
 mat-mdc-background-focus-indicator-checked-color, mat-mdc-background-focus-indicator-color,

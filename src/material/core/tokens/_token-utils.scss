@@ -51,7 +51,8 @@ $_component-prefix: null;
 @mixin _configure-token-prefix($first, $rest...) {
   $_component-prefix: '' !global;
   @each $item in $rest {
-    $_component-prefix: if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+    $_component-prefix:
+      if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
   }
   @include mdc-custom-properties.configure($varname-prefix: $first) {
     @content;
