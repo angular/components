@@ -10,6 +10,7 @@ import {FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
+  Attribute,
   Component,
   ViewEncapsulation,
   ChangeDetectionStrategy,
@@ -52,6 +53,9 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   private _active = false;
   private _disabled = false;
   private _mostRecentViewValue = '';
+
+  /** The role of the option. */
+  role: string = 'option';
 
   /** Whether the wrapping component is in multiple selection mode. */
   get multiple() {
@@ -253,7 +257,6 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   selector: 'mat-option',
   exportAs: 'matOption',
   host: {
-    'role': 'option',
     '[class.mdc-list-item--selected]': 'selected',
     '[class.mat-mdc-option-multiple]': 'multiple',
     '[class.mat-mdc-option-active]': 'active',
@@ -268,7 +271,11 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     //
     // Set `aria-selected="false"` on not-selected listbox options to fix VoiceOver announcing
     // every option as "selected" (#21491).
-    '[attr.aria-selected]': 'selected',
+    //
+    // When role="checkbox", the aria-checked attribute should be used instead of aria-selected
+    // to ensure that all screen readers announce the selection status.
+    '[attr.aria-selected]': "role === 'option' ? selected : null",
+    '[attr.aria-checked]': "role === 'checkbox' ? selected : null",
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
@@ -285,8 +292,11 @@ export class MatOption<T = any> extends _MatOptionBase<T> {
     changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
     @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup,
+    @Attribute('role') role: string,
   ) {
     super(element, changeDetectorRef, parent, group);
+    this.role = role || 'option';
+    this._getHostElement().setAttribute('role', this.role);
   }
 }
 

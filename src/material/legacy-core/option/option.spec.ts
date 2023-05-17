@@ -14,7 +14,7 @@ describe('MatLegacyOption component', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatLegacyOptionModule],
-      declarations: [BasicOption],
+      declarations: [BasicOption, CheckboxOption],
     }).compileComponents();
   }));
 
@@ -150,6 +150,22 @@ describe('MatLegacyOption component', () => {
     subscription.unsubscribe();
   });
 
+  it("should set ARIA check status when role='checkbox'", () => {
+    const fixture = TestBed.createComponent(CheckboxOption);
+    fixture.detectChanges();
+
+    const optionInstance: MatLegacyOption = fixture.debugElement.query(
+      By.directive(MatLegacyOption),
+    )!.componentInstance;
+
+    optionInstance.select();
+    fixture.detectChanges();
+
+    expect(optionInstance.role).toBe('checkbox');
+    expect(optionInstance._getHostElement().getAttribute('aria-selected')).toBeNull();
+    expect(optionInstance._getHostElement().getAttribute('aria-checked')).toBe('true');
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<BasicOption>;
     let optionDebugElement: DebugElement;
@@ -257,3 +273,8 @@ class BasicOption {
   `,
 })
 class InsideGroup {}
+
+@Component({
+  template: `<mat-option role="checkbox"></mat-option>`,
+})
+class CheckboxOption {}

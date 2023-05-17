@@ -7,6 +7,7 @@
  */
 
 import {
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -38,7 +39,8 @@ import {MatLegacyOptgroup} from './optgroup';
     '[class.mat-option-multiple]': 'multiple',
     '[class.mat-active]': 'active',
     '[id]': 'id',
-    '[attr.aria-selected]': 'selected',
+    '[attr.aria-selected]': "role === 'option' ? selected : null",
+    '[attr.aria-checked]': "role === 'checkbox' ? selected : null",
     '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-option-disabled]': 'disabled',
     '(click)': '_selectViaInteraction()',
@@ -56,7 +58,10 @@ export class MatLegacyOption<T = any> extends _MatOptionBase<T> {
     changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
     @Optional() @Inject(MAT_OPTGROUP) group: MatLegacyOptgroup,
+    @Attribute('role') role: string,
   ) {
     super(element, changeDetectorRef, parent, group);
+    this.role = role || 'option';
+    this._getHostElement().setAttribute('role', this.role);
   }
 }

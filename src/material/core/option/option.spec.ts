@@ -14,7 +14,7 @@ describe('MatOption component', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatOptionModule],
-      declarations: [BasicOption],
+      declarations: [BasicOption, CheckboxOption],
     }).compileComponents();
   }));
 
@@ -149,6 +149,22 @@ describe('MatOption component', () => {
     subscription.unsubscribe();
   });
 
+  it("should set ARIA check status when role='checkbox'", () => {
+    const fixture = TestBed.createComponent(CheckboxOption);
+    fixture.detectChanges();
+
+    const optionInstance: MatOption = fixture.debugElement.query(
+      By.directive(MatOption),
+    )!.componentInstance;
+
+    optionInstance.select();
+    fixture.detectChanges();
+
+    expect(optionInstance.role).toBe('checkbox');
+    expect(optionInstance._getHostElement().getAttribute('aria-selected')).toBeNull();
+    expect(optionInstance._getHostElement().getAttribute('aria-checked')).toBe('true');
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<BasicOption>;
     let optionDebugElement: DebugElement;
@@ -259,3 +275,8 @@ class BasicOption {
   `,
 })
 class InsideGroup {}
+
+@Component({
+  template: `<mat-option role="checkbox"></mat-option>`,
+})
+class CheckboxOption {}

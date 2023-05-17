@@ -172,11 +172,11 @@ export { _MatLegacyOptgroupBase }
 
 // @public @deprecated
 export class MatLegacyOption<T = any> extends _MatLegacyOptionBase<T> {
-    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatLegacyOptionParentComponent, group: MatLegacyOptgroup);
+    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatLegacyOptionParentComponent, group: MatLegacyOptgroup, role: string);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyOption<any>, "mat-option", ["matOption"], {}, {}, never, ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyOption<any>, [null, null, { optional: true; }, { optional: true; }, { attribute: "role"; }]>;
 }
 
 export { _MatLegacyOptionBase }

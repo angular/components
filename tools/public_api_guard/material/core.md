@@ -261,11 +261,11 @@ export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisabl
 
 // @public
 export class MatOption<T = any> extends _MatOptionBase<T> {
-    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatOptionParentComponent, group: MatOptgroup);
+    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatOptionParentComponent, group: MatOptgroup, role: string);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], {}, {}, never, ["mat-icon", "*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }, { attribute: "role"; }]>;
 }
 
 // @public (undocumented)
@@ -293,6 +293,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     // (undocumented)
     ngOnDestroy(): void;
     readonly onSelectionChange: EventEmitter<MatOptionSelectionChange<T>>;
+    role: string;
     select(): void;
     get selected(): boolean;
     _selectViaInteraction(): void;
