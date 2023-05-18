@@ -138,6 +138,11 @@ describe('TreeKeyManager', () => {
         parent2._children = [parent2Child1];
         parent2Child1._parent = parent2;
 
+        parentItem = parent1;
+        childItem = parent1Child1;
+        childItemWithNoChildren = parent1Child2;
+        lastItem = parent2Child1;
+
         itemList.reset([
           parent1,
           parent1Child1,
