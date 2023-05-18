@@ -200,6 +200,10 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase>
     }
   }
 
+  /**
+   * Whether tooltip should be relative to the click or touch origin
+   * instead of outside the element bounding box.
+   */
   @Input('matTooltipPositionAtOrigin')
   get positionAtOrigin(): boolean {
     return this._positionAtOrigin;
