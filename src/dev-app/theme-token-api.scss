@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use '@angular/material-experimental';
+@use '@angular/material-experimental' as matx;
 
 dev-app {
   &::before {
@@ -23,6 +23,15 @@ dev-app {
 
 @include mat.core();
 
+$light-theme: mat.define-light-theme((
+  color: (
+    primary: mat.define-palette(mat.$indigo-palette),
+    accent: mat.define-palette(mat.$pink-palette),
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
 $dark-theme: mat.define-dark-theme((
   color: (
     primary: mat.define-palette(mat.$blue-grey-palette),
@@ -35,18 +44,22 @@ $dark-theme: mat.define-dark-theme((
 
 // Set up light theme.
 
-@include material-experimental.theme($components: (
-  material-experimental.card(),
-  material-experimental.checkbox(),
-));
+html {
+  @include matx.theme(
+    $tokens: mat.m2-tokens-from-theme($light-theme),
+    $components: (
+      matx.card(),
+      matx.checkbox(),
+    ));
+}
 
 // Set up dark theme.
 
 .demo-unicorn-dark-theme {
-  @include material-experimental.theme(
+  @include matx.theme(
     $tokens: mat.m2-tokens-from-theme($dark-theme),
     $components: (
-      material-experimental.checkbox((
+      matx.checkbox((
         (mdc, checkbox): (
           selected-checkmark-color: red,
         )

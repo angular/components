@@ -60,16 +60,14 @@ $_error-on-missing-dep: false;
 
 @mixin _theme($tokens, $components) {
   // Call the theme mixin for each configured component.
-  @at-root #{& or body} {
-    @each $component in $components {
-      @include _apply-theme($tokens, $component);
-    }
+  @each $component in $components {
+    @include _apply-theme($tokens, $component);
   }
 }
 
 // Takes the full list of tokens and a list of components to configure, and outputs all theme
 // tokens for the configured components.
-@mixin theme($tokens: mat.m2-tokens-from-theme(), $components) {
+@mixin theme($tokens, $components) {
   @include _theme($tokens, _get-transitive-deps(mat.private-normalize-args-list($components)));
 }
 

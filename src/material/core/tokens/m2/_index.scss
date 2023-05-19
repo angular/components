@@ -30,6 +30,9 @@
     @return meta.call(
         meta.get-function(get-#{$system}-tokens, $module: $module));
   }
+  @if not map.get($theme, $system) {
+    @return ();
+  }
   @return meta.call(
       meta.get-function(get-#{$system}-tokens, $module: $module), map.get($theme, $system));
 }
@@ -44,23 +47,13 @@
   @return map.set((), map.get(meta.module-variables($module), prefix), $tokens);
 }
 
-// Gets the full set of m2 tokens for the given theme object. If parts of the theme are missing
-// (color, density, etc), defaults are used. Returned format:
+// Gets the full set of m2 tokens for the given theme object. Returned format:
 // (
 //   (fully, qualified, namespace): (
 //     token: value
 //   )
 // )
-@function m2-tokens-from-theme($theme: ()) {
-  $theme: map.merge((
-    color: theming.define-light-theme(
-        theming.define-palette(palette.$indigo-palette),
-        theming.define-palette(palette.$pink-palette),
-    ),
-    typography: all-typography.define-typography-config(),
-    density: 0
-  ), $theme);
-
+@function m2-tokens-from-theme($theme) {
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-radio),
