@@ -1,0 +1,7 @@
+// Include content under the current selector (&) or the document root if there is no current
+// selector.
+@mixin current-selector-or-root($root: html) {
+  @at-root #{& or $root} {
+    @content;
+  }
+}
