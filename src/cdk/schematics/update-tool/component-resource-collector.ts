@@ -155,7 +155,7 @@ export class ComponentResourceCollector {
           return;
         }
 
-        const fileContent = this._fileSystem.read(templatePath);
+        const fileContent = stripBom(this._fileSystem.read(templatePath) || '');
 
         if (fileContent) {
           const lineStartsMap = computeLineStartsMap(fileContent);
