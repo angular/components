@@ -19,6 +19,15 @@
   .mat-mdc-chip {
     width: 100%;
   }
+
+  .mdc-evolution-chip__graphic {
+    flex-grow: 0;
+  }
+
+  .mdc-evolution-chip__action--primary {
+    flex-basis: 100%;
+    justify-content: start;
+  }
 }
 
 input.mat-mdc-chip-input {
