@@ -96,7 +96,7 @@ off-screen tabs in the DOM, you can set the `preserveContent` input to `true`.
 
 ### Accessibility
 `MatTabGroup` and `MatTabNavBar` both implement the
-[ARIA Tabs design pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel). Both components
+[ARIA Tabs design pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/). Both components
 compose `tablist`, `tab`, and `tabpanel` elements with handling for keyboard inputs and focus
 management.
 
