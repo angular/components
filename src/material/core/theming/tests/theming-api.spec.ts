@@ -210,15 +210,9 @@ describe('theming api', () => {
         return;
       }
       node.selectors.forEach(selector => {
-        if (baseSelector && selector === baseSelector) {
-          // Styles emitted directly to the baseSelector are emitted to html
-          // when there is no baseSelector.
-          selector = 'html';
-        } else {
-          // Only check selectors that match the specified base selector.
-          if (baseSelector && !baseSelectorRegex.test(selector)) {
-            return;
-          }
+        // Only check selectors that match the specified base selector.
+        if (baseSelector && !baseSelectorRegex.test(selector)) {
+          return;
         }
         selector = selector.replace(baseSelectorRegex, '');
         const matchingRule = knownDensitySelectors.get(selector);

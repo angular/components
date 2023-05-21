@@ -244,7 +244,7 @@ You can use one of these pre-built themes if you don't want to define a custom t
 |------------------------|----------------|----------------------------------|
 | `deeppurple-amber.css` | Light          | deep-purple, amber, red          |
 | `indigo-pink.css`      | Light          | indigo, pink, red                |
-| `pink-bluegrey.css`    | Dark           | pink, blue-grey, red              |
+| `pink-bluegrey.css`    | Dark           | pink, bluegrey, red              |
 | `purple-green.css`     | Dark           | purple, green, red               |
 
 These files include the CSS for every component in the library. To include only the CSS for a subset
@@ -363,7 +363,7 @@ hue's number identifier with `-contrast`.
 $my-palette: mat.define-palette(mat.$indigo-palette);
 
 .my-custom-style {
- background: mat.get-color-from-palette($my-palette, '500');
+ background: mat.get-color-from-palette($my-palette, 500);
  color: mat.get-color-from-palette($my-palette, '500-contrast');
 }
 ```

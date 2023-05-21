@@ -338,7 +338,7 @@ export abstract class _MatAutocompleteBase
   inputs: ['disableRipple'],
   host: {
     'class': 'mat-mdc-autocomplete',
-    'ngSkipHydration': '',
+    'ngSkipHydration': 'true',
   },
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
   animations: [panelAnimation],

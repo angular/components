@@ -551,7 +551,7 @@ export class _MatMenuBase
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
-    'ngSkipHydration': '',
+    'ngSkipHydration': 'true',
   },
   animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
   providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],

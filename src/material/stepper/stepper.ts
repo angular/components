@@ -139,7 +139,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     '[class.mat-stepper-header-position-bottom]': 'headerPosition === "bottom"',
     '[attr.aria-orientation]': 'orientation',
     'role': 'tablist',
-    'ngSkipHydration': '',
+    'ngSkipHydration': 'true',
   },
   animations: [
     matStepperAnimations.horizontalStepTransition,

@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field' as mdc-form-field;
-@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/mdc-helpers/mdc-helpers';
@@ -13,11 +12,9 @@
   $warn: map.get($config, warn);
   $foreground: map.get($config, foreground);
 
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
-  }
-
   .mat-mdc-checkbox {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
+
     &.mat-primary {
       $primary-config: map.merge($config, (accent: $primary));
       @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($primary-config));
@@ -43,12 +40,9 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
           theming.get-typography-config($config-or-theme));
-
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($config));
-  }
-
   .mat-mdc-checkbox {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($config));
+
     @include mdc-helpers.using-mdc-typography($config) {
       // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
@@ -59,7 +53,7 @@
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
 
-  @include sass-utils.current-selector-or-root() {
+  .mat-mdc-checkbox {
     @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-density-tokens($density-scale));
   }
 
