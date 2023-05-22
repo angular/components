@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 /**
  * @title Delayed dragging
@@ -7,5 +8,7 @@ import {Component} from '@angular/core';
   selector: 'cdk-drag-drop-delay-example',
   templateUrl: 'cdk-drag-drop-delay-example.html',
   styleUrls: ['cdk-drag-drop-delay-example.css'],
+  standalone: true,
+  imports: [CdkDrag],
 })
 export class CdkDragDropDelayExample {}

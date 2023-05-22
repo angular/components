@@ -8,12 +8,49 @@
 
 import {Component} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
-import {TabGroupExamplesModule} from '@angular/components-examples/material/tabs';
+import {
+  TabGroupInkBarExample,
+  TabGroupInvertedExample,
+  TabGroupPaginatedExample,
+  TabNavBarBasicExample,
+  TabGroupThemeExample,
+  TabGroupStretchedExample,
+  TabGroupPreserveContentExample,
+  TabGroupLazyLoadedExample,
+  TabGroupHeaderBelowExample,
+  TabGroupDynamicExample,
+  TabGroupHarnessExample,
+  TabGroupAlignExample,
+  TabGroupAnimationsExample,
+  TabGroupAsyncExample,
+  TabGroupBasicExample,
+  TabGroupCustomLabelExample,
+  TabGroupDynamicHeightExample,
+} from '@angular/components-examples/material/tabs';
 
 @Component({
   selector: 'tabs-demo',
   templateUrl: 'tabs-demo.html',
   standalone: true,
-  imports: [TabGroupExamplesModule, MatTabsModule],
+  imports: [
+    TabGroupInkBarExample,
+    TabGroupInvertedExample,
+    TabGroupPaginatedExample,
+    TabNavBarBasicExample,
+    TabGroupThemeExample,
+    TabGroupStretchedExample,
+    TabGroupPreserveContentExample,
+    TabGroupLazyLoadedExample,
+    TabGroupHeaderBelowExample,
+    TabGroupDynamicExample,
+    TabGroupHarnessExample,
+    TabGroupAlignExample,
+    TabGroupAnimationsExample,
+    TabGroupAsyncExample,
+    TabGroupBasicExample,
+    TabGroupCustomLabelExample,
+    TabGroupDynamicHeightExample,
+    MatTabsModule,
+  ],
 })
 export class TabsDemo {}

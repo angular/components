@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatChipInputEvent} from '@angular/material/chips';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {NgFor} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
 
 /**
  * @title Chips with form control
@@ -9,6 +13,16 @@ import {MatChipInputEvent} from '@angular/material/chips';
   selector: 'chips-form-control-example',
   templateUrl: 'chips-form-control-example.html',
   styleUrls: ['chips-form-control-example.css'],
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    MatIconModule,
+  ],
 })
 export class ChipsFormControlExample {
   keywords = ['angular', 'how-to', 'tutorial', 'accessibility'];

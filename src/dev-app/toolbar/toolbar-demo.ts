@@ -7,7 +7,12 @@
  */
 
 import {Component} from '@angular/core';
-import {ToolbarExamplesModule} from '@angular/components-examples/material/toolbar';
+import {
+  ToolbarBasicExample,
+  ToolbarMultirowExample,
+  ToolbarOverviewExample,
+  ToolbarHarnessExample,
+} from '@angular/components-examples/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -17,6 +22,14 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   templateUrl: 'toolbar-demo.html',
   styleUrls: ['toolbar-demo.css'],
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatToolbarModule, ToolbarExamplesModule],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    ToolbarBasicExample,
+    ToolbarMultirowExample,
+    ToolbarOverviewExample,
+    ToolbarHarnessExample,
+  ],
 })
 export class ToolbarDemo {}

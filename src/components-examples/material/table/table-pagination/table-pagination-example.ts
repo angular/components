@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
 /**
  * @title Table with pagination
@@ -9,6 +9,8 @@ import {MatTableDataSource} from '@angular/material/table';
   selector: 'table-pagination-example',
   styleUrls: ['table-pagination-example.css'],
   templateUrl: 'table-pagination-example.html',
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule],
 })
 export class TablePaginationExample implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

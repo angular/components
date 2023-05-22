@@ -8,13 +8,13 @@
 
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CdkLayoutExamplesModule} from '@angular/components-examples/cdk/layout';
+import {BreakpointObserverOverviewExample} from '@angular/components-examples/cdk/layout';
 
 @Component({
   selector: 'layout-demo',
   templateUrl: 'layout-demo.html',
   styleUrls: ['layout-demo.css'],
   standalone: true,
-  imports: [CommonModule, CdkLayoutExamplesModule],
+  imports: [CommonModule, BreakpointObserverOverviewExample],
 })
 export class LayoutDemo {}

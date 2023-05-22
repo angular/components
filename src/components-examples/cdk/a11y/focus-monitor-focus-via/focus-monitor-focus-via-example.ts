@@ -8,12 +8,16 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 /** @title Focusing with a specific FocusOrigin */
 @Component({
   selector: 'focus-monitor-focus-via-example',
   templateUrl: 'focus-monitor-focus-via-example.html',
   styleUrls: ['focus-monitor-focus-via-example.css'],
+  standalone: true,
+  imports: [MatFormFieldModule, MatSelectModule],
 })
 export class FocusMonitorFocusViaExample implements OnDestroy, AfterViewInit {
   @ViewChild('monitored') monitoredEl: ElementRef<HTMLElement>;

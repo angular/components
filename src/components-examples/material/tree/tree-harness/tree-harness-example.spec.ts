@@ -2,19 +2,13 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTreeHarness} from '@angular/material/tree/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatTreeModule} from '@angular/material/tree';
 import {TreeHarnessExample} from './tree-harness-example';
-import {MatIconModule} from '@angular/material/icon';
 
 describe('TreeHarnessExample', () => {
   let fixture: ComponentFixture<TreeHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTreeModule, MatIconModule],
-      declarations: [TreeHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(TreeHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

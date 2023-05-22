@@ -1,5 +1,12 @@
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {NgFor} from '@angular/common';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+  CdkDrag,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop connected sorting
@@ -8,6 +15,8 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   selector: 'cdk-drag-drop-connected-sorting-example',
   templateUrl: 'cdk-drag-drop-connected-sorting-example.html',
   styleUrls: ['cdk-drag-drop-connected-sorting-example.css'],
+  standalone: true,
+  imports: [CdkDropList, NgFor, CdkDrag],
 })
 export class CdkDragDropConnectedSortingExample {
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];

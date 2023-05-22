@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatAccordionHarness, MatExpansionPanelHarness} from '@angular/material/expansion/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatExpansionModule} from '@angular/material/expansion';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ExpansionHarnessExample} from './expansion-harness-example';
 
@@ -12,8 +11,7 @@ describe('ExpansionHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatExpansionModule, NoopAnimationsModule],
-      declarations: [ExpansionHarnessExample],
+      imports: [NoopAnimationsModule],
     }).compileComponents();
     fixture = TestBed.createComponent(ExpansionHarnessExample);
     fixture.detectChanges();

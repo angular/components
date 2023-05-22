@@ -1,6 +1,7 @@
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Virtual scroll with a custom data source */
 @Component({
@@ -8,6 +9,8 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
   styleUrls: ['cdk-virtual-scroll-data-source-example.css'],
   templateUrl: 'cdk-virtual-scroll-data-source-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 export class CdkVirtualScrollDataSourceExample {
   ds = new MyDataSource();

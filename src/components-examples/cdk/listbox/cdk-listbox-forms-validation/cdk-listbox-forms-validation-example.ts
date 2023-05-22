@@ -1,7 +1,9 @@
 import {Component} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
+import {NgFor, NgIf, AsyncPipe, JsonPipe} from '@angular/common';
+import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 
 /** @title Listbox with forms validation. */
 @Component({
@@ -9,6 +11,17 @@ import {Observable} from 'rxjs';
   exportAs: 'cdkListboxFormsValidationExample',
   templateUrl: 'cdk-listbox-forms-validation-example.html',
   styleUrls: ['cdk-listbox-forms-validation-example.css'],
+  standalone: true,
+  imports: [
+    CdkListbox,
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    CdkOption,
+    NgIf,
+    AsyncPipe,
+    JsonPipe,
+  ],
 })
 export class CdkListboxFormsValidationExample {
   signs = [

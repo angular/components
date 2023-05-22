@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MatIconRegistry} from '@angular/material/icon';
+import {MatIconRegistry, MatIconModule} from '@angular/material/icon';
 
 const THUMBUP_ICON =
   `
@@ -18,6 +18,8 @@ const THUMBUP_ICON =
 @Component({
   selector: 'icon-svg-example',
   templateUrl: 'icon-svg-example.html',
+  standalone: true,
+  imports: [MatIconModule],
 })
 export class IconSvgExample {
   constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {

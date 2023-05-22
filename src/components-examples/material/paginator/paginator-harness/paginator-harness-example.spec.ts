@@ -2,9 +2,9 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatPaginatorHarness} from '@angular/material/paginator/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatPaginatorModule} from '@angular/material/paginator';
 import {PaginatorHarnessExample} from './paginator-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 describe('PaginatorHarnessExample', () => {
   let fixture: ComponentFixture<PaginatorHarnessExample>;
@@ -14,7 +14,6 @@ describe('PaginatorHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
-      declarations: [PaginatorHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(PaginatorHarnessExample);
     fixture.detectChanges();

@@ -1,75 +1,22 @@
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
-import {MatMenuModule} from '@angular/material/menu';
-import {
-  DialogContentExample,
-  DialogContentExampleDialog,
-} from './dialog-content/dialog-content-example';
-import {DialogDataExample, DialogDataExampleDialog} from './dialog-data/dialog-data-example';
-import {
-  DialogElementsExample,
-  DialogElementsExampleDialog,
-} from './dialog-elements/dialog-elements-example';
-import {
-  DialogOverviewExample,
-  DialogOverviewExampleDialog,
-} from './dialog-overview/dialog-overview-example';
-import {
-  DialogFromMenuExample,
-  DialogFromMenuExampleDialog,
-} from './dialog-from-menu/dialog-from-menu-example';
-import {DialogHarnessExample} from './dialog-harness/dialog-harness-example';
-import {
-  DialogAnimationsExample,
-  DialogAnimationsExampleDialog,
-} from './dialog-animations/dialog-animations-example';
-
 export {
   DialogContentExample,
   DialogContentExampleDialog,
-  DialogDataExample,
-  DialogDataExampleDialog,
+} from './dialog-content/dialog-content-example';
+export {DialogDataExample, DialogDataExampleDialog} from './dialog-data/dialog-data-example';
+export {
   DialogElementsExample,
   DialogElementsExampleDialog,
-  DialogFromMenuExample,
-  DialogFromMenuExampleDialog,
-  DialogHarnessExample,
+} from './dialog-elements/dialog-elements-example';
+export {
   DialogOverviewExample,
   DialogOverviewExampleDialog,
-  DialogAnimationsExample,
-  DialogAnimationsExampleDialog,
-};
-
-const EXAMPLES = [
-  DialogContentExample,
-  DialogContentExampleDialog,
-  DialogDataExample,
-  DialogDataExampleDialog,
-  DialogElementsExample,
-  DialogElementsExampleDialog,
+} from './dialog-overview/dialog-overview-example';
+export {
   DialogFromMenuExample,
   DialogFromMenuExampleDialog,
-  DialogHarnessExample,
-  DialogOverviewExample,
-  DialogOverviewExampleDialog,
+} from './dialog-from-menu/dialog-from-menu-example';
+export {DialogHarnessExample} from './dialog-harness/dialog-harness-example';
+export {
   DialogAnimationsExample,
   DialogAnimationsExampleDialog,
-];
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatInputModule,
-    MatMenuModule,
-    FormsModule,
-  ],
-  declarations: EXAMPLES,
-  exports: EXAMPLES,
-})
-export class DialogExamplesModule {}
+} from './dialog-animations/dialog-animations-example';

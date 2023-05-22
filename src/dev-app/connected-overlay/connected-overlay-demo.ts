@@ -17,7 +17,7 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
-import {CdkOverlayExamplesModule} from '@angular/components-examples/cdk/overlay';
+import {CdkOverlayBasicExample} from '@angular/components-examples/cdk/overlay';
 import {
   Component,
   TemplateRef,
@@ -37,7 +37,7 @@ import {MatRadioModule} from '@angular/material/radio';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    CdkOverlayExamplesModule,
+    CdkOverlayBasicExample,
     CommonModule,
     FormsModule,
     MatButtonModule,

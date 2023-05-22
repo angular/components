@@ -2,10 +2,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatStepperHarness, MatStepperNextHarness} from '@angular/material/stepper/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {MatStepperModule} from '@angular/material/stepper';
 import {StepperHarnessExample} from './stepper-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms';
 
 describe('StepperHarnessExample', () => {
   let fixture: ComponentFixture<StepperHarnessExample>;
@@ -13,8 +11,7 @@ describe('StepperHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [StepperHarnessExample],
+      imports: [NoopAnimationsModule],
     }).compileComponents();
     fixture = TestBed.createComponent(StepperHarnessExample);
     fixture.detectChanges();

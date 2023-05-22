@@ -1,5 +1,6 @@
-import {SelectionChange} from '@angular/cdk-experimental/selection';
+import {SelectionChange, CdkSelectionModule} from '@angular/cdk-experimental/selection';
 import {Component} from '@angular/core';
+import {CdkTableModule} from '@angular/cdk/table';
 
 /**
  * @title CDK Selection Column on a CDK table.
@@ -8,6 +9,8 @@ import {Component} from '@angular/core';
   selector: 'cdk-selection-column-example',
   templateUrl: 'cdk-selection-column-example.html',
   styleUrls: ['cdk-selection-column-example.css'],
+  standalone: true,
+  imports: [CdkTableModule, CdkSelectionModule],
 })
 export class CdkSelectionColumnExample {
   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];

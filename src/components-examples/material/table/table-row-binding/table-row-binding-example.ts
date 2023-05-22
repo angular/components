@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {NgIf, NgFor} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -27,6 +29,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-row-binding-example',
   styleUrls: ['table-row-binding-example.css'],
   templateUrl: 'table-row-binding-example.html',
+  standalone: true,
+  imports: [MatTableModule, NgIf, NgFor],
 })
 export class TableRowBindingExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

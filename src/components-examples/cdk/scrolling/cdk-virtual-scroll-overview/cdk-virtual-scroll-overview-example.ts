@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Basic virtual scroll */
 @Component({
@@ -6,6 +7,8 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   styleUrls: ['cdk-virtual-scroll-overview-example.css'],
   templateUrl: 'cdk-virtual-scroll-overview-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 export class CdkVirtualScrollOverviewExample {
   items = Array.from({length: 100000}).map((_, i) => `Item #${i}`);

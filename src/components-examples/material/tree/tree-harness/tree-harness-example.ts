@@ -1,6 +1,8 @@
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component} from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 interface Node {
   name: string;
@@ -35,6 +37,8 @@ interface ExampleFlatNode {
 @Component({
   selector: 'tree-harness-example',
   templateUrl: 'tree-harness-example.html',
+  standalone: true,
+  imports: [MatTreeModule, MatButtonModule, MatIconModule],
 })
 export class TreeHarnessExample {
   private _transformer = (node: Node, level: number) => {
