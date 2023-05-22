@@ -134,7 +134,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
       !!this._listBase?.disableRipple
     );
   }
-  set disableRipple(value: boolean) {
+  set disableRipple(value: BooleanInput) {
     this._disableRipple = coerceBooleanProperty(value);
   }
   private _disableRipple: boolean = false;
