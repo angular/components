@@ -1,5 +1,13 @@
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {NgFor} from '@angular/common';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop disabled sorting
@@ -8,6 +16,8 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   selector: 'cdk-drag-drop-disabled-sorting-example',
   templateUrl: 'cdk-drag-drop-disabled-sorting-example.html',
   styleUrls: ['cdk-drag-drop-disabled-sorting-example.css'],
+  standalone: true,
+  imports: [CdkDropListGroup, CdkDropList, NgFor, CdkDrag],
 })
 export class CdkDragDropDisabledSortingExample {
   items = ['Carrots', 'Tomatoes', 'Onions', 'Apples', 'Avocados'];

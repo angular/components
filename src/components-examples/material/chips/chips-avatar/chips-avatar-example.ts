@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatChipsModule} from '@angular/material/chips';
 
 /**
  * @title Chips avatar
@@ -8,5 +9,7 @@ import {Component} from '@angular/core';
   selector: 'chips-avatar-example',
   templateUrl: 'chips-avatar-example.html',
   styleUrls: ['chips-avatar-example.css'],
+  standalone: true,
+  imports: [MatChipsModule],
 })
 export class ChipsAvatarExample {}

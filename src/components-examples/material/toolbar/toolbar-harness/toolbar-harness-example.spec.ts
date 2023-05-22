@@ -2,19 +2,13 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatToolbarHarness} from '@angular/material/toolbar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatToolbarModule} from '@angular/material/toolbar';
 import {ToolbarHarnessExample} from './toolbar-harness-example';
-import {MatIconModule} from '@angular/material/icon';
 
 describe('ToolbarHarnessExample', () => {
   let fixture: ComponentFixture<ToolbarHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatToolbarModule, MatIconModule],
-      declarations: [ToolbarHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(ToolbarHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

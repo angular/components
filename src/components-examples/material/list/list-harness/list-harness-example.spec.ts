@@ -2,7 +2,6 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatListHarness} from '@angular/material/list/testing';
-import {MatListModule} from '@angular/material/list';
 import {ListHarnessExample} from './list-harness-example';
 
 describe('ListHarnessExample', () => {
@@ -10,10 +9,6 @@ describe('ListHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatListModule],
-      declarations: [ListHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(ListHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

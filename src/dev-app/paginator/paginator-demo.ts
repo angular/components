@@ -14,7 +14,10 @@ import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {PaginatorExamplesModule} from '@angular/components-examples/material/paginator';
+import {
+  PaginatorOverviewExample,
+  PaginatorConfigurableExample,
+} from '@angular/components-examples/material/paginator';
 
 @Component({
   selector: 'paginator-demo',
@@ -29,7 +32,8 @@ import {PaginatorExamplesModule} from '@angular/components-examples/material/pag
     MatInputModule,
     MatSlideToggleModule,
     MatPaginatorModule,
-    PaginatorExamplesModule,
+    PaginatorOverviewExample,
+    PaginatorConfigurableExample,
   ],
 })
 export class PaginatorDemo {

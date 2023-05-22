@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkDrag, CdkDragHandle} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop with a handle
@@ -7,5 +8,7 @@ import {Component} from '@angular/core';
   selector: 'cdk-drag-drop-handle-example',
   templateUrl: 'cdk-drag-drop-handle-example.html',
   styleUrls: ['cdk-drag-drop-handle-example.css'],
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 export class CdkDragDropHandleExample {}

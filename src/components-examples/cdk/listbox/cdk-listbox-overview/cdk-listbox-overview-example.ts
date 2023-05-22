@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 
 /** @title Basic listbox. */
 @Component({
@@ -6,5 +7,7 @@ import {Component} from '@angular/core';
   exportAs: 'cdkListboxOverviewExample',
   templateUrl: 'cdk-listbox-overview-example.html',
   styleUrls: ['cdk-listbox-overview-example.css'],
+  standalone: true,
+  imports: [CdkListbox, CdkOption],
 })
 export class CdkListboxOverviewExample {}

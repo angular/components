@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {Sort} from '@angular/material/sort';
+import {Sort, MatSortModule} from '@angular/material/sort';
+import {NgFor} from '@angular/common';
 
 export interface Dessert {
   calories: number;
@@ -16,6 +17,8 @@ export interface Dessert {
   selector: 'sort-overview-example',
   templateUrl: 'sort-overview-example.html',
   styleUrls: ['sort-overview-example.css'],
+  standalone: true,
+  imports: [MatSortModule, NgFor],
 })
 export class SortOverviewExample {
   desserts: Dessert[] = [

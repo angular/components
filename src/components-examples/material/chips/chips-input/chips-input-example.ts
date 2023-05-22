@@ -1,6 +1,9 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component} from '@angular/core';
-import {MatChipEditedEvent, MatChipInputEvent} from '@angular/material/chips';
+import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {NgFor} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 export interface Fruit {
   name: string;
@@ -13,6 +16,8 @@ export interface Fruit {
   selector: 'chips-input-example',
   templateUrl: 'chips-input-example.html',
   styleUrls: ['chips-input-example.css'],
+  standalone: true,
+  imports: [MatFormFieldModule, MatChipsModule, NgFor, MatIconModule],
 })
 export class ChipsInputExample {
   addOnBlur = true;

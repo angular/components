@@ -1,5 +1,9 @@
 import {Component} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatStepperModule} from '@angular/material/stepper';
 
 /**
  * @title Stepper label bottom position
@@ -8,6 +12,15 @@ import {FormBuilder, Validators} from '@angular/forms';
   selector: 'stepper-label-position-bottom-example',
   templateUrl: 'stepper-label-position-bottom-example.html',
   styleUrls: ['stepper-label-position-bottom-example.css'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
 })
 export class StepperLabelPositionBottomExample {
   firstFormGroup = this._formBuilder.group({

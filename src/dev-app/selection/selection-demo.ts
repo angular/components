@@ -7,8 +7,14 @@
  */
 
 import {Component} from '@angular/core';
-import {CdkSelectionExamplesModule} from '@angular/components-examples/cdk-experimental/selection';
-import {MatSelectionExamplesModule} from '@angular/components-examples/material-experimental/selection';
+import {
+  CdkSelectionColumnExample,
+  CdkSelectionListExample,
+} from '@angular/components-examples/cdk-experimental/selection';
+import {
+  MatSelectionColumnExample,
+  MatSelectionListExample,
+} from '@angular/components-examples/material-experimental/selection';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -26,6 +32,12 @@ import {FormsModule} from '@angular/forms';
     <mat-selection-column-example></mat-selection-column-example>
   `,
   standalone: true,
-  imports: [CdkSelectionExamplesModule, MatSelectionExamplesModule, FormsModule],
+  imports: [
+    CdkSelectionColumnExample,
+    CdkSelectionListExample,
+    MatSelectionColumnExample,
+    MatSelectionListExample,
+    FormsModule,
+  ],
 })
 export class SelectionDemo {}

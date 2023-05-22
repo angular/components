@@ -3,7 +3,6 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
 import {MatCardHarness} from '@angular/material/card/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {MatCardModule} from '@angular/material/card';
 import {CardHarnessExample} from './card-harness-example';
 
 describe('CardHarnessExample', () => {
@@ -11,10 +10,6 @@ describe('CardHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatCardModule],
-      declarations: [CardHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(CardHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

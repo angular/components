@@ -1,5 +1,12 @@
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {NgFor} from '@angular/common';
+import {
+  CdkDragDrop,
+  CdkDropList,
+  CdkDragPreview,
+  CdkDrag,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop custom preview
@@ -8,6 +15,8 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
   selector: 'cdk-drag-drop-custom-preview-example',
   templateUrl: 'cdk-drag-drop-custom-preview-example.html',
   styleUrls: ['cdk-drag-drop-custom-preview-example.css'],
+  standalone: true,
+  imports: [CdkDropList, NgFor, CdkDrag, CdkDragPreview],
 })
 export class CdkDragDropCustomPreviewExample {
   // tslint:disable:max-line-length

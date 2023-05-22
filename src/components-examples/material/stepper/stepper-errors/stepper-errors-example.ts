@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatStepperModule} from '@angular/material/stepper';
 
 /**
  * @title Stepper that displays errors in the steps
@@ -14,6 +18,15 @@ import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: {showError: true},
     },
+  ],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
   ],
 })
 export class StepperErrorsExample {

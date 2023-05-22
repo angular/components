@@ -3,18 +3,12 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatChipHarness, MatChipListboxHarness} from '@angular/material/chips/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {ChipsHarnessExample} from './chips-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatChipsModule} from '@angular/material/chips';
 
 describe('ChipsHarnessExample', () => {
   let fixture: ComponentFixture<ChipsHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatChipsModule, NoopAnimationsModule],
-      declarations: [ChipsHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(ChipsHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

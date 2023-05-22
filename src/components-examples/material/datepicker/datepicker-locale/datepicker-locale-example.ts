@@ -5,6 +5,10 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import 'moment/locale/ja';
 import 'moment/locale/fr';
 
@@ -17,7 +21,6 @@ import 'moment/locale/fr';
     // The locale would typically be provided on the root module of your application. We do it at
     // the component level here, due to limitations of our example generation script.
     {provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
-
     // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
     // `MatMomentDateModule` in your applications root module. We provide it at the component level
     // here, due to limitations of our example generation script.
@@ -28,6 +31,8 @@ import 'moment/locale/fr';
     },
     {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
   ],
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
 })
 export class DatepickerLocaleExample {
   constructor(

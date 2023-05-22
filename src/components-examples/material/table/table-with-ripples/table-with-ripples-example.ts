@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {MatRippleModule} from '@angular/material/core';
+import {MatTableModule} from '@angular/material/table';
 
 const ELEMENT_DATA = [
   {name: 'Hydrogen'},
@@ -19,6 +21,8 @@ const ELEMENT_DATA = [
 @Component({
   selector: 'table-with-ripples-example',
   templateUrl: 'table-with-ripples-example.html',
+  standalone: true,
+  imports: [MatTableModule, MatRippleModule],
 })
 export class TableWithRipplesExample {
   displayedColumns: string[] = ['name'];

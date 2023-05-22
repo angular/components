@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatBadgeHarness} from '@angular/material/badge/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatBadgeModule} from '@angular/material/badge';
 import {BadgeHarnessExample} from './badge-harness-example';
 
 describe('BadgeHarnessExample', () => {
@@ -10,10 +9,6 @@ describe('BadgeHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatBadgeModule],
-      declarations: [BadgeHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(BadgeHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

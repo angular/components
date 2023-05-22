@@ -1,11 +1,27 @@
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {NgIf, NgFor} from '@angular/common';
 
 /** @title Responsive sidenav */
 @Component({
   selector: 'sidenav-responsive-example',
   templateUrl: 'sidenav-responsive-example.html',
   styleUrls: ['sidenav-responsive-example.css'],
+  standalone: true,
+  imports: [
+    NgIf,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    NgFor,
+  ],
 })
 export class SidenavResponsiveExample implements OnDestroy {
   mobileQuery: MediaQueryList;

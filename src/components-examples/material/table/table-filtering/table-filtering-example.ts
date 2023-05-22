@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 export interface PeriodicElement {
   name: string;
@@ -28,6 +30,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-filtering-example',
   styleUrls: ['table-filtering-example.css'],
   templateUrl: 'table-filtering-example.html',
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule],
 })
 export class TableFilteringExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

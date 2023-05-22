@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
+import {NgFor, AsyncPipe} from '@angular/common';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 /**
  * @title Plain input autocomplete
@@ -10,6 +12,8 @@ import {startWith, map} from 'rxjs/operators';
   selector: 'autocomplete-plain-input-example',
   templateUrl: 'autocomplete-plain-input-example.html',
   styleUrls: ['autocomplete-plain-input-example.css'],
+  standalone: true,
+  imports: [FormsModule, MatAutocompleteModule, ReactiveFormsModule, NgFor, AsyncPipe],
 })
 export class AutocompletePlainInputExample implements OnInit {
   control = new FormControl('');

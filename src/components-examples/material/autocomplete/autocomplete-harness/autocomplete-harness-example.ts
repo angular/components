@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {NgFor} from '@angular/common';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 /**
  * @title Testing with MatAutocompleteHarness
@@ -6,6 +8,8 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'autocomplete-harness-example',
   templateUrl: 'autocomplete-harness-example.html',
+  standalone: true,
+  imports: [MatAutocompleteModule, NgFor],
 })
 export class AutocompleteHarnessExample {
   states = [

@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 
 /** @title Listbox with disabled options. */
 @Component({
@@ -7,6 +8,8 @@ import {FormControl} from '@angular/forms';
   exportAs: 'cdkListboxDisabledExample',
   templateUrl: 'cdk-listbox-disabled-example.html',
   styleUrls: ['cdk-listbox-disabled-example.css'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, CdkListbox, CdkOption],
 })
 export class CdkListboxDisabledExample {
   canDrinkCtrl = new FormControl(false);

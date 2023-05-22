@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -27,6 +28,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-flex-large-row-example',
   styleUrls: ['table-flex-large-row-example.css'],
   templateUrl: 'table-flex-large-row-example.html',
+  standalone: true,
+  imports: [MatTableModule],
 })
 export class TableFlexLargeRowExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

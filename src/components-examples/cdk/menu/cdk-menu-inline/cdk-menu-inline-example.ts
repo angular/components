@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkMenu, CdkMenuItem} from '@angular/cdk/menu';
 
 /** @title Gmail inline menu. */
 @Component({
@@ -6,5 +7,7 @@ import {Component} from '@angular/core';
   exportAs: 'cdkMenuInlineExample',
   styleUrls: ['cdk-menu-inline-example.css'],
   templateUrl: 'cdk-menu-inline-example.html',
+  standalone: true,
+  imports: [CdkMenu, CdkMenuItem],
 })
 export class CdkMenuInlineExample {}

@@ -1,4 +1,3 @@
-import {ComponentPortal, DomPortal, Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
   Component,
@@ -7,6 +6,13 @@ import {
   ViewContainerRef,
   ElementRef,
 } from '@angular/core';
+import {
+  ComponentPortal,
+  DomPortal,
+  Portal,
+  TemplatePortal,
+  PortalModule,
+} from '@angular/cdk/portal';
 
 /**
  * @title Portal overview
@@ -15,6 +21,8 @@ import {
   selector: 'cdk-portal-overview-example',
   templateUrl: 'cdk-portal-overview-example.html',
   styleUrls: ['cdk-portal-overview-example.css'],
+  standalone: true,
+  imports: [PortalModule],
 })
 export class CdkPortalOverviewExample implements AfterViewInit {
   @ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknown>;
@@ -37,5 +45,6 @@ export class CdkPortalOverviewExample implements AfterViewInit {
 @Component({
   selector: 'component-portal-example',
   template: 'Hello, this is a component portal',
+  standalone: true,
 })
 export class ComponentPortalExample {}

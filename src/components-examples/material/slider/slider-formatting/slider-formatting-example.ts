@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatSliderModule} from '@angular/material/slider';
 
 /**
  * @title Slider with custom thumb label formatting.
@@ -7,6 +8,8 @@ import {Component} from '@angular/core';
   selector: 'slider-formatting-example',
   templateUrl: 'slider-formatting-example.html',
   styleUrls: ['slider-formatting-example.css'],
+  standalone: true,
+  imports: [MatSliderModule],
 })
 export class SliderFormattingExample {
   formatLabel(value: number): string {
