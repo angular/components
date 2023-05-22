@@ -2,10 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormFieldHarnessExample} from './form-field-harness-example';
-import {MatInputModule} from '@angular/material/input';
-import {ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputHarness} from '@angular/material/input/testing';
 
@@ -15,8 +12,7 @@ describe('FormFieldHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, NoopAnimationsModule],
-      declarations: [FormFieldHarnessExample],
+      imports: [NoopAnimationsModule],
     }).compileComponents();
     fixture = TestBed.createComponent(FormFieldHarnessExample);
     fixture.detectChanges();

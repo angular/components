@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
+import {MatTableModule} from '@angular/material/table';
 
 /**
  * @title Table with re-orderable columns
@@ -8,6 +9,8 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
   selector: 'table-reorderable-example',
   templateUrl: './table-reorderable-example.html',
   styleUrls: ['./table-reorderable-example.css'],
+  standalone: true,
+  imports: [MatTableModule, CdkDropList, CdkDrag],
 })
 export class TableReorderableExample {
   columns: string[] = ['position', 'name', 'weight', 'symbol'];

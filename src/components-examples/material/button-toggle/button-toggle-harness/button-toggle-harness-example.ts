@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
+import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/material/button-toggle';
 
 /**
  * @title Testing with MatButtonToggleHarness
@@ -7,6 +7,8 @@ import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
 @Component({
   selector: 'button-toggle-harness-example',
   templateUrl: 'button-toggle-harness-example.html',
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 export class ButtonToggleHarnessExample {
   disabled = false;

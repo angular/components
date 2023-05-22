@@ -7,8 +7,10 @@
  */
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable} from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 const LOAD_MORE = 'LOAD_MORE';
 
@@ -99,6 +101,8 @@ export class LoadmoreDatabase {
   selector: 'tree-loadmore-example',
   templateUrl: 'tree-loadmore-example.html',
   providers: [LoadmoreDatabase],
+  standalone: true,
+  imports: [MatTreeModule, MatButtonModule, MatIconModule],
 })
 export class TreeLoadmoreExample {
   nodeMap = new Map<string, LoadmoreFlatNode>();

@@ -7,7 +7,7 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
-import {CoreExamplesModule} from '@angular/components-examples/material/core';
+import {RippleOverviewExample} from '@angular/components-examples/material/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -21,7 +21,7 @@ import {MatInputModule} from '@angular/material/input';
   styleUrls: ['ripple-demo.css'],
   standalone: true,
   imports: [
-    CoreExamplesModule,
+    RippleOverviewExample,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,

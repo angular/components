@@ -2,9 +2,9 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatDialogHarness} from '@angular/material/dialog/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatDialogModule} from '@angular/material/dialog';
 import {DialogHarnessExample} from './dialog-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatDialogModule} from '@angular/material/dialog';
 
 describe('DialogHarnessExample', () => {
   let fixture: ComponentFixture<DialogHarnessExample>;
@@ -13,7 +13,6 @@ describe('DialogHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, NoopAnimationsModule],
-      declarations: [DialogHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(DialogHarnessExample);
     fixture.detectChanges();

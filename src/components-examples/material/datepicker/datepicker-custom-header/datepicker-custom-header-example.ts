@@ -5,16 +5,27 @@ import {
   Inject,
   OnDestroy,
 } from '@angular/core';
-import {MatCalendar} from '@angular/material/datepicker';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {MatCalendar, MatDatepickerModule} from '@angular/material/datepicker';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  MatNativeDateModule,
+} from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 /** @title Datepicker with custom calendar header */
 @Component({
   selector: 'datepicker-custom-header-example',
   templateUrl: 'datepicker-custom-header-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, MatNativeDateModule, MatDatepickerModule],
 })
 export class DatepickerCustomHeaderExample {
   exampleHeader = ExampleHeader;
@@ -57,6 +68,8 @@ export class DatepickerCustomHeaderExample {
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule],
 })
 export class ExampleHeader<D> implements OnDestroy {
   private _destroyed = new Subject<void>();

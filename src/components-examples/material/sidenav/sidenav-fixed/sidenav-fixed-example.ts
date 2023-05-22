@@ -1,11 +1,28 @@
 import {Component} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {NgIf} from '@angular/common';
 
 /** @title Fixed sidenav */
 @Component({
   selector: 'sidenav-fixed-example',
   templateUrl: 'sidenav-fixed-example.html',
   styleUrls: ['sidenav-fixed-example.css'],
+  standalone: true,
+  imports: [
+    NgIf,
+    MatToolbarModule,
+    MatSidenavModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatButtonModule,
+  ],
 })
 export class SidenavFixedExample {
   options = this._formBuilder.group({

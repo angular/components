@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -27,6 +28,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-flex-basic-example',
   styleUrls: ['table-flex-basic-example.css'],
   templateUrl: 'table-flex-basic-example.html',
+  standalone: true,
+  imports: [MatTableModule],
 })
 export class TableFlexBasicExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatProgressBarHarness} from '@angular/material/progress-bar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {ProgressBarHarnessExample} from './progress-bar-harness-example';
 
 describe('ProgressBarHarnessExample', () => {
@@ -10,10 +9,6 @@ describe('ProgressBarHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatProgressBarModule],
-      declarations: [ProgressBarHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(ProgressBarHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

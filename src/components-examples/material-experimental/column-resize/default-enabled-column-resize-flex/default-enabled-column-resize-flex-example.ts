@@ -7,6 +7,8 @@
  */
 
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
+import {MatDefaultEnabledColumnResizeModule} from '@angular/material-experimental/column-resize';
 
 export interface PeriodicElement {
   name: string;
@@ -45,6 +47,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'default-enabled-column-resize-flex-example',
   templateUrl: 'default-enabled-column-resize-flex-example.html',
   styleUrls: ['default-enabled-column-resize-flex-example.css'],
+  standalone: true,
+  imports: [MatDefaultEnabledColumnResizeModule, MatTableModule],
 })
 export class DefaultEnabledColumnResizeFlexExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

@@ -1,9 +1,15 @@
 import {Component} from '@angular/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatNativeDateModule} from '@angular/material/core';
 
 /** @title Datepicker with min & max validation */
 @Component({
   selector: 'datepicker-min-max-example',
   templateUrl: 'datepicker-min-max-example.html',
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule],
 })
 export class DatepickerMinMaxExample {
   minDate: Date;

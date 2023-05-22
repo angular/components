@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop with alternate root element
@@ -16,6 +17,8 @@ import {TemplatePortal} from '@angular/cdk/portal';
   selector: 'cdk-drag-drop-root-element-example',
   templateUrl: 'cdk-drag-drop-root-element-example.html',
   styleUrls: ['cdk-drag-drop-root-element-example.css'],
+  standalone: true,
+  imports: [CdkDrag],
 })
 export class CdkDragDropRootElementExample implements AfterViewInit, OnDestroy {
   @ViewChild(TemplateRef) _dialogTemplate: TemplateRef<any>;

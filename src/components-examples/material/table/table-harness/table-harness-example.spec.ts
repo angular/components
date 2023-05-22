@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTableHarness} from '@angular/material/table/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {MatTableModule} from '@angular/material/table';
 import {TableHarnessExample} from './table-harness-example';
 
 describe('TableHarnessExample', () => {
@@ -10,10 +9,6 @@ describe('TableHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTableModule],
-      declarations: [TableHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(TableHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

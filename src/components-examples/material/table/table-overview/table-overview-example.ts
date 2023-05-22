@@ -1,7 +1,9 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 export interface UserData {
   id: string;
@@ -50,6 +52,8 @@ const NAMES: string[] = [
   selector: 'table-overview-example',
   styleUrls: ['table-overview-example.css'],
   templateUrl: 'table-overview-example.html',
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
 })
 export class TableOverviewExample implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];

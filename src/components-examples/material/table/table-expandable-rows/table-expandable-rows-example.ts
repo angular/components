@@ -1,5 +1,9 @@
 import {Component} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {NgFor, NgIf} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 
 /**
  * @title Table with expandable rows
@@ -15,6 +19,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
+  standalone: true,
+  imports: [MatTableModule, NgFor, MatButtonModule, NgIf, MatIconModule],
 })
 export class TableExpandableRowsExample {
   dataSource = ELEMENT_DATA;

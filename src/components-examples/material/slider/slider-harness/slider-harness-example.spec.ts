@@ -11,8 +11,7 @@ describe('SliderHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatSliderModule],
-      declarations: [SliderHarnessExample],
+      imports: [MatSliderModule, SliderHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(SliderHarnessExample);
     fixture.detectChanges();

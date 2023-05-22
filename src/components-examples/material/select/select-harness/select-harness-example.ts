@@ -1,4 +1,7 @@
 import {Component} from '@angular/core';
+import {NgFor} from '@angular/common';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 /**
  * @title Testing with MatSelectHarness
@@ -6,6 +9,8 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'select-harness-example',
   templateUrl: 'select-harness-example.html',
+  standalone: true,
+  imports: [MatFormFieldModule, MatSelectModule, NgFor],
 })
 export class SelectHarnessExample {
   foods = [

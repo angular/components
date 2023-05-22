@@ -1,9 +1,18 @@
 import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
-import {FormValueContainer} from '@angular/cdk-experimental/popover-edit';
-import {NgForm} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {FormValueContainer, CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
+import {NgForm, FormsModule} from '@angular/forms';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {MatListModule} from '@angular/material/list';
+import {NgIf, NgFor} from '@angular/common';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPopoverEditModule} from '@angular/material-experimental/popover-edit';
+import {MatTableModule} from '@angular/material/table';
 
 export type ElementType = 'Metal' | 'Semimetal' | 'Nonmetal';
 
@@ -198,6 +207,22 @@ const FANTASY_ELEMENTS: readonly FantasyElement[] = [
   selector: 'popover-edit-mat-table-example',
   styleUrls: ['popover-edit-mat-table-example.css'],
   templateUrl: 'popover-edit-mat-table-example.html',
+  standalone: true,
+  imports: [
+    MatTableModule,
+    CdkPopoverEditModule,
+    FormsModule,
+    MatPopoverEditModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCheckboxModule,
+    NgIf,
+    MatListModule,
+    NgFor,
+    MatSnackBarModule,
+  ],
 })
 export class PopoverEditMatTableExample {
   displayedColumns: string[] = [

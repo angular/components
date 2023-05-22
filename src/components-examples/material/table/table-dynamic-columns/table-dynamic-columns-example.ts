@@ -1,4 +1,7 @@
 import {Component} from '@angular/core';
+import {NgFor} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 export interface PeriodicElement {
   name: string;
@@ -27,6 +30,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-dynamic-columns-example',
   styleUrls: ['table-dynamic-columns-example.css'],
   templateUrl: 'table-dynamic-columns-example.html',
+  standalone: true,
+  imports: [MatButtonModule, MatTableModule, NgFor],
 })
 export class TableDynamicColumnsExample {
   displayedColumns: string[] = ['name', 'weight', 'symbol', 'position'];

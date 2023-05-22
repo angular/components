@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {CurrencyPipe} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 
 interface Transaction {
   item: string;
@@ -12,6 +14,8 @@ interface Transaction {
   selector: 'table-multiple-header-footer-example',
   styleUrls: ['table-multiple-header-footer-example.css'],
   templateUrl: 'table-multiple-header-footer-example.html',
+  standalone: true,
+  imports: [MatTableModule, CurrencyPipe],
 })
 export class TableMultipleHeaderFooterExample {
   displayedColumns: string[] = ['item', 'cost'];
