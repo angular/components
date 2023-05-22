@@ -125,6 +125,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   }
   _explicitLines: number | null = null;
 
+  /** Whether ripples for list items are disabled. */
   @Input()
   get disableRipple(): boolean {
     return (
