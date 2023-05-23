@@ -15,7 +15,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
 import {ExampleViewer} from './example-viewer';
-import {AutocompleteExamplesModule} from '@angular/components-examples/material/autocomplete';
+import {AutocompleteOverviewExample} from '@angular/components-examples/material/autocomplete';
 import {MatTabGroupHarness} from '@angular/material/tabs/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -243,7 +243,7 @@ describe('ExampleViewer', () => {
     CommonModule,
     ReactiveFormsModule,
     NoopAnimationsModule,
-    AutocompleteExamplesModule,
+    AutocompleteOverviewExample,
   ],
 })
 class TestExampleModule {}

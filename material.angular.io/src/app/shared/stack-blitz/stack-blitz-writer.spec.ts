@@ -10,7 +10,7 @@ const testExampleBasePath = `/docs-content/examples-source/cdk/my-comp/${testExa
 const FAKE_DOCS: {[key: string]: string} = {
   /* eslint-disable @typescript-eslint/naming-convention */
   '/assets/stack-blitz/src/index.html': '<material-docs-example></material-docs-example>',
-  '/assets/stack-blitz/src/app/app.module.ts':
+  '/assets/stack-blitz/src/main.ts':
       `import {MaterialDocsExample} from './material-docs-example';`,
   /* eslint-enable @typescript-eslint/naming-convention */
   [`${testExampleBasePath}/test.ts`]: 'ExampleComponent',
@@ -50,7 +50,7 @@ describe('StackBlitzWriter', () => {
 
     // Fake the example in the `EXAMPLE_COMPONENTS`. The stack blitz writer relies on
     // module information for the example in order to read the example sources from disk.
-    EXAMPLE_COMPONENTS[testExampleId] = {module: {importSpecifier: 'cdk/my-comp'}} as LiveExample;
+    EXAMPLE_COMPONENTS[testExampleId] = {importPath: 'cdk/my-comp'} as LiveExample;
   });
 
   afterEach(() => {
@@ -109,11 +109,10 @@ describe('StackBlitzWriter', () => {
     const expectedFiles = jasmine.objectContaining({
       /* eslint-disable @typescript-eslint/naming-convention */
       'angular.json': 'fake',
-      'src/main.ts': 'fake',
+      'src/main.ts': `import {ExampleComponent} from './test';`,
       'src/test.ts': 'fake',
       'src/index.html': `<this-is-the-comp-name></this-is-the-comp-name>`,
-      'src/app/app.module.ts': `import {ExampleComponent, AdditionalComp} from './test';`,
-      'src/app/test.ts': `ExampleComponent
+      'src/example/test.ts': `ExampleComponent
 
 /**  Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that

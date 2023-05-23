@@ -17,8 +17,8 @@ dependencies:
     specifier: ^16.0.0
     version: 16.0.0(@angular/core@16.0.0)
   '@angular/components-examples':
-    specifier: https://github.com/angular/material2-docs-content.git#5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f
-    version: github.com/angular/material2-docs-content/5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f(@angular/cdk-experimental@16.0.0)(@angular/cdk@16.0.0)(@angular/common@16.0.0)(@angular/core@16.0.0)(@angular/material-date-fns-adapter@16.1.0-next.0)(@angular/material-experimental@16.0.0)(@angular/material-luxon-adapter@16.1.0-next.0)(@angular/material-moment-adapter@16.0.0)(@angular/material@16.0.0)
+    specifier: https://github.com/angular/material2-docs-content.git#c29cd4e5f092902d2cca0f589c8de6c379e96789
+    version: github.com/angular/material2-docs-content/c29cd4e5f092902d2cca0f589c8de6c379e96789(@angular/cdk-experimental@16.0.0)(@angular/cdk@16.0.0)(@angular/common@16.0.0)(@angular/core@16.0.0)(@angular/material-date-fns-adapter@16.1.0-next.0)(@angular/material-experimental@16.0.0)(@angular/material-luxon-adapter@16.1.0-next.0)(@angular/material-moment-adapter@16.0.0)(@angular/material@16.0.0)
   '@angular/core':
     specifier: ^16.0.0
     version: 16.0.0(rxjs@6.6.7)(zone.js@0.13.0)
@@ -13627,21 +13627,21 @@ packages:
     dependencies:
       tslib: 2.5.0
 
-  github.com/angular/material2-docs-content/5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f(@angular/cdk-experimental@16.0.0)(@angular/cdk@16.0.0)(@angular/common@16.0.0)(@angular/core@16.0.0)(@angular/material-date-fns-adapter@16.1.0-next.0)(@angular/material-experimental@16.0.0)(@angular/material-luxon-adapter@16.1.0-next.0)(@angular/material-moment-adapter@16.0.0)(@angular/material@16.0.0):
-    resolution: {tarball: https://codeload.github.com/angular/material2-docs-content/tar.gz/5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f}
-    id: github.com/angular/material2-docs-content/5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f
+  github.com/angular/material2-docs-content/c29cd4e5f092902d2cca0f589c8de6c379e96789(@angular/cdk-experimental@16.0.0)(@angular/cdk@16.0.0)(@angular/common@16.0.0)(@angular/core@16.0.0)(@angular/material-date-fns-adapter@16.1.0-next.0)(@angular/material-experimental@16.0.0)(@angular/material-luxon-adapter@16.1.0-next.0)(@angular/material-moment-adapter@16.0.0)(@angular/material@16.0.0):
+    resolution: {tarball: https://codeload.github.com/angular/material2-docs-content/tar.gz/c29cd4e5f092902d2cca0f589c8de6c379e96789}
+    id: github.com/angular/material2-docs-content/c29cd4e5f092902d2cca0f589c8de6c379e96789
     name: '@angular/components-examples'
     version: 16.1.0-next.0
     peerDependencies:
-      '@angular/cdk': 16.1.0-next.0+sha-524c243
-      '@angular/cdk-experimental': 16.1.0-next.0+sha-524c243
+      '@angular/cdk': 16.1.0-next.0+sha-7c48a36
+      '@angular/cdk-experimental': 16.1.0-next.0+sha-7c48a36
       '@angular/common': ^16.0.0-0 || ^16.1.0-0 || ^16.2.0-0 || ^16.3.0-0 || ^17.0.0-0
       '@angular/core': ^16.0.0-0 || ^16.1.0-0 || ^16.2.0-0 || ^16.3.0-0 || ^17.0.0-0
-      '@angular/material': 16.1.0-next.0+sha-524c243
-      '@angular/material-date-fns-adapter': 16.1.0-next.0+sha-524c243
-      '@angular/material-experimental': 16.1.0-next.0+sha-524c243
-      '@angular/material-luxon-adapter': 16.1.0-next.0+sha-524c243
-      '@angular/material-moment-adapter': 16.1.0-next.0+sha-524c243
+      '@angular/material': 16.1.0-next.0+sha-7c48a36
+      '@angular/material-date-fns-adapter': 16.1.0-next.0+sha-7c48a36
+      '@angular/material-experimental': 16.1.0-next.0+sha-7c48a36
+      '@angular/material-luxon-adapter': 16.1.0-next.0+sha-7c48a36
+      '@angular/material-moment-adapter': 16.1.0-next.0+sha-7c48a36
     dependencies:
       '@angular/cdk': 16.0.0(@angular/common@16.0.0)(@angular/core@16.0.0)(rxjs@6.6.7)
       '@angular/cdk-experimental': 16.0.0(@angular/cdk@16.0.0)(@angular/core@16.0.0)

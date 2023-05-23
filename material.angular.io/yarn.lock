@@ -259,9 +259,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/components-examples@https://github.com/angular/material2-docs-content.git#5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f":
+"@angular/components-examples@https://github.com/angular/material2-docs-content.git#c29cd4e5f092902d2cca0f589c8de6c379e96789":
   version "16.1.0-next.0"
-  resolved "https://github.com/angular/material2-docs-content.git#5d7786c0abcb58e0dfe2e4922f1cf58e6e55e61f"
+  resolved "https://github.com/angular/material2-docs-content.git#c29cd4e5f092902d2cca0f589c8de6c379e96789"
   dependencies:
     tslib "^2.3.0"
 

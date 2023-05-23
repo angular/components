@@ -3,12 +3,10 @@ import {
   ElementRef,
   HostBinding,
   Input,
-  NgModuleFactory,
   OnInit,
   QueryList,
   Type,
   ViewChildren,
-  ɵNgModuleFactory,
 } from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
@@ -65,9 +63,6 @@ export class ExampleViewer implements OnInit {
 
   /** Component type for the current example. */
   _exampleComponentType: Type<any> | null = null;
-
-  /** Module factory that declares the example component. */
-  _exampleModuleFactory: NgModuleFactory<any> | null = null;
 
   /** View of the example component. */
   @Input() view: Views | undefined;
@@ -206,15 +201,10 @@ export class ExampleViewer implements OnInit {
   /** Loads the component and module factory for the currently selected example. */
   private async _loadExampleComponent() {
     if (this._example != null) {
-      const {componentName, module} = EXAMPLE_COMPONENTS[this._example];
+      const {componentName} = EXAMPLE_COMPONENTS[this._example];
       // Lazily loads the example package that contains the requested example.
       const moduleExports = await loadExample(this._example);
       this._exampleComponentType = moduleExports[componentName];
-      // The components examples package is built with Ivy. This means that no factory files are
-      // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
-      // class symbol to Ivy's module factory constructor. There is no equivalent for View Engine,
-      // where factories are stored in separate files. Hence the API is currently Ivy-only.
-      this._exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
 
       // Since the data is loaded asynchronously, we can't count on the native behavior
       // that scrolls the element into view automatically. We do it ourselves while giving
