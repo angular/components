@@ -232,6 +232,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     _onBlur(): void;
     // (undocumented)
     _onChange(): void;
+    protected _onChangeFn: ((value: any) => void) | undefined;
     // (undocumented)
     _onFocus(): void;
     // (undocumented)
