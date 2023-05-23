@@ -65,9 +65,8 @@
   </div>
 
   <div class="docs-example-viewer-body" *ngIf="view !== 'snippet'">
-    <ng-template *ngIf="_exampleComponentType && _exampleModuleFactory && !example?.includes('harness')"
-                 [ngComponentOutlet]="_exampleComponentType"
-                 [ngComponentOutletNgModuleFactory]="_exampleModuleFactory"></ng-template>
+    <ng-template *ngIf="_exampleComponentType && !example?.includes('harness')"
+                 [ngComponentOutlet]="_exampleComponentType"></ng-template>
     <div *ngIf="example?.includes('harness')">
       This example contains tests. Open in Stackblitz to run the tests.
     </div>

@@ -7,7 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {NgModule} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {ButtonExamplesModule} from '@angular/components-examples/material/button';
+import {ButtonOverviewExample} from '@angular/components-examples/material/button';
 
 const docItemsId = 'button';
 
@@ -56,7 +56,7 @@ describe('ComponentViewer', () => {
     MatButtonModule,
     MatIconModule,
     NoopAnimationsModule,
-    ButtonExamplesModule,
+    ButtonOverviewExample,
   ],
 })
 class TestExampleModule { }
