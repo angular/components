@@ -68,12 +68,11 @@
   $slots: tokens-mdc-checkbox.get-token-slots(),
   $reference: mdc-checkbox-theme.$light-theme
 );
-// TODO: Uncomment after updating MDC canary version
-// @include validate-slots(
-//   $component: 'm2.mdc.linear-progress',
-//   $slots: tokens-mdc-linear-progress.get-token-slots(),
-//   $reference: mdc-linear-progress-theme.$light-theme
-// );
+@include validate-slots(
+  $component: 'm2.mdc.linear-progress',
+  $slots: tokens-mdc-linear-progress.get-token-slots(),
+  $reference: mdc-linear-progress-theme.$light-theme
+);
 @include validate-slots(
   $component: 'm2.mdc.radio',
   $slots: tokens-mdc-radio.get-token-slots(),
