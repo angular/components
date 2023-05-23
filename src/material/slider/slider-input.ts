@@ -243,7 +243,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   _skipUIUpdate: boolean = false;
 
   /** Callback called when the slider input value changes. */
-  private _onChangeFn: (value: any) => void = () => {};
+  protected _onChangeFn: ((value: any) => void) | undefined;
 
   /** Callback called when the slider input has been touched. */
   private _onTouchedFn: () => void = () => {};
@@ -328,7 +328,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _onInput(): void {
-    this._onChangeFn(this.value);
+    if (this._onChangeFn) {
+      this._onChangeFn(this.value);
+    }
     // handles arrowing and updating the value when
     // a step is defined.
     if (this._slider.step || !this._isActive) {
@@ -422,7 +424,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
     this.value = value;
     this.valueChange.emit(this.value);
-    this._onChangeFn(this.value);
+    if (this._onChangeFn) {
+      this._onChangeFn(this.value);
+    }
     this._slider._onValueChange(this);
     this._slider.step > 0
       ? this._updateThumbUIByValue()
@@ -500,7 +504,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    * @docs-private
    */
   writeValue(value: any): void {
-    this.value = value;
+    if (this._onChangeFn) {
+      this.value = value;
+    }
   }
 
   /**
@@ -738,8 +744,10 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
    * @docs-private
    */
   override writeValue(value: any): void {
-    this.value = value;
-    this._updateWidthInactive();
-    this._updateSibling();
+    if (this._onChangeFn) {
+      this.value = value;
+      this._updateWidthInactive();
+      this._updateSibling();
+    }
   }
 }
