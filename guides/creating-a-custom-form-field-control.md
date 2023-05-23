@@ -300,7 +300,7 @@ change detection if the required state changes.
 get required() {
   return this._required;
 }
-set required(req) {
+set required(req: BooleanInput) {
   this._required = coerceBooleanProperty(req);
   this.stateChanges.next();
 }
@@ -316,7 +316,7 @@ make up our component.
 ```ts
 @Input()
 get disabled(): boolean { return this._disabled; }
-set disabled(value: boolean) {
+set disabled(value: BooleanInput) {
   this._disabled = coerceBooleanProperty(value);
   this._disabled ? this.parts.disable() : this.parts.enable();
   this.stateChanges.next();
