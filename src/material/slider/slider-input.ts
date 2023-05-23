@@ -328,9 +328,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _onInput(): void {
-    if (this._onChangeFn) {
-      this._onChangeFn(this.value);
-    }
+    this._onChangeFn?.(this.value);
     // handles arrowing and updating the value when
     // a step is defined.
     if (this._slider.step || !this._isActive) {
