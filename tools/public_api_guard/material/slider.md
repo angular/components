@@ -218,6 +218,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     _initValue(): void;
     _isActive: boolean;
+    protected _isControlInitialized: boolean;
     _isFocused: boolean;
     _knobRadius: number;
     get max(): number;
