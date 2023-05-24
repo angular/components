@@ -14,6 +14,7 @@ import {
   ElementRef,
   inject,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -43,8 +44,6 @@ export const MAT_BUTTON_HOST = {
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
   [MAT_BUTTON_RIPPLE_UNINITIALIZED]: '',
-  '[attr.mat-button-disabled]': '_isRippleDisabled()',
-  '[attr.mat-button-is-fab]': '_isFab',
 };
 
 /** List of classes to add to buttons instances based on host attribute selector. */
@@ -95,7 +94,7 @@ export const _MatButtonMixin = mixinColor(
 @Directive()
 export class MatButtonBase
   extends _MatButtonMixin
-  implements CanDisable, CanColor, CanDisableRipple, AfterViewInit, OnDestroy
+  implements CanDisable, CanColor, CanDisableRipple, AfterViewInit, OnChanges, OnDestroy
 {
   private readonly _focusMonitor = inject(FocusMonitor);
 
@@ -151,6 +150,12 @@ export class MatButtonBase
     this._focusMonitor.monitor(this._elementRef, true);
   }
 
+  ngOnChanges() {
+    if (this._ripple) {
+      this._ripple.disabled = this.disableRipple || this.disabled;
+    }
+  }
+
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
@@ -167,12 +172,6 @@ export class MatButtonBase
   /** Gets whether the button has one of the given attributes. */
   private _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._elementRef.nativeElement.hasAttribute(attribute));
-  }
-
-  _isRippleDisabled() {
-    if (this._ripple) {
-      this._ripple.disabled = this.disableRipple || this.disabled;
-    }
   }
 }
 
@@ -197,8 +196,6 @@ export const MAT_ANCHOR_HOST = {
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
   [MAT_BUTTON_RIPPLE_UNINITIALIZED]: '',
-  '[attr.mat-button-disabled]': '_isRippleDisabled()',
-  '[attr.mat-button-is-fab]': '_isFab',
 };
 
 /**
