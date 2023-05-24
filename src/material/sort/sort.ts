@@ -89,7 +89,22 @@ export class MatSort
   readonly _stateChanges = new Subject<void>();
 
   /** The id of the most recently sorted MatSortable. */
-  @Input('matSortActive') active: string;
+  @Input('matSortActive')
+  get active(): string {
+    return this._active;
+  }
+  set active(active: string) {
+    if (active !== this._active) {
+      this._active = active;
+
+      // Needs to emit to `sortChange` in order for the table to update.
+      // Skip the initial value since it is picked up automatically.
+      if (this.initialized) {
+        this.sortChange.emit({active, direction: this.direction});
+      }
+    }
+  }
+  private _active: string;
 
   /**
    * The direction to set when an MatSortable is initially sorted.
@@ -111,7 +126,16 @@ export class MatSort
     ) {
       throw getSortInvalidDirectionError(direction);
     }
-    this._direction = direction;
+
+    if (direction !== this._direction) {
+      this._direction = direction;
+
+      // Needs to emit to `sortChange` in order for the table to update.
+      // Skip the initial value since it is picked up automatically.
+      if (this.initialized) {
+        this.sortChange.emit({active: this.active, direction});
+      }
+    }
   }
   private _direction: SortDirection = '';
 

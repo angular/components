@@ -394,10 +394,8 @@ export class MatSortHeader
 
         this._setAnimationTransitionState({fromState: this._arrowDirection, toState: 'active'});
         this._showIndicatorHint = false;
-      }
-
-      // If this header was recently active and now no longer sorted, animate away the arrow.
-      if (!this._isSorted() && this._viewState && this._viewState.toState === 'active') {
+      } else if (this._viewState && this._viewState.toState === 'active') {
+        // If this header was recently active and now no longer sorted, animate away the arrow.
         this._disableViewStateAnimation = false;
         this._setAnimationTransitionState({fromState: 'active', toState: this._arrowDirection});
       }

@@ -148,7 +148,7 @@ describe('MatSort', () => {
       it('should be correct when cycling through a default sort header', () => {
         // Sort the header to set it to the active start state
         component.sort('defaultA');
-        expectedStates.set('defaultA', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+        expectedStates.set('defaultA', {viewState: 'active', arrowDirection: 'active-asc'});
         component.expectViewAndDirectionStates(expectedStates);
 
         // Sorting again will reverse its direction
@@ -179,13 +179,13 @@ describe('MatSort', () => {
       it('should be correct when sort has changed while a header is active', () => {
         // Sort the first header to set up
         component.sort('defaultA');
-        expectedStates.set('defaultA', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+        expectedStates.set('defaultA', {viewState: 'active', arrowDirection: 'active-asc'});
         component.expectViewAndDirectionStates(expectedStates);
 
         // Sort the second header and verify that the first header animated away
         component.dispatchMouseEvent('defaultB', 'click');
         expectedStates.set('defaultA', {viewState: 'active-to-asc', arrowDirection: 'asc'});
-        expectedStates.set('defaultB', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+        expectedStates.set('defaultB', {viewState: 'active', arrowDirection: 'active-asc'});
         component.expectViewAndDirectionStates(expectedStates);
       });
 
@@ -203,7 +203,7 @@ describe('MatSort', () => {
         component.direction = 'asc';
         fixture.detectChanges();
 
-        expectedStates.set('defaultB', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+        expectedStates.set('defaultB', {viewState: 'active', arrowDirection: 'active-asc'});
         component.expectViewAndDirectionStates(expectedStates);
       });
     });
@@ -498,6 +498,25 @@ describe('MatSort', () => {
 
       expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(true);
       expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(true);
+    });
+
+    it('should emit to sortChange when the active column changes', () => {
+      expect(component.latestSortEvent).toBeFalsy();
+
+      component.active = 'defaultB';
+      fixture.detectChanges();
+
+      expect(component.latestSortEvent).toEqual({active: 'defaultB', direction: ''});
+    });
+
+    it('should emit to sortChange when the direction changes', () => {
+      expect(component.latestSortEvent).toBeFalsy();
+
+      component.active = 'defaultA';
+      component.direction = 'desc';
+      fixture.detectChanges();
+
+      expect(component.latestSortEvent).toEqual({active: 'defaultA', direction: 'desc'});
     });
   });
 

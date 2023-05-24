@@ -53,7 +53,8 @@ export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderI
 // @public
 export class MatSort extends _MatSortBase implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit {
     constructor(_defaultOptions?: MatSortDefaultOptions | undefined);
-    active: string;
+    get active(): string;
+    set active(active: string);
     deregister(sortable: MatSortable): void;
     get direction(): SortDirection;
     set direction(direction: SortDirection);
