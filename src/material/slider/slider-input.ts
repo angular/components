@@ -248,6 +248,16 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** Callback called when the slider input has been touched. */
   private _onTouchedFn: () => void = () => {};
 
+  /**
+   * Whether the NgModel has been initialized.
+   *
+   * This flag is used to ignore ghost null calls to
+   * writeValue which can break slider initialization.
+   *
+   * See https://github.com/angular/angular/issues/14988.
+   */
+  protected _isControlInitialized = false;
+
   constructor(
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
@@ -422,8 +432,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
     this.value = value;
     this.valueChange.emit(this.value);
-    if (this._onChangeFn) {
-      this._onChangeFn(this.value);
+    if (this._isControlInitialized) {
+      this._onChangeFn!(this.value);
     }
     this._slider._onValueChange(this);
     this._slider.step > 0
@@ -502,7 +512,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    * @docs-private
    */
   writeValue(value: any): void {
-    if (this._onChangeFn) {
+    if (this._isControlInitialized) {
       this.value = value;
     }
   }
@@ -514,6 +524,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   registerOnChange(fn: any): void {
     this._onChangeFn = fn;
+    this._isControlInitialized = true;
   }
 
   /**
@@ -742,7 +753,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
    * @docs-private
    */
   override writeValue(value: any): void {
-    if (this._onChangeFn) {
+    if (this._isControlInitialized) {
       this.value = value;
       this._updateWidthInactive();
       this._updateSibling();
