@@ -18,6 +18,7 @@ import * as i4 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { NgZone } from '@angular/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
