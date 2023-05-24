@@ -17,7 +17,7 @@
   <p *ngFor="let error of getErrors()">{{error}}</p>
 </div>
 <p>
-  Your zodiac sign is: <b>{{signCtrl.value | json}}</b>&nbsp;
+  Your zodiac sign is: <strong>{{signCtrl.value | json}}</strong>&nbsp;
   <button (click)="signCtrl.setValue(['Cat'])">Set: Cat</button>&nbsp;
   <button (click)="signCtrl.setValue(['Dragon', 'Snake'])">Set: Dragon, Snake</button>&nbsp;
   <button (click)="signCtrl.setValue(['Cat', 'Rat'])">Set: Cat, Rat</button>&nbsp;
