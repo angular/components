@@ -161,7 +161,9 @@ that point.
 
 <!-- example(datepicker-filter) -->
 
-Sometimes we need a bit more control about which dates are valid or not. In this example the user cannot select any date that falls on a Saturday or Sunday, but all of the dates which fall on other days of the week are selectable.
+Sometimes we need a bit more control about which dates are valid or not. In this example the user 
+cannot select any date that falls on a Saturday or Sunday, but all of the dates which fall on other 
+days of the week are selectable.
 
 Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `matDatepickerMin` error.
