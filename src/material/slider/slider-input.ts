@@ -432,9 +432,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
     this.value = value;
     this.valueChange.emit(this.value);
-    if (this._isControlInitialized) {
-      this._onChangeFn!(this.value);
-    }
+    this._onChangeFn!(this.value);
     this._slider._onValueChange(this);
     this._slider.step > 0
       ? this._updateThumbUIByValue()
@@ -512,7 +510,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    * @docs-private
    */
   writeValue(value: any): void {
-    if (this._isControlInitialized) {
+    if (this._isControlInitialized && value === null) {
       this.value = value;
     }
   }
@@ -753,7 +751,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
    * @docs-private
    */
   override writeValue(value: any): void {
-    if (this._isControlInitialized) {
+    if (this._isControlInitialized && value === null) {
       this.value = value;
       this._updateWidthInactive();
       this._updateSibling();
