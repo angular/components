@@ -1180,7 +1180,6 @@ describe('MDC-based MatSlider', () => {
       console.log('result: ', startInput.value);
       checkInput(startInput, {min: -1, max: -0.3, value: -0.7, translateX: 90});
       checkInput(endInput, {min: -0.7, max: 0, value: -0.3, translateX: 210});
-      expect(1).toBe(2);
     }));
   });
 
