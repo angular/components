@@ -432,7 +432,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
     this.value = value;
     this.valueChange.emit(this.value);
-    this._onChangeFn!(this.value);
+    this._onChangeFn?.(this.value);
     this._slider._onValueChange(this);
     this._slider.step > 0
       ? this._updateThumbUIByValue()
