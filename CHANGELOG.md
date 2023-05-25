@@ -1,3 +1,26 @@
+<a name="16.1.0-next.1"></a>
+# 16.1.0-next.1 "metal-rail" (2023-05-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3cb369e048](https://github.com/angular/components/commit/3cb369e04852cfb9876aaddad9b011d396b982a9) | fix | **schematics:** handle templates with byte order mark ([#27131](https://github.com/angular/components/pull/27131)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6610b6d5ce](https://github.com/angular/components/commit/6610b6d5ce51f25c4c9d6c990cfca95a82307ce6) | fix | **checkbox:** set token values on the element where theme is @included ([#27114](https://github.com/angular/components/pull/27114)) |
+| [8afe9cda08](https://github.com/angular/components/commit/8afe9cda08fd555e5d26478fe7bd3aead42765af) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27081](https://github.com/angular/components/pull/27081)) |
+| [fc919ce25d](https://github.com/angular/components/commit/fc919ce25d1b705d3a4326dd62a6fe987675b979) | fix | **datepicker:** set explicit event options ([#27082](https://github.com/angular/components/pull/27082)) |
+| [cda36e9a7a](https://github.com/angular/components/commit/cda36e9a7aa7c3664d9a47583452f87495e1a893) | fix | **form-field:** make notch sizing more reliable ([#26028](https://github.com/angular/components/pull/26028)) |
+| [fd481b9565](https://github.com/angular/components/commit/fd481b9565850d5c163ff06c44f178edbec673f9) | fix | **icon:** harness returning wrong name if icon has other content ([#27132](https://github.com/angular/components/pull/27132)) |
+| [2af1e0a304](https://github.com/angular/components/commit/2af1e0a3048bac6bd117e0f89e1e93eb8604c29e) | fix | **list:** input coercion does not working for `disableRipple` on list items ([#27126](https://github.com/angular/components/pull/27126)) |
+| [a3250c327a](https://github.com/angular/components/commit/a3250c327a9980a309c9cd9886f88bdbf8645a9f) | fix | **paginator:** add aria-hidden="true" to decorative svg's ([#27083](https://github.com/angular/components/pull/27083)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b6373014b7](https://github.com/angular/components/commit/b6373014b7f00edb766009b21b33e50c7a9eb434) | fix | set aria-hidden on presentational svgs ([#27116](https://github.com/angular/components/pull/27116)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.2"></a>
 # 16.0.2 "plastic-car" (2023-05-25)
 ### cdk
