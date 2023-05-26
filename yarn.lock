@@ -259,7 +259,6 @@
 
 "@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#829572899a3ca7617a5a9858ccf3beb41c7ff470":
   version "0.0.0-3fbdd552384e8b3d7e32e520e1c508c6ed384ce4"
-  uid "829572899a3ca7617a5a9858ccf3beb41c7ff470"
   resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#829572899a3ca7617a5a9858ccf3beb41c7ff470"
   dependencies:
     "@angular-devkit/build-angular" "16.1.0-next.0"
@@ -381,7 +380,6 @@
 
 "@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#16ca2cc0e2038538710aa5fa98d4b39af03eece2":
   version "0.0.0-3fbdd552384e8b3d7e32e520e1c508c6ed384ce4"
-  uid "16ca2cc0e2038538710aa5fa98d4b39af03eece2"
   resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#16ca2cc0e2038538710aa5fa98d4b39af03eece2"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
@@ -17257,10 +17255,10 @@ zip-stream@^4.1.0:
     compress-commons "^4.1.0"
     readable-stream "^3.6.0"
 
-zone.js@~0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.5.tgz#ab0b449e91fadb5ebb2db189ffe1b7b6048dc8b1"
-  integrity sha512-D1/7VxEuQ7xk6z/kAROe4SUbd9CzxY4zOwVGnGHerd/SgLIVU5f4esDzQUsOCeArn933BZfWMKydH7l7dPEp0g==
+zone.js@~0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.13.0.tgz#4c735cb8ef49312b58c0ad13451996dc2b202a6d"
+  integrity sha512-7m3hNNyswsdoDobCkYNAy5WiUulkMd3+fWaGT9ij6iq3Zr/IwJo4RMCYPSDjT+r7tnPErmY9sZpKhWQ8S5k6XQ==
   dependencies:
     tslib "^2.3.0"
 
