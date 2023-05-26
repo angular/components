@@ -97,22 +97,22 @@ describe('#visitElements', () => {
     });
 
     it('should handle multiple same line', async () => {
-      runTagNameDuplicationTest('<a></a><b></b>', '<aa></aa><bb></bb>');
+      runTagNameDuplicationTest('<a></a><strong></strong>', '<aa></aa><bb></bb>');
     });
 
     it('should handle multiple same line nested', async () => {
-      runTagNameDuplicationTest('<a><b></b></a>', '<aa><bb></bb></aa>');
+      runTagNameDuplicationTest('<a><strong></strong></a>', '<aa><bb></bb></aa>');
     });
 
     it('should handle multiple same line nested and unnested', async () => {
-      runTagNameDuplicationTest('<a><b></b><c></c></a>', '<aa><bb></bb><cc></cc></aa>');
+      runTagNameDuplicationTest('<a><strong></strong><c></c></a>', '<aa><bb></bb><cc></cc></aa>');
     });
 
     it('should handle multiple multi-line', async () => {
       runTagNameDuplicationTest(
         `
           <a></a>
-          <b></b>
+          <strong></strong>
         `,
         `
           <aa></aa>
@@ -125,7 +125,7 @@ describe('#visitElements', () => {
       runTagNameDuplicationTest(
         `
           <a>
-            <b></b>
+            <strong></strong>
           </a>
         `,
         `
@@ -140,7 +140,7 @@ describe('#visitElements', () => {
       runTagNameDuplicationTest(
         `
           <a>
-            <b></b>
+            <strong></strong>
             <c></c>
           </a>
         `,
@@ -160,16 +160,16 @@ describe('#visitElements', () => {
     });
 
     it('should handle multiple unnested', async () => {
-      runAddAttributeTest('<a></a><b></b>', '<a add="val"></a><b add="val"></b>');
+      runAddAttributeTest('<a></a><strong></strong>', '<a add="val"></a><b add="val"></b>');
     });
 
     it('should handle multiple nested', async () => {
-      runAddAttributeTest('<a><b></b></a>', '<a add="val"><b add="val"></b></a>');
+      runAddAttributeTest('<a><strong></strong></a>', '<a add="val"><b add="val"></b></a>');
     });
 
     it('should handle multiple nested and unnested', async () => {
       runAddAttributeTest(
-        '<a><b></b><c></c></a>',
+        '<a><strong></strong><c></c></a>',
         '<a add="val"><b add="val"></b><c add="val"></c></a>',
       );
     });
