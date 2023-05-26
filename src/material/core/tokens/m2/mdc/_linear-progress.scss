@@ -21,6 +21,7 @@ $prefix: (mdc, linear-progress);
     // bar and `track-height` applies to the track.
     active-indicator-height: $height,
     track-height: $height,
+    track-shape: 0,
   );
 }
 
