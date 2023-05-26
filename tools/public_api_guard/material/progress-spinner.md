@@ -7,11 +7,10 @@
 import { _AbstractConstructor } from '@angular/material/core';
 import { CanColor } from '@angular/material/core';
 import { _Constructor } from '@angular/material/core';
-import { ElementRef } from '@angular/core';
+import { ElementRef, InjectionToken } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import * as i3 from '@angular/material/core';
-import { InjectionToken } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { ThemePalette } from '@angular/material/core';
 

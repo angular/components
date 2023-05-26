@@ -5,14 +5,12 @@
 ```ts
 
 import { _AbstractConstructor } from '@angular/material/core';
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, ElementRef, QueryList } from '@angular/core';
 import { CanColor } from '@angular/material/core';
 import { _Constructor } from '@angular/material/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/material/core';
 import { Platform } from '@angular/cdk/platform';
-import { QueryList } from '@angular/core';
 
 // @public (undocumented)
 export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewInit {

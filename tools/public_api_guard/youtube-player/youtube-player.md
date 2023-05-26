@@ -6,13 +6,9 @@
 
 /// <reference types="youtube" />
 
-import { AfterViewInit } from '@angular/core';
-import { ElementRef } from '@angular/core';
+import { AfterViewInit, ElementRef, NgZone, OnDestroy, OnInit } from '@angular/core';
 import * as i0 from '@angular/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 
 // @public
 export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
