@@ -4,6 +4,11 @@
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use '../core/tokens/m2/mdc/linear-progress' as m2-mdc-linear-progress;
 
+:root {
+  --progressBarHeight: 4px;
+  --progressBarBorderRadius: 0;
+}
+
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   $mdc-progress-bar-token-slots: m2-mdc-linear-progress.get-token-slots();
 
@@ -23,6 +28,15 @@
     // Add default values for tokens that aren't outputted by the theming API.
     @include mdc-linear-progress-theme.theme(m2-mdc-linear-progress.get-unthemable-tokens());
   }
+}
+
+.mdc-linear-progress {
+  height: var(--mdc-linear-progress-track-height, --progressBarHeight);
+  border-radius: --progressBarBorderRadius;
+}
+
+.mdc-linear-progress__bar-inner {
+  border-top-width: var(--mdc-linear-progress-track-height, --progressBarHeight);
 }
 
 .mat-mdc-progress-bar {
