@@ -160,11 +160,11 @@ describe('#visitElements', () => {
     });
 
     it('should handle multiple unnested', async () => {
-      runAddAttributeTest('<a></a><strong></strong>', '<a add="val"></a><b add="val"></b>');
+      runAddAttributeTest('<a></a><b></b>', '<a add="val"></a><b add="val"></b>');
     });
 
     it('should handle multiple nested', async () => {
-      runAddAttributeTest('<a><strong></strong></a>', '<a add="val"><b add="val"></b></a>');
+      runAddAttributeTest('<a><b></b></a>', '<a add="val"><b add="val"></b></a>');
     });
 
     it('should handle multiple nested and unnested', async () => {
