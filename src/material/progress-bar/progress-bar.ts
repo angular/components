@@ -40,6 +40,12 @@ export interface MatProgressBarDefaultOptions {
 
   /** Default mode of the progress bar. */
   mode?: ProgressBarMode;
+
+  /** Default height of the progress bar. */
+  height?: number;
+
+  /** Default border-radius of the progress bar. */
+  borderRadius?: number;
 }
 
 /** Injection token to be used to override the default options for `mat-progress-bar`. */
@@ -134,6 +140,15 @@ export class MatProgressBar
 
       this.mode = defaults.mode || this.mode;
     }
+
+    /** Initialize with defined progress-bar height */
+    document.documentElement.style.setProperty('--progressBarHeigh', defaults?.height + 'px');
+
+    /** Initialize with defined progress-bar border radius  */
+    document.documentElement.style.setProperty(
+      '--progressBarBorderRadius',
+      defaults?.borderRadius + 'px',
+    );
   }
 
   /** Flag that indicates whether NoopAnimations mode is set to true. */
@@ -186,6 +201,28 @@ export class MatProgressBar
     this._changeDetectorRef.markForCheck();
   }
   private _mode: ProgressBarMode = 'determinate';
+
+  /** Height of the progress bar. Defaults to 4px.*/
+  @Input()
+  get height(): number {
+    return this._height;
+  }
+  set height(h: NumberInput) {
+    this._height = clamp(coerceNumberProperty(h));
+    this._changeDetectorRef.markForCheck();
+  }
+  private _height = 0;
+
+  /** Border Radius of the progress bar. Defaults to zero.*/
+  @Input()
+  get borderRadius(): number {
+    return this._borderRadius;
+  }
+  set borderRadius(h: NumberInput) {
+    this._borderRadius = clamp(coerceNumberProperty(h));
+    this._changeDetectorRef.markForCheck();
+  }
+  private _borderRadius = 0;
 
   ngAfterViewInit() {
     // Run outside angular so change detection didn't get triggered on every transition end
