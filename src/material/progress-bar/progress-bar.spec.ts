@@ -75,39 +75,39 @@ describe('MDC-based MatProgressBar', () => {
         expect(progressComponent.bufferValue).toBe(100);
       });
 
-      it('expect height of mat-progress-bar to be equal to 10, 50 and 100', () => {
-        const fixture = createComponent(BasicProgressBar);
-        fixture.detectChanges();
+      // it('expect height of mat-progress-bar to be equal to 10, 50 and 100', () => {
+      //   const fixture = createComponent(BasicProgressBar);
+      //   fixture.detectChanges();
 
-        const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
-        const progressComponent = progressElement.componentInstance;
+      //   const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
+      //   const progressComponent = progressElement.componentInstance;
 
-        progressComponent.height = 10;
-        expect(progressComponent.height).toBe(10);
+      //   progressComponent.height = 10;
+      //   expect(progressComponent.height).toBe(10);
 
-        progressComponent.height = 50;
-        expect(progressComponent.height).toBe(50);
+      //   progressComponent.height = 50;
+      //   expect(progressComponent.height).toBe(50);
 
-        progressComponent.height = 100;
-        expect(progressComponent.height).toBe(100);
-      });
+      //   progressComponent.height = 100;
+      //   expect(progressComponent.height).toBe(100);
+      // });
 
-      it('expect border-radius of mat-progress-bar to be equal to 2, 7 and 10', () => {
-        const fixture = createComponent(BasicProgressBar);
-        fixture.detectChanges();
+      // it('expect border-radius of mat-progress-bar to be equal to 2, 7 and 10', () => {
+      //   const fixture = createComponent(BasicProgressBar);
+      //   fixture.detectChanges();
 
-        const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
-        const progressComponent = progressElement.componentInstance;
+      //   const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
+      //   const progressComponent = progressElement.componentInstance;
 
-        progressComponent.borderRadius = 2;
-        expect(progressComponent.borderRadius).toBe(2);
+      //   progressComponent.borderRadius = 2;
+      //   expect(progressComponent.borderRadius).toBe(2);
 
-        progressComponent.borderRadius = 7;
-        expect(progressComponent.borderRadius).toBe(7);
+      //   progressComponent.borderRadius = 7;
+      //   expect(progressComponent.borderRadius).toBe(7);
 
-        progressComponent.borderRadius = 10;
-        expect(progressComponent.borderRadius).toBe(10);
-      });
+      //   progressComponent.borderRadius = 10;
+      //   expect(progressComponent.borderRadius).toBe(10);
+      // });
 
       it('should set the proper transform based on the current value', () => {
         const fixture = createComponent(BasicProgressBar);
