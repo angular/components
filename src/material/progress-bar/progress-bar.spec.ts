@@ -75,22 +75,19 @@ describe('MDC-based MatProgressBar', () => {
         expect(progressComponent.bufferValue).toBe(100);
       });
 
-      // it('expect height of mat-progress-bar to be equal to 10, 50 and 100', () => {
-      //   const fixture = createComponent(BasicProgressBar);
-      //   fixture.detectChanges();
+      it('expect height of mat-progress-bar to be equal to 10', () => {
+        const fixture = createComponent(BasicProgressBar);
+        fixture.detectChanges();
 
-      //   const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
-      //   const progressComponent = progressElement.componentInstance;
+        // const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
+        const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
+        const progressElementHTML = progressElement.nativeElement;
+        const progressComponent = progressElement.componentInstance;
 
-      //   progressComponent.height = 10;
-      //   expect(progressComponent.height).toBe(10);
-
-      //   progressComponent.height = 50;
-      //   expect(progressComponent.height).toBe(50);
-
-      //   progressComponent.height = 100;
-      //   expect(progressComponent.height).toBe(100);
-      // });
+        progressComponent.height = 10;
+        expect(progressComponent.height).toBe(10);
+        expect(progressElementHTML.height).toBe(10);
+      });
 
       // it('expect border-radius of mat-progress-bar to be equal to 2, 7 and 10', () => {
       //   const fixture = createComponent(BasicProgressBar);
