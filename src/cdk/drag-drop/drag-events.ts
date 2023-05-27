@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CdkDrag} from './directives/drag';
-import {CdkDropList} from './directives/drop-list';
+import type {CdkDrag} from './directives/drag';
+import type {CdkDropList} from './directives/drop-list';
 
 /** Event emitted when the user starts dragging a draggable. */
 export interface CdkDragStart<T = any> {

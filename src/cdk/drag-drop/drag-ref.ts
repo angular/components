@@ -17,7 +17,7 @@ import {
 import {coerceBooleanProperty, coerceElement} from '@angular/cdk/coercion';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {Subscription, Subject, Observable} from 'rxjs';
-import {DropListRefInternal as DropListRef} from './drop-list-ref';
+import type {DropListRef} from './drop-list-ref';
 import {DragDropRegistry} from './drag-drop-registry';
 import {
   combineTransforms,
@@ -68,13 +68,6 @@ const MOUSE_EVENT_IGNORE_TIME = 800;
 
 // TODO(crisbeto): add an API for moving a draggable up/down the
 // list programmatically. Useful for keyboard controls.
-
-/**
- * Internal compile-time-only representation of a `DragRef`.
- * Used to avoid circular import issues between the `DragRef` and the `DropListRef`.
- * @docs-private
- */
-export interface DragRefInternal extends DragRef {}
 
 /** Template that can be used to create a drag helper element (e.g. a preview or a placeholder). */
 interface DragHelperTemplate<T = any> {
