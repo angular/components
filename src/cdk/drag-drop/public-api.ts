@@ -16,7 +16,7 @@ export * from './drag-utils';
 export * from './drag-drop-module';
 export * from './drag-drop-registry';
 
-export {CdkDropList, CDK_DROP_LIST} from './directives/drop-list';
+export {CdkDropList} from './directives/drop-list';
 export * from './directives/config';
 export * from './directives/drop-list-group';
 export * from './directives/drag';
