@@ -11,7 +11,7 @@ import {Platform} from '@angular/cdk/platform';
 import {ElementRef, Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
 import {fromEvent, of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
-import {CdkScrollable} from './scrollable';
+import type {CdkScrollable} from './scrollable';
 import {DOCUMENT} from '@angular/common';
 
 /** Time in ms to throttle the scrolling events by default. */
