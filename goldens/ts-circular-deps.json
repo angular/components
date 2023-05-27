@@ -1,10 +1,1 @@
-[
-  [
-    "src/cdk/scrolling/scroll-dispatcher.ts",
-    "src/cdk/scrolling/scrollable.ts"
-  ],
-  [
-    "src/cdk/scrolling/virtual-scroll-strategy.ts",
-    "src/cdk/scrolling/virtual-scroll-viewport.ts"
-  ]
-]
+[]
