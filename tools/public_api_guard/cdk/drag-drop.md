@@ -52,7 +52,7 @@ export const CDK_DROP_LIST_GROUP: InjectionToken<CdkDropListGroup<unknown>>;
 export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     constructor(
     element: ElementRef<HTMLElement>,
-    dropContainer: CdkDropListInternal,
+    dropContainer: CdkDropList,
     _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, config: DragDropConfig, _dir: Directionality, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _selfHandle?: CdkDragHandle | undefined, _parentDrag?: CdkDrag<any> | undefined);
     boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
     constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: ClientRect, pickupPositionInElement: Point) => Point;
@@ -61,7 +61,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     set disabled(value: BooleanInput);
     _dragRef: DragRef<CdkDrag<T>>;
     dragStartDelay: DragStartDelay;
-    dropContainer: CdkDropListInternal;
+    dropContainer: CdkDropList;
     readonly dropped: EventEmitter<CdkDragDrop<any>>;
     element: ElementRef<HTMLElement>;
     readonly ended: EventEmitter<CdkDragEnd>;
@@ -353,7 +353,7 @@ export class DragDropRegistry<I extends {
 
 // @public
 export class DragRef<T = any> {
-    constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry<DragRef, DropListRefInternal>);
+    constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>);
     readonly beforeStarted: Subject<void>;
     constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: ClientRect, pickupPositionInElement: Point) => Point;
     data: T;
@@ -369,8 +369,8 @@ export class DragRef<T = any> {
         previousIndex: number;
         currentIndex: number;
         item: DragRef;
-        container: DropListRefInternal;
-        previousContainer: DropListRefInternal;
+        container: DropListRef;
+        previousContainer: DropListRef;
         distance: Point;
         dropPoint: Point;
         isPointerOverContainer: boolean;
@@ -384,12 +384,12 @@ export class DragRef<T = any> {
         event: MouseEvent | TouchEvent;
     }>;
     readonly entered: Subject<{
-        container: DropListRefInternal;
+        container: DropListRef;
         item: DragRef;
         currentIndex: number;
     }>;
     readonly exited: Subject<{
-        container: DropListRefInternal;
+        container: DropListRef;
         item: DragRef;
     }>;
     getFreeDragPosition(): Readonly<Point>;
@@ -425,7 +425,7 @@ export class DragRef<T = any> {
     }>;
     withBoundaryElement(boundaryElement: ElementRef<HTMLElement> | HTMLElement | null): this;
     withDirection(direction: Direction): this;
-    _withDropContainer(container: DropListRefInternal): void;
+    _withDropContainer(container: DropListRef): void;
     withHandles(handles: (HTMLElement | ElementRef<HTMLElement>)[]): this;
     withParent(parent: DragRef<unknown> | null): this;
     withPlaceholderTemplate(template: DragHelperTemplate | null): this;
@@ -453,18 +453,18 @@ export type DropListOrientation = 'horizontal' | 'vertical';
 
 // @public
 export class DropListRef<T = any> {
-    constructor(element: ElementRef<HTMLElement> | HTMLElement, _dragDropRegistry: DragDropRegistry<DragRefInternal, DropListRef>, _document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler);
+    constructor(element: ElementRef<HTMLElement> | HTMLElement, _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, _document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler);
     autoScrollDisabled: boolean;
     autoScrollStep: number;
     readonly beforeStarted: Subject<void>;
-    _canReceive(item: DragRefInternal, x: number, y: number): boolean;
+    _canReceive(item: DragRef, x: number, y: number): boolean;
     connectedTo(connectedTo: DropListRef[]): this;
     data: T;
     disabled: boolean;
     dispose(): void;
-    drop(item: DragRefInternal, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event?: MouseEvent | TouchEvent): void;
+    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event?: MouseEvent | TouchEvent): void;
     readonly dropped: Subject<{
-        item: DragRefInternal;
+        item: DragRef;
         currentIndex: number;
         previousIndex: number;
         container: DropListRef;
@@ -475,21 +475,21 @@ export class DropListRef<T = any> {
         event: MouseEvent | TouchEvent;
     }>;
     element: HTMLElement | ElementRef<HTMLElement>;
-    enter(item: DragRefInternal, pointerX: number, pointerY: number, index?: number): void;
+    enter(item: DragRef, pointerX: number, pointerY: number, index?: number): void;
     readonly entered: Subject<{
-        item: DragRefInternal;
+        item: DragRef;
         container: DropListRef;
         currentIndex: number;
     }>;
-    enterPredicate: (drag: DragRefInternal, drop: DropListRef) => boolean;
-    exit(item: DragRefInternal): void;
+    enterPredicate: (drag: DragRef, drop: DropListRef) => boolean;
+    exit(item: DragRef): void;
     readonly exited: Subject<{
-        item: DragRefInternal;
+        item: DragRef;
         container: DropListRef;
     }>;
-    getItemIndex(item: DragRefInternal): number;
+    getItemIndex(item: DragRef): number;
     getScrollableParents(): readonly HTMLElement[];
-    _getSiblingContainerFromPosition(item: DragRefInternal, x: number, y: number): DropListRef | undefined;
+    _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef | undefined;
     isDragging(): boolean;
     _isOverContainer(x: number, y: number): boolean;
     isReceiving(): boolean;
@@ -497,7 +497,7 @@ export class DropListRef<T = any> {
     readonly receivingStarted: Subject<{
         receiver: DropListRef;
         initiator: DropListRef;
-        items: DragRefInternal[];
+        items: DragRef[];
     }>;
     readonly receivingStopped: Subject<{
         receiver: DropListRef;
@@ -507,21 +507,21 @@ export class DropListRef<T = any> {
         previousIndex: number;
         currentIndex: number;
         container: DropListRef;
-        item: DragRefInternal;
+        item: DragRef;
     }>;
     sortingDisabled: boolean;
-    _sortItem(item: DragRefInternal, pointerX: number, pointerY: number, pointerDelta: {
+    _sortItem(item: DragRef, pointerX: number, pointerY: number, pointerDelta: {
         x: number;
         y: number;
     }): void;
-    sortPredicate: (index: number, drag: DragRefInternal, drop: DropListRef) => boolean;
+    sortPredicate: (index: number, drag: DragRef, drop: DropListRef) => boolean;
     start(): void;
-    _startReceiving(sibling: DropListRef, items: DragRefInternal[]): void;
+    _startReceiving(sibling: DropListRef, items: DragRef[]): void;
     _startScrollingIfNecessary(pointerX: number, pointerY: number): void;
     _stopReceiving(sibling: DropListRef): void;
     _stopScrolling(): void;
     withDirection(direction: Direction): this;
-    withItems(items: DragRefInternal[]): this;
+    withItems(items: DragRef[]): this;
     withOrientation(orientation: 'vertical' | 'horizontal'): this;
     withScrollableParents(elements: HTMLElement[]): this;
 }

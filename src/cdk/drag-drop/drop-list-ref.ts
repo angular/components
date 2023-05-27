@@ -14,7 +14,7 @@ import {_getShadowRoot} from '@angular/cdk/platform';
 import {Subject, Subscription, interval, animationFrameScheduler} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {DragDropRegistry} from './drag-drop-registry';
-import {DragRefInternal as DragRef, Point} from './drag-ref';
+import type {DragRef, Point} from './drag-ref';
 import {isPointerNearClientRect, isInsideClientRect} from './dom/client-rect';
 import {ParentPositionTracker} from './dom/parent-position-tracker';
 import {DragCSSStyleDeclaration} from './dom/styling';
@@ -46,13 +46,6 @@ const enum AutoScrollHorizontalDirection {
   LEFT,
   RIGHT,
 }
-
-/**
- * Internal compile-time-only representation of a `DropListRef`.
- * Used to avoid circular import issues between the `DropListRef` and the `DragRef`.
- * @docs-private
- */
-export interface DropListRefInternal extends DropListRef {}
 
 type RootNode = DocumentOrShadowRoot & {
   // As of TS 4.4 the built in DOM typings don't include `elementFromPoint` on `ShadowRoot`,
