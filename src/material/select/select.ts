@@ -138,6 +138,12 @@ export interface MatSelectConfig {
 
   /** Wheter icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
+
+  /**
+   * Width of the panel. If set to `auto`, the panel will match the trigger width.
+   * If set to null or an empty string, the panel will grow to match the longest option's text.
+   */
+  panelWidth?: string | number | null;
 }
 
 /** Injection token that can be used to provide the default options the select module. */
@@ -1282,6 +1288,15 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
   @ContentChild(MAT_SELECT_TRIGGER) customTrigger: MatSelectTrigger;
 
+  /**
+   * Width of the panel. If set to `auto`, the panel will match the trigger width.
+   * If set to null or an empty string, the panel will grow to match the longest option's text.
+   */
+  @Input() panelWidth: string | number | null =
+    this._defaultOptions && typeof this._defaultOptions.panelWidth !== 'undefined'
+      ? this._defaultOptions.panelWidth
+      : 'auto';
+
   _positions: ConnectedPosition[] = [
     {
       originX: 'start',
@@ -1302,7 +1317,7 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
 
   /** Width of the overlay panel. */
-  _overlayWidth: number;
+  _overlayWidth: string | number;
 
   override get shouldLabelFloat(): boolean {
     // Since the panel doesn't overlap the trigger, we
@@ -1378,12 +1393,16 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   }
 
   /** Gets how wide the overlay panel should be. */
-  private _getOverlayWidth() {
-    const refToMeasure =
-      this._preferredOverlayOrigin instanceof CdkOverlayOrigin
-        ? this._preferredOverlayOrigin.elementRef
-        : this._preferredOverlayOrigin || this._elementRef;
-    return refToMeasure.nativeElement.getBoundingClientRect().width;
+  private _getOverlayWidth(): string | number {
+    if (this.panelWidth === 'auto') {
+      const refToMeasure =
+        this._preferredOverlayOrigin instanceof CdkOverlayOrigin
+          ? this._preferredOverlayOrigin.elementRef
+          : this._preferredOverlayOrigin || this._elementRef;
+      return refToMeasure.nativeElement.getBoundingClientRect().width;
+    }
+
+    return this.panelWidth === null ? '' : this.panelWidth;
   }
 
   /** Whether checkmark indicator for single-selection options is hidden. */
