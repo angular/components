@@ -30,7 +30,6 @@ import {
   PositionStrategy,
   ScrollStrategy,
 } from './index';
-import {OverlayReference} from './overlay-reference';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('Overlay', () => {
@@ -1148,9 +1147,9 @@ class FakePositionStrategy implements PositionStrategy {
 
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;
-  overlayRef: OverlayReference;
+  overlayRef: OverlayRef;
 
-  attach(overlayRef: OverlayReference) {
+  attach(overlayRef: OverlayRef) {
     this.overlayRef = overlayRef;
   }
 
