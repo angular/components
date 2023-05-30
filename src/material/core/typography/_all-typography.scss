@@ -37,7 +37,6 @@
 @use '../../tree/tree-theme';
 @use '../theming/theming';
 @use '../core-theme';
-@use '../mdc-helpers/mdc-helpers';
 
 // Includes all of the typographic styles.
 @mixin all-component-typographies($config-or-theme: null) {
