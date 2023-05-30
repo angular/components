@@ -20,8 +20,8 @@ import { MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY as MAT_LEGACY_SELECT_SCROLL
 import { MAT_SELECT_TRIGGER as MAT_LEGACY_SELECT_TRIGGER } from '@angular/material/select';
 import { MatLegacyOptgroup } from '@angular/material/legacy-core';
 import { MatLegacyOption } from '@angular/material/legacy-core';
-import { MatSelectConfig as MatLegacySelectConfig } from '@angular/material/select';
 import { _MatSelectBase } from '@angular/material/select';
+import { MatSelectConfig } from '@angular/material/select';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 
@@ -83,7 +83,8 @@ export class MatLegacySelectChange {
     value: any;
 }
 
-export { MatLegacySelectConfig }
+// @public @deprecated (undocumented)
+export type MatLegacySelectConfig = Omit<MatSelectConfig, 'panelWidth'>;
 
 // @public @deprecated (undocumented)
 export class MatLegacySelectModule {
