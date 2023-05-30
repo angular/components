@@ -3,7 +3,6 @@
 @use '../../../core/theming/palette';
 @use '../../../core/theming/theming';
 @use '../../../core/typography/typography';
-@use '../../../core/typography/all-typography';
 
 
 // Include non-theme styles for core.
@@ -18,7 +17,7 @@ $theme: theming.define-light-theme((
     primary: $primary,
     accent: $accent
   ),
-  typography: all-typography.define-typography-config(),
+  typography: typography.define-typography-config(),
   density: 0,
 ));
 

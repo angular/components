@@ -1,5 +1,4 @@
 @use '@material/typography' as mdc-typography;
-@use '../../typography/all-typography';
 @use '../../typography/typography';
 @use 'sass:map';
 @use 'sass:meta';
@@ -16,17 +15,17 @@
 
 $no-font-family: assert-font-family(
   'should take default MDC font family if none is specified',
-  all-typography.define-typography-config(),
+  typography.define-typography-config(),
   mdc-typography.$font-family);
 
 $only-top-level-font-family: assert-font-family(
   'should take custom font family if specified at top level',
-  all-typography.define-typography-config($font-family: 'custom-top'),
+  typography.define-typography-config($font-family: 'custom-top'),
   'custom-top');
 
 $individual-levels-without-font-families: assert-font-family(
   'should set the default MDC font family if all keys are specified, but without a font-family',
-  all-typography.define-typography-config(
+  typography.define-typography-config(
     $headline-1: typography.define-typography-level($font-size: 1px),
     $headline-2: typography.define-typography-level($font-size: 1px),
     $headline-3: typography.define-typography-level($font-size: 1px),
@@ -46,7 +45,7 @@ $individual-levels-without-font-families: assert-font-family(
 
 $individual-levels-without-font-families-with-top-level-family: assert-font-family(
   'should set a custom top-level font family if all keys are specified, but without a font-family',
-  all-typography.define-typography-config(
+  typography.define-typography-config(
     $font-family: 'custom-top',
     $headline-1: typography.define-typography-level($font-size: 1px),
     $headline-2: typography.define-typography-level($font-size: 1px),
@@ -67,7 +66,7 @@ $individual-levels-without-font-families-with-top-level-family: assert-font-fami
 
 $individual-levels-with-font-families: assert-font-family(
   'should use the level font family if one is specified, but there is none at the top level',
-  all-typography.define-typography-config(
+  typography.define-typography-config(
     $headline-1: typography.define-typography-level($font-size: 1px, $font-family: 'custom-level'),
     $headline-2: typography.define-typography-level($font-size: 1px, $font-family: 'custom-level'),
     $headline-3: typography.define-typography-level($font-size: 1px, $font-family: 'custom-level'),
@@ -87,7 +86,7 @@ $individual-levels-with-font-families: assert-font-family(
 
 $individual-levels-with-font-families-and-top-level-family: assert-font-family(
   'should use the level font family if a top-level one is specified together with it',
-  all-typography.define-typography-config(
+  typography.define-typography-config(
     $font-family: 'custom-top',
     $headline-1: typography.define-typography-level($font-size: 1px, $font-family: 'custom-level'),
     $headline-2: typography.define-typography-level($font-size: 1px, $font-family: 'custom-level'),
