@@ -16,7 +16,6 @@ import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatch
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
-import {OverlayReference} from './overlay-reference';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
 
@@ -29,7 +28,7 @@ export type ImmutableObject<T> = {
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
  */
-export class OverlayRef implements PortalOutlet, OverlayReference {
+export class OverlayRef implements PortalOutlet {
   private _backdropElement: HTMLElement | null = null;
   private _backdropTimeout: number | undefined;
   private readonly _backdropClick = new Subject<MouseEvent>();
