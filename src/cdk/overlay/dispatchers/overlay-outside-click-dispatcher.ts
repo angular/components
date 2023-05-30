@@ -8,9 +8,9 @@
 
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable, NgZone, Optional} from '@angular/core';
-import {OverlayReference} from '../overlay-reference';
 import {Platform, _getEventTarget} from '@angular/cdk/platform';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
+import type {OverlayRef} from '../overlay-ref';
 
 /**
  * Service for dispatching mouse click events that land on the body to appropriate overlay ref,
@@ -33,7 +33,7 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
   }
 
   /** Add a new overlay to the list of attached overlay refs. */
-  override add(overlayRef: OverlayReference): void {
+  override add(overlayRef: OverlayRef): void {
     super.add(overlayRef);
 
     // Safari on iOS does not generate click events for non-interactive

@@ -17,11 +17,11 @@ import {
   validateVerticalPosition,
 } from './connected-position';
 import {Observable, Subscription, Subject} from 'rxjs';
-import {OverlayReference} from '../overlay-reference';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {OverlayContainer} from '../overlay-container';
+import {OverlayRef} from '../overlay-ref';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -53,7 +53,7 @@ type Dimensions = Omit<ClientRect, 'x' | 'y' | 'toJSON'>;
  */
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference;
+  private _overlayRef: OverlayRef;
 
   /** Whether we're performing the very first positioning of the overlay. */
   private _isInitialRender: boolean;
@@ -155,7 +155,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Attaches this position strategy to an overlay. */
-  attach(overlayRef: OverlayReference): void {
+  attach(overlayRef: OverlayRef): void {
     if (
       this._overlayRef &&
       overlayRef !== this._overlayRef &&

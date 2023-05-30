@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OverlayReference} from '../overlay-reference';
+import type {OverlayRef} from '../overlay-ref';
 
 /** Strategy for setting the position on an overlay. */
 export interface PositionStrategy {
   /** Attaches this position strategy to an overlay. */
-  attach(overlayRef: OverlayReference): void;
+  attach(overlayRef: OverlayRef): void;
 
   /** Updates the position of the overlay element. */
   apply(): void;
