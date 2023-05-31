@@ -40,7 +40,6 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
-  AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -1283,7 +1282,7 @@ export class MatSelectTrigger {}
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
   ],
 })
-export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit, AfterViewInit {
+export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit {
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
   @ContentChild(MAT_SELECT_TRIGGER) customTrigger: MatSelectTrigger;
@@ -1332,23 +1331,23 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
       .pipe(takeUntil(this._destroy))
       .subscribe(() => {
         if (this.panelOpen) {
-          this._overlayWidth = this._getOverlayWidth();
+          this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
           this._changeDetectorRef.detectChanges();
         }
       });
   }
 
-  ngAfterViewInit() {
-    // Note that it's important that we read this in `ngAfterViewInit`, because
-    // reading it earlier will cause the form field to return a different element.
+  override open() {
+    // It's important that we read this as late as possible, because doing so earlier will
+    // return a different element since it's based on queries in the form field which may
+    // not have run yet. Also this needs to be assigned before we measure the overlay width.
     if (this._parentFormField) {
       this._preferredOverlayOrigin = this._parentFormField.getConnectedOverlayOrigin();
     }
-  }
 
-  override open() {
-    this._overlayWidth = this._getOverlayWidth();
+    this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
     super.open();
+
     // Required for the MDC form field to pick up when the overlay has been opened.
     this.stateChanges.next();
   }
@@ -1393,12 +1392,14 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   }
 
   /** Gets how wide the overlay panel should be. */
-  private _getOverlayWidth(): string | number {
+  private _getOverlayWidth(
+    preferredOrigin: ElementRef<ElementRef> | CdkOverlayOrigin | undefined,
+  ): string | number {
     if (this.panelWidth === 'auto') {
       const refToMeasure =
-        this._preferredOverlayOrigin instanceof CdkOverlayOrigin
-          ? this._preferredOverlayOrigin.elementRef
-          : this._preferredOverlayOrigin || this._elementRef;
+        preferredOrigin instanceof CdkOverlayOrigin
+          ? preferredOrigin.elementRef
+          : preferredOrigin || this._elementRef;
       return refToMeasure.nativeElement.getBoundingClientRect().width;
     }
 

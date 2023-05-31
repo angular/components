@@ -7,7 +7,6 @@
 import { _AbstractConstructor } from '@angular/material/core';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CanDisable } from '@angular/material/core';
@@ -76,7 +75,7 @@ export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): (
 export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
 
 // @public (undocumented)
-export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit, AfterViewInit {
+export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit {
     // (undocumented)
     close(): void;
     // (undocumented)
@@ -85,8 +84,6 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
     protected _getChangeEvent(value: any): MatSelectChange;
     get hideSingleSelectionIndicator(): boolean;
     set hideSingleSelectionIndicator(value: BooleanInput);
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
