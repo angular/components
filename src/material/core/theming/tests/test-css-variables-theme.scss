@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../all-theme';
-@use '../../typography/all-typography';
+@use '../../typography/typography';
 @use '../palette';
 @use '../theming';
 @use '../../../legacy-core/theming/all-theme' as legacy-all-theme;
@@ -31,7 +31,7 @@
       accent: $palette,
       warn: $palette
     ),
-    typography: all-typography.define-typography-config(),
+    typography: typography.define-typography-config(),
   ));
   $css-var-theme: _replace-all-values($theme, var(--test-var));
   @include all-theme.all-component-themes($css-var-theme);
