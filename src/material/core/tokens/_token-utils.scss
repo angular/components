@@ -52,7 +52,7 @@ $_component-prefix: null;
   $_component-prefix: '' !global;
   @each $item in $rest {
     $_component-prefix:
-        if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+      if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
   }
   @include mdc-custom-properties.configure($varname-prefix: $first) {
     @content;
@@ -85,15 +85,6 @@ $_component-prefix: null;
   @include _configure-token-prefix($prefix...) {
     @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
   }
-}
-
-// Merges together a list of maps into a single map.
-@function merge-all($maps...) {
-  $result: ();
-  @each $map in $maps {
-    $result: map.merge($result, $map);
-  }
-  @return $result;
 }
 
 // MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine

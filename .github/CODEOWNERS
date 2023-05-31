@@ -131,10 +131,10 @@
 # Material experimental package
 /src/material-experimental/*                                @andrewseguin
 /src/material-experimental/column-resize/**                 @andrewseguin
-/src/material-experimental/mdc-tooltip/**                   @crisbeto
 /src/material-experimental/menubar/**                       @jelbourn
 /src/material-experimental/popover-edit/**                  @andrewseguin
 /src/material-experimental/selection/**                     @andrewseguin
+/src/material-experimental/theming/**                       @mmalerba
 
 # CDK experimental package
 /src/cdk-experimental/*                                     @andrewseguin
