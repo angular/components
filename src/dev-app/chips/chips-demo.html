@@ -251,12 +251,35 @@
 
       The selected color is {{selectedColor}}.
 
-      <h4>Single selection without checkmark indicator.</h4>
+      <h4>Single selection without checkmark selection indicator.</h4>
 
       <mat-chip-listbox [(ngModel)]="selectedColor" [hideSingleSelectionIndicator]="true">
         <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
                  [value]="aColor.name">
           {{aColor.name}}
+        </mat-chip-option>
+      </mat-chip-listbox>
+
+      <h4>Single selection with decorative icons.</h4>
+
+      <mat-chip-listbox [(ngModel)]="selectedColor" [hideSingleSelectionIndicator]="true">
+        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
+                 [value]="aColor.name">
+          <mat-icon matChipAvatar>home</mat-icon>
+          {{aColor.name}}
+          <mat-icon matChipTrailingIcon>star</mat-icon>
+        </mat-chip-option>
+      </mat-chip-listbox>
+
+      The selected color is {{selectedColor}}.
+
+      <h4>Single selection with stacked appearance.</h4>
+
+      <mat-chip-listbox [(ngModel)]="selectedColor" class="mat-mdc-chip-set-stacked">
+        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
+                 [value]="aColor.name">
+          {{aColor.name}}
+          <mat-icon matChipTrailingIcon>star</mat-icon>
         </mat-chip-option>
       </mat-chip-listbox>
 
