@@ -31,9 +31,14 @@ If you would like to chat about the question in real-time, you can reach out via
 
 ## <a name="issue"></a> Found an Issue?
 If you find a bug in the source code or a mistake in the documentation, you can help us by
-[submitting an issue](#submit-issue) to our [GitHub Repository][github]. Including an issue
-reproduction (via CodePen, JsBin, Plunkr, etc.) is the absolute best way to help the team quickly
-diagnose the problem. Screenshots are also helpful.
+[submitting an issue](#submit-issue) to our [GitHub Repository][github]. 
+
+For bugs, include an issue reproduction (via your preferred REPL: StackBlitz, CodePen, JsBin,
+Plunkr, etc.) Our team has limited resources, and this allows us quickly diagnose issues and make
+optimal use of the time we dedicate to fixing them. Issues that do not include a REPL reproduction
+will be closed. If a REPL reproduction is not possible for your issue, please explain why and
+include any other information that may be helpful in debugger (link to a repo, error messages, 
+screenshots, etc.)
 
 You can help the team even more and [submit a Pull Request](#submit-pr) with a fix.
 

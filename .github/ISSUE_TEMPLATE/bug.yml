@@ -28,10 +28,15 @@ body:
     attributes:
       label: Reproduction
       description: |
-        **Use StackBlitz to reproduce your issue:**
-        - [Components](https://stackblitz.com/fork/components-issue)
-        - [Harnesses](https://stackblitz.com/fork/harness-issue)
+        Use StackBlitz to reproduce your issue:
+        - [Components StackBlitz starter](https://stackblitz.com/fork/components-issue)
+        - [Harnesses StackBlitz starter](https://stackblitz.com/fork/harness-issue)
+
+        Issues that do not include a StackBlitz (or other REPL) reproduction link will be closed.
+        If it is not possible to create a StackBlitz reproduction for your issue, please explain why
+        and include any other information you can to help the team reliably reproduce the issue.
       value: |
+        StackBlitz link: 
         Steps to reproduce:
         1. 
         2.
