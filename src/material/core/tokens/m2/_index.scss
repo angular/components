@@ -1,7 +1,5 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../theming/palette';
-@use '../../theming/theming' as theming;
 @use '../../style/sass-utils';
 
 @use './mat/card' as tokens-mat-card;
