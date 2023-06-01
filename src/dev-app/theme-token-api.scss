@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
@@ -23,7 +24,7 @@ dev-app {
 
 @include mat.core();
 
-$light-theme: mat.define-light-theme((
+$theme: mat.define-light-theme((
   color: (
     primary: mat.define-palette(mat.$indigo-palette),
     accent: mat.define-palette(mat.$pink-palette),
@@ -32,35 +33,58 @@ $light-theme: mat.define-light-theme((
   density: 0,
 ));
 
-$dark-theme: mat.define-dark-theme((
-  color: (
-    primary: mat.define-palette(mat.$blue-grey-palette),
-    accent: mat.define-palette(mat.$amber-palette, A200, A100, A400),
-    warn: mat.define-palette(mat.$deep-orange-palette),
-  ),
-  typography: mat.define-typography-config(),
-  density: 0,
-));
-
-// Set up light theme.
-
+// Apply all tokens (derived from `$theme`) to the `html` element. This ensures that all components
+// on the page will inherit these tokens.
 html {
   @include matx.theme(
-    $tokens: mat.m2-tokens-from-theme($light-theme),
+    $tokens: mat.m2-tokens-from-theme($theme),
     $components: (
       matx.card(),
       matx.checkbox(),
-    ));
+    )
+  );
 }
 
-// Set up dark theme.
 
+// Apply tokens needed for dark theme to the element with `.demo-unicorn-dark-theme`.
+// This ensures that checkboxes within the element inherit the new tokens for dark theme,
+// rather than the ones for light theme tokens set on `body`. Note that we're not setting *all* of
+// the tokens, since many (density, typography, etc) are the same between light and dark theme.
 .demo-unicorn-dark-theme {
-  @include matx.theme(
-    $tokens: mat.m2-tokens-from-theme($dark-theme),
-    $components: (
-      matx.checkbox((
-        checkmark-color: red,
-      )),
-    ));
+  @include matx.retheme($components: (
+    // TODO(mmalerba): In the future this should be configured through `matx.system-colors()`
+    matx.checkbox((theme-type: dark)),
+    matx.card((theme-type: dark)),
+  ));
+}
+
+// Apply tokens related to the color palette to any element with `.mat-primary`, `.mat-accent`, or
+// `.mat-warn` This ensures that checkboxes within the element inherit the new tokens for the
+// appropriate palette, rather than the any color that may have been set on an element further up
+// the hierarchy. Again, rather than applying *all* the tokens, we apply only the ones effected by
+// the palette color. With this setup, the palette class need not go on the component itself
+// (e.g. <mat-checkbox class="mat-primary">), it can go on some ancestor element and the tokens will
+// flow down. If multiple elements specify different classes, the closest one to the component will
+// take precedence.
+// (e.g. <div class="mat-warn><mat-checkbox class="mat-primary">I'm primary</mat-checkbox></div>)
+.mat-primary {
+  @include matx.retheme($components: (
+    matx.checkbox((
+      color-palette: map.get($theme, color, primary)
+    )),
+  ));
+}
+.mat-accent {
+  @include matx.retheme($components: (
+    matx.checkbox((
+      color-palette: map.get($theme, color, accent)
+    )),
+  ));
+}
+.mat-warn {
+  @include matx.retheme($components: (
+    matx.checkbox((
+      color-palette: map.get($theme, color, warn)
+    )),
+  ));
 }
