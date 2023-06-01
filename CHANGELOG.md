@@ -1,3 +1,17 @@
+<a name="16.0.3"></a>
+# 16.0.3 "silk-scarf" (2023-06-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3d4a9d1607](https://github.com/angular/components/commit/3d4a9d1607fbe1e0a25775ad45551c2d45405c8c) | fix | **overlay:** remove circular dependency workarounds ([#27190](https://github.com/angular/components/pull/27190)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c8065d5168](https://github.com/angular/components/commit/c8065d51688b359463bfd78b6901b7cec907cc69) | fix | **chips:** fix click target when stacked ([#27129](https://github.com/angular/components/pull/27129)) |
+| [12e47478c5](https://github.com/angular/components/commit/12e47478c5d54ee1a998891ee4adbd58512a9cd3) | fix | **slider:** handle ngModel initial null value ([#27149](https://github.com/angular/components/pull/27149)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.0-next.1"></a>
 # 16.1.0-next.1 "metal-rail" (2023-05-25)
 ### cdk
