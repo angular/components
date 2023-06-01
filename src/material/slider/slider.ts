@@ -41,7 +41,6 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
-import {take} from 'rxjs/operators';
 import {
   _MatThumb,
   _MatTickMark,
