@@ -385,6 +385,8 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit, After
       defaultConfig && defaultConfig.fitInkBarToContent != null
         ? defaultConfig.fitInkBarToContent
         : false;
+    this.stretchTabs =
+      defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
   }
 
   override ngAfterContentInit() {
