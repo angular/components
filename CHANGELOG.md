@@ -1,3 +1,23 @@
+<a name="16.1.0-next.2"></a>
+# 16.1.0-next.2 "satin-shoe" (2023-06-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4656c24f78](https://github.com/angular/components/commit/4656c24f784a0efa7136b7138a88666d8b2da917) | fix | **overlay:** remove circular dependency workarounds ([#27190](https://github.com/angular/components/pull/27190)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3703cc912c](https://github.com/angular/components/commit/3703cc912cca1ebc129b5e11be09bf6a505bf5b9) | feat | **select:** add input to control the panel width ([#27188](https://github.com/angular/components/pull/27188)) |
+| [2c078673a7](https://github.com/angular/components/commit/2c078673a7d1e852eb13165942c9c3f6a6d199d9) | fix | **chips:** fix click target when stacked ([#27129](https://github.com/angular/components/pull/27129)) |
+| [57adfe4fbf](https://github.com/angular/components/commit/57adfe4fbf1bfa9cc3f8c0eeebc95a132d42a551) | fix | **select:** incorrect position if initialized late ([#27198](https://github.com/angular/components/pull/27198)) |
+| [43c6fe349f](https://github.com/angular/components/commit/43c6fe349fad5f896e582d8d75fcac1d183626b4) | fix | **slider:** handle ngModel initial null value ([#27149](https://github.com/angular/components/pull/27149)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aec23ac348](https://github.com/angular/components/commit/aec23ac348f41d288417c1ae7788e0bd7cb8a9a9) | feat | **theming:** add first part of token-based theming API ([#27000](https://github.com/angular/components/pull/27000)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.3"></a>
 # 16.0.3 "silk-scarf" (2023-06-01)
 ### cdk
