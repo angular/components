@@ -15,7 +15,6 @@ import {
   ElementRef,
   inject,
   NgZone,
-  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
