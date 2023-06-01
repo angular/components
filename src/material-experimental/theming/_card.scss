@@ -1,0 +1,93 @@
+@use 'sass:color';
+@use 'sass:meta';
+@use '@angular/material' as mat;
+@use './token-resolution';
+
+// TODO(mmalerba): This should live under material/card when moving out of experimental.
+
+/// Gets tokens for setting the card's shape.
+/// @param {String} $shape The card's shape.
+/// @return {Map} A map of tokens for setting the card's shape.
+// Note: we use a function rather than simple rename, because we want to map a single shape value to
+// multiple tokens, rather than offer separate shape customizations for elevated and outlined cards.
+@function _get-tokens-for-card-shape($shape) {
+  @return (
+      (mdc, elevated-card): (container-shape: $shape),
+      (mdc, outline-card): (container-shape: $shape),
+  );
+}
+
+/// Gets tokens for setting the card's color.
+/// @param {String} $shape The card's shape.
+/// @return {Map} A map of tokens for setting the card's shape.
+@function _get-tokens-for-card-color($color) {
+  @return (
+      (mdc, elevated-card): (container-color: $color),
+      (mdc, outline-card): (container-color: $color),
+  );
+}
+
+/// Gets a map of card token values that are derived from the theme type.
+/// @param {'light' | 'dark'} $theme-type The type of theme.
+/// @return {Map} A map of card token values derived from the given theme type.
+@function _get-tokens-for-theme-type($theme-type) {
+  $is-dark: $theme-type == 'dark';
+  $foreground: if($is-dark, white, black);
+  $card-color: if($is-dark, mat.get-color-from-palette(mat.$gray-palette, 800), white);
+  $outline-color: color.change($foreground, $alpha: 0.12);
+  $subtitle-color: if($is-dark, rgba(white, 0.7), rgba(black, 0.54));
+
+  @return (
+    (mdc, elevated-card): (
+      container-color: $card-color,
+    ),
+    (mdc, outlined-card): (
+      container-color: $card-color,
+      outline-color: $outline-color,
+    ),
+    (mat, card): (
+      subtitle-text-color: $subtitle-color,
+    ),
+  );
+}
+
+/// Resolvers for mat-card customizations.
+$_customization-resolvers: mat.private-merge-all(
+  token-resolution.alias((
+    elevation: container-elevation,
+    shadow-color: container-shadow-color,
+  ), (mdc, elevated-card)),
+  token-resolution.forward((
+    outline-width,
+    outline-color
+  ), (mdc, outlined-card)),
+  token-resolution.alias((
+    title-font: title-text-font,
+    title-line-height: title-text-line-height,
+    title-font-size: title-text-size,
+    title-letter-spacing: title-text-tracking,
+    title-font-weight: title-text-weight,
+    subtitle-font: subtitle-text-font,
+    subtitle-line-height: subtitle-text-line-height,
+    subtitle-font-size: subtitle-text-size,
+    subtitle-letter-spacing: subtitle-text-tracking,
+    subtitle-font-weight: subtitle-text-weight,
+    subtitle-color: subtitle-text-color
+  ), (mat, card)),
+  (
+    background-color: meta.get-function(_get-tokens-for-card-color),
+    border-radius: meta.get-function(_get-tokens-for-card-shape),
+    theme-type: meta.get-function(_get-tokens-for-theme-type),
+  )
+);
+
+/// Configure the mat-card's theme.
+/// @param {Map} $customizations [()] A map of custom values to use when theming mat-card.
+@function card($customizations: ()) {
+  @return (
+    id: 'mat.card',
+    customizations: token-resolution.resolve-customized-tokens(
+        'mat.card', $_customization-resolvers, $customizations),
+    deps: (),
+  );
+}

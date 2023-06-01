@@ -110,25 +110,5 @@ $_error-on-missing-dep: false;
 //   - override-theme
 //   - retheme
 @mixin retheme($components) {
-  @include _theme((), $components);
-}
-
-/// Configure the mat-card's theme.
-/// @param {Map} $customizations [()] A map of custom token values to use when theming mat-card.
-@function card($customizations: ()) {
-  @return (
-    id: 'mat.card',
-    customizations: $customizations,
-    deps: (),
-  );
-}
-
-/// Configure the mat-checkbox's theme.
-/// @param {Map} $customizations [()] A map of custom token values to use when theming mat-checkbox.
-@function checkbox($customizations: ()) {
-  @return (
-    id: 'mat.checkbox',
-    customizations: $customizations,
-    deps: (),
-  );
+  @include _theme((), mat.private-coerce-to-list($components));
 }

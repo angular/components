@@ -14,6 +14,18 @@
   }
 }
 
+/// A version of the standard `map.merge` function that takes a variable number of arguments.
+/// Each argument is merged into the final result from left to right.
+/// @param {List} $maps The maps to combine with map.merge
+/// @return {Map} The combined result of successively calling map.merge with each parameter.
+@function merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
+}
+
 /// A version of the standard `map.deep-merge` function that takes a variable number of arguments.
 /// Each argument is deep-merged into the final result from left to right.
 /// @param {List} $maps The maps to combine with map.deep-merge

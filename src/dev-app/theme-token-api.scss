@@ -60,9 +60,7 @@ html {
     $tokens: mat.m2-tokens-from-theme($dark-theme),
     $components: (
       matx.checkbox((
-        (mdc, checkbox): (
-          selected-checkmark-color: red,
-        )
+        checkmark-color: red,
       )),
     ));
 }
