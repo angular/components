@@ -41,7 +41,6 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
-import {take} from 'rxjs/operators';
 import {
   _MatThumb,
   _MatTickMark,
@@ -585,22 +584,11 @@ export class MatSlider
     transformOrigin: string;
   }): void {
     const trackStyle = this._trackActive.nativeElement.style;
-    const animationOriginChanged =
-      styles.left !== trackStyle.left && styles.right !== trackStyle.right;
 
     trackStyle.left = styles.left;
     trackStyle.right = styles.right;
     trackStyle.transformOrigin = styles.transformOrigin;
-
-    if (animationOriginChanged) {
-      this._elementRef.nativeElement.classList.add('mat-mdc-slider-disable-track-animation');
-      this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.classList.remove('mat-mdc-slider-disable-track-animation');
-        trackStyle.transform = styles.transform;
-      });
-    } else {
-      trackStyle.transform = styles.transform;
-    }
+    trackStyle.transform = styles.transform;
   }
 
   /** Returns the translateX positioning for a tick mark based on it's index. */
@@ -913,6 +901,7 @@ export class MatSlider
   private _updateTickMarkUIRange(step: number): void {
     const endValue = this._getValue();
     const startValue = this._getValue(_MatThumb.START);
+
     const numInactiveBeforeStartThumb = Math.max(Math.floor((startValue - this.min) / step), 0);
     const numActive = Math.max(Math.floor((endValue - startValue) / step) + 1, 0);
     const numInactiveAfterEndThumb = Math.max(Math.floor((this.max - endValue) / step), 0);
