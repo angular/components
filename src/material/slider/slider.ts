@@ -902,7 +902,6 @@ export class MatSlider
     const endValue = this._getValue();
     const startValue = this._getValue(_MatThumb.START);
 
-    console.log(`end: ${endValue} start: ${startValue}`);
     const numInactiveBeforeStartThumb = Math.max(Math.floor((startValue - this.min) / step), 0);
     const numActive = Math.max(Math.floor((endValue - startValue) / step) + 1, 0);
     const numInactiveAfterEndThumb = Math.max(Math.floor((this.max - endValue) / step), 0);
