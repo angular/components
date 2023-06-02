@@ -25,16 +25,16 @@ const eventListenerOptions = {capture: true};
 const rippleInteractionEvents = ['focus', 'click', 'mouseenter', 'touchstart'];
 
 /** The attribute attached to a component whose ripple has not yet been initialized. */
-const matRippleUninitialized = 'mat-ripple-uninitialized';
+const matRippleUninitialized = 'mat-ripple-loader-uninitialized';
 
 /** Additional classes that should be added to the ripple when it is rendered. */
-const matRippleClassName = 'mat-ripple-class-name';
+const matRippleClassName = 'mat-ripple-loader-class-name';
 
 /** Whether the ripple should be centered. */
-const matRippleCentered = 'mat-ripple-centered';
+const matRippleCentered = 'mat-ripple-loader-centered';
 
 /** Whether the ripple should be disabled. */
-const matRippleDisabled = 'mat-ripple-disabled';
+const matRippleDisabled = 'mat-ripple-loader-disabled';
 
 /**
  * Handles attaching ripples on demand.
