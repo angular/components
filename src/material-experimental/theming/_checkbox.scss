@@ -13,7 +13,7 @@
   @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
     @return if(mdc-theme-color.contrast-tone($value) == 'dark', $dark-color, $light-color);
   }
-  @return false
+  @return false;
 }
 
 /// Gets a map of checkbox token values that are derived from the given palette.

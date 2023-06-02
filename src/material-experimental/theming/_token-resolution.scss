@@ -73,10 +73,12 @@
       // If the resolver is a list, it represents the token namespace and name.
       $key-and-value: list.append($resolver, $value);
       $result: map.deep-merge($result, map.set((), $key-and-value...));
-    } @else if $resolver-type == 'function' {
+    }
+    @else if $resolver-type == 'function' {
       // If the resolver is a function, it should take a value and return a token map.
-      $result: map.deep-merge($result, meta.call($resolver, $value))
-    } @else {
+      $result: map.deep-merge($result, meta.call($resolver, $value));
+    }
+    @else {
       // Anything else is unexpected.
       @error 'Invalid customization resolver for `#{$customization}` on #{$component-id}';
     }
