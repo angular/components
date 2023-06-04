@@ -115,13 +115,14 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     set selected(step: CdkStep | undefined);
     get selectedIndex(): number;
     set selectedIndex(index: NumberInput);
+    readonly selectedIndexChange: EventEmitter<number>;
     readonly selectionChange: EventEmitter<StepperSelectionEvent>;
     _stateChanged(): void;
     _stepHeader: QueryList<CdkStepHeader>;
     readonly steps: QueryList<CdkStep>;
     _steps: QueryList<CdkStep>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepper, "[cdkStepper]", ["cdkStepper"], { "linear": { "alias": "linear"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "selectionChange": "selectionChange"; }, ["_steps", "_stepHeader"], never, false, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepper, "[cdkStepper]", ["cdkStepper"], { "linear": { "alias": "linear"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "selectionChange": "selectionChange"; "selectedIndexChange": "selectedIndexChange"; }, ["_steps", "_stepHeader"], never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepper, [{ optional: true; }, null, null]>;
 }
