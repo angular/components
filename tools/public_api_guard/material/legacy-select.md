@@ -63,7 +63,7 @@ export class MatLegacySelect extends _MatSelectBase<MatLegacySelectChange> imple
     _transformOrigin: string;
     _triggerFontSize: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacySelect, "mat-select", ["matSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacySelect, "mat-select", ["matSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacySelect, never>;
 }
@@ -99,7 +99,7 @@ export class MatLegacySelectModule {
 // @public @deprecated
 export class MatLegacySelectTrigger {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacySelectTrigger, "mat-select-trigger", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacySelectTrigger, "mat-select-trigger", never, {}, {}, never, never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacySelectTrigger, never>;
 }

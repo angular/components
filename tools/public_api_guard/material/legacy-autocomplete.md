@@ -50,7 +50,7 @@ export class MatLegacyAutocomplete extends _MatAutocompleteBase {
     // (undocumented)
     protected _visibleClass: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, ["optionGroups", "options"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, ["optionGroups", "options"], ["*"], false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyAutocomplete, never>;
 }
@@ -72,7 +72,7 @@ export class MatLegacyAutocompleteModule {
 // @public @deprecated
 export class MatLegacyAutocompleteOrigin extends _MatAutocompleteOriginBase {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyAutocompleteOrigin, "[matAutocompleteOrigin]", ["matAutocompleteOrigin"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyAutocompleteOrigin, "[matAutocompleteOrigin]", ["matAutocompleteOrigin"], {}, {}, never, never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyAutocompleteOrigin, never>;
 }
@@ -84,7 +84,7 @@ export class MatLegacyAutocompleteTrigger extends _MatAutocompleteTriggerBase {
     // (undocumented)
     protected _aboveClass: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyAutocompleteTrigger, "input[matAutocomplete], textarea[matAutocomplete]", ["matAutocompleteTrigger"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyAutocompleteTrigger, "input[matAutocomplete], textarea[matAutocomplete]", ["matAutocompleteTrigger"], {}, {}, never, never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyAutocompleteTrigger, never>;
 }
