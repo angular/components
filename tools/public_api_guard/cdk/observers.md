@@ -27,7 +27,7 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkObserveContent, "[cdkObserveContent]", ["cdkObserveContent"], { "disabled": { "alias": "cdkObserveContentDisabled"; "required": false; }; "debounce": { "alias": "debounce"; "required": false; }; }, { "event": "cdkObserveContent"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkObserveContent, "[cdkObserveContent]", ["cdkObserveContent"], { "disabled": { "alias": "cdkObserveContentDisabled"; "required": false; }; "debounce": { "alias": "debounce"; "required": false; }; }, { "event": "cdkObserveContent"; }, never, never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkObserveContent, never>;
 }
