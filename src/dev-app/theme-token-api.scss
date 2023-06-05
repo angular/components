@@ -51,7 +51,7 @@ html {
 // rather than the ones for light theme tokens set on `body`. Note that we're not setting *all* of
 // the tokens, since many (density, typography, etc) are the same between light and dark theme.
 .demo-unicorn-dark-theme {
-  @include matx.retheme($components: (
+  @include matx.retheme((
     // TODO(mmalerba): In the future this should be configured through `matx.system-colors()`
     matx.checkbox((theme-type: dark)),
     matx.card((theme-type: dark)),
@@ -68,23 +68,47 @@ html {
 // take precedence.
 // (e.g. <div class="mat-warn><mat-checkbox class="mat-primary">I'm primary</mat-checkbox></div>)
 .mat-primary {
-  @include matx.retheme($components: (
+  @include matx.retheme((
     matx.checkbox((
       color-palette: map.get($theme, color, primary)
     )),
   ));
 }
 .mat-accent {
-  @include matx.retheme($components: (
+  @include matx.retheme((
     matx.checkbox((
       color-palette: map.get($theme, color, accent)
     )),
   ));
 }
 .mat-warn {
-  @include matx.retheme($components: (
+  @include matx.retheme((
     matx.checkbox((
       color-palette: map.get($theme, color, warn)
     )),
+  ));
+}
+
+// Apply tokens for a completely custom checkbox that appears as an unfilled red box when unchecked,
+// and a filled green box when checked.
+.demo-traffic-light-checkbox {
+  @include matx.retheme((
+    matx.checkbox((
+      checkmark-color: transparent,
+      selected-box-color: green,
+      selected-focus-box-color: green,
+      selected-hover-box-color: green,
+      selected-pressed-box-color: green,
+      selected-focus-ring-color: green,
+      selected-hover-ring-color: green,
+      selected-pressed-ring-color: green,
+      unselected-box-color: red,
+      unselected-focus-box-color: red,
+      unselected-hover-box-color: red,
+      unselected-pressed-box-color: red,
+      unselected-focus-ring-color: red,
+      unselected-hover-ring-color: red,
+      unselected-pressed-ring-color: red,
+    ))
   ));
 }
