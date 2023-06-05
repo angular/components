@@ -3,18 +3,50 @@ import {Component, ElementRef, inject, ViewChild} from '@angular/core';
 import {SharedResizeObserver} from './shared-resize-observer';
 
 describe('SharedResizeObserver', () => {
+  const currentObservers = new Map<ResizeObserverBoxOptions, MockResizeObserver>();
   let fixture: ComponentFixture<TestComponent>;
   let instance: TestComponent;
   let resizeObserver: SharedResizeObserver;
+  let originalResizeObserver: typeof ResizeObserver;
   let el1: Element;
   let el2: Element;
 
-  async function waitForResize() {
-    fixture.detectChanges();
-    await new Promise(r => setTimeout(r, 16));
+  /**
+   * Mocked out resize observer that allows us to trigger the callback manually. It helps reduce
+   * test flakines caused by browsers that invoke the callbacks with inconsistent timings.
+   */
+  class MockResizeObserver implements ResizeObserver {
+    constructor(private _callback: ResizeObserverCallback, options?: ResizeObserverOptions) {
+      currentObservers.set(options?.box || 'content-box', this);
+    }
+
+    observe(element: Element) {
+      // The native observer triggers the callback when an element is observed for the first time.
+      this.triggerCallback(element);
+    }
+
+    unobserve() {}
+    disconnect() {}
+
+    triggerCallback(target: Element) {
+      this._callback(
+        [
+          {
+            target,
+            borderBoxSize: [],
+            contentBoxSize: [],
+            devicePixelContentBoxSize: [],
+            contentRect: {} as DOMRect,
+          },
+        ],
+        this,
+      );
+    }
   }
 
   beforeEach(() => {
+    originalResizeObserver = ResizeObserver;
+    window.ResizeObserver = MockResizeObserver;
     TestBed.configureTestingModule({
       declarations: [TestComponent],
     });
@@ -24,6 +56,11 @@ describe('SharedResizeObserver', () => {
     resizeObserver = instance.resizeObserver;
     el1 = instance.el1.nativeElement;
     el2 = instance.el2.nativeElement;
+  });
+
+  afterEach(() => {
+    window.ResizeObserver = originalResizeObserver;
+    currentObservers.clear();
   });
 
   it('should return the same observable for the same element and same box', () => {
@@ -60,21 +97,21 @@ describe('SharedResizeObserver', () => {
     const observable = resizeObserver.observe(el1);
     const resizeSpy1 = jasmine.createSpy('resize handler 1');
     observable.subscribe(resizeSpy1);
-    await waitForResize();
+    fixture.detectChanges();
     expect(resizeSpy1).toHaveBeenCalled();
     const resizeSpy2 = jasmine.createSpy('resize handler 2');
     observable.subscribe(resizeSpy2);
-    await waitForResize();
+    fixture.detectChanges();
     expect(resizeSpy2).toHaveBeenCalled();
   }));
 
   it('should receive events on resize', waitForAsync(async () => {
     const resizeSpy = jasmine.createSpy('resize handler');
     resizeObserver.observe(el1).subscribe(resizeSpy);
-    await waitForResize();
+    fixture.detectChanges();
     resizeSpy.calls.reset();
-    instance.el1Width = 1;
-    await waitForResize();
+    currentObservers.get('content-box')?.triggerCallback(el1);
+    fixture.detectChanges();
     expect(resizeSpy).toHaveBeenCalled();
   }));
 
@@ -83,11 +120,11 @@ describe('SharedResizeObserver', () => {
     const resizeSpy2 = jasmine.createSpy('resize handler 2');
     resizeObserver.observe(el1).subscribe(resizeSpy1);
     resizeObserver.observe(el2).subscribe(resizeSpy2);
-    await waitForResize();
+    fixture.detectChanges();
     resizeSpy1.calls.reset();
     resizeSpy2.calls.reset();
-    instance.el1Width = 1;
-    await waitForResize();
+    currentObservers.get('content-box')?.triggerCallback(el1);
+    fixture.detectChanges();
     expect(resizeSpy1).toHaveBeenCalled();
     expect(resizeSpy2).not.toHaveBeenCalled();
   }));
@@ -95,14 +132,12 @@ describe('SharedResizeObserver', () => {
 
 @Component({
   template: `
-    <div #el1 [style.height.px]="1" [style.width.px]="el1Width"></div>
-    <div #el2 [style.height.px]="1" [style.width.px]="el2Width"></div>
+    <div #el1></div>
+    <div #el2></div>
   `,
 })
 export class TestComponent {
   @ViewChild('el1') el1: ElementRef<Element>;
   @ViewChild('el2') el2: ElementRef<Element>;
   resizeObserver = inject(SharedResizeObserver);
-  el1Width = 0;
-  el2Width = 0;
 }
