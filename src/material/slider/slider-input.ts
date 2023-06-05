@@ -269,7 +269,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
       this._hostElement.addEventListener('pointerdown', this._onPointerDown.bind(this));
       this._hostElement.addEventListener('pointermove', this._onPointerMove.bind(this));
       this._hostElement.addEventListener('pointerup', this._onPointerUp.bind(this));
-      this._hostElement.addEventListener('contextmenu', this._onPointerUp.bind(this));
     });
   }
 
@@ -277,7 +276,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._hostElement.removeEventListener('pointerdown', this._onPointerDown);
     this._hostElement.removeEventListener('pointermove', this._onPointerMove);
     this._hostElement.removeEventListener('pointerup', this._onPointerUp);
-    this._hostElement.removeEventListener('contextmenu', this._onPointerUp);
     this._destroyed.next();
     this._destroyed.complete();
     this.dragStart.complete();
@@ -639,7 +637,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   }
 
   override _onPointerDown(event: PointerEvent): void {
-    if (this.disabled) {
+    if (this.disabled || event.button !== 0) {
       return;
     }
     if (this._sibling) {
