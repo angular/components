@@ -1,7 +1,4 @@
 {
   "installDependencies": true,
-  "startCommand": "${startCommand}",
-  "env": {
-    "ENABLE_CJS_IMPORTS": true
-  }
+  "startCommand": "${startCommand}"
 }
