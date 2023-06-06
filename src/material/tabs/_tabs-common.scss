@@ -122,6 +122,11 @@ $mat-tab-animation-duration: 500ms !default;
     // hover and focus selectors.
     pointer-events: none;
 
+    // We also need to prevent content from being clickable.
+    .mdc-tab__content {
+      pointer-events: none;
+    }
+
     @include token-utils.use-tokens(
       tokens-mat-tab-header.$prefix,
       tokens-mat-tab-header.get-token-slots()
