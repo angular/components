@@ -5115,6 +5115,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"browserslist@npm:^4.21.7":
+  version: 4.21.7
+  resolution: "browserslist@npm:4.21.7"
+  dependencies:
+    caniuse-lite: ^1.0.30001489
+    electron-to-chromium: ^1.4.411
+    node-releases: ^2.0.12
+    update-browserslist-db: ^1.0.11
+  bin:
+    browserslist: cli.js
+  checksum: 3d0d025e6d381c4db5e71b538258952660ba574c060832095f182a9877ca798836fa550736269e669a2080e486f0cfdf5d3bcf2769b9f7cf123f6c6b8c005f8f
+  languageName: node
+  linkType: hard
+
 "buffer-from@npm:^1.0.0":
   version: 1.1.2
   resolution: "buffer-from@npm:1.1.2"
@@ -5247,10 +5261,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001400, caniuse-lite@npm:^1.0.30001449, caniuse-lite@npm:^1.0.30001464":
-  version: 1.0.30001494
-  resolution: "caniuse-lite@npm:1.0.30001494"
-  checksum: 770b742ebba6076da72e94f979ef609bbc855369d1b937c52227935d966b11c3b02baa6511fba04a804802b6eb22af0a2a4a82405963bbb769772530e6be7a8e
+"caniuse-lite@npm:^1.0.30001400, caniuse-lite@npm:^1.0.30001449, caniuse-lite@npm:^1.0.30001464, caniuse-lite@npm:^1.0.30001489":
+  version: 1.0.30001495
+  resolution: "caniuse-lite@npm:1.0.30001495"
+  checksum: c0a139a2e679ca60ae1ce2aaf0e9f5850cc1016b3735200cc1a1347bd7737f0a2a5993bc3f88f43a13ec687befffdae212a849f782702a6fe488de123e92351e
   languageName: node
   linkType: hard
 
@@ -5906,6 +5920,13 @@ __metadata:
   version: 1.4.299
   resolution: "electron-to-chromium@npm:1.4.299"
   checksum: 3d3ba3da9a7661f61003a957bb21eb8abfba84c7920088db53f28613e31c8277ad443ae9882dc64a5a5c5e6bf8f52e8a701afac3a7223926ecdb2bd45bfaded4
+  languageName: node
+  linkType: hard
+
+"electron-to-chromium@npm:^1.4.411":
+  version: 1.4.421
+  resolution: "electron-to-chromium@npm:1.4.421"
+  checksum: 91baf5e7de012bdd61ca85623cd95da8441d1b8e8268f3999a4cd110b9451be1be2975eb1268ee34a99c2703a07e4b0dc7e940b96b39800c65c3840a9a8ec62f
   languageName: node
   linkType: hard
 
@@ -8313,6 +8334,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-releases@npm:^2.0.12":
+  version: 2.0.12
+  resolution: "node-releases@npm:2.0.12"
+  checksum: b8c56db82c4642a0f443332b331a4396dae452a2ac5a65c8dbd93ef89ecb2fbb0da9d42ac5366d4764973febadca816cf7587dad492dce18d2a6b2af59cda260
+  languageName: node
+  linkType: hard
+
 "node-releases@npm:^2.0.6":
   version: 2.0.6
   resolution: "node-releases@npm:2.0.6"
@@ -10401,6 +10429,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"update-browserslist-db@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "update-browserslist-db@npm:1.0.11"
+  dependencies:
+    escalade: ^3.1.1
+    picocolors: ^1.0.0
+  peerDependencies:
+    browserslist: ">= 4.21.0"
+  bin:
+    update-browserslist-db: cli.js
+  checksum: b98327518f9a345c7cad5437afae4d2ae7d865f9779554baf2a200fdf4bac4969076b679b1115434bd6557376bdd37ca7583d0f9b8f8e302d7d4cc1e91b5f231
+  languageName: node
+  linkType: hard
+
 "uri-js@npm:^4.2.2":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
@@ -10906,6 +10948,7 @@ __metadata:
     "@angular/router": ^16.0.0
     "@types/jasmine": ~3.10.0
     "@types/node": ^16.10.9
+    browserslist: ^4.21.7
     jasmine-core: ~4.0.0
     karma: ~6.3.0
     karma-chrome-launcher: ~3.1.0
