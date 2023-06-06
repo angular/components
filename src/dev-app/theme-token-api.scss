@@ -37,11 +37,9 @@ $theme: mat.define-light-theme((
 // on the page will inherit these tokens.
 html {
   @include matx.theme(
-    $tokens: mat.m2-tokens-from-theme($theme),
-    $components: (
-      matx.card(),
-      matx.checkbox(),
-    )
+    matx.token-defaults(mat.m2-tokens-from-theme($theme)),
+    matx.card(),
+    matx.checkbox(),
   );
 }
 
@@ -51,11 +49,11 @@ html {
 // rather than the ones for light theme tokens set on `body`. Note that we're not setting *all* of
 // the tokens, since many (density, typography, etc) are the same between light and dark theme.
 .demo-unicorn-dark-theme {
-  @include matx.retheme((
+  @include matx.theme(
     // TODO(mmalerba): In the future this should be configured through `matx.system-colors()`
     matx.checkbox((theme-type: dark)),
     matx.card((theme-type: dark)),
-  ));
+  );
 }
 
 // Apply tokens related to the color palette to any element with `.mat-primary`, `.mat-accent`, or
@@ -68,31 +66,31 @@ html {
 // take precedence.
 // (e.g. <div class="mat-warn><mat-checkbox class="mat-primary">I'm primary</mat-checkbox></div>)
 .mat-primary {
-  @include matx.retheme((
+  @include matx.theme(
     matx.checkbox((
       color-palette: map.get($theme, color, primary)
     )),
-  ));
+  );
 }
 .mat-accent {
-  @include matx.retheme((
+  @include matx.theme(
     matx.checkbox((
       color-palette: map.get($theme, color, accent)
     )),
-  ));
+  );
 }
 .mat-warn {
-  @include matx.retheme((
+  @include matx.theme(
     matx.checkbox((
       color-palette: map.get($theme, color, warn)
     )),
-  ));
+  );
 }
 
 // Apply tokens for a completely custom checkbox that appears as an unfilled red box when unchecked,
 // and a filled green box when checked.
 .demo-traffic-light-checkbox {
-  @include matx.retheme((
+  @include matx.theme(
     matx.checkbox((
       checkmark-color: transparent,
       selected-box-color: green,
@@ -110,5 +108,10 @@ html {
       unselected-hover-ring-color: red,
       unselected-pressed-ring-color: red,
     ))
-  ));
+  );
+}
+
+.demo-what-am-i-doing {
+  // Will not produce any output, should result in a warning.
+  @include matx.theme(matx.checkbox());
 }
