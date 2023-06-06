@@ -637,7 +637,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   }
 
   override _onPointerDown(event: PointerEvent): void {
-    if (this.disabled) {
+    if (this.disabled || event.button !== 0) {
       return;
     }
     if (this._sibling) {
