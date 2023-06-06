@@ -120,7 +120,7 @@ export class MatRippleLoader implements OnDestroy {
 
   /** Handles creating and attaching component internals when a component it is initially interacted with. */
   private _onInteraction = (event: Event) => {
-    if (event.target === this._document) {
+    if (!(event.target instanceof HTMLElement)) {
       return;
     }
     const eventTarget = event.target as HTMLElement;
