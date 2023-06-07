@@ -8,9 +8,9 @@ set -e
 
 cd "$(dirname $0)/../../"
 
-if [ -z ${MATERIAL2_BUILDS_TOKEN} ]; then
+if [ -z ${SNAPSHOT_BUILDS_GITHUB_TOKEN} ]; then
   echo "Error: No access token for GitHub could be found." \
-       "Please set the environment variable 'MATERIAL2_BUILDS_TOKEN'."
+       "Please set the environment variable 'SNAPSHOT_BUILDS_GITHUB_TOKEN'."
   exit 1
 fi
 
@@ -96,7 +96,7 @@ git config user.name "$commitAuthorName"
 git config user.email "$commitAuthorEmail"
 git config credential.helper "store --file=.git/credentials"
 
-echo "https://${MATERIAL2_BUILDS_TOKEN}:@github.com" > .git/credentials
+echo "https://${SNAPSHOT_BUILDS_GITHUB_TOKEN}:@github.com" > .git/credentials
 
 echo "Credentials for docs-content repository are now set up. Publishing.."
 
