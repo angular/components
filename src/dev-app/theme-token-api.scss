@@ -37,13 +37,14 @@ $theme: mat.define-light-theme((
 // on the page will inherit these tokens.
 html {
   @include matx.theme(
-    matx.token-defaults(mat.m2-tokens-from-theme($theme)),
+    matx.token-defaults(matx.get-m3-tokens()),
     matx.card(),
     matx.checkbox(),
   );
 }
 
-
+// TODO(mmalerba): Figure out how dark themes & primary/accent/warn should work with M3.
+/*
 // Apply tokens needed for dark theme to the element with `.demo-unicorn-dark-theme`.
 // This ensures that checkboxes within the element inherit the new tokens for dark theme,
 // rather than the ones for light theme tokens set on `body`. Note that we're not setting *all* of
@@ -115,3 +116,4 @@ html {
   // Will not produce any output, should result in a warning.
   @include matx.theme(matx.checkbox());
 }
+*/
