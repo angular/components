@@ -1,0 +1,45 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@material/tokens/v0_161' as mdc-tokens;
+
+/// Sets all of the standard typography tokens for the given token base name to the given typography
+/// level.
+/// @param {Map} $typography-tokens The MDC system-typescale tokens.
+/// @param {String} $base-name The token base name to get the typography tokens for
+/// @param {String} $typography-level The typography level to base the token values on.
+/// @return {Map} A map containing the typography tokens for the given base token name.
+@function _get-typography-tokens($typography-tokens, $base-name, $typography-level) {
+  $result: ();
+  @each $prop in (font, line-height, size, tracking, weight) {
+    $result: map.set(
+      $result,
+      #{$base-name}-#{$prop},
+      map.get($typography-tokens, #{$typography-level}-#{$prop}
+    ));
+  }
+  @return $result;
+}
+
+// TODO(mmalerba): We need a way to accept custom M3 token values generated from MDCs theme builder
+//  or other means. We can't just use them directly without processing them first because we need to
+//  add our made up tokens,
+/// Gets the default token values for M3.
+/// @return The default set of M3 tokens.
+@function get-m3-tokens() {
+  $typography: mdc-tokens.md-sys-typescale-values();
+  $colors: mdc-tokens.md-sys-color-values-light();
+
+  // TODO(mmalerba): Fill in remaining tokens.
+  @return (
+    // Fill in official MDC tokens.
+      (mdc, checkbox): mdc-tokens.md-comp-checkbox-values(),
+      (mdc, elevated-card): mdc-tokens.md-comp-elevated-card-values(),
+      (mdc, outlined-card): mdc-tokens.md-comp-outlined-card-values(),
+    // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded values.
+      (mat, card): mat.private-merge-all(
+        _get-typography-tokens($typography, title-text, title-large),
+        _get-typography-tokens($typography, subtitle-text, title-medium),
+        (subtitle-text-color: map.get($colors, on-surface))
+      ),
+  );
+}
