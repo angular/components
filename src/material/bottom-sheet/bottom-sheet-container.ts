@@ -11,7 +11,6 @@ import {CdkDialogContainer, DialogConfig} from '@angular/cdk/dialog';
 import {FocusMonitor, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {OverlayRef} from '@angular/cdk/overlay';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
