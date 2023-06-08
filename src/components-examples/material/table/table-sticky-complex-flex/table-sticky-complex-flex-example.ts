@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
-import {MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {NgFor} from '@angular/common';
+import {MatButtonToggleGroup, MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 /**
  * @title Flex-layout tables with toggle-able sticky headers, footers, and columns
@@ -8,6 +11,8 @@ import {MatButtonToggleGroup} from '@angular/material/button-toggle';
   selector: 'table-sticky-complex-flex-example',
   styleUrls: ['table-sticky-complex-flex-example.css'],
   templateUrl: 'table-sticky-complex-flex-example.html',
+  standalone: true,
+  imports: [MatButtonModule, MatButtonToggleModule, NgFor, MatTableModule],
 })
 export class TableStickyComplexFlexExample {
   displayedColumns: string[] = [];

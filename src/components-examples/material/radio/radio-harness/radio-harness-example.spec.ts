@@ -2,19 +2,13 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatRadioButtonHarness, MatRadioGroupHarness} from '@angular/material/radio/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatRadioModule} from '@angular/material/radio';
 import {RadioHarnessExample} from './radio-harness-example';
-import {ReactiveFormsModule} from '@angular/forms';
 
 describe('RadioHarnessExample', () => {
   let fixture: ComponentFixture<RadioHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatRadioModule, ReactiveFormsModule],
-      declarations: [RadioHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(RadioHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

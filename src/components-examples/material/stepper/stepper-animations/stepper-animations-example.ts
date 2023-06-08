@@ -7,7 +7,11 @@
  */
 
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatStepperModule} from '@angular/material/stepper';
 
 /**
  * @title Stepper animations
@@ -16,6 +20,15 @@ import {FormBuilder, FormGroup} from '@angular/forms';
   selector: 'stepper-animations-example',
   templateUrl: 'stepper-animations-example.html',
   styleUrls: ['stepper-animations-example.css'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
 })
 export class StepperAnimationsExample {
   constructor(private _formBuilder: FormBuilder) {}

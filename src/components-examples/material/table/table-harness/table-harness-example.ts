@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
 
 /**
  * @title Testing with MatTableHarness
@@ -7,6 +8,8 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'table-harness-example',
   templateUrl: 'table-harness-example.html',
+  standalone: true,
+  imports: [MatTableModule],
 })
 export class TableHarnessExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

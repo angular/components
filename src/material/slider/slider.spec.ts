@@ -1168,6 +1168,21 @@ describe('MDC-based MatSlider', () => {
     }));
   });
 
+  describe('range slider w/ NgModel edge case', () => {
+    it('should initialize correctly despite NgModel `null` bug', fakeAsync(() => {
+      const fixture = createComponent(RangeSliderWithNgModelEdgeCase);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const slider = sliderDebugElement.componentInstance;
+      const startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
+      const endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
+      flush();
+      console.log('result: ', startInput.value);
+      checkInput(startInput, {min: -1, max: -0.3, value: -0.7, translateX: 90});
+      checkInput(endInput, {min: -0.7, max: 0, value: -0.3, translateX: 210});
+    }));
+  });
+
   describe('slider as a custom form control', () => {
     let fixture: ComponentFixture<SliderWithFormControl>;
     let slider: MatSlider;
@@ -1615,6 +1630,22 @@ class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
   startVal: number | undefined = 0;
   endVal: number | undefined = 100;
+}
+
+@Component({
+  template: `
+  <mat-slider min="-1" max="0" step="0.1">
+    <input [(ngModel)]="startValue" matSliderStartThumb />
+    <input [(ngModel)]="endValue" matSliderEndThumb />
+  </mat-slider>
+
+`,
+  styles: SLIDER_STYLES,
+})
+class RangeSliderWithNgModelEdgeCase {
+  @ViewChild(MatSlider) slider: MatSlider;
+  startValue: number = -0.7;
+  endValue: number = -0.3;
 }
 
 @Component({

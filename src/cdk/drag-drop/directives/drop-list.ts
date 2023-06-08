@@ -24,11 +24,10 @@ import {
   ChangeDetectorRef,
   SkipSelf,
   Inject,
-  InjectionToken,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {CdkDrag} from './drag';
+import {CDK_DROP_LIST, CdkDrag} from './drag';
 import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
 import {CDK_DROP_LIST_GROUP, CdkDropListGroup} from './drop-list-group';
 import {DropListRef} from '../drop-list-ref';
@@ -41,20 +40,6 @@ import {assertElementNode} from './assertions';
 
 /** Counter used to generate unique ids for drop zones. */
 let _uniqueIdCounter = 0;
-
-/**
- * Internal compile-time-only representation of a `CdkDropList`.
- * Used to avoid circular import issues between the `CdkDropList` and the `CdkDrag`.
- * @docs-private
- */
-export interface CdkDropListInternal extends CdkDropList {}
-
-/**
- * Injection token that can be used to reference instances of `CdkDropList`. It serves as
- * alternative token to the actual `CdkDropList` class which could cause unnecessary
- * retention of the class and its directive metadata.
- */
-export const CDK_DROP_LIST = new InjectionToken<CdkDropList>('CdkDropList');
 
 /** Container that wraps a set of draggable items. */
 @Directive({

@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatButtonModule} from '@angular/material/button';
 import {ButtonHarnessExample} from './button-harness-example';
 
 describe('ButtonHarnessExample', () => {
@@ -10,10 +9,6 @@ describe('ButtonHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatButtonModule],
-      declarations: [ButtonHarnessExample],
-    }).compileComponents();
     fixture = TestBed.createComponent(ButtonHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

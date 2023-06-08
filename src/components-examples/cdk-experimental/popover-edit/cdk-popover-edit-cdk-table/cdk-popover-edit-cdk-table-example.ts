@@ -1,7 +1,9 @@
 import {DataSource} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormsModule} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
+import {CdkTableModule} from '@angular/cdk/table';
 
 export interface PeriodicElement {
   name: string;
@@ -40,6 +42,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'cdk-popover-edit-cdk-table-example',
   styleUrls: ['cdk-popover-edit-cdk-table-example.css'],
   templateUrl: 'cdk-popover-edit-cdk-table-example.html',
+  standalone: true,
+  imports: [CdkTableModule, CdkPopoverEditModule, FormsModule],
 })
 export class CdkPopoverEditCdkTableExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

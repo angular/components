@@ -9,6 +9,7 @@ import {
   Optional,
   Self,
   ViewChild,
+  forwardRef,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -18,14 +19,30 @@ import {
   FormGroup,
   NgControl,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
+import {
+  MAT_FORM_FIELD,
+  MatFormField,
+  MatFormFieldControl,
+  MatFormFieldModule,
+} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
+import {MatIconModule} from '@angular/material/icon';
 
 /** @title Form field with custom telephone number input control. */
 @Component({
   selector: 'form-field-custom-control-example',
   templateUrl: 'form-field-custom-control-example.html',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    forwardRef(() => MyTelInput),
+    MatIconModule,
+  ],
 })
 export class FormFieldCustomControlExample {
   form: FormGroup = new FormGroup({
@@ -48,6 +65,8 @@ export class MyTel {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',
   },
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
   static nextId = 0;

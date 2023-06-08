@@ -1,6 +1,11 @@
 import {Component, Injectable} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
-import {MatStepperIntl} from '@angular/material/stepper';
+import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatStepperIntl, MatStepperModule} from '@angular/material/stepper';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {NgFor} from '@angular/common';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Injectable()
 export class StepperIntl extends MatStepperIntl {
@@ -16,6 +21,17 @@ export class StepperIntl extends MatStepperIntl {
   templateUrl: 'stepper-intl-example.html',
   styleUrls: ['stepper-intl-example.css'],
   providers: [{provide: MatStepperIntl, useClass: StepperIntl}],
+  standalone: true,
+  imports: [
+    MatRadioModule,
+    FormsModule,
+    NgFor,
+    MatStepperModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
 })
 export class StepperIntlExample {
   optionalLabelText: string;

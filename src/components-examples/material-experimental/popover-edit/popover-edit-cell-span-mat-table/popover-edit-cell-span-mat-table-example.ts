@@ -1,6 +1,13 @@
 import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPopoverEditModule} from '@angular/material-experimental/popover-edit';
+import {CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
+import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 export interface Person {
@@ -29,6 +36,17 @@ const PERSON_DATA: Person[] = [
   selector: 'popover-edit-cell-span-mat-table-example',
   styleUrls: ['popover-edit-cell-span-mat-table-example.css'],
   templateUrl: 'popover-edit-cell-span-mat-table-example.html',
+  standalone: true,
+  imports: [
+    MatTableModule,
+    CdkPopoverEditModule,
+    FormsModule,
+    MatPopoverEditModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
 })
 export class PopoverEditCellSpanMatTableExample {
   displayedColumns: string[] = ['id', 'firstName', 'middleName', 'lastName'];

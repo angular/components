@@ -20,8 +20,8 @@ import { MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY as MAT_LEGACY_SELECT_SCROLL
 import { MAT_SELECT_TRIGGER as MAT_LEGACY_SELECT_TRIGGER } from '@angular/material/select';
 import { MatLegacyOptgroup } from '@angular/material/legacy-core';
 import { MatLegacyOption } from '@angular/material/legacy-core';
-import { MatSelectConfig as MatLegacySelectConfig } from '@angular/material/select';
 import { _MatSelectBase } from '@angular/material/select';
+import { MatSelectConfig } from '@angular/material/select';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 
@@ -63,7 +63,7 @@ export class MatLegacySelect extends _MatSelectBase<MatLegacySelectChange> imple
     _transformOrigin: string;
     _triggerFontSize: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacySelect, "mat-select", ["matSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacySelect, "mat-select", ["matSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacySelect, never>;
 }
@@ -83,7 +83,8 @@ export class MatLegacySelectChange {
     value: any;
 }
 
-export { MatLegacySelectConfig }
+// @public @deprecated (undocumented)
+export type MatLegacySelectConfig = Omit<MatSelectConfig, 'panelWidth'>;
 
 // @public @deprecated (undocumented)
 export class MatLegacySelectModule {
@@ -98,7 +99,7 @@ export class MatLegacySelectModule {
 // @public @deprecated
 export class MatLegacySelectTrigger {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacySelectTrigger, "mat-select-trigger", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacySelectTrigger, "mat-select-trigger", never, {}, {}, never, never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacySelectTrigger, never>;
 }

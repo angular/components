@@ -1524,6 +1524,42 @@ describe('MDC-based MatSelect', () => {
         expect(parseInt(pane.style.width || '0')).toBeGreaterThan(initialWidth);
       }));
 
+      it('should be able to set a custom width on the select panel', fakeAsync(() => {
+        fixture.componentInstance.panelWidth = '42px';
+        fixture.detectChanges();
+
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(pane.style.width).toBe('42px');
+      }));
+
+      it('should not set a width on the panel if panelWidth is null', fakeAsync(() => {
+        fixture.componentInstance.panelWidth = null;
+        fixture.detectChanges();
+
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(pane.style.width).toBeFalsy();
+      }));
+
+      it('should not set a width on the panel if panelWidth is an empty string', fakeAsync(() => {
+        fixture.componentInstance.panelWidth = '';
+        fixture.detectChanges();
+
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(pane.style.width).toBeFalsy();
+      }));
+
       it('should not attempt to open a select that does not have any options', fakeAsync(() => {
         fixture.componentInstance.foods = [];
         fixture.detectChanges();
@@ -4430,6 +4466,7 @@ describe('MDC-based MatSelect', () => {
             disableOptionCentering: true,
             typeaheadDebounceInterval: 1337,
             overlayPanelClass: 'test-panel-class',
+            panelWidth: null,
           } as MatSelectConfig,
         },
       ],
@@ -4444,6 +4481,7 @@ describe('MDC-based MatSelect', () => {
     expect(select.disableOptionCentering).toBe(true);
     expect(select.typeaheadDebounceInterval).toBe(1337);
     expect(document.querySelector('.cdk-overlay-pane')?.classList).toContain('test-panel-class');
+    expect(select.panelWidth).toBeNull();
   }));
 
   it('should be able to hide checkmark icon through an injection token', () => {
@@ -4542,7 +4580,8 @@ describe('MDC-based MatSelect', () => {
         [tabIndex]="tabIndexOverride" [aria-describedby]="ariaDescribedBy"
         [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
         [panelClass]="panelClass" [disableRipple]="disableRipple"
-        [typeaheadDebounceInterval]="typeaheadDebounceInterval">
+        [typeaheadDebounceInterval]="typeaheadDebounceInterval"
+        [panelWidth]="panelWidth">
         <mat-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
           {{ capitalize ? food.viewValue.toUpperCase() : food.viewValue }}
         </mat-option>
@@ -4577,6 +4616,7 @@ class BasicSelect {
   disableRipple: boolean;
   typeaheadDebounceInterval: number;
   capitalize = false;
+  panelWidth: string | null | number = 'auto';
 
   @ViewChild(MatSelect, {static: true}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;

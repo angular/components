@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, CdkDrag} from '@angular/cdk/drag-drop';
+import {NgFor} from '@angular/common';
+import {CdkDragDrop, moveItemInArray, CdkDrag, CdkDropList} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop sort predicate
@@ -8,6 +9,8 @@ import {CdkDragDrop, moveItemInArray, CdkDrag} from '@angular/cdk/drag-drop';
   selector: 'cdk-drag-drop-sort-predicate-example',
   templateUrl: 'cdk-drag-drop-sort-predicate-example.html',
   styleUrls: ['cdk-drag-drop-sort-predicate-example.css'],
+  standalone: true,
+  imports: [CdkDropList, NgFor, CdkDrag],
 })
 export class CdkDragDropSortPredicateExample {
   numbers = [1, 2, 3, 4, 5, 6, 7, 8];

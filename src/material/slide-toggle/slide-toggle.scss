@@ -5,7 +5,7 @@
 @use '@material/form-field' as mdc-form-field;
 @use '@material/ripple' as mdc-ripple;
 @use '../core/mdc-helpers/mdc-helpers';
-@use '../core/style/_layout-common.scss';
+@use '../core/style/layout-common';
 
 
 @include mdc-helpers.disable-mdc-fallback-declarations {

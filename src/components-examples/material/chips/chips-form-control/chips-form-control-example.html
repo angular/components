@@ -3,9 +3,9 @@
   <button mat-raised-button (click)="formControl.enable()">Enable form control</button>
 </div>
 <p>
-  <i>Enter video keywords</i>
+  <em>Enter video keywords</em>
 </p>
-<mat-form-field appearance="fill" class="example-form-field">
+<mat-form-field class="example-form-field">
   <mat-label>Video keywords</mat-label>
   <mat-chip-grid #chipGrid aria-label="Enter keywords" [formControl]="formControl" >
     <mat-chip-row *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
@@ -21,5 +21,5 @@
 </mat-form-field>
 
 <p>
-  <b>The following keywords are entered:</b> {{formControl.value}}
+  <strong>The following keywords are entered:</strong> {{formControl.value}}
 </p>

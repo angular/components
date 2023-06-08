@@ -1,3 +1,82 @@
+<a name="16.1.0-next.2"></a>
+# 16.1.0-next.2 "satin-shoe" (2023-06-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4656c24f78](https://github.com/angular/components/commit/4656c24f784a0efa7136b7138a88666d8b2da917) | fix | **overlay:** remove circular dependency workarounds ([#27190](https://github.com/angular/components/pull/27190)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3703cc912c](https://github.com/angular/components/commit/3703cc912cca1ebc129b5e11be09bf6a505bf5b9) | feat | **select:** add input to control the panel width ([#27188](https://github.com/angular/components/pull/27188)) |
+| [2c078673a7](https://github.com/angular/components/commit/2c078673a7d1e852eb13165942c9c3f6a6d199d9) | fix | **chips:** fix click target when stacked ([#27129](https://github.com/angular/components/pull/27129)) |
+| [57adfe4fbf](https://github.com/angular/components/commit/57adfe4fbf1bfa9cc3f8c0eeebc95a132d42a551) | fix | **select:** incorrect position if initialized late ([#27198](https://github.com/angular/components/pull/27198)) |
+| [43c6fe349f](https://github.com/angular/components/commit/43c6fe349fad5f896e582d8d75fcac1d183626b4) | fix | **slider:** handle ngModel initial null value ([#27149](https://github.com/angular/components/pull/27149)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aec23ac348](https://github.com/angular/components/commit/aec23ac348f41d288417c1ae7788e0bd7cb8a9a9) | feat | **theming:** add first part of token-based theming API ([#27000](https://github.com/angular/components/pull/27000)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.3"></a>
+# 16.0.3 "silk-scarf" (2023-06-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3d4a9d1607](https://github.com/angular/components/commit/3d4a9d1607fbe1e0a25775ad45551c2d45405c8c) | fix | **overlay:** remove circular dependency workarounds ([#27190](https://github.com/angular/components/pull/27190)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c8065d5168](https://github.com/angular/components/commit/c8065d51688b359463bfd78b6901b7cec907cc69) | fix | **chips:** fix click target when stacked ([#27129](https://github.com/angular/components/pull/27129)) |
+| [12e47478c5](https://github.com/angular/components/commit/12e47478c5d54ee1a998891ee4adbd58512a9cd3) | fix | **slider:** handle ngModel initial null value ([#27149](https://github.com/angular/components/pull/27149)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.0-next.1"></a>
+# 16.1.0-next.1 "metal-rail" (2023-05-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3cb369e048](https://github.com/angular/components/commit/3cb369e04852cfb9876aaddad9b011d396b982a9) | fix | **schematics:** handle templates with byte order mark ([#27131](https://github.com/angular/components/pull/27131)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6610b6d5ce](https://github.com/angular/components/commit/6610b6d5ce51f25c4c9d6c990cfca95a82307ce6) | fix | **checkbox:** set token values on the element where theme is @included ([#27114](https://github.com/angular/components/pull/27114)) |
+| [8afe9cda08](https://github.com/angular/components/commit/8afe9cda08fd555e5d26478fe7bd3aead42765af) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27081](https://github.com/angular/components/pull/27081)) |
+| [fc919ce25d](https://github.com/angular/components/commit/fc919ce25d1b705d3a4326dd62a6fe987675b979) | fix | **datepicker:** set explicit event options ([#27082](https://github.com/angular/components/pull/27082)) |
+| [cda36e9a7a](https://github.com/angular/components/commit/cda36e9a7aa7c3664d9a47583452f87495e1a893) | fix | **form-field:** make notch sizing more reliable ([#26028](https://github.com/angular/components/pull/26028)) |
+| [fd481b9565](https://github.com/angular/components/commit/fd481b9565850d5c163ff06c44f178edbec673f9) | fix | **icon:** harness returning wrong name if icon has other content ([#27132](https://github.com/angular/components/pull/27132)) |
+| [2af1e0a304](https://github.com/angular/components/commit/2af1e0a3048bac6bd117e0f89e1e93eb8604c29e) | fix | **list:** input coercion does not working for `disableRipple` on list items ([#27126](https://github.com/angular/components/pull/27126)) |
+| [a3250c327a](https://github.com/angular/components/commit/a3250c327a9980a309c9cd9886f88bdbf8645a9f) | fix | **paginator:** add aria-hidden="true" to decorative svg's ([#27083](https://github.com/angular/components/pull/27083)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b6373014b7](https://github.com/angular/components/commit/b6373014b7f00edb766009b21b33e50c7a9eb434) | fix | set aria-hidden on presentational svgs ([#27116](https://github.com/angular/components/pull/27116)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.2"></a>
+# 16.0.2 "plastic-car" (2023-05-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a0aa14fe1a](https://github.com/angular/components/commit/a0aa14fe1ae893202d308ae447a6e3ec73915613) | fix | **schematics:** handle templates with byte order mark ([#27131](https://github.com/angular/components/pull/27131)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [82550af4d7](https://github.com/angular/components/commit/82550af4d7fa432ccc1da07f810cda0f9937ea85) | fix | **checkbox:** set token values on the element where theme is @included ([#27114](https://github.com/angular/components/pull/27114)) |
+| [d2e8a55b3b](https://github.com/angular/components/commit/d2e8a55b3b349c79306ea190f07836c0210fdd55) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27081](https://github.com/angular/components/pull/27081)) |
+| [6dd2c605b1](https://github.com/angular/components/commit/6dd2c605b1d123c1cf7817a3f02e02f9e91e882c) | fix | **datepicker:** set explicit event options ([#27082](https://github.com/angular/components/pull/27082)) |
+| [5c3107ccc6](https://github.com/angular/components/commit/5c3107ccc66abb4fcf1bfcf186f215c93db9b35d) | fix | **icon:** harness returning wrong name if icon has other content ([#27132](https://github.com/angular/components/pull/27132)) |
+| [9d9ceb2b22](https://github.com/angular/components/commit/9d9ceb2b22482e7f8669eecef9d63679f0b62b46) | fix | **list:** input coercion does not working for `disableRipple` on list items ([#27126](https://github.com/angular/components/pull/27126)) |
+| [5aad5df78e](https://github.com/angular/components/commit/5aad5df78e61d712653d85f8fb23b5a4cd7d810d) | fix | **paginator:** add aria-hidden="true" to decorative svg's ([#27083](https://github.com/angular/components/pull/27083)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [12474aafc5](https://github.com/angular/components/commit/12474aafc5d86fa7d5829b5a581138d096b2418b) | fix | set aria-hidden on presentational svgs ([#27116](https://github.com/angular/components/pull/27116)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.1"></a>
 # 16.0.1 "sulfur-socks" (2023-05-11)
 ### cdk

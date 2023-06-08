@@ -1,4 +1,4 @@
-import {FocusOrigin} from '@angular/cdk/a11y';
+import {A11yModule, FocusOrigin} from '@angular/cdk/a11y';
 import {ChangeDetectorRef, Component, NgZone} from '@angular/core';
 
 /** @title Monitoring focus with FocusMonitor */
@@ -6,6 +6,8 @@ import {ChangeDetectorRef, Component, NgZone} from '@angular/core';
   selector: 'focus-monitor-directives-example',
   templateUrl: 'focus-monitor-directives-example.html',
   styleUrls: ['focus-monitor-directives-example.css'],
+  standalone: true,
+  imports: [A11yModule],
 })
 export class FocusMonitorDirectivesExample {
   elementOrigin = this.formatOrigin(null);

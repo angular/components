@@ -1,9 +1,12 @@
 import {HttpClient} from '@angular/common/http';
 import {Component, ViewChild, AfterViewInit} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort, SortDirection} from '@angular/material/sort';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule, SortDirection} from '@angular/material/sort';
 import {merge, Observable, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {NgIf, DatePipe} from '@angular/common';
 
 /**
  * @title Table retrieving data through HTTP
@@ -12,6 +15,15 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
   selector: 'table-http-example',
   styleUrls: ['table-http-example.css'],
   templateUrl: 'table-http-example.html',
+  standalone: true,
+  imports: [
+    NgIf,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    DatePipe,
+  ],
 })
 export class TableHttpExample implements AfterViewInit {
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];

@@ -1,5 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatTable} from '@angular/material/table';
+import {MatTable, MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 export interface PeriodicElement {
   name: string;
@@ -28,6 +29,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-dynamic-array-data-example',
   styleUrls: ['table-dynamic-array-data-example.css'],
   templateUrl: 'table-dynamic-array-data-example.html',
+  standalone: true,
+  imports: [MatButtonModule, MatTableModule],
 })
 export class TableDynamicArrayDataExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

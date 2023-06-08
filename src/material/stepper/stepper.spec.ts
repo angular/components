@@ -1571,6 +1571,35 @@ describe('MatStepper', () => {
       expect(element.textContent).toContain('Step 3 content');
     });
   });
+
+  describe('stepper with two-way binding on selectedIndex', () => {
+    it('should update selectedIndex in component on navigation', () => {
+      const fixture = createComponent(StepperWithTwoWayBindingOnSelectedIndex);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.index).toBe(0);
+
+      const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
+
+      let lastStepHeaderEl = stepHeaders[2].nativeElement;
+      lastStepHeaderEl.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.index).toBe(2);
+
+      let middleStepHeaderEl = stepHeaders[1].nativeElement;
+      middleStepHeaderEl.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.index).toBe(1);
+
+      let firstStepHeaderEl = stepHeaders[0].nativeElement;
+      firstStepHeaderEl.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.index).toBe(0);
+    });
+  });
 });
 
 /** Asserts that keyboard interaction works correctly. */
@@ -2165,4 +2194,17 @@ class StepperWithLazyContent {
 })
 class HorizontalStepperWithDelayedStep {
   renderSecondStep = false;
+}
+
+@Component({
+  template: `
+    <mat-stepper [(selectedIndex)]="index">
+      <mat-step label="One"></mat-step>
+      <mat-step label="Two"></mat-step>
+      <mat-step label="Three"></mat-step>
+    </mat-stepper>
+  `,
+})
+class StepperWithTwoWayBindingOnSelectedIndex {
+  index: number = 0;
 }

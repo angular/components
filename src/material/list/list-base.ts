@@ -125,6 +125,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   }
   _explicitLines: number | null = null;
 
+  /** Whether ripples for list items are disabled. */
   @Input()
   get disableRipple(): boolean {
     return (
@@ -134,7 +135,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
       !!this._listBase?.disableRipple
     );
   }
-  set disableRipple(value: boolean) {
+  set disableRipple(value: BooleanInput) {
     this._disableRipple = coerceBooleanProperty(value);
   }
   private _disableRipple: boolean = false;

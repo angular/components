@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {SelectionChange} from '@angular/material-experimental/selection';
+import {SelectionChange, MatSelectionModule} from '@angular/material-experimental/selection';
+import {MatTableModule} from '@angular/material/table';
 
 /**
  * @title Table that uses `matSelectionColumn` which allows users to select rows.
@@ -8,6 +9,8 @@ import {SelectionChange} from '@angular/material-experimental/selection';
   selector: 'mat-selection-column-example',
   templateUrl: 'mat-selection-column-example.html',
   styleUrls: ['mat-selection-column-example.css'],
+  standalone: true,
+  imports: [MatTableModule, MatSelectionModule],
 })
 export class MatSelectionColumnExample {
   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];

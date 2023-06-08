@@ -37,7 +37,7 @@
         <td mat-cell *matCellDef="let item">{{ item.index }}</td>
         <td mat-footer-cell *matFooterCellDef>
           <ng-container *ngIf="allSamples.length">
-            <b>Average render time</b>
+            <strong>Average render time</strong>
           </ng-container>
           <ng-container *ngIf="!allSamples.length"> No data yet </ng-container>
         </td>
@@ -47,7 +47,7 @@
         <th mat-header-cell *matHeaderCellDef>Time</th>
         <td mat-cell *matCellDef="let item">{{ item.time }}</td>
         <td mat-footer-cell *matFooterCellDef>
-          <b>{{ computedResults }}</b>
+          <strong>{{ computedResults }}</strong>
         </td>
       </ng-container>
 

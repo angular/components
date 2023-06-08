@@ -172,7 +172,10 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     this._hostElement.classList.remove('mdc-slider__thumb--focused');
   };
 
-  private _onDragStart = (): void => {
+  private _onDragStart = (event: PointerEvent): void => {
+    if (event.button !== 0) {
+      return;
+    }
     this._isActive = true;
     this._showActiveRipple();
   };

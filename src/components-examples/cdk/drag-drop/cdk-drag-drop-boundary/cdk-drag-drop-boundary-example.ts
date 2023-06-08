@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop boundary
@@ -7,5 +8,7 @@ import {Component} from '@angular/core';
   selector: 'cdk-drag-drop-boundary-example',
   templateUrl: 'cdk-drag-drop-boundary-example.html',
   styleUrls: ['cdk-drag-drop-boundary-example.css'],
+  standalone: true,
+  imports: [CdkDrag],
 })
 export class CdkDragDropBoundaryExample {}

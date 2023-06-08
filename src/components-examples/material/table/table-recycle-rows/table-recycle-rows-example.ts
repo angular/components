@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -27,6 +28,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-recycle-rows-example',
   styleUrls: ['table-recycle-rows-example.css'],
   templateUrl: 'table-recycle-rows-example.html',
+  standalone: true,
+  imports: [MatTableModule],
 })
 export class TableRecycleRowsExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

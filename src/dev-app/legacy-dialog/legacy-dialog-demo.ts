@@ -232,7 +232,7 @@ export class LegacyContentElementDialog {
     <h2 mat-dialog-title>Neptune</h2>
 
     <mat-dialog-content>
-      <iframe frameborder="0" src="https://en.wikipedia.org/wiki/Neptune"></iframe>
+      <iframe style="border: 0" src="https://en.wikipedia.org/wiki/Neptune"></iframe>
     </mat-dialog-content>
 
     <mat-dialog-actions>

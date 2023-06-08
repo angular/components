@@ -8,8 +8,19 @@
 
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {CdkPopoverEditExamplesModule} from '@angular/components-examples/cdk-experimental/popover-edit';
-import {PopoverEditExamplesModule} from '@angular/components-examples/material-experimental/popover-edit';
+import {
+  CdkPopoverEditCdkTableFlexExample,
+  CdkPopoverEditCdkTableExample,
+  CdkPopoverEditCellSpanVanillaTableExample,
+  CdkPopoverEditTabOutVanillaTableExample,
+  CdkPopoverEditVanillaTableExample,
+} from '@angular/components-examples/cdk-experimental/popover-edit';
+import {
+  PopoverEditCellSpanMatTableExample,
+  PopoverEditMatTableFlexExample,
+  PopoverEditMatTableExample,
+  PopoverEditTabOutMatTableExample,
+} from '@angular/components-examples/material-experimental/popover-edit';
 
 @Component({
   template: `
@@ -35,6 +46,17 @@ import {PopoverEditExamplesModule} from '@angular/components-examples/material-e
     <popover-edit-tab-out-mat-table-example></popover-edit-tab-out-mat-table-example>
   `,
   standalone: true,
-  imports: [CdkPopoverEditExamplesModule, PopoverEditExamplesModule, FormsModule],
+  imports: [
+    CdkPopoverEditCdkTableFlexExample,
+    CdkPopoverEditCdkTableExample,
+    CdkPopoverEditCellSpanVanillaTableExample,
+    CdkPopoverEditTabOutVanillaTableExample,
+    CdkPopoverEditVanillaTableExample,
+    PopoverEditCellSpanMatTableExample,
+    PopoverEditMatTableFlexExample,
+    PopoverEditMatTableExample,
+    PopoverEditTabOutMatTableExample,
+    FormsModule,
+  ],
 })
 export class PopoverEditDemo {}

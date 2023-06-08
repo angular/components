@@ -40,7 +40,6 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
-  AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -138,6 +137,12 @@ export interface MatSelectConfig {
 
   /** Wheter icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
+
+  /**
+   * Width of the panel. If set to `auto`, the panel will match the trigger width.
+   * If set to null or an empty string, the panel will grow to match the longest option's text.
+   */
+  panelWidth?: string | number | null;
 }
 
 /** Injection token that can be used to provide the default options the select module. */
@@ -1261,7 +1266,7 @@ export class MatSelectTrigger {}
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
-    'ngSkipHydration': 'true',
+    'ngSkipHydration': '',
     '[class.mat-mdc-select-disabled]': 'disabled',
     '[class.mat-mdc-select-invalid]': 'errorState',
     '[class.mat-mdc-select-required]': 'required',
@@ -1277,10 +1282,19 @@ export class MatSelectTrigger {}
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
   ],
 })
-export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit, AfterViewInit {
+export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit {
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
   @ContentChild(MAT_SELECT_TRIGGER) customTrigger: MatSelectTrigger;
+
+  /**
+   * Width of the panel. If set to `auto`, the panel will match the trigger width.
+   * If set to null or an empty string, the panel will grow to match the longest option's text.
+   */
+  @Input() panelWidth: string | number | null =
+    this._defaultOptions && typeof this._defaultOptions.panelWidth !== 'undefined'
+      ? this._defaultOptions.panelWidth
+      : 'auto';
 
   _positions: ConnectedPosition[] = [
     {
@@ -1302,7 +1316,7 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
 
   /** Width of the overlay panel. */
-  _overlayWidth: number;
+  _overlayWidth: string | number;
 
   override get shouldLabelFloat(): boolean {
     // Since the panel doesn't overlap the trigger, we
@@ -1317,23 +1331,23 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
       .pipe(takeUntil(this._destroy))
       .subscribe(() => {
         if (this.panelOpen) {
-          this._overlayWidth = this._getOverlayWidth();
+          this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
           this._changeDetectorRef.detectChanges();
         }
       });
   }
 
-  ngAfterViewInit() {
-    // Note that it's important that we read this in `ngAfterViewInit`, because
-    // reading it earlier will cause the form field to return a different element.
+  override open() {
+    // It's important that we read this as late as possible, because doing so earlier will
+    // return a different element since it's based on queries in the form field which may
+    // not have run yet. Also this needs to be assigned before we measure the overlay width.
     if (this._parentFormField) {
       this._preferredOverlayOrigin = this._parentFormField.getConnectedOverlayOrigin();
     }
-  }
 
-  override open() {
-    this._overlayWidth = this._getOverlayWidth();
+    this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
     super.open();
+
     // Required for the MDC form field to pick up when the overlay has been opened.
     this.stateChanges.next();
   }
@@ -1378,12 +1392,18 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   }
 
   /** Gets how wide the overlay panel should be. */
-  private _getOverlayWidth() {
-    const refToMeasure =
-      this._preferredOverlayOrigin instanceof CdkOverlayOrigin
-        ? this._preferredOverlayOrigin.elementRef
-        : this._preferredOverlayOrigin || this._elementRef;
-    return refToMeasure.nativeElement.getBoundingClientRect().width;
+  private _getOverlayWidth(
+    preferredOrigin: ElementRef<ElementRef> | CdkOverlayOrigin | undefined,
+  ): string | number {
+    if (this.panelWidth === 'auto') {
+      const refToMeasure =
+        preferredOrigin instanceof CdkOverlayOrigin
+          ? preferredOrigin.elementRef
+          : preferredOrigin || this._elementRef;
+      return refToMeasure.nativeElement.getBoundingClientRect().width;
+    }
+
+    return this.panelWidth === null ? '' : this.panelWidth;
   }
 
   /** Whether checkmark indicator for single-selection options is hidden. */

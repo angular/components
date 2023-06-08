@@ -176,7 +176,7 @@ class MenuItemWithIconClass {
 }
 
 @Component({
-  template: ` <button cdkMenuItem><b>Click</b> me!</button> `,
+  template: ` <button cdkMenuItem><strong>Click</strong> me!</button> `,
 })
 class MenuItemWithBoldElement {}
 
@@ -189,7 +189,7 @@ class MenuItemWithBoldElement {}
           Click
         </div>
         <mat-icon>menu</mat-icon>
-        <div>me<b>!</b></div>
+        <div>me<strong>!</strong></div>
       </div>
     </button>
   `,

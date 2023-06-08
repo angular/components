@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use 'sass:meta';
+
+/// Include content under the current selector (&) or the document root if there is no current
+/// selector.
+/// @param {String} $root [html] The default root selector to use when there is no current selector.
+/// @output The given content under the current selector, or root selector if there is no current
+///     selector.
+/// @content Content to output under the current selector, or root selector if there is no current
+///     selector.
+@mixin current-selector-or-root($root: html) {
+  @at-root #{& or $root} {
+    @content;
+  }
+}
+
+/// A version of the standard `map.deep-merge` function that takes a variable number of arguments.
+/// Each argument is deep-merged into the final result from left to right.
+/// @param {List} $maps The maps to combine with map.deep-merge
+/// @return {Map} The combined result of successively calling map.deep-merge with each parameter.
+@function deep-merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.deep-merge($result, $map);
+  }
+  @return $result;
+}
+
+/// Coerces the given value to a list, by converting any non-list value into a single-item list.
+/// This should be used when dealing with user-passed lists of args to avoid confusing errors,
+/// since Sass treats `($x)` as equivalent to `$x`.
+/// @param {Any} $value The value to coerce to a list.
+/// @return {List} The original $value if it was a list, otherwise a single-item list containing
+///     $value.
+@function coerce-to-list($value) {
+  @return if(meta.type-of($value) != 'list', ($value,), $value);
+}

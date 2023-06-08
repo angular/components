@@ -7,12 +7,23 @@
  */
 
 import {Component} from '@angular/core';
-import {CdkTableExamplesModule} from '@angular/components-examples/cdk/table';
+import {
+  CdkTableFlexBasicExample,
+  CdkTableBasicExample,
+  CdkTableFixedLayoutExample,
+  CdkTableRecycleRowsExample,
+} from '@angular/components-examples/cdk/table';
 import {LegacyTableExamplesModule} from './examples/index';
 
 @Component({
   templateUrl: './legacy-table-demo.html',
   standalone: true,
-  imports: [CdkTableExamplesModule, LegacyTableExamplesModule],
+  imports: [
+    CdkTableFlexBasicExample,
+    CdkTableBasicExample,
+    CdkTableFixedLayoutExample,
+    CdkTableRecycleRowsExample,
+    LegacyTableExamplesModule,
+  ],
 })
 export class LegacyTableDemo {}

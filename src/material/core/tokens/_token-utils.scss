@@ -3,9 +3,9 @@
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/theme/keys' as mdc-keys;
-@use '../mdc-helpers/mdc-helpers';
 @use '../theming/palette';
 @use '../theming/theming';
+@use '../typography/typography';
 
 $_placeholder-color-palette: theming.define-palette(palette.$red-palette);
 
@@ -20,7 +20,7 @@ $placeholder-color-config: (
   background: palette.$light-theme-background-palette,
 );
 
-$_placeholder-typography-level-config: mdc-helpers.typography-config-level-from-mdc(body1);
+$_placeholder-typography-level-config: typography.typography-config-level-from-mdc(body1);
 
 // Placeholder typography config that can be passed to token getter functions when generating token
 // slots.
@@ -52,7 +52,7 @@ $_component-prefix: null;
   $_component-prefix: '' !global;
   @each $item in $rest {
     $_component-prefix:
-        if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+      if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
   }
   @include mdc-custom-properties.configure($varname-prefix: $first) {
     @content;
@@ -85,15 +85,6 @@ $_component-prefix: null;
   @include _configure-token-prefix($prefix...) {
     @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
   }
-}
-
-// Merges together a list of maps into a single map.
-@function merge-all($maps...) {
-  $result: ();
-  @each $map in $maps {
-    $result: map.merge($result, $map);
-  }
-  @return $result;
 }
 
 // MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine

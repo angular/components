@@ -8,7 +8,12 @@
 
 export {MatLegacySelectModule} from './select-module';
 export {matLegacySelectAnimations} from './select-animations';
-export {MatLegacySelectChange, MatLegacySelect, MatLegacySelectTrigger} from './select';
+export {
+  MatLegacySelectChange,
+  MatLegacySelect,
+  MatLegacySelectTrigger,
+  MatLegacySelectConfig,
+} from './select';
 
 export {
   /**
@@ -40,10 +45,4 @@ export {
    * @breaking-change 17.0.0
    */
   MAT_SELECT_TRIGGER as MAT_LEGACY_SELECT_TRIGGER,
-
-  /**
-   * @deprecated Use `MatSelectConfig` from `@angular/material/select` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
-   * @breaking-change 17.0.0
-   */
-  MatSelectConfig as MatLegacySelectConfig,
 } from '@angular/material/select';

@@ -1,5 +1,7 @@
 import {Component, Inject} from '@angular/core';
-import {Dialog, DialogRef, DIALOG_DATA} from '@angular/cdk/dialog';
+import {Dialog, DialogRef, DIALOG_DATA, DialogModule} from '@angular/cdk/dialog';
+import {NgIf} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 export interface DialogData {
   animal: string;
@@ -12,6 +14,8 @@ export interface DialogData {
 @Component({
   selector: 'cdk-dialog-overview-example',
   templateUrl: 'cdk-dialog-overview-example.html',
+  standalone: true,
+  imports: [FormsModule, NgIf, DialogModule],
 })
 export class CdkDialogOverviewExample {
   animal: string | undefined;
@@ -36,6 +40,8 @@ export class CdkDialogOverviewExample {
   selector: 'cdk-dialog-overview-example-dialog',
   templateUrl: 'cdk-dialog-overview-example-dialog.html',
   styleUrls: ['cdk-dialog-overview-example-dialog.css'],
+  standalone: true,
+  imports: [FormsModule],
 })
 export class CdkDialogOverviewExampleDialog {
   constructor(public dialogRef: DialogRef<string>, @Inject(DIALOG_DATA) public data: DialogData) {}

@@ -10,13 +10,29 @@ import {Component} from '@angular/core';
 import {ConnectedPosition} from '@angular/cdk/overlay';
 import {CdkMenuModule} from '@angular/cdk/menu';
 import {CommonModule} from '@angular/common';
-import {CdkMenuExamplesModule} from '@angular/components-examples/cdk/menu';
+import {
+  CdkMenuStandaloneMenuExample,
+  CdkMenuStandaloneStatefulMenuExample,
+  CdkMenuMenubarExample,
+  CdkMenuInlineExample,
+  CdkMenuContextExample,
+  CdkMenuNestedContextExample,
+} from '@angular/components-examples/cdk/menu';
 
 @Component({
   templateUrl: 'cdk-menu-demo.html',
   styleUrls: ['cdk-menu-demo.css'],
   standalone: true,
-  imports: [CdkMenuModule, CommonModule, CdkMenuExamplesModule],
+  imports: [
+    CdkMenuModule,
+    CommonModule,
+    CdkMenuStandaloneMenuExample,
+    CdkMenuStandaloneStatefulMenuExample,
+    CdkMenuMenubarExample,
+    CdkMenuInlineExample,
+    CdkMenuContextExample,
+    CdkMenuNestedContextExample,
+  ],
 })
 export class CdkMenuDemo {
   customPosition = [

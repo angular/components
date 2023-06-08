@@ -161,9 +161,8 @@ that point.
 
 <!-- example(datepicker-filter) -->
 
-In this example the user can back past 2005, but all of the dates before then will be unselectable.
-They will not be able to go further back in the calendar than 2000. If they manually type in a date
-that is before the min, after the max, or filtered out, the input will have validation errors.
+In this example the user cannot select any date that falls on a Saturday or Sunday, but all of the 
+dates which fall on other days of the week are selectable.
 
 Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `matDatepickerMin` error.

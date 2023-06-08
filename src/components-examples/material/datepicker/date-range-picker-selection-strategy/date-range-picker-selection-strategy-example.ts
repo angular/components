@@ -1,10 +1,12 @@
 import {Component, Injectable} from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {
   MatDateRangeSelectionStrategy,
   DateRange,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatDatepickerModule,
 } from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Injectable()
 export class FiveDayRangeSelectionStrategy<D> implements MatDateRangeSelectionStrategy<D> {
@@ -39,5 +41,7 @@ export class FiveDayRangeSelectionStrategy<D> implements MatDateRangeSelectionSt
       useClass: FiveDayRangeSelectionStrategy,
     },
   ],
+  standalone: true,
+  imports: [MatFormFieldModule, MatDatepickerModule, MatNativeDateModule],
 })
 export class DateRangePickerSelectionStrategyExample {}

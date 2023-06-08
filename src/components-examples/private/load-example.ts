@@ -1,4 +1,4 @@
-import {Injector, Type, createNgModuleRef} from '@angular/core';
+import {Injector, Type} from '@angular/core';
 import {EXAMPLE_COMPONENTS} from '../example-module';
 
 /**
@@ -12,16 +12,12 @@ export async function loadExample(
   name: string,
   injector: Injector,
 ): Promise<{component: Type<any>; injector: Injector}> {
-  const {componentName, module} = EXAMPLE_COMPONENTS[name];
-  const moduleExports = await import(
-    `/bundles/components-examples/${module.importSpecifier}/index.js`
-  );
-  const moduleType: Type<any> = moduleExports[module.name];
+  const {componentName, importPath} = EXAMPLE_COMPONENTS[name];
+  const moduleExports = await import(`/bundles/components-examples/${importPath}/index.js`);
   const componentType: Type<any> = moduleExports[componentName];
-  const moduleRef = createNgModuleRef(moduleType, injector);
 
   return {
     component: componentType,
-    injector: moduleRef.injector,
+    injector,
   };
 }

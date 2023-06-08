@@ -1,6 +1,8 @@
-import {ArrayDataSource} from '@angular/cdk/collections';
-import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component} from '@angular/core';
+import {ArrayDataSource} from '@angular/cdk/collections';
+import {FlatTreeControl, CdkTreeModule} from '@angular/cdk/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 const TREE_DATA: ExampleFlatNode[] = [
   {
@@ -75,6 +77,8 @@ interface ExampleFlatNode {
   selector: 'cdk-tree-flat-example',
   templateUrl: 'cdk-tree-flat-example.html',
   styleUrls: ['cdk-tree-flat-example.css'],
+  standalone: true,
+  imports: [CdkTreeModule, MatButtonModule, MatIconModule],
 })
 export class CdkTreeFlatExample {
   treeControl = new FlatTreeControl<ExampleFlatNode>(

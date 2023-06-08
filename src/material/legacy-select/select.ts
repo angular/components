@@ -25,7 +25,7 @@ import {
   MatLegacyOption,
   MatLegacyOptgroup,
 } from '@angular/material/legacy-core';
-import {MAT_SELECT_TRIGGER, _MatSelectBase} from '@angular/material/select';
+import {MAT_SELECT_TRIGGER, _MatSelectBase, MatSelectConfig} from '@angular/material/select';
 import {MatLegacyFormFieldControl} from '@angular/material/legacy-form-field';
 import {take, takeUntil} from 'rxjs/operators';
 import {matLegacySelectAnimations} from './select-animations';
@@ -102,6 +102,12 @@ export class MatLegacySelectChange {
 }
 
 /**
+ * @deprecated Use `MatSelectConfig` from `@angular/material/select` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+ * @breaking-change 17.0.0
+ */
+export type MatLegacySelectConfig = Omit<MatSelectConfig, 'panelWidth'>;
+
+/**
  * Allows the user to customize the trigger that is displayed when the select has a value.
  * @deprecated Use `MatSelectTrigger` from `@angular/material/select` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
  * @breaking-change 17.0.0
@@ -149,7 +155,7 @@ export class MatLegacySelectTrigger {}
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
-    'ngSkipHydration': 'true',
+    'ngSkipHydration': '',
   },
   animations: [
     matLegacySelectAnimations.transformPanelWrap,

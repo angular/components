@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
-@use '@material/tab' as mdc-tab;
 @use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
 @use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;

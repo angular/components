@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSortHarness} from '@angular/material/sort/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {MatSortModule} from '@angular/material/sort';
 import {SortHarnessExample} from './sort-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -12,8 +11,7 @@ describe('SortHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule],
-      declarations: [SortHarnessExample],
+      imports: [NoopAnimationsModule],
     }).compileComponents();
     fixture = TestBed.createComponent(SortHarnessExample);
     fixture.detectChanges();

@@ -1,7 +1,12 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable} from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
 import {BehaviorSubject} from 'rxjs';
 
 /**
@@ -106,6 +111,15 @@ export class ChecklistDatabase {
   templateUrl: 'tree-checklist-example.html',
   styleUrls: ['tree-checklist-example.css'],
   providers: [ChecklistDatabase],
+  standalone: true,
+  imports: [
+    MatTreeModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+  ],
 })
 export class TreeChecklistExample {
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */

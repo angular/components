@@ -1,10 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {SnackBarHarnessExample} from './snack-bar-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSnackBarHarness} from '@angular/material/snack-bar/testing';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 describe('SnackBarHarnessExample', () => {
   let fixture: ComponentFixture<SnackBarHarnessExample>;
@@ -13,7 +13,6 @@ describe('SnackBarHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatSnackBarModule, NoopAnimationsModule],
-      declarations: [SnackBarHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(SnackBarHarnessExample);
     fixture.detectChanges();

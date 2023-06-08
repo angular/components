@@ -83,24 +83,9 @@ $mat-typography-mdc-level-mappings: (
   @return $mdc-config;
 }
 
-// Converts an MDC typography level config to an Angular Material one.
-@function typography-config-level-from-mdc($mdc-level, $font-family: null) {
-  $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
-
-  // Explicitly default the font family to null since we'll apply it globally
-  // through the `define-typgraphy-config`/`define-legacy-typography-config`.
-  @return typography.define-typography-level(
-    $font-family: $font-family,
-    $font-size: map.get($mdc-level-config, font-size),
-    $line-height: map.get($mdc-level-config, line-height),
-    $font-weight: map.get($mdc-level-config, font-weight),
-    $letter-spacing: map.get($mdc-level-config, letter-spacing)
-  );
-}
-
 // MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
 // This function falls back to determining the tone based on whether the theme is light or dark.
-@function _variable-safe-contrast-tone($value, $is-dark) {
+@function variable-safe-contrast-tone($value, $is-dark) {
   @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
     @return mdc-theme-color.contrast-tone($value);
   }
@@ -109,7 +94,7 @@ $mat-typography-mdc-level-mappings: (
 }
 
 @function _variable-safe-ink-color-for-fill($text-style, $fill-color, $is-dark) {
-  $contrast-tone: _variable-safe-contrast-tone($fill-color, $is-dark);
+  $contrast-tone: variable-safe-contrast-tone($fill-color, $is-dark);
   @return map.get(map.get(mdc-theme-color.$text-colors, $contrast-tone), $text-style);
 }
 
@@ -137,17 +122,17 @@ $mat-typography-mdc-level-mappings: (
   // Set new values based on the given Angular Material theme.
   mdc-theme-color.$primary: $primary;
   mdc-theme-color.$on-primary:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$primary, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$primary, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$secondary: $accent;
   mdc-theme-color.$on-secondary:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$background: theming.get-color-from-palette($background-palette, background);
   mdc-theme-color.$surface: theming.get-color-from-palette($background-palette, card);
   mdc-theme-color.$on-surface:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$error: $warn;
   mdc-theme-color.$on-error:
-      if(_variable-safe-contrast-tone(mdc-theme-color.$error, $is-dark) == 'dark', #000, #fff);
+      if(variable-safe-contrast-tone(mdc-theme-color.$error, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$property-values: (
       // Primary
       primary: mdc-theme-color.$primary,
@@ -238,19 +223,19 @@ $mat-typography-mdc-level-mappings: (
   $font-family: mdc-typography.$font-family;
   @return (
     font-family: $font-family,
-    headline-1: typography-config-level-from-mdc(headline1, $font-family),
-    headline-2: typography-config-level-from-mdc(headline2, $font-family),
-    headline-3: typography-config-level-from-mdc(headline3, $font-family),
-    headline-4: typography-config-level-from-mdc(headline4, $font-family),
-    headline-5: typography-config-level-from-mdc(headline5, $font-family),
-    headline-6: typography-config-level-from-mdc(headline6, $font-family),
-    subtitle-1: typography-config-level-from-mdc(subtitle1, $font-family),
-    subtitle-2: typography-config-level-from-mdc(subtitle2, $font-family),
-    body-1: typography-config-level-from-mdc(body1, $font-family),
-    body-2: typography-config-level-from-mdc(body2, $font-family),
-    caption: typography-config-level-from-mdc(caption, $font-family),
-    button: typography-config-level-from-mdc(button, $font-family),
-    overline: typography-config-level-from-mdc(overline, $font-family),
+    headline-1: typography.typography-config-level-from-mdc(headline1, $font-family),
+    headline-2: typography.typography-config-level-from-mdc(headline2, $font-family),
+    headline-3: typography.typography-config-level-from-mdc(headline3, $font-family),
+    headline-4: typography.typography-config-level-from-mdc(headline4, $font-family),
+    headline-5: typography.typography-config-level-from-mdc(headline5, $font-family),
+    headline-6: typography.typography-config-level-from-mdc(headline6, $font-family),
+    subtitle-1: typography.typography-config-level-from-mdc(subtitle1, $font-family),
+    subtitle-2: typography.typography-config-level-from-mdc(subtitle2, $font-family),
+    body-1: typography.typography-config-level-from-mdc(body1, $font-family),
+    body-2: typography.typography-config-level-from-mdc(body2, $font-family),
+    caption: typography.typography-config-level-from-mdc(caption, $font-family),
+    button: typography.typography-config-level-from-mdc(button, $font-family),
+    overline: typography.typography-config-level-from-mdc(overline, $font-family),
   );
 }
 

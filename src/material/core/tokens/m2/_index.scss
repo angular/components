@@ -1,0 +1,84 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../style/sass-utils';
+
+@use './mat/card' as tokens-mat-card;
+@use './mat/radio' as tokens-mat-radio;
+@use './mat/snack-bar' as tokens-mat-snack-bar;
+@use './mat/tab-header' as tokens-mat-tab-header;
+@use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
+@use './mdc/checkbox' as tokens-mdc-checkbox;
+@use './mdc/circular-progress' as tokens-mdc-circular-progress;
+@use './mdc/dialog' as tokens-mdc-dialog;
+@use './mdc/elevated-card' as tokens-mdc-elevated-card;
+@use './mdc/icon-button' as tokens-mdc-icon-button;
+@use './mdc/linear-progress' as tokens-mdc-linear-progress;
+@use './mdc/list' as tokens-mdc-list;
+@use './mdc/outlined-card' as tokens-mdc-outlined-card;
+@use './mdc/radio' as tokens-mdc-radio;
+@use './mdc/snack-bar' as tokens-mdc-snack-bar;
+@use './mdc/tab' as tokens-mdc-tab;
+@use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+
+/// Gets the tokens for the given theme, m2 tokens module, and theming system.
+/// @param {Map} $theme The Angular Material theme object to generate token values from.
+/// @param {String} $module The Sass module containing the token getter functions.
+/// @param {String} $system The theming system to get tokens for. Valid values are: unthemable,
+///     color, typography, density.
+/// @return {Map} The token map by calling the token getter for the given system in the given module
+///    with the given Angular Material theme. Token names are not fully-qualified.
+@function _get-tokens-for-module-and-system($theme, $module, $system) {
+  @if $system == unthemable {
+    @return meta.call(
+        meta.get-function(get-#{$system}-tokens, $module: $module));
+  }
+  @if not map.get($theme, $system) {
+    @return ();
+  }
+  @return meta.call(
+      meta.get-function(get-#{$system}-tokens, $module: $module), map.get($theme, $system));
+}
+
+/// Gets the fully qualified tokens map for the given theme and m2 tokens module.
+/// @param {Map} $theme The Angular Material theme object to generate token values from.
+/// @param {String} $module The Sass module containing the token getter functions.
+/// @return {Map} The token map by calling the token getters in the given module with the given
+///     Angular Material theme. Token names are fully-qualified.
+@function _get-tokens-for-module($theme, $module) {
+  $tokens: sass-utils.deep-merge-all(
+      _get-tokens-for-module-and-system($theme, $module, unthemable),
+      _get-tokens-for-module-and-system($theme, $module, color),
+      _get-tokens-for-module-and-system($theme, $module, typography),
+      _get-tokens-for-module-and-system($theme, $module, density));
+  @return map.set((), map.get(meta.module-variables($module), prefix), $tokens);
+}
+
+/// Gets the full set of M2 tokens for the given theme object.
+/// @param {Map} $theme The Angular Material theme object to generate token values from.
+/// @return {Map} The token map for the given Angular Material theme. Returned format:
+///     (
+///       (fully, qualified, namespace): (
+///         token: value
+///       )
+///     )
+@function m2-tokens-from-theme($theme) {
+  @return sass-utils.deep-merge-all(
+      _get-tokens-for-module($theme, tokens-mat-card),
+      _get-tokens-for-module($theme, tokens-mat-radio),
+      _get-tokens-for-module($theme, tokens-mat-snack-bar),
+      _get-tokens-for-module($theme, tokens-mat-tab-header),
+      _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
+      _get-tokens-for-module($theme, tokens-mdc-checkbox),
+      _get-tokens-for-module($theme, tokens-mdc-circular-progress),
+      _get-tokens-for-module($theme, tokens-mdc-dialog),
+      _get-tokens-for-module($theme, tokens-mdc-elevated-card),
+      _get-tokens-for-module($theme, tokens-mdc-icon-button),
+      _get-tokens-for-module($theme, tokens-mdc-linear-progress),
+      _get-tokens-for-module($theme, tokens-mdc-list),
+      _get-tokens-for-module($theme, tokens-mdc-outlined-card),
+      _get-tokens-for-module($theme, tokens-mdc-radio),
+      _get-tokens-for-module($theme, tokens-mdc-snack-bar),
+      _get-tokens-for-module($theme, tokens-mdc-tab),
+      _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
+  );
+}

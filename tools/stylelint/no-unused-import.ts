@@ -9,6 +9,13 @@ const messages = utils.ruleMessages(ruleName, {
     `imports Stylelint rule likely needs to be updated.`,
 });
 
+function stripCommentsAndAtUse(content: string) {
+  return content
+    .replace(/@use.*?;/g, '')
+    .replace(/\/\/.*?\n/g, '')
+    .replace(/\/\*.*?\*\//g, '');
+}
+
 /** Stylelint plugin that flags unused `@use` statements. */
 const ruleFn: Rule<boolean, string> = (isEnabled, _options, context) => {
   return (root, result) => {
@@ -16,7 +23,7 @@ const ruleFn: Rule<boolean, string> = (isEnabled, _options, context) => {
       return;
     }
 
-    const fileContent = root.toString();
+    const fileContent = stripCommentsAndAtUse(root.toString());
 
     root.walkAtRules(rule => {
       if (rule.name === 'use') {
@@ -30,7 +37,9 @@ const ruleFn: Rule<boolean, string> = (isEnabled, _options, context) => {
             message: messages.invalid(rule.params),
             node: rule,
           });
-        } else if (!fileContent.includes(namespace + '.')) {
+        } else if (!fileContent.match('[^\\w$@-]' + namespace + '[^\\w-]')) {
+          // We use a broader match than just `${namespace}.`, because this doesn't catch the case
+          // where we use the module as an argument to something like `meta.get-function`.
           if (context.fix) {
             rule.remove();
           } else {

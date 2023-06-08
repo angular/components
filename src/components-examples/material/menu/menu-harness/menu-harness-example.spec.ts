@@ -12,8 +12,7 @@ describe('MenuHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule, NoopAnimationsModule],
-      declarations: [MenuHarnessExample],
+      imports: [MatMenuModule, NoopAnimationsModule, MenuHarnessExample],
     }).compileComponents();
     fixture = TestBed.createComponent(MenuHarnessExample);
     fixture.detectChanges();

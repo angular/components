@@ -12,6 +12,7 @@ import {
 @Component({
   selector: 'cdk-platform-overview-example',
   templateUrl: 'cdk-platform-overview-example.html',
+  standalone: true,
 })
 export class CdkPlatformOverviewExample {
   supportedInputTypes = Array.from(getSupportedInputTypes()).join(', ');

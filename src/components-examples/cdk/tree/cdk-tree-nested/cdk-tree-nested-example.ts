@@ -1,6 +1,8 @@
-import {ArrayDataSource} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
-import {NestedTreeControl} from '@angular/cdk/tree';
+import {ArrayDataSource} from '@angular/cdk/collections';
+import {NestedTreeControl, CdkTreeModule} from '@angular/cdk/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 /**
  * Food data with nested structure.
@@ -38,6 +40,8 @@ const TREE_DATA: FoodNode[] = [
   selector: 'cdk-tree-nested-example',
   templateUrl: 'cdk-tree-nested-example.html',
   styleUrls: ['cdk-tree-nested-example.css'],
+  standalone: true,
+  imports: [CdkTreeModule, MatButtonModule, MatIconModule],
 })
 export class CdkTreeNestedExample {
   treeControl = new NestedTreeControl<FoodNode>(node => node.children);
