@@ -97,22 +97,22 @@ describe('#visitElements', () => {
     });
 
     it('should handle multiple same line', async () => {
-      runTagNameDuplicationTest('<a></a><strong></strong>', '<aa></aa><bb></bb>');
+      runTagNameDuplicationTest('<a></a><b></b>', '<aa></aa><bb></bb>');
     });
 
     it('should handle multiple same line nested', async () => {
-      runTagNameDuplicationTest('<a><strong></strong></a>', '<aa><bb></bb></aa>');
+      runTagNameDuplicationTest('<a><b></b></a>', '<aa><bb></bb></aa>');
     });
 
     it('should handle multiple same line nested and unnested', async () => {
-      runTagNameDuplicationTest('<a><strong></strong><c></c></a>', '<aa><bb></bb><cc></cc></aa>');
+      runTagNameDuplicationTest('<a><b></b><c></c></a>', '<aa><bb></bb><cc></cc></aa>');
     });
 
     it('should handle multiple multi-line', async () => {
       runTagNameDuplicationTest(
         `
           <a></a>
-          <strong></strong>
+          <b></b>
         `,
         `
           <aa></aa>
@@ -125,7 +125,7 @@ describe('#visitElements', () => {
       runTagNameDuplicationTest(
         `
           <a>
-            <strong></strong>
+          <b></b>
           </a>
         `,
         `
@@ -169,7 +169,7 @@ describe('#visitElements', () => {
 
     it('should handle multiple nested and unnested', async () => {
       runAddAttributeTest(
-        '<a><strong></strong><c></c></a>',
+        '<a><b></b><c></c></a>',
         '<a add="val"><b add="val"></b><c add="val"></c></a>',
       );
     });
