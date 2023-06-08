@@ -319,7 +319,7 @@ pre-rendering).
 ### CSS
 
 #### Be cautious with use of `display: flex`
-* The [baseline calculation for flex elements](http://www.w3.org/TR/css-flexbox-1/#flex-baselines)
+* The [baseline calculation for flex elements](https://www.w3.org/TR/css-flexbox-1/#flex-baselines)
 is different than other display values, making it difficult to align flex elements with standard
 elements like input and button.
 * Component outermost elements are never flex (block or inline-block)

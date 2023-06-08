@@ -17,7 +17,7 @@ Some fonts are designed to show icons by using
 component.
 
 By default, `<mat-icon>` expects the
-[Material icons font](http://google.github.io/material-design-icons/#icon-font-for-the-web).
+[Material icons font](https://google.github.io/material-design-icons/#icon-font-for-the-web).
 (You will still need to include the HTML to load the font and its CSS, as described in the link).
 You can specify a different font by setting the `fontSet` input to either the CSS class to apply to
 use the desired font, or to an alias previously registered with
