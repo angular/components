@@ -140,7 +140,7 @@ describe('#visitElements', () => {
       runTagNameDuplicationTest(
         `
           <a>
-            <strong></strong>
+          <b></b>
             <c></c>
           </a>
         `,
