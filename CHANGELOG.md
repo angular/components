@@ -1,3 +1,16 @@
+<a name="16.0.4"></a>
+# 16.0.4 "zirconium-zebra" (2023-06-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f595c783c](https://github.com/angular/components/commit/f595c783cb888df03d4713100a8b54df39fd51cc) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27239](https://github.com/angular/components/pull/27239)) |
+| [8fafa88ef](https://github.com/angular/components/commit/8fafa88efb78462c3c3a5e89643bcf9f303baf34) | fix | **slider:** fix track getting out of sync ([#27218](https://github.com/angular/components/pull/27218)) |
+| [c19bd4c77](https://github.com/angular/components/commit/c19bd4c7707ef9790630259d14240e2389b10787) | fix | **slider:** handle contextmenu events ([#27227](https://github.com/angular/components/pull/27227)) |
+| [52a80fef1](https://github.com/angular/components/commit/52a80fef106cf62808df2c896b79e9462bab6672) | fix | **tabs:** default stretchTabs value not picked up by nav bar ([#27212](https://github.com/angular/components/pull/27212)) |
+| [b6a9895a0](https://github.com/angular/components/commit/b6a9895a0e488e16697b3ff5b286ccd20de4ce92) | fix | **tabs:** tab header is clickable if its disable ([#27091](https://github.com/angular/components/pull/27091)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.0-next.2"></a>
 # 16.1.0-next.2 "satin-shoe" (2023-06-01)
 ### cdk
