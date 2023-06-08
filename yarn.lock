@@ -259,7 +259,6 @@
 
 "@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#b24b5dfe241a2f04f64ed98b6ac4673b356525e8":
   version "0.0.0-6ca11925b8d0057eec4bbfe57403b381f663a600"
-  uid b24b5dfe241a2f04f64ed98b6ac4673b356525e8
   resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#b24b5dfe241a2f04f64ed98b6ac4673b356525e8"
   dependencies:
     "@angular-devkit/build-angular" "16.1.0-next.0"
@@ -381,7 +380,6 @@
 
 "@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#71650a8bea2ff06f53d9c03cd80016946b180b75":
   version "0.0.0-6ca11925b8d0057eec4bbfe57403b381f663a600"
-  uid "71650a8bea2ff06f53d9c03cd80016946b180b75"
   resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#71650a8bea2ff06f53d9c03cd80016946b180b75"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
@@ -6251,9 +6249,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001317, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001449, caniuse-lite@^1.0.30001464:
-  version "1.0.30001485"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001485.tgz"
-  integrity sha512-8aUpZ7sjhlOyiNsg+pgcrTTPUXKh+rg544QYHSvQErljVEKJzvkYkCR/hUFeeVoEfTToUtY9cUKNRC7+c45YkA==
+  version "1.0.30001495"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001495.tgz"
+  integrity sha512-F6x5IEuigtUfU5ZMQK2jsy5JqUUlEFRVZq8bO2a+ysq5K7jD6PPc9YXZj78xDNS3uNchesp1Jw47YXEqr+Viyg==
 
 canonical-path@^1.0.0:
   version "1.0.0"
