@@ -1,3 +1,17 @@
+<a name="16.1.0-rc.0"></a>
+# 16.1.0-rc.0 "yarn-oxe" (2023-06-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [91fbe7648](https://github.com/angular/components/commit/91fbe764829c80ae93d5c896b28dd6a4d523812a) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27239](https://github.com/angular/components/pull/27239)) |
+| [710873433](https://github.com/angular/components/commit/710873433d83a5f9e9f6f02adfe3cfe4e2667c53) | fix | **slider:** fix track getting out of sync ([#27218](https://github.com/angular/components/pull/27218)) |
+| [6a85c2964](https://github.com/angular/components/commit/6a85c296454d52dfbc759a25fd695783848100e2) | fix | **slider:** handle contextmenu events ([#27227](https://github.com/angular/components/pull/27227)) |
+| [1cb210bf3](https://github.com/angular/components/commit/1cb210bf32f11d54851aa87eae9f7924875f2271) | fix | **stepper:** two-way binding for selectedIndex ([#27232](https://github.com/angular/components/pull/27232)) |
+| [88d390645](https://github.com/angular/components/commit/88d390645579e434369a4a732b4007a7febf20ae) | fix | **tabs:** default stretchTabs value not picked up by nav bar ([#27212](https://github.com/angular/components/pull/27212)) |
+| [06aa8e5e0](https://github.com/angular/components/commit/06aa8e5e06161b67eb0865665442fccd4a4d6560) | fix | **tabs:** tab header is clickable if its disable ([#27091](https://github.com/angular/components/pull/27091)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.4"></a>
 # 16.0.4 "zirconium-zebra" (2023-06-08)
 ### material
