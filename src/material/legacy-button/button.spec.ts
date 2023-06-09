@@ -349,7 +349,7 @@ describe('MatLegacyButton', () => {
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
       Go
     </button>
-    <a [tabIndex]="tabIndex" href="http://www.google.com" mat-button [disabled]="isDisabled"
+    <a [tabIndex]="tabIndex" href="https://www.google.com" mat-button [disabled]="isDisabled"
       [color]="buttonColor">
       Link
     </a>
