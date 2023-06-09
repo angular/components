@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {CommonModule} from '@angular/common';
 import {ThemePalette} from '@angular/material/core';
@@ -18,6 +18,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 export interface Person {
   name: string;
@@ -92,6 +93,8 @@ export class ChipsDemo {
     {name: 'Warn', color: 'warn'},
   ];
 
+  announcer = inject(LiveAnnouncer);
+
   displayMessage(message: string): void {
     this.message = message;
   }
@@ -113,6 +116,7 @@ export class ChipsDemo {
 
     if (index >= 0) {
       this.people.splice(index, 1);
+      this.announcer.announce(`Removed ${person.name}`);
     }
   }
 
