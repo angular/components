@@ -266,11 +266,11 @@ changes to be accepted, the CLA must be signed. It's a quick process, we promise
 [coc]: https://github.com/angular/code-of-conduct/blob/main/CODE_OF_CONDUCT.md
 [commit-message-format]: https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/preview
 [commit-message-scopes]: https://github.com/angular/components/blob/main/.ng-dev/commit-message.mts#L10
-[corporate-cla]: http://code.google.com/legal/corporate-cla-v1.0.html
+[corporate-cla]: https://code.google.com/legal/corporate-cla-v1.0.html
 [dev-doc]: https://github.com/angular/components/blob/main/DEV_ENVIRONMENT.md
 [github]: https://github.com/angular/components
 [gitter]: https://gitter.im/angular/material2
-[individual-cla]: http://code.google.com/legal/individual-cla-v1.0.html
+[individual-cla]: https://code.google.com/legal/individual-cla-v1.0.html
 [js-style-guide]: https://google.github.io/styleguide/jsguide.html
 [codepen]: http://codepen.io/
 [jsbin]: http://jsbin.com/
