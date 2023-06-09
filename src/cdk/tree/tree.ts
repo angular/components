@@ -89,7 +89,6 @@ function isNotNullish<T>(val: T | null | undefined): val is T {
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
-    '[attr.tabindex]': '_getTabindex()',
     '(keydown)': '_sendKeydownToKeyManager($event)',
     '(focus)': '_focusInitialTreeItem()',
   },
@@ -240,6 +239,7 @@ export class CdkTree<T, K = T>
     private _differs: IterableDiffers,
     private _changeDetectorRef: ChangeDetectorRef,
     private _dir: Directionality,
+    private _elementRef: ElementRef<HTMLElement>,
   ) {}
 
   ngOnInit() {
@@ -300,6 +300,11 @@ export class CdkTree<T, K = T>
         prev?._setTabUnfocusable();
         next?._setTabFocusable();
       });
+
+    this._keyManager.change.pipe(startWith(null), takeUntil(this._onDestroy)).subscribe(() => {
+      // refresh the tabindex when the active item changes.
+      this._setTabIndex();
+    });
   }
 
   ngAfterContentChecked() {
@@ -314,11 +319,21 @@ export class CdkTree<T, K = T>
     }
   }
 
-  _getTabindex() {
+  /**
+   * Sets the tabIndex on the host element.
+   *
+   * NB: we don't set this as a host binding since children being activated
+   * (e.g. on user click) doesn't trigger this component's change detection.
+   */
+  _setTabIndex() {
     // If the `TreeKeyManager` has no active item, then we know that we need to focus the initial
     // item when the tree is focused. We set the tabindex to be `0` so that we can capture
     // the focus event and redirect it. Otherwise, we unset it.
-    return this._keyManager.getActiveItem() ? null : 0;
+    if (!this._keyManager.getActiveItem()) {
+      this._elementRef.nativeElement.setAttribute('tabindex', '0');
+    } else {
+      this._elementRef.nativeElement.removeAttribute('tabindex');
+    }
   }
 
   /**
@@ -456,14 +471,11 @@ export class CdkTree<T, K = T>
     const parent = parentData ?? this._findParentForNode(nodeData, index);
     this._parents.set(this._getExpansionKey(nodeData), parent);
 
-    // Determine where to insert this new node into the group, then insert it.
-    // We do this by looking at the previous node in our flattened node list. If it's in the same
-    // group, we place the current node after. Otherwise, we place it at the start of the group.
+    // We're essentially replicating the tree structure within each `group`;
+    // we insert the node into the group at the specified index.
     const currentGroup = this._groups.get(context.level) ?? new Map<T | null, T[]>();
     const group = currentGroup.get(parent) ?? [];
-    const previousNode = this._dataNodes.value?.[index - 1];
-    const groupInsertionIndex = (previousNode && group.indexOf(previousNode) + 1) ?? 0;
-    group.splice(groupInsertionIndex, 0, nodeData);
+    group.splice(index, 0, nodeData);
     currentGroup.set(parent, group);
     this._groups.set(context.level, currentGroup);
 
@@ -887,11 +899,12 @@ export class CdkTree<T, K = T>
   exportAs: 'cdkTreeNode',
   host: {
     'class': 'cdk-tree-node',
-    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-expanded]': '_getAriaExpanded()',
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
     'tabindex': '-1',
+    '(click)': '_setActiveItem()',
   },
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
@@ -907,8 +920,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
 
   set role(_role: 'treeitem' | 'group') {
-    // TODO: move to host after View Engine deprecation
-    this._elementRef.nativeElement.setAttribute('role', _role);
+    // ignore any role setting, we handle this internally.
+    this._setRoleFromData();
   }
 
   @Input() isExpandable: boolean = false;
@@ -974,6 +987,18 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
 
   /**
+   * Determines the value for `aria-expanded`.
+   *
+   * For non-expandable nodes, this is `null`.
+   */
+  _getAriaExpanded(): string | null {
+    if (!this.isExpandable) {
+      return null;
+    }
+    return String(this.isExpanded);
+  }
+
+  /**
    * Determines the size of this node's parent's child set.
    *
    * This is intended to be used for `aria-setsize`.
@@ -1028,6 +1053,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Emits an activation event. Implemented for TreeKeyManagerItem. */
   activate(): void {
+    if (this.isDisabled) {
+      return;
+    }
     this.activation.next(this._data);
   }
 
@@ -1051,9 +1079,16 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     this._elementRef.nativeElement.setAttribute('tabindex', '-1');
   }
 
+  _setActiveItem() {
+    if (this.isDisabled) {
+      return;
+    }
+    this._tree._keyManager.onClick(this);
+  }
+
   // TODO: role should eventually just be set in the component host
   protected _setRoleFromData(): void {
-    this.role = 'treeitem';
+    this._elementRef.nativeElement.setAttribute('role', 'treeitem');
   }
 }
 
