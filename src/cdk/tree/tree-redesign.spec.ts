@@ -1118,7 +1118,7 @@ describe('CdkTree redesign', () => {
     });
   });
 
-  fdescribe('accessibility', () => {
+  describe('accessibility', () => {
     let fixture: ComponentFixture<StaticNestedCdkTreeApp>;
     let component: StaticNestedCdkTreeApp;
     let nodes: HTMLElement[];
