@@ -90,7 +90,7 @@ To create a remove button, nest a `<button>` element with `matChipRemove` attrib
 </mat-chip-option>
 ```
 
-See the [accessibility](#accessibility) section for how to create accessible icons.
+See the [accessibility](#accessibility) section for best practices on implementing the `removed` Output and creating accessible icons.
 
 ### Orientation
 
@@ -185,6 +185,8 @@ The [Interaction Patterns](#interaction-patterns) section describes the three va
 For both MatChipGrid and MatChipListbox, always apply an accessible label to the control via `aria-label` or `aria-labelledby`.
 
 Always apply MatChipRemove to a `<button>` element, never a `<mat-icon>` element.
+
+When using `MatChipRemove`, you should always communicate removals for assistive technology. One way to accomplish this is by sending a message with `LiveAnnouncer`. Otherwise, removing a chip may only be communicated visually.
 
 When using MatChipListbox, never nest other interactive controls inside of the `<mat-chip-option>` element. Nesting controls degrades the experience for assistive technology users.
 
