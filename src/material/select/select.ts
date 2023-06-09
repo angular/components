@@ -1304,9 +1304,22 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
       overlayY: 'top',
     },
     {
+      originX: 'end',
+      originY: 'bottom',
+      overlayX: 'end',
+      overlayY: 'top',
+    },
+    {
       originX: 'start',
       originY: 'top',
       overlayX: 'start',
+      overlayY: 'bottom',
+      panelClass: 'mat-mdc-select-panel-above',
+    },
+    {
+      originX: 'end',
+      originY: 'top',
+      overlayX: 'end',
       overlayY: 'bottom',
       panelClass: 'mat-mdc-select-panel-above',
     },
