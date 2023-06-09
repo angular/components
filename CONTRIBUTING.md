@@ -272,9 +272,9 @@ changes to be accepted, the CLA must be signed. It's a quick process, we promise
 [gitter]: https://gitter.im/angular/material2
 [individual-cla]: https://code.google.com/legal/individual-cla-v1.0.html
 [js-style-guide]: https://google.github.io/styleguide/jsguide.html
-[codepen]: http://codepen.io/
-[jsbin]: http://jsbin.com/
-[jsfiddle]: http://jsfiddle.net/
-[plunker]: http://plnkr.co/edit
-[runnable]: http://runnable.com/
-[stackoverflow]: http://stackoverflow.com/
+[codepen]: https://codepen.io/
+[jsbin]: https://jsbin.com/
+[jsfiddle]: https://jsfiddle.net/
+[plunker]: https://plnkr.co/edit
+[runnable]: https://runnable.com/
+[stackoverflow]: https://stackoverflow.com/
