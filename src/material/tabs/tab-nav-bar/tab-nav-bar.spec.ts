@@ -517,6 +517,43 @@ describe('MatTabNavBar with enabled animations', () => {
   }));
 });
 
+describe('MatTabNavBar with selectedIndex ouput', () => {
+  let fixture: ComponentFixture<TabNavBarWithSelectedIndexChange>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule],
+      declarations: [TabNavBarWithSelectedIndexChange],
+    });
+
+    TestBed.compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TabNavBarWithSelectedIndexChange);
+    fixture.detectChanges();
+  });
+
+  it('should set selectedIndex when active tab changes', () => {
+    const tabs = fixture.debugElement.queryAll(By.css('a'));
+
+    const lastTab = tabs[2];
+    lastTab.nativeElement.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.selectedIndex).toBe(2);
+
+    const middleTab = tabs[1];
+    middleTab.nativeElement.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.selectedIndex).toBe(1);
+
+    const firstTab = tabs[0];
+    firstTab.nativeElement.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.selectedIndex).toBe(0);
+  });
+});
+
 @Component({
   selector: 'test-app',
   template: `
@@ -584,4 +621,26 @@ class TabBarWithInactiveTabsOnInit {
 })
 class TabsWithCustomAnimationDuration {
   links = ['First', 'Second', 'Third'];
+}
+
+@Component({
+  template: `
+    <nav mat-tab-nav-bar (selectedIndexChange)="setIndex($event)" [tabPanel]="tabPanel">
+      <a mat-tab-link
+        (click)="activeTab = i"
+        [active]="activeTab === i"
+        *ngFor="let tab of tabs; let i = index;">{{tab}}
+      </a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
+  `,
+})
+class TabNavBarWithSelectedIndexChange {
+  tabs: number[] = [1, 2, 3];
+  activeTab: number = 0;
+  selectedIndex: number = 0;
+
+  setIndex(index: number) {
+    this.selectedIndex = index;
+  }
 }

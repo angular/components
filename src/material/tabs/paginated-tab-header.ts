@@ -161,6 +161,9 @@ export abstract class MatPaginatedTabHeader
   /** Event emitted when a label is focused. */
   readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
+  /** Event emitted when selectedIndex change */
+  readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
+
   constructor(
     protected _elementRef: ElementRef<HTMLElement>,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -294,6 +297,7 @@ export abstract class MatPaginatedTabHeader
       this._scrollToLabel(this._selectedIndex);
       this._checkScrollingControls();
       this._alignInkBarToSelectedTab();
+      this.selectedIndexChange.emit(this._selectedIndex);
       this._selectedIndexChanged = false;
       this._changeDetectorRef.markForCheck();
     }

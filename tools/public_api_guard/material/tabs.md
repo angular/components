@@ -146,6 +146,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     _scrollToLabel(labelIndex: number): void;
     get selectedIndex(): number;
     set selectedIndex(value: NumberInput);
+    readonly selectedIndexChange: EventEmitter<number>;
     readonly selectFocusedIndex: EventEmitter<number>;
     _setTabFocus(tabIndex: number): void;
     _showPaginationControls: boolean;
@@ -383,7 +384,7 @@ export class MatTabHeader extends _MatTabHeaderBase implements AfterContentInit 
     // (undocumented)
     _tabListInner: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["_items"], ["*"], false, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; "selectedIndexChange": "selectedIndexChange"; }, ["_items"], ["*"], false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -517,7 +518,7 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit, After
     // (undocumented)
     _tabListInner: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "color": { "alias": "color"; "required": false; }; "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, {}, ["_items"], ["*"], false, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "color": { "alias": "color"; "required": false; }; "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; }, ["_items"], ["*"], false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNav, [null, { optional: true; }, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }

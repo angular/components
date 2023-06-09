@@ -307,6 +307,7 @@ const _MatTabLinkBaseWithInkBarItem = mixinInkBarItem(_MatTabLinkBase);
   selector: '[mat-tab-nav-bar]',
   exportAs: 'matTabNavBar, matTabNav',
   inputs: ['color'],
+  outputs: ['selectedIndexChange'],
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
   host: {
