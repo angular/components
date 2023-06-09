@@ -49,8 +49,8 @@ describe('DocsMarkdownRenderer', () => {
     expect(renderer.link('#some-hash', 'some title', 'some text')).toEqual(
       '<a href="#some-hash" title="some title">some text</a>',
     );
-    expect(renderer.link('http://google.com', 'some title', 'some text')).toEqual(
-      '<a href="http://google.com" title="some title">some text</a>',
+    expect(renderer.link('https://google.com', 'some title', 'some text')).toEqual(
+      '<a href="https://google.com" title="some title">some text</a>',
     );
   });
 
