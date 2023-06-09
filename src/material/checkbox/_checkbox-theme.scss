@@ -92,8 +92,5 @@
 @mixin theme-from-tokens($tokens) {
   // TODO(mmalerba): Some of the theme styles above are not represented in terms of tokens,
   //   so this mixin is currently incomplete.
-
-  .mat-mdc-checkbox {
-    @include mdc-checkbox-theme.theme(map.get($tokens, tokens-mdc-checkbox.$prefix));
-  }
+  @include mdc-checkbox-theme.theme(map.get($tokens, tokens-mdc-checkbox.$prefix));
 }

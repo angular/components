@@ -1,0 +1,88 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+
+/// Creates a map of short token names to fully qualified token name under the given namespace.
+/// @param {List} $tokens A list of tokens to forward under the given namespace.
+/// @param {List} $namespace The namespace to use for the forwarded tokens.
+/// @return {Map} A map of the short token name to pairs of (namespace, token-name) representing the
+///     fully-qualified name
+/// @example
+///     forward((token1, token2), (mat, my-comp))
+///     => (
+///       token1: ((mat, my-comp), token1),
+///       token2: ((mat, my-comp), token1)
+///     )
+@function forward($tokens, $namespace) {
+  $result: ();
+  @each $token in $tokens {
+    $result: map.set($result, $token, ($namespace, $token));
+  }
+  @return $result;
+}
+
+// Creates a map of token alias names to fully qualified canonical names under the given namespace.
+/// @param {Map} $tokens A map of aliases to canonical short names for tokens under the given
+///     namespace.
+/// @param {List} $namespace The namespace to use for the canonical tokens.
+/// @return A map of the token alias name to pairs of (namespace, token-name) representing the
+///     fully-qualified canonical name of the token.
+/// @example
+///     alias((alias1: canonical1, alias2: canonical2), (mat, my-comp))
+///     => (
+///       alias1: ((mat, my-comp), canonical1),
+///       alias2: ((mat, my-comp), canonical2)
+///     )
+@function alias($tokens, $namespace) {
+  $result: ();
+  @each $from, $to in $tokens {
+    $result: map.set($result, $from, ($namespace, $to));
+  }
+  @return $result;
+}
+
+/// Gets the full set of customized tokens from a component configuration's customization map.
+/// @param {String} $component-id The id of the component whose customizations are being resolved.
+///     Used for error logging purposes.
+/// @param {Map} $customization-resolvers A map of resolvers that map customization keys to
+///     fully-qualified token names or functions to generate fully-qualified token names.
+/// @param {Map} $customizations A map of values for customization keys
+/// @return {Map} A map of fully-qualified token values
+/// @example
+///     resolve-customized-tokens('mat.checkbox',
+///       forward(my-color, my-size, (mat, my-comp)),
+///       (my-color: red, my-size: 100px)
+///     )
+///     => (
+///       (mat, my-comp): (
+///         my-color: red,
+///         my-size: 100px
+///       )
+///     )
+@function resolve-customized-tokens($component-id, $customization-resolvers, $customizations) {
+  $result: ();
+
+  @each $customization, $value in $customizations {
+    $resolver: map.get($customization-resolvers, $customization);
+    @if not $resolver {
+      @error 'Unrecognized customization for #{$component-id}: #{$customization}';
+    }
+
+    $resolver-type: meta.type-of($resolver);
+    @if $resolver-type == 'list' {
+      // If the resolver is a list, it represents the token namespace and name.
+      $key-and-value: list.append($resolver, $value);
+      $result: map.deep-merge($result, map.set((), $key-and-value...));
+    }
+    @else if $resolver-type == 'function' {
+      // If the resolver is a function, it should take a value and return a token map.
+      $result: map.deep-merge($result, meta.call($resolver, $value));
+    }
+    @else {
+      // Anything else is unexpected.
+      @error 'Invalid customization resolver for `#{$customization}` on #{$component-id}';
+    }
+  }
+
+  @return $result;
+}
