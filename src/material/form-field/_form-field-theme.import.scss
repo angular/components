@@ -14,7 +14,7 @@ $mat-mdc-mdc-text-field-disabled-placeholder-ink-color, $mat-mdc-mdc-text-field-
 $mat-mdc-mdc-text-field-ink-color, $mat-mdc-mdc-text-field-label,
 $mat-mdc-mdc-text-field-outlined-disabled-border, $mat-mdc-mdc-text-field-outlined-hover-border,
 $mat-mdc-mdc-text-field-outlined-idle-border, $mat-mdc-mdc-text-field-placeholder-ink-color;
-@forward '../../material/core/style/layout-common.import';
+@forward '../core/style/layout-common.import';
 @forward 'form-field-density' as mat-mdc-*;
 @forward 'form-field-subscript' as mat-mdc-*;
 @forward 'form-field-focus-overlay' as mat-mdc-*;
