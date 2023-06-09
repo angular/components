@@ -3,7 +3,7 @@ base list component, it provides Material Design styling, but no behavior of its
 
 <!-- example(list-overview) -->
 
-List items can be constructed in two ways depending the the content they need to show:
+List items can be constructed in two ways depending the content they need to show:
 
 ### Simple lists
 
