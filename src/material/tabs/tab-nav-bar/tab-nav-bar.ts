@@ -48,7 +48,7 @@ import {MatInkBar, MatInkBarItem, mixinInkBarItem} from '../ink-bar';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
-import {SPACE} from '@angular/cdk/keycodes';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
 
@@ -261,7 +261,9 @@ export class _MatTabLinkBase
   }
 
   _handleKeydown(event: KeyboardEvent) {
-    if (this._tabNavBar.tabPanel && event.keyCode === SPACE) {
+    if (this.disabled && (event.keyCode === SPACE || event.keyCode === ENTER)) {
+      event.preventDefault();
+    } else if (this._tabNavBar.tabPanel && event.keyCode === SPACE) {
       this.elementRef.nativeElement.click();
     }
   }
