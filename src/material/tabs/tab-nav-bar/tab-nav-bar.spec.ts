@@ -1,4 +1,4 @@
-import {SPACE} from '@angular/cdk/keycodes';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
@@ -73,31 +73,6 @@ describe('MDC-based MatTabNavBar', () => {
       expect(tabLinkElements[1].classList.contains('mdc-tab--active')).toBeTruthy();
     });
 
-    it('should add the disabled class if disabled', () => {
-      const tabLinkElements = fixture.debugElement
-        .queryAll(By.css('a'))
-        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
-
-      expect(
-        tabLinkElements.every(tabLinkEl => {
-          return !tabLinkEl.classList.contains('mat-mdc-tab-disabled');
-        }),
-      )
-        .withContext('Expected every tab link to not have the disabled class initially')
-        .toBe(true);
-
-      fixture.componentInstance.disabled = true;
-      fixture.detectChanges();
-
-      expect(
-        tabLinkElements.every(tabLinkEl => {
-          return tabLinkEl.classList.contains('mat-mdc-tab-disabled');
-        }),
-      )
-        .withContext('Expected every tab link to have the disabled class if set through binding')
-        .toBe(true);
-    });
-
     it('should update aria-disabled if disabled', () => {
       const tabLinkElements = fixture.debugElement
         .queryAll(By.css('a'))
@@ -141,6 +116,20 @@ describe('MDC-based MatTabNavBar', () => {
       fixture.detectChanges();
 
       expect(tabLinkElement.classList).toContain('mat-mdc-tab-disabled');
+    });
+
+    it('should prevent default keyboard actions on disabled links', () => {
+      const link = fixture.debugElement.query(By.css('a')).nativeElement;
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      const spaceEvent = dispatchKeyboardEvent(link, 'keydown', SPACE);
+      fixture.detectChanges();
+      expect(spaceEvent.defaultPrevented).toBe(true);
+
+      const enterEvent = dispatchKeyboardEvent(link, 'keydown', ENTER);
+      fixture.detectChanges();
+      expect(enterEvent.defaultPrevented).toBe(true);
     });
 
     it('should re-align the ink bar when the direction changes', fakeAsync(() => {
