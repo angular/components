@@ -7,11 +7,7 @@
  */
 import {Directive, forwardRef} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
-import {
-  _MatAutocompleteBase,
-  _MatAutocompleteTriggerBase,
-  _MatAutocompleteOriginBase,
-} from '@angular/material/autocomplete';
+import {_MatAutocompleteTriggerBase} from '@angular/material/autocomplete';
 
 /**
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
