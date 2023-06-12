@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken} from '@angular/core';
+import {InjectionToken, ChangeDetectorRef} from '@angular/core';
 import {MatRipple, RippleGlobalOptions} from '@angular/material/core';
 
 /**
@@ -153,6 +153,8 @@ export interface _MatSlider {
 
   /** Used to set the transition duration for thumb and track animations. */
   _setTransition: (withAnimation: boolean) => void;
+
+  _cdr: ChangeDetectorRef;
 }
 
 export interface _MatSliderThumb {
