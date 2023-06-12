@@ -23,7 +23,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {CanDisable, HasTabIndex, mixinDisabled, mixinTabIndex} from '@angular/material/core';
+import {CanDisable, HasTabIndex} from '@angular/material/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
@@ -76,7 +76,7 @@ export class MatTreeNode<T, K = T>
   get disabled(): boolean {
     return this.isDisabled ?? false;
   }
-  set disabled(value: any) {
+  set disabled(value: BooleanInput) {
     this.isDisabled = coerceBooleanProperty(value);
   }
 
@@ -145,7 +145,7 @@ export class MatNestedTreeNode<T, K = T>
   get disabled(): boolean {
     return this.isDisabled ?? false;
   }
-  set disabled(value: any) {
+  set disabled(value: BooleanInput) {
     this.isDisabled = coerceBooleanProperty(value);
   }
 
