@@ -1,12 +1,12 @@
 @use '@material/data-table/data-table' as mdc-data-table;
+@use '@material/data-table/data-table-cell' as mdc-data-table-cell;
+@use '@material/data-table/data-table-header-cell' as mdc-data-table-header-cell;
+@use '@material/data-table' as mdc-data-table-theme;
+@use '@material/typography/typography' as mdc-typography;
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/table' as tokens-mat-table;
 @use './table-flex-styles';
-
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-data-table.table-styles(
-    $query: mdc-helpers.$mdc-base-styles-without-animation-query);
-  @include table-flex-styles.private-table-flex-styles();
-}
 
 .mat-mdc-table-sticky {
   // Note that the table can either set this class or an inline style to make something sticky.
@@ -15,7 +15,26 @@
   position: sticky !important;
 }
 
+@mixin _cell-border {
+  @include token-utils.create-token-slot(border-bottom-color, row-item-outline-color, true);
+  @include token-utils.create-token-slot(border-bottom-width, row-item-outline-width, true);
+  border-bottom-style: solid;
+}
+
+@include mdc-data-table.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+@include mdc-data-table-cell.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+@include mdc-data-table-header-cell.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+@include mdc-data-table-theme.cell-padding(
+  $leading-padding: mdc-data-table-theme.$cell-leading-padding,
+  $trailing-padding: mdc-data-table-theme.$cell-trailing-padding,
+  $query: mdc-helpers.$mdc-base-styles-query
+);
+@include table-flex-styles.private-table-flex-styles();
+
 .mat-mdc-table {
+  @include token-utils.create-token-values(
+    tokens-mat-table.$prefix, tokens-mat-table.get-unthemable-tokens());
+
   // MDC Table applies `table-layout: fixed`, but this is a backwards incompatible
   // change since the table did not previously apply it.
   // TODO: Add a mixin to MDC to set the layout instead of including this override,
@@ -25,6 +44,76 @@
   // The MDC table does not allow text to wrap within the cell. This allows for text to
   // wrap when the cell reaches its maximum width.
   white-space: normal;
+
+  @include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, background-color);
+  }
+}
+
+@include mdc-helpers.disable-mdc-fallback-declarations {
+  @include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
+    // TODO(crisbeto): these tokens have default values in order to make the initial token
+    // work easier to land in g3. Eventually we should remove them.
+    .mat-mdc-header-row {
+      @include mdc-typography.smooth-font();
+      @include token-utils.create-token-slot(height, header-container-height, 56px);
+      @include token-utils.create-token-slot(color, header-headline-color, true);
+      @include token-utils.create-token-slot(font-family, header-headline-font, true);
+      @include token-utils.create-token-slot(line-height, header-headline-line-height);
+      @include token-utils.create-token-slot(font-size, header-headline-size, 14px);
+      @include token-utils.create-token-slot(font-weight, header-headline-weight, 500);
+    }
+
+    .mat-mdc-row {
+      @include token-utils.create-token-slot(height, row-item-container-height, 52px);
+      @include token-utils.create-token-slot(color, row-item-label-text-color, true);
+    }
+
+    // Note that while it's redundant to apply the typography both to the row
+    // and the content element since the cell inherit from both of them,
+    // applying it only to one results in sub-pixel differences in the
+    // letter spacing which leads to a lot of internal screenshot diffs.
+    .mat-mdc-row,
+    .mdc-data-table__content {
+      @include mdc-typography.smooth-font();
+      @include token-utils.create-token-slot(font-family, row-item-label-text-font, true);
+      @include token-utils.create-token-slot(line-height, row-item-label-text-line-height);
+      @include token-utils.create-token-slot(font-size, row-item-label-text-size, 14px);
+      @include token-utils.create-token-slot(font-weight, row-item-label-text-weight);
+    }
+
+    .mat-mdc-footer-row {
+      @include mdc-typography.smooth-font();
+      @include token-utils.create-token-slot(height, footer-container-height, 52px);
+      @include token-utils.create-token-slot(color, row-item-label-text-color, true);
+      @include token-utils.create-token-slot(font-family, footer-supporting-text-font, true);
+      @include token-utils.create-token-slot(line-height, footer-supporting-text-line-height);
+      @include token-utils.create-token-slot(font-size, footer-supporting-text-size, 14px);
+      @include token-utils.create-token-slot(font-weight, footer-supporting-text-weight);
+      @include token-utils.create-token-slot(letter-spacing, footer-supporting-text-tracking);
+    }
+
+    .mat-mdc-header-cell {
+      @include _cell-border;
+      @include token-utils.create-token-slot(letter-spacing, header-headline-tracking);
+      font-weight: inherit;
+      line-height: inherit;
+    }
+
+    .mat-mdc-cell {
+      @include _cell-border;
+      @include token-utils.create-token-slot(letter-spacing, row-item-label-text-tracking);
+      line-height: inherit;
+
+      .mdc-data-table__row:last-child & {
+        border-bottom: none;
+      }
+    }
+
+    .mat-mdc-footer-cell {
+      @include token-utils.create-token-slot(letter-spacing, row-item-label-text-tracking);
+    }
+  }
 }
 
 // MDC table rows are styled with a top border, whereas our legacy flex table styles rows with
@@ -41,13 +130,6 @@ mat-row.mat-mdc-row, mat-header-row.mat-mdc-header-row, mat-footer-row.mat-mdc-f
 .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row,
 .mat-mdc-table .mat-mdc-header-cell {
   background: inherit;
-}
-
-// Disable hover styling while MDC uses an opacity for its color.
-// When the hover style is used with sticky cells, the opacity shows the cells overlapping.
-.mat-mdc-table .mat-mdc-row:hover,
-.mat-mdc-table .mat-mdc-footer-row:hover {
-  background-color: inherit;
 }
 
 // Flex rows should not set a definite height, but instead stretch to the height of their
