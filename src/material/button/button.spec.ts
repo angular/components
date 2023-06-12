@@ -4,7 +4,6 @@ import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton, MatFabDefaultOptions, MAT_FAB_DEFAULT_OPTIONS} from './index';
 import {MatRipple, ThemePalette} from '@angular/material/core';
 import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
-import {MAT_BUTTON_RIPPLE_UNINITIALIZED} from './button-lazy-loader';
 
 describe('MDC-based MatButton', () => {
   beforeEach(waitForAsync(() => {
@@ -317,9 +316,6 @@ describe('MDC-based MatButton', () => {
       const fab = fixture.debugElement.query(By.css('button[mat-fab]'))!;
       let ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
       expect(ripple).withContext('Expect ripple to be absent before user interaction').toBeNull();
-      expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED))
-        .withContext('Expect mat-button to have the "uninitialized" attr before user interaction')
-        .toBeTrue();
 
       // Referencing the ripple should instantiate the ripple.
       expect(fab.componentInstance.ripple).toBeDefined();
@@ -328,11 +324,6 @@ describe('MDC-based MatButton', () => {
       expect(ripple)
         .withContext('Expect ripple to be present after user interaction')
         .not.toBeNull();
-      expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED))
-        .withContext(
-          'Expect mat-button NOT to have the "uninitialized" attr after user interaction',
-        )
-        .toBeFalse();
     });
 
     // Ensure each of these events triggers the initialization of the button ripple.
@@ -341,12 +332,10 @@ describe('MDC-based MatButton', () => {
         const fab = fixture.debugElement.query(By.css('button[mat-fab]'))!;
         let ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
         expect(ripple).toBeNull();
-        expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED)).toBeTrue();
 
         dispatchEvent(fab.nativeElement, createMouseEvent(event));
         ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
         expect(ripple).not.toBeNull();
-        expect(fab.nativeElement.hasAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED)).toBeFalse();
       });
     }
   });
