@@ -84,7 +84,7 @@
     "@angular/router": "^16.0.0",
     "@babel/core": "^7.16.12",
     "@bazel/bazelisk": "1.12.1",
-    "@bazel/buildifier": "6.0.1",
+    "@bazel/buildifier": "6.1.2",
     "@bazel/concatjs": "5.8.1",
     "@bazel/esbuild": "5.8.1",
     "@bazel/ibazel": "0.16.2",
