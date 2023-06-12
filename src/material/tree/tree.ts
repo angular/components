@@ -20,6 +20,8 @@ import {MatTreeNodeOutlet} from './outlet';
   host: {
     'class': 'mat-tree',
     'role': 'tree',
+    '(keydown)': '_sendKeydownToKeyManager($event)',
+    '(focus)': '_focusInitialTreeItem()',
   },
   styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,
