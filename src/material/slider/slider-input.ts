@@ -102,6 +102,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._updateThumbUIByValue();
     this._slider._onValueChange(this);
     this._cdr.detectChanges();
+    this._slider._cdr.markForCheck();
   }
   /** Event emitted when the `value` is changed. */
   @Output() readonly valueChange: EventEmitter<number> = new EventEmitter<number>();
