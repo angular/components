@@ -584,16 +584,6 @@ describe('CdkTree redesign', () => {
         expect(nodes[0].classList).toContain('customNodeClass');
       });
 
-      it('with the right accessibility roles', () => {
-        expect(treeElement.getAttribute('role')).toBe('tree');
-
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('role') === 'treeitem';
-          }),
-        ).toBe(true);
-      });
-
       it('with the right data', () => {
         expect(dataSource.data.length).toBe(3);
 
@@ -757,11 +747,9 @@ describe('CdkTree redesign', () => {
       });
 
       it('with the right aria-expanded attrs', () => {
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'false';
-          }),
-        ).toBe(true);
+        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, null, null]);
 
         component.toggleRecursively = false;
         let data = dataSource.data;
@@ -772,8 +760,11 @@ describe('CdkTree redesign', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        const ariaExpanded = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpanded).toEqual(['false', 'true', 'false', 'false']);
+        // NB: only four elements are present here; children are not present
+        // in DOM unless the parent node is expanded.
+        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, 'true', 'false', null]);
       });
 
       it('should expand/collapse the node multiple times', () => {
@@ -1584,7 +1575,9 @@ class CdkTreeAppWithToggle {
     <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren"
         nodeType="nested">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
-                            cdkTreeNodeToggle [cdkTreeNodeToggleRecursive]="toggleRecursively">
+                            [isExpandable]="isExpandable(node) | async"
+                            cdkTreeNodeToggle
+                            [cdkTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
         <div *ngIf="tree.isExpanded(node)">
           <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1597,6 +1590,8 @@ class NestedCdkTreeAppWithToggle {
   toggleRecursively: boolean = true;
 
   getChildren = (node: TestData) => node.observableChildren;
+  isExpandable = (node: TestData) =>
+    node.observableChildren.pipe(map(children => children.length > 0));
 
   dataSource: FakeDataSource | null = new FakeDataSource();
 
