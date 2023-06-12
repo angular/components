@@ -2384,11 +2384,6 @@
   resolved "https://registry.yarnpkg.com/@bazel/bazelisk/-/bazelisk-1.12.1.tgz#346531286564aa29eee03a62362d210f3433e7bf"
   integrity sha512-TGCwVeIiVeQUP6yLpxAg8yluFOC+tBQnWw5l8lqwMxKhRtOA+WaH1CJKAXeCBAaS2MxohhkXq44zj/7AM+t2jg==
 
-"@bazel/buildifier@6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@bazel/buildifier/-/buildifier-6.0.1.tgz#3ef5ce4f807db2ec0838ac889775a081fe9208f8"
-  integrity sha512-PKOx5srLU7K1x0BQhiqu78lrxwvgimx+JRe5JXgiPfyA2/iMB1aNn41BozVMmWnEF/DUKbls6DOaNk83kgraag==
-
 "@bazel/buildifier@6.1.2":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@bazel/buildifier/-/buildifier-6.1.2.tgz#c151df52d2537937911f8f7802f96611d63a90b7"
