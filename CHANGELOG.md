@@ -1,14 +1,28 @@
-<a name="16.1.0-rc.0"></a>
-# 16.1.0-rc.0 "yarn-oxe" (2023-06-08)
+<a name="16.1.0"></a>
+# 16.1.0 "epoxy-proxy" (2023-06-13)
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [91fbe7648](https://github.com/angular/components/commit/91fbe764829c80ae93d5c896b28dd6a4d523812a) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27239](https://github.com/angular/components/pull/27239)) |
-| [710873433](https://github.com/angular/components/commit/710873433d83a5f9e9f6f02adfe3cfe4e2667c53) | fix | **slider:** fix track getting out of sync ([#27218](https://github.com/angular/components/pull/27218)) |
-| [6a85c2964](https://github.com/angular/components/commit/6a85c296454d52dfbc759a25fd695783848100e2) | fix | **slider:** handle contextmenu events ([#27227](https://github.com/angular/components/pull/27227)) |
-| [1cb210bf3](https://github.com/angular/components/commit/1cb210bf32f11d54851aa87eae9f7924875f2271) | fix | **stepper:** two-way binding for selectedIndex ([#27232](https://github.com/angular/components/pull/27232)) |
-| [88d390645](https://github.com/angular/components/commit/88d390645579e434369a4a732b4007a7febf20ae) | fix | **tabs:** default stretchTabs value not picked up by nav bar ([#27212](https://github.com/angular/components/pull/27212)) |
-| [06aa8e5e0](https://github.com/angular/components/commit/06aa8e5e06161b67eb0865665442fccd4a4d6560) | fix | **tabs:** tab header is clickable if its disable ([#27091](https://github.com/angular/components/pull/27091)) |
+| [3703cc912c](https://github.com/angular/components/commit/3703cc912cca1ebc129b5e11be09bf6a505bf5b9) | feat | **select:** add input to control the panel width ([#27188](https://github.com/angular/components/pull/27188)) |
+| [9aee2ee77f](https://github.com/angular/components/commit/9aee2ee77f2328ac2294344e9104cf926abfeb13) | feat | **tabs:** synchronize ink bar animation with tab ([#27056](https://github.com/angular/components/pull/27056)) |
+| [0028c6833f](https://github.com/angular/components/commit/0028c6833f2a0266cbe63a1525eb449ab695a40b) | feat | **tooltip:** add isDisabled method to harness ([#27038](https://github.com/angular/components/pull/27038)) |
+| [0a58155814](https://github.com/angular/components/commit/0a581558149799131b58e1780068258549526a45) | fix | **form-field:** ensure prefix and suffix are on top of other content ([#27050](https://github.com/angular/components/pull/27050)) |
+| [764a68f980](https://github.com/angular/components/commit/764a68f980bcef700d9c1422b1294a93170dba11) | fix | **form-field:** ensure prefix and suffix are on top of other content ([#27050](https://github.com/angular/components/pull/27050)) |
+| [cda36e9a7a](https://github.com/angular/components/commit/cda36e9a7aa7c3664d9a47583452f87495e1a893) | fix | **form-field:** make notch sizing more reliable ([#26028](https://github.com/angular/components/pull/26028)) |
+| [57adfe4fbf](https://github.com/angular/components/commit/57adfe4fbf1bfa9cc3f8c0eeebc95a132d42a551) | fix | **select:** incorrect position if initialized late ([#27198](https://github.com/angular/components/pull/27198)) |
+| [bb6f61b874](https://github.com/angular/components/commit/bb6f61b874a6ed82452135e75308fdf52ce38ba3) | fix | **select:** provide horizontal fallback positions ([#27267](https://github.com/angular/components/pull/27267)) |
+| [feaaab9dc9](https://github.com/angular/components/commit/feaaab9dc9d52e1668bf90b849ebdc7e06601caa) | fix | **slider:** fix cd for sliders w/ form controls ([#27250](https://github.com/angular/components/pull/27250)) |
+| [1cb210bf32](https://github.com/angular/components/commit/1cb210bf32f11d54851aa87eae9f7924875f2271) | fix | **stepper:** two-way binding for selectedIndex ([#27232](https://github.com/angular/components/pull/27232)) |
+| [7400746646](https://github.com/angular/components/commit/74007466469baf14285e09a2669e10635731360c) | fix | **tabs:** prevent default keyboard actions on disabled links ([#27274](https://github.com/angular/components/pull/27274)) |
+| [44b57a5b26](https://github.com/angular/components/commit/44b57a5b26ade017a08fa409d75813f8d2d14d07) | fix | **tooltip:** change tooltip to use MDC's token API |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aec23ac348](https://github.com/angular/components/commit/aec23ac348f41d288417c1ae7788e0bd7cb8a9a9) | feat | **theming:** add first part of token-based theming API ([#27000](https://github.com/angular/components/pull/27000)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [33a9543f61](https://github.com/angular/components/commit/33a9543f61e06f7656c8c3f9c4ae93358ace5ffe) | fix | fix VoiceOver confused by Select/Autocomplete's ARIA semantics ([#26861](https://github.com/angular/components/pull/26861)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -25,26 +39,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="16.1.0-next.2"></a>
-# 16.1.0-next.2 "satin-shoe" (2023-06-01)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4656c24f78](https://github.com/angular/components/commit/4656c24f784a0efa7136b7138a88666d8b2da917) | fix | **overlay:** remove circular dependency workarounds ([#27190](https://github.com/angular/components/pull/27190)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [3703cc912c](https://github.com/angular/components/commit/3703cc912cca1ebc129b5e11be09bf6a505bf5b9) | feat | **select:** add input to control the panel width ([#27188](https://github.com/angular/components/pull/27188)) |
-| [2c078673a7](https://github.com/angular/components/commit/2c078673a7d1e852eb13165942c9c3f6a6d199d9) | fix | **chips:** fix click target when stacked ([#27129](https://github.com/angular/components/pull/27129)) |
-| [57adfe4fbf](https://github.com/angular/components/commit/57adfe4fbf1bfa9cc3f8c0eeebc95a132d42a551) | fix | **select:** incorrect position if initialized late ([#27198](https://github.com/angular/components/pull/27198)) |
-| [43c6fe349f](https://github.com/angular/components/commit/43c6fe349fad5f896e582d8d75fcac1d183626b4) | fix | **slider:** handle ngModel initial null value ([#27149](https://github.com/angular/components/pull/27149)) |
-### material-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [aec23ac348](https://github.com/angular/components/commit/aec23ac348f41d288417c1ae7788e0bd7cb8a9a9) | feat | **theming:** add first part of token-based theming API ([#27000](https://github.com/angular/components/pull/27000)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="16.0.3"></a>
 # 16.0.3 "silk-scarf" (2023-06-01)
 ### cdk
@@ -56,29 +50,6 @@
 | -- | -- | -- |
 | [c8065d5168](https://github.com/angular/components/commit/c8065d51688b359463bfd78b6901b7cec907cc69) | fix | **chips:** fix click target when stacked ([#27129](https://github.com/angular/components/pull/27129)) |
 | [12e47478c5](https://github.com/angular/components/commit/12e47478c5d54ee1a998891ee4adbd58512a9cd3) | fix | **slider:** handle ngModel initial null value ([#27149](https://github.com/angular/components/pull/27149)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.1.0-next.1"></a>
-# 16.1.0-next.1 "metal-rail" (2023-05-25)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [3cb369e048](https://github.com/angular/components/commit/3cb369e04852cfb9876aaddad9b011d396b982a9) | fix | **schematics:** handle templates with byte order mark ([#27131](https://github.com/angular/components/pull/27131)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6610b6d5ce](https://github.com/angular/components/commit/6610b6d5ce51f25c4c9d6c990cfca95a82307ce6) | fix | **checkbox:** set token values on the element where theme is @included ([#27114](https://github.com/angular/components/pull/27114)) |
-| [8afe9cda08](https://github.com/angular/components/commit/8afe9cda08fd555e5d26478fe7bd3aead42765af) | fix | **core:** Fix MacOS Hover feature compatibility with optgroup ([#27081](https://github.com/angular/components/pull/27081)) |
-| [fc919ce25d](https://github.com/angular/components/commit/fc919ce25d1b705d3a4326dd62a6fe987675b979) | fix | **datepicker:** set explicit event options ([#27082](https://github.com/angular/components/pull/27082)) |
-| [cda36e9a7a](https://github.com/angular/components/commit/cda36e9a7aa7c3664d9a47583452f87495e1a893) | fix | **form-field:** make notch sizing more reliable ([#26028](https://github.com/angular/components/pull/26028)) |
-| [fd481b9565](https://github.com/angular/components/commit/fd481b9565850d5c163ff06c44f178edbec673f9) | fix | **icon:** harness returning wrong name if icon has other content ([#27132](https://github.com/angular/components/pull/27132)) |
-| [2af1e0a304](https://github.com/angular/components/commit/2af1e0a3048bac6bd117e0f89e1e93eb8604c29e) | fix | **list:** input coercion does not working for `disableRipple` on list items ([#27126](https://github.com/angular/components/pull/27126)) |
-| [a3250c327a](https://github.com/angular/components/commit/a3250c327a9980a309c9cd9886f88bdbf8645a9f) | fix | **paginator:** add aria-hidden="true" to decorative svg's ([#27083](https://github.com/angular/components/pull/27083)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b6373014b7](https://github.com/angular/components/commit/b6373014b7f00edb766009b21b33e50c7a9eb434) | fix | set aria-hidden on presentational svgs ([#27116](https://github.com/angular/components/pull/27116)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -117,31 +88,6 @@
 | [54507552d](https://github.com/angular/components/commit/54507552df0bcb47e15fc7339bc7ae4d7ddc56e0) | fix | **core:** fix opacity in elevation mixin ([#26805](https://github.com/angular/components/pull/26805)) |
 | [d018bf63e](https://github.com/angular/components/commit/d018bf63e4eab2ef8c66e2db7e9815a99eaff77a) | fix | **select:** ensure arrow is centered on all densities ([#27011](https://github.com/angular/components/pull/27011)) |
 | [3ee392eec](https://github.com/angular/components/commit/3ee392eece5b1f59270a3fbcae24e5c6531ee210) | fix | **tabs:** avoid unnecessary updates of tab ink bar ([#27031](https://github.com/angular/components/pull/27031)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="16.1.0-next.0"></a>
-# 16.1.0-next.0 "magnesium-monster" (2023-05-10)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1ce3a3bbe](https://github.com/angular/components/commit/1ce3a3bbe5e4eb104e1a4e545b04156309565cfc) | fix | **schematics:** avoid throwing an error for empty program ([#27060](https://github.com/angular/components/pull/27060)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [9aee2ee77](https://github.com/angular/components/commit/9aee2ee77f2328ac2294344e9104cf926abfeb13) | feat | **tabs:** synchronize ink bar animation with tab ([#27056](https://github.com/angular/components/pull/27056)) |
-| [0028c6833](https://github.com/angular/components/commit/0028c6833f2a0266cbe63a1525eb449ab695a40b) | feat | **tooltip:** add isDisabled method to harness ([#27038](https://github.com/angular/components/pull/27038)) |
-| [f0a5008b2](https://github.com/angular/components/commit/f0a5008b237d4bde3e8d759ca9e793c164656d7a) | fix | **badge:** insert inline description for non-interactive hosts ([#27025](https://github.com/angular/components/pull/27025)) |
-| [514c113dc](https://github.com/angular/components/commit/514c113dc6a9646a7ea2df4d3dcb25c5f6e3b70b) | fix | **core:** fix opacity in elevation mixin ([#26805](https://github.com/angular/components/pull/26805)) |
-| [0a5815581](https://github.com/angular/components/commit/0a581558149799131b58e1780068258549526a45) | fix | **form-field:** ensure prefix and suffix are on top of other content ([#27050](https://github.com/angular/components/pull/27050)) |
-| [764a68f98](https://github.com/angular/components/commit/764a68f980bcef700d9c1422b1294a93170dba11) | fix | **form-field:** ensure prefix and suffix are on top of other content ([#27050](https://github.com/angular/components/pull/27050)) |
-| [d0cd9bb3e](https://github.com/angular/components/commit/d0cd9bb3ec1552c67797d0b063db7732d211a815) | fix | **select:** ensure arrow is centered on all densities ([#27011](https://github.com/angular/components/pull/27011)) |
-| [a1e7de910](https://github.com/angular/components/commit/a1e7de910ab0dc1e861cbb0f1c1b8ae1fe34f572) | fix | **tabs:** avoid unnecessary updates of tab ink bar ([#27031](https://github.com/angular/components/pull/27031)) |
-| [44b57a5b2](https://github.com/angular/components/commit/44b57a5b26ade017a08fa409d75813f8d2d14d07) | fix | **tooltip:** change tooltip to use MDC's token API |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [33a9543f6](https://github.com/angular/components/commit/33a9543f61e06f7656c8c3f9c4ae93358ace5ffe) | fix | fix VoiceOver confused by Select/Autocomplete's ARIA semantics ([#26861](https://github.com/angular/components/pull/26861)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
