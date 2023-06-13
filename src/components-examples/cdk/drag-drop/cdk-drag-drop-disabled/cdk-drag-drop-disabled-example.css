@@ -26,6 +26,7 @@
 .example-box.cdk-drag-disabled {
   background: #ccc;
   cursor: not-allowed;
+  user-select: none;
 }
 
 .cdk-drag-preview {
