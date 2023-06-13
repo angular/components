@@ -942,6 +942,12 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     this._setRoleFromData();
   }
 
+  /**
+   * Whether or not this node is expandable.
+   *
+   * If not using `FlatTreeControl`, or if `isExpandable` is not provided to
+   * `NestedTreeControl`, this should be provided for correct node a11y.
+   */
   @Input() isExpandable: boolean = false;
 
   @Input()

@@ -58,7 +58,7 @@ export const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
 // @public
 export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
-    constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, _differs: IterableDiffers);
+    constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, changeDetectorRef: ChangeDetectorRef, _differs: IterableDiffers);
     protected _children: T[];
     protected _clear(): void;
     // (undocumented)
@@ -148,9 +148,11 @@ export class CdkTreeModule {
 
 // @public
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
-    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T, K>);
+    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T, K>, _changeDetectorRef: ChangeDetectorRef);
     activate(): void;
     readonly activation: EventEmitter<T>;
+    // (undocumented)
+    _changeDetectorRef: ChangeDetectorRef;
     collapse(): void;
     get data(): T;
     set data(value: T);
@@ -171,8 +173,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     _getPositionInSet(): number;
     _getSetSize(): number;
     isDisabled?: boolean;
-    // (undocumented)
     isExpandable: boolean;
+    _isExpandable(): boolean;
     // (undocumented)
     get isExpanded(): boolean;
     set isExpanded(isExpanded: boolean);
@@ -331,6 +333,7 @@ export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
 // @public
 export interface NestedTreeControlOptions<T, K> {
+    isExpandable?: (dataNode: T) => boolean;
     // (undocumented)
     trackBy?: (dataNode: T) => K;
 }

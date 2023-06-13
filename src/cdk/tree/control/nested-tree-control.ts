@@ -11,6 +11,7 @@ import {BaseTreeControl} from './base-tree-control';
 
 /** Optional set of configuration that can be provided to the NestedTreeControl. */
 export interface NestedTreeControlOptions<T, K> {
+  /** Function to determine if the provided node is expandable. */
   isExpandable?: (dataNode: T) => boolean;
   trackBy?: (dataNode: T) => K;
 }
