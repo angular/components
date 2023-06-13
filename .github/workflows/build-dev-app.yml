@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
       - uses: ./.github/actions/yarn-install
 
-      - uses: angular/dev-infra/github-actions/setup-bazel-remote-exec@2ec31a92100367a52100fca54d5e8c7c78cb149c
+      - uses: angular/dev-infra/github-actions/setup-bazel-remote-exec@c0024a8ffe98677f649393a3462779205333fd15
         with:
           bazelrc: ./.bazelrc.user
 
@@ -34,7 +34,7 @@ jobs:
       # the number of concurrent actions is determined based on the host resources.
       - run: bazel build //src/dev-app:web_package --symlink_prefix=dist/ --jobs=32
 
-      - uses: angular/dev-infra/github-actions/deploy-previews/pack-and-upload-artifact@2ec31a92100367a52100fca54d5e8c7c78cb149c
+      - uses: angular/dev-infra/github-actions/deploy-previews/pack-and-upload-artifact@c0024a8ffe98677f649393a3462779205333fd15
         with:
           workflow-artifact-name: 'dev-app'
           pull-number: '${{github.event.pull_request.number}}'
