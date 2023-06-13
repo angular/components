@@ -159,12 +159,12 @@ export class MatNestedTreeNode<T, K = T>
    * @breaking-change 12.0.0 Remove this input
    */
   get tabIndex(): number {
-    return Number(this.elementRef.nativeElement.getAttribute('tabindex') ?? '-1');
+    return Number(this._elementRef.nativeElement.getAttribute('tabindex') ?? '-1');
   }
   set tabIndex(value: number) {}
 
   constructor(
-    private elementRef: ElementRef<HTMLElement>,
+    elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
     differs: IterableDiffers,
     changeDetectorRef: ChangeDetectorRef,
