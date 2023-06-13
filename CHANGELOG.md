@@ -1,3 +1,12 @@
+<a name="16.2.0-next.0"></a>
+# 16.2.0-next.0 "syrup-stampede" (2023-06-13)
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [227a741c65](https://github.com/angular/components/commit/227a741c659a17f58b22cd79d47031df2ce12641) | feat | **theming:** Introduce a facade layer between user-facing customizable keys and actual MDC token names ([#27219](https://github.com/angular/components/pull/27219)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.0"></a>
 # 16.1.0 "epoxy-proxy" (2023-06-13)
 ### material
