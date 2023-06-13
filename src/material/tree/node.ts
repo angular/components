@@ -16,6 +16,7 @@ import {
 import {
   AfterContentInit,
   Attribute,
+  ChangeDetectorRef,
   Directive,
   ElementRef,
   Input,
@@ -83,9 +84,10 @@ export class MatTreeNode<T, K = T>
   constructor(
     elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
+    changeDetectorRef: ChangeDetectorRef,
     @Attribute('tabindex') tabIndex: string,
   ) {
-    super(elementRef, tree);
+    super(elementRef, tree, changeDetectorRef);
     this.tabIndex = Number(tabIndex) || 0;
   }
 
@@ -165,9 +167,10 @@ export class MatNestedTreeNode<T, K = T>
     private elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
     differs: IterableDiffers,
+    changeDetectorRef: ChangeDetectorRef,
     @Attribute('tabindex') tabIndex: string,
   ) {
-    super(elementRef, tree, differs);
+    super(elementRef, tree, changeDetectorRef, differs);
     this.tabIndex = Number(tabIndex) || 0;
   }
 

@@ -54,6 +54,7 @@ import {
   take,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
@@ -260,9 +261,26 @@ export class CdkTree<T, K = T>
       }
     }
 
+    let expansionModel;
     if (!this.treeControl) {
-      this._expansionModel = new SelectionModel(true);
+      expansionModel = new SelectionModel<K>(true);
+      this._expansionModel = expansionModel;
+    } else {
+      expansionModel = this.treeControl.expansionModel;
     }
+
+    // We manually detect changes on all the children nodes when expansion
+    // status changes; otherwise, the various attributes won't be updated.
+    expansionModel.changed
+      .pipe(withLatestFrom(this._nodes), takeUntil(this._onDestroy))
+      .subscribe(([changes, nodes]) => {
+        for (const added of changes.added) {
+          nodes.get(added)?._changeDetectorRef.detectChanges();
+        }
+        for (const removed of changes.removed) {
+          nodes.get(removed)?._changeDetectorRef.detectChanges();
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -986,13 +1004,21 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     return this._tree._getLevel(this._data) ?? this._parentNodeAriaLevel;
   }
 
+  /** Determines if the tree node is expandable. */
+  _isExpandable(): boolean {
+    if (typeof this._tree.treeControl?.isExpandable === 'function') {
+      return this._tree.treeControl.isExpandable(this._data);
+    }
+    return this.isExpandable;
+  }
+
   /**
    * Determines the value for `aria-expanded`.
    *
    * For non-expandable nodes, this is `null`.
    */
   _getAriaExpanded(): string | null {
-    if (!this.isExpandable) {
+    if (!this._isExpandable()) {
       return null;
     }
     return String(this.isExpanded);
@@ -1016,7 +1042,11 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     return this._tree._getPositionInSet(this._data);
   }
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
+  constructor(
+    protected _elementRef: ElementRef<HTMLElement>,
+    protected _tree: CdkTree<T, K>,
+    public _changeDetectorRef: ChangeDetectorRef,
+  ) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
     this.role = 'treeitem';
   }

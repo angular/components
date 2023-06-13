@@ -1488,7 +1488,6 @@ class NestedCdkTreeApp {
       <cdk-nested-tree-node
           *cdkTreeNodeDef="let node"
           class="customNodeClass"
-          [isExpandable]="node.children.length > 0"
           [isDisabled]="node.isDisabled">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template cdkTreeNodeOutlet></ng-template>
@@ -1499,7 +1498,9 @@ class NestedCdkTreeApp {
 class StaticNestedCdkTreeApp {
   getChildren = (node: TestData) => node.children;
 
-  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren, {
+    isExpandable: node => node.children.length > 0,
+  });
 
   dataSource: FakeDataSource;
 
@@ -1569,7 +1570,6 @@ class CdkTreeAppWithToggle {
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
-                            [isExpandable]="isExpandable(node) | async"
                             cdkTreeNodeToggle
                             [cdkTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
@@ -1584,10 +1584,10 @@ class NestedCdkTreeAppWithToggle {
   toggleRecursively: boolean = true;
 
   getChildren = (node: TestData) => node.observableChildren;
-  isExpandable = (node: TestData) =>
-    node.observableChildren.pipe(map(children => children.length > 0));
 
-  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren, {
+    isExpandable: node => node.children.length > 0,
+  });
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;

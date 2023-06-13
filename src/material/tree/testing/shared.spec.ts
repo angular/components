@@ -276,7 +276,9 @@ class TreeHarnessTest {
     node => node.expandable,
   );
   flatTreeDataSource = new MatTreeFlatDataSource(this.flatTreeControl, this.treeFlattener);
-  nestedTreeControl = new NestedTreeControl<Node>(node => node.children);
+  nestedTreeControl = new NestedTreeControl<Node>(node => node.children, {
+    isExpandable: node => !!node.children && node.children.length > 0,
+  });
   nestedTreeDataSource = new MatTreeNestedDataSource<Node>();
 
   constructor() {
