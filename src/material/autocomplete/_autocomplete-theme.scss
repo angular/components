@@ -1,30 +1,19 @@
-@use '@material/menu-surface/mixins' as mdc-menu-surface;
-@use '@material/list/evolution-mixins' as mdc-list;
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/autocomplete' as tokens-mat-autocomplete;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {
-    @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-theme-styles-query);
-    @include mdc-list.without-ripple(mdc-helpers.$mdc-theme-styles-query);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
+      tokens-mat-autocomplete.get-color-tokens($config));
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-typography-styles-query);
-
-    .mat-mdc-autocomplete-panel {
-      // Note that we include this private mixin, because the public one adds
-      // a bunch of styles that we aren't using for the autocomplete panel.
-      @include mdc-list.list-base(mdc-helpers.$mdc-typography-styles-query);
-    }
-  }
-}
+@mixin typography($config-or-theme) {}
 
 @mixin density($config-or-theme) {}
 
