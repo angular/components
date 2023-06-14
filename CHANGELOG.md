@@ -1,3 +1,8 @@
+<a name="16.1.1"></a>
+# 16.1.1 "lace-enigma" (2023-06-14)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.0-next.0"></a>
 # 16.2.0-next.0 "syrup-stampede" (2023-06-13)
 ### material-experimental
