@@ -109,7 +109,7 @@ export class MatLegacyChip extends _MatChipMixinBase implements FocusableOption,
     // (undocumented)
     protected _value: any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "color": { "alias": "color"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "role": { "alias": "role"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; }, { "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["avatar", "trailingIcon", "removeIcon"], never, false, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "color": { "alias": "color"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "role": { "alias": "role"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; }, { "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["avatar", "trailingIcon", "removeIcon"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyChip, [null, null, null, { optional: true; }, null, null, { optional: true; }, { attribute: "tabindex"; }]>;
 }
@@ -117,7 +117,7 @@ export class MatLegacyChip extends _MatChipMixinBase implements FocusableOption,
 // @public @deprecated
 export class MatLegacyChipAvatar {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipAvatar, "mat-chip-avatar, [matChipAvatar]", never, {}, {}, never, never, false, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipAvatar, "mat-chip-avatar, [matChipAvatar]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyChipAvatar, never>;
 }
@@ -165,7 +165,7 @@ export class MatLegacyChipInput implements MatLegacyChipTextControl, OnChanges, 
     placeholder: string;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipList": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, false, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipList": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyChipInput, never>;
 }
@@ -266,7 +266,7 @@ export class MatLegacyChipList extends _MatChipListBase implements MatLegacyForm
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyChipList, "mat-chip-list", ["matChipList"], { "role": { "alias": "role"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "ariaOrientation": { "alias": "aria-orientation"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["chips"], ["*"], false, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatLegacyChipList, "mat-chip-list", ["matChipList"], { "role": { "alias": "role"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "ariaOrientation": { "alias": "aria-orientation"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["chips"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyChipList, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
 }
@@ -287,7 +287,7 @@ export class MatLegacyChipRemove {
     // (undocumented)
     protected _parentChip: MatLegacyChip;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipRemove, "[matChipRemove]", never, {}, {}, never, never, false, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipRemove, "[matChipRemove]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyChipRemove, never>;
 }
@@ -321,7 +321,7 @@ export class MatLegacyChipsModule {
 // @public @deprecated
 export class MatLegacyChipTrailingIcon {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipTrailingIcon, "mat-chip-trailing-icon, [matChipTrailingIcon]", never, {}, {}, never, never, false, never, false>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLegacyChipTrailingIcon, "mat-chip-trailing-icon, [matChipTrailingIcon]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLegacyChipTrailingIcon, never>;
 }
