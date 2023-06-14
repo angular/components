@@ -923,6 +923,7 @@ export class CdkTree<T, K = T>
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
     'tabindex': '-1',
+    'role': 'treeitem',
     '(click)': '_setActiveItem()',
   },
 })
@@ -940,7 +941,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   set role(_role: 'treeitem' | 'group') {
     // ignore any role setting, we handle this internally.
-    this._setRoleFromData();
   }
 
   /**
@@ -998,7 +998,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   set data(value: T) {
     if (value !== this._data) {
       this._data = value;
-      this._setRoleFromData();
       this._dataChanges.next();
     }
   }
@@ -1055,7 +1054,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     public _changeDetectorRef: ChangeDetectorRef,
   ) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
-    this.role = 'treeitem';
   }
 
   ngOnInit(): void {
@@ -1127,11 +1125,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
       return;
     }
     this._tree._keyManager.onClick(this);
-  }
-
-  // TODO: role should eventually just be set in the component host
-  protected _setRoleFromData(): void {
-    this._elementRef.nativeElement.setAttribute('role', 'treeitem');
   }
 }
 
