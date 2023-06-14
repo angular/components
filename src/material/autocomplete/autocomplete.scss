@@ -1,21 +1,30 @@
 @use '@angular/cdk';
-@use '@material/menu-surface/mixins' as mdc-menu-surface;
-@use '@material/list/evolution-mixins' as mdc-list;
+@use '../core/style/elevation';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/autocomplete' as tokens-mat-autocomplete;
 
-@include mdc-menu-surface.core-styles($query: structure);
-
-// Note that the `.mdc-menu-surface` is here in order to bump up the specificity
-// and avoid interference with `mat-menu` which uses the same mixins from MDC.
-.mdc-menu-surface.mat-mdc-autocomplete-panel {
+// Even though we don't use the MDC styles, we need to keep the classes in the
+// DOM for the Gmat versions to work. We need to bump up the specificity here
+// so that it's higher than MDC's styles.
+div.mat-mdc-autocomplete-panel {
+  @include elevation.elevation(8);
   width: 100%; // Ensures that the panel matches the overlay width.
   max-height: 256px; // Prevents lists with a lot of option from growing too high.
-  position: static; // MDC uses `absolute` by default which will throw off our positioning.
   visibility: hidden;
-  // MDC sets the transform-origin programmatically based on whether the dropdown is above or
-  // below the input. We use our own positioning logic, so we need to set this ourselves.
   transform-origin: center top;
+  overflow: auto;
+  padding: 8px 0;
+  border-radius: 4px;
+  box-sizing: border-box;
 
-  @include mdc-list.list-base($query: structure);
+  // Workaround in case other MDC menu surface styles bleed in.
+  position: static;
+
+  @include token-utils.use-tokens(
+    tokens-mat-autocomplete.$prefix, tokens-mat-autocomplete.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, background-color);
+  }
+
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
@@ -28,8 +37,6 @@
   .mat-mdc-autocomplete-panel-above & {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    // MDC sets the transform-origin programmatically based on whether the dropdown is above or
-    // below the input. We use our own positioning logic, so we need to set this ourselves.
     transform-origin: center bottom;
   }
 
