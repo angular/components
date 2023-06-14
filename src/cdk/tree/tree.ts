@@ -61,6 +61,7 @@ import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {
   getMultipleTreeControlsError,
+  getNodeNotExpandableError,
   getTreeControlMissingError,
   getTreeControlNodeTypeUnspecifiedError,
   getTreeMissingMatchingNodeDefError,
@@ -1097,12 +1098,18 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Collapses this data node. Implemented for TreeKeyManagerItem. */
   collapse(): void {
+    if (typeof ngDevMode === 'undefined' || (ngDevMode && !this._isExpandable())) {
+      throw getNodeNotExpandableError();
+    }
     this._tree.collapse(this._data);
     this.expandedChange.emit(this.isExpanded);
   }
 
   /** Expands this data node. Implemented for TreeKeyManagerItem. */
   expand(): void {
+    if (typeof ngDevMode === 'undefined' || (ngDevMode && !this._isExpandable())) {
+      throw getNodeNotExpandableError();
+    }
     this._tree.expand(this._data);
     this.expandedChange.emit(this.isExpanded);
   }

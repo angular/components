@@ -54,3 +54,15 @@ export function getMultipleTreeControlsError() {
 export function getTreeControlNodeTypeUnspecifiedError() {
   return Error(`The nodeType was not specified for the tree.`);
 }
+
+/**
+ * Returns an error to be thrown when a node is attempted to be expanded or collapsed when
+ * it's not expandable.
+ * @docs-private
+ */
+export function getNodeNotExpandableError() {
+  return Error(
+    `The node that was attempted to be expanded or collapsed is not expandable; you might ` +
+      `need to provide 'isExpandable'.`,
+  );
+}
