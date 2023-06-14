@@ -19,9 +19,6 @@ import {MatTreeNodeOutlet} from './outlet';
   template: `<ng-container matTreeNodeOutlet></ng-container>`,
   host: {
     'class': 'mat-tree',
-    'role': 'tree',
-    '(keydown)': '_sendKeydownToKeyManager($event)',
-    '(focus)': '_focusInitialTreeItem()',
   },
   styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,
