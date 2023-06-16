@@ -115,10 +115,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
     // (undocumented)
     _nodeOutlet: CdkTreeNodeOutlet;
-    nodeType?: 'flat' | 'nested';
     _registerNode(node: CdkTreeNode<T, K>): void;
     _renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     _sendKeydownToKeyManager(event: KeyboardEvent): void;
+    // (undocumented)
+    _setNodeTypeIfUnset(nodeType: 'flat' | 'nested'): void;
     _setTabIndex(): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
@@ -131,7 +132,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
         end: number;
     }>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "expansionKey": { "alias": "expansionKey"; "required": false; }; "nodeType": { "alias": "nodeType"; "required": false; }; }, {}, ["_nodeDefs"], never, false, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "expansionKey": { "alias": "expansionKey"; "required": false; }; }, {}, ["_nodeDefs"], never, false, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTree<any, any>, never>;
 }
@@ -173,7 +174,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     _getPositionInSet(): number;
     _getSetSize(): number;
     isDisabled?: boolean;
-    isExpandable: boolean;
+    get isExpandable(): boolean | '' | null;
+    set isExpandable(isExpandable: boolean | '' | null);
     _isExpandable(): boolean;
     // (undocumented)
     get isExpanded(): boolean;
@@ -190,8 +192,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     set role(_role: 'treeitem' | 'group');
     // (undocumented)
     _setActiveItem(): void;
-    // (undocumented)
-    protected _setRoleFromData(): void;
     // (undocumented)
     _setTabFocusable(): void;
     // (undocumented)
@@ -305,10 +305,10 @@ export interface FlatTreeControlOptions<T, K> {
 export function getMultipleTreeControlsError(): Error;
 
 // @public
-export function getTreeControlMissingError(): Error;
+export function getNodeNotExpandableError(): Error;
 
 // @public
-export function getTreeControlNodeTypeUnspecifiedError(): Error;
+export function getTreeControlMissingError(): Error;
 
 // @public
 export function getTreeMissingMatchingNodeDefError(): Error;
