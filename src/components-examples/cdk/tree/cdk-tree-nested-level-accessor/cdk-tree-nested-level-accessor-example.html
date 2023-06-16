@@ -1,4 +1,4 @@
-<cdk-tree #tree [dataSource]="dataSource" [levelAccessor]="levelAccessor" [nodeType]="'nested'">
+<cdk-tree #tree [dataSource]="dataSource" [levelAccessor]="levelAccessor">
   <!-- This is the tree node template for leaf nodes -->
   <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="example-tree-node">
     {{node.name}}

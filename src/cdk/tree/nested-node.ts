@@ -81,6 +81,7 @@ export class CdkNestedTreeNode<T, K = T>
   // This is a workaround for https://github.com/angular/angular/issues/23091
   // In aot mode, the lifecycle hooks from parent class are not called.
   override ngOnInit() {
+    this._tree._setNodeTypeIfUnset('nested');
     super.ngOnInit();
   }
 
