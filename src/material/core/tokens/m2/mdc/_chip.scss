@@ -135,10 +135,6 @@ $prefix: (mdc, chip);
     // Unused.
     focus-outline-color: null,
     // Unused.
-    focus-state-layer-color: null,
-    // Unused.
-    focus-state-layer-opacity: null,
-    // Unused.
     hover-label-text-color: null,
     // Unused.
     hover-state-layer-color: null,
@@ -234,8 +230,12 @@ $prefix: (mdc, chip);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($config) {
   $palette: map.get($config, primary);
+
   $background: theming.get-color-from-palette($palette);
   $foreground: theming.get-color-from-palette($palette, default-contrast);
+
+  $state-layer-color: theming.get-color-from-palette(map.get($config, foreground), base);
+  $state-layer-opacity: 0.12; // 0.12 is a common value in Material Design for opacity.
 
   @return (
     // The text color of a disabled chip.
@@ -244,6 +244,10 @@ $prefix: (mdc, chip);
     elevated-container-color: $background,
     // The background-color of a disabled chip.
     elevated-disabled-container-color: $background,
+    // The color of the focus state layer.
+    focus-state-layer-color: $state-layer-color,
+    // The opacity of the focus state layer.
+    focus-state-layer-opacity: $state-layer-opacity,
     // The chip text color.
     label-text-color: $foreground,
     // The icon color of a chip.

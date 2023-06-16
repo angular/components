@@ -58,10 +58,6 @@
       }
     }
   }
-
-  .mat-mdc-chip-focus-overlay {
-    background: map.get(map.get($config, foreground), base);
-  }
 }
 
 @mixin typography($config-or-theme) {
