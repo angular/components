@@ -197,7 +197,8 @@ export class FocusMonitor implements OnDestroy {
 
     // Do nothing if we're not on the browser platform or the passed in node isn't an element.
     if (!this._platform.isBrowser || nativeElement.nodeType !== 1) {
-      return observableOf(null);
+      // Note: we don't want the observable to emit at all so we don't pass any parameters.
+      return observableOf();
     }
 
     // If the element is inside the shadow DOM, we need to bind our focus/blur listeners to
