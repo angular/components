@@ -90,48 +90,48 @@ describe('MDC-based MatSlider', () => {
     it('should set the default values', () => {
       expect(slider.min).toBe(0);
       expect(slider.max).toBe(100);
-      expect(slider.step).toBe(0);
-      checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
+      expect(slider.step).toBe(1);
+      checkInput(input, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
     });
 
     it('should update by click', fakeAsync(() => {
       setValueByClick(slider, input, 25);
-      checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
+      checkInput(input, {min: 0, max: 100, value: 25, step: 1, translateX: 75});
 
       setValueByClick(slider, input, 50);
-      checkInput(input, {min: 0, max: 100, value: 50, step: 0, translateX: 150});
+      checkInput(input, {min: 0, max: 100, value: 50, step: 1, translateX: 150});
 
       setValueByClick(slider, input, 75);
-      checkInput(input, {min: 0, max: 100, value: 75, step: 0, translateX: 225});
+      checkInput(input, {min: 0, max: 100, value: 75, step: 1, translateX: 225});
 
       setValueByClick(slider, input, 100);
-      checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
+      checkInput(input, {min: 0, max: 100, value: 100, step: 1, translateX: 300});
     }));
 
     it('should update by slide', fakeAsync(() => {
       slideToValue(slider, input, 25);
-      checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
+      checkInput(input, {min: 0, max: 100, value: 25, step: 1, translateX: 75});
 
       slideToValue(slider, input, 50);
-      checkInput(input, {min: 0, max: 100, value: 50, step: 0, translateX: 150});
+      checkInput(input, {min: 0, max: 100, value: 50, step: 1, translateX: 150});
 
       slideToValue(slider, input, 75);
-      checkInput(input, {min: 0, max: 100, value: 75, step: 0, translateX: 225});
+      checkInput(input, {min: 0, max: 100, value: 75, step: 1, translateX: 225});
 
       slideToValue(slider, input, 100);
-      checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
+      checkInput(input, {min: 0, max: 100, value: 100, step: 1, translateX: 300});
     }));
 
     it('should not slide before the track', fakeAsync(() => {
       slideToValue(slider, input, -10);
       expect(input.value).toBe(0);
-      checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
+      checkInput(input, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
     }));
 
     it('should not slide past the track', fakeAsync(() => {
       slideToValue(slider, input, 110);
       expect(input.value).toBe(100);
-      checkInput(input, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
+      checkInput(input, {min: 0, max: 100, value: 100, step: 1, translateX: 300});
     }));
 
     // TODO(wagnermaciel): Fix this test case (behavior works as intended in browser).
@@ -140,7 +140,7 @@ describe('MDC-based MatSlider', () => {
     //   tick(200);
     //   fixture.detectChanges();
     //   setValueByClick(slider, input, 25);
-    //   checkInput(input, {min: 0, max: 100, value: 25, step: 0, translateX: 75});
+    //   checkInput(input, {min: 0, max: 100, value: 25, step: 1, translateX: 75});
     //   slider._elementRef.nativeElement.style.marginLeft = 'initial';
     // }));
   });
@@ -161,12 +161,12 @@ describe('MDC-based MatSlider', () => {
     }));
 
     it('should set the default values', () => {
-      checkInput(startInput, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
-      checkInput(endInput, {min: 0, max: 100, value: 100, step: 0, translateX: 300});
+      checkInput(startInput, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
+      checkInput(endInput, {min: 0, max: 100, value: 100, step: 1, translateX: 300});
 
       expect(slider.min).toBe(0);
       expect(slider.max).toBe(100);
-      expect(slider.step).toBe(0);
+      expect(slider.step).toBe(1);
     });
 
     it('should update by start input click', fakeAsync(() => {
@@ -1373,16 +1373,16 @@ describe('MDC-based MatSlider', () => {
     });
 
     it('should sync the value binding in both directions', fakeAsync(() => {
-      checkInput(input, {min: 0, max: 100, value: 0, step: 0, translateX: 0});
+      checkInput(input, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
 
       slideToValue(slider, input, 10);
       expect(fixture.componentInstance.value).toBe(10);
-      checkInput(input, {min: 0, max: 100, value: 10, step: 0, translateX: 30});
+      checkInput(input, {min: 0, max: 100, value: 10, step: 1, translateX: 30});
 
       fixture.componentInstance.value = 20;
       fixture.detectChanges();
       expect(fixture.componentInstance.value).toBe(20);
-      checkInput(input, {min: 0, max: 100, value: 20, step: 0, translateX: 60});
+      checkInput(input, {min: 0, max: 100, value: 20, step: 1, translateX: 60});
     }));
   });
 
