@@ -38,7 +38,6 @@ import {
   concat,
   EMPTY,
   isObservable,
-  merge,
   NEVER,
   Observable,
   of as observableOf,
