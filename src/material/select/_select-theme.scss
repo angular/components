@@ -1,66 +1,32 @@
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/menu-surface' as mdc-menu-surface;
-@use '@material/list/evolution-mixins' as mdc-list;
-@use '@material/typography' as mdc-typography;
+@use 'sass:map';
 @use '@material/density' as mdc-density;
 @use '@material/textfield' as mdc-textfield;
+@use '../core/tokens/m2/mat/select' as tokens-mat-select;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
-
-
-// Gets the color to use for some text that is highlighted while a select has focus.
-@function _get-mdc-focused-text-color($palette) {
-  @return rgba(mdc-theme-color.prop-value($palette), 0.87);
-}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
 
-  @include mdc-helpers.using-mdc-theme($config) {
-    $disabled-color: rgba(mdc-theme-color.prop-value(on-surface), 0.38);
-    @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-theme-styles-query);
-    @include mdc-list.without-ripple(mdc-helpers.$mdc-theme-styles-query);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-select.$prefix,
+      tokens-mat-select.get-color-tokens($config));
 
-    .mat-mdc-select-value {
-      color: rgba(mdc-theme-color.prop-value(on-surface), 0.87);
+    .mat-mdc-form-field.mat-accent {
+      $accent: map.get($config, accent);
+      $accent-config: map.merge($config, (primary: $accent));
+      @include token-utils.create-token-values(tokens-mat-select.$prefix,
+        tokens-mat-select.get-color-tokens($accent-config));
     }
 
-    .mat-mdc-select-placeholder {
-      color: rgba(mdc-theme-color.prop-value(on-surface), 0.6);
-    }
-
-    .mat-mdc-select-disabled .mat-mdc-select-value {
-      color: $disabled-color;
-    }
-
-    .mat-mdc-select-arrow {
-      color: rgba(mdc-theme-color.prop-value(on-surface), 0.54);
-    }
-
-    .mat-mdc-form-field {
-      &.mat-focused {
-        &.mat-primary .mat-mdc-select-arrow {
-          color: _get-mdc-focused-text-color(primary);
-        }
-
-        &.mat-accent .mat-mdc-select-arrow {
-          color: _get-mdc-focused-text-color(secondary);
-        }
-
-        &.mat-warn .mat-mdc-select-arrow {
-          color: _get-mdc-focused-text-color(error);
-        }
-      }
-
-      .mat-mdc-select.mat-mdc-select-invalid .mat-mdc-select-arrow {
-        color: _get-mdc-focused-text-color(error);
-      }
-
-      .mat-mdc-select.mat-mdc-select-disabled .mat-mdc-select-arrow {
-        color: $disabled-color;
-      }
+    .mat-mdc-form-field.mat-warn {
+      $warn: map.get($config, warn);
+      $warn-config: map.merge($config, (primary: $warn));
+      @include token-utils.create-token-values(tokens-mat-select.$prefix,
+        tokens-mat-select.get-color-tokens($warn-config));
     }
   }
 }
@@ -68,16 +34,10 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-typography-styles-query);
 
-    .mat-mdc-select-panel {
-      @include mdc-list.list-base(mdc-helpers.$mdc-typography-styles-query);
-    }
-
-    .mat-mdc-select {
-      @include mdc-typography.typography(body1, $query: mdc-helpers.$mdc-typography-styles-query);
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-select.$prefix,
+      tokens-mat-select.get-typography-tokens($config));
   }
 }
 
@@ -97,6 +57,11 @@
     .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
       transform: none;
     }
+  }
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-select.$prefix,
+      tokens-mat-select.get-density-tokens($density-scale));
   }
 }
 
