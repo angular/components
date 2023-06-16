@@ -990,6 +990,9 @@ export class CdkTree<T, K = T>
       return;
     }
 
+    this._parents.clear();
+    this._groups.clear();
+
     const flattenedNodes = this._flattenedNodes.value;
     for (let index = 0; index < flattenedNodes.length; index++) {
       const dataNode = flattenedNodes[index];
@@ -1005,14 +1008,6 @@ export class CdkTree<T, K = T>
       group.splice(index, 0, dataNode);
       currentGroup.set(parentKey, group);
       this._groups.set(level, currentGroup);
-    }
-
-    this._refreshAllNodes();
-  }
-
-  private _refreshAllNodes(): void {
-    for (const [, node] of this._nodes.value) {
-      node._changeDetectorRef.detectChanges();
     }
   }
 
