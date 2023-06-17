@@ -48,15 +48,9 @@ $scale: 0.75 !default;
   box-sizing: border-box;
   width: 100%;
 
-  @include token-utils.use-tokens(
-    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, enabled-trigger-color);
-
-    .mat-mdc-select-disabled & {
-      @include vendor-prefixes.user-select(none);
-      @include token-utils.create-token-slot(color, disabled-trigger-color);
-      cursor: default;
-    }
+  .mat-mdc-select-disabled & {
+    @include vendor-prefixes.user-select(none);
+    cursor: default;
   }
 }
 
