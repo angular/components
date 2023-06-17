@@ -25,9 +25,9 @@ $prefix: (mat, select);
 
   @return (
     panel-background-color: theming.get-color-from-palette($background, card),
-    enabled-trigger-color: rgba($on-surface, 0.87),
-    disabled-trigger-color: rgba($on-surface, 0.38),
-    placeholder-color: rgba($on-surface, 0.6),
+    enabled-trigger-text-color: rgba($on-surface, 0.87),
+    disabled-trigger-text-color: rgba($on-surface, 0.38),
+    placeholder-text-color: rgba($on-surface, 0.6),
     enabled-arrow-color: rgba($on-surface, 0.54),
     disabled-arrow-color: rgba($on-surface, 0.38),
     focused-arrow-color: theming.get-color-from-palette($primary, default, 0.87),
@@ -46,12 +46,12 @@ $prefix: (mat, select);
   }
 
   @return (
-    trigger-font: typography-utils.font-family($config, body-1) or
+    trigger-text-font: typography-utils.font-family($config, body-1) or
       typography-utils.font-family($config),
-    trigger-line-height: typography-utils.line-height($config, body-1),
-    trigger-size: typography-utils.font-size($config, body-1),
-    trigger-tracking: typography-utils.letter-spacing($config, body-1),
-    trigger-weight: typography-utils.font-weight($config, body-1)
+    trigger-text-line-height: typography-utils.line-height($config, body-1),
+    trigger-text-size: typography-utils.font-size($config, body-1),
+    trigger-text-tracking: typography-utils.letter-spacing($config, body-1),
+    trigger-text-weight: typography-utils.font-weight($config, body-1)
   );
 }
 
