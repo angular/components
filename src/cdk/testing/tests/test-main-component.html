@@ -1,5 +1,6 @@
+<!-- Note that this element is fixed to avoid flakiness if the page has been scrolled down. -->
 <div class="click-test" (click)="onClick($event)" (contextmenu)="onRightClick($event)"
-     style="width: 100px; height: 100px; background: grey"
+     style="width: 100px; height: 100px; background: grey; position: fixed; top: 0; right: 0; z-index: 10;"
      #clickTestElement>
 </div>
 <div class="click-test-result">{{clickResult.x}}-{{clickResult.y}}</div>
