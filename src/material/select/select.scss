@@ -24,19 +24,19 @@ $scale: 0.75 !default;
   @include token-utils.use-tokens(
     tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
     @include mdc-typography.smooth-font();
-    @include token-utils.create-token-slot(color, enabled-trigger-color);
-    @include token-utils.create-token-slot(font-family, trigger-font);
-    @include token-utils.create-token-slot(line-height, trigger-line-height);
-    @include token-utils.create-token-slot(font-size, trigger-size);
-    @include token-utils.create-token-slot(font-weight, trigger-weight);
-    @include token-utils.create-token-slot(letter-spacing, trigger-tracking);
+    @include token-utils.create-token-slot(color, enabled-trigger-text-color);
+    @include token-utils.create-token-slot(font-family, trigger-text-font);
+    @include token-utils.create-token-slot(line-height, trigger-text-line-height);
+    @include token-utils.create-token-slot(font-size, trigger-text-size);
+    @include token-utils.create-token-slot(font-weight, trigger-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, trigger-text-tracking);
   }
 }
 
 .mat-mdc-select-disabled {
   @include token-utils.use-tokens(
     tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, disabled-trigger-color);
+    @include token-utils.create-token-slot(color, disabled-trigger-text-color);
   }
 }
 
@@ -171,7 +171,7 @@ div.mat-mdc-select-panel {
 
   @include token-utils.use-tokens(
     tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, placeholder-color);
+    @include token-utils.create-token-slot(color, placeholder-text-color);
   }
 
   ._mat-animation-noopable & {
