@@ -214,12 +214,10 @@ export class CdkTree<T, K = T>
   private _expansionModel?: SelectionModel<K>;
 
   /**
-   * Maintain a synchronous cache of flattened data nodes. In the
-   * case of nested nodes (i.e. if `nodeType` is 'nested'), this will
-   * not contain any data.
+   * Maintain a synchronous cache of flattened data nodes. This will only be
+   * populated after initial render, and in certain cases, will be delayed due to
+   * relying on Observable `getChildren` calls.
    */
-  private _preFlattenedNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
-
   private _flattenedNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
   /**
@@ -230,7 +228,8 @@ export class CdkTree<T, K = T>
   >(null);
 
   /**
-   * The root nodes of the tree.
+   * The root nodes of the tree. This will only be populated in the case where the user
+   * provides a `NestedTreeControl`.
    */
   private _rootNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
@@ -285,22 +284,18 @@ export class CdkTree<T, K = T>
         }
       });
 
-    combineLatest([this._preFlattenedNodes, this._rootNodes])
+    this._rootNodes
       .pipe(
-        switchMap(([preFlattened, rootNodes]) => {
-          if (preFlattened.length) {
-            return observableOf(preFlattened);
-          } else if (rootNodes.length) {
-            return this._flattenRootNodes(rootNodes);
-          }
-          return NEVER;
-        }),
+        switchMap(rootNodes => this._flattenRootNodes(rootNodes)),
         takeUntil(this._onDestroy),
       )
       .subscribe(flattenedNodes => {
         this._flattenedNodes.next(flattenedNodes);
-        this._recalculateGroupsForLevelAccessor();
       });
+
+    this._flattenedNodes.pipe(takeUntil(this._onDestroy)).subscribe(() => {
+      this._recalculateGroupsForLevelAccessor();
+    });
   }
 
   ngOnDestroy() {
@@ -638,7 +633,7 @@ export class CdkTree<T, K = T>
       this.treeControl.expandAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      this._getAllDescendants()
+      this._getAllNodes()
         .pipe(takeUntil(this._onDestroy))
         .subscribe(children => {
           expansionModel.select(...children.map(child => this._getExpansionKey(child)));
@@ -652,7 +647,7 @@ export class CdkTree<T, K = T>
       this.treeControl.collapseAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      this._getAllDescendants()
+      this._getAllNodes()
         .pipe(takeUntil(this._onDestroy))
         .subscribe(children => {
           expansionModel.deselect(...children.map(child => this._getExpansionKey(child)));
@@ -802,11 +797,8 @@ export class CdkTree<T, K = T>
   }
 
   /** Gets all nodes in the tree, using the cached nodes. */
-  private _getAllDescendants(): Observable<readonly T[]> {
-    if (this._flattenedNodes.value.length) {
-      return this._flattenedNodes;
-    }
-    return observableOf([]);
+  private _getAllNodes(): Observable<readonly T[]> {
+    return this._flattenedNodes;
   }
 
   private _getDescendants(dataNode: T): Observable<T[]> {
@@ -900,9 +892,6 @@ export class CdkTree<T, K = T>
     // provided node.
     let cachedNodes = this._flattenedNodes.value;
     if (!cachedNodes.length) {
-      cachedNodes = this._preFlattenedNodes.value;
-    }
-    if (!cachedNodes.length) {
       return null;
     }
     const currentLevel = this._levels.get(this._getExpansionKey(node)) ?? 0;
@@ -940,7 +929,7 @@ export class CdkTree<T, K = T>
       // This flattens children into a single array.
       return this._flattenRootNodes(nodes).pipe(
         tap(allNodes => {
-          this._preFlattenedNodes.next(allNodes);
+          this._flattenedNodes.next(allNodes);
         }),
       );
     } else if (this.levelAccessor && nodeType === 'nested') {
@@ -948,15 +937,15 @@ export class CdkTree<T, K = T>
       // itself will handle rendering each individual node's children.
       const levelAccessor = this.levelAccessor;
       return observableOf(nodes.filter(node => levelAccessor(node) === 0)).pipe(
-        tap(rootNodes => {
-          this._preFlattenedNodes.next(nodes);
+        tap(() => {
+          this._flattenedNodes.next(nodes);
         }),
       );
     } else {
       // In the case of a TreeControl, we know that the node type matches up
       // with the TreeControl, and so no conversions are necessary.
       if (nodeType === 'flat') {
-        this._preFlattenedNodes.next(nodes);
+        this._flattenedNodes.next(nodes);
       } else {
         this._rootNodes.next(nodes);
       }
