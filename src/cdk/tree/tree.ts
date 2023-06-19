@@ -38,7 +38,6 @@ import {
   concat,
   EMPTY,
   isObservable,
-  NEVER,
   Observable,
   of as observableOf,
   Subject,
