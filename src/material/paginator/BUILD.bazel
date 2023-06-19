@@ -44,7 +44,9 @@ sass_binary(
     name = "paginator_scss",
     src = "paginator.scss",
     deps = [
+        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
+        "//src/material:sass_lib",
     ],
 )
 
