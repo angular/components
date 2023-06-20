@@ -29,6 +29,7 @@ import {
   ContentChildren,
   QueryList,
   OnInit,
+  inject,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -43,6 +44,7 @@ import {
   mixinTabIndex,
   mixinDisabled,
   RippleGlobalOptions,
+  MatRippleLoader,
 } from '@angular/material/core';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {merge, Subject, Subscription} from 'rxjs';
@@ -127,6 +129,12 @@ export class MatChip
     OnDestroy
 {
   protected _document: Document;
+
+  /**
+   * Handles the lazy creation of the MatButton ripple.
+   * Used to improve initial load time of large applications.
+   */
+  _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
   /** Whether the ripple is centered on the chip. */
   readonly _isRippleCentered = false;
@@ -251,7 +259,34 @@ export class MatChip
    * @deprecated Considered an implementation detail. To be removed.
    * @breaking-change 17.0.0
    */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  get ripple(): MatRipple {
+    return this._rippleLoader?.getRipple(this._elementRef.nativeElement)!;
+  }
+  set ripple(v: MatRipple) {
+    this._rippleLoader?.attachRipple(this._elementRef.nativeElement, v);
+  }
+
+  // We override `disableRipple` and `disabled` so we can hook into
+  // their setters and update the ripple disabled state accordingly.
+
+  /** Whether the ripple effect is disabled or not. */
+  override get disableRipple(): boolean {
+    return this._disableRipple;
+  }
+  override set disableRipple(value: any) {
+    this._disableRipple = coerceBooleanProperty(value);
+    this._updateRippleDisabled();
+  }
+  private _disableRipple: boolean = false;
+
+  override get disabled(): boolean {
+    return this._disabled;
+  }
+  override set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+    this._updateRippleDisabled();
+  }
+  private _disabled: boolean = false;
 
   /** Action receiving the primary set of user interactions. */
   @ViewChild(MatChipAction) primaryAction: MatChipAction;
@@ -271,6 +306,11 @@ export class MatChip
     super(elementRef);
     this._document = _document;
     this._animationsDisabled = animationMode === 'NoopAnimations';
+
+    this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {
+      className: 'mat-mdc-chip-ripple',
+    });
+
     if (tabIndex != null) {
       this.tabIndex = parseInt(tabIndex) ?? this.defaultTabIndex;
     }
@@ -323,14 +363,15 @@ export class MatChip
     }
   }
 
-  /** Whether or not the ripple should be disabled. */
-  _isRippleDisabled(): boolean {
-    return (
+  /** Updates the disabled state of the ripple. */
+  private _updateRippleDisabled(): void {
+    this._rippleLoader?.setDisabled(
+      this._elementRef.nativeElement,
       this.disabled ||
-      this.disableRipple ||
-      this._animationsDisabled ||
-      this._isBasicChip ||
-      !!this._globalRippleOptions?.disabled
+        this.disableRipple ||
+        this._animationsDisabled ||
+        this._isBasicChip ||
+        !!this._globalRippleOptions?.disabled,
     );
   }
 
