@@ -451,9 +451,13 @@ export class CdkTree<T, K = T>
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex!);
           const group = this._getNodeGroup(item.item);
-          this._levels.delete(this._getExpansionKey(item.item));
-          this._parents.delete(this._getExpansionKey(item.item));
-          group.splice(group.indexOf(item.item), 1);
+          const key = this._getExpansionKey(item.item);
+          this._levels.delete(key);
+          this._parents.delete(key);
+          group.splice(
+            group.findIndex(groupItem => this._getExpansionKey(groupItem) === key),
+            1,
+          );
         } else {
           const view = viewContainer.get(adjustedPreviousIndex!);
           viewContainer.move(view!, currentIndex);
@@ -690,7 +694,8 @@ export class CdkTree<T, K = T>
           if (!expanded) {
             return [];
           }
-          const startIndex = flattenedNodes.indexOf(dataNode);
+          const key = this._getExpansionKey(dataNode);
+          const startIndex = flattenedNodes.findIndex(node => this._getExpansionKey(node) === key);
           const level = levelAccessor(dataNode) + 1;
           const results: T[] = [];
 
@@ -762,7 +767,8 @@ export class CdkTree<T, K = T>
    */
   _getPositionInSet(dataNode: T) {
     const group = this._getNodeGroup(dataNode);
-    return group.indexOf(dataNode) + 1;
+    const key = this._getExpansionKey(dataNode);
+    return group.findIndex(node => this._getExpansionKey(node) === key) + 1;
   }
 
   /** Given a CdkTreeNode, gets the node that renders that node's parent's data. */
@@ -805,7 +811,10 @@ export class CdkTree<T, K = T>
       return observableOf(this.treeControl.getDescendants(dataNode));
     }
     if (this.levelAccessor) {
-      const startIndex = this._flattenedNodes.value.indexOf(dataNode);
+      const key = this._getExpansionKey(dataNode);
+      const startIndex = this._flattenedNodes.value.findIndex(
+        node => this._getExpansionKey(node) === key,
+      );
       const results: T[] = [];
 
       // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
