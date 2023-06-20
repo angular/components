@@ -31,6 +31,7 @@ import { InjectionToken } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatRipple } from '@angular/material/core';
+import { MatRippleLoader } from '@angular/material/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -75,6 +76,11 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     _changeDetectorRef: ChangeDetectorRef;
     readonly destroyed: EventEmitter<MatChipEvent>;
     // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: any);
+    get disableRipple(): boolean;
+    set disableRipple(value: any);
+    // (undocumented)
     protected _document: Document;
     focus(): void;
     _getActions(): MatChipAction[];
@@ -91,7 +97,6 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     id: string;
     _isBasicChip: boolean;
     readonly _isRippleCentered = false;
-    _isRippleDisabled(): boolean;
     leadingIcon: MatChipAvatar;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -114,7 +119,9 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     readonly removed: EventEmitter<MatChipEvent>;
     removeIcon: MatChipRemove;
     // @deprecated
-    ripple: MatRipple;
+    get ripple(): MatRipple;
+    set ripple(v: MatRipple);
+    _rippleLoader: MatRippleLoader;
     role: string | null;
     trailingIcon: MatChipTrailingIcon;
     get value(): any;
