@@ -90,7 +90,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    */
   @Input('matRippleDisabled')
   get disabled() {
-    return this._disabled;
+    return this._globalOptions.disabled || this._disabled;
   }
   set disabled(value: boolean) {
     if (value) {
