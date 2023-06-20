@@ -1,4 +1,7 @@
 @use '@angular/cdk';
+@use '@material/typography/typography' as mdc-typography;
+@use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
+@use '../core/tokens/token-utils';
 
 $padding: 0 8px;
 $page-size-margin-right: 8px;
@@ -12,6 +15,22 @@ $button-icon-size: 28px;
 
 .mat-mdc-paginator {
   display: block;
+
+  @include token-utils.use-tokens(
+    tokens-mat-paginator.$prefix, tokens-mat-paginator.get-token-slots()) {
+    @include mdc-typography.smooth-font();
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(background-color, container-background-color);
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(line-height, container-text-line-height);
+    @include token-utils.create-token-slot(font-size, container-text-size);
+    @include token-utils.create-token-slot(font-weight, container-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+
+    .mat-mdc-select-value {
+      @include token-utils.create-token-slot(font-size, select-trigger-text-size);
+    }
+  }
 
   // This element reserves space for hints and error messages.
   // Hide it since we know that we won't need it.
@@ -39,6 +58,11 @@ $button-icon-size: 28px;
   padding: $padding;
   flex-wrap: wrap-reverse;
   width: 100%;
+
+  @include token-utils.use-tokens(
+    tokens-mat-paginator.$prefix, tokens-mat-paginator.get-token-slots()) {
+    @include token-utils.create-token-slot(min-height, container-size);
+  }
 }
 
 .mat-mdc-paginator-page-size {
@@ -73,6 +97,15 @@ $button-icon-size: 28px;
 .mat-mdc-paginator-icon {
   display: inline-block;
   width: $button-icon-size;
+
+  @include token-utils.use-tokens(
+    tokens-mat-paginator.$prefix, tokens-mat-paginator.get-token-slots()) {
+    @include token-utils.create-token-slot(fill, enabled-icon-color);
+
+    .mat-mdc-icon-button[disabled] & {
+      @include token-utils.create-token-slot(fill, disabled-icon-color);
+    }
+  }
 
   [dir='rtl'] & {
     transform: rotate(180deg);
