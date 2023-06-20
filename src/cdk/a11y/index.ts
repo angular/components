@@ -8,4 +8,4 @@
 
 export * from './public-api';
 
-export const someApiChange = true;
+export const someApiChange = 'lok';
