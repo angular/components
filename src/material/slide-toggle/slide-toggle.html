@@ -31,7 +31,7 @@
             [matRippleDisabled]="disableRipple || disabled"
             [matRippleCentered]="true"></div>
         </div>
-        <div class="mdc-switch__icons">
+        <div class="mdc-switch__icons" *ngIf="!hideIcon">
           <svg
             class="mdc-switch__icon mdc-switch__icon--on"
             viewBox="0 0 24 24"

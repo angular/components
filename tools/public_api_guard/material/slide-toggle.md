@@ -80,6 +80,8 @@ export abstract class _MatSlideToggleBase<T> extends _MatSlideToggleMixinBase im
     _focused: boolean;
     // (undocumented)
     protected _focusMonitor: FocusMonitor;
+    get hideIcon(): boolean;
+    set hideIcon(value: BooleanInput);
     id: string;
     get inputId(): string;
     labelPosition: 'before' | 'after';
@@ -102,7 +104,7 @@ export abstract class _MatSlideToggleBase<T> extends _MatSlideToggleMixinBase im
     protected _uniqueId: string;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatSlideToggleBase<any>, never, never, { "name": { "alias": "name"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; }, { "change": "change"; "toggleChange": "toggleChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatSlideToggleBase<any>, never, never, { "name": { "alias": "name"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "hideIcon": { "alias": "hideIcon"; "required": false; }; }, { "change": "change"; "toggleChange": "toggleChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatSlideToggleBase<any>, never>;
 }
@@ -120,6 +122,7 @@ export class MatSlideToggleChange {
 export interface MatSlideToggleDefaultOptions {
     color?: ThemePalette;
     disableToggleValue?: boolean;
+    hideIcon?: boolean;
 }
 
 // @public (undocumented)

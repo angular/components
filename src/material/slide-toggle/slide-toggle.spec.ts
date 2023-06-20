@@ -346,6 +346,15 @@ describe('MDC-based MatSlideToggle without forms', () => {
       const rippleElement = slideToggleElement.querySelector('.mat-mdc-slide-toggle-ripple')!;
       expect(rippleElement.classList).toContain('mat-mdc-focus-indicator');
     }));
+
+    it('should be able to hide the icon', fakeAsync(() => {
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeTruthy();
+
+      testComponent.hideIcon = true;
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
+    }));
   });
 
   describe('custom template', () => {
@@ -798,6 +807,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
                      [tabIndex]="slideTabindex"
                      [labelPosition]="labelPosition"
                      [disableRipple]="disableRipple"
+                     [hideIcon]="hideIcon"
                      (toggleChange)="onSlideToggleChange()"
                      (dragChange)="onSlideDragChange()"
                      (change)="onSlideChange($event)"
@@ -822,6 +832,7 @@ class SlideToggleBasic {
   toggleTriggered: number = 0;
   dragTriggered: number = 0;
   direction: Direction = 'ltr';
+  hideIcon = false;
 
   onSlideClick: (event?: Event) => void = () => {};
   onSlideChange = (event: MatSlideToggleChange) => (this.lastEvent = event);
