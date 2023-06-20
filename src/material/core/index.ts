@@ -7,3 +7,5 @@
  */
 
 export * from './public-api';
+
+export const someApiChange = true;
