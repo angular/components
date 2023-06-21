@@ -5,23 +5,27 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {FocusableOption} from '@angular/cdk/a11y';
+import {TreeKeyManager, TreeKeyManagerItem} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CollectionViewer, DataSource, isDataSource, SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
+  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
   Directive,
   ElementRef,
+  EventEmitter,
   Input,
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   TrackByFunction,
   ViewChild,
@@ -40,7 +44,18 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {concatMap, map, reduce, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {
+  concatMap,
+  map,
+  pairwise,
+  reduce,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -60,6 +75,10 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   return data;
 }
 
+function isNotNullish<T>(val: T | null | undefined): val is T {
+  return val != null;
+}
+
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
@@ -71,6 +90,8 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
+    '(keydown)': '_sendKeydownToKeyManager($event)',
+    '(focus)': '_focusInitialTreeItem()',
   },
   encapsulation: ViewEncapsulation.None,
 
@@ -80,7 +101,9 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTree<T, K = T>
+  implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
+{
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
 
@@ -210,7 +233,15 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     new Map<K, CdkTreeNode<T, K>>(),
   );
 
-  constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
+  /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
+  _keyManager: TreeKeyManager<CdkTreeNode<T, K>>;
+
+  constructor(
+    private _differs: IterableDiffers,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _dir: Directionality,
+    private _elementRef: ElementRef<HTMLElement>,
+  ) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
@@ -230,9 +261,26 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       }
     }
 
+    let expansionModel;
     if (!this.treeControl) {
-      this._expansionModel = new SelectionModel(true);
+      expansionModel = new SelectionModel<K>(true);
+      this._expansionModel = expansionModel;
+    } else {
+      expansionModel = this.treeControl.expansionModel;
     }
+
+    // We manually detect changes on all the children nodes when expansion
+    // status changes; otherwise, the various attributes won't be updated.
+    expansionModel.changed
+      .pipe(withLatestFrom(this._nodes), takeUntil(this._onDestroy))
+      .subscribe(([changes, nodes]) => {
+        for (const added of changes.added) {
+          nodes.get(added)?._changeDetectorRef.detectChanges();
+        }
+        for (const removed of changes.removed) {
+          nodes.get(removed)?._changeDetectorRef.detectChanges();
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -252,6 +300,31 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     }
   }
 
+  ngAfterContentInit() {
+    this._keyManager = new TreeKeyManager({
+      items: combineLatest([this._dataNodes, this._nodes]).pipe(
+        map(([dataNodes, nodes]) =>
+          dataNodes.map(data => nodes.get(this._getExpansionKey(data))).filter(isNotNullish),
+        ),
+      ),
+      trackBy: node => this._getExpansionKey(node.data),
+      typeAheadDebounceInterval: true,
+      horizontalOrientation: this._dir.value,
+    });
+
+    this._keyManager.change
+      .pipe(startWith(null), pairwise(), takeUntil(this._onDestroy))
+      .subscribe(([prev, next]) => {
+        prev?._setTabUnfocusable();
+        next?._setTabFocusable();
+      });
+
+    this._keyManager.change.pipe(startWith(null), takeUntil(this._onDestroy)).subscribe(() => {
+      // refresh the tabindex when the active item changes.
+      this._setTabIndex();
+    });
+  }
+
   ngAfterContentChecked() {
     const defaultNodeDefs = this._nodeDefs.filter(def => !def.when);
     if (defaultNodeDefs.length > 1 && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -264,8 +337,22 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     }
   }
 
-  // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
-  //     and nested trees.
+  /**
+   * Sets the tabIndex on the host element.
+   *
+   * NB: we don't set this as a host binding since children being activated
+   * (e.g. on user click) doesn't trigger this component's change detection.
+   */
+  _setTabIndex() {
+    // If the `TreeKeyManager` has no active item, then we know that we need to focus the initial
+    // item when the tree is focused. We set the tabindex to be `0` so that we can capture
+    // the focus event and redirect it. Otherwise, we unset it.
+    if (!this._keyManager.getActiveItem()) {
+      this._elementRef.nativeElement.setAttribute('tabindex', '0');
+    } else {
+      this._elementRef.nativeElement.removeAttribute('tabindex');
+    }
+  }
 
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
@@ -402,14 +489,11 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     const parent = parentData ?? this._findParentForNode(nodeData, index);
     this._parents.set(this._getExpansionKey(nodeData), parent);
 
-    // Determine where to insert this new node into the group, then insert it.
-    // We do this by looking at the previous node in our flattened node list. If it's in the same
-    // group, we place the current node after. Otherwise, we place it at the start of the group.
+    // We're essentially replicating the tree structure within each `group`;
+    // we insert the node into the group at the specified index.
     const currentGroup = this._groups.get(context.level) ?? new Map<T | null, T[]>();
     const group = currentGroup.get(parent) ?? [];
-    const previousNode = this._dataNodes.value?.[index - 1];
-    const groupInsertionIndex = (previousNode && group.indexOf(previousNode) + 1) ?? 0;
-    group.splice(groupInsertionIndex, 0, nodeData);
+    group.splice(index, 0, nodeData);
     currentGroup.set(parent, group);
     this._groups.set(context.level, currentGroup);
 
@@ -645,6 +729,36 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return group.indexOf(dataNode) + 1;
   }
 
+  /** Given a CdkTreeNode, gets the node that renders that node's parent's data. */
+  _getNodeParent(node: CdkTreeNode<T, K>) {
+    const parent = this._parents.get(this._getExpansionKey(node.data));
+    return parent && this._nodes.value.get(this._getExpansionKey(parent));
+  }
+
+  /** Given a CdkTreeNode, gets the nodes that renders that node's child data. */
+  _getNodeChildren(node: CdkTreeNode<T, K>) {
+    return coerceObservable(this._getChildrenAccessor()?.(node.data) ?? []).pipe(
+      map(children =>
+        children
+          .map(child => this._nodes.value.get(this._getExpansionKey(child)))
+          .filter(isNotNullish),
+      ),
+    );
+  }
+
+  /** `keydown` event handler; this just passes the event to the `TreeKeyManager`. */
+  _sendKeydownToKeyManager(event: KeyboardEvent) {
+    this._keyManager.onKeydown(event);
+  }
+
+  /** `focus` event handler; this focuses the initial item if there isn't already one available. */
+  _focusInitialTreeItem() {
+    if (this._keyManager.getActiveItem()) {
+      return;
+    }
+    this._keyManager.onInitialFocus();
+  }
+
   /**
    * Gets all nodes in the tree, through recursive expansion.
    *
@@ -735,6 +849,32 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
   }
 
+  private _getNodeGroup(node: T) {
+    const level = this._levels.get(this._getExpansionKey(node));
+    const parent = this._parents.get(this._getExpansionKey(node));
+    const group = this._groups.get(level ?? 0)?.get(parent ?? null);
+    return group ?? [node];
+  }
+
+  private _findParentForNode(node: T, index: number) {
+    // In all cases, we have a mapping from node to level; all we need to do here is backtrack in
+    // our flattened list of nodes to determine the first node that's of a level lower than the
+    // provided node.
+    if (!this._dataNodes) {
+      return null;
+    }
+    const currentLevel = this._levels.get(this._getExpansionKey(node)) ?? 0;
+    for (let parentIndex = index; parentIndex >= 0; parentIndex--) {
+      const parentNode = this._dataNodes.value[parentIndex];
+      const parentLevel = this._levels.get(this._getExpansionKey(parentNode)) ?? 0;
+
+      if (parentLevel < currentLevel) {
+        return parentNode;
+      }
+    }
+    return null;
+  }
+
   /**
    * Converts children for certain tree configurations. Note also that this
    * caches the known nodes for use in other parts of the tree.
@@ -767,32 +907,6 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       return observableOf(nodes);
     }
   }
-
-  private _getNodeGroup(node: T) {
-    const level = this._levels.get(this._getExpansionKey(node));
-    const parent = this._parents.get(this._getExpansionKey(node));
-    const group = this._groups.get(level ?? 0)?.get(parent ?? null);
-    return group ?? [node];
-  }
-
-  private _findParentForNode(node: T, index: number) {
-    // In all cases, we have a mapping from node to level; all we need to do here is backtrack in
-    // our flattened list of nodes to determine the first node that's of a level lower than the
-    // provided node.
-    if (!this._dataNodes) {
-      return null;
-    }
-    const currentLevel = this._levels.get(this._getExpansionKey(node)) ?? 0;
-    for (let parentIndex = index; parentIndex >= 0; parentIndex--) {
-      const parentNode = this._dataNodes.value[parentIndex];
-      const parentLevel = this._levels.get(this._getExpansionKey(parentNode)) ?? 0;
-
-      if (parentLevel < currentLevel) {
-        return parentNode;
-      }
-    }
-    return null;
-  }
 }
 
 /**
@@ -803,13 +917,15 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   exportAs: 'cdkTreeNode',
   host: {
     'class': 'cdk-tree-node',
-    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-expanded]': '_getAriaExpanded()',
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
+    'tabindex': '-1',
+    '(click)': '_setActiveItem()',
   },
 })
-export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit {
+export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
   /**
    * The role of the tree node.
    *
@@ -822,10 +938,16 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   }
 
   set role(_role: 'treeitem' | 'group') {
-    // TODO: move to host after View Engine deprecation
-    this._elementRef.nativeElement.setAttribute('role', _role);
+    // ignore any role setting, we handle this internally.
+    this._setRoleFromData();
   }
 
+  /**
+   * Whether or not this node is expandable.
+   *
+   * If not using `FlatTreeControl`, or if `isExpandable` is not provided to
+   * `NestedTreeControl`, this should be provided for correct node a11y.
+   */
   @Input() isExpandable: boolean = false;
 
   @Input()
@@ -834,11 +956,25 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   }
   set isExpanded(isExpanded: boolean) {
     if (isExpanded) {
-      this._tree.expand(this.data);
+      this.expand();
     } else {
-      this._tree.collapse(this.data);
+      this.collapse();
     }
   }
+
+  /**
+   * Whether or not this node is disabled. If it's disabled, then the user won't be able to focus
+   * or activate this node.
+   */
+  @Input() isDisabled?: boolean;
+
+  /** This emits when the node has been programatically activated. */
+  @Output()
+  readonly activation: EventEmitter<T> = new EventEmitter<T>();
+
+  /** This emits when the node's expansion status has been changed. */
+  @Output()
+  readonly expandedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
@@ -874,6 +1010,26 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     return this._tree._getLevel(this._data) ?? this._parentNodeAriaLevel;
   }
 
+  /** Determines if the tree node is expandable. */
+  _isExpandable(): boolean {
+    if (typeof this._tree.treeControl?.isExpandable === 'function') {
+      return this._tree.treeControl.isExpandable(this._data);
+    }
+    return this.isExpandable;
+  }
+
+  /**
+   * Determines the value for `aria-expanded`.
+   *
+   * For non-expandable nodes, this is `null`.
+   */
+  _getAriaExpanded(): string | null {
+    if (!this._isExpandable()) {
+      return null;
+    }
+    return String(this.isExpanded);
+  }
+
   /**
    * Determines the size of this node's parent's child set.
    *
@@ -892,7 +1048,11 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     return this._tree._getPositionInSet(this._data);
   }
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
+  constructor(
+    protected _elementRef: ElementRef<HTMLElement>,
+    protected _tree: CdkTree<T, K>,
+    public _changeDetectorRef: ChangeDetectorRef,
+  ) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
     this.role = 'treeitem';
   }
@@ -914,14 +1074,57 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     this._destroyed.complete();
   }
 
-  /** Focuses the menu item. Implements for FocusableOption. */
+  getParent(): CdkTreeNode<T, K> | null {
+    return this._tree._getNodeParent(this) ?? null;
+  }
+
+  getChildren(): CdkTreeNode<T, K>[] | Observable<CdkTreeNode<T, K>[]> {
+    return this._tree._getNodeChildren(this);
+  }
+
+  /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
     this._elementRef.nativeElement.focus();
   }
 
+  /** Emits an activation event. Implemented for TreeKeyManagerItem. */
+  activate(): void {
+    if (this.isDisabled) {
+      return;
+    }
+    this.activation.next(this._data);
+  }
+
+  /** Collapses this data node. Implemented for TreeKeyManagerItem. */
+  collapse(): void {
+    this._tree.collapse(this._data);
+    this.expandedChange.emit(this.isExpanded);
+  }
+
+  /** Expands this data node. Implemented for TreeKeyManagerItem. */
+  expand(): void {
+    this._tree.expand(this._data);
+    this.expandedChange.emit(this.isExpanded);
+  }
+
+  _setTabFocusable() {
+    this._elementRef.nativeElement.setAttribute('tabindex', '0');
+  }
+
+  _setTabUnfocusable() {
+    this._elementRef.nativeElement.setAttribute('tabindex', '-1');
+  }
+
+  _setActiveItem() {
+    if (this.isDisabled) {
+      return;
+    }
+    this._tree._keyManager.onClick(this);
+  }
+
   // TODO: role should eventually just be set in the component host
   protected _setRoleFromData(): void {
-    this.role = 'treeitem';
+    this._elementRef.nativeElement.setAttribute('role', 'treeitem');
   }
 }
 

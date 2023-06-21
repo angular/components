@@ -7,6 +7,7 @@
  */
 import {
   AfterContentInit,
+  ChangeDetectorRef,
   ContentChildren,
   Directive,
   ElementRef,
@@ -60,9 +61,10 @@ export class CdkNestedTreeNode<T, K = T>
   constructor(
     elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
+    changeDetectorRef: ChangeDetectorRef,
     protected _differs: IterableDiffers,
   ) {
-    super(elementRef, tree);
+    super(elementRef, tree, changeDetectorRef);
   }
 
   ngAfterContentInit() {

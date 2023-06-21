@@ -9,6 +9,7 @@ import {FlatTreeControl, NestedTreeControl, TreeControl} from '@angular/cdk/tree
 import {Component, ViewChild, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {
   MatTree,
   MatTreeFlatDataSource,
@@ -60,38 +61,6 @@ describe('MatTree', () => {
         getNodes(treeElement).forEach(node => {
           expect(node.getAttribute('role')).toBe('treeitem');
         });
-      });
-
-      it('with the right aria-level attrs', () => {
-        // add a child to the first node
-        const data = underlyingDataSource.data;
-        underlyingDataSource.addChild(data[2]);
-        component.treeControl.expandAll();
-        fixture.detectChanges();
-
-        const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
-        expect(ariaLevels).toEqual(['1', '1', '1', '2']);
-      });
-
-      it('with the right aria-expanded attrs', () => {
-        // add a child to the first node
-        const data = underlyingDataSource.data;
-        underlyingDataSource.addChild(data[2]);
-        fixture.detectChanges();
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'false';
-          }),
-        ).toBe(true);
-
-        component.treeControl.expandAll();
-        fixture.detectChanges();
-
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'true';
-          }),
-        ).toBe(true);
       });
 
       it('with the right data', () => {
@@ -470,11 +439,9 @@ describe('MatTree', () => {
       });
 
       it('with the right aria-expanded attrs', () => {
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'false';
-          }),
-        ).toBe(true);
+        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, null, null]);
 
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
@@ -485,8 +452,11 @@ describe('MatTree', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        const ariaExpanded = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpanded).toEqual(['false', 'true', 'false', 'false']);
+        // NB: only four elements are present here; children are not present
+        // in DOM unless the parent node is expanded.
+        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, 'true', 'false', null]);
       });
 
       it('should expand/collapse the node', () => {
@@ -577,6 +547,142 @@ describe('MatTree', () => {
       });
     });
   });
+
+  describe('accessibility', () => {
+    let fixture: ComponentFixture<NestedMatTreeApp>;
+    let component: NestedMatTreeApp;
+    let nodes: HTMLElement[];
+    let tree: MatTree<TestData>;
+
+    beforeEach(() => {
+      configureMatTreeTestingModule([NestedMatTreeApp]);
+      fixture = TestBed.createComponent(NestedMatTreeApp);
+      fixture.detectChanges();
+
+      component = fixture.componentInstance;
+      underlyingDataSource = component.underlyingDataSource as FakeDataSource;
+      const data = underlyingDataSource.data;
+      const child = underlyingDataSource.addChild(data[1], false);
+      underlyingDataSource.addChild(child, false);
+      underlyingDataSource.addChild(child, false);
+      fixture.detectChanges();
+
+      tree = component.tree;
+      treeElement = fixture.nativeElement.querySelector('mat-tree');
+      nodes = getNodes(treeElement);
+    });
+
+    describe('focus management', () => {
+      it('the tree is tabbable when no element is active', () => {
+        expect(treeElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('the tree is not tabbable when an element is active', () => {
+        // activate the second child by clicking on it
+        nodes[1].click();
+
+        expect(treeElement.getAttribute('tabindex')).toBe(null);
+      });
+
+      it('sets tabindex on the latest activated item, with all others "-1"', () => {
+        // activate the second child by clicking on it
+        nodes[1].click();
+
+        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+
+        // activate the first child by clicking on it
+        nodes[0].click();
+
+        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
+      });
+
+      it('maintains tabindex when component is blurred', () => {
+        // activate the second child by clicking on it
+        nodes[1].click();
+
+        expect(document.activeElement).toBe(nodes[1]);
+        // blur the currently active element (which we just checked is the above node)
+        nodes[1].blur();
+
+        expect(treeElement.getAttribute('tabindex')).toBe(null);
+        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+      });
+
+      it('ignores clicks on disabled items', () => {
+        underlyingDataSource.data[0].isDisabled = true;
+        fixture.detectChanges();
+
+        // attempt to click on the first child
+        nodes[0].click();
+
+        expect(treeElement.getAttribute('tabindex')).toBe('0');
+        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '-1', '-1', '-1', '-1', '-1']);
+      });
+
+      describe('when no item is currently active', () => {
+        it('redirects focus to the first item when the tree is focused', () => {
+          treeElement.focus();
+
+          expect(document.activeElement).toBe(nodes[0]);
+        });
+
+        it('redirects focus to the first non-disabled item when the tree is focused', () => {
+          underlyingDataSource.data[0].isDisabled = true;
+          fixture.detectChanges();
+
+          treeElement.focus();
+
+          expect(document.activeElement).toBe(nodes[1]);
+        });
+      });
+    });
+
+    describe('tree role & attributes', () => {
+      it('sets the tree role on the tree element', () => {
+        expect(treeElement.getAttribute('role')).toBe('tree');
+      });
+
+      it('sets the treeitem role on all nodes', () => {
+        expect(getNodeAttributes(nodes, 'role')).toEqual([
+          'treeitem',
+          'treeitem',
+          'treeitem',
+          'treeitem',
+          'treeitem',
+          'treeitem',
+        ]);
+      });
+
+      it('sets aria attributes for tree nodes', () => {
+        expect(getNodeAttributes(nodes, 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, 'false', 'false', null, null, null]);
+        expect(getNodeAttributes(nodes, 'aria-level'))
+          .withContext('aria-level attributes')
+          .toEqual(['1', '1', '2', '3', '3', '1']);
+        expect(getNodeAttributes(nodes, 'aria-posinset'))
+          .withContext('aria-posinset attributes')
+          .toEqual(['1', '2', '1', '1', '2', '3']);
+        expect(getNodeAttributes(nodes, 'aria-setsize'))
+          .withContext('aria-setsize attributes')
+          .toEqual(['3', '3', '1', '2', '2', '3']);
+      });
+
+      it('changes aria-expanded status when expanded or collapsed', () => {
+        tree.expand(underlyingDataSource.data[1]);
+        fixture.detectChanges();
+        expect(getNodeAttributes(nodes, 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, 'true', 'false', null, null, null]);
+
+        tree.collapse(underlyingDataSource.data[1]);
+        fixture.detectChanges();
+        expect(getNodeAttributes(nodes, 'aria-expanded'))
+          .withContext('aria-expanded attributes')
+          .toEqual([null, 'false', 'false', null, null, null]);
+      });
+    });
+  });
 });
 
 export class TestData {
@@ -587,6 +693,7 @@ export class TestData {
   children: TestData[];
   observableChildren: BehaviorSubject<TestData[]>;
   isSpecial: boolean;
+  isDisabled?: boolean;
 
   constructor(
     pizzaTopping: string,
@@ -668,7 +775,7 @@ class FakeDataSource {
   }
 }
 
-function getNodes(treeElement: Element): Element[] {
+function getNodes(treeElement: Element): HTMLElement[] {
   return [].slice.call(treeElement.querySelectorAll('.mat-tree-node, .mat-nested-tree-node'))!;
 }
 
@@ -761,6 +868,10 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
   if (missedExpectations.length) {
     fail(missedExpectations.join('\n'));
   }
+}
+
+function getNodeAttributes(nodes: HTMLElement[], attribute: string) {
+  return nodes.map(node => node.getAttribute(attribute));
 }
 
 @Component({
@@ -903,7 +1014,9 @@ class MatNestedTreeWithNullOrUndefinedChild {
 @Component({
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass">
+      <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass"
+                            [isExpandable]="isExpandable(node) | async"
+                            [isDisabled]="node.isDisabled">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template matTreeNodeOutlet></ng-template>
       </mat-nested-tree-node>
@@ -912,6 +1025,8 @@ class MatNestedTreeWithNullOrUndefinedChild {
 })
 class NestedMatTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
+  isExpandable = (node: TestData) =>
+    node.observableChildren.pipe(map(children => children.length > 0));
 
   treeControl = new NestedTreeControl(this.getChildren);
 
@@ -967,6 +1082,8 @@ class WhenNodeNestedMatTreeApp {
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
+                     [isExpandable]="isExpandable(node)"
+                     [isDisabled]="node.isDisabled"
                      matTreeNodePadding
                      matTreeNodeToggle [matTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
@@ -1010,7 +1127,9 @@ class MatTreeAppWithToggle {
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass"
-                            matTreeNodeToggle [matTreeNodeToggleRecursive]="toggleRecursively">
+                            [isExpandable]="isExpandable(node) | async"
+                            matTreeNodeToggle
+                            [matTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
         <div *ngIf="treeControl.isExpanded(node)">
           <ng-template matTreeNodeOutlet></ng-template>
@@ -1023,6 +1142,8 @@ class NestedMatTreeAppWithToggle {
   toggleRecursively: boolean = true;
 
   getChildren = (node: TestData) => node.observableChildren;
+  isExpandable = (node: TestData) =>
+    node.observableChildren.pipe(map(children => children.length > 0));
 
   treeControl = new NestedTreeControl(this.getChildren);
   dataSource = new MatTreeNestedDataSource();
