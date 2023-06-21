@@ -12,6 +12,9 @@ import {
   transition,
   trigger,
   AnimationTriggerMetadata,
+  group,
+  query,
+  animateChild,
 } from '@angular/animations';
 
 export const DEFAULT_HORIZONTAL_ANIMATION_DURATION = '500ms';
@@ -33,9 +36,16 @@ export const matStepperAnimations: {
     // making this element focusable inside of a `hidden` element.
     state('current', style({transform: 'none', visibility: 'inherit'})),
     state('next', style({transform: 'translate3d(100%, 0, 0)', visibility: 'hidden'})),
-    transition('* => *', animate('{{animationDuration}} cubic-bezier(0.35, 0, 0.25, 1)'), {
-      params: {'animationDuration': DEFAULT_HORIZONTAL_ANIMATION_DURATION},
-    }),
+    transition(
+      '* => *',
+      group([
+        animate('{{animationDuration}} cubic-bezier(0.35, 0, 0.25, 1)'),
+        query('@*', animateChild(), {optional: true}),
+      ]),
+      {
+        params: {'animationDuration': DEFAULT_HORIZONTAL_ANIMATION_DURATION},
+      },
+    ),
   ]),
 
   /** Animation that transitions the step along the Y axis in a vertical stepper. */
@@ -46,8 +56,15 @@ export const matStepperAnimations: {
     // because visibility on a child element the one from the parent,
     // making this element focusable inside of a `hidden` element.
     state('current', style({height: '*', visibility: 'inherit'})),
-    transition('* <=> current', animate('{{animationDuration}} cubic-bezier(0.4, 0.0, 0.2, 1)'), {
-      params: {'animationDuration': DEFAULT_VERTICAL_ANIMATION_DURATION},
-    }),
+    transition(
+      '* <=> current',
+      group([
+        animate('{{animationDuration}} cubic-bezier(0.4, 0.0, 0.2, 1)'),
+        query('@*', animateChild(), {optional: true}),
+      ]),
+      {
+        params: {'animationDuration': DEFAULT_VERTICAL_ANIMATION_DURATION},
+      },
+    ),
   ]),
 };
