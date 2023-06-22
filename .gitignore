@@ -23,7 +23,6 @@ node_modules
 /src/packages
 /src/pubspec.lock
 
-
 # IDEs
 /.idea
 /.vscode/launch.json
