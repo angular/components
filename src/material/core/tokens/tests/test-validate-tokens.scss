@@ -14,6 +14,7 @@
 @use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use '@material/chips/chip-theme' as mdc-chips-theme;
+@use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '@material/theme/validate' as mdc-validate;
 
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
@@ -29,6 +30,7 @@
 @use '../m2/mdc/tab' as tokens-mdc-tab;
 @use '../m2/mdc/snack-bar' as tokens-mdc-snack-bar;
 @use '../m2/mdc/chip' as tokens-mdc-chip;
+@use '../m2/mdc/dialog' as tokens-mdc-dialog;
 
 @mixin validate-slots($component, $slots, $reference) {
   @debug 'Validating #{$component}...';
@@ -106,4 +108,9 @@
   $component: 'm2.mdc.chips',
   $slots: tokens-mdc-chip.get-token-slots(),
   $reference: mdc-chips-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.dialog',
+  $slots: tokens-mdc-dialog.get-token-slots(),
+  $reference: mdc-dialog-theme.$light-theme
 );
