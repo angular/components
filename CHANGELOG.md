@@ -1,3 +1,17 @@
+<a name="16.1.2"></a>
+# 16.1.2 "metal-spoon" (2023-06-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef1ced9873](https://github.com/angular/components/commit/ef1ced98731a69c611163be1725e986ee72ce7ca) | fix | **a11y:** don't emit blurred events on the server ([#27315](https://github.com/angular/components/pull/27315)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [378240a47e](https://github.com/angular/components/commit/378240a47e594350e942fca9e013d82f32271869) | fix | **slider:** fix voiceover on ios ([#27302](https://github.com/angular/components/pull/27302)) |
+| [bfaa20f875](https://github.com/angular/components/commit/bfaa20f875318d1cea6f0574b7b337916a5ce534) | fix | **stepper:** allow child animations to run ([#27338](https://github.com/angular/components/pull/27338)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.1"></a>
 # 16.1.1 "lace-enigma" (2023-06-14)
 
