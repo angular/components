@@ -1,3 +1,19 @@
+<a name="16.2.0-next.1"></a>
+# 16.2.0-next.1 "plastic-fork" (2023-06-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cc52d61a0d](https://github.com/angular/components/commit/cc52d61a0da19d99dc519a005a205e1b0da3f8d5) | fix | **a11y:** don't emit blurred events on the server ([#27315](https://github.com/angular/components/pull/27315)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [df30433339](https://github.com/angular/components/commit/df304333397ff78024e39ac4e77319e015be5733) | feat | **slide-toggle:** allow for icon to be hidden ([#27330](https://github.com/angular/components/pull/27330)) |
+| [860aa42e17](https://github.com/angular/components/commit/860aa42e177cc722ae0797aa34cb8ef5355c47d9) | fix | **slide-toggle:** change slide-toggle to use MDC's token API ([#26966](https://github.com/angular/components/pull/26966)) |
+| [c86e1ef027](https://github.com/angular/components/commit/c86e1ef027e252d582b412661802bac8e088df27) | fix | **slider:** fix voiceover on ios ([#27302](https://github.com/angular/components/pull/27302)) |
+| [53242fe58e](https://github.com/angular/components/commit/53242fe58eecd6cf6556e6e343f7323bcc5ef006) | fix | **stepper:** allow child animations to run ([#27338](https://github.com/angular/components/pull/27338)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.2"></a>
 # 16.1.2 "metal-spoon" (2023-06-23)
 ### cdk
