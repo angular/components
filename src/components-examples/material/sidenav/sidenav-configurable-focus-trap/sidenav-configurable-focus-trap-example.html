@@ -1,0 +1,36 @@
+<mat-sidenav-container class="example-container" *ngIf="shouldRun" [hasBackdrop]="hasBackdrop.value">
+  <mat-sidenav #sidenav [mode]="mode.value!" [position]="position.value!">
+    <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+    <p>
+      <label>Test input for drawer<input/></label>
+    </p>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+    <p>
+      <mat-radio-group class="example-radio-group" [formControl]="mode">
+        <label>Mode:</label>
+        <mat-radio-button value="over">Over</mat-radio-button>
+        <mat-radio-button value="side">Side</mat-radio-button>
+        <mat-radio-button value="push">Push</mat-radio-button>
+      </mat-radio-group>
+      <mat-radio-group class="example-radio-group" [formControl]="hasBackdrop">
+        <label>Has Backdrop:</label>
+        <mat-radio-button [value]="null">Default</mat-radio-button>
+        <mat-radio-button [value]="true">true</mat-radio-button>
+        <mat-radio-button [value]="false">false</mat-radio-button>
+      </mat-radio-group>
+      <mat-radio-group class="example-radio-group" [formControl]="position">
+        <label>Position:</label>
+        <mat-radio-button value="start">Start</mat-radio-button>
+        <mat-radio-button value="end">End</mat-radio-button>
+      </mat-radio-group>
+    </p>
+    <p>
+      <label>Test input for drawer content<input/></label>
+    </p>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div *ngIf="!shouldRun">Please open on Stackblitz to see result</div>
