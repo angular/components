@@ -16,6 +16,7 @@ import {
   OnInit,
   Injector,
   DoCheck,
+  Input,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -89,6 +90,9 @@ abstract class MatDateRangeInputPartBase<D>
   protected abstract override _getValueFromModel(modelValue: DateRange<D>): D | null;
 
   protected readonly _dir = inject(Directionality, {optional: true});
+
+  /** The input's placeholder text. */
+  @Input() placeholder: string = '';
 
   constructor(
     @Inject(MAT_DATE_RANGE_INPUT_PARENT) public _rangeInput: MatDateRangeInputParent<D>,
@@ -214,6 +218,7 @@ const _MatDateRangeInputBase = mixinErrorState(MatDateRangeInputPartBase);
     '[attr.aria-owns]': '(_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null',
     '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
     '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
+    '[attr.placeholder]': 'placeholder || null',
     '(blur)': '_onBlur()',
     'type': 'text',
   },
@@ -327,6 +332,7 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
     '[attr.aria-owns]': '(_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null',
     '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
     '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
+    '[attr.placeholder]': 'placeholder || null',
     '(blur)': '_onBlur()',
     'type': 'text',
   },
