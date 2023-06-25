@@ -75,6 +75,9 @@ $_component-prefix: null;
   @if $_component-prefix == null or $_tokens == null {
     @error '`create-token-slot` must be used within `use-tokens`';
   }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
   @if map.get($_tokens, $token) != null {
     $value: mdc-custom-properties.create('#{$_component-prefix}-#{$token}');
     @include mdc-theme.property($property, $value);
