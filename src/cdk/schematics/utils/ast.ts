@@ -13,7 +13,7 @@ import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {findModuleFromOptions as internalFindModule} from '@schematics/angular/utility/find-module';
 import {addImportToModule} from '@schematics/angular/utility/ast-utils';
 import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {workspaces} from '@angular-devkit/core';
 import * as ts from 'typescript';
 import {getProjectMainFile} from './project-main-file';
 
@@ -31,7 +31,7 @@ export function addModuleImportToRootModule(
   host: Tree,
   moduleName: string,
   src: string,
-  project: ProjectDefinition,
+  project: workspaces.ProjectDefinition,
 ) {
   const modulePath = getAppModulePath(host, getProjectMainFile(project));
   addModuleImportToModule(host, modulePath, moduleName, src);
