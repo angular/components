@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
-import {isJsonObject, JsonObject} from '@angular-devkit/core';
+import {isJsonObject, JsonObject, workspaces} from '@angular-devkit/core';
 import {Schema, Style} from '@schematics/angular/component/schema';
 import {isStandaloneApp} from '@schematics/angular/utility/ng-ast-utils';
 import {getProjectMainFile} from './project-main-file';
@@ -22,7 +21,7 @@ import {Tree} from '@angular-devkit/schematics';
  * This is necessary because the Angular CLI only exposes the default values for the "--style",
  * "--inlineStyle", "--skipTests" and "--inlineTemplate" options to the "component" schematic.
  */
-export function getDefaultComponentOptions(project: ProjectDefinition): Partial<Schema> {
+export function getDefaultComponentOptions(project: workspaces.ProjectDefinition): Partial<Schema> {
   // Note: Not all options which are available when running "ng new" will be stored in the
   // workspace config. List of options which will be available in the configuration:
   // angular/angular-cli/blob/main/packages/schematics/angular/application/index.ts#L109-L131
@@ -68,7 +67,7 @@ export async function isStandaloneSchematic(host: Tree, options: Schema): Promis
  * CLI workspace configuration.
  */
 function getDefaultComponentOption<T>(
-  project: ProjectDefinition,
+  project: workspaces.ProjectDefinition,
   optionNames: string[],
   fallbackValue: T,
 ): T {

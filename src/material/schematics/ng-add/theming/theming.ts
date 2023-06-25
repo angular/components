@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {normalize, logging} from '@angular-devkit/core';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {normalize, logging, workspaces} from '@angular-devkit/core';
 import {
   chain,
   noop,
@@ -174,7 +173,7 @@ function addThemeStyleToTarget(
  * this function can either throw or just show a warning.
  */
 function validateDefaultTargetBuilder(
-  project: ProjectDefinition,
+  project: workspaces.ProjectDefinition,
   targetName: 'build' | 'test',
   logger: logging.LoggerApi,
 ) {

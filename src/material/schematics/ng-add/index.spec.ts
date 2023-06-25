@@ -1,5 +1,4 @@
-import {normalize} from '@angular-devkit/core';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {normalize, workspaces} from '@angular-devkit/core';
 import {Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {
@@ -41,7 +40,7 @@ describe('ng-add schematic', () => {
   });
 
   /** Expects the given file to be in the styles of the specified workspace project. */
-  function expectProjectStyleFile(project: ProjectDefinition, filePath: string) {
+  function expectProjectStyleFile(project: workspaces.ProjectDefinition, filePath: string) {
     expect(getProjectTargetOptions(project, 'build').styles)
       .withContext(`Expected "${filePath}" to be added to the project styles in the workspace.`)
       .toContain(filePath);
