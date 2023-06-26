@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use '@material/list/evolution-mixins' as mdc-list-mixins;
 @use '@material/list/evolution-variables' as mdc-list-variables;
+@use '../tokens/m2/mat/optgroup' as tokens-mat-optgroup;
+@use '../tokens/token-utils';
 @use '../mdc-helpers/mdc-helpers';
 
 .mat-mdc-optgroup-label {
@@ -24,5 +26,15 @@
   // leak in from the list and cause the text to truncate.
   .mdc-list-item__primary-text {
     white-space: normal;
+
+    @include token-utils.use-tokens(
+      tokens-mat-optgroup.$prefix, tokens-mat-optgroup.get-token-slots()) {
+      @include token-utils.create-token-slot(color, label-text-color);
+      @include token-utils.create-token-slot(font-family, label-text-font);
+      @include token-utils.create-token-slot(line-height, label-text-line-height);
+      @include token-utils.create-token-slot(font-size, label-text-size);
+      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+      @include token-utils.create-token-slot(font-weight, label-text-weight);
+    }
   }
 }
