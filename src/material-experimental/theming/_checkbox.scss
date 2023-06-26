@@ -2,26 +2,16 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '@angular/material' as mat;
-@use '@material/theme/theme-color' as mdc-theme-color;
 @use './token-resolution';
 
 // TODO(mmalerba): This should live under material/checkbox when moving out of experimental.
-
-// Duplicated from core/tokens/m2/mdc/checkbox
-// TODO(mmalerba): Delete duplicated code when this is moved out of experimental.
-@function _contrast-tone($value, $light-color: '#fff', $dark-color: '#000') {
-  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
-    @return if(mdc-theme-color.contrast-tone($value) == 'dark', $dark-color, $light-color);
-  }
-  @return false;
-}
 
 /// Gets a map of checkbox token values that are derived from the given palette.
 /// @param {Map} $palette An Angular Material palette object.
 /// @return {Map} A map of checkbox token values derived from the given palette.
 @function _get-tokens-for-color-palette($palette) {
   $palette-default-color: mat.get-color-from-palette($palette);
-  $checkmark-color: _contrast-tone($palette-default-color);
+  $checkmark-color: mat.get-color-from-palette($palette, default-contrast);
 
   @return (
     (mdc, checkbox): (
