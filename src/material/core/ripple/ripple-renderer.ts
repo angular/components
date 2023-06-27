@@ -382,10 +382,14 @@ export class RippleRenderer implements EventListenerObject {
 
       // Use `changedTouches` so we skip any touches where the user put
       // their finger down, but used another finger to tap the element again.
-      const touches = event.changedTouches;
+      const touches = event.changedTouches as TouchList | undefined;
 
-      for (let i = 0; i < touches.length; i++) {
-        this.fadeInRipple(touches[i].clientX, touches[i].clientY, this._target.rippleConfig);
+      // According to the typings the touches should always be defined, but in some cases
+      // the browser appears to not assign them in tests which leads to flakes.
+      if (touches) {
+        for (let i = 0; i < touches.length; i++) {
+          this.fadeInRipple(touches[i].clientX, touches[i].clientY, this._target.rippleConfig);
+        }
       }
     }
   }
