@@ -167,7 +167,9 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
         nativeElement.getAttribute('aria-hidden') === 'true'
       ) {
         console.warn(
-          `Warning: detected matBadge on a "<mat-icon>" with "aria-hidden="true"\n${nativeElement.outerHTML}`,
+          `Detected a matBadge on an "aria-hidden" "<mat-icon>". ` +
+            `Consider setting aria-hidden="false" in order to surface the information assistive technology.` +
+            `\n${nativeElement.outerHTML}`,
         );
       }
     }
