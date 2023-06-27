@@ -158,11 +158,11 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
   /** Host element of the dialog container component. */
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
   /** Duration of the dialog open animation. */
-  private _openAnimationDuration = this._animationsEnabled
+  private _enterAnimationDuration = this._animationsEnabled
     ? parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION
     : 0;
   /** Duration of the dialog close animation. */
-  private _closeAnimationDuration = this._animationsEnabled
+  private _exitAnimationDuration = this._animationsEnabled
     ? parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION
     : 0;
   /** Current timer for dialog animations. */
@@ -218,19 +218,19 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
 
   /** Starts the dialog open animation if enabled. */
   private _startOpenAnimation() {
-    this._animationStateChanged.emit({state: 'opening', totalTime: this._openAnimationDuration});
+    this._animationStateChanged.emit({state: 'opening', totalTime: this._enterAnimationDuration});
 
     if (this._animationsEnabled) {
       this._hostElement.style.setProperty(
         TRANSITION_DURATION_PROPERTY,
-        `${this._openAnimationDuration}ms`,
+        `${this._enterAnimationDuration}ms`,
       );
 
       // We need to give the `setProperty` call from above some time to be applied.
       // One would expect that the open class is added once the animation finished, but MDC
       // uses the open class in combination with the opening class to start the animation.
       this._requestAnimationFrame(() => this._hostElement.classList.add(OPENING_CLASS, OPEN_CLASS));
-      this._waitForAnimationToComplete(this._openAnimationDuration, this._finishDialogOpen);
+      this._waitForAnimationToComplete(this._enterAnimationDuration, this._finishDialogOpen);
     } else {
       this._hostElement.classList.add(OPEN_CLASS);
       // Note: We could immediately finish the dialog opening here with noop animations,
@@ -246,18 +246,18 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
    * called by the dialog ref.
    */
   _startExitAnimation(): void {
-    this._animationStateChanged.emit({state: 'closing', totalTime: this._closeAnimationDuration});
+    this._animationStateChanged.emit({state: 'closing', totalTime: this._exitAnimationDuration});
     this._hostElement.classList.remove(OPEN_CLASS);
 
     if (this._animationsEnabled) {
       this._hostElement.style.setProperty(
         TRANSITION_DURATION_PROPERTY,
-        `${this._openAnimationDuration}ms`,
+        `${this._exitAnimationDuration}ms`,
       );
 
       // We need to give the `setProperty` call from above some time to be applied.
       this._requestAnimationFrame(() => this._hostElement.classList.add(CLOSING_CLASS));
-      this._waitForAnimationToComplete(this._closeAnimationDuration, this._finishDialogClose);
+      this._waitForAnimationToComplete(this._exitAnimationDuration, this._finishDialogClose);
     } else {
       // This subscription to the `OverlayRef#backdropClick` observable in the `DialogRef` is
       // set up before any user can subscribe to the backdrop click. The subscription triggers
@@ -286,7 +286,7 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
    */
   private _finishDialogOpen = () => {
     this._clearAnimationClasses();
-    this._openAnimationDone(this._openAnimationDuration);
+    this._openAnimationDone(this._enterAnimationDuration);
   };
 
   /**
@@ -295,7 +295,7 @@ export class MatDialogContainer extends _MatDialogContainerBase implements OnDes
    */
   private _finishDialogClose = () => {
     this._clearAnimationClasses();
-    this._animationStateChanged.emit({state: 'closed', totalTime: this._closeAnimationDuration});
+    this._animationStateChanged.emit({state: 'closed', totalTime: this._exitAnimationDuration});
   };
 
   /** Clears all dialog animation classes. */
