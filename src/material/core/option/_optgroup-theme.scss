@@ -1,24 +1,27 @@
-@use '@material/theme/theme' as mdc-theme;
+@use '../tokens/m2/mat/optgroup' as tokens-mat-optgroup;
+@use '../tokens/token-utils';
+@use '../style/sass-utils';
 
 @use '../theming/theming';
 @use '../typography/typography';
-@use '../mdc-helpers/mdc-helpers';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
 
-  @include mdc-helpers.using-mdc-theme($config) {
-    .mat-mdc-optgroup-label {
-      // Since this will usually be rendered in an overlay,
-      // we have to explicitly set the default color.
-      @include mdc-theme.prop(color, text-primary-on-background);
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-optgroup.$prefix,
+      tokens-mat-optgroup.get-color-tokens($config));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-optgroup.$prefix,
+      tokens-mat-optgroup.get-typography-tokens($config));
+  }
 }
 
 @mixin density($config-or-theme) {
