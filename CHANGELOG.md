@@ -1,3 +1,19 @@
+<a name="16.2.0-next.2"></a>
+# 16.2.0-next.2 "corduroy-cabin" (2023-06-28)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0d499a3322](https://github.com/angular/components/commit/0d499a3322a3df1145084d0b34c73687fdb1c4a9) | fix | **schematics:** clean up deep imports of devkit APIs ([#27363](https://github.com/angular/components/pull/27363)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [65c7cad727](https://github.com/angular/components/commit/65c7cad7271f701659ad1154852bd53ac74f3628) | fix | **badge:** warn if use with mat-icon ([#27368](https://github.com/angular/components/pull/27368)) |
+| [e0608cbe59](https://github.com/angular/components/commit/e0608cbe5970d9eb5a94ac4fcb76a51f72c8e0d4) | fix | **chips:** remove button role from editable chips ([#27317](https://github.com/angular/components/pull/27317)) |
+| [425c469da8](https://github.com/angular/components/commit/425c469da80559d28bde63f1fce3512f3110dc9c) | fix | **core:** add validation to create-token-slot ([#27357](https://github.com/angular/components/pull/27357)) |
+| [cc1b322cc8](https://github.com/angular/components/commit/cc1b322cc8c54a34c3b59a5bb7accbadabb0e19a) | fix | **dialog:** exit animation duration not being picked up ([#27372](https://github.com/angular/components/pull/27372)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.3"></a>
 # 16.1.3 "linen-latte" (2023-06-28)
 ### cdk
