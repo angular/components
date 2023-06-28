@@ -256,14 +256,16 @@ describe('MDC-based Row Chips', () => {
         return chipNativeElement.querySelector('.mat-chip-edit-input')!;
       }
 
-      it('should set the role of the primary action based on whether it is editable', () => {
+      it('should set the role of the primary action to gridcell', () => {
         testComponent.editable = false;
         fixture.detectChanges();
-        expect(primaryAction.hasAttribute('role')).toBe(false);
+        expect(primaryAction.getAttribute('role')).toBe('gridcell');
 
         testComponent.editable = true;
         fixture.detectChanges();
-        expect(primaryAction.getAttribute('role')).toBe('button');
+        // Test regression of bug where element is mislabeled as a button role. Element that does not perform its
+        // action on click event is not a button by ARIA spec (#27106).
+        expect(primaryAction.getAttribute('role')).toBe('gridcell');
       });
 
       it('should not delete the chip on DELETE or BACKSPACE', () => {
@@ -346,7 +348,7 @@ describe('MDC-based Row Chips', () => {
         fixture.detectChanges();
 
         const primaryGridCell = (fixture.nativeElement as HTMLElement).querySelector(
-          '[role="gridcell"].mdc-evolution-chip__cell--primary .mat-mdc-chip-action',
+          '[role="gridcell"].mdc-evolution-chip__cell--primary.mat-mdc-chip-action',
         );
         expect(primaryGridCell)
           .withContext('expected to find the grid cell for the primary chip action')

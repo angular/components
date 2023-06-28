@@ -118,7 +118,7 @@
 
   // Ensures that the trailing icon is pushed to the end if the chip has a set width.
   .mdc-evolution-chip__cell--primary {
-    width: 100%;
+    flex-basis: 100%;
   }
 
   // This element can be placed on a `button` node which usually has some user agent styles.
