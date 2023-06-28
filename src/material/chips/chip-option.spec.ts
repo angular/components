@@ -26,12 +26,14 @@ describe('MDC-based Option Chips', () => {
   let dir = 'ltr';
 
   let hideSingleSelectionIndicator: boolean | undefined;
+  let hideMultipleSelectionIndicator: boolean | undefined;
 
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
     const defaultOptions: MatChipsDefaultOptions = {
       separatorKeyCodes: [ENTER, SPACE],
       hideSingleSelectionIndicator,
+      hideMultipleSelectionIndicator,
     };
 
     TestBed.configureTestingModule({
@@ -315,6 +317,15 @@ describe('MDC-based Option Chips', () => {
           )
           .toBeUndefined();
 
+        expect(
+          fixture.debugElement.injector.get(MAT_CHIPS_DEFAULT_OPTIONS)
+            ?.hideMultipleSelectionIndicator,
+        )
+          .withContext(
+            'expected not to have a default value set for `hideMultipleSelectionIndicator`',
+          )
+          .toBeUndefined();
+
         expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();
         expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
       });
@@ -365,10 +376,12 @@ describe('MDC-based Option Chips', () => {
     describe('with token to hide single-selection checkmark indicator', () => {
       beforeAll(() => {
         hideSingleSelectionIndicator = true;
+        hideMultipleSelectionIndicator = true;
       });
 
       afterAll(() => {
         hideSingleSelectionIndicator = undefined;
+        hideMultipleSelectionIndicator = undefined;
       });
 
       it('does not display checkmark graphic', () => {

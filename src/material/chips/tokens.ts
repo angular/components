@@ -15,6 +15,9 @@ export interface MatChipsDefaultOptions {
 
   /** Wheter icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
+
+  /** Wheter icon indicators should be hidden for multiple-selection. */
+  hideMultipleSelectionIndicator?: boolean;
 }
 
 /** Injection token to be used to override the default options for the chips module. */

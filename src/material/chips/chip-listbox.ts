@@ -176,6 +176,18 @@ export class MatChipListbox
   private _hideSingleSelectionIndicator: boolean =
     this._defaultOptions?.hideSingleSelectionIndicator ?? false;
 
+  /** Whether checkmark indicator for multiple-selection options is hidden. */
+  @Input()
+  get hideMultipleSelectionIndicator(): boolean {
+    return this._hideMultipleSelectionIndicator;
+  }
+  set hideMultipleSelectionIndicator(value: BooleanInput) {
+    this._hideMultipleSelectionIndicator = coerceBooleanProperty(value);
+    this._syncListboxProperties();
+  }
+  private _hideMultipleSelectionIndicator: boolean =
+    this._defaultOptions?.hideMultipleSelectionIndicator ?? false;
+
   /** Combined stream of all of the child chips' selection change events. */
   get chipSelectionChanges(): Observable<MatChipSelectionChange> {
     return this._getChipStream<MatChipSelectionChange, MatChipOption>(chip => chip.selectionChange);
@@ -382,6 +394,7 @@ export class MatChipListbox
           chip._chipListMultiple = this.multiple;
           chip.chipListSelectable = this._selectable;
           chip._chipListHideSingleSelectionIndicator = this.hideSingleSelectionIndicator;
+          chip._chipListHideMultipleSelectionIndicator = this.hideMultipleSelectionIndicator;
           chip._changeDetectorRef.markForCheck();
         });
       });

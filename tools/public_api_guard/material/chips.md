@@ -297,6 +297,8 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     // (undocumented)
     protected _defaultRole: string;
     focus(): void;
+    get hideMultipleSelectionIndicator(): boolean;
+    set hideMultipleSelectionIndicator(value: BooleanInput);
     get hideSingleSelectionIndicator(): boolean;
     set hideSingleSelectionIndicator(value: BooleanInput);
     // (undocumented)
@@ -327,7 +329,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     protected _value: any;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipListbox, "mat-chip-listbox", never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "ariaOrientation": { "alias": "aria-orientation"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "required": { "alias": "required"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, { "change": "change"; }, ["_chips"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipListbox, "mat-chip-listbox", never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "ariaOrientation": { "alias": "aria-orientation"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "required": { "alias": "required"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "hideMultipleSelectionIndicator": { "alias": "hideMultipleSelectionIndicator"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, { "change": "change"; }, ["_chips"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipListbox, never>;
 }
@@ -345,6 +347,7 @@ export class MatChipListboxChange {
 export class MatChipOption extends MatChip implements OnInit {
     get ariaSelected(): string | null;
     protected basicChipAttrName: string;
+    _chipListHideMultipleSelectionIndicator: boolean;
     _chipListHideSingleSelectionIndicator: boolean;
     _chipListMultiple: boolean;
     chipListSelectable: boolean;
@@ -414,6 +417,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 
 // @public
 export interface MatChipsDefaultOptions {
+    hideMultipleSelectionIndicator?: boolean;
     hideSingleSelectionIndicator?: boolean;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
 }
