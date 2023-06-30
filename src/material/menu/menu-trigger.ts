@@ -96,6 +96,7 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
   private _menuCloseSubscription = Subscription.EMPTY;
   private _scrollStrategy: () => ScrollStrategy;
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  protected _panelClass: string | null;
 
   /**
    * We're specifically looking for a `MatMenu` here since the generic `MatMenuPanel`
@@ -328,6 +329,10 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
 
     this._closingActionsSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
     this._initMenu(menu);
+
+    if (this._panelClass) {
+      overlayRef.overlayElement.classList.add(this._panelClass);
+    }
 
     if (menu instanceof _MatMenuBase) {
       menu._startAnimation();
@@ -686,4 +691,6 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
   },
   exportAs: 'matMenuTrigger',
 })
-export class MatMenuTrigger extends _MatMenuTriggerBase {}
+export class MatMenuTrigger extends _MatMenuTriggerBase {
+  protected override _panelClass = 'mat-mdc-menu-panel-wrapper';
+}
