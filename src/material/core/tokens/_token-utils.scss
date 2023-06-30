@@ -39,6 +39,7 @@ $placeholder-typography-config: (
   caption: $_placeholder-typography-level-config,
   button: $_placeholder-typography-level-config,
   overline: $_placeholder-typography-level-config,
+  subheading-1: $_placeholder-typography-level-config,
 );
 
 // Placeholder density config that can be passed to token getter functions when generating token

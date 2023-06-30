@@ -1,37 +1,48 @@
 
 @use '@angular/cdk';
-
+@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
+@use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/elevation';
 
 .mat-expansion-panel {
-  $border-radius: 4px;
-
+  @include token-utils.create-token-values(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-unthemable-tokens());
+  @include elevation.overridable-elevation(2);
   box-sizing: content-box;
   display: block;
   margin: 0;
-  border-radius: $border-radius;
   overflow: hidden;
   transition: margin 225ms variables.$fast-out-slow-in-timing-function,
       elevation.private-transition-property-value();
 
-  // Required so that the `box-shadow` works after the focus indicator relatively positions the
-  // header.
+  // Required so that the `box-shadow` works after the
+  // focus indicator relatively positions the header.
   position: relative;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(background, container-background-color);
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+  }
 
   .mat-accordion & {
     &:not(.mat-expanded), &:not(.mat-expansion-panel-spacing) {
       border-radius: 0;
     }
 
-    &:first-of-type {
-      border-top-right-radius: $border-radius;
-      border-top-left-radius: $border-radius;
-    }
+    @include token-utils.use-tokens(
+      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+      &:first-of-type {
+        @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+        @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      }
 
-    &:last-of-type {
-      border-bottom-right-radius: $border-radius;
-      border-bottom-left-radius: $border-radius;
+      &:last-of-type {
+        @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+        @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      }
     }
   }
 
@@ -50,6 +61,15 @@
   display: flex;
   flex-direction: column;
   overflow: visible;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(font-size, container-text-size);
+    @include token-utils.create-token-slot(font-weight, container-text-weight);
+    @include token-utils.create-token-slot(line-height, container-text-line-height);
+    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+  }
 
   // Usually the `visibility: hidden` added by the animation is enough to prevent focus from
   // entering the collapsed content, but children with their own `visibility` can override it.
@@ -87,6 +107,11 @@
   flex-direction: row;
   justify-content: flex-end;
   padding: 16px 8px 16px 24px;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(border-top-color, actions-divider-color);
+  }
 
   .mat-button-base, .mat-mdc-button-base {
     margin-left: 8px;
