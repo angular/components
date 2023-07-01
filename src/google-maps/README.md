@@ -8,30 +8,6 @@ File any bugs against the [angular/components repo](https://github.com/angular/c
 
 To install, run `npm install @angular/google-maps`.
 
-## Loading the API
-
-- First follow [these steps](https://developers.google.com/maps/gmp-get-started) to get an API key that can be used to load Google Maps.
-- Load the [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API).
-- The Google Maps JavaScript API must be loaded before the `GoogleMap` component.
-
-```html
-<!-- index.html -->
-<!doctype html>
-<head>
-  ...
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-</head>
-```
-
-**Note:**
-If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization`
-library when loading the Google Maps API. To do so, you can add `&libraries=visualization` to the
-script URL:
-
-```html
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization"></script>
-```
-
 ## Lazy Loading the API
 
 The API can be loaded when the component is actually used by using the Angular HttpClient jsonp
