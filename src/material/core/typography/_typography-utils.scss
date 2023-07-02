@@ -7,6 +7,15 @@
 
 // Utility for fetching a nested value from a typography config.
 @function _mat-get-type-value($config, $level, $name) {
+  @if meta.type-of($config) != 'map' {
+    @error 'Typography config must be a map. Received #{meta.type-of($config)}.';
+  }
+
+  @if not map.has-key($config, $level) {
+    @error 'Typography config does not have a level called "#{$level}". ' +
+           'Available levels are: #{map.keys($config)}.';
+  }
+
   @return map.get(map.get($config, $level), $name);
 }
 
@@ -42,6 +51,10 @@
 /// @param {Map} $config A typography config.
 /// @param {Map} $level A typography level.
 @function font-family($config, $level: null) {
+  @if meta.type-of($config) != 'map' {
+    @error 'Typography config must be a map. Received #{meta.type-of($config)}.';
+  }
+
   $font-family: map.get($config, font-family);
 
   @if $level != null {
