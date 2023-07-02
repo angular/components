@@ -266,6 +266,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** Dispatch change event with current selection and group value. */
   _emitChangeEvent(toggle: MatButtonToggle): void {
     const event = new MatButtonToggleChange(toggle, this.value);
+    this._rawValue = event.value;
     this._controlValueAccessorChangeFn(event.value);
     this.change.emit(event);
   }
