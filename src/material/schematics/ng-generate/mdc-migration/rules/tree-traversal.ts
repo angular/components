@@ -68,7 +68,7 @@ export function parseTemplate(template: string, templateUrl: string = ''): Parse
 }
 
 /**
- * Replaces the start tag of the given Element node inside of the html document with a new tag name.
+ * Replaces the start tag of the given Element node inside the html document with a new tag name.
  *
  * @param html The full html document.
  * @param node The Element node to be updated.
@@ -80,7 +80,7 @@ export function replaceStartTag(html: string, node: TmplAstElement, tag: string)
 }
 
 /**
- * Replaces the end tag of the given Element node inside of the html document with a new tag name.
+ * Replaces the end tag of the given Element node inside the html document with a new tag name.
  *
  * @param html The full html document.
  * @param node The Element node to be updated.
