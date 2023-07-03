@@ -8,7 +8,7 @@ File any bugs against the [angular/components repo](https://github.com/angular/c
 
 To install, run `npm install @angular/google-maps`.
 
-## Getting the API
+## Getting the API Key
 
 Follow [these steps](https://developers.google.com/maps/gmp-get-started) to get an API key that can be used to load Google Maps.
 
