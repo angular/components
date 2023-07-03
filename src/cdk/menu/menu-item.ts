@@ -17,7 +17,7 @@ import {
   Output,
 } from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusableOption, InputModalityDetector} from '@angular/cdk/a11y';
+import {FocusableOption} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
 import {fromEvent, Subject} from 'rxjs';
@@ -27,6 +27,7 @@ import {CDK_MENU, Menu} from './menu-interface';
 import {FocusNext, MENU_STACK} from './menu-stack';
 import {FocusableElement} from './pointer-focus-tracker';
 import {MENU_AIM, Toggler} from './menu-aim';
+import {eventDispatchesNativeClick} from './event-detection';
 
 /**
  * Directive which provides the ability for an element to be focused and navigated to using the
@@ -44,13 +45,12 @@ import {MENU_AIM, Toggler} from './menu-aim';
     '[attr.aria-disabled]': 'disabled || null',
     '(blur)': '_resetTabIndex()',
     '(focus)': '_setTabIndex()',
-    '(click)': '_handleClick()',
+    '(click)': 'trigger()',
     '(keydown)': '_onKeydown($event)',
   },
 })
 export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, OnDestroy {
   protected readonly _dir = inject(Directionality, {optional: true});
-  private readonly _inputModalityDetector = inject(InputModalityDetector);
   readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   protected _ngZone = inject(NgZone);
 
@@ -195,7 +195,8 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     switch (event.keyCode) {
       case SPACE:
       case ENTER:
-        if (!hasModifierKey(event)) {
+        // Skip events that will trigger clicks so the handler doesn't get triggered twice.
+        if (!hasModifierKey(event) && !eventDispatchesNativeClick(this._elementRef, event)) {
           this.trigger({keepOpen: event.keyCode === SPACE && !this.closeOnSpacebarTrigger});
         }
         break;
@@ -223,15 +224,6 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
           }
         }
         break;
-    }
-  }
-
-  /** Handles clicks on the menu item. */
-  _handleClick() {
-    // Don't handle clicks originating from the keyboard since we
-    // already do the same on `keydown` events for enter and space.
-    if (this._inputModalityDetector.mostRecentModality !== 'keyboard') {
-      this.trigger();
     }
   }
 
