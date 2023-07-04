@@ -98,6 +98,12 @@ describe('MDC-based MatChipSet', () => {
 
     expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
   });
+
+  it('should be able to access the `empty` getter before the chips are initialized', () => {
+    const fixture = TestBed.createComponent(BasicChipSet);
+    const chipSet = fixture.debugElement.query(By.directive(MatChipSet))!;
+    expect(chipSet.componentInstance.empty).toBe(true);
+  });
 });
 
 @Component({
