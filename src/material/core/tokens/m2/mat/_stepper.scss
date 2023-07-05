@@ -1,0 +1,118 @@
+@use 'sass:map';
+@use '../../token-utils';
+@use '../../../theming/theming';
+@use '../../../typography/typography-utils';
+@use '../../../style/sass-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, stepper);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+@function get-unthemable-tokens() {
+  @return ();
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($config) {
+  $foreground: map.get($config, foreground);
+  $background: map.get($config, background);
+  $primary: map.get($config, primary);
+  $warn: map.get($config, warn);
+
+  @return map.merge(private-get-color-palette-color-tokens($primary), (
+    // Background for stepper container.
+    container-color: theming.get-color-from-palette($background, card),
+    // Color of the line indicator connecting the steps.
+    line-color: theming.get-color-from-palette($foreground, divider),
+    // Background color of the header while hovered.
+    header-hover-state-layer-color: theming.get-color-from-palette($background, hover),
+    // Background color of the header while focused.
+    header-focus-state-layer-color: theming.get-color-from-palette($background, hover),
+    // Color of the text inside the step header.
+    header-label-text-color: theming.get-color-from-palette($foreground, secondary-text),
+    // Color for the "optional" label in the step header.
+    header-optional-label-text-color: theming.get-color-from-palette($foreground, secondary-text),
+    // Color of the header text when a step is selected.
+    header-selected-state-label-text-color: theming.get-color-from-palette($foreground, text),
+    // Color of the header text when a step is in an error state.
+    header-error-state-label-text-color: theming.get-color-from-palette($warn, text),
+    // Background color of the header icon.
+    header-icon-background-color: theming.get-color-from-palette($foreground, secondary-text),
+    // Foreground color of the header icon in the error state.
+    header-error-state-icon-foreground-color: theming.get-color-from-palette($warn, text),
+    // Background color of the header icon in the error state.
+    header-error-state-icon-background-color: transparent,
+  ));
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($config) {
+  @return (
+    // Font family of the entire stepper.
+    container-text-font: typography-utils.font-family($config),
+    // Font family of the text inside the step header.
+    header-label-text-font: typography-utils.font-family($config, body-1) or
+      typography-utils.font-family($config),
+    // Size of the text inside the step header.
+    header-label-text-size: typography-utils.font-size($config, body-1),
+    // Weight of the text inside the step header.
+    header-label-text-weight: typography-utils.font-weight($config, body-1),
+    // Color of the header text when a step is in an error state.
+    header-error-state-label-text-size: typography-utils.font-size($config, body-2),
+    // Size of the header text in the selected state.
+    header-selected-state-label-text-size: typography-utils.font-size($config, body-2),
+    // Weight of the header text in the selected state.
+    header-selected-state-label-text-weight: typography-utils.font-weight($config, body-2),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($config) {
+  $scale: theming.clamp-density($config, -4);
+  $height-config: (
+    0: 72px,
+    -1: 68px,
+    -2: 64px,
+    -3: 60px,
+    -4: 42px,
+  );
+
+  @return (
+    header-height: map.get($height-config, $scale),
+  );
+}
+
+// Generates the tokens used to theme the stepper based on a palette.
+@function private-get-color-palette-color-tokens($palette) {
+  $active-state-foreground: theming.get-color-from-palette($palette, default-contrast);
+  $active-state-background: theming.get-color-from-palette($palette);
+
+  @return (
+    // Foreground color of the header icon.
+    header-icon-foreground-color: theming.get-color-from-palette($palette, default-contrast),
+    // Background color of the header icon in the selected state.
+    header-selected-state-icon-background-color: $active-state-background,
+    // Foreground color of the header icon in the selected state.
+    header-selected-state-icon-foreground-color: $active-state-foreground,
+    // Background color of the header icon in the selected state.
+    header-done-state-icon-background-color: $active-state-background,
+    // Foreground color of the header icon in the selected state.
+    header-done-state-icon-foreground-color: $active-state-foreground,
+    // Background color of the header icon in the editing state.
+    header-edit-state-icon-background-color: $active-state-background,
+    // Foreground color of the header icon in the editing state.
+    header-edit-state-icon-foreground-color: $active-state-foreground,
+  );
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+      get-unthemable-tokens(),
+      get-color-tokens(token-utils.$placeholder-color-config),
+      get-typography-tokens(token-utils.$placeholder-typography-config),
+      get-density-tokens(token-utils.$placeholder-density-config)
+  );
+}
