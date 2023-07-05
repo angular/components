@@ -1,5 +1,6 @@
 @use '@angular/cdk';
-
+@use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
+@use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 @use './stepper-variables';
 
@@ -15,6 +16,33 @@
   // because `::before` is used for other styling.
   &:focus .mat-focus-indicator::before {
     content: '';
+  }
+
+  &:hover[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+
+    &:hover:not([aria-disabled]),
+    &:hover[aria-disabled='false'] {
+      @include token-utils.create-token-slot(background-color, header-hover-state-layer-color);
+    }
+
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused {
+      @include token-utils.create-token-slot(background-color, header-focus-state-layer-color);
+    }
+  }
+
+  // On touch devices the :hover state will linger on the element after a tap.
+  // Reset it via `@media` after the declaration, because the media query isn't
+  // supported by all browsers yet.
+  @media (hover: none) {
+    &:hover {
+      background: none;
+    }
   }
 
   @include cdk.high-contrast(active, off) {
@@ -39,9 +67,18 @@
   }
 }
 
-.mat-step-optional,
+.mat-step-optional {
+  font-size: stepper-variables.$step-sub-label-font-size;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(color, header-optional-label-text-color);
+  }
+}
+
 .mat-step-sub-label-error {
   font-size: stepper-variables.$step-sub-label-font-size;
+  font-weight: normal;
 }
 
 .mat-step-icon {
@@ -50,6 +87,12 @@
   width: stepper-variables.$label-header-height;
   flex-shrink: 0;
   position: relative;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(color, header-icon-foreground-color);
+    @include token-utils.create-token-slot(background-color, header-icon-background-color);
+  }
 }
 
 .mat-step-icon-content {
@@ -70,10 +113,20 @@
   width: stepper-variables.$step-header-icon-size;
 }
 
-.mat-step-icon-state-error .mat-icon {
-  font-size: stepper-variables.$step-header-icon-size + 8;
-  height: stepper-variables.$step-header-icon-size + 8;
-  width: stepper-variables.$step-header-icon-size + 8;
+.mat-step-icon-state-error {
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color,
+      header-error-state-icon-background-color);
+    @include token-utils.create-token-slot(color,
+      header-error-state-icon-foreground-color);
+  }
+
+  .mat-icon {
+    font-size: stepper-variables.$step-header-icon-size + 8;
+    height: stepper-variables.$step-header-icon-size + 8;
+    width: stepper-variables.$step-header-icon-size + 8;
+  }
 }
 
 .mat-step-label {
@@ -83,6 +136,28 @@
   text-overflow: ellipsis;
   min-width: stepper-variables.$label-min-width;
   vertical-align: middle;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(font-family, header-label-text-font);
+    @include token-utils.create-token-slot(font-size, header-label-text-size);
+    @include token-utils.create-token-slot(font-weight, header-label-text-weight);
+    @include token-utils.create-token-slot(color, header-label-text-color);
+
+    &.mat-step-label-active {
+      @include token-utils.create-token-slot(color, header-selected-state-label-text-color);
+    }
+
+    &.mat-step-label-error {
+      @include token-utils.create-token-slot(color, header-error-state-label-text-color);
+      @include token-utils.create-token-slot(font-size, header-error-state-label-text-size);
+    }
+
+    &.mat-step-label-selected {
+      @include token-utils.create-token-slot(font-size, header-selected-state-label-text-size);
+      @include token-utils.create-token-slot(font-weight, header-selected-state-label-text-weight);
+    }
+  }
 }
 
 .mat-step-text-label {
@@ -95,4 +170,34 @@
 .mat-step-header .mat-step-header-ripple {
   @include layout-common.fill;
   pointer-events: none;
+}
+
+.mat-step-icon-selected {
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color,
+      header-selected-state-icon-background-color);
+    @include token-utils.create-token-slot(color,
+      header-selected-state-icon-foreground-color);
+  }
+}
+
+.mat-step-icon-state-done {
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color,
+      header-done-state-icon-background-color);
+    @include token-utils.create-token-slot(color,
+      header-done-state-icon-foreground-color);
+  }
+}
+
+.mat-step-icon-state-edit {
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color,
+      header-edit-state-icon-background-color);
+    @include token-utils.create-token-slot(color,
+      header-edit-state-icon-foreground-color);
+  }
 }

@@ -84,6 +84,19 @@ $_component-prefix: null;
   }
 }
 
+// Returns the name of a token including the current prefix. Intended to be used in calculations
+// involving tokens. `create-token-slot` should be used when outputting tokens.
+@function get-token-variable($token) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error '`get-token-variable` must be used within `use-tokens`';
+  }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
+
+  @return mdc-custom-properties.create-varname('#{$_component-prefix}-#{$token}');
+}
+
 @mixin create-token-values($prefix, $tokens) {
   @include _configure-token-prefix($prefix...) {
     @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
