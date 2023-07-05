@@ -53,12 +53,51 @@
   $result: ();
   @each $prop in (font, line-height, size, tracking, weight) {
     $result: map.set(
-      $result,
-      #{$base-name}-#{$prop},
-      map.get($typography-tokens, #{$typography-level}-#{$prop}
-    ));
+        $result,
+        #{$base-name}-#{$prop},
+        map.get($typography-tokens, #{$typography-level}-#{$prop}
+        ));
   }
   @return $result;
+}
+
+/// Renames the keys in a map
+/// @param {Map} $map The map whose keys should be renamed
+/// @param {Map} $rename-keys A map of original key to renamed key to apply to $map
+/// @return {Map} The result of applying the given key renames to the given map.
+@function _rename-map-keys($map, $rename-keys) {
+  $result: $map;
+  @each $old-key-name, $new-key-name in $rename-keys {
+    @if map.has-key($map, $old-key-name) {
+      $result: map.set($result, $new-key-name, map.get($map, $old-key-name));
+    }
+  }
+  @return $result;
+}
+
+/// Renames the official checkbox tokens to match the names actually used in MDC's code (which are
+/// different). This is a temporary workaround until MDC updates to use the correct names for the
+/// tokens.
+/// @param {Map} $tokens The map of checkbox tokens with the official tokens names
+/// @return {Map} The given tokens, renamed to be compatible with MDC's token implementation.
+@function _fix-checkbox-token-names($tokens) {
+  $rename-keys: (
+    'selected-icon-color': 'selected-checkmark-color',
+    'selected-disabled-icon-color': 'disabled-selected-checkmark-color',
+    'selected-container-color': 'selected-icon-color',
+    'selected-hover-container-color': 'selected-hover-icon-color',
+    'selected-disabled-container-color': 'disabled-selected-icon-color',
+    'selected-disabled-container-opacity': 'disabled-selected-icon-opacity',
+    'selected-focus-container-color': 'selected-focus-icon-color',
+    'selected-pressed-container-color': 'selected-pressed-icon-color',
+    'unselected-disabled-outline-color': 'disabled-unselected-icon-color',
+    'unselected-disabled-container-opacity': 'disabled-unselected-icon-opacity',
+    'unselected-focus-outline-color': 'unselected-focus-icon-color',
+    'unselected-hover-outline-color': 'unselected-hover-icon-color',
+    'unselected-outline-color': 'unselected-icon-color',
+    'unselected-pressed-outline-color': 'unselected-pressed-icon-color'
+  );
+  @return _rename-map-keys($tokens, $rename-keys);
 }
 
 // TODO(mmalerba): We need a way to accept custom M3 token values generated from MDCs theme builder
@@ -87,18 +126,18 @@
   // TODO(mmalerba): Fill in remaining tokens.
   @return mat.private-merge-all(
     // Fill in official MDC tokens.
-    _get-mdc-tokens((mdc, checkbox), mdc-tokens.md-comp-checkbox-values(), $token-slots),
-    _get-mdc-tokens((mdc, elevated-card), mdc-tokens.md-comp-elevated-card-values(), $token-slots),
-    _get-mdc-tokens((mdc, outlined-card), mdc-tokens.md-comp-outlined-card-values(), $token-slots),
-    // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded values.
-    (
-      (mat, card): mat.private-merge-all(
-        _get-typography-tokens($typography, title-text, title-large),
-        _get-typography-tokens($typography, subtitle-text, title-medium),
-        (
-          subtitle-text-color: map.get($colors, on-surface)
+      _get-mdc-tokens((mdc, checkbox), _fix-checkbox-token-names(mdc-tokens.md-comp-checkbox-values()), $token-slots),
+      _get-mdc-tokens((mdc, elevated-card), mdc-tokens.md-comp-elevated-card-values(), $token-slots),
+      _get-mdc-tokens((mdc, outlined-card), mdc-tokens.md-comp-outlined-card-values(), $token-slots),
+      // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded values.
+      (
+          (mat, card): mat.private-merge-all(
+            _get-typography-tokens($typography, title-text, title-large),
+            _get-typography-tokens($typography, subtitle-text, title-medium),
+            (
+              subtitle-text-color: map.get($colors, on-surface)
+            )
         )
-      )
-    ),
+      ),
   );
 }
