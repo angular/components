@@ -80,8 +80,22 @@
 
 @mixin theme-from-tokens($tokens) {
   @if ($tokens != ()) {
-    @include mdc-elevated-card-theme.theme(map.get($tokens, tokens-mdc-elevated-card.$prefix));
-    @include mdc-outlined-card-theme.theme(map.get($tokens, tokens-mdc-outlined-card.$prefix));
+    $elevated-card-tokens: map.get($tokens, tokens-mdc-elevated-card.$prefix);
+    // Work around a bug in MDC where the elevation is not resolved to an actual shadow value.
+    $elevated-card-tokens: token-utils.resolve-elevation(
+        $elevated-card-tokens,
+        container-elevation,
+        container-shadow-color
+    );
+    $outlined-card-tokens: map.get($tokens, tokens-mdc-outlined-card.$prefix);
+    // Work around a bug in MDC where the elevation is not resolved to an actual shadow value.
+    $outlined-card-tokens: token-utils.resolve-elevation(
+        $outlined-card-tokens,
+        container-elevation,
+        container-shadow-color
+    );
+    @include mdc-elevated-card-theme.theme($elevated-card-tokens);
+    @include mdc-outlined-card-theme.theme($outlined-card-tokens);
     @include token-utils.create-token-values(
         tokens-mat-card.$prefix, map.get($tokens, tokens-mat-card.$prefix));
   }
