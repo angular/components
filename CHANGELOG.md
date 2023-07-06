@@ -1,3 +1,21 @@
+<a name="16.2.0-next.3"></a>
+# 16.2.0-next.3 "verdelite-volcano" (2023-07-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8e4a2ecf0](https://github.com/angular/components/commit/8e4a2ecf022a81edd6c4273039d74dc6b9c39a24) | fix | **menu:** control + option + space not working on VoiceOver ([#27401](https://github.com/angular/components/pull/27401)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0340a4152](https://github.com/angular/components/commit/0340a41529385c7a65f514e6afbceb84732a1aa0) | fix | **button-toggle:** not preserving value if preselected option is removed ([#27398](https://github.com/angular/components/pull/27398)) |
+| [c03b5f415](https://github.com/angular/components/commit/c03b5f415f4cccf41f6a5138dce822205a800da9) | fix | **chips:** error if empty getter is accessed too early ([#27405](https://github.com/angular/components/pull/27405)) |
+| [b985c7d52](https://github.com/angular/components/commit/b985c7d52cf5ccebbc76610e8843711d79e4df50) | fix | **core:** throw better error messages from typography utils ([#27393](https://github.com/angular/components/pull/27393)) |
+| [06f8544e7](https://github.com/angular/components/commit/06f8544e7b7bf8b2cc279a2e30d123c7d74804e1) | fix | **menu:** prevent menu styles from leaking to other components ([#27378](https://github.com/angular/components/pull/27378)) |
+| [017a541d4](https://github.com/angular/components/commit/017a541d496bfaaeda2f1207b6e6247213361dd9) | fix | **schematics:** fix template diagnostic in table schematic ([#27407](https://github.com/angular/components/pull/27407)) |
+| [daa6ca3ec](https://github.com/angular/components/commit/daa6ca3ecd9e46fcea4ec609ef6d37f50fc3af3b) | fix | **sidenav:** only trap focus when backdrop is enabled ([#27355](https://github.com/angular/components/pull/27355)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.4"></a>
 # 16.1.4 "andalusite-almond" (2023-07-06)
 ### cdk
