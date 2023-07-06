@@ -275,8 +275,6 @@ export interface MatMenuPanel<T = any> {
 // @public
 export class MatMenuTrigger extends _MatMenuTriggerBase {
     // (undocumented)
-    protected _panelClass: string;
-    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatMenuTrigger, "[mat-menu-trigger-for], [matMenuTriggerFor]", ["matMenuTrigger"], {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenuTrigger, never>;
@@ -315,8 +313,6 @@ export abstract class _MatMenuTriggerBase implements AfterContentInit, OnDestroy
     // (undocumented)
     _openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     openMenu(): void;
-    // (undocumented)
-    protected _panelClass: string | null;
     restoreFocus: boolean;
     toggleMenu(): void;
     triggersSubmenu(): boolean;
