@@ -34,6 +34,7 @@
     "format": "yarn -s ng-dev format changed",
     "cherry-pick-patch": "ts-node --project tools/cherry-pick-patch/tsconfig.json tools/cherry-pick-patch/cherry-pick-patch.ts",
     "ownerslint": "ts-node --project scripts/tsconfig.json scripts/ownerslint.ts",
+    "detect-component-id-collisions": "ts-node --project scripts/tsconfig.json scripts/detect-component-id-collisions.ts",
     "tslint": "tslint -c tslint.json --project ./tsconfig.json",
     "stylelint": "stylelint \"src/**/*.+(css|scss)\" --config .stylelintrc.json",
     "resync-caretaker-app": "ts-node --project scripts/tsconfig.json scripts/caretaking/resync-caretaker-app-prs.ts",
