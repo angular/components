@@ -1,3 +1,20 @@
+<a name="16.1.4"></a>
+# 16.1.4 "andalusite-almond" (2023-07-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0184a4d5e](https://github.com/angular/components/commit/0184a4d5e36a50a7d1b47735f7f46712809db22e) | fix | **menu:** control + option + space not working on VoiceOver ([#27401](https://github.com/angular/components/pull/27401)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [06ddf00cf](https://github.com/angular/components/commit/06ddf00cf38dc57cf2422f61c9a30fe74baf248b) | fix | **button-toggle:** not preserving value if preselected option is removed ([#27398](https://github.com/angular/components/pull/27398)) |
+| [82c270030](https://github.com/angular/components/commit/82c27003016a1b1cc7ef46c3a068a679d6dd6859) | fix | **chips:** error if empty getter is accessed too early ([#27405](https://github.com/angular/components/pull/27405)) |
+| [408be2c76](https://github.com/angular/components/commit/408be2c7628c3efa18e6486be0a2f842221f21d9) | fix | **core:** throw better error messages from typography utils ([#27393](https://github.com/angular/components/pull/27393)) |
+| [69eff191b](https://github.com/angular/components/commit/69eff191b791a5aff4929bad490a5f1507dc89cd) | fix | **menu:** prevent menu styles from leaking to other components ([#27378](https://github.com/angular/components/pull/27378)) |
+| [35f926023](https://github.com/angular/components/commit/35f926023c12508261c3519299d8c1ec3b9f3398) | fix | **schematics:** fix template diagnostic in table schematic ([#27407](https://github.com/angular/components/pull/27407)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.0-next.2"></a>
 # 16.2.0-next.2 "corduroy-cabin" (2023-06-28)
 ### cdk
