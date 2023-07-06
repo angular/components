@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
 
@@ -125,11 +124,15 @@
 
   // TODO(mmalerba): Fill in remaining tokens.
   @return mat.private-merge-all(
-    // Fill in official MDC tokens.
-      _get-mdc-tokens((mdc, checkbox), _fix-checkbox-token-names(mdc-tokens.md-comp-checkbox-values()), $token-slots),
-      _get-mdc-tokens((mdc, elevated-card), mdc-tokens.md-comp-elevated-card-values(), $token-slots),
-      _get-mdc-tokens((mdc, outlined-card), mdc-tokens.md-comp-outlined-card-values(), $token-slots),
-      // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded values.
+      // Fill in official MDC tokens.
+      _get-mdc-tokens((mdc, checkbox),
+        _fix-checkbox-token-names(mdc-tokens.md-comp-checkbox-values()), $token-slots),
+      _get-mdc-tokens((mdc, elevated-card), mdc-tokens.md-comp-elevated-card-values(),
+        $token-slots),
+      _get-mdc-tokens((mdc, outlined-card), mdc-tokens.md-comp-outlined-card-values(),
+        $token-slots),
+      // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
+      // values.
       (
           (mat, card): mat.private-merge-all(
             _get-typography-tokens($typography, title-text, title-large),
