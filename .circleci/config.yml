@@ -317,6 +317,7 @@ jobs:
 
       - run: yarn ng-dev format changed --check << pipeline.git.base_revision >>
       - run: yarn ownerslint
+      - run: yarn detect-component-id-collisions
       - run: yarn stylelint
       - run: yarn tslint
       - run: yarn -s ts-circular-deps:check
