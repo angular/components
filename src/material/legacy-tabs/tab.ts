@@ -34,6 +34,10 @@ import {
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
   providers: [{provide: MAT_TAB, useExisting: MatLegacyTab}],
+  host: {
+    // This binding is used to ensure that the component ID doesn't clash with the `MatTab`.
+    '[attr.mat-id-collision]': 'null',
+  },
 })
 export class MatLegacyTab extends _MatTabBase {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */

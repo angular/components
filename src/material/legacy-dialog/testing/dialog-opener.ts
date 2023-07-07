@@ -27,6 +27,11 @@ import {_MatTestDialogOpenerBase} from '@angular/material/dialog/testing';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: {
+    // This binding is used to ensure that the component ID
+    // doesn't clash with the `MatTestDialogOpener`.
+    '[attr.mat-id-collision]': 'null',
+  },
 })
 export class MatTestLegacyDialogOpener<T = unknown, R = unknown> extends _MatTestDialogOpenerBase<
   MatLegacyDialogContainer,

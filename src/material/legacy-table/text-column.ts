@@ -34,6 +34,10 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
     </ng-container>
   `,
   encapsulation: ViewEncapsulation.None,
+  host: {
+    // This binding is used to ensure that the component ID doesn't clash with the `MatTextColumn`.
+    '[attr.mat-id-collision]': 'null',
+  },
   // Change detection is intentionally not set to OnPush. This component's template will be provided
   // to the table to be inserted into its view. This is problematic when change detection runs since
   // the bindings in this template will be evaluated _after_ the table's view is evaluated, which

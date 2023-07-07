@@ -104,6 +104,9 @@ export class MatLegacyTooltip extends _MatTooltipBase<LegacyTooltipComponent> {
     '[style.zoom]': 'isVisible() ? 1 : null',
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
+    // This binding is used to ensure that the component
+    // ID doesn't clash with the `TooltipComponent`.
+    '[attr.mat-id-collision]': 'null',
   },
 })
 export class LegacyTooltipComponent extends _TooltipComponentBase {
