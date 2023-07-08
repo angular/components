@@ -274,7 +274,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
-    deselect(): void;
+    deselect(emitEvent?: boolean): void;
     get disabled(): boolean;
     set disabled(value: BooleanInput);
     get disableRipple(): boolean;
@@ -293,7 +293,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     // (undocumented)
     ngOnDestroy(): void;
     readonly onSelectionChange: EventEmitter<MatOptionSelectionChange<T>>;
-    select(): void;
+    select(emitEvent?: boolean): void;
     get selected(): boolean;
     _selectViaInteraction(): void;
     setActiveStyles(): void;
