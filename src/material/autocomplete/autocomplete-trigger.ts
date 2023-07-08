@@ -465,6 +465,10 @@ export abstract class _MatAutocompleteTriggerBase
       this._pendingAutoselectedOption = null;
       this._onChange(value);
 
+      if (!value) {
+        this._clearPreviousSelectedOption(null, false);
+      }
+
       if (this._canOpen() && this._document.activeElement === event.target) {
         this.openPanel();
       }
@@ -628,12 +632,14 @@ export abstract class _MatAutocompleteTriggerBase
   /**
    * Clear any previous selected option and emit a selection change event for this option
    */
-  private _clearPreviousSelectedOption(skip: _MatOptionBase) {
-    this.autocomplete.options.forEach(option => {
-      if (option !== skip && option.selected) {
-        option.deselect();
-      }
-    });
+  private _clearPreviousSelectedOption(skip: _MatOptionBase | null, emitEvent?: boolean) {
+    if (this.autocomplete && this.autocomplete.options) {
+      this.autocomplete.options.forEach(option => {
+        if (option !== skip && option.selected) {
+          option.deselect(emitEvent);
+        }
+      });
+    }
   }
 
   private _attachOverlay(): void {
