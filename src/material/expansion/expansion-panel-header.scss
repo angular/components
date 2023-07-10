@@ -1,4 +1,6 @@
 @use '@angular/cdk';
+@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
+@use '../core/tokens/token-utils';
 @use './expansion-variables';
 
 .mat-expansion-panel-header {
@@ -8,6 +10,44 @@
   padding: 0 24px;
   border-radius: inherit;
   transition: height expansion-variables.$header-transition;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(height, header-collapsed-state-height);
+    @include token-utils.create-token-slot(font-family, header-text-font);
+    @include token-utils.create-token-slot(font-size, header-text-size);
+    @include token-utils.create-token-slot(font-weight, header-text-weight);
+    @include token-utils.create-token-slot(line-height, header-text-line-height);
+    @include token-utils.create-token-slot(letter-spacing, header-text-tracking);
+
+    &.mat-expanded {
+      @include token-utils.create-token-slot(height, header-expanded-state-height);
+    }
+
+    &[aria-disabled='true'] {
+      @include token-utils.create-token-slot(color, header-disabled-state-text-color);
+    }
+
+    &:not([aria-disabled='true']) {
+      cursor: pointer;
+
+      .mat-expansion-panel:not(.mat-expanded) &:hover {
+        @include token-utils.create-token-slot(background, header-hover-state-layer-color);
+
+        // Disable the hover on touch devices since it can appear like it is stuck. We can't use
+        // `@media (hover)` above, because the desktop support browser support isn't great.
+        @media (hover: none) {
+          @include token-utils.create-token-slot(background, container-background-color);
+        }
+      }
+
+      // The `.mat-expansion-panel` here is redundant, but we need the additional specificity.
+      .mat-expansion-panel &.cdk-keyboard-focused,
+      .mat-expansion-panel &.cdk-program-focused {
+        @include token-utils.create-token-slot(background, header-focus-state-layer-color);
+      }
+    }
+  }
 
   // If the `NoopAnimationsModule` is used, disable the height transition.
   &._mat-animation-noopable {
@@ -22,10 +62,6 @@
   &.mat-expanded:focus,
   &.mat-expanded:hover {
     background: inherit;
-  }
-
-  &:not([aria-disabled='true']) {
-    cursor: pointer;
   }
 
   &.mat-expansion-toggle-indicator-before {
@@ -68,6 +104,13 @@
   }
 }
 
+.mat-expansion-panel-header-title {
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(color, header-text-color);
+  }
+}
+
 .mat-expansion-panel-header-title,
 .mat-expansion-panel-header-description {
   display: flex;
@@ -80,10 +123,19 @@
     margin-right: 0;
     margin-left: 16px;
   }
+
+  .mat-expansion-panel-header[aria-disabled='true'] & {
+    color: inherit;
+  }
 }
 
 .mat-expansion-panel-header-description {
   flex-grow: 2;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(color, header-description-color);
+  }
 }
 
 // Creates the expansion indicator arrow. Done using ::after
@@ -96,6 +148,11 @@
   padding: 3px;
   transform: rotate(45deg);
   vertical-align: middle;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(color, header-indicator-color);
+  }
 }
 
 @include cdk.high-contrast(active, off) {
