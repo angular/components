@@ -115,3 +115,5 @@ Angular Material does not support the `menuitemcheckbox` or `menuitemradio` role
 
 Always provide an accessible label via `aria-label` or `aria-labelledby` for any menu
 triggers or menu items without descriptive text content.
+
+MatMenu should not contain any interactive controls aside from MatMenuItem.
