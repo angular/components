@@ -59,7 +59,6 @@ export class AutocompleteDemo {
   tdStates: State[];
 
   tdDisabled = false;
-  hideSingleSelectionIndicators = false;
   reactiveStatesTheme: ThemePalette = 'primary';
   templateStatesTheme: ThemePalette = 'primary';
 
@@ -68,6 +67,9 @@ export class AutocompleteDemo {
     {value: 'accent', name: 'Accent'},
     {value: 'warn', name: 'Warn'},
   ];
+
+  reactiveRequireSelection = false;
+  templateRequireSelection = false;
 
   reactiveHideSingleSelectionIndicator = false;
   templateHideSingleSelectionIndicator = false;

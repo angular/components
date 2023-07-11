@@ -44,6 +44,8 @@ export const MAT_LEGACY_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 // @public @deprecated (undocumented)
 export class MatLegacyAutocomplete extends _MatAutocompleteBase {
     // (undocumented)
+    _animationDone: null;
+    // (undocumented)
     protected _hiddenClass: string;
     optionGroups: QueryList<MatLegacyOptgroup>;
     options: QueryList<MatLegacyOption>;

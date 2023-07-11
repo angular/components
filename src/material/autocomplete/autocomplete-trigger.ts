@@ -110,6 +110,9 @@ export abstract class _MatAutocompleteTriggerBase
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
   private _previousValue: string | number | null;
 
+  /** Value of the input element when the panel was opened. */
+  private _valueOnOpen: string | number | null;
+
   /** Strategy that is used to position the panel. */
   private _positionStrategy: FlexibleConnectedPositionStrategy;
 
@@ -561,7 +564,7 @@ export abstract class _MatAutocompleteTriggerBase
                 //   of the available options,
                 // - if a valid string is entered after an invalid one.
                 if (this.panelOpen) {
-                  this.autocomplete.opened.emit();
+                  this._emitOpened();
                 } else {
                   this.autocomplete.closed.emit();
                 }
@@ -576,6 +579,15 @@ export abstract class _MatAutocompleteTriggerBase
         // set the value, close the panel, and complete.
         .subscribe(event => this._setValueAndClose(event))
     );
+  }
+
+  /**
+   * Emits the opened event once it's known that the panel will be shown and stores
+   * the state of the trigger right before the opening sequence was finished.
+   */
+  private _emitOpened() {
+    this._valueOnOpen = this._element.nativeElement.value;
+    this.autocomplete.opened.emit();
   }
 
   /** Destroys the autocomplete suggestion panel. */
@@ -616,14 +628,28 @@ export abstract class _MatAutocompleteTriggerBase
    * stemmed from the user.
    */
   private _setValueAndClose(event: MatOptionSelectionChange | null): void {
+    const panel = this.autocomplete;
     const toSelect = event ? event.source : this._pendingAutoselectedOption;
 
     if (toSelect) {
       this._clearPreviousSelectedOption(toSelect);
       this._assignOptionValue(toSelect.value);
+      // TODO(crisbeto): this should wait until the animation is done, otherwise the value
+      // gets reset while the panel is still animating which looks glitchy. It'll likely break
+      // some tests to change it at this point.
       this._onChange(toSelect.value);
-      this.autocomplete._emitSelectEvent(toSelect);
+      panel._emitSelectEvent(toSelect);
       this._element.nativeElement.focus();
+    } else if (panel.requireSelection && this._element.nativeElement.value !== this._valueOnOpen) {
+      this._clearPreviousSelectedOption(null);
+      this._assignOptionValue(null);
+      // Wait for the animation to finish before clearing the form control value, otherwise
+      // the options might change while the animation is running which looks glitchy.
+      if (panel._animationDone) {
+        panel._animationDone.pipe(take(1)).subscribe(() => this._onChange(null));
+      } else {
+        this._onChange(null);
+      }
     }
 
     this.closePanel();
@@ -633,13 +659,13 @@ export abstract class _MatAutocompleteTriggerBase
    * Clear any previous selected option and emit a selection change event for this option
    */
   private _clearPreviousSelectedOption(skip: _MatOptionBase | null, emitEvent?: boolean) {
-    if (this.autocomplete && this.autocomplete.options) {
-      this.autocomplete.options.forEach(option => {
-        if (option !== skip && option.selected) {
-          option.deselect(emitEvent);
-        }
-      });
-    }
+    // Null checks are necessary here, because the autocomplete
+    // or its options may not have been assigned yet.
+    this.autocomplete?.options?.forEach(option => {
+      if (option !== skip && option.selected) {
+        option.deselect(emitEvent);
+      }
+    });
   }
 
   private _attachOverlay(): void {
@@ -683,7 +709,7 @@ export abstract class _MatAutocompleteTriggerBase
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.
     if (this.panelOpen && wasOpen !== this.panelOpen) {
-      this.autocomplete.opened.emit();
+      this._emitOpened();
     }
   }
 
