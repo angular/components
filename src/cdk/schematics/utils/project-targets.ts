@@ -11,7 +11,11 @@ import {SchematicsException} from '@angular-devkit/schematics';
 
 /** Object that maps a CLI target to its default builder name. */
 export const defaultTargetBuilders = {
-  build: '@angular-devkit/build-angular:browser',
+  build: [
+    '@angular-devkit/build-angular:browser',
+    '@angular-devkit/build-angular:browser-esbuild',
+    '@angular-devkit/build-angular:application',
+  ],
   test: '@angular-devkit/build-angular:karma',
 };
 

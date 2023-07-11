@@ -11,7 +11,8 @@ import {defaultTargetBuilders, getTargetsByBuilderName} from './project-targets'
 
 /** Gets the path of the index file in the given project. */
 export function getProjectIndexFiles(project: workspaces.ProjectDefinition): Path[] {
-  const paths = getTargetsByBuilderName(project, defaultTargetBuilders.build)
+  const paths = defaultTargetBuilders.build
+    .flatMap(name => getTargetsByBuilderName(project, name))
     .filter(t => t.options?.index)
     .map(t => t.options!.index as Path);
 
