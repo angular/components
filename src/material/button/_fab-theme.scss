@@ -83,6 +83,11 @@
   $config: typography.private-typography-to-2018-config(
     theming.get-typography-config($config-or-theme)
   );
+
+  @include mdc-helpers.using-mdc-typography($config) {
+    @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
+  }
+
   $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($config);
   .mat-mdc-extended-fab {
     @include mdc-extended-fab-theme.theme($typography-tokens);
