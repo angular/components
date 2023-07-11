@@ -2504,6 +2504,165 @@ describe('MDC-based MatAutocomplete', () => {
 
       subscription.unsubscribe();
     }));
+
+    it('should accept the user selection if they click on an option while selection is required', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+      const spy = jasmine.createSpy('optionSelected spy');
+      const subscription = trigger.optionSelections.subscribe(spy);
+
+      options[5].click();
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('Oregon');
+      expect(stateCtrl.value).toEqual({code: 'OR', name: 'Oregon'});
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      subscription.unsubscribe();
+    }));
+
+    it('should accept the user selection if they press enter on an option while selection is required', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+      const spy = jasmine.createSpy('optionSelected spy');
+      const subscription = trigger.optionSelections.subscribe(spy);
+
+      dispatchKeyboardEvent(options[5], 'keydown', ENTER);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('Oregon');
+      expect(stateCtrl.value).toEqual({code: 'OR', name: 'Oregon'});
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      subscription.unsubscribe();
+    }));
+
+    it('should accept the user selection if autoSelectActiveOption is enabled', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      trigger.autocomplete.autoSelectActiveOption = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      for (let i = 0; i < 5; i++) {
+        dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+        fixture.detectChanges();
+      }
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('New York');
+      expect(stateCtrl.value).toEqual({code: 'NY', name: 'New York'});
+    }));
+
+    it('should clear the value if selection is required and the user interacted with the panel without selecting anything', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const spy = jasmine.createSpy('optionSelected spy');
+      const subscription = trigger.optionSelections.subscribe(spy);
+
+      input.value = 'Cali';
+      dispatchKeyboardEvent(input, 'input');
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('Cali');
+      expect(stateCtrl.value).toBe('Cali');
+      expect(spy).not.toHaveBeenCalled();
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('');
+      expect(stateCtrl.value).toBe(null);
+      expect(spy).not.toHaveBeenCalled();
+
+      subscription.unsubscribe();
+    }));
+
+    it('should preserve the value if a selection is required, but the user opened and closed the panel without interacting with it', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const spy = jasmine.createSpy('optionSelected spy');
+      const subscription = trigger.optionSelections.subscribe(spy);
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+      expect(spy).not.toHaveBeenCalled();
+      subscription.unsubscribe();
+    }));
   });
 
   describe('panel closing', () => {
@@ -3553,9 +3712,16 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
       [matAutocompleteDisabled]="autocompleteDisabled"
       [formControl]="stateCtrl">
   </mat-form-field>
-  <mat-autocomplete [class]="panelClass" #auto="matAutocomplete" [displayWith]="displayFn"
-    [disableRipple]="disableRipple" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
-    (opened)="openedSpy()" (closed)="closedSpy()">
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [class]="panelClass"
+    [displayWith]="displayFn"
+    [disableRipple]="disableRipple"
+    [requireSelection]="requireSelection"
+    [aria-label]="ariaLabel"
+    [aria-labelledby]="ariaLabelledby"
+    (opened)="openedSpy()"
+    (closed)="closedSpy()">
     <mat-option
       *ngFor="let state of filteredStates"
       [value]="state"
@@ -3577,6 +3743,7 @@ class SimpleAutocomplete implements OnDestroy {
   disableRipple = false;
   autocompleteDisabled = false;
   hasLabel = true;
+  requireSelection = false;
   ariaLabel: string;
   ariaLabelledby: string;
   panelClass = 'class-one class-two';

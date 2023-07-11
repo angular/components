@@ -47,4 +47,5 @@ export class MatLegacyAutocomplete extends _MatAutocompleteBase {
   @ContentChildren(MatLegacyOption, {descendants: true}) options: QueryList<MatLegacyOption>;
   protected _visibleClass = 'mat-autocomplete-visible';
   protected _hiddenClass = 'mat-autocomplete-hidden';
+  override _animationDone = null;
 }
