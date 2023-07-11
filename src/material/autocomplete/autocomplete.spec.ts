@@ -570,7 +570,7 @@ describe('MDC-based MatAutocomplete', () => {
       expect(input.hasAttribute('aria-haspopup')).toBe(false);
     });
 
-    it('should close the panel when pressing escape', fakeAsync(() => {
+    it('should reopen the panel when clicking on the input', fakeAsync(() => {
       const trigger = fixture.componentInstance.trigger;
 
       input.focus();
@@ -2576,6 +2576,19 @@ describe('MDC-based MatAutocomplete', () => {
       expect(closingActionSpy).not.toHaveBeenCalled();
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
       expect(closingActionSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('should not prevent escape key propagation when there are no options', () => {
+      fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const event = createKeyboardEvent('keydown', ESCAPE);
+      spyOn(event, 'stopPropagation').and.callThrough();
+      dispatchEvent(document.body, event);
+      fixture.detectChanges();
+
+      expect(event.stopPropagation).not.toHaveBeenCalled();
     });
   });
 
