@@ -56,7 +56,10 @@ export const matExpansionAnimations: {
   /** Animation that expands and collapses the panel content. */
   bodyExpansion: trigger('bodyExpansion', [
     state('collapsed, void', style({height: '0px', visibility: 'hidden'})),
-    state('expanded', style({height: '*', visibility: 'visible'})),
+    // Clear the `visibility` while open, otherwise the content will be visible when placed in
+    // a parent that's `visibility: hidden`, because `visibility` doesn't apply to descendants
+    // that have a `visibility` of their own (see #27436).
+    state('expanded', style({height: '*', visibility: ''})),
     transition(
       'expanded <=> collapsed, void => collapsed',
       animate(EXPANSION_PANEL_ANIMATION_TIMING),
