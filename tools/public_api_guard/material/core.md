@@ -403,6 +403,7 @@ export class MatRippleLoader implements OnDestroy {
     configureRipple(host: HTMLElement, config: {
         className?: string;
         centered?: boolean;
+        disabled?: boolean;
     }): void;
     createRipple(host: HTMLElement): MatRipple | undefined;
     getRipple(host: HTMLElement): MatRipple | undefined;

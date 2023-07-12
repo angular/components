@@ -207,6 +207,10 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
+  override _isRippleDisabled(): boolean {
+    return super._isRippleDisabled() || this._isEditing;
+  }
+
   /**
    * Gets the projected chip edit input, or the default input if none is projected in. One of these
    * two values is guaranteed to be defined.

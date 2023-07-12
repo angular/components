@@ -1,7 +1,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatRipple} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
@@ -11,8 +10,6 @@ describe('MDC-based MatChip', () => {
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChip;
-  let chipRippleDebugElement: DebugElement;
-  let chipRippleInstance: MatRipple;
 
   let dir = 'ltr';
 
@@ -74,9 +71,8 @@ describe('MDC-based MatChip', () => {
       fixture = TestBed.createComponent(BasicChip);
       fixture.detectChanges();
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
-      chipRippleDebugElement = chipDebugElement.query(By.directive(MatRipple))!;
-      chipRippleInstance = chipRippleDebugElement.injector.get<MatRipple>(MatRipple);
-      expect(chipRippleInstance.disabled)
+      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
+      expect(chipInstance.ripple.disabled)
         .withContext('Expected basic chip ripples to be disabled.')
         .toBe(true);
     });
@@ -93,8 +89,6 @@ describe('MDC-based MatChip', () => {
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
-      chipRippleDebugElement = chipDebugElement.query(By.directive(MatRipple))!;
-      chipRippleInstance = chipRippleDebugElement.injector.get<MatRipple>(MatRipple);
       testComponent = fixture.debugElement.componentInstance;
       primaryAction = chipNativeElement.querySelector('.mdc-evolution-chip__action--primary')!;
     });
@@ -137,27 +131,27 @@ describe('MDC-based MatChip', () => {
     });
 
     it('should be able to disable ripples with the `[rippleDisabled]` input', () => {
-      expect(chipRippleInstance.disabled)
+      expect(chipInstance.ripple.disabled)
         .withContext('Expected chip ripples to be enabled.')
         .toBe(false);
 
       testComponent.rippleDisabled = true;
       fixture.detectChanges();
 
-      expect(chipRippleInstance.disabled)
+      expect(chipInstance.ripple.disabled)
         .withContext('Expected chip ripples to be disabled.')
         .toBe(true);
     });
 
     it('should disable ripples when the chip is disabled', () => {
-      expect(chipRippleInstance.disabled)
+      expect(chipInstance.ripple.disabled)
         .withContext('Expected chip ripples to be enabled.')
         .toBe(false);
 
       testComponent.disabled = true;
       fixture.detectChanges();
 
-      expect(chipRippleInstance.disabled)
+      expect(chipInstance.ripple.disabled)
         .withContext('Expected chip ripples to be disabled.')
         .toBe(true);
     });

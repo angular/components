@@ -29,6 +29,8 @@ import {
   ContentChildren,
   QueryList,
   OnInit,
+  DoCheck,
+  inject,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -43,6 +45,7 @@ import {
   mixinTabIndex,
   mixinDisabled,
   RippleGlobalOptions,
+  MatRippleLoader,
 } from '@angular/material/core';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {merge, Subject, Subscription} from 'rxjs';
@@ -123,13 +126,11 @@ export class MatChip
     CanColor,
     CanDisableRipple,
     CanDisable,
+    DoCheck,
     HasTabIndex,
     OnDestroy
 {
   protected _document: Document;
-
-  /** Whether the ripple is centered on the chip. */
-  readonly _isRippleCentered = false;
 
   /** Emits when the chip is focused. */
   readonly _onFocus = new Subject<MatChipEvent>();
@@ -251,10 +252,21 @@ export class MatChip
    * @deprecated Considered an implementation detail. To be removed.
    * @breaking-change 17.0.0
    */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  get ripple(): MatRipple {
+    return this._rippleLoader?.getRipple(this._elementRef.nativeElement)!;
+  }
+  set ripple(v: MatRipple) {
+    this._rippleLoader?.attachRipple(this._elementRef.nativeElement, v);
+  }
 
   /** Action receiving the primary set of user interactions. */
   @ViewChild(MatChipAction) primaryAction: MatChipAction;
+
+  /**
+   * Handles the lazy creation of the MatChip ripple.
+   * Used to improve initial load time of large applications.
+   */
+  _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
   constructor(
     public _changeDetectorRef: ChangeDetectorRef,
@@ -275,6 +287,11 @@ export class MatChip
       this.tabIndex = parseInt(tabIndex) ?? this.defaultTabIndex;
     }
     this._monitorFocus();
+
+    this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {
+      className: 'mat-mdc-chip-ripple',
+      disabled: this._isRippleDisabled(),
+    });
   }
 
   ngOnInit() {
@@ -303,6 +320,10 @@ export class MatChip
       this._allTrailingIcons.changes,
       this._allRemoveIcons.changes,
     ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  ngDoCheck(): void {
+    this._rippleLoader.setDisabled(this._elementRef.nativeElement, this._isRippleDisabled());
   }
 
   ngOnDestroy() {
