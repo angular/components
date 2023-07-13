@@ -1,3 +1,18 @@
+<a name="16.1.5"></a>
+# 16.1.5 "turquoise-tortoise" (2023-07-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2ed7a6405](https://github.com/angular/components/commit/2ed7a6405719dd3b12e13b4454ffb5a86192cf95) | fix | **autocomplete:** blocking events to other overlays when there are no results ([#27432](https://github.com/angular/components/pull/27432)) |
+| [ff2143b9c](https://github.com/angular/components/commit/ff2143b9cb808c0c4b04e689bb35f9bc650c89b4) | fix | **autocomplete:** clear selected option if input is cleared ([#27422](https://github.com/angular/components/pull/27422)) |
+| [73e556e57](https://github.com/angular/components/commit/73e556e5740f3ca606eeab3fab5006e7de931c06) | fix | **expansion:** panel content visible when placed inside a hidden parent ([#27438](https://github.com/angular/components/pull/27438)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6e1a7d6b4](https://github.com/angular/components/commit/6e1a7d6b49be385fdb61851c21be33bc9a5edb07) | fix | avoid component ID collisions between legacy and non-legacy components |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.0-next.3"></a>
 # 16.2.0-next.3 "verdelite-volcano" (2023-07-06)
 ### cdk
