@@ -43,7 +43,7 @@
     be one level above the density class in the DOM. At the same time, we want the density to apply
     to the toolbar while always keeping it in LTR at the same time.
    -->
-  <main [attr.dir]="dir.value" [ngClass]="getDensityClass()" class="demo-main">
+  <main [attr.dir]="state.direction" [ngClass]="getDensityClass()" class="demo-main">
     <!-- The toolbar should always be in the LTR direction -->
     <mat-toolbar color="primary" dir="ltr">
       <button mat-icon-button (click)="navigation.open('mouse')">
@@ -52,28 +52,53 @@
       <div class="demo-toolbar">
         <h1>Angular Material Demos</h1>
         <div class="demo-config-buttons">
-          <button mat-icon-button (click)="toggleFullscreen()" title="Toggle fullscreen">
+          <button
+            mat-icon-button
+            (click)="toggleFullscreen()"
+            matTooltip="Toggle fullscreen">
             <mat-icon>fullscreen</mat-icon>
           </button>
-          <button mat-button (click)="toggleAnimations()">
-            {{animationsDisabled ? 'Enable' : 'Disable'}} animations
+          <button
+            mat-icon-button
+            (click)="toggleTokens()"
+            [matTooltip]="state.tokensEnabled ? 'Disable tokens' : 'Enable tokens'">
+            <mat-icon>brush</mat-icon>
           </button>
-          <button mat-button (click)="isDark = !isDark">
-            {{isDark ? 'Light' : 'Dark'}} theme
+          <button
+            mat-icon-button
+            (click)="toggleAnimations()"
+            [matTooltip]="state.animations ? 'Disable animations' : 'Enable animations'">
+            <mat-icon>animation</mat-icon>
           </button>
-          <button mat-button (click)="rippleOptions.disabled = !rippleOptions.disabled">
-            {{rippleOptions.disabled ? 'Enable' : 'Disable'}} ripples
+          <button
+            mat-icon-button
+            (click)="toggleTheme()"
+            [matTooltip]="state.darkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
+            <mat-icon>dark_mode</mat-icon>
           </button>
-          <button mat-button (click)="toggleStrongFocus()">
-            {{strongFocus ? 'Disable strong focus' : 'Enable strong focus'}}
+          <button
+            mat-icon-button
+            (click)="toggleRippleDisabled()"
+            [matTooltip]="state.rippleDisabled ? 'Enable ripples' : 'Disable ripples'">
+            <mat-icon>waves</mat-icon>
           </button>
-          <button mat-button (click)="dir.value = (dir.value === 'rtl' ? 'ltr' : 'rtl')"
-                  title="Toggle between RTL and LTR">
-            {{dir.value.toUpperCase()}}
+          <button
+            mat-icon-button
+            (click)="toggleStrongFocus()"
+            [matTooltip]="state.strongFocusEnabled ? 'Disable strong focus' : 'Enable strong focus'">
+            <mat-icon>accessibility</mat-icon>
           </button>
-          <button mat-button (click)="selectNextDensity()"
-                  title="Use next density scale: {{densityScales[getNextDensityIndex()]}}">
-            Density scale: {{densityScales[this.currentDensityIndex]}}
+          <button
+            mat-icon-button
+            (click)="toggleDirection()"
+            [matTooltip]="state.direction === 'rtl' ? 'Switch to LTR' : 'Switch to RTL'">
+            <mat-icon>keyboard_tab_rtl</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="toggleDensity()"
+            [matTooltip]="'Density: ' + state.density">
+            <mat-icon>grid_on</mat-icon>
           </button>
         </div>
       </div>
