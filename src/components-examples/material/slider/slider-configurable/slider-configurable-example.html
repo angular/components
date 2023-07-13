@@ -41,7 +41,7 @@
 
     <div class="example-label-container">
       <label id="example-name-label" class="example-name-label">Value</label>
-      <label class="example-value-label">{{value}}</label>
+      <label class="example-value-label">{{slider.value}}</label>
     </div>
     <mat-slider
         class="example-margin"
@@ -51,7 +51,7 @@
         [step]="step"
         [discrete]="thumbLabel"
         [showTickMarks]="showTicks">
-      <input matSliderThumb [(ngModel)]="value">
+      <input matSliderThumb [(ngModel)]="value" #slider>
     </mat-slider>
   </mat-card-content>
 </mat-card>
