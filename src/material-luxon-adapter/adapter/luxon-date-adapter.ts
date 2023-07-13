@@ -12,6 +12,8 @@ import {
   DateTime as LuxonDateTime,
   Info as LuxonInfo,
   DateTimeOptions as LuxonDateTimeOptions,
+  CalendarSystem as LuxonCalendarSystem,
+  Settings as LuxonSettings,
 } from 'luxon';
 
 /** Configurable options for the `LuxonDateAdapter`. */
@@ -27,6 +29,12 @@ export interface MatLuxonDateAdapterOptions {
    * Changing this will change how Angular Material components like DatePicker shows start of week.
    */
   firstDayOfWeek: number;
+
+  /**
+   * Sets the output Calendar.
+   * Changing this will change how Angular Material components like DatePicker output dates.
+   */
+  defaultOutputCalendar: LuxonCalendarSystem;
 }
 
 /** InjectionToken for LuxonDateAdapter to configure options. */
@@ -43,6 +51,7 @@ export function MAT_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): MatLuxonDateAdapterOpt
   return {
     useUtc: false,
     firstDayOfWeek: 0,
+    defaultOutputCalendar: 'gregory',
   };
 }
 
@@ -60,6 +69,7 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   private _useUTC: boolean;
   private _firstDayOfWeek: number;
+  private _defaultOutputCalendar: LuxonCalendarSystem;
 
   constructor(
     @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
@@ -71,6 +81,9 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     this._useUTC = !!options?.useUtc;
     this._firstDayOfWeek = options?.firstDayOfWeek || 0;
     this.setLocale(dateLocale || LuxonDateTime.local().locale);
+
+    this._defaultOutputCalendar = options?.defaultOutputCalendar || 'gregory';
+    LuxonSettings.defaultOutputCalendar = this._defaultOutputCalendar;
   }
 
   getYear(date: LuxonDateTime): number {
@@ -91,7 +104,11 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   }
 
   getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
-    return LuxonInfo.months(style, {locale: this.locale});
+    // Adding outputCalendar option, because LuxonInfo doesn't get effected by LuxonSettings
+    return LuxonInfo.months(style, {
+      locale: this.locale,
+      outputCalendar: this._defaultOutputCalendar,
+    });
   }
 
   getDateNames(): string[] {

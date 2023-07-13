@@ -632,6 +632,40 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
   });
 });
 
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defaultOutputCalendar option', () => {
+  let adapter: DateAdapter<DateTime>;
+
+  const calendarExample = 'islamic';
+  Settings.defaultOutputCalendar = calendarExample;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {defaultOutputCalendar: calendarExample},
+        },
+      ],
+    }).compileComponents();
+
+    adapter = TestBed.inject(DateAdapter);
+  }));
+
+  describe('use Islamic calendar', () => {
+    it('should create Luxon date in Islamic calendar', () => {
+      // Use 0 since createDate takes 0-indexed months.
+      expect(adapter.createDate(2017, 0, 2).toLocaleString()).toBe(
+        DateTime.local(2017, JAN, 2).toLocaleString(),
+      );
+    });
+
+    it('should get year name in Islamic calendar', () => {
+      expect(adapter.getYearName(DateTime.local(2017, JAN, 1))).toBe('1438');
+    });
+  });
+});
+
 function assertValidDate(adapter: DateAdapter<DateTime>, d: DateTime | null, valid: boolean) {
   expect(adapter.isDateInstance(d))
     .not.withContext(`Expected ${d} to be a date instance`)
