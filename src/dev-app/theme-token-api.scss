@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
@@ -37,81 +36,13 @@ $theme: mat.define-light-theme((
 // on the page will inherit these tokens.
 html {
   @include matx.theme(
-    matx.token-defaults(mat.m2-tokens-from-theme($theme)),
+    matx.token-defaults(matx.get-m3-tokens()),
     matx.card(),
     matx.checkbox(),
   );
 }
 
-
-// Apply tokens needed for dark theme to the element with `.demo-unicorn-dark-theme`.
-// This ensures that checkboxes within the element inherit the new tokens for dark theme,
-// rather than the ones for light theme tokens set on `body`. Note that we're not setting *all* of
-// the tokens, since many (density, typography, etc) are the same between light and dark theme.
-.demo-unicorn-dark-theme {
-  @include matx.theme(
-    // TODO(mmalerba): In the future this should be configured through `matx.system-colors()`
-    matx.checkbox((theme-type: dark)),
-    matx.card((theme-type: dark)),
-  );
-}
-
-// Apply tokens related to the color palette to any element with `.mat-primary`, `.mat-accent`, or
-// `.mat-warn` This ensures that checkboxes within the element inherit the new tokens for the
-// appropriate palette, rather than the any color that may have been set on an element further up
-// the hierarchy. Again, rather than applying *all* the tokens, we apply only the ones effected by
-// the palette color. With this setup, the palette class need not go on the component itself
-// (e.g. <mat-checkbox class="mat-primary">), it can go on some ancestor element and the tokens will
-// flow down. If multiple elements specify different classes, the closest one to the component will
-// take precedence.
-// (e.g. <div class="mat-warn><mat-checkbox class="mat-primary">I'm primary</mat-checkbox></div>)
-.mat-primary {
-  @include matx.theme(
-    matx.checkbox((
-      color-palette: map.get($theme, color, primary)
-    )),
-  );
-}
-.mat-accent {
-  @include matx.theme(
-    matx.checkbox((
-      color-palette: map.get($theme, color, accent)
-    )),
-  );
-}
-.mat-warn {
-  @include matx.theme(
-    matx.checkbox((
-      color-palette: map.get($theme, color, warn)
-    )),
-  );
-}
-
-// Apply tokens for a completely custom checkbox that appears as an unfilled red box when unchecked,
-// and a filled green box when checked.
-.demo-traffic-light-checkbox {
-  @include matx.theme(
-    matx.checkbox((
-      checkmark-color: transparent,
-      selected-box-color: green,
-      selected-focus-box-color: green,
-      selected-hover-box-color: green,
-      selected-pressed-box-color: green,
-      selected-focus-ring-color: green,
-      selected-hover-ring-color: green,
-      selected-pressed-ring-color: green,
-      unselected-box-color: red,
-      unselected-focus-box-color: red,
-      unselected-hover-box-color: red,
-      unselected-pressed-box-color: red,
-      unselected-focus-ring-color: red,
-      unselected-hover-ring-color: red,
-      unselected-pressed-ring-color: red,
-    ))
-  );
-}
-
-.demo-what-am-i-doing {
-  // Will not produce any output, should result in a warning.
-  @include matx.theme(matx.checkbox());
-}
+// TODO(mmalerba): Figure out a consistent solution for handling dark themes & color palette
+//  variants across M2 & M3 (likely by implementing `matx.system-colors`). As a reference, see the
+//  prior version of this file that showed a possible way to accomplish this in M2:
+//  https://github.com/angular/components/blob/5f5c5160dc20331619fc6729aa2ad78ac84af1c3/src/dev-app/theme-token-api.scss
