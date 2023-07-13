@@ -6,22 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
 import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
-
-import {DevAppDirectionality} from './dev-app-directionality';
-import {DevAppRippleOptions} from './ripple-options';
 import {CommonModule, DOCUMENT} from '@angular/common';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
-
-const isDarkThemeKey = 'ANGULAR_COMPONENTS_DEV_APP_DARK_THEME';
-
-export const ANIMATIONS_STORAGE_KEY = 'ANGULAR_COMPONENTS_ANIMATIONS_DISABLED';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {DevAppDirectionality} from './dev-app-directionality';
+import {DevAppRippleOptions} from './ripple-options';
+import {getAppState, setAppState} from './dev-app-state';
 
 /** Root component for the dev-app demos. */
 @Component({
@@ -37,13 +34,12 @@ export const ANIMATIONS_STORAGE_KEY = 'ANGULAR_COMPONENTS_ANIMATIONS_DISABLED';
     MatListModule,
     MatSidenavModule,
     MatToolbarModule,
+    MatTooltipModule,
     RouterModule,
   ],
 })
 export class DevAppLayout {
-  readonly darkThemeClass = 'demo-unicorn-dark-theme';
-  _isDark = false;
-  strongFocus = false;
+  state = getAppState();
   navItems = [
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
@@ -126,108 +122,79 @@ export class DevAppLayout {
     {name: 'Legacy Tooltip', route: '/legacy-tooltip'},
   ];
 
-  /** Currently selected density scale based on the index. */
-  currentDensityIndex = 0;
-
   /** List of possible global density scale values. */
-  densityScales = [0, -1, -2, -3, 'minimum', 'maximum'];
-
-  /** Whether animations are disabled. */
-  animationsDisabled = localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true';
+  private _densityScales = [0, -1, -2, -3, 'minimum', 'maximum'];
 
   constructor(
     private _element: ElementRef<HTMLElement>,
-    public rippleOptions: DevAppRippleOptions,
-    @Inject(Directionality) public dir: DevAppDirectionality,
-    cdr: ChangeDetectorRef,
+    private _rippleOptions: DevAppRippleOptions,
+    @Inject(Directionality) private _dir: DevAppDirectionality,
+    private _changeDetectorRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private _document: Document,
   ) {
-    dir.change.subscribe(() => cdr.markForCheck());
-    try {
-      const isDark = localStorage.getItem(isDarkThemeKey);
-      if (isDark != null) {
-        // We avoid calling the setter and apply the themes directly here.
-        // This avoids writing the same value, that we just read, back to localStorage.
-        this._isDark = isDark === 'true';
-        this.updateThemeClass(this._isDark);
-      }
-    } catch (error) {
-      console.error(`Failed to read ${isDarkThemeKey} from localStorage: `, error);
-    }
+    this.toggleTheme(this.state.darkTheme);
+    this.toggleStrongFocus(this.state.strongFocusEnabled);
+    this.toggleDensity(Math.max(this._densityScales.indexOf(this.state.density), 0));
+    this.toggleRippleDisabled(this.state.rippleDisabled);
+    this.toggleDirection(this.state.direction);
   }
 
-  get isDark(): boolean {
-    return this._isDark;
-  }
-
-  set isDark(value: boolean) {
-    // Noop if the value is the same as is already set.
-    if (value !== this._isDark) {
-      this._isDark = value;
-      this.updateThemeClass(this._isDark);
-
-      try {
-        localStorage.setItem(isDarkThemeKey, String(value));
-      } catch (error) {
-        console.error(`Failed to write ${isDarkThemeKey} to localStorage: `, error);
-      }
-    }
+  toggleTheme(value = !this.state.darkTheme) {
+    this.state.darkTheme = value;
+    this._document.body.classList.toggle('demo-unicorn-dark-theme', value);
+    setAppState(this.state);
   }
 
   toggleFullscreen() {
-    // Cast to `any`, because the typings don't include the browser-prefixed methods.
-    const elem = this._element.nativeElement.querySelector('.demo-content') as any;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullScreen) {
-      elem.webkitRequestFullScreen();
-    } else if (elem.mozRequestFullScreen) {
-      elem.mozRequestFullScreen();
-    } else if (elem.msRequestFullScreen) {
-      elem.msRequestFullScreen();
-    }
+    this._element.nativeElement.querySelector('.demo-content')?.requestFullscreen();
   }
 
-  updateThemeClass(isDark?: boolean) {
-    if (isDark) {
-      this._document.body.classList.add(this.darkThemeClass);
-    } else {
-      this._document.body.classList.remove(this.darkThemeClass);
-    }
-  }
-
-  toggleStrongFocus() {
-    const strongFocusClass = 'demo-strong-focus';
-
-    this.strongFocus = !this.strongFocus;
-
-    if (this.strongFocus) {
-      this._document.body.classList.add(strongFocusClass);
-    } else {
-      this._document.body.classList.remove(strongFocusClass);
-    }
+  toggleStrongFocus(value = !this.state.strongFocusEnabled) {
+    this.state.strongFocusEnabled = value;
+    this._document.body.classList.toggle('demo-strong-focus', value);
+    setAppState(this.state);
   }
 
   toggleAnimations() {
-    localStorage.setItem(ANIMATIONS_STORAGE_KEY, !this.animationsDisabled + '');
+    this.state.animations = !this.state.animations;
+    setAppState(this.state);
     location.reload();
   }
 
-  /** Gets the index of the next density scale that can be selected. */
-  getNextDensityIndex() {
-    return (this.currentDensityIndex + 1) % this.densityScales.length;
+  toggleDensity(index?: number) {
+    if (index == null) {
+      index = (this._densityScales.indexOf(this.state.density) + 1) % this._densityScales.length;
+    }
+
+    this.state.density = this._densityScales[index];
+    setAppState(this.state);
   }
 
-  /** Selects the next possible density scale. */
-  selectNextDensity() {
-    this.currentDensityIndex = this.getNextDensityIndex();
+  toggleRippleDisabled(value = !this.state.rippleDisabled) {
+    this._rippleOptions.disabled = this.state.rippleDisabled = value;
+    setAppState(this.state);
   }
 
-  /**
-   * Updates the density classes on the host element. Applies a unique class for
-   * a given density scale, so that the density styles are conditionally applied.
-   */
+  toggleDirection(value: Direction = this.state.direction === 'ltr' ? 'rtl' : 'ltr') {
+    if (value !== this._dir.value) {
+      this._dir.value = this.state.direction = value;
+      this._changeDetectorRef.markForCheck();
+      setAppState(this.state);
+    }
+  }
+
+  toggleTokens(value = !this.state.tokensEnabled) {
+    // We need to diff this one since it's a bit more expensive to toggle.
+    if (value !== this.state.tokensEnabled) {
+      (document.getElementById('theme-styles') as HTMLLinkElement).href = value
+        ? 'theme-token-api.css'
+        : 'theme.css';
+      this.state.tokensEnabled = value;
+      setAppState(this.state);
+    }
+  }
+
   getDensityClass() {
-    return `demo-density-${this.densityScales[this.currentDensityIndex]}`;
+    return `demo-density-${this.state.density}`;
   }
 }
