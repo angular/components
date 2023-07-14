@@ -300,6 +300,17 @@ describe('SelectionModel', () => {
     expect(model.selected.length).toBe(1);
   });
 
+  it('should not empty selection when caling setSelection twice with comparable', () => {
+    type Item = {id: number};
+    const compareFn = (x: Item, y: Item) => x.id === y.id;
+    const model = new SelectionModel<Item>(false, [], false, compareFn);
+    model.setSelection({id: 1});
+    expect(model.selected).toEqual([{id: 1}]);
+
+    model.setSelection({id: 1});
+    expect(model.selected).toEqual([{id: 1}]);
+  });
+
   describe('setSelection', () => {
     it('should not deselect an already selected value', () => {
       type Item = {key: number; value: string};
