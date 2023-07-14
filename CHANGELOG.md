@@ -1,3 +1,27 @@
+<a name="16.2.0-next.4"></a>
+# 16.2.0-next.4 "honeycomb-huskey" (2023-07-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1703c274d](https://github.com/angular/components/commit/1703c274d304228326d0ef723fb497085161c8c5) | fix | **clipboard:** not working inside fullscreen element ([#27456](https://github.com/angular/components/pull/27456)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af1a04123](https://github.com/angular/components/commit/af1a0412397c3887c377ceb7bbd03a37ca41ad8a) | feat | **autocomplete:** add input to require selection from the panel ([#27423](https://github.com/angular/components/pull/27423)) |
+| [ff2a3cc6f](https://github.com/angular/components/commit/ff2a3cc6fb8055b10e717d366932f771195a89af) | fix | **autocomplete:** blocking events to other overlays when there are no results ([#27432](https://github.com/angular/components/pull/27432)) |
+| [7c8a79629](https://github.com/angular/components/commit/7c8a796294713c6f102885c94088a9c4713ffdd4) | fix | **autocomplete:** clear selected option if input is cleared ([#27422](https://github.com/angular/components/pull/27422)) |
+| [fd047217d](https://github.com/angular/components/commit/fd047217da86dbfff3d83482b0d4881ecf84cb49) | fix | **expansion:** panel content visible when placed inside a hidden parent ([#27438](https://github.com/angular/components/pull/27438)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b77094dc2](https://github.com/angular/components/commit/b77094dc23e99355b7d6bbc4ed41e4a08bdc544c) | feat | **themeing:** add M3 token values for checkbox and card ([#27409](https://github.com/angular/components/pull/27409)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [95e18c522](https://github.com/angular/components/commit/95e18c522585668fe0017fa90ab8caf89b75ca9a) | fix | avoid component ID collisions between legacy and non-legacy components |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.5"></a>
 # 16.1.5 "turquoise-tortoise" (2023-07-13)
 ### material
