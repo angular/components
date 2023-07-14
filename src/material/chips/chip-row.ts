@@ -30,7 +30,7 @@ import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {MAT_CHIP} from './tokens';
 
 /** Represents an event fired on an individual `mat-chip` when it is edited. */
@@ -183,8 +183,12 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 
     // Defer initializing the input so it has time to be added to the DOM.
     setTimeout(() => {
-      this._getEditInput().initialize(value);
-      this._editStartPending = false;
+      this._ngZone.onStable.pipe(take(1)).subscribe({
+        next: () => {
+          this._getEditInput().initialize(value);
+          this._editStartPending = false;
+        },
+      });
     });
   }
 
