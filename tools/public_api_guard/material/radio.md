@@ -124,7 +124,7 @@ export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
 }
 
 // @public
-export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implements AfterContentInit, ControlValueAccessor {
+export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implements AfterContentInit, OnDestroy, ControlValueAccessor {
     constructor(_changeDetector: ChangeDetectorRef);
     readonly change: EventEmitter<MatRadioChange>;
     // (undocumented)
@@ -141,6 +141,8 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
     get name(): string;
     set name(value: string);
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     onTouched: () => any;
     abstract _radios: QueryList<T>;
     registerOnChange(fn: (value: any) => void): void;
