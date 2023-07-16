@@ -9,7 +9,7 @@
 import {LOCALE_ID} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
-import {DateTime, FixedOffsetZone, Settings} from 'luxon';
+import {CalendarSystem, DateTime, FixedOffsetZone, Settings} from 'luxon';
 import {LuxonDateModule} from './index';
 import {MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
 
@@ -635,8 +635,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
 describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defaultOutputCalendar option', () => {
   let adapter: DateAdapter<DateTime>;
 
-  const calendarExample = 'islamic';
-  Settings.defaultOutputCalendar = calendarExample;
+  const calendarExample: CalendarSystem = 'islamic';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -652,16 +651,18 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defa
     adapter = TestBed.inject(DateAdapter);
   }));
 
-  describe('use Islamic calendar', () => {
-    it('should create Luxon date in Islamic calendar', () => {
+  describe(`use ${calendarExample} calendar`, () => {
+    it(`should create Luxon date in ${calendarExample} calendar`, () => {
       // Use 0 since createDate takes 0-indexed months.
       expect(adapter.createDate(2017, 0, 2).toLocaleString()).toBe(
-        DateTime.local(2017, JAN, 2).toLocaleString(),
+        DateTime.local(2017, JAN, 2, {outputCalendar: calendarExample}).toLocaleString(),
       );
     });
 
-    it('should get year name in Islamic calendar', () => {
-      expect(adapter.getYearName(DateTime.local(2017, JAN, 1))).toBe('1438');
+    it(`should create today in ${calendarExample} calendar`, () => {
+      expect(adapter.today().toLocaleString()).toBe(
+        DateTime.local({outputCalendar: calendarExample}).toLocaleString(),
+      );
     });
   });
 });
