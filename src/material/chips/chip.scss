@@ -184,7 +184,7 @@
 }
 
 // The ripple container should match the bounds of the entire chip.
-.mat-mdc-chip-ripple {
+.mat-ripple.mat-mdc-chip-ripple {
   @include layout-common.fill;
 
   // Disable pointer events for the ripple container and state overlay because the container
