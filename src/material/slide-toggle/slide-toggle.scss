@@ -89,4 +89,9 @@
       transition: none;
     }
   }
+
+  // If our slide-toggle is enabled the cursor on label should appear as a pointer.
+  .mdc-switch:enabled + .mdc-label {
+    cursor: pointer;
+  }
 }
