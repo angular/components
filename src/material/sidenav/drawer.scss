@@ -1,7 +1,10 @@
 @use '@angular/cdk';
 
+@use '../core/tokens/m2/mat/sidenav' as tokens-mat-sidenav;
+@use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/layout-common';
+@use '../core/style/elevation';
 
 $drawer-content-z-index: 1;
 $drawer-side-drawer-z-index: 2;
@@ -24,6 +27,12 @@ $drawer-over-drawer-z-index: 4;
   // We create another stacking context in the '.mat-drawer-content' and in each drawer so that
   // the application content does not get messed up with our own CSS.
   @include drawer-stacking-context();
+
+  @include token-utils.use-tokens(
+    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+    @include token-utils.create-token-slot(color, content-text-color);
+    @include token-utils.create-token-slot(background-color, content-background-color);
+  }
 
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
@@ -74,6 +83,11 @@ $drawer-over-drawer-z-index: 4;
 
   &.mat-drawer-shown {
     visibility: visible;
+
+    @include token-utils.use-tokens(
+      tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, scrim-color);
+    }
   }
 
   .mat-drawer-transition & {
@@ -108,7 +122,20 @@ $drawer-over-drawer-z-index: 4;
 .mat-drawer {
   $high-contrast-border: solid 1px currentColor;
 
+  // The elevation of z-16 is noted in the design specifications.
+  // See https://material.io/design/components/navigation-drawer.html
+  @include elevation.elevation(16);
   @include drawer-stacking-context($drawer-over-drawer-z-index);
+  @include token-utils.create-token-values(
+    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-unthemable-tokens());
+
+  @include token-utils.use-tokens(
+    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(background-color, container-background-color);
+    @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+    @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+  }
 
   display: block;
   position: absolute;
@@ -119,6 +146,7 @@ $drawer-over-drawer-z-index: 4;
   box-sizing: border-box;
   overflow-y: auto; // TODO(kara): revisit scrolling behavior for drawers
   transform: translate3d(-100%, 0, 0);
+
 
   &, [dir='rtl'] &.mat-drawer-end {
     @include cdk.high-contrast(active, off) {
@@ -140,15 +168,34 @@ $drawer-over-drawer-z-index: 4;
   &.mat-drawer-end {
     right: 0;
     transform: translate3d(100%, 0, 0);
+
+    @include token-utils.use-tokens(
+      tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
   [dir='rtl'] & {
-    transform: translate3d(100%, 0, 0);
+    @include token-utils.use-tokens(
+      tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      transform: translate3d(100%, 0, 0);
 
-    &.mat-drawer-end {
-      left: 0;
-      right: auto;
-      transform: translate3d(-100%, 0, 0);
+      &.mat-drawer-end {
+        @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+        @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        left: 0;
+        right: auto;
+        transform: translate3d(-100%, 0, 0);
+      }
     }
   }
 
@@ -161,6 +208,38 @@ $drawer-over-drawer-z-index: 4;
   // animation before the previous one has finished.
   &[style*='visibility: hidden'] {
     display: none;
+  }
+}
+
+.mat-drawer-side {
+  box-shadow: none;
+
+  @include token-utils.use-tokens(
+    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+    @include token-utils.create-token-slot(border-right-color, container-divider-color);
+    border-right-width: 1px;
+    border-right-style: solid;
+
+    &.mat-drawer-end {
+      @include token-utils.create-token-slot(border-left-color, container-divider-color);
+      border-left-width: 1px;
+      border-left-style: solid;
+      border-right: none;
+    }
+
+    [dir='rtl'] & {
+      @include token-utils.create-token-slot(border-left-color, container-divider-color);
+      border-left-width: 1px;
+      border-left-style: solid;
+      border-right: none; // Clears the default LTR border.
+
+      &.mat-drawer-end {
+        @include token-utils.create-token-slot(border-right-color, container-divider-color);
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-left: none;
+      }
+    }
   }
 }
 

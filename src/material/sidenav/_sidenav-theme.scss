@@ -1,77 +1,14 @@
-@use 'sass:color';
-@use 'sass:map';
-@use 'sass:meta';
-@use '../core/style/private';
 @use '../core/theming/theming';
+@use '../core/tokens/m2/mat/sidenav' as tokens-mat-sidenav;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
 
-  $drawer-background-color: theming.get-color-from-palette($background, dialog);
-  $drawer-container-background-color:  theming.get-color-from-palette($background, background);
-  $drawer-push-background-color: theming.get-color-from-palette($background, dialog);
-  $drawer-side-border: solid 1px theming.get-color-from-palette($foreground, divider);
-
-  .mat-drawer-container {
-    background-color: $drawer-container-background-color;
-    color: theming.get-color-from-palette($foreground, text);
-  }
-
-  .mat-drawer {
-    background-color: $drawer-background-color;
-    color: theming.get-color-from-palette($foreground, text);
-
-    &.mat-drawer-push {
-      background-color: $drawer-push-background-color;
-    }
-
-    &:not(.mat-drawer-side) {
-      // The elevation of z-16 is noted in the design specifications.
-      // See https://material.io/design/components/navigation-drawer.html
-      @include private.private-theme-elevation(16, $config);
-    }
-  }
-
-  .mat-drawer-side {
-    border-right: $drawer-side-border;
-
-    &.mat-drawer-end {
-      border-left: $drawer-side-border;
-      border-right: none;
-    }
-  }
-
-  [dir='rtl'] .mat-drawer-side {
-    border-left: $drawer-side-border;
-    border-right: none;
-
-    &.mat-drawer-end {
-      border-left: none;
-      border-right: $drawer-side-border;
-    }
-  }
-
-  .mat-drawer-backdrop.mat-drawer-shown {
-    $opacity: 0.6;
-    $backdrop-color: theming.get-color-from-palette($background, card, $opacity);
-
-    @if (meta.type-of($backdrop-color) == color) {
-      // We use invert() here to have the darken the background color expected to be used. If the
-      // background is light, we use a dark backdrop. If the background is dark,
-      // we use a light backdrop.
-      background-color: color.invert($backdrop-color);
-    }
-    @else {
-      // If we couldn't resolve the backdrop color to a color value, fall back to using
-      // `opacity` to make it opaque since its end value could be a solid color.
-      background-color: $backdrop-color;
-      opacity: $opacity;
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-color-tokens($config));
   }
 }
 
