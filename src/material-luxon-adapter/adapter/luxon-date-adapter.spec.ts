@@ -9,7 +9,7 @@
 import {LOCALE_ID} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
-import {DateTime, FixedOffsetZone, Settings} from 'luxon';
+import {CalendarSystem, DateTime, FixedOffsetZone, Settings} from 'luxon';
 import {LuxonDateModule} from './index';
 import {MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
 
@@ -628,6 +628,41 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
     it('should return UTC date when deserializing', () => {
       const date = adapter.deserialize('1985-04-12T23:20:50.52Z')!;
       expect(date.toISO()).toBe(date.toUTC().toISO());
+    });
+  });
+});
+
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defaultOutputCalendar option', () => {
+  let adapter: DateAdapter<DateTime>;
+
+  const calendarExample: CalendarSystem = 'islamic';
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {defaultOutputCalendar: calendarExample},
+        },
+      ],
+    }).compileComponents();
+
+    adapter = TestBed.inject(DateAdapter);
+  }));
+
+  describe(`use ${calendarExample} calendar`, () => {
+    it(`should create Luxon date in ${calendarExample} calendar`, () => {
+      // Use 0 since createDate takes 0-indexed months.
+      expect(adapter.createDate(2017, 0, 2).toLocaleString()).toBe(
+        DateTime.local(2017, JAN, 2, {outputCalendar: calendarExample}).toLocaleString(),
+      );
+    });
+
+    it(`should create today in ${calendarExample} calendar`, () => {
+      expect(adapter.today().toLocaleString()).toBe(
+        DateTime.local({outputCalendar: calendarExample}).toLocaleString(),
+      );
     });
   });
 });
