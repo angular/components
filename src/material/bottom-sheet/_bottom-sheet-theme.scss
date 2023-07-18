@@ -1,26 +1,25 @@
-@use 'sass:map';
-@use '../core/style/private';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
 @use '../core/theming/theming';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/bottom-sheet' as tokens-mat-bottom-sheet;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
 
-  .mat-bottom-sheet-container {
-    @include private.private-theme-elevation(16, $config);
-    background: theming.get-color-from-palette($background, dialog);
-    color: theming.get-color-from-palette($foreground, text);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-bottom-sheet.$prefix,
+      tokens-mat-bottom-sheet.get-color-tokens($config));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
-  .mat-bottom-sheet-container {
-    @include typography-utils.typography-level($config, body-1);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-bottom-sheet.$prefix,
+      tokens-mat-bottom-sheet.get-typography-tokens($config));
   }
 }
 
