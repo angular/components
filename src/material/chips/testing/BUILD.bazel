@@ -19,6 +19,7 @@ ng_test_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
+        "//src/cdk/keycodes",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/chips",

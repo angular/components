@@ -7,7 +7,7 @@
  */
 
 import {getNoKeysSpecifiedError, ModifierKeys} from '@angular/cdk/testing';
-import {PERIOD} from '@angular/cdk/keycodes';
+import {COMMA, PERIOD} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
 
@@ -21,6 +21,11 @@ const incrementalInputTypes = new Set([
   'tel',
   'url',
 ]);
+
+/** Characters whose key code doesn't match their character code. */
+const KEYCODE_MISMATCHES: Record<string, number> = {
+  ',': COMMA,
+};
 
 /**
  * Checks whether the given Element is a text input element.
@@ -78,7 +83,12 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
   const keys: {keyCode?: number; key?: string}[] = rest
     .map(k =>
       typeof k === 'string'
-        ? k.split('').map(c => ({keyCode: c.toUpperCase().charCodeAt(0), key: c}))
+        ? k.split('').map(c => ({
+            keyCode: KEYCODE_MISMATCHES.hasOwnProperty(c)
+              ? KEYCODE_MISMATCHES[c]
+              : c.toUpperCase().charCodeAt(0),
+            key: c,
+          }))
         : [k],
     )
     .reduce((arr, k) => arr.concat(k), []);
