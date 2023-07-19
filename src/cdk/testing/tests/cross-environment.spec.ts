@@ -209,6 +209,12 @@ export function crossEnvironmentSpecs(
       expect(await specialKey.text()).toBe('enter');
     });
 
+    it('should send comma key', async () => {
+      const specialKey = await harness.specaialKey();
+      await harness.sendComma();
+      expect(await specialKey.text()).toBe(',');
+    });
+
     it('should send alt+j key', async () => {
       const specialKey = await harness.specaialKey();
       await harness.sendAltJ();
