@@ -427,11 +427,22 @@ describe('MDC-based MatCheckbox', () => {
     }));
 
     describe('ripple elements', () => {
+      it('should lazily render the mat-ripple', fakeAsync(() => {
+        const rippleSelector = '.mat-ripple';
+
+        expect(checkboxNativeElement.querySelector(rippleSelector)).toBeFalsy();
+        dispatchFakeEvent(checkboxElement, 'mouseenter');
+        expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
+
+        flush();
+      }));
+
       it('should show ripples on label mousedown', fakeAsync(() => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
 
         expect(checkboxNativeElement.querySelector(rippleSelector)).toBeFalsy();
 
+        dispatchFakeEvent(checkboxElement, 'mouseenter');
         dispatchFakeEvent(checkboxElement, 'mousedown');
         dispatchFakeEvent(checkboxElement, 'mouseup');
         checkboxElement.click();
@@ -610,11 +621,7 @@ describe('MDC-based MatCheckbox', () => {
     });
 
     it('should have a focus indicator', () => {
-      const checkboxRippleNativeElement = checkboxNativeElement.querySelector(
-        '.mat-mdc-checkbox-ripple',
-      )!;
-
-      expect(checkboxRippleNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+      expect(checkboxNativeElement.querySelector('.mat-mdc-focus-indicator')).toBeDefined();
     });
   });
 

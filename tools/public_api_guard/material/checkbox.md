@@ -14,6 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
 import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -23,6 +24,7 @@ import * as i0 from '@angular/core';
 import * as i3 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { MatRippleLoader } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { Provider } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
@@ -68,7 +70,7 @@ export class MatCheckbox extends _MatCheckboxBase<MatCheckboxChange> implements 
 }
 
 // @public (undocumented)
-export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, CanDisableRipple, FocusableOption {
+export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, CanDisableRipple, FocusableOption, DoCheck {
     constructor(idPrefix: string, elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
     protected abstract _animationClasses: {
         uncheckedToChecked: string;
@@ -86,6 +88,7 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     readonly change: EventEmitter<E>;
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;
+    _checkbox: ElementRef<HTMLElement>;
     get checked(): boolean;
     set checked(value: BooleanInput);
     protected abstract _createChangeEvent(isChecked: boolean): E;
@@ -109,6 +112,8 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
+    ngDoCheck(): void;
+    // (undocumented)
     protected _ngZone: NgZone;
     // (undocumented)
     _onBlur(): void;
@@ -125,7 +130,9 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     get required(): boolean;
     set required(value: BooleanInput);
     // @deprecated
-    ripple: MatRipple;
+    get ripple(): MatRipple;
+    set ripple(v: MatRipple);
+    _rippleLoader: MatRippleLoader;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     toggle(): void;

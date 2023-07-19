@@ -13,9 +13,11 @@ import {
   ChangeDetectorRef,
   Component,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -31,6 +33,7 @@ import {
   CanDisableRipple,
   HasTabIndex,
   MatRipple,
+  MatRippleLoader,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
@@ -104,7 +107,8 @@ export abstract class _MatCheckboxBase<E>
     CanDisable,
     HasTabIndex,
     CanDisableRipple,
-    FocusableOption
+    FocusableOption,
+    DoCheck
 {
   /** Focuses the checkbox. */
   abstract focus(origin?: FocusOrigin): void;
@@ -180,12 +184,26 @@ export abstract class _MatCheckboxBase<E>
   /** The native `<label>` element */
   @ViewChild('label') _labelElement: ElementRef<HTMLInputElement>;
 
+  /** The mdc-checkbox element that wraps the `<input type="checkbox">` */
+  @ViewChild('checkbox') _checkbox: ElementRef<HTMLElement>;
+
   /**
    * Reference to the MatRipple instance of the checkbox.
    * @deprecated Considered an implementation detail. To be removed.
    * @breaking-change 17.0.0
    */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  get ripple(): MatRipple {
+    return this._rippleLoader?.getRipple(this._elementRef.nativeElement)!;
+  }
+  set ripple(v: MatRipple) {
+    this._rippleLoader?.attachRipple(this._elementRef.nativeElement, v);
+  }
+
+  /**
+   * Handles the lazy creation of the MatButton ripple.
+   * Used to improve initial load time of large applications.
+   */
+  _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
@@ -217,6 +235,21 @@ export abstract class _MatCheckboxBase<E>
 
   ngAfterViewInit() {
     this._syncIndeterminate(this._indeterminate);
+
+    this._rippleLoader?.configureRipple(this._checkbox.nativeElement, {
+      className: 'mat-mdc-checkbox-ripple',
+      centered: true,
+      disabled: this.disableRipple || this.disabled,
+    });
+  }
+
+  ngDoCheck(): void {
+    if (this._checkbox) {
+      this._rippleLoader.setDisabled(
+        this._checkbox.nativeElement,
+        this.disableRipple || this.disabled,
+      );
+    }
   }
 
   /** Whether the checkbox is checked. */
