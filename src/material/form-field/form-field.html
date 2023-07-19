@@ -10,17 +10,13 @@
     as part of the label, and we don't want to spend resources on walking through projected content
     to set `aria-hidden`. Nor do we want to set `aria-labelledby` on every form control if we could
     simply link the label to the control using the label `for` attribute.
-
-    *Note*: We add aria-owns as a workaround for an issue in JAWS & NVDA where the label isn't
-    read if it comes before the control in the DOM.
   -->
   <label matFormFieldFloatingLabel
          [floating]="_shouldLabelFloat()"
          [monitorResize]="_hasOutline()"
          *ngIf="_hasFloatingLabel()"
          [id]="_labelId"
-         [attr.for]="_control.id"
-         [attr.aria-owns]="_control.id">
+         [attr.for]="_control.id">
     <ng-content select="mat-label"></ng-content>
     <!--
       We set the required marker as a separate element, in order to make it easier to target if
