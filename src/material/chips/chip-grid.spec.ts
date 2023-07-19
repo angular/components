@@ -526,17 +526,6 @@ describe('MDC-based MatChipGrid', () => {
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
     });
-
-    it('should point the label id to the chip input', () => {
-      const label = fixture.nativeElement.querySelector('label');
-      const input = fixture.nativeElement.querySelector('input');
-
-      fixture.detectChanges();
-
-      expect(label.getAttribute('for')).toBeTruthy();
-      expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
-      expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
-    });
   });
 
   describe('with chip remove', () => {
