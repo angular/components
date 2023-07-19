@@ -152,6 +152,10 @@ export class MainComponentHarness extends ComponentHarness {
     return (await this.input()).sendKeys({alt: true}, 'j');
   }
 
+  async sendComma(): Promise<void> {
+    return (await this.input()).sendKeys(',');
+  }
+
   async getTaskStateResult(): Promise<string> {
     await (await this.taskStateTestTrigger()).click();
     // Wait for async tasks to complete since the click caused a
