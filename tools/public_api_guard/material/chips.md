@@ -31,6 +31,7 @@ import { InjectionToken } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatRipple } from '@angular/material/core';
+import { MatRippleLoader } from '@angular/material/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -61,7 +62,7 @@ export const MAT_CHIP_TRAILING_ICON: InjectionToken<unknown>;
 export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
-export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit, AfterContentInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy {
+export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit, AfterContentInit, CanColor, CanDisableRipple, CanDisable, DoCheck, HasTabIndex, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
     protected _allLeadingIcons: QueryList<MatChipAvatar>;
     protected _allRemoveIcons: QueryList<MatChipRemove>;
@@ -90,13 +91,14 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     protected _highlighted: boolean;
     id: string;
     _isBasicChip: boolean;
-    readonly _isRippleCentered = false;
     _isRippleDisabled(): boolean;
     leadingIcon: MatChipAvatar;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -114,7 +116,9 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     readonly removed: EventEmitter<MatChipEvent>;
     removeIcon: MatChipRemove;
     // @deprecated
-    ripple: MatRipple;
+    get ripple(): MatRipple;
+    set ripple(v: MatRipple);
+    _rippleLoader: MatRippleLoader;
     role: string | null;
     trailingIcon: MatChipTrailingIcon;
     get value(): any;
@@ -406,6 +410,8 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     _hasTrailingIcon(): boolean;
     // (undocumented)
     _isEditing: boolean;
+    // (undocumented)
+    _isRippleDisabled(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "*", "[matChipEditInput]", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
