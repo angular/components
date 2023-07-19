@@ -76,6 +76,7 @@ export class MatRippleLoader implements OnDestroy {
       className?: string;
       centered?: boolean;
       disabled?: boolean;
+      trigger?: HTMLElement;
     },
   ): void {
     // Indicates that the ripple has not yet been rendered for this component.
@@ -93,6 +94,10 @@ export class MatRippleLoader implements OnDestroy {
 
     if (config.disabled) {
       host.setAttribute(matRippleDisabled, '');
+    }
+
+    if (config.trigger) {
+      (host as any).matRippleTrigger = config.trigger;
     }
   }
 
@@ -159,7 +164,7 @@ export class MatRippleLoader implements OnDestroy {
       this._animationMode ? this._animationMode : undefined,
     );
     ripple._isInitialized = true;
-    ripple.trigger = host;
+    ripple.trigger = (host as any).matRippleTrigger || host;
     ripple.centered = host.hasAttribute(matRippleCentered);
     ripple.disabled = host.hasAttribute(matRippleDisabled);
     this.attachRipple(host, ripple);

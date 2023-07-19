@@ -31,9 +31,11 @@ import {
   InjectionToken,
   Inject,
   AfterViewInit,
+  inject,
+  DoCheck,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
+import {CanDisableRipple, MatRippleLoader, mixinDisableRipple} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -414,7 +416,7 @@ const _MatButtonToggleBase = mixinDisableRipple(class {});
 })
 export class MatButtonToggle
   extends _MatButtonToggleBase
-  implements OnInit, AfterViewInit, CanDisableRipple, OnDestroy
+  implements OnInit, AfterViewInit, CanDisableRipple, OnDestroy, DoCheck
 {
   private _checked = false;
 
@@ -495,6 +497,12 @@ export class MatButtonToggle
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
     new EventEmitter<MatButtonToggleChange>();
 
+  /**
+   * Handles the lazy creation of the MatButtonToggle ripple.
+   * Used to improve initial load time of large applications.
+   */
+  _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
+
   constructor(
     @Optional() @Inject(MAT_BUTTON_TOGGLE_GROUP) toggleGroup: MatButtonToggleGroup,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -533,6 +541,12 @@ export class MatButtonToggle
 
   ngAfterViewInit() {
     this._focusMonitor.monitor(this._elementRef, true);
+
+    this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {
+      className: 'mat-button-toggle-ripple',
+      disabled: this.disableRipple || this.disabled,
+      trigger: this._buttonElement.nativeElement,
+    });
   }
 
   ngOnDestroy() {
@@ -544,6 +558,15 @@ export class MatButtonToggle
     // on the next tick in order to avoid "changed after checked" errors.
     if (group && group._isSelected(this)) {
       group._syncButtonToggle(this, false, false, true);
+    }
+  }
+
+  ngDoCheck(): void {
+    if (this._buttonElement) {
+      this._rippleLoader.setDisabled(
+        this._elementRef.nativeElement,
+        this.disableRipple || this.disabled,
+      );
     }
   }
 

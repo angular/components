@@ -196,11 +196,20 @@ describe('MatButtonToggle with forms', () => {
       expect(testComponent.modelValue).toBe('green');
     }));
 
+    it('should lazily render the mat-ripple', () => {
+      const groupElement = groupDebugElement.nativeElement;
+
+      expect(groupElement.querySelectorAll('.mat-ripple').length).toBe(0);
+      dispatchMouseEvent(innerButtons[0], 'mouseenter');
+      expect(groupElement.querySelectorAll('.mat-ripple').length).toBe(1);
+    });
+
     it('should show a ripple on label click', () => {
       const groupElement = groupDebugElement.nativeElement;
 
       expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
+      dispatchMouseEvent(innerButtons[0], 'mouseenter');
       dispatchMouseEvent(innerButtons[0], 'mousedown');
       dispatchMouseEvent(innerButtons[0], 'mouseup');
 
@@ -215,6 +224,7 @@ describe('MatButtonToggle with forms', () => {
 
       expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
+      dispatchMouseEvent(innerButtons[0], 'mouseenter');
       dispatchMouseEvent(innerButtons[0], 'mousedown');
       dispatchMouseEvent(innerButtons[0], 'mouseup');
 

@@ -12,12 +12,14 @@ import { CanDisableRipple } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
+import { MatRippleLoader } from '@angular/material/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -32,7 +34,7 @@ export const MAT_BUTTON_TOGGLE_GROUP: InjectionToken<MatButtonToggleGroup>;
 export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
-export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, AfterViewInit, CanDisableRipple, OnDestroy {
+export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, AfterViewInit, CanDisableRipple, OnDestroy, DoCheck {
     constructor(toggleGroup: MatButtonToggleGroup, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _focusMonitor: FocusMonitor, defaultTabIndex: string, defaultOptions?: MatButtonToggleDefaultOptions);
     get appearance(): MatButtonToggleAppearance;
     set appearance(value: MatButtonToggleAppearance);
@@ -54,10 +56,13 @@ export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, Aft
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
+    ngDoCheck(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     _onButtonClick(): void;
+    _rippleLoader: MatRippleLoader;
     tabIndex: number | null;
     value: any;
     // (undocumented)
