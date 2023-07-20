@@ -7,7 +7,20 @@
  */
 
 import {getNoKeysSpecifiedError, ModifierKeys} from '@angular/cdk/testing';
-import {COMMA, PERIOD} from '@angular/cdk/keycodes';
+import {
+  COMMA,
+  NINE,
+  PERIOD,
+  ZERO,
+  OPEN_SQUARE_BRACKET,
+  CLOSE_SQUARE_BRACKET,
+  SINGLE_QUOTE,
+  SEVEN,
+  FIVE,
+  ONE,
+  THREE,
+  FOUR,
+} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
 
@@ -25,6 +38,19 @@ const incrementalInputTypes = new Set([
 /** Characters whose key code doesn't match their character code. */
 const KEYCODE_MISMATCHES: Record<string, number> = {
   ',': COMMA,
+  '.': PERIOD,
+  '[': OPEN_SQUARE_BRACKET,
+  ']': CLOSE_SQUARE_BRACKET,
+  '!': ONE,
+  '#': THREE,
+  '$': FOUR,
+  // These conflict with arrow keys which are fairly common in tests.
+  '(': NINE,
+  ')': ZERO,
+  '&': SEVEN,
+  '%': FIVE,
+  "'": SINGLE_QUOTE,
+  '"': SINGLE_QUOTE,
 };
 
 /**
@@ -112,26 +138,40 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
 
   triggerFocus(element);
 
-  // When we aren't entering the value incrementally, assign it all at once ahead
-  // of time so that any listeners to the key events below will have access to it.
-  if (!enterValueIncrementally) {
-    (element as HTMLInputElement).value = keys.reduce((value, key) => value + (key.key || ''), '');
-  }
+  let nonIncrementalValue = '';
 
   for (const key of keys) {
-    dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers);
-    dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, modifiers);
-    if (isInput && key.key && key.key.length === 1) {
-      if (enterValueIncrementally) {
-        (element as HTMLInputElement | HTMLTextAreaElement).value += key.key;
-        dispatchFakeEvent(element, 'input');
+    const downEvent = dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers);
+
+    // If the handler called `preventDefault` during `keydown`, the browser doesn't insert the
+    // value or dispatch `keypress` and `input` events. `keyup` is still dispatched.
+    if (!downEvent.defaultPrevented) {
+      const pressEvent = dispatchKeyboardEvent(
+        element,
+        'keypress',
+        key.keyCode,
+        key.key,
+        modifiers,
+      );
+
+      // If the handler called `preventDefault` during `keypress`, the browser doesn't insert the
+      // value or dispatch the `input` event. `keyup` is still dispatched.
+      if (!pressEvent.defaultPrevented && isInput && key.key && key.key.length === 1) {
+        if (enterValueIncrementally) {
+          element.value += key.key;
+          dispatchFakeEvent(element, 'input');
+        } else {
+          nonIncrementalValue += key.key;
+        }
       }
     }
+
     dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers);
   }
 
-  // Since we weren't dispatching `input` events while sending the keys, we have to do it now.
-  if (!enterValueIncrementally) {
+  // Since we weren't adding the value or dispatching `input` events, we do it all at once now.
+  if (!enterValueIncrementally && nonIncrementalValue.length > 0 && isInput) {
+    element.value = nonIncrementalValue;
     dispatchFakeEvent(element, 'input');
   }
 }

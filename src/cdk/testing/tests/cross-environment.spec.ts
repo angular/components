@@ -204,19 +204,19 @@ export function crossEnvironmentSpecs(
     });
 
     it('should send enter key', async () => {
-      const specialKey = await harness.specaialKey();
+      const specialKey = await harness.specialKey();
       await harness.sendEnter();
       expect(await specialKey.text()).toBe('enter');
     });
 
     it('should send comma key', async () => {
-      const specialKey = await harness.specaialKey();
+      const specialKey = await harness.specialKey();
       await harness.sendComma();
       expect(await specialKey.text()).toBe(',');
     });
 
     it('should send alt+j key', async () => {
-      const specialKey = await harness.specaialKey();
+      const specialKey = await harness.specialKey();
       await harness.sendAltJ();
       expect(await specialKey.text()).toBe('alt-j');
     });
@@ -288,6 +288,69 @@ export function crossEnvironmentSpecs(
       expect(element).toBeTruthy();
       expect(await element.getText()).toBe('Has comma inside attribute');
     });
+
+    it(
+      'should prevent the value from changing and dispatch the correct event sequence ' +
+        'when preventDefault is called on an input during `keydown`',
+      async () => {
+        const button = await harness.preventDefaultKeydownButton();
+        const input = await harness.preventDefaultInput();
+        const value = await harness.preventDefaultInputValues();
+
+        await button.click();
+        await input.sendKeys('321');
+
+        expect((await value.text()).split('|')).toEqual([
+          // Event sequence for 3
+          'keydown - 3 - <empty>',
+          'keypress - 3 - <empty>',
+          'input - <none> - 3',
+          'keyup - 3 - 3',
+
+          // Event sequence for 2 which calls preventDefault
+          'keydown - 2 - 3',
+          'keyup - 2 - 3',
+
+          // Event sequence for 1
+          'keydown - 1 - 3',
+          'keypress - 1 - 3',
+          'input - <none> - 31',
+          'keyup - 1 - 31',
+        ]);
+      },
+    );
+
+    it(
+      'should prevent the value from changing and dispatch the correct event sequence ' +
+        'when preventDefault is called on an input during `keypress`',
+      async () => {
+        const button = await harness.preventDefaultKeypressButton();
+        const input = await harness.preventDefaultInput();
+        const value = await harness.preventDefaultInputValues();
+
+        await button.click();
+        await input.sendKeys('321');
+
+        expect((await value.text()).split('|')).toEqual([
+          // Event sequence for 3
+          'keydown - 3 - <empty>',
+          'keypress - 3 - <empty>',
+          'input - <none> - 3',
+          'keyup - 3 - 3',
+
+          // Event sequence for 2 which calls preventDefault
+          'keydown - 2 - 3',
+          'keypress - 2 - 3',
+          'keyup - 2 - 3',
+
+          // Event sequence for 1
+          'keydown - 1 - 3',
+          'keypress - 1 - 3',
+          'input - <none> - 31',
+          'keyup - 1 - 31',
+        ]);
+      },
+    );
 
     if (!skipAsyncTests) {
       it('should wait for async operation to complete', async () => {

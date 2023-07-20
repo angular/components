@@ -50,6 +50,21 @@
 
   <input id="number-input" type="number" aria-label="Enter a number" [formControl]="numberControl">
   <div id="number-input-value">Number value: {{numberControl.value}}</div>
+
+  <button
+    id="prevent-default-keydown"
+    (click)="preventDefaultEventType = 'keydown'">Prevent default on keydown</button>
+  <button
+    id="prevent-default-keypress"
+    (click)="preventDefaultEventType = 'keypress'">Prevent default on keypress</button>
+  <input
+    id="prevent-default-input"
+    type="text"
+    (keydown)="preventDefaultListener($event)"
+    (keypress)="preventDefaultListener($event)"
+    (input)="preventDefaultListener($event)"
+    (keyup)="preventDefaultListener($event)">
+  <div id="prevent-default-input-values">{{preventDefaultValues.join('|')}}</div>
 </div>
 <div class="subcomponents">
   <test-sub class="test-special" title="test tools" [items]="testTools"></test-sub>

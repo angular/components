@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER, TWO} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {FormControl} from '@angular/forms';
 import {
@@ -48,6 +48,8 @@ export class TestMainComponent implements OnDestroy {
   clickResult = {x: -1, y: -1};
   rightClickResult = {x: -1, y: -1, button: -1};
   numberControl = new FormControl<number | null>(null);
+  preventDefaultEventType: string | null = null;
+  preventDefaultValues: string[] = [];
 
   @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
   @ViewChild('taskStateResult') taskStateResultElement: ElementRef<HTMLElement>;
@@ -115,6 +117,18 @@ export class TestMainComponent implements OnDestroy {
 
   onCustomEvent(event: any) {
     this.customEventData = JSON.stringify({message: event.message, value: event.value});
+  }
+
+  preventDefaultListener(event: Event) {
+    // `input` events don't have a key
+    const key = event.type === 'input' ? '<none>' : (event as KeyboardEvent).key;
+    const input = event.target as HTMLInputElement;
+
+    if (event.type === this.preventDefaultEventType && (event as KeyboardEvent).keyCode === TWO) {
+      event.preventDefault();
+    }
+
+    this.preventDefaultValues.push(`${event.type} - ${key} - ${input.value || '<empty>'}`);
   }
 
   runTaskOutsideZone() {

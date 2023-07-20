@@ -39,6 +39,10 @@ export class MainComponentHarness extends ComponentHarness {
   readonly multiSelectChangeEventCounter = this.locatorFor('#multi-select-change-counter');
   readonly numberInput = this.locatorFor('#number-input');
   readonly numberInputValue = this.locatorFor('#number-input-value');
+  readonly preventDefaultInput = this.locatorFor('#prevent-default-input');
+  readonly preventDefaultInputValues = this.locatorFor('#prevent-default-input-values');
+  readonly preventDefaultKeydownButton = this.locatorFor('#prevent-default-keydown');
+  readonly preventDefaultKeypressButton = this.locatorFor('#prevent-default-keypress');
   readonly contextmenuTestResult = this.locatorFor('.contextmenu-test-result');
   readonly contenteditable = this.locatorFor('#contenteditable');
   // Allow null for element
@@ -68,7 +72,7 @@ export class MainComponentHarness extends ComponentHarness {
     SubComponentHarness.with({title: 'List of test tools', itemCount: 4}),
   );
   readonly lastList = this.locatorFor(SubComponentHarness.with({selector: ':last-child'}));
-  readonly specaialKey = this.locatorFor('.special-key');
+  readonly specialKey = this.locatorFor('.special-key');
 
   readonly requiredAncestorRestrictedSubcomponent = this.locatorFor(
     SubComponentHarness.with({ancestor: '.other'}),
