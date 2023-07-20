@@ -1,105 +1,59 @@
 @use 'sass:map';
-@use '../core/density/private/compatibility';
-@use '../core/style/variables';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use './toolbar-variables';
-
-@mixin _height($height) {
-  .mat-toolbar-multiple-rows {
-    min-height: $height;
-  }
-  .mat-toolbar-row, .mat-toolbar-single-row {
-    height: $height;
-  }
-}
+@use '../core/tokens/m2/mat/toolbar' as tokens-mat-toolbar;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
 @mixin _palette-styles($palette) {
-  background: theming.get-color-from-palette($palette);
-  color: theming.get-color-from-palette($palette, default-contrast);
-}
-
-@mixin _form-field-overrides {
-  .mat-form-field-underline,
-  .mat-form-field-ripple,
-  .mat-focused .mat-form-field-ripple {
-    background-color: currentColor;
-  }
-
-  .mat-form-field-label,
-  .mat-focused .mat-form-field-label,
-  .mat-select-value,
-  .mat-select-arrow,
-  .mat-form-field.mat-focused .mat-select-arrow {
-    color: inherit;
-  }
-
-  .mat-input-element {
-    caret-color: currentColor;
-  }
+  @include token-utils.create-token-values(
+    tokens-mat-toolbar.$prefix,
+    tokens-mat-toolbar.private-get-color-palette-color-tokens(
+      $background-color: theming.get-color-from-palette($palette),
+      $text-color: theming.get-color-from-palette($palette, default-contrast)
+    )
+  );
 }
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-toolbar.$prefix,
+      tokens-mat-toolbar.get-color-tokens($config));
+  }
 
   .mat-toolbar {
-    background: theming.get-color-from-palette($background, app-bar);
-    color: theming.get-color-from-palette($foreground, text);
-
     &.mat-primary {
-      @include _palette-styles($primary);
+      @include _palette-styles(map.get($config, primary));
     }
 
     &.mat-accent {
-      @include _palette-styles($accent);
+      @include _palette-styles(map.get($config, accent));
     }
 
     &.mat-warn {
-      @include _palette-styles($warn);
+      @include _palette-styles(map.get($config, warn));
     }
-
-    @include _form-field-overrides;
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
-  .mat-toolbar,
-  .mat-toolbar h1,
-  .mat-toolbar h2,
-  .mat-toolbar h3,
-  .mat-toolbar h4,
-  .mat-toolbar h5,
-  .mat-toolbar h6 {
-    @include typography-utils.typography-level($config, title);
-    margin: 0;
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-toolbar.$prefix,
+      tokens-mat-toolbar.get-typography-tokens($config));
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $height-desktop: compatibility.private-density-prop-value(
-      toolbar-variables.$desktop-density-config, $density-scale, height);
-  $height-mobile: compatibility.private-density-prop-value(
-      toolbar-variables.$mobile-density-config, $density-scale, height);
 
-  @include compatibility.private-density-legacy-compatibility() {
-    // Set the default height for the toolbar.
-    @include _height($height-desktop);
-
-    // As per specs, toolbars should have a different height in mobile devices. This has been
-    // specified in the old guidelines and is still observable in the new specifications by
-    // looking at the spec images. See: https://material.io/design/components/app-bars-top.html#anatomy
-    @media (variables.$xsmall) {
-      @include _height($height-mobile);
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-toolbar.$prefix,
+      tokens-mat-toolbar.get-density-tokens($density-scale));
   }
 }
 
