@@ -1,16 +1,15 @@
-// This contains all of the styles for the badge
-// rather than just the color/theme because of
-// no style sheet support for directives.
 @use 'sass:color';
 @use 'sass:map';
-@use 'sass:meta';
 @use 'sass:math';
 @use '@angular/cdk';
 
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
+@use '../core/tokens/m2/mat/badge' as tokens-mat-badge;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
+// TODO(crisbeto): some of these variables aren't used anymore and should be deleted.
 $font-size: 12px;
 $font-weight: 600;
 $default-size: 22px !default;
@@ -18,79 +17,71 @@ $small-size: $default-size - 6;
 $large-size: $default-size + 6;
 $_badge-structure-emitted: false !default;
 
+// Internally there are some builds that throw an error if they can't figure out the values
+// of CSS variables during compliation. This flag temporarily enables fallbacks for these builds.
+// Eventually we should clean them up.
+$_emit-fallback-vars: true;
+
 // Mixin for building offset given different sizes
-@mixin _badge-size($size) {
+@mixin _badge-size($size, $font-size-token) {
   // This mixin isn't used in the context of a theme so we can disable the ampersand check.
   // stylelint-disable material/no-ampersand-beyond-selector-start
   .mat-badge-content {
     width: $size;
     height: $size;
     line-height: $size;
-  }
 
-  &.mat-badge-above {
-    .mat-badge-content {
-      top: math.div(-$size, 2);
+    @if ($font-size-token) {
+      @include token-utils.use-tokens(tokens-mat-badge.$prefix,
+        tokens-mat-badge.get-token-slots()) {
+        @include token-utils.create-token-slot(font-size, $font-size-token, $_emit-fallback-vars);
+      }
     }
   }
 
-  &.mat-badge-below {
-    .mat-badge-content {
-      bottom: math.div(-$size, 2);
-    }
+  &.mat-badge-above .mat-badge-content {
+    top: math.div(-$size, 2);
   }
 
-  &.mat-badge-before {
-    .mat-badge-content {
-      left: -$size;
-    }
+  &.mat-badge-below .mat-badge-content {
+    bottom: math.div(-$size, 2);
   }
 
-  [dir='rtl'] &.mat-badge-before {
-    .mat-badge-content {
-      left: auto;
-      right: -$size;
-    }
+  &.mat-badge-before .mat-badge-content {
+    left: -$size;
   }
 
-  &.mat-badge-after {
-    .mat-badge-content {
-      right: -$size;
-    }
+  [dir='rtl'] &.mat-badge-before .mat-badge-content {
+    left: auto;
+    right: -$size;
   }
 
-  [dir='rtl'] &.mat-badge-after {
-    .mat-badge-content {
-      right: auto;
-      left: -$size;
-    }
+  &.mat-badge-after .mat-badge-content {
+    right: -$size;
+  }
+
+  [dir='rtl'] &.mat-badge-after .mat-badge-content {
+    right: auto;
+    left: -$size;
   }
 
   &.mat-badge-overlap {
-    &.mat-badge-before {
-      .mat-badge-content {
-        left: math.div(-$size, 2);
-      }
+    &.mat-badge-before .mat-badge-content {
+      left: math.div(-$size, 2);
     }
 
-    [dir='rtl'] &.mat-badge-before {
-      .mat-badge-content {
-        left: auto;
-        right: math.div(-$size, 2);
-      }
+    [dir='rtl'] &.mat-badge-before .mat-badge-content {
+      left: auto;
+      right: math.div(-$size, 2);
     }
 
-    &.mat-badge-after {
-      .mat-badge-content {
-        right: math.div(-$size, 2);
-      }
+    &.mat-badge-after .mat-badge-content {
+      right: math.div(-$size, 2);
     }
 
-    [dir='rtl'] &.mat-badge-after {
-      .mat-badge-content {
-        right: auto;
-        left: math.div(-$size, 2);
-      }
+    [dir='rtl'] &.mat-badge-after .mat-badge-content {
+      right: auto;
+      left: math.div(-$size, 2);
     }
   }
   // stylelint-enable
@@ -101,19 +92,13 @@ $_badge-structure-emitted: false !default;
 @mixin _badge-structure {
   .mat-badge {
     position: relative;
-  }
 
-  // The badge should make sure its host is overflow visible so that the badge content
-  // can be rendered outside of the element. Some components such as <mat-icon> explicitly
-  // style `overflow: hidden` so this requires extra specificity so that it does not
-  // depend on style load order.
-  .mat-badge.mat-badge {
-    overflow: visible;
-  }
-
-  .mat-badge-hidden {
-    .mat-badge-content {
-      display: none;
+    // The badge should make sure its host is overflow visible so that the badge content
+    // can be rendered outside of the element. Some components such as <mat-icon> explicitly
+    // style `overflow: hidden` so this requires extra specificity so that it does not
+    // depend on style load order.
+    &.mat-badge {
+      overflow: visible;
     }
   }
 
@@ -128,6 +113,30 @@ $_badge-structure-emitted: false !default;
     white-space: nowrap;
     text-overflow: ellipsis;
     pointer-events: none;
+
+    @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, background-color);
+      @include token-utils.create-token-slot(color, text-color);
+      @include token-utils.create-token-slot(font-family, text-font, $_emit-fallback-vars);
+      @include token-utils.create-token-slot(font-size, text-size, $_emit-fallback-vars);
+      @include token-utils.create-token-slot(font-weight, text-weight, $_emit-fallback-vars);
+    }
+
+    @include cdk.high-contrast(active, off) {
+      outline: solid 1px;
+      border-radius: 0;
+    }
+  }
+
+  .mat-badge-disabled .mat-badge-content {
+    @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+      @include token-utils.create-token-slot(color, disabled-state-text-color);
+    }
+  }
+
+  .mat-badge-hidden .mat-badge-content {
+    display: none;
   }
 
   .ng-animate-disabled .mat-badge-content,
@@ -143,15 +152,15 @@ $_badge-structure-emitted: false !default;
   }
 
   .mat-badge-small {
-    @include _badge-size($small-size);
+    @include _badge-size($small-size, small-size-text-size);
   }
 
   .mat-badge-medium {
-    @include _badge-size($default-size);
+    @include _badge-size($default-size, null);
   }
 
   .mat-badge-large {
-    @include _badge-size($large-size);
+    @include _badge-size($large-size, large-size-text-size);
   }
 }
 
@@ -159,73 +168,30 @@ $_badge-structure-emitted: false !default;
   $config: theming.get-color-config($config-or-theme);
   $accent: map.get($config, accent);
   $warn: map.get($config, warn);
-  $primary: map.get($config, primary);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
 
-  .mat-badge-content {
-    color: theming.get-color-from-palette($primary, default-contrast);
-    background: theming.get-color-from-palette($primary);
-
-    @include cdk.high-contrast(active, off) {
-      outline: solid 1px;
-      border-radius: 0;
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.get-color-tokens($config));
   }
 
   .mat-badge-accent {
-    .mat-badge-content {
-      background: theming.get-color-from-palette($accent);
-      color: theming.get-color-from-palette($accent, default-contrast);
-    }
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.private-get-color-palette-color-tokens($accent));
   }
 
   .mat-badge-warn {
-    .mat-badge-content {
-      color: theming.get-color-from-palette($warn, default-contrast);
-      background: theming.get-color-from-palette($warn);
-    }
-  }
-
-  .mat-badge-disabled {
-    .mat-badge-content {
-      $app-background: theming.get-color-from-palette($background, 'background');
-      $badge-color: theming.get-color-from-palette($foreground, disabled-button);
-
-      // The disabled color usually has some kind of opacity, but because the badge is overlayed
-      // on top of something else, it won't look good if it's opaque. If it is a color *type*,
-      // we convert it into a solid color by taking the opacity from the rgba value and using
-      // the value to determine the percentage of the background to put into foreground when
-      // mixing the colors together.
-      @if (meta.type-of($badge-color) == color and meta.type-of($app-background) == color) {
-        $badge-opacity: opacity($badge-color);
-        background: color.mix($app-background, rgba($badge-color, 1), (1 - $badge-opacity) * 100%);
-      }
-      @else {
-        background: $badge-color;
-      }
-
-      color: theming.get-color-from-palette($foreground, disabled-text);
-    }
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.private-get-color-palette-color-tokens($warn));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
-  .mat-badge-content {
-    font-weight: $font-weight;
-    font-size: $font-size;
-    font-family: typography-utils.font-family($config);
-  }
 
-  .mat-badge-small .mat-badge-content {
-    // Set the font size to 75% of the original.
-    font-size: $font-size * 0.75;
-  }
-
-  .mat-badge-large .mat-badge-content {
-    font-size: $font-size * 2;
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.get-typography-tokens($config));
   }
 }
 
