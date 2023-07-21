@@ -1,16 +1,14 @@
-@use 'sass:map';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $foreground: map.get($config, foreground);
 
-  .mat-divider {
-    border-top-color: theming.get-color-from-palette($foreground, divider);
-  }
-
-  .mat-divider-vertical {
-    border-right-color: theming.get-color-from-palette($foreground, divider);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-divider.$prefix,
+            tokens-mat-divider.get-color-tokens($config));
   }
 }
 
