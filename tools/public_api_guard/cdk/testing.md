@@ -263,6 +263,8 @@ export enum TestKey {
     // (undocumented)
     BACKSPACE = 0,
     // (undocumented)
+    COMMA = 30,
+    // (undocumented)
     CONTROL = 4,
     // (undocumented)
     DELETE = 16,

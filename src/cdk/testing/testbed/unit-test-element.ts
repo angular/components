@@ -61,6 +61,7 @@ const keyMap = {
   [TestKey.F11]: {keyCode: keyCodes.F11, key: 'F11'},
   [TestKey.F12]: {keyCode: keyCodes.F12, key: 'F12'},
   [TestKey.META]: {keyCode: keyCodes.META, key: 'Meta'},
+  [TestKey.COMMA]: {keyCode: keyCodes.COMMA, key: ','},
 };
 
 /** A `TestElement` implementation for unit tests. */
