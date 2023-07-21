@@ -65,6 +65,7 @@ export enum TestKey {
   F11,
   F12,
   META,
+  COMMA, // Commas are a common separator key.
 }
 
 /**

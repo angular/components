@@ -50,6 +50,7 @@ const keyMap = {
   [TestKey.F11]: Key.F11,
   [TestKey.F12]: Key.F12,
   [TestKey.META]: Key.META,
+  [TestKey.COMMA]: ',',
 };
 
 /** Converts a `ModifierKeys` object to a list of Protractor `Key`s. */
