@@ -18,6 +18,10 @@ import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 const ISO_8601_REGEX =
   /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|(?:(?:\+|-)\d{2}:\d{2}))?)?$/;
 
+const DATE_COMPONENT_SEPARATOR_REGEX = /[ \/.:,'"|\\_-]+/;
+
+const FULLY_NUMERIC_DATE_FORMAT_REGEX = /^\d{4}(\d\d){0,2}$/;
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   const valuesArray = Array(length);
@@ -26,6 +30,10 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   }
   return valuesArray;
 }
+
+type DateComponent = 'year' | 'month' | 'day';
+
+const defaultFormatOrder: DateComponent[] = ['month', 'day', 'year'];
 
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
@@ -128,10 +136,367 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   parse(value: any, parseFormat?: any): Date | null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
-    if (typeof value == 'number') {
+    if (typeof value === 'number') {
       return new Date(value);
     }
-    return value ? new Date(Date.parse(value)) : null;
+
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value !== 'string') {
+      return new Date(value);
+    }
+
+    let dateParts = (value as string)
+      .trim()
+      .split(DATE_COMPONENT_SEPARATOR_REGEX, 4)
+      .filter(part => !!part);
+
+    if (dateParts.length === 4) {
+      const weekday = dateParts[0].toLocaleLowerCase(this.locale);
+
+      let foundWeekday = false;
+
+      for (const weekdayFormat of ['long', 'short']) {
+        let index = this.getDayOfWeekNames(weekdayFormat as 'long' | 'short').findIndex(
+          d =>
+            d.toLocaleLowerCase(this.locale).replace(DATE_COMPONENT_SEPARATOR_REGEX, '') ===
+            weekday,
+        );
+
+        if (index !== -1) {
+          foundWeekday = true;
+          break;
+        }
+      }
+
+      if (foundWeekday) {
+        // We ignore the weekday
+        dateParts = dateParts.slice(1);
+      } else {
+        // First component isn't a weekday, so we assume the first 3 components are the date
+        dateParts = dateParts.slice(0, 3);
+      }
+    }
+
+    if (dateParts.length === 1) {
+      // No separator found, assuming the format is only digits
+
+      const numericFormat = dateParts[0];
+      // Check if the format is either 4, 6, or 8 digits.
+      if (!FULLY_NUMERIC_DATE_FORMAT_REGEX.test(numericFormat)) {
+        return this.invalid();
+      }
+
+      if (numericFormat.length === 4) {
+        // If the format is of 4 characters, assume <mmdd> / <ddmm>.
+        dateParts = [numericFormat.substring(0, 2), numericFormat.substring(2, 4)];
+      } else if (numericFormat.length === 6) {
+        // If the format is of 6 characters, assume <yymmdd> / <ddmmyy>.
+        dateParts = [
+          numericFormat.substring(0, 2),
+          numericFormat.substring(2, 4),
+          numericFormat.substring(4, 6),
+        ];
+      } else {
+        // If the format is of 8 characters, assume the year is in front or at the end.
+        const localeFormatOrder = this._getLocaleShortFormatOrder();
+        const formatOrders =
+          localeFormatOrder === defaultFormatOrder
+            ? [localeFormatOrder]
+            : [localeFormatOrder, defaultFormatOrder];
+
+        for (const formatOrder of formatOrders) {
+          const yearIndex = formatOrder.findIndex(part => part === 'year');
+          const monthIndex = formatOrder.findIndex(part => part === 'month');
+          if (yearIndex === 0) {
+            const year = parseInt(numericFormat.substring(0, 4), 10);
+            const part1Int = parseInt(numericFormat.substring(4, 6), 10);
+            const part2Int = parseInt(numericFormat.substring(6, 8), 10);
+
+            if (monthIndex === 1 && this._dateComponentsAreValid(year, part1Int - 1, part2Int)) {
+              return this.createDate(year, part1Int - 1, part2Int);
+            }
+
+            if (monthIndex === 2 && this._dateComponentsAreValid(year, part2Int - 1, part1Int)) {
+              return this.createDate(year, part2Int - 1, part1Int);
+            }
+          } else if (yearIndex === 1) {
+            const year = parseInt(numericFormat.substring(2, 6), 10);
+            const part0Int = parseInt(numericFormat.substring(0, 2), 10);
+            const part2Int = parseInt(numericFormat.substring(6, 8), 10);
+
+            if (monthIndex === 0 && this._dateComponentsAreValid(year, part0Int - 1, part2Int)) {
+              return this.createDate(year, part0Int - 1, part2Int);
+            }
+
+            if (monthIndex === 2 && this._dateComponentsAreValid(year, part2Int - 1, part0Int)) {
+              return this.createDate(year, part2Int - 1, part0Int);
+            }
+          } else {
+            const year = parseInt(numericFormat.substring(4, 8), 10);
+            const part0Int = parseInt(numericFormat.substring(0, 2), 10);
+            const part1Int = parseInt(numericFormat.substring(2, 4), 10);
+
+            if (monthIndex === 0 && this._dateComponentsAreValid(year, part0Int - 1, part1Int)) {
+              return this.createDate(year, part0Int - 1, part1Int);
+            }
+
+            if (monthIndex === 1 && this._dateComponentsAreValid(year, part1Int - 1, part0Int)) {
+              return this.createDate(year, part1Int - 1, part0Int);
+            }
+          }
+        }
+      }
+    }
+
+    if (dateParts.length === 2) {
+      // Two parts imply a missing year component, we will set it to the current year.
+
+      const date = new Date();
+      const part0Int = parseInt(dateParts[0], 10);
+      const part1Int = parseInt(dateParts[1], 10);
+
+      if (isNaN(part0Int) && isNaN(part1Int)) {
+        return null;
+      }
+
+      const year = date.getFullYear();
+
+      if (isNaN(part0Int)) {
+        const month = this._getMonthByName(dateParts[0]);
+        return month !== undefined && this._dateComponentsAreValid(year, month, part1Int)
+          ? this.createDate(year, month, part1Int)
+          : this.invalid();
+      }
+
+      if (isNaN(part1Int)) {
+        const month = this._getMonthByName(dateParts[1]);
+        return month !== undefined && this._dateComponentsAreValid(year, month, part0Int)
+          ? this.createDate(year, month, part0Int)
+          : this.invalid();
+      }
+
+      const mdFormatIsValid = this._dateComponentsAreValid(year, part0Int - 1, part1Int);
+      const dmFormatIsValid = this._dateComponentsAreValid(year, part1Int - 1, part0Int);
+
+      if (mdFormatIsValid && dmFormatIsValid) {
+        const formatOrder = this._getLocaleShortFormatOrder();
+        const monthIndex = formatOrder.indexOf('month');
+        const dayIndex = formatOrder.indexOf('day');
+        if (monthIndex < dayIndex) {
+          return this.createDate(year, part0Int - 1, part1Int);
+        }
+        return this.createDate(year, part1Int - 1, part0Int);
+      } else if (mdFormatIsValid) {
+        return this.createDate(year, part0Int - 1, part1Int);
+      } else if (dmFormatIsValid) {
+        return this.createDate(year, part1Int - 1, part0Int);
+      } else {
+        return this.invalid();
+      }
+    } else {
+      const part0Int = parseInt(dateParts[0], 10);
+      const part1Int = parseInt(dateParts[1], 10);
+      const part2Int = parseInt(dateParts[2], 10);
+
+      if (
+        (isNaN(part0Int) && isNaN(part1Int)) ||
+        (isNaN(part0Int) && isNaN(part2Int)) ||
+        (isNaN(part1Int) && isNaN(part2Int))
+      ) {
+        return this.invalid();
+      }
+
+      if (isNaN(part0Int) || isNaN(part1Int) || isNaN(part2Int)) {
+        // One of the date components is assumed to be the month written out.
+        if (isNaN(part0Int)) {
+          // Format is <M d y>
+          const month = this._getMonthByName(dateParts[0]);
+          if (month === undefined) {
+            return this.invalid();
+          }
+
+          const year = part2Int < 100 ? part2Int + 2000 : part2Int;
+
+          return this._dateComponentsAreValid(year, month, part1Int)
+            ? this.createDate(year, month, part1Int)
+            : this.invalid();
+        } else if (isNaN(part1Int)) {
+          // Format is <y M d> or <d M y>
+          const month = this._getMonthByName(dateParts[1]);
+          if (month === undefined) {
+            return this.invalid();
+          }
+
+          if (part0Int > 99) {
+            return this._dateComponentsAreValid(part0Int, month, part2Int)
+              ? this.createDate(part0Int, month, part2Int)
+              : this.invalid();
+          } else if (part2Int > 99) {
+            return this._dateComponentsAreValid(part2Int, month, part0Int)
+              ? this.createDate(part2Int, month, part0Int)
+              : this.invalid();
+          }
+
+          const ymdFormatIsValid = this._dateComponentsAreValid(part0Int + 2000, month, part2Int);
+          const dmyFormatIsValid = this._dateComponentsAreValid(part2Int + 2000, month, part0Int);
+
+          if (ymdFormatIsValid && dmyFormatIsValid) {
+            const formatOrder = this._getLocaleLongFormatOrder();
+            const dayIndex = formatOrder.indexOf('day');
+            const yearIndex = formatOrder.indexOf('year');
+            if (dayIndex < yearIndex) {
+              return this.createDate(part0Int + 2000, month, part2Int);
+            }
+            return this.createDate(part2Int + 2000, month, part0Int);
+          } else if (ymdFormatIsValid) {
+            return this.createDate(part0Int + 2000, month, part2Int);
+          } else if (dmyFormatIsValid) {
+            return this.createDate(part2Int + 2000, month, part0Int);
+          }
+          return this.invalid();
+        } else {
+          // Format is <y d M>
+          const month = this._getMonthByName(dateParts[2]);
+          if (month === undefined) {
+            return this.invalid();
+          }
+
+          const year = part0Int < 100 ? part0Int + 2000 : part0Int;
+
+          return this._dateComponentsAreValid(year, month, part1Int)
+            ? this.createDate(year, month, part1Int)
+            : this.invalid();
+        }
+      }
+
+      // We are dealing with a set of 3 numbers.
+
+      if (
+        (part0Int > 31 && part1Int > 31) ||
+        (part0Int > 31 && part2Int > 31) ||
+        (part1Int > 31 && part2Int > 31)
+      ) {
+        // Eliminate a date that looks like it has at least two years.
+        return this.invalid();
+      }
+
+      if (part0Int > 31) {
+        // Format is <y m d> or <y d m>
+        if (part1Int > 12) {
+          return this._dateComponentsAreValid(part0Int, part2Int - 1, part1Int)
+            ? this.createDate(part0Int, part2Int - 1, part1Int)
+            : this.invalid();
+        } else if (part2Int > 12) {
+          return this._dateComponentsAreValid(part0Int, part1Int - 1, part2Int)
+            ? this.createDate(part0Int, part1Int - 1, part2Int)
+            : this.invalid();
+        } else {
+          const ymdFormatIsValid = this._dateComponentsAreValid(part0Int, part1Int - 1, part2Int);
+          const dmyFormatIsValid = this._dateComponentsAreValid(part0Int, part2Int - 1, part1Int);
+
+          if (ymdFormatIsValid && dmyFormatIsValid) {
+            const formatOrder = this._getLocaleShortFormatOrder();
+            const monthIndex = formatOrder.indexOf('month');
+            const dayIndex = formatOrder.indexOf('day');
+            if (monthIndex < dayIndex) {
+              return this.createDate(part0Int, part1Int - 1, part2Int);
+            }
+            return this.createDate(part0Int, part2Int - 1, part1Int);
+          } else if (ymdFormatIsValid) {
+            return this.createDate(part0Int, part1Int - 1, part2Int);
+          } else if (dmyFormatIsValid) {
+            return this.createDate(part0Int, part2Int - 1, part1Int);
+          }
+          return this.invalid();
+        }
+      } else if (part1Int > 31) {
+        // Format is <m y d>, as the format <d y m> does not seem to be used anywhere.
+        return this._dateComponentsAreValid(part1Int, part0Int - 1, part2Int)
+          ? this.createDate(part1Int, part0Int - 1, part2Int)
+          : this.invalid();
+      } else if (part2Int > 31) {
+        // Format is <m d y> or <d m y>
+        if (part0Int > 12) {
+          return this._dateComponentsAreValid(part2Int, part1Int - 1, part0Int)
+            ? this.createDate(part2Int, part1Int - 1, part0Int)
+            : this.invalid();
+        } else if (part1Int > 12) {
+          return this._dateComponentsAreValid(part2Int, part0Int - 1, part1Int)
+            ? this.createDate(part2Int, part0Int - 1, part1Int)
+            : this.invalid();
+        } else {
+          const mdyFormatIsValid = this._dateComponentsAreValid(part2Int, part0Int - 1, part1Int);
+          const dmyFormatIsValid = this._dateComponentsAreValid(part2Int, part1Int - 1, part0Int);
+
+          if (mdyFormatIsValid && dmyFormatIsValid) {
+            const formatOrder = this._getLocaleShortFormatOrder();
+            const monthIndex = formatOrder.indexOf('month');
+            const dayIndex = formatOrder.indexOf('day');
+            if (monthIndex < dayIndex) {
+              return this.createDate(part2Int, part0Int - 1, part1Int);
+            }
+            return this.createDate(part2Int, part1Int - 1, part0Int);
+          } else if (mdyFormatIsValid) {
+            return this.createDate(part2Int, part0Int - 1, part1Int);
+          } else if (dmyFormatIsValid) {
+            return this.createDate(part2Int, part1Int - 1, part0Int);
+          }
+        }
+        return this.invalid();
+      } else {
+        // We are dealing with a set of 3 numbers that are all less than 32.
+        // Use locale format to determine the order of the date components.
+
+        const localeFormatOrder = this._getLocaleShortFormatOrder();
+        const formatOrders =
+          localeFormatOrder === defaultFormatOrder
+            ? [localeFormatOrder]
+            : [localeFormatOrder, defaultFormatOrder];
+
+        for (const formatOrder of formatOrders) {
+          let year: number;
+          let month: number;
+          let day: number;
+
+          if (formatOrder[0] === 'year') {
+            year = part0Int;
+          } else if (formatOrder[0] === 'month') {
+            month = part0Int;
+          } else {
+            day = part0Int;
+          }
+
+          if (formatOrder[1] === 'year') {
+            year = part1Int;
+          } else if (formatOrder[1] === 'month') {
+            month = part1Int;
+          } else {
+            day = part1Int;
+          }
+
+          if (formatOrder[2] === 'year') {
+            year = part2Int;
+          } else if (formatOrder[2] === 'month') {
+            month = part2Int;
+          } else {
+            day = part2Int;
+          }
+
+          if (year! < 100) {
+            year = year! + 2000;
+          }
+
+          if (this._dateComponentsAreValid(year!, month! - 1, day!)) {
+            return this.createDate(year!, month! - 1, day!);
+          }
+        }
+
+        return this.invalid();
+      }
+    }
   }
 
   format(date: Date, displayFormat: Object): string {
@@ -252,5 +617,85 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     d.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     d.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
     return dtf.format(d);
+  }
+
+  private _dateComponentsAreValid(year: number, month: number, day: number) {
+    if (year < 0 || year > 9999 || month < 0 || month > 11 || day < 1 || day > 31) {
+      return false;
+    }
+
+    if (month === 1) {
+      const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+      return isLeapYear ? day <= 29 : day <= 28;
+    }
+
+    if (month === 3 || month === 5 || month === 8 || month === 10) {
+      return day <= 30;
+    }
+
+    return true;
+  }
+
+  private _getLocaleShortFormatOrder(): DateComponent[] {
+    try {
+      const formatParts = Intl.DateTimeFormat(this.locale, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).formatToParts();
+
+      const formatOrder: DateComponent[] = [];
+
+      for (let formatPart of formatParts) {
+        const type = formatPart.type;
+        if (type === 'year' || type === 'month' || type === 'day') {
+          formatOrder.push(type);
+        }
+      }
+
+      return formatOrder;
+    } catch (e) {
+      return defaultFormatOrder;
+    }
+  }
+
+  private _getLocaleLongFormatOrder(): DateComponent[] {
+    try {
+      const formatParts = Intl.DateTimeFormat(this.locale, {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+      }).formatToParts();
+
+      const formatOrder: DateComponent[] = [];
+
+      for (let formatPart of formatParts) {
+        const type = formatPart.type;
+        if (type === 'year' || type === 'month' || type === 'day') {
+          formatOrder.push(type);
+        }
+      }
+
+      return formatOrder;
+    } catch (e) {
+      return defaultFormatOrder;
+    }
+  }
+
+  private _getMonthByName(monthName: string): number | undefined {
+    monthName = monthName.toLocaleLowerCase(this.locale);
+    monthName = monthName.toLocaleLowerCase(this.locale);
+    let index = this.getMonthNames('long').findIndex(
+      m =>
+        m.toLocaleLowerCase(this.locale).replace(DATE_COMPONENT_SEPARATOR_REGEX, '') === monthName,
+    );
+    if (index !== -1) {
+      return index;
+    }
+    index = this.getMonthNames('short').findIndex(
+      m =>
+        m.toLocaleLowerCase(this.locale).replace(DATE_COMPONENT_SEPARATOR_REGEX, '') === monthName,
+    );
+    return index === -1 ? undefined : index;
   }
 }
