@@ -226,3 +226,9 @@
 .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
   max-width: calc(100% * 4 / 3 + 1px);
 }
+
+.mat-mdc-form-field.mat-form-field-appearance-fill {
+  .mat-mdc-floating-label {
+    max-width: 100%;
+  }
+}
