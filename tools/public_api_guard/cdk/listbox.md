@@ -12,6 +12,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { Highlightable } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { ListKeyManagerOption } from '@angular/cdk/a11y';
+import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -19,6 +20,7 @@ import { Subject } from 'rxjs';
 
 // @public (undocumented)
 export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
+    constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get compareWith(): undefined | ((o1: T, o2: T) => boolean);
     set compareWith(fn: undefined | ((o1: T, o2: T) => boolean));
@@ -53,6 +55,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    protected readonly ngZone: NgZone;
     protected options: QueryList<CdkOption<T>>;
     get orientation(): 'horizontal' | 'vertical';
     set orientation(value: 'horizontal' | 'vertical');
