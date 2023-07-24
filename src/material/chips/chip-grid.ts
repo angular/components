@@ -130,6 +130,12 @@ export class MatChipGrid
    */
   readonly controlType: string = 'mat-chip-grid';
 
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  readonly shouldHaveFocusOverlay = false;
+
   /** The chip input to add more chips */
   protected _chipInput: MatChipTextControl;
 

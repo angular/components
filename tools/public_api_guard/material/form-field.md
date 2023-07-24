@@ -137,6 +137,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _shouldAlwaysFloat(): boolean;
     _shouldForward(prop: keyof AbstractControlDirective): boolean;
     // (undocumented)
+    _shouldHaveFocusOverlay(): boolean;
+    // (undocumented)
     _shouldLabelFloat(): boolean;
     _subscriptAnimationState: string;
     get subscriptSizing(): SubscriptSizing;
@@ -175,6 +177,7 @@ export abstract class MatFormFieldControl<T> {
     readonly placeholder: string;
     readonly required: boolean;
     abstract setDescribedByIds(ids: string[]): void;
+    readonly shouldHaveFocusOverlay?: boolean;
     readonly shouldLabelFloat: boolean;
     readonly stateChanges: Observable<void>;
     readonly userAriaDescribedBy?: string;

@@ -73,4 +73,10 @@ export abstract class MatFormFieldControl<T> {
 
   /** Handles a click on the control's container. */
   abstract onContainerClick(event: MouseEvent): void;
+
+  /**
+   * Whether the `MatFormField` should have a focus overlay. If property is not present on the
+   * control it is assumed to be true.
+   */
+  readonly shouldHaveFocusOverlay?: boolean;
 }

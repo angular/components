@@ -503,6 +503,15 @@ export class MatFormField
     return this.appearance === 'outline';
   }
 
+  _shouldHaveFocusOverlay() {
+    // TODO(zarend): add a unit test to cover `shouldHaveFocusOverlay`.
+    if (this._control.shouldHaveFocusOverlay === false) {
+      return false;
+    }
+
+    return !this._hasOutline() && !this._control.disabled;
+  }
+
   /**
    * Whether the label should display in the infix. Labels in the outline appearance are
    * displayed as part of the notched-outline and are horizontally offset to account for

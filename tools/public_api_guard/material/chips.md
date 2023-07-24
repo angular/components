@@ -213,6 +213,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     protected _required: boolean | undefined;
     setDescribedByIds(ids: string[]): void;
     setDisabledState(isDisabled: boolean): void;
+    readonly shouldHaveFocusOverlay = false;
     get shouldLabelFloat(): boolean;
     get value(): any;
     set value(value: any);
