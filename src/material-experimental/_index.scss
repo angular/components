@@ -5,9 +5,5 @@
   popover-edit-typography, popover-edit-density, popover-edit-theme;
 
 // Token-based theming API
-@forward './theming/theming' show theme, token-defaults;
-@forward './theming/checkbox' show checkbox;
-@forward './theming/card' show card;
-@forward './theming/m3-tokens' show get-m3-tokens;
 
 // Additional public APIs for individual components
