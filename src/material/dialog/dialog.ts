@@ -165,6 +165,18 @@ export class MatDialog implements OnDestroy {
     config.id = config.id || `mat-mdc-dialog-${uniqueId++}`;
     config.scrollStrategy = config.scrollStrategy || this._scrollStrategy();
 
+    // When a component is passed into the dialog, the host element interrupts
+    // the `display:flex` from affecting the dialog title, content, and
+    // actions. To fix this, we make the component host `display: contents` by
+    // marking it's panel with the `mat-mdc-dialog-component-panel` class.
+    //
+    // Note that this problem does not exist when a template ref is used since
+    // the title, contents, and actions are then nested directly under the
+    // dialog surface.
+    if (!(componentOrTemplateRef instanceof TemplateRef)) {
+      this._appendPanelClass(config, 'mat-mdc-dialog-component-panel');
+    }
+
     const cdkRef = this._dialog.open<R, D, T>(componentOrTemplateRef, {
       ...config,
       positionStrategy: this._overlay.position().global().centerHorizontally().centerVertically(),
@@ -250,6 +262,17 @@ export class MatDialog implements OnDestroy {
 
     while (i--) {
       dialogs[i].close();
+    }
+  }
+
+  /** Appends the given class name to the panel via the dialog config. */
+  private _appendPanelClass(config: MatDialogConfig, className: string) {
+    if (Array.isArray(config.panelClass)) {
+      config.panelClass.push(className);
+    } else if (typeof config.panelClass === 'string') {
+      config.panelClass = [config.panelClass, className];
+    } else {
+      config.panelClass = className;
     }
   }
 }
