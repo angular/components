@@ -57,12 +57,16 @@ sass_library(
 sass_binary(
     name = "datepicker_content_scss",
     src = "datepicker-content.scss",
+    deps = ["//src/material/core:core_scss_lib"],
 )
 
 sass_binary(
     name = "datepicker_toggle_scss",
     src = "datepicker-toggle.scss",
-    deps = ["//src/cdk:sass_lib"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
