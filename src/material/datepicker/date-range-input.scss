@@ -3,9 +3,12 @@
 
 @use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
 
 $date-range-input-separator-spacing: 4px;
 $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spacing});
+$_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots();
 
 @mixin _placeholder-transition($property) {
   transition: #{$property} variables.$swift-ease-out-duration
@@ -29,6 +32,14 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
 .mat-date-range-input-separator {
   @include _placeholder-transition(opacity);
   margin: 0 $date-range-input-separator-spacing;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, range-input-separator-color);
+
+    .mat-form-field-disabled & {
+      @include token-utils.create-token-slot(color, range-input-disabled-state-separator-color);
+    }
+  }
 
   ._mat-animation-noopable & {
     transition: none;
@@ -88,6 +99,13 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
 
   @include vendor-prefixes.input-placeholder {
     @include _placeholder-transition(color);
+  }
+
+  @include token-utils.use-tokens($_tokens...) {
+
+    &[disabled] {
+      @include token-utils.create-token-slot(color, range-input-disabled-state-text-color);
+    }
   }
 
   .mat-form-field-hide-placeholder &,
