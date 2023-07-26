@@ -128,6 +128,9 @@ export interface MatTooltipDefaultOptions {
   /** Default delay when hiding the tooltip on a touch device. */
   touchendHideDelay: number;
 
+  /** Time between the user putting the pointer on a tooltip trigger and the long press event being fired on a touch device. */
+  touchLongPressShowDelay?: number;
+
   /** Default touch gesture handling for tooltips. */
   touchGestures?: TooltipTouchGestures;
 
@@ -155,12 +158,6 @@ const PANEL_CLASS = 'tooltip-panel';
 
 /** Options used to bind passive event listeners. */
 const passiveListenerOptions = normalizePassiveListenerOptions({passive: true});
-
-/**
- * Time between the user putting the pointer on a tooltip
- * trigger and the long press event being fired.
- */
-const LONGPRESS_DELAY = 500;
 
 // These constants were taken from MDC's `numbers` object. We can't import them from MDC,
 // because they have some top-level references to `window` which break during SSR.
@@ -787,7 +784,12 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
           // because it can prevent click events from firing on the element.
           this._setupPointerExitEventsIfNeeded();
           clearTimeout(this._touchstartTimeout);
-          this._touchstartTimeout = setTimeout(() => this.show(undefined, origin), LONGPRESS_DELAY);
+
+          const DEFAULT_LONGPRESS_DELAY = 500;
+          this._touchstartTimeout = setTimeout(
+            () => this.show(undefined, origin),
+            this._defaultOptions.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY,
+          );
         },
       ]);
     }
