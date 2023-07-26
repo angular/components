@@ -118,7 +118,6 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _registerNode(node: CdkTreeNode<T, K>): void;
     _renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     _sendKeydownToKeyManager(event: KeyboardEvent): void;
-    // (undocumented)
     _setNodeTypeIfUnset(nodeType: 'flat' | 'nested'): void;
     _setTabIndex(): void;
     toggle(dataNode: T): void;
@@ -163,6 +162,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
+    // (undocumented)
+    _emitExpansionState(expanded: boolean): void;
     expand(): void;
     readonly expandedChange: EventEmitter<boolean>;
     focus(): void;
@@ -303,9 +304,6 @@ export interface FlatTreeControlOptions<T, K> {
 
 // @public
 export function getMultipleTreeControlsError(): Error;
-
-// @public
-export function getNodeNotExpandableError(): Error;
 
 // @public
 export function getTreeControlMissingError(): Error;

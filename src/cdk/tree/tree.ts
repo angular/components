@@ -59,7 +59,6 @@ import {
   take,
   takeUntil,
   tap,
-  withLatestFrom,
 } from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
@@ -82,8 +81,6 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
 function isNotNullish<T>(val: T | null | undefined): val is T {
   return val != null;
 }
-
-type NodeGroup<T, K> = Map<K | null, T[]>;
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -138,7 +135,7 @@ export class CdkTree<T, K = T>
    * - the inner index is the parent node for this particular group. If there is no parent node, we
    *   use `null`.
    */
-  private _groups: NodeGroup<T, K> = new Map<K | null, T[]>();
+  private _groups: Map<K | null, T[]> = new Map<K | null, T[]>();
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -410,7 +407,6 @@ export class CdkTree<T, K = T>
         ),
       ])
         .pipe(
-          takeUntil(this._onDestroy),
           switchMap(([data, nodeType]) => {
             if (nodeType === null) {
               return observableOf([{renderNodes: data}, nodeType] as const);
@@ -418,9 +414,11 @@ export class CdkTree<T, K = T>
 
             // If we're here, then we know what our node type is, and therefore can
             // perform our usual rendering pipeline, which necessitates converting the data
-            const convertedData = this._convertData(data, nodeType);
-            return convertedData.pipe(map(data => [data, nodeType] as const));
+            return this._convertData(data, nodeType).pipe(
+              map(convertedData => [convertedData, nodeType] as const),
+            );
           }),
+          takeUntil(this._onDestroy),
         )
         .subscribe(([data, nodeType]) => {
           if (nodeType === null) {
@@ -708,7 +706,6 @@ export class CdkTree<T, K = T>
           if (!expanded) {
             return [];
           }
-          const key = this._getExpansionKey(dataNode);
           const startIndex = flattenedNodes.findIndex(node => this._getExpansionKey(node) === key);
           const level = levelAccessor(dataNode) + 1;
           const results: T[] = [];

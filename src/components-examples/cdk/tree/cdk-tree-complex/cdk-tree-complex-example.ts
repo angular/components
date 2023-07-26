@@ -49,7 +49,7 @@ const TREE_DATA: Map<string, BackendData> = new Map(
 );
 
 class FakeDataBackend {
-  private getRandomDelayTime() {
+  private _getRandomDelayTime() {
     // anywhere from 100 to 500ms.
     return Math.floor(Math.random() * 400) + 100;
   }
@@ -60,13 +60,13 @@ class FakeDataBackend {
     const children = item?.children ?? [];
 
     return observableOf(children.map(childId => TREE_DATA.get(childId)!)).pipe(
-      delay(this.getRandomDelayTime()),
+      delay(this._getRandomDelayTime()),
     );
   }
 
   getRoots(): Observable<BackendData[]> {
     return observableOf([...TREE_DATA.values()].filter(datum => !datum.parent)).pipe(
-      delay(this.getRandomDelayTime()),
+      delay(this._getRandomDelayTime()),
     );
   }
 }
@@ -109,49 +109,49 @@ interface State {
 
 type ObservedValueOf<T> = T extends Observable<infer U> ? U : never;
 
-type ObservedValuesOf<T extends ReadonlyArray<Observable<unknown>>> = {
+type ObservedValuesOf<T extends readonly Observable<unknown>[]> = {
   [K in keyof T]: ObservedValueOf<T[K]>;
 };
 
-type TransformFn<T extends ReadonlyArray<Observable<unknown>>, U> = (
+type TransformFn<T extends readonly Observable<unknown>[], U> = (
   ...args: [...ObservedValuesOf<T>, State]
 ) => U;
 
 class ComplexDataStore {
-  private readonly backend = new FakeDataBackend();
+  private readonly _backend = new FakeDataBackend();
 
-  private state = new BehaviorSubject<State>({
+  private _state = new BehaviorSubject<State>({
     rootIds: [],
     rootsLoading: 'INIT',
     allData: new Map(),
     dataLoading: new Map(),
   });
 
-  private readonly rootIds = this.select(state => state.rootIds);
-  private readonly allData = this.select(state => state.allData);
-  private readonly loadingData = this.select(state => state.dataLoading);
-  private readonly rootsLoadingState = this.select(state => state.rootsLoading);
+  private readonly _rootIds = this.select(state => state.rootIds);
+  private readonly _allData = this.select(state => state.allData);
+  private readonly _loadingData = this.select(state => state.dataLoading);
+  private readonly _rootsLoadingState = this.select(state => state.rootsLoading);
   readonly areRootsLoading = this.select(
-    this.rootIds,
-    this.loadingData,
-    this.rootsLoadingState,
+    this._rootIds,
+    this._loadingData,
+    this._rootsLoadingState,
     (rootIds, loading, rootsLoading) =>
       rootsLoading !== 'LOADED' || rootIds.some(id => loading.get(id) !== 'LOADED'),
   );
   readonly roots = this.select(
     this.areRootsLoading,
-    this.rootIds,
-    this.allData,
+    this._rootIds,
+    this._allData,
     (rootsLoading, rootIds, data) => {
       if (rootsLoading) {
         return [];
       }
-      return this.getDataByIds(rootIds, data);
+      return this._getDataByIds(rootIds, data);
     },
   );
 
   getChildren(parentId: string) {
-    return this.select(this.allData, this.loadingData, (data, loading) => {
+    return this.select(this._allData, this._loadingData, (data, loading) => {
       const parentData = data.get(parentId);
       if (parentData?.childrenLoading !== 'LOADED') {
         return [];
@@ -160,47 +160,47 @@ class ComplexDataStore {
       if (childIds.some(id => loading.get(id) !== 'LOADED')) {
         return [];
       }
-      return this.getDataByIds(childIds, data);
+      return this._getDataByIds(childIds, data);
     });
   }
 
   loadRoots() {
-    this.setRootsLoading();
-    this.backend.getRoots().subscribe(roots => {
-      this.setRoots(roots);
+    this._setRootsLoading();
+    this._backend.getRoots().subscribe(roots => {
+      this._setRoots(roots);
     });
   }
 
   loadChildren(parentId: string) {
-    this.setChildrenLoading(parentId);
-    this.backend.getChildren(parentId).subscribe(children => {
-      this.addLoadedData(parentId, children);
+    this._setChildrenLoading(parentId);
+    this._backend.getChildren(parentId).subscribe(children => {
+      this._addLoadedData(parentId, children);
     });
   }
 
-  private setRootsLoading() {
-    this.state.next({
-      ...this.state.value,
+  private _setRootsLoading() {
+    this._state.next({
+      ...this._state.value,
       rootsLoading: 'LOADING',
     });
   }
 
-  private setRoots(roots: BackendData[]) {
-    const currentState = this.state.value;
+  private _setRoots(roots: BackendData[]) {
+    const currentState = this._state.value;
 
-    this.state.next({
+    this._state.next({
       ...currentState,
       rootIds: roots.map(root => root.id),
       rootsLoading: 'LOADED',
-      ...this.addData(currentState, roots),
+      ...this._addData(currentState, roots),
     });
   }
 
-  private setChildrenLoading(parentId: string) {
-    const currentState = this.state.value;
+  private _setChildrenLoading(parentId: string) {
+    const currentState = this._state.value;
     const parentData = currentState.allData.get(parentId);
 
-    this.state.next({
+    this._state.next({
       ...currentState,
       dataLoading: new Map([
         ...currentState.dataLoading,
@@ -209,22 +209,22 @@ class ComplexDataStore {
     });
   }
 
-  private addLoadedData(parentId: string, childData: BackendData[]) {
-    const currentState = this.state.value;
+  private _addLoadedData(parentId: string, childData: BackendData[]) {
+    const currentState = this._state.value;
 
-    this.state.next({
+    this._state.next({
       ...currentState,
-      ...this.addData(currentState, childData, parentId),
+      ...this._addData(currentState, childData, parentId),
     });
   }
 
-  private addData(
+  private _addData(
     {allData, dataLoading}: State,
     data: BackendData[],
     parentId?: string,
   ): Pick<State, 'allData' | 'dataLoading'> {
     const parentData = parentId && allData.get(parentId);
-    const allChildren = data.flatMap(data => data.children ?? []);
+    const allChildren = data.flatMap(datum => datum.children ?? []);
     return {
       allData: new Map([
         ...allData,
@@ -250,20 +250,20 @@ class ComplexDataStore {
     };
   }
 
-  private getDataByIds(ids: string[], data: State['allData']) {
+  private _getDataByIds(ids: string[], data: State['allData']) {
     return ids
       .map(id => data.get(id))
       .filter(<T>(item: T | undefined): item is T => !!item)
-      .map(data => new TransformedData(data));
+      .map(datum => new TransformedData(datum));
   }
 
-  private select<T extends ReadonlyArray<Observable<unknown>>, U>(
+  select<T extends readonly Observable<unknown>[], U>(
     ...sourcesAndTransform: [...T, TransformFn<T, U>]
   ) {
     const sources = sourcesAndTransform.slice(0, -1) as unknown as T;
     const transformFn = sourcesAndTransform[sourcesAndTransform.length - 1] as TransformFn<T, U>;
 
-    return combineLatest([...sources, this.state]).pipe(
+    return combineLatest([...sources, this._state]).pipe(
       map(args => transformFn(...(args as [...ObservedValuesOf<T>, State]))),
       shareReplay({refCount: true, bufferSize: 1}),
     );
@@ -281,23 +281,23 @@ class ComplexDataStore {
   imports: [CdkTreeModule, MatButtonModule, MatIconModule, CommonModule, MatProgressSpinnerModule],
 })
 export class CdkTreeComplexExample implements OnInit {
-  private readonly dataStore = new ComplexDataStore();
+  private readonly _dataStore = new ComplexDataStore();
 
-  areRootsLoading = this.dataStore.areRootsLoading;
-  roots = this.dataStore.roots;
+  areRootsLoading = this._dataStore.areRootsLoading;
+  roots = this._dataStore.roots;
 
-  getChildren = (node: TransformedData) => this.dataStore.getChildren(node.raw.id);
+  getChildren = (node: TransformedData) => this._dataStore.getChildren(node.raw.id);
   trackBy = (index: number, node: TransformedData) => this.expansionKey(node);
   expansionKey = (node: TransformedData) => node.raw.id;
 
   ngOnInit() {
-    this.dataStore.loadRoots();
+    this._dataStore.loadRoots();
   }
 
   onExpand(node: TransformedData, expanded: boolean) {
     if (expanded) {
       // Only perform a load on expansion.
-      this.dataStore.loadChildren(node.raw.id);
+      this._dataStore.loadChildren(node.raw.id);
     }
   }
 }
