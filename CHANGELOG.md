@@ -1,3 +1,23 @@
+<a name="16.1.6"></a>
+# 16.1.6 "apatite-anchor" (2023-07-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fa1ac2630](https://github.com/angular/components/commit/fa1ac26303e1540d1b9134e5d4b6493298178ae5) | fix | **clipboard:** not working inside fullscreen element ([#27456](https://github.com/angular/components/pull/27456)) |
+| [23527b991](https://github.com/angular/components/commit/23527b991d342210c3111484ae734d91362575a2) | fix | **listbox:** prevent wrong activeItemIndex after browser tab switch ([#27499](https://github.com/angular/components/pull/27499)) |
+| [dead83f65](https://github.com/angular/components/commit/dead83f65ba1ea3f0a3c69bc5f4f6f7313dfcdab) | fix | **testing:** allow for comma key to be sent ([#27486](https://github.com/angular/components/pull/27486)) |
+| [05573aea7](https://github.com/angular/components/commit/05573aea7b3098bcefe88dcf41fa5c8654569e11) | fix | **testing:** sending incorrect keyCode for comma ([#27472](https://github.com/angular/components/pull/27472)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4d947318a](https://github.com/angular/components/commit/4d947318aeda0b4f72bbd6738ea42045a2f08d62) | fix | **chips:** ensure that edit input query is re-evaluated on time ([#27465](https://github.com/angular/components/pull/27465)) |
+| [1a659bd55](https://github.com/angular/components/commit/1a659bd555a0b1f173d7579ea342f16055e2689c) | fix | **chips:** increase specificity of chip ripple selector ([#27457](https://github.com/angular/components/pull/27457)) |
+| [45748ba3d](https://github.com/angular/components/commit/45748ba3deedbac7335116fac1bc3f91e0819fa9) | fix | **form-field:** fix duplicate announcement of form controls ([#27102](https://github.com/angular/components/pull/27102)) |
+| [465a7b022](https://github.com/angular/components/commit/465a7b022b1940858c8b1d1698593871eb1b89a3) | fix | **radio:** clear selected radio button from group ([#27466](https://github.com/angular/components/pull/27466)) |
+| [0be32cfc5](https://github.com/angular/components/commit/0be32cfc5ca1c87db348285fa437445450482e9c) | fix | **slide-toggle:** add cursor pointer for label ([#27391](https://github.com/angular/components/pull/27391)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.5"></a>
 # 16.1.5 "turquoise-tortoise" (2023-07-13)
 ### material
