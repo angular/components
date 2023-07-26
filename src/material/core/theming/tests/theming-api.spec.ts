@@ -98,15 +98,15 @@ describe('theming api', () => {
         )
       ));
 
-      // Updates the "icon" foreground color to hotpink.
+      // Updates the "icon" foreground color to "canary".
       $color: map-get($theme, color);
       $theme: map-merge($color,
-        (foreground: map-merge(map-get($color, foreground), (icon: hotpink))));
+        (foreground: map-merge(map-get($color, foreground), (icon: "canary"))));
 
       @include angular-material-theme($theme);
     `);
 
-    expect(result).toContain(': hotpink');
+    expect(result).toContain(': "canary"');
   });
 
   it('should warn if default density styles are duplicated', () => {
