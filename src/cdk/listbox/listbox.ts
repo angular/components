@@ -15,6 +15,7 @@ import {
   forwardRef,
   inject,
   Input,
+  NgZone,
   OnDestroy,
   Output,
   QueryList,
@@ -34,7 +35,7 @@ import {
 } from '@angular/cdk/keycodes';
 import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {defer, merge, Observable, Subject} from 'rxjs';
+import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Directionality} from '@angular/cdk/bidi';
@@ -381,6 +382,9 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /** The host element of the listbox. */
   protected readonly element: HTMLElement = inject(ElementRef).nativeElement;
 
+  /** The Angular zone. */
+  protected readonly ngZone = inject(NgZone);
+
   /** The change detector for this listbox. */
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -417,6 +421,13 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   /** Whether the listbox currently has focus. */
   private _hasFocus = false;
+
+  /** A reference to the option that was active before the listbox lost focus. */
+  private _previousActiveOption: CdkOption<T> | null = null;
+
+  constructor() {
+    this._setPreviousActiveOptionAsActiveOptionOnWindowBlur();
+  }
 
   ngAfterContentInit() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
@@ -783,6 +794,11 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    * @param event The focusout event
    */
   protected _handleFocusOut(event: FocusEvent) {
+    // Some browsers (e.g. Chrome and Firefox) trigger the focusout event when the user returns back to the document.
+    // To prevent losing the active option in this case, we store it in `_previousActiveOption` and restore it on the window `blur` event
+    // This ensures that the `activeItem` matches the actual focused element when the user returns to the document.
+    this._previousActiveOption = this.listKeyManager.activeItem;
+
     const otherElement = event.relatedTarget as Element;
     if (this.element !== otherElement && !this.element.contains(otherElement)) {
       this._onTouched();
@@ -992,6 +1008,23 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   private _getLastTriggeredIndex() {
     const index = this.options.toArray().indexOf(this._lastTriggered!);
     return index === -1 ? null : index;
+  }
+
+  /**
+   * Set previous active option as active option on window blur.
+   * This ensures that the `activeOption` matches the actual focused element when the user returns to the document.
+   */
+  private _setPreviousActiveOptionAsActiveOptionOnWindowBlur() {
+    this.ngZone.runOutsideAngular(() => {
+      fromEvent(window, 'blur')
+        .pipe(takeUntil(this.destroyed))
+        .subscribe(() => {
+          if (this.element.contains(document.activeElement) && this._previousActiveOption) {
+            this._setActiveOption(this._previousActiveOption);
+            this._previousActiveOption = null;
+          }
+        });
+    });
   }
 }
 
