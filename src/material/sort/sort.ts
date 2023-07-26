@@ -42,6 +42,17 @@ export interface MatSortable {
   /** Whether to disable clearing the sorting state. */
   disableClear: boolean;
 }
+/** Interface for user manual sort. */
+export interface MatManualSort {
+  /** The id of the column being sorted. */
+  id: string;
+
+  /** set direction to exact direction. */
+  direction: SortDirection;
+
+  /** Whether to disable clearing the sorting state. */
+  disableClear: boolean;
+}
 
 /** The current sort state. */
 export interface Sort {
@@ -166,15 +177,27 @@ export class MatSort
   }
 
   /** Sets the active sort id and determines the new sort direction. */
-  sort(sortable: MatSortable): void {
+  sort(sortable: MatSortable | MatManualSort): void {
     if (this.active != sortable.id) {
       this.active = sortable.id;
-      this.direction = sortable.start ? sortable.start : this.start;
+      if (this._isMatManualSort(sortable)) {
+        this.direction = sortable.direction;
+      } else {
+        this.direction = sortable.start ? sortable.start : this.start;
+      }
     } else {
-      this.direction = this.getNextSortDirection(sortable);
+      if (this._isMatManualSort(sortable)) {
+        this.direction = sortable.direction;
+      } else {
+        this.direction = this.getNextSortDirection(sortable);
+      }
     }
 
     this.sortChange.emit({active: this.active, direction: this.direction});
+  }
+
+  private _isMatManualSort(sortable: MatSortable | MatManualSort): sortable is MatManualSort {
+    return (sortable as MatManualSort).direction !== undefined;
   }
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
