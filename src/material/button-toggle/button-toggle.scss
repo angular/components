@@ -2,26 +2,50 @@
 
 @use '../core/style/vendor-prefixes';
 @use '../core/style/layout-common';
+@use '../core/style/elevation';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
+@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
 
 $standard-padding: 0 12px !default;
-$standard-border-radius: 4px !default;
-
 $legacy-padding: 0 16px !default;
+
+// TODO(crisbeto): these variables aren't used anymore and should be removed.
 $legacy-height: 36px !default;
+$standard-border-radius: 4px !default;
 $legacy-border-radius: 2px !default;
+
+$_legacy-tokens: (
+  tokens-mat-legacy-button-toggle.$prefix,
+  tokens-mat-legacy-button-toggle.get-token-slots()
+);
+
+$_standard-tokens: (
+  tokens-mat-standard-button-toggle.$prefix,
+  tokens-mat-standard-button-toggle.get-token-slots()
+);
 
 .mat-button-toggle-standalone,
 .mat-button-toggle-group {
+  @include token-utils.create-token-values(
+    tokens-mat-legacy-button-toggle.$prefix,
+    tokens-mat-legacy-button-toggle.get-unthemable-tokens()
+  );
+
+  @include elevation.overridable-elevation(2);
   position: relative;
   display: inline-flex;
   flex-direction: row;
   white-space: nowrap;
   overflow: hidden;
-  border-radius: $legacy-border-radius;
   -webkit-tap-highlight-color: transparent;
 
   // Fixes the ripples not being clipped to the border radius on Safari.
   transform: translateZ(0);
+
+  @include token-utils.use-tokens($_legacy-tokens...) {
+    @include token-utils.create-token-slot(border-radius, shape);
+  }
 
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
@@ -30,7 +54,19 @@ $legacy-border-radius: 2px !default;
 
 .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
-  border-radius: $standard-border-radius;
+  @include token-utils.create-token-values(
+    tokens-mat-standard-button-toggle.$prefix,
+    tokens-mat-standard-button-toggle.get-unthemable-tokens()
+  );
+
+  @include token-utils.use-tokens($_standard-tokens...) {
+    @include token-utils.create-token-slot(border-radius, shape);
+    border: solid 1px var(#{token-utils.get-token-variable(divider-color)});
+  }
+
+  &:not([class*='mat-elevation-z']) {
+    box-shadow: none;
+  }
 
   @include cdk.high-contrast(active, off) {
     outline: 0;
@@ -51,30 +87,99 @@ $legacy-border-radius: 2px !default;
   white-space: nowrap;
   position: relative;
 
+  @include token-utils.use-tokens($_legacy-tokens...) {
+    @include token-utils.create-token-slot(color, text-color);
+    @include token-utils.create-token-slot(font-family, text-font);
+
+    &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
+      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+    }
+  }
+
   // Fixes SVG icons that get thrown off because of the `vertical-align` on the parent.
   .mat-icon svg {
     vertical-align: top;
   }
+}
 
-  &.cdk-keyboard-focused {
-    .mat-button-toggle-focus-overlay {
-      opacity: 1;
+.mat-button-toggle-checked {
+  @include token-utils.use-tokens($_legacy-tokens...) {
+    @include token-utils.create-token-slot(color, selected-state-text-color);
+    @include token-utils.create-token-slot(background-color, selected-state-background-color);
+  }
+}
+
+.mat-button-toggle-disabled {
+  @include token-utils.use-tokens($_legacy-tokens...) {
+    @include token-utils.create-token-slot(color, disabled-state-text-color);
+    @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+
+    &.mat-button-toggle-checked {
+      @include token-utils.create-token-slot(background-color,
+        disabled-selected-state-background-color);
     }
   }
 }
 
 .mat-button-toggle-appearance-standard {
-  &:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
-    opacity: 0.04;
-  }
+  @include token-utils.create-token-values(
+    tokens-mat-standard-button-toggle.$prefix,
+    tokens-mat-standard-button-toggle.get-unthemable-tokens()
+  );
 
-  // Similar to components like the checkbox, slide-toggle and radio, we cannot show the focus
-  // overlay for `.cdk-program-focused` because mouse clicks on the <label> element would be always
-  // treated as programmatic focus. Note that it needs the extra `:not` in order to have more
-  // specificity than the `:hover` above.
-  // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
-  &.cdk-keyboard-focused:not(.mat-button-toggle-disabled) .mat-button-toggle-focus-overlay {
-    opacity: 0.12;
+  @include token-utils.use-tokens($_standard-tokens...) {
+    $divider-color: var(#{token-utils.get-token-variable(divider-color)});
+    @include token-utils.create-token-slot(color, text-color);
+    @include token-utils.create-token-slot(background-color, background-color);
+    @include token-utils.create-token-slot(font-family, text-font);
+
+    .mat-button-toggle-group-appearance-standard & + & {
+      border-left: solid 1px $divider-color;
+    }
+
+    [dir='rtl'] .mat-button-toggle-group-appearance-standard & + & {
+      border-left: none;
+      border-right: solid 1px $divider-color;
+    }
+
+    .mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical & + & {
+      border-left: none;
+      border-right: none;
+      border-top: solid 1px $divider-color;
+    }
+
+    &.mat-button-toggle-checked {
+      @include token-utils.create-token-slot(color, selected-state-text-color);
+      @include token-utils.create-token-slot(background-color, selected-state-background-color);
+    }
+
+    &.mat-button-toggle-disabled {
+      @include token-utils.create-token-slot(color, disabled-state-text-color);
+      @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+
+      &.mat-button-toggle-checked {
+        @include token-utils.create-token-slot(color, disabled-selected-state-text-color);
+        @include token-utils.create-token-slot(background-color,
+          disabled-selected-state-background-color);
+      }
+    }
+
+    .mat-button-toggle-focus-overlay {
+      @include token-utils.create-token-slot(background-color, state-layer-color);
+    }
+
+    &:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
+      @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+    }
+
+    // Similar to components like the checkbox, slide-toggle and radio, we cannot show the focus
+    // overlay for `.cdk-program-focused` because mouse clicks on the <label> element would be
+    // always treated as programmatic focus. Note that it needs the extra `:not` in order to have
+    // more specificity than the `:hover` above.
+    // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
+    &.cdk-keyboard-focused:not(.mat-button-toggle-disabled) .mat-button-toggle-focus-overlay {
+      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+    }
   }
 
   // On touch devices the hover state will linger on the element after the user has tapped.
@@ -91,14 +196,21 @@ $legacy-border-radius: 2px !default;
 .mat-button-toggle-label-content {
   @include vendor-prefixes.user-select(none);
   display: inline-block;
-  line-height: $legacy-height;
   padding: $legacy-padding;
+
+  @include token-utils.use-tokens($_legacy-tokens...) {
+    @include token-utils.create-token-slot(line-height, height);
+  }
 
   // Prevents IE from shifting the content on click.
   position: relative;
 
   .mat-button-toggle-appearance-standard & {
     padding: $standard-padding;
+
+    @include token-utils.use-tokens($_standard-tokens...) {
+      @include token-utils.create-token-slot(line-height, height);
+    }
   }
 }
 
@@ -114,6 +226,10 @@ $legacy-border-radius: 2px !default;
   // Disable pointer events to prevent it from hijacking user events.
   pointer-events: none;
   opacity: 0;
+
+  @include token-utils.use-tokens($_legacy-tokens...) {
+    @include token-utils.create-token-slot(background-color, state-layer-color);
+  }
 }
 
 @include cdk.high-contrast(active, off) {
@@ -122,7 +238,7 @@ $legacy-border-radius: 2px !default;
   // It uses a border, because the browser will render it using a brighter color.
   .mat-button-toggle-checked {
     .mat-button-toggle-focus-overlay {
-      border-bottom: solid $legacy-height;
+      border-bottom: solid 500px;
       opacity: 0.5;
       height: 0;
     }
