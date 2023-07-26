@@ -360,8 +360,11 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   }
 
   private _updateActiveItemIndex(newItems: T[]) {
-    if (this._activeItem) {
-      const newIndex = newItems.indexOf(this._activeItem);
+    const activeItem = this._activeItem;
+    if (activeItem) {
+      const newIndex = newItems.findIndex(
+        item => this._trackByFn(item) === this._trackByFn(activeItem),
+      );
 
       if (newIndex > -1 && newIndex !== this._activeItemIndex) {
         this._activeItemIndex = newIndex;

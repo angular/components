@@ -295,7 +295,6 @@ export class CdkTreeComplexExample implements OnInit {
   }
 
   onExpand(node: TransformedData, expanded: boolean) {
-    console.log('onExpand', node.raw.id);
     if (expanded) {
       // Only perform a load on expansion.
       this.dataStore.loadChildren(node.raw.id);

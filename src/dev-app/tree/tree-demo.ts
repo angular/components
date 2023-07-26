@@ -14,6 +14,7 @@ import {
   CdkTreeFlatLevelAccessorExample,
   CdkTreeNestedLevelAccessorExample,
   CdkTreeFlatChildrenAccessorExample,
+  CdkTreeComplexExample,
 } from '@angular/components-examples/cdk/tree';
 import {
   TreeChecklistExample,
@@ -45,6 +46,7 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeFlatChildrenAccessorExample,
     CdkTreeFlatLevelAccessorExample,
     CdkTreeNestedLevelAccessorExample,
+    CdkTreeComplexExample,
     CommonModule,
     FormsModule,
     TreeChecklistExample,

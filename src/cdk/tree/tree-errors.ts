@@ -46,15 +46,3 @@ export function getTreeControlMissingError() {
 export function getMultipleTreeControlsError() {
   return Error(`More than one of tree control, levelAccessor, or childrenAccessor were provided.`);
 }
-
-/**
- * Returns an error to be thrown when a node is attempted to be expanded or collapsed when
- * it's not expandable.
- * @docs-private
- */
-export function getNodeNotExpandableError() {
-  return Error(
-    `The node that was attempted to be expanded or collapsed is not expandable; you might ` +
-      `need to provide 'isExpandable'.`,
-  );
-}
