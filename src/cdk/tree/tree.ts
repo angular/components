@@ -1141,7 +1141,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    */
   @Input() isDisabled?: boolean;
 
-  /** This emits when the node has been programatically activated. */
+  /** This emits when the node has been programatically activated or activated by keyboard. */
   @Output()
   readonly activation: EventEmitter<T> = new EventEmitter<T>();
 
