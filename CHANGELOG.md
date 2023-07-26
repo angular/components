@@ -1,3 +1,26 @@
+<a name="16.2.0-next.5"></a>
+# 16.2.0-next.5 "antimony-anteater" (2023-07-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [89c5fafea](https://github.com/angular/components/commit/89c5fafea6c7649da96328c349f32efa35ee8c9a) | fix | **listbox:** prevent wrong activeItemIndex after browser tab switch ([#27499](https://github.com/angular/components/pull/27499)) |
+| [89ade6a6b](https://github.com/angular/components/commit/89ade6a6b8675e0568eb3b5e1368a67ccfddc2eb) | fix | **testing:** allow for comma key to be sent ([#27486](https://github.com/angular/components/pull/27486)) |
+| [8250a0df0](https://github.com/angular/components/commit/8250a0df0462634b3e2a8b6ef4783dc2a9b45820) | fix | **testing:** sending incorrect keyCode for comma ([#27472](https://github.com/angular/components/pull/27472)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6045a0cfa](https://github.com/angular/components/commit/6045a0cfa319bd9bad27a3101ea06c36767566ef) | fix | **chips:** ensure that edit input query is re-evaluated on time ([#27465](https://github.com/angular/components/pull/27465)) |
+| [8b0618091](https://github.com/angular/components/commit/8b06180919a88d961f6a5d0101f3fcb697692bd3) | fix | **chips:** increase specificity of chip ripple selector ([#27457](https://github.com/angular/components/pull/27457)) |
+| [5c5e34ae4](https://github.com/angular/components/commit/5c5e34ae41bba8fcc5586cb252d2b94754054995) | fix | **form-field:** fix duplicate announcement of form controls ([#27102](https://github.com/angular/components/pull/27102)) |
+| [6c846e274](https://github.com/angular/components/commit/6c846e274c9703175d248e573e6474bbef247aec) | fix | **radio:** clear selected radio button from group ([#27466](https://github.com/angular/components/pull/27466)) |
+| [6bbf2ea8b](https://github.com/angular/components/commit/6bbf2ea8becf64a462c63fe18cff9755236d99be) | fix | **slide-toggle:** add cursor pointer for label ([#27391](https://github.com/angular/components/pull/27391)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [439d6fc59](https://github.com/angular/components/commit/439d6fc591faf2a236c6027f217a97d906180b6c) | feat | add option to set default calendar ([#27453](https://github.com/angular/components/pull/27453)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.6"></a>
 # 16.1.6 "apatite-anchor" (2023-07-26)
 ### cdk
