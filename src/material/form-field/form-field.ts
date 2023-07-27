@@ -17,6 +17,7 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
+  inject,
   Inject,
   InjectionToken,
   Input,
@@ -30,8 +31,8 @@ import {
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {merge, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {EMPTY, merge, Subject} from 'rxjs';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
   FLOATING_LABEL_PARENT,
@@ -52,6 +53,7 @@ import {
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
 import {DOCUMENT} from '@angular/common';
+import {SharedResizeObserver} from '@angular/cdk/observers/private';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -284,6 +286,9 @@ export class MatFormField
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
+  private _needsOutlineLabelPrefixResizeObserverUpdateOnStable = true;
+
+  private _resizeObserver = inject(SharedResizeObserver);
 
   constructor(
     public _elementRef: ElementRef,
@@ -473,10 +478,16 @@ export class MatFormField
    * checking every change detection cycle.
    */
   private _initializeOutlineLabelOffsetSubscriptions() {
-    // Whenever the prefix changes, schedule an update of the label offset.
-    this._prefixChildren.changes.subscribe(
-      () => (this._needsOutlineLabelOffsetUpdateOnStable = true),
-    );
+    // Whenever the prefix changes, schedule an update  for label offset.
+    this._prefixChildren.changes.pipe(map(prefixes => !!prefixes.length)).subscribe(hasPrefix => {
+      // If there are any prefix, schedule an update for their resize observer.
+      // Otherwise, just schedule an update for label offset.
+      if (hasPrefix) {
+        this._needsOutlineLabelPrefixResizeObserverUpdateOnStable = true;
+      } else {
+        this._needsOutlineLabelOffsetUpdateOnStable = true;
+      }
+    });
 
     // Note that we have to run outside of the `NgZone` explicitly, in order to avoid
     // throwing users into an infinite loop if `zone-patch-rxjs` is included.
@@ -487,6 +498,18 @@ export class MatFormField
           this._updateOutlineLabelOffset();
         }
       });
+
+      this._ngZone.onStable
+        .pipe(
+          switchMap(() => this._resizeObserver.observe(this._elementRef.nativeElement)),
+          takeUntil(this._destroyed),
+        )
+        .subscribe(() => {
+          if (this._needsOutlineLabelPrefixResizeObserverUpdateOnStable) {
+            this._needsOutlineLabelPrefixResizeObserverUpdateOnStable = false;
+            this._updateOutlineLabelOffsetOnPrefixResize();
+          }
+        });
     });
 
     this._dir.change
@@ -670,6 +693,23 @@ export class MatFormField
         --mat-mdc-form-field-label-transform,
         ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset})
     )`;
+  }
+
+  /**
+   * Updates the horizontal offset of the label in the outline appearance when the prefix containers are resized.
+   */
+  private _updateOutlineLabelOffsetOnPrefixResize() {
+    const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
+    const textPrefixContainer = this._textPrefixContainer?.nativeElement;
+
+    merge(
+      iconPrefixContainer ? this._resizeObserver.observe(iconPrefixContainer) : EMPTY,
+      textPrefixContainer ? this._resizeObserver.observe(textPrefixContainer) : EMPTY,
+    )
+      .pipe(takeUntil(this._prefixChildren.changes))
+      .subscribe(() => {
+        this._updateOutlineLabelOffset();
+      });
   }
 
   /** Checks whether the form field is attached to the DOM. */
