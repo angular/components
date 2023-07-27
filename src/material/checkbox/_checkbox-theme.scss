@@ -97,7 +97,7 @@
   }
 }
 
-@mixin theme-from-tokens($tokens) {
+@mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     // TODO(mmalerba): Some of the theme styles above are not represented in terms of tokens,
     //   so this mixin is currently incomplete.
