@@ -1,0 +1,37 @@
+// This file contains functions used to inspect Angular Material theme objects.
+
+@use 'sass:list';
+@use 'sass:map';
+@use '../style/validation';
+
+$_internals: _mat-theming-internals-do-not-access;
+
+@function _validate-theme-object($theme) {
+  $err: validation.validate-type($theme, 'map') or
+        map.get($theme, $_internals, theme-version) == null;
+  @return if($err, true, null);
+}
+
+@function get-theme-version($theme) {
+  $err: _validate-theme-object($theme);
+  @return if($err, 0, map.get($theme, $_internals, theme-version) or 0);
+}
+
+@function get-theme-tokens($theme, $systems...) {
+  $systems: if(list.length($systems) == 0, (color, typography, density, other), $systems);
+  $err: _validate-theme-object($theme);
+  @if $err {
+    @error #{'Expected $theme to be an Angular Material theme object. Got:'} $theme;
+  }
+  $err: validation.validate-allowed-values($systems, color, typography, density, other);
+  @if $err {
+   @error
+     #{'Expected $systems to contain valid system names (color, typographt, density, or other).'}
+     #{'Got invalid system names:'} $err;
+  }
+  $result: ();
+  @each $system in $systems {
+    $result: map.deep-merge($result, map.get($theme, $_internals, '#{$system}-tokens'));
+  }
+  @return $result;
+}
