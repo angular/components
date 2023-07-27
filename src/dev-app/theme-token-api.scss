@@ -23,9 +23,16 @@ dev-app {
 
 @include mat.core();
 
-$m3-theme: matx.define-theme();
+$m3-theme: matx.define-theme((
+  color: (
+    primary: matx.$m3-green-palette
+  ),
+  typography: (
+    brand-family: 'monospace'
+  )
+));
 
-@debug $m3-theme;
-
-// @include mat.checkbox-theme($m3-theme);
-// @include mat.card-theme($m3-theme);
+html {
+  @include mat.checkbox-theme($m3-theme);
+  @include mat.card-theme($m3-theme);
+}
