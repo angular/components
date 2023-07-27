@@ -23,7 +23,6 @@ sass_library(
     name = "sass_lib",
     srcs = [
         "_index.scss",
-        "_token-theming.scss",
     ],
     deps = [
         "//src/material/core:core_scss_lib",

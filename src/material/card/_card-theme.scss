@@ -89,7 +89,7 @@
   }
 }
 
-@mixin theme-from-tokens($tokens) {
+@mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     $elevated-card-tokens: map.get($tokens, tokens-mdc-elevated-card.$prefix);
     // Work around a bug in MDC where the elevation is not resolved to an actual shadow value.
