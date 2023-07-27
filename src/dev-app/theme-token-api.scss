@@ -23,26 +23,9 @@ dev-app {
 
 @include mat.core();
 
-$theme: mat.define-light-theme((
-  color: (
-    primary: mat.define-palette(mat.$indigo-palette),
-    accent: mat.define-palette(mat.$pink-palette),
-  ),
-  typography: mat.define-typography-config(),
-  density: 0,
-));
+$m3-theme: matx.define-theme();
 
-// Apply all tokens (derived from `$theme`) to the `html` element. This ensures that all components
-// on the page will inherit these tokens.
-html {
-  @include matx.theme(
-    matx.token-defaults(matx.get-m3-tokens()),
-    matx.card(),
-    matx.checkbox(),
-  );
-}
+@debug $m3-theme;
 
-// TODO(mmalerba): Figure out a consistent solution for handling dark themes & color palette
-//  variants across M2 & M3 (likely by implementing `matx.system-colors`). As a reference, see the
-//  prior version of this file that showed a possible way to accomplish this in M2:
-//  https://github.com/angular/components/blob/5f5c5160dc20331619fc6729aa2ad78ac84af1c3/src/dev-app/theme-token-api.scss
+// @include mat.checkbox-theme($m3-theme);
+// @include mat.card-theme($m3-theme);

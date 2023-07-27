@@ -1,0 +1,101 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+
+/// Validates that the object's type matches any of the expected types.
+/// @param {any} $obj The object to test
+/// @param {List} $types The expected types
+/// @return {String} null if no error, else the unexpected type.
+@function validate-type($obj, $types...) {
+  $result: meta.type-of($obj);
+  // A zero-length list is the same as a zero-length map.
+  @if ($result == list and list.index($types, map) and list.length($obj) == 0) {
+    @return null;
+  }
+  @return if(list.index($types, $result), null, $result);
+}
+
+/// Validates that a map's keys contains only keys from the allowed keys list.
+/// @param {Map} $map The map to test
+/// @param {List} $keys The allowed map keys
+/// @return {List} null if no error, else the list of unexpected keys.
+@function validate-only-keys($map, $keys...) {
+  @each $key in $keys {
+    $map: map.remove($map, $key);
+  }
+  $invalid: map.keys($map);
+  @return if(list.length($invalid) > 0, $invalid, null);
+}
+
+/// Validates a theme config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-theme-config($config) {
+  $err: validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config'} #{'should be a color configuraiton object. Got:'} $config);
+  }
+  $err: validate-only-keys($config or (), color, typography, density);
+  @if $err {
+    @return (#{'$config'} #{'has unexpected properties:'} $err);
+  }
+  $err: validate-color-config(map.get($config, color));
+  @if $err {
+    @return list.set-nth($err, 1, #{'#{list.nth($err, 1)}.color'});
+  }
+  $err: validate-typography-config(map.get($config, typography));
+  @if $err {
+    @return list.set-nth($err, 1, #{'#{list.nth($err, 1)}.typography'});
+  }
+  $err: validate-density-config(map.get($config, density));
+  @if $err {
+    @return list.set-nth($err, 1, #{'#{list.nth($err, 1)}.density'});
+  }
+  @return null;
+}
+
+/// Validates a theme color config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-color-config($config) {
+  $err: validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config'} #{'should be a color configuraiton object. Got:'} $config);
+  }
+  $err: validate-only-keys($config or (), theme-type, primary, secondary, tertiary);
+  @if $err {
+    @return (#{'$config'} #{'has unexpected properties:'} $err);
+  }
+  @return null;
+}
+
+/// Validates a theme typography config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-typography-config($config) {
+  $err: validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config'} #{'should be a typography configuraiton object. Got:'} $config);
+  }
+  $err: validate-only-keys($config or (),
+      brand-family, plain-family, bold-weight, medium-weight, regular-weight);
+  @if $err {
+    @return (#{'$config'} #{'has unexpected properties:'} $err);
+  }
+  @return null;
+}
+
+/// Validates a theme density config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-density-config($config) {
+  $err: validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config'} #{'should be a density configuraiton object. Got:'} $config);
+  }
+  $err: validate-only-keys($config or (), scale);
+  @if $err {
+    @return (#{'$config'} #{'has unexpected properties:'} $err);
+  }
+  @return null;
+}

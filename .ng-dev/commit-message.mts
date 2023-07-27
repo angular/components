@@ -41,6 +41,7 @@ export const commitMessage: CommitMessageConfig = {
     'google-maps',
     'material-experimental/column-resize',
     'material-experimental/theming-next',
+    'material-experimental/theming',
     'material-experimental/menubar',
     'material-experimental/popover-edit',
     'material-experimental/selection',
