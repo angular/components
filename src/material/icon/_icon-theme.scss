@@ -1,25 +1,35 @@
 @use 'sass:map';
 @use '../core/theming/theming';
+@use '../core/tokens/m2/mat/icon' as tokens-mat-icon;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@mixin _palette-colors($config, $palette-name) {
+  $palette: map.get($config, $palette-name);
+  $color: theming.get-color-from-palette($palette, text);
+  $tokens: tokens-mat-icon.private-get-icon-color-tokens($color);
+  @include token-utils.create-token-values(tokens-mat-icon.$prefix, $tokens);
+}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-icon.$prefix,
+      tokens-mat-icon.get-color-tokens($config));
+  }
 
   .mat-icon {
     &.mat-primary {
-      color: theming.get-color-from-palette($primary, text);
+      @include _palette-colors($config, primary);
     }
 
     &.mat-accent {
-      color: theming.get-color-from-palette($accent, text);
+      @include _palette-colors($config, accent);
     }
 
     &.mat-warn {
-      color: theming.get-color-from-palette($warn, text);
+      @include _palette-colors($config, warn);
     }
   }
 }
