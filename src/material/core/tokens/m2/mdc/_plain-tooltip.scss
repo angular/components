@@ -51,9 +51,9 @@ $prefix: (mdc, plain-tooltip);
     // Font for the tooltip text.
     supporting-text-font: typography-utils.font-family($config, caption)
     or typography-utils.font-family($config),
-    // Font size for the the tooltip text.
+    // Font size for the tooltip text.
     supporting-text-size: typography-utils.font-size($config, caption),
-    // Font weight of the the tooltip text.
+    // Font weight of the tooltip text.
     supporting-text-weight: typography-utils.font-weight($config, caption),
     // Tracking (space between letters) of the tooltip text.
     supporting-text-tracking: typography-utils.letter-spacing($config, caption),
