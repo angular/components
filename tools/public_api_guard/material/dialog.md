@@ -7,6 +7,7 @@
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentFactoryResolver } from '@angular/core';
+import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
@@ -250,6 +251,7 @@ export class MatDialogRef<T, R = any> {
     beforeClosed(): Observable<R | undefined>;
     close(dialogResult?: R): void;
     componentInstance: T;
+    readonly componentRef: ComponentRef<T> | null;
     // (undocumented)
     _containerInstance: _MatDialogContainerBase;
     disableClose: boolean | undefined;

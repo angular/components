@@ -10,6 +10,7 @@ import {ComponentType, Overlay, OverlayContainer, ScrollStrategy} from '@angular
 import {Location} from '@angular/common';
 import {
   ANIMATION_MODULE_TYPE,
+  ComponentRef,
   Inject,
   Injectable,
   InjectionToken,
@@ -197,6 +198,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
 
     // This can't be assigned in the `providers` callback, because
     // the instance hasn't been assigned to the CDK ref yet.
+    (dialogRef! as {componentRef: ComponentRef<T>}).componentRef = cdkRef.componentRef!;
     dialogRef!.componentInstance = cdkRef.componentInstance!;
 
     this.openDialogs.push(dialogRef!);
