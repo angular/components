@@ -175,6 +175,7 @@ export class DialogRef<R = unknown, C = unknown> {
     close(result?: R, options?: DialogCloseOptions): void;
     readonly closed: Observable<R | undefined>;
     readonly componentInstance: C | null;
+    readonly componentRef: ComponentRef<C> | null;
     // (undocumented)
     readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>;
     readonly containerInstance: BasePortalOutlet & {

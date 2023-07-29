@@ -12,6 +12,7 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {DialogConfig} from './dialog-config';
 import {FocusOrigin} from '@angular/cdk/a11y';
 import {BasePortalOutlet} from '@angular/cdk/portal';
+import {ComponentRef} from '@angular/core';
 
 /** Additional options that can be passed in when closing a dialog. */
 export interface DialogCloseOptions {
@@ -28,6 +29,12 @@ export class DialogRef<R = unknown, C = unknown> {
    * null when the dialog is opened using a `TemplateRef`.
    */
   readonly componentInstance: C | null;
+
+  /**
+   * `ComponentRef` of the component opened into the dialog. Will be
+   * null when the dialog is opened using a `TemplateRef`.
+   */
+  readonly componentRef: ComponentRef<C> | null;
 
   /** Instance of the container that is rendering out the dialog content. */
   readonly containerInstance: BasePortalOutlet & {_closeInteractionType?: FocusOrigin};
