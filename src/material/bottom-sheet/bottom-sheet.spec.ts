@@ -8,6 +8,7 @@ import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
   Component,
+  ComponentRef,
   Directive,
   Inject,
   Injector,
@@ -83,6 +84,7 @@ describe('MatBottomSheet', () => {
 
     expect(overlayContainerElement.textContent).toContain('Pizza');
     expect(bottomSheetRef.instance instanceof PizzaMsg).toBe(true);
+    expect(bottomSheetRef.componentRef instanceof ComponentRef).toBe(true);
     expect(bottomSheetRef.instance.bottomSheetRef).toBe(bottomSheetRef);
   });
 

@@ -9,6 +9,7 @@ import { AnimationTriggerMetadata } from '@angular/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { DialogConfig } from '@angular/cdk/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
@@ -117,6 +118,7 @@ export class MatBottomSheetRef<T = any, R = any> {
     afterDismissed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
     backdropClick(): Observable<MouseEvent>;
+    get componentRef(): ComponentRef<T> | null;
     containerInstance: MatBottomSheetContainer;
     disableClose: boolean | undefined;
     dismiss(result?: R): void;
