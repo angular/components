@@ -1,5 +1,7 @@
 @use '../core/style/list-common';
 @use '../core/style/layout-common';
+@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use '../core/tokens/token-utils';
 
 
 // height of tile header or footer if it has one line
@@ -65,6 +67,24 @@ $text-padding: 16px;
     &:empty {
       display: none;
     }
+  }
+}
+
+.mat-grid-tile-header {
+  @include token-utils.use-tokens(
+    tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
+    $secondary-token-name: token-utils.get-token-variable(tile-header-secondary-text-size);
+    @include list-common.base(var(#{$secondary-token-name}));
+    @include token-utils.create-token-slot(font-size, tile-header-primary-text-size);
+  }
+}
+
+.mat-grid-tile-footer {
+  @include token-utils.use-tokens(
+    tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
+    $secondary-token-name: token-utils.get-token-variable(tile-footer-secondary-text-size);
+    @include list-common.base(var(#{$secondary-token-name}));
+    @include token-utils.create-token-slot(font-size, tile-footer-primary-text-size);
   }
 }
 
