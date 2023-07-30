@@ -1357,6 +1357,24 @@ describe('MDC-based MatSlider', () => {
       expect(sliderControl.pristine).toBe(false);
       expect(sliderControl.touched).toBe(true);
     }));
+
+    it('slider responds to form control modifications', () => {
+      // Whenever the starting input is assigned the value 56, it should be adjusted to 55.
+
+      const subscription = startInput.valueChange.subscribe(() => {
+        startInput.value = 55;
+        fixture.detectChanges();
+      });
+
+      // Once the input is manipulated, it gets activated and a value update becomes necessary.
+      startInput._isActive = true;
+      startInput._hostElement.value = `56`;
+      dispatchEvent(startInput._hostElement, new Event('change'));
+
+      expect(startInput.value).toBe(55);
+
+      subscription.unsubscribe();
+    });
   });
 
   describe('slider with a two-way binding', () => {
