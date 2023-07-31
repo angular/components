@@ -49,7 +49,7 @@ $prefix: (mat, tab-header);
     label-text-font:
       typography-utils.font-family($config, button) or typography-utils.font-family($config),
     label-text-size: typography-utils.font-size($config, button),
-    label-text-letter-spacing: typography-utils.letter-spacing($config, button),
+    label-text-tracking: typography-utils.letter-spacing($config, button),
     label-text-line-height: typography-utils.line-height($config, button),
     label-text-weight: typography-utils.font-weight($config, button),
   );

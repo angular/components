@@ -52,7 +52,7 @@
     .mat-mdc-slide-toggle .mdc-label {
       @include token-utils.create-token-slot(font-family, label-text-font);
       @include token-utils.create-token-slot(font-size, label-text-size);
-      @include token-utils.create-token-slot(letter-spacing, label-text-letter-spacing);
+      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
       @include token-utils.create-token-slot(line-height, label-text-line-height);
       @include token-utils.create-token-slot(font-weight, label-text-weight);
     }
