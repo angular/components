@@ -930,7 +930,7 @@ export class MatSlider
   }
 
   _setTransition(withAnimation: boolean): void {
-    this._hasAnimation = withAnimation && !this._noopAnimations;
+    this._hasAnimation = !this._platform.IOS && withAnimation && !this._noopAnimations;
     this._elementRef.nativeElement.classList.toggle(
       'mat-mdc-slider-with-animation',
       this._hasAnimation,

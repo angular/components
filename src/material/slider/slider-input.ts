@@ -468,7 +468,12 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     if (this._isActive) {
       this._isActive = false;
       this.dragEnd.emit({source: this, parent: this._slider, value: this.value});
-      setTimeout(() => this._updateWidthInactive());
+
+      // This setTimeout is to prevent the pointerup from triggering a value
+      // change on the input based on the inactive width. It's not clear why
+      // but for some reason on IOS this race condition is even more common so
+      // the timeout needs to be increased.
+      setTimeout(() => this._updateWidthInactive(), this._platform.IOS ? 10 : 0);
     }
   }
 
