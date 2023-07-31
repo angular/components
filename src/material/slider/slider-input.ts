@@ -95,7 +95,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
       this._initialValue = val;
       return;
     }
-    if (this._isActive) {
+    // The control, once initialized via setValue, necessitates a value update.
+    // The _isControlInitialized flag turns true once setValue is executed.
+    if (this._isActive && !this._isControlInitialized) {
       return;
     }
     this._hostElement.value = val;
