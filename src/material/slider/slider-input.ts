@@ -36,6 +36,7 @@ import {
   MAT_SLIDER_THUMB,
   MAT_SLIDER,
 } from './slider-interface';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * Provider that allows the slider thumb to register as a ControlValueAccessor.
@@ -260,6 +261,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   protected _isControlInitialized = false;
 
   constructor(
+    protected _platform: Platform,
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
@@ -363,8 +365,22 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
       return;
     }
 
-    this._isActive = true;
-    this._setIsFocused(true);
+    // On IOS, dragging only works if the pointer down happens on the
+    // slider thumb and the slider does not receive focus from pointer events.
+    if (this._platform.IOS) {
+      const isCursorOnSliderThumb = this._slider._isCursorOnSliderThumb(
+        event,
+        this._slider._getThumb(this.thumbPosition)._hostElement.getBoundingClientRect(),
+      );
+
+      if (isCursorOnSliderThumb) {
+        this._isActive = true;
+      }
+    } else {
+      this._isActive = true;
+      this._setIsFocused(true);
+    }
+
     this._updateWidthActive();
     this._slider._updateDimensions();
 
@@ -609,12 +625,13 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   _isEndThumb: boolean;
 
   constructor(
+    protected override _platform: Platform,
     _ngZone: NgZone,
     @Inject(MAT_SLIDER) _slider: _MatSlider,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
   ) {
-    super(_ngZone, _elementRef, _cdr, _slider);
+    super(_platform, _ngZone, _elementRef, _cdr, _slider);
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
     this.thumbPosition = this._isEndThumb ? _MatThumb.END : _MatThumb.START;

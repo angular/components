@@ -936,6 +936,16 @@ export class MatSlider
       this._hasAnimation,
     );
   }
+
+  /** Whether the given pointer event occurred within the bounds of the slider pointer's DOM Rect. */
+  _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect) {
+    const radius = rect.width / 2;
+    const centerX = rect.x + radius;
+    const centerY = rect.y + radius;
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    return Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(radius, 2);
+  }
 }
 
 /** Ensures that there is not an invalid configuration for the slider thumb inputs. */

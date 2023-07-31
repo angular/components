@@ -137,7 +137,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     }
 
     const rect = this._hostElement.getBoundingClientRect();
-    const isHovered = this._isSliderThumbHovered(event, rect);
+    const isHovered = this._slider._isCursorOnSliderThumb(event, rect);
     this._isHovered = isHovered;
 
     if (isHovered) {
@@ -298,14 +298,5 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
       this._isShowingRipple(this._focusRippleRef) ||
       this._isShowingRipple(this._activeRippleRef)
     );
-  }
-
-  private _isSliderThumbHovered(event: PointerEvent, rect: DOMRect) {
-    const radius = rect.width / 2;
-    const centerX = rect.x + radius;
-    const centerY = rect.y + radius;
-    const dx = event.clientX - centerX;
-    const dy = event.clientY - centerY;
-    return Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(radius, 2);
   }
 }
