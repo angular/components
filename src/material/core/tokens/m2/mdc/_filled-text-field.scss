@@ -1,0 +1,161 @@
+@use 'sass:map';
+@use '../../../theming/theming';
+@use '../../../style/sass-utils';
+@use '../../../typography/typography-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, filled-text-field);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
+@function get-unthemable-tokens() {
+  @return (
+    active-indicator-height: 1px,
+    focus-active-indicator-height: 2px,
+
+    // TODO(crisbeto): distribute the remainder of these tokens
+    container-color: null,
+    container-height: null,
+    container-shape: null,
+    disabled-container-color: null,
+    disabled-container-opacity: null,
+    disabled-input-text-color: null,
+    disabled-input-text-opacity: null,
+    disabled-leading-icon-color: null,
+    disabled-leading-icon-opacity: null,
+    disabled-supporting-text-color: null,
+    disabled-supporting-text-opacity: null,
+    disabled-trailing-icon-color: null,
+    disabled-trailing-icon-opacity: null,
+    error-focus-input-text-color: null,
+    error-focus-leading-icon-color: null,
+    error-focus-supporting-text-color: null,
+    error-focus-trailing-icon-color: null,
+    error-hover-input-text-color: null,
+    error-hover-leading-icon-color: null,
+    error-hover-state-layer-color: null,
+    error-hover-state-layer-opacity: null,
+    error-hover-supporting-text-color: null,
+    error-hover-trailing-icon-color: null,
+    error-input-text-color: null,
+    error-leading-icon-color: null,
+    error-supporting-text-color: null,
+    error-trailing-icon-color: null,
+    focus-input-text-color: null,
+    focus-leading-icon-color: null,
+    focus-supporting-text-color: null,
+    focus-trailing-icon-color: null,
+    hover-input-text-color: null,
+    hover-leading-icon-color: null,
+    hover-state-layer-color: null,
+    hover-state-layer-opacity: null,
+    hover-supporting-text-color: null,
+    hover-trailing-icon-color: null,
+    input-text-color: null,
+    input-text-font: null,
+    input-text-line-height: null,
+    input-text-placeholder-color: null,
+    input-text-prefix-color: null,
+    input-text-size: null,
+    input-text-suffix-color: null,
+    input-text-tracking: null,
+    input-text-type: null,
+    input-text-weight: null,
+    leading-icon-color: null,
+    leading-icon-size: null,
+    supporting-text-color: null,
+    supporting-text-font: null,
+    supporting-text-line-height: null,
+    supporting-text-size: null,
+    supporting-text-tracking: null,
+    supporting-text-weight: null,
+    trailing-icon-color: null,
+    trailing-icon-size: null,
+    label-text-font: null,
+    label-text-line-height: null,
+    label-text-size: null,
+    label-text-tracking: null,
+    label-text-weight: null,
+    disabled-label-text-color: null,
+    disabled-label-text-opacity: null,
+    error-focus-label-text-color: null,
+    error-hover-label-text-color: null,
+    error-label-text-color: null,
+    focus-label-text-color: null,
+    hover-label-text-color: null,
+    label-text-populated-line-height: null,
+    label-text-populated-size: null,
+    label-text-type: null,
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
+    disabled-active-indicator-height: null,
+    hover-active-indicator-height: null,
+    disabled-active-indicator-opacity: null,
+    error-focus-caret-color: null,
+    error-hover-caret-color: null,
+    focus-caret-color: null,
+    hover-caret-color: null,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($config) {
+  $foreground: map.get($config, foreground);
+  $warn: map.get($config, warn);
+  $is-dark: map.get($config, is-dark);
+  $warn-color: theming.get-color-from-palette($warn);
+  $color-tokens: private-get-color-palette-color-tokens($config, primary);
+
+  @return map.merge($color-tokens, (
+    label-text-color: null,
+    error-caret-color: $warn-color,
+
+    // Line ripple tokens
+    active-indicator-color: theming.get-color-from-palette($foreground, divider, 0.42),
+    disabled-active-indicator-color: theming.get-color-from-palette($foreground, divider, 0.06),
+    hover-active-indicator-color: theming.get-color-from-palette($foreground, divider, 0.87),
+    error-active-indicator-color: $warn-color,
+    error-focus-active-indicator-color: $warn-color,
+    error-hover-active-indicator-color: $warn-color,
+  ));
+}
+
+// Generates the mapping for the properties that change based on the slide toggle color.
+@function private-get-color-palette-color-tokens($config, $palette-name) {
+  $palette: map.get($config, $palette-name);
+  $palette-color: theming.get-color-from-palette($palette);
+
+  @return (
+    caret-color: $palette-color,
+    focus-active-indicator-color: $palette-color,
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($config) {
+  $fallback-font-family: typography-utils.font-family($config);
+
+  @return ();
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($config) {
+  @return ();
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+      get-unthemable-tokens(),
+      get-color-tokens(token-utils.$placeholder-color-config),
+      get-typography-tokens(token-utils.$placeholder-typography-config),
+      get-density-tokens(token-utils.$placeholder-density-config)
+  );
+}
