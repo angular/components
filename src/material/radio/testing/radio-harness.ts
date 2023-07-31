@@ -194,7 +194,7 @@ export class MatRadioButtonHarness extends ComponentHarness {
   }
 
   protected _textLabel = this.locatorFor('label');
-  protected _clickLabel = this._textLabel;
+  protected _clickLabel = this.locatorFor('.mat-mdc-radio-touch-target');
   private _input = this.locatorFor('input');
 
   /** Whether the radio-button is checked. */
