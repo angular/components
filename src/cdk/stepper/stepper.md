@@ -42,7 +42,7 @@ this default `completed` behavior by setting the `completed` attribute as needed
 
 ### Stepper buttons
 There are two button directives to support navigation between different steps:
-`CdkStepperNext` and `CdkStepperPrevious`. When placed inside of a step, these will automatically
+`CdkStepperNext` and `CdkStepperPrevious`. When placed inside a step, these will automatically
 add click handlers to advance or rewind the workflow, respectively.
 
 ### Resetting a stepper
