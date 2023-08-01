@@ -5774,7 +5774,7 @@ StackBlitz instead of Plunker.
 
 * Progress spinner is now entirely css-based.
 * Fixed sidenav: the sidenav can now be configured to use fixed positioning. This resolves a longstanding issue where sidenav-container would always introduce a scrolling region.
-* `mat-select` is now used inside `mat-form-field`. This makes all of the existing form-field features available with `mat-select`, including hints, errors, prefixes, and suffixes. This also ensures that `mat-select` and `matInput` have a consistent presentation.
+* `mat-select` is now used inside `mat-form-field`. This makes all the existing form-field features available with `mat-select`, including hints, errors, prefixes, and suffixes. This also ensures that `mat-select` and `matInput` have a consistent presentation.
 
 ```html
 <mat-form-field>
