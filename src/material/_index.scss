@@ -3,6 +3,7 @@
   define-palette, get-contrast-color-from-palette, get-color-from-palette,
   get-color-config, get-typography-config, get-density-config,
   $theme-ignore-duplication-warnings;
+@forward './core/theming/theming' as private-* show private-clamp-density;
 @forward './core/theming/palette' show $red-palette, $pink-palette, $indigo-palette,
   $purple-palette, $deep-purple-palette, $blue-palette, $light-blue-palette, $cyan-palette,
   $teal-palette, $green-palette, $light-green-palette, $lime-palette, $yellow-palette,
