@@ -8,7 +8,7 @@
 @function validate-theme-config($config) {
   $err: mat.private-validate-type($config, 'map', 'null');
   @if $err {
-    @return (#{'$config'} #{'should be a color configuraiton object. Got:'} $config);
+    @return (#{'$config'} #{'should be a color configuration object. Got:'} $config);
   }
   $err: mat.private-validate-allowed-values(map.keys($config or ()), color, typography, density);
   @if $err {
@@ -35,7 +35,7 @@
 @function validate-color-config($config) {
   $err: mat.private-validate-type($config, 'map', 'null');
   @if $err {
-    @return (#{'$config'} #{'should be a color configuraiton object. Got:'} $config);
+    @return (#{'$config'} #{'should be a color configuration object. Got:'} $config);
   }
   $err: mat.private-validate-allowed-values(
       map.keys($config or ()), theme-type, primary, secondary, tertiary);
@@ -51,7 +51,7 @@
 @function validate-typography-config($config) {
   $err: mat.private-validate-type($config, 'map', 'null');
   @if $err {
-    @return (#{'$config'} #{'should be a typography configuraiton object. Got:'} $config);
+    @return (#{'$config'} #{'should be a typography configuration object. Got:'} $config);
   }
   $err: mat.private-validate-allowed-values(
       map.keys($config or ()), brand-family, plain-family, bold-weight, medium-weight,
@@ -68,7 +68,7 @@
 @function validate-density-config($config) {
   $err: mat.private-validate-type($config, 'map', 'null');
   @if $err {
-    @return (#{'$config'} #{'should be a density configuraiton object. Got:'} $config);
+    @return (#{'$config'} #{'should be a density configuration object. Got:'} $config);
   }
   $err: mat.private-validate-allowed-values(map.keys($config or ()), scale);
   @if $err {

@@ -97,11 +97,11 @@
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
 
-  @if inspection.get-theme-version($theme-or-color-config) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme-or-color-config));
-  }
-  @else {
-    @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    }
+    @else {
       $color: theming.get-color-config($theme);
       $density: theming.get-density-config($theme);
       $typography: theming.get-typography-config($theme);
