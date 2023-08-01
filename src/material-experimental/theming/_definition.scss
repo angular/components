@@ -70,8 +70,8 @@ $theme-version: 1;
   @return (
     $internals: (
       theme-version: $theme-version,
-      typography-tokens:
-      m3-tokens.generate-typography-tokens($brand, $plain, $bold, $medium, $regular)
+      typography-tokens: m3-tokens.generate-typography-tokens(
+          $brand, $plain, $bold, $medium, $regular)
     )
   );
 }
