@@ -19,7 +19,7 @@ $theme-version: 1;
   @if $err {
     @error $err;
   }
-  
+
   @return mat.private-deep-merge-all(
       define-colors(map.get($config, color) or ()),
       define-typography(map.get($config, typography) or ()),
@@ -47,7 +47,7 @@ $theme-version: 1;
       theme-version: $theme-version,
       theme-type: $type,
       color-tokens: m3-tokens.generate-color-tokens($type, $primary, $secondary, $tertiary,
-          m3-palettes.$neutral-palette, m3-palettes.$red-palette)
+        m3-palettes.$neutral-palette, m3-palettes.$red-palette)
     )
   );
 }
@@ -71,7 +71,7 @@ $theme-version: 1;
     $internals: (
       theme-version: $theme-version,
       typography-tokens:
-          m3-tokens.generate-typography-tokens($brand, $plain, $bold, $medium, $regular)
+      m3-tokens.generate-typography-tokens($brand, $plain, $bold, $medium, $regular)
     )
   );
 }
