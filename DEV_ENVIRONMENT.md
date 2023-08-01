@@ -4,7 +4,7 @@
 2. angular/components uses Bazel which requires certain Bash and UNIX tools.
    - On Windows: Follow the [instructions](https://docs.bazel.build/versions/master/install-windows.html#installing-compilers-and-language-runtimes)
    to install [`MSYS2`](https://www.msys2.org/) and the listed "Common MSYS2 packages".
-   Afterwards add `C:\msys64\usr\bin` to the `PATH` environment variable.
+   Afterward add `C:\msys64\usr\bin` to the `PATH` environment variable.
 3. Fork the `angular/components` repo on GitHub.
 4. Clone your fork to your machine with `git clone`.
    Recommendation: name your git remotes `upstream` for `angular/components`
