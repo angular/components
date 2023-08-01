@@ -891,6 +891,8 @@ describe('MDC-based MatSlider', () => {
     it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$1');
       setValueByClick(slider, input, 199);
+      fixture.detectChanges();
+      flush();
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$199');
     }));
 
