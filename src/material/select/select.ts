@@ -1113,7 +1113,7 @@ export abstract class _MatSelectBase<C>
 
   /** Emits change event to set the model value. */
   private _propagateChanges(fallbackValue?: any): void {
-    let valueToEmit: any = null;
+    let valueToEmit: any;
 
     if (this.multiple) {
       valueToEmit = (this.selected as MatOption[]).map(option => option.value);
