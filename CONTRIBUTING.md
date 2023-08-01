@@ -68,7 +68,7 @@ chances of your issue being dealt with quickly:
     is a bug for you
 * **Browsers and Operating System** - is this a problem with all browsers?
 * **Reproduce the Error** - provide a live example (using [CodePen][codepen], [JsBin][jsbin],
-    [Plunker][plunker], etc.) or a unambiguous set of steps
+    [Plunker][plunker], etc.) or an unambiguous set of steps
 * **Screenshots** - Due to the visual nature of Angular Material, screenshots can help the team
     triage issues far more quickly than a text description.
 * **Related Issues** - has a similar issue been reported before?
