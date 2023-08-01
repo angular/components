@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
+@use './m3-density';
 @use './m3-palettes';
 @use './custom-tokens';
 
@@ -166,7 +167,7 @@
   $token-slots: mat.m2-tokens-from-theme($fake-theme);
 
   // TODO(mmalerba): Fill in remaining tokens.
-  @return mat.private-merge-all(
+  $result: mat.private-merge-all(
       // Add the system color & typography tokens (so we can give users access via an API).
       (
           (mdc, theme): map.get($systems, md-sys-color),
@@ -196,6 +197,17 @@
           $token-slots
       ),
   );
+
+  // Strip out tokens that are systemized by our made up density system.
+  @each $namespace, $tokens in $result {
+    @each $token, $value in $tokens {
+      @if m3-density.is-systemized($namespace, $token) {
+        $tokens: map.remove($tokens, $token);
+      }
+    }
+    $result: map.set($result, $namespace, $tokens);
+  }
+  @return $result;
 }
 
 /// Generates a set of namespaced color tokens for all components.
@@ -239,8 +251,7 @@
 /// @param {String|Number} $scale The regular font-weight
 /// @return {Map} A map of namespaced density tokens
 @function generate-density-tokens($scale) {
-  // TODO(mmalerba): Implement density.
-  @return ();
+  @return m3-density.get-tokens-for-scale($scale);
 }
 
 /// Generates a set of namespaced tokens not related to color, typography, or density for all

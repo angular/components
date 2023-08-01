@@ -1,6 +1,8 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
+// Add an indicator to make it clear that the app is styled with the experimental theming API.
 dev-app {
   &::before {
     content: 'Using experimental theming API';
@@ -16,23 +18,47 @@ dev-app {
   }
 }
 
-.demo-unicorn-dark-theme {
-  background: black;
-  color: white;
-}
-
+// Emit Angular Material core styles.
 @include mat.core();
 
-$m3-theme: matx.define-theme((
+// Base theme configuration for our M3 theme.
+$m3-base-config: (
   color: (
     primary: matx.$m3-green-palette
   ),
   typography: (
     brand-family: 'monospace'
   )
-));
+);
 
+// Our M3 light theme.
+$light-theme: matx.define-theme($m3-base-config);
+
+// Our M3 dark theme.
+$dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark));
+
+// Emit default theme styles.
 html {
-  @include mat.checkbox-theme($m3-theme);
-  @include mat.card-theme($m3-theme);
+  @include mat.checkbox-theme($light-theme);
+  @include mat.card-theme($light-theme);
+}
+
+// Emit dark theme styles.
+.demo-unicorn-dark-theme {
+  // TODO(mmalerba): choose colors from the theming API.
+  background: black;
+  color: white;
+
+  @include mat.checkbox-color($dark-theme);
+  @include mat.card-color($dark-theme);
+}
+
+// Emit density styles for each scale.
+@each $scale in (maximum, 0, -1, -2, -3, minimum) {
+  $scale-theme: matx.define-theme(map.set($m3-base-config, density, scale, $scale));
+
+  .demo-density-#{$scale} {
+    @include mat.checkbox-density($scale-theme);
+    @include mat.card-density($scale-theme);
+  }
 }
