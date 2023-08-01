@@ -16,8 +16,8 @@
 // TODO(mmalerba): Add density tokens for remaining components.
 $_density-tokens: (
     (mdc, checkbox): (
-      state-layer-size: (40px, 36px, 32px, 28px),
-    ),
+    state-layer-size: (40px, 36px, 32px, 28px),
+  ),
     (mdc, elevated-card): (),
     (mdc, outlined-card): (),
     (mat, card): (),
@@ -27,7 +27,7 @@ $_density-tokens: (
 /// @param {List} $density-values The list of values for each density scale.
 /// @param {Number} $scale The density scale to get the value for.
 /// @return {*} The value for the given scale.
-@function _get-value-for-scale($density-values, $scale){
+@function _get-value-for-scale($density-values, $scale) {
   $scale: mat.private-clamp-density($scale, -1 * list.length($density-values) + 1);
   $index: -$scale + 1;
   @return list.nth($density-values, $index);

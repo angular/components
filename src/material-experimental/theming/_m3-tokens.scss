@@ -2,7 +2,6 @@
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
 @use './m3-density';
-@use './m3-palettes';
 @use './custom-tokens';
 
 // TODO(mmalerba): Split up this file into smaller pieces.
@@ -168,31 +167,31 @@
 
   // TODO(mmalerba): Fill in remaining tokens.
   $result: mat.private-merge-all(
-      // Add the system color & typography tokens (so we can give users access via an API).
+    // Add the system color & typography tokens (so we can give users access via an API).
       (
           (mdc, theme): map.get($systems, md-sys-color),
           (mdc, typography): map.get($systems, md-sys-typescale),
       ),
       // Get the official MDC component tokens
       _namespace-tokens(
-          (mdc, checkbox),
+            (mdc, checkbox),
           _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
           $token-slots
       ),
       _namespace-tokens(
-          (mdc, elevated-card),
+            (mdc, elevated-card),
           mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
           $token-slots
       ),
       _namespace-tokens(
-          (mdc, outlined-card),
+            (mdc, outlined-card),
           mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
           $token-slots
       ),
       // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
       // values.
       _namespace-tokens(
-          (mat, card),
+            (mat, card),
           custom-tokens.card($systems, $exclude-hardcoded),
           $token-slots
       ),
@@ -223,8 +222,8 @@
     md-ref-palette: _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error)
   );
   $sys-color: if($type == dark,
-      mdc-tokens.md-sys-color-values-dark($ref),
-      mdc-tokens.md-sys-color-values-light($ref));
+    mdc-tokens.md-sys-color-values-dark($ref),
+    mdc-tokens.md-sys-color-values-light($ref));
   @return _generate-tokens((
     md-sys-color: $sys-color,
     md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
@@ -263,5 +262,5 @@
     md-sys-motion: mdc-tokens.md-sys-motion-values(),
     md-sys-shape: mdc-tokens.md-sys-shape-values(),
     md-sys-state: mdc-tokens.md-sys-state-values(),
-  ), $include-non-systemized: true)
+  ), $include-non-systemized: true);
 }
