@@ -16,7 +16,7 @@ import {
   inject,
 } from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRipple} from '../core';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRipple} from '@angular/material/core';
 
 /** The options for the MatButtonRippleLoader's event listeners. */
 const eventListenerOptions = {capture: true};
