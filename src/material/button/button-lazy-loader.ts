@@ -15,15 +15,8 @@ import {
   OnDestroy,
   inject,
 } from '@angular/core';
-import {
-  MAT_RIPPLE_GLOBAL_OPTIONS,
-  MatRipple,
-  RippleConfig,
-  RippleGlobalOptions,
-  RippleRenderer,
-  RippleTarget,
-} from '@angular/material/core';
 import {Platform} from '@angular/cdk/platform';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRipple} from '@angular/material/core';
 
 /** The options for the MatButtonRippleLoader's event listeners. */
 const eventListenerOptions = {capture: true};
@@ -31,14 +24,23 @@ const eventListenerOptions = {capture: true};
 /** The events that should trigger the initialization of the ripple. */
 const rippleInteractionEvents = ['focus', 'click', 'mouseenter', 'touchstart'];
 
-/** The attribute attached to a mat-button whose ripple has not yet been initialized. */
-export const MAT_BUTTON_RIPPLE_UNINITIALIZED = 'mat-button-ripple-uninitialized';
+/** The attribute attached to a component whose ripple has not yet been initialized. */
+const matRippleUninitialized = 'mat-ripple-loader-uninitialized';
+
+/** Additional classes that should be added to the ripple when it is rendered. */
+const matRippleClassName = 'mat-ripple-loader-class-name';
+
+/** Whether the ripple should be centered. */
+const matRippleCentered = 'mat-ripple-loader-centered';
+
+/** Whether the ripple should be disabled. */
+const matRippleDisabled = 'mat-ripple-loader-disabled';
 
 /**
- * Handles attaching the MatButton's ripple on demand.
+ * Handles attaching ripples on demand.
  *
- * This service allows us to avoid eagerly creating & attaching the MatButton's ripple.
- * It works by creating & attaching the ripple only when a MatButton is first interacted with.
+ * This service allows us to avoid eagerly creating & attaching MatRipples.
+ * It works by creating & attaching a ripple only when a component is first interacted with.
  */
 @Injectable({providedIn: 'root'})
 export class MatButtonLazyLoader implements OnDestroy {
@@ -62,50 +64,93 @@ export class MatButtonLazyLoader implements OnDestroy {
     }
   }
 
-  /** Handles creating and attaching button internals when a button is initially interacted with. */
-  private _onInteraction = (event: Event) => {
-    if (event.target === this._document) {
+  /**
+   * Configures the ripple that will be rendered by the ripple loader.
+   *
+   * Stores the given information about how the ripple should be configured on the host
+   * element so that it can later be retrived & used when the ripple is actually created.
+   */
+  configureRipple(
+    host: HTMLElement,
+    config: {
+      className?: string;
+      centered?: boolean;
+      disabled?: boolean;
+    },
+  ): void {
+    // Indicates that the ripple has not yet been rendered for this component.
+    host.setAttribute(matRippleUninitialized, '');
+
+    // Store the additional class name(s) that should be added to the ripple element.
+    if (config.className || !host.hasAttribute(matRippleClassName)) {
+      host.setAttribute(matRippleClassName, config.className || '');
+    }
+
+    // Store whether the ripple should be centered.
+    if (config.centered) {
+      host.setAttribute(matRippleCentered, '');
+    }
+
+    if (config.disabled) {
+      host.setAttribute(matRippleDisabled, '');
+    }
+  }
+
+  /** Returns the ripple instance for the given host element. */
+  getRipple(host: HTMLElement): MatRipple | undefined {
+    if ((host as any).matRipple) {
+      return (host as any).matRipple;
+    }
+    return this.createRipple(host);
+  }
+
+  /** Sets the disabled state on the ripple instance corresponding to the given host element. */
+  setDisabled(host: HTMLElement, disabled: boolean): void {
+    const ripple = (host as any).matRipple as MatRipple | undefined;
+
+    // If the ripple has already been instantiated, just disable it.
+    if (ripple) {
+      ripple.disabled = disabled;
       return;
     }
-    const eventTarget = event.target as Element;
+
+    // Otherwise, set an attribute so we know what the
+    // disabled state should be when the ripple is initialized.
+    if (disabled) {
+      host.setAttribute(matRippleDisabled, '');
+    } else {
+      host.removeAttribute(matRippleDisabled);
+    }
+  }
+
+  /** Handles creating and attaching component internals when a component it is initially interacted with. */
+  private _onInteraction = (event: Event) => {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+    const eventTarget = event.target as HTMLElement;
 
     // TODO(wagnermaciel): Consider batching these events to improve runtime performance.
 
-    const button = eventTarget.closest(`[${MAT_BUTTON_RIPPLE_UNINITIALIZED}]`);
-    if (button) {
-      button.removeAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED);
-      this._appendRipple(button as HTMLElement);
+    const element = eventTarget.closest(`[${matRippleUninitialized}]`);
+    if (element) {
+      this.createRipple(element as HTMLElement);
     }
   };
 
-  /** Creates a MatButtonRipple and appends it to the given button element. */
-  private _appendRipple(button: HTMLElement): void {
+  /** Creates a MatRipple and appends it to the given element. */
+  createRipple(host: HTMLElement): MatRipple | undefined {
     if (!this._document) {
       return;
     }
-    const ripple = this._document.createElement('span');
-    ripple.classList.add('mat-mdc-button-ripple');
 
-    const target = new MatButtonRippleTarget(
-      button,
-      this._globalRippleOptions ? this._globalRippleOptions : undefined,
-      this._animationMode ? this._animationMode : undefined,
-    );
-    target.rippleConfig.centered = button.hasAttribute('mat-icon-button');
-
-    const rippleRenderer = new RippleRenderer(target, this._ngZone, ripple, this._platform);
-    rippleRenderer.setupTriggerEvents(button);
-    button.append(ripple);
-  }
-
-  _createMatRipple(button: HTMLElement): MatRipple | undefined {
-    if (!this._document) {
-      return;
-    }
-    button.querySelector('.mat-mdc-button-ripple')?.remove();
-    button.removeAttribute(MAT_BUTTON_RIPPLE_UNINITIALIZED);
+    // Create the ripple element.
+    host.querySelector('.mat-ripple')?.remove();
     const rippleEl = this._document!.createElement('span');
-    rippleEl.classList.add('mat-mdc-button-ripple');
+    rippleEl.classList.add('mat-ripple', host.getAttribute(matRippleClassName)!);
+    host.append(rippleEl);
+
+    // Create the MatRipple.
     const ripple = new MatRipple(
       new ElementRef(rippleEl),
       this._ngZone,
@@ -114,38 +159,15 @@ export class MatButtonLazyLoader implements OnDestroy {
       this._animationMode ? this._animationMode : undefined,
     );
     ripple._isInitialized = true;
-    ripple.trigger = button;
-    button.append(rippleEl);
+    ripple.trigger = host;
+    ripple.centered = host.hasAttribute(matRippleCentered);
+    ripple.disabled = host.hasAttribute(matRippleDisabled);
+    this.attachRipple(host, ripple);
     return ripple;
   }
-}
 
-/**
- * The RippleTarget for the lazily rendered MatButton ripple.
- * It handles ripple configuration and disabled state for ripples interactions.
- *
- * Note that this configuration is usually handled by the MatRipple, but the MatButtonLazyLoader does not use the
- * MatRipple Directive. In order to create & attach a ripple on demand, it uses the "lower level" RippleRenderer.
- */
-class MatButtonRippleTarget implements RippleTarget {
-  rippleConfig: RippleConfig & RippleGlobalOptions;
-
-  constructor(
-    private _button: HTMLElement,
-    private _globalRippleOptions?: RippleGlobalOptions,
-    animationMode?: string,
-  ) {
-    this._setRippleConfig(_globalRippleOptions, animationMode);
-  }
-
-  private _setRippleConfig(globalRippleOptions?: RippleGlobalOptions, animationMode?: string) {
-    this.rippleConfig = globalRippleOptions || {};
-    if (animationMode === 'NoopAnimations') {
-      this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
-    }
-  }
-
-  get rippleDisabled(): boolean {
-    return this._button.hasAttribute('disabled') || !!this._globalRippleOptions?.disabled;
+  attachRipple(host: Element, ripple: MatRipple): void {
+    host.removeAttribute(matRippleUninitialized);
+    (host as any).matRipple = ripple;
   }
 }
