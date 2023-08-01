@@ -99,7 +99,7 @@
 @forward './legacy-checkbox/checkbox-theme' as legacy-checkbox-* show
   legacy-checkbox-theme, legacy-checkbox-color, legacy-checkbox-typography;
 @forward './checkbox/checkbox-theme' as checkbox-* show checkbox-theme, checkbox-color,
-  checkbox-typography, checkbox-density;
+  checkbox-typography, checkbox-density, checkbox-base;
 @forward './legacy-chips/chips-theme' as legacy-chips-* show legacy-chips-theme,
   legacy-chips-color, legacy-chips-typography;
 @forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography,
