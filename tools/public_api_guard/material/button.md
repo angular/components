@@ -16,7 +16,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i4 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { MatRipple as MatRipple_2 } from '@angular/material/core';
+import { MatRipple } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
