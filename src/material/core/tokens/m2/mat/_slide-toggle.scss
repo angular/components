@@ -29,7 +29,7 @@ $prefix: (mat, slide-toggle);
   @return (
     label-text-font: typography-utils.font-family($config),
     label-text-size: typography-utils.font-size($config, body-2),
-    label-text-letter-spacing: typography-utils.letter-spacing($config, body-2),
+    label-text-tracking: typography-utils.letter-spacing($config, body-2),
     label-text-line-height: typography-utils.line-height($config, body-2),
     label-text-weight: typography-utils.font-weight($config, body-2),
   );
