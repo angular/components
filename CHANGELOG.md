@@ -1,3 +1,12 @@
+<a name="16.1.7"></a>
+# 16.1.7 "velvet-violin" (2023-08-02)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b0635a5bd2](https://github.com/angular/components/commit/b0635a5bd2f6f6a075f2f3cbcc088640a3bd09e6) | fix | **button:** fix disableRipple regression ([#27527](https://github.com/angular/components/pull/27527)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.0-next.5"></a>
 # 16.2.0-next.5 "antimony-anteater" (2023-07-26)
 ### cdk
