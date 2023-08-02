@@ -16,6 +16,7 @@
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
+@use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '@material/chips/chip-theme' as mdc-chips-theme;
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '@material/theme/validate' as mdc-validate;
@@ -35,6 +36,7 @@
 @use '../m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
 @use '../m2/mdc/tab' as tokens-mdc-tab;
 @use '../m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../m2/mdc/slider' as tokens-mdc-slider;
 @use '../m2/mdc/chip' as tokens-mdc-chip;
 @use '../m2/mdc/dialog' as tokens-mdc-dialog;
 
@@ -114,6 +116,11 @@
   $component: 'm2.mdc.snackbar',
   $slots: tokens-mdc-snack-bar.get-token-slots(),
   $reference: mdc-snackbar-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.slider',
+  $slots: tokens-mdc-slider.get-token-slots(),
+  $reference: mdc-slider-theme.$light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.chips',
