@@ -18,6 +18,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -260,8 +261,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   protected _isControlInitialized = false;
 
+  private _platform = inject(Platform);
+
   constructor(
-    protected _platform: Platform,
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     readonly _cdr: ChangeDetectorRef,
@@ -630,13 +632,12 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   _isEndThumb: boolean;
 
   constructor(
-    protected override _platform: Platform,
     _ngZone: NgZone,
     @Inject(MAT_SLIDER) _slider: _MatSlider,
     _elementRef: ElementRef<HTMLInputElement>,
     override readonly _cdr: ChangeDetectorRef,
   ) {
-    super(_platform, _ngZone, _elementRef, _cdr, _slider);
+    super(_ngZone, _elementRef, _cdr, _slider);
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
     this.thumbPosition = this._isEndThumb ? _MatThumb.END : _MatThumb.START;
