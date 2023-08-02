@@ -139,7 +139,8 @@
 @forward './legacy-progress-bar/progress-bar-theme' as legacy-progress-bar-* show
   legacy-progress-bar-theme, legacy-progress-bar-color, legacy-progress-bar-typography;
 @forward './progress-bar/progress-bar-theme' as progress-bar-* show
-  progress-bar-theme, progress-bar-color, progress-bar-typography, progress-bar-density;
+  progress-bar-theme, progress-bar-color, progress-bar-typography,
+  progress-bar-density, progress-bar-base;
 @forward './progress-spinner/progress-spinner-theme' as progress-spinner-* show
   progress-spinner-theme, progress-spinner-color, progress-spinner-typography,
   progress-spinner-density;

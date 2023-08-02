@@ -17,12 +17,6 @@
       track-color: null,
     ))
   );
-
-  // Add default values for tokens that aren't outputted by the theming API.
-  .mat-mdc-progress-bar {
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-linear-progress-theme.theme(m2-mdc-linear-progress.get-unthemable-tokens());
-  }
 }
 
 .mat-mdc-progress-bar {
