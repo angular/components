@@ -1,7 +1,15 @@
 @use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
+
+@mixin base($config-or-theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-plain-tooltip-theme.theme(m2-mdc-plain-tooltip.get-unthemable-tokens());
+  }
+}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -41,6 +49,7 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
+    @include base($theme);
     @if $color != null {
       @include color($color);
     }
