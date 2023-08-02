@@ -1,3 +1,17 @@
+<a name="16.2.0-rc.0"></a>
+# 16.2.0-rc.0 "metal-mushroom" (2023-08-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [626bf533d9](https://github.com/angular/components/commit/626bf533d920251e2b755e29df3835760e23ec56) | feat | **dialog:** expose rendered ComponentRef |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [956aec2c64](https://github.com/angular/components/commit/956aec2c6482b347609c25fd2d8a85679e541ecf) | feat | **bottom-sheet:** expose rendered ComponentRef |
+| [30c3e13444](https://github.com/angular/components/commit/30c3e134446b00536b36aa2bbbf840f2aec1c247) | feat | **dialog:** expose rendered ComponentRef |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.7"></a>
 # 16.1.7 "velvet-violin" (2023-08-02)
 ### material
