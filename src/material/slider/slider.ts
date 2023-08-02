@@ -22,6 +22,7 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -404,10 +405,11 @@ export class MatSlider
 
   private _resizeTimer: null | ReturnType<typeof setTimeout> = null;
 
+  private _platform = inject(Platform);
+
   constructor(
     readonly _ngZone: NgZone,
     readonly _cdr: ChangeDetectorRef,
-    readonly _platform: Platform,
     elementRef: ElementRef<HTMLElement>,
     @Optional() readonly _dir: Directionality,
     @Optional()
