@@ -14,9 +14,6 @@
   .mat-mdc-progress-spinner {
     // Add the official slots for the MDC circular progress.
     @include mdc-circular-progress-theme.theme-styles($mdc-circular-progress-token-slots);
-
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-circular-progress-theme.theme(m2-mdc-circular-progress.get-unthemable-tokens());
   }
 }
 

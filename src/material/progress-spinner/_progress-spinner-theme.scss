@@ -1,7 +1,17 @@
 @use 'sass:map';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
+
+@mixin base($config-or-theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-circular-progress-theme.theme(
+      tokens-mdc-circular-progress.get-unthemable-tokens()
+    );
+  }
+}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -33,6 +43,7 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
+    @include base($theme);
     @if $color != null {
       @include color($color);
     }
