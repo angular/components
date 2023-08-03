@@ -7,6 +7,13 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 
+@mixin base($config-or-theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
+  }
+}
+
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   $primary: map.get($config, primary);
@@ -77,6 +84,7 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
+    @include base($theme);
     @if $color != null {
       @include color($color);
     }

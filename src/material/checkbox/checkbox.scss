@@ -141,11 +141,6 @@
       }
     }
   }
-
-  html {
-    // Add default values for MDC checkbox tokens that aren't outputted by the theming API.
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
-  }
 }
 
 .mat-mdc-checkbox {
