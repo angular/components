@@ -1,14 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
 import {NgFor, AsyncPipe} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 /**
- * @title Require an autocomplete option to be selected.
+ * @title Require an autocomplete option to be selected
  */
 @Component({
   selector: 'autocomplete-require-selection-example',
@@ -25,21 +23,18 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     AsyncPipe,
   ],
 })
-export class AutocompleteRequireSelectionExample implements OnInit {
+export class AutocompleteRequireSelectionExample {
+  @ViewChild('input') input: ElementRef<HTMLInputElement>;
   myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three', 'Three', 'Four'];
-  filteredOptions: Observable<string[]>;
+  options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
+  filteredOptions: string[];
 
-  ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+  constructor() {
+    this.filteredOptions = this.options.slice();
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  filter(): void {
+    const filterValue = this.input.nativeElement.value.toLowerCase();
+    this.filteredOptions = this.options.filter(o => o.toLowerCase().includes(filterValue));
   }
 }
