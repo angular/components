@@ -82,6 +82,9 @@ export class MatSliderChange {
 }
 
 export interface _MatSlider {
+  /** Whether the given pointer event occurred within the bounds of the slider pointer's DOM Rect. */
+  _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect): boolean;
+
   /** Gets the slider thumb input of the given thumb position. */
   _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
 

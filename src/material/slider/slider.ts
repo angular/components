@@ -22,6 +22,7 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -404,10 +405,11 @@ export class MatSlider
 
   private _resizeTimer: null | ReturnType<typeof setTimeout> = null;
 
+  private _platform = inject(Platform);
+
   constructor(
     readonly _ngZone: NgZone,
     readonly _cdr: ChangeDetectorRef,
-    readonly _platform: Platform,
     elementRef: ElementRef<HTMLElement>,
     @Optional() readonly _dir: Directionality,
     @Optional()
@@ -930,11 +932,21 @@ export class MatSlider
   }
 
   _setTransition(withAnimation: boolean): void {
-    this._hasAnimation = withAnimation && !this._noopAnimations;
+    this._hasAnimation = !this._platform.IOS && withAnimation && !this._noopAnimations;
     this._elementRef.nativeElement.classList.toggle(
       'mat-mdc-slider-with-animation',
       this._hasAnimation,
     );
+  }
+
+  /** Whether the given pointer event occurred within the bounds of the slider pointer's DOM Rect. */
+  _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect) {
+    const radius = rect.width / 2;
+    const centerX = rect.x + radius;
+    const centerY = rect.y + radius;
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    return Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(radius, 2);
   }
 }
 
