@@ -7,6 +7,7 @@
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentFactoryResolver } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { DialogRef } from '@angular/cdk/dialog';
@@ -184,6 +185,8 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
     // (undocumented)
     protected _captureInitialFocus(): void;
+    // (undocumented)
+    attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // (undocumented)
     protected _contentAttached(): void;
     // (undocumented)

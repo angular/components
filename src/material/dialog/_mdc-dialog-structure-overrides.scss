@@ -31,7 +31,9 @@
     // this for the dialog content scrolling (as explained above), and since we allow for
     // custom positioning through overlay configuration, we remove the rectangle
     // restrictions and scale based on the CDK overlay container.
-    &, .mdc-dialog__container, .mdc-dialog__surface {
+    &,
+    .mdc-dialog__container,
+    .mdc-dialog__surface {
       max-height: inherit;
       min-height: inherit;
       min-width: inherit;
@@ -47,12 +49,12 @@
   // When a component is passed into the dialog, the host element interrupts
   // the `display:flex` from affecting the dialog title, content, and
   // actions. To fix this, we make the component host `display: flex` by
-  // marking it's panel with the `mat-mdc-dialog-component-panel` class.
+  // marking its host with the `mat-mdc-dialog-component-host` class.
   //
   // Note that this problem does not exist when a template ref is used since
   // the title, contents, and actions are then nested directly under the
   // dialog surface.
-  .mat-mdc-dialog-component-panel .mat-mdc-dialog-surface > * {
+  .mat-mdc-dialog-component-host {
     display: flex;
     flex-direction: column;
     width: 100%;
