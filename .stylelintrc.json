@@ -43,12 +43,7 @@
         "filePattern": "\\.scss$"
       }
     ],
-    "material/no-import": [
-      true,
-      {
-        "exclude": "\\.import\\.scss$"
-      }
-    ],
+    "material/no-import": true,
     "material/no-ampersand-beyond-selector-start": [
       true,
       {

@@ -143,16 +143,11 @@ export function checkPrimaryPackageJson(
  */
 export function checkMaterialPackage(packagePath: string): string[] {
   const prebuiltThemesPath = join(packagePath, 'prebuilt-themes');
-  const themingFilePath = join(packagePath, '_theming.scss');
   const newThemingFilePath = join(packagePath, '_index.scss');
   const failures: string[] = [];
 
   if (glob.sync('*.css', {cwd: prebuiltThemesPath}).length === 0) {
     failures.push('No prebuilt themes could be found.');
-  }
-
-  if (!existsSync(themingFilePath)) {
-    failures.push('Legacy theming bundle could not be found.');
   }
 
   if (!existsSync(newThemingFilePath)) {

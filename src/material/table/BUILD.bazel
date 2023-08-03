@@ -48,7 +48,6 @@ sass_binary(
 sass_library(
     name = "table_flex_scss_lib",
     srcs = [
-        "_table-flex-styles.import.scss",
         "_table-flex-styles.scss",
     ],
     deps = ["//src/material/core:core_scss_lib"],

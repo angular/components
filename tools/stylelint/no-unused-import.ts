@@ -82,7 +82,7 @@ function extractNamespaceFromUseStatement(params: string): string | null {
     const importPath = params
       .slice(openQuoteIndex + 1, closeQuoteIndex)
       // Sass allows for leading underscores to be omitted and it technically supports .scss.
-      .replace(/^_|(\.import)?\.scss$|\.import$/g, '');
+      .replace(/^_|\.scss$/g, '');
 
     // Built-in Sass imports look like `sass:map`.
     if (importPath.startsWith('sass:')) {

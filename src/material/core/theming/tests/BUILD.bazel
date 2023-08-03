@@ -36,15 +36,6 @@ sass_binary(
     deps = ["//src/material:sass_lib"],
 )
 
-# Sass binary which is used to ensure that the legacy theming bundle exposes the necessary
-# mixins and variables for creating themes.
-sass_binary(
-    name = "test-legacy-theming-bundle",
-    testonly = True,
-    src = "test-legacy-theming-bundle.scss",
-    deps = ["//src/material:sass_lib"],
-)
-
 # Sass binary that asserts that setting the font family for a typography config works as expected.
 sass_binary(
     name = "test-typography-font-family",
@@ -59,7 +50,6 @@ build_test(
         ":test-css-variables-theme",
         ":test-theming-api",
         ":test-theming-bundle",
-        ":test-legacy-theming-bundle",
         ":test-typography-font-family",
     ],
 )
@@ -86,6 +76,6 @@ ts_library(
 jasmine_node_test(
     name = "unit_tests",
     srcs = [":unit_test_lib"],
-    data = ["//src/material/core:theming_scss_lib"],
+    data = ["//src/material:sass_lib"],
     shard_count = 4,
 )
