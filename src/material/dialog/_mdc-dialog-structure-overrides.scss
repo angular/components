@@ -31,9 +31,7 @@
     // this for the dialog content scrolling (as explained above), and since we allow for
     // custom positioning through overlay configuration, we remove the rectangle
     // restrictions and scale based on the CDK overlay container.
-    &,
-    .mdc-dialog__container,
-    .mdc-dialog__surface {
+    &, .mdc-dialog__container, .mdc-dialog__surface {
       max-height: inherit;
       min-height: inherit;
       min-width: inherit;
