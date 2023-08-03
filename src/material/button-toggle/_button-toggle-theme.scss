@@ -1,118 +1,41 @@
-@use 'sass:map';
-@use '../core/style/private';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use '../core/density/private/compatibility';
-@use './button-toggle-variables';
+@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
+@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $divider-color: theming.get-color-from-palette($foreground, divider);
-  $theme-divider-color: map.get($foreground, divider);
 
-  // By default the theme usually has an rgba color for the dividers, which can
-  // stack up with the background of a button toggle. This can cause the border
-  // of a selected toggle to look different from an deselected one. We use a solid
-  // color to ensure that the border always stays the same.
-  $divider-color: if(type-of($theme-divider-color) == color,
-    theming.private-rgba-to-hex($theme-divider-color, map.get($background, card)),
-    $theme-divider-color
-  );
-
-  .mat-button-toggle-standalone,
-  .mat-button-toggle-group {
-    @include private.private-theme-overridable-elevation(2, $config);
-  }
-
-  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-  .mat-button-toggle-group-appearance-standard {
-    &:not([class*='mat-elevation-z']) {
-      box-shadow: none;
-    }
-  }
-
-  .mat-button-toggle {
-    color: theming.get-color-from-palette($foreground, hint-text);
-
-    .mat-button-toggle-focus-overlay {
-      background-color: theming.get-color-from-palette($background, focused-button);
-    }
-  }
-
-  .mat-button-toggle-appearance-standard {
-    color: theming.get-color-from-palette($foreground, text);
-    background: theming.get-color-from-palette($background, card);
-
-    .mat-button-toggle-focus-overlay {
-      background-color: theming.get-color-from-palette($background, focused-button, 1);
-    }
-  }
-
-  .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
-    border-left: solid 1px $divider-color;
-  }
-
-  [dir='rtl'] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
-    border-left: none;
-    border-right: solid 1px $divider-color;
-  }
-
-  .mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical {
-    .mat-button-toggle + .mat-button-toggle {
-      border-left: none;
-      border-right: none;
-      border-top: solid 1px $divider-color;
-    }
-  }
-
-  .mat-button-toggle-checked {
-    background-color: theming.get-color-from-palette($background, selected-button);
-    color: theming.get-color-from-palette($foreground, secondary-text);
-
-    &.mat-button-toggle-appearance-standard {
-      color: theming.get-color-from-palette($foreground, text);
-    }
-  }
-
-  .mat-button-toggle-disabled {
-    color: theming.get-color-from-palette($foreground, disabled-button);
-    background-color: theming.get-color-from-palette($background, disabled-button-toggle);
-
-    &.mat-button-toggle-appearance-standard {
-      background: theming.get-color-from-palette($background, card);
-    }
-
-    &.mat-button-toggle-checked {
-      background-color: theming.get-color-from-palette($background, selected-disabled-button);
-    }
-  }
-
-  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-  .mat-button-toggle-group-appearance-standard {
-    border: solid 1px $divider-color;
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-color-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-color-tokens($config));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
-  .mat-button-toggle {
-    font-family: typography-utils.font-family($config);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-typography-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-typography-tokens($config));
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $standard-height: compatibility.private-density-prop-value(
-      button-toggle-variables.$standard-density-config, $density-scale, height);
 
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-      line-height: $standard-height;
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-density-tokens($density-scale));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-density-tokens($density-scale));
   }
 }
 

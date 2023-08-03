@@ -219,7 +219,7 @@ describe('Portals', () => {
       fixture.detectChanges();
       templatePortal.attach(testAppComponent.portalOutlet, {$implicit: {status: 'rotten'}});
       fixture.detectChanges();
-      // Expect that the content of the attached portal is present and and context given via the
+      // Expect that the content of the attached portal is present and context given via the
       // attach method is projected and get precedence over constructor context
       expect(hostContainer.textContent).toContain('Banana - rotten!');
     });

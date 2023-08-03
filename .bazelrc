@@ -76,6 +76,10 @@ build:remote --define=EXECUTOR=remote
 build:remote --cpu=k8
 build:remote --host_cpu=k8
 
+# Bazel detects maximum number of jobs based on host resources.
+# Since we run remotely, we can increase this number significantly.
+common:remote --jobs=200
+
 # Setup the remote build execution servers.
 build:remote --remote_cache=remotebuildexecution.googleapis.com
 build:remote --remote_executor=remotebuildexecution.googleapis.com

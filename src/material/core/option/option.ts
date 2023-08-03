@@ -125,20 +125,26 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
   }
 
   /** Selects the option. */
-  select(): void {
+  select(emitEvent = true): void {
     if (!this._selected) {
       this._selected = true;
       this._changeDetectorRef.markForCheck();
-      this._emitSelectionChangeEvent();
+
+      if (emitEvent) {
+        this._emitSelectionChangeEvent();
+      }
     }
   }
 
   /** Deselects the option. */
-  deselect(): void {
+  deselect(emitEvent = true): void {
     if (this._selected) {
       this._selected = false;
       this._changeDetectorRef.markForCheck();
-      this._emitSelectionChangeEvent();
+
+      if (emitEvent) {
+        this._emitSelectionChangeEvent();
+      }
     }
   }
 

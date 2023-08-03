@@ -1,3 +1,210 @@
+<a name="16.2.0-rc.0"></a>
+# 16.2.0-rc.0 "metal-mushroom" (2023-08-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [626bf533d9](https://github.com/angular/components/commit/626bf533d920251e2b755e29df3835760e23ec56) | feat | **dialog:** expose rendered ComponentRef |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [956aec2c64](https://github.com/angular/components/commit/956aec2c6482b347609c25fd2d8a85679e541ecf) | feat | **bottom-sheet:** expose rendered ComponentRef |
+| [30c3e13444](https://github.com/angular/components/commit/30c3e134446b00536b36aa2bbbf840f2aec1c247) | feat | **dialog:** expose rendered ComponentRef |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.7"></a>
+# 16.1.7 "velvet-violin" (2023-08-02)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b0635a5bd2](https://github.com/angular/components/commit/b0635a5bd2f6f6a075f2f3cbcc088640a3bd09e6) | fix | **button:** fix disableRipple regression ([#27527](https://github.com/angular/components/pull/27527)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.0-next.5"></a>
+# 16.2.0-next.5 "antimony-anteater" (2023-07-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [89c5fafea](https://github.com/angular/components/commit/89c5fafea6c7649da96328c349f32efa35ee8c9a) | fix | **listbox:** prevent wrong activeItemIndex after browser tab switch ([#27499](https://github.com/angular/components/pull/27499)) |
+| [89ade6a6b](https://github.com/angular/components/commit/89ade6a6b8675e0568eb3b5e1368a67ccfddc2eb) | fix | **testing:** allow for comma key to be sent ([#27486](https://github.com/angular/components/pull/27486)) |
+| [8250a0df0](https://github.com/angular/components/commit/8250a0df0462634b3e2a8b6ef4783dc2a9b45820) | fix | **testing:** sending incorrect keyCode for comma ([#27472](https://github.com/angular/components/pull/27472)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6045a0cfa](https://github.com/angular/components/commit/6045a0cfa319bd9bad27a3101ea06c36767566ef) | fix | **chips:** ensure that edit input query is re-evaluated on time ([#27465](https://github.com/angular/components/pull/27465)) |
+| [8b0618091](https://github.com/angular/components/commit/8b06180919a88d961f6a5d0101f3fcb697692bd3) | fix | **chips:** increase specificity of chip ripple selector ([#27457](https://github.com/angular/components/pull/27457)) |
+| [5c5e34ae4](https://github.com/angular/components/commit/5c5e34ae41bba8fcc5586cb252d2b94754054995) | fix | **form-field:** fix duplicate announcement of form controls ([#27102](https://github.com/angular/components/pull/27102)) |
+| [6c846e274](https://github.com/angular/components/commit/6c846e274c9703175d248e573e6474bbef247aec) | fix | **radio:** clear selected radio button from group ([#27466](https://github.com/angular/components/pull/27466)) |
+| [6bbf2ea8b](https://github.com/angular/components/commit/6bbf2ea8becf64a462c63fe18cff9755236d99be) | fix | **slide-toggle:** add cursor pointer for label ([#27391](https://github.com/angular/components/pull/27391)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [439d6fc59](https://github.com/angular/components/commit/439d6fc591faf2a236c6027f217a97d906180b6c) | feat | add option to set default calendar ([#27453](https://github.com/angular/components/pull/27453)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.6"></a>
+# 16.1.6 "apatite-anchor" (2023-07-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fa1ac2630](https://github.com/angular/components/commit/fa1ac26303e1540d1b9134e5d4b6493298178ae5) | fix | **clipboard:** not working inside fullscreen element ([#27456](https://github.com/angular/components/pull/27456)) |
+| [23527b991](https://github.com/angular/components/commit/23527b991d342210c3111484ae734d91362575a2) | fix | **listbox:** prevent wrong activeItemIndex after browser tab switch ([#27499](https://github.com/angular/components/pull/27499)) |
+| [dead83f65](https://github.com/angular/components/commit/dead83f65ba1ea3f0a3c69bc5f4f6f7313dfcdab) | fix | **testing:** allow for comma key to be sent ([#27486](https://github.com/angular/components/pull/27486)) |
+| [05573aea7](https://github.com/angular/components/commit/05573aea7b3098bcefe88dcf41fa5c8654569e11) | fix | **testing:** sending incorrect keyCode for comma ([#27472](https://github.com/angular/components/pull/27472)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4d947318a](https://github.com/angular/components/commit/4d947318aeda0b4f72bbd6738ea42045a2f08d62) | fix | **chips:** ensure that edit input query is re-evaluated on time ([#27465](https://github.com/angular/components/pull/27465)) |
+| [1a659bd55](https://github.com/angular/components/commit/1a659bd555a0b1f173d7579ea342f16055e2689c) | fix | **chips:** increase specificity of chip ripple selector ([#27457](https://github.com/angular/components/pull/27457)) |
+| [45748ba3d](https://github.com/angular/components/commit/45748ba3deedbac7335116fac1bc3f91e0819fa9) | fix | **form-field:** fix duplicate announcement of form controls ([#27102](https://github.com/angular/components/pull/27102)) |
+| [465a7b022](https://github.com/angular/components/commit/465a7b022b1940858c8b1d1698593871eb1b89a3) | fix | **radio:** clear selected radio button from group ([#27466](https://github.com/angular/components/pull/27466)) |
+| [0be32cfc5](https://github.com/angular/components/commit/0be32cfc5ca1c87db348285fa437445450482e9c) | fix | **slide-toggle:** add cursor pointer for label ([#27391](https://github.com/angular/components/pull/27391)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.0-next.4"></a>
+# 16.2.0-next.4 "honeycomb-huskey" (2023-07-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1703c274d](https://github.com/angular/components/commit/1703c274d304228326d0ef723fb497085161c8c5) | fix | **clipboard:** not working inside fullscreen element ([#27456](https://github.com/angular/components/pull/27456)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af1a04123](https://github.com/angular/components/commit/af1a0412397c3887c377ceb7bbd03a37ca41ad8a) | feat | **autocomplete:** add input to require selection from the panel ([#27423](https://github.com/angular/components/pull/27423)) |
+| [ff2a3cc6f](https://github.com/angular/components/commit/ff2a3cc6fb8055b10e717d366932f771195a89af) | fix | **autocomplete:** blocking events to other overlays when there are no results ([#27432](https://github.com/angular/components/pull/27432)) |
+| [7c8a79629](https://github.com/angular/components/commit/7c8a796294713c6f102885c94088a9c4713ffdd4) | fix | **autocomplete:** clear selected option if input is cleared ([#27422](https://github.com/angular/components/pull/27422)) |
+| [fd047217d](https://github.com/angular/components/commit/fd047217da86dbfff3d83482b0d4881ecf84cb49) | fix | **expansion:** panel content visible when placed inside a hidden parent ([#27438](https://github.com/angular/components/pull/27438)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b77094dc2](https://github.com/angular/components/commit/b77094dc23e99355b7d6bbc4ed41e4a08bdc544c) | feat | **themeing:** add M3 token values for checkbox and card ([#27409](https://github.com/angular/components/pull/27409)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [95e18c522](https://github.com/angular/components/commit/95e18c522585668fe0017fa90ab8caf89b75ca9a) | fix | avoid component ID collisions between legacy and non-legacy components |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.5"></a>
+# 16.1.5 "turquoise-tortoise" (2023-07-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2ed7a6405](https://github.com/angular/components/commit/2ed7a6405719dd3b12e13b4454ffb5a86192cf95) | fix | **autocomplete:** blocking events to other overlays when there are no results ([#27432](https://github.com/angular/components/pull/27432)) |
+| [ff2143b9c](https://github.com/angular/components/commit/ff2143b9cb808c0c4b04e689bb35f9bc650c89b4) | fix | **autocomplete:** clear selected option if input is cleared ([#27422](https://github.com/angular/components/pull/27422)) |
+| [73e556e57](https://github.com/angular/components/commit/73e556e5740f3ca606eeab3fab5006e7de931c06) | fix | **expansion:** panel content visible when placed inside a hidden parent ([#27438](https://github.com/angular/components/pull/27438)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6e1a7d6b4](https://github.com/angular/components/commit/6e1a7d6b49be385fdb61851c21be33bc9a5edb07) | fix | avoid component ID collisions between legacy and non-legacy components |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.0-next.3"></a>
+# 16.2.0-next.3 "verdelite-volcano" (2023-07-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8e4a2ecf0](https://github.com/angular/components/commit/8e4a2ecf022a81edd6c4273039d74dc6b9c39a24) | fix | **menu:** control + option + space not working on VoiceOver ([#27401](https://github.com/angular/components/pull/27401)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0340a4152](https://github.com/angular/components/commit/0340a41529385c7a65f514e6afbceb84732a1aa0) | fix | **button-toggle:** not preserving value if preselected option is removed ([#27398](https://github.com/angular/components/pull/27398)) |
+| [c03b5f415](https://github.com/angular/components/commit/c03b5f415f4cccf41f6a5138dce822205a800da9) | fix | **chips:** error if empty getter is accessed too early ([#27405](https://github.com/angular/components/pull/27405)) |
+| [b985c7d52](https://github.com/angular/components/commit/b985c7d52cf5ccebbc76610e8843711d79e4df50) | fix | **core:** throw better error messages from typography utils ([#27393](https://github.com/angular/components/pull/27393)) |
+| [06f8544e7](https://github.com/angular/components/commit/06f8544e7b7bf8b2cc279a2e30d123c7d74804e1) | fix | **menu:** prevent menu styles from leaking to other components ([#27378](https://github.com/angular/components/pull/27378)) |
+| [017a541d4](https://github.com/angular/components/commit/017a541d496bfaaeda2f1207b6e6247213361dd9) | fix | **schematics:** fix template diagnostic in table schematic ([#27407](https://github.com/angular/components/pull/27407)) |
+| [daa6ca3ec](https://github.com/angular/components/commit/daa6ca3ecd9e46fcea4ec609ef6d37f50fc3af3b) | fix | **sidenav:** only trap focus when backdrop is enabled ([#27355](https://github.com/angular/components/pull/27355)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.4"></a>
+# 16.1.4 "andalusite-almond" (2023-07-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0184a4d5e](https://github.com/angular/components/commit/0184a4d5e36a50a7d1b47735f7f46712809db22e) | fix | **menu:** control + option + space not working on VoiceOver ([#27401](https://github.com/angular/components/pull/27401)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [06ddf00cf](https://github.com/angular/components/commit/06ddf00cf38dc57cf2422f61c9a30fe74baf248b) | fix | **button-toggle:** not preserving value if preselected option is removed ([#27398](https://github.com/angular/components/pull/27398)) |
+| [82c270030](https://github.com/angular/components/commit/82c27003016a1b1cc7ef46c3a068a679d6dd6859) | fix | **chips:** error if empty getter is accessed too early ([#27405](https://github.com/angular/components/pull/27405)) |
+| [408be2c76](https://github.com/angular/components/commit/408be2c7628c3efa18e6486be0a2f842221f21d9) | fix | **core:** throw better error messages from typography utils ([#27393](https://github.com/angular/components/pull/27393)) |
+| [69eff191b](https://github.com/angular/components/commit/69eff191b791a5aff4929bad490a5f1507dc89cd) | fix | **menu:** prevent menu styles from leaking to other components ([#27378](https://github.com/angular/components/pull/27378)) |
+| [35f926023](https://github.com/angular/components/commit/35f926023c12508261c3519299d8c1ec3b9f3398) | fix | **schematics:** fix template diagnostic in table schematic ([#27407](https://github.com/angular/components/pull/27407)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.0-next.2"></a>
+# 16.2.0-next.2 "corduroy-cabin" (2023-06-28)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0d499a3322](https://github.com/angular/components/commit/0d499a3322a3df1145084d0b34c73687fdb1c4a9) | fix | **schematics:** clean up deep imports of devkit APIs ([#27363](https://github.com/angular/components/pull/27363)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [65c7cad727](https://github.com/angular/components/commit/65c7cad7271f701659ad1154852bd53ac74f3628) | fix | **badge:** warn if use with mat-icon ([#27368](https://github.com/angular/components/pull/27368)) |
+| [e0608cbe59](https://github.com/angular/components/commit/e0608cbe5970d9eb5a94ac4fcb76a51f72c8e0d4) | fix | **chips:** remove button role from editable chips ([#27317](https://github.com/angular/components/pull/27317)) |
+| [425c469da8](https://github.com/angular/components/commit/425c469da80559d28bde63f1fce3512f3110dc9c) | fix | **core:** add validation to create-token-slot ([#27357](https://github.com/angular/components/pull/27357)) |
+| [cc1b322cc8](https://github.com/angular/components/commit/cc1b322cc8c54a34c3b59a5bb7accbadabb0e19a) | fix | **dialog:** exit animation duration not being picked up ([#27372](https://github.com/angular/components/pull/27372)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.3"></a>
+# 16.1.3 "linen-latte" (2023-06-28)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [419528977f](https://github.com/angular/components/commit/419528977fc66928de7e0db544891dd18f7ab5f8) | fix | **schematics:** clean up deep imports of devkit APIs ([#27363](https://github.com/angular/components/pull/27363)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5c066badba](https://github.com/angular/components/commit/5c066badbaaae48d747f7e99dec16c721584d585) | fix | **badge:** warn if use with mat-icon ([#27368](https://github.com/angular/components/pull/27368)) |
+| [581506145b](https://github.com/angular/components/commit/581506145b994153e430db143b5dbac080540699) | fix | **chips:** remove button role from editable chips ([#27317](https://github.com/angular/components/pull/27317)) |
+| [faccac047b](https://github.com/angular/components/commit/faccac047b56dada0435bf3e414fe4c5607f637a) | fix | **core:** add validation to create-token-slot ([#27357](https://github.com/angular/components/pull/27357)) |
+| [3a846e1ece](https://github.com/angular/components/commit/3a846e1ece7fbfa18ef8dcf42e76ad219c606798) | fix | **dialog:** exit animation duration not being picked up ([#27372](https://github.com/angular/components/pull/27372)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.0-next.1"></a>
+# 16.2.0-next.1 "plastic-fork" (2023-06-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cc52d61a0d](https://github.com/angular/components/commit/cc52d61a0da19d99dc519a005a205e1b0da3f8d5) | fix | **a11y:** don't emit blurred events on the server ([#27315](https://github.com/angular/components/pull/27315)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [df30433339](https://github.com/angular/components/commit/df304333397ff78024e39ac4e77319e015be5733) | feat | **slide-toggle:** allow for icon to be hidden ([#27330](https://github.com/angular/components/pull/27330)) |
+| [860aa42e17](https://github.com/angular/components/commit/860aa42e177cc722ae0797aa34cb8ef5355c47d9) | fix | **slide-toggle:** change slide-toggle to use MDC's token API ([#26966](https://github.com/angular/components/pull/26966)) |
+| [c86e1ef027](https://github.com/angular/components/commit/c86e1ef027e252d582b412661802bac8e088df27) | fix | **slider:** fix voiceover on ios ([#27302](https://github.com/angular/components/pull/27302)) |
+| [53242fe58e](https://github.com/angular/components/commit/53242fe58eecd6cf6556e6e343f7323bcc5ef006) | fix | **stepper:** allow child animations to run ([#27338](https://github.com/angular/components/pull/27338)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.2"></a>
+# 16.1.2 "metal-spoon" (2023-06-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef1ced9873](https://github.com/angular/components/commit/ef1ced98731a69c611163be1725e986ee72ce7ca) | fix | **a11y:** don't emit blurred events on the server ([#27315](https://github.com/angular/components/pull/27315)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [378240a47e](https://github.com/angular/components/commit/378240a47e594350e942fca9e013d82f32271869) | fix | **slider:** fix voiceover on ios ([#27302](https://github.com/angular/components/pull/27302)) |
+| [bfaa20f875](https://github.com/angular/components/commit/bfaa20f875318d1cea6f0574b7b337916a5ce534) | fix | **stepper:** allow child animations to run ([#27338](https://github.com/angular/components/pull/27338)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.1.1"></a>
+# 16.1.1 "lace-enigma" (2023-06-14)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.0-next.0"></a>
 # 16.2.0-next.0 "syrup-stampede" (2023-06-13)
 ### material-experimental

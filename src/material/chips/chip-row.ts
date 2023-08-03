@@ -178,9 +178,14 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     // The value depends on the DOM so we need to extract it before we flip the flag.
     const value = this.value;
 
-    this._isEditing = true;
-    this._editStartPending = true;
+    this._isEditing = this._editStartPending = true;
 
+    // Starting the editing sequence below depends on the edit input
+    // query resolving on time. Trigger a synchronous change detection to
+    // ensure that it happens by the time we hit the timeout below.
+    this._changeDetectorRef.detectChanges();
+
+    // TODO(crisbeto): this timeout shouldn't be necessary given the `detectChange` call above.
     // Defer initializing the input so it has time to be added to the DOM.
     setTimeout(() => {
       this._getEditInput().initialize(value);
@@ -189,8 +194,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
   }
 
   private _onEditFinish() {
-    this._isEditing = false;
-    this._editStartPending = false;
+    this._isEditing = this._editStartPending = false;
     this.edited.emit({chip: this, value: this._getEditInput().getValue()});
 
     // If the edit input is still focused or focus was returned to the body after it was destroyed,
@@ -201,6 +205,10 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     ) {
       this.primaryAction.focus();
     }
+  }
+
+  override _isRippleDisabled(): boolean {
+    return super._isRippleDisabled() || this._isEditing;
   }
 
   /**

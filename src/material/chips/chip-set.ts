@@ -98,7 +98,7 @@ export class MatChipSet
 
   /** Whether the chip list contains chips or not. */
   get empty(): boolean {
-    return this._chips.length === 0;
+    return !this._chips || this._chips.length === 0;
   }
 
   /** The ARIA role applied to the chip set. */

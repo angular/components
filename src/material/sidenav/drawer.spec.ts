@@ -567,6 +567,19 @@ describe('MatDrawer', () => {
       expect(document.activeElement).toBe(firstFocusableElement);
     }));
 
+    it('should trap focus when opened in "side" mode if backdrop is explicitly enabled', fakeAsync(() => {
+      testComponent.mode = 'push';
+      testComponent.hasBackdrop = true;
+      fixture.detectChanges();
+      lastFocusableElement.focus();
+
+      drawer.open();
+      fixture.detectChanges();
+      tick();
+
+      expect(document.activeElement).toBe(firstFocusableElement);
+    }));
+
     it('should not auto-focus by default when opened in "side" mode', fakeAsync(() => {
       testComponent.mode = 'side';
       fixture.detectChanges();
@@ -585,6 +598,23 @@ describe('MatDrawer', () => {
       fakeAsync(() => {
         drawer.autoFocus = 'first-tabbable';
         testComponent.mode = 'side';
+        fixture.detectChanges();
+        lastFocusableElement.focus();
+
+        drawer.open();
+        fixture.detectChanges();
+        tick();
+
+        expect(document.activeElement).toBe(firstFocusableElement);
+      }),
+    );
+
+    it(
+      'should auto-focus to first tabbable element when opened in "push" mode' +
+        'when backdrop is enabled explicitly',
+      fakeAsync(() => {
+        testComponent.mode = 'push';
+        testComponent.hasBackdrop = true;
         fixture.detectChanges();
         lastFocusableElement.focus();
 
@@ -1229,7 +1259,7 @@ class DrawerDynamicPosition {
   // Note: we use inputs here, because they're guaranteed
   // to be focusable across all platforms.
   template: `
-    <mat-drawer-container>
+    <mat-drawer-container [hasBackdrop]="hasBackdrop">
       <mat-drawer position="start" [mode]="mode">
         <input type="text" class="input1"/>
       </mat-drawer>
@@ -1238,6 +1268,7 @@ class DrawerDynamicPosition {
 })
 class DrawerWithFocusableElements {
   mode: string = 'over';
+  hasBackdrop: boolean | null = null;
 }
 
 @Component({

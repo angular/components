@@ -25,6 +25,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {AnimationEvent} from '@angular/animations';
 import {
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
@@ -79,6 +80,12 @@ export interface MatAutocompleteDefaultOptions {
   /** Whether the active option should be selected as the user is navigating. */
   autoSelectActiveOption?: boolean;
 
+  /**
+   * Whether the user is required to make a selection when
+   * they're interacting with the autocomplete.
+   */
+  requireSelection?: boolean;
+
   /** Class or list of classes to be applied to the autocomplete's overlay panel. */
   overlayPanelClass?: string | string[];
 
@@ -101,6 +108,7 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
     autoActiveFirstOption: false,
     autoSelectActiveOption: false,
     hideSingleSelectionIndicator: false,
+    requireSelection: false,
   };
 }
 
@@ -117,6 +125,9 @@ export abstract class _MatAutocompleteBase
 
   /** Class to apply to the panel when it's hidden. */
   protected abstract _hiddenClass: string;
+
+  /** Emits when the panel animation is done. Null if the panel doesn't animate. */
+  abstract _animationDone: EventEmitter<AnimationEvent> | null;
 
   /** Manages active item in option list based on key events. */
   _keyManager: ActiveDescendantKeyManager<_MatOptionBase>;
@@ -187,6 +198,21 @@ export abstract class _MatAutocompleteBase
   private _autoSelectActiveOption: boolean;
 
   /**
+   * Whether the user is required to make a selection when they're interacting with the
+   * autocomplete. If the user moves away from the autcomplete without selecting an option from
+   * the list, the value will be reset. If the user opens the panel and closes it without
+   * interacting or selecting a value, the initial value will be kept.
+   */
+  @Input()
+  get requireSelection(): boolean {
+    return this._requireSelection;
+  }
+  set requireSelection(value: BooleanInput) {
+    this._requireSelection = coerceBooleanProperty(value);
+  }
+  private _requireSelection: boolean;
+
+  /**
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
    * match the width of its host.
    */
@@ -251,6 +277,7 @@ export abstract class _MatAutocompleteBase
     this.inertGroups = platform?.SAFARI || false;
     this._autoActiveFirstOption = !!_defaults.autoActiveFirstOption;
     this._autoSelectActiveOption = !!_defaults.autoSelectActiveOption;
+    this._requireSelection = !!_defaults.requireSelection;
   }
 
   ngAfterContentInit() {
@@ -343,13 +370,14 @@ export abstract class _MatAutocompleteBase
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
   animations: [panelAnimation],
 })
-export class MatAutocomplete extends _MatAutocompleteBase {
+export class MatAutocomplete extends _MatAutocompleteBase implements OnDestroy {
   /** Reference to all option groups within the autocomplete. */
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
   /** Reference to all options within the autocomplete. */
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
   protected _visibleClass = 'mat-mdc-autocomplete-visible';
   protected _hiddenClass = 'mat-mdc-autocomplete-hidden';
+  override _animationDone = new EventEmitter<AnimationEvent>();
 
   /** Whether checkmark indicator for single-selection options is hidden. */
   @Input()
@@ -370,6 +398,11 @@ export class MatAutocomplete extends _MatAutocompleteBase {
         option._changeDetectorRef.markForCheck();
       }
     }
+  }
+
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this._animationDone.complete();
   }
 
   // `skipPredicate` determines if key manager should avoid putting a given option in the tab

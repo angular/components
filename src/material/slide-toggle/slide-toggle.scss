@@ -6,11 +6,57 @@
 @use '@material/ripple' as mdc-ripple;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/tokens/m2/mdc/switch' as m2-mdc-switch;
+@use '../core/tokens/m2/mat/slide-toggle' as mat-slide-toggle-tokens;
+@use '../core/tokens/token-utils';
 
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-switch-token-slots: m2-mdc-switch.get-token-slots();
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
   @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);
-  @include mdc-switch.static-styles-without-ripple;
+  // Add the MDC switch static styles.
+  @include mdc-switch.static-styles-without-ripple();
+
+  .mdc-switch {
+    // Add the official slots for the MDC switch
+    @include mdc-switch-theme.theme-styles($mdc-switch-token-slots);
+
+    // The tokens are outputting handle-elevation and disabled-handle-elevation
+    // as the values for box-shadow. Rather the value that should be displayed
+    // is calculated using the tokens for elevation and the handle-shadow-color
+    // within theme-styles and is stored in new variables that end in -shadow.
+
+    // TODO(amysorto): remove these overrides once MDC emits correct value for
+    // box-shadow.
+
+    // Override box-shadow with correct values.
+    &:enabled .mdc-switch__shadow {
+      box-shadow: var(--mdc-switch-handle-elevation-shadow);
+    }
+
+    &:disabled .mdc-switch__shadow {
+      box-shadow: var(--mdc-switch-disabled-handle-elevation-shadow);
+    }
+
+    // Add default values for MDC switch tokens that aren't outputted by the theming API
+    @include mdc-switch-theme.theme(m2-mdc-switch.get-unthemable-tokens());
+  }
+
+
+  // Add slots for custom Angular Material slide-toggle tokens.
+  @include token-utils.use-tokens(
+    mat-slide-toggle-tokens.$prefix,
+    mat-slide-toggle-tokens.get-token-slots()
+  ) {
+    .mat-mdc-slide-toggle .mdc-label {
+      @include token-utils.create-token-slot(font-family, label-text-font);
+      @include token-utils.create-token-slot(font-size, label-text-size);
+      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+      @include token-utils.create-token-slot(line-height, label-text-line-height);
+      @include token-utils.create-token-slot(font-weight, label-text-weight);
+    }
+  }
 }
 
 .mat-mdc-slide-toggle {
@@ -19,14 +65,6 @@
 
   // Remove the native outline since we use the ripple for focus indication.
   outline: 0;
-
-  .mdc-switch {
-    // MDC theme styles also include structural styles so we have to include the theme at least
-    // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-helpers.disable-mdc-fallback-declarations {
-      @include mdc-switch-theme.theme-styles(mdc-switch-theme.$light-theme);
-    }
-  }
 
   // The ripple needs extra specificity so the base ripple styling doesn't override its `position`.
   .mat-mdc-slide-toggle-ripple, #{mdc-switch.$ripple-target}::after {
@@ -88,5 +126,10 @@
     .mdc-switch__track::after {
       transition: none;
     }
+  }
+
+  // If our slide-toggle is enabled the cursor on label should appear as a pointer.
+  .mdc-switch:enabled + .mdc-label {
+    cursor: pointer;
   }
 }

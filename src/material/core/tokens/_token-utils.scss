@@ -39,6 +39,8 @@ $placeholder-typography-config: (
   caption: $_placeholder-typography-level-config,
   button: $_placeholder-typography-level-config,
   overline: $_placeholder-typography-level-config,
+  subheading-1: $_placeholder-typography-level-config,
+  title: $_placeholder-typography-level-config,
 );
 
 // Placeholder density config that can be passed to token getter functions when generating token
@@ -75,6 +77,9 @@ $_component-prefix: null;
   @if $_component-prefix == null or $_tokens == null {
     @error '`create-token-slot` must be used within `use-tokens`';
   }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
   @if map.get($_tokens, $token) != null {
     $fallback: null;
 
@@ -88,6 +93,19 @@ $_component-prefix: null;
     $value: mdc-custom-properties.create('#{$_component-prefix}-#{$token}', $fallback: $fallback);
     @include mdc-theme.property($property, $value);
   }
+}
+
+// Returns the name of a token including the current prefix. Intended to be used in calculations
+// involving tokens. `create-token-slot` should be used when outputting tokens.
+@function get-token-variable($token) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error '`get-token-variable` must be used within `use-tokens`';
+  }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
+
+  @return mdc-custom-properties.create-varname('#{$_component-prefix}-#{$token}');
 }
 
 @mixin create-token-values($prefix, $tokens) {

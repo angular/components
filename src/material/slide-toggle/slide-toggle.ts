@@ -145,6 +145,16 @@ export abstract class _MatSlideToggleBase<T>
     this._changeDetectorRef.markForCheck();
   }
 
+  /** Whether to hide the icon inside of the slide toggle. */
+  @Input()
+  get hideIcon(): boolean {
+    return this._hideIcon;
+  }
+  set hideIcon(value: BooleanInput) {
+    this._hideIcon = coerceBooleanProperty(value);
+  }
+  private _hideIcon = false;
+
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() readonly change: EventEmitter<T> = new EventEmitter<T>();
 
@@ -174,6 +184,7 @@ export abstract class _MatSlideToggleBase<T>
     this.color = this.defaultColor = defaults.color || 'accent';
     this._noopAnimations = animationMode === 'NoopAnimations';
     this.id = this._uniqueId = `${idPrefix}${++nextUniqueId}`;
+    this._hideIcon = defaults.hideIcon ?? false;
   }
 
   ngAfterContentInit() {

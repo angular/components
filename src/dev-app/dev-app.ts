@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, inject, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute, RouterModule} from '@angular/router';
+import {Component, ViewEncapsulation} from '@angular/core';
+import {RouterModule} from '@angular/router';
 import {DevAppLayout} from './dev-app/dev-app-layout';
 
 /** Root component for the dev-app demos. */
@@ -18,14 +18,4 @@ import {DevAppLayout} from './dev-app/dev-app-layout';
   standalone: true,
   imports: [DevAppLayout, RouterModule],
 })
-export class DevApp {
-  route = inject(ActivatedRoute);
-
-  constructor() {
-    this.route.queryParams.subscribe(q => {
-      (document.querySelector('#theme-styles') as any).href = q.hasOwnProperty('tokenapi')
-        ? 'theme-token-api.css'
-        : 'theme.css';
-    });
-  }
-}
+export class DevApp {}

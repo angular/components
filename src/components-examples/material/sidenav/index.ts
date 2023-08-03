@@ -3,7 +3,7 @@ export {SidenavBackdropExample} from './sidenav-backdrop/sidenav-backdrop-exampl
 export {SidenavDisableCloseExample} from './sidenav-disable-close/sidenav-disable-close-example';
 export {SidenavDrawerOverviewExample} from './sidenav-drawer-overview/sidenav-drawer-overview-example';
 export {SidenavFixedExample} from './sidenav-fixed/sidenav-fixed-example';
-export {SidenavModeExample} from './sidenav-mode/sidenav-mode-example';
+export {SidenavConfigurableFocusTrapExample} from './sidenav-configurable-focus-trap/sidenav-configurable-focus-trap-example';
 export {SidenavOpenCloseExample} from './sidenav-open-close/sidenav-open-close-example';
 export {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
 export {SidenavPositionExample} from './sidenav-position/sidenav-position-example';

@@ -19,6 +19,14 @@ indicating whether dark mode is set.
 @use 'sass:map';
 @use '@angular/material' as mat;
 
+$primary: mat.define-palette(mat.$indigo-palette);
+$accent: mat.define-palette(mat.$pink-palette);
+$warn: mat.define-palette(mat.$red-palette);
+
+$theme: mat.define-light-theme((
+  color: (primary: $primary, accent: $accent, warn: $warn),
+));
+
 $color-config:    mat.get-color-config($theme);
 $primary-palette: map.get($color-config, 'primary');
 $accent-palette:  map.get($color-config, 'accent');

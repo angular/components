@@ -11,6 +11,7 @@ import {DOCUMENT} from '@angular/common';
 import {Component, NgZone, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {Platform} from '@angular/cdk/platform';
 import {A11yModule, CdkMonitorFocus} from '../index';
 import {TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
 import {
@@ -824,11 +825,14 @@ describe('FocusMonitor observable stream', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
   let focusMonitor: FocusMonitor;
+  let fakePlatform: Platform;
 
   beforeEach(() => {
+    fakePlatform = {isBrowser: true} as Platform;
     TestBed.configureTestingModule({
       imports: [A11yModule],
       declarations: [PlainButton],
+      providers: [{provide: Platform, useValue: fakePlatform}],
     }).compileComponents();
   });
 
@@ -849,6 +853,22 @@ describe('FocusMonitor observable stream', () => {
     fixture.detectChanges();
     tick();
     expect(spy).toHaveBeenCalledWith(true);
+  }));
+
+  it('should not emit on the server', fakeAsync(() => {
+    fakePlatform.isBrowser = false;
+    const emitSpy = jasmine.createSpy('emit spy');
+    const completeSpy = jasmine.createSpy('complete spy');
+
+    focusMonitor.monitor(buttonElement).subscribe({next: emitSpy, complete: completeSpy});
+    expect(emitSpy).not.toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+
+    buttonElement.focus();
+    fixture.detectChanges();
+    tick();
+    expect(emitSpy).not.toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   }));
 });
 

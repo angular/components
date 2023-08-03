@@ -44,6 +44,7 @@ export const seleniumWebDriverKeyMap = {
   [TestKey.F11]: webdriver.Key.F11,
   [TestKey.F12]: webdriver.Key.F12,
   [TestKey.META]: webdriver.Key.META,
+  [TestKey.COMMA]: ',',
 };
 
 /** Gets a list of WebDriver `Key`s for the given `ModifierKeys`. */

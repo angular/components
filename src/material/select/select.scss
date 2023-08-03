@@ -1,9 +1,11 @@
 @use 'sass:math';
 @use '@angular/cdk';
-@use '@material/menu-surface' as mdc-menu-surface;
-@use '@material/list/evolution-mixins' as mdc-list;
+@use '@material/typography/typography' as mdc-typography;
+@use '../core/style/elevation';
 @use '../core/style/vendor-prefixes';
 @use '../core/style/variables';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/select' as tokens-mat-select;
 
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
@@ -13,15 +15,29 @@ $mat-select-placeholder-arrow-space: 2 *
 $leading-width: 12px !default;
 $scale: 0.75 !default;
 
-// We base the select panel styling on top of MDC's menu styles and we
-// implement the trigger ourselves since MDC doesn't provide an equivalent.
-
-@include mdc-menu-surface.core-styles($query: structure);
 
 .mat-mdc-select {
   display: inline-block;
   width: 100%;
   outline: none;
+
+  @include token-utils.use-tokens(
+    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+    @include mdc-typography.smooth-font();
+    @include token-utils.create-token-slot(color, enabled-trigger-text-color);
+    @include token-utils.create-token-slot(font-family, trigger-text-font);
+    @include token-utils.create-token-slot(line-height, trigger-text-line-height);
+    @include token-utils.create-token-slot(font-size, trigger-text-size);
+    @include token-utils.create-token-slot(font-weight, trigger-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, trigger-text-tracking);
+  }
+}
+
+.mat-mdc-select-disabled {
+  @include token-utils.use-tokens(
+    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+    @include token-utils.create-token-slot(color, disabled-trigger-text-color);
+  }
 }
 
 .mat-mdc-select-trigger {
@@ -72,6 +88,23 @@ $scale: 0.75 !default;
   height: $mat-select-arrow-size;
   position: relative;
 
+  @include token-utils.use-tokens(
+    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+    @include token-utils.create-token-slot(color, enabled-arrow-color);
+
+    .mat-mdc-form-field.mat-focused & {
+      @include token-utils.create-token-slot(color, focused-arrow-color);
+    }
+
+    .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-invalid & {
+      @include token-utils.create-token-slot(color, invalid-arrow-color);
+    }
+
+    .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-disabled & {
+      @include token-utils.create-token-slot(color, disabled-arrow-color);
+    }
+  }
+
   svg {
     fill: currentColor;
     position: absolute;
@@ -91,15 +124,27 @@ $scale: 0.75 !default;
   }
 }
 
-// Note that the `.mdc-menu-surface` is here in order to bump up the specificity
-// and avoid interference with `mat-menu` which uses the same mixins from MDC.
-.mdc-menu-surface.mat-mdc-select-panel {
+// Even though we don't use the MDC styles, we need to keep the classes in the
+// DOM for the Gmat versions to work. We need to bump up the specificity here
+// so that it's higher than MDC's styles.
+div.mat-mdc-select-panel {
+  @include elevation.elevation(8);
   width: 100%; // Ensures that the panel matches the overlay width.
   max-height: $mat-select-panel-max-height;
-  position: static; // MDC uses `absolute` by default which will throw off our positioning.
   outline: 0;
+  overflow: auto;
+  padding: 8px 0;
+  border-radius: 4px;
+  box-sizing: border-box;
 
-  @include mdc-list.list-base($query: structure);
+  // Workaround in case other MDC menu surface styles bleed in.
+  position: static;
+
+  @include token-utils.use-tokens(
+    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, panel-background-color);
+  }
+
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
@@ -123,6 +168,11 @@ $scale: 0.75 !default;
   transition: color variables.$swift-ease-out-duration
       math.div(variables.$swift-ease-out-duration, 3)
       variables.$swift-ease-out-timing-function;
+
+  @include token-utils.use-tokens(
+    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+    @include token-utils.create-token-slot(color, placeholder-text-color);
+  }
 
   ._mat-animation-noopable & {
     transition: none;

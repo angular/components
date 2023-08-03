@@ -1,68 +1,25 @@
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/theme/theme' as mdc-theme;
-@use '@material/menu-surface' as mdc-menu-surface;
-@use '@material/list/evolution-mixins' as mdc-list;
-@use '@material/typography' as mdc-typography;
-@use '@material/ripple' as mdc-ripple;
-@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/m2/mat/menu' as tokens-mat-menu;
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {
-    @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-theme-styles-query);
-    @include mdc-list.without-ripple(mdc-helpers.$mdc-theme-styles-query);
 
-    // MDC doesn't appear to have disabled styling for menu
-    // items so we have to grey them out ourselves.
-    .mat-mdc-menu-item[disabled] {
-      &,
-      .mat-mdc-menu-submenu-icon,
-      .mat-icon-no-color {
-        @include mdc-theme.prop(color, text-disabled-on-background);
-      }
-    }
-
-    // Since we're creating `mat-icon` and the submenu trigger
-    // chevron ourselves, we have to handle the color as well.
-    .mat-mdc-menu-item .mat-icon-no-color,
-    .mat-mdc-menu-submenu-icon {
-      @include mdc-theme.prop(color, text-primary-on-background);
-    }
-
-    // MDC's hover and focus styles are tied to their ripples which we aren't using.
-    .mat-mdc-menu-item:hover,
-    .mat-mdc-menu-item.cdk-program-focused,
-    .mat-mdc-menu-item.cdk-keyboard-focused,
-    .mat-mdc-menu-item-highlighted {
-      &:not([disabled]) {
-        $color: mdc-theme-color.$on-surface;
-        background: rgba($color, mdc-ripple.states-opacity($color, hover));
-      }
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-menu.$prefix,
+      tokens-mat-menu.get-color-tokens($config));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-menu-surface.core-styles(mdc-helpers.$mdc-typography-styles-query);
-
-    .mat-mdc-menu-content {
-      // Note that we include this private mixin, because the public
-      // one adds a bunch of styles that we aren't using for the menu.
-      @include mdc-list.list-base(mdc-helpers.$mdc-typography-styles-query);
-
-      // MDC uses the `subtitle1` level for list items, but the spec shows `body1` as the correct
-      // level.
-      &,
-      .mat-mdc-menu-item .mdc-list-item__primary-text {
-        @include mdc-typography.typography(body1, $query: mdc-helpers.$mdc-typography-styles-query);
-      }
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-menu.$prefix,
+      tokens-mat-menu.get-typography-tokens($config));
   }
 }
 

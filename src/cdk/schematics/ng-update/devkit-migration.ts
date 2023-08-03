@@ -7,7 +7,7 @@
  */
 
 import {SchematicContext, Tree} from '@angular-devkit/schematics';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {workspaces} from '@angular-devkit/core';
 import {Constructor, Migration, PostMigrationAction} from '../update-tool/migration';
 import {TargetVersion} from '../update-tool/target-version';
 
@@ -17,7 +17,7 @@ export type DevkitContext = {
   /** Name of the project the migrations run against. */
   projectName: string;
   /** Workspace project the migrations run against. */
-  project: ProjectDefinition;
+  project: workspaces.ProjectDefinition;
   /** Whether the migrations run for a test target. */
   isTestTarget: boolean;
 };
@@ -43,5 +43,5 @@ export abstract class DevkitMigration<Data> extends Migration<Data, DevkitContex
 }
 
 export type DevkitMigrationCtor<Data> = Constructor<DevkitMigration<Data>> & {
-  [m in keyof typeof DevkitMigration]: typeof DevkitMigration[m];
+  [m in keyof typeof DevkitMigration]: (typeof DevkitMigration)[m];
 };

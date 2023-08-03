@@ -1,75 +1,102 @@
 @use 'sass:map';
 @use '@material/fab/fab' as mdc-fab;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
-@use '@material/theme/theme-color' as mdc-theme-color;
+@use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 
 @use './button-theme-private';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
 @use '../core/typography/typography';
 
-@mixin _fab-variant($foreground, $background) {
-  @include mdc-fab-theme.theme((
-    container-color: $background,
-    icon-color: $foreground,
-  ));
+@mixin _fab-variant($config, $foreground, $background) {
+  $color-config: map.merge(
+    $config,
+    (
+      primary: (
+        default: $background,
+        default-contrast: $foreground,
+      ),
+    )
+  );
+  $color-tokens: tokens-mdc-fab.get-color-tokens($color-config);
+  @include mdc-fab-theme.theme($color-tokens);
 
   --mat-mdc-fab-color: #{$foreground};
 }
 
+@function white-or-black($color, $is-dark) {
+  @return if(mdc-helpers.variable-safe-contrast-tone($color, $is-dark) == 'dark', #000, #fff);
+}
+
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {
-    $on-surface: mdc-theme-color.prop-value(on-surface);
-    $is-dark: map.get($config, is-dark);
 
-    .mat-mdc-fab, .mat-mdc-mini-fab {
+  $is-dark: map.get($config, is-dark);
+  $background: map.get($config, background);
+
+  $surface: theming.get-color-from-palette($background, card);
+  $primary: theming.get-color-from-palette(map.get($config, primary));
+  $accent: theming.get-color-from-palette(map.get($config, accent));
+  $warn: theming.get-color-from-palette(map.get($config, warn));
+
+  $on-surface: white-or-black($surface, $is-dark);
+  $on-primary: white-or-black($primary, $is-dark);
+  $on-accent: white-or-black($accent, $is-dark);
+  $on-warn: white-or-black($warn, $is-dark);
+
+  $disabled: rgba($on-surface, 0.12);
+  $on-disabled: rgba($on-surface, if(map.get($config, is-dark), 0.5, 0.38));
+
+  .mat-mdc-fab,
+  .mat-mdc-mini-fab {
+    // TODO(wagnermaciel): The ripple-theme-styles mixin depends heavily on
+    // being wrapped by using-mdc-theme. This workaround needs to be
+    // revisited w/ a more holistic solution.
+    @include mdc-helpers.using-mdc-theme($config) {
       @include button-theme-private.ripple-theme-styles($config, true);
+    }
 
-      &.mat-unthemed {
-        @include _fab-variant($on-surface, mdc-theme-color.prop-value(surface));
-      }
+    @include button-theme-private.apply-disabled-style() {
+      @include _fab-variant($config, $on-disabled, $disabled);
+    }
 
-      &.mat-primary {
-        @include _fab-variant(
-          mdc-theme-color.prop-value(on-primary),
-          mdc-theme-color.prop-value(primary)
-        );
-      }
+    &.mat-unthemed {
+      @include _fab-variant($config, $on-surface, $surface);
+    }
 
-      &.mat-accent {
-        @include _fab-variant(
-          mdc-theme-color.prop-value(on-secondary),
-          mdc-theme-color.prop-value(secondary)
-        );
-      }
+    &.mat-primary {
+      @include _fab-variant($config, $on-primary, $primary);
+    }
 
-      &.mat-warn {
-        @include _fab-variant(
-          mdc-theme-color.prop-value(on-error),
-          mdc-theme-color.prop-value(error)
-        );
-      }
+    &.mat-accent {
+      @include _fab-variant($config, $on-accent, $accent);
+    }
 
-      @include button-theme-private.apply-disabled-style() {
-        @include _fab-variant(
-          rgba($on-surface, if(map.get($config, is-dark), 0.5, 0.38)),
-          rgba($on-surface, 0.12)
-        );
-      }
+    &.mat-warn {
+      @include _fab-variant($config, $on-warn, $warn);
     }
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
-    theming.get-typography-config($config-or-theme));
+    theming.get-typography-config($config-or-theme)
+  );
+
   @include mdc-helpers.using-mdc-typography($config) {
     @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
   }
+
+  $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($config);
+  .mat-mdc-extended-fab {
+    @include mdc-extended-fab-theme.theme($typography-tokens);
+  }
 }
 
-@mixin density($config-or-theme) {}
+@mixin density($config-or-theme) {
+}
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);

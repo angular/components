@@ -5,6 +5,7 @@
 @use '../core/style/layout-common';
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use '../core/tokens/m2/mdc/chip' as m2-mdc-chip;
+@use '../core/tokens/token-utils';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 // The slots for tokens that will be configured in the theme can be emitted with no fallback.
@@ -20,6 +21,14 @@
 
     // Add default values for tokens that aren't outputted by the theming API.
     @include mdc-chip-theme.theme(m2-mdc-chip.get-unthemable-tokens());
+  }
+
+  // Add additional slots for the MDC chip tokens, needed in Angular Material.
+  @include token-utils.use-tokens(m2-mdc-chip.$prefix, $token-slots) {
+    .mat-mdc-chip-focus-overlay {
+      @include token-utils.create-token-slot(background, focus-state-layer-color);
+      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+    }
   }
 }
 
@@ -109,7 +118,7 @@
 
   // Ensures that the trailing icon is pushed to the end if the chip has a set width.
   .mdc-evolution-chip__cell--primary {
-    width: 100%;
+    flex-basis: 100%;
   }
 
   // This element can be placed on a `button` node which usually has some user agent styles.
@@ -175,7 +184,7 @@
 }
 
 // The ripple container should match the bounds of the entire chip.
-.mat-mdc-chip-ripple {
+.mat-mdc-chip .mat-ripple.mat-mdc-chip-ripple {
   @include layout-common.fill;
 
   // Disable pointer events for the ripple container and state overlay because the container

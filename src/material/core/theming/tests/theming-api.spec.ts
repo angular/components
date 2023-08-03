@@ -32,7 +32,7 @@ describe('theming api', () => {
   // for legacy themes, or if they are properly scoped to a given selector.
   beforeAll(() => {
     knownDensitySelectors = new Map();
-    parse(transpile(`@include angular-material-density(0);`)).each(node => {
+    parse(transpile(`@include mat.all-component-densities(0);`)).each(node => {
       if (node.type === 'rule') {
         node.selectors.forEach(s => knownDensitySelectors.set(s, node));
       }
@@ -43,17 +43,17 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      $theme: mat-light-theme((
+      $theme: mat.define-light-theme((
         color: (
-          primary: mat-define-palette($mat-red),
-          accent: mat-define-palette($mat-red),
+          primary: mat.define-palette(mat.$red-palette),
+          accent: mat.define-palette(mat.$red-palette),
         )
       ));
 
-      @include angular-material-theme($theme);
+      @include mat.all-component-themes($theme);
 
       .dark-theme {
-        @include angular-material-theme($theme);
+        @include mat.all-component-themes($theme);
       }
     `);
 
@@ -63,23 +63,23 @@ describe('theming api', () => {
   it('should not warn if color styles and density are not duplicated', () => {
     const parsed = parse(
       transpile(`
-      $theme: mat-light-theme((
+      $theme: mat.define-light-theme((
         color: (
-          primary: mat-define-palette($mat-red),
-          accent: mat-define-palette($mat-red),
+          primary: mat.define-palette(mat.$red-palette),
+          accent: mat.define-palette(mat.$red-palette),
         )
       ));
-      $theme2: mat-light-theme((
+      $theme2: mat.define-light-theme((
         color: (
-          primary: mat-define-palette($mat-red),
-          accent: mat-define-palette($mat-blue),
+          primary: mat.define-palette(mat.$red-palette),
+          accent: mat.define-palette(mat.$blue-palette),
         )
       ));
 
-      @include angular-material-theme($theme);
+      @include mat.all-component-themes($theme);
 
       .dark-theme {
-        @include angular-material-color($theme2);
+        @include mat.all-component-colors($theme2);
       }
     `),
     );
@@ -91,22 +91,22 @@ describe('theming api', () => {
 
   it('should be possible to modify color configuration directly', () => {
     const result = transpile(`
-      $theme: mat-light-theme((
+      $theme: mat.define-light-theme((
         color: (
-          primary: mat-define-palette($mat-red),
-          accent: mat-define-palette($mat-blue),
+          primary: mat.define-palette(mat.$red-palette),
+          accent: mat.define-palette(mat.$blue-palette),
         )
       ));
 
-      // Updates the "icon" foreground color to "canary".
+      // Updates the "icon" foreground color to hotpink.
       $color: map-get($theme, color);
       $theme: map-merge($color,
-        (foreground: map-merge(map-get($color, foreground), (icon: "canary"))));
+        (foreground: map-merge(map-get($color, foreground), (icon: hotpink))));
 
-      @include angular-material-theme($theme);
+      @include mat.all-component-themes($theme);
     `);
 
-    expect(result).toContain(': "canary"');
+    expect(result).toContain(': hotpink');
   });
 
   it('should warn if default density styles are duplicated', () => {
@@ -114,10 +114,10 @@ describe('theming api', () => {
 
     const parsed = parse(
       transpile(`
-      @include angular-material-theme((color: null));
+      @include mat.all-component-themes((color: null));
 
       .dark-theme {
-        @include angular-material-theme((color: null));
+        @include mat.all-component-themes((color: null));
       }
     `),
     );
@@ -131,10 +131,10 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      @include angular-material-theme((density: -1));
+      @include mat.all-component-themes((density: -1));
 
       .dark-theme {
-        @include angular-material-theme((density: -1));
+        @include mat.all-component-themes((density: -1));
       }
     `);
 
@@ -145,10 +145,10 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      @include angular-material-theme((density: -1));
+      @include mat.all-component-themes((density: -1));
 
       .dark-theme {
-        @include angular-material-theme((density: -2));
+        @include mat.all-component-themes((density: -2));
       }
     `);
 
@@ -159,11 +159,11 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      $theme: (typography: mat-typography-config(), density: null);
-      @include angular-material-theme($theme);
+      $theme: (typography: mat.define-typography-config(), density: null);
+      @include mat.all-component-themes($theme);
 
       .dark-theme {
-        @include angular-material-theme($theme);
+        @include mat.all-component-themes($theme);
       }
     `);
 
@@ -174,14 +174,14 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      @include angular-material-theme((
-        typography: mat-typography-config(),
+      @include mat.all-component-themes((
+        typography: mat.define-typography-config(),
         density: null,
       ));
 
       .dark-theme {
-        @include angular-material-theme((
-          typography: mat-typography-config($font-family: "sans-serif"),
+        @include mat.all-component-themes((
+          typography: mat.define-typography-config($font-family: "sans-serif"),
           density: null,
         ));
       }
@@ -246,10 +246,7 @@ describe('theming api', () => {
   function transpile(content: string) {
     return compileString(
       `
-        @import '../_all-theme.scss';
-        @import '../../color/_all-color.scss';
-        @import '../../density/private/_all-density.scss';
-        @import '../../typography/_all-typography.scss';
+        @use '../../../index' as mat;
 
         ${content}
       `,

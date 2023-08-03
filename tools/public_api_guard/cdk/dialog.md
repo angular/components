@@ -70,7 +70,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     _recaptureFocus(): void;
     protected _trapFocus(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkDialogContainer<any>, "cdk-dialog-container", never, {}, {}, never, never, false, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkDialogContainer<any>, "cdk-dialog-container", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkDialogContainer<any>, [null, null, { optional: true; }, null, null, null, null, null]>;
 }
@@ -175,6 +175,7 @@ export class DialogRef<R = unknown, C = unknown> {
     close(result?: R, options?: DialogCloseOptions): void;
     readonly closed: Observable<R | undefined>;
     readonly componentInstance: C | null;
+    readonly componentRef: ComponentRef<C> | null;
     // (undocumented)
     readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>;
     readonly containerInstance: BasePortalOutlet & {

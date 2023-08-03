@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {strings, template as interpolateTemplate} from '@angular-devkit/core';
+import {strings, template as interpolateTemplate, workspaces} from '@angular-devkit/core';
 import {
   apply,
   applyTemplates,
@@ -35,13 +35,12 @@ import {dirname, join, resolve} from 'path';
 import * as ts from 'typescript';
 import {getProjectFromWorkspace} from './get-project';
 import {getDefaultComponentOptions, isStandaloneSchematic} from './schematic-options';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 
 /**
  * Build a default project path for generating.
  * @param project The project to build the path for.
  */
-function buildDefaultPath(project: ProjectDefinition): string {
+function buildDefaultPath(project: workspaces.ProjectDefinition): string {
   const root = project.sourceRoot ? `/${project.sourceRoot}/` : `/${project.root}/src/`;
 
   const projectDirName = project.extensions.projectType === ProjectType.Application ? 'app' : 'lib';

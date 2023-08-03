@@ -170,8 +170,15 @@ export class MatChipOption extends MatChip implements OnInit {
   }
 
   override _handlePrimaryActionInteraction() {
-    if (this.selectable && !this.disabled) {
-      this.toggleSelected(true);
+    if (!this.disabled) {
+      // Interacting with the primary action implies that the chip already has focus, however
+      // there's a bug in Safari where focus ends up lingering on the previous chip (see #27544).
+      // We work around it by explicitly focusing the primary action of the current chip.
+      this.focus();
+
+      if (this.selectable) {
+        this.toggleSelected(true);
+      }
     }
   }
 

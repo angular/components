@@ -42,6 +42,7 @@ import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angula
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -100,7 +101,7 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
  */
 @Directive()
 export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
-  implements AfterContentInit, ControlValueAccessor
+  implements AfterContentInit, OnDestroy, ControlValueAccessor
 {
   /** Selected value for the radio group. */
   private _value: any = null;
@@ -122,6 +123,9 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
 
   /** Whether the radio group is required. */
   private _required: boolean = false;
+
+  /** Subscription to changes in amount of radio buttons. */
+  private _buttonChanges: Subscription;
 
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
@@ -236,6 +240,20 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
     // possibly be set by NgModel on MatRadioGroup, and it is possible that the OnInit of the
     // NgModel occurs *after* the OnInit of the MatRadioGroup.
     this._isInitialized = true;
+
+    // Clear the `selected` button when it's destroyed since the tabindex of the rest of the
+    // buttons depends on it. Note that we don't clear the `value`, because the radio button
+    // may be swapped out with a similar one and there are some internal apps that depend on
+    // that behavior.
+    this._buttonChanges = this._radios.changes.subscribe(() => {
+      if (this.selected && !this._radios.find(radio => radio === this.selected)) {
+        this._selected = null;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this._buttonChanges?.unsubscribe();
   }
 
   /**

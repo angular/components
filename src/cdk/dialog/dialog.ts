@@ -16,6 +16,7 @@ import {
   Inject,
   Optional,
   SkipSelf,
+  ComponentRef,
 } from '@angular/core';
 import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {of as observableOf, Observable, Subject, defer} from 'rxjs';
@@ -290,6 +291,7 @@ export class Dialog implements OnDestroy {
           config.componentFactoryResolver,
         ),
       );
+      (dialogRef as {componentRef: ComponentRef<C>}).componentRef = contentRef;
       (dialogRef as {componentInstance: C}).componentInstance = contentRef.instance;
     }
   }

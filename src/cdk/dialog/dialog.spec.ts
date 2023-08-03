@@ -9,6 +9,7 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  ComponentRef,
   Directive,
   inject,
   Inject,
@@ -89,6 +90,7 @@ describe('Dialog', () => {
 
     expect(overlayContainerElement.textContent).toContain('Pizza');
     expect(dialogRef.componentInstance instanceof PizzaMsg).toBe(true);
+    expect(dialogRef.componentRef instanceof ComponentRef).toBe(true);
     expect(dialogRef.componentInstance!.dialogRef).toBe(dialogRef);
 
     viewContainerFixture.detectChanges();

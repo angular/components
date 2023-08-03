@@ -1,90 +1,34 @@
-@use 'sass:map';
-@use '../core/density/private/compatibility';
 @use '../core/theming/theming';
-@use '../core/style/private';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use './expansion-variables';
-@use './expansion-mixins';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
 
-  .mat-expansion-panel {
-    @include private.private-theme-overridable-elevation(2, $config);
-    background: theming.get-color-from-palette($background, card);
-    color: theming.get-color-from-palette($foreground, text);
-  }
-
-  .mat-action-row {
-    border-top-color: theming.get-color-from-palette($foreground, divider);
-  }
-
-  @include expansion-mixins.private-expansion-focus {
-    background: theming.get-color-from-palette($background, hover);
-  }
-
-  // Disable the hover on touch devices since it can appear like it is stuck. We can't use
-  // `@media (hover)` above, because the desktop support browser support isn't great.
-  @media (hover: none) {
-    .mat-expansion-panel:not(.mat-expanded):not([aria-disabled='true'])
-      .mat-expansion-panel-header:hover {
-      background: theming.get-color-from-palette($background, card);
-    }
-  }
-
-  .mat-expansion-panel-header-title {
-    color: theming.get-color-from-palette($foreground, text);
-  }
-
-  .mat-expansion-panel-header-description,
-  .mat-expansion-indicator::after {
-    color: theming.get-color-from-palette($foreground, secondary-text);
-  }
-
-  .mat-expansion-panel-header[aria-disabled='true'] {
-    color: theming.get-color-from-palette($foreground, disabled-button);
-
-    .mat-expansion-panel-header-title,
-    .mat-expansion-panel-header-description {
-      color: inherit;
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-expansion.$prefix,
+      tokens-mat-expansion.get-color-tokens($config));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
-  .mat-expansion-panel-header {
-    font: {
-      family: typography-utils.font-family($config, subheading-1);
-      size: typography-utils.font-size($config, subheading-1);
-      weight: typography-utils.font-weight($config, subheading-1);
-    }
-  }
 
-  .mat-expansion-panel-content {
-    @include typography-utils.typography-level($config, body-1);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-expansion.$prefix,
+      tokens-mat-expansion.get-typography-tokens($config));
   }
 }
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $expanded-height: compatibility.private-density-prop-value(
-        expansion-variables.$header-density-config, $density-scale, expanded-height);
-  $collapsed-height: compatibility.private-density-prop-value(
-      expansion-variables.$header-density-config, $density-scale, collapsed-height);
 
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-expansion-panel-header {
-      height: $collapsed-height;
-
-      &.mat-expanded {
-        height: $expanded-height;
-      }
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-expansion.$prefix,
+      tokens-mat-expansion.get-density-tokens($density-scale));
   }
 }
 

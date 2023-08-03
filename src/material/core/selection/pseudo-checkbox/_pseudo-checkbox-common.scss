@@ -42,7 +42,7 @@ $padding: checkbox-common.$border-width * 2;
 // `$box-size`: size of the checkbox.
 // `$border-size`: size of the checkbox's border.
 @mixin _checkbox-indeterminate-styles-with-size($box-size, $border-size) {
-  // Center the line in the the checkbox. `$checkbox-common.$border-width` is the width of the line.
+  // Center the line in the checkbox. `$checkbox-common.$border-width` is the width of the line.
   top: math.div($box-size - checkbox-common.$border-width, 2) - $border-size;
   width: $box-size - checkbox-common.$border-width - (2 * $border-size);
 }

@@ -15,6 +15,9 @@ export interface MatSlideToggleDefaultOptions {
 
   /** Default color for slide toggles. */
   color?: ThemePalette;
+
+  /** Whether to hide the icon inside the slide toggle. */
+  hideIcon?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-slide-toggle`. */
@@ -22,6 +25,6 @@ export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatSlideToggl
   'mat-slide-toggle-default-options',
   {
     providedIn: 'root',
-    factory: () => ({disableToggleValue: false}),
+    factory: () => ({disableToggleValue: false, hideIcon: false}),
   },
 );

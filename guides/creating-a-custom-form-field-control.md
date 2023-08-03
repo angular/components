@@ -326,14 +326,50 @@ private _disabled = false;
 
 #### `errorState`
 
-This property indicates whether the associated `NgControl` is in an error state. In this example,
-we show an error if the input is invalid and our component has been touched.
+This property indicates whether the associated `NgControl` is in an error state. For example,
+we can show an error if the input is invalid and our component has been touched.
 
 ```ts
 get errorState(): boolean {
   return this.parts.invalid && this.touched;
 }
 ```
+
+However, there are some error triggers that we can't subscribe to (e.g. parent form submissions),
+to handle such cases we should re-evaluate `errorState` on every change detection cycle.
+
+```ts
+/** Whether the component is in an error state. */
+errorState: boolean = false;
+
+constructor(
+  ...,
+  @Optional() private _parentForm: NgForm,
+  @Optional() private _parentFormGroup: FormGroupDirective
+) {
+...
+}
+
+ngDoCheck() {
+  if (this.ngControl) {
+    this.updateErrorState();
+  }
+}
+
+private updateErrorState() {
+  const parent = this._parentFormGroup || this.parentForm;
+
+  const oldState = this.errorState;
+  const newState = (this.ngControl?.invalid || this.parts.invalid) && (this.touched || parent.submitted);
+
+  if (oldState !== newState) {
+    this.errorState = newState;
+    this.stateChanges.next();
+  }
+}
+```
+
+Keep in mind that `updateErrorState()` must have minimal logic to avoid performance issues.
 
 #### `controlType`
 

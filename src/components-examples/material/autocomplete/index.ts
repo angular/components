@@ -5,4 +5,5 @@ export {AutocompleteOptgroupExample} from './autocomplete-optgroup/autocomplete-
 export {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-overview-example';
 export {AutocompletePlainInputExample} from './autocomplete-plain-input/autocomplete-plain-input-example';
 export {AutocompleteSimpleExample} from './autocomplete-simple/autocomplete-simple-example';
+export {AutocompleteRequireSelectionExample} from './autocomplete-require-selection/autocomplete-require-selection-example';
 export {AutocompleteHarnessExample} from './autocomplete-harness/autocomplete-harness-example';

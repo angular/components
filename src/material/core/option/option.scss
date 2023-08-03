@@ -2,7 +2,10 @@
 @use '@angular/cdk';
 @use '@material/list/evolution-mixins' as mdc-list-mixins;
 @use '@material/list/evolution-variables' as mdc-list-variables;
+@use '@material/typography/typography' as mdc-typography;
 
+@use '../tokens/m2/mat/option' as tokens-mat-option;
+@use '../tokens/token-utils';
 @use '../mdc-helpers/mdc-helpers';
 @use '../style/vendor-prefixes';
 @use '../style/layout-common';
@@ -13,8 +16,41 @@
   @include mdc-list-mixins.item-spacing(
     mdc-list-variables.$side-padding, $query: mdc-helpers.$mdc-base-styles-query);
   @include vendor-prefixes.user-select(none);
+  @include mdc-typography.smooth-font();
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+
+  @include token-utils.use-tokens(
+    tokens-mat-option.$prefix, tokens-mat-option.get-token-slots()) {
+    @include token-utils.create-token-slot(color, label-text-color);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(line-height, label-text-line-height);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+
+    // Increase specificity to override styles from list theme.
+    &:hover:not(.mdc-list-item--disabled) {
+      @include token-utils.create-token-slot(background-color, hover-state-layer-color);
+    }
+
+    &:focus.mdc-list-item,
+    &.mat-mdc-option-active.mdc-list-item {
+      @include token-utils.create-token-slot(background-color, focus-state-layer-color);
+    }
+
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      .mdc-list-item__primary-text {
+        @include token-utils.create-token-slot(color, selected-state-label-text-color);
+      }
+
+      // We don't change the background in multiple mode since
+      // it has the checkbox to show the selected state.
+      &:not(.mat-mdc-option-multiple) {
+        @include token-utils.create-token-slot(background-color, selected-state-layer-color);
+      }
+    }
+  }
 
   // If the MDC list is loaded after the option, this gets overwritten which breaks the text
   // alignment. Ideally we'd wrap all the MDC mixins above with this selector, but the increased

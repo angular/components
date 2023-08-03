@@ -75,6 +75,7 @@ export class MatRippleLoader implements OnDestroy {
     config: {
       className?: string;
       centered?: boolean;
+      disabled?: boolean;
     },
   ): void {
     // Indicates that the ripple has not yet been rendered for this component.
@@ -88,6 +89,10 @@ export class MatRippleLoader implements OnDestroy {
     // Store whether the ripple should be centered.
     if (config.centered) {
       host.setAttribute(matRippleCentered, '');
+    }
+
+    if (config.disabled) {
+      host.setAttribute(matRippleDisabled, '');
     }
   }
 

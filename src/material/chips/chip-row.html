@@ -1,34 +1,26 @@
 <ng-container *ngIf="!_isEditing">
-  <span matRipple class="mat-mdc-chip-ripple"
-       [matRippleDisabled]="_isRippleDisabled()"
-       [matRippleCentered]="_isRippleCentered"
-       [matRippleTrigger]="_elementRef.nativeElement"></span>
   <span class="mat-mdc-chip-focus-overlay"></span>
 </ng-container>
 
-
-<span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell">
-  <span
+<span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"
     matChipAction
-    [attr.role]="editable ? 'button' : null"
     [tabIndex]="tabIndex"
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel"
     [attr.aria-describedby]="_ariaDescriptionId">
-    <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic" *ngIf="leadingIcon">
-      <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
-    </span>
-    <span class="mdc-evolution-chip__text-label mat-mdc-chip-action-label" [ngSwitch]="_isEditing">
-      <ng-container *ngSwitchCase="false"><ng-content></ng-content></ng-container>
+  <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic" *ngIf="leadingIcon">
+    <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
+  </span>
+  <span class="mdc-evolution-chip__text-label mat-mdc-chip-action-label" [ngSwitch]="_isEditing">
+    <ng-container *ngSwitchCase="false"><ng-content></ng-content></ng-container>
 
-      <ng-container *ngSwitchCase="true">
-        <ng-content *ngIf="contentEditInput; else defaultMatChipEditInput"
-                    select="[matChipEditInput]"></ng-content>
-        <ng-template #defaultMatChipEditInput><span matChipEditInput></span></ng-template>
-      </ng-container>
+    <ng-container *ngSwitchCase="true">
+      <ng-content *ngIf="contentEditInput; else defaultMatChipEditInput"
+                  select="[matChipEditInput]"></ng-content>
+      <ng-template #defaultMatChipEditInput><span matChipEditInput></span></ng-template>
+    </ng-container>
 
-      <span class="mat-mdc-chip-primary-focus-indicator mat-mdc-focus-indicator"></span>
-    </span>
+    <span class="mat-mdc-chip-primary-focus-indicator mat-mdc-focus-indicator" aria-hidden="true"></span>
   </span>
 </span>
 

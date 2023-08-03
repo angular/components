@@ -2,142 +2,38 @@
 @use 'sass:math';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
 @use '../core/density/private/compatibility';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
 @use './stepper-variables';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
 
-  .mat-step-header {
-    &.cdk-keyboard-focused,
-    &.cdk-program-focused,
-    &:hover:not([aria-disabled]),
-    &:hover[aria-disabled='false'] {
-      background-color: theming.get-color-from-palette($background, hover);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+      tokens-mat-stepper.get-color-tokens($config));
+
+    .mat-step-header.mat-accent {
+      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.private-get-color-palette-color-tokens(map.get($config, accent)));
     }
 
-    &:hover[aria-disabled='true'] {
-      cursor: default;
+    .mat-step-header.mat-warn {
+      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.private-get-color-palette-color-tokens(map.get($config, warn)));
     }
-
-    // On touch devices the :hover state will linger on the element after a tap.
-    // Reset it via `@media` after the declaration, because the media query isn't
-    // supported by all browsers yet.
-    @media (hover: none) {
-      &:hover {
-        background: none;
-      }
-    }
-
-    .mat-step-label,
-    .mat-step-optional {
-      // TODO(josephperrott): Update to using a corrected disabled-text contrast
-      // instead of secondary-text.
-      color: theming.get-color-from-palette($foreground, secondary-text);
-    }
-
-    .mat-step-icon {
-      // TODO(josephperrott): Update to using a corrected disabled-text contrast
-      // instead of secondary-text.
-      background-color: theming.get-color-from-palette($foreground, secondary-text);
-      color: theming.get-color-from-palette($primary, default-contrast);
-    }
-
-    .mat-step-icon-selected,
-    .mat-step-icon-state-done,
-    .mat-step-icon-state-edit {
-      background-color: theming.get-color-from-palette($primary);
-      color: theming.get-color-from-palette($primary, default-contrast);
-    }
-
-    &.mat-accent {
-      .mat-step-icon {
-        color: theming.get-color-from-palette($accent, default-contrast);
-      }
-
-      .mat-step-icon-selected,
-      .mat-step-icon-state-done,
-      .mat-step-icon-state-edit {
-        background-color: theming.get-color-from-palette($accent);
-        color: theming.get-color-from-palette($accent, default-contrast);
-      }
-    }
-
-    &.mat-warn {
-      .mat-step-icon {
-        color: theming.get-color-from-palette($warn, default-contrast);
-      }
-
-      .mat-step-icon-selected,
-      .mat-step-icon-state-done,
-      .mat-step-icon-state-edit {
-        background-color: theming.get-color-from-palette($warn);
-        color: theming.get-color-from-palette($warn, default-contrast);
-      }
-    }
-
-    .mat-step-icon-state-error {
-      background-color: transparent;
-      color: theming.get-color-from-palette($warn, text);
-    }
-
-    .mat-step-label.mat-step-label-active {
-      color: theming.get-color-from-palette($foreground, text);
-    }
-
-    .mat-step-label.mat-step-label-error {
-      color: theming.get-color-from-palette($warn, text);
-    }
-  }
-
-  .mat-stepper-horizontal, .mat-stepper-vertical {
-    background-color: theming.get-color-from-palette($background, card);
-  }
-
-  .mat-stepper-vertical-line::before {
-    border-left-color: theming.get-color-from-palette($foreground, divider);
-  }
-
-  .mat-horizontal-stepper-header::before,
-  .mat-horizontal-stepper-header::after,
-  .mat-stepper-horizontal-line {
-    border-top-color: theming.get-color-from-palette($foreground, divider);
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2014-config(
       theming.get-typography-config($config-or-theme));
-  .mat-stepper-vertical, .mat-stepper-horizontal {
-    font-family: typography-utils.font-family($config);
-  }
 
-  .mat-step-label {
-    font: {
-      size: typography-utils.font-size($config, body-1);
-      weight: typography-utils.font-weight($config, body-1);
-    };
-  }
-
-  .mat-step-sub-label-error {
-    font-weight: normal;
-  }
-
-  .mat-step-label-error {
-    font-size: typography-utils.font-size($config, body-2);
-  }
-
-  .mat-step-label-selected {
-    font: {
-      size: typography-utils.font-size($config, body-2);
-      weight: typography-utils.font-weight($config, body-2);
-    };
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+      tokens-mat-stepper.get-typography-tokens($config));
   }
 }
 
@@ -147,34 +43,9 @@
     $density-scale, height);
   $vertical-padding: math.div($height - stepper-variables.$label-header-height, 2);
 
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-horizontal-stepper-header {
-      height: $height;
-    }
-
-    .mat-stepper-label-position-bottom .mat-horizontal-stepper-header,
-    .mat-vertical-stepper-header {
-      padding: $vertical-padding stepper-variables.$side-gap;
-    }
-
-    // Ensures that the vertical lines for the step content exceed into the step
-    // headers with a given distance (`$mat-stepper-line-gap`) to the step icon.
-    .mat-stepper-vertical-line::before {
-      top: stepper-variables.$line-gap - $vertical-padding;
-      bottom: stepper-variables.$line-gap - $vertical-padding;
-    }
-
-    // Ensures that the horizontal lines for the step header are centered vertically.
-    .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
-      &::after, &::before {
-        top: $vertical-padding + math.div(stepper-variables.$label-header-height, 2);
-      }
-    }
-
-    // Ensures that the horizontal line for the step content is aligned centered vertically.
-    .mat-stepper-label-position-bottom .mat-stepper-horizontal-line {
-      top: $vertical-padding + math.div(stepper-variables.$label-header-height, 2);
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+      tokens-mat-stepper.get-density-tokens($density-scale));
   }
 }
 

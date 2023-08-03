@@ -19,6 +19,7 @@ describe('MatButtonToggle with forms', () => {
         ButtonToggleGroupWithNgModel,
         ButtonToggleGroupWithFormControl,
         ButtonToggleGroupWithIndirectDescendantToggles,
+        ButtonToggleGroupWithFormControlAndDynamicButtons,
       ],
     });
 
@@ -265,6 +266,45 @@ describe('MatButtonToggle with forms', () => {
     expect(fixture.componentInstance.control.value).toBe('red');
     expect(groupInstance._buttonToggles.length).toBe(3);
   }));
+
+  it('should preserve the selection if the pre-selected option is removed and re-added', () => {
+    const fixture = TestBed.createComponent(ButtonToggleGroupWithFormControlAndDynamicButtons);
+    const instance = fixture.componentInstance;
+    instance.control.setValue('a');
+    fixture.detectChanges();
+    const buttons = fixture.nativeElement.querySelectorAll('.mat-button-toggle-button');
+
+    expect(instance.toggles.map(t => t.checked)).toEqual([true, false, false]);
+
+    buttons[2].click();
+    fixture.detectChanges();
+
+    instance.values.shift();
+    fixture.detectChanges();
+    expect(instance.toggles.map(t => t.checked)).toEqual([false, true]);
+
+    instance.values.unshift('a');
+    fixture.detectChanges();
+
+    expect(instance.toggles.map(t => t.checked)).toEqual([false, false, true]);
+  });
+
+  it('should preserve the pre-selected option if it removed and re-added', () => {
+    const fixture = TestBed.createComponent(ButtonToggleGroupWithFormControlAndDynamicButtons);
+    const instance = fixture.componentInstance;
+    instance.control.setValue('a');
+    fixture.detectChanges();
+    expect(instance.toggles.map(t => t.checked)).toEqual([true, false, false]);
+
+    instance.values.shift();
+    fixture.detectChanges();
+    expect(instance.toggles.map(t => t.checked)).toEqual([false, false]);
+
+    instance.values.unshift('a');
+    fixture.detectChanges();
+
+    expect(instance.toggles.map(t => t.checked)).toEqual([true, false, false]);
+  });
 });
 
 describe('MatButtonToggle without forms', () => {
@@ -1097,3 +1137,16 @@ class ButtonToggleWithStaticChecked {
   `,
 })
 class ButtonToggleWithStaticAriaAttributes {}
+
+@Component({
+  template: `
+  <mat-button-toggle-group [formControl]="control">
+    <mat-button-toggle *ngFor="let value of values" [value]="value">{{value}}</mat-button-toggle>
+  </mat-button-toggle-group>
+  `,
+})
+class ButtonToggleGroupWithFormControlAndDynamicButtons {
+  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  control = new FormControl('');
+  values = ['a', 'b', 'c'];
+}

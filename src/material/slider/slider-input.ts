@@ -18,6 +18,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -36,6 +37,7 @@ import {
   MAT_SLIDER_THUMB,
   MAT_SLIDER,
 } from './slider-interface';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * Provider that allows the slider thumb to register as a ControlValueAccessor.
@@ -259,6 +261,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   protected _isControlInitialized = false;
 
+  private _platform = inject(Platform);
+
   constructor(
     readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLInputElement>,
@@ -363,8 +367,22 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
       return;
     }
 
-    this._isActive = true;
-    this._setIsFocused(true);
+    // On IOS, dragging only works if the pointer down happens on the
+    // slider thumb and the slider does not receive focus from pointer events.
+    if (this._platform.IOS) {
+      const isCursorOnSliderThumb = this._slider._isCursorOnSliderThumb(
+        event,
+        this._slider._getThumb(this.thumbPosition)._hostElement.getBoundingClientRect(),
+      );
+
+      if (isCursorOnSliderThumb) {
+        this._isActive = true;
+      }
+    } else {
+      this._isActive = true;
+      this._setIsFocused(true);
+    }
+
     this._updateWidthActive();
     this._slider._updateDimensions();
 
@@ -452,7 +470,12 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     if (this._isActive) {
       this._isActive = false;
       this.dragEnd.emit({source: this, parent: this._slider, value: this.value});
-      setTimeout(() => this._updateWidthInactive());
+
+      // This setTimeout is to prevent the pointerup from triggering a value
+      // change on the input based on the inactive width. It's not clear why
+      // but for some reason on IOS this race condition is even more common so
+      // the timeout needs to be increased.
+      setTimeout(() => this._updateWidthInactive(), this._platform.IOS ? 10 : 0);
     }
   }
 

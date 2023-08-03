@@ -1,16 +1,13 @@
 @use 'sass:map';
 @use '@angular/cdk';
-@use '@material/menu-surface' as mdc-menu-surface;
 @use '@material/list/evolution-mixins' as mdc-list-mixins;
 @use '@material/list/evolution-variables' as mdc-list-variables;
+@use '@material/typography/typography' as mdc-typography;
+@use '../core/tokens/m2/mat/menu' as tokens-mat-menu;
+@use '../core/tokens/token-utils';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/menu-common';
 @use '../core/style/button-common';
-
-
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-menu-surface.core-styles($query: structure);
-}
 
 // Prevent rendering mat-menu as it can affect the flex layout.
 mat-menu {
@@ -19,9 +16,40 @@ mat-menu {
 
 .mat-mdc-menu-content {
   @include mdc-list-mixins.list-base($query: structure);
+
+  &,
+  .mat-mdc-menu-item .mat-mdc-menu-item-text {
+    @include mdc-typography.smooth-font();
+    white-space: normal;
+
+    @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+      @include token-utils.create-token-slot(font-family, item-label-text-font);
+      @include token-utils.create-token-slot(line-height, item-label-text-line-height);
+      @include token-utils.create-token-slot(font-size, item-label-text-size);
+      @include token-utils.create-token-slot(letter-spacing, item-label-text-tracking);
+      @include token-utils.create-token-slot(font-weight, item-label-text-weight);
+    }
+  }
 }
 
 .mat-mdc-menu-panel {
+  @include token-utils.create-token-values(tokens-mat-menu.$prefix,
+    tokens-mat-menu.get-unthemable-tokens());
+  @include menu-common.base;
+  box-sizing: border-box;
+  outline: 0;
+
+  @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+    @include token-utils.create-token-slot(border-radius, container-shape);
+    @include token-utils.create-token-slot(background-color, container-color);
+  }
+
+  // TODO(crisbeto): we don't need this for anything, but it was there when
+  // we used MDC's structural styles and removing it leads to sub-pixels
+  // differences in text rendering which break a lot of screenshots internally.
+  // We should clean it up eventually and re-approve all the screenshots.
+  will-change: transform, opacity;
+
   // Prevent users from interacting with the panel while it's animating. Note that
   // people won't be able to click through it, because the overlay pane will catch the click.
   // This fixes the following issues:
@@ -36,20 +64,6 @@ mat-menu {
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;
   }
-}
-
-// We need to increase the specificity for these styles to ensure we are not overridden by MDC's
-// .mdc-menu-surface styles. This can happen if the MDC styles are loaded in after our styles.
-.mat-mdc-menu-panel.mat-mdc-menu-panel {
-  // Include Material's base menu panel styling which contain the `min-width`, `max-width` and some
-  // styling to make scrolling smoother. MDC doesn't include the `min-width` and `max-width`, even
-  // though they're explicitly defined in spec.
-  @include menu-common.base;
-
-  // The CDK positioning uses flexbox to anchor the element, whereas MDC uses `position: absolute`.
-  // Furthermore, the relative position ensures that the `offsetParent` is the menu, rather than
-  // the overlay. This comes into play when we measure the `offsetTop` of a menu item.
-  position: relative;
 }
 
 .mat-mdc-menu-item {
@@ -71,6 +85,7 @@ mat-menu {
   background: none;
   text-decoration: none;
   margin: 0; // Resolves an issue where buttons have an extra 2px margin on Safari.
+  align-items: center;
 
   // Set the `min-height` here ourselves, instead of going through
   // the `mdc-list-one-line-item-density` mixin, because it sets a `height`
@@ -78,11 +93,18 @@ mat-menu {
   $height-config: map.get(mdc-list-variables.$one-line-item-density-config, height);
   min-height: map.get($height-config, default);
 
-  // If the MDC list is loaded after the menu, this gets overwritten which breaks the text
-  // alignment. Ideally we'd wrap all the MDC mixins above with this selector, but the increased
-  // specificity breaks some internal overrides.
-  &.mdc-list-item {
-    align-items: center;
+  @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+    // The class selector isn't specific enough to overide the link pseudo selectors so we need
+    // to target them specifically, otherwise the item color might be overwritten by the user
+    // agent resets of the app.
+    &, &:visited, &:link {
+      @include token-utils.create-token-slot(color, item-label-text-color);
+    }
+
+    .mat-icon-no-color,
+    .mat-mdc-menu-submenu-icon {
+      @include token-utils.create-token-slot(color, item-icon-color);
+    }
   }
 
   &[disabled] {
@@ -120,14 +142,22 @@ mat-menu {
     }
   }
 
-  // Needs to be overwritten explicitly, because the style can
-  // leak in from the list and cause the text to truncate.
-  .mdc-list-item__primary-text {
-    white-space: normal;
-  }
-
   &.mat-mdc-menu-item-submenu-trigger {
     @include menu-common.item-submenu-trigger(mdc-list-variables.$side-padding);
+  }
+
+  &:not([disabled]) {
+    @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+      &:hover {
+        @include token-utils.create-token-slot(background-color, item-hover-state-layer-color);
+      }
+
+      &.cdk-program-focused,
+      &.cdk-keyboard-focused,
+      &.mat-mdc-menu-item-highlighted {
+        @include token-utils.create-token-slot(background-color, item-focus-state-layer-color);
+      }
+    }
   }
 
   @include cdk.high-contrast(active, off) {

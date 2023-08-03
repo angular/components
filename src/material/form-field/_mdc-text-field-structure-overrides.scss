@@ -1,4 +1,8 @@
 @use '@material/textfield/variables' as mdc-textfield-variables;
+@use '@material/typography/typography' as mdc-typography;
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 // Mixin that can be included to override the default MDC text-field
 // styles to fit our needs. See individual comments for context on why
@@ -13,6 +17,7 @@
   // Note: We increase specificity here because the MDC textfield seems to override this,
   // depending on the CSS order, with an affix selector joint with the input.
   .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
+    @include mdc-typography.smooth-font();
     font: inherit;
     letter-spacing: inherit;
     text-decoration: inherit;
@@ -21,6 +26,8 @@
   }
 
   .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+    @include mdc-typography.smooth-font();
+
     // In order to ensure proper alignment of the floating label, we reset its line-height.
     // The line-height is not important as the element is absolutely positioned and only has one
     // line of text.
@@ -83,6 +90,17 @@
     }
     .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
       padding-right: 0;
+    }
+  }
+
+  // Before the switch to the tokens MDC was setting a specific placeholder color when the input
+  // is disabled, but now there's no token for it so we need to implement it ourselves.
+  .mat-form-field-disabled .mdc-text-field__input {
+    @include vendor-prefixes.input-placeholder {
+      @include token-utils.use-tokens(
+        tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
+        @include token-utils.create-token-slot(color, disabled-input-text-placeholder-color);
+      }
     }
   }
 
