@@ -167,7 +167,7 @@ export class MatDialog implements OnDestroy {
 
     // When a component is passed into the dialog, the host element interrupts
     // the `display:flex` from affecting the dialog title, content, and
-    // actions. To fix this, we make the component host `display: contents` by
+    // actions. To fix this, we make the component host `display: flex` by
     // marking it's panel with the `mat-mdc-dialog-component-panel` class.
     //
     // Note that this problem does not exist when a template ref is used since
