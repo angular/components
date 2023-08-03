@@ -5,10 +5,21 @@
 
 @use './button-theme-private';
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
 @use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
 @use '../core/typography/typography';
+
+@mixin base($config-or-theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-fab-theme.theme(tokens-mdc-fab.get-unthemable-tokens());
+    @include mdc-extended-fab-theme.theme(
+      tokens-mdc-extended-fab.get-unthemable-tokens()
+    );
+  }
+}
 
 @mixin _fab-variant($config, $foreground, $background) {
   $color-config: map.merge(
@@ -105,6 +116,7 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
+    @include base($theme);
     @if $color != null {
       @include color($color);
     }

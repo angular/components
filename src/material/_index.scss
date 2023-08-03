@@ -88,7 +88,7 @@
 @forward './button/button-theme' as button-* show button-theme, button-color, button-typography,
   button-density;
 @forward './button/fab-theme' as fab-* show fab-color, fab-typography,
-  fab-density, fab-theme;
+  fab-density, fab-theme, fab-base;
 @forward './button/icon-button-theme' as icon-button-* show icon-button-color,
   icon-button-typography, icon-button-density, icon-button-theme;
 @forward './button-toggle/button-toggle-theme' as button-toggle-* show button-toggle-theme,
