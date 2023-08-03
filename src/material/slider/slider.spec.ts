@@ -891,6 +891,8 @@ describe('MDC-based MatSlider', () => {
     it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$1');
       setValueByClick(slider, input, 199);
+      fixture.detectChanges();
+      flush();
       expect(input._hostElement.getAttribute('aria-valuetext')).toBe('$199');
     }));
 
@@ -1177,7 +1179,6 @@ describe('MDC-based MatSlider', () => {
       const startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       const endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
       flush();
-      console.log('result: ', startInput.value);
       checkInput(startInput, {min: -1, max: -0.3, value: -0.7, translateX: 90});
       checkInput(endInput, {min: -0.7, max: 0, value: -0.3, translateX: 210});
     }));
@@ -1733,7 +1734,7 @@ function slideToValue(slider: MatSlider, input: MatSliderThumb, value: number) {
   dispatchEvent(input._hostElement, new Event('input'));
   dispatchPointerEvent(sliderElement, 'pointerup', endX, endY);
   dispatchEvent(input._hostElement, new Event('change'));
-  tick();
+  tick(10);
 }
 
 /** Returns the x and y coordinates for the given slider value. */
