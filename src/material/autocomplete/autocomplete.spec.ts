@@ -2622,7 +2622,7 @@ describe('MDC-based MatAutocomplete', () => {
       tick();
 
       expect(input.value).toBe('Cali');
-      expect(stateCtrl.value).toBe('Cali');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
       expect(spy).not.toHaveBeenCalled();
 
       dispatchFakeEvent(document, 'click');

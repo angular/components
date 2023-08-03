@@ -14,8 +14,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
 import {ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
@@ -50,12 +48,12 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
   ],
 })
 export class AutocompleteDemo {
-  stateCtrl = new FormControl({code: 'CA', name: 'California'});
+  stateCtrl = new FormControl();
   currentState = '';
   currentGroupedState = '';
   topHeightCtrl = new FormControl(0);
 
-  reactiveStates: Observable<State[]>;
+  reactiveStates: State[];
   tdStates: State[];
 
   tdDisabled = false;
@@ -138,12 +136,8 @@ export class AutocompleteDemo {
   ].map((state, index) => ({...state, index}));
 
   constructor() {
-    this.tdStates = this.states;
-    this.reactiveStates = this.stateCtrl.valueChanges.pipe(
-      startWith(this.stateCtrl.value),
-      map(val => this.displayFn(val)),
-      map(name => this.filterStates(name)),
-    );
+    this.tdStates = this.states.slice();
+    this.reactiveStates = this.states.slice();
 
     this.filteredGroupedStates = this.groupedStates = this.states.reduce<StateGroup[]>(
       (groups, state) => {
