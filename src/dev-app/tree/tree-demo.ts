@@ -10,7 +10,6 @@ import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
 import {CdkTreeFlatExample, CdkTreeNestedExample} from '@angular/components-examples/cdk/tree';
 import {
-  TreeChecklistExample,
   TreeDynamicExample,
   TreeFlatOverviewExample,
   TreeHarnessExample,
@@ -38,7 +37,6 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeNestedExample,
     CommonModule,
     FormsModule,
-    TreeChecklistExample,
     TreeDynamicExample,
     TreeFlatOverviewExample,
     TreeHarnessExample,
