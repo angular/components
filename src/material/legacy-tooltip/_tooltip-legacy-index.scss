@@ -1,3 +1,0 @@
-@forward 'tooltip-theme' hide $font-size, $handset-font-size, $handset-target-height,
-$handset-vertical-padding, $target-height, $vertical-padding, color, theme, typography;
-@forward 'tooltip-theme' as mat-legacy-tooltip-* hide mat-legacy-tooltip-density;

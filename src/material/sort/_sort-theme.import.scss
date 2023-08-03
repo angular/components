@@ -1,5 +1,0 @@
-@forward '../core/theming/theming.import';
-@forward 'sort-theme' hide color, theme, typography, density;
-@forward 'sort-theme' as mat-sort-* hide mat-sort-density;
-
-@import '../core/theming/theming';
