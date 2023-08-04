@@ -256,7 +256,7 @@
 /// Generates a set of namespaced tokens not related to color, typography, or density for all
 /// components.
 /// @return {Map} A map of namespaced tokens not related to color, typography, or density
-@function generate-other-tokens() {
+@function generate-base-tokens() {
   // TODO(mmalerba): Exclude density tokens once implemented.
   @return _generate-tokens((
     md-sys-motion: mdc-tokens.md-sys-motion-values(),

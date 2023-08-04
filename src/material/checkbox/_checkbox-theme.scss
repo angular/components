@@ -9,9 +9,13 @@
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 
 @mixin base($config-or-theme) {
-  // Add default values for tokens not related to color, typography, or density.
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
+  @if inspection.get-theme-version($config-or-theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, base));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
+    }
   }
 }
 
