@@ -6,17 +6,30 @@
 
 $_internals: _mat-theming-internals-do-not-access;
 
+/// Validates that the given value is a versioned theme object.
+/// @param {Any} $theme The theme object to validate.
+/// @return {Boolean|Null} true if the theme has errors, else null.
 @function _validate-theme-object($theme) {
   $err: validation.validate-type($theme, 'map') or
         map.get($theme, $_internals, theme-version) == null;
   @return if($err, true, null);
 }
 
+/// Gets the version number of a theme object. A theme that is not a valid versioned theme object is
+/// considered to be version 0.
+/// @param {Map} $theme The theme to check the version of
+/// @return {Number} The version number of the theme (0 if unknown).
 @function get-theme-version($theme) {
   $err: _validate-theme-object($theme);
   @return if($err, 0, map.get($theme, $_internals, theme-version) or 0);
 }
 
+/// Gets the set of tokens from the given theme, limited to those affected by the requested theming
+/// systems.
+/// @param {Map} $theme The theme to get tokens from.
+/// @param {String...} $systems The theming systems to get tokens for. Valid values are: color,
+///   typography, density, other. If no systems are passed, all tokens will be returned.
+/// @return {Map} The requested tokens for the theme.
 @function get-theme-tokens($theme, $systems...) {
   $systems: if(list.length($systems) == 0, (color, typography, density, other), $systems);
   $err: _validate-theme-object($theme);
