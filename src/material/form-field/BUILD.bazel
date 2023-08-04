@@ -31,7 +31,6 @@ sass_library(
     srcs = [
         "_form-field-theme.import.scss",
         "_form-field-theme.scss",
-        "_mdc-text-field-theme-variable-refresh.scss",
     ],
     deps = [
         ":form_field_partials",

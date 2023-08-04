@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use '../../token-utils';
 @use '../../../style/sass-utils';
+@use '../../../theming/theming';
+@use '../../../theming/palette';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, form-field);
@@ -13,12 +15,43 @@ $prefix: (mat, form-field);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($config) {
+  $warn: map.get($config, warn);
   $is-dark: map.get($config, is-dark);
   $on-surface: if($is-dark, #fff, #000);
+  $color-tokens: private-get-color-palette-color-tokens($config, primary);
 
-  @return (
+  @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
     disabled-input-text-placeholder-color: rgba($on-surface, 0.38),
+    state-layer-color: rgba($on-surface, 0.87),
+    error-text-color: theming.get-color-from-palette($warn),
+
+    // On dark themes we set the native `select` color to some shade of white,
+    // however the color propagates to all of the `option` elements, which are
+    // always on a white background inside the dropdown, causing them to blend in.
+    // Since we can't change background of the dropdown, we need to explicitly
+    // reset the color of the options to something dark.
+    select-option-text-color: if($is-dark, palette.$dark-primary-text, inherit),
+    // Note the spelling of the `GrayText` here which is a system color. See:
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
+    select-disabled-option-text-color: if($is-dark, palette.$dark-disabled-text, GrayText),
+
+    // These values are taken from the MDC select implementation:
+    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-select/_select-theme.scss
+    enabled-select-arrow-color: rgba($on-surface, 0.54),
+    disabled-select-arrow-color: rgba($on-surface, 0.38),
+
+    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+  ));
+}
+
+// Generates the mapping for the properties that change based on the form field color.
+@function private-get-color-palette-color-tokens($config, $palette-name) {
+  $palette: map.get($config, $palette-name);
+
+  @return (
+    focus-select-arrow-color: theming.get-color-from-palette($palette, default, 0.87),
   );
 }
 
