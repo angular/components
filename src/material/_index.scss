@@ -183,7 +183,7 @@ legacy-tabs-typography;
 @forward './legacy-tooltip/tooltip-theme' as legacy-tooltip-* show legacy-tooltip-theme,
   legacy-tooltip-color, legacy-tooltip-typography;
 @forward './tooltip/tooltip-theme' as tooltip-* show tooltip-theme, tooltip-color,
-  tooltip-typography, tooltip-density;
+  tooltip-typography, tooltip-density, tooltip-base;
 @forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density;
 
 // MDC Helpers
