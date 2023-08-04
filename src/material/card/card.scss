@@ -30,12 +30,6 @@
         tokens-mdc-elevated-card.$prefix, $mdc-elevated-card-token-slots) {
       @include token-utils.create-token-slot(box-shadow, container-elevation);
     }
-
-    // Add default values for MDC card tokens that aren't outputted by the theming API.
-    @include mdc-elevated-card-theme.theme(tokens-mdc-elevated-card.get-unthemable-tokens());
-    @include mdc-outlined-card-theme.theme(tokens-mdc-outlined-card.get-unthemable-tokens());
-    @include token-utils.create-token-values(
-            tokens-mat-card.$prefix, tokens-mat-card.get-unthemable-tokens());
   }
 
   .mat-mdc-card-outlined {
