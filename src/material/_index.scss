@@ -143,7 +143,7 @@
   progress-bar-density, progress-bar-base;
 @forward './progress-spinner/progress-spinner-theme' as progress-spinner-* show
   progress-spinner-theme, progress-spinner-color, progress-spinner-typography,
-  progress-spinner-density;
+  progress-spinner-density, progress-spinner-base;
 @forward './legacy-progress-spinner/progress-spinner-theme' as legacy-progress-spinner-* show
   legacy-progress-spinner-theme, legacy-progress-spinner-color, legacy-progress-spinner-typography;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
