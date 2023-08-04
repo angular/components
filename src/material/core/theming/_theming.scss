@@ -35,7 +35,7 @@ $_disable-color-backwards-compatibility: false;
 $_emitted-color: () !default;
 $_emitted-typography: () !default;
 $_emitted-density: () !default;
-$_emitted-other: () !default;
+$_emitted-base: () !default;
 
 /// Extracts a color from a palette or throws an error if it doesn't exist.
 /// @param {Map} $palette The palette from which to extract a color.
@@ -387,13 +387,13 @@ $_internals: _mat-theming-internals-do-not-access;
     density-scale: map.get($theme-or-color-config, $_internals, density-scale),
     density-tokens: map.get($theme-or-color-config, $_internals, density-tokens),
   ));
-  $other-settings: _strip-empty-settings((
-    other-tokens: map.get($theme-or-color-config, $_internals, other-tokens),
+  $base-settings: _strip-empty-settings((
+    base-tokens: map.get($theme-or-color-config, $_internals, base-tokens),
   ));
   $previous-color-settings: map.get($_emitted-color, $id) or ();
   $previous-typography-settings: map.get($_emitted-typography, $id) or ();
   $previous-density-settings: map.get($_emitted-density, $id) or ();
-  $previous-other-settings: map.get($_emitted-other, $id) or ();
+  $previous-base-settings: map.get($_emitted-base, $id) or ();
 
   // Check if the color configuration has been generated before.
   @if $color-settings != null {
@@ -422,19 +422,19 @@ $_internals: _mat-theming-internals-do-not-access;
     $previous-density-settings: list.append($previous-density-settings, $density-settings);
   }
 
-  // Check if the other configuration has been generated before.
-  @if $other-settings != null {
-    @if list.index($previous-other-settings, $other-settings) != null and
+  // Check if the base configuration has been generated before.
+  @if $base-settings != null {
+    @if list.index($previous-base-settings, $base-settings) != null and
         not $theme-ignore-duplication-warnings {
       @warn 'The same base theme styles are generated multiple times. ' + $_duplicate-warning;
     }
-    $previous-other-settings: list.append($previous-other-settings, $other-settings);
+    $previous-base-settings: list.append($previous-base-settings, $base-settings);
   }
 
   $_emitted-color: map.set($_emitted-color, $id, $previous-color-settings) !global;
   $_emitted-density: map.set($_emitted-density, $id, $previous-density-settings) !global;
   $_emitted-typography: map.set($_emitted-typography, $id, $previous-typography-settings) !global;
-  $_emitted-other: map.set($_emitted-other, $id, $previous-other-settings) !global;
+  $_emitted-base: map.set($_emitted-base, $id, $previous-base-settings) !global;
 
   @content;
 }

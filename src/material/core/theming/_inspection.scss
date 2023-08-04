@@ -28,18 +28,18 @@ $_internals: _mat-theming-internals-do-not-access;
 /// systems.
 /// @param {Map} $theme The theme to get tokens from.
 /// @param {String...} $systems The theming systems to get tokens for. Valid values are: color,
-///   typography, density, other. If no systems are passed, all tokens will be returned.
+///   typography, density, base. If no systems are passed, all tokens will be returned.
 /// @return {Map} The requested tokens for the theme.
 @function get-theme-tokens($theme, $systems...) {
-  $systems: if(list.length($systems) == 0, (color, typography, density, other), $systems);
+  $systems: if(list.length($systems) == 0, (color, typography, density, base), $systems);
   $err: _validate-theme-object($theme);
   @if $err {
     @error #{'Expected $theme to be an Angular Material theme object. Got:'} $theme;
   }
-  $err: validation.validate-allowed-values($systems, color, typography, density, other);
+  $err: validation.validate-allowed-values($systems, color, typography, density, base);
   @if $err {
    @error
-     #{'Expected $systems to contain valid system names (color, typographt, density, or other).'}
+     #{'Expected $systems to contain valid system names (color, typographt, density, or base).'}
      #{'Got invalid system names:'} $err;
   }
   $result: ();

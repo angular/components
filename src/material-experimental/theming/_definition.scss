@@ -24,7 +24,7 @@ $theme-version: 1;
       define-colors(map.get($config, color) or ()),
       define-typography(map.get($config, typography) or ()),
       define-density(map.get($config, density) or ()),
-      ($internals: (other-tokens: m3-tokens.generate-other-tokens())),
+      ($internals: (base-tokens: m3-tokens.generate-base-tokens())),
   );
 }
 
