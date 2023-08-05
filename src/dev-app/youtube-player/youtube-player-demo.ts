@@ -23,6 +23,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 interface Video {
   id: string;
   name: string;
+  isPlaylist?: boolean;
 }
 
 const VIDEOS: Video[] = [
@@ -38,6 +39,16 @@ const VIDEOS: Video[] = [
     id: 'invalidname',
     name: 'Invalid',
   },
+  {
+    id: 'PLOa5YIicjJ-XCGXwnEmMmpHHCn11gUgvL',
+    name: 'Angular Forms Playlist',
+    isPlaylist: true,
+  },
+  {
+    id: 'PLOa5YIicjJ-VpOOoLczAGTLEEznZ2JEa6',
+    name: 'Angular Router Playlist',
+    isPlaylist: true,
+  },
 ];
 
 @Component({
@@ -49,7 +60,10 @@ const VIDEOS: Video[] = [
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   @ViewChild('demoYouTubePlayer') demoYouTubePlayer: ElementRef<HTMLDivElement>;
-  selectedVideo: Video | undefined = VIDEOS[0];
+  private _selectedVideo?: Video;
+  private _playerVars?: YT.PlayerVars;
+  private _selectedVideoId?: string;
+
   videos = VIDEOS;
   videoWidth: number | undefined;
   videoHeight: number | undefined;
@@ -57,6 +71,8 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this._loadApi();
+
+    this.selectedVideo = VIDEOS[0];
   }
 
   ngAfterViewInit(): void {
@@ -73,6 +89,37 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.onResize);
+  }
+
+  get selectedVideoId() {
+    return this._selectedVideoId;
+  }
+
+  get playerVars() {
+    return this._playerVars;
+  }
+
+  get selectedVideo() {
+    return this._selectedVideo;
+  }
+
+  set selectedVideo(value: Video | undefined) {
+    this._selectedVideo = value;
+
+    // If the video is a playlist, don't send a video id, and prepare playerVars instead
+
+    if (!value?.isPlaylist) {
+      this._playerVars = undefined;
+      this._selectedVideoId = value?.id;
+      return;
+    }
+
+    this._playerVars = {
+      list: this._selectedVideo?.id,
+      listType: 'playlist',
+    };
+
+    this._selectedVideoId = undefined;
   }
 
   private _loadApi() {
