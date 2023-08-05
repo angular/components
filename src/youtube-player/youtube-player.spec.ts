@@ -425,7 +425,7 @@ describe('YoutubePlayer', () => {
       playerCtorSpy.calls.reset();
 
       // Change the vars so that the list type is undefined
-      // We only support a "list" if there's an accompaying "listType"
+      // We only support a "list" if there's an accompanying "listType"
       testComponent.playerVars = {
         ...playerVars,
         listType: undefined,
