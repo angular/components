@@ -7,6 +7,7 @@
  */
 
 import {Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
+import {InputModalityDetector} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   ConnectedPosition,
@@ -69,6 +70,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
   private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   private readonly _overlay = inject(Overlay);
   private readonly _ngZone = inject(NgZone);
+  private readonly _inputModalityDetector = inject(InputModalityDetector);
   private readonly _directionality = inject(Directionality, {optional: true});
 
   /** The parent menu this trigger belongs to. */
@@ -195,7 +197,14 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     this._ngZone.runOutsideAngular(() => {
       fromEvent(this._elementRef.nativeElement, 'mouseenter')
         .pipe(
-          filter(() => !this.menuStack.isEmpty() && !this.isOpen()),
+          filter(() => {
+            return (
+              // Skip fake `mouseenter` events dispatched by touch devices.
+              this._inputModalityDetector.mostRecentModality !== 'touch' &&
+              !this.menuStack.isEmpty() &&
+              !this.isOpen()
+            );
+          }),
           takeUntil(this.destroyed),
         )
         .subscribe(() => {
