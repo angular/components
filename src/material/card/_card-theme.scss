@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
@@ -9,7 +10,7 @@
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 
 @mixin base($config-or-theme) {
-  .mat-mdc-card {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-elevated-card-theme.theme(tokens-mdc-elevated-card.get-unthemable-tokens());
     @include mdc-outlined-card-theme.theme(tokens-mdc-outlined-card.get-unthemable-tokens());
     @include token-utils.create-token-values(
@@ -32,7 +33,7 @@
   $mat-card-color-tokens: tokens-mat-card.get-color-tokens($config);
 
   // Add values for card tokens.
-  .mat-mdc-card {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-elevated-card-theme.theme($mdc-elevated-card-color-tokens);
     @include mdc-outlined-card-theme.theme($mdc-outlined-card-color-tokens);
     @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-color-tokens);
@@ -47,7 +48,7 @@
   $mat-card-typography-tokens: tokens-mat-card.get-typography-tokens($config);
 
   // Add values for card tokens.
-  .mat-mdc-card {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-elevated-card-theme.theme($mdc-elevated-card-typography-tokens);
     @include mdc-outlined-card-theme.theme($mdc-outlined-card-typography-tokens);
     @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-typography-tokens);
@@ -61,7 +62,7 @@
   $mat-card-density-tokens: tokens-mat-card.get-density-tokens($density-scale);
 
   // Add values for card tokens.
-  .mat-mdc-card {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-elevated-card-theme.theme($mdc-elevated-card-density-tokens);
     @include mdc-outlined-card-theme.theme($mdc-outlined-card-density-tokens);
     @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-density-tokens);
