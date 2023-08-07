@@ -22,17 +22,11 @@
   .mat-mdc-fab, .mat-mdc-mini-fab {
     // Add the official slots for the MDC fab.
     @include mdc-fab-theme.theme-styles($mdc-fab-token-slots);
-
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-fab-theme.theme(m2-mdc-fab.get-unthemable-tokens());
   }
 
   .mat-mdc-extended-fab {
     // Add the official slots for the MDC fab.
     @include mdc-extended-fab-theme.theme-styles($mdc-extended-fab-token-slots);
-
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-extended-fab-theme.theme(m2-mdc-extended-fab.get-unthemable-tokens());
   }
 }
 
