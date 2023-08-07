@@ -33,14 +33,14 @@
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
 
-  .mat-mdc-progress-bar {
+  @include sass-utils.current-selector-or-root() {
     @include _palette-styles($config, primary);
 
-    &.mat-accent {
+    .mat-accent {
       @include _palette-styles($config, accent);
     }
 
-    &.mat-warn {
+    .mat-warn {
       @include _palette-styles($config, warn);
     }
   }
