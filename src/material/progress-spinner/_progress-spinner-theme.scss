@@ -16,16 +16,16 @@
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
   $mdc-circular-progress-color-tokens: tokens-mdc-circular-progress.get-color-tokens($config);
+  @include sass-utils.current-selector-or-root() {
 
-  .mat-mdc-progress-spinner {
     @include mdc-circular-progress-theme.theme($mdc-circular-progress-color-tokens);
 
-    &.mat-accent {
+    .mat-accent {
       $color: theming.get-color-from-palette(map.get($config, accent));
       @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
     }
 
-    &.mat-warn {
+    .mat-warn {
       $color: theming.get-color-from-palette(map.get($config, warn));
       @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
     }
