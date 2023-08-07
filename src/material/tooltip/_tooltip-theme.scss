@@ -16,7 +16,7 @@
   $mdc-tooltip-color-tokens: m2-mdc-plain-tooltip.get-color-tokens($config);
 
   // Add values for MDC tooltip tokens.
-  .mat-mdc-tooltip {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-plain-tooltip-theme.theme($mdc-tooltip-color-tokens);
   }
 }
@@ -27,7 +27,7 @@
   $mdc-tooltip-typography-tokens: m2-mdc-plain-tooltip.get-typography-tokens($config);
 
   // Add values for MDC tooltip tokens.
-  .mat-mdc-tooltip {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-plain-tooltip-theme.theme($mdc-tooltip-typography-tokens);
   }
 }
@@ -37,7 +37,7 @@
   $mdc-tooltip-density-tokens: m2-mdc-plain-tooltip.get-density-tokens($density-scale);
 
   // Add values for MDC tooltip tokens.
-  .mat-mdc-tooltip {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-plain-tooltip-theme.theme($mdc-tooltip-density-tokens);
   }
 }
