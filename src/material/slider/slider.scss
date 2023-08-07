@@ -32,9 +32,6 @@ $mat-slider-horizontal-margin: 8px !default;
       }
     }
 
-    // Add default values for MDC slider tokens that aren't outputted by the theming API.
-    @include mdc-slider-theme.theme(m2-mdc-slider.get-unthemable-tokens());
-
     display: inline-block;
     box-sizing: border-box;
     outline: none;

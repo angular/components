@@ -3,9 +3,17 @@
 @use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '../core/theming/theming';
 @use '../core/typography/typography';
+@use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/slider' as m2-mat-slider;
 @use '../core/tokens/m2/mdc/slider' as m2-mdc-slider;
+
+@mixin base($config-or-theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-slider-theme.theme(m2-mdc-slider.get-unthemable-tokens());
+  }
+}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -74,6 +82,7 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
+    @include base($theme);
     @if $color != null {
       @include color($color);
     }
