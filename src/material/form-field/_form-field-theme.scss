@@ -1,17 +1,14 @@
 @use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
 @use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
-@use '@material/typography/typography' as mdc-typography;
 
 @use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use '../core/tokens/m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use './form-field-density';
-@use './form-field-subscript';
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -53,36 +50,8 @@
       tokens-mdc-filled-text-field.get-typography-tokens($config));
     @include mdc-outlined-text-field-theme.theme(
       tokens-mdc-outlined-text-field.get-typography-tokens($config));
-  }
-
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include form-field-subscript.private-form-field-subscript-typography($config);
-
-    // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
-    // shows `body1` for text fields though, so we manually override the typography.
-    // Note: Form controls inherit the typography from the parent form field.
-    .mat-mdc-form-field {
-      @include mdc-typography.typography(body1, $query: mdc-helpers.$mdc-typography-styles-query);
-    }
-
-    // TODO(crisbeto): we may be able to set this style with the `label-text-populated-size` token.
-    // Above, we updated the floating label to use the `body1` typography level. The MDC notched
-    // outline overrides this accidentally (only when the label floats) to a `rem`-based value.
-    // This results in different label widths when floated/docked and ultimately breaks the notch
-    // width as it has been measured in the docked state (where `body1` is applied). We try to
-    // unset these styles set by the `mdc-notched-outline`:
-    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
-    .mat-mdc-form-field .mdc-text-field--outlined {
-      // For the non-upgraded notch label (i.e. when rendered on the server), also
-      // use the correct `body1` typography level.
-      .mdc-floating-label--float-above {
-        font-size: calc(#{
-            mdc-typography.get-size(body1)} * var(--mat-mdc-form-field-floating-label-scale, 0.75));
-      }
-      .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-        font-size: mdc-typography.get-size(body1);
-      }
-    }
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-typography-tokens($config));
   }
 }
 
