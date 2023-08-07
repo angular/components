@@ -13,7 +13,8 @@
     <div class="demo-video-selection">
       <mat-checkbox [(ngModel)]="disableCookies">Disable cookies</mat-checkbox>
     </div>
-    <youtube-player [videoId]="selectedVideo && selectedVideo.id"
+    <youtube-player [videoId]="selectedVideoId"
+                    [playerVars]="playerVars"
                     [width]="videoWidth" [height]="videoHeight"
                     [disableCookies]="disableCookies"></youtube-player>
   </section>
