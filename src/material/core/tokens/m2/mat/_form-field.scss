@@ -3,6 +3,7 @@
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
 @use '../../../theming/palette';
+@use '../../../typography/typography-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, form-field);
@@ -57,7 +58,34 @@ $prefix: (mat, form-field);
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($config) {
-  @return ();
+  $fallback-font-family: typography-utils.font-family($config);
+
+  @return (
+    // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
+    // shows `body1` for text fields though, so we manually override the typography.
+    // Note: Form controls inherit the typography from the parent form field.
+    container-text-font: typography-utils.font-family($config, body-1) or $fallback-font-family,
+    container-text-line-height: typography-utils.line-height($config, body-1),
+    container-text-size: typography-utils.font-size($config, body-1),
+    container-text-tracking: typography-utils.letter-spacing($config, body-1),
+    container-text-weight: typography-utils.font-weight($config, body-1),
+
+    // In the container styles, we updated the floating label to use the `body-1` typography level.
+    // The MDC notched outline overrides this accidentally (only when the label floats) to a
+    // `rem`-based value. This results in different label widths when floated/docked and ultimately
+    // breaks the notch width as it has been measured in the docked state (where `body-1` is
+    // applied). We try to unset these styles set by the `mdc-notched-outline`:
+    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
+    // This is why we can't use their `label-text-populated-size` token and we have to declare
+    // our own version of it.
+    outlined-label-text-populated-size: typography-utils.font-size($config, body-1),
+
+    subscript-text-font: typography-utils.font-family($config, caption) or $fallback-font-family,
+    subscript-text-line-height: typography-utils.line-height($config, caption),
+    subscript-text-size: typography-utils.font-size($config, caption),
+    subscript-text-tracking: typography-utils.letter-spacing($config, caption),
+    subscript-text-weight: typography-utils.font-weight($config, caption),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.

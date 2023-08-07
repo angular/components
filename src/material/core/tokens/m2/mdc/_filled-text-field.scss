@@ -88,6 +88,7 @@ $prefix: (mdc, filled-text-field);
     error-hover-state-layer-opacity: null,
     hover-state-layer-color: null,
     hover-state-layer-opacity: null,
+    label-text-line-height: null, // We override the line height to `normal` so don't emit a slot.
   );
 }
 
@@ -151,7 +152,6 @@ $prefix: (mdc, filled-text-field);
 
   @return (
     label-text-font: typography-utils.font-family($config, body-1) or $fallback-font-family,
-    label-text-line-height: typography-utils.line-height($config, body-1),
     label-text-size: typography-utils.font-size($config, body-1),
     label-text-tracking: typography-utils.letter-spacing($config, body-1),
     label-text-weight: typography-utils.font-weight($config, body-1),
