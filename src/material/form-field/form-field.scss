@@ -8,6 +8,7 @@
 @use '@material/line-ripple/line-ripple' as mdc-line-ripple;
 @use '@material/line-ripple/line-ripple-theme' as mdc-line-ripple-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@material/typography' as mdc-typography;
 @use '../core/tokens/token-utils';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/vendor-prefixes';
@@ -94,6 +95,30 @@
 
   [dir='rtl'] & {
     text-align: right;
+  }
+
+  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+    tokens-mat-form-field.get-token-slots()) {
+    @include mdc-typography.smooth-font();
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(line-height, container-text-line-height);
+    @include token-utils.create-token-slot(font-size, container-text-size);
+    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+    @include token-utils.create-token-slot(font-weight, container-text-weight);
+
+    .mdc-text-field--outlined {
+      $token-value: var(#{token-utils.get-token-variable(outlined-label-text-populated-size)});
+
+      // For the non-upgraded notch label (i.e. when rendered on the server), also
+      // use the correct typography.
+      .mdc-floating-label--float-above {
+        font-size: calc(#{$token-value} * var(--mat-mdc-form-field-floating-label-scale));
+      }
+
+      .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: $token-value;
+      }
+    }
   }
 }
 

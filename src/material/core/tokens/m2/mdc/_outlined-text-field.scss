@@ -82,6 +82,7 @@ $prefix: (mdc, outlined-text-field);
     error-input-text-color: null,
     focus-input-text-color: null,
     hover-input-text-color: null,
+    label-text-line-height: null, // We override the line height to `normal` so don't emit a slot.
   );
 }
 
@@ -134,7 +135,6 @@ $prefix: (mdc, outlined-text-field);
 
   @return (
     label-text-font: typography-utils.font-family($config, body-1) or $fallback-font-family,
-    label-text-line-height: typography-utils.line-height($config, body-1),
     label-text-size: typography-utils.font-size($config, body-1),
     label-text-tracking: typography-utils.letter-spacing($config, body-1),
     label-text-weight: typography-utils.font-weight($config, body-1),
