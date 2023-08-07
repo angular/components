@@ -122,7 +122,7 @@
 @forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
   slider-density, slider-base;
 @forward './snack-bar/snack-bar-theme' as snack-bar-* show snack-bar-theme, snack-bar-color,
-  snack-bar-typography, snack-bar-density;
+  snack-bar-typography, snack-bar-density, snack-bar-base;
 @forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography, sort-density;
 @forward './stepper/stepper-theme' as stepper-* show stepper-theme, stepper-color,
   stepper-typography, stepper-density;
