@@ -402,6 +402,43 @@ describe('YoutubePlayer', () => {
         }),
       );
     });
+
+    it('should play with a playlist id instead of a video id', () => {
+      playerCtorSpy.calls.reset();
+
+      const playerVars: YT.PlayerVars = {
+        list: 'some-playlist-id',
+        listType: 'playlist',
+      };
+
+      testComponent.videoId = undefined;
+      testComponent.playerVars = playerVars;
+
+      fixture.detectChanges();
+
+      let calls = playerCtorSpy.calls.all();
+
+      expect(calls.length).toBe(1);
+      expect(calls[0].args[1]).toEqual(jasmine.objectContaining({playerVars, videoId: undefined}));
+
+      playerSpy.destroy.calls.reset();
+      playerCtorSpy.calls.reset();
+
+      // Change the vars so that the list type is undefined
+      // We only support a "list" if there's an accompanying "listType"
+      testComponent.playerVars = {
+        ...playerVars,
+        listType: undefined,
+      };
+
+      fixture.detectChanges();
+
+      // The previous instance should have been destroyed
+      expect(playerSpy.destroy).toHaveBeenCalled();
+
+      // Don't expect it to have been called
+      expect(playerCtorSpy.calls.all().length).toHaveSize(0);
+    });
   });
 
   describe('API loaded asynchronously', () => {
