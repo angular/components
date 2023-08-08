@@ -144,4 +144,5 @@ list-density, list-base;
   $private-mdc-theme-styles-query, $private-mdc-typography-styles-query;
 
 // New theming APIs, currently in development:
-@forward './core/theming/inspection' as private-* show private-get-theme-version;
+@forward './core/theming/inspection' as private-* show private-get-theme-version,
+  private-get-theme-type, private-get-theme-color;
