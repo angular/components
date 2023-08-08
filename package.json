@@ -90,7 +90,7 @@
     "@bazel/buildifier": "6.1.2",
     "@bazel/concatjs": "5.8.1",
     "@bazel/esbuild": "5.8.1",
-    "@bazel/ibazel": "0.16.2",
+    "@bazel/ibazel": "0.23.7",
     "@bazel/jasmine": "5.8.1",
     "@bazel/protractor": "5.8.1",
     "@bazel/rollup": "5.8.1",
