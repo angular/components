@@ -124,13 +124,12 @@ describe('theming inspection api', () => {
     it('should get theme version', () => {
       expect(
         transpile(`
-        $theme: ${defineM2Theme()};
-
-        div {
-          content: mat.private-get-theme-version($theme);
-        }
-      `),
-      ).toMatch('content: 0;');
+          $theme: ${defineM2Theme()};
+          div {
+            content: mat.private-get-theme-version($theme);
+          }
+        `),
+      ).toMatch(/content: 0;/);
     });
   });
 
@@ -139,12 +138,88 @@ describe('theming inspection api', () => {
       expect(
         transpile(`
         $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-version($theme);
+          }
+        `),
+      ).toMatch(/content: 1;/);
+    });
 
-        div {
-          content: mat.private-get-theme-version($theme);
-        }
-      `),
-      ).toMatch('content: 1;');
+    it('should get theme type', () => {
+      expect(
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-type($theme);
+          }
+        `),
+      ).toMatch(/content: light;/);
+    });
+
+    it('should get role color', () => {
+      expect(
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-color($theme, primary-container);
+          }
+        `),
+      ).toMatch(/content: #e0e0ff;/);
+    });
+
+    it('should error on invalid color role', () => {
+      expect(() =>
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-color($theme, fake-role);
+          }
+        `),
+      ).toThrowError(/Valid color roles are.*Got: fake-role/);
+    });
+
+    it('should get palette color', () => {
+      expect(
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-color($theme, tertiary, 20);
+          }
+        `),
+      ).toMatch(/content: #323200;/);
+    });
+
+    it('should error on invalid color palette', () => {
+      expect(() =>
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-color($theme, fake-palette, 20);
+          }
+        `),
+      ).toThrowError(/Valid palettes are.*Got: fake-palette/);
+    });
+
+    it('should error on invalid color hue', () => {
+      expect(() =>
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-color($theme, neutral, 11);
+          }
+        `),
+      ).toThrowError(/Valid hues for neutral are.*Got: 11/);
+    });
+
+    it('should error on wrong number of get-color-theme args', () => {
+      expect(() =>
+        transpile(`
+          $theme: ${defineM3Theme()};
+          div {
+            content: mat.private-get-theme-color($theme);
+          }
+        `),
+      ).toThrowError(/Expected 2 or 3 arguments. Got: 1/);
     });
   });
 });

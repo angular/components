@@ -46,6 +46,14 @@ $theme-version: 1;
     $internals: (
       theme-version: $theme-version,
       theme-type: $type,
+      palettes: (
+        primary: map.remove($primary, neutral-variant),
+        secondary: map.remove($secondary, neutral-variant),
+        tertiary: map.remove($tertiary, neutral-variant),
+        neutral: m3-palettes.$neutral-palette,
+        neutral-variant: map.get($primary, neutral-variant),
+        error: m3-palettes.$red-palette
+      ),
       color-tokens: m3-tokens.generate-color-tokens($type, $primary, $secondary, $tertiary,
         m3-palettes.$neutral-palette, m3-palettes.$red-palette)
     )

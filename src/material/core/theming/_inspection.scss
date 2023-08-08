@@ -24,6 +24,81 @@ $_internals: _mat-theming-internals-do-not-access;
   @return if($err, 0, map.get($theme, $_internals, theme-version) or 0);
 }
 
+/// Gets the type of theme represented by a theme object (light or dark).
+/// @param {Map} $theme The theme
+/// @return {String} The type of theme (either `light` or `dark`).
+@function get-theme-type($theme) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-type does not support legacy theme objects.'};
+  }
+  @return map.get($theme, $_internals, theme-type) or light;
+}
+
+/// Gets a color from a theme object. This function can take 2 or 3 arguments. If 2 arguments are
+/// passed, the second argument is treated as the name of a color role. If 3 arguments are passed,
+/// the second argument is treated as the name of a color palette (primary, secondary, etc.) and the
+/// third is treated as the palette hue (10, 50, etc.)
+/// @param {Map} $theme The theme
+/// @param {String} $color-role-or-palette-name The name of the color role to get, or the name of a
+///   color palette.
+/// @param {Number} $hue The palette hue to get (passing this argument means the second argument is
+///   interpreted as a palette name).
+/// @return {Color} The requested theme color.
+@function get-theme-color($theme, $args...) {
+  $args-count: list.length($args);
+  @if $args-count == 1 {
+    @return _get-theme-role-color($theme, $args...);
+  } @else if $args-count == 2 {
+    @return _get-theme-palette-color($theme, $args...);
+  }
+  @error #{'Expected 2 or 3 arguments. Got:'} $args-count + 1;
+}
+
+/// Gets a role color from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $color-role-name The name of the color role to get.
+/// @return {Color} The requested role color.
+@function _get-theme-role-color($theme, $color-role-name) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-color does not support legacy theme objects.'};
+  }
+  $color-roles: map.get($theme, $_internals, color-tokens, (mdc, theme));
+  $result: map.get($color-roles, $color-role-name);
+  @if not $result {
+    @error #{'Valid color roles are: #{map.keys($color-roles)}. Got:'} $color-role-name;
+  }
+  @return $result;
+}
+
+/// Gets a palette color from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $palette-name The name of the palette to get the color from.
+/// @param {Number} $hue The hue to read from the palette.
+/// @return {Color} The requested palette color.
+@function _get-theme-palette-color($theme, $palette-name, $hue) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-color does not support legacy theme objects.'};
+  }
+  $palettes: map.get($theme, $_internals, palettes);
+  $palette: map.get($palettes, $palette-name);
+  @if not $palette {
+    $supported-palettes: map.keys($palettes);
+    @error #{'Valid palettes are: #{$supported-palettes}. Got:'} $palette-name;
+  }
+  $result: map.get($palette, $hue);
+  @if not $result {
+    $supported-hues: map.keys($palette);
+    @error #{'Valid hues for'} $palette-name #{'are: #{$supported-hues}. Got:'} $hue;
+  }
+  @return $result;
+}
+
 /// Gets the set of tokens from the given theme, limited to those affected by the requested theming
 /// systems.
 /// @param {Map} $theme The theme to get tokens from.
@@ -38,9 +113,8 @@ $_internals: _mat-theming-internals-do-not-access;
   }
   $err: validation.validate-allowed-values($systems, color, typography, density, base);
   @if $err {
-   @error
-     #{'Expected $systems to contain valid system names (color, typographt, density, or base).'}
-     #{'Got invalid system names:'} $err;
+    @error #{'Expected $systems to contain valid system names (color, typography, density, or'}
+    #{'base). Got invalid system names:'} $err;
   }
   $result: ();
   @each $system in $systems {
