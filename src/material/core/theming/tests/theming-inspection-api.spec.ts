@@ -126,10 +126,10 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM2Theme()};
           div {
-            content: mat.private-get-theme-version($theme);
+            --theme-version: #{mat.private-get-theme-version($theme)};
           }
         `),
-      ).toMatch(/content: 0;/);
+      ).toMatch('--theme-version: 0;');
     });
   });
 
@@ -139,10 +139,10 @@ describe('theming inspection api', () => {
         transpile(`
         $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-version($theme);
+            --theme-version: #{mat.private-get-theme-version($theme)};
           }
         `),
-      ).toMatch(/content: 1;/);
+      ).toMatch('--theme-version: 1;');
     });
 
     it('should get theme type', () => {
@@ -150,10 +150,10 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-type($theme);
+            --theme-type: #{mat.private-get-theme-type($theme)};
           }
         `),
-      ).toMatch(/content: light;/);
+      ).toMatch('--theme-type: light;');
     });
 
     it('should get role color', () => {
@@ -161,10 +161,10 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-color($theme, primary-container);
+            color: mat.private-get-theme-color($theme, primary-container);
           }
         `),
-      ).toMatch(/content: #e0e0ff;/);
+      ).toMatch('color: #e0e0ff;');
     });
 
     it('should error on invalid color role', () => {
@@ -172,7 +172,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-color($theme, fake-role);
+            color: mat.private-get-theme-color($theme, fake-role);
           }
         `),
       ).toThrowError(/Valid color roles are.*Got: fake-role/);
@@ -183,10 +183,10 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-color($theme, tertiary, 20);
+            color: mat.private-get-theme-color($theme, tertiary, 20);
           }
         `),
-      ).toMatch(/content: #323200;/);
+      ).toMatch('color: #323200;');
     });
 
     it('should error on invalid color palette', () => {
@@ -194,7 +194,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-color($theme, fake-palette, 20);
+            color: mat.private-get-theme-color($theme, fake-palette, 20);
           }
         `),
       ).toThrowError(/Valid palettes are.*Got: fake-palette/);
@@ -205,7 +205,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-color($theme, neutral, 11);
+            color: mat.private-get-theme-color($theme, neutral, 11);
           }
         `),
       ).toThrowError(/Valid hues for neutral are.*Got: 11/);
@@ -216,10 +216,52 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: ${defineM3Theme()};
           div {
-            content: mat.private-get-theme-color($theme);
+            color: mat.private-get-theme-color($theme);
           }
         `),
       ).toThrowError(/Expected 2 or 3 arguments. Got: 1/);
     });
+
+    it('should get typography properties from theme', () => {
+      const css = transpile(`
+        $theme: ${defineM3Theme()};
+        div {
+          font: mat.private-get-theme-typography($theme, headline-large);
+          font-family: mat.private-get-theme-typography($theme, headline-large, font-family);
+          font-size: mat.private-get-theme-typography($theme, headline-large, font-size);
+          font-weight: mat.private-get-theme-typography($theme, headline-large, font-weight);
+          line-height: mat.private-get-theme-typography($theme, headline-large, line-height);
+          letter-spacing: mat.private-get-theme-typography($theme, headline-large, letter-spacing);
+        }
+      `);
+      expect(css).toMatch('font: 400 2rem / 2.5rem Google Sans;');
+      expect(css).toMatch('font-family: Google Sans;');
+      expect(css).toMatch('font-size: 2rem;');
+      expect(css).toMatch('font-weight: 400;');
+      expect(css).toMatch('line-height: 2.5rem;');
+      expect(css).toMatch('letter-spacing: 0rem;');
+    });
+  });
+
+  it('should error on invalid typescale', () => {
+    expect(() =>
+      transpile(`
+        $theme: ${defineM3Theme()};
+        div {
+          font: mat.private-get-theme-typography($theme, subtitle-large);
+        }
+      `),
+    ).toThrowError(/Valid typescales are:.*Got: subtitle-large/);
+  });
+
+  it('should error on invalid typography property', () => {
+    expect(() =>
+      transpile(`
+        $theme: ${defineM3Theme()};
+        div {
+          font: mat.private-get-theme-typography($theme, body-small, text-transform);
+        }
+      `),
+    ).toThrowError(/Valid typography properties are:.*Got: text-transform/);
   });
 });

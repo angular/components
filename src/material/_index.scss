@@ -144,4 +144,4 @@
 
 // New theming APIs, currently in development:
 @forward './core/theming/inspection' as private-* show private-get-theme-version,
-  private-get-theme-type, private-get-theme-color;
+  private-get-theme-type, private-get-theme-color, private-get-theme-typography;
