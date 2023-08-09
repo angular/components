@@ -1,3 +1,5 @@
+@use '@material/textfield' as mdc-textfield;
+@use '@material/theme/theme' as mdc-theme;
 @use '@material/typography' as mdc-typography;
 @use '@material/textfield/variables' as mdc-textfield-variables;
 
@@ -56,11 +58,13 @@
   // Single error message displayed beneath the form field underline.
   .mat-mdc-form-field-error {
     display: block;
+  }
+}
 
-    @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-      tokens-mat-form-field.get-token-slots()) {
-      @include token-utils.create-token-slot(color, error-text-color);
-    }
+@mixin private-form-field-subscript-color() {
+  // MDC does not have built-in error treatment.
+  .mat-mdc-form-field-error {
+    @include mdc-theme.prop(color, mdc-textfield.$error);
   }
 
   // The subscript wrapper has a minimum height to avoid that the form-field

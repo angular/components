@@ -117,7 +117,7 @@ $prefix: (mdc, outlined-text-field);
   ));
 }
 
-// Generates the mapping for the properties that change based on the text field color.
+// Generates the mapping for the properties that change based on the slide toggle color.
 @function private-get-color-palette-color-tokens($config, $palette-name) {
   $palette: map.get($config, $palette-name);
   $palette-color: theming.get-color-from-palette($palette);
