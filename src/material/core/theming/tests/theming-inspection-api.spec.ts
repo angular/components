@@ -259,9 +259,20 @@ describe('theming inspection api', () => {
       transpile(`
         $theme: ${defineM3Theme()};
         div {
-          font: mat.private-get-theme-typography($theme, body-small, text-transform);
+          text-transform: mat.private-get-theme-typography($theme, body-small, text-transform);
         }
       `),
     ).toThrowError(/Valid typography properties are:.*Got: text-transform/);
+  });
+
+  it('should get density scale', () => {
+    expect(
+      transpile(`
+        $theme: ${defineM3Theme()};
+        div {
+          --density-scale: #{mat.private-get-theme-density($theme)};
+        }
+      `),
+    ).toMatch('--density-scale: 0;');
   });
 });

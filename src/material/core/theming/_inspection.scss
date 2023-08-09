@@ -149,6 +149,18 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @return map.get($theme, $_internals, typography-tokens, (mdc, typography), $token-name);
 }
 
+/// Gets the density scale from a theme object.
+/// @param {Map} $theme The theme
+/// @return {Number} The density scale.
+@function get-theme-density($theme) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-density does not support legacy theme objects.'};
+  }
+  @return map.get($theme, $_internals, density-scale);
+}
+
 /// Gets the set of tokens from the given theme, limited to those affected by the requested theming
 /// systems.
 /// @param {Map} $theme The theme to get tokens from.
