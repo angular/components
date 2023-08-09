@@ -56,7 +56,8 @@ ts_library(
     name = "unit_test_lib",
     testonly = True,
     srcs = [
-        "theming-api.spec.ts",
+        "theming-inspection-api.spec.ts",
+        "theming-mixin-api.spec.ts",
     ],
     # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
     devmode_module = "commonjs",
@@ -74,6 +75,9 @@ ts_library(
 jasmine_node_test(
     name = "unit_tests",
     srcs = [":unit_test_lib"],
-    data = ["//src/material:sass_lib"],
+    data = [
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
+    ],
     shard_count = 4,
 )
