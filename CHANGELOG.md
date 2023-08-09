@@ -1,3 +1,21 @@
+<a name="16.1.8"></a>
+# 16.1.8 "plastic-pear" (2023-08-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3284407af4](https://github.com/angular/components/commit/3284407af49b719214a44f793107fd697db70f84) | fix | **menu:** nested menus requiring two taps to open touch devices ([#27586](https://github.com/angular/components/pull/27586)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [18e537a013](https://github.com/angular/components/commit/18e537a0136467ce2757749520a799184486bc6d) | fix | **chips:** focus lingering on previous chip ([#27559](https://github.com/angular/components/pull/27559)) |
+| [675b29a1e3](https://github.com/angular/components/commit/675b29a1e3d09b311fff115ebe5b85e4190c6177) | fix | **slider:** match active & focus state on IOS ([#27546](https://github.com/angular/components/pull/27546)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9ec77aa376](https://github.com/angular/components/commit/9ec77aa376def0209acdeee813e233b605f1d817) | fix | Allow playlists without specifying videoId ([#27529](https://github.com/angular/components/pull/27529)) ([#27588](https://github.com/angular/components/pull/27588)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.1.7"></a>
 # 16.1.7 "velvet-violin" (2023-08-02)
 ### material
