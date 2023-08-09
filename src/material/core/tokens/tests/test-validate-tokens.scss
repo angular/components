@@ -104,7 +104,7 @@
 @include validate-slots(
   $component: 'm2.mdc.switch',
   $slots: tokens-mdc-switch.get-token-slots(),
-  $reference: mdc-switch-theme.$light-theme,
+  $reference: mdc-switch-theme.$light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.tab-indicator',
@@ -155,4 +155,9 @@
   $component: 'm2.mdc.outlined-text-field',
   $slots: tokens-mdc-outlined-text-field.get-token-slots(),
   $reference: mdc-outlined-text-field-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.button-filled',
+  $slots: tokens-mdc-extended-fab.get-token-slots(),
+  $reference: mdc-extended-fab-theme.$extended-light-theme
 );
