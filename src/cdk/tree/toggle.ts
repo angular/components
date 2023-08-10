@@ -39,10 +39,16 @@ export class CdkTreeNodeToggle<T, K = T> {
 
   constructor(protected _tree: CdkTree<T, K>, protected _treeNode: CdkTreeNode<T, K>) {}
 
+  // Toggle the expanded or collapsed state of this node.
+  //
+  // Focus this node with expanding or collapsing it. This ensures that the active node will always
+  // be visible when expanding and collapsing.
   _toggle(event: Event): void {
     this.recursive
       ? this._tree.toggleDescendants(this._treeNode.data)
       : this._tree.toggle(this._treeNode.data);
+
+    this._tree._keyManager.focusItem(this._treeNode);
 
     event.stopPropagation();
   }

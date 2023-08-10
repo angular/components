@@ -270,6 +270,28 @@ describe('CdkTree redesign', () => {
           .toBe(0);
       });
 
+      it('should focus a node when collapsing it', () => {
+        // Create a tree with two nodes. A parent node and its child.
+        dataSource.clear();
+        const parent = dataSource.addData();
+        dataSource.addChild(parent);
+
+        component.tree.expandAll();
+        fixture.detectChanges();
+
+        // focus the child node
+        getNodes(treeElement)[1].click();
+        fixture.detectChanges();
+
+        // collapse the parent node
+        getNodes(treeElement)[0].click();
+        fixture.detectChanges();
+
+        expect(getNodes(treeElement).map(x => x.getAttribute('tabindex')))
+          .withContext(`Expecting parent node to be focused since it was collapsed.`)
+          .toEqual(['0', '-1']);
+      });
+
       it('should expand/collapse the node recursively', () => {
         expect(dataSource.data.length).toBe(3);
 
@@ -1312,21 +1334,32 @@ class FakeDataSource extends DataSource<TestData> {
     return child;
   }
 
-  addData(level: number = 1) {
+  addData(level: number = 1): TestData {
     const nextIndex = ++this.dataIndex;
 
     let copiedData = this.data.slice();
-    copiedData.push(
-      new TestData(`topping_${nextIndex}`, `cheese_${nextIndex}`, `base_${nextIndex}`, level),
+    const newData = new TestData(
+      `topping_${nextIndex}`,
+      `cheese_${nextIndex}`,
+      `base_${nextIndex}`,
+      level,
     );
+    copiedData.push(newData);
 
     this.data = copiedData;
+
+    return newData;
   }
 
   getRecursiveData(nodes: TestData[] = this._dataChange.getValue()): TestData[] {
     return [
       ...new Set(nodes.flatMap(parent => [parent, ...this.getRecursiveData(parent.children)])),
     ];
+  }
+
+  clear() {
+    this.data = [];
+    this.dataIndex = 0;
   }
 }
 
