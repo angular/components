@@ -62,22 +62,26 @@
 
 <h2>Checkbox</h2>
 
-<mat-checkbox>With a label</mat-checkbox>
-<mat-checkbox></mat-checkbox>Without a label
+<mat-checkbox></mat-checkbox>
+<mat-checkbox checked></mat-checkbox>
+<mat-checkbox checked disabled></mat-checkbox>
+<mat-checkbox indeterminate></mat-checkbox>
+<mat-checkbox>with a label</mat-checkbox>
 
 <h2>Chips</h2>
 
-<mat-chip-list>
-  <mat-chip>Barbeque Cheddar</mat-chip>
-  <mat-chip>Sea Salt and Vinegar</mat-chip>
-  <mat-chip>Manta Ray</mat-chip>
-</mat-chip-list>
+<mat-chip-set>
+  <mat-basic-chip>Basic Chip 1</mat-basic-chip>
+  <mat-basic-chip>Basic Chip 2</mat-basic-chip>
+  <mat-basic-chip>Basic Chip 3</mat-basic-chip>
+</mat-chip-set>
 
-<mat-chip-list>
-  <mat-basic-chip>Tomato</mat-basic-chip>
-  <mat-basic-chip>Scallion</mat-basic-chip>
-  <mat-basic-chip>Cilantro</mat-basic-chip>
-</mat-chip-list>
+<mat-chip-listbox>
+  <mat-chip-option>Extra Small</mat-chip-option>
+  <mat-chip-option>Small</mat-chip-option>
+  <mat-chip-option>Medium</mat-chip-option>
+  <mat-chip-option>Large</mat-chip-option>
+</mat-chip-listbox>
 
 <h2>Datepicker</h2>
 
@@ -109,25 +113,59 @@
 
 <h2>Input</h2>
 
-<mat-form-field floatLabel="never">
-  <input matInput placeholder="name" type="text">
+<mat-form-field>
+  <mat-label>Label</mat-label>
+  <input matInput value="Initial value">
 </mat-form-field>
-
+<mat-form-field>
+  <input matInput placeholder="Placeholder">
+</mat-form-field>
+<mat-form-field floatLabel="always">
+  <mat-label>Always floating</mat-label>
+  <input matInput>
+</mat-form-field>
 <mat-form-field appearance="outline">
-  <mat-label>Surname</mat-label>
-  <input matInput value="Baggins">
+  <mat-label>Label</mat-label>
+  <input matInput>
+</mat-form-field>
+<mat-form-field>
+  <mat-label>Label</mat-label>
+  <textarea matInput></textarea>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Label</mat-label>
+  <textarea matInput></textarea>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Label</mat-label>
+  <input matInput value="Initial">
 </mat-form-field>
 
-<mat-form-field>
-  <textarea matInput placeholder="description"></textarea>
+<h3>Prefix and Suffix</h3>
+<mat-form-field appearance="outline">
+  <span matPrefix>+123&nbsp;</span>
+  <mat-label>Phone Number</mat-label>
+  <input matInput>
 </mat-form-field>
-
 <mat-form-field>
-  <input type="number" matInput placeholder="amount">
-  <span matPrefix>$&nbsp;</span>
-  <span matSuffix>.00</span>
-  <mat-hint>Dolla dolla bills</mat-hint>
-  <mat-error>Recession</mat-error>
+  <span matPrefix>+123&nbsp;</span>
+  <mat-label>Phone Number</mat-label>
+  <input matInput>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <span matPrefix>+123&nbsp;</span>
+  <mat-label>Phone Number</mat-label>
+  <input matInput>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-icon matPrefix>calendar_today</mat-icon>
+  <mat-label>Name</mat-label>
+  <input matInput>
+</mat-form-field>
+<mat-form-field>
+  <mat-icon matPrefix>calendar_today</mat-icon>
+  <mat-label>Name</mat-label>
+  <input matInput>
 </mat-form-field>
 
 <h2>List</h2>
@@ -150,6 +188,13 @@
   <button mat-list-item>Third action</button>
 </mat-action-list>
 
+<mat-selection-list>
+  <h3 mat-subheader>Groceries</h3>
+  <mat-list-option value="apples">Apples</mat-list-option>
+  <mat-list-option value="bananas">Bananas</mat-list-option>
+  <mat-list-option value="oranges">Oranges</mat-list-option>
+</mat-selection-list>
+
 <h2>Menu</h2>
 
 <button mat-button [matMenuTriggerFor]="menu">Open</button>
@@ -161,15 +206,17 @@
 
 <h2>Progress bar</h2>
 
-<mat-progress-bar value="25"></mat-progress-bar>
-<mat-progress-bar mode="buffer" value="25" [bufferValue]="60"></mat-progress-bar>
+<mat-progress-bar [value]="25"></mat-progress-bar>
+<mat-progress-bar mode="buffer" [value]="25" [bufferValue]="60"></mat-progress-bar>
 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 <mat-progress-bar mode="query"></mat-progress-bar>
 
 <h2>Progress spinner</h2>
 
-<mat-progress-spinner mode="indeterminate" [diameter]="32"></mat-progress-spinner>
-<mat-progress-spinner mode="determinate" [value]="60"></mat-progress-spinner>
+<mat-progress-spinner [value]="25"></mat-progress-spinner>
+<mat-spinner></mat-spinner>
+<mat-progress-spinner mode="indeterminate" [diameter]="37"></mat-progress-spinner>
+<mat-spinner [strokeWidth]="4"></mat-spinner>
 
 <h2>Radio buttons</h2>
 
@@ -206,17 +253,32 @@
 </mat-sidenav-container>
 
 <h2>Slide-toggle</h2>
-<mat-slide-toggle>With a label</mat-slide-toggle>
-<mat-slide-toggle></mat-slide-toggle>Without a label
+
+<mat-slide-toggle></mat-slide-toggle>
+<mat-slide-toggle checked></mat-slide-toggle>
+<mat-slide-toggle checked disabled></mat-slide-toggle>
+<mat-slide-toggle>with a label</mat-slide-toggle>
 
 <h2>Slider</h2>
-<mat-slider></mat-slider>
-<mat-slider value="50"></mat-slider>
-<mat-slider tickInterval="1" min="1" max="10" value="5" thumbLabel></mat-slider>
-<mat-slider disabled></mat-slider>
+
+<mat-slider>
+  <input matSliderThumb value="60">
+</mat-slider>
+<mat-slider>
+  <input matSliderThumb value="50" disabled>
+</mat-slider>
+<mat-slider min="200" max="500" step="100" discrete showTickMarks>
+  <input value="300" matSliderStartThumb>
+  <input value="400" matSliderEndThumb>
+</mat-slider>
 
 <h2>Tabs</h2>
-<mat-tab-group>
+
+<!--
+  Note that we set the `selectedIndex` here to hit the code path
+  where we might need to do some measurements.
+-->
+<mat-tab-group [selectedIndex]="1">
   <mat-tab label="Overview">
     The overview
   </mat-tab>
@@ -229,8 +291,8 @@
 </mat-tab-group>
 
 <nav mat-tab-nav-bar [tabPanel]="tabPanel">
- <a mat-tab-link href="https://google.com">Google</a>
- <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
+  <a mat-tab-link href="https://google.com">Google</a>
+  <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
 </nav>
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
