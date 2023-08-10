@@ -46,7 +46,7 @@ import {_MatDialogContainerBase, matDialogAnimations} from '@angular/material/di
     '[attr.aria-modal]': '_config.ariaModal',
     '[id]': '_config.id',
     '[attr.role]': '_config.role',
-    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledBy',
+    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledByQueue[0]',
     '[attr.aria-label]': '_config.ariaLabel',
     '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
     '[@dialogContainer]': `_getAnimationState()`,
