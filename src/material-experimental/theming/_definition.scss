@@ -69,7 +69,7 @@ $theme-version: 1;
     @error $err;
   }
 
-  $plain: map.get($config, plain-family) or Roboto, sans-serif;
+  $plain: map.get($config, plain-family) or (Roboto, sans-serif);
   $brand: map.get($config, brand-family) or $plain;
   $bold: map.get($config, bold-weight) or 700;
   $medium: map.get($config, medium-weight) or 500;
