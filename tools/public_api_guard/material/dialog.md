@@ -274,10 +274,12 @@ export const enum MatDialogState {
 }
 
 // @public
-export class MatDialogTitle implements OnInit {
+export class MatDialogTitle implements OnInit, OnDestroy {
     constructor(_dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
     // (undocumented)
     id: string;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)

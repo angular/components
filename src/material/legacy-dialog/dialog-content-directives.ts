@@ -14,6 +14,7 @@ import {
   Optional,
   SimpleChanges,
   ElementRef,
+  OnDestroy,
 } from '@angular/core';
 import {MatLegacyDialog} from './dialog';
 import {MatLegacyDialogRef} from './dialog-ref';
@@ -106,7 +107,7 @@ export class MatLegacyDialogClose implements OnInit, OnChanges {
     '[id]': 'id',
   },
 })
-export class MatLegacyDialogTitle implements OnInit {
+export class MatLegacyDialogTitle implements OnInit, OnDestroy {
   /** Unique id for the dialog title. If none is supplied, it will be auto-generated. */
   @Input() id: string = `mat-dialog-title-${dialogElementUid++}`;
 
@@ -125,10 +126,24 @@ export class MatLegacyDialogTitle implements OnInit {
 
     if (this._dialogRef) {
       Promise.resolve().then(() => {
-        const container = this._dialogRef._containerInstance;
+        // Note: we null check the queue, because there are some internal
+        // tests that are mocking out `MatDialogRef` incorrectly.
+        this._dialogRef._containerInstance?._ariaLabelledByQueue?.push(this.id);
+      });
+    }
+  }
 
-        if (container && !container._ariaLabelledBy) {
-          container._ariaLabelledBy = this.id;
+  ngOnDestroy() {
+    // Note: we null check the queue, because there are some internal
+    // tests that are mocking out `MatDialogRef` incorrectly.
+    const queue = this._dialogRef?._containerInstance?._ariaLabelledByQueue;
+
+    if (queue) {
+      Promise.resolve().then(() => {
+        const index = queue.indexOf(this.id);
+
+        if (index > -1) {
+          queue.splice(index, 1);
         }
       });
     }
