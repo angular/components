@@ -73,7 +73,8 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   $args-count: list.length($args);
   @if $args-count == 1 {
     @return _get-theme-role-color($theme, $args...);
-  } @else if $args-count == 2 {
+  }
+  @else if $args-count == 2 {
     @return _get-theme-palette-color($theme, $args...);
   }
   @error #{'Expected 2 or 3 arguments. Got:'} $args-count + 1;
@@ -198,7 +199,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return map.get($theme, $_internals, typography-tokens) != null;
   }
   @if $system == density {
-    @return map.get($theme, $_internals, density-scale) != null
+    @return map.get($theme, $_internals, density-scale) != null;
   }
   @error 'Valid systems are: base, color, typography, density. Got:' $system;
 }
