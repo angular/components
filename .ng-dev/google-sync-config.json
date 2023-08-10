@@ -29,7 +29,6 @@
     "src/material/index.ts",
     "src/material/module.ts",
     "src/material/core/index.ts",
-    "src/material/legacy-core/index.ts",
     "src/material/core/theming/tests/**/*",
     "src/material/core/tokens/tests/**",
     "src/material/expansion/index.ts",
