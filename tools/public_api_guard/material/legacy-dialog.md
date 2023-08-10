@@ -31,6 +31,7 @@ import { _MatDialogContainerBase as _MatLegacyDialogContainerBase } from '@angul
 import { MatDialogState as MatLegacyDialogState } from '@angular/material/dialog';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -171,9 +172,11 @@ export class MatLegacyDialogRef<T, R = any> extends MatDialogRef<T, R> {
 export { MatLegacyDialogState }
 
 // @public @deprecated
-export class MatLegacyDialogTitle implements OnInit {
+export class MatLegacyDialogTitle implements OnInit, OnDestroy {
     constructor(_dialogRef: MatLegacyDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatLegacyDialog);
     id: string;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
