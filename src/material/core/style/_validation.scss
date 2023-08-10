@@ -27,3 +27,17 @@
   }
   @return if(list.length($invalid) > 0, $invalid, null);
 }
+
+/// Validates that a list contains all values from the required list of values.
+/// @param {List} $list The list to test
+/// @param {List} $required The required values
+/// @return {List} null if no error, else the list of missing values.
+@function validate-required-values($list, $required...) {
+  $invalid: ();
+  @each $element in $required {
+    @if not list.index($list, $element) {
+      $invalid: list.append($invalid, $element);
+    }
+  }
+  @return if(list.length($invalid) > 0, $invalid, null);
+}
