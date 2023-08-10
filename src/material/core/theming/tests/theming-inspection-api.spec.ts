@@ -21,88 +21,6 @@ const mdcSassImporter = {
   },
 };
 
-interface M2ThemeConfig {
-  type: string;
-  density: string;
-  typography: string;
-  primary: string;
-  accent: string;
-  warn: string;
-}
-
-interface M3ThemeConfig {
-  type: string;
-  density: string;
-  brand: string;
-  plain: string;
-  bold: string;
-  medium: string;
-  regular: string;
-  primary: string;
-  secondary: string;
-  tertiary: string;
-}
-
-function defineM2Theme(config: Partial<M2ThemeConfig> = {}) {
-  const {type, density, typography, primary, accent, warn} = {
-    type: 'light',
-    density: '0',
-    typography: 'mat.define-typography-config()',
-    primary: 'mat.define-palette(mat.$blue-palette)',
-    accent: 'mat.define-palette(mat.$green-palette)',
-    warn: 'mat.define-palette(mat.$red-palette)',
-    ...config,
-  };
-  const collapseColor = primary === 'null' && accent === 'null' && warn === 'null';
-  return `mat.define-${type}-theme((
-    color: ${
-      collapseColor
-        ? `(
-      primary: ${primary},
-      accent: ${accent},
-      warn: ${warn},
-    )`
-        : 'null'
-    },
-    typography: ${typography},
-    density: ${density},
-  ))`;
-}
-
-function defineM3Theme(config: Partial<M3ThemeConfig> = {}) {
-  const {type, density, brand, plain, bold, medium, regular, primary, secondary, tertiary} = {
-    type: 'light',
-    density: '0',
-    brand: 'Google Sans',
-    plain: 'Roboto',
-    bold: '700',
-    medium: '500',
-    regular: '400',
-    primary: 'matx.$m3-blue-palette',
-    secondary: 'matx.$m3-green-palette',
-    tertiary: 'matx.$m3-yellow-palette',
-    ...config,
-  };
-  return `matx.define-theme((
-    color: (
-      theme-type: ${type},
-      primary: ${primary},
-      secondary: ${secondary},
-      tertiary: ${tertiary},
-    ),
-    typography: (
-      brand-family: ${brand},
-      plain-family: ${plain},
-      bold-weight: ${bold},
-      medium-weight: ${medium},
-      regular-weight: ${regular},
-    ),
-    density: (
-      scale: ${density}
-    ),
-  ))`;
-}
-
 /** Transpiles given Sass content into CSS. */
 function transpile(content: string) {
   return compileString(
@@ -124,7 +42,15 @@ describe('theming inspection api', () => {
     it('should get theme version', () => {
       expect(
         transpile(`
-          $theme: ${defineM2Theme()};
+          $theme: mat.define-light-theme((
+            color: (
+              primary: mat.define-palette(mat.$red-palette),
+              accent: mat.define-palette(mat.$red-palette),
+              warn: mat.define-palette(mat.$red-palette),
+            ),
+            typography: mat.define-typography-config(),
+            density: 0,
+          ));
           div {
             --theme-version: #{mat.private-get-theme-version($theme)};
           }
@@ -137,7 +63,7 @@ describe('theming inspection api', () => {
     it('should get theme version', () => {
       expect(
         transpile(`
-        $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             --theme-version: #{mat.private-get-theme-version($theme)};
           }
@@ -148,7 +74,7 @@ describe('theming inspection api', () => {
     it('should get theme type', () => {
       expect(
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             --theme-type: #{mat.private-get-theme-type($theme)};
           }
@@ -159,18 +85,18 @@ describe('theming inspection api', () => {
     it('should get role color', () => {
       expect(
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             color: mat.private-get-theme-color($theme, primary-container);
           }
         `),
-      ).toMatch('color: #e0e0ff;');
+      ).toMatch('color: #f0dbff;');
     });
 
     it('should error on invalid color role', () => {
       expect(() =>
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             color: mat.private-get-theme-color($theme, fake-role);
           }
@@ -181,18 +107,18 @@ describe('theming inspection api', () => {
     it('should get palette color', () => {
       expect(
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             color: mat.private-get-theme-color($theme, tertiary, 20);
           }
         `),
-      ).toMatch('color: #323200;');
+      ).toMatch('color: #4a0080;');
     });
 
     it('should error on invalid color palette', () => {
       expect(() =>
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             color: mat.private-get-theme-color($theme, fake-palette, 20);
           }
@@ -203,7 +129,7 @@ describe('theming inspection api', () => {
     it('should error on invalid color hue', () => {
       expect(() =>
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             color: mat.private-get-theme-color($theme, neutral, 11);
           }
@@ -214,7 +140,7 @@ describe('theming inspection api', () => {
     it('should error on wrong number of get-color-theme args', () => {
       expect(() =>
         transpile(`
-          $theme: ${defineM3Theme()};
+          $theme: matx.define-theme();
           div {
             color: mat.private-get-theme-color($theme);
           }
@@ -224,7 +150,7 @@ describe('theming inspection api', () => {
 
     it('should get typography properties from theme', () => {
       const css = transpile(`
-        $theme: ${defineM3Theme()};
+        $theme: matx.define-theme();
         div {
           font: mat.private-get-theme-typography($theme, headline-large);
           font-family: mat.private-get-theme-typography($theme, headline-large, font-family);
@@ -234,8 +160,8 @@ describe('theming inspection api', () => {
           letter-spacing: mat.private-get-theme-typography($theme, headline-large, letter-spacing);
         }
       `);
-      expect(css).toMatch('font: 400 2rem / 2.5rem Google Sans;');
-      expect(css).toMatch('font-family: Google Sans;');
+      expect(css).toMatch('font: 400 2rem / 2.5rem Roboto, sans-serif;');
+      expect(css).toMatch('font-family: Roboto, sans-serif;');
       expect(css).toMatch('font-size: 2rem;');
       expect(css).toMatch('font-weight: 400;');
       expect(css).toMatch('line-height: 2.5rem;');
@@ -246,7 +172,7 @@ describe('theming inspection api', () => {
   it('should error on invalid typescale', () => {
     expect(() =>
       transpile(`
-        $theme: ${defineM3Theme()};
+        $theme: matx.define-theme();
         div {
           font: mat.private-get-theme-typography($theme, subtitle-large);
         }
@@ -257,7 +183,7 @@ describe('theming inspection api', () => {
   it('should error on invalid typography property', () => {
     expect(() =>
       transpile(`
-        $theme: ${defineM3Theme()};
+        $theme: matx.define-theme();
         div {
           text-transform: mat.private-get-theme-typography($theme, body-small, text-transform);
         }
@@ -268,11 +194,94 @@ describe('theming inspection api', () => {
   it('should get density scale', () => {
     expect(
       transpile(`
-        $theme: ${defineM3Theme()};
+        $theme: matx.define-theme();
         div {
           --density-scale: #{mat.private-get-theme-density($theme)};
         }
       `),
     ).toMatch('--density-scale: 0;');
+  });
+
+  it('should check what information the theme has', () => {
+    const css = transpile(`
+      $theme: matx.define-theme();
+      $color-only: matx.define-colors();
+      $typography-only: matx.define-typography();
+      $density-only: matx.define-density();
+      div {
+        --base: #{(
+          mat.private-theme-has($theme, base),
+          mat.private-theme-has($color-only, base),
+          mat.private-theme-has($typography-only, base),
+          mat.private-theme-has($density-only, base),
+        )};
+        --color: #{(
+          mat.private-theme-has($theme, color),
+          mat.private-theme-has($color-only, color),
+          mat.private-theme-has($typography-only, color),
+          mat.private-theme-has($density-only, color),
+        )};
+        --typography: #{(
+          mat.private-theme-has($theme, typography),
+          mat.private-theme-has($color-only, typography),
+          mat.private-theme-has($typography-only, typography),
+          mat.private-theme-has($density-only, typography),
+        )};
+        --density: #{(
+          mat.private-theme-has($theme, density),
+          mat.private-theme-has($color-only, density),
+          mat.private-theme-has($typography-only, density),
+          mat.private-theme-has($density-only, density),
+        )};
+      }
+    `);
+    expect(css).toMatch(/--base: true, false, false, false;/);
+    expect(css).toMatch(/--color: true, true, false, false;/);
+    expect(css).toMatch(/--typography: true, false, true, false;/);
+    expect(css).toMatch(/--density: true, false, false, true;/);
+  });
+
+  it('should error when reading theme type from a theme with no color information', () => {
+    expect(() =>
+      transpile(`
+        $theme: matx.define-density();
+        div {
+          color: mat.private-get-theme-type($theme);
+        }
+      `),
+    ).toThrowError(/Color information is not available on this theme/);
+  });
+
+  it('should error when reading color from a theme with no color information', () => {
+    expect(() =>
+      transpile(`
+        $theme: matx.define-density();
+        div {
+          color: mat.private-get-theme-color($theme, primary);
+        }
+      `),
+    ).toThrowError(/Color information is not available on this theme/);
+  });
+
+  it('should error when reading typography from a theme with no typography information', () => {
+    expect(() =>
+      transpile(`
+        $theme: matx.define-density();
+        div {
+          font: mat.private-get-theme-typography($theme, body-small);
+        }
+      `),
+    ).toThrowError(/Typography information is not available on this theme/);
+  });
+
+  it('should error when reading density from a theme with no density information', () => {
+    expect(() =>
+      transpile(`
+        $theme: matx.define-colors();
+        div {
+          --density: #{mat.private-get-theme-density($theme)};
+        }
+      `),
+    ).toThrowError(/Density information is not available on this theme/);
   });
 });
