@@ -265,7 +265,7 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
   override attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     // When a component is passed into the dialog, the host element interrupts
     // the `display:flex` from affecting the dialog title, content, and
-    // actions. To fix this, we make the component host `display: flex` by
+    // actions. To fix this, we make the component host `display: contents` by
     // marking its host with the `mat-mdc-dialog-component-host` class.
     //
     // Note that this problem does not exist when a template ref is used since
