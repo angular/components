@@ -27,8 +27,6 @@ sass_library(
     deps = [
         "//src/material/core:core_scss_lib",
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-core:legacy_core_scss_lib",
-        "//src/material/legacy-core:theming_scss_lib",
     ],
 )
 
@@ -52,10 +50,6 @@ ng_package(
         ":package_json",
         ":sass_lib",
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-prebuilt-themes:deeppurple-amber",
-        "//src/material/legacy-prebuilt-themes:indigo-pink",
-        "//src/material/legacy-prebuilt-themes:pink-bluegrey",
-        "//src/material/legacy-prebuilt-themes:purple-green",
         "//src/material/prebuilt-themes:deeppurple-amber",
         "//src/material/prebuilt-themes:indigo-pink",
         "//src/material/prebuilt-themes:pink-bluegrey",

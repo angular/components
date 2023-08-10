@@ -28,8 +28,8 @@ describe('theming api', () => {
   let knownDensitySelectors: Map<string, Rule>;
 
   // Before all tests, we collect all nodes specific to density styles. We can then
-  // use this check how density styles are generated. i.e. if they are duplicated
-  // for legacy themes, or if they are properly scoped to a given selector.
+  // use this check how density styles are generated. i.e. if they are properly scoped to a
+  // given selector.
   beforeAll(() => {
     knownDensitySelectors = new Map();
     parse(transpile(`@include mat.all-component-densities(0);`)).each(node => {
