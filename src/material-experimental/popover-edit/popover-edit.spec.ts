@@ -1,6 +1,6 @@
 import {DataSource} from '@angular/cdk/collections';
 import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
-import {MatLegacyTableModule} from '@angular/material/legacy-table';
+import {MatTableModule} from '@angular/material/table';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {CommonModule} from '@angular/common';
 import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
@@ -302,7 +302,7 @@ describe('Material Popover Edit', () => {
 
       beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-          imports: [MatLegacyTableModule, MatPopoverEditModule, CommonModule, FormsModule],
+          imports: [MatTableModule, MatPopoverEditModule, CommonModule, FormsModule],
           declarations: [componentClass],
         }).compileComponents();
         fixture = TestBed.createComponent(componentClass);
