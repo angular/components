@@ -7,8 +7,6 @@
  */
 
 import {
-  BaseHarnessFilters,
-  ComponentHarness,
   ComponentHarnessConstructor,
   ContentContainerComponentHarness,
   HarnessLoader,
@@ -19,18 +17,29 @@ import {
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MenuHarnessFilters, MenuItemHarnessFilters} from './menu-harness-filters';
 
-export abstract class _MatMenuHarnessBase<
-  ItemType extends ComponentHarnessConstructor<Item> & {
-    with: (options?: ItemFilters) => HarnessPredicate<Item>;
-  },
-  Item extends ComponentHarness & {
-    click(): Promise<void>;
-    getSubmenu(): Promise<_MatMenuHarnessBase<ItemType, Item, ItemFilters> | null>;
-  },
-  ItemFilters extends BaseHarnessFilters,
-> extends ContentContainerComponentHarness<string> {
+/** Harness for interacting with an MDC-based mat-menu in tests. */
+export class MatMenuHarness extends ContentContainerComponentHarness<string> {
+  /** The selector for the host element of a `MatMenu` instance. */
+  static hostSelector = '.mat-mdc-menu-trigger';
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a menu with specific attributes.
+   * @param options Options for filtering which menu instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatMenuHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: MenuHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options).addOption(
+      'triggerText',
+      options.triggerText,
+      (harness, text) => HarnessPredicate.stringMatches(harness.getTriggerText(), text),
+    );
+  }
+
   private _documentRootLocator = this.documentRootLocatorFactory();
-  protected abstract _itemClass: ItemType;
+  private _itemClass = MatMenuItemHarness;
 
   // TODO: potentially extend MatLegacyButtonHarness
 
@@ -84,14 +93,16 @@ export abstract class _MatMenuHarnessBase<
    * Gets a list of `MatMenuItemHarness` representing the items in the menu.
    * @param filters Optionally filters which menu items are included.
    */
-  async getItems(filters?: Omit<ItemFilters, 'ancestor'>): Promise<Item[]> {
+  async getItems(
+    filters?: Omit<MenuItemHarnessFilters, 'ancestor'>,
+  ): Promise<MatMenuItemHarness[]> {
     const panelId = await this._getPanelId();
     if (panelId) {
       return this._documentRootLocator.locatorForAll(
         this._itemClass.with({
           ...(filters || {}),
           ancestor: `#${panelId}`,
-        } as ItemFilters),
+        } as MenuItemHarnessFilters),
       )();
     }
     return [];
@@ -106,8 +117,8 @@ export abstract class _MatMenuHarnessBase<
    *     `subItemFilters` will be clicked.
    */
   async clickItem(
-    itemFilter: Omit<ItemFilters, 'ancestor'>,
-    ...subItemFilters: Omit<ItemFilters, 'ancestor'>[]
+    itemFilter: Omit<MenuItemHarnessFilters, 'ancestor'>,
+    ...subItemFilters: Omit<MenuItemHarnessFilters, 'ancestor'>[]
   ): Promise<void> {
     await this.open();
     const items = await this.getItems(itemFilter);
@@ -123,7 +134,7 @@ export abstract class _MatMenuHarnessBase<
     if (!menu) {
       throw Error(`Item matching ${JSON.stringify(itemFilter)} does not have a submenu`);
     }
-    return menu.clickItem(...(subItemFilters as [Omit<ItemFilters, 'ancestor'>]));
+    return menu.clickItem(subItemFilters as Omit<MenuItemHarnessFilters, 'ancestor'>);
   }
 
   protected override async getRootHarnessLoader(): Promise<HarnessLoader> {
@@ -144,11 +155,30 @@ export abstract class _MatMenuHarnessBase<
   }
 }
 
-export abstract class _MatMenuItemHarnessBase<
-  MenuType extends ComponentHarnessConstructor<Menu>,
-  Menu extends ComponentHarness,
-> extends ContentContainerComponentHarness<string> {
-  protected abstract _menuClass: MenuType;
+export class MatMenuItemHarness extends ContentContainerComponentHarness<string> {
+  /** The selector for the host element of a `MatMenuItem` instance. */
+  static hostSelector = '.mat-mdc-menu-item';
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a menu item with specific attributes.
+   * @param options Options for filtering which menu item instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatMenuItemHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: MenuItemHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options)
+      .addOption('text', options.text, (harness, text) =>
+        HarnessPredicate.stringMatches(harness.getText(), text),
+      )
+      .addOption(
+        'hasSubmenu',
+        options.hasSubmenu,
+        async (harness, hasSubmenu) => (await harness.hasSubmenu()) === hasSubmenu,
+      );
+  }
+  protected _menuClass: typeof MatMenuHarness;
 
   /** Whether the menu is disabled. */
   async isDisabled(): Promise<boolean> {
@@ -187,67 +217,10 @@ export abstract class _MatMenuItemHarnessBase<
   }
 
   /** Gets the submenu associated with this menu item, or null if none. */
-  async getSubmenu(): Promise<Menu | null> {
+  async getSubmenu(): Promise<MatMenuHarness | null> {
     if (await this.hasSubmenu()) {
       return new this._menuClass(this.locatorFactory);
     }
     return null;
-  }
-}
-
-/** Harness for interacting with an MDC-based mat-menu in tests. */
-export class MatMenuHarness extends _MatMenuHarnessBase<
-  typeof MatMenuItemHarness,
-  MatMenuItemHarness,
-  MenuItemHarnessFilters
-> {
-  /** The selector for the host element of a `MatMenu` instance. */
-  static hostSelector = '.mat-mdc-menu-trigger';
-  protected _itemClass = MatMenuItemHarness;
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a menu with specific attributes.
-   * @param options Options for filtering which menu instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with<T extends MatMenuHarness>(
-    this: ComponentHarnessConstructor<T>,
-    options: MenuHarnessFilters = {},
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption(
-      'triggerText',
-      options.triggerText,
-      (harness, text) => HarnessPredicate.stringMatches(harness.getTriggerText(), text),
-    );
-  }
-}
-
-/** Harness for interacting with an MDC-based mat-menu-item in tests. */
-export class MatMenuItemHarness extends _MatMenuItemHarnessBase<
-  typeof MatMenuHarness,
-  MatMenuHarness
-> {
-  /** The selector for the host element of a `MatMenuItem` instance. */
-  static hostSelector = '.mat-mdc-menu-item';
-  protected _menuClass = MatMenuHarness;
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a menu item with specific attributes.
-   * @param options Options for filtering which menu item instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with<T extends MatMenuItemHarness>(
-    this: ComponentHarnessConstructor<T>,
-    options: MenuItemHarnessFilters = {},
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options)
-      .addOption('text', options.text, (harness, text) =>
-        HarnessPredicate.stringMatches(harness.getText(), text),
-      )
-      .addOption(
-        'hasSubmenu',
-        options.hasSubmenu,
-        async (harness, hasSubmenu) => (await harness.hasSubmenu()) === hasSubmenu,
-      );
   }
 }
