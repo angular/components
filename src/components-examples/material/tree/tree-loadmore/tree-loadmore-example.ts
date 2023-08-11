@@ -11,6 +11,7 @@ import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/m
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
 const LOAD_MORE = 'LOAD_MORE';
 
@@ -160,6 +161,16 @@ export class TreeLoadmoreExample {
   /** Load more nodes from data source */
   loadMore(item: string) {
     this._database.loadMore(item);
+  }
+
+  loadMoreOnEnterOrSpace(event: KeyboardEvent, item: string) {
+    if (event.keyCode === ENTER || event.keyCode === SPACE) {
+      this._database.loadMore(item);
+
+      // Prevent default behavior so that the tree node doesn't handle the keypress instead of this
+      // button.
+      event.preventDefault();
+    }
   }
 
   loadChildren(node: LoadmoreFlatNode) {
