@@ -4,12 +4,10 @@
 
 ```ts
 
-import { AsyncFactoryFn } from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { TestElement } from '@angular/cdk/testing';
 
 // @public
 export interface CheckboxHarnessFilters extends BaseHarnessFilters {
@@ -20,20 +18,7 @@ export interface CheckboxHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export class MatCheckboxHarness extends _MatCheckboxHarnessBase {
-    // (undocumented)
-    static hostSelector: string;
-    // (undocumented)
-    protected _input: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected _label: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    toggle(): Promise<void>;
-    static with<T extends MatCheckboxHarness>(this: ComponentHarnessConstructor<T>, options?: CheckboxHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatCheckboxHarnessBase extends ComponentHarness {
+export class MatCheckboxHarness extends ComponentHarness {
     blur(): Promise<void>;
     check(): Promise<void>;
     focus(): Promise<void>;
@@ -43,17 +28,16 @@ export abstract class _MatCheckboxHarnessBase extends ComponentHarness {
     getName(): Promise<string | null>;
     getValue(): Promise<string | null>;
     // (undocumented)
-    protected abstract _input: AsyncFactoryFn<TestElement>;
+    static hostSelector: string;
     isChecked(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;
     isIndeterminate(): Promise<boolean>;
     isRequired(): Promise<boolean>;
     isValid(): Promise<boolean>;
-    // (undocumented)
-    protected abstract _label: AsyncFactoryFn<TestElement>;
-    abstract toggle(): Promise<void>;
+    toggle(): Promise<void>;
     uncheck(): Promise<void>;
+    static with<T extends MatCheckboxHarness>(this: ComponentHarnessConstructor<T>, options?: CheckboxHarnessFilters): HarnessPredicate<T>;
 }
 
 // (No @packageDocumentation comment for this package)

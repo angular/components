@@ -240,37 +240,20 @@ export class MatNativeDateModule {
 }
 
 // @public
-export class MatOptgroup extends _MatOptgroupBase {
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, never>;
-}
-
-// @public (undocumented)
-export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisable {
+export class MatOptgroup extends _MatOptgroupMixinBase implements CanDisable {
     constructor(parent?: MatOptionParentComponent);
     _inert: boolean;
     label: string;
     _labelId: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptgroupBase, never, never, { "label": { "alias": "label"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "disabled": { "alias": "disabled"; "required": false; }; "label": { "alias": "label"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptgroupBase, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, [{ optional: true; }]>;
 }
 
 // @public
-export class MatOption<T = any> extends _MatOptionBase<T> {
-    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatOptionParentComponent, group: MatOptgroup);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], {}, {}, never, ["mat-icon", "*"], false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
-}
-
-// @public (undocumented)
-export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: _MatOptgroupBase);
+export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
+    constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: MatOptgroup);
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
@@ -283,7 +266,7 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     getLabel(): string;
     _getTabIndex(): string;
     // (undocumented)
-    readonly group: _MatOptgroupBase;
+    group: MatOptgroup;
     _handleKeydown(event: KeyboardEvent): void;
     get hideSingleSelectionIndicator(): boolean;
     id: string;
@@ -303,9 +286,9 @@ export class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecke
     value: T;
     get viewValue(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptionBase<any>, never, never, { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["mat-icon", "*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptionBase<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
@@ -333,10 +316,10 @@ export interface MatOptionParentComponent {
 // @public
 export class MatOptionSelectionChange<T = any> {
     constructor(
-    source: _MatOptionBase<T>,
+    source: MatOption<T>,
     isUserInput?: boolean);
     isUserInput: boolean;
-    source: _MatOptionBase<T>;
+    source: MatOption<T>;
 }
 
 // @public

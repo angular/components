@@ -10,22 +10,7 @@ import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
-export class MatSnackBarHarness extends _MatSnackBarHarnessBase {
-    // (undocumented)
-    protected _actionButtonSelector: string;
-    protected _assertContentAnnotated(): Promise<void>;
-    static hostSelector: string;
-    // (undocumented)
-    protected _messageSelector: string;
-    static with(options?: SnackBarHarnessFilters): HarnessPredicate<MatSnackBarHarness>;
-}
-
-// @public (undocumented)
-export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentHarness<string> {
-    // (undocumented)
-    protected abstract _actionButtonSelector: string;
-    protected abstract _assertContentAnnotated(): Promise<void>;
-    protected _assertHasAction(): Promise<void>;
+export class MatSnackBarHarness extends ContentContainerComponentHarness<string> {
     dismissWithAction(): Promise<void>;
     getActionDescription(): Promise<string>;
     getAriaLive(): Promise<AriaLivePoliteness>;
@@ -33,9 +18,9 @@ export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentH
     // @deprecated
     getRole(): Promise<'alert' | 'status' | null>;
     hasAction(): Promise<boolean>;
+    static hostSelector: string;
     isDismissed(): Promise<boolean>;
-    // (undocumented)
-    protected abstract _messageSelector: string;
+    static with(options?: SnackBarHarnessFilters): HarnessPredicate<MatSnackBarHarness>;
 }
 
 // @public

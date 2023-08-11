@@ -25,10 +25,9 @@ import { DataSource } from '@angular/cdk/collections';
 import * as i0 from '@angular/core';
 import * as i5 from '@angular/material/core';
 import * as i6 from '@angular/cdk/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 
 // @public
@@ -169,11 +168,7 @@ export class MatTable<T> extends CdkTable<T> implements OnInit {
 }
 
 // @public
-export class MatTableDataSource<T, P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator> extends _MatTableDataSource<T, P> {
-}
-
-// @public
-export class _MatTableDataSource<T, P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator> extends DataSource<T> {
+export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extends DataSource<T> {
     constructor(initialData?: T[]);
     connect(): BehaviorSubject<T[]>;
     get data(): T[];
@@ -195,34 +190,6 @@ export class _MatTableDataSource<T, P extends MatTableDataSourcePaginator = MatT
     sortingDataAccessor: (data: T, sortHeaderId: string) => string | number;
     _updateChangeSubscription(): void;
     _updatePaginator(filteredDataLength: number): void;
-}
-
-// @public
-export interface MatTableDataSourcePageEvent {
-    // (undocumented)
-    length: number;
-    // (undocumented)
-    pageIndex: number;
-    // (undocumented)
-    pageSize: number;
-}
-
-// @public
-export interface MatTableDataSourcePaginator {
-    // (undocumented)
-    firstPage: () => void;
-    // (undocumented)
-    initialized: Observable<void>;
-    // (undocumented)
-    lastPage: () => void;
-    // (undocumented)
-    length: number;
-    // (undocumented)
-    page: Subject<MatTableDataSourcePageEvent>;
-    // (undocumented)
-    pageIndex: number;
-    // (undocumented)
-    pageSize: number;
 }
 
 // @public (undocumented)

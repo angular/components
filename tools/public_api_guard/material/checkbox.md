@@ -17,7 +17,6 @@ import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
-import { FocusOrigin } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/material/core';
@@ -40,37 +39,9 @@ export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOption
 export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public (undocumented)
-export class MatCheckbox extends _MatCheckboxBase<MatCheckboxChange> implements ControlValueAccessor, CanColor, CanDisable {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, tabIndex: string, animationMode?: string, options?: MatCheckboxDefaultOptions);
-    // (undocumented)
+export class MatCheckbox extends _MatCheckboxMixinBase implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, CanDisableRipple, FocusableOption {
+    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
     protected _animationClasses: {
-        uncheckedToChecked: string;
-        uncheckedToIndeterminate: string;
-        checkedToUnchecked: string;
-        checkedToIndeterminate: string;
-        indeterminateToChecked: string;
-        indeterminateToUnchecked: string;
-    };
-    // (undocumented)
-    protected _createChangeEvent(isChecked: boolean): MatCheckboxChange;
-    focus(): void;
-    // (undocumented)
-    protected _getAnimationTargetElement(): HTMLInputElement;
-    // (undocumented)
-    _onInputClick(): void;
-    // (undocumented)
-    _onTouchTargetClick(): void;
-    _preventBubblingFromLabel(event: MouseEvent): void;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCheckbox, [null, null, null, { attribute: "tabindex"; }, { optional: true; }, { optional: true; }]>;
-}
-
-// @public (undocumented)
-export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, CanDisableRipple, FocusableOption {
-    constructor(idPrefix: string, elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
-    protected abstract _animationClasses: {
         uncheckedToChecked: string;
         uncheckedToIndeterminate: string;
         checkedToUnchecked: string;
@@ -83,16 +54,14 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     ariaDescribedby: string;
     ariaLabel: string;
     ariaLabelledby: string | null;
-    readonly change: EventEmitter<E>;
-    // (undocumented)
-    protected _changeDetectorRef: ChangeDetectorRef;
+    readonly change: EventEmitter<MatCheckboxChange>;
     get checked(): boolean;
     set checked(value: BooleanInput);
-    protected abstract _createChangeEvent(isChecked: boolean): E;
+    protected _createChangeEvent(isChecked: boolean): MatCheckboxChange;
     get disabled(): boolean;
     set disabled(value: BooleanInput);
-    abstract focus(origin?: FocusOrigin): void;
-    protected abstract _getAnimationTargetElement(): HTMLElement | null;
+    focus(): void;
+    protected _getAnimationTargetElement(): HTMLInputElement;
     // (undocumented)
     protected _handleInputClick(): void;
     id: string;
@@ -109,15 +78,16 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    protected _ngZone: NgZone;
-    // (undocumented)
     _onBlur(): void;
+    // (undocumented)
+    _onInputClick(): void;
     // (undocumented)
     _onInteractionEvent(event: Event): void;
     _onLabelTextChange(): void;
     _onTouched: () => any;
     // (undocumented)
-    protected _options?: MatCheckboxDefaultOptions | undefined;
+    _onTouchTargetClick(): void;
+    _preventBubblingFromLabel(event: MouseEvent): void;
     // (undocumented)
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
@@ -133,9 +103,9 @@ export abstract class _MatCheckboxBase<E> extends _MatCheckboxMixinBase implemen
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatCheckboxBase<any>, never, never, { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatCheckboxBase<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatCheckbox, [null, null, null, { attribute: "tabindex"; }, { optional: true; }, { optional: true; }]>;
 }
 
 // @public

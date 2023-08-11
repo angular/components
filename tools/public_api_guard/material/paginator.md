@@ -39,28 +39,13 @@ export const MAT_PAGINATOR_INTL_PROVIDER: {
 export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public
-export class MatPaginator extends _MatPaginatorBase<MatPaginatorDefaultOptions> {
-    constructor(intl: MatPaginatorIntl, changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
-    _formFieldAppearance?: MatFormFieldAppearance;
-    readonly _pageSizeLabelId: string;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatPaginator, "mat-paginator", ["matPaginator"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginator, [null, null, { optional: true; }]>;
-}
-
-// @public
-export abstract class _MatPaginatorBase<O extends {
-    pageSize?: number;
-    pageSizeOptions?: number[];
-    hidePageSize?: boolean;
-    showFirstLastButtons?: boolean;
-}> extends _MatPaginatorMixinBase implements OnInit, OnDestroy, CanDisable, HasInitialized {
-    constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: O);
+export class MatPaginator extends _MatPaginatorMixinBase implements OnInit, OnDestroy, CanDisable, HasInitialized {
+    constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
     _displayedPageSizeOptions: number[];
     firstPage(): void;
+    _formFieldAppearance?: MatFormFieldAppearance;
     getNumberOfPages(): number;
     hasNextPage(): boolean;
     hasPreviousPage(): boolean;
@@ -82,6 +67,7 @@ export abstract class _MatPaginatorBase<O extends {
     set pageIndex(value: NumberInput);
     get pageSize(): number;
     set pageSize(value: NumberInput);
+    readonly _pageSizeLabelId: string;
     get pageSizeOptions(): number[];
     set pageSizeOptions(value: number[] | readonly number[]);
     _previousButtonsDisabled(): boolean;
@@ -90,9 +76,9 @@ export abstract class _MatPaginatorBase<O extends {
     get showFirstLastButtons(): boolean;
     set showFirstLastButtons(value: BooleanInput);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatPaginatorBase<any>, never, never, { "color": { "alias": "color"; "required": false; }; "pageIndex": { "alias": "pageIndex"; "required": false; }; "length": { "alias": "length"; "required": false; }; "pageSize": { "alias": "pageSize"; "required": false; }; "pageSizeOptions": { "alias": "pageSizeOptions"; "required": false; }; "hidePageSize": { "alias": "hidePageSize"; "required": false; }; "showFirstLastButtons": { "alias": "showFirstLastButtons"; "required": false; }; "selectConfig": { "alias": "selectConfig"; "required": false; }; }, { "page": "page"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatPaginator, "mat-paginator", ["matPaginator"], { "disabled": { "alias": "disabled"; "required": false; }; "color": { "alias": "color"; "required": false; }; "pageIndex": { "alias": "pageIndex"; "required": false; }; "length": { "alias": "length"; "required": false; }; "pageSize": { "alias": "pageSize"; "required": false; }; "pageSizeOptions": { "alias": "pageSizeOptions"; "required": false; }; "hidePageSize": { "alias": "hidePageSize"; "required": false; }; "showFirstLastButtons": { "alias": "showFirstLastButtons"; "required": false; }; "selectConfig": { "alias": "selectConfig"; "required": false; }; }, { "page": "page"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatPaginatorBase<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginator, [null, null, { optional: true; }]>;
 }
 
 // @public

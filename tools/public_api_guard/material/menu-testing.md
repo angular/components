@@ -5,63 +5,41 @@
 ```ts
 
 import { BaseHarnessFilters } from '@angular/cdk/testing';
-import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
-export class MatMenuHarness extends _MatMenuHarnessBase<typeof MatMenuItemHarness, MatMenuItemHarness, MenuItemHarnessFilters> {
-    static hostSelector: string;
+export class MatMenuHarness extends ContentContainerComponentHarness<string> {
+    blur(): Promise<void>;
+    clickItem(itemFilter: Omit<MenuItemHarnessFilters, 'ancestor'>, ...subItemFilters: Omit<MenuItemHarnessFilters, 'ancestor'>[]): Promise<void>;
+    close(): Promise<void>;
+    focus(): Promise<void>;
+    getItems(filters?: Omit<MenuItemHarnessFilters, 'ancestor'>): Promise<MatMenuItemHarness[]>;
     // (undocumented)
-    protected _itemClass: typeof MatMenuItemHarness;
+    protected getRootHarnessLoader(): Promise<HarnessLoader>;
+    getTriggerText(): Promise<string>;
+    static hostSelector: string;
+    isDisabled(): Promise<boolean>;
+    isFocused(): Promise<boolean>;
+    isOpen(): Promise<boolean>;
+    open(): Promise<void>;
     static with<T extends MatMenuHarness>(this: ComponentHarnessConstructor<T>, options?: MenuHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public (undocumented)
-export abstract class _MatMenuHarnessBase<ItemType extends ComponentHarnessConstructor<Item> & {
-    with: (options?: ItemFilters) => HarnessPredicate<Item>;
-}, Item extends ComponentHarness & {
-    click(): Promise<void>;
-    getSubmenu(): Promise<_MatMenuHarnessBase<ItemType, Item, ItemFilters> | null>;
-}, ItemFilters extends BaseHarnessFilters> extends ContentContainerComponentHarness<string> {
-    blur(): Promise<void>;
-    clickItem(itemFilter: Omit<ItemFilters, 'ancestor'>, ...subItemFilters: Omit<ItemFilters, 'ancestor'>[]): Promise<void>;
-    close(): Promise<void>;
-    focus(): Promise<void>;
-    getItems(filters?: Omit<ItemFilters, 'ancestor'>): Promise<Item[]>;
-    // (undocumented)
-    protected getRootHarnessLoader(): Promise<HarnessLoader>;
-    getTriggerText(): Promise<string>;
-    isDisabled(): Promise<boolean>;
-    isFocused(): Promise<boolean>;
-    isOpen(): Promise<boolean>;
-    // (undocumented)
-    protected abstract _itemClass: ItemType;
-    open(): Promise<void>;
-}
-
-// @public
-export class MatMenuItemHarness extends _MatMenuItemHarnessBase<typeof MatMenuHarness, MatMenuHarness> {
-    static hostSelector: string;
-    // (undocumented)
-    protected _menuClass: typeof MatMenuHarness;
-    static with<T extends MatMenuItemHarness>(this: ComponentHarnessConstructor<T>, options?: MenuItemHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatMenuItemHarnessBase<MenuType extends ComponentHarnessConstructor<Menu>, Menu extends ComponentHarness> extends ContentContainerComponentHarness<string> {
+export class MatMenuItemHarness extends ContentContainerComponentHarness<string> {
     blur(): Promise<void>;
     click(): Promise<void>;
     focus(): Promise<void>;
-    getSubmenu(): Promise<Menu | null>;
+    getSubmenu(): Promise<MatMenuHarness | null>;
     getText(): Promise<string>;
     hasSubmenu(): Promise<boolean>;
+    static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;
-    // (undocumented)
-    protected abstract _menuClass: MenuType;
+    static with<T extends MatMenuItemHarness>(this: ComponentHarnessConstructor<T>, options?: MenuItemHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public
