@@ -8,16 +8,21 @@
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Directive, Input} from '@angular/core';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
 import {CdkTree, CdkTreeNode} from './tree';
 
 /**
  * Node toggle to expand/collapse the node.
+ *
+ * CdkTreeNodeToggle is intended only to be used on native button elements, elements with button role,
+ * or elements with treeitem role.
  */
 @Directive({
   selector: '[cdkTreeNodeToggle]',
   host: {
     '(click)': '_toggle($event)',
+    '(keydown)': '_toggleOnEnterOrSpace($event)',
     'tabindex': '-1',
   },
 })
@@ -40,5 +45,12 @@ export class CdkTreeNodeToggle<T, K = T> {
       : this._tree.toggle(this._treeNode.data);
 
     event.stopPropagation();
+  }
+
+  _toggleOnEnterOrSpace(event: KeyboardEvent) {
+    if (event.keyCode === ENTER || event.keyCode === SPACE) {
+      this._toggle(event);
+      event.preventDefault();
+    }
   }
 }

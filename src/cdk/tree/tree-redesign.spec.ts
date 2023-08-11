@@ -16,14 +16,14 @@ import {
   ViewChildren,
   QueryList,
 } from '@angular/core';
-
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Directionality, Direction} from '@angular/cdk/bidi';
 import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
+import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
+import {ENTER} from '@angular/cdk/keycodes';
 
 /**
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,
@@ -293,7 +293,9 @@ describe('CdkTree redesign', () => {
           [_, `${data[3].pizzaTopping} - ${data[3].pizzaCheese} + ${data[3].pizzaBase}`],
         );
 
-        (getNodes(treeElement)[2] as HTMLElement).click();
+        (getNodes(treeElement)[2] as HTMLElement)!.dispatchEvent(
+          createKeyboardEvent('keydown', ENTER),
+        );
         fixture.detectChanges();
 
         const expandedNodes = getExpandedNodes(
