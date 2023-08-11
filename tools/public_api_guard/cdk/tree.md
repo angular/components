@@ -274,6 +274,8 @@ export class CdkTreeNodeToggle<T, K = T> {
     // (undocumented)
     _toggle(event: Event): void;
     // (undocumented)
+    _toggleOnEnterOrSpace(event: KeyboardEvent): void;
+    // (undocumented)
     protected _tree: CdkTree<T, K>;
     // (undocumented)
     protected _treeNode: CdkTreeNode<T, K>;
