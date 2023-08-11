@@ -1,11 +1,13 @@
 <cdk-tree #tree [dataSource]="dataSource" [levelAccessor]="levelAccessor">
   <!-- This is the tree node template for leaf nodes -->
-  <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="example-tree-node">
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="example-tree-node"
+                        [isDisabled]="!shouldRender(node)">
     {{node.name}}
   </cdk-nested-tree-node>
   <!-- This is the tree node template for expandable nodes -->
   <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild"
                         [isExpandable]="node.expandable"
+                        [isDisabled]="!shouldRender(node)"
                         class="example-tree-node example-expandable">
     <button mat-icon-button cdkTreeNodeToggle
             [attr.aria-label]="'Toggle ' + node.name"
