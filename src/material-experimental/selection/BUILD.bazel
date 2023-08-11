@@ -12,7 +12,7 @@ ng_module(
     deps = [
         "//src/cdk-experimental/selection",
         "//src/material/checkbox",
-        "//src/material/legacy-table",
+        "//src/material/table",
         "@npm//@angular/core",
     ],
 )

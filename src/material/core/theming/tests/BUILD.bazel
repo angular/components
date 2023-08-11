@@ -11,12 +11,11 @@ sass_binary(
     src = "test-css-variables-theme.scss",
     deps = [
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-core:theming_scss_lib",
     ],
 )
 
-# Sass binary which is used to ensure that our themes will compile with the legacy and new
-# pattern for configuring themes. For more information on the legacy and new pattern, inspect
+# Sass binary which is used to ensure that our themes will compile with the
+# pattern for configuring themes. For more information, inspect
 # the `mat-light-theme` and `mat-dark-theme` theming functions.
 sass_binary(
     name = "test-theming-api",
@@ -24,7 +23,6 @@ sass_binary(
     src = "test-theming-api.scss",
     deps = [
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-core:theming_scss_lib",
     ],
 )
 

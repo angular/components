@@ -4,7 +4,6 @@
 @use '../../typography/typography';
 @use '../palette';
 @use '../theming';
-@use '../../../legacy-core/theming/all-theme' as legacy-all-theme;
 
 // Recursively replaces all of the values inside a Sass map with a different value.
 @function _replace-all-values($palette, $replacement) {
@@ -35,5 +34,4 @@
   ));
   $css-var-theme: _replace-all-values($theme, var(--test-var));
   @include all-theme.all-component-themes($css-var-theme);
-  @include legacy-all-theme.all-legacy-component-themes($css-var-theme);
 }

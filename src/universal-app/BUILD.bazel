@@ -11,18 +11,16 @@ package(default_visibility = ["//visibility:public"])
 ng_module(
     name = "kitchen-sink",
     srcs = [
-        "kitchen-sink-mdc/kitchen-sink-mdc.ts",
         "kitchen-sink-root.ts",
         "kitchen-sink/kitchen-sink.ts",
     ],
     assets = [
         "kitchen-sink/kitchen-sink.html",
-        "kitchen-sink-mdc/kitchen-sink-mdc.html",
     ],
     deps = [
-        "@npm//@angular/platform-server",
         "//src/google-maps",
         "//src/youtube-player",
+        "@npm//@angular/platform-server",
     ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS,
 )
 

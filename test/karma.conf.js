@@ -56,11 +56,6 @@ module.exports = config => {
         included: true,
         watched: true,
       },
-      {
-        pattern: 'src/material/legacy-core/theming/prebuilt/indigo-pink.css',
-        included: true,
-        watched: true,
-      },
     ],
 
     customLaunchers: customLaunchers,
