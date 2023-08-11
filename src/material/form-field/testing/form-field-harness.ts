@@ -30,7 +30,7 @@ export type FormFieldControlHarness =
   | MatDatepickerInputHarness
   | MatDateRangeInputHarness;
 
-export abstract class MatFormFieldHarness extends ComponentHarness {
+export class MatFormFieldHarness extends ComponentHarness {
   private _prefixContainer = this.locatorForOptional('.mat-mdc-form-field-text-prefix');
   private _suffixContainer = this.locatorForOptional('.mat-mdc-form-field-text-suffix');
   private _label = this.locatorForOptional('.mdc-floating-label');

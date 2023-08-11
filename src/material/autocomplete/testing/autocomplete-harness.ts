@@ -21,7 +21,7 @@ import {
 } from '@angular/material/core/testing';
 import {AutocompleteHarnessFilters} from './autocomplete-harness-filters';
 
-export abstract class MatAutocompleteHarness extends ComponentHarness {
+export class MatAutocompleteHarness extends ComponentHarness {
   private _documentRootLocator = this.documentRootLocatorFactory();
 
   /** The selector for the host element of a `MatAutocomplete` instance. */

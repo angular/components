@@ -14,7 +14,6 @@ import {
   Inject,
   Optional,
   InjectionToken,
-  Directive,
 } from '@angular/core';
 import {CanDisable, mixinDisabled} from '../common-behaviors/disabled';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
@@ -46,23 +45,6 @@ const _MatOptgroupMixinBase = mixinDisabled(class {});
 // Counter for unique group ids.
 let _uniqueOptgroupIdCounter = 0;
 
-@Directive()
-export class _MatOptgroupBase extends _MatOptgroupMixinBase implements CanDisable {
-  /** Label for the option group. */
-  @Input() label: string;
-
-  /** Unique id for the underlying label. */
-  _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;
-
-  /** Whether the group is in inert a11y mode. */
-  _inert: boolean;
-
-  constructor(@Inject(MAT_OPTION_PARENT_COMPONENT) @Optional() parent?: MatOptionParentComponent) {
-    super();
-    this._inert = parent?.inertGroups ?? false;
-  }
-}
-
 /**
  * Injection token that can be used to reference instances of `MatOptgroup`. It serves as
  * alternative token to the actual `MatOptgroup` class which could cause unnecessary
@@ -89,4 +71,18 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   },
   providers: [{provide: MAT_OPTGROUP, useExisting: MatOptgroup}],
 })
-export class MatOptgroup extends _MatOptgroupBase {}
+export class MatOptgroup extends _MatOptgroupMixinBase implements CanDisable {
+  /** Label for the option group. */
+  @Input() label: string;
+
+  /** Unique id for the underlying label. */
+  _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;
+
+  /** Whether the group is in inert a11y mode. */
+  _inert: boolean;
+
+  constructor(@Inject(MAT_OPTION_PARENT_COMPONENT) @Optional() parent?: MatOptionParentComponent) {
+    super();
+    this._inert = parent?.inertGroups ?? false;
+  }
+}

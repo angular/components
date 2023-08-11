@@ -30,7 +30,7 @@ export interface MatTableHarnessColumnsText {
 }
 
 /** Harness for interacting with a mat-table in tests. */
-export abstract class MatTableHarness extends ContentContainerComponentHarness<string> {
+export class MatTableHarness extends ContentContainerComponentHarness<string> {
   /** The selector for the host element of a `MatTableHarness` instance. */
   static hostSelector = '.mat-mdc-table';
   private _headerRowHarness = MatHeaderRowHarness;

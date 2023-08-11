@@ -45,7 +45,7 @@ import {
   MatOptionSelectionChange,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
-  _MatOptionBase,
+  MatOption,
 } from '@angular/material/core';
 import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
@@ -162,7 +162,7 @@ export class MatAutocompleteTrigger
    * Current option that we have auto-selected as the user is navigating,
    * but which hasn't been propagated to the model value yet.
    */
-  private _pendingAutoselectedOption: _MatOptionBase | null;
+  private _pendingAutoselectedOption: MatOption | null;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -374,7 +374,7 @@ export class MatAutocompleteTrigger
   }) as Observable<MatOptionSelectionChange>;
 
   /** The currently active option, coerced to MatOption type. */
-  get activeOption(): _MatOptionBase | null {
+  get activeOption(): MatOption | null {
     if (this.autocomplete && this.autocomplete._keyManager) {
       return this.autocomplete._keyManager.activeItem;
     }
@@ -689,7 +689,7 @@ export class MatAutocompleteTrigger
   /**
    * Clear any previous selected option and emit a selection change event for this option
    */
-  private _clearPreviousSelectedOption(skip: _MatOptionBase | null, emitEvent?: boolean) {
+  private _clearPreviousSelectedOption(skip: MatOption | null, emitEvent?: boolean) {
     // Null checks are necessary here, because the autocomplete
     // or its options may not have been assigned yet.
     this.autocomplete?.options?.forEach(option => {

@@ -178,7 +178,6 @@ export class MatMenuItemHarness extends ContentContainerComponentHarness<string>
         async (harness, hasSubmenu) => (await harness.hasSubmenu()) === hasSubmenu,
       );
   }
-  protected _menuClass: typeof MatMenuHarness;
 
   /** Whether the menu is disabled. */
   async isDisabled(): Promise<boolean> {
@@ -213,13 +212,13 @@ export class MatMenuItemHarness extends ContentContainerComponentHarness<string>
 
   /** Whether this item has a submenu. */
   async hasSubmenu(): Promise<boolean> {
-    return (await this.host()).matchesSelector(this._menuClass.hostSelector);
+    return (await this.host()).matchesSelector(MatMenuHarness.hostSelector);
   }
 
   /** Gets the submenu associated with this menu item, or null if none. */
   async getSubmenu(): Promise<MatMenuHarness | null> {
     if (await this.hasSubmenu()) {
-      return new this._menuClass(this.locatorFactory);
+      return new MatMenuHarness(this.locatorFactory);
     }
     return null;
   }
