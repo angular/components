@@ -19,6 +19,8 @@ import {MenuHarnessFilters, MenuItemHarnessFilters} from './menu-harness-filters
 
 /** Harness for interacting with an MDC-based mat-menu in tests. */
 export class MatMenuHarness extends ContentContainerComponentHarness<string> {
+  private _documentRootLocator = this.documentRootLocatorFactory();
+
   /** The selector for the host element of a `MatMenu` instance. */
   static hostSelector = '.mat-mdc-menu-trigger';
 
@@ -37,11 +39,6 @@ export class MatMenuHarness extends ContentContainerComponentHarness<string> {
       (harness, text) => HarnessPredicate.stringMatches(harness.getTriggerText(), text),
     );
   }
-
-  private _documentRootLocator = this.documentRootLocatorFactory();
-  private _itemClass = MatMenuItemHarness;
-
-  // TODO: potentially extend MatLegacyButtonHarness
 
   /** Whether the menu is disabled. */
   async isDisabled(): Promise<boolean> {
@@ -99,7 +96,7 @@ export class MatMenuHarness extends ContentContainerComponentHarness<string> {
     const panelId = await this._getPanelId();
     if (panelId) {
       return this._documentRootLocator.locatorForAll(
-        this._itemClass.with({
+        MatMenuItemHarness.with({
           ...(filters || {}),
           ancestor: `#${panelId}`,
         } as MenuItemHarnessFilters),
@@ -134,7 +131,7 @@ export class MatMenuHarness extends ContentContainerComponentHarness<string> {
     if (!menu) {
       throw Error(`Item matching ${JSON.stringify(itemFilter)} does not have a submenu`);
     }
-    return menu.clickItem(subItemFilters as Omit<MenuItemHarnessFilters, 'ancestor'>);
+    return menu.clickItem(...(subItemFilters as [Omit<MenuItemHarnessFilters, 'ancestor'>]));
   }
 
   protected override async getRootHarnessLoader(): Promise<HarnessLoader> {
