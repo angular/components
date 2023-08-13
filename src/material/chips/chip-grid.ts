@@ -106,6 +106,7 @@ const _MatChipGridMixinBase = mixinErrorState(MatChipGridBase);
     '[class.mat-mdc-chip-list-disabled]': 'disabled',
     '[class.mat-mdc-chip-list-invalid]': 'errorState',
     '[class.mat-mdc-chip-list-required]': 'required',
+    '[class.mat-mdc-chip-list-placeholder]': '_chips && _chips.length',
     '(focus)': 'focus()',
     '(blur)': '_blur()',
   },

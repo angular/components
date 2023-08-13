@@ -39,3 +39,13 @@ input.mat-mdc-chip-input {
     margin-right: 8px;
   }
 }
+
+// This ensures that if we have any sort of data in our chips, we apply
+// a class & set placeholder to be visible so it doesn't show only when
+// form field is focused.
+.mat-mdc-chip-list-placeholder {
+  // stylelint-disable-next-line material/no-prefixes
+  .mat-mdc-chip-input::placeholder {
+    opacity: 1;
+  }
+}
