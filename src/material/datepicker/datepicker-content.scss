@@ -49,6 +49,14 @@ $touch-max-height: 788px;
     height: auto;
   }
 
+
+  // Height should be auto, when theres no header for calendar,
+  // if we don't set it to auto, it will render the hardcoded height
+  // for non-touch showing some extra space at the end of calendar.
+  .mat-datepicker-content-container-with-no-header .mat-calendar {
+    height: auto;
+  }
+
   // Note that this selector doesn't technically have to be nested, but we want the slightly
   // higher specificity, or it can be overridden based on the CSS insertion order (see #21043).
   .mat-datepicker-close-button {

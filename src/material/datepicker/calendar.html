@@ -1,4 +1,4 @@
-<ng-template [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
+<ng-template *ngIf="!hideHeader" [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
 
 <div class="mat-calendar-content" [ngSwitch]="currentView" cdkMonitorSubtreeFocus tabindex="-1">
   <mat-month-view
@@ -17,6 +17,7 @@
       (dragStarted)="_dragStarted($event)"
       (dragEnded)="_dragEnded($event)"
       [activeDrag]="_activeDrag"
+      [hideHeader]="hideHeader"
       >
   </mat-month-view>
 

@@ -333,10 +333,11 @@ export interface MatDatepickerPanel<
 /** Base class for a datepicker. */
 @Directive()
 export abstract class MatDatepickerBase<
-  C extends MatDatepickerControl<D>,
-  S,
-  D = ExtractDateTypeFromSelection<S>,
-> implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
+    C extends MatDatepickerControl<D>,
+    S,
+    D = ExtractDateTypeFromSelection<S>,
+  >
+  implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
   private _scrollStrategy: () => ScrollStrategy;
   private _inputStateChanges = Subscription.EMPTY;
@@ -423,6 +424,18 @@ export abstract class MatDatepickerBase<
     this._restoreFocus = coerceBooleanProperty(value);
   }
   private _restoreFocus = true;
+
+  /**
+   * Whether the header should be rendered.
+   */
+  @Input()
+  get hideHeader(): boolean {
+    return this._hideHeader;
+  }
+  set hideHeader(value: BooleanInput) {
+    this._hideHeader = coerceBooleanProperty(value);
+  }
+  private _hideHeader = false;
 
   /**
    * Emits selected year in multiyear view.

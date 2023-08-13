@@ -139,6 +139,17 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   }
 }
 
+.mat-calendar-table-no-header th {
+  text-align: center;
+  padding: $calendar-padding 0 $calendar-padding 0;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, calendar-header-text-color);
+    @include token-utils.create-token-slot(font-size, calendar-header-text-size);
+    @include token-utils.create-token-slot(font-weight, calendar-header-text-weight);
+  }
+}
+
 .mat-calendar-table-header-divider {
   position: relative;
   height: $calendar-header-divider-width;

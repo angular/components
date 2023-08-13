@@ -2465,6 +2465,37 @@ describe('MatDatepicker', () => {
       expect(actualClasses.contains('bar')).toBe(true);
     }));
   });
+
+  describe('datepicker with toggleable header', () => {
+    let fixture: ComponentFixture<DatepickerWithNoHeader>;
+    let testComponent: DatepickerWithNoHeader;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(DatepickerWithNoHeader, [MatNativeDateModule]);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should find the header element', fakeAsync(() => {
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      tick();
+
+      expect(document.querySelector('.mat-calendar-header')).toBeTruthy();
+    }));
+
+    it('should not find the header element', fakeAsync(() => {
+      fixture.componentInstance.hide = true;
+      fixture.detectChanges();
+      tick();
+
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      tick();
+
+      expect(document.querySelector('.mat-calendar-header')).toBeFalsy();
+    }));
+  });
 });
 
 /**
@@ -2833,4 +2864,15 @@ class PanelClassDatepicker {
   date = new Date(0);
   panelClass: any;
   @ViewChild('d') datepicker: MatDatepicker<Date>;
+}
+
+@Component({
+  template: `
+  <input [matDatepicker]="dp"/>
+  <mat-datepicker #dp [hideHeader]="hide"></mat-datepicker>
+  `,
+})
+class DatepickerWithNoHeader {
+  @ViewChild('dp') datepicker: MatDatepicker<Date>;
+  hide: boolean = false;
 }

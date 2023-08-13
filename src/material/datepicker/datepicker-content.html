@@ -5,6 +5,7 @@
   [attr.aria-labelledby]="_dialogLabelId ?? undefined"
   class="mat-datepicker-content-container"
   [class.mat-datepicker-content-container-with-custom-header]="datepicker.calendarHeaderComponent"
+  [class.mat-datepicker-content-container-with-no-header]="datepicker.hideHeader"
   [class.mat-datepicker-content-container-with-actions]="_actionsPortal">
   <mat-calendar
     [id]="datepicker.id"
@@ -22,6 +23,7 @@
     [@fadeInCalendar]="'enter'"
     [startDateAccessibleName]="startDateAccessibleName"
     [endDateAccessibleName]="endDateAccessibleName"
+    [hideHeader]="datepicker.hideHeader"
     (yearSelected)="datepicker._selectYear($event)"
     (monthSelected)="datepicker._selectMonth($event)"
     (viewChanged)="datepicker._viewChanged($event)"

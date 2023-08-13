@@ -148,6 +148,11 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** Origin of active drag, or null when dragging is not active. */
   @Input() activeDrag: MatCalendarUserEvent<D> | null = null;
 
+  /**
+   * Whether the header should be rendered. If its hidden we might wanna add extra space on top of header.
+   */
+  @Input() hideHeader: boolean = false;
+
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
