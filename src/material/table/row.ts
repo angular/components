@@ -7,7 +7,6 @@
  */
 
 import {
-  CDK_ROW_TEMPLATE,
   CdkFooterRow,
   CdkFooterRowDef,
   CdkHeaderRow,
@@ -17,6 +16,9 @@ import {
   CdkNoDataRow,
 } from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
+
+// We can't reuse `CDK_ROW_TEMPLATE` because it's incompatible with local compilation mode.
+const ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
 
 /**
  * Header row definition for the mat-table.
@@ -55,7 +57,7 @@ export class MatRowDef<T> extends CdkRowDef<T> {}
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'mat-header-row, tr[mat-header-row]',
-  template: CDK_ROW_TEMPLATE,
+  template: ROW_TEMPLATE,
   host: {
     'class': 'mat-mdc-header-row mdc-data-table__header-row',
     'role': 'row',
@@ -72,7 +74,7 @@ export class MatHeaderRow extends CdkHeaderRow {}
 /** Footer template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'mat-footer-row, tr[mat-footer-row]',
-  template: CDK_ROW_TEMPLATE,
+  template: ROW_TEMPLATE,
   host: {
     'class': 'mat-mdc-footer-row mdc-data-table__row',
     'role': 'row',
@@ -89,7 +91,7 @@ export class MatFooterRow extends CdkFooterRow {}
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'mat-row, tr[mat-row]',
-  template: CDK_ROW_TEMPLATE,
+  template: ROW_TEMPLATE,
   host: {
     'class': 'mat-mdc-row mdc-data-table__row',
     'role': 'row',
