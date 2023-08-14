@@ -58,7 +58,7 @@ export abstract class _MatRowHarnessBase<
   }
 }
 
-/** Harness for interacting with an MDC-based Angular Material table row. */
+/** Harness for interacting with an Angular Material table row. */
 export class MatRowHarness extends _MatRowHarnessBase<typeof MatCellHarness, MatCellHarness> {
   /** The selector for the host element of a `MatRowHarness` instance. */
   static hostSelector = '.mat-mdc-row';
@@ -77,7 +77,7 @@ export class MatRowHarness extends _MatRowHarnessBase<typeof MatCellHarness, Mat
   }
 }
 
-/** Harness for interacting with an MDC-based Angular Material table header row. */
+/** Harness for interacting with an Angular Material table header row. */
 export class MatHeaderRowHarness extends _MatRowHarnessBase<
   typeof MatHeaderCellHarness,
   MatHeaderCellHarness
@@ -100,7 +100,7 @@ export class MatHeaderRowHarness extends _MatRowHarnessBase<
   }
 }
 
-/** Harness for interacting with an MDC-based Angular Material table footer row. */
+/** Harness for interacting with an Angular Material table footer row. */
 export class MatFooterRowHarness extends _MatRowHarnessBase<
   typeof MatFooterCellHarness,
   MatFooterCellHarness

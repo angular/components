@@ -12,7 +12,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Directive,
   ElementRef,
   EventEmitter,
   forwardRef,
@@ -37,7 +36,7 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusableOption} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
@@ -94,8 +93,29 @@ const _MatCheckboxMixinBase = mixinTabIndex(
   ),
 );
 
-@Directive()
-export abstract class _MatCheckboxBase<E>
+@Component({
+  selector: 'mat-checkbox',
+  templateUrl: 'checkbox.html',
+  styleUrls: ['checkbox.css'],
+  host: {
+    'class': 'mat-mdc-checkbox',
+    '[attr.tabindex]': 'null',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[class.mdc-checkbox--disabled]': 'disabled',
+    '[id]': 'id',
+    // Add classes that users can use to more easily target disabled or checked checkboxes.
+    '[class.mat-mdc-checkbox-disabled]': 'disabled',
+    '[class.mat-mdc-checkbox-checked]': 'checked',
+  },
+  providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
+  inputs: ['disableRipple', 'color', 'tabIndex'],
+  exportAs: 'matCheckbox',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatCheckbox
   extends _MatCheckboxMixinBase
   implements
     AfterViewInit,
@@ -107,22 +127,31 @@ export abstract class _MatCheckboxBase<E>
     FocusableOption
 {
   /** Focuses the checkbox. */
-  abstract focus(origin?: FocusOrigin): void;
+  focus() {
+    this._inputElement.nativeElement.focus();
+  }
 
   /** Creates the change event that will be emitted by the checkbox. */
-  protected abstract _createChangeEvent(isChecked: boolean): E;
+  protected _createChangeEvent(isChecked: boolean) {
+    const event = new MatCheckboxChange();
+    event.source = this;
+    event.checked = isChecked;
+    return event;
+  }
 
   /** Gets the element on which to add the animation CSS classes. */
-  protected abstract _getAnimationTargetElement(): HTMLElement | null;
+  protected _getAnimationTargetElement() {
+    return this._inputElement?.nativeElement;
+  }
 
   /** CSS classes to add when transitioning between the different checkbox states. */
-  protected abstract _animationClasses: {
-    uncheckedToChecked: string;
-    uncheckedToIndeterminate: string;
-    checkedToUnchecked: string;
-    checkedToIndeterminate: string;
-    indeterminateToChecked: string;
-    indeterminateToUnchecked: string;
+  protected _animationClasses = {
+    uncheckedToChecked: 'mdc-checkbox--anim-unchecked-checked',
+    uncheckedToIndeterminate: 'mdc-checkbox--anim-unchecked-indeterminate',
+    checkedToUnchecked: 'mdc-checkbox--anim-checked-unchecked',
+    checkedToIndeterminate: 'mdc-checkbox--anim-checked-indeterminate',
+    indeterminateToChecked: 'mdc-checkbox--anim-indeterminate-checked',
+    indeterminateToUnchecked: 'mdc-checkbox--anim-indeterminate-unchecked',
   };
 
   /**
@@ -166,7 +195,7 @@ export abstract class _MatCheckboxBase<E>
   @Input() name: string | null = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() readonly change: EventEmitter<E> = new EventEmitter<E>();
+  @Output() readonly change = new EventEmitter<MatCheckboxChange>();
 
   /** Event emitted when the checkbox's `indeterminate` value changes. */
   @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -200,19 +229,18 @@ export abstract class _MatCheckboxBase<E>
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   constructor(
-    idPrefix: string,
     elementRef: ElementRef<HTMLElement>,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    protected _ngZone: NgZone,
-    tabIndex: string,
-    public _animationMode?: string,
-    protected _options?: MatCheckboxDefaultOptions,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _ngZone: NgZone,
+    @Attribute('tabindex') tabIndex: string,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+    @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?: MatCheckboxDefaultOptions,
   ) {
     super(elementRef);
     this._options = this._options || defaults;
     this.color = this.defaultColor = this._options.color || defaults.color;
     this.tabIndex = parseInt(tabIndex) || 0;
-    this.id = this._uniqueId = `${idPrefix}${++nextUniqueId}`;
+    this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
   }
 
   ngAfterViewInit() {
@@ -465,86 +493,13 @@ export abstract class _MatCheckboxBase<E>
       nativeCheckbox.nativeElement.indeterminate = value;
     }
   }
-}
-
-@Component({
-  selector: 'mat-checkbox',
-  templateUrl: 'checkbox.html',
-  styleUrls: ['checkbox.css'],
-  host: {
-    'class': 'mat-mdc-checkbox',
-    '[attr.tabindex]': 'null',
-    '[attr.aria-label]': 'null',
-    '[attr.aria-labelledby]': 'null',
-    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
-    '[class.mdc-checkbox--disabled]': 'disabled',
-    '[id]': 'id',
-    // Add classes that users can use to more easily target disabled or checked checkboxes.
-    '[class.mat-mdc-checkbox-disabled]': 'disabled',
-    '[class.mat-mdc-checkbox-checked]': 'checked',
-  },
-  providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disableRipple', 'color', 'tabIndex'],
-  exportAs: 'matCheckbox',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatCheckbox
-  extends _MatCheckboxBase<MatCheckboxChange>
-  implements ControlValueAccessor, CanColor, CanDisable
-{
-  protected _animationClasses = {
-    uncheckedToChecked: 'mdc-checkbox--anim-unchecked-checked',
-    uncheckedToIndeterminate: 'mdc-checkbox--anim-unchecked-indeterminate',
-    checkedToUnchecked: 'mdc-checkbox--anim-checked-unchecked',
-    checkedToIndeterminate: 'mdc-checkbox--anim-checked-indeterminate',
-    indeterminateToChecked: 'mdc-checkbox--anim-indeterminate-checked',
-    indeterminateToUnchecked: 'mdc-checkbox--anim-indeterminate-unchecked',
-  };
-
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef,
-    ngZone: NgZone,
-    @Attribute('tabindex') tabIndex: string,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional()
-    @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
-    options?: MatCheckboxDefaultOptions,
-  ) {
-    super(
-      'mat-mdc-checkbox-',
-      elementRef,
-      changeDetectorRef,
-      ngZone,
-      tabIndex,
-      animationMode,
-      options,
-    );
-  }
-
-  /** Focuses the checkbox. */
-  focus() {
-    this._inputElement.nativeElement.focus();
-  }
-
-  protected _createChangeEvent(isChecked: boolean) {
-    const event = new MatCheckboxChange();
-    event.source = this;
-    event.checked = isChecked;
-    return event;
-  }
-
-  protected _getAnimationTargetElement() {
-    return this._inputElement?.nativeElement;
-  }
 
   _onInputClick() {
-    super._handleInputClick();
+    this._handleInputClick();
   }
 
   _onTouchTargetClick() {
-    super._handleInputClick();
+    this._handleInputClick();
 
     if (!this.disabled) {
       // Normally the input should be focused already, but if the click

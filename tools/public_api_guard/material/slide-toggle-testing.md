@@ -12,22 +12,7 @@ import { HarnessPredicate } from '@angular/cdk/testing';
 import { TestElement } from '@angular/cdk/testing';
 
 // @public
-export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
-    // (undocumented)
-    static hostSelector: string;
-    // (undocumented)
-    isChecked(): Promise<boolean>;
-    // (undocumented)
-    isRequired(): Promise<boolean>;
-    // (undocumented)
-    protected _nativeElement: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    toggle(): Promise<void>;
-    static with<T extends MatSlideToggleHarness>(this: ComponentHarnessConstructor<T>, options?: SlideToggleHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
+export class MatSlideToggleHarness extends ComponentHarness {
     blur(): Promise<void>;
     check(): Promise<void>;
     focus(): Promise<void>;
@@ -35,15 +20,18 @@ export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
     getAriaLabelledby(): Promise<string | null>;
     getLabelText(): Promise<string>;
     getName(): Promise<string | null>;
-    abstract isChecked(): Promise<boolean>;
+    // (undocumented)
+    static hostSelector: string;
+    isChecked(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;
     isRequired(): Promise<boolean>;
     isValid(): Promise<boolean>;
     // (undocumented)
-    protected abstract _nativeElement: AsyncFactoryFn<TestElement>;
-    abstract toggle(): Promise<void>;
+    _nativeElement: AsyncFactoryFn<TestElement>;
+    toggle(): Promise<void>;
     uncheck(): Promise<void>;
+    static with<T extends MatSlideToggleHarness>(this: ComponentHarnessConstructor<T>, options?: SlideToggleHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public

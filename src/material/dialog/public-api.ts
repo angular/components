@@ -10,6 +10,6 @@ export * from './dialog';
 export * from './dialog-config';
 export * from './dialog-ref';
 export * from './dialog-content-directives';
-export {_MatDialogContainerBase, MatDialogContainer} from './dialog-container';
+export {MatDialogContainer} from './dialog-container';
 export * from './module';
 export {matDialogAnimations, _defaultParams} from './dialog-animations';

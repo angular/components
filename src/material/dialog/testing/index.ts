@@ -7,4 +7,4 @@
  */
 
 export * from './public-api';
-export {_MatDialogHarnessBase} from './dialog-harness';
+export {MatDialogHarness} from './dialog-harness';

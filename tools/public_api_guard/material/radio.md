@@ -35,29 +35,18 @@ export const MAT_RADIO_DEFAULT_OPTIONS: InjectionToken<MatRadioDefaultOptions>;
 export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions;
 
 // @public
-export const MAT_RADIO_GROUP: InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>;
+export const MAT_RADIO_GROUP: InjectionToken<MatRadioGroup>;
 
 // @public
 export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class MatRadioButton extends _MatRadioButtonBase {
-    constructor(radioGroup: MatRadioGroup, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _providerOverride?: MatRadioDefaultOptions, tabIndex?: string);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatRadioButton, "mat-radio-button", ["matRadioButton"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatRadioButton, [{ optional: true; }, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
-}
-
-// @public
-export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex {
-    constructor(radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _providerOverride?: MatRadioDefaultOptions | undefined, tabIndex?: string);
+export class MatRadioButton extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex {
+    constructor(radioGroup: MatRadioGroup, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _providerOverride?: MatRadioDefaultOptions | undefined, tabIndex?: string);
     ariaDescribedby: string;
     ariaLabel: string;
     ariaLabelledby: string;
     readonly change: EventEmitter<MatRadioChange>;
-    // (undocumented)
-    protected _changeDetector: ChangeDetectorRef;
     get checked(): boolean;
     set checked(value: BooleanInput);
     get color(): ThemePalette;
@@ -87,24 +76,24 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
     _onInputClick(event: Event): void;
     _onInputInteraction(event: Event): void;
     _onTouchTargetClick(event: Event): void;
-    radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>;
+    radioGroup: MatRadioGroup;
     get required(): boolean;
     set required(value: BooleanInput);
     protected _setDisabled(value: boolean): void;
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatRadioButtonBase, never, never, { "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, { "change": "change"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatRadioButton, "mat-radio-button", ["matRadioButton"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, { "change": "change"; }, never, ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatRadioButtonBase, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatRadioButton, [{ optional: true; }, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
 
 // @public
 export class MatRadioChange {
     constructor(
-    source: _MatRadioButtonBase,
+    source: MatRadioButton,
     value: any);
-    source: _MatRadioButtonBase;
+    source: MatRadioButton;
     value: any;
 }
 
@@ -115,16 +104,7 @@ export interface MatRadioDefaultOptions {
 }
 
 // @public
-export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
-    _radios: QueryList<MatRadioButton>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRadioGroup, "mat-radio-group", ["matRadioGroup"], {}, {}, ["_radios"], never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatRadioGroup, never>;
-}
-
-// @public
-export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implements AfterContentInit, OnDestroy, ControlValueAccessor {
+export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
     constructor(_changeDetector: ChangeDetectorRef);
     readonly change: EventEmitter<MatRadioChange>;
     // (undocumented)
@@ -144,22 +124,22 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
     // (undocumented)
     ngOnDestroy(): void;
     onTouched: () => any;
-    abstract _radios: QueryList<T>;
+    _radios: QueryList<MatRadioButton>;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: any): void;
     get required(): boolean;
     set required(value: BooleanInput);
-    get selected(): T | null;
-    set selected(selected: T | null);
+    get selected(): MatRadioButton | null;
+    set selected(selected: MatRadioButton | null);
     setDisabledState(isDisabled: boolean): void;
     _touch(): void;
     get value(): any;
     set value(newValue: any);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatRadioGroupBase<any>, never, never, { "color": { "alias": "color"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRadioGroup, "mat-radio-group", ["matRadioGroup"], { "color": { "alias": "color"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, ["_radios"], never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatRadioGroupBase<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatRadioGroup, never>;
 }
 
 // @public (undocumented)

@@ -100,11 +100,22 @@ export type MatTabBodyPositionState =
   | 'right-origin-center';
 
 /**
- * Base class with all of the `MatTabBody` functionality.
+ * Wrapper for the contents of a tab.
  * @docs-private
  */
-@Directive()
-export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
+@Component({
+  selector: 'mat-tab-body',
+  templateUrl: 'tab-body.html',
+  styleUrls: ['tab-body.css'],
+  encapsulation: ViewEncapsulation.None,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
+  animations: [matTabsAnimations.translateTab],
+  host: {
+    'class': 'mat-mdc-tab-body',
+  },
+})
+export class MatTabBody implements OnInit, OnDestroy {
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
   private _positionIndex: number;
 
@@ -130,7 +141,7 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
   /** The portal host inside of this container into which the tab body content will be loaded. */
-  abstract _portalHost: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet) _portalHost: CdkPortalOutlet;
 
   /** The tab body content to display. */
   @Input('content') _content: TemplatePortal;
@@ -243,34 +254,6 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
     }
 
     return 'right-origin-center';
-  }
-}
-
-/**
- * Wrapper for the contents of a tab.
- * @docs-private
- */
-@Component({
-  selector: 'mat-tab-body',
-  templateUrl: 'tab-body.html',
-  styleUrls: ['tab-body.css'],
-  encapsulation: ViewEncapsulation.None,
-  // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
-  animations: [matTabsAnimations.translateTab],
-  host: {
-    'class': 'mat-mdc-tab-body',
-  },
-})
-export class MatTabBody extends _MatTabBodyBase {
-  @ViewChild(CdkPortalOutlet) _portalHost: CdkPortalOutlet;
-
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef,
-  ) {
-    super(elementRef, dir, changeDetectorRef);
   }
 }
 

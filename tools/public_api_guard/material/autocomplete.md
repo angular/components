@@ -25,9 +25,7 @@ import * as i7 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOptgroup } from '@angular/material/core';
-import { _MatOptgroupBase } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
-import { _MatOptionBase } from '@angular/material/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -68,39 +66,10 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 // @public
 export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
-// @public (undocumented)
-export class MatAutocomplete extends _MatAutocompleteBase implements OnDestroy {
-    // (undocumented)
-    _animationDone: EventEmitter<AnimationEvent_2>;
-    // (undocumented)
-    protected _hiddenClass: string;
-    get hideSingleSelectionIndicator(): boolean;
-    set hideSingleSelectionIndicator(value: BooleanInput);
-    // (undocumented)
-    ngOnDestroy(): void;
-    optionGroups: QueryList<MatOptgroup>;
-    options: QueryList<MatOption>;
-    // (undocumented)
-    protected _skipPredicate(_option: _MatOptionBase): boolean;
-    _syncParentProperties(): void;
-    // (undocumented)
-    protected _visibleClass: string;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, {}, ["optionGroups", "options"], ["*"], false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocomplete, never>;
-}
-
 // @public
-export interface MatAutocompleteActivatedEvent {
-    option: _MatOptionBase | null;
-    source: _MatAutocompleteBase;
-}
-
-// @public
-export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase implements AfterContentInit, CanDisableRipple, OnDestroy {
+export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterContentInit, CanDisableRipple, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _defaults: MatAutocompleteDefaultOptions, platform?: Platform);
-    abstract _animationDone: EventEmitter<AnimationEvent_2> | null;
+    _animationDone: EventEmitter<AnimationEvent_2>;
     ariaLabel: string;
     ariaLabelledby: string;
     get autoActiveFirstOption(): boolean;
@@ -116,24 +85,25 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     // (undocumented)
     protected _defaults: MatAutocompleteDefaultOptions;
     displayWith: ((value: any) => string) | null;
-    _emitSelectEvent(option: _MatOptionBase): void;
+    _emitSelectEvent(option: MatOption): void;
     _getPanelAriaLabelledby(labelId: string | null): string | null;
     _getScrollTop(): number;
-    protected abstract _hiddenClass: string;
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: BooleanInput);
     id: string;
     readonly inertGroups: boolean;
     get isOpen(): boolean;
     // (undocumented)
     _isOpen: boolean;
-    _keyManager: ActiveDescendantKeyManager<_MatOptionBase>;
+    _keyManager: ActiveDescendantKeyManager<MatOption>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly opened: EventEmitter<void>;
     readonly optionActivated: EventEmitter<MatAutocompleteActivatedEvent>;
-    abstract optionGroups: QueryList<_MatOptgroupBase>;
-    abstract options: QueryList<_MatOptionBase>;
+    optionGroups: QueryList<MatOptgroup>;
+    options: QueryList<MatOption>;
     readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent>;
     panel: ElementRef;
     panelWidth: string | number;
@@ -144,13 +114,19 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     _setVisibility(): void;
     showPanel: boolean;
     // (undocumented)
-    protected _skipPredicate(option: _MatOptionBase): boolean;
+    protected _skipPredicate(): boolean;
+    _syncParentProperties(): void;
     template: TemplateRef<any>;
-    protected abstract _visibleClass: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatAutocompleteBase, never, never, { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"], ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatAutocompleteBase, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocomplete, never>;
+}
+
+// @public
+export interface MatAutocompleteActivatedEvent {
+    option: MatOption | null;
+    source: MatAutocomplete;
 }
 
 // @public
@@ -173,7 +149,10 @@ export class MatAutocompleteModule {
 }
 
 // @public
-export class MatAutocompleteOrigin extends _MatAutocompleteOriginBase {
+export class MatAutocompleteOrigin {
+    constructor(
+    elementRef: ElementRef<HTMLElement>);
+    elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatAutocompleteOrigin, "[matAutocompleteOrigin]", ["matAutocompleteOrigin"], {}, {}, never, never, false, never>;
     // (undocumented)
@@ -181,46 +160,24 @@ export class MatAutocompleteOrigin extends _MatAutocompleteOriginBase {
 }
 
 // @public
-export abstract class _MatAutocompleteOriginBase {
-    constructor(
-    elementRef: ElementRef<HTMLElement>);
-    elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatAutocompleteOriginBase, never, never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatAutocompleteOriginBase, never>;
-}
-
-// @public
 export class MatAutocompleteSelectedEvent {
     constructor(
-    source: _MatAutocompleteBase,
-    option: _MatOptionBase);
-    option: _MatOptionBase;
-    source: _MatAutocompleteBase;
-}
-
-// @public (undocumented)
-export class MatAutocompleteTrigger extends _MatAutocompleteTriggerBase {
-    // (undocumented)
-    protected _aboveClass: string;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatAutocompleteTrigger, "input[matAutocomplete], textarea[matAutocomplete]", ["matAutocompleteTrigger"], {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocompleteTrigger, never>;
+    source: MatAutocomplete,
+    option: MatOption);
+    option: MatOption;
+    source: MatAutocomplete;
 }
 
 // @public
-export abstract class _MatAutocompleteTriggerBase implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
+export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
     constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _viewContainerRef: ViewContainerRef, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality | null, _formField: MatFormField | null, _document: any, _viewportRuler: ViewportRuler, _defaults?: MatAutocompleteDefaultOptions | null | undefined);
-    protected abstract _aboveClass: string;
-    get activeOption(): _MatOptionBase | null;
-    autocomplete: _MatAutocompleteBase;
+    get activeOption(): MatOption | null;
+    autocomplete: MatAutocomplete;
     autocompleteAttribute: string;
     get autocompleteDisabled(): boolean;
     set autocompleteDisabled(value: BooleanInput);
     closePanel(): void;
-    connectedTo: _MatAutocompleteOriginBase;
+    connectedTo: MatAutocompleteOrigin;
     // (undocumented)
     _handleClick(): void;
     // (undocumented)
@@ -252,9 +209,9 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatAutocompleteTriggerBase, never, never, { "autocomplete": { "alias": "matAutocomplete"; "required": false; }; "position": { "alias": "matAutocompletePosition"; "required": false; }; "connectedTo": { "alias": "matAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "matAutocompleteDisabled"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatAutocompleteTrigger, "input[matAutocomplete], textarea[matAutocomplete]", ["matAutocompleteTrigger"], { "autocomplete": { "alias": "matAutocomplete"; "required": false; }; "position": { "alias": "matAutocompletePosition"; "required": false; }; "connectedTo": { "alias": "matAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "matAutocompleteDisabled"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatAutocompleteTriggerBase, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, { optional: true; }, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, { optional: true; }, null, { optional: true; }]>;
 }
 
 // (No @packageDocumentation comment for this package)

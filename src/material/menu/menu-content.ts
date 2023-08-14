@@ -29,8 +29,12 @@ import {Subject} from 'rxjs';
  */
 export const MAT_MENU_CONTENT = new InjectionToken<MatMenuContent>('MatMenuContent');
 
-@Directive()
-export abstract class _MatMenuContentBase implements OnDestroy {
+/** Menu content that will be rendered lazily once the menu is opened. */
+@Directive({
+  selector: 'ng-template[matMenuContent]',
+  providers: [{provide: MAT_MENU_CONTENT, useExisting: MatMenuContent}],
+})
+export class MatMenuContent implements OnDestroy {
   private _portal: TemplatePortal<any>;
   private _outlet: DomPortalOutlet;
 
@@ -125,10 +129,3 @@ export abstract class _MatMenuContentBase implements OnDestroy {
     }
   }
 }
-
-/** Menu content that will be rendered lazily once the menu is opened. */
-@Directive({
-  selector: 'ng-template[matMenuContent]',
-  providers: [{provide: MAT_MENU_CONTENT, useExisting: MatMenuContent}],
-})
-export class MatMenuContent extends _MatMenuContentBase {}

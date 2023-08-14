@@ -84,36 +84,18 @@ export interface MatRowHarnessColumnsText {
 }
 
 // @public
-export class MatTableHarness extends _MatTableHarnessBase<typeof MatHeaderRowHarness, MatHeaderRowHarness, typeof MatRowHarness, MatRowHarness, typeof MatFooterRowHarness, MatFooterRowHarness> {
-    // (undocumented)
-    protected _footerRowHarness: typeof MatFooterRowHarness;
-    // (undocumented)
-    protected _headerRowHarness: typeof MatHeaderRowHarness;
-    static hostSelector: string;
-    // (undocumented)
-    protected _rowHarness: typeof MatRowHarness;
-    static with<T extends MatTableHarness>(this: ComponentHarnessConstructor<T>, options?: TableHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatTableHarnessBase<HeaderRowType extends ComponentHarnessConstructor<HeaderRow> & {
-    with: (options?: RowHarnessFilters) => HarnessPredicate<HeaderRow>;
-}, HeaderRow extends RowBase, RowType extends ComponentHarnessConstructor<Row> & {
-    with: (options?: RowHarnessFilters) => HarnessPredicate<Row>;
-}, Row extends RowBase, FooterRowType extends ComponentHarnessConstructor<FooterRow> & {
-    with: (options?: RowHarnessFilters) => HarnessPredicate<FooterRow>;
-}, FooterRow extends RowBase> extends ContentContainerComponentHarness<string> {
-    // (undocumented)
-    protected abstract _footerRowHarness: FooterRowType;
+export class MatTableHarness extends ContentContainerComponentHarness<string> {
     getCellTextByColumnName(): Promise<MatTableHarnessColumnsText>;
     getCellTextByIndex(): Promise<string[][]>;
-    getFooterRows(filter?: RowHarnessFilters): Promise<FooterRow[]>;
-    getHeaderRows(filter?: RowHarnessFilters): Promise<HeaderRow[]>;
-    getRows(filter?: RowHarnessFilters): Promise<Row[]>;
+    getFooterRows(filter?: RowHarnessFilters): Promise<MatFooterRowHarness[]>;
+    getHeaderRows(filter?: RowHarnessFilters): Promise<MatHeaderRowHarness[]>;
+    getRows(filter?: RowHarnessFilters): Promise<MatRowHarness[]>;
     // (undocumented)
-    protected abstract _headerRowHarness: HeaderRowType;
+    _headerRowHarness: typeof MatHeaderRowHarness;
+    static hostSelector: string;
     // (undocumented)
-    protected abstract _rowHarness: RowType;
+    _rowHarness: typeof MatRowHarness;
+    static with<T extends MatTableHarness>(this: ComponentHarnessConstructor<T>, options?: TableHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public

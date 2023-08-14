@@ -22,11 +22,26 @@ export const enum MatDialogSection {
   ACTIONS = '.mat-mdc-dialog-actions',
 }
 
-/** Base class for the `MatDialogHarness` implementation. */
-export class _MatDialogHarnessBase
+/** Harness for interacting with a standard `MatDialog` in tests. */
+export class MatDialogHarness
   // @breaking-change 14.0.0 change generic type to MatDialogSection.
   extends ContentContainerComponentHarness<MatDialogSection | string>
 {
+  /** The selector for the host element of a `MatDialog` instance. */
+  static hostSelector = '.mat-mdc-dialog-container';
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a dialog with specific attributes.
+   * @param options Options for filtering which dialog instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatDialogHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: DialogHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options);
+  }
+
   protected _title = this.locatorForOptional(MatDialogSection.TITLE);
   protected _content = this.locatorForOptional(MatDialogSection.CONTENT);
   protected _actions = this.locatorForOptional(MatDialogSection.ACTIONS);
@@ -86,23 +101,5 @@ export class _MatDialogHarnessBase
   /** Gets the dialog's actions text. This only works if the dialog is using mat-dialog-actions. */
   async getActionsText() {
     return (await this._actions())?.text() ?? '';
-  }
-}
-
-/** Harness for interacting with a standard `MatDialog` in tests. */
-export class MatDialogHarness extends _MatDialogHarnessBase {
-  /** The selector for the host element of a `MatDialog` instance. */
-  static hostSelector = '.mat-mdc-dialog-container';
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a dialog with specific attributes.
-   * @param options Options for filtering which dialog instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with<T extends MatDialogHarness>(
-    this: ComponentHarnessConstructor<T>,
-    options: DialogHarnessFilters = {},
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options);
   }
 }

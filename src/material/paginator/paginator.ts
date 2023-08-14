@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Directive,
   EventEmitter,
   Inject,
   InjectionToken,
@@ -102,22 +101,36 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
 /** @docs-private */
 const _MatPaginatorMixinBase = mixinDisabled(mixinInitialized(class {}));
 
+let nextUniqueId = 0;
+
 /**
- * Base class with all of the `MatPaginator` functionality.
- * @docs-private
+ * Component to provide navigation between paged information. Displays the size of the current
+ * page, user-selectable options to change that size, what items are being shown, and
+ * navigational button to go to the previous or next page.
  */
-@Directive()
-export abstract class _MatPaginatorBase<
-    O extends {
-      pageSize?: number;
-      pageSizeOptions?: number[];
-      hidePageSize?: boolean;
-      showFirstLastButtons?: boolean;
-    },
-  >
+@Component({
+  selector: 'mat-paginator',
+  exportAs: 'matPaginator',
+  templateUrl: 'paginator.html',
+  styleUrls: ['paginator.css'],
+  inputs: ['disabled'],
+  host: {
+    'class': 'mat-mdc-paginator',
+    'role': 'group',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class MatPaginator
   extends _MatPaginatorMixinBase
   implements OnInit, OnDestroy, CanDisable, HasInitialized
 {
+  /** If set, styles the "page size" form field with the designated style. */
+  _formFieldAppearance?: MatFormFieldAppearance;
+
+  /** ID for the DOM node containing the paginator's items per page label. */
+  readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
+
   private _initialized: boolean;
   private _intlChanges: Subscription;
 
@@ -163,7 +176,7 @@ export abstract class _MatPaginatorBase<
     return this._pageSizeOptions;
   }
   set pageSizeOptions(value: number[] | readonly number[]) {
-    this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
+    this._pageSizeOptions = (value || ([] as number[])).map(p => coerceNumberProperty(p));
     this._updateDisplayedPageSizeOptions();
   }
   private _pageSizeOptions: number[] = [];
@@ -200,7 +213,7 @@ export abstract class _MatPaginatorBase<
   constructor(
     public _intl: MatPaginatorIntl,
     private _changeDetectorRef: ChangeDetectorRef,
-    defaults?: O,
+    @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS) defaults?: MatPaginatorDefaultOptions,
   ) {
     super();
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
@@ -224,6 +237,8 @@ export abstract class _MatPaginatorBase<
         this._showFirstLastButtons = showFirstLastButtons;
       }
     }
+
+    this._formFieldAppearance = defaults?.formFieldAppearance || 'outline';
   }
 
   ngOnInit() {
@@ -365,42 +380,5 @@ export abstract class _MatPaginatorBase<
       pageSize: this.pageSize,
       length: this.length,
     });
-  }
-}
-
-let nextUniqueId = 0;
-
-/**
- * Component to provide navigation between paged information. Displays the size of the current
- * page, user-selectable options to change that size, what items are being shown, and
- * navigational button to go to the previous or next page.
- */
-@Component({
-  selector: 'mat-paginator',
-  exportAs: 'matPaginator',
-  templateUrl: 'paginator.html',
-  styleUrls: ['paginator.css'],
-  inputs: ['disabled'],
-  host: {
-    'class': 'mat-mdc-paginator',
-    'role': 'group',
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-})
-export class MatPaginator extends _MatPaginatorBase<MatPaginatorDefaultOptions> {
-  /** If set, styles the "page size" form field with the designated style. */
-  _formFieldAppearance?: MatFormFieldAppearance;
-
-  /** ID for the DOM node containing the paginator's items per page label. */
-  readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
-
-  constructor(
-    intl: MatPaginatorIntl,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS) defaults?: MatPaginatorDefaultOptions,
-  ) {
-    super(intl, changeDetectorRef, defaults);
-    this._formFieldAppearance = defaults?.formFieldAppearance || 'outline';
   }
 }

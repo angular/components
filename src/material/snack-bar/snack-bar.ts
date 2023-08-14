@@ -20,11 +20,10 @@ import {
   Optional,
   SkipSelf,
   TemplateRef,
-  Type,
 } from '@angular/core';
 import {MatSnackBarModule} from './module';
 import {SimpleSnackBar, TextOnlySnackBar} from './simple-snack-bar';
-import {_MatSnackBarContainerBase, MatSnackBarContainer} from './snack-bar-container';
+import {MatSnackBarContainer} from './snack-bar-container';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
@@ -44,8 +43,11 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfi
   },
 );
 
-@Injectable()
-export abstract class _MatSnackBarBase implements OnDestroy {
+/**
+ * Service to dispatch Material Design snack bar messages.
+ */
+@Injectable({providedIn: MatSnackBarModule})
+export class MatSnackBar implements OnDestroy {
   /**
    * Reference to the current snack bar in the view *at this level* (in the Angular injector tree).
    * If there is a parent snack-bar service, all operations should delegate to that parent
@@ -54,13 +56,13 @@ export abstract class _MatSnackBarBase implements OnDestroy {
   private _snackBarRefAtThisLevel: MatSnackBarRef<any> | null = null;
 
   /** The component that should be rendered as the snack bar's simple component. */
-  protected abstract simpleSnackBarComponent: Type<TextOnlySnackBar>;
+  simpleSnackBarComponent = SimpleSnackBar;
 
   /** The container component that attaches the provided template or component. */
-  protected abstract snackBarContainerComponent: Type<_MatSnackBarContainerBase>;
+  snackBarContainerComponent = MatSnackBarContainer;
 
   /** The CSS class to apply for handset mode. */
-  protected abstract handsetCssClass: string;
+  handsetCssClass = 'mat-mdc-snack-bar-handset';
 
   /** Reference to the currently opened snackbar at *any* level. */
   get _openedSnackBarRef(): MatSnackBarRef<any> | null {
@@ -81,7 +83,7 @@ export abstract class _MatSnackBarBase implements OnDestroy {
     private _live: LiveAnnouncer,
     private _injector: Injector,
     private _breakpointObserver: BreakpointObserver,
-    @Optional() @SkipSelf() private _parentSnackBar: _MatSnackBarBase,
+    @Optional() @SkipSelf() private _parentSnackBar: MatSnackBar,
     @Inject(MAT_SNACK_BAR_DEFAULT_OPTIONS) private _defaultConfig: MatSnackBarConfig,
   ) {}
 
@@ -161,7 +163,7 @@ export abstract class _MatSnackBarBase implements OnDestroy {
   private _attachSnackBarContainer(
     overlayRef: OverlayRef,
     config: MatSnackBarConfig,
-  ): _MatSnackBarContainerBase {
+  ): MatSnackBarContainer {
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injector = Injector.create({
       parent: userInjector || this._injector,
@@ -173,8 +175,7 @@ export abstract class _MatSnackBarBase implements OnDestroy {
       config.viewContainerRef,
       injector,
     );
-    const containerRef: ComponentRef<_MatSnackBarContainerBase> =
-      overlayRef.attach(containerPortal);
+    const containerRef: ComponentRef<MatSnackBarContainer> = overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
     return containerRef.instance;
   }
@@ -310,26 +311,5 @@ export abstract class _MatSnackBarBase implements OnDestroy {
         {provide: MAT_SNACK_BAR_DATA, useValue: config.data},
       ],
     });
-  }
-}
-
-/**
- * Service to dispatch Material Design snack bar messages.
- */
-@Injectable({providedIn: MatSnackBarModule})
-export class MatSnackBar extends _MatSnackBarBase {
-  protected override simpleSnackBarComponent = SimpleSnackBar;
-  protected override snackBarContainerComponent = MatSnackBarContainer;
-  protected override handsetCssClass = 'mat-mdc-snack-bar-handset';
-
-  constructor(
-    overlay: Overlay,
-    live: LiveAnnouncer,
-    injector: Injector,
-    breakpointObserver: BreakpointObserver,
-    @Optional() @SkipSelf() parentSnackBar: MatSnackBar,
-    @Inject(MAT_SNACK_BAR_DEFAULT_OPTIONS) defaultConfig: MatSnackBarConfig,
-  ) {
-    super(overlay, live, injector, breakpointObserver, parentSnackBar, defaultConfig);
   }
 }

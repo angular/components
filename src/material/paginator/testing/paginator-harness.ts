@@ -7,30 +7,41 @@
  */
 
 import {
-  AsyncFactoryFn,
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessPredicate,
-  TestElement,
 } from '@angular/cdk/testing';
 import {MatSelectHarness} from '@angular/material/select/testing';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {PaginatorHarnessFilters} from './paginator-harness-filters';
 
-export abstract class _MatPaginatorHarnessBase extends ComponentHarness {
-  protected abstract _nextButton: AsyncFactoryFn<TestElement>;
-  protected abstract _previousButton: AsyncFactoryFn<TestElement>;
-  protected abstract _firstPageButton: AsyncFactoryFn<TestElement | null>;
-  protected abstract _lastPageButton: AsyncFactoryFn<TestElement | null>;
-  protected abstract _select: AsyncFactoryFn<
-    | (ComponentHarness & {
-        getValueText(): Promise<string>;
-        clickOptions(...filters: unknown[]): Promise<void>;
-      })
-    | null
-  >;
-  protected abstract _pageSizeFallback: AsyncFactoryFn<TestElement>;
-  protected abstract _rangeLabel: AsyncFactoryFn<TestElement>;
+/** Harness for interacting with a mat-paginator in tests. */
+export class MatPaginatorHarness extends ComponentHarness {
+  /** Selector used to find paginator instances. */
+  static hostSelector = '.mat-mdc-paginator';
+  private _nextButton = this.locatorFor('.mat-mdc-paginator-navigation-next');
+  private _previousButton = this.locatorFor('.mat-mdc-paginator-navigation-previous');
+  private _firstPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-first');
+  private _lastPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-last');
+  _select = this.locatorForOptional(
+    MatSelectHarness.with({
+      ancestor: '.mat-mdc-paginator-page-size',
+    }),
+  );
+  private _pageSizeFallback = this.locatorFor('.mat-mdc-paginator-page-size-value');
+  _rangeLabel = this.locatorFor('.mat-mdc-paginator-range-label');
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a paginator with specific attributes.
+   * @param options Options for filtering which paginator instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatPaginatorHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: PaginatorHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options);
+  }
 
   /** Goes to the next page in the paginator. */
   async goToNextPage(): Promise<void> {
@@ -113,34 +124,5 @@ export abstract class _MatPaginatorHarnessBase extends ComponentHarness {
   /** Gets the text of the range label of the paginator. */
   async getRangeLabel(): Promise<string> {
     return (await this._rangeLabel()).text();
-  }
-}
-
-/** Harness for interacting with an MDC-based mat-paginator in tests. */
-export class MatPaginatorHarness extends _MatPaginatorHarnessBase {
-  /** Selector used to find paginator instances. */
-  static hostSelector = '.mat-mdc-paginator';
-  protected _nextButton = this.locatorFor('.mat-mdc-paginator-navigation-next');
-  protected _previousButton = this.locatorFor('.mat-mdc-paginator-navigation-previous');
-  protected _firstPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-first');
-  protected _lastPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-last');
-  protected _select = this.locatorForOptional(
-    MatSelectHarness.with({
-      ancestor: '.mat-mdc-paginator-page-size',
-    }),
-  );
-  protected _pageSizeFallback = this.locatorFor('.mat-mdc-paginator-page-size-value');
-  protected _rangeLabel = this.locatorFor('.mat-mdc-paginator-range-label');
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a paginator with specific attributes.
-   * @param options Options for filtering which paginator instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with<T extends MatPaginatorHarness>(
-    this: ComponentHarnessConstructor<T>,
-    options: PaginatorHarnessFilters = {},
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options);
   }
 }

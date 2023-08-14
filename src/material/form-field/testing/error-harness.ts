@@ -19,24 +19,8 @@ export interface ErrorHarnessFilters extends BaseHarnessFilters {
   text?: string | RegExp;
 }
 
-export abstract class _MatErrorHarnessBase extends ComponentHarness {
-  /** Gets a promise for the error's label text. */
-  async getText(): Promise<string> {
-    return (await this.host()).text();
-  }
-
-  protected static _getErrorPredicate<T extends MatErrorHarness>(
-    type: ComponentHarnessConstructor<T>,
-    options: ErrorHarnessFilters,
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(type, options).addOption('text', options.text, (harness, text) =>
-      HarnessPredicate.stringMatches(harness.getText(), text),
-    );
-  }
-}
-
 /** Harness for interacting with an MDC-based `mat-error` in tests. */
-export class MatErrorHarness extends _MatErrorHarnessBase {
+export class MatErrorHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-form-field-error';
 
   /**
@@ -49,6 +33,20 @@ export class MatErrorHarness extends _MatErrorHarnessBase {
     this: ComponentHarnessConstructor<T>,
     options: ErrorHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return _MatErrorHarnessBase._getErrorPredicate(this, options);
+    return MatErrorHarness._getErrorPredicate(this, options);
+  }
+
+  protected static _getErrorPredicate<T extends MatErrorHarness>(
+    type: ComponentHarnessConstructor<T>,
+    options: ErrorHarnessFilters,
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(type, options).addOption('text', options.text, (harness, text) =>
+      HarnessPredicate.stringMatches(harness.getText(), text),
+    );
+  }
+
+  /** Gets a promise for the error's label text. */
+  async getText(): Promise<string> {
+    return (await this.host()).text();
   }
 }

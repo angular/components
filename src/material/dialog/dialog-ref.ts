@@ -11,7 +11,7 @@ import {FocusOrigin} from '@angular/cdk/a11y';
 import {merge, Observable, Subject} from 'rxjs';
 import {DialogRef} from '@angular/cdk/dialog';
 import {DialogPosition, MatDialogConfig} from './dialog-config';
-import {_MatDialogContainerBase} from './dialog-container';
+import {MatDialogContainer} from './dialog-container';
 import {filter, take} from 'rxjs/operators';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {GlobalPositionStrategy} from '@angular/cdk/overlay';
@@ -67,7 +67,7 @@ export class MatDialogRef<T, R = any> {
   constructor(
     private _ref: DialogRef<R, T>,
     config: MatDialogConfig,
-    public _containerInstance: _MatDialogContainerBase,
+    public _containerInstance: MatDialogContainer,
   ) {
     this.disableClose = config.disableClose;
     this.id = _ref.id;

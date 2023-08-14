@@ -37,7 +37,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatOptgroup } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
-import { _MatOptionBase } from '@angular/material/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -75,50 +74,7 @@ export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): (
 export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
 
 // @public (undocumented)
-export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit {
-    // (undocumented)
-    close(): void;
-    // (undocumented)
-    customTrigger: MatSelectTrigger;
-    // (undocumented)
-    protected _getChangeEvent(value: any): MatSelectChange;
-    get hideSingleSelectionIndicator(): boolean;
-    set hideSingleSelectionIndicator(value: BooleanInput);
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    open(): void;
-    // (undocumented)
-    optionGroups: QueryList<MatOptgroup>;
-    // (undocumented)
-    options: QueryList<MatOption>;
-    _overlayWidth: string | number;
-    panelWidth: string | number | null;
-    // (undocumented)
-    protected _positioningSettled(): void;
-    // (undocumented)
-    _positions: ConnectedPosition[];
-    _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
-    protected _scrollOptionIntoView(index: number): void;
-    // (undocumented)
-    get shouldLabelFloat(): boolean;
-    // (undocumented)
-    protected _skipPredicate: (option: MatOption) => boolean;
-    _syncParentProperties(): void;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, never>;
-}
-
-// @public
-export const matSelectAnimations: {
-    readonly transformPanelWrap: AnimationTriggerMetadata;
-    readonly transformPanel: AnimationTriggerMetadata;
-};
-
-// @public
-export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
+export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
     constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _defaultOptions?: MatSelectConfig | undefined);
     ariaLabel: string;
     ariaLabelledby: string;
@@ -130,7 +86,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;
-    abstract customTrigger: {};
+    customTrigger: MatSelectTrigger;
     // (undocumented)
     protected _defaultOptions?: MatSelectConfig | undefined;
     protected readonly _destroy: Subject<void>;
@@ -141,10 +97,11 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     focus(options?: FocusOptions): void;
     get focused(): boolean;
     _getAriaActiveDescendant(): string | null;
-    protected abstract _getChangeEvent(value: any): C;
     _getPanelAriaLabelledby(): string | null;
     _getPanelTheme(): string;
     _handleKeydown(event: KeyboardEvent): void;
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: BooleanInput);
     get id(): string;
     set id(value: string);
     _isRtl(): boolean;
@@ -173,12 +130,13 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     open(): void;
     readonly openedChange: EventEmitter<boolean>;
     readonly _openedStream: Observable<void>;
-    abstract optionGroups: QueryList<MatOptgroup>;
-    abstract options: QueryList<_MatOptionBase>;
+    optionGroups: QueryList<MatOptgroup>;
+    options: QueryList<MatOption>;
     readonly optionSelectionChanges: Observable<MatOptionSelectionChange>;
     protected _overlayDir: CdkConnectedOverlay;
     // (undocumented)
     _overlayPanelClass: string | string[];
+    _overlayWidth: string | number;
     panel: ElementRef;
     panelClass: string | string[] | Set<string> | {
         [key: string]: any;
@@ -186,27 +144,27 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     protected _panelDoneAnimating(isOpen: boolean): void;
     readonly _panelDoneAnimatingStream: Subject<string>;
     get panelOpen(): boolean;
+    panelWidth: string | number | null;
     // (undocumented)
     protected _parentFormField: MatFormField;
     get placeholder(): string;
     set placeholder(value: string);
-    protected abstract _positioningSettled(): void;
-    abstract _positions: ConnectedPosition[];
+    _positions: ConnectedPosition[];
+    _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => {}): void;
     get required(): boolean;
     set required(value: BooleanInput);
-    protected abstract _scrollOptionIntoView(index: number): void;
+    _scrollOptionIntoView(index: number): void;
     _scrollStrategy: ScrollStrategy;
     get selected(): MatOption | MatOption[];
-    readonly selectionChange: EventEmitter<C>;
+    readonly selectionChange: EventEmitter<MatSelectChange>;
     _selectionModel: SelectionModel<MatOption>;
     setDescribedByIds(ids: string[]): void;
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
-    // (undocumented)
-    protected _skipPredicate(item: MatOption): boolean;
     sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
+    _syncParentProperties(): void;
     toggle(): void;
     trigger: ElementRef;
     get triggerValue(): string;
@@ -221,10 +179,16 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     protected _viewportRuler: ViewportRuler;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatSelectBase<any>, never, never, { "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disableOptionCentering": { "alias": "disableOptionCentering"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "typeaheadDebounceInterval": { "alias": "typeaheadDebounceInterval"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disableOptionCentering": { "alias": "disableOptionCentering"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "typeaheadDebounceInterval": { "alias": "typeaheadDebounceInterval"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "id": { "alias": "id"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatSelectBase<any>, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
 }
+
+// @public
+export const matSelectAnimations: {
+    readonly transformPanelWrap: AnimationTriggerMetadata;
+    readonly transformPanel: AnimationTriggerMetadata;
+};
 
 // @public
 export class MatSelectChange {
