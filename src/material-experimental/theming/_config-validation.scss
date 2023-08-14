@@ -5,14 +5,16 @@
 @use '@angular/material' as mat;
 @use './m3-palettes';
 
-/// Updates an error message by finding `$config` and appending a suffix to it.
+/// Creates an error message by finding `$config` in the existing message and appending a suffix to
+/// it.
 /// @param {List|String} $err The error message.
 /// @param {String} $suffix The suffix to add.
 /// @return {List|String} The updated error message.
-@function _update-dollar-config($err, $suffix) {
+@function _create-dollar-config-error-message($err, $suffix) {
   @if meta.type-of($err) == 'list' {
     @for $i from 1 through list.length($err) {
-      $err: list.set-nth($err, $i, _update-dollar-config(list.nth($err, $i), $suffix));
+      $err: list.set-nth($err, $i,
+        _create-dollar-config-error-message(list.nth($err, $i), $suffix));
     }
   }
   @else if meta.type-of($err) == 'string' {
@@ -66,15 +68,15 @@
   }
   $err: validate-color-config(map.get($config, color));
   @if $err {
-    @return _update-dollar-config($err, '.color');
+    @return _create-dollar-config-error-message($err, '.color');
   }
   $err: validate-typography-config(map.get($config, typography));
   @if $err {
-    @return _update-dollar-config($err, '.typography');
+    @return _create-dollar-config-error-message($err, '.typography');
   }
   $err: validate-density-config(map.get($config, density));
   @if $err {
-    @return _update-dollar-config($err, '.density');
+    @return _create-dollar-config-error-message($err, '.density');
   }
   @return null;
 }
