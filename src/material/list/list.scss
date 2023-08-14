@@ -75,11 +75,6 @@
       @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
     }
   }
-
-  // Add default values for tokens that aren't outputted by the theming API.
-  .mat-mdc-list-base {
-    @include mdc-list-theme.theme(m2-mdc-list.get-unthemable-tokens());
-  }
 }
 
 a.mdc-list-item--activated {
