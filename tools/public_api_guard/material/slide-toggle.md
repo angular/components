@@ -42,7 +42,7 @@ export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: {
 
 // @public (undocumented)
 export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable, CanColor, HasTabIndex, CanDisableRipple {
-    constructor(elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, tabIndex: string, _defaults: MatSlideToggleDefaultOptions, animationMode?: string);
+    constructor(elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, tabIndex: string, defaults: MatSlideToggleDefaultOptions, animationMode?: string);
     ariaDescribedby: string;
     ariaLabel: string | null;
     ariaLabelledby: string | null;
@@ -52,6 +52,8 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     protected _changeDetectorRef: ChangeDetectorRef;
     get checked(): boolean;
     set checked(value: BooleanInput);
+    // (undocumented)
+    defaults: MatSlideToggleDefaultOptions;
     protected _emitChangeEvent(): void;
     focus(): void;
     _focused: boolean;

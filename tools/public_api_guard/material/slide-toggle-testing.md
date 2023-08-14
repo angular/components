@@ -4,10 +4,12 @@
 
 ```ts
 
+import { AsyncFactoryFn } from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { TestElement } from '@angular/cdk/testing';
 
 // @public
 export class MatSlideToggleHarness extends ComponentHarness {
@@ -25,6 +27,8 @@ export class MatSlideToggleHarness extends ComponentHarness {
     isFocused(): Promise<boolean>;
     isRequired(): Promise<boolean>;
     isValid(): Promise<boolean>;
+    // (undocumented)
+    _nativeElement: AsyncFactoryFn<TestElement>;
     toggle(): Promise<void>;
     uncheck(): Promise<void>;
     static with<T extends MatSlideToggleHarness>(this: ComponentHarnessConstructor<T>, options?: SlideToggleHarnessFilters): HarnessPredicate<T>;

@@ -155,6 +155,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     registerOnTouched(fn: () => {}): void;
     get required(): boolean;
     set required(value: BooleanInput);
+    _scrollOptionIntoView(index: number): void;
     _scrollStrategy: ScrollStrategy;
     get selected(): MatOption | MatOption[];
     readonly selectionChange: EventEmitter<MatSelectChange>;

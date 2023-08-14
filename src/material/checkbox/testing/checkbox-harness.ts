@@ -18,7 +18,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 export class MatCheckboxHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-checkbox';
 
-  private _input = this.locatorFor('input');
+  _input = this.locatorFor('input');
   private _label = this.locatorFor('label');
   private _inputContainer = this.locatorFor('.mdc-checkbox');
 

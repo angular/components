@@ -4,10 +4,12 @@
 
 ```ts
 
+import { AsyncFactoryFn } from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { TestElement } from '@angular/cdk/testing';
 
 // @public
 export interface CheckboxHarnessFilters extends BaseHarnessFilters {
@@ -29,6 +31,8 @@ export class MatCheckboxHarness extends ComponentHarness {
     getValue(): Promise<string | null>;
     // (undocumented)
     static hostSelector: string;
+    // (undocumented)
+    _input: AsyncFactoryFn<TestElement>;
     isChecked(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;

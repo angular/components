@@ -17,7 +17,7 @@ import {SlideToggleHarnessFilters} from './slide-toggle-harness-filters';
 /** Harness for interacting with a mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends ComponentHarness {
   private _label = this.locatorFor('label');
-  private _nativeElement = this.locatorFor('button');
+  _nativeElement = this.locatorFor('button');
   static hostSelector = '.mat-mdc-slide-toggle';
 
   /**

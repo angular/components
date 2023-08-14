@@ -25,7 +25,7 @@ import {Subscription} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatTestDialogOpener<T, R> implements OnDestroy {
+export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
   /** Component that should be opened with the MatDialog `open` method. */
   protected static component: ComponentType<unknown> | undefined;
 

@@ -210,15 +210,15 @@ export class MatSlideToggle
     protected _focusMonitor: FocusMonitor,
     protected _changeDetectorRef: ChangeDetectorRef,
     @Attribute('tabindex') tabIndex: string,
-    @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS) private _defaults: MatSlideToggleDefaultOptions,
+    @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS) public defaults: MatSlideToggleDefaultOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
   ) {
     super(elementRef);
     this.tabIndex = parseInt(tabIndex) || 0;
-    this.color = this.defaultColor = _defaults.color || 'accent';
+    this.color = this.defaultColor = defaults.color || 'accent';
     this._noopAnimations = animationMode === 'NoopAnimations';
     this.id = this._uniqueId = `mat-mdc-slide-toggle-${++nextUniqueId}`;
-    this._hideIcon = _defaults.hideIcon ?? false;
+    this._hideIcon = defaults.hideIcon ?? false;
     this._labelId = this._uniqueId + '-label';
   }
 
@@ -285,7 +285,7 @@ export class MatSlideToggle
   _handleClick() {
     this.toggleChange.emit();
 
-    if (!this._defaults.disableToggleValue) {
+    if (!this.defaults.disableToggleValue) {
       this.checked = !this.checked;
       this._onChange(this.checked);
       this.change.emit(new MatSlideToggleChange(this, this.checked));

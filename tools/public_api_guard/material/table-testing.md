@@ -90,7 +90,11 @@ export class MatTableHarness extends ContentContainerComponentHarness<string> {
     getFooterRows(filter?: RowHarnessFilters): Promise<MatFooterRowHarness[]>;
     getHeaderRows(filter?: RowHarnessFilters): Promise<MatHeaderRowHarness[]>;
     getRows(filter?: RowHarnessFilters): Promise<MatRowHarness[]>;
+    // (undocumented)
+    _headerRowHarness: typeof MatHeaderRowHarness;
     static hostSelector: string;
+    // (undocumented)
+    _rowHarness: typeof MatRowHarness;
     static with<T extends MatTableHarness>(this: ComponentHarnessConstructor<T>, options?: TableHarnessFilters): HarnessPredicate<T>;
 }
 

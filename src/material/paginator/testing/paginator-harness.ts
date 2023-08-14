@@ -23,13 +23,13 @@ export class MatPaginatorHarness extends ComponentHarness {
   private _previousButton = this.locatorFor('.mat-mdc-paginator-navigation-previous');
   private _firstPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-first');
   private _lastPageButton = this.locatorForOptional('.mat-mdc-paginator-navigation-last');
-  private _select = this.locatorForOptional(
+  _select = this.locatorForOptional(
     MatSelectHarness.with({
       ancestor: '.mat-mdc-paginator-page-size',
     }),
   );
   private _pageSizeFallback = this.locatorFor('.mat-mdc-paginator-page-size-value');
-  private _rangeLabel = this.locatorFor('.mat-mdc-paginator-range-label');
+  _rangeLabel = this.locatorFor('.mat-mdc-paginator-range-label');
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a paginator with specific attributes.

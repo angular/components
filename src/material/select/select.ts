@@ -303,7 +303,7 @@ export class MatSelect
   ];
 
   /** Scrolls a particular option into the view. */
-  private _scrollOptionIntoView(index: number): void {
+  _scrollOptionIntoView(index: number): void {
     const option = this.options.toArray()[index];
 
     if (option) {
