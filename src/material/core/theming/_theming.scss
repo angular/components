@@ -5,6 +5,8 @@
 @use 'palette';
 @use '../density/private/compatibility';
 
+$theme-legacy-inspection-api-compatibility: true !default;
+
 // Whether duplication warnings should be disabled. Warnings enabled by default.
 $theme-ignore-duplication-warnings: false !default;
 
@@ -544,7 +546,14 @@ $_internals: _mat-theming-internals-do-not-access;
     @return $theme;
   }
   $color: map.get($theme, color);
-  @return map.merge($theme, $color);
+  $m2-config: map.merge($theme, $color);
+  $theme: (
+    _mat-theming-internals-do-not-access: (
+      theme-version: 0,
+      m2-config: $m2-config,
+    )
+  );
+  @return map.merge(if($theme-legacy-inspection-api-compatibility, $m2-config, ()), $theme);
 }
 
 // Gets the theme from the given value that is either already a theme, or a color configuration.
