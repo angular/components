@@ -187,6 +187,12 @@ export class AutocompleteDemo {
     return this._isStateDisabled(index, this.templateDisableStateOption);
   }
 
+  clearTemplateState() {
+    this.modelDir.reset();
+    this.currentState = '';
+    this.tdStates = this.states.slice();
+  }
+
   private _isStateDisabled(stateIndex: number, disableStateOption: DisableStateOption) {
     if (disableStateOption === 'all') {
       return true;
