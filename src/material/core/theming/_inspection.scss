@@ -224,7 +224,8 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @if $system == density {
       @return map.get($theme, $_internals, density-scale) != null;
     }
-    @error 'Valid systems are: base, color, typography, density. Got:' $system;  }
+    @error 'Valid systems are: base, color, typography, density. Got:' $system;
+  }
   @else {
     @error #{'Unrecognized theme version:'} $version;
   }
