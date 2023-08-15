@@ -1,0 +1,104 @@
+@use 'sass:list';
+@use 'sass:map';
+@use './theming';
+@use '../typography/typography-utils';
+
+$_typography-properties: (font, font-family, line-height, font-size, letter-spacing, font-weight);
+
+/// Gets the type of theme represented by a theme object (light or dark).
+/// @param {Map} $theme The theme
+/// @return {String} The type of theme (either `light` or `dark`).
+@function get-theme-type($theme) {
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  $colors: theming.get-color-config($theme);
+  @return if(map.get($colors, is-dark), dark, light);
+}
+
+/// Gets a color from a theme object. This function can take 2 or 3 arguments. If 2 arguments are
+/// passed, the second argument is treated as the name of a color role. If 3 arguments are passed,
+/// the second argument is treated as the name of a color palette (primary, secondary, etc.) and the
+/// third is treated as the palette hue (10, 50, etc.)
+/// @param {Map} $theme The theme
+/// @param {String} $palette-name The name of a color palette.
+/// @param {Number} $hue The palette hue to get (passing this argument means the second argument is
+///   interpreted as a palette name).
+/// @return {Color} The requested theme color.
+@function get-theme-color($theme, $palette-name, $args...) {
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  $colors: theming.get-color-config($theme);
+  $palette: map.get($colors, $palette-name);
+  @if not $palette {
+    @error 'Unrecognized palette name:' $palette-name;
+  }
+  @return theming.get-color-from-palette($palette, $args...);
+}
+
+/// Gets a typography value from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $typescale The typescale name.
+/// @param {String} $property The CSS font property to get
+///   (font, font-family, font-size, font-weight, line-height, or letter-spacing).
+/// @return {*} The value of the requested font property.
+@function get-theme-typography($theme, $typescale, $property) {
+  @if not theme-has($theme, typography) {
+    @error 'Typography information is not available on this theme.';
+  }
+  $typography: theming.get-typography-config($theme);
+  @if $property == font {
+    $font-weight: typography-utils.font-weight($typography, $typescale);
+    $font-size: typography-utils.font-size($typography, $typescale);
+    $line-height: typography-utils.line-height($typography, $typescale);
+    $font-family: typography-utils.font-family($typography, $typescale);
+    @return ($font-weight list.slash($font-size, $line-height) $font-family);
+  }
+  @else if $property == font-family {
+    @return typography-utils.font-family($typography, $typescale);
+  }
+  @else if $property == font-size {
+    @return typography-utils.font-size($typography, $typescale);
+  }
+  @else if $property == font-weight {
+    @return typography-utils.font-weight($typography, $typescale);
+  }
+  @else if $property == line-height {
+    @return typography-utils.line-height($typography, $typescale);
+  }
+  @else if $property == letter-spacing {
+    @return typography-utils.letter-spacing($typography, $typescale);
+  }
+  @else {
+    @error #{'Valid typography properties are: #{$_typography-properties}. Got:'} $property;
+  }
+}
+
+/// Gets the density scale from a theme object.
+/// @param {Map} $theme The theme
+/// @return {Number} The density scale.
+@function get-theme-density($theme) {
+  @if not theme-has($theme, density) {
+    @error 'Density information is not available on this theme.';
+  }
+  $scale: theming.get-density-config($theme);
+  @return theming.clamp-density($scale, -5);
+}
+
+@function theme-has($theme, $system) {
+  $theme: theming.private-legacy-get-theme($theme);
+  @if $system == base {
+    @return true;
+  }
+  @if $system == color {
+    @return theming.get-color-config($theme) != null;
+  }
+  @if $system == typography {
+    @return theming.get-typography-config($theme) != null;
+  }
+  @if $system == density {
+    @return theming.get-density-config($theme, $default: null) != null;
+  }
+  @error 'Valid systems are: base, color, typography, density. Got:' $system;
+}
