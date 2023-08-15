@@ -46,11 +46,33 @@
   .mdc-text-field--filled {
     @include mdc-filled-text-field-theme.theme-styles(
       tokens-mdc-filled-text-field.get-token-slots());
+    @include token-utils.use-tokens(
+      tokens-mdc-filled-text-field.$prefix,
+      tokens-mdc-filled-text-field.get-token-slots()) {
+        .mat-mdc-form-field-text-prefix {
+          @include token-utils.create-token-slot(color, input-text-prefix-color);
+        }
+
+        .mat-mdc-form-field-text-suffix {
+          @include token-utils.create-token-slot(color, input-text-suffix-color);
+        }
+      }
   }
 
   .mdc-text-field--outlined {
     @include mdc-outlined-text-field-theme.theme-styles(
       tokens-mdc-outlined-text-field.get-token-slots());
+    @include token-utils.use-tokens(
+      tokens-mdc-outlined-text-field.$prefix,
+      tokens-mdc-outlined-text-field.get-token-slots()) {
+        .mat-mdc-form-field-text-prefix {
+          @include token-utils.create-token-slot(color, input-text-prefix-color);
+        }
+
+        .mat-mdc-form-field-text-suffix {
+          @include token-utils.create-token-slot(color, input-text-suffix-color);
+        }
+      }
   }
 }
 

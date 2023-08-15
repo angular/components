@@ -109,6 +109,8 @@ $prefix: (mdc, filled-text-field);
     input-text-color: rgba($on-surface, 0.87),
     disabled-input-text-color: rgba($on-surface, 0.38),
     input-text-placeholder-color: rgba($on-surface, 0.6),
+    input-text-prefix-color: rgba($on-surface, 0.6),
+    input-text-suffix-color: rgba($on-surface, 0.6),
 
     error-focus-label-text-color: $warn-color,
     error-label-text-color: $warn-color,
