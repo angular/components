@@ -57,6 +57,150 @@ describe('theming inspection api', () => {
         `),
       ).toMatch('--theme-version: 0;');
     });
+
+    it('should get theme type', () => {
+      expect(
+        transpile(`
+          $theme: mat.define-dark-theme((
+            color: (
+              primary: mat.define-palette(mat.$red-palette),
+              accent: mat.define-palette(mat.$red-palette),
+            ),
+          ));
+          div {
+            --theme-type: #{mat.private-get-theme-type($theme)};
+          }
+        `),
+      ).toMatch('--theme-type: dark;');
+    });
+
+    it('should get role color', () => {
+      expect(
+        transpile(`
+          $theme: mat.define-light-theme((
+            color: (
+              primary: mat.define-palette(mat.$red-palette),
+              accent: mat.define-palette(mat.$green-palette)
+            )
+          ));
+          div {
+            color: mat.private-get-theme-color($theme, accent);
+          }
+        `),
+      ).toMatch('color: #4caf50;');
+    });
+
+    it('should get palette color', () => {
+      expect(
+        transpile(`
+          $theme: mat.define-light-theme((
+            color: (
+              primary: mat.define-palette(mat.$red-palette),
+              accent: mat.define-palette(mat.$green-palette)
+            )
+          ));
+          div {
+            color: mat.private-get-theme-color($theme, accent, A200);
+          }
+        `),
+      ).toMatch('color: #69f0ae;');
+    });
+
+    it('should get typography properties from theme', () => {
+      const css = transpile(`
+        $theme: mat.define-light-theme((
+          typography: mat.define-typography-config()
+        ));
+        div {
+          font: mat.private-get-theme-typography($theme, headline-1);
+          font-family: mat.private-get-theme-typography($theme, headline-1, font-family);
+          font-size: mat.private-get-theme-typography($theme, headline-1, font-size);
+          font-weight: mat.private-get-theme-typography($theme, headline-1, font-weight);
+          line-height: mat.private-get-theme-typography($theme, headline-1, line-height);
+          letter-spacing: mat.private-get-theme-typography($theme, headline-1, letter-spacing);
+        }
+      `);
+      expect(css).toMatch('font: 300 96px / 96px Roboto, sans-serif;');
+      expect(css).toMatch('font-family: Roboto, sans-serif;');
+      expect(css).toMatch('font-size: 96px;');
+      expect(css).toMatch('font-weight: 300;');
+      expect(css).toMatch('line-height: 96px;');
+      expect(css).toMatch('letter-spacing: -0.015625em;');
+    });
+
+    it('should get density scale', () => {
+      expect(
+        transpile(`
+        $theme: mat.define-light-theme((
+          density: -1
+        ));
+        div {
+          --density-scale: #{mat.private-get-theme-density($theme)};
+        }
+      `),
+      ).toMatch('--density-scale: -1;');
+    });
+
+    it('should check what information the theme has', () => {
+      const css = transpile(`
+      $theme: mat.define-light-theme((
+        color: (
+          primary: mat.define-palette(mat.$red-palette),
+          accent: mat.define-palette(mat.$red-palette),
+        ),
+        typography: mat.define-typography-config(),
+        density: -1,
+      ));
+      $color-only: mat.define-light-theme((
+        color: (
+          primary: mat.define-palette(mat.$red-palette),
+          accent: mat.define-palette(mat.$red-palette),
+        ),
+        typography: null,
+        density: null,
+      ));
+      $typography-only: mat.define-light-theme((
+        color: null,
+        typography: mat.define-typography-config(),
+        density: null,
+      ));
+      $density-only: mat.define-light-theme((
+        color: null,
+        typography: null,
+        density: -1,
+      ));
+      div {
+        --base: #{(
+          mat.private-theme-has($theme, base),
+          mat.private-theme-has($color-only, base),
+          mat.private-theme-has($typography-only, base),
+          mat.private-theme-has($density-only, base),
+        )};
+        --color: #{(
+          mat.private-theme-has($theme, color),
+          mat.private-theme-has($color-only, color),
+          mat.private-theme-has($typography-only, color),
+          mat.private-theme-has($density-only, color),
+        )};
+        --typography: #{(
+          mat.private-theme-has($theme, typography),
+          mat.private-theme-has($color-only, typography),
+          mat.private-theme-has($typography-only, typography),
+          mat.private-theme-has($density-only, typography),
+        )};
+        --density: #{(
+          mat.private-theme-has($theme, density),
+          mat.private-theme-has($color-only, density),
+          mat.private-theme-has($typography-only, density),
+          mat.private-theme-has($density-only, density),
+        )};
+      }
+    `);
+      expect(css).toMatch(/--base: true, true, true, true;/);
+      expect(css).toMatch(/--color: true, true, false, false;/);
+      expect(css).toMatch(/--typography: true, false, true, false;/);
+      expect(css).toMatch(/--density: true, false, false, true;/);
+    });
   });
 
   describe('for m3 theme', () => {
