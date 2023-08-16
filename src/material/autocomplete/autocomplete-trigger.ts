@@ -284,6 +284,7 @@ export class MatAutocompleteTrigger
   openPanel(): void {
     this._attachOverlay();
     this._floatLabel();
+    // Add aria-owns attribute when the autocomplete becomes visible.
     if (this._trackedModal) {
       const panelId = this.autocomplete.id;
       addAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
@@ -328,7 +329,7 @@ export class MatAutocompleteTrigger
       this._changeDetectorRef.detectChanges();
     }
 
-    // Remove aria-owns when the panel is closed and the autocomplete is no longer visible.
+    // Remove aria-owns attribute when the autocomplete is no longer visible.
     if (this._trackedModal) {
       const panelId = this.autocomplete.id;
       removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
