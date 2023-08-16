@@ -17,10 +17,10 @@ import {materialUpgradeData} from './upgrade-data';
 
 const materialMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular Material v16 */
-export function updateToV16(): Rule {
+/** Entry point for the migration schematics with target of Angular Material v17 */
+export function updateToV17(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V16,
+    TargetVersion.V17,
     materialMigrations,
     materialUpgradeData,
     onMigrationComplete,

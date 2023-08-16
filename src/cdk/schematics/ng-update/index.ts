@@ -13,10 +13,10 @@ import {createMigrationSchematicRule, NullableDevkitMigration} from './devkit-mi
 
 const cdkMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular CDK 16.0.0 */
-export function updateToV16(): Rule {
+/** Entry point for the migration schematics with target of Angular CDK 17.0.0 */
+export function updateToV17(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V16,
+    TargetVersion.V17,
     cdkMigrations,
     cdkUpgradeData,
     onMigrationComplete,
