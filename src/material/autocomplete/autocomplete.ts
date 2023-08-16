@@ -210,7 +210,7 @@ export class MatAutocomplete
 
   /**
    * Whether the user is required to make a selection when they're interacting with the
-   * autocomplete. If the user moves away from the autcomplete without selecting an option from
+   * autocomplete. If the user moves away from the autocomplete without selecting an option from
    * the list, the value will be reset. If the user opens the panel and closes it without
    * interacting or selecting a value, the initial value will be kept.
    */
