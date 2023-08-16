@@ -1,3 +1,14 @@
+<a name="16.2.1"></a>
+# 16.2.1 "rubber-duck" (2023-08-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9ff32fd55](https://github.com/angular/components/commit/9ff32fd558a7eb88aec7e6eae5ce5732a52e57f8) | fix | **dialog:** update aria-labelledby if title is swapped ([#27609](https://github.com/angular/components/pull/27609)) |
+| [58dd80225](https://github.com/angular/components/commit/58dd802253b91da83f85b4cdfdba8cb224ca72de) | fix | **progress-bar:** alignment affected by parent text-align ([#27646](https://github.com/angular/components/pull/27646)) |
+| [0ba807125](https://github.com/angular/components/commit/0ba807125173f120964b6572defac4e77d9b5317) | fix | **table:** resolve local compilation issues ([#27640](https://github.com/angular/components/pull/27640)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.0"></a>
 # 16.2.0 "paper-rings" (2023-08-09)
 ### cdk
