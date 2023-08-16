@@ -1,10 +1,10 @@
 {
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "migration-v16": {
-      "version": "16.0.0-0",
-      "description": "Updates the Angular CDK to v16",
-      "factory": "./ng-update/index#updateToV16"
+    "migration-v17": {
+      "version": "17.0.0-0",
+      "description": "Updates the Angular CDK to v17",
+      "factory": "./ng-update/index#updateToV17"
     },
     "ng-post-update": {
       "description": "Prints out results after ng-update.",
