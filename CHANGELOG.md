@@ -1,3 +1,92 @@
+<a name="17.0.0-next.0"></a>
+# 17.0.0-next.0 "paper-crane" (2023-08-17)
+## Breaking Changes
+### material
+- There are new styles emitted by `mat.fab-theme` that are not
+  emitted by any of: `mat.fab-color`, `mat.fab-typography`,
+  `mat.fab-density`. If you rely on the partial mixins only and don't
+  call `mat.fab-theme`, you can add `mat.fab-base` to get the
+  missing styles.
+- There are new styles emitted by `mat.card-theme` that are not
+  emitted by any of: `mat.card-color`, `mat.card-typography`,
+  `mat.card-density`. If you rely on the partial mixins only and don't
+  call `mat.card-theme`, you can add `mat.card-base` to get the
+  missing styles.
+- There are new styles emitted by `mat.checkbox-theme` that are not
+  emitted by any of: `mat.checkbox-color`, `mat.checkbox-typography`,
+  `mat.checkbox-density`. If you rely on the partial mixins only and don't
+  call `mat.checkbox-theme`, you can add `mat.checkbox-base` to get the
+  missing styles.
+- `NativeDateAdapter` no longer takes `Platform` in its
+  constructor. It also now uses the `inject` function, and therefore
+  cannot be instantiated directly (must go through Angular's DI system
+  instead).
+- There are new styles emitted by `mat.list-theme` that are not
+  emitted by any of: `mat.list-color`, `mat.list-typography`,
+  `mat.list-density`. If you rely on the partial mixins only and don't
+  call `mat.list-theme`, you can add `mat.list-base` to get the
+  missing styles.
+- There are new styles emitted by mat.progress-bar-theme that are not
+  emitted by any of: mat.progress-bar-color, mat.progress-bar-typography,
+  mat.progress-bar-density. If you rely on the partial mixins only and don't
+  call mat.progress-bar-theme, you can add mat.progress-bar-base to get the
+  missing styles.
+- There are new styles emitted by mat.progress-spinner-theme that are not
+  emitted by any of: mat.progress-spinner-color, mat.progress-spinner-typography,
+  mat.progress-spinner-density. If you rely on the partial mixins only and don't
+  call mat.progress-spinner-theme, you can add mat.progress-spinner-base to get the
+  missing styles.
+- There are new styles emitted by `mat.slider-theme` that are not
+  emitted by any of: `mat.slider-color`, `mat.slider-typography`,
+  `mat.slider-density`. If you rely on the partial mixins only and don't
+  call `mat.slider-theme`, you can add `mat.slider-base` to get the
+  missing styles.
+- There are new styles emitted by `mat.snack-bar-theme` that are not
+  emitted by any of: `mat.snack-bar-color`, `mat.snack-bar-typography`,
+  `mat.snack-bar-density`. If you rely on the partial mixins only and don't
+  call `mat.snack-bar-theme`, you can add `mat.snack-bar-base` to get the
+  missing styles.
+- There are new styles emitted by mat.tooltip-theme that are not
+  emitted by any of: mat.tooltip-color, mat.tooltip-typography,
+  mat.tooltip-density. If you rely on the partial mixins only and don't
+  call mat.tooltip-theme, you can add mat.tooltip-base to get the
+  missing styles.
+### multiple
+- `@import` of Angular Material and Angular CDK Sass is no longer
+  supported. Please use `@use` instead.
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [60aa52c88](https://github.com/angular/components/commit/60aa52c88670307365890071df9e16645024653b) | feat | **theming:** Support defining M3 theme objects |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9906aa344](https://github.com/angular/components/commit/9906aa3443ad874c7470c94fea137c72779c9fcd) | feat | **theming:** Add APIs to check what information theme has |
+| [1a85dd299](https://github.com/angular/components/commit/1a85dd299b4ac38d201c3cc38c396b2f08398adc) | feat | **theming:** Add APIs to get color info from theme |
+| [e608f5fa3](https://github.com/angular/components/commit/e608f5fa392e9a5cd80923ba545b66217ad01c30) | feat | **theming:** Add APIs to get density info from theme |
+| [f52e97958](https://github.com/angular/components/commit/f52e97958ac8d9845017a5ead077952f3228144f) | feat | **theming:** Add APIs to get typography info from theme |
+| [68096ec9d](https://github.com/angular/components/commit/68096ec9d34aae793a7b3037c39e6ae7d1700933) | fix | **button:** Move fab unthemable tokens to theme mixin ([#27580](https://github.com/angular/components/pull/27580)) |
+| [408c0b492](https://github.com/angular/components/commit/408c0b492f5d7edd6571b2287bb06aa89d582758) | fix | **card:** Apply tokens at mixin root ([#27557](https://github.com/angular/components/pull/27557)) |
+| [06460d177](https://github.com/angular/components/commit/06460d17703ef28a8fc89833c389c479b1ba6bcf) | fix | **card:** Move unthemable tokens to theme mixin ([#27579](https://github.com/angular/components/pull/27579)) |
+| [03a773a02](https://github.com/angular/components/commit/03a773a0237843fd1e1e600d0b9911eb924319bc) | fix | **checkbox:** Move unthemable tokens to theme mixin ([#27556](https://github.com/angular/components/pull/27556)) |
+| [b423c0e0b](https://github.com/angular/components/commit/b423c0e0b754b1f1d118d17e022981c357c3aa68) | fix | **datepicker:** deprecate constructor injection in NativeDateAdapter ([#26144](https://github.com/angular/components/pull/26144)) |
+| [7c16cc8b6](https://github.com/angular/components/commit/7c16cc8b659133167f1b875dcfe77ca806bfe876) | fix | **list:** Move unthemable tokens to theme mixin ([#27607](https://github.com/angular/components/pull/27607)) |
+| [047404067](https://github.com/angular/components/commit/047404067865a2452bfcb93b2374ac07aca319be) | fix | **progress-bar:** Move unthemable tokens to theme mixin ([#27563](https://github.com/angular/components/pull/27563)) |
+| [593fc79ec](https://github.com/angular/components/commit/593fc79ecbc6677f04e2d3707bff024b00a517e8) | fix | **progress-spinner:** Move unthemable tokens to theme mixin ([#27567](https://github.com/angular/components/pull/27567)) |
+| [b13c6aa19](https://github.com/angular/components/commit/b13c6aa194cf560a304213961ae28725f8d0a4e2) | fix | **slider:** change slider to use MDC's token API ([#27375](https://github.com/angular/components/pull/27375)) |
+| [c572dc4bf](https://github.com/angular/components/commit/c572dc4bf4d48448699288aeac2be14db0186a86) | fix | **slider:** Move unthemable tokens to theme mixin ([#27584](https://github.com/angular/components/pull/27584)) |
+| [65c97170d](https://github.com/angular/components/commit/65c97170d2b3d239fda25bd049ec417e0098fe12) | fix | **snack-bar:** Move unthemable tokens to theme mixin ([#27596](https://github.com/angular/components/pull/27596)) |
+| [6cc6cf21f](https://github.com/angular/components/commit/6cc6cf21f292d78c930cbda79c1f337bd6b82bfe) | fix | **tooltip:** Emit tokens under mixin root selector ([#27585](https://github.com/angular/components/pull/27585)) |
+| [ccd2d7fa7](https://github.com/angular/components/commit/ccd2d7fa72f4566ab2c2aeb78a5ac4b7d4149bbf) | fix | **tooltip:** Move unthemable tokens to theme mixin ([#27569](https://github.com/angular/components/pull/27569)) |
+| [f7e3ae3bd](https://github.com/angular/components/commit/f7e3ae3bd1b86d5987df57bb06d350001c592931) | fix | remove legacy components ([#27622](https://github.com/angular/components/pull/27622)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [86e9e524c](https://github.com/angular/components/commit/86e9e524c3234f44eece21632048cd4290e5f3f4) | fix | remove .import.scss and -legacy-index.scss files ([#27571](https://github.com/angular/components/pull/27571)) |
+| [55f9618b6](https://github.com/angular/components/commit/55f9618b687fc0da4743a3cf27e113ceb837e151) | fix | remove unnecessary base classes ([#27632](https://github.com/angular/components/pull/27632)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.1"></a>
 # 16.2.1 "rubber-duck" (2023-08-16)
 ### material
