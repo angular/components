@@ -429,8 +429,8 @@ export function mixinTabIndex<T extends _AbstractConstructor<CanDisable>>(base: 
 
 // @public
 export class NativeDateAdapter extends DateAdapter<Date> {
-    constructor(matDateLocale: string,
-    _platform?: Platform);
+    constructor(
+    matDateLocale?: string);
     // (undocumented)
     addCalendarDays(date: Date, days: number): Date;
     // (undocumented)
@@ -479,7 +479,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // @deprecated (undocumented)
     useUtcForDisplay: boolean;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<NativeDateAdapter, [{ optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NativeDateAdapter, [{ optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<NativeDateAdapter>;
 }

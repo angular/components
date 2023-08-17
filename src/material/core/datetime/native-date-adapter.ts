@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform} from '@angular/cdk/platform';
-import {Inject, Injectable, Optional} from '@angular/core';
+import {inject, Inject, Injectable, Optional} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 
 /**
@@ -36,16 +35,21 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    */
   useUtcForDisplay: boolean = false;
 
+  /** The injected locale. */
+  private readonly _matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+
   constructor(
-    @Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string,
     /**
-     * @deprecated No longer being used. To be removed.
-     * @breaking-change 14.0.0
+     * @deprecated Now injected via inject(), param to be removed.
+     * @breaking-change 18.0.0
      */
-    _platform?: Platform,
+    @Optional() @Inject(MAT_DATE_LOCALE) matDateLocale?: string,
   ) {
     super();
-    super.setLocale(matDateLocale);
+    if (matDateLocale !== undefined) {
+      this._matDateLocale = matDateLocale;
+    }
+    super.setLocale(this._matDateLocale);
   }
 
   getYear(date: Date): number {
