@@ -75,6 +75,8 @@ export class MatRadioButton extends _MatRadioButtonMixinBase implements OnInit, 
     // (undocumented)
     _onInputClick(event: Event): void;
     _onInputInteraction(event: Event): void;
+    // (undocumented)
+    _onLabelClick(event: Event): void;
     _onTouchTargetClick(event: Event): void;
     radioGroup: MatRadioGroup;
     get required(): boolean;

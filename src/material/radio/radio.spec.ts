@@ -484,6 +484,15 @@ describe('MDC-based MatRadio', () => {
       expect(groupInstance.selected).toBe(null);
       expect(groupInstance.value).toBe('fire');
     });
+
+    it('should emit event once on <mat-radio-button> click', () => {
+      const spy = spyOn(fixture.componentInstance, 'WhosThatPokemon');
+
+      radioLabelElements[2].click();
+      fixture.detectChanges();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('group with ngModel', () => {
@@ -1014,7 +1023,7 @@ describe('MatRadioDefaultOverrides', () => {
     <mat-radio-button value="water" [disableRipple]="disableRipple" [color]="color">
       Squirtle
     </mat-radio-button>
-    <mat-radio-button value="leaf" [disableRipple]="disableRipple" [color]="color">
+    <mat-radio-button value="leaf" (click)="WhosThatPokemon()" [disableRipple]="disableRipple" [color]="color">
       Bulbasaur
     </mat-radio-button>
   </mat-radio-group>
@@ -1029,6 +1038,10 @@ class RadiosInsideRadioGroup {
   disableRipple = false;
   color: string | null;
   isFirstShown = true;
+
+  WhosThatPokemon() {
+    console.log("It's bulbasaur");
+  }
 }
 
 @Component({

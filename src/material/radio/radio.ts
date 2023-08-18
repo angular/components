@@ -639,6 +639,15 @@ export class MatRadioButton
     event.stopPropagation();
   }
 
+  _onLabelClick(event: Event) {
+    // If there's a <input type="radio"/> element associated with a <label> element
+    // via [for] attribute, whenever the label gets clicked the input field gets checked
+    // causing another emission of event.
+    // Stopping it would make it that "(click)" binding on MatRadioButton will emit
+    // it once instead of twice.
+    event.stopPropagation();
+  }
+
   /** Triggered when the radio button receives an interaction from the user. */
   _onInputInteraction(event: Event) {
     // We always have to stop propagation on the change event.
