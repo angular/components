@@ -197,6 +197,10 @@ div.mat-mdc-select-panel {
 // for select. The select specific styles are not present as they don't use their text field as a
 // container. Below are the styles to account for the select arrow icon at the end.
 .mat-mdc-form-field-type-mat-select {
+  &:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
+    cursor: pointer;
+  }
+
   &.mat-form-field-appearance-fill {
     .mat-mdc-floating-label {
       max-width: calc(100% - #{$mat-select-placeholder-arrow-space});
