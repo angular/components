@@ -7,7 +7,7 @@
  */
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {ENTER, hasModifierKey, SPACE, TAB} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Attribute,
@@ -179,6 +179,13 @@ export class MatExpansionPanelHeader
     return null;
   }
 
+  /** Handle default for keydown event. */
+  private _handleDefaultKeydown(event: KeyboardEvent) {
+    if (this.panel.accordion) {
+      this.panel.accordion._handleHeaderKeydown(event);
+    }
+  }
+
   /** Handle keydown event calling to toggle() if appropriate. */
   _keydown(event: KeyboardEvent) {
     switch (event.keyCode) {
@@ -191,10 +198,15 @@ export class MatExpansionPanelHeader
         }
 
         break;
-      default:
-        if (this.panel.accordion) {
-          this.panel.accordion._handleHeaderKeydown(event);
+      case TAB:
+        if (this.panel.collapsingAnimation) {
+          this.panel._body.nativeElement.setAttribute('style', 'visibility: hidden');
         }
+        this._handleDefaultKeydown(event);
+
+        break;
+      default:
+        this._handleDefaultKeydown(event);
 
         return;
     }

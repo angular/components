@@ -104,6 +104,12 @@ export class MatExpansionPanel
   private _document: Document;
   private _hideToggle = false;
   private _togglePosition: MatAccordionTogglePosition;
+  private _collapsingAnimation = false;
+
+  /** whether the element is currently undergoing the collapsing animation */
+  get collapsingAnimation(): boolean {
+    return this._collapsingAnimation;
+  }
 
   /** Whether the toggle indicator should be hidden. */
   @Input()
@@ -174,6 +180,7 @@ export class MatExpansionPanel
         }),
       )
       .subscribe(event => {
+        this._collapsingAnimation = false;
         if (event.fromState !== 'void') {
           if (event.toState === 'expanded') {
             this.afterExpand.emit();
@@ -185,6 +192,13 @@ export class MatExpansionPanel
 
     if (defaultOptions) {
       this.hideToggle = defaultOptions.hideToggle;
+    }
+  }
+
+  /** Check and determine if the element is currently undergoing a collapsing animation. */
+  _bodyAnimationStart(event: AnimationEvent) {
+    if (event.toState === 'collapsed') {
+      this._collapsingAnimation = true;
     }
   }
 

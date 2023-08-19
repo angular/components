@@ -2,6 +2,7 @@
 <div class="mat-expansion-panel-content"
      role="region"
      [@bodyExpansion]="_getExpandedState()"
+     (@bodyExpansion.start)="_bodyAnimationStart($event)"
      (@bodyExpansion.done)="_bodyAnimationDone.next($event)"
      [attr.aria-labelledby]="_headerId"
      [id]="id"
