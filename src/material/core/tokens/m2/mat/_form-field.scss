@@ -2,6 +2,7 @@
 @use '../../token-utils';
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../theming/palette';
 @use '../../../typography/typography-utils';
 
@@ -15,17 +16,16 @@ $prefix: (mat, form-field);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $warn: map.get($config, warn);
-  $is-dark: map.get($config, is-dark);
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $on-surface: if($is-dark, #fff, #000);
-  $color-tokens: private-get-color-palette-color-tokens($config, primary);
+  $color-tokens: private-get-color-palette-color-tokens($theme, primary);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
     disabled-input-text-placeholder-color: rgba($on-surface, 0.38),
     state-layer-color: rgba($on-surface, 0.87),
-    error-text-color: theming.get-color-from-palette($warn),
+    error-text-color: inspection.get-theme-color($theme, warn),
 
     // On dark themes we set the native `select` color to some shade of white,
     // however the color propagates to all of the `option` elements, which are
@@ -48,27 +48,25 @@ $prefix: (mat, form-field);
 }
 
 // Generates the mapping for the properties that change based on the form field color.
-@function private-get-color-palette-color-tokens($config, $palette-name) {
-  $palette: map.get($config, $palette-name);
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
 
   @return (
-    focus-select-arrow-color: theming.get-color-from-palette($palette, default, 0.87),
+    focus-select-arrow-color: rgba($palette-color, 0.87),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  $fallback-font-family: typography-utils.font-family($config);
-
+@function get-typography-tokens($theme) {
   @return (
     // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
     // shows `body1` for text fields though, so we manually override the typography.
     // Note: Form controls inherit the typography from the parent form field.
-    container-text-font: typography-utils.font-family($config, body-1) or $fallback-font-family,
-    container-text-line-height: typography-utils.line-height($config, body-1),
-    container-text-size: typography-utils.font-size($config, body-1),
-    container-text-tracking: typography-utils.letter-spacing($config, body-1),
-    container-text-weight: typography-utils.font-weight($config, body-1),
+    container-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    container-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    container-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    container-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    container-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
 
     // In the container styles, we updated the floating label to use the `body-1` typography level.
     // The MDC notched outline overrides this accidentally (only when the label floats) to a
@@ -78,18 +76,18 @@ $prefix: (mat, form-field);
     // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
     // This is why we can't use their `label-text-populated-size` token and we have to declare
     // our own version of it.
-    outlined-label-text-populated-size: typography-utils.font-size($config, body-1),
+    outlined-label-text-populated-size: inspection.get-theme-typography($theme, body-1, font-size),
 
-    subscript-text-font: typography-utils.font-family($config, caption) or $fallback-font-family,
-    subscript-text-line-height: typography-utils.line-height($config, caption),
-    subscript-text-size: typography-utils.font-size($config, caption),
-    subscript-text-tracking: typography-utils.letter-spacing($config, caption),
-    subscript-text-weight: typography-utils.font-weight($config, caption),
+    subscript-text-font: inspection.get-theme-typography($theme, caption, font-family),
+    subscript-text-line-height: inspection.get-theme-typography($theme, caption, line-height),
+    subscript-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    subscript-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
+    subscript-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

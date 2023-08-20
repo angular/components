@@ -2,6 +2,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../../typography/typography-utils';
 @use '../../token-utils';
@@ -93,15 +94,12 @@ $prefix: (mdc, filled-text-field);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $warn: map.get($config, warn);
-  $is-dark: map.get($config, is-dark);
-  $surface: theming.get-color-from-palette($background, card);
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $surface: inspection.get-theme-color($theme, background, card);
   $on-surface: if($is-dark, #fff, #000);
-  $warn-color: theming.get-color-from-palette($warn);
-  $color-tokens: private-get-color-palette-color-tokens($config, primary);
+  $warn-color: inspection.get-theme-color($theme, warn);
+  $color-tokens: private-get-color-palette-color-tokens($theme, primary);
 
   @return map.merge($color-tokens, (
     container-color: _variable-safe-mix($on-surface, $surface, 4%),
@@ -135,31 +133,29 @@ $prefix: (mdc, filled-text-field);
 }
 
 // Generates the mapping for the properties that change based on the text field color.
-@function private-get-color-palette-color-tokens($config, $palette-name) {
-  $palette: map.get($config, $palette-name);
-  $palette-color: theming.get-color-from-palette($palette);
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $palette: map.get($theme, $palette-name);
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
 
   @return (
     caret-color: $palette-color,
     focus-active-indicator-color: $palette-color,
-    focus-label-text-color: theming.get-color-from-palette($palette, default, 0.87),
+    focus-label-text-color: rgba($palette-color, 0.87),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  $fallback-font-family: typography-utils.font-family($config);
-
+@function get-typography-tokens($theme) {
   @return (
-    label-text-font: typography-utils.font-family($config, body-1) or $fallback-font-family,
-    label-text-size: typography-utils.font-size($config, body-1),
-    label-text-tracking: typography-utils.letter-spacing($config, body-1),
-    label-text-weight: typography-utils.font-weight($config, body-1),
+    label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

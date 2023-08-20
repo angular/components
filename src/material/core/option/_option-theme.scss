@@ -4,42 +4,35 @@
 @use '../style/sass-utils';
 
 @use '../theming/theming';
+@use '../theming/inspection';
 @use '../typography/typography';
 @use '../mdc-helpers/mdc-helpers';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
-  @include mdc-helpers.using-mdc-theme($config) {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-option.$prefix,
-        tokens-mat-option.get-color-tokens($config));
-    }
-
-    .mat-accent {
-      @include token-utils.create-token-values(tokens-mat-option.$prefix,
-        tokens-mat-option.private-get-color-palette-color-tokens(map.get($config, accent)));
-    }
-
-    .mat-warn {
-      @include token-utils.create-token-values(tokens-mat-option.$prefix,
-        tokens-mat-option.private-get-color-palette-color-tokens(map.get($config, warn)));
-    }
-  }
-}
-
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-
+@mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-option.$prefix,
-      tokens-mat-option.get-typography-tokens($config));
+      tokens-mat-option.get-color-tokens($theme));
+  }
+
+  .mat-accent {
+    @include token-utils.create-token-values(tokens-mat-option.$prefix,
+      tokens-mat-option.get-color-tokens($theme, accent));
+  }
+
+  .mat-warn {
+    @include token-utils.create-token-values(tokens-mat-option.$prefix,
+      tokens-mat-option.get-color-tokens($theme, warn));
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-option.$prefix,
+      tokens-mat-option.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
 }
 
 @mixin theme($theme-or-color-config) {
@@ -49,13 +42,13 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
+    @if inspection.theme-has($theme, density) {
       @include density($density);
     }
-    @if $typography != null {
+    @if inspection.theme-has($theme, typography) {
       @include typography($typography);
     }
   }

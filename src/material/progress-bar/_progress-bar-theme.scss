@@ -1,5 +1,6 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/tokens/m2/mdc/linear-progress' as tokens-mdc-linear-progress;
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use 'sass:map';
@@ -11,9 +12,8 @@
   }
 }
 
-@mixin _palette-styles($config, $palette-name) {
-  $palette-config: map.merge($config, (primary: map.get($config, $palette-name)));
-  $color-tokens: tokens-mdc-linear-progress.get-color-tokens($palette-config);
+@mixin _palette-styles($theme, $palette-name) {
+  $color-tokens: tokens-mdc-linear-progress.get-color-tokens($theme, $palette-name);
 
   // We can't set the `track-color` using `theme`, because it isn't possible for it to use a CSS
   // variable since MDC's buffer animation works by constructing an SVG string from this color.
@@ -30,18 +30,16 @@
   @include mdc-linear-progress-theme.theme($color-tokens);
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
+@mixin color($theme) {
   .mat-mdc-progress-bar {
-    @include _palette-styles($config, primary);
+    @include _palette-styles($theme, primary);
 
     &.mat-accent {
-      @include _palette-styles($config, accent);
+      @include _palette-styles($theme, accent);
     }
 
     &.mat-warn {
-      @include _palette-styles($config, warn);
+      @include _palette-styles($theme, warn);
     }
   }
 }
@@ -53,19 +51,15 @@
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-bar') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     @include base($theme);
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

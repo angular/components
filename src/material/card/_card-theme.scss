@@ -10,9 +10,9 @@
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 
-@mixin base($config-or-theme) {
-  @if inspection.get-theme-version($config-or-theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, base));
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -24,24 +24,22 @@
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
-  @if inspection.get-theme-version($config-or-theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, color));
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
   @else {
     $mdc-elevated-card-color-tokens: token-utils.resolve-elevation(
-        tokens-mdc-elevated-card.get-color-tokens($config),
+        tokens-mdc-elevated-card.get-color-tokens($theme),
         container-elevation,
         container-shadow-color
     );
     $mdc-outlined-card-color-tokens: token-utils.resolve-elevation(
-        tokens-mdc-outlined-card.get-color-tokens($config),
+        tokens-mdc-outlined-card.get-color-tokens($theme),
         container-elevation,
         container-shadow-color,
     );
-    $mat-card-color-tokens: tokens-mat-card.get-color-tokens($config);
+    $mat-card-color-tokens: tokens-mat-card.get-color-tokens($theme);
 
     // Add values for card tokens.
     @include sass-utils.current-selector-or-root() {
@@ -52,17 +50,14 @@
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-
-  @if inspection.get-theme-version($config-or-theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, typography));
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
   @else {
-    $mdc-elevated-card-typography-tokens: tokens-mdc-elevated-card.get-typography-tokens($config);
-    $mdc-outlined-card-typography-tokens: tokens-mdc-outlined-card.get-typography-tokens($config);
-    $mat-card-typography-tokens: tokens-mat-card.get-typography-tokens($config);
+    $mdc-elevated-card-typography-tokens: tokens-mdc-elevated-card.get-typography-tokens($theme);
+    $mdc-outlined-card-typography-tokens: tokens-mdc-outlined-card.get-typography-tokens($theme);
+    $mat-card-typography-tokens: tokens-mat-card.get-typography-tokens($theme);
 
     // Add values for card tokens.
     @include sass-utils.current-selector-or-root() {
@@ -74,16 +69,14 @@
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-
-  @if inspection.get-theme-version($config-or-theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, density));
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    $mdc-elevated-card-density-tokens: tokens-mdc-elevated-card.get-density-tokens($density-scale);
-    $mdc-outlined-card-density-tokens: tokens-mdc-outlined-card.get-density-tokens($density-scale);
-    $mat-card-density-tokens: tokens-mat-card.get-density-tokens($density-scale);
+    $mdc-elevated-card-density-tokens: tokens-mdc-elevated-card.get-density-tokens($theme);
+    $mdc-outlined-card-density-tokens: tokens-mdc-outlined-card.get-density-tokens($theme);
+    $mat-card-density-tokens: tokens-mat-card.get-density-tokens($theme);
 
     // Add values for card tokens.
     @include sass-utils.current-selector-or-root() {
@@ -102,19 +95,15 @@
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
     @else {
-      $color: theming.get-color-config($theme);
-      $density: theming.get-density-config($theme);
-      $typography: theming.get-typography-config($theme);
-
       @include base($theme);
-      @if $color != null {
-        @include color($color);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
       }
-      @if $density != null {
-        @include density($density);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
       }
-      @if $typography != null {
-        @include typography($typography);
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
       }
     }
   }

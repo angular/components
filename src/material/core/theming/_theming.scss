@@ -5,6 +5,7 @@
 @use 'palette';
 @use '../density/private/compatibility';
 
+// Whether to enable compatibility with legacy methods for accessing theme information.
 $theme-legacy-inspection-api-compatibility: true !default;
 
 // Whether duplication warnings should be disabled. Warnings enabled by default.
@@ -186,10 +187,10 @@ $_emitted-base: () !default;
   // configuration for the `color` theming part.
   @if $accent != null {
     @warn $_legacy-theme-warning;
-    @return private-create-backwards-compatibility-theme(_mat-validate-theme((
+    @return _internalize-theme(private-create-backwards-compatibility-theme(_mat-validate-theme((
       _is-legacy-theme: true,
       color: _mat-create-light-color-config($primary, $accent, $warn),
-    )));
+    ))));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
   // parts of the theming system, but update the `color` configuration if set. As explained
@@ -202,7 +203,8 @@ $_emitted-base: () !default;
     $warn: map.get($color-settings, warn);
     $result: map.merge($result, (color: _mat-create-light-color-config($primary, $accent, $warn)));
   }
-  @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
+  @return _internalize-theme(
+      private-create-backwards-compatibility-theme(_mat-validate-theme($result)));
 }
 
 // TODO: Remove legacy API and rename below `$primary` to `$config`. Currently it cannot be renamed
@@ -227,10 +229,10 @@ $_emitted-base: () !default;
   // configuration for the `color` theming part.
   @if $accent != null {
     @warn $_legacy-theme-warning;
-    @return private-create-backwards-compatibility-theme(_mat-validate-theme((
+    @return _internalize-theme(private-create-backwards-compatibility-theme(_mat-validate-theme((
       _is-legacy-theme: true,
       color: _mat-create-dark-color-config($primary, $accent, $warn),
-    )));
+    ))));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
   // parts of the theming system, but update the `color` configuration if set. As explained
@@ -243,7 +245,8 @@ $_emitted-base: () !default;
     $warn: map.get($color-settings, warn);
     $result: map.merge($result, (color: _mat-create-dark-color-config($primary, $accent, $warn)));
   }
-  @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
+  @return _internalize-theme(
+      private-create-backwards-compatibility-theme(_mat-validate-theme($result)));
 }
 
 /// Gets the color configuration from the given theme or configuration.
@@ -546,14 +549,7 @@ $_internals: _mat-theming-internals-do-not-access;
     @return $theme;
   }
   $color: map.get($theme, color);
-  $m2-config: map.merge($theme, $color);
-  $theme: (
-    _mat-theming-internals-do-not-access: (
-      theme-version: 0,
-      m2-config: $m2-config,
-    )
-  );
-  @return map.merge(if($theme-legacy-inspection-api-compatibility, $m2-config, ()), $theme);
+  @return map.merge($theme, $color);
 }
 
 // Gets the theme from the given value that is either already a theme, or a color configuration.
@@ -603,4 +599,39 @@ $_internals: _mat-theming-internals-do-not-access;
     @return $max;
   }
   @return $density-scale;
+}
+
+@function _internalize-theme($theme) {
+  @if map.has-key($theme, $_internals) {
+    @return $theme;
+  }
+  $internalized-theme: (
+    $_internals: (
+      theme-version: 0,
+      m2-config: $theme
+    )
+  );
+  @if ($theme-legacy-inspection-api-compatibility) {
+    @return map.merge($theme, $internalized-theme);
+  }
+  $error-theme:
+    _replace-values-with-errors($theme, 'Theme may only be accessed via theme inspection API');
+  @return map.merge($error-theme, $internalized-theme);
+}
+
+@function _replace-values-with-errors($value, $message) {
+  $value-type: meta.type-of($value);
+  @if $value-type == 'map' {
+    @each $k, $v in $value {
+      $value: map.set($value, $k, _replace-values-with-errors($v, $message));
+    }
+    @return $value;
+  }
+  @else if $value-type == 'list' and list.length($value) > 0 {
+    @for $i from 1 through list.length() {
+      $value: list.set-nth($value, $i, _replace-values-with-errors(list.nth($value, $i), $message));
+    }
+    @return $value;
+  }
+  @return ('ERROR': $message);
 }

@@ -3,46 +3,37 @@
 @use '../style/sass-utils';
 
 @use '../theming/theming';
+@use '../theming/inspection';
 @use '../typography/typography';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
+@mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-optgroup.$prefix,
-      tokens-mat-optgroup.get-color-tokens($config));
+      tokens-mat-optgroup.get-color-tokens($theme));
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-
+@mixin typography($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-optgroup.$prefix,
-      tokens-mat-optgroup.get-typography-tokens($config));
+      tokens-mat-optgroup.get-typography-tokens($theme));
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
+@mixin density($theme) {
 }
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-optgroup') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }
