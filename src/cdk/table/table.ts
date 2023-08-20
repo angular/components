@@ -110,7 +110,10 @@ export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observab
  */
 @Directive({selector: '[rowOutlet]'})
 export class DataRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
+  constructor(
+    public viewContainer: ViewContainerRef,
+    public elementRef: ElementRef,
+  ) {}
 }
 
 /**
@@ -119,7 +122,10 @@ export class DataRowOutlet implements RowOutlet {
  */
 @Directive({selector: '[headerRowOutlet]'})
 export class HeaderRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
+  constructor(
+    public viewContainer: ViewContainerRef,
+    public elementRef: ElementRef,
+  ) {}
 }
 
 /**
@@ -128,7 +134,10 @@ export class HeaderRowOutlet implements RowOutlet {
  */
 @Directive({selector: '[footerRowOutlet]'})
 export class FooterRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
+  constructor(
+    public viewContainer: ViewContainerRef,
+    public elementRef: ElementRef,
+  ) {}
 }
 
 /**
@@ -138,7 +147,10 @@ export class FooterRowOutlet implements RowOutlet {
  */
 @Directive({selector: '[noDataRowOutlet]'})
 export class NoDataRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) {}
+  constructor(
+    public viewContainer: ViewContainerRef,
+    public elementRef: ElementRef,
+  ) {}
 }
 
 /**
@@ -1337,6 +1349,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     }
 
     this._isShowingNoDataRow = shouldShow;
+
+    this._changeDetectorRef.markForCheck();
   }
 }
 
