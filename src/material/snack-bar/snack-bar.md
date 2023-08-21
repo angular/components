@@ -84,10 +84,7 @@ snackbars  opened via `snackBar.open`.
 
 If no annotations are used, all the content will be treated as text content.
 
-<!-- example({
-  "example": "snack-bar-annotated-component-example",
-  "file": "snack-bar-annotated-component-example-snack.html"
-}) -->
+<!-- example(snack-bar-annotated-component) -->
 
 ### Setting the global configuration defaults
 If you want to override the default snack bar options, you can do so using the
