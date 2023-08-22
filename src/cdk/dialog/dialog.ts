@@ -39,7 +39,7 @@ import {CdkDialogContainer} from './dialog-container';
 /** Unique id for the created dialog. */
 let uniqueId = 0;
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class Dialog implements OnDestroy {
   private _openDialogsAtThisLevel: DialogRef<any, any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();

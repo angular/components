@@ -20,6 +20,7 @@ import {
   CdkPortalOutlet,
   ComponentPortal,
   DomPortal,
+  PortalModule,
   TemplatePortal,
 } from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
@@ -54,6 +55,8 @@ export function throwDialogContentAlreadyAttachedError() {
   // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [PortalModule],
   host: {
     'class': 'cdk-dialog-container',
     'tabindex': '-1',
