@@ -9,6 +9,7 @@ import {
   Type,
   ViewChild,
   AfterViewInit,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
@@ -1913,6 +1914,20 @@ describe('CdkTable', () => {
     expect(cellElement.classList.contains('custom-cell-class-even')).toBe(true);
     expect(cellElement.classList.contains('custom-cell-class-odd')).toBe(false);
   });
+
+  it('should be able to show a message when no data is being displayed in the strategy ChangeDetectionOnPush', () => {
+    setupTableTestApp(WrapNativeHtmlTableAppOnPush, [NativeHtmlTableAppOnPush]);
+
+    expect(tableElement.querySelector('.cdk-no-data-row')).toBeFalsy();
+
+    component.dataSource.data = [];
+
+    fixture.detectChanges();
+
+    const noDataRow = tableElement.querySelector('.cdk-no-data-row')!;
+    expect(noDataRow).toBeTruthy();
+    expect(noDataRow.getAttribute('colspan')).toEqual('3');
+  });
 });
 
 interface TestData {
@@ -3009,6 +3024,48 @@ class NativeHtmlTableWithColgroupAndCol {
 })
 class TableWithIndirectDescendantDefs {
   dataSource = new FakeDataSource();
+}
+
+@Component({
+  selector: 'cdk-table-change-detection-on-push',
+  template: `
+    <table cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <th cdk-header-cell *cdkHeaderCellDef> Column C</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.c}}</td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+      <tr *cdkNoDataRow [attr.colspan]="columnsToRender.length">
+        <td>No data</td>
+      </tr>
+    </table>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class NativeHtmlTableAppOnPush {
+  @Input() dataSource: Observable<TestData[]> | null = null;
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+}
+
+@Component({
+  template: `
+    <cdk-table-change-detection-on-push [dataSource]="dataSource"></cdk-table-change-detection-on-push>
+  `,
+})
+class WrapNativeHtmlTableAppOnPush {
+  dataSource: FakeDataSource = new FakeDataSource();
 }
 
 function getElements(element: Element, query: string): HTMLElement[] {
