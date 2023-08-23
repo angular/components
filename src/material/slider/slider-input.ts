@@ -386,6 +386,10 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._updateWidthActive();
     this._slider._updateDimensions();
 
+    if (this._platform.IOS) {
+      return;
+    }
+
     // Does nothing if a step is defined because we
     // want the value to snap to the values on input.
     if (!this._slider.step) {
