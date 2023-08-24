@@ -375,20 +375,16 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
         this._slider._getThumb(this.thumbPosition)._hostElement.getBoundingClientRect(),
       );
 
-      if (isCursorOnSliderThumb) {
-        this._isActive = true;
-      }
-    } else {
-      this._isActive = true;
-      this._setIsFocused(true);
-    }
-
-    this._updateWidthActive();
-    this._slider._updateDimensions();
-
-    if (this._platform.IOS) {
+      this._isActive = isCursorOnSliderThumb;
+      this._updateWidthActive();
+      this._slider._updateDimensions();
       return;
     }
+
+    this._isActive = true;
+    this._setIsFocused(true);
+    this._updateWidthActive();
+    this._slider._updateDimensions();
 
     // Does nothing if a step is defined because we
     // want the value to snap to the values on input.
