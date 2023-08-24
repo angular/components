@@ -76,8 +76,7 @@
 
 @mixin _density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-pseudo-checkbox') {
     @if inspection.theme-has($theme, color) {
       @include color($theme);

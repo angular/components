@@ -148,7 +148,6 @@
     {
       "files": [
         "**/_card-theme.scss",
-        "**/_checkbox-theme.scss",
         "**/_core-theme.scss",
         "**/_form-field-theme.scss",
         "**/_optgroup-theme.scss",

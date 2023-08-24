@@ -8,7 +8,7 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 
-@mixin base($theme) {
+@mixin base($config-or-theme) {
   @if inspection.get-theme-version($config-or-theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, base));
   }
@@ -19,7 +19,7 @@
   }
 }
 
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
 
   @if inspection.get-theme-version($config-or-theme) == 1 {
@@ -58,7 +58,7 @@
   }
 }
 
-@mixin typography($theme) {
+@mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
           theming.get-typography-config($config-or-theme));
 
@@ -79,7 +79,7 @@
   }
 }
 
-@mixin density($theme) {
+@mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
 
   @if inspection.get-theme-version($config-or-theme) == 1 {

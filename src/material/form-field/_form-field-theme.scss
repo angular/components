@@ -55,8 +55,7 @@
   @include form-field-density.private-form-field-density($theme);
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-form-field') {
     @if inspection.theme-has($theme, color) {
       @include color($theme);

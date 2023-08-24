@@ -33,21 +33,16 @@
 @mixin density($theme) {
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-option') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
     @if inspection.theme-has($theme, density) {
-      @include density($density);
+      @include density($theme);
     }
     @if inspection.theme-has($theme, typography) {
-      @include typography($typography);
+      @include typography($theme);
     }
   }
 }

@@ -137,12 +137,21 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return true;
   }
   @if $system == color {
+    @if not theming.private-is-theme-object($theme) {
+      @return map.has-key($theme, primary);
+    }
     @return theming.get-color-config($theme) != null;
   }
   @if $system == typography {
+    @if not theming.private-is-theme-object($theme) {
+      @return map.has-key($theme, body-1);
+    }
     @return theming.get-typography-config($theme) != null;
   }
   @if $system == density {
+    @if not theming.private-is-theme-object($theme) {
+      @return $theme == minimum or $theme == maximum or meta.type-of($theme) == 'number';
+    }
     @return theming.get-density-config($theme) != null;
   }
   @error 'Valid systems are: base, color, typography, density. Got:' $system;
