@@ -19,7 +19,7 @@
   }
 }
 
-@mixin color($config-or-theme) {
+@mixin color($theme) {
   $is-dark-theme: inspection.get-theme-type($theme) == dark;
   $primary: inspection.get-theme-color($theme, primary);
   $accent: inspection.get-theme-color($theme, accent);
@@ -72,7 +72,7 @@
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {}
 
 @mixin _density($theme) {}
 

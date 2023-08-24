@@ -6,7 +6,7 @@
 @use '../theming/inspection';
 @use '../typography/typography';
 
-@mixin color($config-or-theme) {
+@mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-option.$prefix,
       tokens-mat-option.get-color-tokens($theme));
@@ -23,14 +23,14 @@
   }
 }
 
-@mixin typography($config-or-theme) {
+@mixin typography($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-option.$prefix,
       tokens-mat-option.get-typography-tokens($theme));
   }
 }
 
-@mixin density($config-or-theme) {
+@mixin density($theme) {
 }
 
 @mixin theme($theme-or-color-config) {

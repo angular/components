@@ -3,7 +3,7 @@
 @use '../theming/inspection';
 
 // Colors for the ripple elements.
-@mixin color($config-or-theme) {
+@mixin color($theme) {
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
   $color-opacity: 0.1;
 
@@ -23,7 +23,6 @@
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-ripple') {
-    $color: theming.get-color-config($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

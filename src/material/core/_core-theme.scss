@@ -8,7 +8,7 @@
 @use './style/elevation';
 @use './typography/typography';
 
-@mixin color($config-or-theme) {
+@mixin color($theme) {
   @include ripple-theme.color($theme);
   @include option-theme.color($theme);
   @include optgroup-theme.color($theme);
@@ -42,7 +42,7 @@
   }
 }
 
-@mixin typography($config-or-theme) {
+@mixin typography($theme) {
   @include option-theme.typography($theme);
   @include optgroup-theme.typography($theme);
   @include pseudo-checkbox-theme.typography($theme);
@@ -50,7 +50,7 @@
   // @include ripple-theme.typography($config);
 }
 
-@mixin density($config-or-theme) {
+@mixin density($theme) {
   @include option-theme.density($theme);
   @include optgroup-theme.density($theme);
   // TODO(mmalerba): add density mixins for these.

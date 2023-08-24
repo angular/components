@@ -5,7 +5,7 @@
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use 'sass:map';
 
-@mixin base($config-or-theme) {
+@mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
   @include sass-utils.current-selector-or-root() {
     @include mdc-linear-progress-theme.theme(tokens-mdc-linear-progress.get-unthemable-tokens());
@@ -30,7 +30,7 @@
   @include mdc-linear-progress-theme.theme($color-tokens);
 }
 
-@mixin color($config-or-theme) {
+@mixin color($theme) {
   .mat-mdc-progress-bar {
     @include _palette-styles($theme, primary);
 
@@ -44,9 +44,9 @@
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {}
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
