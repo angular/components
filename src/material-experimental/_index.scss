@@ -5,9 +5,8 @@
   popover-edit-typography, popover-edit-density, popover-edit-theme;
 
 // Token-based theming API
-@forward './theming/theming' show theme, token-defaults;
-@forward './theming/checkbox' show checkbox;
-@forward './theming/card' show card;
-@forward './theming/m3-tokens' show get-m3-tokens;
+@forward './theming/definition' show define-theme, define-colors, define-typography, define-density;
+@forward './theming/m3-palettes' as m3-* show $m3-red-palette, $m3-orange-palette,
+$m3-yellow-palette, $m3-green-palette, $m3-blue-palette, $m3-indigo-palette, $m3-violet-palette;
 
 // Additional public APIs for individual components

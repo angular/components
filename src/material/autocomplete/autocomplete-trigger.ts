@@ -45,16 +45,16 @@ import {
   MatOptionSelectionChange,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
-  _MatOptionBase,
+  MatOption,
 } from '@angular/material/core';
 import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {delay, filter, map, switchMap, take, tap, startWith} from 'rxjs/operators';
-import {_MatAutocompleteOriginBase} from './autocomplete-origin';
+import {MatAutocompleteOrigin} from './autocomplete-origin';
 import {
   MatAutocompleteDefaultOptions,
   MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
-  _MatAutocompleteBase,
+  MatAutocomplete,
 } from './autocomplete';
 
 /**
@@ -97,8 +97,29 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 };
 
 /** Base class with all of the `MatAutocompleteTrigger` functionality. */
-@Directive()
-export abstract class _MatAutocompleteTriggerBase
+@Directive({
+  selector: `input[matAutocomplete], textarea[matAutocomplete]`,
+  host: {
+    'class': 'mat-mdc-autocomplete-trigger',
+    '[attr.autocomplete]': 'autocompleteAttribute',
+    '[attr.role]': 'autocompleteDisabled ? null : "combobox"',
+    '[attr.aria-autocomplete]': 'autocompleteDisabled ? null : "list"',
+    '[attr.aria-activedescendant]': '(panelOpen && activeOption) ? activeOption.id : null',
+    '[attr.aria-expanded]': 'autocompleteDisabled ? null : panelOpen.toString()',
+    '[attr.aria-controls]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
+    '[attr.aria-haspopup]': 'autocompleteDisabled ? null : "listbox"',
+    // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
+    // a little earlier. This avoids issues where IE delays the focusing of the input.
+    '(focusin)': '_handleFocus()',
+    '(blur)': '_onTouched()',
+    '(input)': '_handleInput($event)',
+    '(keydown)': '_handleKeydown($event)',
+    '(click)': '_handleClick()',
+  },
+  exportAs: 'matAutocompleteTrigger',
+  providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR],
+})
+export class MatAutocompleteTrigger
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
 {
   private _overlayRef: OverlayRef | null;
@@ -141,7 +162,7 @@ export abstract class _MatAutocompleteTriggerBase
    * Current option that we have auto-selected as the user is navigating,
    * but which hasn't been propagated to the model value yet.
    */
-  private _pendingAutoselectedOption: _MatOptionBase | null;
+  private _pendingAutoselectedOption: MatOption | null;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -165,7 +186,7 @@ export abstract class _MatAutocompleteTriggerBase
   _onTouched = () => {};
 
   /** The autocomplete panel to be attached to this trigger. */
-  @Input('matAutocomplete') autocomplete: _MatAutocompleteBase;
+  @Input('matAutocomplete') autocomplete: MatAutocomplete;
 
   /**
    * Position of the autocomplete panel relative to the trigger element. A position of `auto`
@@ -180,7 +201,7 @@ export abstract class _MatAutocompleteTriggerBase
    * Reference relative to which to position the autocomplete panel.
    * Defaults to the autocomplete trigger element.
    */
-  @Input('matAutocompleteConnectedTo') connectedTo: _MatAutocompleteOriginBase;
+  @Input('matAutocompleteConnectedTo') connectedTo: MatAutocompleteOrigin;
 
   /**
    * `autocomplete` attribute to be set on the input element.
@@ -219,7 +240,7 @@ export abstract class _MatAutocompleteTriggerBase
   }
 
   /** Class to apply to the panel when it's above the input. */
-  protected abstract _aboveClass: string;
+  private _aboveClass = 'mat-mdc-autocomplete-panel-above';
 
   ngAfterViewInit() {
     const window = this._getWindow();
@@ -353,7 +374,7 @@ export abstract class _MatAutocompleteTriggerBase
   }) as Observable<MatOptionSelectionChange>;
 
   /** The currently active option, coerced to MatOption type. */
-  get activeOption(): _MatOptionBase | null {
+  get activeOption(): MatOption | null {
     if (this.autocomplete && this.autocomplete._keyManager) {
       return this.autocomplete._keyManager.activeItem;
     }
@@ -470,7 +491,13 @@ export abstract class _MatAutocompleteTriggerBase
     if (this._previousValue !== value) {
       this._previousValue = value;
       this._pendingAutoselectedOption = null;
-      this._onChange(value);
+
+      // If selection is required we don't write to the CVA while the user is typing.
+      // At the end of the selection either the user will have picked something
+      // or we'll reset the value back to null.
+      if (!this.autocomplete || !this.autocomplete.requireSelection) {
+        this._onChange(value);
+      }
 
       if (!value) {
         this._clearPreviousSelectedOption(null, false);
@@ -662,7 +689,7 @@ export abstract class _MatAutocompleteTriggerBase
   /**
    * Clear any previous selected option and emit a selection change event for this option
    */
-  private _clearPreviousSelectedOption(skip: _MatOptionBase | null, emitEvent?: boolean) {
+  private _clearPreviousSelectedOption(skip: MatOption | null, emitEvent?: boolean) {
     // Null checks are necessary here, because the autocomplete
     // or its options may not have been assigned yet.
     this.autocomplete?.options?.forEach(option => {
@@ -977,30 +1004,4 @@ export abstract class _MatAutocompleteTriggerBase
       this._trackedModal = null;
     }
   }
-}
-
-@Directive({
-  selector: `input[matAutocomplete], textarea[matAutocomplete]`,
-  host: {
-    'class': 'mat-mdc-autocomplete-trigger',
-    '[attr.autocomplete]': 'autocompleteAttribute',
-    '[attr.role]': 'autocompleteDisabled ? null : "combobox"',
-    '[attr.aria-autocomplete]': 'autocompleteDisabled ? null : "list"',
-    '[attr.aria-activedescendant]': '(panelOpen && activeOption) ? activeOption.id : null',
-    '[attr.aria-expanded]': 'autocompleteDisabled ? null : panelOpen.toString()',
-    '[attr.aria-controls]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
-    '[attr.aria-haspopup]': 'autocompleteDisabled ? null : "listbox"',
-    // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
-    // a little earlier. This avoids issues where IE delays the focusing of the input.
-    '(focusin)': '_handleFocus()',
-    '(blur)': '_onTouched()',
-    '(input)': '_handleInput($event)',
-    '(keydown)': '_handleKeydown($event)',
-    '(click)': '_handleClick()',
-  },
-  exportAs: 'matAutocompleteTrigger',
-  providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR],
-})
-export class MatAutocompleteTrigger extends _MatAutocompleteTriggerBase {
-  protected _aboveClass = 'mat-mdc-autocomplete-panel-above';
 }

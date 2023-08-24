@@ -12,17 +12,15 @@ import {PortalModule} from '@angular/cdk/portal';
 import {A11yModule} from '@angular/cdk/a11y';
 import {Dialog} from './dialog';
 import {CdkDialogContainer} from './dialog-container';
-import {DIALOG_SCROLL_STRATEGY_PROVIDER} from './dialog-injectors';
 
 @NgModule({
-  imports: [OverlayModule, PortalModule, A11yModule],
+  imports: [OverlayModule, PortalModule, A11yModule, CdkDialogContainer],
   exports: [
     // Re-export the PortalModule so that people extending the `CdkDialogContainer`
     // don't have to remember to import it or be faced with an unhelpful error.
     PortalModule,
     CdkDialogContainer,
   ],
-  declarations: [CdkDialogContainer],
-  providers: [Dialog, DIALOG_SCROLL_STRATEGY_PROVIDER],
+  providers: [Dialog],
 })
 export class DialogModule {}

@@ -1,7 +1,25 @@
 @use '../core/style/vendor-prefixes';
+@use '../core/tokens/m2/mat/icon' as tokens-mat-icon;
+@use '../core/tokens/token-utils';
 
 // The width/height of the icon element.
 $size: 24px !default;
+
+// Note that here we target the `mat-icon` tag name with the `color`, instead of `.mat-icon` to
+// avoid breaking any existing overrides. It's common to customize the color of icons by setting a
+// `color` on the root node. This was easy before the tokens API, because `.mat-icon` doesn't have
+// any `color` and users could easily specify it. By adding support for tokens, we have to set a
+// `color` so the CSS variable declaration works, but by doing so we can break existing overrides.
+// We mitigate against it by targeting the tag name which has the lowest possible specificity.
+// Note that this means that we also have to re-declare the property for `primary`, `accent` and
+// `warn` because there we want the additional specificity.
+mat-icon {
+  &, &.mat-primary, &.mat-accent, &.mat-warn {
+    @include token-utils.use-tokens(tokens-mat-icon.$prefix, tokens-mat-icon.get-token-slots()) {
+      @include token-utils.create-token-slot(color, color);
+    }
+  }
+}
 
 .mat-icon {
   @include vendor-prefixes.user-select(none);

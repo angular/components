@@ -17,17 +17,18 @@
       track-color: null,
     ))
   );
-
-  // Add default values for tokens that aren't outputted by the theming API.
-  .mat-mdc-progress-bar {
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-linear-progress-theme.theme(m2-mdc-linear-progress.get-unthemable-tokens());
-  }
 }
 
 .mat-mdc-progress-bar {
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
   display: block;
+
+  // Explicitly set a `text-align` so that the content isn't affected by the parent (see #27613).
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
 
   // Inverts the progress bar horizontally in `query` mode.
   &[mode='query'] {

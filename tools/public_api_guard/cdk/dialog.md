@@ -18,9 +18,9 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FocusTrapFactory } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/overlay';
-import * as i3 from '@angular/cdk/portal';
-import * as i4 from '@angular/cdk/a11y';
+import * as i1 from '@angular/cdk/overlay';
+import * as i2 from '@angular/cdk/portal';
+import * as i3 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { InteractivityChecker } from '@angular/cdk/a11y';
@@ -45,7 +45,7 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 // @public
 export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends BasePortalOutlet implements OnDestroy {
     constructor(_elementRef: ElementRef, _focusTrapFactory: FocusTrapFactory, _document: any, _config: C, _interactivityChecker: InteractivityChecker, _ngZone: NgZone, _overlayRef: OverlayRef, _focusMonitor?: FocusMonitor | undefined);
-    _ariaLabelledBy: string | null;
+    _ariaLabelledByQueue: string[];
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;
@@ -70,7 +70,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     _recaptureFocus(): void;
     protected _trapFocus(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkDialogContainer<any>, "cdk-dialog-container", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkDialogContainer<any>, "cdk-dialog-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkDialogContainer<any>, [null, null, { optional: true; }, null, null, null, null, null]>;
 }
@@ -104,14 +104,14 @@ export const DIALOG_DATA: InjectionToken<any>;
 // @public
 export const DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public
+// @public @deprecated
 export const DIALOG_SCROLL_STRATEGY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];
     useFactory: typeof DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY;
 };
 
-// @public
+// @public @deprecated
 export function DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
 // @public
@@ -164,7 +164,7 @@ export class DialogModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<DialogModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<DialogModule, [typeof i1.CdkDialogContainer], [typeof i2.OverlayModule, typeof i3.PortalModule, typeof i4.A11yModule], [typeof i3.PortalModule, typeof i1.CdkDialogContainer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<DialogModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.A11yModule, typeof i4.CdkDialogContainer], [typeof i2.PortalModule, typeof i4.CdkDialogContainer]>;
 }
 
 // @public
@@ -175,6 +175,7 @@ export class DialogRef<R = unknown, C = unknown> {
     close(result?: R, options?: DialogCloseOptions): void;
     readonly closed: Observable<R | undefined>;
     readonly componentInstance: C | null;
+    readonly componentRef: ComponentRef<C> | null;
     // (undocumented)
     readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>;
     readonly containerInstance: BasePortalOutlet & {

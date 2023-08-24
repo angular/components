@@ -1,6 +1,10 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
+@use './m3-density';
+@use './custom-tokens';
+
+// TODO(mmalerba): Split up this file into smaller pieces.
 
 /// Picks a submap containing only the given keys out the given map.
 /// @param {Map} $map The map to pick from.
@@ -29,37 +33,6 @@
   @return $result;
 }
 
-/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
-/// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map} $m3-values A map of M3 token values for the given prefix.
-/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
-/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function _get-mdc-tokens($prefix, $m3-values, $slots) {
-  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
-  $used-m3-tokens: _pick($m3-values, $used-token-names);
-  @return (
-    $prefix: $used-m3-tokens,
-  );
-}
-
-/// Sets all of the standard typography tokens for the given token base name to the given typography
-/// level.
-/// @param {Map} $typography-tokens The MDC system-typescale tokens.
-/// @param {String} $base-name The token base name to get the typography tokens for
-/// @param {String} $typography-level The typography level to base the token values on.
-/// @return {Map} A map containing the typography tokens for the given base token name.
-@function _get-typography-tokens($typography-tokens, $base-name, $typography-level) {
-  $result: ();
-  @each $prop in (font, line-height, size, tracking, weight) {
-    $result: map.set(
-        $result,
-        #{$base-name}-#{$prop},
-        map.get($typography-tokens, #{$typography-level}-#{$prop}
-        ));
-  }
-  @return $result;
-}
-
 /// Renames the keys in a map
 /// @param {Map} $map The map whose keys should be renamed
 /// @param {Map} $rename-keys A map of original key to renamed key to apply to $map
@@ -74,43 +47,113 @@
   @return $result;
 }
 
+/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
+/// @param {List} $prefix The token prefix for the given tokens.
+/// @param {Map} $m3-values A map of M3 token values for the given prefix.
+/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
+/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
+@function _namespace-tokens($prefix, $m3-values, $slots) {
+  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
+  $used-m3-tokens: _pick(_filter-nulls($m3-values), $used-token-names);
+  @return (
+    $prefix: $used-m3-tokens,
+  );
+}
+
+/// Generates tokens for the given palette with the given prefix.
+/// @param {Map} $palette The palette to generate tokens for
+/// @param {String} $prefix The key prefix used to name the tokens
+/// @return {Map} A set of tokens for the given palette
+@function _generate-palette-tokens($palette, $prefix) {
+  $palette: map.remove($palette, neutral-variant);
+  $result: ();
+  @each $hue, $value in $palette {
+    $result: map.set($result, '#{$prefix}#{$hue}', $value);
+  }
+  @return $result;
+}
+
+/// Creates a set of `md-ref-palette` tokens from the given palettes. (See
+/// https://github.com/material-components/material-components-web/blob/master/packages/mdc-tokens/v0_161/_md-ref-palette.scss)
+/// @param {Map} $primary The primary palette
+/// @param {Map} $secondary The secondary palette
+/// @param {Map} $tertiary The tertiary palette
+/// @param {Map} $neutral The neutral palette
+/// @param {Map} $error The error palette
+/// @return {Map} A set of `md-ref-palette` tokens
+@function _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error) {
+  @return mat.private-merge-all(
+      (black: #000, white: #fff),
+      _generate-palette-tokens($primary, primary),
+      _generate-palette-tokens($secondary, secondary),
+      _generate-palette-tokens($tertiary, tertiary),
+      _generate-palette-tokens($neutral, neutral),
+      _generate-palette-tokens(map.get($primary, neutral-variant), neutral-variant),
+      _generate-palette-tokens($error, error),
+  );
+}
+
+/// Creates a set of `md-ref-typeface` tokens from the given palettes. (See
+/// https://github.com/material-components/material-components-web/blob/master/packages/mdc-tokens/v0_161/_md-ref-typeface.scss)
+/// @param {List|String} $brand The font-family to use for brand text
+/// @param {List|String} $plain The font-family to use for plain text
+/// @param {String} $bold The font-weight to use for bold text
+/// @param {String} $medium The font-weight to use for medium text
+/// @param {String} $regular The font-weight to use for regular text
+/// @return {Map} A set of `md-ref-typeface` tokens
+@function _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular) {
+  @return (
+    brand: $brand,
+    plain: $plain,
+    weight-bold: $bold,
+    weight-medium: $medium,
+    weight-regular: $regular,
+  );
+}
+
 /// Renames the official checkbox tokens to match the names actually used in MDC's code (which are
 /// different). This is a temporary workaround until MDC updates to use the correct names for the
 /// tokens.
 /// @param {Map} $tokens The map of checkbox tokens with the official tokens names
 /// @return {Map} The given tokens, renamed to be compatible with MDC's token implementation.
-@function _fix-checkbox-token-names($tokens) {
+@function _fix-checkbox-tokens($tokens) {
   $rename-keys: (
-    'selected-icon-color': 'selected-checkmark-color',
-    'selected-disabled-icon-color': 'disabled-selected-checkmark-color',
-    'selected-container-color': 'selected-icon-color',
-    'selected-hover-container-color': 'selected-hover-icon-color',
-    'selected-disabled-container-color': 'disabled-selected-icon-color',
-    'selected-disabled-container-opacity': 'disabled-selected-icon-opacity',
-    'selected-focus-container-color': 'selected-focus-icon-color',
-    'selected-pressed-container-color': 'selected-pressed-icon-color',
-    'unselected-disabled-outline-color': 'disabled-unselected-icon-color',
-    'unselected-disabled-container-opacity': 'disabled-unselected-icon-opacity',
-    'unselected-focus-outline-color': 'unselected-focus-icon-color',
-    'unselected-hover-outline-color': 'unselected-hover-icon-color',
-    'unselected-outline-color': 'unselected-icon-color',
-    'unselected-pressed-outline-color': 'unselected-pressed-icon-color'
+    selected-icon-color: selected-checkmark-color,
+    selected-disabled-icon-color: disabled-selected-checkmark-color,
+    selected-container-color: selected-icon-color,
+    selected-hover-container-color: selected-hover-icon-color,
+    selected-disabled-container-color: disabled-selected-icon-color,
+    selected-disabled-container-opacity: disabled-selected-icon-opacity,
+    selected-focus-container-color: selected-focus-icon-color,
+    selected-pressed-container-color: selected-pressed-icon-color,
+    unselected-disabled-outline-color: disabled-unselected-icon-color,
+    unselected-disabled-container-opacity: disabled-unselected-icon-opacity,
+    unselected-focus-outline-color: unselected-focus-icon-color,
+    unselected-hover-outline-color: unselected-hover-icon-color,
+    unselected-outline-color: unselected-icon-color,
+    unselected-pressed-outline-color: unselected-pressed-icon-color
   );
   @return _rename-map-keys($tokens, $rename-keys);
 }
 
-// TODO(mmalerba): We need a way to accept custom M3 token values generated from MDCs theme builder
-//  or other means. We can't just use them directly without processing them first because we need to
-//  add our made up tokens,
-/// Gets the default token values for M3.
-/// @return The default set of M3 tokens.
-@function get-m3-tokens() {
-  $typography: mdc-tokens.md-sys-typescale-values();
-  $colors: mdc-tokens.md-sys-color-values-light();
+/// Generates a set of namespaced tokens for all components.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
+/// @return {Map} A map of namespaced tokens
+@function _generate-tokens($systems, $include-non-systemized: false) {
+  $systems: map.merge((
+    md-sys-color: (),
+    md-sys-elevation: (),
+    md-sys-motion: (),
+    md-sys-shape: (),
+    md-sys-state: (),
+    md-sys-typescale: ()
+  ), $systems);
+  $exclude-hardcoded: not $include-non-systemized;
 
-  // TODO(mmalerba): Refactor this to not depend on the legacy theme. This is a hack for now because
-  //  there is no good way to get the token slots in material-experimental without exposing them all
-  //  from material.
+  // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
+  //  material-experimental. This is a hack for now because there is no good way to get the token
+  //  slots in material-experimental without exposing them all from material.
   $fake-theme: mat.define-light-theme((
     color: (
       primary: mat.define-palette(mat.$red-palette),
@@ -123,24 +166,101 @@
   $token-slots: mat.m2-tokens-from-theme($fake-theme);
 
   // TODO(mmalerba): Fill in remaining tokens.
-  @return mat.private-merge-all(
-      // Fill in official MDC tokens.
-      _get-mdc-tokens((mdc, checkbox),
-        _fix-checkbox-token-names(mdc-tokens.md-comp-checkbox-values()), $token-slots),
-      _get-mdc-tokens((mdc, elevated-card), mdc-tokens.md-comp-elevated-card-values(),
-        $token-slots),
-      _get-mdc-tokens((mdc, outlined-card), mdc-tokens.md-comp-outlined-card-values(),
-        $token-slots),
+  $result: mat.private-merge-all(
+    // Add the system color & typography tokens (so we can give users access via an API).
+      (
+          (mdc, theme): map.get($systems, md-sys-color),
+          (mdc, typography): map.get($systems, md-sys-typescale),
+      ),
+      // Get the official MDC component tokens
+      _namespace-tokens(
+            (mdc, checkbox),
+          _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
+          $token-slots
+      ),
+      _namespace-tokens(
+            (mdc, elevated-card),
+          mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
+      _namespace-tokens(
+            (mdc, outlined-card),
+          mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
       // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
       // values.
-      (
-          (mat, card): mat.private-merge-all(
-            _get-typography-tokens($typography, title-text, title-large),
-            _get-typography-tokens($typography, subtitle-text, title-medium),
-            (
-              subtitle-text-color: map.get($colors, on-surface)
-            )
-        )
+      _namespace-tokens(
+            (mat, card),
+          custom-tokens.card($systems, $exclude-hardcoded),
+          $token-slots
       ),
   );
+
+  // Strip out tokens that are systemized by our made up density system.
+  @each $namespace, $tokens in $result {
+    @each $token, $value in $tokens {
+      @if m3-density.is-systemized($namespace, $token) {
+        $tokens: map.remove($tokens, $token);
+      }
+    }
+    $result: map.set($result, $namespace, $tokens);
+  }
+  @return $result;
+}
+
+/// Generates a set of namespaced color tokens for all components.
+/// @param {String} $type The type of theme system (light or dark)
+/// @param {Map} $primary The primary palette
+/// @param {Map} $secondary The secondary palette
+/// @param {Map} $tertiary The tertiary palette
+/// @param {Map} $neutral The neutral palette
+/// @param {Map} $error The error palette
+/// @return {Map} A map of namespaced color tokens
+@function generate-color-tokens($type, $primary, $secondary, $tertiary, $neutral, $error) {
+  $ref: (
+    md-ref-palette: _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error)
+  );
+  $sys-color: if($type == dark,
+    mdc-tokens.md-sys-color-values-dark($ref),
+    mdc-tokens.md-sys-color-values-light($ref));
+  @return _generate-tokens((
+    md-sys-color: $sys-color,
+    md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
+  ));
+}
+
+/// Generates a set of namespaced color tokens for all components.
+/// @param {String|List} $brand The brand font-family
+/// @param {String|List} $plain The plain fort-family
+/// @param {String|Number} $bold The bold font-weight
+/// @param {String|Number} $medium The medium font-weight
+/// @param {String|Number} $regular The regular font-weight
+/// @return {Map} A map of namespaced typography tokens
+@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular) {
+  $ref: (
+    md-ref-typeface: _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
+  );
+  @return _generate-tokens((
+    md-sys-typescale: mdc-tokens.md-sys-typescale-values($ref)
+  ));
+}
+
+/// Generates a set of namespaced density tokens for all components.
+/// @param {String|Number} $scale The regular font-weight
+/// @return {Map} A map of namespaced density tokens
+@function generate-density-tokens($scale) {
+  @return m3-density.get-tokens-for-scale($scale);
+}
+
+/// Generates a set of namespaced tokens not related to color, typography, or density for all
+/// components.
+/// @return {Map} A map of namespaced tokens not related to color, typography, or density
+@function generate-base-tokens() {
+  // TODO(mmalerba): Exclude density tokens once implemented.
+  @return _generate-tokens((
+    md-sys-motion: mdc-tokens.md-sys-motion-values(),
+    md-sys-shape: mdc-tokens.md-sys-shape-values(),
+    md-sys-state: mdc-tokens.md-sys-state-values(),
+  ), $include-non-systemized: true);
 }

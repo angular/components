@@ -47,7 +47,6 @@
     // surface element.
     @include mdc-snackbar-theme.elevation(mdc-snackbar-theme.$elevation);
     @include mdc-snackbar-theme.theme-styles(tokens-mdc-snack-bar.get-token-slots());
-    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-unthemable-tokens());
 
     // MDC sets the position as fixed and sets the container on the bottom center of the page (or
     // otherwise can be set to be "leading"). Our overlay handles a more advanced configuration

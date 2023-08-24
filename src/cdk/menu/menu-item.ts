@@ -17,7 +17,7 @@ import {
   Output,
 } from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption, InputModalityDetector} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
 import {fromEvent, Subject} from 'rxjs';
@@ -53,6 +53,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   protected readonly _dir = inject(Directionality, {optional: true});
   readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   protected _ngZone = inject(NgZone);
+  private readonly _inputModalityDetector = inject(InputModalityDetector);
 
   /** The menu aim service used by this menu. */
   private readonly _menuAim = inject(MENU_AIM, {optional: true});
@@ -276,7 +277,14 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       this._ngZone.runOutsideAngular(() =>
         fromEvent(this._elementRef.nativeElement, 'mouseenter')
           .pipe(
-            filter(() => !this._menuStack.isEmpty() && !this.hasMenu),
+            filter(() => {
+              return (
+                // Skip fake `mouseenter` events dispatched by touch devices.
+                this._inputModalityDetector.mostRecentModality !== 'touch' &&
+                !this._menuStack.isEmpty() &&
+                !this.hasMenu
+              );
+            }),
             takeUntil(this.destroyed),
           )
           .subscribe(() => {

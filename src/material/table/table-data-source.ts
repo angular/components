@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {
   BehaviorSubject,
   combineLatest,
@@ -21,40 +22,25 @@ import {_isNumberValue} from '@angular/cdk/coercion';
 import {map} from 'rxjs/operators';
 
 /**
- * Interface that matches the required API parts for the MatPaginator's PageEvent.
- * Decoupled so that users can depend on either the legacy or MDC-based paginator.
- */
-export interface MatTableDataSourcePageEvent {
-  pageIndex: number;
-  pageSize: number;
-  length: number;
-}
-
-/**
- * Interface that matches the required API parts of the MatPaginator.
- * Decoupled so that users can depend on either the legacy or MDC-based paginator.
- */
-export interface MatTableDataSourcePaginator {
-  page: Subject<MatTableDataSourcePageEvent>;
-  pageIndex: number;
-  initialized: Observable<void>;
-  pageSize: number;
-  length: number;
-  firstPage: () => void;
-  lastPage: () => void;
-}
-
-/**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
  * flaky browser support and the value not being defined in Closure's typings.
  */
 const MAX_SAFE_INTEGER = 9007199254740991;
 
-/** Shared base class with MDC-based implementation. */
-export class _MatTableDataSource<
-  T,
-  P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator,
-> extends DataSource<T> {
+/**
+ * Data source that accepts a client-side data array and includes native support of filtering,
+ * sorting (using MatSort), and pagination (using MatPaginator).
+ *
+ * Allows for sort customization by overriding sortingDataAccessor, which defines how data
+ * properties are accessed. Also allows for filter customization by overriding filterPredicate,
+ * which defines how row data is converted to a string for filter matching.
+ *
+ * **Note:** This class is meant to be a simple data source to help you get started. As such
+ * it isn't equipped to handle some more advanced cases like robust i18n support or server-side
+ * interactions. If your app needs to support more advanced use cases, consider implementing your
+ * own `DataSource`.
+ */
+export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]>;
 
@@ -283,12 +269,12 @@ export class _MatTableDataSource<
     const sortChange: Observable<Sort | null | void> = this._sort
       ? (merge(this._sort.sortChange, this._sort.initialized) as Observable<Sort | void>)
       : observableOf(null);
-    const pageChange: Observable<MatTableDataSourcePageEvent | null | void> = this._paginator
+    const pageChange: Observable<PageEvent | null | void> = this._paginator
       ? (merge(
           this._paginator.page,
           this._internalPageChanges,
           this._paginator.initialized,
-        ) as Observable<MatTableDataSourcePageEvent | void>)
+        ) as Observable<PageEvent | void>)
       : observableOf(null);
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
@@ -408,21 +394,3 @@ export class _MatTableDataSource<
     this._renderChangesSubscription = null;
   }
 }
-
-/**
- * Data source that accepts a client-side data array and includes native support of filtering,
- * sorting (using MatSort), and pagination (using MatPaginator).
- *
- * Allows for sort customization by overriding sortingDataAccessor, which defines how data
- * properties are accessed. Also allows for filter customization by overriding filterPredicate,
- * which defines how row data is converted to a string for filter matching.
- *
- * **Note:** This class is meant to be a simple data source to help you get started. As such
- * it isn't equipped to handle some more advanced cases like robust i18n support or server-side
- * interactions. If your app needs to support more advanced use cases, consider implementing your
- * own `DataSource`.
- */
-export class MatTableDataSource<
-  T,
-  P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator,
-> extends _MatTableDataSource<T, P> {}

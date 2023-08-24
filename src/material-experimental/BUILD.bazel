@@ -21,13 +21,16 @@ sass_library(
     name = "theming_scss_lib",
     srcs = MATERIAL_EXPERIMENTAL_SCSS_LIBS + [
         "//src/material-experimental/theming:theming_scss_lib",
+        "//src/material-experimental/theming-next:theming_next_scss_lib",
     ],
 )
 
 sass_library(
     name = "sass_lib",
     srcs = ["_index.scss"],
-    deps = [":theming_scss_lib"],
+    deps = [
+        ":theming_scss_lib",
+    ],
 )
 
 # Generate the material-experimental `package.json` by adding all MDC dependencies
@@ -48,7 +51,6 @@ ng_package(
     srcs = [
         ":package_json",
         ":sass_lib",
-        ":theming_scss_lib",
     ],
     tags = ["release-package"],
     deps = MATERIAL_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TESTING_TARGETS,

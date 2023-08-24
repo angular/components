@@ -15,7 +15,7 @@ import {UpgradeData} from '../upgrade-data';
  * instances of outdated Angular CDK API that can't be migrated automatically.
  */
 export class MiscTemplateMigration extends Migration<UpgradeData> {
-  // There are currently no migrations for V16 deprecations.
+  // There are currently no migrations for V17 deprecations.
   enabled = false;
 
   override visitTemplate(template: ResolvedResource): void {}

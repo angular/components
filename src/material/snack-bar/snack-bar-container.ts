@@ -11,7 +11,6 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentRef,
-  Directive,
   ElementRef,
   EmbeddedViewRef,
   inject,
@@ -39,11 +38,27 @@ import {MatSnackBarConfig} from './snack-bar-config';
 let uniqueId = 0;
 
 /**
- * Base class for snack bar containers.
+ * Internal component that wraps user-provided snack bar content.
  * @docs-private
  */
-@Directive()
-export abstract class _MatSnackBarContainerBase extends BasePortalOutlet implements OnDestroy {
+@Component({
+  selector: 'mat-snack-bar-container',
+  templateUrl: 'snack-bar-container.html',
+  styleUrls: ['snack-bar-container.css'],
+  // In Ivy embedded views will be change detected from their declaration place, rather than
+  // where they were stamped out. This means that we can't have the snack bar container be OnPush,
+  // because it might cause snack bars that were opened from a template not to be out of date.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
+  encapsulation: ViewEncapsulation.None,
+  animations: [matSnackBarAnimations.snackBarState],
+  host: {
+    'class': 'mdc-snackbar mat-mdc-snack-bar-container mdc-snackbar--open',
+    '[@state]': '_animationState',
+    '(@state.done)': 'onAnimationEnd($event)',
+  },
+})
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
   private _document = inject(DOCUMENT);
   private _trackedModals = new Set<Element>();
 
@@ -75,6 +90,13 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
   _live: AriaLivePoliteness;
 
   /**
+   * Element that will have the `mdc-snackbar__label` class applied if the attached component
+   * or template does not have it. This ensures that the appropriate structure, typography, and
+   * color is applied to the attached view.
+   */
+  @ViewChild('label', {static: true}) _label: ElementRef;
+
+  /**
    * Role of the live region. This is only for Firefox as there is a known issue where Firefox +
    * JAWS does not read out aria-live message.
    */
@@ -85,7 +107,7 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
 
   constructor(
     private _ngZone: NgZone,
-    protected _elementRef: ElementRef<HTMLElement>,
+    private _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _platform: Platform,
     /** The snack bar configuration. */
@@ -219,7 +241,7 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
    * Called after the portal contents have been attached. Can be
    * used to modify the DOM once it's guaranteed to be in place.
    */
-  protected _afterPortalAttached() {
+  private _afterPortalAttached() {
     const element: HTMLElement = this._elementRef.nativeElement;
     const panelClasses = this.snackBarConfig.panelClass;
 
@@ -233,6 +255,13 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
     }
 
     this._exposeToModals();
+
+    // Check to see if the attached component or template uses the MDC template structure,
+    // specifically the MDC label. If not, the container should apply the MDC label class to this
+    // component's label container, which will apply MDC's label styles to the attached view.
+    const label = this._label.nativeElement;
+    const labelClass = 'mdc-snackbar__label';
+    label.classList.toggle(labelClass, !label.querySelector(`.${labelClass}`));
   }
 
   /**
@@ -323,47 +352,5 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
         }, this._announceDelay);
       });
     }
-  }
-}
-
-/**
- * Internal component that wraps user-provided snack bar content.
- * @docs-private
- */
-@Component({
-  selector: 'mat-snack-bar-container',
-  templateUrl: 'snack-bar-container.html',
-  styleUrls: ['snack-bar-container.css'],
-  // In Ivy embedded views will be change detected from their declaration place, rather than
-  // where they were stamped out. This means that we can't have the snack bar container be OnPush,
-  // because it might cause snack bars that were opened from a template not to be out of date.
-  // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None,
-  animations: [matSnackBarAnimations.snackBarState],
-  host: {
-    'class': 'mdc-snackbar mat-mdc-snack-bar-container mdc-snackbar--open',
-    '[@state]': '_animationState',
-    '(@state.done)': 'onAnimationEnd($event)',
-  },
-})
-export class MatSnackBarContainer extends _MatSnackBarContainerBase {
-  /**
-   * Element that will have the `mdc-snackbar__label` class applied if the attached component
-   * or template does not have it. This ensures that the appropriate structure, typography, and
-   * color is applied to the attached view.
-   */
-  @ViewChild('label', {static: true}) _label: ElementRef;
-
-  /** Applies the correct CSS class to the label based on its content. */
-  protected override _afterPortalAttached() {
-    super._afterPortalAttached();
-
-    // Check to see if the attached component or template uses the MDC template structure,
-    // specifically the MDC label. If not, the container should apply the MDC label class to this
-    // component's label container, which will apply MDC's label styles to the attached view.
-    const label = this._label.nativeElement;
-    const labelClass = 'mdc-snackbar__label';
-    label.classList.toggle(labelClass, !label.querySelector(`.${labelClass}`));
   }
 }

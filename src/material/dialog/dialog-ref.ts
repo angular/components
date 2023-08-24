@@ -11,10 +11,11 @@ import {FocusOrigin} from '@angular/cdk/a11y';
 import {merge, Observable, Subject} from 'rxjs';
 import {DialogRef} from '@angular/cdk/dialog';
 import {DialogPosition, MatDialogConfig} from './dialog-config';
-import {_MatDialogContainerBase} from './dialog-container';
+import {MatDialogContainer} from './dialog-container';
 import {filter, take} from 'rxjs/operators';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {GlobalPositionStrategy} from '@angular/cdk/overlay';
+import {ComponentRef} from '@angular/core';
 
 export const enum MatDialogState {
   OPEN,
@@ -28,6 +29,12 @@ export const enum MatDialogState {
 export class MatDialogRef<T, R = any> {
   /** The instance of component opened into the dialog. */
   componentInstance: T;
+
+  /**
+   * `ComponentRef` of the component opened into the dialog. Will be
+   * null when the dialog is opened using a `TemplateRef`.
+   */
+  readonly componentRef: ComponentRef<T> | null;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined;
@@ -60,7 +67,7 @@ export class MatDialogRef<T, R = any> {
   constructor(
     private _ref: DialogRef<R, T>,
     config: MatDialogConfig,
-    public _containerInstance: _MatDialogContainerBase,
+    public _containerInstance: MatDialogContainer,
   ) {
     this.disableClose = config.disableClose;
     this.id = _ref.id;

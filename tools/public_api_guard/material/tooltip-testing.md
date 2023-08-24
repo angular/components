@@ -4,47 +4,21 @@
 
 ```ts
 
-import { AsyncFactoryFn } from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { TestElement } from '@angular/cdk/testing';
 
 // @public
-export class MatTooltipHarness extends _MatTooltipHarnessBase {
-    // (undocumented)
-    protected _disabledClass: string;
-    // (undocumented)
-    protected _hiddenClass: string;
-    // (undocumented)
-    protected _hideAnimationName: string;
-    // (undocumented)
-    static hostSelector: string;
-    // (undocumented)
-    protected _optionalPanel: AsyncFactoryFn<TestElement | null>;
-    // (undocumented)
-    protected _showAnimationName: string;
-    static with<T extends MatTooltipHarness>(this: ComponentHarnessConstructor<T>, options?: TooltipHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatTooltipHarnessBase extends ComponentHarness {
-    // (undocumented)
-    protected abstract _disabledClass: string;
+export class MatTooltipHarness extends ComponentHarness {
     getTooltipText(): Promise<string>;
-    // (undocumented)
-    protected abstract _hiddenClass: string;
     hide(): Promise<void>;
     // (undocumented)
-    protected abstract _hideAnimationName: string;
+    static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isOpen(): Promise<boolean>;
-    // (undocumented)
-    protected abstract _optionalPanel: AsyncFactoryFn<TestElement | null>;
     show(): Promise<void>;
-    // (undocumented)
-    protected abstract _showAnimationName: string;
+    static with<T extends MatTooltipHarness>(this: ComponentHarnessConstructor<T>, options?: TooltipHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public

@@ -7,6 +7,7 @@
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentFactoryResolver } from '@angular/core';
+import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
@@ -36,7 +37,6 @@ import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
@@ -74,9 +74,6 @@ export const MAT_DIALOG_DEFAULT_OPTIONS: InjectionToken<MatDialogConfig<any>>;
 export const MAT_DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
-export function MAT_DIALOG_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
-
-// @public
 export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];
@@ -87,11 +84,24 @@ export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER: {
 export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
 // @public
-export class MatDialog extends _MatDialogBase<MatDialogContainer> {
-    constructor(overlay: Overlay, injector: Injector,
-    location: Location_2, defaultOptions: MatDialogConfig, scrollStrategy: any, parentDialog: MatDialog,
-    overlayContainer: OverlayContainer,
-    animationMode?: 'NoopAnimations' | 'BrowserAnimations');
+export class MatDialog implements OnDestroy {
+    constructor(_overlay: Overlay, injector: Injector,
+    location: Location_2, _defaultOptions: MatDialogConfig, _scrollStrategy: any, _parentDialog: MatDialog,
+    _overlayContainer: OverlayContainer,
+    _animationMode?: 'NoopAnimations' | 'BrowserAnimations');
+    readonly afterAllClosed: Observable<void>;
+    get afterOpened(): Subject<MatDialogRef<any>>;
+    closeAll(): void;
+    // (undocumented)
+    protected dialogConfigClass: typeof MatDialogConfig;
+    getDialogById(id: string): MatDialogRef<any> | undefined;
+    // (undocumented)
+    ngOnDestroy(): void;
+    open<T, D = any, R = any>(component: ComponentType<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+    open<T, D = any, R = any>(template: TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+    // (undocumented)
+    open<T, D = any, R = any>(template: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+    get openDialogs(): MatDialogRef<any>[];
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialog, [null, null, { optional: true; }, { optional: true; }, null, { optional: true; skipSelf: true; }, null, { optional: true; }]>;
     // (undocumented)
@@ -111,32 +121,6 @@ export class MatDialogActions {
 export const matDialogAnimations: {
     readonly dialogContainer: AnimationTriggerMetadata;
 };
-
-// @public
-export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implements OnDestroy {
-    constructor(_overlay: Overlay, injector: Injector, _defaultOptions: MatDialogConfig | undefined, _parentDialog: _MatDialogBase<C> | undefined,
-    _overlayContainer: OverlayContainer, scrollStrategy: any, _dialogRefConstructor: Type<MatDialogRef<any>>, _dialogContainerType: Type<C>, _dialogDataToken: InjectionToken<any>,
-    _animationMode?: 'NoopAnimations' | 'BrowserAnimations');
-    readonly afterAllClosed: Observable<void>;
-    get afterOpened(): Subject<MatDialogRef<any>>;
-    closeAll(): void;
-    // (undocumented)
-    protected dialogConfigClass: typeof MatDialogConfig;
-    getDialogById(id: string): MatDialogRef<any> | undefined;
-    // (undocumented)
-    protected _idPrefix: string;
-    // (undocumented)
-    ngOnDestroy(): void;
-    open<T, D = any, R = any>(component: ComponentType<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
-    open<T, D = any, R = any>(template: TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
-    // (undocumented)
-    open<T, D = any, R = any>(template: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
-    get openDialogs(): MatDialogRef<any>[];
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatDialogBase<any>, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<_MatDialogBase<any>>;
-}
 
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
@@ -193,33 +177,23 @@ export class MatDialogConfig<D = any> {
     width?: string;
 }
 
-// @public
-export class MatDialogContainer extends _MatDialogContainerBase implements OnDestroy {
-    constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, document: any, dialogConfig: MatDialogConfig, checker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, _animationMode?: string | undefined, focusMonitor?: FocusMonitor);
+// @public (undocumented)
+export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+    constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, _document: any, dialogConfig: MatDialogConfig, interactivityChecker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, _animationMode?: string | undefined, focusMonitor?: FocusMonitor);
     _animationsEnabled: boolean;
+    _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
+    // (undocumented)
+    protected _captureInitialFocus(): void;
     // (undocumented)
     protected _contentAttached(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    protected _openAnimationDone(totalTime: number): void;
     _startExitAnimation(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatDialogContainer, "mat-dialog-container", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogContainer, [null, null, { optional: true; }, null, null, null, null, { optional: true; }, null]>;
-}
-
-// @public
-export abstract class _MatDialogContainerBase extends CdkDialogContainer<MatDialogConfig> {
-    constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, _document: any, dialogConfig: MatDialogConfig, interactivityChecker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, focusMonitor?: FocusMonitor);
-    _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
-    // (undocumented)
-    protected _captureInitialFocus(): void;
-    protected _openAnimationDone(totalTime: number): void;
-    abstract _startExitAnimation(): void;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<_MatDialogContainerBase, "ng-component", never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatDialogContainerBase, [null, null, { optional: true; }, null, null, null, null, null]>;
 }
 
 // @public
@@ -242,7 +216,7 @@ export class MatDialogModule {
 
 // @public
 export class MatDialogRef<T, R = any> {
-    constructor(_ref: DialogRef<R, T>, config: MatDialogConfig, _containerInstance: _MatDialogContainerBase);
+    constructor(_ref: DialogRef<R, T>, config: MatDialogConfig, _containerInstance: MatDialogContainer);
     addPanelClass(classes: string | string[]): this;
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
@@ -250,8 +224,9 @@ export class MatDialogRef<T, R = any> {
     beforeClosed(): Observable<R | undefined>;
     close(dialogResult?: R): void;
     componentInstance: T;
+    readonly componentRef: ComponentRef<T> | null;
     // (undocumented)
-    _containerInstance: _MatDialogContainerBase;
+    _containerInstance: MatDialogContainer;
     disableClose: boolean | undefined;
     getState(): MatDialogState;
     id: string;
@@ -272,10 +247,12 @@ export const enum MatDialogState {
 }
 
 // @public
-export class MatDialogTitle implements OnInit {
+export class MatDialogTitle implements OnInit, OnDestroy {
     constructor(_dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
     // (undocumented)
     id: string;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)

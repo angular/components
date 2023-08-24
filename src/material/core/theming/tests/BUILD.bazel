@@ -11,12 +11,11 @@ sass_binary(
     src = "test-css-variables-theme.scss",
     deps = [
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-core:theming_scss_lib",
     ],
 )
 
-# Sass binary which is used to ensure that our themes will compile with the legacy and new
-# pattern for configuring themes. For more information on the legacy and new pattern, inspect
+# Sass binary which is used to ensure that our themes will compile with the
+# pattern for configuring themes. For more information, inspect
 # the `mat-light-theme` and `mat-dark-theme` theming functions.
 sass_binary(
     name = "test-theming-api",
@@ -24,7 +23,6 @@ sass_binary(
     src = "test-theming-api.scss",
     deps = [
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-core:theming_scss_lib",
     ],
 )
 
@@ -33,15 +31,6 @@ sass_binary(
     name = "test-theming-bundle",
     testonly = True,
     src = "test-theming-bundle.scss",
-    deps = ["//src/material:sass_lib"],
-)
-
-# Sass binary which is used to ensure that the legacy theming bundle exposes the necessary
-# mixins and variables for creating themes.
-sass_binary(
-    name = "test-legacy-theming-bundle",
-    testonly = True,
-    src = "test-legacy-theming-bundle.scss",
     deps = ["//src/material:sass_lib"],
 )
 
@@ -59,7 +48,6 @@ build_test(
         ":test-css-variables-theme",
         ":test-theming-api",
         ":test-theming-bundle",
-        ":test-legacy-theming-bundle",
         ":test-typography-font-family",
     ],
 )
@@ -68,7 +56,9 @@ ts_library(
     name = "unit_test_lib",
     testonly = True,
     srcs = [
-        "theming-api.spec.ts",
+        "theming-definition-api.spec.ts",
+        "theming-inspection-api.spec.ts",
+        "theming-mixin-api.spec.ts",
     ],
     # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
     devmode_module = "commonjs",
@@ -86,6 +76,9 @@ ts_library(
 jasmine_node_test(
     name = "unit_tests",
     srcs = [":unit_test_lib"],
-    data = ["//src/material/core:theming_scss_lib"],
+    data = [
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
+    ],
     shard_count = 4,
 )

@@ -3,39 +3,57 @@
 @use '@material/form-field' as mdc-form-field;
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/typography/typography';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 
+@mixin base($config-or-theme) {
+  @if inspection.get-theme-version($config-or-theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, base));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
+    }
+  }
+}
+
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $warn: map.get($config, warn);
-  $foreground: map.get($config, foreground);
 
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
+  @if inspection.get-theme-version($config-or-theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, color));
   }
+  @else {
+    $primary: map.get($config, primary);
+    $warn: map.get($config, warn);
+    $foreground: map.get($config, foreground);
 
-  .mat-mdc-checkbox {
-    &.mat-primary {
-      $primary-config: map.merge($config, (accent: $primary));
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($primary-config));
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($config));
     }
 
-    &.mat-warn {
-      $warn-config: map.merge($config, (accent: $warn));
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($warn-config));
-    }
+    .mat-mdc-checkbox {
+      &.mat-primary {
+        $primary-config: map.merge($config, (accent: $primary));
+        @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($primary-config));
+      }
 
-    @include mdc-helpers.using-mdc-theme($config) {
-      // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
-      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-    }
+      &.mat-warn {
+        $warn-config: map.merge($config, (accent: $warn));
+        @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($warn-config));
+      }
 
-    &.mat-mdc-checkbox-disabled label {
-      // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
-      color: theming.get-color-from-palette($foreground, disabled-text);
+      @include mdc-helpers.using-mdc-theme($config) {
+        // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
+        @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
+      }
+
+      &.mat-mdc-checkbox-disabled label {
+        // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
+        color: theming.get-color-from-palette($foreground, disabled-text);
+      }
     }
   }
 }
@@ -44,14 +62,19 @@
   $config: typography.private-typography-to-2018-config(
           theming.get-typography-config($config-or-theme));
 
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($config));
+  @if inspection.get-theme-version($config-or-theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, typography));
   }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($config));
+    }
 
-  .mat-mdc-checkbox {
-    @include mdc-helpers.using-mdc-typography($config) {
-      // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
-      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+    .mat-mdc-checkbox {
+      @include mdc-helpers.using-mdc-typography($config) {
+        // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.
+        @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+      }
     }
   }
 }
@@ -59,37 +82,49 @@
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
 
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-density-tokens($density-scale));
+  @if inspection.get-theme-version($config-or-theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($config-or-theme, density));
   }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-density-tokens($density-scale));
+    }
 
-  @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
-    .mat-mdc-checkbox-touch-target {
-      display: none;
+    @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
+      .mat-mdc-checkbox-touch-target {
+        display: none;
+      }
     }
   }
 }
 
 @mixin theme($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-checkbox') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
 
-    @if $color != null {
-      @include color($color);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-checkbox') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if $density != null {
-      @include density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @else {
+      $color: theming.get-color-config($theme);
+      $density: theming.get-density-config($theme);
+      $typography: theming.get-typography-config($theme);
+
+      @include base($theme);
+      @if $color != null {
+        @include color($color);
+      }
+      @if $density != null {
+        @include density($density);
+      }
+      @if $typography != null {
+        @include typography($typography);
+      }
     }
   }
 }
 
-@mixin theme-from-tokens($tokens) {
+@mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     // TODO(mmalerba): Some of the theme styles above are not represented in terms of tokens,
     //   so this mixin is currently incomplete.

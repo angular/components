@@ -12,7 +12,6 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   EventEmitter,
   Inject,
@@ -94,18 +93,30 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   };
 }
 
-/** Base class with all of the `MatMenu` functionality. */
-@Directive()
-export class _MatMenuBase
-  implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy
-{
+@Component({
+  selector: 'mat-menu',
+  templateUrl: 'menu.html',
+  styleUrls: ['menu.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  exportAs: 'matMenu',
+  host: {
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
+    '[attr.aria-describedby]': 'null',
+    'ngSkipHydration': '',
+  },
+  animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
+  providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],
+})
+export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX;
   private _yPosition: MenuPositionY;
   private _firstItemFocusSubscription?: Subscription;
   private _previousElevation: string;
-  protected _elevationPrefix: string;
-  protected _baseElevation: number;
+  private _elevationPrefix = 'mat-elevation-z';
+  private _baseElevation = 8;
 
   /** All items inside the menu. Includes items nested inside another menu. */
   @ContentChildren(MatMenuItem, {descendants: true}) _allItems: QueryList<MatMenuItem>;
@@ -537,45 +548,5 @@ export class _MatMenuBase
         this._directDescendantItems.reset(items.filter(item => item._parentMenu === this));
         this._directDescendantItems.notifyOnChanges();
       });
-  }
-}
-
-@Component({
-  selector: 'mat-menu',
-  templateUrl: 'menu.html',
-  styleUrls: ['menu.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  exportAs: 'matMenu',
-  host: {
-    '[attr.aria-label]': 'null',
-    '[attr.aria-labelledby]': 'null',
-    '[attr.aria-describedby]': 'null',
-    'ngSkipHydration': '',
-  },
-  animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
-  providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],
-})
-export class MatMenu extends _MatMenuBase {
-  protected override _elevationPrefix = 'mat-elevation-z';
-  protected override _baseElevation = 8;
-
-  /*
-   * @deprecated `changeDetectorRef` parameter will become a required parameter.
-   * @breaking-change 15.0.0
-   */
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    ngZone: NgZone,
-    defaultOptions: MatMenuDefaultOptions,
-  );
-
-  constructor(
-    _elementRef: ElementRef<HTMLElement>,
-    _ngZone: NgZone,
-    @Inject(MAT_MENU_DEFAULT_OPTIONS) _defaultOptions: MatMenuDefaultOptions,
-    changeDetectorRef?: ChangeDetectorRef,
-  ) {
-    super(_elementRef, _ngZone, _defaultOptions, changeDetectorRef);
   }
 }

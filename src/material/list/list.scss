@@ -75,11 +75,6 @@
       @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
     }
   }
-
-  // Add default values for tokens that aren't outputted by the theming API.
-  .mat-mdc-list-base {
-    @include mdc-list-theme.theme(m2-mdc-list.get-unthemable-tokens());
-  }
 }
 
 a.mdc-list-item--activated {
@@ -172,7 +167,7 @@ a.mdc-list-item--activated {
   // Unscoped content can wrap if the list item has acquired three lines. MDC implements
   // this functionality for secondary text but there is no proper text ellipsis when
   // text overflows the third line. These styles ensure the overflow is handled properly.
-  // TODO: Move this to the the MDC list once it drops IE11 support.
+  // TODO: Move this to the MDC list once it drops IE11 support.
   .mat-mdc-list-item-unscoped-content.mdc-list-item__secondary-text {
     display: -webkit-box;
     -webkit-box-orient: vertical;

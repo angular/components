@@ -1,0 +1,229 @@
+// This file contains functions used to inspect Angular Material theme objects.
+
+@use 'sass:list';
+@use 'sass:map';
+@use '../style/validation';
+
+$_internals: _mat-theming-internals-do-not-access;
+
+$_m3-typescales: (
+  display-large,
+  display-medium,
+  display-small,
+  headline-large,
+  headline-medium,
+  headline-small,
+  title-large,
+  title-medium,
+  title-small,
+  label-large,
+  label-medium,
+  label-small,
+  body-large,
+  body-medium,
+  body-small,
+);
+
+$_typography-properties: (font, font-family, line-height, font-size, letter-spacing, font-weight);
+
+/// Validates that the given value is a versioned theme object.
+/// @param {Any} $theme The theme object to validate.
+/// @return {Boolean|Null} true if the theme has errors, else null.
+@function _validate-theme-object($theme) {
+  $err: validation.validate-type($theme, 'map') or
+        map.get($theme, $_internals, theme-version) == null;
+  @return if($err, true, null);
+}
+
+/// Gets the version number of a theme object. A theme that is not a valid versioned theme object is
+/// considered to be version 0.
+/// @param {Map} $theme The theme to check the version of
+/// @return {Number} The version number of the theme (0 if unknown).
+@function get-theme-version($theme) {
+  $err: _validate-theme-object($theme);
+  @return if($err, 0, map.get($theme, $_internals, theme-version) or 0);
+}
+
+/// Gets the type of theme represented by a theme object (light or dark).
+/// @param {Map} $theme The theme
+/// @return {String} The type of theme (either `light` or `dark`).
+@function get-theme-type($theme) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-type does not support legacy theme objects.'};
+  }
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  @return map.get($theme, $_internals, theme-type) or light;
+}
+
+/// Gets a color from a theme object. This function can take 2 or 3 arguments. If 2 arguments are
+/// passed, the second argument is treated as the name of a color role. If 3 arguments are passed,
+/// the second argument is treated as the name of a color palette (primary, secondary, etc.) and the
+/// third is treated as the palette hue (10, 50, etc.)
+/// @param {Map} $theme The theme
+/// @param {String} $color-role-or-palette-name The name of the color role to get, or the name of a
+///   color palette.
+/// @param {Number} $hue The palette hue to get (passing this argument means the second argument is
+///   interpreted as a palette name).
+/// @return {Color} The requested theme color.
+@function get-theme-color($theme, $args...) {
+  $args-count: list.length($args);
+  @if $args-count == 1 {
+    @return _get-theme-role-color($theme, $args...);
+  }
+  @else if $args-count == 2 {
+    @return _get-theme-palette-color($theme, $args...);
+  }
+  @error #{'Expected 2 or 3 arguments. Got:'} $args-count + 1;
+}
+
+/// Gets a role color from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $color-role-name The name of the color role to get.
+/// @return {Color} The requested role color.
+@function _get-theme-role-color($theme, $color-role-name) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-color does not support legacy theme objects.'};
+  }
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  $color-roles: map.get($theme, $_internals, color-tokens, (mdc, theme));
+  $result: map.get($color-roles, $color-role-name);
+  @if not $result {
+    @error #{'Valid color roles are: #{map.keys($color-roles)}. Got:'} $color-role-name;
+  }
+  @return $result;
+}
+
+/// Gets a palette color from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $palette-name The name of the palette to get the color from.
+/// @param {Number} $hue The hue to read from the palette.
+/// @return {Color} The requested palette color.
+@function _get-theme-palette-color($theme, $palette-name, $hue) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-color does not support legacy theme objects.'};
+  }
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  $palettes: map.get($theme, $_internals, palettes);
+  $palette: map.get($palettes, $palette-name);
+  @if not $palette {
+    $supported-palettes: map.keys($palettes);
+    @error #{'Valid palettes are: #{$supported-palettes}. Got:'} $palette-name;
+  }
+  $result: map.get($palette, $hue);
+  @if not $result {
+    $supported-hues: map.keys($palette);
+    @error #{'Valid hues for'} $palette-name #{'are: #{$supported-hues}. Got:'} $hue;
+  }
+  @return $result;
+}
+
+/// Gets a typography value from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $typescale The typescale name.
+/// @param {String} $property The CSS font property to get
+///   (font, font-family, font-size, font-weight, line-height, or letter-spacing).
+/// @return {*} The value of the requested font property.
+@function get-theme-typography($theme, $typescale, $property: font) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-typography does not support legacy theme objects.'};
+  }
+  @if not theme-has($theme, typography) {
+    @error 'Typography information is not available on this theme.';
+  }
+  @if not list.index($_m3-typescales, $typescale) {
+    @error #{'Valid typescales are: #{$_m3-typescales}. Got:'} $typescale;
+  }
+  @if not list.index($_typography-properties, $property) {
+    @error #{'Valid typography properties are: #{$_typography-properties}. Got:'} $property;
+  }
+  $property-key: map.get((
+    font: '',
+    font-family: '-font',
+    line-height: '-line-height',
+    font-size: '-size',
+    letter-spacing: '-tracking',
+    font-weight: '-weight'
+  ), $property);
+  $token-name: '#{$typescale}#{$property-key}';
+  @return map.get($theme, $_internals, typography-tokens, (mdc, typography), $token-name);
+}
+
+/// Gets the density scale from a theme object.
+/// @param {Map} $theme The theme
+/// @return {Number} The density scale.
+@function get-theme-density($theme) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-density does not support legacy theme objects.'};
+  }
+  @if not theme-has($theme, density) {
+    @error 'Density information is not available on this theme.';
+  }
+  @return map.get($theme, $_internals, density-scale);
+}
+
+/// Checks whether the theme has information about given theming system.
+/// @param {Map} $theme The theme
+/// @param {String} $system The system to check
+/// @param {Boolean} Whether the theme has information about the system.
+@function theme-has($theme, $system) {
+  $err: _validate-theme-object($theme);
+  @if $err {
+    // TODO(mmalerba): implement for old style theme objects.
+    @error #{'get-theme-density does not support legacy theme objects.'};
+  }
+  @if $system == base {
+    @return map.get($theme, $_internals, base-tokens) != null;
+  }
+  @if $system == color {
+    @return map.get($theme, $_internals, color-tokens) != null and
+        map.get($theme, $_internals, theme-type) != null and
+        map.get($theme, $_internals, palettes) != null;
+  }
+  @if $system == typography {
+    @return map.get($theme, $_internals, typography-tokens) != null;
+  }
+  @if $system == density {
+    @return map.get($theme, $_internals, density-scale) != null;
+  }
+  @error 'Valid systems are: base, color, typography, density. Got:' $system;
+}
+
+/// Gets the set of tokens from the given theme, limited to those affected by the requested theming
+/// systems.
+/// @param {Map} $theme The theme to get tokens from.
+/// @param {String...} $systems The theming systems to get tokens for. Valid values are: color,
+///   typography, density, base. If no systems are passed, all tokens will be returned.
+/// @return {Map} The requested tokens for the theme.
+@function get-theme-tokens($theme, $systems...) {
+  $systems: if(list.length($systems) == 0, (color, typography, density, base), $systems);
+  $err: _validate-theme-object($theme);
+  @if $err {
+    @error #{'Expected $theme to be an Angular Material theme object. Got:'} $theme;
+  }
+  $err: validation.validate-allowed-values($systems, color, typography, density, base);
+  @if $err {
+    @error #{'Expected $systems to contain valid system names (color, typography, density, or'}
+    #{'base). Got invalid system names:'} $err;
+  }
+  $result: ();
+  @each $system in $systems {
+    $result: map.deep-merge($result, map.get($theme, $_internals, '#{$system}-tokens'));
+  }
+  @return $result;
+}

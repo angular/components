@@ -17,6 +17,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
+  ComponentRef,
   createNgModuleRef,
   Directive,
   Inject,
@@ -110,6 +111,7 @@ describe('MDC-based MatDialog', () => {
 
     expect(overlayContainerElement.textContent).toContain('Pizza');
     expect(dialogRef.componentInstance instanceof PizzaMsg).toBe(true);
+    expect(dialogRef.componentRef instanceof ComponentRef).toBe(true);
     expect(dialogRef.componentInstance.dialogRef).toBe(dialogRef);
 
     viewContainerFixture.detectChanges();
@@ -1585,12 +1587,14 @@ describe('MDC-based MatDialog', () => {
 
   describe('dialog content elements', () => {
     let dialogRef: MatDialogRef<any>;
+    let hostInstance: ContentElementDialog | ComponentWithContentElementTemplateRef;
 
     describe('inside component dialog', () => {
       beforeEach(fakeAsync(() => {
         dialogRef = dialog.open(ContentElementDialog, {viewContainerRef: testViewContainerRef});
         viewContainerFixture.detectChanges();
         flush();
+        hostInstance = dialogRef.componentInstance;
       }));
 
       runContentElementTests();
@@ -1607,6 +1611,7 @@ describe('MDC-based MatDialog', () => {
 
         viewContainerFixture.detectChanges();
         flush();
+        hostInstance = fixture.componentInstance;
       }));
 
       runContentElementTests();
@@ -1678,6 +1683,49 @@ describe('MDC-based MatDialog', () => {
         expect(container.getAttribute('aria-labelledby'))
           .withContext('Expected the aria-labelledby to match the title id.')
           .toBe(title.id);
+      }));
+
+      it('should update the aria-labelledby attribute if two titles are swapped', fakeAsync(() => {
+        const container = overlayContainerElement.querySelector('mat-dialog-container')!;
+        let title = overlayContainerElement.querySelector('[mat-dialog-title]')!;
+
+        flush();
+        viewContainerFixture.detectChanges();
+
+        const previousId = title.id;
+        expect(title.id).toBeTruthy();
+        expect(container.getAttribute('aria-labelledby')).toBe(title.id);
+
+        hostInstance.shownTitle = 'second';
+        viewContainerFixture.detectChanges();
+        flush();
+        viewContainerFixture.detectChanges();
+        title = overlayContainerElement.querySelector('[mat-dialog-title]')!;
+
+        expect(title.id).toBeTruthy();
+        expect(title.id).not.toBe(previousId);
+        expect(container.getAttribute('aria-labelledby')).toBe(title.id);
+      }));
+
+      it('should update the aria-labelledby attribute if multiple titles are present and one is removed', fakeAsync(() => {
+        const container = overlayContainerElement.querySelector('mat-dialog-container')!;
+
+        hostInstance.shownTitle = 'all';
+        viewContainerFixture.detectChanges();
+        flush();
+        viewContainerFixture.detectChanges();
+
+        const titles = overlayContainerElement.querySelectorAll('[mat-dialog-title]');
+
+        expect(titles.length).toBe(3);
+        expect(container.getAttribute('aria-labelledby')).toBe(titles[0].id);
+
+        hostInstance.shownTitle = 'second';
+        viewContainerFixture.detectChanges();
+        flush();
+        viewContainerFixture.detectChanges();
+
+        expect(container.getAttribute('aria-labelledby')).toBe(titles[1].id);
       }));
 
       it('should add correct css class according to given [align] input in [mat-dialog-actions]', () => {
@@ -2114,7 +2162,9 @@ class PizzaMsg {
 
 @Component({
   template: `
-    <h1 mat-dialog-title>This is the title</h1>
+    <h1 mat-dialog-title *ngIf="shouldShowTitle('first')">This is the first title</h1>
+    <h1 mat-dialog-title *ngIf="shouldShowTitle('second')">This is the second title</h1>
+    <h1 mat-dialog-title *ngIf="shouldShowTitle('third')">This is the third title</h1>
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-dialog-close>Close</button>
@@ -2128,12 +2178,20 @@ class PizzaMsg {
     </mat-dialog-actions>
   `,
 })
-class ContentElementDialog {}
+class ContentElementDialog {
+  shownTitle: 'first' | 'second' | 'third' | 'all' = 'first';
+
+  shouldShowTitle(name: string) {
+    return this.shownTitle === 'all' || this.shownTitle === name;
+  }
+}
 
 @Component({
   template: `
     <ng-template>
-      <h1 mat-dialog-title>This is the title</h1>
+      <h1 mat-dialog-title *ngIf="shouldShowTitle('first')">This is the first title</h1>
+      <h1 mat-dialog-title *ngIf="shouldShowTitle('second')">This is the second title</h1>
+      <h1 mat-dialog-title *ngIf="shouldShowTitle('third')">This is the third title</h1>
       <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
       <mat-dialog-actions align="end">
         <button mat-dialog-close>Close</button>
@@ -2150,6 +2208,12 @@ class ContentElementDialog {}
 })
 class ComponentWithContentElementTemplateRef {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+
+  shownTitle: 'first' | 'second' | 'third' | 'all' = 'first';
+
+  shouldShowTitle(name: string) {
+    return this.shownTitle === 'all' || this.shownTitle === name;
+  }
 }
 
 @Component({template: '', providers: [MatDialog]})

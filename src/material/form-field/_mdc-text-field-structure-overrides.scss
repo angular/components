@@ -1,4 +1,8 @@
 @use '@material/textfield/variables' as mdc-textfield-variables;
+@use '@material/typography/typography' as mdc-typography;
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 // Mixin that can be included to override the default MDC text-field
 // styles to fit our needs. See individual comments for context on why
@@ -13,6 +17,7 @@
   // Note: We increase specificity here because the MDC textfield seems to override this,
   // depending on the CSS order, with an affix selector joint with the input.
   .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
+    @include mdc-typography.smooth-font();
     font: inherit;
     letter-spacing: inherit;
     text-decoration: inherit;
@@ -21,6 +26,8 @@
   }
 
   .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+    @include mdc-typography.smooth-font();
+
     // In order to ensure proper alignment of the floating label, we reset its line-height.
     // The line-height is not important as the element is absolutely positioned and only has one
     // line of text.
@@ -86,6 +93,17 @@
     }
   }
 
+  // Before the switch to the tokens MDC was setting a specific placeholder color when the input
+  // is disabled, but now there's no token for it so we need to implement it ourselves.
+  .mat-form-field-disabled .mdc-text-field__input {
+    @include vendor-prefixes.input-placeholder {
+      @include token-utils.use-tokens(
+        tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
+        @include token-utils.create-token-slot(color, disabled-input-text-placeholder-color);
+      }
+    }
+  }
+
   // The default MDC text-field implementation does not support labels which always float.
   // MDC only renders the placeholder if the input is focused. We extend this to show the
   // placeholder if the form-field label is set to always float.
@@ -136,4 +154,24 @@
     content: none;
   }
 
+  // This fixes an issue where the notch appears to be thicker than the rest of the outline when
+  // zoomed in on Chrome. The border inconsistency seems to be some kind of rendering artifact
+  // that arises from a combination of the fact that the notch contains text, while the leading
+  // and trailing outline do not, combined with the fact that the border is semi-transparent.
+  // Experimentally, I discovered that adding a transparent left border fixes the inconsistency.
+  // Note: class name is repeated to achieve sufficient specificity over the various MDC states.
+  // (hover, focus, etc.)
+  // TODO(mmalerba): port this fix into MDC
+  .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
+    &.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+      border-left: 1px solid transparent;
+    }
+  }
+
+  [dir='rtl'] .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
+    &.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+      border-left: none;
+      border-right: 1px solid transparent;
+    }
+  }
 }

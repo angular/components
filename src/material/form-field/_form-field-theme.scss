@@ -1,126 +1,57 @@
-@use '@material/textfield' as mdc-textfield;
-@use '@material/floating-label' as mdc-floating-label;
-@use '@material/notched-outline' as mdc-notched-outline;
-@use '@material/line-ripple' as mdc-line-ripple;
-@use '@material/theme/theme-color' as mdc-theme-color;
-@use '@material/typography/typography' as mdc-typography;
+@use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
+@use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
 
+@use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
+@use '../core/tokens/m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/theming/theming';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
 @use './form-field-density';
-@use './form-field-subscript';
-@use './form-field-focus-overlay';
-@use './form-field-native-select';
-@use './mdc-text-field-theme-variable-refresh';
-
-
-// Mixin that overwrites the default MDC text-field color styles to be based on
-// the given theme palette. The MDC text-field is styled using `primary` by default.
-@mixin _color-styles($palette-name,
-  $query: mdc-helpers.$mdc-theme-styles-query) {
-  $orig-focused-label-color: mdc-textfield.$focused-label-color;
-  mdc-textfield.$focused-label-color: rgba(mdc-theme-color.prop-value($palette-name), 0.87);
-
-  @include mdc-textfield.caret-color($palette-name, $query);
-  @include mdc-textfield.line-ripple-color($palette-name, $query);
-
-  .mdc-text-field--focused {
-    @include mdc-textfield.focused_($query);
-  }
-
-  .mdc-text-field--invalid {
-    @include mdc-textfield.invalid_($query);
-  }
-
-  .mdc-text-field--outlined {
-    @include mdc-textfield.focused-outline-color($palette-name, $query);
-  }
-
-  mdc-textfield.$focused-label-color: $orig-focused-label-color;
-}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {
-    @include mdc-text-field-theme-variable-refresh.private-text-field-refresh-theme-variables() {
-      @include mdc-textfield.without-ripple($query: mdc-helpers.$mdc-theme-styles-query);
-      @include mdc-floating-label.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-      @include mdc-notched-outline.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-      @include mdc-line-ripple.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-      @include form-field-subscript.private-form-field-subscript-color();
-      @include form-field-focus-overlay.private-form-field-focus-overlay-color();
-      @include form-field-native-select.private-form-field-native-select-color($config);
 
-      .mat-mdc-form-field.mat-accent {
-        @include _color-styles(secondary);
-      }
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.get-color-tokens($config));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.get-color-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-color-tokens($config));
+  }
 
-      .mat-mdc-form-field.mat-warn {
-        @include _color-styles(error);
-      }
+  .mat-mdc-form-field.mat-accent {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($config, accent));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($config, accent));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.private-get-color-palette-color-tokens($config, accent));
+  }
 
-      // This fixes an issue where the notch appears to be thicker than the rest of the outline when
-      // zoomed in on Chrome. The border inconsistency seems to be some kind of rendering artifact
-      // that arises from a combination of the fact that the notch contains text, while the leading
-      // and trailing outline do not, combined with the fact that the border is semi-transparent.
-      // Experimentally, I discovered that adding a transparent left border fixes the inconsistency.
-      // Note: class name is repeated to achieve sufficient specificity over the various MDC states.
-      // (hover, focus, etc.)
-      // TODO(mmalerba): port this fix into MDC
-      .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
-        &.mat-mdc-form-field .mdc-notched-outline__notch {
-          border-left: 1px solid transparent;
-        }
-      }
-
-      [dir='rtl'] {
-        .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
-          &.mat-mdc-form-field .mdc-notched-outline__notch {
-            border-left: none;
-            border-right: 1px solid transparent;
-          }
-        }
-      }
-    }
+  .mat-mdc-form-field.mat-warn {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($config, warn));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($config, warn));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.private-get-color-palette-color-tokens($config, warn));
   }
 }
 
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {
-    @include mdc-textfield.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-    @include mdc-floating-label.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
-    @include mdc-notched-outline.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
-    @include mdc-line-ripple.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
-    @include form-field-subscript.private-form-field-subscript-typography($config);
 
-    // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
-    // shows `body1` for text fields though, so we manually override the typography.
-    // Note: Form controls inherit the typography from the parent form field.
-    .mat-mdc-form-field,
-    .mat-mdc-floating-label {
-      @include mdc-typography.typography(body1, $query: mdc-helpers.$mdc-typography-styles-query);
-    }
-
-    // Above, we updated the floating label to use the `body1` typography level. The MDC notched
-    // outline overrides this accidentally (only when the label floats) to a `rem`-based value.
-    // This results in different label widths when floated/docked and ultimately breaks the notch
-    // width as it has been measured in the docked state (where `body1` is applied). We try to
-    // unset these styles set by the `mdc-notched-outline`:
-    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
-    .mat-mdc-form-field .mdc-text-field--outlined {
-      // For the non-upgraded notch label (i.e. when rendered on the server), also
-      // use the correct `body1` typography level.
-      .mdc-floating-label--float-above {
-        font-size: calc(#{
-            mdc-typography.get-size(body1)} * var(--mat-mdc-form-field-floating-label-scale, 0.75));
-      }
-      .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-        font-size: mdc-typography.get-size(body1);
-      }
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.get-typography-tokens($config));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.get-typography-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-typography-tokens($config));
   }
 }
 

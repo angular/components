@@ -36,7 +36,6 @@ import { Platform } from '@angular/cdk/platform';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
@@ -49,14 +48,19 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<any
 export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig;
 
 // @public
-export class MatSnackBar extends _MatSnackBarBase {
-    constructor(overlay: Overlay, live: LiveAnnouncer, injector: Injector, breakpointObserver: BreakpointObserver, parentSnackBar: MatSnackBar, defaultConfig: MatSnackBarConfig);
+export class MatSnackBar implements OnDestroy {
+    constructor(_overlay: Overlay, _live: LiveAnnouncer, _injector: Injector, _breakpointObserver: BreakpointObserver, _parentSnackBar: MatSnackBar, _defaultConfig: MatSnackBarConfig);
+    dismiss(): void;
+    handsetCssClass: string;
     // (undocumented)
-    protected handsetCssClass: string;
-    // (undocumented)
-    protected simpleSnackBarComponent: typeof SimpleSnackBar;
-    // (undocumented)
-    protected snackBarContainerComponent: typeof MatSnackBarContainer;
+    ngOnDestroy(): void;
+    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
+    get _openedSnackBarRef(): MatSnackBarRef<any> | null;
+    set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
+    openFromComponent<T, D = any>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T>;
+    openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
+    simpleSnackBarComponent: typeof SimpleSnackBar;
+    snackBarContainerComponent: typeof MatSnackBarContainer;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBar, [null, null, null, null, { optional: true; skipSelf: true; }, null]>;
     // (undocumented)
@@ -84,26 +88,6 @@ export const matSnackBarAnimations: {
     readonly snackBarState: AnimationTriggerMetadata;
 };
 
-// @public (undocumented)
-export abstract class _MatSnackBarBase implements OnDestroy {
-    constructor(_overlay: Overlay, _live: LiveAnnouncer, _injector: Injector, _breakpointObserver: BreakpointObserver, _parentSnackBar: _MatSnackBarBase, _defaultConfig: MatSnackBarConfig);
-    dismiss(): void;
-    protected abstract handsetCssClass: string;
-    // (undocumented)
-    ngOnDestroy(): void;
-    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
-    get _openedSnackBarRef(): MatSnackBarRef<any> | null;
-    set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
-    openFromComponent<T, D = any>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T>;
-    openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
-    protected abstract simpleSnackBarComponent: Type<TextOnlySnackBar>;
-    protected abstract snackBarContainerComponent: Type<_MatSnackBarContainerBase>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatSnackBarBase, [null, null, null, null, { optional: true; skipSelf: true; }, null]>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<_MatSnackBarBase>;
-}
-
 // @public
 export class MatSnackBarConfig<D = any> {
     announcementMessage?: string;
@@ -118,29 +102,17 @@ export class MatSnackBarConfig<D = any> {
 }
 
 // @public
-export class MatSnackBarContainer extends _MatSnackBarContainerBase {
-    protected _afterPortalAttached(): void;
-    _label: ElementRef;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSnackBarContainer, "mat-snack-bar-container", never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarContainer, never>;
-}
-
-// @public
-export abstract class _MatSnackBarContainerBase extends BasePortalOutlet implements OnDestroy {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
     constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _platform: Platform,
     snackBarConfig: MatSnackBarConfig);
-    protected _afterPortalAttached(): void;
     _animationState: string;
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
-    // (undocumented)
-    protected _elementRef: ElementRef<HTMLElement>;
     enter(): void;
     exit(): Observable<void>;
+    _label: ElementRef;
     _live: AriaLivePoliteness;
     readonly _liveElementId: string;
     ngOnDestroy(): void;
@@ -152,9 +124,9 @@ export abstract class _MatSnackBarContainerBase extends BasePortalOutlet impleme
     _role?: 'status' | 'alert';
     snackBarConfig: MatSnackBarConfig;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatSnackBarContainerBase, never, never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSnackBarContainer, "mat-snack-bar-container", never, {}, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatSnackBarContainerBase, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarContainer, never>;
 }
 
 // @public
@@ -185,12 +157,12 @@ export class MatSnackBarModule {
 
 // @public
 export class MatSnackBarRef<T> {
-    constructor(containerInstance: _MatSnackBarContainerBase, _overlayRef: OverlayRef);
+    constructor(containerInstance: MatSnackBarContainer, _overlayRef: OverlayRef);
     afterDismissed(): Observable<MatSnackBarDismiss>;
     afterOpened(): Observable<void>;
     // @deprecated
     closeWithAction(): void;
-    containerInstance: _MatSnackBarContainerBase;
+    containerInstance: MatSnackBarContainer;
     dismiss(): void;
     _dismissAfter(duration: number): void;
     dismissWithAction(): void;

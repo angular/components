@@ -51,7 +51,7 @@ let nextUniqueId = 0;
 export class MatRadioChange {
   constructor(
     /** The radio button that emits the change event. */
-    public source: _MatRadioButtonBase,
+    public source: MatRadioButton,
     /** The value of the radio button. */
     public value: any,
   ) {}
@@ -73,9 +73,7 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
  * alternative token to the actual `MatRadioGroup` class which could cause unnecessary
  * retention of the class and its component metadata.
  */
-export const MAT_RADIO_GROUP = new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>(
-  'MatRadioGroup',
-);
+export const MAT_RADIO_GROUP = new InjectionToken<MatRadioGroup>('MatRadioGroup');
 
 export interface MatRadioDefaultOptions {
   color: ThemePalette;
@@ -96,13 +94,21 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
 }
 
 /**
- * Base class with all of the `MatRadioGroup` functionality.
- * @docs-private
+ * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
  */
-@Directive()
-export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
-  implements AfterContentInit, OnDestroy, ControlValueAccessor
-{
+@Directive({
+  selector: 'mat-radio-group',
+  exportAs: 'matRadioGroup',
+  providers: [
+    MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR,
+    {provide: MAT_RADIO_GROUP, useExisting: MatRadioGroup},
+  ],
+  host: {
+    'role': 'radiogroup',
+    'class': 'mat-mdc-radio-group',
+  },
+})
+export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
   /** Selected value for the radio group. */
   private _value: any = null;
 
@@ -110,7 +116,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
   private _name: string = `mat-radio-group-${nextUniqueId++}`;
 
   /** The currently selected radio button. Should match value. */
-  private _selected: T | null = null;
+  private _selected: MatRadioButton | null = null;
 
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
@@ -144,7 +150,8 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
   @Output() readonly change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
   /** Child radio buttons. */
-  abstract _radios: QueryList<T>;
+  @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
+  _radios: QueryList<MatRadioButton>;
 
   /** Theme color for all of the radio buttons in the group. */
   @Input() color: ThemePalette;
@@ -203,7 +210,7 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase>
   get selected() {
     return this._selected;
   }
-  set selected(selected: T | null) {
+  set selected(selected: MatRadioButton | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
     this._checkSelectedRadioButton();
@@ -353,12 +360,34 @@ abstract class MatRadioButtonBase {
 
 const _MatRadioButtonMixinBase = mixinDisableRipple(mixinTabIndex(MatRadioButtonBase));
 
-/**
- * Base class with all of the `MatRadioButton` functionality.
- * @docs-private
- */
-@Directive()
-export abstract class _MatRadioButtonBase
+@Component({
+  selector: 'mat-radio-button',
+  templateUrl: 'radio.html',
+  styleUrls: ['radio.css'],
+  host: {
+    'class': 'mat-mdc-radio-button',
+    '[attr.id]': 'id',
+    '[class.mat-primary]': 'color === "primary"',
+    '[class.mat-accent]': 'color === "accent"',
+    '[class.mat-warn]': 'color === "warn"',
+    '[class.mat-mdc-radio-checked]': 'checked',
+    '[class._mat-animation-noopable]': '_noopAnimations',
+    // Needs to be removed since it causes some a11y issues (see #21266).
+    '[attr.tabindex]': 'null',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
+    '[attr.aria-describedby]': 'null',
+    // Note: under normal conditions focus shouldn't land on this element, however it may be
+    // programmatically set, for example inside of a focus trap, in this case we want to forward
+    // the focus to the native element.
+    '(focus)': '_inputElement.nativeElement.focus()',
+  },
+  inputs: ['disableRipple', 'tabIndex'],
+  exportAs: 'matRadioButton',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatRadioButton
   extends _MatRadioButtonMixinBase
   implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex
 {
@@ -477,7 +506,7 @@ export abstract class _MatRadioButtonBase
   @Output() readonly change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
   /** The parent radio group. May or may not be present. */
-  radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>;
+  radioGroup: MatRadioGroup;
 
   /** ID of the native input element inside `<mat-radio-button>` */
   get inputId(): string {
@@ -509,14 +538,16 @@ export abstract class _MatRadioButtonBase
   _noopAnimations: boolean;
 
   constructor(
-    radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>,
+    @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
     elementRef: ElementRef,
-    protected _changeDetector: ChangeDetectorRef,
+    private _changeDetector: ChangeDetectorRef,
     private _focusMonitor: FocusMonitor,
     private _radioDispatcher: UniqueSelectionDispatcher,
-    animationMode?: string,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+    @Optional()
+    @Inject(MAT_RADIO_DEFAULT_OPTIONS)
     private _providerOverride?: MatRadioDefaultOptions,
-    tabIndex?: string,
+    @Attribute('tabindex') tabIndex?: string,
   ) {
     super(elementRef);
 
@@ -673,79 +704,5 @@ export abstract class _MatRadioButtonBase
         this._previousTabIndex = value;
       }
     }
-  }
-}
-
-/**
- * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
- */
-@Directive({
-  selector: 'mat-radio-group',
-  exportAs: 'matRadioGroup',
-  providers: [
-    MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR,
-    {provide: MAT_RADIO_GROUP, useExisting: MatRadioGroup},
-  ],
-  host: {
-    'role': 'radiogroup',
-    'class': 'mat-mdc-radio-group',
-  },
-})
-export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
-  /** Child radio buttons. */
-  @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
-  _radios: QueryList<MatRadioButton>;
-}
-
-@Component({
-  selector: 'mat-radio-button',
-  templateUrl: 'radio.html',
-  styleUrls: ['radio.css'],
-  host: {
-    'class': 'mat-mdc-radio-button',
-    '[attr.id]': 'id',
-    '[class.mat-primary]': 'color === "primary"',
-    '[class.mat-accent]': 'color === "accent"',
-    '[class.mat-warn]': 'color === "warn"',
-    '[class.mat-mdc-radio-checked]': 'checked',
-    '[class._mat-animation-noopable]': '_noopAnimations',
-    // Needs to be removed since it causes some a11y issues (see #21266).
-    '[attr.tabindex]': 'null',
-    '[attr.aria-label]': 'null',
-    '[attr.aria-labelledby]': 'null',
-    '[attr.aria-describedby]': 'null',
-    // Note: under normal conditions focus shouldn't land on this element, however it may be
-    // programmatically set, for example inside of a focus trap, in this case we want to forward
-    // the focus to the native element.
-    '(focus)': '_inputElement.nativeElement.focus()',
-  },
-  inputs: ['disableRipple', 'tabIndex'],
-  exportAs: 'matRadioButton',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatRadioButton extends _MatRadioButtonBase {
-  constructor(
-    @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
-    elementRef: ElementRef,
-    _changeDetector: ChangeDetectorRef,
-    _focusMonitor: FocusMonitor,
-    _radioDispatcher: UniqueSelectionDispatcher,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional()
-    @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-    _providerOverride?: MatRadioDefaultOptions,
-    @Attribute('tabindex') tabIndex?: string,
-  ) {
-    super(
-      radioGroup,
-      elementRef,
-      _changeDetector,
-      _focusMonitor,
-      _radioDispatcher,
-      animationMode,
-      _providerOverride,
-      tabIndex,
-    );
   }
 }

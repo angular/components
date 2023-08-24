@@ -24,6 +24,7 @@ ng_module(
         "//src/material/select",
         "//src/material/sidenav",
         "//src/material/toolbar",
+        "//src/material/input",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
         "@npm//@angular/platform-browser-dynamic",

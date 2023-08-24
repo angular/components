@@ -12,10 +12,7 @@ import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { DialogRole } from '@angular/material/dialog';
 import { HarnessPredicate } from '@angular/cdk/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { _MatDialogBase } from '@angular/material/dialog';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { MatDialogContainer } from '@angular/material/dialog';
-import { _MatDialogContainerBase } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { OnDestroy } from '@angular/core';
 import { TestElement } from '@angular/cdk/testing';
@@ -25,13 +22,7 @@ export interface DialogHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export class MatDialogHarness extends _MatDialogHarnessBase {
-    static hostSelector: string;
-    static with<T extends MatDialogHarness>(this: ComponentHarnessConstructor<T>, options?: DialogHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public
-export class _MatDialogHarnessBase extends ContentContainerComponentHarness<MatDialogSection | string> {
+export class MatDialogHarness extends ContentContainerComponentHarness<MatDialogSection | string> {
     // (undocumented)
     protected _actions: AsyncFactoryFn<TestElement | null>;
     close(): Promise<void>;
@@ -46,8 +37,10 @@ export class _MatDialogHarnessBase extends ContentContainerComponentHarness<MatD
     getRole(): Promise<DialogRole | null>;
     getText(): Promise<string>;
     getTitleText(): Promise<string>;
+    static hostSelector: string;
     // (undocumented)
     protected _title: AsyncFactoryFn<TestElement | null>;
+    static with<T extends MatDialogHarness>(this: ComponentHarnessConstructor<T>, options?: DialogHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public
@@ -61,22 +54,17 @@ export const enum MatDialogSection {
 }
 
 // @public
-export class MatTestDialogOpener<T = unknown, R = unknown> extends _MatTestDialogOpenerBase<MatDialogContainer, T, R> {
+export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
     constructor(dialog: MatDialog);
-    static withComponent<T = unknown, R = unknown>(component: ComponentType<T>, config?: MatDialogConfig): ComponentType<MatTestDialogOpener<T, R>>;
-}
-
-// @public
-export class _MatTestDialogOpenerBase<C extends _MatDialogContainerBase, T, R> implements OnDestroy {
-    constructor(dialog: _MatDialogBase<C>);
     closedResult: R | undefined;
     protected static component: ComponentType<unknown> | undefined;
     protected static config: MatDialogConfig | undefined;
     // (undocumented)
-    dialog: _MatDialogBase<C>;
+    dialog: MatDialog;
     dialogRef: MatDialogRef<T, R>;
     // (undocumented)
     ngOnDestroy(): void;
+    static withComponent<T = unknown, R = unknown>(component: ComponentType<T>, config?: MatDialogConfig): ComponentType<MatTestDialogOpener<T, R>>;
 }
 
 // @public (undocumented)

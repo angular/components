@@ -4,12 +4,20 @@
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/typography/typography';
 @use '../core/typography/typography-utils';
+
+@mixin base($config-or-theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-list-theme.theme(tokens-mdc-list.get-unthemable-tokens());
+  }
+}
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
@@ -140,6 +148,7 @@
     $density: theming.get-density-config($theme);
     $typography: theming.get-typography-config($theme);
 
+    @include base($theme);
     @if $color != null {
       @include color($color);
     }

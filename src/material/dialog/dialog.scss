@@ -20,9 +20,6 @@ $mat-dialog-button-horizontal-margin: 8px !default;
     $mat-dialog-content-max-height);
 
   .mat-mdc-dialog-container {
-    // Add default values for MDC dialog tokens that aren't outputted by the theming API.
-    @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-unthemable-tokens());
-
     // Apply the theming slots to the container using an initial set of
     // values that will be overridden in the theme styles.
     @include mdc-dialog-theme.theme-styles(tokens-mdc-dialog.get-token-slots());

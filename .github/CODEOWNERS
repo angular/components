@@ -16,28 +16,6 @@
 /src/material/grid-list/**                                  @andrewseguin
 /src/material/icon/**                                       @andrewseguin
 /src/material/input/**                                      @devversion @mmalerba
-/src/material/legacy-autocomplete/**                        @crisbeto
-/src/material/legacy-button/**                              @andrewseguin
-/src/material/legacy-card/**                                @andrewseguin
-/src/material/legacy-checkbox/**                            @andrewseguin @devversion
-/src/material/legacy-chips/**                               @andrewseguin
-/src/material/legacy-dialog/**                              @andrewseguin @crisbeto
-/src/material/legacy-form-field/**                          @mmalerba
-/src/material/legacy-input/**                               @mmalerba
-/src/material/legacy-list/**                                @andrewseguin @crisbeto @devversion
-/src/material/legacy-menu/**                                @crisbeto
-/src/material/legacy-paginator/**                           @andrewseguin
-/src/material/legacy-prebuilt-themes/**                     @andrewseguin
-/src/material/legacy-progress-bar/**                        @andrewseguin @crisbeto
-/src/material/legacy-progress-spinner/**                    @andrewseguin @crisbeto
-/src/material/legacy-radio/**                               @andrewseguin @devversion
-/src/material/legacy-select/**                              @crisbeto
-/src/material/legacy-slide-toggle/**                        @devversion
-/src/material/legacy-slider/**                              @mmalerba
-/src/material/legacy-snack-bar/**                           @andrewseguin @crisbeto
-/src/material/legacy-table/**                               @andrewseguin
-/src/material/legacy-tabs/**                                @andrewseguin
-/src/material/legacy-tooltip/**                             @andrewseguin
 /src/material/list/**                                       @mmalerba @devversion
 /src/material/menu/**                                       @crisbeto
 /src/material/paginator/**                                  @crisbeto
@@ -86,13 +64,6 @@
 /src/material/core/tokens/**                                @mmalerba
 /src/material/core/typography/**                            @crisbeto
 /src/material/core/util/**                                  @andrewseguin
-/src/material/legacy-core/*                                 @andrewseguin
-/src/material/legacy-core/color/**                          @andrewseguin @devversion
-/src/material/legacy-core/density/**                        @devversion
-/src/material/legacy-core/option/**                         @crisbeto
-/src/material/legacy-core/testing/**                        @crisbeto
-/src/material/legacy-core/theming/**                        @andrewseguin @jelbourn
-/src/material/legacy-core/typography/**                     @crisbeto
 
 # Miscellaneous components
 /src/google-maps/**                                         @crisbeto
@@ -136,6 +107,7 @@
 /src/material-experimental/popover-edit/**                  @andrewseguin
 /src/material-experimental/selection/**                     @andrewseguin
 /src/material-experimental/theming/**                       @mmalerba
+/src/material-experimental/theming-next/**                  @mmalerba
 
 # CDK experimental package
 /src/cdk-experimental/*                                     @andrewseguin
@@ -155,7 +127,6 @@
 /src/dev-app/autocomplete/**                                @crisbeto
 /src/dev-app/badge/**                                       @andrewseguin
 /src/dev-app/baseline/**                                    @mmalerba
-/src/dev-app/legacy-baseline/**                             @mmalerba
 /src/dev-app/bottom-sheet/**                                @andrewseguin @crisbeto
 /src/dev-app/button-toggle/**                               @andrewseguin
 /src/dev-app/button/**                                      @andrewseguin
@@ -186,32 +157,11 @@
 /src/dev-app/input-modality/**                              @jelbourn
 /src/dev-app/input/**                                       @devversion @mmalerba
 /src/dev-app/layout/**                                      @andrewseguin
-/src/dev-app/legacy-card/**                                 @mmalerba
-/src/dev-app/legacy-checkbox/**                             @mmalerba
-/src/dev-app/legacy-chips/**                                @andrewseguin
-/src/dev-app/legacy-datepicker/**                           @mmalerba
-/src/dev-app/legacy-dialog/**                               @devversion
-/src/dev-app/legacy-input/**                                @mmalerba
-/src/dev-app/legacy-list/**                                 @mmalerba
-/src/dev-app/legacy-menu/**                                 @crisbeto
-/src/dev-app/legacy-paginator/**                            @crisbeto
-/src/dev-app/legacy-radio/**                                @andrewseguin @devversion
-/src/dev-app/legacy-select/**                               @crisbeto
-/src/dev-app/legacy-slide-toggle/**                         @devversion
-/src/dev-app/legacy-snack-bar/**                            @andrewseguin
-/src/dev-app/legacy-tabs/**                                 @andrewseguin
-/src/dev-app/legacy-table/**                                @andrewseguin
-/src/dev-app/legacy-tooltip/**                              @crisbeto
 /src/dev-app/list/**                                        @andrewseguin @crisbeto @devversion
 /src/dev-app/live-announcer/**                              @jelbourn
-/src/dev-app/legacy-autocomplete/**                         @crisbeto
-/src/dev-app/mdc-button/**                                  @andrewseguin
-/src/dev-app/legacy-button/**                               @andrewseguin
-/src/dev-app/legacy-progress-bar/**                         @crisbeto
-/src/dev-app/legacy-progress-spinner/**                     @mmalerba
-/src/dev-app/legacy-slider/**                               @devversion
-/src/dev-app/mdc-snack-bar/**                               @andrewseguin
-/src/dev-app/mdc-tabs/**                                    @crisbeto
+/src/dev-app/button/**                                      @andrewseguin
+/src/dev-app/snack-bar/**                                   @andrewseguin
+/src/dev-app/tabs/**                                        @crisbeto
 /src/dev-app/menu/**                                        @crisbeto
 /src/dev-app/menubar/**                                     @jelbourn
 /src/dev-app/overlay/**                                     @jelbourn @crisbeto
@@ -299,21 +249,6 @@
 /tools/public_api_guard/material/form-field**               @mmalerba
 /tools/public_api_guard/material/grid-list**                @andrewseguin
 /tools/public_api_guard/material/icon**                     @andrewseguin
-/tools/public_api_guard/material/legacy-button**            @andrewseguin
-/tools/public_api_guard/material/legacy-card**              @andrewseguin
-/tools/public_api_guard/material/legacy-checkbox**          @andrewseguin @devversion
-/tools/public_api_guard/material/legacy-dialog**            @andrewseguin @crisbeto
-/tools/public_api_guard/material/legacy-input**             @mmalerba
-/tools/public_api_guard/material/legacy-paginator**         @andrewseguin
-/tools/public_api_guard/material/legacy-progress-bar**      @andrewseguin @crisbeto
-/tools/public_api_guard/material/legacy-progress-spinner**  @andrewseguin @crisbeto
-/tools/public_api_guard/material/legacy-radio**             @andrewseguin @devversion
-/tools/public_api_guard/material/legacy-select**            @crisbeto
-/tools/public_api_guard/material/legacy-slide-toggle**      @devversion
-/tools/public_api_guard/material/legacy-snack-bar**         @andrewseguin @crisbeto
-/tools/public_api_guard/material/legacy-table**             @andrewseguin
-/tools/public_api_guard/material/legacy-tabs**              @andrewseguin
-/tools/public_api_guard/material/legacy-tooltip**           @andrewseguin
 /tools/public_api_guard/material/list**                     @andrewseguin @crisbeto @devversion
 /tools/public_api_guard/material/material**                 @andrewseguin
 /tools/public_api_guard/material/menu**                     @crisbeto

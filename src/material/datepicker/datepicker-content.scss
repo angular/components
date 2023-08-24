@@ -1,3 +1,7 @@
+@use '../core/style/elevation';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
+
 $calendar-padding: 8px;
 $non-touch-calendar-cell-size: 40px;
 $non-touch-calendar-width:
@@ -23,8 +27,15 @@ $touch-max-height: 788px;
 
 
 .mat-datepicker-content {
+  @include elevation.elevation(4);
   display: block;
   border-radius: 4px;
+
+  @include token-utils.use-tokens(
+    tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, calendar-container-background-color);
+    @include token-utils.create-token-slot(color, calendar-container-text-color);
+  }
 
   .mat-calendar {
     width: $non-touch-calendar-width;
@@ -63,6 +74,7 @@ $touch-max-height: 788px;
 }
 
 .mat-datepicker-content-touch {
+  @include elevation.elevation(24);
   display: block;
   max-height: 80vh;
 

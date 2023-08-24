@@ -679,7 +679,13 @@ function createPlayerObservable(
     map(([constructorOptions, sizeOptions]) => {
       const [videoId, host, playerVars] = constructorOptions;
       const [width, height] = sizeOptions;
-      return videoId ? {videoId, playerVars, width, height, host} : undefined;
+
+      // If there's no video id or a list isn't supplied, bail out
+      if (!videoId && !(playerVars?.list && playerVars?.listType)) {
+        return undefined;
+      }
+
+      return {videoId, playerVars, width, height, host};
     }),
   );
 

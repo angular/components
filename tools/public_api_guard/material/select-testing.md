@@ -5,7 +5,6 @@
 ```ts
 
 import { BaseHarnessFilters } from '@angular/cdk/testing';
-import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 import { MatFormFieldControlHarness } from '@angular/material/form-field/testing/control';
@@ -15,33 +14,16 @@ import { OptgroupHarnessFilters } from '@angular/material/core/testing';
 import { OptionHarnessFilters } from '@angular/material/core/testing';
 
 // @public
-export class MatSelectHarness extends _MatSelectHarnessBase<typeof MatOptionHarness, MatOptionHarness, OptionHarnessFilters, typeof MatOptgroupHarness, MatOptgroupHarness, OptgroupHarnessFilters> {
-    // (undocumented)
-    static hostSelector: string;
-    // (undocumented)
-    protected _optionClass: typeof MatOptionHarness;
-    // (undocumented)
-    protected _optionGroupClass: typeof MatOptgroupHarness;
-    // (undocumented)
-    protected _prefix: string;
-    static with<T extends MatSelectHarness>(this: ComponentHarnessConstructor<T>, options?: SelectHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatSelectHarnessBase<OptionType extends ComponentHarnessConstructor<Option> & {
-    with: (options?: OptionFilters) => HarnessPredicate<Option>;
-}, Option extends ComponentHarness & {
-    click(): Promise<void>;
-}, OptionFilters extends BaseHarnessFilters, OptionGroupType extends ComponentHarnessConstructor<OptionGroup> & {
-    with: (options?: OptionGroupFilters) => HarnessPredicate<OptionGroup>;
-}, OptionGroup extends ComponentHarness, OptionGroupFilters extends BaseHarnessFilters> extends MatFormFieldControlHarness {
+export class MatSelectHarness extends MatFormFieldControlHarness {
     blur(): Promise<void>;
-    clickOptions(filter?: OptionFilters): Promise<void>;
+    clickOptions(filter?: OptionHarnessFilters): Promise<void>;
     close(): Promise<void>;
     focus(): Promise<void>;
-    getOptionGroups(filter?: Omit<OptionGroupFilters, 'ancestor'>): Promise<OptionGroup[]>;
-    getOptions(filter?: Omit<OptionFilters, 'ancestor'>): Promise<Option[]>;
+    getOptionGroups(filter?: Omit<OptgroupHarnessFilters, 'ancestor'>): Promise<MatOptgroupHarness[]>;
+    getOptions(filter?: Omit<OptionHarnessFilters, 'ancestor'>): Promise<MatOptionHarness[]>;
     getValueText(): Promise<string>;
+    // (undocumented)
+    static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isEmpty(): Promise<boolean>;
     isFocused(): Promise<boolean>;
@@ -50,12 +32,7 @@ export abstract class _MatSelectHarnessBase<OptionType extends ComponentHarnessC
     isRequired(): Promise<boolean>;
     isValid(): Promise<boolean>;
     open(): Promise<void>;
-    // (undocumented)
-    protected abstract _optionClass: OptionType;
-    // (undocumented)
-    protected abstract _optionGroupClass: OptionGroupType;
-    // (undocumented)
-    protected abstract _prefix: string;
+    static with<T extends MatSelectHarness>(this: ComponentHarnessConstructor<T>, options?: SelectHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public

@@ -53,7 +53,7 @@ export abstract class _MatCellHarnessBase extends ContentContainerComponentHarne
   }
 }
 
-/** Harness for interacting with an MDC-based Angular Material table cell. */
+/** Harness for interacting with an Angular Material table cell. */
 export class MatCellHarness extends _MatCellHarnessBase {
   /** The selector for the host element of a `MatCellHarness` instance. */
   static hostSelector = '.mat-mdc-cell';
@@ -68,7 +68,7 @@ export class MatCellHarness extends _MatCellHarnessBase {
   }
 }
 
-/** Harness for interacting with an MDC-based Angular Material table header cell. */
+/** Harness for interacting with an Angular Material table header cell. */
 export class MatHeaderCellHarness extends _MatCellHarnessBase {
   /** The selector for the host element of a `MatHeaderCellHarness` instance. */
   static hostSelector = '.mat-mdc-header-cell';
@@ -84,7 +84,7 @@ export class MatHeaderCellHarness extends _MatCellHarnessBase {
   }
 }
 
-/** Harness for interacting with an MDC-based Angular Material table footer cell. */
+/** Harness for interacting with an Angular Material table footer cell. */
 export class MatFooterCellHarness extends _MatCellHarnessBase {
   /** The selector for the host element of a `MatFooterCellHarness` instance. */
   static hostSelector = '.mat-mdc-footer-cell';

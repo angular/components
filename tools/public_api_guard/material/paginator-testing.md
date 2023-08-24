@@ -13,54 +13,23 @@ import { MatSelectHarness } from '@angular/material/select/testing';
 import { TestElement } from '@angular/cdk/testing';
 
 // @public
-export class MatPaginatorHarness extends _MatPaginatorHarnessBase {
-    // (undocumented)
-    protected _firstPageButton: AsyncFactoryFn<TestElement | null>;
-    static hostSelector: string;
-    // (undocumented)
-    protected _lastPageButton: AsyncFactoryFn<TestElement | null>;
-    // (undocumented)
-    protected _nextButton: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected _pageSizeFallback: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected _previousButton: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected _rangeLabel: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected _select: AsyncFactoryFn<MatSelectHarness | null>;
-    static with<T extends MatPaginatorHarness>(this: ComponentHarnessConstructor<T>, options?: PaginatorHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatPaginatorHarnessBase extends ComponentHarness {
-    // (undocumented)
-    protected abstract _firstPageButton: AsyncFactoryFn<TestElement | null>;
+export class MatPaginatorHarness extends ComponentHarness {
     getPageSize(): Promise<number>;
     getRangeLabel(): Promise<string>;
     goToFirstPage(): Promise<void>;
     goToLastPage(): Promise<void>;
     goToNextPage(): Promise<void>;
     goToPreviousPage(): Promise<void>;
+    static hostSelector: string;
     isNextPageDisabled(): Promise<boolean>;
     // (undocumented)
     isPreviousPageDisabled(): Promise<boolean>;
     // (undocumented)
-    protected abstract _lastPageButton: AsyncFactoryFn<TestElement | null>;
+    _rangeLabel: AsyncFactoryFn<TestElement>;
     // (undocumented)
-    protected abstract _nextButton: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected abstract _pageSizeFallback: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected abstract _previousButton: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected abstract _rangeLabel: AsyncFactoryFn<TestElement>;
-    // (undocumented)
-    protected abstract _select: AsyncFactoryFn<(ComponentHarness & {
-        getValueText(): Promise<string>;
-        clickOptions(...filters: unknown[]): Promise<void>;
-    }) | null>;
+    _select: AsyncFactoryFn<MatSelectHarness | null>;
     setPageSize(size: number): Promise<void>;
+    static with<T extends MatPaginatorHarness>(this: ComponentHarnessConstructor<T>, options?: PaginatorHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public

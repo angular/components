@@ -21,17 +21,6 @@ const ruleFn: Rule<boolean, unknown> = isEnabled => {
       return;
     }
 
-    const filePath = root.source!.input.file!;
-
-    // We skip non-theme files and legacy theming Sass files (like `.import.scss`).
-    if (
-      filePath.endsWith('.import.scss') ||
-      filePath.endsWith('-legacy-index.scss') ||
-      filePath.endsWith('material/_theming.scss')
-    ) {
-      return;
-    }
-
     root.walkAtRules(rule => {
       if (rule.name === 'use' || rule.name === 'import' || rule.name === 'forward') {
         const [_, specifier] = rule.params.match(specifierRegex)!;

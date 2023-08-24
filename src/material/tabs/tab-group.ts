@@ -13,7 +13,6 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
-  Directive,
   ElementRef,
   EventEmitter,
   Inject,
@@ -71,11 +70,35 @@ export interface MatTabGroupBaseHeader {
 export type MatTabHeaderPosition = 'above' | 'below';
 
 /**
- * Base class with all of the `MatTabGroupBase` functionality.
- * @docs-private
+ * Material design tab-group component. Supports basic tab pairs (label + content) and includes
+ * animated ink-bar, keyboard navigation, and screen reader.
+ * See: https://material.io/design/components/tabs.html
  */
-@Directive()
-export abstract class _MatTabGroupBase
+@Component({
+  selector: 'mat-tab-group',
+  exportAs: 'matTabGroup',
+  templateUrl: 'tab-group.html',
+  styleUrls: ['tab-group.css'],
+  encapsulation: ViewEncapsulation.None,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
+  inputs: ['color', 'disableRipple'],
+  providers: [
+    {
+      provide: MAT_TAB_GROUP,
+      useExisting: MatTabGroup,
+    },
+  ],
+  host: {
+    'ngSkipHydration': '',
+    'class': 'mat-mdc-tab-group',
+    '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
+    '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
+    '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
+    '[style.--mat-tab-animation-duration]': 'animationDuration',
+  },
+})
+export class MatTabGroup
   extends _MatTabGroupMixinBase
   implements AfterContentInit, AfterContentChecked, OnDestroy, CanColor, CanDisableRipple
 {
@@ -83,9 +106,9 @@ export abstract class _MatTabGroupBase
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
    */
-  abstract _allTabs: QueryList<MatTab>;
-  abstract _tabBodyWrapper: ElementRef;
-  abstract _tabHeader: MatTabGroupBaseHeader;
+  @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
+  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
 
   /** All of the tabs that belong to the group. */
   _tabs: QueryList<MatTab> = new QueryList<MatTab>();
@@ -104,6 +127,27 @@ export abstract class _MatTabGroupBase
 
   /** Subscription to changes in the tab labels. */
   private _tabLabelSubscription = Subscription.EMPTY;
+
+  /** Whether the ink bar should fit its width to the size of the tab label content. */
+  @Input()
+  get fitInkBarToContent(): boolean {
+    return this._fitInkBarToContent;
+  }
+  set fitInkBarToContent(v: BooleanInput) {
+    this._fitInkBarToContent = coerceBooleanProperty(v);
+    this._changeDetectorRef.markForCheck();
+  }
+  private _fitInkBarToContent = false;
+
+  /** Whether tabs should be stretched to fill the header. */
+  @Input('mat-stretch-tabs')
+  get stretchTabs(): boolean {
+    return this._stretchTabs;
+  }
+  set stretchTabs(v: BooleanInput) {
+    this._stretchTabs = coerceBooleanProperty(v);
+  }
+  private _stretchTabs = true;
 
   /** Whether the tab group should grow to the size of the active tab. */
   @Input()
@@ -230,7 +274,7 @@ export abstract class _MatTabGroupBase
 
   constructor(
     elementRef: ElementRef,
-    protected _changeDetectorRef: ChangeDetectorRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
   ) {
@@ -246,6 +290,12 @@ export abstract class _MatTabGroupBase
       defaultConfig && defaultConfig.dynamicHeight != null ? defaultConfig.dynamicHeight : false;
     this.contentTabIndex = defaultConfig?.contentTabIndex ?? null;
     this.preserveContent = !!defaultConfig?.preserveContent;
+    this.fitInkBarToContent =
+      defaultConfig && defaultConfig.fitInkBarToContent != null
+        ? defaultConfig.fitInkBarToContent
+        : false;
+    this.stretchTabs =
+      defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
   }
 
   /**
@@ -499,77 +549,6 @@ export abstract class _MatTabGroupBase
     if (focusOrigin && focusOrigin !== 'mouse' && focusOrigin !== 'touch') {
       this._tabHeader.focusIndex = index;
     }
-  }
-}
-
-/**
- * Material design tab-group component. Supports basic tab pairs (label + content) and includes
- * animated ink-bar, keyboard navigation, and screen reader.
- * See: https://material.io/design/components/tabs.html
- */
-@Component({
-  selector: 'mat-tab-group',
-  exportAs: 'matTabGroup',
-  templateUrl: 'tab-group.html',
-  styleUrls: ['tab-group.css'],
-  encapsulation: ViewEncapsulation.None,
-  // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
-  inputs: ['color', 'disableRipple'],
-  providers: [
-    {
-      provide: MAT_TAB_GROUP,
-      useExisting: MatTabGroup,
-    },
-  ],
-  host: {
-    'ngSkipHydration': '',
-    'class': 'mat-mdc-tab-group',
-    '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
-    '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
-    '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
-    '[style.--mat-tab-animation-duration]': 'animationDuration',
-  },
-})
-export class MatTabGroup extends _MatTabGroupBase {
-  @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
-
-  /** Whether the ink bar should fit its width to the size of the tab label content. */
-  @Input()
-  get fitInkBarToContent(): boolean {
-    return this._fitInkBarToContent;
-  }
-  set fitInkBarToContent(v: BooleanInput) {
-    this._fitInkBarToContent = coerceBooleanProperty(v);
-    this._changeDetectorRef.markForCheck();
-  }
-  private _fitInkBarToContent = false;
-
-  /** Whether tabs should be stretched to fill the header. */
-  @Input('mat-stretch-tabs')
-  get stretchTabs(): boolean {
-    return this._stretchTabs;
-  }
-  set stretchTabs(v: BooleanInput) {
-    this._stretchTabs = coerceBooleanProperty(v);
-  }
-  private _stretchTabs = true;
-
-  constructor(
-    elementRef: ElementRef,
-    changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(elementRef, changeDetectorRef, defaultConfig, animationMode);
-    this.fitInkBarToContent =
-      defaultConfig && defaultConfig.fitInkBarToContent != null
-        ? defaultConfig.fitInkBarToContent
-        : false;
-    this.stretchTabs =
-      defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
   }
 }
 

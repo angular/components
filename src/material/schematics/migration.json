@@ -1,10 +1,10 @@
 {
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "migration-v16": {
-      "version": "16.0.0-0",
-      "description": "Updates the Angular Material to v16",
-      "factory": "./ng-update/index_bundled#updateToV16"
+    "migration-v17": {
+      "version": "17.0.0-0",
+      "description": "Updates the Angular Material to v17",
+      "factory": "./ng-update/index_bundled#updateToV17"
     }
   }
 }

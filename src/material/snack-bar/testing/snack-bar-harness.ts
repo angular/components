@@ -10,11 +10,26 @@ import {ContentContainerComponentHarness, HarnessPredicate, parallel} from '@ang
 import {AriaLivePoliteness} from '@angular/cdk/a11y';
 import {SnackBarHarnessFilters} from './snack-bar-harness-filters';
 
-export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentHarness<string> {
-  protected abstract _messageSelector: string;
-  protected abstract _actionButtonSelector: string;
+/** Harness for interacting with an MDC-based mat-snack-bar in tests. */
+export class MatSnackBarHarness extends ContentContainerComponentHarness<string> {
+  // Developers can provide a custom component or template for the
+  // snackbar. The canonical snack-bar parent is the "MatSnackBarContainer".
+  /** The selector for the host element of a `MatSnackBar` instance. */
+  static hostSelector = '.mat-mdc-snack-bar-container:not([mat-exit])';
+  private _messageSelector = '.mdc-snackbar__label';
+  private _actionButtonSelector = '.mat-mdc-snack-bar-action';
 
   private _snackBarLiveRegion = this.locatorFor('[aria-live]');
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a `MatSnackBarHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which snack bar instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with(options: SnackBarHarnessFilters = {}): HarnessPredicate<MatSnackBarHarness> {
+    return new HarnessPredicate(MatSnackBarHarness, options);
+  }
 
   /**
    * Gets the role of the snack-bar. The role of a snack-bar is determined based
@@ -40,7 +55,6 @@ export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentH
    * Whether the snack-bar has an action. Method cannot be used for snack-bar's with custom content.
    */
   async hasAction(): Promise<boolean> {
-    await this._assertContentAnnotated();
     return (await this._getActionButton()) !== null;
   }
 
@@ -66,7 +80,6 @@ export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentH
    * Gets the message of the snack-bar. Method cannot be used for snack-bar's with custom content.
    */
   async getMessage(): Promise<string> {
-    await this._assertContentAnnotated();
     return (await this.locatorFor(this._messageSelector)()).text();
   }
 
@@ -87,17 +100,10 @@ export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentH
   }
 
   /**
-   * Asserts that the current snack-bar has annotated content. Promise reject
-   * if content is not annotated.
-   */
-  protected abstract _assertContentAnnotated(): Promise<void>;
-
-  /**
    * Asserts that the current snack-bar has an action defined. Otherwise the
    * promise will reject.
    */
-  protected async _assertHasAction(): Promise<void> {
-    await this._assertContentAnnotated();
+  private async _assertHasAction(): Promise<void> {
     if (!(await this.hasAction())) {
       throw Error('Method cannot be used for a snack-bar without an action.');
     }
@@ -107,30 +113,4 @@ export abstract class _MatSnackBarHarnessBase extends ContentContainerComponentH
   private async _getActionButton() {
     return this.locatorForOptional(this._actionButtonSelector)();
   }
-}
-
-/** Harness for interacting with an MDC-based mat-snack-bar in tests. */
-export class MatSnackBarHarness extends _MatSnackBarHarnessBase {
-  // Developers can provide a custom component or template for the
-  // snackbar. The canonical snack-bar parent is the "MatSnackBarContainer".
-  /** The selector for the host element of a `MatSnackBar` instance. */
-  static hostSelector = '.mat-mdc-snack-bar-container:not([mat-exit])';
-  protected override _messageSelector = '.mdc-snackbar__label';
-  protected override _actionButtonSelector = '.mat-mdc-snack-bar-action';
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatSnackBarHarness` that meets
-   * certain criteria.
-   * @param options Options for filtering which snack bar instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with(options: SnackBarHarnessFilters = {}): HarnessPredicate<MatSnackBarHarness> {
-    return new HarnessPredicate(MatSnackBarHarness, options);
-  }
-
-  /**
-   * Asserts that the current snack-bar has annotated content. Promise reject
-   * if content is not annotated.
-   */
-  protected override async _assertContentAnnotated() {}
 }

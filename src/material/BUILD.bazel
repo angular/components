@@ -16,21 +16,17 @@ ts_library(
 
 filegroup(
     name = "overviews",
-    srcs = ["//src/material/%s:overview" % name for name in MATERIAL_ENTRYPOINTS if not "legacy-" in name],
+    srcs = ["//src/material/%s:overview" % name for name in MATERIAL_ENTRYPOINTS],
 )
 
 sass_library(
     name = "sass_lib",
     srcs = [
         "_index.scss",
-        "_theming.scss",
-        "_token-theming.scss",
     ],
     deps = [
         "//src/material/core:core_scss_lib",
         "//src/material/core:theming_scss_lib",
-        "//src/material/legacy-core:legacy_core_scss_lib",
-        "//src/material/legacy-core:theming_scss_lib",
     ],
 )
 
@@ -58,10 +54,6 @@ ng_package(
         "//src/material/prebuilt-themes:indigo-pink",
         "//src/material/prebuilt-themes:pink-bluegrey",
         "//src/material/prebuilt-themes:purple-green",
-        "//src/material/legacy-prebuilt-themes:deeppurple-amber",
-        "//src/material/legacy-prebuilt-themes:indigo-pink",
-        "//src/material/legacy-prebuilt-themes:pink-bluegrey",
-        "//src/material/legacy-prebuilt-themes:purple-green",
     ] + MATERIAL_SCSS_LIBS,
     nested_packages = ["//src/material/schematics:npm_package"],
     tags = ["release-package"],

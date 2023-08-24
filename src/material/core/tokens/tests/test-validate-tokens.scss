@@ -16,8 +16,11 @@
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
+@use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '@material/chips/chip-theme' as mdc-chips-theme;
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
+@use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
+@use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
 @use '@material/theme/validate' as mdc-validate;
 
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
@@ -35,8 +38,11 @@
 @use '../m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
 @use '../m2/mdc/tab' as tokens-mdc-tab;
 @use '../m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../m2/mdc/slider' as tokens-mdc-slider;
 @use '../m2/mdc/chip' as tokens-mdc-chip;
 @use '../m2/mdc/dialog' as tokens-mdc-dialog;
+@use '../m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
+@use '../m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
 
 @mixin validate-slots($component, $slots, $reference) {
   @debug 'Validating #{$component}...';
@@ -116,6 +122,11 @@
   $reference: mdc-snackbar-theme.$light-theme
 );
 @include validate-slots(
+  $component: 'm2.mdc.slider',
+  $slots: tokens-mdc-slider.get-token-slots(),
+  $reference: mdc-slider-theme.$light-theme
+);
+@include validate-slots(
   $component: 'm2.mdc.chips',
   $slots: tokens-mdc-chip.get-token-slots(),
   $reference: mdc-chips-theme.$light-theme
@@ -134,4 +145,14 @@
   $component: 'm2.mdc.extended-fab',
   $slots: tokens-mdc-extended-fab.get-token-slots(),
   $reference: mdc-extended-fab-theme.$extended-light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.filled-text-field',
+  $slots: tokens-mdc-filled-text-field.get-token-slots(),
+  $reference: mdc-filled-text-field-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.outlined-text-field',
+  $slots: tokens-mdc-outlined-text-field.get-token-slots(),
+  $reference: mdc-outlined-text-field-theme.$light-theme
 );

@@ -20,6 +20,7 @@ import {
   CdkPortalOutlet,
   ComponentPortal,
   DomPortal,
+  PortalModule,
   TemplatePortal,
 } from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
@@ -54,13 +55,15 @@ export function throwDialogContentAlreadyAttachedError() {
   // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [PortalModule],
   host: {
     'class': 'cdk-dialog-container',
     'tabindex': '-1',
     '[attr.id]': '_config.id || null',
     '[attr.role]': '_config.role',
     '[attr.aria-modal]': '_config.ariaModal',
-    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledBy',
+    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledByQueue[0]',
     '[attr.aria-label]': '_config.ariaLabel',
     '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
   },
@@ -87,8 +90,13 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    */
   _closeInteractionType: FocusOrigin | null = null;
 
-  /** ID of the element that should be considered as the dialog's label. */
-  _ariaLabelledBy: string | null;
+  /**
+   * Queue of the IDs of the dialog's label element, based on their definition order. The first
+   * ID will be used as the `aria-labelledby` value. We use a queue here to handle the case
+   * where there are two or more titles in the DOM at a time and the first one is destroyed while
+   * the rest are present.
+   */
+  _ariaLabelledByQueue: string[] = [];
 
   constructor(
     protected _elementRef: ElementRef,
@@ -101,8 +109,12 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
     private _focusMonitor?: FocusMonitor,
   ) {
     super();
-    this._ariaLabelledBy = this._config.ariaLabelledBy || null;
+
     this._document = _document;
+
+    if (this._config.ariaLabelledBy) {
+      this._ariaLabelledByQueue.push(this._config.ariaLabelledBy);
+    }
   }
 
   protected _contentAttached() {

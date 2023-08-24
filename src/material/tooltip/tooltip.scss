@@ -13,9 +13,6 @@ $emit-fallback-vars: false) {
   .mat-mdc-tooltip {
     // Add the official slots for the MDC tooltip.
     @include mdc-plain-tooltip-theme.theme-styles($mdc-tooltip-token-slots);
-
-    // Add default values for MDC tooltip tokens that aren't outputted by the theming API.
-    @include mdc-plain-tooltip-theme.theme(m2-mdc-plain-tooltip.get-unthemable-tokens());
   }
 }
 

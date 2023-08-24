@@ -12,60 +12,37 @@ import { HarnessPredicate } from '@angular/cdk/testing';
 import { TestElement } from '@angular/cdk/testing';
 
 // @public
-export class MatRadioButtonHarness extends _MatRadioButtonHarnessBase {
-    // (undocumented)
-    protected _clickLabel: AsyncFactoryFn<TestElement>;
-    static hostSelector: string;
-    // (undocumented)
-    protected _textLabel: AsyncFactoryFn<TestElement>;
-    static with<T extends MatRadioButtonHarness>(this: ComponentHarnessConstructor<T>, options?: RadioButtonHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatRadioButtonHarnessBase extends ComponentHarness {
+export class MatRadioButtonHarness extends ComponentHarness {
     blur(): Promise<void>;
     check(): Promise<void>;
     // (undocumented)
-    protected abstract _clickLabel: AsyncFactoryFn<TestElement>;
+    protected _clickLabel: AsyncFactoryFn<TestElement>;
     focus(): Promise<void>;
     getId(): Promise<string | null>;
     getLabelText(): Promise<string>;
     getName(): Promise<string | null>;
     getValue(): Promise<string | null>;
+    static hostSelector: string;
     isChecked(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;
     isRequired(): Promise<boolean>;
     // (undocumented)
-    protected abstract _textLabel: AsyncFactoryFn<TestElement>;
+    protected _textLabel: AsyncFactoryFn<TestElement>;
+    static with<T extends MatRadioButtonHarness>(this: ComponentHarnessConstructor<T>, options?: RadioButtonHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public
-export class MatRadioGroupHarness extends _MatRadioGroupHarnessBase<typeof MatRadioButtonHarness, MatRadioButtonHarness, RadioButtonHarnessFilters> {
-    // (undocumented)
-    protected _buttonClass: typeof MatRadioButtonHarness;
-    static hostSelector: string;
-    static with<T extends MatRadioGroupHarness>(this: ComponentHarnessConstructor<T>, options?: RadioGroupHarnessFilters): HarnessPredicate<T>;
-}
-
-// @public (undocumented)
-export abstract class _MatRadioGroupHarnessBase<ButtonType extends ComponentHarnessConstructor<Button> & {
-    with: (options?: ButtonFilters) => HarnessPredicate<Button>;
-}, Button extends ComponentHarness & {
-    isChecked(): Promise<boolean>;
-    getValue(): Promise<string | null>;
-    getName(): Promise<string | null>;
-    check(): Promise<void>;
-}, ButtonFilters extends BaseHarnessFilters> extends ComponentHarness {
-    // (undocumented)
-    protected abstract _buttonClass: ButtonType;
-    checkRadioButton(filter?: ButtonFilters): Promise<void>;
-    protected static _checkRadioGroupName(harness: _MatRadioGroupHarnessBase<any, any, any>, name: string): Promise<boolean>;
-    getCheckedRadioButton(): Promise<Button | null>;
+export class MatRadioGroupHarness extends ComponentHarness {
+    checkRadioButton(filter?: RadioButtonHarnessFilters): Promise<void>;
+    protected static _checkRadioGroupName(harness: MatRadioGroupHarness, name: string): Promise<boolean>;
+    getCheckedRadioButton(): Promise<MatRadioButtonHarness | null>;
     getCheckedValue(): Promise<string | null>;
     getId(): Promise<string | null>;
     getName(): Promise<string | null>;
-    getRadioButtons(filter?: ButtonFilters): Promise<Button[]>;
+    getRadioButtons(filter?: RadioButtonHarnessFilters): Promise<MatRadioButtonHarness[]>;
+    static hostSelector: string;
+    static with<T extends MatRadioGroupHarness>(this: ComponentHarnessConstructor<T>, options?: RadioGroupHarnessFilters): HarnessPredicate<T>;
 }
 
 // @public

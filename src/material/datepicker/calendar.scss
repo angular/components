@@ -2,6 +2,8 @@
 
 @use '../core/style/layout-common';
 @use '../core/focus-indicators/private';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
 
 $calendar-padding: 8px !default;
 $calendar-header-divider-width: 1px !default;
@@ -20,9 +22,15 @@ $calendar-prev-next-icon-border-width: 2px;
 $calendar-prev-next-icon-margin: 15.5px;
 $calendar-prev-icon-transform: translateX(2px) rotate(-45deg);
 $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
+$_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots();
 
 .mat-calendar {
   display: block;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-family, calendar-text-font);
+    @include token-utils.create-token-slot(font-size, calendar-text-size);
+  }
 }
 
 .mat-calendar-header {
@@ -47,6 +55,11 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 .mat-calendar-period-button {
   min-width: 0;
   margin: 0 8px;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-size, calendar-period-button-text-size);
+    @include token-utils.create-token-slot(font-weight, calendar-period-button-text-weight);
+  }
 }
 
 .mat-calendar-arrow {
@@ -55,6 +68,10 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   height: $calendar-arrow-size;
   margin: 0 0 0 $calendar-arrow-size;
   vertical-align: middle;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(fill, calendar-period-button-icon-color);
+  }
 
   &.mat-calendar-invert {
     transform: rotate(180deg);
@@ -73,6 +90,14 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 .mat-calendar-previous-button,
 .mat-calendar-next-button {
   position: relative;
+
+  @include token-utils.use-tokens($_tokens...) {
+
+    // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
+    .mat-datepicker-content & {
+      @include token-utils.create-token-slot(color, calendar-navigation-button-icon-color);
+    }
+  }
 
   &::after {
     @include layout-common.fill;
@@ -106,6 +131,12 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 .mat-calendar-table-header th {
   text-align: center;
   padding: 0 0 $calendar-padding 0;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, calendar-header-text-color);
+    @include token-utils.create-token-slot(font-size, calendar-header-text-size);
+    @include token-utils.create-token-slot(font-weight, calendar-header-text-weight);
+  }
 }
 
 .mat-calendar-table-header-divider {
@@ -121,6 +152,10 @@ $calendar-next-icon-transform: translateX(-2px) rotate(45deg);
     left: -$calendar-padding;
     right: -$calendar-padding;
     height: $calendar-header-divider-width;
+
+    @include token-utils.use-tokens($_tokens...) {
+      @include token-utils.create-token-slot(background, calendar-header-divider-color);
+    }
   }
 }
 

@@ -1,11 +1,9 @@
-<mat-checkbox [(ngModel)]="isLegacy">Is Legacy</mat-checkbox>
-
 <!-- via https://en.wikipedia.org/wiki/Pangram -->
-<div [class]="isLegacy ? 'mat-legacy-typography' : 'mat-typography'">
-  <h1 [class]="isLegacy ? 'mat-display-4' : 'mat-headline-1'">How vexingly quick daft zebras jump!</h1>
-  <h1 [class]="isLegacy ? 'mat-display-3' : 'mat-headline-2'">The wizard quickly jinxed the gnomes before they vaporized.</h1>
-  <h1 [class]="isLegacy ? 'mat-display-2' : 'mat-headline-3'">The quick brown fox jumps over the lazy dog.</h1>
-  <h1 [class]="isLegacy ? 'mat-display-1' : 'mat-headline-4'">Grumpy wizards make toxic brew for the evil queen and jack.</h1>
+<div class="mat-typography">
+  <h1 class="mat-headline-1">How vexingly quick daft zebras jump!</h1>
+  <h1 class="mat-headline-2">The wizard quickly jinxed the gnomes before they vaporized.</h1>
+  <h1 class="mat-headline-3">The quick brown fox jumps over the lazy dog.</h1>
+  <h1 class="mat-headline-4">Grumpy wizards make toxic brew for the evil queen and jack.</h1>
   <h1>Jackdaws love my big sphinx of quartz.</h1>
   <h2>The five boxing wizards jump quickly.</h2>
   <h3>Pack my box with five dozen liquor jugs.</h3>

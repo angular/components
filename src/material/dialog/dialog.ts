@@ -10,6 +10,7 @@ import {ComponentType, Overlay, OverlayContainer, ScrollStrategy} from '@angular
 import {Location} from '@angular/common';
 import {
   ANIMATION_MODULE_TYPE,
+  ComponentRef,
   Inject,
   Injectable,
   InjectionToken,
@@ -21,7 +22,7 @@ import {
   Type,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
-import {_MatDialogContainerBase, MatDialogContainer} from './dialog-container';
+import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
 import {defer, Observable, Subject} from 'rxjs';
 import {Dialog, DialogConfig} from '@angular/cdk/dialog';
@@ -54,27 +55,23 @@ export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
 
-/** @docs-private */
-export function MAT_DIALOG_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.block();
-}
-
 // Counter for unique dialog ids.
 let uniqueId = 0;
 
 /**
- * Base class for dialog services. The base dialog service allows
- * for arbitrary dialog refs and dialog container components.
+ * Service to open Material Design modal dialogs.
  */
 @Injectable()
-export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implements OnDestroy {
+export class MatDialog implements OnDestroy {
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<MatDialogRef<any>>();
-  private _scrollStrategy: () => ScrollStrategy;
-  protected _idPrefix = 'mat-dialog-';
   private _dialog: Dialog;
   protected dialogConfigClass = MatDialogConfig;
+
+  private readonly _dialogRefConstructor: Type<MatDialogRef<any>>;
+  private readonly _dialogContainerType: Type<MatDialogContainer>;
+  private readonly _dialogDataToken: InjectionToken<any>;
 
   /** Keeps track of the currently-open dialogs. */
   get openDialogs(): MatDialogRef<any>[] {
@@ -104,25 +101,32 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
   constructor(
     private _overlay: Overlay,
     injector: Injector,
-    private _defaultOptions: MatDialogConfig | undefined,
-    private _parentDialog: _MatDialogBase<C> | undefined,
+    /**
+     * @deprecated `_location` parameter to be removed.
+     * @breaking-change 10.0.0
+     */
+    @Optional() location: Location,
+    @Optional() @Inject(MAT_DIALOG_DEFAULT_OPTIONS) private _defaultOptions: MatDialogConfig,
+    @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy: any,
+    @Optional() @SkipSelf() private _parentDialog: MatDialog,
     /**
      * @deprecated No longer used. To be removed.
      * @breaking-change 15.0.0
      */
     _overlayContainer: OverlayContainer,
-    scrollStrategy: any,
-    private _dialogRefConstructor: Type<MatDialogRef<any>>,
-    private _dialogContainerType: Type<C>,
-    private _dialogDataToken: InjectionToken<any>,
     /**
      * @deprecated No longer used. To be removed.
      * @breaking-change 14.0.0
      */
+    @Optional()
+    @Inject(ANIMATION_MODULE_TYPE)
     _animationMode?: 'NoopAnimations' | 'BrowserAnimations',
   ) {
-    this._scrollStrategy = scrollStrategy;
     this._dialog = injector.get(Dialog);
+
+    this._dialogRefConstructor = MatDialogRef;
+    this._dialogContainerType = MatDialogContainer;
+    this._dialogDataToken = MAT_DIALOG_DATA;
   }
 
   /**
@@ -158,7 +162,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
   ): MatDialogRef<T, R> {
     let dialogRef: MatDialogRef<T, R>;
     config = {...(this._defaultOptions || new MatDialogConfig()), ...config};
-    config.id = config.id || `${this._idPrefix}${uniqueId++}`;
+    config.id = config.id || `mat-mdc-dialog-${uniqueId++}`;
     config.scrollStrategy = config.scrollStrategy || this._scrollStrategy();
 
     const cdkRef = this._dialog.open<R, D, T>(componentOrTemplateRef, {
@@ -197,6 +201,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
 
     // This can't be assigned in the `providers` callback, because
     // the instance hasn't been assigned to the CDK ref yet.
+    (dialogRef! as {componentRef: ComponentRef<T>}).componentRef = cdkRef.componentRef!;
     dialogRef!.componentInstance = cdkRef.componentInstance!;
 
     this.openDialogs.push(dialogRef!);
@@ -246,51 +251,5 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
     while (i--) {
       dialogs[i].close();
     }
-  }
-}
-
-/**
- * Service to open Material Design modal dialogs.
- */
-@Injectable()
-export class MatDialog extends _MatDialogBase<MatDialogContainer> {
-  constructor(
-    overlay: Overlay,
-    injector: Injector,
-    /**
-     * @deprecated `_location` parameter to be removed.
-     * @breaking-change 10.0.0
-     */
-    @Optional() location: Location,
-    @Optional() @Inject(MAT_DIALOG_DEFAULT_OPTIONS) defaultOptions: MatDialogConfig,
-    @Inject(MAT_DIALOG_SCROLL_STRATEGY) scrollStrategy: any,
-    @Optional() @SkipSelf() parentDialog: MatDialog,
-    /**
-     * @deprecated No longer used. To be removed.
-     * @breaking-change 15.0.0
-     */
-    overlayContainer: OverlayContainer,
-    /**
-     * @deprecated No longer used. To be removed.
-     * @breaking-change 14.0.0
-     */
-    @Optional()
-    @Inject(ANIMATION_MODULE_TYPE)
-    animationMode?: 'NoopAnimations' | 'BrowserAnimations',
-  ) {
-    super(
-      overlay,
-      injector,
-      defaultOptions,
-      parentDialog,
-      overlayContainer,
-      scrollStrategy,
-      MatDialogRef,
-      MatDialogContainer,
-      MAT_DIALOG_DATA,
-      animationMode,
-    );
-
-    this._idPrefix = 'mat-mdc-dialog-';
   }
 }

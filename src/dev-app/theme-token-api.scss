@@ -1,6 +1,8 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
+// Add an indicator to make it clear that the app is styled with the experimental theming API.
 dev-app {
   &::before {
     content: 'Using experimental theming API';
@@ -16,33 +18,47 @@ dev-app {
   }
 }
 
-.demo-unicorn-dark-theme {
-  background: black;
-  color: white;
-}
-
+// Emit Angular Material core styles.
 @include mat.core();
 
-$theme: mat.define-light-theme((
+// Base theme configuration for our M3 theme.
+$m3-base-config: (
   color: (
-    primary: mat.define-palette(mat.$indigo-palette),
-    accent: mat.define-palette(mat.$pink-palette),
+    primary: matx.$m3-green-palette
   ),
-  typography: mat.define-typography-config(),
-  density: 0,
-));
+  typography: (
+    brand-family: 'monospace'
+  )
+);
 
-// Apply all tokens (derived from `$theme`) to the `html` element. This ensures that all components
-// on the page will inherit these tokens.
+// Our M3 light theme.
+$light-theme: matx.define-theme($m3-base-config);
+
+// Our M3 dark theme.
+$dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark));
+
+// Emit default theme styles.
 html {
-  @include matx.theme(
-    matx.token-defaults(matx.get-m3-tokens()),
-    matx.card(),
-    matx.checkbox(),
-  );
+  @include mat.checkbox-theme($light-theme);
+  @include mat.card-theme($light-theme);
 }
 
-// TODO(mmalerba): Figure out a consistent solution for handling dark themes & color palette
-//  variants across M2 & M3 (likely by implementing `matx.system-colors`). As a reference, see the
-//  prior version of this file that showed a possible way to accomplish this in M2:
-//  https://github.com/angular/components/blob/5f5c5160dc20331619fc6729aa2ad78ac84af1c3/src/dev-app/theme-token-api.scss
+// Emit dark theme styles.
+.demo-unicorn-dark-theme {
+  // TODO(mmalerba): choose colors from the theming API.
+  background: black;
+  color: white;
+
+  @include mat.checkbox-color($dark-theme);
+  @include mat.card-color($dark-theme);
+}
+
+// Emit density styles for each scale.
+@each $scale in (maximum, 0, -1, -2, -3, minimum) {
+  $scale-theme: matx.define-theme(map.set($m3-base-config, density, scale, $scale));
+
+  .demo-density-#{$scale} {
+    @include mat.checkbox-density($scale-theme);
+    @include mat.card-density($scale-theme);
+  }
+}

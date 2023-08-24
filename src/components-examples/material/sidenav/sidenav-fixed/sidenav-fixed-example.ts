@@ -5,6 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatInputModule} from '@angular/material/input';
 import {NgIf} from '@angular/common';
 
 /** @title Fixed sidenav */
@@ -22,6 +23,7 @@ import {NgIf} from '@angular/common';
     MatCheckboxModule,
     MatFormFieldModule,
     MatButtonModule,
+    MatInputModule,
   ],
 })
 export class SidenavFixedExample {

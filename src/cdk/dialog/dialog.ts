@@ -16,6 +16,7 @@ import {
   Inject,
   Optional,
   SkipSelf,
+  ComponentRef,
 } from '@angular/core';
 import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {of as observableOf, Observable, Subject, defer} from 'rxjs';
@@ -38,7 +39,7 @@ import {CdkDialogContainer} from './dialog-container';
 /** Unique id for the created dialog. */
 let uniqueId = 0;
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class Dialog implements OnDestroy {
   private _openDialogsAtThisLevel: DialogRef<any, any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
@@ -290,6 +291,7 @@ export class Dialog implements OnDestroy {
           config.componentFactoryResolver,
         ),
       );
+      (dialogRef as {componentRef: ComponentRef<C>}).componentRef = contentRef;
       (dialogRef as {componentInstance: C}).componentInstance = contentRef.instance;
     }
   }

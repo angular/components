@@ -17,6 +17,4 @@ import {FormsModule} from '@angular/forms';
   imports: [MatCheckboxModule, FormsModule],
   standalone: true,
 })
-export class TypographyDemo {
-  isLegacy = false;
-}
+export class TypographyDemo {}

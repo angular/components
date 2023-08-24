@@ -7,7 +7,6 @@
  */
 
 import {
-  ComponentHarness,
   ComponentHarnessConstructor,
   ContentContainerComponentHarness,
   HarnessPredicate,
@@ -30,41 +29,38 @@ export interface MatTableHarnessColumnsText {
   };
 }
 
-interface RowBase extends ComponentHarness {
-  getCellTextByColumnName(): Promise<MatRowHarnessColumnsText>;
-  getCellTextByIndex(): Promise<string[]>;
-}
+/** Harness for interacting with a mat-table in tests. */
+export class MatTableHarness extends ContentContainerComponentHarness<string> {
+  /** The selector for the host element of a `MatTableHarness` instance. */
+  static hostSelector = '.mat-mdc-table';
+  _headerRowHarness = MatHeaderRowHarness;
+  _rowHarness = MatRowHarness;
+  private _footerRowHarness = MatFooterRowHarness;
 
-export abstract class _MatTableHarnessBase<
-  HeaderRowType extends ComponentHarnessConstructor<HeaderRow> & {
-    with: (options?: RowHarnessFilters) => HarnessPredicate<HeaderRow>;
-  },
-  HeaderRow extends RowBase,
-  RowType extends ComponentHarnessConstructor<Row> & {
-    with: (options?: RowHarnessFilters) => HarnessPredicate<Row>;
-  },
-  Row extends RowBase,
-  FooterRowType extends ComponentHarnessConstructor<FooterRow> & {
-    with: (options?: RowHarnessFilters) => HarnessPredicate<FooterRow>;
-  },
-  FooterRow extends RowBase,
-> extends ContentContainerComponentHarness<string> {
-  protected abstract _headerRowHarness: HeaderRowType;
-  protected abstract _rowHarness: RowType;
-  protected abstract _footerRowHarness: FooterRowType;
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a table with specific attributes.
+   * @param options Options for narrowing the search
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatTableHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: TableHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options);
+  }
 
-  /** Gets all of the header rows in a table. */
-  async getHeaderRows(filter: RowHarnessFilters = {}): Promise<HeaderRow[]> {
+  /** Gets all the header rows in a table. */
+  async getHeaderRows(filter: RowHarnessFilters = {}): Promise<MatHeaderRowHarness[]> {
     return this.locatorForAll(this._headerRowHarness.with(filter))();
   }
 
-  /** Gets all of the regular data rows in a table. */
-  async getRows(filter: RowHarnessFilters = {}): Promise<Row[]> {
+  /** Gets all the regular data rows in a table. */
+  async getRows(filter: RowHarnessFilters = {}): Promise<MatRowHarness[]> {
     return this.locatorForAll(this._rowHarness.with(filter))();
   }
 
-  /** Gets all of the footer rows in a table. */
-  async getFooterRows(filter: RowHarnessFilters = {}): Promise<FooterRow[]> {
+  /** Gets all the footer rows in a table. */
+  async getFooterRows(filter: RowHarnessFilters = {}): Promise<MatFooterRowHarness[]> {
     return this.locatorForAll(this._footerRowHarness.with(filter))();
   }
 
@@ -106,34 +102,6 @@ export abstract class _MatTableHarnessBase<
     });
 
     return text;
-  }
-}
-
-/** Harness for interacting with an MDC-based mat-table in tests. */
-export class MatTableHarness extends _MatTableHarnessBase<
-  typeof MatHeaderRowHarness,
-  MatHeaderRowHarness,
-  typeof MatRowHarness,
-  MatRowHarness,
-  typeof MatFooterRowHarness,
-  MatFooterRowHarness
-> {
-  /** The selector for the host element of a `MatTableHarness` instance. */
-  static hostSelector = '.mat-mdc-table';
-  protected _headerRowHarness = MatHeaderRowHarness;
-  protected _rowHarness = MatRowHarness;
-  protected _footerRowHarness = MatFooterRowHarness;
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a table with specific attributes.
-   * @param options Options for narrowing the search
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with<T extends MatTableHarness>(
-    this: ComponentHarnessConstructor<T>,
-    options: TableHarnessFilters = {},
-  ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options);
   }
 }
 

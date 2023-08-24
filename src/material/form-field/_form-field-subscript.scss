@@ -1,10 +1,8 @@
-@use '@material/textfield' as mdc-textfield;
-@use '@material/theme/theme' as mdc-theme;
 @use '@material/typography' as mdc-typography;
 @use '@material/textfield/variables' as mdc-textfield-variables;
 
-@use '../core/theming/theming';
-@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
 @use './form-field-sizing';
 
 @mixin private-form-field-subscript() {
@@ -58,25 +56,25 @@
   // Single error message displayed beneath the form field underline.
   .mat-mdc-form-field-error {
     display: block;
-  }
-}
 
-@mixin private-form-field-subscript-color() {
-  // MDC does not have built-in error treatment.
-  .mat-mdc-form-field-error {
-    @include mdc-theme.prop(color, mdc-textfield.$error);
+    @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-token-slots()) {
+      @include token-utils.create-token-slot(color, error-text-color);
+    }
   }
-}
-
-// We need to define our own typography for the subscript because we don't include MDC's
-// helper text in our MDC based form field
-@mixin private-form-field-subscript-typography($config-or-theme) {
-  $config: theming.get-typography-config($config-or-theme);
 
   // The subscript wrapper has a minimum height to avoid that the form-field
   // jumps when hints or errors are displayed.
   .mat-mdc-form-field-subscript-wrapper,
   .mat-mdc-form-field-bottom-align::before {
-    @include mdc-typography.typography(caption, $query: mdc-helpers.$mdc-typography-styles-query);
+    @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-token-slots()) {
+      @include mdc-typography.smooth-font();
+      @include token-utils.create-token-slot(font-family, subscript-text-font);
+      @include token-utils.create-token-slot(line-height, subscript-text-line-height);
+      @include token-utils.create-token-slot(font-size, subscript-text-size);
+      @include token-utils.create-token-slot(letter-spacing, subscript-text-tracking);
+      @include token-utils.create-token-slot(font-weight, subscript-text-weight);
+    }
   }
 }

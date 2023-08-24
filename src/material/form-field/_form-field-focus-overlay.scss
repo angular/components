@@ -1,5 +1,5 @@
-@use '@material/ripple/functions' as mdc-ripple-functions;
-@use '@material/textfield' as mdc-textfield;
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 
 // MDC text-field uses `@material/ripple` in order to show a focus and hover effect for
@@ -13,24 +13,19 @@
   .mat-mdc-form-field-focus-overlay {
     @include layout-common.fill;
     opacity: 0;
-    // Make sure we don't block click on the prefix/suffix.
-    pointer-events: none;
-  }
-}
+    pointer-events: none; // Make sure we don't block click on the prefix/suffix.
 
-@mixin private-form-field-focus-overlay-color() {
-  $focus-opacity: mdc-ripple-functions.states-opacity(mdc-textfield.$ink-color, focus);
-  $hover-opacity: mdc-ripple-functions.states-opacity(mdc-textfield.$ink-color, hover);
+    @include token-utils.use-tokens(
+      tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, state-layer-color);
 
-  .mat-mdc-form-field-focus-overlay {
-    background-color: mdc-textfield.$ink-color;
-  }
+      .mat-mdc-text-field-wrapper:hover & {
+        @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+      }
 
-  .mat-mdc-form-field:hover .mat-mdc-form-field-focus-overlay {
-    opacity: $hover-opacity;
-  }
-
-  .mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
-    opacity: $focus-opacity;
+      .mat-mdc-form-field.mat-focused & {
+        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      }
+    }
   }
 }

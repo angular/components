@@ -14,7 +14,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  CDK_TABLE_TEMPLATE,
   CdkTable,
   _CoalescedStyleScheduler,
   _COALESCED_STYLE_SCHEDULER,
@@ -40,7 +39,17 @@ export class MatRecycleRows {}
 @Component({
   selector: 'mat-table, table[mat-table]',
   exportAs: 'matTable',
-  template: CDK_TABLE_TEMPLATE,
+  // Note that according to MDN, the `caption` element has to be projected as the **first**
+  // element in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
+  // We can't reuse `CDK_TABLE_TEMPLATE` because it's incompatible with local compilation mode.
+  template: `
+    <ng-content select="caption"></ng-content>
+    <ng-content select="colgroup, col"></ng-content>
+    <ng-container headerRowOutlet></ng-container>
+    <ng-container rowOutlet></ng-container>
+    <ng-container noDataRowOutlet></ng-container>
+    <ng-container footerRowOutlet></ng-container>
+  `,
   styleUrls: ['table.css'],
   host: {
     'class': 'mat-mdc-table mdc-data-table__table',
