@@ -10,11 +10,13 @@
   $output: ();
 
   @each $key, $value in $palette {
-    @if (meta.type-of($value) == 'map') {
-      $output: map.merge(($key: _replace-all-values($value, $replacement)), $output);
-    }
-    @else {
-      $output: map.merge(($key: $replacement), $output);
+    @if $key != _mat-theming-internals-do-not-access {
+      @if (meta.type-of($value) == 'map') {
+        $output: map.merge(($key: _replace-all-values($value, $replacement)), $output);
+      }
+ @else {
+        $output: map.merge(($key: $replacement), $output);
+      }
     }
   }
 

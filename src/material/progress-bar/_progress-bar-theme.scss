@@ -30,7 +30,7 @@
   @include mdc-linear-progress-theme.theme($color-tokens);
 }
 
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   .mat-mdc-progress-bar {
     @include _palette-styles($theme, primary);
 

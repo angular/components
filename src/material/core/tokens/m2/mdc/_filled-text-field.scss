@@ -1,10 +1,8 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../typography/typography-utils';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.

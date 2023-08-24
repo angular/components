@@ -2,7 +2,6 @@
 @use 'sass:math';
 @use '@material/density' as mdc-density;
 @use '@material/textfield' as mdc-textfield;
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
 
 @use './form-field-sizing';

@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '../tokens/m2/mat/option' as tokens-mat-option;
 @use '../tokens/token-utils';
 @use '../style/sass-utils';
@@ -6,9 +5,8 @@
 @use '../theming/theming';
 @use '../theming/inspection';
 @use '../typography/typography';
-@use '../mdc-helpers/mdc-helpers';
 
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-option.$prefix,
       tokens-mat-option.get-color-tokens($theme));
@@ -25,14 +23,14 @@
   }
 }
 
-@mixin typography($theme) {
+@mixin typography($config-or-theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-option.$prefix,
       tokens-mat-option.get-typography-tokens($theme));
   }
 }
 
-@mixin density($theme) {
+@mixin density($config-or-theme) {
 }
 
 @mixin theme($theme-or-color-config) {

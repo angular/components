@@ -27,7 +27,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   $internal: map.get($theme, $_internals, m2-config);
   $theme: map.remove($theme, $_internals);
-  @return if(_is-error-theme($theme), $internal, $theme or $internal);
+  @return if(_is-error-theme($theme), $internal, $theme);
 }
 
 /// Gets the type of theme represented by a theme object (light or dark).
@@ -142,7 +142,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return theming.get-typography-config($theme) != null;
   }
   @if $system == density {
-    @return theming.get-density-config($theme, $default: null) != null;
+    @return theming.get-density-config($theme) != null;
   }
   @error 'Valid systems are: base, color, typography, density. Got:' $system;
 }

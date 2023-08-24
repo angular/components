@@ -24,7 +24,7 @@
   }
 }
 
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
@@ -50,7 +50,7 @@
   }
 }
 
-@mixin typography($theme) {
+@mixin typography($config-or-theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
@@ -69,7 +69,7 @@
   }
 }
 
-@mixin density($theme) {
+@mixin density($config-or-theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }

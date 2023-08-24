@@ -1,10 +1,9 @@
-@use 'sass:map';
 @use 'sass:meta';
 @use '../theming/theming';
 @use '../theming/inspection';
 
 // Colors for the ripple elements.
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
   $color-opacity: 0.1;
 

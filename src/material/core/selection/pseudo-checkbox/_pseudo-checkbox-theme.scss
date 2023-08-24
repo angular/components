@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '../../theming/theming';
 @use '../../theming/inspection';
 
@@ -20,7 +19,7 @@
   }
 }
 
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   $is-dark-theme: inspection.get-theme-type($theme) == dark;
   $primary: inspection.get-theme-color($theme, primary);
   $accent: inspection.get-theme-color($theme, accent);
@@ -73,7 +72,7 @@
   }
 }
 
-@mixin typography($theme) {}
+@mixin typography($config-or-theme) {}
 
 @mixin _density($theme) {}
 

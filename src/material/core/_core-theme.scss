@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use './theming/theming';
 @use './theming/inspection';
 @use './style/private';
@@ -9,7 +8,7 @@
 @use './style/elevation';
 @use './typography/typography';
 
-@mixin color($theme) {
+@mixin color($config-or-theme) {
   @include ripple-theme.color($theme);
   @include option-theme.color($theme);
   @include optgroup-theme.color($theme);
@@ -43,7 +42,7 @@
   }
 }
 
-@mixin typography($theme) {
+@mixin typography($config-or-theme) {
   @include option-theme.typography($theme);
   @include optgroup-theme.typography($theme);
   @include pseudo-checkbox-theme.typography($theme);
@@ -51,7 +50,7 @@
   // @include ripple-theme.typography($config);
 }
 
-@mixin density($theme) {
+@mixin density($config-or-theme) {
   @include option-theme.density($theme);
   @include optgroup-theme.density($theme);
   // TODO(mmalerba): add density mixins for these.

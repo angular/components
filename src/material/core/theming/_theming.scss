@@ -633,5 +633,5 @@ $_internals: _mat-theming-internals-do-not-access;
     }
     @return $value;
   }
-  @return ('ERROR': $message);
+  @return (ERROR: $message);
 }
