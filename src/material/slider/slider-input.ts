@@ -739,7 +739,19 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
     const percentage = this._slider.min < this._slider.max ? _percentage : 1;
 
-    const width = maxWidth * percentage + 24;
+    // Extend the native input width by the radius of the ripple
+    let ripplePadding = this._slider._rippleRadius;
+
+    // If one of the inputs is maximally sized (the value of both thumbs is
+    // equal to the min or max), make that input take up all of the width and
+    // make the other unselectable.
+    if (percentage === 1) {
+      ripplePadding = 48;
+    } else if (percentage === 0) {
+      ripplePadding = 0;
+    }
+
+    const width = maxWidth * percentage + ripplePadding;
     this._hostElement.style.width = `${width}px`;
     this._hostElement.style.padding = '0px';
 
