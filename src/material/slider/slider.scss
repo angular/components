@@ -135,6 +135,12 @@ $mat-slider-horizontal-margin: 8px !default;
     .mat-mdc-focus-indicator::before {
       border-radius: 50%;
     }
+
+    // Stop parent word-break from altering
+    // the word-break of the value indicator.
+    .mdc-slider__value-indicator {
+      word-break: normal;
+    }
   }
   // In the MDC slider the focus indicator is inside the thumb.
   .mdc-slider__thumb--focused .mat-mdc-focus-indicator::before {
