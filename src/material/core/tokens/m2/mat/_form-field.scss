@@ -50,7 +50,7 @@ $prefix: (mat, form-field);
   $palette-color: inspection.get-theme-color($theme, $palette-name);
 
   @return (
-    focus-select-arrow-color: rgba($palette-color, 0.87),
+    focus-select-arrow-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
   );
 }
 

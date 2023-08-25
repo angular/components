@@ -121,7 +121,7 @@ $prefix: (mdc, outlined-text-field);
   @return (
     caret-color: $palette-color,
     focus-outline-color: $palette-color,
-    focus-label-text-color: rgba($palette-color, 0.87),
+    focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
   );
 }
 

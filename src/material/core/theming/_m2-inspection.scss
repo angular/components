@@ -7,6 +7,33 @@
 
 $_internals: _mat-theming-internals-do-not-access;
 
+$_color-keys: (
+  primary,
+  accent,
+  warn,
+  foreground,
+  background,
+  is-dark,
+  color, /* included for themes that incorrectly nest the color config: (color: (color: (....))) */
+);
+
+$_typography-keys: (
+  headline-1,
+  headline-2,
+  headline-3,
+  headline-4,
+  headline-5,
+  headline-6,
+  subtitle-1,
+  font-famiy,
+  subtitle-2,
+  body-1,
+  body-2,
+  button,
+  caption,
+  overline,
+);
+
 $_typography-properties: (font, font-family, line-height, font-size, letter-spacing, font-weight);
 
 /// Checks whether the given theme contains error objects.
@@ -137,22 +164,29 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return true;
   }
   @if $system == color {
-    @if not theming.private-is-theme-object($theme) {
-      @return map.has-key($theme, primary);
-    }
-    @return theming.get-color-config($theme) != null;
+    $color: theming.get-color-config($theme);
+    @return $color != null and _has-any-key($color, $_color-keys);
   }
   @if $system == typography {
-    @if not theming.private-is-theme-object($theme) {
-      @return map.has-key($theme, body-1);
-    }
-    @return theming.get-typography-config($theme) != null;
+    $typography: theming.get-typography-config($theme);
+    @return $typography != null and _has-any-key($typography, $_typography-keys);
   }
   @if $system == density {
-    @if not theming.private-is-theme-object($theme) {
-      @return $theme == minimum or $theme == maximum or meta.type-of($theme) == 'number';
-    }
-    @return theming.get-density-config($theme) != null;
+    $density: theming.get-density-config($theme);
+    @return $density != null and _is-density-value($density);
   }
   @error 'Valid systems are: base, color, typography, density. Got:' $system;
+}
+
+@function _has-any-key($theme, $keys) {
+  @each $key in $keys {
+    @if map.has-key($theme, $key) {
+      @return true;
+    }
+  }
+  @return false;
+}
+
+@function _is-density-value($theme) {
+  @return $theme == minimum or $theme == maximum or meta.type-of($theme) == 'number';
 }

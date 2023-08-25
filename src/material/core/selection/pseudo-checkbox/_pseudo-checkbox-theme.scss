@@ -84,7 +84,7 @@
     @if inspection.theme-has($theme, density) {
       @include _density($theme);
     }
-    @if inspection.theme-has($theme, typoraphyg) {
+    @if inspection.theme-has($theme, typography) {
       @include typography($theme);
     }
   }
