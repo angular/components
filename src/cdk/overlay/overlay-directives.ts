@@ -24,6 +24,7 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
+  booleanAttribute,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
@@ -112,6 +113,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
   private _scrollStrategyFactory: () => ScrollStrategy;
+  private _disposeOnNavigation = false;
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin')
@@ -230,6 +232,15 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._push = coerceBooleanProperty(value);
   }
 
+  /** Whether the overlay should be disposed of when the user goes backwards/forwards in history. */
+  @Input({alias: 'cdkConnectedOverlayDisposeOnNavigation', transform: booleanAttribute})
+  get disposeOnNavigation(): boolean {
+    return this._disposeOnNavigation;
+  }
+  set disposeOnNavigation(value: boolean) {
+    this._disposeOnNavigation = value;
+  }
+
   /** Event emitted when the backdrop is clicked. */
   @Output() readonly backdropClick = new EventEmitter<MouseEvent>();
 
@@ -335,6 +346,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       positionStrategy,
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop,
+      disposeOnNavigation: this.disposeOnNavigation,
     });
 
     if (this.width || this.width === 0) {
