@@ -1,5 +1,5 @@
-@use 'sass:map';
 @use '../../theming/theming';
+@use '../../theming/inspection';
 
 @mixin _psuedo-checkbox-styles-with-color($text-color, $background) {
   .mat-pseudo-checkbox-checked,
@@ -19,15 +19,13 @@
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $is-dark-theme: map.get($config, is-dark);
-
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
-  $background: theming.get-color-from-palette(map.get($config, background), background);
-  $secondary-text: theming.get-color-from-palette(map.get($config, foreground), secondary-text);
+@mixin color($theme) {
+  $is-dark-theme: inspection.get-theme-type($theme) == dark;
+  $primary: inspection.get-theme-color($theme, primary);
+  $accent: inspection.get-theme-color($theme, accent);
+  $warn: inspection.get-theme-color($theme, warn);
+  $background: inspection.get-theme-color($theme, background, background);
+  $secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
 
   // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
   // this does not work well with elements layered on top of one another. To get around this we
@@ -74,25 +72,20 @@
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {}
 
-@mixin _density($config-or-theme) {}
+@mixin _density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-pseudo-checkbox') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include _density($density);
+    @if inspection.theme-has($theme, density) {
+      @include _density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

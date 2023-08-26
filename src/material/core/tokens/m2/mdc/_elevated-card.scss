@@ -1,6 +1,5 @@
-@use 'sass:map';
 @use '../../../style/elevation';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -45,14 +44,12 @@ $prefix: (mdc, elevated-card);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-  $elevation: theming.get-color-from-palette($foreground, elevation);
+@function get-color-tokens($theme) {
+  $elevation: inspection.get-theme-color($theme, foreground, elevation);
 
   @return (
     // The background color of the card.
-    container-color: theming.get-color-from-palette($background, card),
+    container-color: inspection.get-theme-color($theme, background, card),
     // The elevation level of the card.
     // (Part of the color tokens because it needs to be combined with the shadow color to generate
     // the final box-shadow).
@@ -63,12 +60,12 @@ $prefix: (mdc, elevated-card);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'sass:map';
 @use 'sass:meta';
 
@@ -46,4 +47,10 @@
 ///     $value.
 @function coerce-to-list($value) {
   @return if(meta.type-of($value) != 'list', ($value,), $value);
+}
+
+/// A version of the Sass `color.change` function that is safe ot use with CSS variables.
+@function safe-color-change($color, $args...) {
+  $args: meta.keywords($args);
+  @return if(meta.type-of($color) == 'color', color.change($color, $args...), $color);
 }
