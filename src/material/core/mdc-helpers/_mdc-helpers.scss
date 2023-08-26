@@ -2,6 +2,7 @@
 //  "theming", "typography", "core".
 
 @use '../theming/theming';
+@use '../theming/inspection';
 @use '../typography/typography';
 @use '../typography/typography-utils';
 @use '@material/feature-targeting' as mdc-feature-targeting;
@@ -36,7 +37,7 @@ $mat-typography-mdc-level-mappings: (
 );
 
 // Converts an Angular Material typography level config to an MDC one.
-@function typography-level-config-to-mdc($mat-config, $mat-level) {
+@function typography-level-config-to-mdc($theme, $mat-level) {
   $mdc-level: map.get($mat-typography-mdc-level-mappings, $mat-level);
 
   $result-with-nulls: map.merge(
@@ -49,11 +50,11 @@ $mat-typography-mdc-level-mappings: (
           )),
       if($mat-level,
           (
-            font-size: typography-utils.font-size($mat-config, $mat-level),
-            line-height: typography-utils.line-height($mat-config, $mat-level),
-            font-weight: typography-utils.font-weight($mat-config, $mat-level),
-            letter-spacing: typography-utils.letter-spacing($mat-config, $mat-level),
-            font-family: typography-utils.font-family($mat-config, $mat-level),
+            font-size: inspection.get-theme-typography($theme, $mat-level, font-size),
+            line-height: inspection.get-theme-typography($theme, $mat-level, line-height),
+            font-weight: inspection.get-theme-typography($theme, $mat-level, font-weight),
+            letter-spacing: inspection.get-theme-typography($theme, $mat-level, letter-spacing),
+            font-family: inspection.get-theme-typography($theme, $mat-level, font-family),
             // Angular Material doesn't use text-transform, so disable it.
             text-transform: none,
           ),
@@ -71,13 +72,13 @@ $mat-typography-mdc-level-mappings: (
 }
 
 // Converts an Angular Material typography config to an MDC one.
-@function typography-config-to-mdc($mat-config) {
+@function typography-config-to-mdc($theme) {
   $mdc-config: ();
 
   @each $mat-level, $mdc-level in $mat-typography-mdc-level-mappings {
     $mdc-config: map.merge(
         $mdc-config,
-        ($mdc-level: typography-level-config-to-mdc($mat-config, $mat-level)));
+        ($mdc-level: typography-level-config-to-mdc($theme, $mat-level)));
   }
 
   @return $mdc-config;
@@ -100,12 +101,11 @@ $mat-typography-mdc-level-mappings: (
 
 // Configures MDC's global variables to reflect the given theme, applies the given styles,
 // then resets the global variables to prevent unintended side effects.
-@mixin using-mdc-theme($config) {
-  $primary: theming.get-color-from-palette(map.get($config, primary));
-  $accent: theming.get-color-from-palette(map.get($config, accent));
-  $warn: theming.get-color-from-palette(map.get($config, warn));
-  $background-palette: map.get($config, background);
-  $is-dark: map.get($config, is-dark);
+@mixin using-mdc-theme($theme) {
+  $primary: inspection.get-theme-color($theme, primary);
+  $accent: inspection.get-theme-color($theme, accent);
+  $warn: inspection.get-theme-color($theme, warn);
+  $is-dark: inspection.get-theme-type($theme) == dark;
 
   // Save the original values.
   $orig-primary: mdc-theme-color.$primary;
@@ -126,8 +126,8 @@ $mat-typography-mdc-level-mappings: (
   mdc-theme-color.$secondary: $accent;
   mdc-theme-color.$on-secondary:
       if(variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
-  mdc-theme-color.$background: theming.get-color-from-palette($background-palette, background);
-  mdc-theme-color.$surface: theming.get-color-from-palette($background-palette, card);
+  mdc-theme-color.$background: inspection.get-theme-color($theme, background, background);
+  mdc-theme-color.$surface: inspection.get-theme-color($theme, background, card);
   mdc-theme-color.$on-surface:
       if(variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
   mdc-theme-color.$error: $warn;
@@ -193,13 +193,13 @@ $mat-typography-mdc-level-mappings: (
 
 // Configures MDC's global variables to reflect the given typography config,
 // applies the given styles, then resets the global variables to prevent unintended side effects.
-@mixin using-mdc-typography($config) {
+@mixin using-mdc-typography($theme) {
   // Save the original values.
   $orig-mdc-typography-styles: mdc-typography.$styles;
 
   // Set new values based on the given Angular Material typography configuration.
-  @if $config {
-    mdc-typography.$styles: typography-config-to-mdc($config);
+  @if inspection.theme-has($theme, typography) {
+    mdc-typography.$styles: typography-config-to-mdc($theme);
   }
 
   // Apply given rules.

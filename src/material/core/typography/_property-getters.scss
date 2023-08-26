@@ -1,0 +1,63 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+
+// Utility for fetching a nested value from a typography config.
+@function _mat-get-type-value($config, $level, $name) {
+  @if meta.type-of($config) != 'map' {
+    @error 'Typography config must be a map. Received #{meta.type-of($config)}.';
+  }
+
+  @if not map.has-key($config, $level) {
+    @error 'Typography config does not have a level called "#{$level}". ' +
+           'Available levels are: #{map.keys($config)}.';
+  }
+
+  @return map.get(map.get($config, $level), $name);
+}
+
+/// Gets the font size for a level inside a typography config.
+/// @param {Map} $config A typography config.
+/// @param {Map} $level A typography level.
+@function font-size($config, $level) {
+  @return _mat-get-type-value($config, $level, font-size);
+}
+
+/// Gets the line height for a level inside a typography config.
+/// @param {Map} $config A typography config.
+/// @param {Map} $level A typography level.
+@function line-height($config, $level) {
+  @return _mat-get-type-value($config, $level, line-height);
+}
+
+/// Gets the font weight for a level inside a typography config.
+/// @param {Map} $config A typography config.
+/// @param {Map} $level A typography level.
+@function font-weight($config, $level) {
+  @return _mat-get-type-value($config, $level, font-weight);
+}
+
+/// Gets the letter spacing for a level inside a typography config.
+/// @param {Map} $config A typography config.
+/// @param {Map} $level A typography level.
+@function letter-spacing($config, $level) {
+  @return _mat-get-type-value($config, $level, letter-spacing);
+}
+
+/// Gets the font-family from a typography config and removes the quotes around it.
+/// @param {Map} $config A typography config.
+/// @param {Map} $level A typography level.
+@function font-family($config, $level: null) {
+  @if meta.type-of($config) != 'map' {
+    @error 'Typography config must be a map. Received #{meta.type-of($config)}.';
+  }
+
+  $font-family: map.get($config, font-family);
+
+  @if $level != null {
+    $font-family: _mat-get-type-value($config, $level, font-family);
+  }
+
+  // Guard against unquoting non-string values, because it's deprecated.
+  @return if(meta.type-of($font-family) == string, string.unquote($font-family), $font-family);
+}

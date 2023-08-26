@@ -1,35 +1,24 @@
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/typography/typography';
 @use '../core/mdc-helpers/mdc-helpers';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  @include mdc-helpers.using-mdc-theme($config) {}
-}
+@mixin color($theme) {}
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-  @include mdc-helpers.using-mdc-typography($config) {}
-}
+@mixin typography($theme) {}
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-input') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

@@ -6,6 +6,7 @@
 
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
@@ -19,16 +20,8 @@
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($config);
-  $inner-control-primary: map.merge($config, (accent: $primary));
-  $inner-control-accent: map.merge($config, (accent: $accent));
-  $inner-control-warn: map.merge($config, (accent: $warn));
-
+@mixin color($theme) {
+  $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($theme);
 
   // Add values for MDC list tokens.
   .mat-mdc-list-base {
@@ -37,37 +30,37 @@
 
   .mdc-list-item__start,
   .mdc-list-item__end {
-    @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($inner-control-primary));
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
   }
 
   .mat-accent {
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($inner-control-accent));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, accent));
     }
   }
 
   .mat-warn {
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($inner-control-warn));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, warn));
     }
   }
 
   .mat-mdc-list-option {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($inner-control-primary));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, primary));
   }
   .mat-mdc-list-option.mat-accent {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($inner-control-accent));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, accent));
   }
   .mat-mdc-list-option.mat-warn {
-    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($inner-control-warn));
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, warn));
   }
 
   // There is no token for activated color on nav list.
   // TODO(mmalerba): Add a token to MDC or make a custom one.
   .mat-mdc-list-base.mat-mdc-list-base {
-    @include evolution-mixins.list-selected-ink-color(theming.get-color-from-palette($primary));
+    @include evolution-mixins.list-selected-ink-color(inspection.get-theme-color($theme, primary));
   }
 
   // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can cause
@@ -82,9 +75,9 @@
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $mdc-list-density-tokens: tokens-mdc-list.get-density-tokens($density-scale);
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+  $mdc-list-density-tokens: tokens-mdc-list.get-density-tokens($theme);
 
   // Add values for MDC list tokens.
   .mat-mdc-list-base {
@@ -94,7 +87,6 @@
   // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based API,
   //  to avoid screenshot diffs. We should remove it in favor of following MDC's current style, or
   //  add custom tokens for it.
-  $clamped-density-scale: theming.clamp-density($density-scale, -5);
   .mat-mdc-list-item {
     &.mdc-list-item--with-leading-avatar,
     &.mdc-list-item--with-leading-checkbox,
@@ -107,7 +99,7 @@
             -3: 44px,
             -4: 40px,
             -5: 40px,
-        ), $clamped-density-scale);
+        ), $density-scale);
       }
 
       &.mdc-list-item--with-two-lines {
@@ -118,16 +110,14 @@
             -3: 60px,
             -4: 56px,
             -5: 56px,
-        ), $clamped-density-scale);
+        ), $density-scale);
       }
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-  $mdc-list-typography-tokens: tokens-mdc-list.get-typography-tokens($config);
+@mixin typography($theme) {
+  $mdc-list-typography-tokens: tokens-mdc-list.get-typography-tokens($theme);
 
   // Add values for MDC list tokens.
   .mat-mdc-list-base {
@@ -137,26 +127,22 @@
   // MDC does not have tokens for the subheader.
   // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
   .mdc-list-group__subheader {
-    @include typography-utils.typography-level($config, subtitle-1);
+    font: inspection.get-theme-typography($theme, subtitle-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-list') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     @include base($theme);
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }
