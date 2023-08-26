@@ -198,6 +198,11 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return $typography != null and _has-any-key($typography, $_typography-keys);
   }
   @if $system == density {
+    // Backwards compatibility for the case where an explicit, but invalid density is given
+    // (this was previously treated as density 0).
+    @if meta.type-of($theme) == 'map' and map.get($theme, density) {
+      @return true;
+    }
     $density: theming.get-density-config($theme);
     @return $density != null and _is-density-value($density);
   }
