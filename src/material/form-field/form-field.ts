@@ -610,16 +610,6 @@ export class MatFormField
   }
 
   /**
-   * Calculate the vertical offset for the overlay when the input field has an outline appearance.
-   * In the outline appearance, the overlay should have extra space to display the label correctly.
-   * This function calculates the vertical offset needed.
-   */
-  _getOverlayOffsetOutlined() {
-    const outlineHeight = this._floatingLabel?.element.getBoundingClientRect().height || 0;
-    return this._hasOutline() ? -outlineHeight / 2 : 0;
-  }
-
-  /**
    * Whether the label should display in the infix. Labels in the outline appearance are
    * displayed as part of the notched-outline and are horizontally offset to account for
    * form field prefix content. This won't work in server side rendering since we cannot

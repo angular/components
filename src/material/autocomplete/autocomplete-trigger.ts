@@ -925,8 +925,13 @@ export class MatAutocompleteTrigger
     // border-radius based on the overlay position.
     const panelClass = this._aboveClass;
 
-    // Calculate vertical overlay offset with outline, or set to 0.
-    const offsetY = this._formField?._getOverlayOffsetOutlined() || 0;
+    /**
+     * Calculate the vertical offset for the overlay when the input field has an outline appearance.
+     * In the outline appearance, the overlay should have extra space to display the label correctly.
+     */
+    const outlineHeight =
+      this._formField?._floatingLabel?.element.getBoundingClientRect().height || 0;
+    const offsetY = this._formField?._hasOutline() ? -outlineHeight / 2 : 0;
 
     const abovePositions: ConnectedPosition[] = [
       {
