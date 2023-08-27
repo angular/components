@@ -3,6 +3,7 @@ import {Component, DebugElement, ViewEncapsulation, ViewChild} from '@angular/co
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
 import {ThemePalette} from '@angular/material/core';
+import {MatIconModule} from '@angular/material/icon';
 
 describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
@@ -270,6 +271,55 @@ describe('MatBadge', () => {
   });
 });
 
+describe('MatBadge with MatIcon', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MatIconModule, MatBadgeModule],
+      declarations: [
+        IconWithBadge,
+        IconWithBadgeAtributeBindedTrueAriaHidden,
+        IconWithBadgeAtributeBindedFalseAriaHidden,
+      ],
+    }).compileComponents();
+  });
+
+  it('should warn bout using matBadge on MatIcon as its aria-hidden true by default', () => {
+    spyOn(console, 'warn');
+
+    const fixture = TestBed.createComponent(IconWithBadge);
+    fixture.detectChanges();
+
+    expect(console.warn).toHaveBeenCalled();
+  });
+
+  it('should not warn about using matBadge on MatIcon with aria-hidden="false', () => {
+    spyOn(console, 'warn');
+
+    const fixture = TestBed.createComponent(IconWithBadgeFalseAriaHidden);
+    fixture.detectChanges();
+
+    expect(console.warn).toHaveBeenCalled();
+  });
+
+  it('should warn about using matBadge on MatIcon with [attr.aria-hidden]="true"', () => {
+    spyOn(console, 'warn');
+
+    const fixture = TestBed.createComponent(IconWithBadgeAtributeBindedTrueAriaHidden);
+    fixture.detectChanges();
+
+    expect(console.warn).toHaveBeenCalled();
+  });
+
+  it('should not warn about using matBadge on MatIcon with [attr.aria-hidden]="false"', () => {
+    spyOn(console, 'warn');
+
+    const fixture = TestBed.createComponent(IconWithBadgeAtributeBindedFalseAriaHidden);
+    fixture.detectChanges();
+
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+});
+
 /** Test component that contains a MatBadge. */
 @Component({
   // Explicitly set the view encapsulation since we have a test that checks for it.
@@ -330,3 +380,15 @@ class NestedBadge {}
     <ng-template matBadge="1">Notifications</ng-template>`,
 })
 class BadgeOnTemplate {}
+
+@Component({template: `<mat-icon matBadge="1">home</mat-icon>`})
+class IconWithBadge {}
+
+@Component({template: `<mat-icon matBadge="1" aria-hidden="false">home</mat-icon>`})
+class IconWithBadgeFalseAriaHidden {}
+
+@Component({template: `<mat-icon matBadge="1" [attr.aria-hidden]="true">home</mat-icon>`})
+class IconWithBadgeAtributeBindedTrueAriaHidden {}
+
+@Component({template: `<mat-icon matBadge="1" [attr.aria-hidden]="false">home</mat-icon>`})
+class IconWithBadgeAtributeBindedFalseAriaHidden {}
