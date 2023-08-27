@@ -72,6 +72,12 @@ $mat-slider-horizontal-margin: 8px !default;
     .mdc-slider__track--active_fill {
       transition-duration: 80ms;
     }
+
+    // Stop parent word-break from altering
+    // the word-break of the value indicator.
+    .mdc-slider__value-indicator {
+      word-break: normal;
+    }
   }
 
   .mdc-slider__track,
