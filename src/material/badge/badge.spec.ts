@@ -277,6 +277,7 @@ describe('MatBadge with MatIcon', () => {
       imports: [MatIconModule, MatBadgeModule],
       declarations: [
         IconWithBadge,
+        IconWithBadgeFalseAriaHidden,
         IconWithBadgeAtributeBindedTrueAriaHidden,
         IconWithBadgeAtributeBindedFalseAriaHidden,
       ],
