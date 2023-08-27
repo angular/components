@@ -292,13 +292,13 @@ describe('MatBadge with MatIcon', () => {
     expect(console.warn).toHaveBeenCalled();
   });
 
-  it('should not warn about using matBadge on MatIcon with aria-hidden="false', () => {
+  it('should not warn about using matBadge on MatIcon with aria-hidden="false"', () => {
     spyOn(console, 'warn');
 
     const fixture = TestBed.createComponent(IconWithBadgeFalseAriaHidden);
     fixture.detectChanges();
 
-    expect(console.warn).toHaveBeenCalled();
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   it('should warn about using matBadge on MatIcon with [attr.aria-hidden]="true"', () => {
