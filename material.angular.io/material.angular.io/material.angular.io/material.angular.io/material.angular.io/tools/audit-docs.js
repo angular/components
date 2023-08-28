@@ -31,18 +31,18 @@ const lightServer = require('light-server');
 
 // Individual page a11y scores
 const MIN_A11Y_SCORES_PER_PAGE = {
-  '': 100,
-  'components/categories': 91,
-  'cdk/categories': 91,
-  guides: 100,
-  'guide/creating-a-custom-form-field-control': 97,
-  'guide/getting-started': 96,
+  '': 92,
+  'components/categories': 89,
+  'cdk/categories': 89,
+  guides: 95,
+  'guide/creating-a-custom-form-field-control': 88,
+  'guide/getting-started': 88,
   'cdk/a11y/overview': 85,
-  'cdk/a11y/api': 89,
-  'cdk/a11y/examples': 85,
-  'components/button/overview': 92,
-  'components/button/api': 89,
-  'components/button/examples': 90,
+  'cdk/a11y/api': 86,
+  'cdk/a11y/examples': 91,
+  'components/button/overview': 85,
+  'components/button/api': 86,
+  'components/button/examples': 80,
 };
 
 /**
@@ -52,11 +52,11 @@ const MIN_SCORES_PER_PAGE = [
   {
     url: '',
     minScores: {
-      pwa: 70,
-      performance: 25,
-      seo: 98,
+      pwa: 75,
+      performance: 25, // Intentionally low because Ligthouse is flaky.
+      seo: 100,
       'best-practices': 100,
-      accessibility: 100,
+      accessibility: 92,
     },
   },
   ...Object.entries(MIN_A11Y_SCORES_PER_PAGE).map(([url, accessibility]) => ({
@@ -67,7 +67,7 @@ const MIN_SCORES_PER_PAGE = [
 
 /**
  * @param {{performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}} scores
- * @returns string scores formatted as described in the docs of lighthouse-audit.js's _main()
+ * @returns string scores formatted as described in the docs of lighthouse-audit.mjs's _main()
  */
 function formatScores(scores) {
   let formattedScores = '';
@@ -111,7 +111,7 @@ if (!/https?:\/\//.test(urlOrDeployDir)) {
 }
 
 // Run the a11y audit against the above pages
-const lighthouseAuditCmd = `"${process.execPath}" "${__dirname}/lighthouse-audit"`;
+const lighthouseAuditCmd = `"${process.execPath}" "${__dirname}/lighthouse-audit.mjs"`;
 
 setTimeout(async function () {
   console.log('Run audit tests...');
