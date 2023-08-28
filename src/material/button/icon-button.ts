@@ -17,15 +17,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-
-import {
-  MAT_ANCHOR_HOST,
-  MAT_ANCHOR_INPUTS,
-  MAT_BUTTON_HOST,
-  MAT_BUTTON_INPUTS,
-  MatAnchorBase,
-  MatButtonBase,
-} from './button-base';
+import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './button-base';
 
 /**
  * Material Design icon button component. This type of button displays a single interactive icon for
@@ -36,7 +28,6 @@ import {
   selector: `button[mat-icon-button]`,
   templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
-  inputs: MAT_BUTTON_INPUTS,
   host: MAT_BUTTON_HOST,
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
@@ -64,7 +55,6 @@ export class MatIconButton extends MatButtonBase {
   selector: `a[mat-icon-button]`,
   templateUrl: 'button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
-  inputs: MAT_ANCHOR_INPUTS,
   host: MAT_ANCHOR_HOST,
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,

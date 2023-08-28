@@ -9,8 +9,8 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk/coercion",
         "//src/cdk/testing",
+        "@npm//@angular/core",
     ],
 )
 
