@@ -7,30 +7,20 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
+  booleanAttribute,
   Directive,
   ElementRef,
   inject,
+  Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  CanColor,
-  CanDisable,
-  CanDisableRipple,
-  MatRipple,
-  mixinColor,
-  mixinDisabled,
-  mixinDisableRipple,
-  MatRippleLoader,
-} from '@angular/material/core';
-
-/** Inputs common to all buttons. */
-export const MAT_BUTTON_INPUTS = ['disabled', 'disableRipple', 'color'];
+import {MatRipple, MatRippleLoader} from '@angular/material/core';
 
 /** Shared host configuration for all buttons */
 export const MAT_BUTTON_HOST = {
@@ -43,6 +33,7 @@ export const MAT_BUTTON_HOST = {
   // Add a class that applies to all buttons. This makes it easier to target if somebody
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
+  '[class]': 'color ? "mat-" + color : ""',
 };
 
 /** List of classes to add to buttons instances based on host attribute selector. */
@@ -77,24 +68,9 @@ const HOST_SELECTOR_MDC_CLASS_PAIR: {selector: string; mdcClasses: string[]}[] =
   },
 ];
 
-// Boilerplate for applying mixins to MatButton.
-/** @docs-private */
-export const _MatButtonMixin = mixinColor(
-  mixinDisabled(
-    mixinDisableRipple(
-      class {
-        constructor(public _elementRef: ElementRef) {}
-      },
-    ),
-  ),
-);
-
 /** Base class for all buttons.  */
 @Directive()
-export class MatButtonBase
-  extends _MatButtonMixin
-  implements CanDisable, CanColor, CanDisableRipple, AfterViewInit, OnDestroy
-{
+export class MatButtonBase implements AfterViewInit, OnDestroy {
   private readonly _focusMonitor = inject(FocusMonitor);
 
   /**
@@ -118,41 +94,41 @@ export class MatButtonBase
     this._rippleLoader?.attachRipple(this._elementRef.nativeElement, v);
   }
 
-  // We override `disableRipple` and `disabled` so we can hook into
-  // their setters and update the ripple disabled state accordingly.
+  /** Theme color palette of the button */
+  @Input() color?: string | null;
 
   /** Whether the ripple effect is disabled or not. */
-  override get disableRipple(): boolean {
+  @Input({transform: booleanAttribute})
+  get disableRipple(): boolean {
     return this._disableRipple;
   }
-  override set disableRipple(value: any) {
-    this._disableRipple = coerceBooleanProperty(value);
+  set disableRipple(value: any) {
+    this._disableRipple = value;
     this._updateRippleDisabled();
   }
   private _disableRipple: boolean = false;
 
-  override get disabled(): boolean {
+  @Input({transform: booleanAttribute})
+  get disabled(): boolean {
     return this._disabled;
   }
-  override set disabled(value: any) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: any) {
+    this._disabled = value;
     this._updateRippleDisabled();
   }
   private _disabled: boolean = false;
 
   constructor(
-    elementRef: ElementRef,
+    public _elementRef: ElementRef,
     public _platform: Platform,
     public _ngZone: NgZone,
     public _animationMode?: string,
   ) {
-    super(elementRef);
-
     this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {
       className: 'mat-mdc-button-ripple',
     });
 
-    const classList = (elementRef.nativeElement as HTMLElement).classList;
+    const classList = (_elementRef.nativeElement as HTMLElement).classList;
 
     // For each of the variant selectors that is present in the button's host
     // attributes, add the correct corresponding MDC classes.
@@ -195,9 +171,6 @@ export class MatButtonBase
   }
 }
 
-/** Shared inputs by buttons using the `<a>` tag */
-export const MAT_ANCHOR_INPUTS = ['disabled', 'disableRipple', 'color', 'tabIndex'];
-
 /** Shared host configuration for buttons using the `<a>` tag. */
 export const MAT_ANCHOR_HOST = {
   '[attr.disabled]': 'disabled || null',
@@ -215,6 +188,7 @@ export const MAT_ANCHOR_HOST = {
   // Add a class that applies to all buttons. This makes it easier to target if somebody
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
+  '[class]': 'color ? "mat-" + color : ""',
 };
 
 /**
@@ -222,6 +196,11 @@ export const MAT_ANCHOR_HOST = {
  */
 @Directive()
 export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
+  @Input({
+    transform: (value: unknown) => {
+      return value == null ? undefined : numberAttribute(value);
+    },
+  })
   tabIndex: number;
 
   constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string) {
