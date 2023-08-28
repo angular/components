@@ -55,7 +55,7 @@ js_test(
     "$(location //:build.production)",
   ],
   data = [
-    "tools/lighthouse-audit.js",
+    "tools/lighthouse-audit.mjs",
     "//:build.production",
     "//:node_modules/lighthouse",
     "//:node_modules/lighthouse-logger",

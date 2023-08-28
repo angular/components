@@ -1,19 +1,21 @@
 #!/bin/env node
 'use strict';
 
-// Imports
-const lighthouse = require('lighthouse');
-const printer = require('lighthouse/lighthouse-cli/printer');
-const logger = require('lighthouse-logger');
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const path = require('path');
+import lighthouse from 'lighthouse';
+import logger from 'lighthouse-logger';
+import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from 'path';
+import {write as lighthouseWrite, OutputMode} from 'lighthouse/cli/printer.js';
+import {fileURLToPath} from 'url';
 
-const projectDir = path.join(__dirname, '../');
+const dirname = path.dirname(fileURLToPath(import.meta.url)); // Equivalent of __dirname in ESM.
+const projectDir = path.join(dirname, '../');
 const reportsDir = path.join(projectDir, 'dist/reports');
 
 // Constants
 const AUDIT_CATEGORIES = ['accessibility', 'best-practices', 'performance', 'pwa', 'seo'];
+
 /**
  * @type {LH.Flags}
  */
@@ -104,11 +106,12 @@ async function _main(args) {
     console.log();
     const startTime = Date.now();
     const results = await launchChromeAndRunLighthouse(url, lhFlags, lhConfig);
+
     if (!results) {
       onError('Lighthouse failed to return any results.');
     }
     const success = await processResults(results, minScores, logFile);
-    console.log(`\n(Completed in ${((Date.now() - startTime) / 1000).toFixed(1)}s.)\n`);
+    console.log(`\nCompleted audit of ${url} in ${((Date.now() - startTime) / 1000).toFixed(1)}s\n`);
 
     if (!success) {
       onError('One or more scores are below the minimum required.');
@@ -136,12 +139,15 @@ async function launchChromeAndRunLighthouse(url, flags, config) {
   const browser = await puppeteer.launch({
     // Allow for a custom chromium to be provided (e.g. for M1 native support)
     executablePath: process.env.CHROMIUM_BIN,
+    headless: 'new',
   });
-  flags.port = new URL(browser.wsEndpoint()).port;
+
+  const page = await browser.newPage();
 
   try {
-    return await lighthouse(url, flags, config);
+    return await lighthouse(url, flags, config, page);
   } finally {
+    await page.close();
     await browser.close();
   }
 }
@@ -249,7 +255,7 @@ async function processResults(results, minScores, logFile) {
     console.log(`\nSaving results in '${logFile}'...`);
     console.log(`  LightHouse viewer: ${VIEWER_URL}`);
 
-    await printer.write(report, printer.OutputMode.json, logFile);
+    await lighthouseWrite(report, OutputMode.json, logFile);
   }
 
   console.log(`\nLighthouse version: ${lhVersion}`);
