@@ -8,7 +8,6 @@
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
-@use 'sass:map';
 
 @mixin color($theme) {
   @include mdc-helpers.using-mdc-theme($theme) {

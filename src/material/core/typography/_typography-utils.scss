@@ -1,10 +1,6 @@
 @use 'sass:list';
-@use 'sass:map';
 @use 'sass:math';
-@use 'sass:meta';
-@use 'sass:string';
 @use './property-getters';
-@use '../theming/inspection';
 
 // Property getters live in their own file to avoid circular dependencies, but we re-export them
 // here so that historical imports from this file continue to work without needing to be updated.

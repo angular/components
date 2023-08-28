@@ -11,7 +11,6 @@
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
 
 @mixin base($config-or-theme) {
   // Add default values for tokens not related to color, typography, or density.

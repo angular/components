@@ -1,10 +1,7 @@
 // TODO(mmalerba): this file should be split into separate cohesive partials for things like
 //  "theming", "typography", "core".
-
-@use '../theming/theming';
 @use '../theming/inspection';
 @use '../typography/typography';
-@use '../typography/typography-utils';
 @use '@material/feature-targeting' as mdc-feature-targeting;
 @use '@material/typography' as mdc-typography;
 @use '@material/theme/theme-color' as mdc-theme-color;

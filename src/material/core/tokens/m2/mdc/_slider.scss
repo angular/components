@@ -1,10 +1,8 @@
 @use 'sass:map';
-@use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../token-utils';
 @use '../../../style/elevation';
 @use '../../../style/sass-utils';
-@use '../../../typography/typography-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, slider);

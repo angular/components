@@ -6,7 +6,7 @@
 @use '../typography/versioning' as typography-versioning;
 
 /// Key used to access the Angular Material theme internals.
-$_internals: _mat-theming-internals-do-not-accesst;
+$_internals: _mat-theming-internals-do-not-access;
 
 /// Keys that indicate a config object is a color config.
 $_color-keys: (

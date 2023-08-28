@@ -147,14 +147,24 @@
   "overrides": [
     {
       "files": [
+        "**/_button-theme.scss",
         "**/_card-theme.scss",
+        "**/_checkbox-theme.scss",
         "**/_core-theme.scss",
+        "**/_fab-theme.scss",
         "**/_form-field-theme.scss",
+        "**/_icon-button-theme.scss",
+        "**/_input-theme.scss",
+        "**/_list-theme.scss",
         "**/_optgroup-theme.scss",
         "**/_option-theme.scss",
+        "**/_paginator-theme.scss",
         "**/_progress-bar-theme.scss",
         "**/_pseudo-checkbox-theme.scss",
-        "**/_ripple-theme.scss"
+        "**/_radio-theme.scss",
+        "**/_ripple-theme.scss",
+        "**/_slide-toggle-theme.scss",
+        "**/_slider-theme.scss"
       ],
       "rules": {
         "material/theme-mixin-api": false
