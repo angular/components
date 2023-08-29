@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@angular/cdk';
 @use '@angular/material' as mat;
 
@@ -6,12 +5,8 @@
   @return linear-gradient($direction, rgba($background-color, 0), $background-color 8px);
 }
 
-@mixin color($config-or-theme) {
-  $config: mat.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-  $primary: map.get($config, primary);
-  $background-color: mat.get-color-from-palette($background, 'card');
+@mixin color($theme) {
+  $background-color: mat.private-get-theme-color($theme, background, 'card');
 
   // TODO: these structural styles don't belong in the `color` part of a theme.
   // We should figure out a better place for them.
@@ -47,7 +42,7 @@
     position: relative;
 
     &::after {
-      background-color: mat.get-color-from-palette($primary);
+      background-color: mat.private-get-theme-color($theme, primary);
       bottom: 0;
       content: '';
       height: 2px;
@@ -81,9 +76,9 @@
   }
 
   .mat-edit-pane {
-    @include mat.private-theme-elevation(2, $config);
+    @include mat.private-theme-elevation(2, $theme);
     background: $background-color;
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.private-get-theme-color($theme, foreground, text);
     display: block;
     padding: 16px 24px;
 
@@ -147,32 +142,26 @@
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: mat.private-typography-to-2018-config(
-      mat.get-typography-config($config-or-theme));
+@mixin typography($theme) {
   [mat-edit-title] {
-    @include mat.typography-level($config, headline-6);
+    font: mat.private-get-theme-typography($theme, headline-6, font);
+    letter-spacing: mat.private-get-theme-typography($theme, headline-6, letter-spacing);
   }
 }
 
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: mat.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include mat.private-check-duplicate-theme-styles($theme, 'mat-popover-edit') {
-    $color: mat.get-color-config($theme);
-    $density: mat.get-density-config($theme);
-    $typography: mat.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if mat.private-theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if mat.private-theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if mat.private-theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

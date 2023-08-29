@@ -1,10 +1,8 @@
 @use 'sass:color';
-@use 'sass:map';
 @use 'sass:meta';
 @use 'sass:math';
 @use '../../token-utils';
-@use '../../../theming/theming';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -36,23 +34,20 @@ $private-default-overlap-color: #a8dab5;
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $primary: map.get($config, primary);
-  $inactive-icon-color: theming.get-color-from-palette($foreground, icon);
-  $text-color: theming.get-color-from-palette($foreground, text);
-  $secondary-text-color: theming.get-color-from-palette($foreground, secondary-text);
-  $disabled-text-color: theming.get-color-from-palette($foreground, disabled-text);
-  $divider-color: theming.get-color-from-palette($foreground, divider);
-  $hint-text-color: theming.get-color-from-palette($foreground, hint-text);
+@function get-color-tokens($theme) {
+  $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
+  $text-color: inspection.get-theme-color($theme, foreground, text);
+  $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
+  $disabled-text-color: inspection.get-theme-color($theme, foreground, disabled-text);
+  $divider-color: inspection.get-theme-color($theme, foreground, divider);
+  $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
   $preview-outline-color: $divider-color;
   $today-disabled-outline-color: null;
 
-  $primary-color: theming.get-color-from-palette(map.get($config, primary));
+  $primary-color: inspection.get-theme-color($theme, primary);
   $range-tokens: get-range-color-tokens(private-get-range-background-color($primary-color));
-  $calendar-tokens: private-get-calendar-color-palette-color-tokens($config, primary);
-  $toggle-tokens: private-get-toggle-color-palette-color-tokens($config, primary);
+  $calendar-tokens: private-get-calendar-color-palette-color-tokens($theme, primary);
+  $toggle-tokens: private-get-toggle-color-palette-color-tokens($theme, primary);
 
   // The divider color is set under the assumption that it'll be used
   // for a solid border, but because we're using a dashed border for the
@@ -90,31 +85,30 @@ $private-default-overlap-color: #a8dab5;
     range-input-disabled-state-separator-color: $disabled-text-color,
     range-input-disabled-state-text-color: $disabled-text-color,
 
-    calendar-container-background-color: theming.get-color-from-palette($background, card),
+    calendar-container-background-color: inspection.get-theme-color($theme, background, card),
     calendar-container-text-color: $text-color,
   ));
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  $fallback-font: typography-utils.font-family($config);
-
+@function get-typography-tokens($theme) {
   @return (
     // TODO(crisbeto): the typography tokens for other components set every typography dimension of
     // an element (e.g. size, weight, line height, letter spacing). These tokens only set the values
     // that were set in the previous theming API to reduce the amount of subtle screenshot
     // differences. We should look into introducing the other tokens in a follow-up.
-    calendar-text-font: $fallback-font,
+    calendar-text-font: inspection.get-theme-typography($theme, body-1, font-family),
     calendar-text-size: 13px, // TODO(crisbeto): this doesn't appear to affect anything
 
-    calendar-body-label-text-size: typography-utils.font-size($config, button),
-    calendar-body-label-text-weight: typography-utils.font-weight($config, button),
+    calendar-body-label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    calendar-body-label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
 
-    calendar-period-button-text-size: typography-utils.font-size($config, button),
-    calendar-period-button-text-weight: typography-utils.font-weight($config, button),
+    calendar-period-button-text-size: inspection.get-theme-typography($theme, button, font-size),
+    calendar-period-button-text-weight: inspection.get-theme-typography(
+        $theme, button, font-weight),
 
     calendar-header-text-size: 11px,
-    calendar-header-text-weight: typography-utils.font-weight($config, body-1),
+    calendar-header-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 
@@ -133,19 +127,17 @@ $private-default-overlap-color: #a8dab5;
   );
 }
 
-@function private-get-calendar-color-palette-color-tokens($config, $palette-name) {
-  $foreground: map.get($config, foreground);
-  $palette: map.get($config, $palette-name);
-  $palette-color: theming.get-color-from-palette($palette);
-  $default-contrast: theming.get-color-from-palette($palette, default-contrast);
-  $active-background-color: theming.get-color-from-palette($palette, 0.3);
+@function private-get-calendar-color-palette-color-tokens($theme, $palette-name) {
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
+  $default-contrast: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  $active-background-color: sass-utils.safe-color-change($palette-color, $alpha: 0.3);
   $active-disabled-color: null;
 
   @if (meta.type-of($palette-color) == color) {
     $active-disabled-color: color.adjust($palette-color, $alpha: -$_selected-fade-amount);
   }
   @else {
-    $active-disabled-color: theming.get-color-from-palette($foreground, disabled-button);
+    $active-disabled-color: inspection.get-theme-color($theme, foreground, disabled-button);
   }
 
   @return (
@@ -158,17 +150,15 @@ $private-default-overlap-color: #a8dab5;
   );
 }
 
-@function private-get-toggle-color-palette-color-tokens($config, $palette-name) {
-  $palette: map.get($config, $palette-name);
-
+@function private-get-toggle-color-palette-color-tokens($theme, $palette-name) {
   @return (
-    toggle-active-state-icon-color: theming.get-color-from-palette($palette, text),
+    toggle-active-state-icon-color: inspection.get-theme-color($theme, $palette-name, text),
   );
 }
 
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

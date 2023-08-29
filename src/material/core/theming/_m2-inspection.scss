@@ -209,3 +209,27 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   @error 'Valid systems are: base, color, typography, density. Got:' $system;
 }
+
+/// Removes the information about the given theming system(s) from the given theme.
+/// @param {Map} $theme The theme to remove information from
+/// @param {String...} $systems The systems to remove
+/// @return {Map} A version of the theme without the removed theming systems.
+@function theme-remove($theme, $systems...) {
+  $internal: map.get($theme, $_internals, m2-config);
+  @each $system in $systems {
+    @if $system == color {
+      $theme: map.set($theme, color, null);
+    }
+    @else if $system == typography {
+      $theme: map.set($theme, typography, null);
+    }
+    @else if $system == density {
+      $theme: map.set($theme, density, null);
+    }
+  }
+  @if $internal {
+    $internal: theme-remove($internal, $systems...);
+    $theme: map.set($theme, $_internals, m2-config, $internal);
+  }
+  @return $theme;
+}

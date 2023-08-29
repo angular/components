@@ -231,6 +231,41 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
 }
 
+/// Removes the information about the given theming system(s) from the given theme.
+/// @param {Map} $theme The theme to remove information from
+/// @param {String...} $systems The systems to remove
+/// @return {Map} A version of the theme without the removed theming systems.
+@function theme-remove($theme, $systems...) {
+  $err: validation.validate-allowed-values($systems, color, typography, density, base);
+  @if $err {
+    @error #{'Expected $systems to contain valid system names (color, typography, density, or'}
+    #{'base). Got invalid system names:'} $err;
+  }
+  $version: get-theme-version($theme);
+  @if $version == 0 {
+    @return m2-inspection.theme-remove($theme, $systems...);
+  }
+  @else if $version == 1 {
+    @each $system in $systems {
+      @if $system == base {
+        $theme: map.deep-remove($theme, $_internals, base-tokens);
+      }
+      @else if $system == color {
+        $theme: map.deep-remove($theme, $_internals, color-tokens);
+        $theme: map.deep-remove($theme, $_internals, theme-type);
+        $theme: map.deep-remove($theme, $_internals, palettes);
+      }
+      @else if $system == typography {
+        $theme: map.deep-remove($theme, $_internals, typography-tokens);
+      }
+      @else if $system == density {
+        $theme: map.deep-remove($theme, $_internals, density-scale);
+      }
+    }
+    @return $theme;
+  }
+}
+
 /// Gets the set of tokens from the given theme, limited to those affected by the requested theming
 /// systems.
 /// @param {Map} $theme The theme to get tokens from.
