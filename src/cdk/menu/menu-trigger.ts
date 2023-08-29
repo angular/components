@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
 import {InputModalityDetector} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
@@ -70,6 +70,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
   private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   private readonly _overlay = inject(Overlay);
   private readonly _ngZone = inject(NgZone);
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
   private readonly _inputModalityDetector = inject(InputModalityDetector);
   private readonly _directionality = inject(Directionality, {optional: true});
 
@@ -101,6 +102,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
 
       this.overlayRef = this.overlayRef || this._overlay.create(this._getOverlayConfig());
       this.overlayRef.attach(this.getMenuContentPortal());
+      this._changeDetectorRef.markForCheck();
       this._subscribeToOutsideClicks();
     }
   }
@@ -111,6 +113,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
       this.closed.next();
 
       this.overlayRef!.detach();
+      this._changeDetectorRef.markForCheck();
     }
     this._closeSiblingTriggers();
   }
