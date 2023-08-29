@@ -3,14 +3,15 @@
 @use '@material/theme/theme-color' as mdc-theme-color;
 
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/theming/inspection';
 
 @mixin _ripple-color($color) {
   --mat-mdc-button-persistent-ripple-color: #{$color};
   --mat-mdc-button-ripple-color: #{rgba($color, 0.1)};
 }
 
-@mixin ripple-theme-styles($config, $is-filled) {
-  $opacities: if(map.get($config, is-dark),
+@mixin ripple-theme-styles($theme, $is-filled) {
+  $opacities: if(inspection.get-theme-type($theme) == dark,
     mdc-ripple-theme.$light-ink-opacities, mdc-ripple-theme.$dark-ink-opacities);
 
   // Ideally these styles would be structural, but MDC bases some of the opacities on the theme.

@@ -2,8 +2,8 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use './theming';
-@use '../typography/typography-utils';
-@use '../typography/typography';
+@use '../typography/property-getters' as typography-getters;
+@use '../typography/versioning' as typography-versioning;
 
 /// Key used to access the Angular Material theme internals.
 $_internals: _mat-theming-internals-do-not-access;
@@ -139,29 +139,30 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, typography) {
     @error 'Typography information is not available on this theme.';
   }
-  $typography: typography.private-typography-to-2018-config(theming.get-typography-config($theme));
+  $typography: typography-versioning.private-typography-to-2018-config(
+      theming.get-typography-config($theme));
   @if $property == font {
-    $font-weight: typography-utils.font-weight($typography, $typescale);
-    $font-size: typography-utils.font-size($typography, $typescale);
-    $line-height: typography-utils.line-height($typography, $typescale);
-    $font-family: typography-utils.font-family($typography, $typescale);
+    $font-weight: typography-getters.font-weight($typography, $typescale);
+    $font-size: typography-getters.font-size($typography, $typescale);
+    $line-height: typography-getters.line-height($typography, $typescale);
+    $font-family: typography-getters.font-family($typography, $typescale);
     @return ($font-weight list.slash($font-size, $line-height) $font-family);
   }
   @else if $property == font-family {
-    $result: typography-utils.font-family($typography, $typescale);
-    @return $result or typography-utils.font-family($typography);
+    $result: typography-getters.font-family($typography, $typescale);
+    @return $result or typography-getters.font-family($typography);
   }
   @else if $property == font-size {
-    @return typography-utils.font-size($typography, $typescale);
+    @return typography-getters.font-size($typography, $typescale);
   }
   @else if $property == font-weight {
-    @return typography-utils.font-weight($typography, $typescale);
+    @return typography-getters.font-weight($typography, $typescale);
   }
   @else if $property == line-height {
-    @return typography-utils.line-height($typography, $typescale);
+    @return typography-getters.line-height($typography, $typescale);
   }
   @else if $property == letter-spacing {
-    @return typography-utils.letter-spacing($typography, $typescale);
+    @return typography-getters.letter-spacing($typography, $typescale);
   }
   @else {
     @error #{'Valid typography properties are: #{$_typography-properties}. Got:'} $property;

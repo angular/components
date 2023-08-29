@@ -148,10 +148,10 @@
 }
 
 @mixin typography($config-or-theme) {
-  $config: mat.private-typography-to-2014-config(
+  $config: mat.private-typography-to-2018-config(
       mat.get-typography-config($config-or-theme));
   [mat-edit-title] {
-    @include mat.typography-level($config, title);
+    @include mat.typography-level($config, headline-6);
   }
 }
 

@@ -43,7 +43,7 @@ $prefix: (mdc, icon-button);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
+@function get-color-tokens($theme) {
   @return (
     icon-color: inherit,
   );

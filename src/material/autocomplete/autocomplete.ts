@@ -250,10 +250,13 @@ export class MatAutocomplete
   @Input('class')
   set classList(value: string | string[]) {
     if (value && value.length) {
-      this._classList = coerceStringArray(value).reduce((classList, className) => {
-        classList[className] = true;
-        return classList;
-      }, {} as {[key: string]: boolean});
+      this._classList = coerceStringArray(value).reduce(
+        (classList, className) => {
+          classList[className] = true;
+          return classList;
+        },
+        {} as {[key: string]: boolean},
+      );
     } else {
       this._classList = {};
     }

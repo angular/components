@@ -90,9 +90,9 @@
   }
 }
 
-// Changes a button theme to exclude the ripple styles.
-@function mat-private-button-remove-ripple($theme) {
-  @return map.merge($theme, (
+// Changes a button token set to exclude the ripple styles.
+@function mat-private-button-remove-ripple($tokens) {
+  @return map.merge($tokens, (
     focus-state-layer-color: null,
     focus-state-layer-opacity: null,
     hover-state-layer-color: null,

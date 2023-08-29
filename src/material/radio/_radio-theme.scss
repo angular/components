@@ -3,19 +3,14 @@
 @use '@material/form-field' as mdc-form-field;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
-@use 'sass:map';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-
-  @include mdc-helpers.using-mdc-theme($config) {
+@mixin color($theme) {
+  @include mdc-helpers.using-mdc-theme($theme) {
     .mat-mdc-radio-button {
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
     }
@@ -23,44 +18,39 @@
 
   .mat-mdc-radio-button {
     &.mat-primary {
-      $primary-config: map.merge($config, (accent: $primary));
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($primary-config));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
       @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-        tokens-mat-radio.get-color-tokens($primary-config));
+        tokens-mat-radio.get-color-tokens($theme, primary));
     }
 
     &.mat-accent {
-      $accent-config: map.merge($config, (accent: $accent));
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($accent-config));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-        tokens-mat-radio.get-color-tokens($accent-config));
+        tokens-mat-radio.get-color-tokens($theme));
     }
 
     &.mat-warn {
-      $warn-config: map.merge($config, (accent: $warn));
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($warn-config));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, warn));
       @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-        tokens-mat-radio.get-color-tokens($warn-config));
+        tokens-mat-radio.get-color-tokens($theme, warn));
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-
+@mixin typography($theme) {
   .mat-mdc-radio-button {
-    @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($config));
-    @include mdc-helpers.using-mdc-typography($config) {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($theme));
+    @include mdc-helpers.using-mdc-typography($theme) {
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
     }
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+
   .mat-mdc-radio-button .mdc-radio {
-    @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($density-scale));
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
   }
 
   @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
@@ -70,21 +60,16 @@
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-radio') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

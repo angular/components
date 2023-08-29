@@ -1,6 +1,5 @@
-@use 'sass:map';
 @use '../../token-utils';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -13,25 +12,23 @@ $prefix: (mat, radio);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $is-dark: map.get($config, is-dark);
-  $accent: map.get($config, accent);
+@function get-color-tokens($theme, $palette-name: accent) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
     ripple-color: if($is-dark, #fff, #000),
-    checked-ripple-color: theming.get-color-from-palette($accent, default),
-    disabled-label-color: theming.get-color-from-palette($foreground, disabled-text),
+    checked-ripple-color: inspection.get-theme-color($theme, $palette-name, default),
+    disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

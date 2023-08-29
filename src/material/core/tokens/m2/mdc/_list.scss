@@ -1,6 +1,5 @@
 @use 'sass:map';
-@use '../../../theming/theming';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -83,96 +82,99 @@ $prefix: (mdc, list);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $is-dark: map.get($config, is-dark);
-  $foreground-base: theming.get-color-from-palette($foreground, base);
-  $text-icon-on-background:
-    theming.get-color-from-palette($foreground, base, if($is-dark, 0.5, 0.38));
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $foreground-base: inspection.get-theme-color($theme, foreground, base);
+  $foreground-text: inspection.get-theme-color($theme, foreground, text);
+  $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
+  $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
+  $text-icon-on-background: sass-utils.safe-color-change(
+      $foreground-base, $alpha: if($is-dark, 0.5, 0.38));
 
   @return (
     // Text color of the list item primary text.
-    list-item-label-text-color: theming.get-color-from-palette($foreground, text),
+    list-item-label-text-color: $foreground-text,
     // Text color of the list item supporting text.
-    list-item-supporting-text-color: theming.get-color-from-palette($foreground, secondary-text),
+    list-item-supporting-text-color: $foreground-secondary-text,
     // Color of the list item's leading icon.
     list-item-leading-icon-color: $text-icon-on-background,
     // Text color of the list item's trailing text.
-    list-item-trailing-supporting-text-color: theming.get-color-from-palette(
-        $foreground, hint-text),
+    list-item-trailing-supporting-text-color: $foreground-hint-text,
     // Color of the list item's trailing icon.
     list-item-trailing-icon-color: $text-icon-on-background,
     // Color of the list item's trailing icon when the item is selected.
     list-item-selected-trailing-icon-color: $text-icon-on-background,
     // Text color of the list item's primary text when the  item is disabled.
-    list-item-disabled-label-text-color: theming.get-color-from-palette($foreground, base),
+    list-item-disabled-label-text-color: $foreground-base,
     // Color of the list item's leading icon when the item is disabled.
-    list-item-disabled-leading-icon-color: theming.get-color-from-palette($foreground, base),
+    list-item-disabled-leading-icon-color: $foreground-base,
     // Color of the list item's trailing icon when the item is disabled.
-    list-item-disabled-trailing-icon-color: theming.get-color-from-palette($foreground, base),
+    list-item-disabled-trailing-icon-color: $foreground-base,
     // Color of the list item's primary text when the item is being hovered.
-    list-item-hover-label-text-color: theming.get-color-from-palette($foreground, text),
+    list-item-hover-label-text-color: $foreground-text,
     // Color of the list item's leading icon when the item is being hovered.
     list-item-hover-leading-icon-color: $text-icon-on-background,
     // Color of the list item's trailing icon when the item is being hovered.
     list-item-hover-trailing-icon-color: $text-icon-on-background,
     // Color of the list item's primary text when the item is focused.
-    list-item-focus-label-text-color: theming.get-color-from-palette($foreground, text),
+    list-item-focus-label-text-color: $foreground-text,
     // Color of the list item's overlay when the item is hovered.
-    list-item-hover-state-layer-color: theming.get-color-from-palette($foreground, base),
+    list-item-hover-state-layer-color: $foreground-base,
     // Opacity of the list item's overlay when the item is hovered.
     list-item-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     // Color of the list item's overlay when the item is focused.
-    list-item-focus-state-layer-color: theming.get-color-from-palette($foreground, base),
+    list-item-focus-state-layer-color: $foreground-base,
     // Opacity of the list item's overlay when the item is focused.
     list-item-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
     // Font family of the list item primary text.
-    list-item-label-text-font: typography-utils.font-family($config, body-1)
-          or typography-utils.font-family($config),
+    list-item-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
     // Line height of the list item primary text.
-    list-item-label-text-line-height: typography-utils.line-height($config, body-1),
+    list-item-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
     // Font size of the list item primary text.
-    list-item-label-text-size: typography-utils.font-size($config, body-1),
+    list-item-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
     // Letter spacing of the list item primary text.
-    list-item-label-text-tracking: typography-utils.letter-spacing($config, body-1),
+    list-item-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
     // Font weight of the list item primary text.
-    list-item-label-text-weight: typography-utils.font-weight($config, body-1),
+    list-item-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
     // Font family of the list item supporting text.
-    list-item-supporting-text-font: typography-utils.font-family($config, body-2)
-          or typography-utils.font-family($config),
+    list-item-supporting-text-font: inspection.get-theme-typography($theme, body-2, font-family),
     // Line height of the list item supporting text.
-    list-item-supporting-text-line-height: typography-utils.line-height($config, body-2),
+    list-item-supporting-text-line-height:inspection.get-theme-typography(
+        $theme, body-2, line-height),
     // Font size of the list item supporting text.
-    list-item-supporting-text-size: typography-utils.font-size($config, body-2),
+    list-item-supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
     // Letter spacing of the list item supporting text.
-    list-item-supporting-text-tracking: typography-utils.letter-spacing($config, body-2),
+    list-item-supporting-text-tracking: inspection.get-theme-typography(
+        $theme, body-2, letter-spacing),
     // Font weight of the list item supporting text.
-    list-item-supporting-text-weight: typography-utils.font-weight($config, body-2),
+    list-item-supporting-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
     // Font family of the list item's trailing text.
-    list-item-trailing-supporting-text-font: typography-utils.font-family($config, caption)
-          or typography-utils.font-family($config),
+    list-item-trailing-supporting-text-font: inspection.get-theme-typography(
+        $theme, caption, font-family),
     // Line height of the list item's trailing text.
-    list-item-trailing-supporting-text-line-height: typography-utils.line-height(
-        $config, caption),
+    list-item-trailing-supporting-text-line-height: inspection.get-theme-typography(
+        $theme, caption, line-height),
     // Font size of the list item's trailing text.
-    list-item-trailing-supporting-text-size: typography-utils.font-size($config, caption),
+    list-item-trailing-supporting-text-size: inspection.get-theme-typography(
+        $theme, caption, font-size),
     // Letter spacing color of the list item's trailing text.
-    list-item-trailing-supporting-text-tracking: typography-utils.letter-spacing(
-        $config, caption),
+    list-item-trailing-supporting-text-tracking: inspection.get-theme-typography(
+        $theme, caption, letter-spacing),
     // Font weight of the list item's trailing text.
-    list-item-trailing-supporting-text-weight: typography-utils.font-weight($config, caption),
+    list-item-trailing-supporting-text-weight: inspection.get-theme-typography(
+        $theme, caption, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $scale: theming.clamp-density($config, -5);
+@function get-density-tokens($theme) {
+  $scale: inspection.get-theme-density($theme);
 
   @return (
     // Height of one line list items.

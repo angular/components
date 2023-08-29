@@ -1,8 +1,8 @@
 @use 'sass:map';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../token-utils';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
-@use '../../../typography/typography-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, slider);
@@ -56,15 +56,13 @@ $prefix: (mdc, slider);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $elevation: theming.get-color-from-palette($foreground, elevation);
-  $is-dark: map.get($config, is-dark);
+@function get-color-tokens($theme) {
+  $elevation: inspection.get-theme-color($theme, foreground, elevation);
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $on-surface: if($is-dark, #fff, #000);
 
   // The default for tokens that rely on the theme will use the primary palette
-  $primary: map.get($config, primary);
-  $theme-color-tokens: private-get-color-palette-color-tokens($primary);
+  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
 
   @return map.merge(
     $theme-color-tokens,
@@ -94,9 +92,9 @@ $prefix: (mdc, slider);
 }
 
 // Generates tokens for the slider properties that change based on the theme.
-@function private-get-color-palette-color-tokens($color-palette) {
-  $color: theming.get-color-from-palette($color-palette);
-  $on-color: map.get($color-palette, default-contrast);
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $color: inspection.get-theme-color($theme, $palette-name);
+  $on-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
 
   @return (
     // Color of handle.
@@ -117,28 +115,23 @@ $prefix: (mdc, slider);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
     // Font for label text.
-    label-label-text-font: typography-utils.font-family($config, subtitle-2)
-    or typography-utils.font-family($config),
+    label-label-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
     // Font size of label text.
-    label-label-text-size: typography-utils.font-size($config, subtitle-2),
+    label-label-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
     // Line height of label text.
-    label-label-text-line-height: typography-utils.line-height($config, subtitle-2),
+    label-label-text-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
     // Letter spacing of label text.
-    label-label-text-tracking: typography-utils.letter-spacing($config, subtitle-2),
+    label-label-text-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
     // Font weight of label text.
-    label-label-text-weight: typography-utils.font-weight($config, subtitle-2),
+    label-label-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

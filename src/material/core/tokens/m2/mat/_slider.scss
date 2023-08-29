@@ -1,6 +1,6 @@
-@use 'sass:map';
 @use '../../token-utils';
 @use '../../../style/sass-utils';
+@use '../../../theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, slider);
@@ -12,8 +12,8 @@ $prefix: (mat, slider);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $is-dark: map.get($config, is-dark);
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
     // Opacity of value indicator text container
@@ -22,12 +22,12 @@ $prefix: (mat, slider);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
  }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

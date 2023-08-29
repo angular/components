@@ -1,6 +1,6 @@
 @use '../../token-utils';
 @use '../../../style/sass-utils';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, slide-toggle);
@@ -12,31 +12,23 @@ $prefix: (mat, slide-toggle);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
+@function get-color-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  // TODO(amysorto): The earlier implementation of the slide-toggle used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
-    label-text-font: typography-utils.font-family($config),
-    label-text-size: typography-utils.font-size($config, body-2),
-    label-text-tracking: typography-utils.letter-spacing($config, body-2),
-    label-text-line-height: typography-utils.line-height($config, body-2),
-    label-text-weight: typography-utils.font-weight($config, body-2),
+    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
+    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
+    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
   );
  }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

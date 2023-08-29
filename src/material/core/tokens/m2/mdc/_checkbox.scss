@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../../../theming/palette';
 @use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 @use '@material/theme/theme-color' as mdc-theme-color;
@@ -50,15 +51,15 @@ $prefix: (mdc, checkbox);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $accent: map.get($config, accent);
-  $is-dark: map.get($config, is-dark);
-  $foreground-base: theming.get-color-from-palette($foreground, base);
-  $accent-default: theming.get-color-from-palette($accent, default);
-  $disabled-color: theming.get-color-from-palette($foreground, base, 0.38);
-  $selected-color: theming.get-color-from-palette($accent);
-  $border-color: theming.get-color-from-palette($foreground, base, 0.54);
+@function get-color-tokens($theme, $palette-name: accent) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $foreground-base: inspection.get-theme-color($theme, foreground, base);
+  $palette-default: inspection.get-theme-color($theme, $palette-name, default);
+  $disabled-color: sass-utils.safe-color-change(
+      inspection.get-theme-color($theme, foreground, base), $alpha: 0.38);
+  $palette-selected: inspection.get-theme-color($theme, $palette-name);
+  $border-color: sass-utils.safe-color-change(
+      inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
   $active-border-color:
     theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
 
@@ -68,15 +69,15 @@ $prefix: (mdc, checkbox);
     // The color of the checkbox border when the checkbox is unselected and disabled.
     disabled-unselected-icon-color: $disabled-color,
     // The color of the checkmark when the checkbox is selected.
-    selected-checkmark-color: _contrast-tone($selected-color, $is-dark),
+    selected-checkmark-color: _contrast-tone($palette-selected, $is-dark),
     // The color of the checkbox fill when the checkbox is selected and focused.
-    selected-focus-icon-color: $selected-color,
+    selected-focus-icon-color: $palette-selected,
     // The color of the checkbox fill when the checkbox is selected and hovered.
-    selected-hover-icon-color: $selected-color,
+    selected-hover-icon-color: $palette-selected,
     // The color of the checkbox fill when the checkbox is selected.
-    selected-icon-color: $selected-color,
+    selected-icon-color: $palette-selected,
     // The color of the checkbox fill when the checkbox is selected an pressed.
-    selected-pressed-icon-color: $selected-color,
+    selected-pressed-icon-color: $palette-selected,
     // The color of the checkbox border when the checkbox is unselected and focused.
     unselected-focus-icon-color: $active-border-color,
     // The color of the checkbox border when the checkbox is unselected and hovered.
@@ -86,11 +87,11 @@ $prefix: (mdc, checkbox);
     // The color of the checkbox border when the checkbox is unselected and pressed.
     unselected-pressed-icon-color: $border-color,
     // The color of the ripple when the checkbox is selected and focused.
-    selected-focus-state-layer-color: $accent-default,
+    selected-focus-state-layer-color: $palette-default,
     // The color of the ripple when the checkbox is selected and hovered.
-    selected-hover-state-layer-color: $accent-default,
+    selected-hover-state-layer-color: $palette-default,
     // The color of the ripple when the checkbox is selected and pressed.
-    selected-pressed-state-layer-color: $accent-default,
+    selected-pressed-state-layer-color: $palette-default,
     // The color of the ripple when the checkbox is unselected and focused.
     unselected-focus-state-layer-color: $foreground-base,
     // The color of the ripple when the checkbox is unselected and hovered.
@@ -101,13 +102,13 @@ $prefix: (mdc, checkbox);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $scale: theming.clamp-density($config, -3);
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
   @return (
     // The diameter of the checkbox's ripple.
