@@ -1,19 +1,3 @@
-<a name="16.2.2"></a>
-# 16.2.2 "baryte-barnacle" (2023-08-30)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8511b74e9](https://github.com/angular/components/commit/8511b74e9d0394698353ad25ab245503a3788792) | fix | **table:** the CdkNoDataRow directive does not render in the OnPush strategy ([#27687](https://github.com/angular/components/pull/27687)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1438747b0](https://github.com/angular/components/commit/1438747b09693633a4040cfa5ca0f85779df9f7e) | fix | **select:** set pointer cursor on entire form field ([#27678](https://github.com/angular/components/pull/27678)) |
-| [875e7104a](https://github.com/angular/components/commit/875e7104a7ac9137a6e32af44e217982dd52b9c2) | fix | **slider:** keep ios safari slider value binding in sync ([#27701](https://github.com/angular/components/pull/27701)) |
-| [19fa9b8e2](https://github.com/angular/components/commit/19fa9b8e23f91e337cb9a3d464d02f71f7fbbc6b) | fix | **slider:** make selecting thumbs at min/max easier ([#27702](https://github.com/angular/components/pull/27702)) |
-| [38003efcc](https://github.com/angular/components/commit/38003efccef97356d39e650a469b4e8bb401ee7b) | fix | **slider:** set word-break on value-indicator ([#27709](https://github.com/angular/components/pull/27709)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="16.2.1"></a>
 # 16.2.1 "rubber-duck" (2023-08-16)
 ### material
