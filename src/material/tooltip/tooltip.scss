@@ -3,7 +3,7 @@
 @use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
 @use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
 
-@include mdc-custom-properties.configure($emit-fallback-values: false,
+@include mdc-custom-properties.configure($emit-declaration-fallback: false,
 $emit-fallback-vars: false) {
   $mdc-tooltip-token-slots: m2-mdc-plain-tooltip.get-token-slots();
 

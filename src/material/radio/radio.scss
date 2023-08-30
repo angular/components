@@ -12,7 +12,7 @@
 @use '../core/style/layout-common';
 
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   @include mdc-radio.static-styles($query: mdc-helpers.$mdc-base-styles-query);
   @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);
 

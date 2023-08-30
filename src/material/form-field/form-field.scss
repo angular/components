@@ -42,7 +42,7 @@
 @include _static-styles(mdc-helpers.$mdc-base-styles-without-animation-query);
 
 @include mdc-custom-properties.configure(
-  $emit-fallback-values: false, $emit-fallback-vars: false) {
+  $emit-declaration-fallback: false, $emit-fallback-vars: false) {
 
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(

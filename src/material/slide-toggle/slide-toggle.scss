@@ -11,7 +11,7 @@
 @use '../core/tokens/m2/mat/slide-toggle' as mat-slide-toggle-tokens;
 @use '../core/tokens/token-utils';
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   $mdc-switch-token-slots: m2-mdc-switch.get-token-slots();
 
   @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);

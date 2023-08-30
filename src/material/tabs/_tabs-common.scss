@@ -19,7 +19,7 @@ $mat-tab-animation-duration: 500ms !default;
 // Combines the various structural styles we need for the tab group and tab nav bar.
 @mixin structural-styles {
   @include mdc-custom-properties.configure(
-    $emit-fallback-values: false,
+    $emit-declaration-fallback: false,
     $emit-fallback-vars: false
   ) {
     @include mdc-tab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
@@ -38,7 +38,7 @@ $mat-tab-animation-duration: 500ms !default;
 
 @mixin tab {
   @include mdc-custom-properties.configure(
-    $emit-fallback-values: false,
+    $emit-declaration-fallback: false,
     $emit-fallback-vars: false
   ) {
     @include mdc-tab-indicator-theme.theme-styles(tokens-mdc-tab-indicator.get-token-slots());

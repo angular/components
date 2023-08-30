@@ -9,7 +9,7 @@
 @use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 
 // TODO(jelbourn): move header and title-group styles to their own files.
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   $mdc-elevated-card-token-slots: tokens-mdc-elevated-card.get-token-slots();
   $mdc-outlined-card-token-slots: tokens-mdc-outlined-card.get-token-slots();
 

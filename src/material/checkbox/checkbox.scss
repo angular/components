@@ -11,7 +11,7 @@
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/token-utils';
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   // Add the checkbox static styles.
   @include mdc-checkbox.static-styles();
   // TODO(mmalerba): Switch to static-styles, theme-styles, and theme once they're available.

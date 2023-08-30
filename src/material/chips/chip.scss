@@ -9,7 +9,7 @@
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 // The slots for tokens that will be configured in the theme can be emitted with no fallback.
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   $token-slots: m2-mdc-chip.get-token-slots();
 
   // Add the MDC chip static styles.

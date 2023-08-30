@@ -9,7 +9,7 @@
 $mat-slider-min-size: 128px !default;
 $mat-slider-horizontal-margin: 8px !default;
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   $mdc-slider-token-slots: m2-mdc-slider.get-token-slots();
 
   // Add MDC slider static styles.

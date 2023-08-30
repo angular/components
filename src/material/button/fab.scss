@@ -11,7 +11,7 @@
 @use '../core/tokens/m2/mdc/extended-fab' as m2-mdc-extended-fab;
 @use '../core/tokens/m2/mdc/fab' as m2-mdc-fab;
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   $mdc-fab-token-slots: m2-mdc-fab.get-token-slots();
   $mdc-extended-fab-token-slots: m2-mdc-extended-fab.get-token-slots();
 

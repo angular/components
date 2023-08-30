@@ -25,7 +25,7 @@
   }
 }
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+@include mdc-custom-properties.configure($emit-declaration-fallback: false, $emit-fallback-vars: false) {
   // Include the styles without the animations since we
   // reuse the same animation as the non-MDC version.
   @include mdc-snackbar.static-styles($query: mdc-helpers.$mdc-base-styles-without-animation-query);
