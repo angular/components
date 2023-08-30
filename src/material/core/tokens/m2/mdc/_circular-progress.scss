@@ -1,5 +1,4 @@
-@use 'sass:map';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -33,20 +32,20 @@ $prefix: (mdc, circular-progress);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
+@function get-color-tokens($theme) {
   @return (
     // The color of the progress spinner's active indicator.
-    active-indicator-color: theming.get-color-from-palette(map.get($config, primary))
+    active-indicator-color: inspection.get-theme-color($theme, primary)
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

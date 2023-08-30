@@ -12,7 +12,7 @@
 @use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/typography/typography';
 
-@mixin base($config-or-theme) {
+@mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
   @include sass-utils.current-selector-or-root() {
     @include mdc-list-theme.theme(tokens-mdc-list.get-unthemable-tokens());

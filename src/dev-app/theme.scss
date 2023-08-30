@@ -3,9 +3,8 @@
 
 // Plus imports for other components in your app.
 
-// Disable legacy API compatibility.
-// TODO: uncomment once conversion to inspection API is complete.
-//mat.$theme-legacy-inspection-api-compatibility: false;
+// Disable legacy API compatibility, since dev-app is fully migrated to theme inspection API.
+mat.$theme-legacy-inspection-api-compatibility: false;
 
 // Define the default (light) theme.
 $candy-app-primary: mat.define-palette(mat.$indigo-palette);

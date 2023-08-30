@@ -16,6 +16,9 @@
 }
 
 @mixin typography($theme) {
+  // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
+  $theme: inspection.private-get-typography-back-compat-theme($theme);
+
   .mat-tree {
     font-family: inspection.get-theme-typography($theme, body-2, font-family);
   }

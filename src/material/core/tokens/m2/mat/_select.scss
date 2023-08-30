@@ -1,8 +1,5 @@
-@use 'sass:map';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
-@use '../../../mdc-helpers/mdc-helpers';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -15,48 +12,37 @@ $prefix: (mat, select);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $is-dark: map.get($config, is-dark);
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $primary: map.get($config, primary);
-  $warn: map.get($config, warn);
+@function get-color-tokens($theme, $palette-name: primary) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $on-surface: if($is-dark, #fff, #000);
 
   @return (
-    panel-background-color: theming.get-color-from-palette($background, card),
+    panel-background-color: inspection.get-theme-color($theme, background, card),
     enabled-trigger-text-color: rgba($on-surface, 0.87),
     disabled-trigger-text-color: rgba($on-surface, 0.38),
     placeholder-text-color: rgba($on-surface, 0.6),
     enabled-arrow-color: rgba($on-surface, 0.54),
     disabled-arrow-color: rgba($on-surface, 0.38),
-    focused-arrow-color: theming.get-color-from-palette($primary, default, 0.87),
-    invalid-arrow-color: theming.get-color-from-palette($warn, default, 0.87),
+    focused-arrow-color: sass-utils.safe-color-change(
+        inspection.get-theme-color($theme, $palette-name, default), $alpha: 0.87),
+    invalid-arrow-color: sass-utils.safe-color-change(
+        inspection.get-theme-color($theme, warn, default), $alpha: 0.87),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  // TODO(crisbeto): The earlier implementation of the select used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
-    trigger-text-font: typography-utils.font-family($config, body-1) or
-      typography-utils.font-family($config),
-    trigger-text-line-height: typography-utils.line-height($config, body-1),
-    trigger-text-size: typography-utils.font-size($config, body-1),
-    trigger-text-tracking: typography-utils.letter-spacing($config, body-1),
-    trigger-text-weight: typography-utils.font-weight($config, body-1)
+    trigger-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    trigger-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    trigger-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    trigger-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    trigger-text-weight: inspection.get-theme-typography($theme, body-1, font-weight)
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

@@ -1,7 +1,4 @@
-@use 'sass:map';
-@use '../../../theming/theming';
-@use '../../../typography/typography-utils';
-@use '../../../mdc-helpers/mdc-helpers';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -56,14 +53,13 @@ $prefix: (mdc, dialog);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $is-dark: map.get($config, 'is-dark');
-  $background: map.get($config, background);
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $on-surface: if($is-dark, #fff, #000);
 
   @return (
     // Background color of the container.
-    container-color: theming.get-color-from-palette($background, dialog),
+    container-color: inspection.get-theme-color($theme, background, dialog),
     // Color of the dialog header.
     subhead-color: rgba($on-surface, 0.87),
     // Color of the dialog body text.
@@ -72,35 +68,25 @@ $prefix: (mdc, dialog);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  // TODO(crisbeto): The earlier implementation of the dialog used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
     // Typography of the dialog header.
-    subhead-font: typography-utils.font-family($config, headline-6)
-      or typography-utils.font-family($config),
-    subhead-line-height: typography-utils.line-height($config, headline-6),
-    subhead-size: typography-utils.font-size($config, headline-6),
-    subhead-weight: typography-utils.font-weight($config, headline-6),
-    subhead-tracking: typography-utils.letter-spacing($config, headline-6),
+    subhead-font: inspection.get-theme-typography($theme, headline-6, font-family),
+    subhead-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
+    subhead-size: inspection.get-theme-typography($theme, headline-6, font-size),
+    subhead-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
+    subhead-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
     // Typography of the dialog body text.
-    supporting-text-font: typography-utils.font-family($config, body-1)
-      or typography-utils.font-family($config),
-    supporting-text-line-height: typography-utils.line-height($config, body-1),
-    supporting-text-size: typography-utils.font-size($config, body-1),
-    supporting-text-weight: typography-utils.font-weight($config, body-1),
-    supporting-text-tracking: typography-utils.letter-spacing($config, body-1),
+    supporting-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    supporting-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    supporting-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    supporting-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    supporting-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

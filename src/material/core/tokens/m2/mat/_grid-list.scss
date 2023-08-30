@@ -1,5 +1,5 @@
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -12,25 +12,25 @@ $prefix: (mat, grid-list);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
+@function get-color-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
     // TODO(crisbeto): other components have tokens for all typography dimensions.
     // Here we only set the font size to maintain the same appearance as the pre-tokens
     // theming API. Consider adding more tokens for letter spacing, font weight etc.
-    tile-header-primary-text-size: typography-utils.font-size($config, body-1),
-    tile-header-secondary-text-size: typography-utils.font-size($config, caption),
-    tile-footer-primary-text-size: typography-utils.font-size($config, body-1),
-    tile-footer-secondary-text-size: typography-utils.font-size($config, caption),
+    tile-header-primary-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    tile-header-secondary-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    tile-footer-primary-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    tile-footer-secondary-text-size: inspection.get-theme-typography($theme, caption, font-size),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

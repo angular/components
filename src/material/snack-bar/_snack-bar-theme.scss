@@ -1,57 +1,48 @@
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
 @use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
 
-@mixin base($config-or-theme) {
+@mixin base($theme) {
     // Add default values for tokens not related to color, typography, or density.
   @include sass-utils.current-selector-or-root() {
     @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-unthemable-tokens());
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
+@mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
-    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-color-tokens($config));
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-color-tokens($theme));
     @include token-utils.create-token-values(
       tokens-mat-snack-bar.$prefix,
-      tokens-mat-snack-bar.get-color-tokens($config)
+      tokens-mat-snack-bar.get-color-tokens($theme)
     );
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-      theming.get-typography-config($config-or-theme));
-
+@mixin typography($theme) {
   @include sass-utils.current-selector-or-root() {
-    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-typography-tokens($config));
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-typography-tokens($theme));
   }
 }
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-snack-bar') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     @include base($theme);
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

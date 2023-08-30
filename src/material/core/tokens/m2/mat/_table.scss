@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../theming/theming';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
 @use '../../token-utils';
 @use '../../../style/sass-utils';
 
@@ -16,34 +16,30 @@ $prefix: (mat, table);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-
+@function get-color-tokens($theme) {
   @return (
-    background-color: theming.get-color-from-palette($background, 'card'),
+    background-color: inspection.get-theme-color($theme, background, 'card'),
 
-    header-headline-color: theming.get-color-from-palette($foreground, text),
-    row-item-label-text-color: theming.get-color-from-palette($foreground, text),
-    row-item-outline-color: theming.get-color-from-palette($foreground, divider),
+    header-headline-color: inspection.get-theme-color($theme, foreground, text),
+    row-item-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    row-item-outline-color: inspection.get-theme-color($theme, foreground, divider),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  $fallback-font: typography-utils.font-family($config);
-  $cell-font-family: typography-utils.font-family($config, body-2) or $fallback-font;
-  $cell-line-height: typography-utils.line-height($config, body-2);
-  $cell-font-size: typography-utils.font-size($config, body-2);
-  $cell-font-weight: typography-utils.font-weight($config, body-2);
-  $cell-letter-spacing: typography-utils.letter-spacing($config, body-2);
+@function get-typography-tokens($theme) {
+  $cell-font-family: inspection.get-theme-typography($theme, body-2, font-family);
+  $cell-line-height: inspection.get-theme-typography($theme, body-2, line-height);
+  $cell-font-size: inspection.get-theme-typography($theme, body-2, font-size);
+  $cell-font-weight: inspection.get-theme-typography($theme, body-2, font-weight);
+  $cell-letter-spacing: inspection.get-theme-typography($theme, body-2, letter-spacing);
 
   @return (
-    header-headline-font: typography-utils.font-family($config, subtitle-2) or $fallback-font,
-    header-headline-line-height: typography-utils.line-height($config, subtitle-2),
-    header-headline-size: typography-utils.font-size($config, subtitle-2),
-    header-headline-weight: typography-utils.font-weight($config, subtitle-2),
-    header-headline-tracking: typography-utils.letter-spacing($config, subtitle-2),
+    header-headline-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    header-headline-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
+    header-headline-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    header-headline-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    header-headline-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
 
     // Plain cells and footer cells have the same typography.
     row-item-label-text-font: $cell-font-family,
@@ -61,8 +57,8 @@ $prefix: (mat, table);
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $scale: theming.clamp-density($config, -4);
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
   $header-scale: (
     0: 56px,
     -1: 52px,

@@ -1,7 +1,5 @@
-@use 'sass:map';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -18,36 +16,34 @@ $prefix: (mat, legacy-button-toggle);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-
+@function get-color-tokens($theme) {
   @return (
-    text-color: theming.get-color-from-palette($foreground, hint-text),
-    state-layer-color: theming.get-color-from-palette($background, focused-button),
-    selected-state-text-color: theming.get-color-from-palette($foreground, secondary-text),
-    selected-state-background-color: theming.get-color-from-palette($background, selected-button),
-    disabled-state-text-color: theming.get-color-from-palette($foreground, disabled-button),
-    disabled-state-background-color:
-      theming.get-color-from-palette($background, disabled-button-toggle),
-    disabled-selected-state-background-color:
-      theming.get-color-from-palette($background, selected-disabled-button)
+    text-color: inspection.get-theme-color($theme, foreground, hint-text),
+    state-layer-color: inspection.get-theme-color($theme, background, focused-button),
+    selected-state-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    selected-state-background-color: inspection.get-theme-color(
+        $theme, background, selected-button),
+    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
+    disabled-state-background-color: inspection.get-theme-color(
+        $theme, background, disabled-button-toggle),
+    disabled-selected-state-background-color: inspection.get-theme-color(
+        $theme, background, selected-disabled-button)
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
     // TODO(crisbeto): other components have tokens for all typography dimensions (font weight,
     // letter spacing etc). The button toggle only has the font to match what it had in the
     // old theming API and to reduce internal breakages. We should introduce more typography
     // tokens at some point.
-    text-font: typography-utils.font-family($config),
+    text-font: inspection.get-theme-typography($theme, body-1, font-family),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

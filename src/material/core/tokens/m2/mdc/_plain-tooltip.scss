@@ -1,7 +1,4 @@
-@use 'sass:map';
-@use '../../../theming/theming';
-@use '../../../typography/typography-utils';
-@use '../../../mdc-helpers/mdc-helpers';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -26,42 +23,32 @@ $prefix: (mdc, plain-tooltip);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $background: map.get($config, background);
+@function get-color-tokens($theme) {
 
   @return (
     // Color of the tooltip container.
-    container-color: theming.get-color-from-palette($background, tooltip),
+    container-color: inspection.get-theme-color($theme, background, tooltip),
     // Color of the tooltip text.
     supporting-text-color: #fff,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  // TODO(amysorto): The earlier implementation of the tooltip used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
     // Font for the tooltip text.
-    supporting-text-font: typography-utils.font-family($config, caption)
-    or typography-utils.font-family($config),
+    supporting-text-font: inspection.get-theme-typography($theme, caption, font-family),
     // Font size for the tooltip text.
-    supporting-text-size: typography-utils.font-size($config, caption),
+    supporting-text-size: inspection.get-theme-typography($theme, caption, font-size),
     // Font weight of the tooltip text.
-    supporting-text-weight: typography-utils.font-weight($config, caption),
+    supporting-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
     // Tracking (space between letters) of the tooltip text.
-    supporting-text-tracking: typography-utils.letter-spacing($config, caption),
+    supporting-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

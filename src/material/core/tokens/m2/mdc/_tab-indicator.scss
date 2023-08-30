@@ -1,5 +1,4 @@
-@use 'sass:map';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -21,21 +20,19 @@ $prefix: (mdc, tab-indicator);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $primary: map.get($config, primary);
-
+@function get-color-tokens($theme, $palette-name: primary) {
   @return (
-    active-indicator-color: theming.get-color-from-palette($primary, default),
+    active-indicator-color: inspection.get-theme-color($theme, $palette-name, default),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 
