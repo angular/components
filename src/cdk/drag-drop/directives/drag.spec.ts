@@ -946,6 +946,29 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
     }));
 
+    it('should allow for dragging to be constrained to an element while using constrainPosition', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.componentInstance.boundary = '.wrapper';
+      fixture.detectChanges();
+
+      fixture.componentInstance.dragInstance.constrainPosition = (
+        {x, y}: Point,
+        _dragRef: DragRef,
+        _dimensions: ClientRect,
+        pickup: Point,
+      ) => {
+        x -= pickup.x;
+        y -= pickup.y;
+        return {x, y};
+      };
+
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, dragElement, 300, 300);
+      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+    }));
+
     it('should be able to pass in a DOM node as the boundary', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.boundary = fixture.nativeElement.querySelector('.wrapper');

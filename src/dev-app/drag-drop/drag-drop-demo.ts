@@ -14,6 +14,9 @@ import {
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
+  Point,
+  DragRef,
+  CdkDrag,
 } from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -73,5 +76,17 @@ export class DragAndDropDemo {
         event.currentIndex,
       );
     }
+  }
+
+  constrainPosition(
+    {x, y}: Point,
+    _dragRef: DragRef,
+    _dimensions: ClientRect,
+    pickup: Point,
+  ): Point {
+    // Just returning the original top left corner to not modify position
+    x -= pickup.x;
+    y -= pickup.y;
+    return {x, y};
   }
 }
