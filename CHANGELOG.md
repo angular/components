@@ -1,3 +1,32 @@
+<a name="17.0.0-next.1"></a>
+# 17.0.0-next.1 "manganese-muffin" (2023-08-30)
+## Breaking Changes
+### material
+- There are new styles emitted by `mat.dialog-theme` that are not
+  emitted by any of: `mat.dialog-color`, `mat.dialog-typography`,
+  `mat.dialog-density`. If you rely on the partial mixins only and don't
+  call `mat.dialog-theme`, you can add `mat.dialog-base` to get the
+  missing styles.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [685b585f7](https://github.com/angular/components/commit/685b585f70fded62813480b849832fd1bfd1bffb) | feat | **theming:** add support for M2 themes to theme inspection API |
+| [dfba0edfb](https://github.com/angular/components/commit/dfba0edfbec52614e42e6fe0f9409a1fa0346669) | fix | **dialog:** Move unthemable tokens to theme mixin ([#27606](https://github.com/angular/components/pull/27606)) |
+| [cf456a2d4](https://github.com/angular/components/commit/cf456a2d43837497367662e7de22f1b2bcbf4f00) | fix | **form-field:** don't toggle hover state over subscript ([#27683](https://github.com/angular/components/pull/27683)) |
+| [f8252d816](https://github.com/angular/components/commit/f8252d816806b4fff18bb5f7d313a8edca774459) | fix | **progress-spinner:** Emit tokens under mixin root selector ([#27594](https://github.com/angular/components/pull/27594)) |
+| [373a0cbf9](https://github.com/angular/components/commit/373a0cbf9531ea9ae0c9eb0e9cbf70f049f863b7) | fix | **select:** set pointer cursor on entire form field ([#27678](https://github.com/angular/components/pull/27678)) |
+| [291b9db91](https://github.com/angular/components/commit/291b9db9105846ff0ae37581263725bebb6f0a45) | fix | **slider:** keep ios safari slider value binding in sync ([#27701](https://github.com/angular/components/pull/27701)) |
+| [eef455620](https://github.com/angular/components/commit/eef45562035448212e0f827c5dbc31b3fd621255) | fix | **slider:** make selecting thumbs at min/max easier ([#27702](https://github.com/angular/components/pull/27702)) |
+| [3b25de953](https://github.com/angular/components/commit/3b25de95306f11a6ffb828769af331bb8c076652) | fix | **slider:** set word-break on value-indicator ([#27709](https://github.com/angular/components/pull/27709)) |
+| [6c724c713](https://github.com/angular/components/commit/6c724c713fb0510b32ce302a51f1d9d15df4b668) | fix | **snack-bar:** Emit tokens under mixin root selector ([#27667](https://github.com/angular/components/pull/27667)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b3e4d576b](https://github.com/angular/components/commit/b3e4d576b9f0060bb1110766d74c982e4620b2a6) | feat | **overlay:** add disposeOnNavigation ([#27672](https://github.com/angular/components/pull/27672)) |
+| [ca9c490ee](https://github.com/angular/components/commit/ca9c490ee30dbf7c9c147079197d0dbc0abcd611) | fix | **table:** the CdkNoDataRow directive does not render in the OnPush strategy ([#27687](https://github.com/angular/components/pull/27687)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-next.0"></a>
 # 17.0.0-next.0 "paper-crane" (2023-08-17)
 ## Breaking Changes
