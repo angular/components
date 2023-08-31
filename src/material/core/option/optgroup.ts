@@ -14,8 +14,8 @@ import {
   Inject,
   Optional,
   InjectionToken,
+  booleanAttribute,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '../common-behaviors/disabled';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
 
 // Notes on the accessibility pattern used for `mat-optgroup`.
@@ -38,10 +38,6 @@ import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-pa
 // 3. `<mat-option aria-labelledby="optionLabel groupLabel"` - This works on Chrome, but Safari
 //     doesn't read out the text at all. Furthermore, on
 
-// Boilerplate for applying mixins to MatOptgroup.
-/** @docs-private */
-const _MatOptgroupMixinBase = mixinDisabled(class {});
-
 // Counter for unique group ids.
 let _uniqueOptgroupIdCounter = 0;
 
@@ -61,7 +57,6 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   templateUrl: 'optgroup.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disabled'],
   styleUrls: ['optgroup.css'],
   host: {
     'class': 'mat-mdc-optgroup',
@@ -71,9 +66,12 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   },
   providers: [{provide: MAT_OPTGROUP, useExisting: MatOptgroup}],
 })
-export class MatOptgroup extends _MatOptgroupMixinBase implements CanDisable {
+export class MatOptgroup {
   /** Label for the option group. */
   @Input() label: string;
+
+  /** whether the option group is disabled. */
+  @Input({transform: booleanAttribute}) disabled: boolean = false;
 
   /** Unique id for the underlying label. */
   _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;
@@ -82,7 +80,6 @@ export class MatOptgroup extends _MatOptgroupMixinBase implements CanDisable {
   _inert: boolean;
 
   constructor(@Inject(MAT_OPTION_PARENT_COMPONENT) @Optional() parent?: MatOptionParentComponent) {
-    super();
     this._inert = parent?.inertGroups ?? false;
   }
 }
