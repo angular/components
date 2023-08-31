@@ -4,12 +4,9 @@
 
 ```ts
 
-import { _AbstractConstructor as _AbstractConstructor_2 } from '@angular/material/core';
 import { AbstractControl } from '@angular/forms';
 import { AfterViewChecked } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor as _Constructor_2 } from '@angular/material/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -240,13 +237,16 @@ export class MatNativeDateModule {
 }
 
 // @public
-export class MatOptgroup extends _MatOptgroupMixinBase implements CanDisable {
+export class MatOptgroup {
     constructor(parent?: MatOptionParentComponent);
+    disabled: boolean;
     _inert: boolean;
     label: string;
     _labelId: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "disabled": { "alias": "disabled"; "required": false; }; "label": { "alias": "label"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], false, never>;
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, [{ optional: true; }]>;
 }
@@ -259,7 +259,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
     _changeDetectorRef: ChangeDetectorRef;
     deselect(emitEvent?: boolean): void;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     get disableRipple(): boolean;
     focus(_origin?: FocusOrigin, options?: FocusOptions): void;
     _getHostElement(): HTMLElement;
@@ -271,6 +271,8 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
     get hideSingleSelectionIndicator(): boolean;
     id: string;
     get multiple(): boolean | undefined;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)

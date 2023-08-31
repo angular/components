@@ -7,7 +7,6 @@
  */
 
 import {FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   Component,
@@ -24,6 +23,7 @@ import {
   EventEmitter,
   QueryList,
   ViewChild,
+  booleanAttribute,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
@@ -101,12 +101,12 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   @Input() id: string = `mat-option-${_uniqueIdCounter++}`;
 
   /** Whether the option is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return (this.group && this.group.disabled) || this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
   }
 
   /** Whether ripples for the option are disabled. */
