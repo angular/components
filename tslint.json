@@ -94,7 +94,6 @@
         "Component": {
           "argument": 0,
           "properties": {
-            "!host": "\\[class\\]",
             "!preserveWhitespaces": ".*",
             "!styles": ".*",
             "!moduleId": ".*",
