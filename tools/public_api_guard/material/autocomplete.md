@@ -4,15 +4,11 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanDisableRipple } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
@@ -67,15 +63,13 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
 // @public
-export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterContentInit, CanDisableRipple, OnDestroy {
+export class MatAutocomplete implements AfterContentInit, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _defaults: MatAutocompleteDefaultOptions, platform?: Platform);
     _animationDone: EventEmitter<AnimationEvent_2>;
     ariaLabel: string;
     ariaLabelledby: string;
-    get autoActiveFirstOption(): boolean;
-    set autoActiveFirstOption(value: BooleanInput);
-    get autoSelectActiveOption(): boolean;
-    set autoSelectActiveOption(value: BooleanInput);
+    autoActiveFirstOption: boolean;
+    autoSelectActiveOption: boolean;
     set classList(value: string | string[]);
     // (undocumented)
     _classList: {
@@ -84,18 +78,29 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
     readonly closed: EventEmitter<void>;
     // (undocumented)
     protected _defaults: MatAutocompleteDefaultOptions;
+    disableRipple: boolean;
     displayWith: ((value: any) => string) | null;
     _emitSelectEvent(option: MatOption): void;
     _getPanelAriaLabelledby(labelId: string | null): string | null;
     _getScrollTop(): number;
     get hideSingleSelectionIndicator(): boolean;
-    set hideSingleSelectionIndicator(value: BooleanInput);
+    set hideSingleSelectionIndicator(value: boolean);
     id: string;
     readonly inertGroups: boolean;
     get isOpen(): boolean;
     // (undocumented)
     _isOpen: boolean;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
+    // (undocumented)
+    static ngAcceptInputType_autoActiveFirstOption: unknown;
+    // (undocumented)
+    static ngAcceptInputType_autoSelectActiveOption: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disableRipple: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hideSingleSelectionIndicator: unknown;
+    // (undocumented)
+    static ngAcceptInputType_requireSelection: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -107,8 +112,7 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
     readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent>;
     panel: ElementRef;
     panelWidth: string | number;
-    get requireSelection(): boolean;
-    set requireSelection(value: BooleanInput);
+    requireSelection: boolean;
     _setColor(value: ThemePalette): void;
     _setScrollTop(scrollTop: number): void;
     _setVisibility(): void;
@@ -118,7 +122,7 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
     _syncParentProperties(): void;
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocomplete, never>;
 }
@@ -174,8 +178,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     get activeOption(): MatOption | null;
     autocomplete: MatAutocomplete;
     autocompleteAttribute: string;
-    get autocompleteDisabled(): boolean;
-    set autocompleteDisabled(value: BooleanInput);
+    autocompleteDisabled: boolean;
     closePanel(): void;
     connectedTo: MatAutocompleteOrigin;
     // (undocumented)
@@ -186,6 +189,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     _handleInput(event: KeyboardEvent): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    static ngAcceptInputType_autocompleteDisabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

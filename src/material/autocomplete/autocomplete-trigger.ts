@@ -9,6 +9,7 @@
 import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
+  booleanAttribute,
   ChangeDetectorRef,
   Directive,
   ElementRef,
@@ -26,7 +27,6 @@ import {
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -125,7 +125,6 @@ export class MatAutocompleteTrigger
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal;
   private _componentDestroyed = false;
-  private _autocompleteDisabled = false;
   private _scrollStrategy: () => ScrollStrategy;
   private _keydownSubscription: Subscription | null;
   private _outsideClickSubscription: Subscription | null;
@@ -213,13 +212,8 @@ export class MatAutocompleteTrigger
    * Whether the autocomplete is disabled. When disabled, the element will
    * act as a regular input and the user won't be able to open the panel.
    */
-  @Input('matAutocompleteDisabled')
-  get autocompleteDisabled(): boolean {
-    return this._autocompleteDisabled;
-  }
-  set autocompleteDisabled(value: BooleanInput) {
-    this._autocompleteDisabled = coerceBooleanProperty(value);
-  }
+  @Input({alias: 'matAutocompleteDisabled', transform: booleanAttribute})
+  autocompleteDisabled: boolean;
 
   constructor(
     private _element: ElementRef<HTMLInputElement>,
@@ -897,7 +891,7 @@ export class MatAutocompleteTrigger
   /** Determines whether the panel can be opened. */
   private _canOpen(): boolean {
     const element = this._element.nativeElement;
-    return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
+    return !element.readOnly && !element.disabled && !this.autocompleteDisabled;
   }
 
   /** Use defaultView of injected document if available or fallback to global window reference */
