@@ -1,14 +1,9 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 
-@mixin color($config-or-theme) {
-  $config: mat.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $foreground: map.get($config, foreground);
-
-  $non-resizable-hover-divider: mat.get-color-from-palette($foreground, divider);
-  $resizable-hover-divider: mat.get-color-from-palette($primary, 600);
-  $resizable-active-divider: mat.get-color-from-palette($primary, 600);
+@mixin color($theme) {
+  $non-resizable-hover-divider: mat.private-get-theme-color($theme, foreground, divider);
+  $resizable-hover-divider: mat.private-get-theme-color($theme, primary, 600);
+  $resizable-active-divider: mat.private-get-theme-color($theme, primary, 600);
 
   // TODO: these styles don't really belong in the `color` part of the theme.
   // We should figure out a better place for them.
@@ -135,25 +130,20 @@
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {}
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: mat.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include mat.private-check-duplicate-theme-styles($theme, 'mat-column-resize') {
-    $color: mat.get-color-config($theme);
-    $density: mat.get-density-config($theme);
-    $typography: mat.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if mat.private-theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if mat.private-theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if mat.private-theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

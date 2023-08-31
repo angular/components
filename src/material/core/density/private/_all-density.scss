@@ -1,4 +1,4 @@
-@use '../../theming/theming';
+@use '../../theming/inspection';
 @use '../../../button/button-theme';
 @use '../../../button/icon-button-theme';
 @use '../../../button/fab-theme';
@@ -30,13 +30,8 @@
 @use '../../../table/table-theme';
 
 // Includes all of the density styles.
-@mixin all-component-densities($config-or-theme) {
-  // In case a theme object has been passed instead of a configuration for
-  // the density system, extract the density config from the theme object.
-  $config: if(theming.private-is-theme-object($config-or-theme),
-      theming.get-density-config($config-or-theme), $config-or-theme);
-
-  @if $config == null {
+@mixin all-component-densities($theme) {
+  @if not inspection.theme-has($theme, density) {
     @error 'No density configuration specified.';
   }
 
@@ -45,39 +40,39 @@
   // not possible as it would introduce a circular dependency for density because the `mat-core`
   // mixin that is transitively loaded by the `all-theme` file, imports `all-density` which
   // would then load `all-theme` again. This ultimately results a circular dependency.
-  @include form-field-theme.density($config);
-  @include card-theme.density($config);
-  @include progress-bar-theme.density($config);
-  @include progress-spinner-theme.density($config);
-  @include tooltip-theme.density($config);
-  @include input-theme.density($config);
-  @include core-theme.density($config);
-  @include select-theme.density($config);
-  @include checkbox-theme.density($config);
-  @include autocomplete-theme.density($config);
-  @include dialog-theme.density($config);
-  @include chips-theme.density($config);
-  @include slide-toggle-theme.density($config);
-  @include radio-theme.density($config);
-  @include slider-theme.density($config);
-  @include menu-theme.density($config);
-  @include list-theme.density($config);
-  @include paginator-theme.density($config);
-  @include tabs-theme.density($config);
-  @include snack-bar-theme.density($config);
-  @include button-theme.density($config);
-  @include icon-button-theme.density($config);
-  @include fab-theme.density($config);
-  @include table-theme.density($config);
-  @include expansion-theme.density($config);
-  @include stepper-theme.density($config);
-  @include toolbar-theme.density($config);
-  @include tree-theme.density($config);
-  @include button-toggle-theme.density($config);
+  @include form-field-theme.density($theme);
+  @include card-theme.density($theme);
+  @include progress-bar-theme.density($theme);
+  @include progress-spinner-theme.density($theme);
+  @include tooltip-theme.density($theme);
+  @include input-theme.density($theme);
+  @include core-theme.density($theme);
+  @include select-theme.density($theme);
+  @include checkbox-theme.density($theme);
+  @include autocomplete-theme.density($theme);
+  @include dialog-theme.density($theme);
+  @include chips-theme.density($theme);
+  @include slide-toggle-theme.density($theme);
+  @include radio-theme.density($theme);
+  @include slider-theme.density($theme);
+  @include menu-theme.density($theme);
+  @include list-theme.density($theme);
+  @include paginator-theme.density($theme);
+  @include tabs-theme.density($theme);
+  @include snack-bar-theme.density($theme);
+  @include button-theme.density($theme);
+  @include icon-button-theme.density($theme);
+  @include fab-theme.density($theme);
+  @include table-theme.density($theme);
+  @include expansion-theme.density($theme);
+  @include stepper-theme.density($theme);
+  @include toolbar-theme.density($theme);
+  @include tree-theme.density($theme);
+  @include button-toggle-theme.density($theme);
 }
 
 
 // @deprecated Use `all-component-densities`.
-@mixin angular-material-density($config-or-theme) {
-  @include all-component-densities($config-or-theme);
+@mixin angular-material-density($theme) {
+  @include all-component-densities($theme);
 }

@@ -1,69 +1,51 @@
-@use 'sass:map';
-@use 'sass:math';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use '../core/density/private/compatibility';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
-@use './stepper-variables';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
+@mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-      tokens-mat-stepper.get-color-tokens($config));
+      tokens-mat-stepper.get-color-tokens($theme));
 
     .mat-step-header.mat-accent {
       @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.private-get-color-palette-color-tokens(map.get($config, accent)));
+        tokens-mat-stepper.private-get-color-palette-color-tokens($theme, accent));
     }
 
     .mat-step-header.mat-warn {
       @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.private-get-color-palette-color-tokens(map.get($config, warn)));
+        tokens-mat-stepper.private-get-color-palette-color-tokens($theme, warn));
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-
+@mixin typography($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-      tokens-mat-stepper.get-typography-tokens($config));
+      tokens-mat-stepper.get-typography-tokens($theme));
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $height: compatibility.private-density-prop-value(stepper-variables.$density-config,
-    $density-scale, height);
-  $vertical-padding: math.div($height - stepper-variables.$label-header-height, 2);
-
+@mixin density($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-      tokens-mat-stepper.get-density-tokens($density-scale));
+      tokens-mat-stepper.get-density-tokens($theme));
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-stepper') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

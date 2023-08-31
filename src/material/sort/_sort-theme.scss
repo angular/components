@@ -1,16 +1,12 @@
 @use 'sass:color';
-@use 'sass:map';
 @use 'sass:meta';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-
+@mixin color($theme) {
   .mat-sort-header-arrow {
-    $table-background: theming.get-color-from-palette($background, 'card');
-    $text-color: theming.get-color-from-palette($foreground, secondary-text);
+    $table-background: inspection.get-theme-color($theme, background, card);
+    $text-color: inspection.get-theme-color($theme, foreground, secondary-text);
 
     // Because the arrow is made up of multiple elements that are stacked on top of each other,
     // we can't use the semi-transparent color from the theme directly. If the value is a color
@@ -28,25 +24,20 @@
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {}
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sort') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }
