@@ -522,7 +522,7 @@ export class MatButtonToggle
       if (group._isPrechecked(this)) {
         this.checked = true;
       } else if (group._isSelected(this) !== this._checked) {
-        // As as side effect of the circular dependency between the toggle group and the button,
+        // As side effect of the circular dependency between the toggle group and the button,
         // we may end up in a state where the button is supposed to be checked on init, but it
         // isn't, because the checked value was assigned too early. This can happen when Ivy
         // assigns the static input value before the `ngOnInit` has run.
