@@ -26,11 +26,11 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
+  booleanAttribute,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ESCAPE,
   LEFT_ARROW,
@@ -204,24 +204,11 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   @ContentChild(MAT_MENU_CONTENT) lazyContent: MatMenuContent;
 
   /** Whether the menu should overlap its trigger. */
-  @Input()
-  get overlapTrigger(): boolean {
-    return this._overlapTrigger;
-  }
-  set overlapTrigger(value: BooleanInput) {
-    this._overlapTrigger = coerceBooleanProperty(value);
-  }
-  private _overlapTrigger: boolean;
+  @Input({transform: booleanAttribute}) overlapTrigger: boolean;
 
   /** Whether the menu has a backdrop. */
-  @Input()
-  get hasBackdrop(): boolean | undefined {
-    return this._hasBackdrop;
-  }
-  set hasBackdrop(value: BooleanInput) {
-    this._hasBackdrop = coerceBooleanProperty(value);
-  }
-  private _hasBackdrop: boolean | undefined;
+  @Input({transform: (value: any) => (value == null ? null : booleanAttribute(value))})
+  hasBackdrop?: boolean;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -307,8 +294,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     this._xPosition = defaultOptions.xPosition;
     this._yPosition = defaultOptions.yPosition;
     this.backdropClass = defaultOptions.backdropClass;
-    this._overlapTrigger = defaultOptions.overlapTrigger;
-    this._hasBackdrop = defaultOptions.hasBackdrop;
+    this.overlapTrigger = defaultOptions.overlapTrigger;
+    this.hasBackdrop = defaultOptions.hasBackdrop;
   }
 
   ngOnInit() {

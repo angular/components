@@ -17,21 +17,12 @@ import {
   Input,
   AfterViewInit,
   ChangeDetectorRef,
+  booleanAttribute,
 } from '@angular/core';
-import {
-  CanDisable,
-  CanDisableRipple,
-  mixinDisabled,
-  mixinDisableRipple,
-} from '@angular/material/core';
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
 import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
-
-// Boilerplate for applying mixins to MatMenuItem.
-/** @docs-private */
-const _MatMenuItemBase = mixinDisableRipple(mixinDisabled(class {}));
 
 /**
  * Single item inside a `mat-menu`. Provides the menu item styling and accessibility treatment.
@@ -39,7 +30,6 @@ const _MatMenuItemBase = mixinDisableRipple(mixinDisabled(class {}));
 @Component({
   selector: '[mat-menu-item]',
   exportAs: 'matMenuItem',
-  inputs: ['disabled', 'disableRipple'],
   host: {
     '[attr.role]': 'role',
     'class': 'mat-mdc-menu-item mat-mdc-focus-indicator',
@@ -55,12 +45,15 @@ const _MatMenuItemBase = mixinDisableRipple(mixinDisabled(class {}));
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
 })
-export class MatMenuItem
-  extends _MatMenuItemBase
-  implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy
-{
+export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
   /** ARIA role for the menu item. */
   @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
+
+  /** Whether the menu item is disabled. */
+  @Input({transform: booleanAttribute}) disabled: boolean = false;
+
+  /** Whether ripples are disabled on the menu item. */
+  @Input({transform: booleanAttribute}) disableRipple: boolean = false;
 
   /** Stream that emits when the menu item is hovered. */
   readonly _hovered: Subject<MatMenuItem> = new Subject<MatMenuItem>();
@@ -101,7 +94,6 @@ export class MatMenuItem
     @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>,
     private _changeDetectorRef?: ChangeDetectorRef,
   ) {
-    super();
     _parentMenu?.addItem?.(this);
   }
 
