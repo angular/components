@@ -84,7 +84,6 @@ jobs:
     <<: *job_defaults
     steps:
       - checkout
-      - browser-tools/install-chrome
       - restore_cache:
           key: *cache_key
       - *yarn_install

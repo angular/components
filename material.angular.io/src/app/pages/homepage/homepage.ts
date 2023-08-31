@@ -40,7 +40,7 @@ export class Homepage implements OnInit {
   @HostBinding('class.main-content') readonly mainContentClass = true;
   @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
 
-  isNextVersion = location.hostname.startsWith('next.material.angular.io');
+  isNextVersion = location.hostname === 'next.material.angular.io';
 
   constructor(
     public _componentPageTitle: ComponentPageTitle,
