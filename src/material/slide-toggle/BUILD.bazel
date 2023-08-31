@@ -21,7 +21,6 @@ ng_module(
     ),
     assets = [":slide_toggle_scss"] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/coercion",
         "//src/material/core",
         "@npm//@angular/animations",
         "@npm//@angular/common",

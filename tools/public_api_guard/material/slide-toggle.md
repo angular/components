@@ -4,20 +4,13 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterContentInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanColor } from '@angular/material/core';
-import { CanDisable } from '@angular/material/core';
-import { CanDisableRipple } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
-import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/material/core';
 import * as i4 from '@angular/common';
@@ -41,8 +34,8 @@ export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: {
 };
 
 // @public (undocumented)
-export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable, CanColor, HasTabIndex, CanDisableRipple {
-    constructor(elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, tabIndex: string, defaults: MatSlideToggleDefaultOptions, animationMode?: string);
+export class MatSlideToggle implements OnDestroy, AfterContentInit, ControlValueAccessor {
+    constructor(_elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, tabIndex: string, defaults: MatSlideToggleDefaultOptions, animationMode?: string);
     ariaDescribedby: string;
     ariaLabel: string | null;
     ariaLabelledby: string | null;
@@ -51,9 +44,12 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;
     get checked(): boolean;
-    set checked(value: BooleanInput);
+    set checked(value: boolean);
+    color: string | undefined;
     // (undocumented)
     defaults: MatSlideToggleDefaultOptions;
+    disabled: boolean;
+    disableRipple: boolean;
     protected _emitChangeEvent(): void;
     focus(): void;
     _focused: boolean;
@@ -62,13 +58,24 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     // (undocumented)
     _getAriaLabelledBy(): string | null;
     _handleClick(): void;
-    get hideIcon(): boolean;
-    set hideIcon(value: BooleanInput);
+    hideIcon: boolean;
     id: string;
     get inputId(): string;
     _labelId: string;
     labelPosition: 'before' | 'after';
     name: string | null;
+    // (undocumented)
+    static ngAcceptInputType_checked: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disableRipple: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hideIcon: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -76,10 +83,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     _noopAnimations: boolean;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    get required(): boolean;
-    set required(value: BooleanInput);
+    required: boolean;
     setDisabledState(isDisabled: boolean): void;
     _switchElement: ElementRef<HTMLElement>;
+    tabIndex: number;
     toggle(): void;
     readonly toggleChange: EventEmitter<void>;
     writeValue(value: any): void;
