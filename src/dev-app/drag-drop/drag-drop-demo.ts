@@ -16,7 +16,6 @@ import {
   transferArrayItem,
   Point,
   DragRef,
-  CdkDrag,
 } from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
