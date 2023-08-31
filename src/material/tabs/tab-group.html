@@ -58,6 +58,7 @@
                [id]="_getTabContentId(i)"
                [attr.tabindex]="(contentTabIndex != null && selectedIndex === i) ? contentTabIndex : null"
                [attr.aria-labelledby]="_getTabLabelId(i)"
+               [attr.aria-hidden]="selectedIndex !== i"
                [class.mat-mdc-tab-body-active]="selectedIndex === i"
                [ngClass]="tab.bodyClass"
                [content]="tab.content!"
