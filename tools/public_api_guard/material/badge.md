@@ -4,11 +4,7 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AriaDescriber } from '@angular/cdk/a11y';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanDisable } from '@angular/material/core';
-import { _Constructor } from '@angular/material/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
@@ -20,7 +16,7 @@ import { Renderer2 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
-export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDisable {
+export class MatBadge implements OnInit, OnDestroy {
     constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _ariaDescriber: AriaDescriber, _renderer: Renderer2, _animationMode?: string | undefined);
     get color(): ThemePalette;
     set color(value: ThemePalette);
@@ -28,22 +24,27 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
     set content(newContent: string | number | undefined | null);
     get description(): string;
     set description(newDescription: string);
+    disabled: boolean;
     getBadgeElement(): HTMLElement | undefined;
-    get hidden(): boolean;
-    set hidden(val: BooleanInput);
+    hidden: boolean;
     _id: number;
     isAbove(): boolean;
     isAfter(): boolean;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hidden: unknown;
+    // (undocumented)
+    static ngAcceptInputType_overlap: unknown;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    get overlap(): boolean;
-    set overlap(val: BooleanInput);
+    overlap: boolean;
     position: MatBadgePosition;
     size: MatBadgeSize;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatBadge, "[matBadge]", never, { "disabled": { "alias": "matBadgeDisabled"; "required": false; }; "color": { "alias": "matBadgeColor"; "required": false; }; "overlap": { "alias": "matBadgeOverlap"; "required": false; }; "position": { "alias": "matBadgePosition"; "required": false; }; "content": { "alias": "matBadge"; "required": false; }; "description": { "alias": "matBadgeDescription"; "required": false; }; "size": { "alias": "matBadgeSize"; "required": false; }; "hidden": { "alias": "matBadgeHidden"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatBadge, "[matBadge]", never, { "color": { "alias": "matBadgeColor"; "required": false; }; "overlap": { "alias": "matBadgeOverlap"; "required": false; }; "disabled": { "alias": "matBadgeDisabled"; "required": false; }; "position": { "alias": "matBadgePosition"; "required": false; }; "content": { "alias": "matBadge"; "required": false; }; "description": { "alias": "matBadgeDescription"; "required": false; }; "size": { "alias": "matBadgeSize"; "required": false; }; "hidden": { "alias": "matBadgeHidden"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatBadge, [null, null, null, null, { optional: true; }]>;
 }

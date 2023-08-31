@@ -7,9 +7,9 @@
  */
 
 import {AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {
+  booleanAttribute,
   Directive,
   ElementRef,
   inject,
@@ -21,14 +21,10 @@ import {
   Optional,
   Renderer2,
 } from '@angular/core';
-import {CanDisable, mixinDisabled, ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 let nextId = 0;
-
-// Boilerplate for applying mixins to MatBadge.
-/** @docs-private */
-const _MatBadgeBase = mixinDisabled(class {});
 
 /** Allowed position options for matBadgePosition */
 export type MatBadgePosition =
@@ -49,7 +45,6 @@ const BADGE_CONTENT_CLASS = 'mat-badge-content';
 /** Directive to display a text badge. */
 @Directive({
   selector: '[matBadge]',
-  inputs: ['disabled: matBadgeDisabled'],
   host: {
     'class': 'mat-badge',
     '[class.mat-badge-overlap]': 'overlap',
@@ -64,7 +59,7 @@ const BADGE_CONTENT_CLASS = 'mat-badge-content';
     '[class.mat-badge-disabled]': 'disabled',
   },
 })
-export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDisable {
+export class MatBadge implements OnInit, OnDestroy {
   /** The color of the badge. Can be `primary`, `accent`, or `warn`. */
   @Input('matBadgeColor')
   get color(): ThemePalette {
@@ -77,14 +72,10 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
   private _color: ThemePalette = 'primary';
 
   /** Whether the badge should overlap its contents or not */
-  @Input('matBadgeOverlap')
-  get overlap(): boolean {
-    return this._overlap;
-  }
-  set overlap(val: BooleanInput) {
-    this._overlap = coerceBooleanProperty(val);
-  }
-  private _overlap: boolean = true;
+  @Input({alias: 'matBadgeOverlap', transform: booleanAttribute}) overlap: boolean = true;
+
+  /** Whether the badge is disabled. */
+  @Input({alias: 'matBadgeDisabled', transform: booleanAttribute}) disabled: boolean;
 
   /**
    * Position the badge should reside.
@@ -116,14 +107,7 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
   @Input('matBadgeSize') size: MatBadgeSize = 'medium';
 
   /** Whether the badge is hidden. */
-  @Input('matBadgeHidden')
-  get hidden(): boolean {
-    return this._hidden;
-  }
-  set hidden(val: BooleanInput) {
-    this._hidden = coerceBooleanProperty(val);
-  }
-  private _hidden: boolean;
+  @Input({alias: 'matBadgeHidden', transform: booleanAttribute}) hidden: boolean;
 
   /** Unique id for the badge */
   _id: number = nextId++;
@@ -149,8 +133,6 @@ export class MatBadge extends _MatBadgeBase implements OnInit, OnDestroy, CanDis
     private _renderer: Renderer2,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
   ) {
-    super();
-
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = _elementRef.nativeElement;
       if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
