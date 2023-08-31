@@ -560,10 +560,63 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(150px, 0px, 0px)');
     }));
 
+    it('should be able to lock dragging along the x axis while using constrainPosition', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.detectChanges();
+      fixture.componentInstance.dragInstance.lockAxis = 'x';
+      fixture.componentInstance.dragInstance.constrainPosition = (
+        {x, y}: Point,
+        _dragRef: DragRef,
+        _dimensions: ClientRect,
+        pickup: Point,
+      ) => {
+        x -= pickup.x;
+        y -= pickup.y;
+        return {x, y};
+      };
+
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+
+      dragElementViaMouse(fixture, dragElement, 50, 100);
+      expect(dragElement.style.transform).toBe('translate3d(50px, 0px, 0px)');
+
+      dragElementViaMouse(fixture, dragElement, 100, 200);
+      expect(dragElement.style.transform).toBe('translate3d(150px, 0px, 0px)');
+    }));
+
     it('should be able to lock dragging along the y axis', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       fixture.componentInstance.dragInstance.lockAxis = 'y';
+
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+
+      dragElementViaMouse(fixture, dragElement, 50, 100);
+      expect(dragElement.style.transform).toBe('translate3d(0px, 100px, 0px)');
+
+      dragElementViaMouse(fixture, dragElement, 100, 200);
+      expect(dragElement.style.transform).toBe('translate3d(0px, 300px, 0px)');
+    }));
+
+    it('should be able to lock dragging along the y axis while using constrainPosition', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.detectChanges();
+
+      fixture.componentInstance.dragInstance.lockAxis = 'y';
+      fixture.componentInstance.dragInstance.constrainPosition = (
+        {x, y}: Point,
+        _dragRef: DragRef,
+        _dimensions: ClientRect,
+        pickup: Point,
+      ) => {
+        x -= pickup.x;
+        y -= pickup.y;
+        return {x, y};
+      };
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -939,6 +992,29 @@ describe('CdkDrag', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.boundary = '.wrapper';
       fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, dragElement, 300, 300);
+      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+    }));
+
+    it('should allow for dragging to be constrained to an element while using constrainPosition', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.componentInstance.boundary = '.wrapper';
+      fixture.detectChanges();
+
+      fixture.componentInstance.dragInstance.constrainPosition = (
+        {x, y}: Point,
+        _dragRef: DragRef,
+        _dimensions: ClientRect,
+        pickup: Point,
+      ) => {
+        x -= pickup.x;
+        y -= pickup.y;
+        return {x, y};
+      };
+
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
       expect(dragElement.style.transform).toBeFalsy();
