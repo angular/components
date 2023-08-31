@@ -7,7 +7,6 @@
  */
 
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -31,9 +30,9 @@ import {
   InjectionToken,
   Inject,
   AfterViewInit,
+  booleanAttribute,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -115,7 +114,6 @@ export class MatButtonToggleChange {
   exportAs: 'matButtonToggleGroup',
 })
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-  private _vertical = false;
   private _multiple = false;
   private _disabled = false;
   private _selectionModel: SelectionModel<MatButtonToggle>;
@@ -160,13 +158,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   private _name = `mat-button-toggle-group-${uniqueIdCounter++}`;
 
   /** Whether the toggle group is vertical. */
-  @Input()
-  get vertical(): boolean {
-    return this._vertical;
-  }
-  set vertical(value: BooleanInput) {
-    this._vertical = coerceBooleanProperty(value);
-  }
+  @Input({transform: booleanAttribute}) vertical: boolean;
 
   /** Value of the toggle group. */
   @Input()
@@ -198,22 +190,22 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
 
   /** Whether multiple button toggles can be selected. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get multiple(): boolean {
     return this._multiple;
   }
-  set multiple(value: BooleanInput) {
-    this._multiple = coerceBooleanProperty(value);
+  set multiple(value: boolean) {
+    this._multiple = value;
     this._markButtonsForCheck();
   }
 
   /** Whether multiple button toggle group is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
     this._markButtonsForCheck();
   }
 
@@ -385,10 +377,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
 }
 
-// Boilerplate for applying mixins to the MatButtonToggle class.
-/** @docs-private */
-const _MatButtonToggleBase = mixinDisableRipple(class {});
-
 /** Single button inside of a toggle group. */
 @Component({
   selector: 'mat-button-toggle',
@@ -397,7 +385,6 @@ const _MatButtonToggleBase = mixinDisableRipple(class {});
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disableRipple'],
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup',
     '[class.mat-button-toggle-checked]': 'checked',
@@ -412,10 +399,7 @@ const _MatButtonToggleBase = mixinDisableRipple(class {});
     'role': 'presentation',
   },
 })
-export class MatButtonToggle
-  extends _MatButtonToggleBase
-  implements OnInit, AfterViewInit, CanDisableRipple, OnDestroy
-{
+export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _checked = false;
 
   /**
@@ -452,6 +436,9 @@ export class MatButtonToggle
   /** Tabindex for the toggle. */
   @Input() tabIndex: number | null;
 
+  /** Whether ripples are disabled on the button toggle. */
+  @Input({transform: booleanAttribute}) disableRipple: boolean;
+
   /** The appearance style of the button. */
   @Input()
   get appearance(): MatButtonToggleAppearance {
@@ -463,15 +450,13 @@ export class MatButtonToggle
   private _appearance: MatButtonToggleAppearance;
 
   /** Whether the button is checked. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get checked(): boolean {
     return this.buttonToggleGroup ? this.buttonToggleGroup._isSelected(this) : this._checked;
   }
-  set checked(value: BooleanInput) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this._checked) {
-      this._checked = newValue;
+  set checked(value: boolean) {
+    if (value !== this._checked) {
+      this._checked = value;
 
       if (this.buttonToggleGroup) {
         this.buttonToggleGroup._syncButtonToggle(this, this._checked);
@@ -482,12 +467,12 @@ export class MatButtonToggle
   }
 
   /** Whether the button is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled || (this.buttonToggleGroup && this.buttonToggleGroup.disabled);
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
   }
   private _disabled: boolean = false;
 
@@ -505,8 +490,6 @@ export class MatButtonToggle
     @Inject(MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS)
     defaultOptions?: MatButtonToggleDefaultOptions,
   ) {
-    super();
-
     const parsedTabIndex = Number(defaultTabIndex);
     this.tabIndex = parsedTabIndex || parsedTabIndex === 0 ? parsedTabIndex : null;
     this.buttonToggleGroup = toggleGroup;
