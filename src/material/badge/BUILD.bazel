@@ -17,13 +17,12 @@ ng_module(
     ),
     deps = [
         "//src:dev_mode_types",
+        "//src/cdk/a11y",
+        "//src/material/core",
+        "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/animations",
-        "//src/cdk/a11y",
-        "//src/cdk/coercion",
-        "//src/material/core",
     ] + glob(["**/*.html"]),
 )
 
