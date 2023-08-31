@@ -1238,13 +1238,22 @@ export class DragRef<T = any> {
       : point;
 
     if (this.lockAxis === 'x' || dropContainerLock === 'x') {
-      y = this._pickupPositionOnPage.y;
+      y =
+        this._pickupPositionOnPage.y -
+        (this.constrainPosition ? this._pickupPositionInElement.y : 0);
     } else if (this.lockAxis === 'y' || dropContainerLock === 'y') {
-      x = this._pickupPositionOnPage.x;
+      x =
+        this._pickupPositionOnPage.x -
+        (this.constrainPosition ? this._pickupPositionInElement.x : 0);
     }
 
     if (this._boundaryRect) {
-      const {x: pickupX, y: pickupY} = this._pickupPositionInElement;
+      // If not using a custom constrain we need to account for the pickup position in the element
+      // otherwise we do not need to do this, as it has already been accounted for
+      const {x: pickupX, y: pickupY} = !this.constrainPosition
+        ? this._pickupPositionInElement
+        : {x: 0, y: 0};
+
       const boundaryRect = this._boundaryRect;
       const {width: previewWidth, height: previewHeight} = this._getPreviewRect();
       const minY = boundaryRect.top + pickupY;
