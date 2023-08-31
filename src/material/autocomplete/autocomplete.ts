@@ -23,6 +23,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  booleanAttribute,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {
@@ -30,12 +31,10 @@ import {
   MAT_OPTION_PARENT_COMPONENT,
   MatOptgroup,
   MatOption,
-  mixinDisableRipple,
-  CanDisableRipple,
   ThemePalette,
 } from '@angular/material/core';
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
+import {coerceStringArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {panelAnimation} from './animations';
 import {Subscription} from 'rxjs';
@@ -64,10 +63,6 @@ export interface MatAutocompleteActivatedEvent {
   /** Option that was selected. */
   option: MatOption | null;
 }
-
-// Boilerplate for applying mixins to MatAutocomplete.
-/** @docs-private */
-const _MatAutocompleteMixinBase = mixinDisableRipple(class {});
 
 /** Default `mat-autocomplete` options that can be overridden. */
 export interface MatAutocompleteDefaultOptions {
@@ -117,7 +112,6 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'matAutocomplete',
-  inputs: ['disableRipple'],
   host: {
     'class': 'mat-mdc-autocomplete',
     'ngSkipHydration': '',
@@ -125,10 +119,7 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
   animations: [panelAnimation],
 })
-export class MatAutocomplete
-  extends _MatAutocompleteMixinBase
-  implements AfterContentInit, CanDisableRipple, OnDestroy
-{
+export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _activeOptionChanges = Subscription.EMPTY;
 
   /** Class to apply to the panel when it's visible. */
@@ -189,24 +180,10 @@ export class MatAutocomplete
    * Whether the first option should be highlighted when the autocomplete panel is opened.
    * Can be configured globally through the `MAT_AUTOCOMPLETE_DEFAULT_OPTIONS` token.
    */
-  @Input()
-  get autoActiveFirstOption(): boolean {
-    return this._autoActiveFirstOption;
-  }
-  set autoActiveFirstOption(value: BooleanInput) {
-    this._autoActiveFirstOption = coerceBooleanProperty(value);
-  }
-  private _autoActiveFirstOption: boolean;
+  @Input({transform: booleanAttribute}) autoActiveFirstOption: boolean;
 
   /** Whether the active option should be selected as the user is navigating. */
-  @Input()
-  get autoSelectActiveOption(): boolean {
-    return this._autoSelectActiveOption;
-  }
-  set autoSelectActiveOption(value: BooleanInput) {
-    this._autoSelectActiveOption = coerceBooleanProperty(value);
-  }
-  private _autoSelectActiveOption: boolean;
+  @Input({transform: booleanAttribute}) autoSelectActiveOption: boolean;
 
   /**
    * Whether the user is required to make a selection when they're interacting with the
@@ -214,20 +191,16 @@ export class MatAutocomplete
    * the list, the value will be reset. If the user opens the panel and closes it without
    * interacting or selecting a value, the initial value will be kept.
    */
-  @Input()
-  get requireSelection(): boolean {
-    return this._requireSelection;
-  }
-  set requireSelection(value: BooleanInput) {
-    this._requireSelection = coerceBooleanProperty(value);
-  }
-  private _requireSelection: boolean;
+  @Input({transform: booleanAttribute}) requireSelection: boolean;
 
   /**
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
    * match the width of its host.
    */
   @Input() panelWidth: string | number;
+
+  /** Whether ripples are disabled within the autocomplete panel. */
+  @Input({transform: booleanAttribute}) disableRipple: boolean;
 
   /** Event that is emitted whenever an option from the list is selected. */
   @Output() readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent> =
@@ -268,16 +241,15 @@ export class MatAutocomplete
   _classList: {[key: string]: boolean} = {};
 
   /** Whether checkmark indicator for single-selection options is hidden. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get hideSingleSelectionIndicator(): boolean {
     return this._hideSingleSelectionIndicator;
   }
-  set hideSingleSelectionIndicator(value: BooleanInput) {
-    this._hideSingleSelectionIndicator = coerceBooleanProperty(value);
+  set hideSingleSelectionIndicator(value: boolean) {
+    this._hideSingleSelectionIndicator = value;
     this._syncParentProperties();
   }
-  private _hideSingleSelectionIndicator: boolean =
-    this._defaults.hideSingleSelectionIndicator ?? false;
+  private _hideSingleSelectionIndicator: boolean;
 
   /** Syncs the parent state with the individual options. */
   _syncParentProperties(): void {
@@ -303,16 +275,15 @@ export class MatAutocomplete
     @Inject(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS) protected _defaults: MatAutocompleteDefaultOptions,
     platform?: Platform,
   ) {
-    super();
-
     // TODO(crisbeto): the problem that the `inertGroups` option resolves is only present on
     // Safari using VoiceOver. We should occasionally check back to see whether the bug
     // wasn't resolved in VoiceOver, and if it has, we can remove this and the `inertGroups`
     // option altogether.
     this.inertGroups = platform?.SAFARI || false;
-    this._autoActiveFirstOption = !!_defaults.autoActiveFirstOption;
-    this._autoSelectActiveOption = !!_defaults.autoSelectActiveOption;
-    this._requireSelection = !!_defaults.requireSelection;
+    this.autoActiveFirstOption = !!_defaults.autoActiveFirstOption;
+    this.autoSelectActiveOption = !!_defaults.autoSelectActiveOption;
+    this.requireSelection = !!_defaults.requireSelection;
+    this._hideSingleSelectionIndicator = this._defaults.hideSingleSelectionIndicator ?? false;
   }
 
   ngAfterContentInit() {
