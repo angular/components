@@ -135,6 +135,7 @@ mat-menu {
 
   [dir='rtl'] & {
     text-align: right;
+    direction: rtl;
 
     .mat-icon {
       margin-right: 0;
