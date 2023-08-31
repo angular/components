@@ -4,18 +4,13 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ApplicationRef } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanDisable } from '@angular/material/core';
-import { CanDisableRipple } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFactoryResolver } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { Direction } from '@angular/cdk/bidi';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
@@ -89,13 +84,16 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     direction: Direction;
     focusFirstItem(origin?: FocusOrigin): void;
     _handleKeydown(event: KeyboardEvent): void;
-    get hasBackdrop(): boolean | undefined;
-    set hasBackdrop(value: BooleanInput);
+    hasBackdrop?: boolean;
     _hovered(): Observable<MatMenuItem>;
     _isAnimating: boolean;
     // @deprecated
     items: QueryList<MatMenuItem>;
     lazyContent: MatMenuContent;
+    // (undocumented)
+    static ngAcceptInputType_hasBackdrop: any;
+    // (undocumented)
+    static ngAcceptInputType_overlapTrigger: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -105,8 +103,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     _onAnimationDone(event: AnimationEvent_2): void;
     // (undocumented)
     _onAnimationStart(event: AnimationEvent_2): void;
-    get overlapTrigger(): boolean;
-    set overlapTrigger(value: BooleanInput);
+    overlapTrigger: boolean;
     overlayPanelClass: string | string[];
     _panelAnimationState: 'void' | 'enter';
     set panelClass(classes: string);
@@ -164,11 +161,13 @@ export interface MatMenuDefaultOptions {
 }
 
 // @public
-export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy {
+export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, document: any, focusMonitor: FocusMonitor, parentMenu: MatMenuPanel<MatMenuItem> | undefined, changeDetectorRef: ChangeDetectorRef);
     // @deprecated
     constructor(elementRef: ElementRef<HTMLElement>, document?: any, focusMonitor?: FocusMonitor, parentMenu?: MatMenuPanel<MatMenuItem>, changeDetectorRef?: ChangeDetectorRef);
     _checkDisabled(event: Event): void;
+    disabled: boolean;
+    disableRipple: boolean;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     readonly _focused: Subject<MatMenuItem>;
     _getHostElement(): HTMLElement;
@@ -179,6 +178,10 @@ export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, Ca
     _hasFocus(): boolean;
     _highlighted: boolean;
     readonly _hovered: Subject<MatMenuItem>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -192,7 +195,7 @@ export class MatMenuItem extends _MatMenuItemBase implements FocusableOption, Ca
     _setTriggersSubmenu(triggersSubmenu: boolean): void;
     _triggersSubmenu: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "role": { "alias": "role"; "required": false; }; }, {}, never, ["mat-icon, [matMenuItemIcon]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, never, ["mat-icon, [matMenuItemIcon]", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenuItem, [null, null, null, { optional: true; }, null]>;
 }
