@@ -9,6 +9,7 @@
 import {
   AfterContentInit,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -17,6 +18,7 @@ import {
   forwardRef,
   Inject,
   Input,
+  numberAttribute,
   OnDestroy,
   Optional,
   Output,
@@ -30,17 +32,6 @@ import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
-import {
-  CanColor,
-  CanDisable,
-  CanDisableRipple,
-  HasTabIndex,
-  mixinColor,
-  mixinDisabled,
-  mixinDisableRipple,
-  mixinTabIndex,
-} from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** @docs-private */
 export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR = {
@@ -62,20 +53,6 @@ export class MatSlideToggleChange {
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;
 
-// Boilerplate for applying mixins to MatSlideToggle.
-/** @docs-private */
-const _MatSlideToggleMixinBase = mixinTabIndex(
-  mixinColor(
-    mixinDisableRipple(
-      mixinDisabled(
-        class {
-          constructor(public _elementRef: ElementRef) {}
-        },
-      ),
-    ),
-  ),
-);
-
 @Component({
   selector: 'mat-slide-toggle',
   templateUrl: 'slide-toggle.html',
@@ -92,28 +69,18 @@ const _MatSlideToggleMixinBase = mixinTabIndex(
     '[class.mat-mdc-slide-toggle-focused]': '_focused',
     '[class.mat-mdc-slide-toggle-checked]': 'checked',
     '[class._mat-animation-noopable]': '_noopAnimations',
+    '[class]': 'color ? "mat-" + color : ""',
   },
   exportAs: 'matSlideToggle',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SLIDE_TOGGLE_VALUE_ACCESSOR],
 })
-export class MatSlideToggle
-  extends _MatSlideToggleMixinBase
-  implements
-    OnDestroy,
-    AfterContentInit,
-    ControlValueAccessor,
-    CanDisable,
-    CanColor,
-    HasTabIndex,
-    CanDisableRipple
-{
+export class MatSlideToggle implements OnDestroy, AfterContentInit, ControlValueAccessor {
   private _onChange = (_: any) => {};
   private _onTouched = () => {};
 
   private _uniqueId: string;
-  private _required: boolean = false;
   private _checked: boolean = false;
 
   private _createChangeEvent(isChecked: boolean) {
@@ -160,35 +127,35 @@ export class MatSlideToggle
   @Input('aria-describedby') ariaDescribedby: string;
 
   /** Whether the slide-toggle is required. */
-  @Input()
-  get required(): boolean {
-    return this._required;
-  }
+  @Input({transform: booleanAttribute}) required: boolean;
 
-  set required(value: BooleanInput) {
-    this._required = coerceBooleanProperty(value);
-  }
+  // TODO(crisbeto): this should be a ThemePalette, but some internal apps were abusing
+  // the lack of type checking previously and assigning random strings.
+  /** Palette color of slide toggle. */
+  @Input() color: string | undefined;
+
+  /** Whether the slide toggle is disabled. */
+  @Input({transform: booleanAttribute}) disabled: boolean = false;
+
+  /** Whether the slide toggle has a ripple. */
+  @Input({transform: booleanAttribute}) disableRipple: boolean = false;
+
+  /** Tabindex of slide toggle. */
+  @Input({transform: (value: unknown) => (value == null ? 0 : numberAttribute(value))})
+  tabIndex: number = 0;
 
   /** Whether the slide-toggle element is checked or not. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get checked(): boolean {
     return this._checked;
   }
-
-  set checked(value: BooleanInput) {
-    this._checked = coerceBooleanProperty(value);
+  set checked(value: boolean) {
+    this._checked = value;
     this._changeDetectorRef.markForCheck();
   }
 
   /** Whether to hide the icon inside of the slide toggle. */
-  @Input()
-  get hideIcon(): boolean {
-    return this._hideIcon;
-  }
-  set hideIcon(value: BooleanInput) {
-    this._hideIcon = coerceBooleanProperty(value);
-  }
-  private _hideIcon = false;
+  @Input({transform: booleanAttribute}) hideIcon: boolean;
 
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() readonly change = new EventEmitter<MatSlideToggleChange>();
@@ -206,19 +173,18 @@ export class MatSlideToggle
   }
 
   constructor(
-    elementRef: ElementRef,
+    private _elementRef: ElementRef,
     protected _focusMonitor: FocusMonitor,
     protected _changeDetectorRef: ChangeDetectorRef,
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS) public defaults: MatSlideToggleDefaultOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
   ) {
-    super(elementRef);
     this.tabIndex = parseInt(tabIndex) || 0;
-    this.color = this.defaultColor = defaults.color || 'accent';
+    this.color = defaults.color || 'accent';
     this._noopAnimations = animationMode === 'NoopAnimations';
     this.id = this._uniqueId = `mat-mdc-slide-toggle-${++nextUniqueId}`;
-    this._hideIcon = defaults.hideIcon ?? false;
+    this.hideIcon = defaults.hideIcon ?? false;
     this._labelId = this._uniqueId + '-label';
   }
 

@@ -8,7 +8,7 @@
     [class.mdc-switch--unselected]="!checked"
     [class.mdc-switch--checked]="checked"
     [class.mdc-switch--disabled]="disabled"
-    [tabIndex]="tabIndex"
+    [tabIndex]="disabled ? -1 : tabIndex"
     [disabled]="disabled"
     [attr.id]="buttonId"
     [attr.name]="name"
