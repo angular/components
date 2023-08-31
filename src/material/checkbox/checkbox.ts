@@ -9,6 +9,7 @@
 import {
   AfterViewInit,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -18,26 +19,16 @@ import {
   Inject,
   Input,
   NgZone,
+  numberAttribute,
   Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {
-  CanColor,
-  CanDisable,
-  CanDisableRipple,
-  HasTabIndex,
-  MatRipple,
-  mixinColor,
-  mixinDisabled,
-  mixinDisableRipple,
-  mixinTabIndex,
-} from '@angular/material/core';
+import {MatRipple} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {FocusableOption} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
@@ -79,20 +70,6 @@ let nextUniqueId = 0;
 // Default checkbox configuration.
 const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 
-// Boilerplate for applying mixins to MatCheckbox.
-/** @docs-private */
-const _MatCheckboxMixinBase = mixinTabIndex(
-  mixinColor(
-    mixinDisableRipple(
-      mixinDisabled(
-        class {
-          constructor(public _elementRef: ElementRef) {}
-        },
-      ),
-    ),
-  ),
-);
-
 @Component({
   selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
@@ -108,24 +85,14 @@ const _MatCheckboxMixinBase = mixinTabIndex(
     // Add classes that users can use to more easily target disabled or checked checkboxes.
     '[class.mat-mdc-checkbox-disabled]': 'disabled',
     '[class.mat-mdc-checkbox-checked]': 'checked',
+    '[class]': 'color ? "mat-" + color : "mat-accent"',
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disableRipple', 'color', 'tabIndex'],
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCheckbox
-  extends _MatCheckboxMixinBase
-  implements
-    AfterViewInit,
-    ControlValueAccessor,
-    CanColor,
-    CanDisable,
-    HasTabIndex,
-    CanDisableRipple,
-    FocusableOption
-{
+export class MatCheckbox implements AfterViewInit, ControlValueAccessor, FocusableOption {
   /** Focuses the checkbox. */
   focus() {
     this._inputElement.nativeElement.focus();
@@ -179,14 +146,7 @@ export class MatCheckbox
   }
 
   /** Whether the checkbox is required. */
-  @Input()
-  get required(): boolean {
-    return this._required;
-  }
-  set required(value: BooleanInput) {
-    this._required = coerceBooleanProperty(value);
-  }
-  private _required: boolean;
+  @Input({transform: booleanAttribute}) required: boolean;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
@@ -203,11 +163,23 @@ export class MatCheckbox
   /** The value attribute of the native input element */
   @Input() value: string;
 
+  /** Whether the checkbox has a ripple. */
+  @Input({transform: booleanAttribute}) disableRipple: boolean;
+
   /** The native `<input type="checkbox">` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** The native `<label>` element */
   @ViewChild('label') _labelElement: ElementRef<HTMLInputElement>;
+
+  /** Tabindex for the checkbox. */
+  @Input({transform: (value: unknown) => (value == null ? undefined : numberAttribute(value))})
+  tabIndex: number;
+
+  // TODO(crisbeto): this should be a ThemePalette, but some internal apps were abusing
+  // the lack of type checking previously and assigning random strings.
+  /** Palette color of the checkbox. */
+  @Input() color: string | undefined;
 
   /**
    * Reference to the MatRipple instance of the checkbox.
@@ -229,16 +201,15 @@ export class MatCheckbox
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   constructor(
-    elementRef: ElementRef<HTMLElement>,
+    public _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ngZone: NgZone,
     @Attribute('tabindex') tabIndex: string,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
     @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?: MatCheckboxDefaultOptions,
   ) {
-    super(elementRef);
     this._options = this._options || defaults;
-    this.color = this.defaultColor = this._options.color || defaults.color;
+    this.color = this._options.color || defaults.color;
     this.tabIndex = parseInt(tabIndex) || 0;
     this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
   }
@@ -248,33 +219,26 @@ export class MatCheckbox
   }
 
   /** Whether the checkbox is checked. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get checked(): boolean {
     return this._checked;
   }
-  set checked(value: BooleanInput) {
-    const checked = coerceBooleanProperty(value);
-
-    if (checked != this.checked) {
-      this._checked = checked;
+  set checked(value: boolean) {
+    if (value != this.checked) {
+      this._checked = value;
       this._changeDetectorRef.markForCheck();
     }
   }
   private _checked: boolean = false;
 
-  /**
-   * Whether the checkbox is disabled. This fully overrides the implementation provided by
-   * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
-   */
-  @Input()
-  override get disabled(): boolean {
+  /** Whether the checkbox is disabled. */
+  @Input({transform: booleanAttribute})
+  get disabled(): boolean {
     return this._disabled;
   }
-  override set disabled(value: BooleanInput) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this.disabled) {
-      this._disabled = newValue;
+  set disabled(value: boolean) {
+    if (value !== this.disabled) {
+      this._disabled = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -286,13 +250,13 @@ export class MatCheckbox
    * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
    * set to false.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get indeterminate(): boolean {
     return this._indeterminate;
   }
-  set indeterminate(value: BooleanInput) {
+  set indeterminate(value: boolean) {
     const changed = value != this._indeterminate;
-    this._indeterminate = coerceBooleanProperty(value);
+    this._indeterminate = value;
 
     if (changed) {
       if (this._indeterminate) {

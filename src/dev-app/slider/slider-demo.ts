@@ -14,6 +14,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog, MatDialogModule, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
+import {ThemePalette} from '@angular/material/core';
 
 interface DialogData {
   color: string;
@@ -40,7 +41,7 @@ interface DialogData {
 export class SliderDemo {
   discrete = true;
   showTickMarks = true;
-  colorModel = 'primary';
+  colorModel: ThemePalette = 'primary';
 
   noop = () => {};
   min = '0';

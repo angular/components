@@ -18,7 +18,7 @@
            [disabled]="disabled"
            [id]="inputId"
            [required]="required"
-           [tabIndex]="tabIndex"
+           [tabIndex]="disabled ? -1 : tabIndex"
            (blur)="_onBlur()"
            (click)="_onInputClick()"
            (change)="_onInteractionEvent($event)"/>
