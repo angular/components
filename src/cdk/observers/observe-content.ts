@@ -6,13 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  coerceElement,
-  BooleanInput,
-  NumberInput,
-} from '@angular/cdk/coercion';
+import {coerceNumberProperty, coerceElement, NumberInput} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Directive,
@@ -24,6 +18,7 @@ import {
   NgZone,
   OnDestroy,
   Output,
+  booleanAttribute,
 } from '@angular/core';
 import {Observable, Subject, Subscription, Observer} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
@@ -148,12 +143,12 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
    * Whether observing content is disabled. This option can be used
    * to disconnect the underlying MutationObserver until it is needed.
    */
-  @Input('cdkObserveContentDisabled')
+  @Input({alias: 'cdkObserveContentDisabled', transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
     this._disabled ? this._unsubscribe() : this._subscribe();
   }
   private _disabled = false;
