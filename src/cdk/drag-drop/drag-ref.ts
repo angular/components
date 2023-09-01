@@ -14,7 +14,7 @@ import {
   _getEventTarget,
   _getShadowRoot,
 } from '@angular/cdk/platform';
-import {coerceBooleanProperty, coerceElement} from '@angular/cdk/coercion';
+import {coerceElement} from '@angular/cdk/coercion';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {Subscription, Subject, Observable} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
@@ -287,12 +287,10 @@ export class DragRef<T = any> {
     return this._disabled || !!(this._dropContainer && this._dropContainer.disabled);
   }
   set disabled(value: boolean) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this._disabled) {
-      this._disabled = newValue;
+    if (value !== this._disabled) {
+      this._disabled = value;
       this._toggleNativeDragInteractions();
-      this._handles.forEach(handle => toggleNativeDragInteractions(handle, newValue));
+      this._handles.forEach(handle => toggleNativeDragInteractions(handle, value));
     }
   }
   private _disabled = false;

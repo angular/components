@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 import { Directionality } from '@angular/cdk/bidi';
@@ -58,7 +57,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: ClientRect, pickupPositionInElement: Point) => Point;
     data: T;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     _dragRef: DragRef<CdkDrag<T>>;
     dragStartDelay: DragStartDelay;
     dropContainer: CdkDropList;
@@ -74,6 +73,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     _handles: QueryList<CdkDragHandle>;
     lockAxis: DragAxis;
     readonly moved: Observable<CdkDragMove<T>>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -145,9 +146,11 @@ export interface CdkDragExit<T = any, I = T> {
 export class CdkDragHandle implements OnDestroy {
     constructor(element: ElementRef<HTMLElement>, parentDrag?: any);
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     // (undocumented)
     element: ElementRef<HTMLElement>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     _parentDrag: {} | undefined;
@@ -192,8 +195,9 @@ export class CdkDragPlaceholder<T = any> {
 export class CdkDragPreview<T = any> {
     constructor(templateRef: TemplateRef<T>);
     data: T;
-    get matchSize(): boolean;
-    set matchSize(value: BooleanInput);
+    matchSize: boolean;
+    // (undocumented)
+    static ngAcceptInputType_matchSize: unknown;
     // (undocumented)
     templateRef: TemplateRef<T>;
     // (undocumented)
@@ -227,12 +231,12 @@ export class CdkDropList<T = any> implements OnDestroy {
     constructor(
     element: ElementRef<HTMLElement>, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _scrollDispatcher: ScrollDispatcher, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined, config?: DragDropConfig);
     addItem(item: CdkDrag): void;
-    autoScrollDisabled: BooleanInput;
+    autoScrollDisabled: boolean;
     autoScrollStep: NumberInput;
     connectedTo: (CdkDropList | string)[] | CdkDropList | string;
     data: T;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     _dropListRef: DropListRef<CdkDropList<T>>;
     readonly dropped: EventEmitter<CdkDragDrop<T, any>>;
     element: ElementRef<HTMLElement>;
@@ -243,11 +247,17 @@ export class CdkDropList<T = any> implements OnDestroy {
     id: string;
     lockAxis: DragAxis;
     // (undocumented)
+    static ngAcceptInputType_autoScrollDisabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_sortingDisabled: unknown;
+    // (undocumented)
     ngOnDestroy(): void;
     orientation: DropListOrientation;
     removeItem(item: CdkDrag): void;
     readonly sorted: EventEmitter<CdkDragSortEvent<T>>;
-    sortingDisabled: BooleanInput;
+    sortingDisabled: boolean;
     sortPredicate: (index: number, drag: CdkDrag, drop: CdkDropList) => boolean;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDropList<any>, "[cdkDropList], cdk-drop-list", ["cdkDropList"], { "connectedTo": { "alias": "cdkDropListConnectedTo"; "required": false; }; "data": { "alias": "cdkDropListData"; "required": false; }; "orientation": { "alias": "cdkDropListOrientation"; "required": false; }; "id": { "alias": "id"; "required": false; }; "lockAxis": { "alias": "cdkDropListLockAxis"; "required": false; }; "disabled": { "alias": "cdkDropListDisabled"; "required": false; }; "sortingDisabled": { "alias": "cdkDropListSortingDisabled"; "required": false; }; "enterPredicate": { "alias": "cdkDropListEnterPredicate"; "required": false; }; "sortPredicate": { "alias": "cdkDropListSortPredicate"; "required": false; }; "autoScrollDisabled": { "alias": "cdkDropListAutoScrollDisabled"; "required": false; }; "autoScrollStep": { "alias": "cdkDropListAutoScrollStep"; "required": false; }; }, { "dropped": "cdkDropListDropped"; "entered": "cdkDropListEntered"; "exited": "cdkDropListExited"; "sorted": "cdkDropListSorted"; }, never, never, true, never>;
@@ -257,9 +267,10 @@ export class CdkDropList<T = any> implements OnDestroy {
 
 // @public
 export class CdkDropListGroup<T> implements OnDestroy {
-    get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    disabled: boolean;
     readonly _items: Set<T>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -16,6 +15,7 @@ import {
   OnDestroy,
   Optional,
   SkipSelf,
+  booleanAttribute,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {CDK_DRAG_PARENT} from '../drag-parent';
@@ -45,12 +45,12 @@ export class CdkDragHandle implements OnDestroy {
   readonly _stateChanges = new Subject<CdkDragHandle>();
 
   /** Whether starting to drag through this handle is disabled. */
-  @Input('cdkDragHandleDisabled')
+  @Input({alias: 'cdkDragHandleDisabled', transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
     this._stateChanges.next(this);
   }
   private _disabled = false;
