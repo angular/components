@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
@@ -15,7 +14,6 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i5 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -29,26 +27,32 @@ export class CdkStep implements OnChanges {
     ariaLabel: string;
     ariaLabelledby: string;
     get completed(): boolean;
-    set completed(value: BooleanInput);
+    set completed(value: boolean);
     // (undocumented)
     _completedOverride: boolean | null;
     content: TemplateRef<any>;
     // (undocumented)
     _displayDefaultIndicatorType: boolean;
-    get editable(): boolean;
-    set editable(value: BooleanInput);
+    editable: boolean;
     errorMessage: string;
     get hasError(): boolean;
-    set hasError(value: BooleanInput);
+    set hasError(value: boolean);
     interacted: boolean;
     readonly interactedStream: EventEmitter<CdkStep>;
     label: string;
     // (undocumented)
     _markAsInteracted(): void;
     // (undocumented)
+    static ngAcceptInputType_completed: unknown;
+    // (undocumented)
+    static ngAcceptInputType_editable: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hasError: unknown;
+    // (undocumented)
+    static ngAcceptInputType_optional: unknown;
+    // (undocumented)
     ngOnChanges(): void;
-    get optional(): boolean;
-    set optional(value: BooleanInput);
+    optional: boolean;
     reset(): void;
     select(): void;
     _showError(): boolean;
@@ -96,9 +100,12 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;
     _groupId: number;
-    get linear(): boolean;
-    set linear(value: BooleanInput);
+    linear: boolean;
     next(): void;
+    // (undocumented)
+    static ngAcceptInputType_linear: unknown;
+    // (undocumented)
+    static ngAcceptInputType_selectedIndex: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -114,7 +121,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     get selected(): CdkStep | undefined;
     set selected(step: CdkStep | undefined);
     get selectedIndex(): number;
-    set selectedIndex(index: NumberInput);
+    set selectedIndex(index: number);
     readonly selectedIndexChange: EventEmitter<number>;
     readonly selectionChange: EventEmitter<StepperSelectionEvent>;
     _stateChanged(): void;
