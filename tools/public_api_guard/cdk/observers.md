@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -20,8 +19,10 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
     get debounce(): number;
     set debounce(value: NumberInput);
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     readonly event: EventEmitter<MutationRecord[]>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
