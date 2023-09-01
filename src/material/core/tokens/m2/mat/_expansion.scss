@@ -1,8 +1,8 @@
 @use 'sass:map';
 @use '../../token-utils';
 @use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../typography/typography-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, expansion);
@@ -16,49 +16,45 @@ $prefix: (mat, expansion);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-
+@function get-color-tokens($theme) {
   @return (
-    container-background-color: theming.get-color-from-palette($background, card),
-    container-text-color: theming.get-color-from-palette($foreground, text),
-    actions-divider-color: theming.get-color-from-palette($foreground, divider),
-    header-hover-state-layer-color: theming.get-color-from-palette($background, hover),
-    header-focus-state-layer-color: theming.get-color-from-palette($background, hover),
-    header-disabled-state-text-color: theming.get-color-from-palette($foreground, disabled-button),
-    header-text-color: theming.get-color-from-palette($foreground, text),
-    header-description-color: theming.get-color-from-palette($foreground, secondary-text),
-    header-indicator-color: theming.get-color-from-palette($foreground, secondary-text),
+    container-background-color: inspection.get-theme-color($theme, background, card),
+    container-text-color: inspection.get-theme-color($theme, foreground, text),
+    actions-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
+    header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
+    header-disabled-state-text-color: inspection.get-theme-color(
+        $theme, foreground, disabled-button),
+    header-text-color: inspection.get-theme-color($theme, foreground, text),
+    header-description-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    header-indicator-color: inspection.get-theme-color($theme, foreground, secondary-text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  $fallback-font-family: typography-utils.font-family($config);
-
+@function get-typography-tokens($theme) {
   @return (
-    header-text-font: typography-utils.font-family($config, subheading-1) or $fallback-font-family,
-    header-text-size: typography-utils.font-size($config, subheading-1),
-    header-text-weight: typography-utils.font-weight($config, subheading-1),
+    header-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    header-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    header-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
 
     // TODO(crisbeto): these two properties weren't set at all before the introduction of tokens,
     // but it's inconsistent not to provide them since the container sets all of them. Eventually
-    // we should change the values to use come from `subheading-1`.
+    // we should change the values to use come from `subtitle-2`.
     header-text-line-height: inherit,
     header-text-tracking: inherit,
 
-    container-text-font: typography-utils.font-family($config, body-1) or $fallback-font-family,
-    container-text-line-height: typography-utils.line-height($config, body-1),
-    container-text-size: typography-utils.font-size($config, body-1),
-    container-text-tracking: typography-utils.letter-spacing($config, body-1),
-    container-text-weight: typography-utils.font-weight($config, body-1),
+    container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    container-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
+    container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    container-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
+    container-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $scale: theming.clamp-density($config, -3);
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
   $collapsed-scale: (
     0: 48px,
     -1: 44px,

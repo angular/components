@@ -1,8 +1,7 @@
 @use 'sass:color';
-@use 'sass:map';
 @use 'sass:meta';
 @use '../../token-utils';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -19,20 +18,19 @@ $prefix: (mat, sidenav);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $is-dark: map.get($config, is-dark);
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) ==  dark;
   $scrim-opacity: 0.6;
-  $scrim-color: theming.get-color-from-palette($background, card, $scrim-opacity);
+  $scrim-color: sass-utils.safe-color-change(
+      inspection.get-theme-color($theme, background, card), $alpha: $scrim-opacity);
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
-    container-divider-color: theming.get-color-from-palette($foreground, divider),
-    container-background-color: theming.get-color-from-palette($background, dialog),
-    container-text-color: theming.get-color-from-palette($foreground, text),
-    content-background-color: theming.get-color-from-palette($background, background),
-    content-text-color: theming.get-color-from-palette($foreground, text),
+    container-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    container-background-color: inspection.get-theme-color($theme, background, dialog),
+    container-text-color: inspection.get-theme-color($theme, foreground, text),
+    content-background-color: inspection.get-theme-color($theme, background, background),
+    content-text-color: inspection.get-theme-color($theme, foreground, text),
 
     // We use invert() here to have the darken the background color expected to be used.
     // If the background is light, we use a dark backdrop. If the background is dark, we
@@ -44,12 +42,12 @@ $prefix: (mat, sidenav);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

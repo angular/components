@@ -1,10 +1,7 @@
-@use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -58,10 +55,9 @@ $prefix: (mdc, snackbar);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $background-palette: map.get($config, background);
-  $is-dark: map.get($config, is-dark);
-  $surface: theming.get-color-from-palette($background-palette, card);
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $surface: inspection.get-theme-color($theme, background, card);
 
   @return (
     container-color: if(meta.type-of($surface) == color,
@@ -71,26 +67,17 @@ $prefix: (mdc, snackbar);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  // TODO(crisbeto): The earlier implementation of the snack bar used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
-    supporting-text-font: typography-utils.font-family($config, body-2)
-      or typography-utils.font-family($config),
-    supporting-text-line-height: typography-utils.line-height($config, body-2),
-    supporting-text-size: typography-utils.font-size($config, body-2),
-    supporting-text-weight: typography-utils.font-weight($config, body-2),
+    supporting-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    supporting-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
+    supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    supporting-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

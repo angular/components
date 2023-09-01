@@ -1,19 +1,19 @@
 @use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
 
-@mixin base($config-or-theme) {
+@mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
   @include sass-utils.current-selector-or-root() {
     @include mdc-plain-tooltip-theme.theme(m2-mdc-plain-tooltip.get-unthemable-tokens());
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $mdc-tooltip-color-tokens: m2-mdc-plain-tooltip.get-color-tokens($config);
+@mixin color($theme) {
+  $mdc-tooltip-color-tokens: m2-mdc-plain-tooltip.get-color-tokens($theme);
 
   // Add values for MDC tooltip tokens.
   @include sass-utils.current-selector-or-root() {
@@ -21,10 +21,8 @@
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-          theming.get-typography-config($config-or-theme));
-  $mdc-tooltip-typography-tokens: m2-mdc-plain-tooltip.get-typography-tokens($config);
+@mixin typography($theme) {
+  $mdc-tooltip-typography-tokens: m2-mdc-plain-tooltip.get-typography-tokens($theme);
 
   // Add values for MDC tooltip tokens.
   @include sass-utils.current-selector-or-root() {
@@ -32,9 +30,8 @@
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $mdc-tooltip-density-tokens: m2-mdc-plain-tooltip.get-density-tokens($density-scale);
+@mixin density($theme) {
+  $mdc-tooltip-density-tokens: m2-mdc-plain-tooltip.get-density-tokens($theme);
 
   // Add values for MDC tooltip tokens.
   @include sass-utils.current-selector-or-root() {
@@ -42,22 +39,17 @@
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tooltip') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     @include base($theme);
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

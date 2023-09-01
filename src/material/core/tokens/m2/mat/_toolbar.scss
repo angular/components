@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
 @use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -14,31 +14,27 @@ $prefix: (mat, toolbar);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-
+@function get-color-tokens($theme) {
   @return private-get-color-palette-color-tokens(
-    $background-color: theming.get-color-from-palette($background, app-bar),
-    $text-color: theming.get-color-from-palette($foreground, text),
+    $background-color: inspection.get-theme-color($theme, background, app-bar),
+    $text-color: inspection.get-theme-color($theme, foreground, text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
-    title-text-font: typography-utils.font-family($config, title) or
-      typography-utils.font-family($config),
-    title-text-line-height: typography-utils.line-height($config, title),
-    title-text-size: typography-utils.font-size($config, title),
-    title-text-tracking: typography-utils.letter-spacing($config, title),
-    title-text-weight: typography-utils.font-weight($config, title),
+    title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
+    title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
+    title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
+    title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
+    title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $density-scale: theming.clamp-density($config, -3);
+@function get-density-tokens($theme) {
+  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
   $standard-scale: (
     0: 64px,
     -1: 60px,

@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use './elevation';
 @use '../theming/inspection';
 
@@ -9,9 +8,8 @@
   @include elevation.elevation($zValue, $elevation-color-or-default);
 }
 
-@mixin private-theme-overridable-elevation($zValue, $config) {
-  $foreground: map.get($config, foreground);
-  $elevation-color: map.get($foreground, elevation);
+@mixin private-theme-overridable-elevation($zValue, $theme) {
+  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
   $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
 
   @include elevation.overridable-elevation($zValue, $elevation-color-or-default);

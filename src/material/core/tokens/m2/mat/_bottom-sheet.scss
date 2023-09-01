@@ -1,7 +1,5 @@
-@use 'sass:map';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -17,30 +15,26 @@ $prefix: (mat, bottom-sheet);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-
+@function get-color-tokens($theme) {
   @return (
-    container-text-color: theming.get-color-from-palette($foreground, text),
-    container-background-color: theming.get-color-from-palette($background, dialog),
+    container-text-color: inspection.get-theme-color($theme, foreground, text),
+    container-background-color: inspection.get-theme-color($theme, background, dialog),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
-    container-text-font: typography-utils.font-family($config, body-1) or
-      typography-utils.font-family($config),
-    container-text-line-height: typography-utils.line-height($config, body-1),
-    container-text-size: typography-utils.font-size($config, body-1),
-    container-text-tracking: typography-utils.letter-spacing($config, body-1),
-    container-text-weight: typography-utils.font-weight($config, body-1),
+    container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    container-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
+    container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    container-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
+    container-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

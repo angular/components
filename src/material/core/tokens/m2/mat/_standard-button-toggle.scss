@@ -1,8 +1,8 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
 @use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -19,49 +19,50 @@ $prefix: (mat, standard-button-toggle);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $theme-divider-color: theming.get-color-from-palette($foreground, divider);
+@function get-color-tokens($theme) {
+  $theme-divider-color: inspection.get-theme-color($theme, foreground, divider);
 
   // By default the theme usually has an rgba color for the dividers, which can
   // stack up with the background of a button toggle. This can cause the border
   // of a selected toggle to look different from an deselected one. We use a solid
   // color to ensure that the border always stays the same.
-  $divider-color: if(meta.type-of($theme-divider-color) == color,
-    theming.private-rgba-to-hex($theme-divider-color, map.get($background, card)),
-    $theme-divider-color
-  );
+  $divider-color: if(
+      meta.type-of($theme-divider-color) == color,
+      theming.private-rgba-to-hex(
+          $theme-divider-color, inspection.get-theme-color($theme, background, card)),
+      $theme-divider-color);
 
   @return (
-    text-color: theming.get-color-from-palette($foreground, text),
-    background-color: theming.get-color-from-palette($background, card),
-    state-layer-color: theming.get-color-from-palette($background, focused-button, 1),
-    selected-state-background-color: theming.get-color-from-palette($background, selected-button),
-    selected-state-text-color: theming.get-color-from-palette($foreground, text),
-    disabled-state-text-color: theming.get-color-from-palette($foreground, disabled-button),
-    disabled-state-background-color: theming.get-color-from-palette($background, card),
-    disabled-selected-state-text-color: theming.get-color-from-palette($foreground, text),
+    text-color: inspection.get-theme-color($theme, foreground, text),
+    background-color: inspection.get-theme-color($theme, background, card),
+    state-layer-color: sass-utils.safe-color-change(
+        inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
+    selected-state-background-color: inspection.get-theme-color(
+        $theme, background, selected-button),
+    selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
+    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
+    disabled-state-background-color: inspection.get-theme-color($theme, background, card),
+    disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
     disabled-selected-state-background-color:
-      theming.get-color-from-palette($background, selected-disabled-button),
+      inspection.get-theme-color($theme, background, selected-disabled-button),
     divider-color: $divider-color,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
     // TODO(crisbeto): other components have tokens for all typography dimensions (font weight,
     // letter spacing etc). The button toggle only has the font to match what it had in the
     // old theming API and to reduce internal breakages. We should introduce more typography
     // tokens at some point.
-    text-font: typography-utils.font-family($config),
+    text-font: inspection.get-theme-typography($theme, body-1, font-family),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $density-scale: theming.clamp-density($config, -4);
+@function get-density-tokens($theme) {
+  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
   $size-scale: (
     0: 48px,
     -1: 44px,

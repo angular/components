@@ -1,7 +1,5 @@
-@use 'sass:map';
 @use '../../token-utils';
-@use '../../../theming/theming';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -14,16 +12,14 @@ $prefix: (mat, tab-header);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $is-dark: map.get($config, is-dark);
-  $foreground: map.get($config, foreground);
-  $primary: map.get($config, primary);
+@function get-color-tokens($theme, $palette-name: primary) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $inactive-label-text-color: rgba(if($is-dark, #fff, #000), 0.6);
-  $active-label-text-color: theming.get-color-from-palette($primary, default);
-  $ripple-color: theming.get-color-from-palette($primary, default);
+  $active-label-text-color: inspection.get-theme-color($theme, $palette-name, default);
+  $ripple-color: inspection.get-theme-color($theme, $palette-name, default);
 
   @return (
-    disabled-ripple-color: theming.get-color-from-palette($foreground, disabled),
+    disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
     pagination-icon-color: if($is-dark, #fff, #000),
 
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
@@ -43,20 +39,19 @@ $prefix: (mat, tab-header);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return (
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
-    label-text-font:
-      typography-utils.font-family($config, button) or typography-utils.font-family($config),
-    label-text-size: typography-utils.font-size($config, button),
-    label-text-tracking: typography-utils.letter-spacing($config, button),
-    label-text-line-height: typography-utils.line-height($config, button),
-    label-text-weight: typography-utils.font-weight($config, button),
+    label-text-font: inspection.get-theme-typography($theme, button, font-family),
+    label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
+    label-text-line-height: inspection.get-theme-typography($theme, button, line-height),
+    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

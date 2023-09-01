@@ -53,11 +53,16 @@
 // produces a normalized typography config for the 2018 Material Design typography system.
 // 2014 - https://material.io/archive/guidelines/style/typography.html#typography-styles
 // 2018 - https://material.io/design/typography/the-type-system.html#type-scale
-@function private-typography-to-2018-config($config) {
+//
+// The $force option is used to allow components to specify that they want to re-map the keys, even
+// if the 2018 keys are already present. This allows those components to preserve the (incorrect)
+// behavior they had previously, when they called `private-typography-to-2014-config`. Eventually we
+// should clean this up, remove the $force option, and reconcile any screen diffs.
+@function private-typography-to-2018-config($config, $force: false) {
   @if $config == null {
     @return null;
   }
-  @if not private-typography-is-2018-config($config) {
+  @if $force or not private-typography-is-2018-config($config) {
     @return (
       headline-1: map.get($config, display-4),
       headline-2: map.get($config, display-3),

@@ -1,99 +1,61 @@
 @use 'sass:color';
-@use 'sass:map';
-@use 'sass:meta';
 @use '@material/chips/chip-theme' as mdc-chip-theme;
 @use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
-@use '../core/theming/palette';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
 
-@function _get-default-palette($config) {
-  $is-dark: map.get($config, is-dark);
-  $grey-50: map.get(palette.$grey-palette, 50);
-  $grey-900: map.get(palette.$grey-palette, 900);
-  $default-foreground: if($is-dark, $grey-50, $grey-900);
-
-  $surface: map.get(map.get($config, background), card);
-  $on-surface: if(
-    mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark',
-    #000,
-    #fff
-  );
-  $default-background: if(
-    meta.type-of($on-surface) == color and meta.type-of($surface) == color,
-    color.mix($on-surface, $surface, 12%),
-    $on-surface
-  );
-
-  @return (default: $default-background, default-contrast: $default-foreground);
-}
-
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-
+@mixin color($theme) {
   .mat-mdc-standard-chip {
-    $default-palette: _get-default-palette($config);
-    $default-config: map.merge($config, (primary: $default-palette));
-    $default-color-tokens: tokens-mdc-chip.get-color-tokens($default-config);
+    $default-color-tokens: tokens-mdc-chip.get-color-tokens($theme);
     @include mdc-chip-theme.theme($default-color-tokens);
 
     &.mat-mdc-chip-selected,
     &.mat-mdc-chip-highlighted {
       &.mat-primary {
-        $primary-color-tokens: tokens-mdc-chip.get-color-tokens($config);
+        $primary-color-tokens: tokens-mdc-chip.get-color-tokens($theme, primary);
         @include mdc-chip-theme.theme($primary-color-tokens);
       }
 
       &.mat-accent {
-        $accent-config: map.merge($config, (primary: map.get($config, accent)));
-        $accent-color-tokens: tokens-mdc-chip.get-color-tokens($accent-config);
+        $accent-color-tokens: tokens-mdc-chip.get-color-tokens($theme, accent);
         @include mdc-chip-theme.theme($accent-color-tokens);
       }
 
       &.mat-warn {
-        $warn-config: map.merge($config, (primary: map.get($config, warn)));
-        $warn-color-tokens: tokens-mdc-chip.get-color-tokens($warn-config);
+        $warn-color-tokens: tokens-mdc-chip.get-color-tokens($theme, warn);
         @include mdc-chip-theme.theme($warn-color-tokens);
       }
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2018-config(
-    theming.get-typography-config($config-or-theme)
-  );
-  $typography-tokens: tokens-mdc-chip.get-typography-tokens($config);
+@mixin typography($theme) {
+  $typography-tokens: tokens-mdc-chip.get-typography-tokens($theme);
 
   .mat-mdc-standard-chip {
     @include mdc-chip-theme.theme($typography-tokens);
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $density-tokens: tokens-mdc-chip.get-density-tokens($density-scale);
+@mixin density($theme) {
+  $density-tokens: tokens-mdc-chip.get-density-tokens($theme);
+
   .mat-mdc-chip.mat-mdc-standard-chip {
     @include mdc-chip-theme.theme($density-tokens);
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-chips') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

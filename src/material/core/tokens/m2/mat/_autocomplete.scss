@@ -1,6 +1,5 @@
-@use 'sass:map';
 @use '../../token-utils';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -13,21 +12,19 @@ $prefix: (mat, autocomplete);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $background: map.get($config, background);
-
+@function get-color-tokens($theme) {
   @return (
-    background-color: theming.get-color-from-palette($background, card)
+    background-color: inspection.get-theme-color($theme, background, card)
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

@@ -1,9 +1,12 @@
+@use 'sass:color';
 @use 'sass:map';
+@use 'sass:meta';
 @use '../../token-utils';
 @use '../../../mdc-helpers/mdc-helpers';
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
-@use '../../../typography/typography-utils';
+@use '../../../theming/inspection';
+@use '../../../theming/palette';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, chip);
@@ -228,14 +231,34 @@ $prefix: (mdc, chip);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $palette: map.get($config, primary);
-
-  $background: theming.get-color-from-palette($palette);
-  $foreground: theming.get-color-from-palette($palette, default-contrast);
-
-  $state-layer-color: theming.get-color-from-palette(map.get($config, foreground), base);
+@function get-color-tokens($theme, $palette-name: null) {
+  $foreground: null;
+  $background: null;
+  $state-layer-color: inspection.get-theme-color($theme, foreground, base);
   $state-layer-opacity: 0.12; // 0.12 is a common value in Material Design for opacity.
+
+  @if $palette-name == null {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+    $grey-50: map.get(palette.$grey-palette, 50);
+    $grey-900: map.get(palette.$grey-palette, 900);
+    $foreground: if($is-dark, $grey-50, $grey-900);
+
+    $surface: inspection.get-theme-color($theme, background, card);
+    $on-surface: if(
+        mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark',
+        #000,
+        #fff
+    );
+    $background: if(
+        meta.type-of($on-surface) == color and meta.type-of($surface) == color,
+        color.mix($on-surface, $surface, 12%),
+        $on-surface
+    );
+  }
+  @else {
+    $background: inspection.get-theme-color($theme, $palette-name);
+    $foreground: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  }
 
   @return (
     // The text color of a disabled chip.
@@ -264,33 +287,24 @@ $prefix: (mdc, chip);
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
-  // TODO(wagnermaciel): The earlier implementation of the chip used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($config == null) {
-    $config: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
+@function get-typography-tokens($theme) {
   @return (
     // The font family of the chip text.
-    label-text-font: typography-utils.font-family($config, body-2) or
-      typography-utils.font-family($config),
+    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
     // The line height of the chip text.
-    label-text-line-height: typography-utils.line-height($config, body-2),
+    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
     // The font size of the chip text.
-    label-text-size: typography-utils.font-size($config, body-2),
+    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
     // The letter spacing of the chip label.
-    label-text-tracking: typography-utils.letter-spacing($config, body-2),
+    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
     // The font weight of the chip text.
-    label-text-weight: typography-utils.font-weight($config, body-2)
+    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
-  $scale: theming.clamp-density($config, -2);
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -2);
   @return (
     // The height of the chip.
     container-height:

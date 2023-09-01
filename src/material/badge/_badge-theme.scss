@@ -1,9 +1,9 @@
 @use 'sass:color';
-@use 'sass:map';
 @use 'sass:math';
 @use '@angular/cdk';
 
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mat/badge' as tokens-mat-badge;
 @use '../core/tokens/token-utils';
@@ -164,46 +164,34 @@ $_emit-fallback-vars: true;
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-
+@mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-      tokens-mat-badge.get-color-tokens($config));
+      tokens-mat-badge.get-color-tokens($theme));
   }
 
   .mat-badge-accent {
     @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-      tokens-mat-badge.private-get-color-palette-color-tokens($accent));
+      tokens-mat-badge.private-get-color-palette-color-tokens($theme, accent));
   }
 
   .mat-badge-warn {
     @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-      tokens-mat-badge.private-get-color-palette-color-tokens($warn));
+      tokens-mat-badge.private-get-color-palette-color-tokens($theme, warn));
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-
+@mixin typography($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-      tokens-mat-badge.get-typography-tokens($config));
+      tokens-mat-badge.get-typography-tokens($theme));
   }
 }
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-badge') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     // Try to reduce the number of times that the structural styles are emitted.
     @if not $_badge-structure-emitted {
       @include _badge-structure;
@@ -216,14 +204,14 @@ $_emit-fallback-vars: true;
       }
     }
 
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

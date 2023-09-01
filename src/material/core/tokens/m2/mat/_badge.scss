@@ -2,8 +2,7 @@
 @use 'sass:map';
 @use 'sass:color';
 @use '../../token-utils';
-@use '../../../typography/typography-utils';
-@use '../../../theming/theming';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -16,12 +15,10 @@ $prefix: (mat, badge);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($config) {
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $primary-color-tokens: private-get-color-palette-color-tokens(map.get($config, primary));
-  $app-background: theming.get-color-from-palette($background, 'background');
-  $disabled-background: theming.get-color-from-palette($foreground, disabled-button);
+@function get-color-tokens($theme) {
+  $primary-color-tokens: private-get-color-palette-color-tokens($theme, primary);
+  $app-background: inspection.get-theme-color($theme, background, background);
+  $disabled-background: inspection.get-theme-color($theme, foreground, disabled-button);
 
   // The disabled color usually has some kind of opacity, but because the badge is overlayed
   // on top of something else, it won't look good if it's opaque. If it is a color *type*,
@@ -36,24 +33,24 @@ $prefix: (mat, badge);
 
   @return map.merge($primary-color-tokens, (
     disabled-state-background-color: $disabled-background,
-    disabled-state-text-color: theming.get-color-from-palette($foreground, disabled-text),
+    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-text),
   ));
 }
 
 // Generates the tokens used to theme the badge based on a palette.
-@function private-get-color-palette-color-tokens($palette) {
+@function private-get-color-palette-color-tokens($theme, $palette-name: primary) {
   @return (
-    background-color: theming.get-color-from-palette($palette),
-    text-color: theming.get-color-from-palette($palette, default-contrast),
+    background-color: inspection.get-theme-color($theme, $palette-name),
+    text-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($config) {
+@function get-typography-tokens($theme) {
   $base-size: 12px;
 
   @return (
-    text-font: typography-utils.font-family($config),
+    text-font: inspection.get-theme-typography($theme, body-2, font-family),
     text-size: $base-size,
     text-weight: 600,
     small-size-text-size: $base-size * 0.75,
@@ -62,7 +59,7 @@ $prefix: (mat, badge);
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($config) {
+@function get-density-tokens($theme) {
   @return ();
 }
 

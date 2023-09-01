@@ -1,10 +1,10 @@
-@use 'sass:map';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
 @use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
 
-@mixin base($config-or-theme) {
+@mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
   @include sass-utils.current-selector-or-root() {
     @include mdc-circular-progress-theme.theme(
@@ -13,45 +13,39 @@
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $mdc-circular-progress-color-tokens: tokens-mdc-circular-progress.get-color-tokens($config);
-  @include sass-utils.current-selector-or-root() {
+@mixin color($theme) {
+  $mdc-circular-progress-color-tokens: tokens-mdc-circular-progress.get-color-tokens($theme);
 
+  @include sass-utils.current-selector-or-root() {
     @include mdc-circular-progress-theme.theme($mdc-circular-progress-color-tokens);
 
     .mat-accent {
-      $color: theming.get-color-from-palette(map.get($config, accent));
+      $color: inspection.get-theme-color($theme, accent);
       @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
     }
 
     .mat-warn {
-      $color: theming.get-color-from-palette(map.get($config, warn));
+      $color: inspection.get-theme-color($theme, warn);
       @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
     }
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {}
 
-@mixin density($config-or-theme) {}
+@mixin density($theme) {}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-spinner') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
     @include base($theme);
-    @if $color != null {
-      @include color($color);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-    @if $density != null {
-      @include density($density);
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
     }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
 }

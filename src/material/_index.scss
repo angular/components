@@ -11,8 +11,7 @@
   $gray-palette, $blue-grey-palette, $blue-gray-palette, $light-theme-background-palette,
   $dark-theme-background-palette, $light-theme-foreground-palette, $dark-theme-foreground-palette;
 @forward './core/typography/typography' show define-typography-level, define-rem-typography-config,
-  define-typography-config, typography-hierarchy, define-legacy-typography-config,
-  legacy-typography-hierarchy;
+  define-typography-config, typography-hierarchy, define-legacy-typography-config;
 @forward './core/typography/typography-utils' show typography-level,
   font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
 @forward './core/tokens/m2' show m2-tokens-from-theme;
