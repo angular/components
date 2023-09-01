@@ -8,12 +8,6 @@
 
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -38,6 +32,8 @@ import {
   ViewChild,
   ViewEncapsulation,
   AfterContentInit,
+  booleanAttribute,
+  numberAttribute,
 } from '@angular/core';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
@@ -149,32 +145,18 @@ export class CdkStep implements OnChanges {
   @Input() state: StepState;
 
   /** Whether the user can return to this step once it has been marked as completed. */
-  @Input()
-  get editable(): boolean {
-    return this._editable;
-  }
-  set editable(value: BooleanInput) {
-    this._editable = coerceBooleanProperty(value);
-  }
-  private _editable = true;
+  @Input({transform: booleanAttribute}) editable: boolean = true;
 
   /** Whether the completion of step is optional. */
-  @Input()
-  get optional(): boolean {
-    return this._optional;
-  }
-  set optional(value: BooleanInput) {
-    this._optional = coerceBooleanProperty(value);
-  }
-  private _optional = false;
+  @Input({transform: booleanAttribute}) optional: boolean = false;
 
   /** Whether step is marked as completed. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get completed(): boolean {
     return this._completedOverride == null ? this._getDefaultCompleted() : this._completedOverride;
   }
-  set completed(value: BooleanInput) {
-    this._completedOverride = coerceBooleanProperty(value);
+  set completed(value: boolean) {
+    this._completedOverride = value;
   }
   _completedOverride: boolean | null = null;
 
@@ -183,12 +165,12 @@ export class CdkStep implements OnChanges {
   }
 
   /** Whether step has an error. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get hasError(): boolean {
     return this._customError == null ? this._getDefaultError() : this._customError;
   }
-  set hasError(value: BooleanInput) {
-    this._customError = coerceBooleanProperty(value);
+  set hasError(value: boolean) {
+    this._customError = value;
   }
   private _customError: boolean | null = null;
 
@@ -271,40 +253,31 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _sortedHeaders = new QueryList<CdkStepHeader>();
 
   /** Whether the validity of previous steps should be checked or not. */
-  @Input()
-  get linear(): boolean {
-    return this._linear;
-  }
-  set linear(value: BooleanInput) {
-    this._linear = coerceBooleanProperty(value);
-  }
-  private _linear = false;
+  @Input({transform: booleanAttribute}) linear: boolean = false;
 
   /** The index of the selected step. */
-  @Input()
+  @Input({transform: numberAttribute})
   get selectedIndex(): number {
     return this._selectedIndex;
   }
-  set selectedIndex(index: NumberInput) {
-    const newIndex = coerceNumberProperty(index);
-
+  set selectedIndex(index: number) {
     if (this.steps && this._steps) {
       // Ensure that the index can't be out of bounds.
-      if (!this._isValidIndex(newIndex) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      if (!this._isValidIndex(index) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw Error('cdkStepper: Cannot assign out-of-bounds value to `selectedIndex`.');
       }
 
       this.selected?._markAsInteracted();
 
       if (
-        this._selectedIndex !== newIndex &&
-        !this._anyControlsInvalidOrPending(newIndex) &&
-        (newIndex >= this._selectedIndex || this.steps.toArray()[newIndex].editable)
+        this._selectedIndex !== index &&
+        !this._anyControlsInvalidOrPending(index) &&
+        (index >= this._selectedIndex || this.steps.toArray()[index].editable)
       ) {
-        this._updateSelectedItemIndex(newIndex);
+        this._updateSelectedItemIndex(index);
       }
     } else {
-      this._selectedIndex = newIndex;
+      this._selectedIndex = index;
     }
   }
   private _selectedIndex = 0;
@@ -551,7 +524,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   }
 
   private _anyControlsInvalidOrPending(index: number): boolean {
-    if (this._linear && index >= 0) {
+    if (this.linear && index >= 0) {
       return this.steps
         .toArray()
         .slice(0, index)
