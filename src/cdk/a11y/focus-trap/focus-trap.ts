@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -21,6 +20,7 @@ import {
   DoCheck,
   SimpleChanges,
   OnChanges,
+  booleanAttribute,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
@@ -413,26 +413,19 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   private _previouslyFocusedElement: HTMLElement | null = null;
 
   /** Whether the focus trap is active. */
-  @Input('cdkTrapFocus')
+  @Input({alias: 'cdkTrapFocus', transform: booleanAttribute})
   get enabled(): boolean {
     return this.focusTrap.enabled;
   }
-  set enabled(value: BooleanInput) {
-    this.focusTrap.enabled = coerceBooleanProperty(value);
+  set enabled(value: boolean) {
+    this.focusTrap.enabled = value;
   }
 
   /**
    * Whether the directive should automatically move focus into the trapped region upon
    * initialization and return focus to the previous activeElement upon destruction.
    */
-  @Input('cdkTrapFocusAutoCapture')
-  get autoCapture(): boolean {
-    return this._autoCapture;
-  }
-  set autoCapture(value: BooleanInput) {
-    this._autoCapture = coerceBooleanProperty(value);
-  }
-  private _autoCapture: boolean;
+  @Input({alias: 'cdkTrapFocusAutoCapture', transform: booleanAttribute}) autoCapture: boolean;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
