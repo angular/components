@@ -50,7 +50,7 @@ element. In some cases that `<mat-form-field>` may use the placeholder as the la
 The `<mat-form-field>` allows you to
 [associate error messages](https://material.angular.io/components/form-field/overview#error-messages)
 with your `matNativeControl`. By default, these error messages are shown when the control is invalid and
-either the user has interacted with (touched) the element or the parent form has been submitted. If
+the user has interacted with (touched) the element or the parent form has been submitted. If
 you wish to override this behavior (e.g. to show the error as soon as the invalid control is dirty
 or when a parent form group is invalid), you can use the `errorStateMatcher` property of the
 `matNativeControl`. The property takes an instance of an `ErrorStateMatcher` object. An `ErrorStateMatcher`
