@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ContentChild,
   Directive,
@@ -15,6 +14,7 @@ import {
   Input,
   Optional,
   TemplateRef,
+  booleanAttribute,
 } from '@angular/core';
 import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
 import {CDK_TABLE} from './tokens';
@@ -82,14 +82,15 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
    * that it mimics the `CanStick` mixin such that `_hasStickyChanged` is set to true if the value
    * has been changed.
    */
-  @Input('stickyEnd')
+  @Input({transform: booleanAttribute})
   get stickyEnd(): boolean {
     return this._stickyEnd;
   }
-  set stickyEnd(v: BooleanInput) {
-    const prevValue = this._stickyEnd;
-    this._stickyEnd = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._stickyEnd;
+  set stickyEnd(value: boolean) {
+    if (value !== this._stickyEnd) {
+      this._stickyEnd = value;
+      this._hasStickyChanged = true;
+    }
   }
   _stickyEnd: boolean = false;
 

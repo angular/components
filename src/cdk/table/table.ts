@@ -7,7 +7,6 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   CollectionViewer,
   DataSource,
@@ -52,6 +51,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -432,12 +432,12 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * dataobject will render the first row that evaluates its when predicate to true, in the order
    * defined in the table, or otherwise the default row which does not have a when predicate.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get multiTemplateDataRows(): boolean {
     return this._multiTemplateDataRows;
   }
-  set multiTemplateDataRows(v: BooleanInput) {
-    this._multiTemplateDataRows = coerceBooleanProperty(v);
+  set multiTemplateDataRows(value: boolean) {
+    this._multiTemplateDataRows = value;
 
     // In Ivy if this value is set via a static attribute (e.g. <table multiTemplateDataRows>),
     // this setter will be invoked before the row outlet has been defined hence the null check.
@@ -452,12 +452,12 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Whether to use a fixed table layout. Enabling this option will enforce consistent column widths
    * and optimize rendering sticky styles for native tables. No-op for flex tables.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get fixedLayout(): boolean {
     return this._fixedLayout;
   }
-  set fixedLayout(v: BooleanInput) {
-    this._fixedLayout = coerceBooleanProperty(v);
+  set fixedLayout(value: boolean) {
+    this._fixedLayout = value;
 
     // Toggling `fixedLayout` may change column widths. Sticky column styles should be recalculated.
     this._forceRecalculateCellWidths = true;
