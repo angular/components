@@ -227,7 +227,7 @@ export class RuntimeCodeMigration extends Migration<ComponentMigrator[], Schemat
     // be additionally created because the migrations run in isolation.
     if (!this._templateMigration) {
       const templateUpgradeData = this.upgradeData.filter(component => component.template);
-      // If no component in the upgrade data has a a template migrator, stop
+      // If no component in the upgrade data has a template migrator, stop
       // trying to migrate any templates from now on
       if (templateUpgradeData.length === 0) {
         this._hasPossibleTemplateMigrations = false;
