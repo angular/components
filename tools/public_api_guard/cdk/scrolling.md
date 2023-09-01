@@ -4,7 +4,6 @@
 
 ```ts
 
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/collections';
@@ -186,8 +185,7 @@ export interface CdkVirtualScrollRepeater<T> {
 // @public
 export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, _scrollStrategy: VirtualScrollStrategy, dir: Directionality, scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, scrollable: CdkVirtualScrollable);
-    get appendOnly(): boolean;
-    set appendOnly(value: BooleanInput);
+    appendOnly: boolean;
     attach(forOf: CdkVirtualScrollRepeater<any>): void;
     checkViewportSize(): void;
     _contentWrapper: ElementRef<HTMLElement>;
@@ -204,6 +202,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     measureRenderedContentSize(): number;
     measureScrollOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
     measureViewportOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
+    // (undocumented)
+    static ngAcceptInputType_appendOnly: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
