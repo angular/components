@@ -16,10 +16,10 @@ import {
   ChangeDetectorRef,
   SkipSelf,
   Inject,
+  booleanAttribute,
 } from '@angular/core';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CDK_ACCORDION, CdkAccordion} from './accordion';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs';
 
 /** Used to generate unique ID for each accordion item. */
@@ -59,13 +59,11 @@ export class CdkAccordionItem implements OnDestroy {
   readonly id: string = `cdk-accordion-child-${nextId++}`;
 
   /** Whether the AccordionItem is expanded. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get expanded(): boolean {
     return this._expanded;
   }
-  set expanded(expanded: BooleanInput) {
-    expanded = coerceBooleanProperty(expanded);
-
+  set expanded(expanded: boolean) {
     // Only emit events and update the internal value if the value changes.
     if (this._expanded !== expanded) {
       this._expanded = expanded;
@@ -91,14 +89,7 @@ export class CdkAccordionItem implements OnDestroy {
   private _expanded = false;
 
   /** Whether the AccordionItem is disabled. */
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(disabled: BooleanInput) {
-    this._disabled = coerceBooleanProperty(disabled);
-  }
-  private _disabled = false;
+  @Input({transform: booleanAttribute}) disabled: boolean = false;
 
   /** Unregister function for _expansionDispatcher. */
   private _removeUniqueSelectionListener: () => void = () => {};

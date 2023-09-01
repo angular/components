@@ -4,7 +4,6 @@
 
 ```ts
 
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -19,8 +18,9 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 export class CdkAccordion implements OnDestroy, OnChanges {
     closeAll(): void;
     readonly id: string;
-    get multi(): boolean;
-    set multi(multi: BooleanInput);
+    multi: boolean;
+    // (undocumented)
+    static ngAcceptInputType_multi: unknown;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -42,14 +42,17 @@ export class CdkAccordionItem implements OnDestroy {
     close(): void;
     readonly closed: EventEmitter<void>;
     readonly destroyed: EventEmitter<void>;
-    get disabled(): boolean;
-    set disabled(disabled: BooleanInput);
+    disabled: boolean;
     get expanded(): boolean;
-    set expanded(expanded: BooleanInput);
+    set expanded(expanded: boolean);
     readonly expandedChange: EventEmitter<boolean>;
     // (undocumented)
     protected _expansionDispatcher: UniqueSelectionDispatcher;
     readonly id: string;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_expanded: unknown;
     ngOnDestroy(): void;
     open(): void;
     readonly opened: EventEmitter<void>;
