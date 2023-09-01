@@ -8,6 +8,7 @@
 
 import {
   AfterContentInit,
+  booleanAttribute,
   ChangeDetectorRef,
   ContentChildren,
   Directive,
@@ -33,7 +34,7 @@ import {
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceArray} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
@@ -115,12 +116,12 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   @Input('cdkOptionTypeaheadLabel') typeaheadLabel: string;
 
   /** Whether this option is disabled. */
-  @Input('cdkOptionDisabled')
+  @Input({alias: 'cdkOptionDisabled', transform: booleanAttribute})
   get disabled(): boolean {
     return this.listbox.disabled || this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
   }
   private _disabled: boolean = false;
 
@@ -281,12 +282,12 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    * Whether the listbox allows multiple options to be selected. If the value switches from `true`
    * to `false`, and more than one option is selected, all options are deselected.
    */
-  @Input('cdkListboxMultiple')
+  @Input({alias: 'cdkListboxMultiple', transform: booleanAttribute})
   get multiple(): boolean {
     return this.selectionModel.multiple;
   }
-  set multiple(value: BooleanInput) {
-    this.selectionModel.multiple = coerceBooleanProperty(value);
+  set multiple(value: boolean) {
+    this.selectionModel.multiple = value;
 
     if (this.options) {
       this._updateInternalValue();
@@ -294,24 +295,12 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
 
   /** Whether the listbox is disabled. */
-  @Input('cdkListboxDisabled')
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled: boolean = false;
+  @Input({alias: 'cdkListboxDisabled', transform: booleanAttribute})
+  disabled: boolean = false;
 
   /** Whether the listbox will use active descendant or will move focus onto the options. */
-  @Input('cdkListboxUseActiveDescendant')
-  get useActiveDescendant(): boolean {
-    return this._useActiveDescendant;
-  }
-  set useActiveDescendant(shouldUseActiveDescendant: BooleanInput) {
-    this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
-  }
-  private _useActiveDescendant: boolean = false;
+  @Input({alias: 'cdkListboxUseActiveDescendant', transform: booleanAttribute})
+  useActiveDescendant: boolean = false;
 
   /** The orientation of the listbox. Only affects keyboard interaction, not visual layout. */
   @Input('cdkListboxOrientation')
@@ -341,23 +330,23 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    * Whether the keyboard navigation should wrap when the user presses arrow down on the last item
    * or arrow up on the first item.
    */
-  @Input('cdkListboxNavigationWrapDisabled')
+  @Input({alias: 'cdkListboxNavigationWrapDisabled', transform: booleanAttribute})
   get navigationWrapDisabled() {
     return this._navigationWrapDisabled;
   }
-  set navigationWrapDisabled(wrap: BooleanInput) {
-    this._navigationWrapDisabled = coerceBooleanProperty(wrap);
+  set navigationWrapDisabled(wrap: boolean) {
+    this._navigationWrapDisabled = wrap;
     this.listKeyManager?.withWrap(!this._navigationWrapDisabled);
   }
   private _navigationWrapDisabled = false;
 
   /** Whether keyboard navigation should skip over disabled items. */
-  @Input('cdkListboxNavigatesDisabledOptions')
+  @Input({alias: 'cdkListboxNavigatesDisabledOptions', transform: booleanAttribute})
   get navigateDisabledOptions() {
     return this._navigateDisabledOptions;
   }
-  set navigateDisabledOptions(skip: BooleanInput) {
-    this._navigateDisabledOptions = coerceBooleanProperty(skip);
+  set navigateDisabledOptions(skip: boolean) {
+    this._navigateDisabledOptions = skip;
     this.listKeyManager?.skipPredicate(
       this._navigateDisabledOptions ? this._skipNonePredicate : this._skipDisabledPredicate,
     );
@@ -683,7 +672,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   /** Called when the user presses keydown on the listbox. */
   protected _handleKeydown(event: KeyboardEvent) {
-    if (this._disabled) {
+    if (this.disabled) {
       return;
     }
 
@@ -809,7 +798,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   /** Get the id of the active option if active descendant is being used. */
   protected _getAriaActiveDescendant(): string | null | undefined {
-    return this._useActiveDescendant ? this.listKeyManager?.activeItem?.id : null;
+    return this.useActiveDescendant ? this.listKeyManager?.activeItem?.id : null;
   }
 
   /** Get the tabindex for the listbox. */
