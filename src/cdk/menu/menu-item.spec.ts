@@ -44,11 +44,6 @@ describe('MenuItem', () => {
       expect(nativeButton.getAttribute('type')).toBe('button');
     });
 
-    it('should coerce the disabled property', () => {
-      menuItem.disabled = '';
-      expect(menuItem.disabled).toBeTrue();
-    });
-
     it('should toggle the aria disabled attribute', () => {
       expect(nativeButton.hasAttribute('aria-disabled')).toBeFalse();
 

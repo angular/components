@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, Input} from '@angular/core';
+import {Directive, Input, booleanAttribute} from '@angular/core';
 import {CdkMenuItem} from './menu-item';
 
 /** Base class providing checked state for selectable MenuItems. */
@@ -19,14 +18,7 @@ import {CdkMenuItem} from './menu-item';
 })
 export abstract class CdkMenuItemSelectable extends CdkMenuItem {
   /** Whether the element is checked */
-  @Input('cdkMenuItemChecked')
-  get checked(): boolean {
-    return this._checked;
-  }
-  set checked(value: BooleanInput) {
-    this._checked = coerceBooleanProperty(value);
-  }
-  private _checked = false;
+  @Input({alias: 'cdkMenuItemChecked', transform: booleanAttribute}) checked: boolean = false;
 
   /** Whether the item should close the menu if triggered by the spacebar. */
   protected override closeOnSpacebarTrigger = false;

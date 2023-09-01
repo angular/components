@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, inject, Injectable, Input, OnDestroy} from '@angular/core';
+import {booleanAttribute, Directive, inject, Injectable, Input, OnDestroy} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   FlexibleConnectedPositionStrategy,
@@ -14,7 +14,6 @@ import {
   OverlayConfig,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil} from 'rxjs/operators';
@@ -85,14 +84,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private readonly _contextMenuTracker = inject(ContextMenuTracker);
 
   /** Whether the context menu is disabled. */
-  @Input('cdkContextMenuDisabled')
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled = false;
+  @Input({alias: 'cdkContextMenuDisabled', transform: booleanAttribute}) disabled: boolean = false;
 
   constructor() {
     super();
