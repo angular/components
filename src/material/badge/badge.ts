@@ -172,7 +172,7 @@ export class MatBadge implements OnInit, OnDestroy {
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = this._elementRef.nativeElement;
-      const matIconTagName: string = 'mat-icon';
+      const matIconTagName = 'mat-icon';
 
       // Heads-up for developers to avoid putting matBadge on <mat-icon>
       // as it is aria-hidden by default docs mention this at:

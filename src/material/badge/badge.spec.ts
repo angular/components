@@ -276,18 +276,18 @@ describe('MatBadge with MatIcon', () => {
     await TestBed.configureTestingModule({
       imports: [MatIconModule, MatBadgeModule],
       declarations: [
-        IconWithBadge,
-        IconWithBadgeFalseAriaHidden,
-        IconWithBadgeAtributeBindedTrueAriaHidden,
-        IconWithBadgeAtributeBindedFalseAriaHidden,
+        BadgeOnIcon,
+        BadgeOnIconWithAriaHiddenFalse,
+        BadgeOnIconWithAriaHiddenBindingTrue,
+        BadgeOnIconWithAriaHiddenBindingFalse,
       ],
     }).compileComponents();
   });
 
-  it('should warn bout using matBadge on MatIcon as its aria-hidden true by default', () => {
+  it('should warn about using matBadge on MatIcon as its aria-hidden true by default', () => {
     spyOn(console, 'warn');
 
-    const fixture = TestBed.createComponent(IconWithBadge);
+    const fixture = TestBed.createComponent(BadgeOnIcon);
     fixture.detectChanges();
 
     expect(console.warn).toHaveBeenCalled();
@@ -296,7 +296,7 @@ describe('MatBadge with MatIcon', () => {
   it('should not warn about using matBadge on MatIcon with aria-hidden="false"', () => {
     spyOn(console, 'warn');
 
-    const fixture = TestBed.createComponent(IconWithBadgeFalseAriaHidden);
+    const fixture = TestBed.createComponent(BadgeOnIconWithAriaHiddenFalse);
     fixture.detectChanges();
 
     expect(console.warn).not.toHaveBeenCalled();
@@ -305,7 +305,7 @@ describe('MatBadge with MatIcon', () => {
   it('should warn about using matBadge on MatIcon with [attr.aria-hidden]="true"', () => {
     spyOn(console, 'warn');
 
-    const fixture = TestBed.createComponent(IconWithBadgeAtributeBindedTrueAriaHidden);
+    const fixture = TestBed.createComponent(BadgeOnIconWithAriaHiddenBindingTrue);
     fixture.detectChanges();
 
     expect(console.warn).toHaveBeenCalled();
@@ -314,7 +314,7 @@ describe('MatBadge with MatIcon', () => {
   it('should not warn about using matBadge on MatIcon with [attr.aria-hidden]="false"', () => {
     spyOn(console, 'warn');
 
-    const fixture = TestBed.createComponent(IconWithBadgeAtributeBindedFalseAriaHidden);
+    const fixture = TestBed.createComponent(BadgeOnIconWithAriaHiddenBindingFalse);
     fixture.detectChanges();
 
     expect(console.warn).not.toHaveBeenCalled();
@@ -383,13 +383,13 @@ class NestedBadge {}
 class BadgeOnTemplate {}
 
 @Component({template: `<mat-icon matBadge="1">home</mat-icon>`})
-class IconWithBadge {}
+class BadgeOnIcon {}
 
 @Component({template: `<mat-icon matBadge="1" aria-hidden="false">home</mat-icon>`})
-class IconWithBadgeFalseAriaHidden {}
+class BadgeOnIconWithAriaHiddenFalse {}
 
 @Component({template: `<mat-icon matBadge="1" [attr.aria-hidden]="true">home</mat-icon>`})
-class IconWithBadgeAtributeBindedTrueAriaHidden {}
+class BadgeOnIconWithAriaHiddenBindingTrue {}
 
 @Component({template: `<mat-icon matBadge="1" [attr.aria-hidden]="false">home</mat-icon>`})
-class IconWithBadgeAtributeBindedFalseAriaHidden {}
+class BadgeOnIconWithAriaHiddenBindingFalse {}
