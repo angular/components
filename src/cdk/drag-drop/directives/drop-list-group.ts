@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, OnDestroy, Input, InjectionToken} from '@angular/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Directive, OnDestroy, Input, InjectionToken, booleanAttribute} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `CdkDropListGroup`. It serves as
@@ -35,14 +34,8 @@ export class CdkDropListGroup<T> implements OnDestroy {
   readonly _items = new Set<T>();
 
   /** Whether starting a dragging sequence from inside this group is disabled. */
-  @Input('cdkDropListGroupDisabled')
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled = false;
+  @Input({alias: 'cdkDropListGroupDisabled', transform: booleanAttribute})
+  disabled: boolean = false;
 
   ngOnDestroy() {
     this._items.clear();
