@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -22,6 +17,7 @@ import {
   NgZone,
   Optional,
   Inject,
+  booleanAttribute,
 } from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 import {auditTime, takeUntil} from 'rxjs/operators';
@@ -80,13 +76,11 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   /** Whether autosizing is enabled or not */
-  @Input('cdkTextareaAutosize')
+  @Input({alias: 'cdkTextareaAutosize', transform: booleanAttribute})
   get enabled(): boolean {
     return this._enabled;
   }
-  set enabled(value: BooleanInput) {
-    value = coerceBooleanProperty(value);
-
+  set enabled(value: boolean) {
     // Only act if the actual value changed. This specifically helps to not run
     // resizeToFitContent too early (i.e. before ngAfterViewInit)
     if (this._enabled !== value) {

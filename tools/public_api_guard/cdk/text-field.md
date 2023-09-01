@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -58,11 +57,13 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     document?: any);
     protected _document?: Document;
     get enabled(): boolean;
-    set enabled(value: BooleanInput);
+    set enabled(value: boolean);
     get maxRows(): number;
     set maxRows(value: NumberInput);
     get minRows(): number;
     set minRows(value: NumberInput);
+    // (undocumented)
+    static ngAcceptInputType_enabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
