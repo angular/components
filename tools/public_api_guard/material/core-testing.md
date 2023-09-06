@@ -7,6 +7,7 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
+import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
@@ -19,7 +20,7 @@ export class MatOptgroupHarness extends ComponentHarness {
 }
 
 // @public
-export class MatOptionHarness extends ComponentHarness {
+export class MatOptionHarness extends ContentContainerComponentHarness {
     click(): Promise<void>;
     getText(): Promise<string>;
     static hostSelector: string;
