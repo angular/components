@@ -38,19 +38,21 @@
       max-width: inherit;
     }
 
-    // MDC by default sets the `surface` to `display: flex`. MDC does this in order to
-    // be able to make the content scrollable while locking the title and actions. This
-    // does not work in our dialog anyway because due to the content projection, arbitrary
-    // components can be immediate children of the surface and make this a noop. If only
-    // templates or DOM elements are projected, the flex display could cause unexpected
-    // alignment issues as explained in our coding standards (see `CODING_STANDARDS.md`).
-    // Additionally, the surface by default should expand based on the parent overlay
-    // boundaries (so that boundaries for the overlay config are respected). The surface
-    // by default would only expand based on its content.
     .mdc-dialog__surface {
-      display: block;
       width: 100%;
       height: 100%;
     }
+  }
+
+  // When a component is passed into the dialog, the host element interrupts
+  // the `display:flex` from affecting the dialog title, content, and
+  // actions. To fix this, we make the component host `display: contents` by
+  // marking its host with the `mat-mdc-dialog-component-host` class.
+  //
+  // Note that this problem does not exist when a template ref is used since
+  // the title, contents, and actions are then nested directly under the
+  // dialog surface.
+  .mat-mdc-dialog-component-host {
+    display: contents;
   }
 }

@@ -7,6 +7,7 @@
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentFactoryResolver } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { DialogRef } from '@angular/cdk/dialog';
@@ -182,6 +183,8 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, _document: any, dialogConfig: MatDialogConfig, interactivityChecker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, _animationMode?: string | undefined, focusMonitor?: FocusMonitor);
     _animationsEnabled: boolean;
     _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
+    // (undocumented)
+    attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // (undocumented)
     protected _captureInitialFocus(): void;
     // (undocumented)

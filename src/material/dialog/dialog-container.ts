@@ -12,6 +12,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  ComponentRef,
   ElementRef,
   EventEmitter,
   Inject,
@@ -24,6 +25,7 @@ import {MatDialogConfig} from './dialog-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {ComponentPortal} from '@angular/cdk/portal';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -258,6 +260,20 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     if (this._animationTimer !== null) {
       clearTimeout(this._animationTimer);
     }
+  }
+
+  override attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
+    // When a component is passed into the dialog, the host element interrupts
+    // the `display:flex` from affecting the dialog title, content, and
+    // actions. To fix this, we make the component host `display: contents` by
+    // marking its host with the `mat-mdc-dialog-component-host` class.
+    //
+    // Note that this problem does not exist when a template ref is used since
+    // the title, contents, and actions are then nested directly under the
+    // dialog surface.
+    const ref = super.attachComponentPortal(portal);
+    ref.location.nativeElement.classList.add('mat-mdc-dialog-component-host');
+    return ref;
   }
 }
 
