@@ -184,9 +184,9 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     _animationsEnabled: boolean;
     _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
     // (undocumented)
-    protected _captureInitialFocus(): void;
-    // (undocumented)
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
+    // (undocumented)
+    protected _captureInitialFocus(): void;
     // (undocumented)
     protected _contentAttached(): void;
     // (undocumented)
