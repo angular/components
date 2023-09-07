@@ -1,3 +1,17 @@
+<a name="16.2.3"></a>
+# 16.2.3 "plastic-part" (2023-09-07)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ffd4209318](https://github.com/angular/components/commit/ffd4209318cdc5dc3e1e247698712679ebdf93d7) | fix | **drag-drop:** constrainPosition now working well with boundary ([#27730](https://github.com/angular/components/pull/27730)) |
+| [08dd2322ac](https://github.com/angular/components/commit/08dd2322accbac10cdb93181d51770cb4db7cf68) | fix | **menu:** run change detection for  changes to overlay ref of trigger ([#27726](https://github.com/angular/components/pull/27726)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [72a5d1eedc](https://github.com/angular/components/commit/72a5d1eedc090cbd08d3aaed30cea6c05601272e) | fix | **tabs:** add aria-hidden to inactive tabs ([#27742](https://github.com/angular/components/pull/27742)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.2"></a>
 # 16.2.2 "baryte-barnacle" (2023-08-30)
 ### cdk
